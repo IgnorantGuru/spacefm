@@ -1,0 +1,1899 @@
+# translation of pcmanfm_TR.po to Türkçe
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Bekir SONAT <bekirsonat@kde.org.tr>, 2006.
+msgid ""
+msgstr ""
+"Project-Id-Version: pcmanfm_TR\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2006-11-14 15:51+0200\n"
+"Last-Translator: Bekir SONAT <bekirsonat@kde.org.tr>\n"
+"Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms:  nplurals=1; plural=0;\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+#, fuzzy
+msgid "Copyright (C) 2005 - 2008"
+msgstr "Copyright (C) 2005 - 2006"
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"Hafif sıklet dosya yöneticisi\n"
+"\n"
+"Hon Jen Yee (PCMan) tarafından geliştirildi."
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr ""
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr "Çeviri-Tanıtım"
+
+#: ../data/ui/about-dlg.glade.h:10
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "Uygulama seç"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+#, fuzzy
+msgid "File Type To be Opened:"
+msgstr "Açılacak dosya türü:"
+
+#: ../data/ui/appchooserdlg.glade.h:3
+#, fuzzy
+msgid "Opened in Terminal"
+msgstr "Terminalde Aç"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr "Aşağıdaki listeden uygulama seçin veya el ile komut satırı yazın:"
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr "Seçilen uygulamayı varsayılan eylem olarak ata"
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "_Tüm Uygulamalar"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "_Göz-at"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+#, fuzzy
+msgid "_Command Line:"
+msgstr "_Komut Satırı:"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+msgid "_Recommended Applications"
+msgstr "Önerilen _Uygulamalar"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr "Çıkma-menülerde gösterilen eylemler"
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+msgid "Add _Application"
+msgstr "Uygulama _Ekle"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr "Ö_zel Eylem Ekle"
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+#, fuzzy
+msgid "File Associations"
+msgstr "Dosya İlişkilendirmeleri"
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr "Bilinen dosya türleri:"
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+msgid "Move _Down"
+msgstr "_Aşağıya Taşı"
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+msgid "Move _Up"
+msgstr "_Yukarıya Taşı"
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "Hazırlıyor..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "Süreç:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "İlerleme:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "Hedef:"
+
+#: ../data/ui/file_properties.glade.h:1
+#, fuzzy
+msgid "<b>File Type:</b>"
+msgstr "Dosya Türü:"
+
+#: ../data/ui/file_properties.glade.h:2
+#, fuzzy
+msgid "<b>File _Name:</b>"
+msgstr "Dosya Adı:"
+
+#: ../data/ui/file_properties.glade.h:3
+#, fuzzy
+msgid "<b>Group:</b>"
+msgstr "Grup:"
+
+#: ../data/ui/file_properties.glade.h:4
+#, fuzzy
+msgid "<b>Last Access:</b>"
+msgstr "Son Erişim:"
+
+#: ../data/ui/file_properties.glade.h:5
+#, fuzzy
+msgid "<b>Last Modification:</b>"
+msgstr "Son Düzenleme:"
+
+#: ../data/ui/file_properties.glade.h:6
+#, fuzzy
+msgid "<b>Location:</b>"
+msgstr "Konum:"
+
+#: ../data/ui/file_properties.glade.h:7
+#, fuzzy
+msgid "<b>Open _with:</b>"
+msgstr "...ile Aç:"
+
+#: ../data/ui/file_properties.glade.h:8
+#, fuzzy
+msgid "<b>Other Users:</b>"
+msgstr "Diğer Kullanıcılar:"
+
+#: ../data/ui/file_properties.glade.h:9
+#, fuzzy
+msgid "<b>Owner:</b>"
+msgstr "Sahip:"
+
+#: ../data/ui/file_properties.glade.h:10
+#, fuzzy
+msgid "<b>Size on Disk:</b>"
+msgstr "Diskteki Büyüklüğü:"
+
+#: ../data/ui/file_properties.glade.h:11
+#, fuzzy
+msgid "<b>Total Size of Files:</b>"
+msgstr "Dosyaların Toplam Büyüklüğü:"
+
+#: ../data/ui/file_properties.glade.h:12
+#, fuzzy
+msgid "<b>_Group:</b>"
+msgstr "Grup:"
+
+#: ../data/ui/file_properties.glade.h:13
+#, fuzzy
+msgid "<b>_Owner:</b>"
+msgstr "Duvarkağıdı:"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "Çalıştırma"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "Dosya Öznitelikleri"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "Okuma"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "Set GID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "Set UID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr "Yapışkan"
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "Yazma"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "_Genel"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "i_zinler"
+
+#: ../data/ui/find-files.glade.h:1
+#, fuzzy
+msgid "<b>File Content</b>"
+msgstr "Dosya Türü:"
+
+#: ../data/ui/find-files.glade.h:2
+#, fuzzy
+msgid "<b>File Name Contains:</b>"
+msgstr "Dosya Adı:"
+
+#: ../data/ui/find-files.glade.h:3
+#, fuzzy
+msgid "<b>File Size</b>"
+msgstr "Dosya Türü:"
+
+#: ../data/ui/find-files.glade.h:4
+#, fuzzy
+msgid "<b>File Types to Search</b>"
+msgstr "Dosya Türü:"
+
+#: ../data/ui/find-files.glade.h:5
+#, fuzzy
+msgid "<b>Last Modified</b>"
+msgstr "Son Düzenleme:"
+
+#: ../data/ui/find-files.glade.h:6
+#, fuzzy
+msgid "<b>Places to Search</b>"
+msgstr "Dosya Türü:"
+
+#: ../data/ui/find-files.glade.h:7
+#, fuzzy
+msgid "<b>Search Result:</b>"
+msgstr "Diğer Kullanıcılar:"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:22
+#, fuzzy
+msgid "File Contains:"
+msgstr "Dosya İlişkilendirmeleri"
+
+#: ../data/ui/find-files.glade.h:23
+#, fuzzy
+msgid "Find Files"
+msgstr "_Dosya"
+
+#: ../data/ui/find-files.glade.h:24
+#, fuzzy
+msgid "General"
+msgstr "_Genel"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:27
+#, fuzzy
+msgid "Plain Text Files"
+msgstr "_Metin Dosyası"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:29
+#, fuzzy
+msgid "Search Hidden Files"
+msgstr "_Gizli Dosyaları Göster"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr ""
+
+#: ../data/ui/godlg.glade.h:1
+#, fuzzy
+msgid "Go to folder"
+msgstr "_Üst Dizine Git"
+
+#: ../data/ui/prefdlg.glade.h:1
+#, fuzzy
+msgid "<b>Behavior</b>"
+msgstr "Konum:"
+
+#: ../data/ui/prefdlg.glade.h:2
+#, fuzzy
+msgid "<b>Colors</b>"
+msgstr "Duvarkağıdı:"
+
+#: ../data/ui/prefdlg.glade.h:3
+#, fuzzy
+msgid "<b>Display</b>"
+msgstr "Duvarkağıdı:"
+
+#: ../data/ui/prefdlg.glade.h:4
+#, fuzzy
+msgid "<b>General</b>"
+msgstr "_Genel"
+
+#: ../data/ui/prefdlg.glade.h:5
+#, fuzzy
+msgid "<b>Wallpaper</b>"
+msgstr "Duvarkağıdı:"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:7
+#, fuzzy
+msgid "Background:"
+msgstr "Arkaplan rengi"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "Yerİmleri:"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:10
+#, fuzzy
+msgid "Display image files with supported format as thumbnails"
+msgstr "Resim dosyalarını minyatür şeklinde göster"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "Minyatürde görünecek azami dosya sayısı:"
+
+#: ../data/ui/prefdlg.glade.h:17
+#, fuzzy
+msgid "Mode:"
+msgstr "Taşı:"
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "Diskteki dosya ismi kodlaması:"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "Lütfen bir resim dosyası seçin"
+
+#: ../data/ui/prefdlg.glade.h:24
+#, fuzzy
+msgid "Preferences"
+msgstr "Ayarlar"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:26
+#, fuzzy
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "Masaüstünde dosya simgelerini göster"
+
+#: ../data/ui/prefdlg.glade.h:27
+#, fuzzy
+msgid "Show icons of volumes on desktop"
+msgstr "Masaüstünde dosya simgelerini göster"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "Büyük simgelerin boyu:"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "Küçük simgelerin boyu:"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "Terminal:"
+
+#: ../data/ui/prefdlg.glade.h:36
+#, fuzzy
+msgid "Text:"
+msgstr "text"
+
+#: ../data/ui/prefdlg.glade.h:37
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "Duvarkağıdı:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "_Masaüstü"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:907
+#, fuzzy
+msgid "Selection mode"
+msgstr "_Tümünü Seç"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:972
+#, fuzzy
+msgid "Text column"
+msgstr "Metin rengi"
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:980
+#, fuzzy
+msgid "Selection Box Color"
+msgstr "_Tümünü Seç"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:987
+#, fuzzy
+msgid "Selection Box Alpha"
+msgstr "_Tümünü Seç"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr ""
+
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+msgid "application"
+msgstr "uygulama"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr "audio"
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr "video"
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+#, fuzzy
+msgid "text"
+msgstr "text"
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr "multipart"
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr "image"
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr "message"
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+msgid "model"
+msgstr "model"
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+msgid "inode"
+msgstr "inode"
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr "packages"
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr ""
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr ""
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr ""
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr ""
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr ""
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+ simge teması yeterince ayarlanmamış"
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+"<big><b>%s</b></big>\n"
+"\n"
+"Bu genellikle çalışır durumda bir  XSETTINGS yöneticisinin bulunmadığını "
+"işaret eder. GNOME veya XFCE benzeri Masaüstü ortamları, kendilerine ait "
+"gnome-settings-daemon veya xfce-mcs-manager aracılığıyla XSETTINGS "
+"yönetimini otomatik olarak gerçekleştirirler.\n"
+"\n"
+"<b>Eğer bu masaüstü ortamlarını kullanmıyorsanız iki seçeneğiniz var:\n"
+"1. bir XSETTINGS yöneticisini çalıştırın, veya\n"
+"2. basitçe ~/.gtkrc-2.0 dosyası içinde bir simge teması belirleyin.</b>\n"
+"Örneğin Tango icon theme için ~/.gtkrc-2.0 dosyasına ( eğer bu dosya yoksa,-"
+"oluşturun) şu satırı ekleyin:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> \n"
+"\n"
+"<b>NOT: Seçtiğiniz simge teması GNOME ile uyumlu olmalıdır,-aksi takdirde "
+"dosya simgeleri düzgün görüntülenmeyecektir.</b>GNOME ve KDE, simgelerin "
+"adlandırmalarını farklı yaptıkları için KDE temalarını kullanamazsınız. "
+"Halihazırda bu konu ile ilgili bir standart yoktur ama freedesktop.org "
+"sitesi bu türden sorunların gelecekte olmaması için kurulmuştur."
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr ""
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "Dosya mevuct değil"
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "Dosyanın nasıl açılacağı bilinmiyor"
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"Açılamayan dosya:\n"
+"\"%s\"\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "_Dizin"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "_Metin Dosyası"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "Yeni _Pencere"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "Yeni _Sekme"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "_Yeni Oluştur"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "Dosya Öz_Nitelikleri"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "Sekmeyi Kapat"
+
+#: ../src/main-window.c:318
+#, fuzzy
+msgid "_Close Window"
+msgstr "Yeni _Pencere"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "_Sil"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "Yeniden _Adlandır"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "_Tümünü Seç"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "Seçimi Tersine Çe_vir"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "_Geri Git"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "_ileri Git"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "_Üst Dizine Git"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "_home Dizinine Git"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "_isime Göre Sıralı"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "_Büyüklüğe Göre Sıralı"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "_Düzenleme Zamanına Göre Sıralı"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "_Türüne Göre Sıralı"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "_Yetkilere Göre Sıralı"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "_Sahibine Göre Sıralı"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "Yukarı-doğru"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "Aşağı-doğru"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "_Yan Paneli Aç"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "_Konum Panelini Göster"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "Dizin _Ağacını Göster"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "_Yenile"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "Yan Panel"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+#, fuzzy
+msgid "L_ocation Bar"
+msgstr "Konum"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "_Gizli Dosyaları Göster"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "_Sırala"
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "Si_mge Görünümü"
+
+#: ../src/main-window.c:387
+#, fuzzy
+msgid "View as _Compact List"
+msgstr "_Ayrıntılı Liste Görünümü"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "_Ayrıntılı Liste Görünümü"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "_Terminal Aç"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "Bulunulan dizini _root olarak Aç"
+
+#: ../src/main-window.c:399
+#, fuzzy
+msgid "_Find Files"
+msgstr "_Dosya"
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "_Dosya"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "Dü_zen"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "_Git"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "Yerİ_mleri"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "Görü_nüm"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "_Araçlar"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "_Yardım"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "Yeni Sekme"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "Geriye"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "İleriye"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "Üst Dizin"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "Yenile"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "home Dizini"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Yan Paneli Aç"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "Git"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "Uyarı:Yetkili kullanıcı kipindesiniz"
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "Terminal programı yapılandırılmadı"
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "Yerimlerine _Ekle"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "Yerimlerini _Düzenle"
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "Yüklüyor..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", Boş yer: %s (Toplam: %s )"
+
+#: ../src/main-window.c:2112
+#, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] "%d öge seçildi (%s)%s"
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] ""
+
+#: ../src/main-window.c:2123
+#, fuzzy, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] "%d görünen (%d gizli)%s"
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "Dizin mevcut değil."
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "Yeni _Sekmede Aç"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "Yeni _Pencerede Aç"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "Ad"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "Büyüklük"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "Tür"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "Yetkiler"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "Sahip:Grup"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "Son Değişiklik"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "Konum"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "Dizin Ağacı"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr ""
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "Masaüstü"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "Ortama bağlanamadı"
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "Ortam ayrılamadı"
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "Ortam çıkartılamadı"
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "Dosya Sistemini _Bağla"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "Çı_kart"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "Dosya Sistemini _Ayır"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "Taşı:"
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "Kopyala:"
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr ""
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "Sil:"
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "Bağ:"
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "Öznitelikler Değiştir:"
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "Taşıyor..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "Kopyalıyor..."
+
+#: ../src/ptk/ptk-file-task.c:114
+#, fuzzy
+msgid "Moving to Trash..."
+msgstr "Taşıyor..."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "Siliyor..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "Bağlıyor..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "Öznitelikleri Değiştiriyor"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "Eylem iptal edilecek?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "Dizin ve içeriğinin üzerine yazmak ister misiniz?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "Bu dosyanın üzerine yazmak ister misiniz?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "Lütfen yeni bir dosya ismi belirleyin."
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, fuzzy, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\" oluşturuldu.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\"\n"
+"\n"
+"Kaynak ve hedef aynı dosya!.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "Üzerine-yaz"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "Tümünün Üzerine-yaz"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "Yeniden Adlandır"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "Atla"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "Tümünü Atla"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "Sıkıştırılmış Dosyaları Sakla..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "Sıkıştırılmış dosyanın biçimi:"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "Sıkıştırılmış dosya oluşturuluyor: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "Dosyaları Sıkıştır"
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "Dosyayı çıkart..."
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "Dosyaların çıkartıldığı yer: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "Dosyaları Çıkart"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"Tamamlandı!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "Komut:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "Dosya Sistemi"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "Alt-dizin yok"
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "_Buraya Çıkart"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "Çıkartılacak _Yer"
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "..._ile Aç"
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "Sıkıştır"
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "Çıkar_t"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "Ö_zellikler"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "Terminalde Aç"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "Başka bir _programla aç"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "Çalıştı_r"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr " \"%s\" ..._ile Aç"
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "_Aç"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "Seçilen dosyaları gerçekten silmek istiyor musunuz?"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "Dosyayı Yeniden-adlandır"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "Lütfen yeni dosya ismi yazın:"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+#, fuzzy
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"Seçtiğiniz isimde bir dosya zaten var.\n"
+"Lütfen başka bir isim verin:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "Yeni Dizin"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "Yeni dizin için bir isim verin:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "Yeni Dosya"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "Yeni dosya için bir isim verin:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "Yeni dosya oluşturulamadı!"
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "Birçok dosya seçildi"
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr "Farklı türlerde birçok dosya"
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "Diğer program..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "Hesaplıyor..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "Geçersiz Kullanıcı"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "Geçersiz Grup"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr ""
+"Bu değişiklikleri tüm alt-dizinler ve içindeki dosyalara uygulamak ister "
+"misiniz?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "Yeni Öge"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "Yerİmlerini Düzenle"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "Yol"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "Sıralama için Nesneleri sürükleyip-bırakın"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "Komut bulunamadı"
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr ""
+"Hedef dizininiz \"%1$s\", zaten kaynak dizininiz içinde yer alıyor! : \"%2$s"
+"\""
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:586
+#, fuzzy
+msgid "Drive"
+msgstr "Yazma"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr ""
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr ""
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr ""
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, fuzzy, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr ""
+"Sürücü \"%s\" bağlı değil.\n"
+"Bağlamak ister misiniz?"
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr ""
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, fuzzy, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr ""
+"Sürücü \"%s\" bağlı değil.\n"
+"Bağlamak ister misiniz?"
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+
+#: ../src/desktop/desktop-window.c:193
+#, fuzzy
+msgid "_Icons"
+msgstr "Si_mge Görünümü"
+
+#: ../src/desktop/desktop-window.c:198
+#, fuzzy
+msgid "_Desktop Settings"
+msgstr "_Masaüstü"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr ""
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../src/find-files.c:677
+#, fuzzy
+msgid "Select a folder"
+msgstr "_Tümünü Seç"
+
+#: ../src/find-files.c:722
+#, fuzzy
+msgid "Browse..."
+msgstr "_Göz-at"
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr ""
+
+#: ../src/find-files.c:814
+#, fuzzy
+msgid "Folder"
+msgstr "_Dizin"
+
+#: ../src/find-files.c:830
+#, fuzzy
+msgid "Last Modified"
+msgstr "Son Değişiklik"
+
+#, fuzzy
+#~ msgid "Opened in Current Tab"
+#~ msgstr "Şimdiki sekmede aç"
+
+#~ msgid "Opened in New Tab"
+#~ msgstr "Yeni sekmede aç"
+
+#~ msgid "Opened in New Window"
+#~ msgstr "Yeni Pencerede aç"
+
+#~ msgid "gksu or kdesu is not found"
+#~ msgstr "gksu veya kdesu bulunamadı"
+
+#~ msgid ""
+#~ "The volume \"%s\" is not mounted.\n"
+#~ "Do you want to mount it?"
+#~ msgstr ""
+#~ "Sürücü \"%s\" bağlı değil.\n"
+#~ "Bağlamak ister misiniz?"
+
+#~ msgid "Source code taken from other projects:"
+#~ msgstr "Diğer projelerden alınana kaynak kodlar:"
+
+#~ msgid " * libmd5-rfc: Aladdin Enterprises"
+#~ msgstr " * libmd5-rfc: Aladdin Enterprises"
+
+#~ msgid " * Working area detection: Gary Kramlich"
+#~ msgstr " * Çalışma alanının tesbiti: Gary Kramlich"
+
+#~ msgid " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
+#~ msgstr ""
+#~ " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
+
+#~ msgid " * Text and icon renderer uese code from Jonathan Blandford"
+#~ msgstr " * Metin ve simge yorumlayıcı: Jonathan Blandford"
+
+#~ msgid " * Desktop icons use code from Brian Tarricone"
+#~ msgstr " * Masaüstü simgelerinin işlenmesi: Brian Tarricone"
+
+#~ msgid "PCMan File Manager"
+#~ msgstr "PCMan Dosya Yönetici"
+
+#~ msgid "Icon Theme:"
+#~ msgstr "Simge teması:"
+
+#~ msgid "A_ddress:"
+#~ msgstr "_Konum"
+
+#~ msgid " * xdgmime: Red Hat, Inc & Jonathan Blandford"
+#~ msgstr " * xdgmime: Red Hat, Inc & Jonathan Blandford"

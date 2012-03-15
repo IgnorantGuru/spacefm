@@ -1,0 +1,35 @@
+[encoding: UTF-8]
+# List of source files containing translatable strings.
+data/spacefm-folder-handler.desktop.in
+data/spacefm-find.desktop.in
+data/spacefm.desktop.in
+[type: gettext/glade]data/ui/about-dlg.ui
+[type: gettext/glade]data/ui/appchooserdlg.ui
+[type: gettext/glade]data/ui/file_properties.ui
+[type: gettext/glade]data/ui/find-files.ui
+[type: gettext/glade]data/ui/godlg.ui
+[type: gettext/glade]data/ui/prefdlg.ui
+src/exo/exo-icon-view.c
+src/exo/exo-tree-view.c
+src/main.c
+src/main-window.c
+src/pref-dialog.c
+src/settings.c
+src/ptk/ptk-file-browser.c
+src/ptk/ptk-location-view.c
+src/ptk/ptk-file-task.c
+src/ptk/ptk-file-archiver.c
+src/ptk/ptk-console-output.c
+src/ptk/ptk-dir-tree.c
+src/ptk/ptk-file-menu.c
+src/ptk/ptk-file-misc.c
+src/ptk/ptk-file-properties.c
+src/edit-bookmarks.c
+src/ptk/ptk-app-chooser.c
+src/vfs/vfs-app-desktop.c
+src/vfs/vfs-file-task.c
+src/vfs/vfs-volume-hal.c
+src/vfs/vfs-volume-nohal.c
+src/desktop/desktop.c
+src/desktop/desktop-window.c
+src/find-files.c

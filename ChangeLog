@@ -1,0 +1,154 @@
+0.7.2   2012-03-05:
+    exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
+        added /usr/bin/spacefm-auth)
+    submitted ktsuss2 bug reports
+    additional and updated language strings including shell prompts
+    copy menu item now copies context
+    can now create MBR and FSArchiver backups of mounted volumes
+    changed 20x20 icon sizes to 22x22 to prevent blur from scaling
+    apply prefs small icon size to devices, bookmarks, dirtree icons
+    tab icons default to 16x16 if available in gtk icon theme
+    fixed segfault on open multiple files in File Search window results
+    completed open selected dir in File Search window results
+    corrected folder selection history skipping empty selection
+    user's manual updated to reflect changes, minor corrections
+0.7.1   2012-02-21:
+    changed temp file usage for better multiple instance separation
+    removed sync/flush as default mount options
+    auto run|on unmount no longer depends on auto-mount qualification
+    auto run|on remove no longer depends on auto-mount qualification
+    added auto run sensitivity
+    corrected click on desktop icon obeys 'Click runs executables'
+    corrected paste replace with linefeeds into multi-input
+    corrected reversed order of files copied onto clipboard
+    default plugin name converts spaces to hyphens
+    corrected icon view change show hidden doesn't update status bar
+    fixed segfault on open multiple files in File Search window results
+    fixed File Search results right-click on unselected selects
+    submitted gdk-pixbuf bug 670476 on segfault when loading drives.svg 3.2.0
+    allow rename of desktop items (desktop file Name[locale] value)
+    fixed rename desktop file, extension != desktop
+    fixed segfaults on desktop rename / delete / paste
+0.7.0   2012-02-14:
+    changed custom command/plugin dir structure
+    added design menu Command|Browse
+    corrected unrealized event on main window focus (directly to menu bar)
+    fixed xfce4-terminal, gnome-terminal, lxterminal, konsole, terminator
+    renamed eterm Eterm
+    fixed 'please set your terminal' error does not close
+    added user manual: design mode, plugins
+    disallow spaces etc in tmp_dir and --config-dir
+    pulse progress bar to 0% on error/about or 100% on finish
+    added debug info for toolbar config button
+    fixed invalid ->next->prev on custom separators - auto repair session
+    configure and debian files updated to require libgtk >= 2.24
+0.6.3   2012-02-08:
+    updated POTFILES.in and translatable strings - ready for translations
+    corrected makefile problems adding translations to desktop files
+    added devices Settings|Show|Empty Drives option
+    added unique separators
+    click runs executables default to false
+    removed pref Show SI deciaml file sizes
+    added pref Right-click opens design menu
+    click on blank area of devices and bookmarks unselects
+    added View|Panel Bar option
+    updated distributed licenses, Help|About|License
+    corrected click on toolbar config menu icon clears smartbar
+    --desktop mode now works with instance already running
+    fixed item value memory for check/input style plugins
+    fixed key assignments on plugins
+    fixed paste custom command into toolbar (no Show option in design menu)
+    completed custom toolbar command activation
+0.6.2   2012-02-05:
+    corrected multiple tasks listed for single function
+    changed default name of context|Move to Rename
+    removed color dialog and task list debug info
+0.6.1   2012-02-01:
+    dir monitor create/delete cache rewrite
+    segfault on Highlight Bar/Text color dialog corrected? added debug info
+    corrected segfault on Properties|Info keypress with no selected files
+    Properties|Info/Permissions now shown with no selected files (cwd)
+    disabled smartbar breadcrumb on middle-click (now ctrl-leftclick only)
+    corrections to archive extractions
+    Copy Name/Parent/Path now also copies to primary (middle-click) clipboard
+    disabled default highlight of selected status bar due to theme issue
+    removed single quotes from device volume label display
+    corrected devices horiz scrollbar not disappearing when unneeded
+    added sdebug info for task list issue
+0.6.0   2012-01-31:
+    added design menu > Style > Context
+    added panel bar
+    added status bar panel icons
+    added status bar highlight colors
+    added status bar mouse responses
+    added ctrl-click breadcrumbs to smartbar (ctrl-click on part of path)
+    disabled double-click on blank area of file list goes up due to complaints
+    corrected new second tab if not always show tab bar causes horiz scrollbar
+    added Open > Default to open all files with default apps / pre-context
+    added Properties > Quick > rwxrwxrwt  and Root > rwxrwxrwt
+    added View > Fullscreen
+    fixed File Search add All Local Disk Partitions (and rename Local Volumes)
+    numerous minor UI adjustments
+0.5.5   2012-01-22:
+    added 100ms cache for inotify create/delete events
+    corrected keys not responding: Open|Choose, Open|In Panel|Next/Prev
+    corrected column size changing on new tab/panel
+    corrected column width save
+    if no folder spec on cmdline, open new window of same instance
+    removed gnome-icon-theme as recommended dep
+    reverted to single-click opens multiple files to fix drag/band breakage
+    mouse buttons 4 and 5 on file list go back and forward
+    mouse alt+left/right goes back/forward
+    fixed New|File/Folder not grayed when no write access
+    corrected broken close icon on tabs when gtk theme not set
+    don't install mount.rules if not hal build (data/Makefile.am)
+    corrected thumbnails for compact view not displayed
+    pref dlg removed "(applies to icon view only)" from Show Thumbnails
+    corrected refresh undisplays thumbnails
+    optional /etc/spacefm/spacefm.conf to set tmp_dir (default /tmp)
+    added additional default key shortcuts
+    added item count to confirm delete dlg
+0.5.4   2012-01-19:
+    added CFLAGS+="-g" and !strip to Arch Linux PKGBUILD
+    default icons now use only gtk icons
+    removed startup warning for no gtk theme available
+    fixed repeated pref dialog save root settings prompt
+    added sensitivity to toolbar nav buttons and Go menu items
+    corrected Go|Panel focus of previously hidden panel
+    corrected change device Display Name triggers automount of unmounted
+    added bookmarks Settings|Single Click option
+    added shared_keys for toolbar items
+0.5.3   2012-01-18:
+    corrected segfault on File|Root Window (main-window.c - note to self: 
+        don't free memory immediately after allocation)
+    remove udisks not installed sh error on startup (vfs-volume-nohal.c)
+    corrected segfault on click device Properties? (ptk-location-view.c)
+    changed device Open to always open in current tab, show error
+    inhibit auto-open tab and exec-on if user manually mounts/remounts
+    inhibit auto-open tab and exec-on during startup automounting
+    show app icons of .desktop files in detailed file list
+    .desktop files obey 'Click runs executables'
+    corrected Open|Execute ignored
+    fixed middle-click on bookmark pane opens in tab
+    moved bookmark 'opens in new tab' setting to context menu
+    added toolbar icon size option in preferences
+    renamed Left/Right/Side toolbar config menus
+    added device Settings|Display Name (custom device name format)
+    added View|Window Title for custom title (new default: full path)
+    added toolbar config menu help item
+    removed "Detailed style only" qualifier from Rubberband Select in prefs
+    changed single-click mode left click on multiple files now opens only one
+0.5.2   2012-01-16:
+    corrected segfault in devices list when changing settings with no devices
+        shown (ptk-location-view.c)
+    corrected gentoo make error? (ptk-file-task.h:17:29: error: redefinition
+	of typedef PtkFileTask)
+    corrected ./configure --help output not up to date
+    removed 'udisks not installed' warning on startup
+0.5.1   2012-01-14:
+    corrected syntax error in Arch Linux PKGBUILD creation
+    corrected problem in settings.c which caused reported make error on
+	unidentified distro
+    corrected deb pkg conflict with pcmanfm-mod - rename file libmimetype.xml
+0.5.0   2012-01-13:
+    initial test release

@@ -1,0 +1,16 @@
+2012-02-08 IgnorantGuru <ignorantguru@users.sourceforge.net>
+
+	* spacefm POTFILES.in and translatable strings updated
+
+2009-04-27 Og Maciel <ogmaciel@gnome.org>
+
+	* pt_BR.po: Updated Brazilian Portuguese translation by
+	Henrique P. Machado.
+
+2009-01-26 Og Maciel <ogmaciel@gnome.org>
+
+	* pcmanfm.pot: Updated.
+	* POTFILES.in: Updated.
+	* pt.po: Renamed from pt_PT.po as there is no pt_PT.
+	* .po: Updated all message catalogs against the updated pcmanfm.pot file.
+	* LINGUAS: Added with available languages.

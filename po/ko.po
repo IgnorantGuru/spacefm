@@ -1,0 +1,1810 @@
+# Korean translations for pcmanfm package
+# Copyright (C) 2007-2008 THE pcmanfm'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the pcmanfm package.
+# DongSik Lee <zecksmaster@gmail.com> 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pcmanfm 0.5.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2008-10-26 14:50+0900\n"
+"Last-Translator: DongSik Lee <zecksmaster@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+msgid "Copyright (C) 2005 - 2008"
+msgstr "Copyright (C) 2005 - 2008"
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"가벼운 파일 관리자\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr "Hironao Komatsu <hironao@users.sourceforge.net>"
+
+#: ../data/ui/about-dlg.glade.h:10
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "응용프로그램 선택"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+msgid "File Type To be Opened:"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:3
+#, fuzzy
+msgid "Opened in Terminal"
+msgstr "터미널에서 실행"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "모든 응용프로그램(_A)"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "Browse(_B)"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+msgid "_Command Line:"
+msgstr "명령줄(_C):"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+#, fuzzy
+msgid "_Recommended Applications"
+msgstr "모든 응용프로그램(_A)"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+#, fuzzy
+msgid "Add _Application"
+msgstr "모든 응용프로그램(_A)"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+#, fuzzy
+msgid "File Associations"
+msgstr "파일이 존재하지 않습니다."
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+#, fuzzy
+msgid "Move _Down"
+msgstr "이동: "
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+#, fuzzy
+msgid "Move _Up"
+msgstr "이동: "
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "준비중..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "처리중:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "진행중:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "To:"
+
+#: ../data/ui/file_properties.glade.h:1
+msgid "<b>File Type:</b>"
+msgstr "<b>파일 형식:</b>"
+
+#: ../data/ui/file_properties.glade.h:2
+msgid "<b>File _Name:</b>"
+msgstr "<b>파일 이름:</b>"
+
+#: ../data/ui/file_properties.glade.h:3
+msgid "<b>Group:</b>"
+msgstr "<b>그룹:</b>"
+
+#: ../data/ui/file_properties.glade.h:4
+msgid "<b>Last Access:</b>"
+msgstr "<b>최근 Access:</b>"
+
+#: ../data/ui/file_properties.glade.h:5
+msgid "<b>Last Modification:</b>"
+msgstr "<b>최근 수정:</b>"
+
+#: ../data/ui/file_properties.glade.h:6
+msgid "<b>Location:</b>"
+msgstr "<b>위치:</b>"
+
+#: ../data/ui/file_properties.glade.h:7
+msgid "<b>Open _with:</b>"
+msgstr "<b>열기...:</b>"
+
+#: ../data/ui/file_properties.glade.h:8
+msgid "<b>Other Users:</b>"
+msgstr "<b>다른 사용자:</b>"
+
+#: ../data/ui/file_properties.glade.h:9
+msgid "<b>Owner:</b>"
+msgstr "<b>소유자</b>"
+
+#: ../data/ui/file_properties.glade.h:10
+msgid "<b>Size on Disk:</b>"
+msgstr "<b>Size on Disk:</b>"
+
+#: ../data/ui/file_properties.glade.h:11
+#, fuzzy
+msgid "<b>Total Size of Files:</b>"
+msgstr "<b>Size on Disk:</b>"
+
+#: ../data/ui/file_properties.glade.h:12
+msgid "<b>_Group:</b>"
+msgstr "<b>그룹:</b> "
+
+#: ../data/ui/file_properties.glade.h:13
+msgid "<b>_Owner:</b>"
+msgstr "<b>소유자:</b>"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "실행"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "파일 속성"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "읽기"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "그룹ID 설정"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "사용자ID 설정"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr ""
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "쓰기"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "일반(_G)"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "퍼미션(_P)"
+
+#: ../data/ui/find-files.glade.h:1
+msgid "<b>File Content</b>"
+msgstr "<b>파일 콘텐츠</b>"
+
+#: ../data/ui/find-files.glade.h:2
+#, fuzzy
+msgid "<b>File Name Contains:</b>"
+msgstr "<b>파일 이름:</b>"
+
+#: ../data/ui/find-files.glade.h:3
+#, fuzzy
+msgid "<b>File Size</b>"
+msgstr "<b>파일 형식:</b>"
+
+#: ../data/ui/find-files.glade.h:4
+#, fuzzy
+msgid "<b>File Types to Search</b>"
+msgstr "<b>파일 형식:</b>"
+
+#: ../data/ui/find-files.glade.h:5
+#, fuzzy
+msgid "<b>Last Modified</b>"
+msgstr "<b>최근 수정:</b>"
+
+#: ../data/ui/find-files.glade.h:6
+msgid "<b>Places to Search</b>"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:7
+msgid "<b>Search Result:</b>"
+msgstr "<b>검색 결과:</b>"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr "모든 파일과 폴더"
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+"Any\n"
+"하루 전\n"
+"1주일 전\n"
+"한달 전\n"
+"일년 전\n"
+"선택된 날까지"
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr "오디오 파일들(mp3, ogg,...)"
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr "대소문자 구별"
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:22
+#, fuzzy
+msgid "File Contains:"
+msgstr "파일이 존재하지 않습니다."
+
+#: ../data/ui/find-files.glade.h:23
+msgid "Find Files"
+msgstr "파일 찾기"
+
+#: ../data/ui/find-files.glade.h:24
+msgid "General"
+msgstr "일반"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr "이미지 파일들 (jpg, png,...)"
+
+#: ../data/ui/find-files.glade.h:27
+#, fuzzy
+msgid "Plain Text Files"
+msgstr "텍스트 파일(_T)"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr "다시 검색"
+
+#: ../data/ui/find-files.glade.h:29
+msgid "Search Hidden Files"
+msgstr "숨김 파일 검색"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr "하위 디렉토리 검색"
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr "정규식 사용"
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr "동영상 파일들 (avi, mpg,...)"
+
+#: ../data/ui/godlg.glade.h:1
+#, fuzzy
+msgid "Go to folder"
+msgstr "상위 폴더로 이동(_P)"
+
+#: ../data/ui/prefdlg.glade.h:1
+msgid "<b>Behavior</b>"
+msgstr "<b>행동</b>"
+
+#: ../data/ui/prefdlg.glade.h:2
+msgid "<b>Colors</b>"
+msgstr "<b>색상</b>"
+
+#: ../data/ui/prefdlg.glade.h:3
+msgid "<b>Display</b>"
+msgstr "<b>화면</b>"
+
+#: ../data/ui/prefdlg.glade.h:4
+msgid "<b>General</b>"
+msgstr "<b>일반</b>"
+
+#: ../data/ui/prefdlg.glade.h:5
+msgid "<b>Wallpaper</b>"
+msgstr "<b>배경화면</b>"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:7
+msgid "Background:"
+msgstr "배경화면:"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "북마크:"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr "\"휴지통\"에 버리지 않고 곧바로 삭제"
+
+#: ../data/ui/prefdlg.glade.h:10
+msgid "Display image files with supported format as thumbnails"
+msgstr "이미지파일을 썸네일로 보이기"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "썸네일로 보이게 할 파일 최대 사이즈:"
+
+#: ../data/ui/prefdlg.glade.h:17
+msgid "Mode:"
+msgstr "모드:"
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "파일명 인코딩 설정:"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr "한번 클릭으로 파일 열기"
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+"현재 탭에 열기\n"
+"새 탭에 열기\n"
+"새 창에 열기"
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "이미지 파일을 선택해주세요"
+
+#: ../data/ui/prefdlg.glade.h:24
+msgid "Preferences"
+msgstr "환경설정"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr "Shadow:"
+
+#: ../data/ui/prefdlg.glade.h:26
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "데스크탑에 \"내 문서\" 아이콘 보이기"
+
+#: ../data/ui/prefdlg.glade.h:27
+msgid "Show icons of volumes on desktop"
+msgstr "데스크탑에 볼륨 아이콘 보이기"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "큰 아이콘 사이즈:"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "작은 아이콘 사이즈:"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "터미널:"
+
+#: ../data/ui/prefdlg.glade.h:36
+msgid "Text:"
+msgstr "텍스트:"
+
+#: ../data/ui/prefdlg.glade.h:37
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "배경화면:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "테스크탑(_D)"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:892
+#, fuzzy
+msgid "Search Column"
+msgstr "다시 검색"
+
+#: ../src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:907
+#, fuzzy
+msgid "Selection mode"
+msgstr "모두 선택(_A)"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:972
+msgid "Text column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:980
+#, fuzzy
+msgid "Selection Box Color"
+msgstr "모두 선택(_A)"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:987
+#, fuzzy
+msgid "Selection Box Alpha"
+msgstr "모두 선택(_A)"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr ""
+
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+#, fuzzy
+msgid "application"
+msgstr "모든 응용프로그램(_A)"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr ""
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr ""
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+#, fuzzy
+msgid "text"
+msgstr "텍스트:"
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr ""
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr ""
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr ""
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+#, fuzzy
+msgid "model"
+msgstr "모드:"
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+#, fuzzy
+msgid "inode"
+msgstr "모드:"
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr ""
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr ""
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr "PCmanFM을 데몬으로 실행"
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr "PCManFM으로 파일 검색"
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr "배경화면으로 설정"
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr "[파일이름1, 파일이름2,...]"
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+ 아이콘 테마가 설정되어 있지 않습니다."
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr "에러"
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+"에러 : FAM 연결할 수 없습니다.\n"
+"\n"
+"\"FAM\" 또는 \"Gamin\" 이 설치되었고 실행중입니까?"
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "파일이 존재하지 않습니다."
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "파일을 열수 없습니다."
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"파일을 열 수 없습니다:\n"
+"\"%s\"\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "폴더(_F)"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "텍스트 파일(_T)"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "새 창(_W)"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "새 탭(_T)"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "새로 만들기(_C)"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "파일 속성(_P)"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "탭 닫기"
+
+#: ../src/main-window.c:318
+msgid "_Close Window"
+msgstr "종료(_C)"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "삭제(_D)"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "이름바꾸기(_R)"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "모두 선택(_A)"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "반대로 선택(_I)"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "뒤로 이동(_B)"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "앞으로 이동(_F)"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "상위 폴더로 이동(_P)"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "홈으로 이동(_H)"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "이름순 정렬(_N)"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "크기순 정렬(_S)"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "수정시간순 정렬(_M)"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "타입순 정렬(_T)"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "퍼미션순 정렬(_P)"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "소유자순 정렬(_O)"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "오름차순"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "내림차순"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "Side Pane 열기(_O)"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "Location Pane 보이기(_L)"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "디렉토리 트리 보이기(_D)"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "새로 고침(_R)"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "Side Pane(_P)"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+#, fuzzy
+msgid "L_ocation Bar"
+msgstr "위치"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "숨김 파일 보이기(_H)"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "정렬...(_S)"
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "아이콘 보기(_I)"
+
+#: ../src/main-window.c:387
+msgid "View as _Compact List"
+msgstr "간략하게 보기(_C)"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "자세히 보기(_L)"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "터미널 실행(_T)"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "루트권한으로 현재 폴더 열기(_R)"
+
+#: ../src/main-window.c:399
+msgid "_Find Files"
+msgstr "파일 검색(_F)"
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "파일(_F)"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "편집(_E)"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "이동(_G)"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "북마크(_B)"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "보기(_V)"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "도구(_T)"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "도움말(_H)"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "새 탭"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "뒤로"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "앞으로"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "상위 폴더"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "새로 고침"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "홈 디렉토리"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Side Pane 열기"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "이동"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "경고: 당신은 Super User Mode에 있습니다."
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "터미널 프로그램이 설정되지 있지 않습니다."
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "북마크 추가(_A)"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "북마크 수정(_E)"
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "로딩중..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", 남은 공간: %s (전체: %s )"
+
+#: ../src/main-window.c:2112
+#, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] ""
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] ""
+
+#: ../src/main-window.c:2123
+#, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] ""
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "디렉토리가 존재하지 않습니다!"
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "새 탭에 열기(_T)"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "새 창에 열기(_W)"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "이름"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "사이즈"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "타입"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "퍼미션"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "소유자:그룹"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "최종 수정"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "위치"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "디렉토리 트리"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr "휴지통"
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "데스크탑"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "디바이스를 마운트할 수 없습니다."
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "디바이스를 언마운트할 수 없습니다."
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "디바이스를 꺼낼수 없습니다."
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "파일시스템 마운트(_M)"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "꺼내기(_E)"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "파일시스템 언마운트(_U)"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "이동: "
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "복사: "
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr "휴지통으로 이동: "
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "삭제: "
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "링크: "
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "속성 변경: "
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "이동중..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "복사중..."
+
+#: ../src/ptk/ptk-file-task.c:114
+msgid "Moving to Trash..."
+msgstr "휴지통으로 이동중..."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "삭제중..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "링크중..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "속성 변경중"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "작업을 취소하시겠습니까?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "폴더와 콘텐츠를 덮어쓰시겠습니까?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "이 파일을 덮어쓰시겠습니까?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "새 파일 이름을 입력해주세요"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, fuzzy, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\" 가 존재합니다.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\"\n"
+"\n"
+"같은 파일입니다.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "덮어쓰기"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "전부 덮어쓰기"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "이름바꾸기"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "건너뛰기"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "전부 건너뛰기"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "앞축파일로 저장..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "압축파일 형식:"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "압축파일 생성중 : %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "압축파일"
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "압축 해제..."
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "압축 해제중 : %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "압축 해제"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"완료!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "명령:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "파일 시스템"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "하위 디렉토리가 없습니다."
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "현재 폴더에 압축풀기(_X)"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "특정 폴더에 압축풀기(_T)"
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "실행...(_W)"
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "압축하기"
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "압축풀기(_X)"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "속성(_P)"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "터미널에서 실행"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "다른 프로그램으로 실행(_O)"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "실행(_X)"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr "\"%s\"로 열기(_O)"
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "열기(_O)"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "정말 선택된 파일들을 삭제하시겠습니까?"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "파일이름 바꾸기"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "새로운 파일 이름을 입력해 주세요"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+#, fuzzy
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"파일 이름이 이미 존재합니다.\n"
+"다른 이름을 입력하세요:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "새 폴더"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "새 폴더의 이름을 입력하세요:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "새 파일"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "새 파일의 이름을 입력하세요:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "새 파일을 생성할 수 없습니다!"
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "여러개의 파일들이 선택되었습니다."
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr ""
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "다른 프로그램..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "계산중..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "알수없는 사용자"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "알수없는 그룹"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr "모든 하위 폴더와 파일에 이 설정을 모두 적용하시겠습니까?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "새 아이템"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "북마크 수정"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "경로"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "아이템 정렬 시 drag & drop 사용"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "명령을 찾을 수 없습니다."
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "CD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "CD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "CD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "DVD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "DVD+R"
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "DVD+RW"
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "DVD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "DVD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "DVD-RAM"
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Floppy Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Compact Flash Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "Memory Stick Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr "Smart Media Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "SD/MMC Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "Zip Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr "Jaz Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "Pen Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s Music Player"
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s Digital Camera"
+
+#: ../src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Drive"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "External %s"
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "CD-ROM Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "공 CD-R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "CD-R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "공 CD-RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "CD-RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "DVD-ROM Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "공 DVD-RAM Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "DVD-RAM Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "공 DVD-R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "DVD-R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "공 DVD-RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "DVD-RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "공 DVD+R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "DVD+R Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "공 DVD+RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "DVD+RW Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Audio Disc"
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "%s Removable Volume"
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Volume"
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "HAL 데몬으로 연결이 실패했습니다.: %s"
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "Given device \"%s\" is not a volume or drive"
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "\"%s\"을 파일시스템 장치 테이블에서 찾을 수 없습니다."
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr "\"%s\"를 마운트할 권한이 없습니다."
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr "\"%s\"를 언마운트할 권한이 없습니다."
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr "\"%s\"을 꺼낼 권한이 없습니다."
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Invalid mount option when attempting to mount the volume \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "에러 <i>%s</i>"
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+
+#: ../src/desktop/desktop-window.c:193
+msgid "_Icons"
+msgstr "아이콘(_I)"
+
+#: ../src/desktop/desktop-window.c:198
+msgid "_Desktop Settings"
+msgstr "데스크탑 설정(_D)"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr "내 문서"
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../src/find-files.c:677
+#, fuzzy
+msgid "Select a folder"
+msgstr "모두 선택(_A)"
+
+#: ../src/find-files.c:722
+msgid "Browse..."
+msgstr "Browse(_B)"
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr "전체 디스크 파티션"
+
+#: ../src/find-files.c:814
+msgid "Folder"
+msgstr "폴더"
+
+#: ../src/find-files.c:830
+msgid "Last Modified"
+msgstr "최종 수정"
+
+#, fuzzy
+#~ msgid "Opened in Current Tab"
+#~ msgstr "새 탭에 열기(_T)"
+
+#, fuzzy
+#~ msgid "Opened in New Tab"
+#~ msgstr "새 탭에 열기(_T)"
+
+#, fuzzy
+#~ msgid "Opened in New Window"
+#~ msgstr "새 창에 열기(_W)"
+
+#~ msgid "Owner:"
+#~ msgstr "所有者:"

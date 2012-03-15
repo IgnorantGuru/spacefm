@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+_Name=SpaceFM File Search
+Categories=Application;Utility;GTK;
+Exec=spacefm --find-files %F
+Icon=gtk-find
+StartupNotify=true
+Type=Application
+Terminal=false
+MimeType=x-directory/normal;inode/directory;
+_Comment=Search for files and folders

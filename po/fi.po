@@ -1,0 +1,1805 @@
+# Finnish translation for PCManFM.
+# Copyright (C) 2008
+# This file is distributed under the same license as the PCManFM package.
+# Elias Julkunen <elias.julkunen@gmail.com>, 2008.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2009-01-31 21:56+0200\n"
+"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
+"Language-Team: Finnish <laatu@lokalisointi.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+msgid "Copyright (C) 2005 - 2008"
+msgstr "Tekijänoikeudet © 2005–2008"
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"Kevyt tiedostonhallinta\n"
+"\n"
+"Tekijä: Hon Jen Yee (PCMan)"
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr ""
+"Kuvake otettiin nuoveXT 2 -kuvaketeemasta,\n"
+"jonka on luonut Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr "Elias Julkunen <elias.julkunen@gmail.com>"
+
+#: ../data/ui/about-dlg.glade.h:10
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "Valitse sovellus"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+msgid "File Type To be Opened:"
+msgstr "Avattava tiedostotyyppi:"
+
+#: ../data/ui/appchooserdlg.glade.h:3
+msgid "Opened in Terminal"
+msgstr "Avattu päätteessä"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr "Valitse sovellus seuraavasta luettelosta tai anna komento käsin:"
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr "Valitse oletussovellukseksi"
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "_Kaikki sovellukset"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "_Selaa"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+msgid "_Command Line:"
+msgstr "_Komento:"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+msgid "_Recommended Applications"
+msgstr "_Suositellut sovellukset"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr "Näytettävät toiminnot ponnahdusikkunavalikoissa"
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+msgid "Add _Application"
+msgstr "Lisää _sovellus"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr "Lisää _oma toiminto"
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+msgid "File Associations"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr "Tunnetut tiedostotyypit:"
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+msgid "Move _Down"
+msgstr "Siirrä _alas"
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+msgid "Move _Up"
+msgstr "Siirrä _ylös"
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "Valmistellaan..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "Käsitellään:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "Edistyminen:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "Kansioon:"
+
+#: ../data/ui/file_properties.glade.h:1
+msgid "<b>File Type:</b>"
+msgstr "<b>Tiedoston tyyppi:</b>"
+
+#: ../data/ui/file_properties.glade.h:2
+msgid "<b>File _Name:</b>"
+msgstr "<b>Tiedoston _nimi:</b>"
+
+#: ../data/ui/file_properties.glade.h:3
+msgid "<b>Group:</b>"
+msgstr "<b>Ryhmä:</b>"
+
+#: ../data/ui/file_properties.glade.h:4
+msgid "<b>Last Access:</b>"
+msgstr "<b>Viimeksi avattu:</b>"
+
+#: ../data/ui/file_properties.glade.h:5
+msgid "<b>Last Modification:</b>"
+msgstr "<b>Viimeksi muokattu:</b>"
+
+#: ../data/ui/file_properties.glade.h:6
+msgid "<b>Location:</b>"
+msgstr "<b>Sijainti:</b>"
+
+#: ../data/ui/file_properties.glade.h:7
+msgid "<b>Open _with:</b>"
+msgstr "<b>Avaa _sovelluksella:</b>"
+
+#: ../data/ui/file_properties.glade.h:8
+msgid "<b>Other Users:</b>"
+msgstr "<b>_Muut käyttäjät:</b>"
+
+#: ../data/ui/file_properties.glade.h:9
+msgid "<b>Owner:</b>"
+msgstr "<b>Omistaja:</b>"
+
+#: ../data/ui/file_properties.glade.h:10
+msgid "<b>Size on Disk:</b>"
+msgstr "<b>Koko levyllä:</b>"
+
+#: ../data/ui/file_properties.glade.h:11
+msgid "<b>Total Size of Files:</b>"
+msgstr "<b>Tiedostojen kokonaiskoko:</b>"
+
+#: ../data/ui/file_properties.glade.h:12
+msgid "<b>_Group:</b>"
+msgstr "<b>_Ryhmä:</b>"
+
+#: ../data/ui/file_properties.glade.h:13
+msgid "<b>_Owner:</b>"
+msgstr "<b>_Omistaja:</b>"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "Suorita"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "Tiedoston ominaisuudet"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "Lue"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "Aseta GID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "Aseta UID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr "Tahmea"
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "Kirjoita"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "_Yleiset"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "_Oikeudet"
+
+#: ../data/ui/find-files.glade.h:1
+msgid "<b>File Content</b>"
+msgstr "<b>Tiedoston sisältö</b>"
+
+#: ../data/ui/find-files.glade.h:2
+msgid "<b>File Name Contains:</b>"
+msgstr "<b>Tiedoston nimi sisältää:</b>"
+
+#: ../data/ui/find-files.glade.h:3
+msgid "<b>File Size</b>"
+msgstr "<b>Tiedoston koko</b>"
+
+#: ../data/ui/find-files.glade.h:4
+msgid "<b>File Types to Search</b>"
+msgstr "<b>Etsittävät tiedostotyypit</b>"
+
+#: ../data/ui/find-files.glade.h:5
+msgid "<b>Last Modified</b>"
+msgstr "<b>Viimeksi muokattu</b>"
+
+#: ../data/ui/find-files.glade.h:6
+msgid "<b>Places to Search</b>"
+msgstr "<b>Etsittävät sijainnit</b>"
+
+#: ../data/ui/find-files.glade.h:7
+msgid "<b>Search Result:</b>"
+msgstr "<b>Haun tulokset:</b>"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr "Kaikki tiedostot ja kansiot"
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+"Koska tahansa\n"
+"Päivän aikana\n"
+"Viikon aikana\n"
+"Kuukauden aikana\n"
+"Vuoden aikana\n"
+"Valitulla aikavälillä"
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr "Äänitiedostot (mp3, ogg,...)"
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+"Tavua\n"
+"KB\n"
+"MB\n"
+"GB"
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr "Kirjainkoko merkitsee"
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr "Sisältö"
+
+#: ../data/ui/find-files.glade.h:22
+msgid "File Contains:"
+msgstr "Tiedosto sisältää:"
+
+#: ../data/ui/find-files.glade.h:23
+msgid "Find Files"
+msgstr "Etsi tiedostoja"
+
+#: ../data/ui/find-files.glade.h:24
+msgid "General"
+msgstr "Yleiset"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr "Suurempi kuin:"
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr "Kuvatiedostot (jpg, png,...)"
+
+#: ../data/ui/find-files.glade.h:27
+msgid "Plain Text Files"
+msgstr "Muotoilemattomat tekstitiedostot"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr "Etsi uudelleen"
+
+#: ../data/ui/find-files.glade.h:29
+msgid "Search Hidden Files"
+msgstr "Etsi piilotiedostoista"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr "Etsi alihakemistoista"
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr "Koko ja päiväys"
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr "Pienempi kuin:"
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr "Käytä säännöllistä lauseketta"
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr "Videotiedostot (avi, mpg,...)"
+
+#: ../data/ui/godlg.glade.h:1
+#, fuzzy
+msgid "Go to folder"
+msgstr "_Siirry yläkansioon"
+
+#: ../data/ui/prefdlg.glade.h:1
+msgid "<b>Behavior</b>"
+msgstr "<b>Käyttäytyminen</b>"
+
+#: ../data/ui/prefdlg.glade.h:2
+msgid "<b>Colors</b>"
+msgstr "<b>Värit</b>"
+
+#: ../data/ui/prefdlg.glade.h:3
+msgid "<b>Display</b>"
+msgstr "<b>Näyttö</b>"
+
+#: ../data/ui/prefdlg.glade.h:4
+msgid "<b>General</b>"
+msgstr "<b>Yleiset</b>"
+
+#: ../data/ui/prefdlg.glade.h:5
+msgid "<b>Wallpaper</b>"
+msgstr "<b>Taustakuva</b>"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:7
+msgid "Background:"
+msgstr "Taustaväri:"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "Kirjanmerkit:"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr "Älä käytä roskakoria vaan poista tiedostot suoraan levyltä"
+
+#: ../data/ui/prefdlg.glade.h:10
+msgid "Display image files with supported format as thumbnails"
+msgstr "Näytä pienoiskuvat kuvatiedostoista (tuetut muodot)"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr "Hallitse työpöytää ja näytä tiedostokuvakkeet"
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "Pienoiskuvina näytettävien tiedostojen enimmäiskoko:"
+
+#: ../data/ui/prefdlg.glade.h:17
+msgid "Mode:"
+msgstr "Tila:"
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "Levyn tiedostonimien merkkikoodaus:"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr "Avaa tiedostot yhdellä napsautuksella"
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+"Avataan nykyisessä välilehdessä\n"
+"Avataan uudessa välilehdessä\n"
+"Avataan uudessa ikkunassa"
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "Valitse kuvatiedosto"
+
+#: ../data/ui/prefdlg.glade.h:24
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr "Varjo:"
+
+#: ../data/ui/prefdlg.glade.h:26
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "Näytä ”Omat tiedostot”-kuvake työpöydällä"
+
+#: ../data/ui/prefdlg.glade.h:27
+msgid "Show icons of volumes on desktop"
+msgstr "Näytä levyjen kuvakkeet työpöydällä"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr "Näytä ikkunaohjelman tarjoamat valikot, kun työpöytää napsautetaan"
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "Isojen kuvakkeiden koko:"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "Pienien kuvakkeiden koko:"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+"Venytä täyttämään koko näyttö\n"
+"Venytä sopimaan näytölle\n"
+"Keskitä näytölle\n"
+"Laatoita näyttö kuvalla täyteen"
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "Pääte:"
+
+#: ../data/ui/prefdlg.glade.h:36
+msgid "Text:"
+msgstr "Teksti:"
+
+#: ../data/ui/prefdlg.glade.h:37
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "Taustakuva:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr "_Lisäasetukset"
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "_Työpöytä"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr "_Taltioiden hallinta"
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr "Sarakkeiden määrä"
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr "Näytettävien sarakkeiden määrä"
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr "Käytä hakua"
+
+#: ../src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr "Ulkoasutila"
+
+#: ../src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr "Ulkoasutila"
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr "Marginaali"
+
+#: ../src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr "Kuvakenäkymän reunoille lisättävä tila."
+
+#: ../src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr "Kuvakenäkymän malli"
+
+#: ../src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr "Kuvakenäkymän malli"
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr "Käyttäytyminen"
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr "Uudelleenjärjestettävä"
+
+#: ../src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr "Näkymä on uudelleenjärjestettävä"
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:907
+msgid "Selection mode"
+msgstr "Valintatila"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr "Valintatila"
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr "Kertanapsautus"
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr "Voidaanko kohdat näkymässä valita kertanapsautuksella"
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:972
+msgid "Text column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:980
+msgid "Selection Box Color"
+msgstr "Valintalaatikon väri"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr "Valitalaatikon väri"
+
+#: ../src/exo/exo-icon-view.c:987
+msgid "Selection Box Alpha"
+msgstr "Valintalaatikon läpinäkyvyys"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr "Valintalaatikon läpinäkyvyys"
+
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+msgid "application"
+msgstr "sovellus"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr "ääni"
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr "video"
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+msgid "text"
+msgstr "teksti"
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr ""
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr "kuva"
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr "viesti"
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+msgid "model"
+msgstr "malli"
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+msgid "inode"
+msgstr ""
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr "pakettia"
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr "Älä näytä työpöydän kuvakkeita."
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr "Suorita PCManFM taustaohjelmana"
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+"Avaa kansiot uusiin välilehtiin nykyisessä ikkunassa (ei uuteen ikkunaan)"
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+"Avaa asetukset. ”n” määrittää näytettävien sivujen määrän (1, 2, 3...)."
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr "Etsi tiedostoja PCManFM:llä"
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr "Aseta työpöydän taustakuva"
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr "[TIEDOSTO1, TIEDOSTO2,...]"
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+-kuvaketeemaa ei ole asetettu oikein"
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr "Virhe"
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+"Virhe: yhteyttä FAMiin ei voida muodostaa.\n"
+"\n"
+"Onko FAM tai Gamin asennettuna ja käynnissä?"
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "Tiedostoa ei ole"
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "Tiedoston avaustapaa ei tiedetä"
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"Tiedostoa ei voitu avata:\n"
+"”%s”\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "_Kansio"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "_Tekstitiedosto"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "Uusi _ikkuna"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "Uusi _välilehti"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "_Luo uusi"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "Tiedoston _ominaisuudet"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "Sulje välilehti"
+
+#: ../src/main-window.c:318
+msgid "_Close Window"
+msgstr "_Sulje ikkuna"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "_Poista"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "_Nimeä uudelleen"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "_Valitse kaikki"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "_Käänteinen valinta"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "_Edellinen"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "_Seuraava"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "_Siirry yläkansioon"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "_Siirry kotikansioon"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "Järjestä _nimen mukaan"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "Järjestä _koon mukaan"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "Järjestä _muokkausajan mukaan"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "Järjestä _tyypin mukaan"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "Järjestä _oikeuksien mukaan"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "Järjestä om_istajan mukaan"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "Nouseva"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "Laskeva"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "_Avaa sivupaneeli"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "Näytä _sijaintipaneeli"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "Näytä _hakemistopuu"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "_Päivitä"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "_Sivupaneeli"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+#, fuzzy
+msgid "L_ocation Bar"
+msgstr "Sijainti"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "Näytä _piilotiedostot"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "_Järjestä..."
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "Näytä _kuvakkeina"
+
+#: ../src/main-window.c:387
+msgid "View as _Compact List"
+msgstr "Näytä _kompaktina luettelona"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "Näytä _yksityiskohtaisena luettelona"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "Avaa _pääte"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "Avaa nykyinen kansio _pääkäyttäjänä"
+
+#: ../src/main-window.c:399
+msgid "_Find Files"
+msgstr "_Etsi tiedostoja"
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "_Tiedosto"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "_Muokkaa"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "_Siirry"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "_Kirjanmerkit"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "_Näytä"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "_Työkalut"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "_Ohje"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "Uusi välilehti"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "Edellinen"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "Seuraava"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "Yläkansio"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "Päivitä"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "Kotihakemisto"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Avaa sivupaneeli"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "Siirry"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "Varoitus: olet pääkäyttäjätilassa"
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "Päätesovellusta ei ole asetettu"
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "_Lisää kirjanmerkkeihin"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "_Muokkaa kirjanmerkkejä"
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "Ladataan..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", vapaa tila: %s (yhteensä: %s)"
+
+#: ../src/main-window.c:2112
+#, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] "%d kohta valittu (%s)%s"
+msgstr[1] "%d kohtaa valittu (%s)%s"
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] "%d piilotettu"
+msgstr[1] "%d piilotettu"
+
+#: ../src/main-window.c:2123
+#, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] "%d näkyvä kohta (%s)%s"
+msgstr[1] "%d näkyvää kohtaa (%s)%s"
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "Hakemistoa ei ole."
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "Avaa uudessa _välilehdessä"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "Avaa uudessa _ikkunassa"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "Nimi"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "Koko"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "Tyyppi"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "Oikeudet"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "Omistaja:ryhmä"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "Viimeksi muokattu"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "Sijainti"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "Hakemistopuu"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr "Roskakori"
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "Työpöytä"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "Laitetta ei voida liittää"
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "Laitetta ei voida irrottaa"
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "Laitetta ei voida poistaa asemasta"
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "_Liitä tiedostojärjestelmä"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "_Poista asemasta"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "_Irrota tiedostojärjestelmä"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "Siirrä:"
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "Kopioi:"
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr "Siirrä roskakoriin:"
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "Poista:"
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "Linkki:"
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "Muuta ominaisuuksia:"
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "Siirretään..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "Kopioidaan..."
+
+#: ../src/ptk/ptk-file-task.c:114
+msgid "Moving to Trash..."
+msgstr "Siirretään roskakoriin..."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "Poistetaan..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "Linkitetään..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "Muutetaan ominaisuuksia"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "Peruutetaanko toimenpide?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "Haluatko korvata kansion ja sen sisällön?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "Haluatko korvata tämän tiedoston?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "Valitse uusi nimi tiedostolle."
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"”%s” on jo olemassa.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"”%s”\n"
+"\n"
+"Kohde ja lähde ovat sama tiedosto.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "Korvaa"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "Korvaa kaikki"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "Nimeä uudelleen"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "Ohita"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "Ohita kaikki"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "Tallenna pakatut tiedostot kansioon..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "Pakattujen tiedostojen muoto:"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "Luo uusi pakattu tiedosto: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "Pakkaa tiedostot"
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "Pura tiedosto kansioon..."
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "Puretaan tiedostoja kansioon: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "Pura tiedostoja"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"Valmis!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "Komento:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "Tiedostojärjestelmä"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "Ei alikansiota"
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "_Pura tänne"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "Pura _kansioon"
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "Avaa _toiminnolla..."
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "Pakkaa"
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "_Pura"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "_Ominaisuudet"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "Avaa päätteessä"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "_Avaa toisella sovelluksella"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "_Suorita"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr "_Avaa sovelluksella ”%s”"
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "_Avaa"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "Poistetaanko valitut tiedostot?"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "Nimeä tiedosto uudelleen"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "Syötä uusi nimi tiedostolle:"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"Annetun niminen tiedosto on jo olemassa.\n"
+"Anna uusi nimi:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "Uusi kansio:"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "Nimeä uusi kansio:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "Uusi tiedosto"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "Nimeä uusi tiedosto:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "Uutta tiedostoa ei voida luoda."
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "Useit tiedostoja on valittu"
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr "Useita erityyppisiä tiedostoja"
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "Muu sovellus..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "Lasketaan..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "Virheellinen käyttäjä"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "Virheellinen ryhmä"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr "Tehdäänkö muutokset myös kaikkiin alikansioihin ja tiedostoihin?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "Uusi kohta"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "Muokkaa kirjanmerkkejä"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "Polku"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "Järjesttä tiedostot raahaamalla"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "Komentoa ei löytynyt"
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr "Kohdehakemisto ”%1$s” sisältyy lähteeseen ”%2$s”"
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr "%s levy"
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "CD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "CD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "CD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "DVD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "DVD+R"
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "DVD+RW"
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "DVD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "DVD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "DVD-RAM"
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s-asema"
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s-asema"
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Levykeasema"
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Compact Flash -asema"
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "USB-muisti"
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "SD/MMC-asema"
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "Zip-asema"
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr ""
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "Muistitikku"
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s musiikkisoitin"
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s digikamera"
+
+#: ../src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Asema"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "Ulkoinen %s"
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "CD-ROM-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "Tyhjä CD-R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "CD-R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "Tyhjä CD-RW-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "CD-RW-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "DVD-ROM-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "Tyhjä DVD-RAM-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "DVD-RAM-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "Tyhjä DVD-R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "DVD-R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "Tyhjä DVD-RW -levy"
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "DVD-RW -levy"
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "Tyhjä DVD+R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "DVD+R-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "Tyhjä DVD+RW-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "DVD+RW-levy"
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Äänilevy"
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "%s irrotettava levy"
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Levy"
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "HAL-taustaohjelmaan ei voitu yhdistää: %s"
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "Annettu laite ”%s” ei ole levy tai asema"
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "Laitetta ”%s” ei löydy tiedostojärjestelmän laitetaulusta"
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr "Sinulla ei ole oikeuksia liittää levyä ”%s”"
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr "Sinulla ei ole oikeuksia irrottaa levyä ”%s”"
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr "Sinulla ei ole oikeuksia poistaa levyä ”%s” asemasta"
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Virheellinen liitosvalinta yritettäessä liittää taltiota ”%s”"
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+"Levy ”%s” käyttää tiedostojärjestelmää  <i>%s</i>, jota järjestelmäsi ei tue"
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr "Sovellus estää levyn ”%s” irrottamisen"
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr "Levyä ”%s” ei ole liitetty"
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "Virhe <i>%s</i>"
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr "Levy ”%s” liitettiin ehkä käsin komentoriviltä"
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+"Tyhjiä levyjä ei voi liittää: käytä CD-kirjoitussovellusta siirtääksesi "
+"ääntä tai tietoja levylle"
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+"Ääni-CD:itä ei voi liittää, käytä musiikkisoittimia kappaleiden toistoon."
+
+#: ../src/desktop/desktop-window.c:193
+msgid "_Icons"
+msgstr "_Kuvakkeet"
+
+#: ../src/desktop/desktop-window.c:198
+msgid "_Desktop Settings"
+msgstr "_Työpöydän asetukset"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr "Omat tiedostot"
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../src/find-files.c:677
+msgid "Select a folder"
+msgstr "Valitse kansio"
+
+#: ../src/find-files.c:722
+msgid "Browse..."
+msgstr "Selaa..."
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr "Kaikki paikalliset levyosiot"
+
+#: ../src/find-files.c:814
+msgid "Folder"
+msgstr "Kansio"
+
+#: ../src/find-files.c:830
+msgid "Last Modified"
+msgstr "Viimeksi muokattu"
+
+#, fuzzy
+#~ msgid "Opened in Current Tab"
+#~ msgstr "Avaa uudessa _välilehdessä"
+
+#, fuzzy
+#~ msgid "Opened in New Tab"
+#~ msgstr "Avaa uudessa _välilehdessä"
+
+#, fuzzy
+#~ msgid "Opened in New Window"
+#~ msgstr "Avaa uudessa _ikkunassa"

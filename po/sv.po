@@ -1,0 +1,1971 @@
+# Swedish translation for PCManFM
+# Copyright (C) 2006-2009 Free Software Foundation, Inc.
+# This file is distributed under the same license as the PCManFM package.
+# Johan Andersson <nossrednanahoj(at)gmail.com>, 2006.
+# Mikael Magnusson, <mikachu@gmail.com>, 2008.
+# Martin Bagge <brother@bsnet.se>, 2009.
+# Daniel Nylander <po@danielnylander.se>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PCManFM\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2009-04-21 17:31+0200\n"
+"Last-Translator: Martin Bagge <brother@bsnet.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 1.1.0\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+msgid "Copyright (C) 2005 - 2008"
+msgstr "Copyright © 2005 - 2008"
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"Resurssnål filhanterare\n"
+"\n"
+"Utvecklad av Hon Jen Yee (PCMan)"
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr ""
+"Ikonerna togs från ikontemat \"nuoveXT 2\"\n"
+"skapat av Alexander Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr ""
+"Daniel Nylander <po@danielnylander.se>\n"
+"Martin Bagge <brother@bsnet.se>\n"
+"Mikael Magnusson <mikachu@gmail.com>\n"
+"Johan Andersson <nossrednanahoj(at)gmail.com>\n"
+"\n"
+"Skicka synpunkter på översättningen till\n"
+"<tp-sv@listor.tp-sv.se>"
+
+#: ../data/ui/about-dlg.glade.h:10
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Källkod hämtad från andra projekt:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson och Benedikt Meurer\n"
+" * Text- och ikonutritarna använder kod från Jonathan Blandford\n"
+" * Skrivbordsikoner använder kod från Brian Tarricone\n"
+" * Volymhantering använder kod från följande projekt/upphovsmän:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs och libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "Välj ett program"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+msgid "File Type To be Opened:"
+msgstr "Filtyp som ska öppnas:"
+
+#: ../data/ui/appchooserdlg.glade.h:3
+msgid "Opened in Terminal"
+msgstr "Öppnas i terminal"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr ""
+"Välj ett program från följande listor eller ange manuellt ett kommando:"
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr "Ange valt program som standardåtgärd"
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "_Alla program"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "_Bläddra"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+msgid "_Command Line:"
+msgstr "_Kommandorad:"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+msgid "_Recommended Applications"
+msgstr "_Rekommenderade program"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr "Åtgärder som visas i popupmenyer"
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+msgid "Add _Application"
+msgstr "Lägg till _program"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr "Lägg till a_npassat kommando"
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+msgid "File Associations"
+msgstr "Filassocieringar"
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr "Kända filtyper:"
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+msgid "Move _Down"
+msgstr "Flytta _nedåt"
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+msgid "Move _Up"
+msgstr "Flytta _uppåt"
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "Förbereder..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "Bearbetar:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "Förlopp:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "Till:"
+
+#: ../data/ui/file_properties.glade.h:1
+msgid "<b>File Type:</b>"
+msgstr "<b>Filtyp:</b>"
+
+#: ../data/ui/file_properties.glade.h:2
+msgid "<b>File _Name:</b>"
+msgstr "<b>Fil_namn:</b>"
+
+#: ../data/ui/file_properties.glade.h:3
+msgid "<b>Group:</b>"
+msgstr "<b>Grupp:</b>"
+
+#: ../data/ui/file_properties.glade.h:4
+msgid "<b>Last Access:</b>"
+msgstr "<b>Senast använd:</b>"
+
+#: ../data/ui/file_properties.glade.h:5
+msgid "<b>Last Modification:</b>"
+msgstr "<b>Senast ändrad:</b>"
+
+#: ../data/ui/file_properties.glade.h:6
+msgid "<b>Location:</b>"
+msgstr "<b>Plats:</b>"
+
+#: ../data/ui/file_properties.glade.h:7
+msgid "<b>Open _with:</b>"
+msgstr "<b>Öppna _med:</b>"
+
+#: ../data/ui/file_properties.glade.h:8
+msgid "<b>Other Users:</b>"
+msgstr "<b>Övriga användare:</b>"
+
+#: ../data/ui/file_properties.glade.h:9
+msgid "<b>Owner:</b>"
+msgstr "<b>Ägare:</b>"
+
+#: ../data/ui/file_properties.glade.h:10
+msgid "<b>Size on Disk:</b>"
+msgstr "<b>Storlek på disk:</b>"
+
+#: ../data/ui/file_properties.glade.h:11
+msgid "<b>Total Size of Files:</b>"
+msgstr "<b>Total filstorlek:</b>"
+
+#: ../data/ui/file_properties.glade.h:12
+msgid "<b>_Group:</b>"
+msgstr "<b>_Grupp:</b>"
+
+#: ../data/ui/file_properties.glade.h:13
+msgid "<b>_Owner:</b>"
+msgstr "<b>_Ägare:</b>"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "Kör"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "Filegenskaper"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "Läs"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "Ange GID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "Ange UID"
+
+# Sticky-bit är en teknik
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr "Sticky"
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "Skriv"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "A_llmänt"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "_Rättigheter"
+
+#: ../data/ui/find-files.glade.h:1
+msgid "<b>File Content</b>"
+msgstr "<b>Filinnehåll</b>"
+
+#: ../data/ui/find-files.glade.h:2
+msgid "<b>File Name Contains:</b>"
+msgstr "<b>Filnamn innehåller:</b>"
+
+#: ../data/ui/find-files.glade.h:3
+msgid "<b>File Size</b>"
+msgstr "<b>Filstorlek</b>"
+
+#: ../data/ui/find-files.glade.h:4
+msgid "<b>File Types to Search</b>"
+msgstr "<b>Filtyper att söka efter</b>"
+
+#: ../data/ui/find-files.glade.h:5
+msgid "<b>Last Modified</b>"
+msgstr "<b>Senast ändrad</b>"
+
+# Inspirerad av Dolphin. "Sökvägar att söka i" kändes klumpigt.
+# PCManFM tillhanda håller en lista med sökvägar som ska sökas, detta är dess rubrikrad.
+#: ../data/ui/find-files.glade.h:6
+msgid "<b>Places to Search</b>"
+msgstr "<b>Platser att söka i</b>"
+
+#: ../data/ui/find-files.glade.h:7
+msgid "<b>Search Result:</b>"
+msgstr "<b>Sökresultat:</b>"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr "Alla filer och mappar"
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+"Alla\n"
+"Inom en dag\n"
+"Inom en vecka\n"
+"Inom en månad\n"
+"Inom ett år\n"
+"Inom valt datumintervall"
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr "Ljudfiler (ogg, mp3,...)"
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+"Byte\n"
+"KB\n"
+"MB\n"
+"GB"
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr "Skiftlägeskänslig"
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr "Innehåll"
+
+#: ../data/ui/find-files.glade.h:22
+msgid "File Contains:"
+msgstr "Filen innehåller:"
+
+#: ../data/ui/find-files.glade.h:23
+msgid "Find Files"
+msgstr "Sök filer"
+
+#: ../data/ui/find-files.glade.h:24
+msgid "General"
+msgstr "Allmänt"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr "Större än:"
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr "Bildfiler (jpg, png,...)"
+
+#: ../data/ui/find-files.glade.h:27
+msgid "Plain Text Files"
+msgstr "Vanliga textfiler"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr "Sök igen"
+
+#: ../data/ui/find-files.glade.h:29
+msgid "Search Hidden Files"
+msgstr "Sök efter dolda filer"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr "Sök i underkataloger"
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr "Storlek och datum"
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr "Mindre än:"
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr "Använd reguljära uttryck"
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr "Videofiler (avi, mpg,...)"
+
+#: ../data/ui/godlg.glade.h:1
+msgid "Go to folder"
+msgstr "Gå till mapp"
+
+#: ../data/ui/prefdlg.glade.h:1
+msgid "<b>Behavior</b>"
+msgstr "<b>Beteende</b>"
+
+#: ../data/ui/prefdlg.glade.h:2
+msgid "<b>Colors</b>"
+msgstr "<b>Färger</b>"
+
+#: ../data/ui/prefdlg.glade.h:3
+msgid "<b>Display</b>"
+msgstr "<b>Visning</b>"
+
+#: ../data/ui/prefdlg.glade.h:4
+msgid "<b>General</b>"
+msgstr "<b>Allmänt</b>"
+
+#: ../data/ui/prefdlg.glade.h:5
+msgid "<b>Wallpaper</b>"
+msgstr "<b>Bakgrundsbild</b>"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr "Visa alltid flikfältet"
+
+#: ../data/ui/prefdlg.glade.h:7
+msgid "Background:"
+msgstr "Bakgrund:"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "Bokmärken:"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr "Inaktivera \"Papperskorg\" och ta bort filer från disken direkt"
+
+#: ../data/ui/prefdlg.glade.h:10
+msgid "Display image files with supported format as thumbnails"
+msgstr "Visa miniatyrbilder av bildfiler som stöds"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr "Dölj knappen 'stäng flik'"
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr "Dölj kant för kataloginnehåll"
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr "Dölj knappar för sidopanel"
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr "_Gränssnitt"
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr "Hantera skrivbordet och visa filikoner"
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "Maximal storlek på filer som visas som miniatyrbilder:"
+
+#: ../data/ui/prefdlg.glade.h:17
+msgid "Mode:"
+msgstr "Läge: "
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "Filnamnskodning på disk:"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr "Öppna filer med enkelklick"
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+"Öppnas i aktuell flik\n"
+"Öppnas i ny flik\n"
+"Öppnas i nytt fönster"
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "Välj en bildfil"
+
+#: ../data/ui/prefdlg.glade.h:24
+msgid "Preferences"
+msgstr "Inställningar"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr "Skugga:"
+
+#: ../data/ui/prefdlg.glade.h:26
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "Visa \"Mina dokument\"-ikon på skrivbordet"
+
+#: ../data/ui/prefdlg.glade.h:27
+msgid "Show icons of volumes on desktop"
+msgstr "Visa volymikoner på skrivbordet"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr "Visa menyer från fönsterhanteraren när skrivbordet klickas"
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "Storlek på stora ikoner:"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "Storlek på små ikoner:"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+"Sträck ut över hela skärmen\n"
+"Sträck ut för att passa skärmen\n"
+"Centrera på skärmen\n"
+"Upprepa bilden för att fylla hela skärmen"
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "Terminalprogram:"
+
+#: ../data/ui/prefdlg.glade.h:36
+msgid "Text:"
+msgstr "Text:"
+
+#: ../data/ui/prefdlg.glade.h:37
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr "Använd SI-prefix istället för IEC-binär-prefix"
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "Bakgrundsbild:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr "A_vancerat"
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "_Skrivbord"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr "_Volymhantering"
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr "Kolumnutrymme"
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr "Utrymme som infogas mellan rutnätskolumner"
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr "Antal kolumner"
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr "Antal kolumner att visa"
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr "Aktivera sökning"
+
+#: ../src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr "Vy tillåter användaren att interaktivt söka genom kolumner"
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr "Bredd för varje objekt"
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr "Bredden som används för varje objekt"
+
+#: ../src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr "Layoutläge"
+
+#: ../src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr "Läget för layouten"
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr "Marginal"
+
+#: ../src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr "Utrymme som infogas vid kanterna för ikonvyn"
+
+#: ../src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr "Uppmärkningskolumn"
+
+#: ../src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr ""
+"Modellkolumn som används för att hämta texten om Pango-uppmärkning används"
+
+#: ../src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr "Ikonvymodell"
+
+#: ../src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr "Modellen för ikonvyn"
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr "Orientering"
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr "Hur text och ikon för varje objekt placeras relativt till varandra"
+
+#: ../src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr "Pixbuf-kolumn"
+
+#: ../src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr "Modellkolumn som används för att hämta ikonens pixbuf från"
+
+#: ../src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr "Justeringsbar"
+
+#: ../src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr "Vyn är justeringsbar"
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr "Radutrymme"
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr "Utrymme som infogas mellan rutnätsrader"
+
+#: ../src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr "Sökkolumn"
+
+#: ../src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr "Modellkolumn att söka genom vid sökning efter objekt"
+
+#: ../src/exo/exo-icon-view.c:907
+msgid "Selection mode"
+msgstr "Markeringsläge"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr "Markeringsläge"
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr "Enkelklick"
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr "Huruvida objekten i vyn kan aktiveras med enkelklick"
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr "Tidsgräns för enkelklick"
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+"Mängden tid efter vilken objektet under muspekaren kommer att automatiskt "
+"markeras i enkelklicksläge"
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr "Mellanrum"
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr "Mellanrum som infogas mellan celler för ett objekt"
+
+#: ../src/exo/exo-icon-view.c:972
+msgid "Text column"
+msgstr "Textkolumn"
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr "Modellkolumn som används för att hämta texten från"
+
+#: ../src/exo/exo-icon-view.c:980
+msgid "Selection Box Color"
+msgstr "Selection Box Color"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr "Färg för väljarrutan"
+
+#: ../src/exo/exo-icon-view.c:987
+msgid "Selection Box Alpha"
+msgstr "Alfa för väljarruta"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr "Opacitet för väljarrutan"
+
+# Inte översätta mime-typer
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+msgid "application"
+msgstr "application"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr "audio"
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr "video"
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+msgid "text"
+msgstr "text"
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr "multipart"
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr "image"
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr "message"
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+msgid "model"
+msgstr "model"
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+msgid "inode"
+msgstr "inode"
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr "packages"
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr "Visa inte skrivbordsikoner."
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr "Kör PCManFM som en bakgrundsprocess"
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+"Öppna mappar i nya flikar i det senast använda fönstret istället för att "
+"skapa nya fönster"
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+"Öppna inställningarna. \"n\" är det sidnummer som du vill visa (1,2,3,...)."
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr "Sök filer med PCManFM"
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr "Ange skrivbordsbakgrund"
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr "[FIL1, FIL2,...]"
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+-ikontemat är inte korrekt inställt"
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+"<big><b>%s</b></big>\n"
+"\n"
+"Det betyder vanligtvis att du inte har en XSETTINGS-hanterare som körs. "
+"Skrivbordsmiljöer som GNOME och XFCE startar upp en XSETTING hanterare "
+"automatiskt, som tex. gnome-settings-daemon eller xfce-mcs-manager.\n"
+"\n"
+"<b>Om du inte användar dessa skrivbordsmiljöer, har du två möjligheter att "
+"välja mellan:\n"
+"1. kör en XSETTINGS-hanterare, eller\n"
+"2. ändra ikontemat i ~/.gtkrc-2.0.</b>\n"
+"För att exempelvis använda ikontemat Tango - lägg till raden:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> i din ~/.gtkrc-2.0. (skapa filen "
+"om den inte redan existerar)\n"
+"\n"
+"<b>OBS: Ditt valda ikontema måste vara kompatibelt med GNOME, annars kan "
+"filikonerna inte visas korrekt.</b> På grund av skillnader i ikonnamnens "
+"format mellan GNOME och KDE, kan KDE-teman inte användas. För närvarande "
+"finns ingen standard för det, men det ska lösas av freedesktop.org i "
+"framtiden."
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr "Fel"
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+"Fel: Kunde inte skapa en anslutning till FAM.\n"
+"\n"
+"Har du \"FAM\" eller \"Gamin\" installerat och igång?"
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "Filen finns inte"
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "Vet inte hur filen ska öppnas"
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"Kunde inte öppna filen:\n"
+"\"%s\"\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "_Mapp"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "_Textfil"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "Nytt fö_nster"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "Ny _flik"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "_Skapa ny"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "Fil_egenskaper"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "Stäng flik"
+
+#: ../src/main-window.c:318
+msgid "_Close Window"
+msgstr "S_täng fönster"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "_Ta bort"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "_Byt namn"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "Markera _allt"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "In_vertera markering"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "Gå _bakåt"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "Gå _framåt"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "Gå till f_öräldramapp"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "Gå _hem"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "Sortera efter _namn"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "Sortera efter _storlek"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "Sortera efter ändringsdatu_m"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "Sortera efter _typ"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "Sortera efter _rättigheter"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "Sortera efter ä_gare"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "Stigande"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "Fallande"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "Öppna sid_opanel"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "Visa _adressrad"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "Visa _katalogträd"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "_Uppdatera"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "Sido_panel"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+msgid "L_ocation Bar"
+msgstr "Ad_ressfält"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "Visa _dolda filer"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "_Sortera..."
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "Visa som _ikoner"
+
+#: ../src/main-window.c:387
+msgid "View as _Compact List"
+msgstr "Visa som _kompakt lista"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "Visa som detaljerad _lista"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "Öppna _terminal"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "Öppna aktuell mapp som _root"
+
+#: ../src/main-window.c:399
+msgid "_Find Files"
+msgstr "_Sök efter filer"
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "_Arkiv"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "_Redigera"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "_Gå"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "_Bokmärken"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "_Visa"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "Ver_ktyg"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "_Hjälp"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "Ny flik"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "Bakåt"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "Framåt"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "Föräldramapp"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "Uppdatera"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "Hemkatalog"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Öppna sidopanel"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "Gå"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "Varning: Du är i administratörsläge"
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "Terminalprogrammet har inte angivits"
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "_Lägg till i bokmärken"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "_Redigera bokmärken"
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "Läser in..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", ledigt utrymme: %s (Totalt: %s )"
+
+#: ../src/main-window.c:2112
+#, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] "%d objekt markerat (%s)%s"
+msgstr[1] "%d objekt markerade (%s)%s"
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] "%d dolt"
+msgstr[1] "%d dolda"
+
+#: ../src/main-window.c:2123
+#, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] "%d synligt objekt (%s)%s"
+msgstr[1] "%d synliga objekt (%s)%s"
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "Katalogen finns inte!"
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "Öppna i ny f_lik"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "Öppna i nytt f_önster"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "Namn"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "Storlek"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "Typ"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "Rättigheter"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "Ägare:Grupp"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "Senast ändrad"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "Plats"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "Katalogträd"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr "Papperskorg"
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "Skrivbord"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "Kan inte montera enhet"
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "Kan inte avmontera enhet"
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "Kan inte mata ut enhet"
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "_Montera filsystem"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "Mata _ut"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "_Avmontera filsystem"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "Flytta: "
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "Kopiera: "
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr "Flytta till papperskorg:"
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "Ta bort: "
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "Länk: "
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "Ändra egenskaper: "
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "Flyttar..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "Kopierar..."
+
+#: ../src/ptk/ptk-file-task.c:114
+msgid "Moving to Trash..."
+msgstr "Flyttar till papperskorg...."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "Tar bort..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "Länkar..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "Ändrar egenskaper"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "Avbryt åtgärden?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "Vill du skriva över mappen och dess innehåll?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "Vill du skriva över filen?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "Välj ett nytt filnamn."
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\" finns redan.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\"\n"
+"\n"
+"Destination och källa är samma fil.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "Skriv över"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "Skriv över alla"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "Byt namn"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "Hoppa över"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "Hoppa över alla"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "Spara komprimerade filer till..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "Format för komprimerad fil:"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "Skapar komprimerad fil: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "Komprimera filer"
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "Extrahera fil till..."
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "Extraherar filer till: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "Extrahera filer"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"Färdig!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "Kommando:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "Filsystem"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "Ingen undermapp"
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "E_xtrahera här"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "Extrahera _till"
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "Öppna _med..."
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "Komprimera"
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "E_xtrahera"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "_Egenskaper"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "Öppna i terminal"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "Öppna _med annat program"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "_Kör"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr "Öppna _med \"%s\""
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "Ö_ppna"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "Vill du verkligen ta bort de markerade filerna?"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "Byt namn på fil"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "Ange nytt filnamn:"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"Angivet filnamn finns redan.\n"
+"Ange ett nytt namn:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "Ny mapp"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "Ange ett namn för den nya mappen:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "Ny fil"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "Ange ett namn för den nya filen:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "Den nya filen kan inte skapas!"
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "Flera filer har markerats"
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr "Flera filer av olika typer"
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "Annat program..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "Beräknar..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "Ogiltig användare"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "Ogiltig grupp"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr ""
+"Vill du verkställa ändringarna rekursivt för alla filer och undermappar?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "Nytt objekt"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "Redigera bokmärken"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "Sökväg"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "Använd dra och släpp för att sortera objekten"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "Kommandot finns inte"
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr "Målkatalogen \"%1$s\" finns i källan \"%2$s\""
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr "%s-volym"
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "CD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "CD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "CD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "DVD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "DVD+R"
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "DVD+RW"
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "DVD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "DVD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "DVD-RAM"
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Diskettenhet"
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Compact Flash-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "Memory Stick-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr "Smart Media-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "SD/MMC-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "Zip-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr "Jaz-enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "Pennenhet"
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s-musikspelare"
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s-digitalkamera"
+
+#: ../src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "Extern %s"
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "CD-ROM-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "Tom CD-R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "CD-R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "Tom CD-RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "CD-RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "DVD-ROM-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "Tom DVD-RAM-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "DVD-RAM-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "Tom DVD-R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "DVD-R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "Tom DVD-RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "DVD-RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "Tom DVD+R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "DVD+R-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "Tom DVD+RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "DVD+RW-skiva"
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Ljudskiva"
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "Flyttbar %s-volym"
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Volym"
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "Kunde inte ansluta till HAL-tjänsten: %s"
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "\"%s\" är inte en volym eller enhet"
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "Enheten \"%s\" kunde inte hittas i filsystemets enhetstabell"
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr "Du har inte rättigheter att montera volymen \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr "Du har inte rättigheter att avmontera volymen \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr "Du har inte rättigheter att mata ut volymen \"%s\""
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Ogiltigt monteringsalternativ vid försök att montera volymen \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+"Volymen \"%s\" använder filsystemet <i>%s</i>, men det stöds inte av ditt "
+"system"
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr "Ett program hindrar volymen \"%s\" från att avmonteras"
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr "Volymen \"%s\" är inte monterad"
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "Fel <i>%s</i>"
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr "Volymen \"%s\" monterades antagligen manuellt på kommandoraden"
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+"Tomma skivor kan inte monteras, använd ett cd-bränningsprogram för att "
+"skriva ljud- eller dataspår på skivan"
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+"Ljudskivor kan inte monteras, använd en musikspelare för att lyssna på "
+"ljudspåren"
+
+#: ../src/desktop/desktop-window.c:193
+msgid "_Icons"
+msgstr "_Ikoner"
+
+#: ../src/desktop/desktop-window.c:198
+msgid "_Desktop Settings"
+msgstr "Skrivbor_dsinställningar"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr "Mina dokument"
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr "Öppna aktuell _mapp"
+
+#: ../src/find-files.c:677
+msgid "Select a folder"
+msgstr "Välj en mapp"
+
+#: ../src/find-files.c:722
+msgid "Browse..."
+msgstr "Bläddra..."
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr "Alla lokala diskpartitioner"
+
+#: ../src/find-files.c:814
+msgid "Folder"
+msgstr "Mapp"
+
+#: ../src/find-files.c:830
+msgid "Last Modified"
+msgstr "Senast ändrad"
+
+#~ msgid "Center on the screen"
+#~ msgstr "Centrera på skärmen"
+
+#~ msgid "Opened in Current Tab"
+#~ msgstr "Öppnad i denna flik"
+
+#~ msgid "Opened in New Tab"
+#~ msgstr "Öppnad i ny flik"
+
+#~ msgid "Opened in New Window"
+#~ msgstr "Öppnad i nytt fönster"
+
+#~ msgid "Stretch to fill the entire screen"
+#~ msgstr "Sträck ut för att fylla hela skärmen"
+
+#~ msgid "Stretch to fit the screen"
+#~ msgstr "Sträck för att passa skärmen"
+
+#~ msgid "Tile the image to fill the entire screen"
+#~ msgstr "Lägg i mönster för att fylla hela skärmen"
+
+#~ msgid "Any"
+#~ msgstr "När som helst"
+
+#~ msgid "Bytes"
+#~ msgstr "Byte"
+
+#~ msgid "GB"
+#~ msgstr "GB"
+
+#~ msgid "KB"
+#~ msgstr "KB"
+
+#~ msgid "MB"
+#~ msgstr "MB"
+
+#~ msgid "Within One Day"
+#~ msgstr "Senaste dagen"
+
+#~ msgid "Within One Month"
+#~ msgstr "Senaste månaden"
+
+#~ msgid "Within One Week"
+#~ msgstr "Senaste veckan"
+
+#~ msgid "Within One Year"
+#~ msgstr "Senaste året"
+
+#~ msgid "Within Selected Date Range"
+#~ msgstr "Inom valt datumområde"
+
+#~ msgid "Owner:"
+#~ msgstr "Ägare:"
+
+#~ msgid "gksu or kdesu is not found"
+#~ msgstr "varken gksu eller kdesu kunde hittas"
+
+#~ msgid "Error: %s\n"
+#~ msgstr "Fel: %s\n"
+
+#~ msgid ""
+#~ "The volume \"%s\" is not mounted.\n"
+#~ "Do you want to mount it?"
+#~ msgstr ""
+#~ "Enheten \"%s\" är inte monterad.\n"
+#~ "Vill du montera den nu?"
+
+#~ msgid "Source code taken from other projects:"
+#~ msgstr "Källkod från andra projekt:"
+
+#~ msgid " * libmd5-rfc: Aladdin Enterprises"
+#~ msgstr " * libmd5-rfc: Aladdin Enterprises"
+
+#~ msgid " * Working area detection: Gary Kramlich"
+#~ msgstr " * Kod för att detektera arbetsytor: Gary Kramlich"
+
+#~ msgid " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
+#~ msgstr ""
+#~ " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
+
+#~ msgid " * Text and icon renderer uese code from Jonathan Blandford"
+#~ msgstr "* Text och ikon-renderare använder kod från Jonathan Blandford"
+
+#~ msgid " * Desktop icons use code from Brian Tarricone"
+#~ msgstr "* Skrivbordsikoner använder kod från Brian Tarricone"
+
+#~ msgid "PCMan File Manager"
+#~ msgstr "PCMan Filhanterare"
+
+#~ msgid "Icon Theme:"
+#~ msgstr "Ikontema:"
+
+#~ msgid "A_ddress:"
+#~ msgstr "Sökväg:"
+
+#~ msgid " * xdgmime: Red Hat, Inc & Jonathan Blandford"
+#~ msgstr " * xdgmime: Red Hat, Inc & Jonathan Blandford"
+
+#~ msgid ""
+#~ "File operation failed.\n"
+#~ "\n"
+#~ "Unable to process \"%s\"\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Operationen misslyckades.\n"
+#~ "\n"
+#~ "Kan inte behandla \"%s\"\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Edit Bookmark"
+#~ msgstr "Redigera Bokmärke"
+
+#~ msgid "Add to Bookmarks"
+#~ msgstr "Lägg till bokmärke"
+
+#~ msgid "Enter new directory path:"
+#~ msgstr "Ange ny plats:"
+
+#~ msgid "Open Directory _Tree"
+#~ msgstr "Ö_ppna trädvyn"
+
+#~ msgid "Open Terminal"
+#~ msgstr "Öppna via terminal"

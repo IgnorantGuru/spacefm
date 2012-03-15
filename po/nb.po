@@ -1,0 +1,1880 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pcmanfm-0.3.6.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2008-04-18 02:05+0100\n"
+"Last-Translator: Vidar Jon Bauge <vidarjb@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+#, fuzzy
+msgid "Copyright (C) 2005 - 2008"
+msgstr "Copyright (C) 2005 - 2006"
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"Lettvekts filbehandler\n"
+"\n"
+"Utviklet av Hon Jen Yee (PCMan)"
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr ""
+"Ikonet er hentet fra \"nuoveXT 2\" ikon temaet\n"
+"laget av Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr "Vidar Jon Bauge <vidarjb@gmail.com>"
+
+#: ../data/ui/about-dlg.glade.h:10
+#, fuzzy
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Kildekode fra andre prosjekter:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Oppdatering av arbeidsområde: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Rendering av tekst og ikoner bruker kode fra Jonathan Blandford\n"
+" * Visning av ikoner på skrivebordet bruker kode fra Brian Tarricone\n"
+" * Enhetshåndering bruker kode fra følgende prosjekter/utviklere:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "Velg en Applikasjon"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+msgid "File Type To be Opened:"
+msgstr "Filtype som skal åpnes:"
+
+#: ../data/ui/appchooserdlg.glade.h:3
+msgid "Opened in Terminal"
+msgstr "Åpnes i Terminal"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr "Velg en applikasjon fra listen, eller skriv inn kommandoen nedenfor:"
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr "Sett den valgte applikasjon som forvalgt handling"
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "_Alle Applikasjoner"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "_Bla gjennom"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+#, fuzzy
+msgid "_Command Line:"
+msgstr "Kommando Linje"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+msgid "_Recommended Applications"
+msgstr "Anbefalte Applikasjone_r"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+#, fuzzy
+msgid "Add _Application"
+msgstr "_Alle Applikasjoner"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+#, fuzzy
+msgid "File Associations"
+msgstr "Filen finnes ikke"
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr ""
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+#, fuzzy
+msgid "Move _Down"
+msgstr "Flytt: "
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+#, fuzzy
+msgid "Move _Up"
+msgstr "Flytt: "
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "Forbereder..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "Behandler:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "Fremgang:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "Til:"
+
+#: ../data/ui/file_properties.glade.h:1
+#, fuzzy
+msgid "<b>File Type:</b>"
+msgstr "FilType:"
+
+#: ../data/ui/file_properties.glade.h:2
+#, fuzzy
+msgid "<b>File _Name:</b>"
+msgstr "Filnavn:"
+
+#: ../data/ui/file_properties.glade.h:3
+#, fuzzy
+msgid "<b>Group:</b>"
+msgstr "Gruppe:"
+
+#: ../data/ui/file_properties.glade.h:4
+#, fuzzy
+msgid "<b>Last Access:</b>"
+msgstr "Sist Åpnet:"
+
+#: ../data/ui/file_properties.glade.h:5
+#, fuzzy
+msgid "<b>Last Modification:</b>"
+msgstr "Sist Endret"
+
+#: ../data/ui/file_properties.glade.h:6
+#, fuzzy
+msgid "<b>Location:</b>"
+msgstr "Plassering:"
+
+#: ../data/ui/file_properties.glade.h:7
+#, fuzzy
+msgid "<b>Open _with:</b>"
+msgstr "Åpne med:"
+
+#: ../data/ui/file_properties.glade.h:8
+#, fuzzy
+msgid "<b>Other Users:</b>"
+msgstr "Andre brukere:"
+
+#: ../data/ui/file_properties.glade.h:9
+#, fuzzy
+msgid "<b>Owner:</b>"
+msgstr "Eier:"
+
+#: ../data/ui/file_properties.glade.h:10
+#, fuzzy
+msgid "<b>Size on Disk:</b>"
+msgstr "Diskforbruk:"
+
+#: ../data/ui/file_properties.glade.h:11
+#, fuzzy
+msgid "<b>Total Size of Files:</b>"
+msgstr "Total Filstørrelse:"
+
+#: ../data/ui/file_properties.glade.h:12
+#, fuzzy
+msgid "<b>_Group:</b>"
+msgstr "Gruppe:"
+
+#: ../data/ui/file_properties.glade.h:13
+#, fuzzy
+msgid "<b>_Owner:</b>"
+msgstr "Skrivebords-bakgrunn:"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "Kjør"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "Fil Egenskaper"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "Les"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "Sett GID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "Sett UID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr "Sticky"
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "Skriv"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "_Generelt"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "Rettigheter"
+
+#: ../data/ui/find-files.glade.h:1
+#, fuzzy
+msgid "<b>File Content</b>"
+msgstr "FilType:"
+
+#: ../data/ui/find-files.glade.h:2
+#, fuzzy
+msgid "<b>File Name Contains:</b>"
+msgstr "Filnavn:"
+
+#: ../data/ui/find-files.glade.h:3
+#, fuzzy
+msgid "<b>File Size</b>"
+msgstr "FilType:"
+
+#: ../data/ui/find-files.glade.h:4
+#, fuzzy
+msgid "<b>File Types to Search</b>"
+msgstr "FilType:"
+
+#: ../data/ui/find-files.glade.h:5
+#, fuzzy
+msgid "<b>Last Modified</b>"
+msgstr "Sist Endret"
+
+#: ../data/ui/find-files.glade.h:6
+#, fuzzy
+msgid "<b>Places to Search</b>"
+msgstr "FilType:"
+
+#: ../data/ui/find-files.glade.h:7
+#, fuzzy
+msgid "<b>Search Result:</b>"
+msgstr "Andre brukere:"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:22
+#, fuzzy
+msgid "File Contains:"
+msgstr "Filen finnes ikke"
+
+#: ../data/ui/find-files.glade.h:23
+#, fuzzy
+msgid "Find Files"
+msgstr "_Fil"
+
+#: ../data/ui/find-files.glade.h:24
+#, fuzzy
+msgid "General"
+msgstr "_Generelt"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:27
+#, fuzzy
+msgid "Plain Text Files"
+msgstr "Tekst fil"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:29
+#, fuzzy
+msgid "Search Hidden Files"
+msgstr "Vis Skjulte filer"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr ""
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr ""
+
+#: ../data/ui/godlg.glade.h:1
+#, fuzzy
+msgid "Go to folder"
+msgstr "Gå til Ma_ppen Over"
+
+#: ../data/ui/prefdlg.glade.h:1
+#, fuzzy
+msgid "<b>Behavior</b>"
+msgstr "Plassering:"
+
+#: ../data/ui/prefdlg.glade.h:2
+#, fuzzy
+msgid "<b>Colors</b>"
+msgstr "Skrivebords-bakgrunn:"
+
+#: ../data/ui/prefdlg.glade.h:3
+#, fuzzy
+msgid "<b>Display</b>"
+msgstr "Skrivebords-bakgrunn:"
+
+#: ../data/ui/prefdlg.glade.h:4
+#, fuzzy
+msgid "<b>General</b>"
+msgstr "_Generelt"
+
+#: ../data/ui/prefdlg.glade.h:5
+#, fuzzy
+msgid "<b>Wallpaper</b>"
+msgstr "Skrivebords-bakgrunn:"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:7
+#, fuzzy
+msgid "Background:"
+msgstr "Bakgrunnsfarge"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "Bokmerker"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:10
+msgid "Display image files with supported format as thumbnails"
+msgstr "Vis understøtte billed filer som miniatyrer"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "Max størrelse på filer som vises som miniatyrer"
+
+#: ../data/ui/prefdlg.glade.h:17
+#, fuzzy
+msgid "Mode:"
+msgstr "Flytt: "
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "Filnavnenes koding på disken"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+"Åpnes i den aktuelle fane\n"
+"Åpnes i en ny fane\n"
+"Åpnes i et nytt vindu"
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "Velg en billedfil"
+
+#: ../data/ui/prefdlg.glade.h:24
+#, fuzzy
+msgid "Preferences"
+msgstr "Brukervalg"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:26
+#, fuzzy
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "Vis ikoner på skrivebordet"
+
+#: ../data/ui/prefdlg.glade.h:27
+#, fuzzy
+msgid "Show icons of volumes on desktop"
+msgstr "Vis ikoner på skrivebordet"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "Størrelse på store ikoner"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "Størrelse på små ikoner"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "Terminal:"
+
+#: ../data/ui/prefdlg.glade.h:36
+msgid "Text:"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:37
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "Skrivebords-bakgrunn:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr ""
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "Skrivebor_d"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:907
+#, fuzzy
+msgid "Selection mode"
+msgstr "Velg _Alle"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:972
+#, fuzzy
+msgid "Text column"
+msgstr "Tekst Farge"
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:980
+#, fuzzy
+msgid "Selection Box Color"
+msgstr "Velg _Alle"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr ""
+
+#: ../src/exo/exo-icon-view.c:987
+#, fuzzy
+msgid "Selection Box Alpha"
+msgstr "Velg _Alle"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr ""
+
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+#, fuzzy
+msgid "application"
+msgstr "_Alle Applikasjoner"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr ""
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr ""
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+msgid "text"
+msgstr ""
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr ""
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr ""
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr ""
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+#, fuzzy
+msgid "model"
+msgstr "Flytt: "
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+#, fuzzy
+msgid "inode"
+msgstr "Flytt: "
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr ""
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr "Ikke vis ikoner på skrivebordet"
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr ""
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr ""
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr ""
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr "[FIL1, FIL2,...]"
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+ ikon tema er ikke konfigurert"
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+"<big><b>%s</b></big>\n"
+"\n"
+"Dette betyr at du ikke har en XSETTINGS manager kjørende. Skrivebordsmiljøer "
+"som GNOME eller XFCE starter automatisk sine  XSETTING managers som gnome-"
+"settings-daemon eller xfce-mcs-manager.\n"
+"\n"
+"<b>Hvis du ikke bruker disse skrivebordsmiljøene, har du to muligheter:\n"
+"\"\"1. kjør en XSETTINGS manager, eller\n"
+"\"\"2. spesifiser et ikon tema i ~/.gtkrc-2.0.</b>\n"
+"For eksempel å bruke Tango ikon temaet, tilføy linjene:\n"
+"\"\"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> i din ~/.gtkrc-2.0. (opprett "
+"filen hvis den ikke finnes)\n"
+"\n"
+"<b>OBS: Ikon temaet du velger må være kompatibelt med GNOME, ellers blir "
+"ikonene ikke vist riktig.</b>  På grunn av forskjeller mellom GNOME og KDE, "
+"kan KDE temaer ikke brukes. Der er ingen standard for dette, men freedesktop."
+"org arbeider med å løse dette."
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr "Feil"
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+"Feil: Kan ikke oprette forbindelse til FAM.\n"
+"\n"
+"Er FAM eller Gamin installeret og kører?"
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "Filen finnes ikke"
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "Vet ikke hvordan filen skal åpnes"
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"Kan ikke åpne filen:\n"
+"\"%s\"\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "Mappe"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "Tekst fil"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "Nytt Vindu"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "Ny _Tab"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "Opprett Ny"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "Fil Egenska_per"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "Lukk Tab"
+
+#: ../src/main-window.c:318
+#, fuzzy
+msgid "_Close Window"
+msgstr "Nytt Vindu"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "Slett"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "Gi Nytt Navn"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "Velg _Alle"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "_Inverter Utvalg"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "Til_bake"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "Gå _Frem"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "Gå til Ma_ppen Over"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "Gå til _Hjemmemappen"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "Sorter etter _Navn"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "Sorter etter _Størrelse"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "Sorter etter _Modifikasjons tidspunkt"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "Sorter etter _Type"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "Sorter etter _Rettigheter"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "Sorter etter _Eier"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "Stigende"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "Fallende"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "Åpne Sidepanel"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "Vis Adresse_linje"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "Vis Mappe _Tre"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "Oppdate_r"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "Side_panel"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+#, fuzzy
+msgid "L_ocation Bar"
+msgstr "Plassering"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "Vis Skjulte filer"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "_Sorter..."
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "Vis som _Ikoner"
+
+#: ../src/main-window.c:387
+#, fuzzy
+msgid "View as _Compact List"
+msgstr "Detaljert _Listevisning"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "Detaljert _Listevisning"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "Åpne _Terminal"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "Åpne aktuell mappe som _Root"
+
+#: ../src/main-window.c:399
+#, fuzzy
+msgid "_Find Files"
+msgstr "_Fil"
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "_Fil"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "R_ediger"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "_Gå"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "_Bokmerke"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "_Vis"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "Verk_tøy"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "_Hjelp"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "Ny Tab"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "Tilbake"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "Frem"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "Mappen Over"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "Oppdater"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "Hjemmemappe"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Åpne Sidepanel"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "Gå"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "Advarsel: Du er logget på som root"
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "Terminal program er ikke valgt"
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "Tilføy til bokmerker"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "R_ediger bokmerker"
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "Laster..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", Ledig plass: %s (Totalt: %s )"
+
+#: ../src/main-window.c:2112
+#, fuzzy, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] "%d oppføring valgt (%s)%s"
+msgstr[1] "%d oppføring valgt (%s)%s"
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../src/main-window.c:2123
+#, fuzzy, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] "%d synlige oppføringer (%d skjult)%s"
+msgstr[1] "%d synlige oppføringer (%d skjult)%s"
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "Mappen finnes ikke!"
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "Åpne i Ny Fane"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "Åpne i Nytt _Vindu"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "Navn"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "Størrelse"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "Type"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "Rettighet"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "Eier:Gruppe"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "Sist Endret"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "Plassering"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "Mappe Tre"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr ""
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "Skrivebord"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "Kan ikke montere enheten"
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "Kan ikke avmontere enheten"
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "Kan ikke skubbe enheten ut"
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "_Monter filsystem"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "Skubb ut"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "Avmonter filsystem"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "Flytt: "
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "Kopier: "
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr ""
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "Slett: "
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "Lenke: "
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "Endre Egenskaper: "
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "Flytter..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "Kopierer..."
+
+#: ../src/ptk/ptk-file-task.c:114
+#, fuzzy
+msgid "Moving to Trash..."
+msgstr "Flytter..."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "Sletter..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "Lenker..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "Endrer Rettigheter"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "Avbryte operasjonen?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "Vil du overskrive mappen og hele dens innhold?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "Vil du overskrive denne filen?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "Velg nytt filnavn"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, fuzzy, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\" eksisterer.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"\"%s\"\n"
+"\n"
+"Kilden og Målfilen er den samme fil.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "Skriv Over"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "Skriv Over Alle"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "Gi Nytt Navn"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "Hopp Over"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "Hopp Over Alle"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "Lagre Komprimerte Filer i..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "Arkivets Format"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "Oppretter Arkiv: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "Komprimer Filer"
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "Pakk Filer Ut til..."
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "Pakker Filer ut til: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "Pakk Ut Filer"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"Ferdig!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "Kommando:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "Filsystem"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "Ingen Undermappe"
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "Pakk Ut Her"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "Pakk Ut _Til"
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "Åpne med"
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "Komprimer"
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "Pakk Ut"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "Egenska_per"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "Åpne i Terminal"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "Åpne med et andet pr_ogram"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "Kjør"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr "Åpne med \"%s\""
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "Åpne"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "Bekreft sletting av markerte filer"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "Gi Nytt Navn"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "Nytt Filnavn:"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+#, fuzzy
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"Det oppgitte filnavn eksisterer.\n"
+"Skriv inn et nytt filnavn:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "Ny Mappe"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "Navn til Ny Mappe:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "Ny Fil"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "Navn til Ny Fil:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "Den nye filen kan ikke opprettes!"
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "Flere filer er markert"
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr "Flere filer av forskjellige typer"
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "Andre programmer..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "Beregner..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "Ugyldig Bruker"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "Ugyldig Gruppe"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr "Vil du skrive disse endringene rekursivt på alle undermapper?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "Ny oppføring"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "Rediger Bokmerker"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "Sti"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "Bruk drag & drop til å sortere oppføringene"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "Kommando ikke funnet"
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr "Målmappen  \"%1$s\" finnes i kildemappen  \"%2$s\""
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr "%s Enhed"
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "CD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "CD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "CD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "DVD-ROM"
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "DVD+R"
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "DVD+RW"
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "DVD-R"
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "DVD-RW"
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "DVD-RAM"
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Diskettedrev"
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Compact Flash Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "USB lagringsenhet"
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr "Smart Media Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "SD/MMC Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "Zip Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr "Jaz Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "Pen Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s Musiikk avspiller"
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s Digitalkamera"
+
+#: ../src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Drev"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "Ekstern %s"
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "CD-ROM Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "Blank CD-R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "CD-R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "Blank CD-RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "CD-RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "DVD-ROM Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "Blank DVD-RAM Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "DVD-RAM Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "Blank DVD-R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "DVD-R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "Tom DVD-RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "DVD-RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "Tom DVD+R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "DVD+R Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "Tom DVD+RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "DVD+RW Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Audio Disk"
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "%s fjernbar enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Enhet"
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "Kunne ikke forbinde til HAL prosessen: %s"
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "Enheten \"%s\" er ikke egyldig drev eller medie"
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "Enheten \"%s\" ikke fundet i systemets enhetstabell"
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr "Du har ikke rettigheter til å montere enheten \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr "Du har ikke rettigheter til å avmontere enheten \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr "Du har ikke rettigheter til å skubbe enheten ut \"%s\""
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Ugyldig valg ved montering av enheten \"%s\""
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+"Enheten \"%s\" bruker <i>%s</i> filsystemet, som i ikke er understøttet av "
+"dette system"
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr "En applikasjon forhindrer denne enheten \"%s\" fra å bli avmontert"
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr "Enheten \"%s\" er ikke montert"
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "Feil <i>%s</i>"
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr "Enheten \"%s\" er sannsynligvis montert manuelt fra kommandolinjen"
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+"Tomme disker kan ikke monteres. Bruk et program til CD brenning for å skrive "
+"audio eller data til disken"
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+"Lyd CDer kan ikke monteres. Bruk en musik avspiller til å spille lydsporene"
+
+#: ../src/desktop/desktop-window.c:193
+#, fuzzy
+msgid "_Icons"
+msgstr "Vis som _Ikoner"
+
+#: ../src/desktop/desktop-window.c:198
+#, fuzzy
+msgid "_Desktop Settings"
+msgstr "Skrivebor_d"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr ""
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr ""
+
+#: ../src/find-files.c:677
+#, fuzzy
+msgid "Select a folder"
+msgstr "Velg _Alle"
+
+#: ../src/find-files.c:722
+#, fuzzy
+msgid "Browse..."
+msgstr "_Bla gjennom"
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr ""
+
+#: ../src/find-files.c:814
+#, fuzzy
+msgid "Folder"
+msgstr "Mappe"
+
+#: ../src/find-files.c:830
+#, fuzzy
+msgid "Last Modified"
+msgstr "Sist Endret"
+
+#, fuzzy
+#~ msgid "Opened in Current Tab"
+#~ msgstr "Åpne i Ny Fane"
+
+#, fuzzy
+#~ msgid "Opened in New Tab"
+#~ msgstr "Åpne i Ny Fane"
+
+#, fuzzy
+#~ msgid "Opened in New Window"
+#~ msgstr "Åpne i Nytt _Vindu"
+
+#~ msgid "Error: %s\n"
+#~ msgstr "Feil:  %s\n"
+
+#~ msgid "gksu or kdesu is not found"
+#~ msgstr "gksu eller kdesu ikke funnet"

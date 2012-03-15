@@ -1,0 +1,68 @@
+#!/bin/bash
+# spacefm installer
+
+if [ "$1" = "--help" ]; then
+	./configure --help
+	exit
+fi
+
+echo "Running configure:  ./configure \"$@\""
+./configure "$@"
+if [ $? -ne 0 ]; then
+	echo
+	echo "configure was not successful, probably due to missing build"
+	echo "dependencies.  Examine the message above to determine what is missing"
+	echo "on your system, install the appropriate package, and try this installer"
+	echo "again."
+	echo
+	echo "Build dependencies include:  (package names may vary on your distro)"
+	echo "autotools-dev dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev"
+	echo
+	exit 1
+fi
+echo
+echo "Running make... (this can take awhile)"
+make 2>&1 | grep "error:"
+if [ ! -e src/spacefm ]; then
+	echo
+	echo "make was not successful, possibly due to missing build"
+	echo "dependencies.  Examine the errors above to determine what is missing"
+	echo "on your system, install the appropriate package, and try this installer"
+	echo "again.  If no error is displayed, you may need to follow the manual"
+	echo "build instructions in the README to see all of make's output."
+	echo
+	echo "Build dependencies include:  (package names may vary on your distro)"
+	echo "autotools-dev dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev"
+	echo
+	exit 1
+fi
+echo
+
+echo "SpaceFM appears to have been built successfully.  To install it, you"
+echo "may need to enter your root or administrator password below..."
+echo
+wh_sudo="$( which sudo 2>/dev/null )"
+if [ -z "$wh_sudo" ]; then
+	echo "Running su -c \"make install\""
+	su -c "make install"
+else
+	echo "Running sudo make install"
+	sudo make install
+fi
+if [ $? -ne 0 ]; then
+	echo
+	echo "Error: make install was not successful."
+	echo
+	exit 1
+fi
+
+echo "Running update-mime-database..."
+sudo update-mime-database /usr/share/mime > /dev/null
+sudo update-desktop-database -q
+
+echo
+echo "Installation appears successful."
+echo
+
+exit
+

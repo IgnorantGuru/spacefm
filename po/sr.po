@@ -1,0 +1,1847 @@
+# Serbian translation for PCManFM package
+# Српски превод за пакет PCManFM.
+# This file is distributed under the same license as the PCManFM package.
+# Jay A. Fleming <tito.nehru.naser@gmail.com>, 2009.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PCManFM 0.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-28 13:07+0200\n"
+"PO-Revision-Date: 2009-09-09 11:33+0100\n"
+"Last-Translator: Jay A. Fleming <tito.nehru.naser@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../data/ui/about-dlg.glade.h:1
+msgid "Copyright (C) 2005 - 2008"
+msgstr "2005-2009. Сва права задржана."
+
+#: ../data/ui/about-dlg.glade.h:2
+msgid ""
+"Lightweight file manager\n"
+"\n"
+"Developed by Hon Jen Yee (PCMan)"
+msgstr ""
+"Олакшани управљач датотекама\n"
+"\n"
+"Приредио: Hon Jen Yee (PCMan)"
+
+#: ../data/ui/about-dlg.glade.h:5
+msgid ""
+"The icon was taken from \"nuoveXT 2\" icon theme\n"
+"created by Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+msgstr ""
+"Иконице су преузете из „nuoveXT 2“ теме икона\n"
+"коју је направио Alexandre Moore (saki).\n"
+"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+
+#. Please replace this line with your own names, one name per line.
+#: ../data/ui/about-dlg.glade.h:9
+msgid "translator-credits"
+msgstr "Serbian (sr) — Jay A. Fleming <tito.nehru.naser@gmail.com>"
+
+#: ../data/ui/about-dlg.glade.h:10
+msgid ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Source code taken from other projects:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Volume management uses code from following projects/authors:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+msgstr ""
+"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
+"\n"
+"Изворни код је преузет из других пројеката:\n"
+" * libmd5-rfc: Aladdin Enterprises\n"
+" * Working area detection: Gary Kramlich\n"
+" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
+" * Text and icon renderer uses code from Jonathan Blandford\n"
+" * Desktop icons use code from Brian Tarricone\n"
+" * Управљач складиштима користи код од следећих пројеката/аутора:\n"
+"     * gnome-vfs: David Zeuthen\n"
+"     * thunar-vfs and libexo: Benedikt Meurer\n"
+"     * gnome-mount: David Zeuthen"
+
+#: ../data/ui/appchooserdlg.glade.h:1
+msgid "Choose an Application"
+msgstr "Изаберите програм"
+
+#: ../data/ui/appchooserdlg.glade.h:2
+msgid "File Type To be Opened:"
+msgstr "Врста датотеке која се отвара:"
+
+#: ../data/ui/appchooserdlg.glade.h:3
+msgid "Opened in Terminal"
+msgstr "Отворено у терминалу"
+
+#: ../data/ui/appchooserdlg.glade.h:4
+msgid ""
+"Please choose an application from following lists or enter the command line "
+"by hand:"
+msgstr ""
+"Изаберите програм из доње листе или унесите наредбу коју желите покренути:"
+
+#: ../data/ui/appchooserdlg.glade.h:5
+msgid "Set selected application to default action"
+msgstr "Означи као подразумевану радњу"
+
+#: ../data/ui/appchooserdlg.glade.h:6
+msgid "_All Applications"
+msgstr "Сви прогр_ами"
+
+#: ../data/ui/appchooserdlg.glade.h:7
+msgid "_Browse"
+msgstr "Раз_гледај"
+
+#: ../data/ui/appchooserdlg.glade.h:8
+msgid "_Command Line:"
+msgstr "_Покрени наредбу:"
+
+#: ../data/ui/appchooserdlg.glade.h:9
+msgid "_Recommended Applications"
+msgstr "П_репоручени програми"
+
+#: ../data/ui/file-assoc-dlg.glade.h:1
+msgid "Actions Showed in Popup Menus"
+msgstr "Акције приказане у искачућим менијима"
+
+#: ../data/ui/file-assoc-dlg.glade.h:2
+msgid "Add _Application"
+msgstr "Дод_ај програм"
+
+#: ../data/ui/file-assoc-dlg.glade.h:3
+msgid "Add _Custom Action"
+msgstr "Додајте произвољну акцију"
+
+#: ../data/ui/file-assoc-dlg.glade.h:4
+msgid "File Associations"
+msgstr "Придруживање датотека"
+
+#: ../data/ui/file-assoc-dlg.glade.h:5
+msgid "Known File Types:"
+msgstr "Познате врсте датотека:"
+
+#: ../data/ui/file-assoc-dlg.glade.h:6
+msgid "Move _Down"
+msgstr "Помери _доле"
+
+#: ../data/ui/file-assoc-dlg.glade.h:7
+msgid "Move _Up"
+msgstr "Помери _горе"
+
+#. Preparing to do some file operation (Copy, Move, Delete...)
+#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
+msgid "Preparing..."
+msgstr "pripremam..."
+
+#. Processing: <Name of currently proccesed file>
+#. Processing:
+#. Processing: <Name of currently proccesed file>
+#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
+msgid "Processing:"
+msgstr "Радим са:"
+
+#. Progress:
+#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
+msgid "Progress:"
+msgstr "Напредак:"
+
+#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
+#. To: <Destination folder>
+#. ex. Copy file to..., Move file to...etc.
+#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
+msgid "To:"
+msgstr "У место:"
+
+#: ../data/ui/file_properties.glade.h:1
+msgid "<b>File Type:</b>"
+msgstr "<b>Врста:</b>"
+
+#: ../data/ui/file_properties.glade.h:2
+msgid "<b>File _Name:</b>"
+msgstr "<b>_Назив:</b>"
+
+#: ../data/ui/file_properties.glade.h:3
+msgid "<b>Group:</b>"
+msgstr "<b>Група:</b>"
+
+#: ../data/ui/file_properties.glade.h:4
+msgid "<b>Last Access:</b>"
+msgstr "<b>Последњи приступ:</b>"
+
+#: ../data/ui/file_properties.glade.h:5
+msgid "<b>Last Modification:</b>"
+msgstr "<b>Измењено:</b>"
+
+#: ../data/ui/file_properties.glade.h:6
+msgid "<b>Location:</b>"
+msgstr "<b>Путања:</b>"
+
+#: ../data/ui/file_properties.glade.h:7
+msgid "<b>Open _with:</b>"
+msgstr "<b>Отвори по_моћу:</b>"
+
+#: ../data/ui/file_properties.glade.h:8
+msgid "<b>Other Users:</b>"
+msgstr "<b>Остали:</b>"
+
+#: ../data/ui/file_properties.glade.h:9
+msgid "<b>Owner:</b>"
+msgstr "<b>Власник:</b>"
+
+#: ../data/ui/file_properties.glade.h:10
+msgid "<b>Size on Disk:</b>"
+msgstr "<b>Заузет простор:</b>"
+
+#: ../data/ui/file_properties.glade.h:11
+msgid "<b>Total Size of Files:</b>"
+msgstr "<b>Величина:</b>"
+
+#: ../data/ui/file_properties.glade.h:12
+msgid "<b>_Group:</b>"
+msgstr "<b>_Група:</b>"
+
+#: ../data/ui/file_properties.glade.h:13
+msgid "<b>_Owner:</b>"
+msgstr "<b>_Власник:</b>"
+
+#: ../data/ui/file_properties.glade.h:14
+msgid "Execute"
+msgstr "Покретање"
+
+#: ../data/ui/file_properties.glade.h:15
+msgid "File Properties"
+msgstr "Особине датотеке"
+
+#: ../data/ui/file_properties.glade.h:16
+msgid "Read"
+msgstr "Читање"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:18
+msgid "Set GID"
+msgstr "Постави GID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:20
+msgid "Set UID"
+msgstr "Постави UID"
+
+#. This is used in file attribute
+#: ../data/ui/file_properties.glade.h:22
+msgid "Sticky"
+msgstr "Лепљиво"
+
+#: ../data/ui/file_properties.glade.h:23
+msgid "Write"
+msgstr "Писање"
+
+#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
+msgid "_General"
+msgstr "Оп_ште"
+
+#: ../data/ui/file_properties.glade.h:25
+msgid "_Permissions"
+msgstr "_Дозволе"
+
+#: ../data/ui/find-files.glade.h:1
+msgid "<b>File Content</b>"
+msgstr "<b>Садржај датотеке</b>"
+
+#: ../data/ui/find-files.glade.h:2
+msgid "<b>File Name Contains:</b>"
+msgstr "<b>Име датотеке садржи:</b>"
+
+#: ../data/ui/find-files.glade.h:3
+msgid "<b>File Size</b>"
+msgstr "<b>Величина датотеке</b>"
+
+#: ../data/ui/find-files.glade.h:4
+msgid "<b>File Types to Search</b>"
+msgstr "<b>Тражи по врсти датотеке</b>"
+
+#: ../data/ui/find-files.glade.h:5
+msgid "<b>Last Modified</b>"
+msgstr "<b>Последњи пут измењено</b>"
+
+#: ../data/ui/find-files.glade.h:6
+msgid "<b>Places to Search</b>"
+msgstr "<b>Тражи у следећим местима</b>"
+
+#: ../data/ui/find-files.glade.h:7
+msgid "<b>Search Result:</b>"
+msgstr "<b>Пронађене су следеће датотеке:</b>"
+
+#: ../data/ui/find-files.glade.h:8
+msgid "All Files and Folders"
+msgstr "Све датотеке и директоријуми"
+
+#: ../data/ui/find-files.glade.h:9
+msgid ""
+"Any\n"
+"Within One Day\n"
+"Within One Week\n"
+"Within One Month\n"
+"Within One Year\n"
+"Within Selected Date Range"
+msgstr ""
+"Било када\n"
+"У току једног дана\n"
+"У току једне недеље\n"
+"У току једног месеца\n"
+"У току једне године\n"
+"У задатом временском периоду"
+
+#: ../data/ui/find-files.glade.h:15
+msgid "Audio Files (mp3, ogg,...)"
+msgstr "Звучне датотеке (oga ,mp3, ogg,...)"
+
+#: ../data/ui/find-files.glade.h:16
+msgid ""
+"Bytes\n"
+"KB\n"
+"MB\n"
+"GB"
+msgstr ""
+"бајта\n"
+"КБ\n"
+"МБ\n"
+"ГБ"
+
+#: ../data/ui/find-files.glade.h:20
+msgid "Case Sensitive"
+msgstr "Разликуј величину слова"
+
+#: ../data/ui/find-files.glade.h:21
+msgid "Content"
+msgstr "Према садржају"
+
+#: ../data/ui/find-files.glade.h:22
+msgid "File Contains:"
+msgstr "У датотеци се налази:"
+
+#: ../data/ui/find-files.glade.h:23
+msgid "Find Files"
+msgstr "Пронађи датотеке"
+
+#: ../data/ui/find-files.glade.h:24
+msgid "General"
+msgstr "Општи услови"
+
+#: ../data/ui/find-files.glade.h:25
+msgid "Greater Than:"
+msgstr "Веће од:"
+
+#: ../data/ui/find-files.glade.h:26
+msgid "Image Files (jpg, png,...)"
+msgstr "Слике (png, jpg, svg,...)"
+
+#: ../data/ui/find-files.glade.h:27
+msgid "Plain Text Files"
+msgstr "Обичне датотеке са текстом"
+
+#: ../data/ui/find-files.glade.h:28
+msgid "Search Again"
+msgstr "Тражи поново"
+
+#: ../data/ui/find-files.glade.h:29
+msgid "Search Hidden Files"
+msgstr "Тражи и скривене датотеке"
+
+#: ../data/ui/find-files.glade.h:30
+msgid "Search in Sub Directories"
+msgstr "Претражуј и поддиректоријуме"
+
+#: ../data/ui/find-files.glade.h:31
+msgid "Size & Date"
+msgstr "Према величини и датуму"
+
+#: ../data/ui/find-files.glade.h:32
+msgid "Smaller Than:"
+msgstr "Мање од:"
+
+#: ../data/ui/find-files.glade.h:33
+msgid "Use Regular Expression"
+msgstr "Користи регуларне изразе"
+
+#: ../data/ui/find-files.glade.h:34
+msgid "Video Files (avi, mpg,...)"
+msgstr "Видео датотеке (ogv, mkv, avi,...)"
+
+#: ../data/ui/godlg.glade.h:1
+msgid "Go to folder"
+msgstr "Иди у директоријум"
+
+#: ../data/ui/prefdlg.glade.h:1
+msgid "<b>Behavior</b>"
+msgstr "<b>Понашање</b>"
+
+#: ../data/ui/prefdlg.glade.h:2
+msgid "<b>Colors</b>"
+msgstr "<b>Боје</b>"
+
+#: ../data/ui/prefdlg.glade.h:3
+msgid "<b>Display</b>"
+msgstr "<b>Приказ</b>"
+
+#: ../data/ui/prefdlg.glade.h:4
+msgid "<b>General</b>"
+msgstr "<b>Опште</b>"
+
+#: ../data/ui/prefdlg.glade.h:5
+msgid "<b>Wallpaper</b>"
+msgstr "<b>Позадинска слика</b>"
+
+#: ../data/ui/prefdlg.glade.h:6
+msgid "Always show the tab bar"
+msgstr "Увек приказуј траку са листовима"
+
+#: ../data/ui/prefdlg.glade.h:7
+msgid "Background:"
+msgstr "Позадина:"
+
+#: ../data/ui/prefdlg.glade.h:8
+msgid "Bookmarks:"
+msgstr "Обележивачи:"
+
+#: ../data/ui/prefdlg.glade.h:9
+msgid "Disable \"Trash Can\" and delete files from disk directly"
+msgstr "Не користи „Корпу за смеће“ већ бриши датотеке директно са диска"
+
+#: ../data/ui/prefdlg.glade.h:10
+msgid "Display image files with supported format as thumbnails"
+msgstr "Прикажи умањени приказ за подржане слике"
+
+#: ../data/ui/prefdlg.glade.h:11
+msgid "Hide 'Close tab' buttons"
+msgstr "Сакриј „Затвори лист“ дугмад"
+
+#: ../data/ui/prefdlg.glade.h:12
+msgid "Hide folder content border"
+msgstr "Сакриј ивицу садржаја директоријума"
+
+#: ../data/ui/prefdlg.glade.h:13
+msgid "Hide side pane buttons"
+msgstr "Сакриј дугмад бочне површи"
+
+#: ../data/ui/prefdlg.glade.h:14
+msgid "I_nterface"
+msgstr "И_нтерфејс"
+
+#: ../data/ui/prefdlg.glade.h:15
+msgid "Manage the desktop and show file icons"
+msgstr "Управљај радном површи и прикажи иконе датотека"
+
+#: ../data/ui/prefdlg.glade.h:16
+msgid "Max size of files displayed as thumbnails:"
+msgstr "Највећа величина датотека за које се користи умањени приказ:"
+
+#: ../data/ui/prefdlg.glade.h:17
+msgid "Mode:"
+msgstr "Начин приказа:"
+
+#: ../data/ui/prefdlg.glade.h:18
+msgid "On-disk file name encoding:"
+msgstr "Кодна страница имена датотека на диску:"
+
+#: ../data/ui/prefdlg.glade.h:19
+msgid "Open files with single click"
+msgstr "Отварај датотеке једним кликом"
+
+#: ../data/ui/prefdlg.glade.h:20
+msgid ""
+"Opened in Current Tab\n"
+"Opened in New Tab\n"
+"Opened in New Window"
+msgstr ""
+"се отворају у текућем листу\n"
+"се отворају у новом листу\n"
+"се отворају у новом прозору"
+
+#: ../data/ui/prefdlg.glade.h:23
+msgid "Please select an image file"
+msgstr "Изаберите слику"
+
+#: ../data/ui/prefdlg.glade.h:24
+msgid "Preferences"
+msgstr "Поставке"
+
+#: ../data/ui/prefdlg.glade.h:25
+msgid "Shadow:"
+msgstr "Сенка:"
+
+#: ../data/ui/prefdlg.glade.h:26
+msgid "Show \"My Documents\" icon on desktop"
+msgstr "Прикажи икону „Личне датотеке“ на радној површи"
+
+#: ../data/ui/prefdlg.glade.h:27
+msgid "Show icons of volumes on desktop"
+msgstr "Прикажи иконе логичких дискова на радној површи"
+
+#: ../data/ui/prefdlg.glade.h:28
+msgid "Show menus provided by WM when desktop is clicked"
+msgstr "Прикажи мени управљача прозорима када се кликне на радну површ"
+
+#: ../data/ui/prefdlg.glade.h:29
+msgid "Size of Big Icons:"
+msgstr "Величина већих икона:"
+
+#: ../data/ui/prefdlg.glade.h:30
+msgid "Size of Small Icons:"
+msgstr "Величина мањих икона:"
+
+#: ../data/ui/prefdlg.glade.h:31
+msgid ""
+"Stretch to fill the entire screen\n"
+"Stretch to fit the screen\n"
+"Center on the screen\n"
+"Tile the image to fill the entire screen"
+msgstr ""
+"Растегни преко целог екрана\n"
+"Прилагоди величини екрана\n"
+"Постави на сред екрана\n"
+"Поплочај екран"
+
+#: ../data/ui/prefdlg.glade.h:35
+msgid "Terminal:"
+msgstr "Терминал:"
+
+#: ../data/ui/prefdlg.glade.h:36
+msgid "Text:"
+msgstr "Текст:"
+
+#: ../data/ui/prefdlg.glade.h:37
+#, fuzzy
+msgid "Use SI decimal prefixes instead of IEC binary prefixes"
+msgstr "Користи „SI“ децималне префиксе уместо „IEC“ бинарних префикса"
+
+#: ../data/ui/prefdlg.glade.h:38
+msgid "Wallpaper:"
+msgstr "Позадинска слика:"
+
+#: ../data/ui/prefdlg.glade.h:39
+msgid "_Advanced"
+msgstr "Н_апредно"
+
+#: ../data/ui/prefdlg.glade.h:40
+msgid "_Desktop"
+msgstr "Ра_дна површ"
+
+#: ../data/ui/prefdlg.glade.h:42
+msgid "_Volume Management"
+msgstr "Упра_вљање логичким дисковима"
+
+#: ../src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr "Размак између колона"
+
+#: ../src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr "Размак убачен између колона мреже"
+
+#: ../src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr "Број колона"
+
+#: ../src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr "Број колона за приказ"
+
+#: ../src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr "Укључи претрагу"
+
+#: ../src/exo/exo-icon-view.c:729
+#, fuzzy
+msgid "View allows user to search through columns interactively"
+msgstr "Поглед дозвољава кориснику интерактивно претраживање у колонама"
+
+#: ../src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr "Ширина за сваку ставку"
+
+#: ../src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr "Ширина употребљена за сваку ставку"
+
+#: ../src/exo/exo-icon-view.c:765
+#, fuzzy
+msgid "Layout mode"
+msgstr "Начин размештаја"
+
+#: ../src/exo/exo-icon-view.c:766
+#, fuzzy
+msgid "The layout mode"
+msgstr "Начин размештаја"
+
+#: ../src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr "Маргина"
+
+#: ../src/exo/exo-icon-view.c:783
+#, fuzzy
+msgid "Space which is inserted at the edges of the icon view"
+msgstr "Размак од ивица у Гледање икона моделу"
+
+#: ../src/exo/exo-icon-view.c:799
+#, fuzzy
+msgid "Markup column"
+msgstr "Маркерска колона"
+
+#: ../src/exo/exo-icon-view.c:800
+#, fuzzy
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr "Модел колоне за пријем текста ако се користи „Pango markup“"
+
+#: ../src/exo/exo-icon-view.c:814
+#, fuzzy
+msgid "Icon View Model"
+msgstr "Модел Гледање икона"
+
+#: ../src/exo/exo-icon-view.c:815
+#, fuzzy
+msgid "The model for the icon view"
+msgstr "Модел Гледање икона"
+
+#: ../src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr "Оријентација"
+
+#: ../src/exo/exo-icon-view.c:829
+msgid ""
+"How the text and icon of each item are positioned relative to each other"
+msgstr "Релативни размештај текста и икона према другој ставци за сваку ставку"
+
+#: ../src/exo/exo-icon-view.c:845
+#, fuzzy
+msgid "Pixbuf column"
+msgstr "„Pixbuf“ колона"
+
+#: ../src/exo/exo-icon-view.c:846
+#, fuzzy
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr "Модел колоне за пријем „icon pixbuf“ из"
+
+#: ../src/exo/exo-icon-view.c:861
+#, fuzzy
+msgid "Reorderable"
+msgstr "Преуредљиво"
+
+#: ../src/exo/exo-icon-view.c:862
+#, fuzzy
+msgid "View is reorderable"
+msgstr "Поглед је преуредљив"
+
+#: ../src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr "Размак реда"
+
+#: ../src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr "Размак убачен између редова мреже"
+
+#: ../src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr "Колона за претраживање"
+
+#: ../src/exo/exo-icon-view.c:893
+#, fuzzy
+msgid "Model column to search through when searching through item"
+msgstr "Модел колоне за претрагу када претражујем ставке"
+
+#: ../src/exo/exo-icon-view.c:907
+msgid "Selection mode"
+msgstr "Начин одабира"
+
+#: ../src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr "Начин одабира"
+
+#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr "Један клик"
+
+#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr "Да ли се дате ставке у датом погледу покрећу на један клик"
+
+#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr "Трајање једног клика"
+
+#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
+msgid ""
+"The amount of time after which the item under the mouse cursor will be "
+"selected automatically in single click mode"
+msgstr ""
+"Време за које ће свака ставка испод показивача миша аутоматски бити изабрана "
+"у „један клик“ режиму"
+
+#: ../src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr "Одстојање"
+
+#: ../src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr "Размак убачен између ћелија неке ставке"
+
+#: ../src/exo/exo-icon-view.c:972
+msgid "Text column"
+msgstr "Текст-колона"
+
+#: ../src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr "Модел колоне за пријем  датог текста из"
+
+#: ../src/exo/exo-icon-view.c:980
+msgid "Selection Box Color"
+msgstr "Боја одељка за избор"
+
+#: ../src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr "Боја одељка за избор"
+
+#: ../src/exo/exo-icon-view.c:987
+#, fuzzy
+msgid "Selection Box Alpha"
+msgstr "Транспарентност одељка за избор"
+
+#: ../src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr "Непровидност одељка за избор"
+
+#. mime-type: application
+#: ../src/file-assoc-dlg.c:34
+msgid "application"
+msgstr "програм"
+
+#. mime-type: audio
+#: ../src/file-assoc-dlg.c:37
+msgid "audio"
+msgstr "звучни"
+
+#. mime-type: video
+#: ../src/file-assoc-dlg.c:40
+msgid "video"
+msgstr "видео"
+
+#. mime-type: text
+#: ../src/file-assoc-dlg.c:43
+msgid "text"
+msgstr "текст"
+
+#. mime-type: multipart
+#: ../src/file-assoc-dlg.c:46
+msgid "multipart"
+msgstr "вишеделни"
+
+#. mime-type: image
+#: ../src/file-assoc-dlg.c:49
+msgid "image"
+msgstr "слика"
+
+#. mime-type: message
+#: ../src/file-assoc-dlg.c:52
+msgid "message"
+msgstr "порука"
+
+#. mime-type: model
+#: ../src/file-assoc-dlg.c:55
+msgid "model"
+msgstr "модел"
+
+#. mime-type: inode
+#: ../src/file-assoc-dlg.c:58
+msgid "inode"
+msgstr "индексни чвор"
+
+#. mime-type: packages
+#: ../src/file-assoc-dlg.c:61
+msgid "packages"
+msgstr "пакети"
+
+#: ../src/main.c:92
+msgid "Don't show desktop icons."
+msgstr "Не приказуј иконе на радној површи"
+
+#: ../src/main.c:93
+msgid "Run PCManFM as a daemon"
+msgstr "Покрени PCManFM као позадински процес"
+
+#: ../src/main.c:94
+msgid ""
+"Open folders in new tabs of the last used window instead of creating new "
+"windows"
+msgstr ""
+"Отвори директоријуме у новим листовима последњег коришћеног прозора\n"
+"уместо прављења новог прозора"
+
+#: ../src/main.c:95
+msgid ""
+"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
+"3...)."
+msgstr ""
+"Отвори прозорче за поставке. „n“ је број странице коју желите приказати (1, "
+"2, 3...)."
+
+#: ../src/main.c:96
+msgid "Find Files with PCManFM"
+msgstr "Нађи датотеке помоћу „PCManFM“"
+
+#: ../src/main.c:103
+msgid "Set desktop wallpaper"
+msgstr "Постави позадинску слику"
+
+#: ../src/main.c:112
+msgid "[FILE1, FILE2,...]"
+msgstr "[FILE1, FILE2,...]"
+
+#: ../src/main.c:339
+msgid "GTK+ icon theme is not properly set"
+msgstr "GTK+ тема икона није исправно постављена"
+
+#: ../src/main.c:341
+#, c-format
+msgid ""
+"<big><b>%s</b></big>\n"
+"\n"
+"This usually means you don't have an XSETTINGS manager running.  Desktop "
+"environment like GNOME or XFCE automatically execute their XSETTING managers "
+"like gnome-settings-daemon or xfce-mcs-manager.\n"
+"\n"
+"<b>If you don't use these desktop environments, you have two choices:\n"
+"1. run an XSETTINGS manager, or\n"
+"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
+"For example to use the Tango icon theme add a line:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
+"if no such file)\n"
+"\n"
+"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
+"file icons cannot be displayed correctly.</b>  Due to the differences in "
+"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
+"no standard for this, but it will be solved by freedesktop.org in the future."
+msgstr ""
+"<big><b>%s</b></big>\n"
+"\n"
+"Ово обично значи да немате покренут  „XSETTINGS“ управљач. Познатија "
+"окружења аутоматски покрећу своје  „XSETTING“ управљаче (ГНОМ —  gnome-"
+"settings-daemon, XFCE — xfce-mcs-manager...).\n"
+"\n"
+"<b>Ако не користите ова окружења, имате две могућности:\n"
+"1. покрените неки од XSETTINGS управљача, или\n"
+"2. једноставно наведите једну од тема икона у датотеци ~/.gtkrc-2.0.</b>\n"
+"На пример, да би користили Танго тему икона, додајте следећу линију:\n"
+"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> у вашу ~/.gtkrc-2.0 датотеку . "
+"(Направите ову датотеку ако је немате)\n"
+"\n"
+"<b>ОБАВЕШТЕЊЕ: Тема икона коју одаберете мора бити усклађена са ГНОМ "
+"окружењем да би се иконе приказале исправно.</b>  Због различитог именовања "
+"датотека, КДЕ теме икона се не могу користити.  Још увек не постоји стандард "
+"за теме икона. У будућности freedesktop.org ће решаваити овај проблем."
+
+#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
+#: ../src/main-window.c:1704 ../src/main-window.c:1771
+#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
+#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
+#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
+#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Error"
+msgstr "Грешка"
+
+#: ../src/main.c:678
+msgid ""
+"Error: Unable to establish connection with FAM.\n"
+"\n"
+"Do you have \"FAM\" or \"Gamin\" installed and running?"
+msgstr ""
+"Грешка: Не могу се повезати са „FAM“ програмом.\n"
+"\n"
+"Имате ли инсталиран и покренут „FAM“ (или „Gamin“)?"
+
+#: ../src/main.c:747
+msgid "File doesn't exist"
+msgstr "Датотека не постоји"
+
+#: ../src/main.c:794
+msgid "Don't know how to open the file"
+msgstr "Не знам како да отворим ову датотеку"
+
+#: ../src/main.c:796
+#, c-format
+msgid ""
+"Unable to open file:\n"
+"\"%s\"\n"
+"%s"
+msgstr ""
+"Не могу отворити датотеку:\n"
+"„%s“\n"
+"%s"
+
+#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
+#: ../src/desktop/desktop-window.c:186
+msgid "_Folder"
+msgstr "_Директоријум"
+
+#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
+#: ../src/desktop/desktop-window.c:187
+msgid "_Text File"
+msgstr "Пр_азна датотека"
+
+#: ../src/main-window.c:311
+msgid "New _Window"
+msgstr "Нови _прозор"
+
+#: ../src/main-window.c:312
+msgid "New _Tab"
+msgstr "Нови _лист"
+
+#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
+#: ../src/desktop/desktop-window.c:196
+msgid "_Create New"
+msgstr "_Направи нови"
+
+#: ../src/main-window.c:315
+msgid "File _Properties"
+msgstr "_Особине"
+
+#: ../src/main-window.c:317
+msgid "Close Tab"
+msgstr "Затвори лист"
+
+#: ../src/main-window.c:318
+msgid "_Close Window"
+msgstr "_Затвори прозор"
+
+#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
+msgid "_Delete"
+msgstr "Обри_ши"
+
+#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
+#: ../src/ptk/ptk-file-menu.c:129
+msgid "_Rename"
+msgstr "П_ромени име"
+
+#: ../src/main-window.c:330
+msgid "Select _All"
+msgstr "Изабери _све"
+
+#: ../src/main-window.c:331
+msgid "_Invert Selection"
+msgstr "_Обрни избор"
+
+#: ../src/main-window.c:340
+msgid "Go _Back"
+msgstr "_Назад"
+
+#: ../src/main-window.c:341
+msgid "Go _Forward"
+msgstr "На_пред"
+
+#: ../src/main-window.c:342
+msgid "Go to _Parent Folder"
+msgstr "Отвори над_директоријум"
+
+#: ../src/main-window.c:343
+msgid "Go _Home"
+msgstr "_Личне датотеке"
+
+#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
+msgid "Sort by _Name"
+msgstr "Према _имену"
+
+#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
+msgid "Sort by _Size"
+msgstr "Према _величини"
+
+#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
+msgid "Sort by _Modification Time"
+msgstr "Према _датуму измене"
+
+#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
+msgid "Sort by _Type"
+msgstr "Према вр_сти"
+
+#: ../src/main-window.c:359
+msgid "Sort by _Permission"
+msgstr "Према д_озволама"
+
+#: ../src/main-window.c:360
+msgid "Sort by _Owner"
+msgstr "Према в_ласништву"
+
+#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
+msgid "Ascending"
+msgstr "Растући редослед"
+
+#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
+msgid "Descending"
+msgstr "Опадајући редослед"
+
+#: ../src/main-window.c:369
+msgid "_Open Side Pane"
+msgstr "_Отвори бочну пшоврш"
+
+#: ../src/main-window.c:371
+msgid "Show _Location Pane"
+msgstr "Прикажи _места"
+
+#: ../src/main-window.c:372
+msgid "Show _Directory Tree"
+msgstr "Прикажи стабло _директоријума"
+
+#: ../src/main-window.c:378
+msgid "_Refresh"
+msgstr "_Освежи"
+
+#: ../src/main-window.c:379
+msgid "Side _Pane"
+msgstr "Бочна _површ"
+
+#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
+#: ../src/main-window.c:381
+msgid "L_ocation Bar"
+msgstr "Адресна линија"
+
+#: ../src/main-window.c:383
+msgid "Show _Hidden Files"
+msgstr "Прикажи _скривене датотеке"
+
+#: ../src/main-window.c:384
+msgid "_Sort..."
+msgstr "По_ређај ставке..."
+
+#: ../src/main-window.c:386
+msgid "View as _Icons"
+msgstr "_Иконе"
+
+#: ../src/main-window.c:387
+msgid "View as _Compact List"
+msgstr "_Збијено"
+
+#: ../src/main-window.c:388
+msgid "View as Detailed _List"
+msgstr "_Листа"
+
+#: ../src/main-window.c:394
+msgid "Open _Terminal"
+msgstr "Отвори у _терминалу"
+
+#: ../src/main-window.c:395
+msgid "Open Current Folder as _Root"
+msgstr "Отвори текући директоријум као „_Root“"
+
+#: ../src/main-window.c:399
+msgid "_Find Files"
+msgstr "_Тражи датотеке..."
+
+#: ../src/main-window.c:405
+msgid "_File"
+msgstr "_Датотека"
+
+#: ../src/main-window.c:406
+msgid "_Edit"
+msgstr "_Уреди"
+
+#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
+#: ../src/main-window.c:408
+msgid "_Go"
+msgstr "_Иди"
+
+#: ../src/main-window.c:409
+msgid "_Bookmark"
+msgstr "_Обележивачи"
+
+#: ../src/main-window.c:410
+msgid "_View"
+msgstr "П_реглед"
+
+#: ../src/main-window.c:411
+msgid "_Tool"
+msgstr "_Алатке"
+
+#: ../src/main-window.c:412
+msgid "_Help"
+msgstr "_Помоћ"
+
+#: ../src/main-window.c:420
+msgid "New Tab"
+msgstr "Нови лист"
+
+#: ../src/main-window.c:421
+msgid "Back"
+msgstr "Назад"
+
+#: ../src/main-window.c:422
+msgid "Forward"
+msgstr "Напред"
+
+#: ../src/main-window.c:423
+msgid "Parent Folder"
+msgstr "Наддиректоријум"
+
+#: ../src/main-window.c:424
+msgid "Refresh"
+msgstr "Освежи"
+
+#: ../src/main-window.c:425
+msgid "Home Directory"
+msgstr "Личне датотеке"
+
+#: ../src/main-window.c:426
+msgid "Open Side Pane"
+msgstr "Отвори бочну површ"
+
+#: ../src/main-window.c:432
+msgid "Go"
+msgstr "Иди"
+
+#: ../src/main-window.c:664
+msgid "Warning: You are in super user mode"
+msgstr "УПОЗОРЕЊЕ: Користите програм са администраторским привилегијама!"
+
+#: ../src/main-window.c:1705
+msgid "Terminal program has not been set"
+msgstr "Трминални програм није одабран"
+
+#: ../src/main-window.c:1846
+msgid "_Add to Bookmarks"
+msgstr "_Додај у обележиваче"
+
+#: ../src/main-window.c:1847
+msgid "_Edit Bookmarks"
+msgstr "_Уреди обележиваче..."
+
+#: ../src/main-window.c:1918
+msgid "Loading..."
+msgstr "Учитавање..."
+
+#: ../src/main-window.c:2103
+#, c-format
+msgid ", Free space: %s (Total: %s )"
+msgstr ", Слободан простор: %s (Укупно: %s )"
+
+#: ../src/main-window.c:2112
+#, c-format
+msgid "%d item selected (%s)%s"
+msgid_plural "%d items selected (%s)%s"
+msgstr[0] "%d ставка је одабрана (%s)%s"
+msgstr[1] "%d ставке су одабране (%s)%s"
+msgstr[2] "%d ставки је одабрано (%s)%s"
+
+#: ../src/main-window.c:2122
+#, c-format
+msgid "%d hidden"
+msgid_plural "%d hidden"
+msgstr[0] "%d скривена"
+msgstr[1] "%d скривене"
+msgstr[2] "%d скривених"
+
+#: ../src/main-window.c:2123
+#, c-format
+msgid "%d visible item (%s)%s"
+msgid_plural "%d visible items (%s)%s"
+msgstr[0] "%d видљива ставка (%s)%s"
+msgstr[1] "%d видљиве ставке (%s)%s"
+msgstr[2] "%d видљивих ставки (%s)%s"
+
+#: ../src/ptk/ptk-file-browser.c:521
+msgid "Directory doesn't exist!"
+msgstr "Директоријум не постоји!"
+
+#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
+msgid "Open in New _Tab"
+msgstr "Отвори у новом _листу"
+
+#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
+msgid "Open in New _Window"
+msgstr "Отвори у _новом прозору"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
+#: ../src/find-files.c:799
+msgid "Name"
+msgstr "Име"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+msgid "Size"
+msgstr "Величина"
+
+#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+msgid "Type"
+msgstr "Врста"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Permission"
+msgstr "Дозволе"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Owner:Group"
+msgstr "Власник:Група"
+
+#: ../src/ptk/ptk-file-browser.c:1647
+msgid "Last Modification"
+msgstr "Последња измена"
+
+#: ../src/ptk/ptk-file-browser.c:2856
+msgid "Location"
+msgstr "Места"
+
+#: ../src/ptk/ptk-file-browser.c:2857
+msgid "Directory Tree"
+msgstr "Стабло директоријума"
+
+#: ../src/ptk/ptk-location-view.c:207
+msgid "Trash"
+msgstr "Смеће"
+
+#: ../src/ptk/ptk-location-view.c:250
+msgid "Desktop"
+msgstr "Радна површ"
+
+#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
+msgid "Unable to mount device"
+msgstr "Не могу да монтирам уређај"
+
+#: ../src/ptk/ptk-location-view.c:652
+msgid "Unable to unmount device"
+msgstr "Не могу да демонтирам уређај"
+
+#: ../src/ptk/ptk-location-view.c:671
+msgid "Unable to eject device"
+msgstr "Не могу да избацим уређај"
+
+#: ../src/ptk/ptk-location-view.c:730
+msgid "_Mount File System"
+msgstr "_Монтирај"
+
+#: ../src/ptk/ptk-location-view.c:740
+msgid "_Eject"
+msgstr "_Избаци"
+
+#: ../src/ptk/ptk-location-view.c:746
+msgid "_Unmount File System"
+msgstr "_Демонтирај"
+
+#: ../src/ptk/ptk-file-task.c:103
+msgid "Move: "
+msgstr "Премештам: "
+
+#: ../src/ptk/ptk-file-task.c:104
+msgid "Copy: "
+msgstr "Умножавам: "
+
+#: ../src/ptk/ptk-file-task.c:105
+msgid "Move to Trash: "
+msgstr "Премештам у смеће: "
+
+#: ../src/ptk/ptk-file-task.c:106
+msgid "Delete: "
+msgstr "Бришем: "
+
+#: ../src/ptk/ptk-file-task.c:107
+msgid "Link: "
+msgstr "Повезујем: "
+
+#: ../src/ptk/ptk-file-task.c:108
+msgid "Change Properties: "
+msgstr "Мењам особине: "
+
+#: ../src/ptk/ptk-file-task.c:112
+msgid "Moving..."
+msgstr "Премештање..."
+
+#: ../src/ptk/ptk-file-task.c:113
+msgid "Copying..."
+msgstr "Умножавање..."
+
+#: ../src/ptk/ptk-file-task.c:114
+msgid "Moving to Trash..."
+msgstr "Премештање у смеће..."
+
+#: ../src/ptk/ptk-file-task.c:115
+msgid "Deleting..."
+msgstr "Брисање..."
+
+#: ../src/ptk/ptk-file-task.c:116
+msgid "Linking..."
+msgstr "Повезивање..."
+
+#: ../src/ptk/ptk-file-task.c:117
+msgid "Changing Properties"
+msgstr "Измена особина"
+
+#: ../src/ptk/ptk-file-task.c:320
+msgid "Cancel the operation?"
+msgstr "Поништи ову радњу?"
+
+#. Ask the user whether to overwrite dir content or not
+#: ../src/ptk/ptk-file-task.c:409
+msgid "Do you want to overwrite the folder and its content?"
+msgstr "Желите ли да препишем преко овог директоријума и његовог садржаја?"
+
+#. Ask the user whether to overwrite the file or not
+#: ../src/ptk/ptk-file-task.c:414
+msgid "Do you want to overwrite this file?"
+msgstr "Желите ли да препишем преко ове датотеке?"
+
+#. Rename is required
+#: ../src/ptk/ptk-file-task.c:419
+msgid "Please choose a new file name."
+msgstr "Изаберите ново име за датотеку."
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
+#: ../src/ptk/ptk-file-task.c:427
+#, c-format
+msgid ""
+"\"%s\" already exists.\n"
+"\n"
+"%s"
+msgstr ""
+"„%s“ већ постоји.\n"
+"\n"
+"%s"
+
+#. Ths first %s is a file name, and the second one represents followed message.
+#: ../src/ptk/ptk-file-task.c:432
+#, c-format
+msgid ""
+"\"%s\"\n"
+"\n"
+"Destination and source are the same file.\n"
+"\n"
+"%s"
+msgstr ""
+"„%s“\n"
+"\n"
+"Одредишна и изворна су исте датотеке.\n"
+"\n"
+"%s"
+
+#: ../src/ptk/ptk-file-task.c:449
+msgid "Overwrite"
+msgstr "Препиши"
+
+#: ../src/ptk/ptk-file-task.c:450
+msgid "Overwrite All"
+msgstr "Препиши све"
+
+#: ../src/ptk/ptk-file-task.c:455
+msgid "Rename"
+msgstr "Преименуј"
+
+#: ../src/ptk/ptk-file-task.c:456
+msgid "Skip"
+msgstr "Прескочи"
+
+#: ../src/ptk/ptk-file-task.c:457
+msgid "Skip All"
+msgstr "Прескочи све"
+
+#: ../src/ptk/ptk-file-archiver.c:125
+#, fuzzy
+msgid "Save Compressed Files to..."
+msgstr "Сачувај архиву у..."
+
+#: ../src/ptk/ptk-file-archiver.c:133
+msgid "Format of compressed File:"
+msgstr "Врста архиве:"
+
+#: ../src/ptk/ptk-file-archiver.c:204
+#, c-format
+msgid "Creating Compressed File: %s"
+msgstr "Правим архиву: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:207
+msgid "Compress Files"
+msgstr "Направи архиву..."
+
+#: ../src/ptk/ptk-file-archiver.c:238
+msgid "Extract File to..."
+msgstr "Распакуј архиву у"
+
+#: ../src/ptk/ptk-file-archiver.c:287
+#, c-format
+msgid "Extracting Files to: %s"
+msgstr "Распакујем архиву у: %s"
+
+#: ../src/ptk/ptk-file-archiver.c:289
+msgid "Extract Files"
+msgstr "Распакуј архиву"
+
+#: ../src/ptk/ptk-console-output.c:67
+msgid ""
+"\n"
+"Complete!"
+msgstr ""
+"\n"
+"Завршено!"
+
+#: ../src/ptk/ptk-console-output.c:171
+msgid "Command:"
+msgstr "Наредба:"
+
+#: ../src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr "Систем датотека"
+
+#: ../src/ptk/ptk-dir-tree.c:397
+msgid "No Sub Folder"
+msgstr "Нема поддиректоријума"
+
+#: ../src/ptk/ptk-file-menu.c:116
+msgid "E_xtract Here"
+msgstr "Распакуј овде"
+
+#: ../src/ptk/ptk-file-menu.c:117
+msgid "Extract _To"
+msgstr "Распакуј у..."
+
+#: ../src/ptk/ptk-file-menu.c:123
+msgid "Open _with..."
+msgstr "Отвори по_моћу..."
+
+#: ../src/ptk/ptk-file-menu.c:131
+msgid "Compress"
+msgstr "Направи архиву..."
+
+#: ../src/ptk/ptk-file-menu.c:132
+msgid "E_xtract"
+msgstr "_Распакуј"
+
+#: ../src/ptk/ptk-file-menu.c:135
+msgid "_Properties"
+msgstr "_Особине"
+
+#: ../src/ptk/ptk-file-menu.c:144
+msgid "Open in Terminal"
+msgstr "Отвори у терминалу"
+
+#: ../src/ptk/ptk-file-menu.c:373
+msgid "_Open with another program"
+msgstr "Отвори неким другим _програмом"
+
+#: ../src/ptk/ptk-file-menu.c:388
+msgid "E_xecute"
+msgstr "И_зврши"
+
+#: ../src/ptk/ptk-file-menu.c:397
+#, c-format
+msgid "_Open with \"%s\""
+msgstr "_Отвори помоћу „%s“"
+
+#. delete some confusing menu item if this menu is for current folder
+#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
+#: ../src/find-files.c:229
+msgid "_Open"
+msgstr "_Отвори"
+
+#: ../src/ptk/ptk-file-misc.c:60
+msgid "Really delete selected files?"
+msgstr "Желите ли да обришем изабране датотеке?"
+
+#: ../src/ptk/ptk-file-misc.c:121
+msgid "Rename File"
+msgstr "Преименуј датотеку"
+
+#: ../src/ptk/ptk-file-misc.c:122
+msgid "Please input new file name:"
+msgstr "Унесите ново име за датотеку:"
+
+#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
+#: ../src/ptk/ptk-file-misc.c:225
+msgid ""
+"The file name you specified already exists.\n"
+"Please input a new one:"
+msgstr ""
+"Датотека са истим именом већ постоји.\n"
+"Унесите ново име за датотеку:"
+
+#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+msgid "New Folder"
+msgstr "Нови директоријум"
+
+#: ../src/ptk/ptk-file-misc.c:196
+msgid "Input a name for the new folder:"
+msgstr "Унесите име за нови директоријум:"
+
+#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+msgid "New File"
+msgstr "Нова датотека"
+
+#: ../src/ptk/ptk-file-misc.c:203
+msgid "Input a name for the new file:"
+msgstr "Унесите име за нову датотеку:"
+
+#: ../src/ptk/ptk-file-misc.c:259
+msgid "The new file cannot be created!"
+msgstr "Не могу да направим нову датотеку!"
+
+#: ../src/ptk/ptk-file-properties.c:305
+msgid "Multiple files are selected"
+msgstr "Више датотека је одабрано"
+
+#: ../src/ptk/ptk-file-properties.c:384
+msgid "Multiple files of different types"
+msgstr "Више разноврсних датотека"
+
+#: ../src/ptk/ptk-file-properties.c:452
+msgid "Other program..."
+msgstr "Други програм..."
+
+#. The total file size displayed in "File Properties" is not
+#. completely calculated yet. So "Calculating..." is displayed.
+#: ../src/ptk/ptk-file-properties.c:546
+msgid "Calculating..."
+msgstr "Рачунам..."
+
+#: ../src/ptk/ptk-file-properties.c:701
+msgid "Invalid User"
+msgstr "Не постоји корисник"
+
+#: ../src/ptk/ptk-file-properties.c:712
+msgid "Invalid Group"
+msgstr "Не постоји група"
+
+#: ../src/ptk/ptk-file-properties.c:760
+msgid ""
+"Do you want to recursively apply these changes to all files and sub-folders?"
+msgstr ""
+"Желите ли да рекурзивно применим ову радњу на све датотеке и "
+"поддиректоријуме?"
+
+#: ../src/edit-bookmarks.c:79
+msgid "New Item"
+msgstr "Нова ставка"
+
+#: ../src/edit-bookmarks.c:153
+msgid "Edit Bookmarks"
+msgstr "Уреди обележиваче"
+
+#: ../src/edit-bookmarks.c:210
+msgid "Path"
+msgstr "Путања"
+
+#: ../src/edit-bookmarks.c:233
+msgid "Use drag & drop to sort the items"
+msgstr "Користите технику „превуци и пусти“ за сортирање ставки"
+
+#: ../src/vfs/vfs-app-desktop.c:445
+#, c-format
+msgid "Command not found"
+msgstr "Не постоји ова наредба"
+
+#: ../src/vfs/vfs-file-task.c:733
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr "Одредишни директоријум „%1$s“ се налази у изворном „%2$s“"
+
+#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr "%s логички диск"
+
+#: ../src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "ЦД-РОМ"
+
+#: ../src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "ЦД-Р"
+
+#: ../src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "ЦД-РВ"
+
+#: ../src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "ДВД-РОМ"
+
+#: ../src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "ДВД+Р"
+
+#: ../src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "ДВД+РВ"
+
+#: ../src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "ДВД±РВ"
+
+#: ../src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "ДВД-РВ"
+
+#: ../src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "ДВД-РАМ"
+
+#: ../src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Флопи уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Компакт-флеш меморија"
+
+#: ../src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "Меморијски стик"
+
+#: ../src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr "Смарт медија уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "СД/ММЦ уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "ЗИП уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr "ЏЕЗ уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "ПЕН уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s музички плејер"
+
+#: ../src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s дигитални фотоапарат"
+
+#: ../src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Уређај"
+
+#: ../src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "Спољашњи %s"
+
+#: ../src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "ЦД-РОМ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "Празан ЦД-Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "ЦД-Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "Празан ЦД-РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "ЦД-РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "ДВД-РОМ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "Празан ДВД-РАМ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "ДВД-РАМ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "Празан ДВД-Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "ДВД-Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "Празан ДВД-РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "ДВД-РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "Празан ДВД+Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "ДВД+Р диск"
+
+#: ../src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "Празан ДВД+РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "ДВД+РВ диск"
+
+#: ../src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Звучни диск"
+
+#: ../src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "%s преносиви диск"
+
+#: ../src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Логички диск"
+
+#: ../src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "Не могу позвати „HAL“ позадински процес: %s"
+
+#. definitely not a device that we're able to mount, eject or unmount
+#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "Дати уређај „%s“ није уређај за складиштење"
+
+#. tell the caller that no matching device was found
+#: ../src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "Уређај „%s“ не постоји у табели уређаја на систему датотека"
+
+#: ../src/vfs/vfs-volume-hal.c:2256
+#, c-format
+msgid "You are not privileged to mount the volume \"%s\""
+msgstr "Немате дозволе за монтирање диска „%s“"
+
+#: ../src/vfs/vfs-volume-hal.c:2257
+#, c-format
+msgid "You are not privileged to unmount the volume \"%s\""
+msgstr "Немате дозволе за демонтирање диска „%s“"
+
+#: ../src/vfs/vfs-volume-hal.c:2258
+#, c-format
+msgid "You are not privileged to eject the volume \"%s\""
+msgstr "Немате дозволе за избацивање диска „%s“"
+
+#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#: ../src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Погрешне поставке код покушаја монтирања диска „%s“"
+
+#: ../src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid ""
+"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
+"your system"
+msgstr ""
+"Ваш систем не подржава <i>%s</i> систем датотека који се налази на „%s“ диску"
+
+#: ../src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr "Неки од програма спречава демонтирање „%s“ диска"
+
+#: ../src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr "Диск „%s“ није монтиран"
+
+#: ../src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "Грешка <i>%s</i>"
+
+#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
+#: ../src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr "Вероватно је „%s“ диск монтиран ручно у терминалу"
+
+#: ../src/vfs/vfs-volume-hal.c:2289
+#, c-format
+msgid ""
+"Blank discs cannot be mounted, use a CD recording application to record "
+"audio or data on the disc"
+msgstr ""
+"Празни ЦД-ови се не могу монтирати. Користите неки програм за рад са ЦД-"
+"овима да би их могли користити"
+
+#: ../src/vfs/vfs-volume-hal.c:2300
+#, c-format
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr ""
+"Звучни дискови се не могу монтирати. Покрените их из неког музичког плејера"
+
+#: ../src/desktop/desktop-window.c:193
+msgid "_Icons"
+msgstr "_Иконице"
+
+#: ../src/desktop/desktop-window.c:198
+msgid "_Desktop Settings"
+msgstr "Подешавања радне површи"
+
+#: ../src/desktop/desktop-window.c:1842
+msgid "My Documents"
+msgstr "Личне датотеке"
+
+#: ../src/find-files.c:230
+msgid "Open Containing _Folder"
+msgstr "_Отвори директоријум где се ово налази"
+
+#: ../src/find-files.c:677
+msgid "Select a folder"
+msgstr "Изаберите директоријум"
+
+#: ../src/find-files.c:722
+msgid "Browse..."
+msgstr "Разгледај..."
+
+#: ../src/find-files.c:744
+msgid "All Local Disk Partitions"
+msgstr "Сви делови локалних дискова"
+
+#: ../src/find-files.c:814
+msgid "Folder"
+msgstr "Директоријум"
+
+#: ../src/find-files.c:830
+msgid "Last Modified"
+msgstr "Последњи пут измењено"
