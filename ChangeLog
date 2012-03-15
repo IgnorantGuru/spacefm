@@ -1,3 +1,5 @@
+0.7.3
+    new icons and logo by Goran Simovic plus alternates
 0.7.2   2012-03-05:
     exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
         added /usr/bin/spacefm-auth)

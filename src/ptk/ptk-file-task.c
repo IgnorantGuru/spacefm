@@ -235,11 +235,6 @@ void ptk_file_task_run( PtkFileTask* task )
     vfs_file_task_run( task->task );
     if ( task->task->type == VFS_FILE_TASK_EXEC )
     {
-        if ( task->complete && task->timeout )
-        {
-            g_source_remove( task->timeout );
-            task->timeout = 0;
-        }
         if ( !task->complete && task->task->exec_sync )
             task->exec_timer = g_timeout_add( 200, ( GSourceFunc ) on_exec_timer, task );
         else if ( !task->task->exec_sync )
@@ -298,8 +293,10 @@ void ptk_file_task_cancel( PtkFileTask* task )
                 // remove files
                 char* rm_cmd;
                 if ( task->task->exec_script )
-                    rm_cmd = g_strdup_printf( " ; rm -f %s",
-                                        task->task->exec_script );
+                    rm_cmd = g_strdup_printf( " ; rm -f %s %s",
+                                        task->task->exec_script,
+                                        task->task->exec_export_script ? 
+                                            task->task->exec_export_script : "" );
                 else
                     rm_cmd = g_strdup_printf( "" );
 
@@ -320,7 +317,22 @@ void ptk_file_task_cancel( PtkFileTask* task )
                 g_free( rm_cmd );
 
                 PtkFileTask* task2 = ptk_file_exec_new( _("Kill As Other"), NULL, task->parent_window, task->task_view );
-                task2->task->exec_command = cmd;
+                task2->task->exec_direct = TRUE;
+                // argv max size 7
+                // for su commands, must use /bin/bash -c
+                // as su does not execute binaries but passes command to shell
+                int a = 0;  
+                if ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) )
+                    // gksu* needs one arg with command single-quoted
+                    task2->task->exec_argv[a++] = g_strdup_printf( "/bin/bash -c '%s'", cmd );
+                else
+                {
+                    task2->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
+                    task2->task->exec_argv[a++] = g_strdup_printf( "-c" );
+                    task2->task->exec_argv[a++] = g_strdup( cmd );
+                }
+                task2->task->exec_argv[a++] = NULL;
+                g_free( cmd );
                 task2->task->exec_as_user = g_strdup( task->task->exec_as_user );
                 task2->task->exec_sync = FALSE;
                 task2->task->exec_browser = task->task->exec_browser;

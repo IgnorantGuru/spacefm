@@ -27,7 +27,7 @@
         <col id="0">24x24</col>
       </row>
       <row>
-        <col id="0">22x22</col>
+        <col id="0">20x20</col>
       </row>
       <row>
         <col id="0">16x16</col>
@@ -64,7 +64,7 @@
         <col id="0">24x24</col>
       </row>
       <row>
-        <col id="0">22x22</col>
+        <col id="0">20x20</col>
       </row>
     </data>
   </object>

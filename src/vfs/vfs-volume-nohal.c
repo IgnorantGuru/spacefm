@@ -784,7 +784,7 @@ void vfs_volume_exec( VFSVolume* vol, char* command )
     GList* files = NULL;
     files = g_list_prepend( files, g_strdup_printf( "autoexec" ) );
 
-    printf( _("\nAutoexec: %s\n"), s1 );
+    printf( _("Autoexec: %s\n"), s1 );
     PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_EXEC, files, "/", NULL,
                                                                         NULL );
     task->task->exec_action = g_strdup_printf( "autoexec" );
@@ -830,7 +830,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
                     FMMainWindow* main_window = fm_main_window_get_last_active();
                     if ( main_window )
                     {
-                        printf( _("\nAuto Open Tab for %s in %s\n"), vol->device_file,
+                        printf( _("Auto Open Tab for %s in %s\n"), vol->device_file,
                                                                 vol->mount_point );
                         //PtkFileBrowser* file_browser = 
                         //        (PtkFileBrowser*)fm_main_window_get_current_file_browser(
@@ -874,7 +874,7 @@ void vfs_volume_autounmount( VFSVolume* vol )
         return;
 
     char* line = g_strdup_printf( "/usr/bin/udisks --unmount %s", vol->device_file );
-    printf( _("\nAuto-Unmount: %s\n"), line );
+    printf( _("Auto-Unmount: %s\n"), line );
     g_spawn_command_line_async( line, NULL );
     g_free( line );
 }
@@ -891,7 +891,7 @@ void vfs_volume_automount( VFSVolume* vol )
 
     char* line = vfs_volume_get_mount_command( vol,
                                             xset_get_s( "dev_mount_options" ) );
-    printf( _("\nAutomount: %s\n"), line );
+    printf( _("Automount: %s\n"), line );
     g_spawn_command_line_async( line, NULL );
     g_free( line );
 }

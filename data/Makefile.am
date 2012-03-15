@@ -11,7 +11,21 @@ DISTCLEANFILES = spacefm.desktop \
 
 icondir = $(datadir)/pixmaps
 icon_DATA = spacefm.png \
-			spacefm-root.png
+			spacefm-root.png \
+			spacefm-128-cube-blue.png \
+			spacefm-128-cube-green.png \
+			spacefm-128-cube-red.png \
+			spacefm-128-pyramid-blue.png \
+			spacefm-128-pyramid-green.png \
+			spacefm-128-pyramid-red.png \
+			spacefm-48-cube-blue.png \
+			spacefm-48-cube-green.png \
+			spacefm-48-cube-red.png \
+			spacefm-48-folder-blue.png \
+			spacefm-48-folder-red.png \
+			spacefm-48-pyramid-blue.png \
+			spacefm-48-pyramid-green.png \
+			spacefm-48-pyramid-red.png
 
 filedir = $(datadir)/spacefm
 uidir=$(filedir)/ui

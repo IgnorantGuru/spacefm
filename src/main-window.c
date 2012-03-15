@@ -2175,29 +2175,16 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
     GtkEventBox * evt_box;
     GtkWidget* tab_label;
     GtkWidget* tab_text;
-    GtkWidget* tab_icon = NULL;
+    GtkWidget* tab_icon;
     GtkWidget* close_btn;
-    GtkWidget* close_icon;
-    GdkPixbuf* pixbuf = NULL;
-    GtkIconTheme* icon_theme = gtk_icon_theme_get_default();
-    
+
     /* Create tab label */
     evt_box = GTK_EVENT_BOX( gtk_event_box_new () );
     gtk_event_box_set_visible_window ( GTK_EVENT_BOX( evt_box ), FALSE );
 
     tab_label = gtk_hbox_new( FALSE, 0 );
-    XSet* set = xset_get_panel( file_browser->mypanel, "icon_tab" );
-    if ( set->icon )
-    {
-        pixbuf = vfs_load_icon( icon_theme, set->icon, 16 );
-        if ( pixbuf )
-        {
-            tab_icon = gtk_image_new_from_pixbuf( pixbuf );
-            g_object_unref( pixbuf );
-        }
-        else
-            tab_icon = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
-    }
+    XSet* set = xset_get_panel( file_browser->mypanel, "icon_tab" ); 
+    tab_icon = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
     if ( !tab_icon )
         tab_icon = gtk_image_new_from_icon_name ( "gtk-directory",
                                               GTK_ICON_SIZE_MENU );
@@ -2235,19 +2222,11 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
         close_btn = gtk_button_new ();
         gtk_button_set_focus_on_click ( GTK_BUTTON ( close_btn ), FALSE );
         gtk_button_set_relief( GTK_BUTTON ( close_btn ), GTK_RELIEF_NONE );
-        pixbuf = vfs_load_icon( icon_theme, GTK_STOCK_CLOSE, 16 );
-        if ( pixbuf )
-        {
-            close_icon = gtk_image_new_from_pixbuf( pixbuf );
-            g_object_unref( pixbuf );
-            //shorten tab since we have a 16 icon
-            gtk_widget_set_size_request ( close_btn, 24, 20 );
-        }
-        else
-        {
-            close_icon = gtk_image_new_from_stock( GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU );
-        }
-        gtk_container_add ( GTK_CONTAINER ( close_btn ), close_icon );
+        //gtk_container_add ( GTK_CONTAINER ( close_btn ),
+        //                    gtk_image_new_from_icon_name( "gtk-close", GTK_ICON_SIZE_MENU ) );
+        gtk_container_add ( GTK_CONTAINER ( close_btn ),
+                            gtk_image_new_from_stock( GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU ) );
+        gtk_widget_set_size_request ( close_btn, 24, 20 );
         gtk_box_pack_start ( GTK_BOX( tab_label ),
                              close_btn, FALSE, FALSE, 0 );
         g_signal_connect( G_OBJECT( close_btn ), "clicked",
@@ -3559,7 +3538,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     c->valid = TRUE;
 }
 
-gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
+gboolean main_write_exports( VFSFileTask* vtask, char* value )
 {
     int result, p, num_pages, i;
     char* cwd;
@@ -3577,11 +3556,15 @@ gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     XSet* set = (XSet*)vtask->exec_set;
     
+    FILE* file = fopen( vtask->exec_export_script, "w" );
     if ( !file )
         return FALSE;
-        
-    result = fputs( "# source\n\n", file );
-    if ( result < 0 ) return FALSE;
+    result = fputs( "#!/bin/bash\n#\n# Temporary SpaceFM source script - it is safe to delete this file.\n\n", file );
+    if ( result < 0 )
+    {
+        fclose( file );
+        return FALSE;
+    }
     
     write_src_functions( file );
     
@@ -3989,9 +3972,17 @@ gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
             g_free( esc_path );
         }
     }
-
+    // close
     result = fputs( "\n", file );
-    return result >= 0;
+    if ( result < 0 )
+    {
+        fclose( file );
+        return FALSE;
+    }
+    result = fclose( file );
+    if ( result )
+        return FALSE;    
+    return TRUE;
 }
 
 void on_task_columns_changed( GtkTreeView *view, gpointer user_data )

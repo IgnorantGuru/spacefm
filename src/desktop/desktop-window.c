@@ -2633,7 +2633,7 @@ void desktop_context_fill( DesktopWindow* win, gpointer context )
     c->valid = TRUE;
 }
 
-gboolean desktop_write_exports( VFSFileTask* vtask, char* value, FILE* file )
+gboolean desktop_write_exports( VFSFileTask* vtask, char* value )
 {
     int result;
     char* cwd = vfs_get_desktop_dir();
@@ -2648,10 +2648,15 @@ gboolean desktop_write_exports( VFSFileTask* vtask, char* value, FILE* file )
     DesktopWindow* win = (DesktopWindow*)vtask->exec_desktop;
     XSet* set = (XSet*)vtask->exec_set;
 
+    FILE* file = fopen( vtask->exec_export_script, "w" );
     if ( !file )
         return FALSE;
-    result = fputs( "# source\n\n", file );
-    if ( result < 0 ) return FALSE;
+    result = fputs( "#!/bin/bash\n#\n# Temporary SpaceFM source script - it is safe to delete this file.\n\n", file );
+    if ( result < 0 )
+    {
+        fclose( file );
+        return FALSE;
+    }
  
     write_src_functions( file );
 
@@ -2788,8 +2793,16 @@ gboolean desktop_write_exports( VFSFileTask* vtask, char* value, FILE* file )
     else
         fprintf( file, "fm_tmp_dir=%s\n", xset_get_user_tmp_dir() );
 
-
+    // close
     result = fputs( "\n", file );
-    return result >= 0;
+    if ( result < 0 )
+    {
+        fclose( file );
+        return FALSE;
+    }
+    result = fclose( file );
+    if ( result )
+        return FALSE;    
+    return TRUE;
 }
 

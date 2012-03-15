@@ -135,7 +135,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser );
-gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file );
+gboolean main_write_exports( VFSFileTask* vtask, char* value );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );
 void on_reorder( GtkWidget* item, GtkWidget* parent );
 char* main_window_get_tab_cwd( PtkFileBrowser* file_browser, int tab_num );

@@ -1790,7 +1790,6 @@ void ptk_file_browser_update_tab_label( PtkFileBrowser* file_browser )
 
 void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
 {
-//printf("ptk_file_browser_select_last\n");
     // select one file?
     if ( file_browser->select_path )
     {
@@ -1804,42 +1803,40 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     gint* elementn = -1;
     GList* l;
     GList* element = NULL;
-    //printf("    search for %s\n", (char*)file_browser->curHistory->data );
-    
-    if ( file_browser->history && file_browser->histsel && file_browser->curHistory &&
-                                        ( l = g_list_last( file_browser->history ) ) )
+    //g_debug ("@@@@@@@@@@@ search for: %s", (char*)file_browser->curHistory->data );
+    element = g_list_find(file_browser->history, (char*)file_browser->curHistory->data );
+    if ( element )
     {
-        if ( l->data && !strcmp( (char*)l->data, (char*)file_browser->curHistory->data ) )
+        elementn = g_list_position( file_browser->history, element );
+        //g_debug ("elementn=%d", elementn );
+        element = NULL;
+        if ( elementn != -1 )
         {
-            elementn = g_list_position( file_browser->history, l );
-            if ( elementn != -1 )
+            element = g_list_nth( file_browser->histsel, elementn );
+            if ( element == file_browser->curhistsel && ! element->data )
             {
-                element = g_list_nth( file_browser->histsel, elementn );
-                // skip the current history item if sellist empty since it was just created
-                if ( !element->data )
+                /* g_list_find found only the new curHistory element for this folder
+                 * so avoid that element and search backwards through history
+                 * for another match */
+                element = NULL;
+                //g_debug("backwards search");
+                for ( l = g_list_last( file_browser->history ); l; l = l->prev )
                 {
-                    //printf( "        found current empty\n");
-                    element = NULL;
-                }
-                //else printf( "        found current NON-empty\n");
-            }
-        }
-        if ( !element )
-        {
-            while ( l = l->prev )
-            {
-                if ( l->data && !strcmp( (char*)l->data, (char*)file_browser->curHistory->data ) )
-                {
-                    elementn = g_list_position( file_browser->history, l );
-                    //printf ("        found elementn=%d\n", elementn );
-                    if ( elementn != -1 )
-                        element = g_list_nth( file_browser->histsel, elementn );
-                    break;
+                    if ( l != file_browser->curHistory && l->data )
+                    {
+                        if ( ! strcmp( (char*)l->data, (char*)file_browser->curHistory->data ) )
+                        {
+                            elementn = g_list_position( file_browser->history, l );
+                            //g_debug ("elementn=%d (backwards search)", elementn );
+                            if ( elementn != -1 )
+                                element = g_list_nth( file_browser->histsel, elementn );
+                            break;
+                        }
+                    }
                 }
             }
         }
     }
-    
 /*    
     if ( element )
     {
@@ -1855,7 +1852,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
 */
     if ( element && element->data )
     {
-        //printf("    select files\n");
+        //g_debug ("select files");
         PtkFileList* list = PTK_FILE_LIST( file_browser->file_list );
         GtkTreeIter it;
         GtkTreePath* tp;
@@ -2022,6 +2019,15 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     if( cancel )
         return FALSE;
 
+    if ( file_browser->dir )    /* remove old dir object */
+    {
+        g_signal_handlers_disconnect_matched( file_browser->dir,
+                                              G_SIGNAL_MATCH_DATA,
+                                              0, 0, NULL, NULL,
+                                              file_browser );
+        g_object_unref( file_browser->dir );
+    }
+
     //MOD remember selected files
     //g_debug ("@@@@@@@@@@@ remember: %s", ptk_file_browser_get_cwd( file_browser ) );
     if ( file_browser->curhistsel && file_browser->curhistsel->data )
@@ -2033,13 +2039,13 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     if ( file_browser->curhistsel )
     {
         file_browser->curhistsel->data = ptk_file_browser_get_selected_files( file_browser );
-         
-        //g_debug("set curhistsel %d", g_list_position( file_browser->histsel, file_browser->curhistsel ) );
-        //if ( file_browser->curhistsel->data )
-        //    g_debug ("curhistsel->data OK" );
-        //else
-        //    g_debug ("curhistsel->data NULL" );
-        
+        /* 
+        g_debug("set curhistsel %d", g_list_position( file_browser->histsel, file_browser->curhistsel ) );
+        if ( file_browser->curhistsel->data )
+            g_debug ("curhistsel->data OK" );
+        else
+            g_debug ("curhistsel->data NULL" );
+        */
     }
 
     if ( mode == PTK_FB_CHDIR_ADD_HISTORY )
@@ -2089,16 +2095,6 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     {
         file_browser->curHistory = file_browser->curHistory->next;
         file_browser->curhistsel = file_browser->curhistsel->next;  //MOD
-    }
-
-    // remove old dir object
-    if ( file_browser->dir )
-    {
-        g_signal_handlers_disconnect_matched( file_browser->dir,
-                                              G_SIGNAL_MATCH_DATA,
-                                              0, 0, NULL, NULL,
-                                              file_browser );
-        g_object_unref( file_browser->dir );
     }
 
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
@@ -2349,11 +2345,6 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
         gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
                                  GTK_TREE_MODEL( list ) );
-
-// try to smooth list bounce created by delayed re-appearance of column headers 
-//while( gtk_events_pending() )
-//    gtk_main_iteration();
-
 }
 
 void on_dir_file_listed( VFSDir* dir,
@@ -2371,7 +2362,6 @@ void on_dir_file_listed( VFSDir* dir,
         //g_signal_connect( dir, "file-changed",
         //                  G_CALLBACK( on_folder_content_changed ), file_browser );
     }
-
     ptk_file_browser_update_model( file_browser );
 
     file_browser->busy = FALSE;
@@ -3403,7 +3393,6 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
         folder_view = exo_tree_view_new ();
 
         init_list_view( file_browser, GTK_TREE_VIEW( folder_view ) );
-
         tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( folder_view ) );
         gtk_tree_selection_set_mode( tree_sel, GTK_SELECTION_MULTIPLE );
 
@@ -6040,8 +6029,8 @@ void ptk_file_browser_on_permission( GtkMenuItem* item, PtkFileBrowser* file_bro
     task->task->exec_browser = file_browser;
     task->task->exec_sync = TRUE;
     task->task->exec_show_error = TRUE;
-    task->task->exec_show_output = FALSE;
-    task->task->exec_export = FALSE;
+    task->task->exec_show_output = TRUE;
+    task->task->exec_export = TRUE;
     if ( as_root )
         task->task->exec_as_user = g_strdup_printf( "root" );
     ptk_file_task_run( task );

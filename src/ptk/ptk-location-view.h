@@ -43,7 +43,6 @@ void ptk_location_view_show_trash_can( gboolean show );
 
 void ptk_location_view_on_action( GtkWidget* view, XSet* set );
 VFSVolume* ptk_location_view_get_selected_vol( GtkTreeView* location_view );
-void update_volume_icons();
 void update_bookmark_icons();
 void on_bookmark_remove( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_rename( GtkMenuItem* item, PtkFileBrowser* file_browser );

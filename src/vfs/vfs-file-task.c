@@ -859,14 +859,19 @@ void vfs_file_task_kill_cpids( char* cpids, int signal )
     }
 }
 
-static void cb_exec_child_cleanup( GPid pid, gint status, char* tmp_file )
+static void cb_exec_child_cleanup( GPid pid, gint status, char* tmphex8 )
 {   // delete tmp files after async task terminates
-//printf("cb_exec_child_cleanup pid=%d status=%d file=%s\n", pid, status, tmp_file );
+//printf("cb_exec_child_cleanup pid=%d status=%d\n", pid, status);
     g_spawn_close_pid( pid );
-    if ( tmp_file )
+    if ( tmphex8 )
     {
-        unlink( tmp_file );
-        g_free( tmp_file );
+        char* path = g_strdup_printf( "%s-exec-tmp.sh", tmphex8 );
+        unlink( path );
+        g_free( path );
+        path = g_strdup_printf( "%s-src-tmp.sh", tmphex8 );
+        unlink( path );
+        g_free( path );
+        g_free( tmphex8 );
     }
 //printf("cb_exec_child_cleanup DONE\n", pid, status);
 }
@@ -874,7 +879,7 @@ static void cb_exec_child_cleanup( GPid pid, gint status, char* tmp_file )
 static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
 {
     gboolean bad_status = FALSE;
-printf("child finished  pid=%d exit_status=%d\n", pid, status);
+printf("child finished  pid=%d exit_status=%d\n\n", pid, status);
     g_spawn_close_pid( pid );
     task->exec_pid = 0;
 
@@ -892,6 +897,8 @@ printf("child finished  pid=%d exit_status=%d\n", pid, status);
     {
         if ( task->exec_script )
             unlink( task->exec_script );
+        if ( task->exec_export_script )
+            unlink( task->exec_export_script );
     }
     
     if ( !task->exec_exit_status && !bad_status )
@@ -1073,7 +1080,7 @@ char* get_sha256sum( char* path )
     char* sha256sum = g_find_program_in_path( "/usr/bin/sha256sum" );
     if ( !sha256sum )
     {
-        g_warning( _("Please install /usr/bin/sha256sum so I can improve your security while running root commands\n") );
+        g_warning( _("Please install sha256sum so I can improve your security while running root commands\n") );
         return NULL;
     }
     
@@ -1133,15 +1140,16 @@ static void vfs_file_task_exec( VFSFileTask* task )
     int result;
     FILE* file;
     char* terminal = NULL;
+    char* terminal_opt;
     char* value;
+    char* sum_export_script = NULL;
     char* sum_script = NULL;
+    char* bash_cmd = NULL;
     GtkWidget* parent = NULL;
     gboolean success;
     int i;
 
 //printf("vfs_file_task_exec\n");
-//task->exec_keep_tmp = TRUE;
-
 
     value = task->current_dest;  // variable value temp storage
     task->current_dest = NULL;
@@ -1157,7 +1165,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     call_progress_callback( task );
     
     if ( should_abort( task ) )
-        return;
+        return ;
 
     task->percent = 0;
 
@@ -1166,32 +1174,36 @@ static void vfs_file_task_exec( VFSFileTask* task )
     {
         if ( geteuid() == 0 && !strcmp( task->exec_as_user, "root" ) )
         {
-            // already root so no su
             g_free( task->exec_as_user );
             task->exec_as_user = NULL;
         }
         else
         {
-            // get su programs
             su = get_valid_su();
             if ( !su )
             {
+                if ( value )
+                    g_free( value );
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                                         _("Terminal SU Not Available"), NULL, 0, str, NULL );
-                //vfs_file_task_exec_error( task, 0, str );
-                goto _exit_with_error_lean;
+                vfs_file_task_exec_error( task, 0, str );
+                call_state_callback( task, VFS_FILE_TASK_FINISH );
+                return ;
             }
             gsu = get_valid_gsu();
             if ( !gsu )
             {
+                if ( value )
+                    g_free( value );
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                                         _("Graphical SU Not Available"), NULL, 0, str, NULL );
-                //vfs_file_task_exec_error( task, 0, str );
-                goto _exit_with_error_lean;
+                vfs_file_task_exec_error( task, 0, str );
+                call_state_callback( task, VFS_FILE_TASK_FINISH );
+                return ;
             }
         }
     }
@@ -1204,90 +1216,148 @@ static void vfs_file_task_exec( VFSFileTask* task )
  
     if ( !g_file_test( tmp, G_FILE_TEST_IS_DIR ) )
     {
+        if ( value )
+            g_free( value );
         str = _("Cannot create temporary directory");
         g_warning ( str );
-        xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                _("Error"), NULL, 0, str, NULL );
-        //vfs_file_task_exec_error( task, 0, str );
-        goto _exit_with_error_lean;
+        vfs_file_task_exec_error( task, 0, str );
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
+        return;
     }
     
+    // get script names
+    do
+    {
+        if ( task->exec_script )
+            g_free(task->exec_script );
+        if ( task->exec_export_script )
+            g_free(task->exec_export_script );
+        hex8 = randhex8();
+        hexname = g_strdup_printf( "%s-exec-tmp.sh", hex8 );
+        task->exec_script = g_build_filename( tmp, hexname, NULL );
+        g_free(hexname );
+        hexname = g_strdup_printf( "%s-src-tmp.sh", hex8 );
+        task->exec_export_script = g_build_filename( tmp, hexname, NULL );
+        g_free(hexname );
+    }
+    while ( g_file_test( task->exec_script, G_FILE_TEST_EXISTS )
+            || g_file_test( task->exec_export_script, G_FILE_TEST_EXISTS ) ); 
+
     // get terminal if needed
     if ( !task->exec_terminal && task->exec_as_user )
     {
         if ( !strcmp( gsu, "/bin/su" ) || !strcmp( gsu, "/usr/bin/sudo" ) )
         {
             // using a non-GUI gsu so run in terminal
-            if ( su )
-                g_free( su );
+            g_free( su );
             su = strdup( gsu );
             task->exec_terminal = TRUE;
         }
     }
     if ( task->exec_terminal )
     {
-        // get terminal
         char* main_term = xset_get_s( "main_terminal" );
         if ( main_term && main_term[0] != '\0' )
             terminal = g_find_program_in_path( main_term );
         if ( !terminal || terminal[0] == '\0' )
         {
-            str = _("Please set a valid terminal program in View|Preferences|Advanced");
+            str = _("Please set your terminal program in View|Preferences|Advanced");
             g_warning ( str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                                     _("Terminal Not Available"), NULL, 0, str, NULL );
             //vfs_file_task_exec_error( task, 0, str );
-            goto _exit_with_error_lean;
+            call_state_callback( task, VFS_FILE_TASK_FINISH );
+            g_free( hex8 );
+            if ( value )
+                g_free( value );
+            return;
         }
+        if ( strstr( terminal, "xfce4-terminal" ) 
+                                || strstr( terminal, "gnome-terminal" )
+                                || strstr( terminal, "terminator" ) )
+            terminal_opt = g_strdup_printf( "-x" );
+        else
+            terminal_opt = g_strdup_printf( "-e" );
+    }
+
+    // Build exports script
+    if ( task->exec_export && !task->exec_direct &&
+                                ( task->exec_browser || task->exec_desktop ) )
+    {
+        if ( task->exec_browser )
+            success = main_write_exports( task, value );
+        else
+            success = desktop_write_exports( task, value );
+        if ( !success )
+        {
+            if ( !task->exec_keep_tmp )
+                unlink( task->exec_export_script );
+            if ( terminal )
+            {
+                g_free(terminal );
+                g_free(terminal_opt );
+            }
+            g_free( hex8 );
+            if ( value )
+                g_free( value );
+            str = _("Error writing temporary file");
+            g_warning ( str );
+            vfs_file_task_exec_error( task, 0, str );
+            call_state_callback( task, VFS_FILE_TASK_FINISH );
+            return;
+        }
+        if ( task->exec_as_user && strcmp( task->exec_as_user, "root" ) )
+            chmod( task->exec_export_script,
+                            S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );    
+        else
+            chmod( task->exec_export_script, S_IRWXU );
+        if ( task->exec_as_user && !strcmp( task->exec_as_user, "root" ) 
+                                                            && geteuid() != 0 )
+            sum_export_script = get_sha256sum( task->exec_export_script );
+    }
+    else
+    {
+        if ( task->exec_export && !task->exec_browser && !task->exec_desktop )
+            g_warning( "exec_export set without exec_browser/exec_desktop" );
+        g_free(task->exec_export_script );
+        task->exec_export_script = NULL;
     }
 
     // Build exec script
     if ( !task->exec_direct )
     {
-        // get script name
-        do
-        {
-            if ( task->exec_script )
-                g_free( task->exec_script );
-            hex8 = randhex8();
-            hexname = g_strdup_printf( "%s-tmp.sh", hex8 );
-            task->exec_script = g_build_filename( tmp, hexname, NULL );
-            g_free( hexname );
-            g_free( hex8 );
-        }
-        while ( g_file_test( task->exec_script, G_FILE_TEST_EXISTS ) ); 
-
-        // open file
         file = fopen( task->exec_script, "w" );
-        if ( !file ) goto _exit_with_error;
-
+        if ( !file )
+        {
+            str = _("Cannot create temporary file");
+            g_warning ( str );
+            vfs_file_task_exec_error( task, 0, str );
+            call_state_callback( task, VFS_FILE_TASK_FINISH );
+            if ( terminal )
+            {
+                g_free(terminal );
+                g_free(terminal_opt );
+            }
+            g_free(hex8 );
+            return ;
+        }
         // build - header
         result = fputs( "#!/bin/bash\n#\n# Temporary SpaceFM exec script - it is safe to delete this file\n\n", file );
         if ( result < 0 ) goto _exit_with_error;
-        
         // build - exports
-        if ( task->exec_export && ( task->exec_browser || task->exec_desktop ) )
+        if ( task->exec_export_script )
         {
-            if ( task->exec_browser )
-                success = main_write_exports( task, value, file );
-            else
-                success = desktop_write_exports( task, value, file );
-            if ( !success ) goto _exit_with_error;
+            result = fprintf( file, "source %s\n", task->exec_export_script );
+            if ( result < 0 ) goto _exit_with_error;
+            result = fprintf( file, "export fm_import='source %s'\n\n", task->exec_export_script );
+            if ( result < 0 ) goto _exit_with_error;
         }
         else
         {
-            if ( task->exec_export && !task->exec_browser && !task->exec_desktop )
-            {
-                task->exec_export = FALSE;
-                g_warning( "exec_export set without exec_browser/exec_desktop" );
-            }
+            result = fprintf( file, "export fm_import=''\n\n" );
+            if ( result < 0 ) goto _exit_with_error;
         }
-
-        // build - run
-        result = fprintf( file, "# run\n\nif [ \"$1\" == \"run\" ]; then\n\n" );
-        if ( result < 0 ) goto _exit_with_error;
-        
-        // build - write root settings
+        // write root settings
         if ( task->exec_write_root && geteuid() != 0 )
         {
             char* this_user = g_get_user_name();
@@ -1307,16 +1377,19 @@ static void vfs_file_task_exec( VFSFileTask* task )
                 g_free( root_set_path );
             }
         }
-
-        // build - export vars
-        if ( task->exec_export )
-            result = fprintf( file, "export fm_import='source %s'\n", task->exec_script );
-        else
-            result = fprintf( file, "export fm_import=''\n" );
-        if ( result < 0 ) goto _exit_with_error;
-        result = fprintf( file, "export fm_source='%s'\n\n", task->exec_script );
-        if ( result < 0 ) goto _exit_with_error;
-
+        // build - echo command   ( make this an option ? or echo $fm_command )
+        /*
+        if ( terminal )
+        {
+            if ( task->exec_as_user )
+                result = fprintf( file, "echo '%s>>> %s'\necho\n", task->exec_as_user,
+                                                                task->exec_command );
+            else
+                result = fprintf( file, "echo '>>> %s'\necho\n", task->exec_command );
+            if ( result < 0 ) goto _exit_with_error;
+        }
+        */
+    
         // build - trap rm
         if ( !task->exec_keep_tmp && terminal && ( strstr( terminal, "lxterminal" )
                                             || strstr( terminal, "konsole" ) ) )
@@ -1330,23 +1403,33 @@ static void vfs_file_task_exec( VFSFileTask* task )
             // note for konsole:  if you create a link to it and execute the
             // link, it will start of new instance (might also work for lxterminal?)
             // http://www.linuxjournal.com/content/start-and-control-konsole-dbus
-            result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
-                                                    task->exec_script );
+            if ( task->exec_export_script )
+                result = fprintf( file, "trap \"rm -f %s %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
+                                                        task->exec_script, 
+                                                        task->exec_export_script );
+            else
+                result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
+                                                        task->exec_script );
             if ( result < 0 ) goto _exit_with_error;
             task->exec_keep_tmp = TRUE;
         }
         else if ( !task->exec_keep_tmp && geteuid() != 0 && task->exec_as_user
                                         && !strcmp( task->exec_as_user, "root" ) )
         {
-            // run as root command, clean up
-            result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
-                                                    task->exec_script );
+            // run as root command clean up
+            if ( task->exec_export_script )
+                result = fprintf( file, "trap \"rm -f %s %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
+                                                        task->exec_script, 
+                                                        task->exec_export_script );
+            else
+                result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
+                                                        task->exec_script );
             if ( result < 0 ) goto _exit_with_error;
         }
         
         // build - command
-        printf("\nTASK_COMMAND=%s\n", task->exec_command );
-        result = fprintf( file, "%s\nfm_err=$?\n", task->exec_command );
+        printf("TASK_COMMAND=%s\n", task->exec_command );
+        result = fprintf( file, "%s\n", task->exec_command );
         if ( result < 0 ) goto _exit_with_error;
 
         // build - press enter to close
@@ -1354,180 +1437,339 @@ static void vfs_file_task_exec( VFSFileTask* task )
         {
             if ( geteuid() == 0 || 
                     ( task->exec_as_user && !strcmp( task->exec_as_user, "root" ) ) )
-                result = fprintf( file, "\necho\necho -n '%s: '\nread s",
-                                        _("[ Finished ]  Press Enter to close") );
+                result = fprintf( file, "\necho\necho -n '[ Finished ]  Press Enter to close: '\nread s" );
             else 
             {         
-                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", _("[ Finished ]  Press Enter to close or s + Enter for a shell"), _("You are ROOT") );
+                result = fprintf( file, "\necho\necho -n '[ Finished ]  Press Enter to close or s + Enter for a shell: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ You are ROOT ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n" );
             }
-            if ( result < 0 ) goto _exit_with_error;
+            if ( result < 0 ) { printf( "r<0\n" ); goto _exit_with_error; }        
         }
 
-        result = fprintf( file, "\nexit $fm_err\nfi\n" );
-        if ( result < 0 ) goto _exit_with_error;
-        
-        // close file
         result = fclose( file );
         file = NULL;
         if ( result ) goto _exit_with_error;
-        
-        // set permissions
         if ( task->exec_as_user && strcmp( task->exec_as_user, "root" ) )
-            // run as a non-root user
             chmod( task->exec_script,
                             S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );    
         else
-            // run as self or as root
             chmod( task->exec_script, S_IRWXU );
-        if ( task->exec_as_user && geteuid() != 0 )
+        if ( task->exec_as_user && !strcmp( task->exec_as_user, "root" )
+                                                            && geteuid() != 0 )
             sum_script = get_sha256sum( task->exec_script );
+    }
+    else
+    {
+        g_free( task->exec_script );
+        task->exec_script = NULL;        
     }
 
     task->percent = 50;
 
-    // Spawn
-    GPid pid;
-    gchar *argv[25] = { NULL };
-    gint out, err;
-    int a = 0;
-    char* use_su;
-    gboolean single_arg = FALSE;
-    char* auth = NULL;
-    
-    if ( terminal )
+    // protect root-run scripts with sha256sum
+//sum_export_script = NULL;  // test one script only
+    char* rm_cmd;
+    if ( task->exec_keep_tmp )
+        rm_cmd = "echo sim-rm";
+    else
+        rm_cmd = "rm";
+    if ( sum_script )
     {
-        // terminal
-        argv[a++] = terminal;
-        if ( strstr( terminal, "roxterm" ) )
+        // sha256sum available
+        if ( sum_export_script )
         {
-            argv[a++] = g_strdup_printf( "--disable-sm" );
-            argv[a++] = g_strdup_printf( "--separate" );
+            // two scripts
+            if ( !terminal && 
+                ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
+            {
+                // gksu* will not permit curly brackets; $ and " must be escaped
+                // -c argument single-quoted; entire /bin/bash command in one argv
+                bash_cmd = g_strdup_printf( "'chown root:root %s %s %s; chmod go-rwx %s %s; fm_sum=\\$(/usr/bin/sha256sum %s); fm_sum_src=\\$(/usr/bin/sha256sum %s); if [ \\\"\\$fm_sum\\\" != \\\"%s  %s\\\" ] || [ \\\"\\$fm_sum_src\\\" != \\\"%s  %s\\\" ]; then echo Error: sha256sum mismatch ; %s -f %s %s; exit 1; fi; %s; err=\\$?; %s -f %s %s; exit \\$err'",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        sum_script,
+                                        task->exec_script,
+                                        sum_export_script,
+                                        task->exec_export_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script
+                                        );
+            }
+            else
+            {
+                // non-gksu*
+                bash_cmd = g_strdup_printf( "chown root:root %s %s %s; chmod go-rwx %s %s; fm_sum=$(/usr/bin/sha256sum %s); fm_sum_src=$(/usr/bin/sha256sum %s); if [ ${fm_sum:0:64} != %s ] || [ ${fm_sum_src:0:64} != %s ]; then echo Error: sha256sum mismatch ; %s -f %s %s; exit 1; fi; %s; err=$?; %s -f %s %s; exit $err",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        sum_script,
+                                        sum_export_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script
+                                        );
+            }
+            g_free( sum_export_script );
         }
-        else if ( strstr( terminal, "xfce4-terminal" ) )
-            argv[a++] = g_strdup_printf( "--disable-server" );
-        else if ( strstr( terminal, "gnome-terminal" ) )
-            argv[a++] = g_strdup_printf( "--disable-factory" );
-
-        if ( strstr( terminal, "xfce4-terminal" ) 
-                                || strstr( terminal, "gnome-terminal" )
-                                || strstr( terminal, "terminator" ) )
-            argv[a++] = g_strdup( "-x" );
         else
-            argv[a++] = g_strdup( "-e" );
-        
-        use_su = su;
+        {
+            // one script
+            if ( !terminal && 
+                ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
+            {
+                // gksu*
+                bash_cmd = g_strdup_printf( "'chown root:root %s %s; chmod go-rwx %s; fm_sum=\\$(/usr/bin/sha256sum %s); if [ \\\"\\$fm_sum\\\" != \\\"%s  %s\\\" ]; then echo Error: sha256sum mismatch ; %s -f %s; exit 1; fi; %s; err=\\$?; %s -f %s; exit \\$err'",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        sum_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script
+                                        );
+            }
+            else
+            {
+                // non-gksu*
+                bash_cmd = g_strdup_printf( "chown root:root %s %s; chmod go-rwx %s; fm_sum=$(/usr/bin/sha256sum %s); if [ ${fm_sum:0:64} != %s ]; then echo Error: sha256sum mismatch ; %s -f %s; exit 1; fi; %s; err=$?; %s -f %s; exit $err",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        sum_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script
+                                        );
+            }                 
+        }
+        g_free( sum_script );
+    } 
+    else if ( task->exec_as_user && !strcmp( task->exec_as_user, "root" )
+                                                            && geteuid() != 0 )
+    {
+        // sha256sum not available so just own tmp files
+        if ( task->exec_export_script )
+        {
+            // two scripts
+            if ( !terminal && 
+                ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
+            {
+                // gksu*
+                bash_cmd = g_strdup_printf( "'chown root:root %s %s %s; chmod go-rwx %s %s; %s; err=\\$?; %s -f %s %s; exit \\$err'",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script
+                                        );
+            }
+            else
+            {
+                // non-gksu*
+                bash_cmd = g_strdup_printf( "chown root:root %s %s %s; chmod go-rwx %s %s; %s; err=$?; %s -f %s %s; exit $err",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        task->exec_export_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script,
+                                        task->exec_export_script
+                                        );
+            }
+        }
+        else
+        {
+            // one script
+            if ( !terminal && 
+                ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
+            {
+                // gksu*
+                bash_cmd = g_strdup_printf( "'chown root:root %s %s; chmod go-rwx %s; %s; err=\\$?; %s -f %s; exit \\$err'",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script
+                                        );
+            }
+            else
+            {
+                // non-gksu*
+                bash_cmd = g_strdup_printf( "chown root:root %s %s; chmod go-rwx %s; %s; err=$?; %s -f %s; exit $err",
+                                        tmp,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        task->exec_script,
+                                        rm_cmd,
+                                        task->exec_script
+                                        );
+            }
+        }
     }
     else
-        use_su = gsu;
-
+        // not run as root so just run script
+        bash_cmd = g_strdup( task->exec_script );
+   
+    // Spawn
+    GPid        pid;
+    gchar      *argv[20] = { NULL };
+    gint        out,
+                err;
+    int a = 0;
     if ( task->exec_as_user )
     {
         // su
-        argv[a++] = g_strdup( use_su );
-        if ( strcmp( task->exec_as_user, "root" ) )
+        if ( terminal )
         {
-            if ( strcmp( use_su, "/bin/su" ) )
-                argv[a++] = g_strdup( "-u" );
-            argv[a++] = g_strdup( task->exec_as_user );
-        }
-
-        if ( !strcmp( use_su, "/usr/bin/gksu" ) || !strcmp( use_su, "/usr/bin/gksudo" ) )
-        {
-            // gksu*
-            argv[a++] = g_strdup( "-g" );
-            argv[a++] = g_strdup( "-D" );
-            argv[a++] = g_strdup( "SpaceFM Command" );
-            single_arg = TRUE;
-        }
-        else if ( !strcmp( use_su, "/usr/bin/kdesu" ) )
-        {
-            // kdesu
-            argv[a++] = g_strdup( "-d" );
-            argv[a++] = g_strdup( "-c" );
-            single_arg = TRUE;
-        }
-        else if ( !strcmp( use_su, "/bin/su" ) )
-        {
-            // /bin/su
-            argv[a++] = g_strdup( "-s" );
-            argv[a++] = g_strdup( "/bin/bash" );  //shell spec
-            argv[a++] = g_strdup( "-c" );
-            single_arg = TRUE;
-        }
-    }
-
-    if ( sum_script )
-    {
-        // spacefm-auth exists?
-        auth = g_find_program_in_path( "spacefm-auth" );
-        if ( !auth )
-        {
-            g_free( sum_script );
-            sum_script = NULL;
-            g_warning( _("spacefm-auth not found in path - this reduces your security") );
-        }
-    }
-    
-    if ( sum_script && auth )
-    {
-        // spacefm-auth
-        if ( single_arg )
-        {
-            argv[a++] = g_strdup_printf( "/bin/bash %s%s %s %s",
-                                auth,
-                                !strcmp( task->exec_as_user, "root" ) ? " root" : "",
-                                task->exec_script,
-                                sum_script );
-            g_free( auth );
-        }
-        else
-        {
-            argv[a++] = g_strdup( "/bin/bash" );
-            argv[a++] = auth;
-            if ( !strcmp( task->exec_as_user, "root" ) )
-                argv[a++] = g_strdup( "root" );
-            argv[a++] = g_strdup( task->exec_script );
-            argv[a++] = g_strdup( sum_script );
-        }
-        g_free( sum_script );
-    }
-    else if ( task->exec_direct )
-    {
-        // add direct args - not currently used
-        if ( single_arg )
-        {
-            argv[a++] = g_strjoinv( " ", &task->exec_argv[0] );
-            for ( i = 0; i < 7; i++ )
+            // su in terminal
+            argv[a++] = terminal;
+            if ( strstr( terminal, "roxterm" ) )
             {
-                if ( !task->exec_argv[i] )
-                    break;
-                g_free( task->exec_argv[i] );
+                argv[a++] = g_strdup_printf( "--disable-sm" );
+                argv[a++] = g_strdup_printf( "--separate" );
+            }
+            else if ( strstr( terminal, "xfce4-terminal" ) )
+                argv[a++] = g_strdup_printf( "--disable-server" );
+            else if ( strstr( terminal, "gnome-terminal" ) )
+                argv[a++] = g_strdup_printf( "--disable-factory" );
+            argv[a++] = terminal_opt;
+            if ( !strcmp( su, "/bin/su" ) )
+            {
+                // /bin/su
+                argv[a++] = g_strdup_printf( "/bin/su" );
+                argv[a++] = g_strdup_printf( "-s" );
+                argv[a++] = g_strdup_printf( "/bin/bash" );
+                argv[a++] = g_strdup_printf( "%s", task->exec_as_user );
+                if ( !task->exec_direct )
+                {
+                    argv[a++] = g_strdup_printf( "-c" );
+                    argv[a++] = bash_cmd;
+                }
+            }
+            else
+            {
+                // probably sudo - assume that usage
+                argv[a++] = g_strdup( su );
+                if ( strcmp( task->exec_as_user, "root" ) )
+                {
+                    printf("USER=%s\n", task->exec_as_user ); 
+                    argv[a++] = g_strdup_printf( "-u" );
+                    argv[a++] = g_strdup_printf( "%s", task->exec_as_user );
+                }
+                if ( !task->exec_direct )
+                {
+                    argv[a++] = g_strdup_printf( "/bin/bash" );
+                    argv[a++] = g_strdup_printf( "-c" );
+                    argv[a++] = bash_cmd;                
+                }
             }
         }
         else
         {
-            for ( i = 0; i < 7; i++ )
+            // graphical su without terminal
+            argv[a++] = g_strdup( gsu );
+            if ( strcmp( task->exec_as_user, "root" ) )
             {
-                if ( !task->exec_argv[i] )
-                    break;
-                argv[a++] = task->exec_argv[i];
+                argv[a++] = g_strdup_printf( "-u" );
+                argv[a++] = g_strdup( task->exec_as_user );
+            }
+            if ( !task->exec_direct )
+            {
+                if ( !strcmp( gsu, "/usr/bin/gksu" ) || !strcmp( gsu, "/usr/bin/gksudo" ) )
+                {
+                    // gksu*
+                    argv[a++] = g_strdup_printf( "-g" );
+                    argv[a++] = g_strdup_printf( "-D" );
+                    argv[a++] = g_strdup_printf( "SpaceFM Command" );
+                    argv[a++] = g_strdup_printf( "/bin/bash -c %s", bash_cmd );
+                }
+                else
+                {
+                    // non-gksu*
+                    argv[a++] = g_strdup_printf( "/bin/bash" );
+                    argv[a++] = g_strdup_printf( "-c" );
+                    argv[a++] = bash_cmd;                
+                }
             }
         }
     }
     else
     {
-        if ( single_arg )
+        // without su
+        if ( terminal )
         {
-            argv[a++] = g_strdup_printf( "/bin/bash %s run", task->exec_script );
+            // with terminal
+            argv[a++] = terminal;
+            if ( strstr( terminal, "roxterm" ) )
+            {
+                argv[a++] = g_strdup_printf( "--disable-sm" );
+                argv[a++] = g_strdup_printf( "--separate" );
+            }
+            else if ( strstr( terminal, "xfce4-terminal" ) )
+                argv[a++] = g_strdup_printf( "--disable-server" );
+            else if ( strstr( terminal, "gnome-terminal" ) )
+                argv[a++] = g_strdup_printf( "--disable-factory" );
+            argv[a++] = terminal_opt;
+            if ( !task->exec_direct )
+            {
+                argv[a++] = g_strdup_printf( "/bin/bash" );
+                argv[a++] = g_strdup_printf( "-c" );
+                argv[a++] = bash_cmd;                
+            }
         }
         else
         {
-            argv[a++] = g_strdup( "/bin/bash" );
-            argv[a++] = g_strdup( task->exec_script );
-            argv[a++] = g_strdup( "run" );
+            // without terminal
+            if ( !task->exec_direct )
+            {
+                argv[a++] = g_strdup_printf( "/bin/bash" );
+                argv[a++] = g_strdup_printf( "-c" );
+                argv[a++] = bash_cmd;                
+            }
         }
     }
-
+    
+    // add direct args
+    if ( task->exec_direct )
+    {
+        for ( i = 0; i < 7; i++ )
+        {
+            if ( !task->exec_argv[i] )
+                break;
+            argv[a++] = task->exec_argv[i];
+        }
+    }
     argv[a++] = NULL;
     if ( su )
         g_free( su );
@@ -1537,7 +1779,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     printf( "SPAWN=" );
     i = 0;
     while ( argv[i] )
-        printf( "%s%s", i == 1 ? "" : "  ", argv[i++] );
+        printf( "%s%s", i == 1 ? "" : " ", argv[i++] );
     printf( "\n" );
 
     if ( task->exec_sync )
@@ -1560,9 +1802,12 @@ static void vfs_file_task_exec( VFSFileTask* task )
         {
             if ( task->exec_script )
                 unlink( task->exec_script );
+            if ( task->exec_export_script )
+                unlink( task->exec_export_script );
         }
         vfs_file_task_exec_error( task, errno, _("Error executing command") );
-        task->exec_sync = FALSE;  // triggers FINISH
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
+        g_free( hex8 );
         return;
     }
     else
@@ -1571,13 +1816,16 @@ static void vfs_file_task_exec( VFSFileTask* task )
     if ( !task->exec_sync )
     {
         // catch termination to delete tmp
-        if ( !task->exec_keep_tmp && !task->exec_direct && task->exec_script )
+        if ( !task->exec_keep_tmp && !task->exec_direct )
         {
             g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_cleanup, 
-                                                    g_strdup( task->exec_script ) );
+                                            g_strdup_printf( "%s/%s", tmp, hex8 ) );
         }
+        g_free( hex8 );
         return;
     }
+
+    g_free(hex8 );
     
     task->exec_pid = pid;
 
@@ -1595,7 +1843,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
     // Add watches to channels
     g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
                                                 (GIOFunc)cb_exec_out_watch, task );
-    //g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_OUT | G_IO_PRI | G_IO_ERR | G_IO_HUP | G_IO_NVAL, (GIOFunc)cb_exec_out_watch, task );
+//    g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_OUT | G_IO_PRI | G_IO_ERR | G_IO_HUP | G_IO_NVAL,
+//                                                (GIOFunc)cb_exec_out_watch, task );
     g_io_add_watch( task->exec_channel_err, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR,
                                                 (GIOFunc)cb_exec_out_watch, task );
 
@@ -1615,17 +1864,11 @@ _exit_with_error:
     {
         if ( task->exec_script )
             unlink( task->exec_script );
+        if ( task->exec_export_script )
+            unlink( task->exec_export_script );
     }
-_exit_with_error_lean:
-    if ( terminal )
-        g_free( terminal );
-    if ( value )
-        g_free( value );
-    if ( su )
-        g_free( su );
-    if ( gsu )
-        g_free( gsu );
-    task->exec_sync = FALSE;  // triggers FINISH
+    g_free( hex8 );
+    call_state_callback( task, VFS_FILE_TASK_FINISH );
 }
 
 static gpointer vfs_file_task_thread ( VFSFileTask* task )
@@ -1801,6 +2044,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_as_user = NULL;
     task->exec_icon = NULL;
     task->exec_script = NULL;
+    task->exec_export_script = NULL;
     task->exec_keep_tmp = FALSE;
     task->exec_browser = NULL;
     task->exec_desktop = NULL;
@@ -1878,6 +2122,8 @@ void vfs_file_task_free ( VFSFileTask* task )
         g_free(task->exec_as_user );
     if ( task->exec_command )
         g_free(task->exec_command );
+    if ( task->exec_export_script )
+        g_free(task->exec_export_script );
     if ( task->exec_script )
         g_free(task->exec_script );
 

@@ -1,4 +1,4 @@
-README for SpaceFM v0.7.2 ALPHA TEST VERSION
+README for SpaceFM v0.7.3 ALPHA TEST VERSION
 
 
 USE AT YOUR OWN RISK
@@ -16,10 +16,11 @@ CONTENTS:
     DESCRIPTION
     PACKAGES
     INSTALLER
-    BUILD INSTRUCTIONS 
-    MANUAL UN-INSTALL INSTRUCTIONS
-    DEBIAN PACKAGING INSTRUCTIONS
-    
+    BUILD 
+    BUILD FOR DEBUGGING
+    MANUAL UN-INSTALL
+    DEBIAN PACKAGING
+
 
 DESCRIPTION:
 
@@ -49,7 +50,7 @@ PACKAGES:
     Arch Linux's AUR includes spacefm:
         http://aur.archlinux.org/packages.php?ID=55777
     
-	PCLinuxOS has spacefm test packages available (see forum):
+    PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
         
     VectorLinux has spacefm test packages available:
@@ -80,7 +81,7 @@ INSTALLER:
     To reinstall or upgrade, just run the latest installer again.
 
 
-BUILD INSTRUCTIONS:
+BUILD:
 
 1)  Install required build dependencies (below are Debian package names - 
     packages names on your distro may vary but should be similar):
@@ -106,8 +107,9 @@ BUILD INSTRUCTIONS:
 
     configure will report anything missing when you run it as shown below.
     
-2)  Extract spacefm-x.x.x.tar.xz and enter directory.  The following commands
-    will build and install as "/usr/local/bin/spacefm":
+2)  Extract spacefm-x.x.x.tar.xz and enter the directory containing the
+    'configure' file.  The following commands will build and install as
+    "/usr/local/bin/spacefm":
     
         ./configure
         make
@@ -133,7 +135,44 @@ BUILD INSTRUCTIONS:
     For general build information consult the INSTALL file.
 
 
-MANUAL UN-INSTALL INSTRUCTIONS:
+BUILD FOR DEBUGGING
+
+If SpaceFM crashes on your system, you can help to correct this problem by
+reporting it, including a full backtrace.
+
+1)  Install build dependencies (see BUILD INSTRUCTIONS above).
+
+2)  Install the 'gdb' GNU Debugger, and debugging symbols for gtk.  On debian,
+    this is done like this:
+
+    apt-get install gdb libc6-dbg libglib2.0-0-dbg libgtk2.0-0-dbg librsvg2-dbg
+
+    (Packages on other distros should have similar names.)
+    
+3)  Extract SpaceFM tarball and enter the directory containing 'configure'.
+
+4)  Build spacefm with debugging flags:
+
+        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure
+        make
+        sudo make install
+        sudo update-mime-database /usr/share/mime > /dev/null
+        sudo update-desktop-database -q
+
+5)  Run spacefm with the debugger:
+
+        gdb /usr/local/bin/spacefm
+        
+    In gdb, enter 'run' at the prompt.  SpaceFM will start.  When the crash
+    occurs, gdb will freeze SpaceFM.  Return to the terminal running gdb and
+    enter 'bt full'.  Provide the output with your detailed bug report at
+        http://sourceforge.net/p/spacefm/tickets/
+    
+    NOTE: When SpaceFM is built this way, it may run more slowly.  Once you are
+    done debugging, be sure to install a normal (optimized) build.
+
+
+MANUAL UN-INSTALL:
 
 As root:
     rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
@@ -147,13 +186,13 @@ As root:
     update-desktop-database -q
 
 
-DEBIAN PACKAGING INSTRUCTIONS:
+DEBIAN PACKAGING:
 
 To build a deb file of spacefm:
 
 1)  Install build dependencies (see BUILD INSTRUCTIONS above).
 
-2)  Extract tarball and enter directory.
+2)  Extract spacefm tarball and enter the directory containing 'configure'.
 
 3)  IF hal support IS desired:
 
