@@ -13,3 +13,4 @@ src/.deps/
 src/spacefm
 src/xml-purge
 *.o
+packages/*/*.src.tar.gz
