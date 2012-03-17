@@ -1,6 +1,5 @@
 autom4te.cache/
 Makefile
-Makefile.in
 config.log
 config.status
 *.desktop
@@ -13,3 +12,5 @@ src/.deps/
 src/spacefm
 src/xml-purge
 *.o
+packages/*/*.src.tar.gz
+packages/*/*.changes
