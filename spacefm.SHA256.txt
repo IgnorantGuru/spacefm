@@ -1,0 +1,72 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+SpaceFM Authentication Instructions
+
+
+  Each version of SpaceFM is distributed with a file named
+  spacefm-x.x.x.SHA256.txt (where x.x.x is the current version number) which is
+  used to authenticate distributed files.
+
+
+Why Authenticate?
+
+  Verifying the authenticity of downloaded files prior to installation is
+  important to ensure that your download is not corrupt and that no one has
+  tampered with the server holding the files.
+
+
+1) If you don't already have IgnorantGuru's CURRENT key on your keyring:
+
+  gpg --keyserver keys.gnupg.net --recv-keys 0x7977070A723C6CCB696C0B0227A5AC5A01937621
+    (if you receive an error, try again)
+    
+  Also visually verify that the given fingerprint matches the one shown here:
+    http://igurublog.wordpress.com/contact-ignorantguru/
+
+
+2) Download one or more files (the first is required) (replace x.x.x with
+   current version number):
+
+  wget http://downloads.sf.net/project/spacefm/spacefm-x.x.x.SHA256.txt
+  wget http://downloads.sf.net/project/spacefm/spacefm-x.x.x.tar.xz
+  wget http://downloads.sf.net/project/spacefm/spacefm-x.x.x-installer.sh
+  wget http://downloads.sf.net/project/spacefm/spacefm_x.x.x-1_i386.deb
+  wget http://downloads.sf.net/project/spacefm/spacefm_x.x.x-1_amd64.deb
+  wget http://downloads.sf.net/project/spacefm/spacefm-hal_x.x.x-1_i386.deb
+  wget http://downloads.sf.net/project/spacefm/spacefm-hal_x.x.x-1_amd64.deb
+
+
+3) Check signature on the SHA256 file:
+
+  gpg --verify spacefm-x.x.x.SHA256.txt
+
+  This should report a good signature like this:  
+    gpg: Signature made <SIGNATURE DATE> using DSA key ID 01937621
+    gpg: Good signature from IgnorantGuru (igurublog.wordpress.com)
+    gpg: WARNING: This key is not certified with a trusted signature!
+    gpg:          There is no indication that the signature belongs to the owner.
+
+  If "BAD signature" or an unrecognized signature is reported, DO NOT USE the
+  downloaded files.  A "key is not certified" warning (shown above) can be
+  safely ignored if you visually verified the key fingerprint in step 1.
+
+
+4) Authenticate the downloaded files:
+
+  sha256sum --check spacefm-x.x.x.SHA256.txt
+  
+  This should report OK for all the files present.  For example:
+  
+    spacefm-x.x.x.tar.xz: OK
+
+  If you see FAILED next to a file, then the file is invalid or missing - do
+  not use it.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iF4EAREIAAYFAk86l2wACgkQJ6WsWgGTdiGeSgD/UAE/Vj4VwahKD8cHTU4j8eqT
+c88vsn+ItlI9m0yQom4BAN0b/z4+/KmCyA3XOr+5x0IgfdqTSVLoX+DDzoToU3PR
+=xMsk
+-----END PGP SIGNATURE-----

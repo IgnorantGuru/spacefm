@@ -1,14 +1,134 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8'>
-
-  <title>SpaceFM Homepage</title>
-
+	<title>SpaceFM Homepage</title>
 </head>
 
-<body>
-test page
+<body bgcolor="#c4c8c9" background="bodybg.png" text="#394552" link="#306f9f" vlink="#306f9f">
 
-</body>
-</html>
+<font face="Arial" color="#556677">
+<H2>&nbsp;&nbsp;<a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a></H2>
+
+
+</font>
+<center>
+<br><br><br>
+<table cellspacing="0" cellpadding="10" align="center" width="80%" bgcolor=#dbdcde background="entrybg.png" border=2>
+ <tr> 
+	<td>
+
+<font face="Arial" size=+1>
+<br>
+SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, optional udisks-based device manager, customizable menu system, and bash integration.  SpaceFM is a fork of legacy PCManFM.  Earlier versions of this program were released under the name PCManFM-Mod.
+
+<p><b>IMPORTANT</b>  This is a test release.  Please carefully test functions before relying on them.  USE AT YOUR OWN RISK.
+
+<p>Some aspects of this project are just getting started, so please check back regularly for updates.
+<br>
+<h3>Links</h3>
+
+<ul>
+	<li><a href="http://ignorantguru.github.com/spacefm/screenshots.html">Screenshots</a>
+	<li><a href="http://sourceforge.net/projects/spacefm/files/">Downloads</a>
+	<li><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">User's Manual</a> - still under construction but already includes lots of info
+    <li><a href="https://github.com/IgnorantGuru/spacefm/issues">Bugs & Requests</a>
+	<li><a href="http://igurublog.wordpress.com/">IgnorantGuru's Blog</a> - Author's blog contains news and update info
+</ul>
+
+
+<h3>Highlights</h3>
+<ul>
+	<li>Lightweight -  Written in C with GTK2 stability, inotify kernel support, optional udisks
+	<li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
+	<li>Flexible - Can appear very simple or very complex depending on configuration
+	<li>Multiple Windows - A single instance opens multiple windows
+	<li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a task manager pane
+	<li>Tabbed - Each browser panel supports multiple folder tabs
+	<li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
+	<li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
+	<li>Device Manager - Loose udisks integration for manual and customized automatic device management, plus easily format, backup and restore partitions and MBRs
+	<li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
+	<li>MIME - Manages MIME file types and default actions
+	<li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
+	<li>Plugins - Install, copy, and export custom commands as plugins
+	<li>Bash Integration - Built-in bash scripting support for custom commands, with file manager data exported as bash variables
+	<li>Output Control - Monitor the stdout/stderr output of built-in and custom commands, with error detection and popup control, or run commands in a terminal
+	<li>Fonts & Icons - Easily configure custom fonts and icons in each panel or pane for a unique look
+	<li>Styles - Show files as icons or in lists with customized columns
+	<li>Find-As-You-Type - File list allows you to quickly locate a file with a case-insensitive substring search of filenames - just type a few letters
+	<li>File Search - Flexibly search for file names, sizes, content, etc. with no daemons
+	<li>System Management - Safely perform quick commands as root or run a root instance
+	<li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
+	<li>Archives - Single-click, built-in archive creation and extraction, or use external apps
+	<li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
+	<li>Alternate Builds - deprecated support for hal (replaces udisks) and fam/gamin (replaces inotify)
+</ul>
+<h3>Limitations</h3>
+<ul>
+	<li>SpaceFM makes no network connections and is not a network browser.  It browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to mount the shares locally.
+</ul>
+<br>
+<hr>
+
+<h3>PACKAGES</h3>
+
+<ul>
+	<li>Debian/Ubuntu packages are available in the <a href="http://sourceforge.net/projects/spacefm/files/">project files</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  Remember to <a href="http://spacefm.sourceforge.net/spacefm.SHA256.txt">authenticate</a>.  NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
+	
+	<li>Easily build your own deb package from source using the instructions in the <a href="http://sourceforge.net/projects/spacefm/files/README/download">README</a> file.
+
+	<li>Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
+	
+	<li><a href="http://www.sabayon.org/">Sabayon</a> includes spacefm in its repositories
+	
+	<li>SpaceFM is included in <a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a>
+	
+	<li>Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+
+	<li><a href="http://www.pclinuxos.com/">PCLinuxOS</a> has spacefm test packages available (see forum)
+	
+	<li><a href="http://vectorlinux.com/">VectorLinux</a> has spacefm test packages available
+</ul>
+
+<p><h3>INSTALLER</h3>
+
+<p>A self-extracting installer is available in the <a href="http://sourceforge.net/projects/spacefm/files/">project files</a>.  Remember to <a href="http://spacefm.sourceforge.net/spacefm.SHA256.txt">authenticate</a>.  The installer MUST be run in a terminal.  It automatically builds and
+installs, and should work with any recent distro.  Run it like this:
+<p>
+<table bgcolor="#d0d4d7" width="100%" border="1"><tr><td><pre><font color="#000000">bash spacefm-x.x.x-installer.sh
+
+# or to see options:
+
+bash spacefm-x.x.x-installer.sh --help
+</font></pre></td></tr></table>
+
+<p>The installer requires the build dependencies listed in the <a href="http://sourceforge.net/projects/spacefm/files/README/download">README</a> file.  Build dependencies include:  (package names may vary on your distro)
+<blockquote><i>autotools-dev dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
+
+<p>If any dependencies are missing, examine the error, install missing packages, and try again.
+
+<p>To reinstall or upgrade, just run the latest installer again.<BR>
+
+<p>For easy manual build instructions please see the <a href="http://sourceforge.net/projects/spacefm/files/README/download">README</a> file.
+
+
+
+
+</td></tr></table>
+<br><br><br>
+<table cellspacing="0" cellpadding="0" align="center" width="75%">
+ <tr> 
+<!--
+	<td>
+		<div align="left"><a href="http://sourceforge.net/projects/spacefm/">&lt; Back to Project Home</a></div>
+	</td>
+-->
+	<td>
+		<div align="left"><i>Updated 2012-03-07</i></div>
+	</td>
+	<td>
+		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>
+	</td>
+</tr></table>
+<br>
+</center>
+</body></html>
