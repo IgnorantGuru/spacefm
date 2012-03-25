@@ -2847,7 +2847,7 @@ printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
     newset->title = g_strdup( set->title );
     newset->b = set->b;
     newset->menu_style = set->menu_style;
-    newset->context = g_strdup( set->context );
+    newset->context = g_strdup( mset->context );
     newset->line = g_strdup( set->line );
 
     newset->task = mset->task;
