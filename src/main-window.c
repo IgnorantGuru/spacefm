@@ -2582,7 +2582,8 @@ void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     {
         gtk_window_unfullscreen( GTK_WIDGET( main_window ) );
         gtk_widget_show( main_window->menu_bar );
-        gtk_widget_show( main_window->panelbar );
+        if ( xset_get_b( "main_pbar" ) )
+            gtk_widget_show( main_window->panelbar );
     }
 }
 
