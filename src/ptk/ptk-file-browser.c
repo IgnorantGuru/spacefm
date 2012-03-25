@@ -3624,6 +3624,9 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
             gtk_tree_view_column_set_visible( col, 
                     xset_get_b_panel( file_browser->mypanel, set_names[j] ) );
         }
+
+        if ( cols[j] == COL_FILE_SIZE )
+            gtk_cell_renderer_set_alignment( renderer, 1, 0 );
         
         gtk_tree_view_column_pack_start( col, renderer, TRUE );       
         gtk_tree_view_column_set_attributes( col, renderer, "text", cols[ j ], NULL );

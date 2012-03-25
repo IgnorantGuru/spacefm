@@ -5,6 +5,7 @@
     equate display :0.0 & :0 fixes #5
     changed debug info for sf ticket 88000
     fixed panel bar always shown on cancel fullscreen
+    no folder size display; right-align size column
 0.7.2   2012-03-05:
     exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
         added /usr/bin/spacefm-auth)

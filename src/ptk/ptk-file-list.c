@@ -473,7 +473,12 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
         g_value_set_string( value, vfs_file_info_get_disp_name(info) );
         break;
     case COL_FILE_SIZE:
-        g_value_set_string( value, vfs_file_info_get_disp_size(info) );
+        if ( S_ISDIR( info->mode ) || ( S_ISLNK( info->mode ) &&
+                                0 == strcmp( vfs_mime_type_get_type( info->mime_type ),
+                                XDG_MIME_TYPE_DIRECTORY ) ) )
+            g_value_set_string( value, NULL );
+        else
+            g_value_set_string( value, vfs_file_info_get_disp_size(info) );
         break;
     case COL_FILE_DESC:
         g_value_set_string( value, vfs_file_info_get_mime_type_desc( info ) );
