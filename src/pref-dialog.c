@@ -1020,5 +1020,6 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
     gtk_notebook_set_current_page( (GtkNotebook*)data->notebook, page );
 
     gtk_window_present( (GtkWindow*)data->dlg );
+    return TRUE;
 }
 

@@ -385,7 +385,7 @@ static gboolean on_button_release(GtkEntry      *entry,
                                                                     gpointer        user_data)
 {
     if ( GDK_BUTTON_RELEASE != evt->type )
-        return;
+        return FALSE;
     if ( ( ( evt->state & GDK_CONTROL_MASK ) && 1 == evt->button ) )
     {
         int pos;

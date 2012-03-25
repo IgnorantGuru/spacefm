@@ -391,7 +391,7 @@ gboolean single_instance_check()
         ret = 1;
         goto _exit;
     }
-    return ;
+    return TRUE;
 
 _exit:
 

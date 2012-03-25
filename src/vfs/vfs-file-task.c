@@ -1537,7 +1537,10 @@ static void vfs_file_task_exec( VFSFileTask* task )
     printf( "SPAWN=" );
     i = 0;
     while ( argv[i] )
-        printf( "%s%s", i == 1 ? "" : "  ", argv[i++] );
+    {
+        printf( "%s%s", i == 1 ? "" : "  ", argv[i] );
+        i++;
+    }
     printf( "\n" );
 
     if ( task->exec_sync )

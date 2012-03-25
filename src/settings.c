@@ -1970,7 +1970,7 @@ gboolean write_root_settings( FILE* file, char* path )
     XSet* set;
 
     if ( !file )
-        return;
+        return FALSE;
 
     fprintf( file, "\n# save root settings\nmkdir -p /etc/spacefm\necho -e '# SpaceFM As-Root Session File\\n\\n# THIS FILE IS NOT DESIGNED TO BE EDITED\\n\\n' > '%s'\n", path );
 
@@ -2011,6 +2011,7 @@ gboolean write_root_settings( FILE* file, char* path )
     }
 
     fprintf( file, "chmod -R go-w+rX /etc/spacefm\n\n" );
+    return TRUE;
 }
 
 void read_root_settings()

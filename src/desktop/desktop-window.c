@@ -2252,7 +2252,6 @@ GCompareDataFunc get_sort_func( DesktopWindow* win )
             break;
         default:
             comp = comp_item_by_name;
-            return;
     }
     return comp;
 }
