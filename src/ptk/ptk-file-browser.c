@@ -480,24 +480,20 @@ void on_toolbar_help( GtkWidget* widget, PtkFileBrowser* file_browser )
 
 void on_toolbar_config_done( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-printf(  "on_toolbar_config_done\n");
     if ( !widget || !file_browser )
         return;
         
     if ( !GTK_IS_WIDGET( widget ) )
         return;
-printf( "    1111\n");
+
     GtkToolbar* toolbar = (GtkToolbar*)g_object_get_data( G_OBJECT(widget), "toolbar" );
 
-printf( "    2222\n");
     gtk_widget_destroy( widget );
     
-printf( "    3333\n");
     if ( toolbar == file_browser->toolbar )
         rebuild_toolbar_all_windows( 0, file_browser );
     else if ( toolbar == file_browser->side_toolbar )
         rebuild_toolbar_all_windows( 1, file_browser );
-printf(  "on_toolbar_config_done DONE\n");
 }
 
 void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -947,17 +943,25 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
 {
 //printf(" ptk_file_browser_rebuild_toolbox\n");
     XSet* set;
+    
+    if ( !file_browser )
+        return;
+
     // destroy
     if ( file_browser->toolbar )
     {
-        gtk_widget_destroy( file_browser->toolbar );
-        file_browser->path_bar = ( GtkEntry* )ptk_path_entry_new( file_browser );
-        g_signal_connect( file_browser->path_bar, "activate",
-                            G_CALLBACK(on_address_bar_activate), file_browser );
-        g_signal_connect( file_browser->path_bar, "focus-in-event",
-                                        G_CALLBACK(on_address_bar_focus_in), file_browser );
+        if ( GTK_IS_WIDGET( file_browser->toolbar ) )
+        {
+            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n", file_browser->toolbar );
+            // crashing here? http://sourceforge.net/p/spacefm/tickets/88000/?page=0
+            gtk_widget_destroy( file_browser->toolbar );  
+            printf("    DONE\n" );
+        }
+        file_browser->toolbar = NULL;
+        file_browser->path_bar = NULL;
     }
-    else if ( !file_browser->path_bar )
+
+    if ( !file_browser->path_bar )
     {
         file_browser->path_bar = ( GtkEntry* )ptk_path_entry_new( file_browser );
         g_signal_connect( file_browser->path_bar, "activate",
