@@ -137,12 +137,40 @@ static const char menu_def[] =
 "</popup>"
 "</ui>";
 
-static gboolean open_file( char* dir, GList* files, gpointer unused )
+static gboolean open_file( char* dir, GList* files, PtkFileBrowser* file_browser )
 {
     if( files )
     {
-        ptk_open_files_with_app( dir, g_list_copy( files ),
-                                 NULL, NULL, FALSE, TRUE );  //MOD
+        ptk_open_files_with_app( dir, files, NULL, NULL, FALSE, TRUE );
+
+        //sfm open selected dirs
+        if ( file_browser )
+        {
+            GList * l;
+            gchar* full_path;
+            VFSFileInfo* file;
+            
+            for ( l = files; l; l = l->next )
+            {
+                file = ( VFSFileInfo* ) l->data;
+                if ( G_UNLIKELY( ! file ) )
+                    continue;
+
+                full_path = g_build_filename( dir,
+                                              vfs_file_info_get_name( file ),
+                                              NULL );
+                if ( G_LIKELY( full_path ) )
+                {
+                    if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                    {
+                        ptk_file_browser_emit_open( file_browser,
+                                                            full_path, PTK_OPEN_NEW_TAB );
+                    }
+                    g_free( full_path );
+                }
+            }
+        }
+        vfs_file_info_list_free( files );  //sfm moved free list to here
         return TRUE;
     }
     return FALSE;
@@ -162,6 +190,8 @@ static void on_open_files( GtkAction* action, FindFile* data )
     GHashTable* hash;
     GtkWidget* w;
     VFSFileInfo* fi;
+    gboolean open_files_has_dir = FALSE;  //sfm
+    PtkFileBrowser* file_browser = NULL;  //sfm
 
     gboolean open_files = (0 == strcmp( gtk_action_get_name(action), "OpenAction") );
 
@@ -170,7 +200,9 @@ static void on_open_files( GtkAction* action, FindFile* data )
     if( ! rows )
         return;
 
-    hash = g_hash_table_new_full( g_str_hash, g_str_equal, (GDestroyNotify)g_free, open_files ? (GDestroyNotify)vfs_file_info_list_free : NULL );
+    //sfm this frees list when new value inserted - caused segfault
+    //hash = g_hash_table_new_full( g_str_hash, g_str_equal, (GDestroyNotify)g_free, open_files ? (GDestroyNotify)vfs_file_info_list_free : NULL );
+    hash = g_hash_table_new_full( g_str_hash, g_str_equal, (GDestroyNotify)g_free, NULL );
 
     for( row = rows; row; row = row->next )
     {
@@ -186,12 +218,12 @@ static void on_open_files( GtkAction* action, FindFile* data )
 
             if( open_files )
             {
-                GList *l, *ll;
+                GList *l;
                 l = g_hash_table_lookup( hash, dir );
-                ll = g_list_copy( l );
-                ll = g_list_prepend( ll, vfs_file_info_ref(fi) );
-                //g_hash_table_insert( hash, dir, l ); //sfm this frees list so use copy - caused segfault 
-                g_hash_table_insert( hash, dir, ll );
+                l = g_list_prepend( l, vfs_file_info_ref(fi) );
+                g_hash_table_insert( hash, dir, l );  //sfm caused segfault with destroy function
+                if ( vfs_file_info_is_dir( fi ) )  //sfm
+                    open_files_has_dir = TRUE;
             }
             else
             {
@@ -206,7 +238,18 @@ static void on_open_files( GtkAction* action, FindFile* data )
 
     if( open_files )
     {
-        g_hash_table_foreach_steal( hash, (GHRFunc)open_file, NULL );
+        if ( open_files_has_dir )
+        {
+            w = GTK_WIDGET( fm_main_window_get_last_active() );
+            if( ! w )
+            {
+                w = fm_main_window_new();
+                gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
+            }
+            gtk_window_present( (GtkWindow*)w );
+            file_browser = fm_main_window_get_current_file_browser( w );
+        }
+        g_hash_table_foreach_steal( hash, (GHRFunc)open_file, file_browser );
     }
     else
     {

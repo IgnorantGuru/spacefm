@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "glib-utils.h"
+#include <glib/gi18n.h>
 
 #include "pref-dialog.h"
 #include "settings.h"
@@ -29,6 +30,7 @@
 #include "main-window.h"
 #include "ptk-file-browser.h"
 #include "desktop.h"
+#include "ptk-location-view.h"
 
 typedef struct _FMPrefDlg FMPrefDlg;
 struct _FMPrefDlg
@@ -91,8 +93,8 @@ static const int tool_icon_sizes[] = {
     GTK_ICON_SIZE_BUTTON,
     GTK_ICON_SIZE_DND,
     GTK_ICON_SIZE_DIALOG };
-static const int big_icon_sizes[] = { 96, 72, 64, 48, 36, 32, 24, 20 };
-static const int small_icon_sizes[] = { 48, 36, 32, 24, 20, 16, 12 };
+static const int big_icon_sizes[] = { 96, 72, 64, 48, 36, 32, 24, 22 };
+static const int small_icon_sizes[] = { 48, 36, 32, 24, 22, 16, 12 };
 static const char* date_formats[] =
 {
     "%Y-%m-%d %H:%M",
@@ -428,9 +430,16 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
                         ptk_file_browser_update_display( file_browser );
+                        if ( file_browser->side_dir )
+                        {
+                            gtk_widget_destroy( file_browser->side_dir );
+                            file_browser->side_dir = NULL;
+                            ptk_file_browser_update_views( NULL, file_browser );
+                        }
                     }
                 }
             }
+            // update desktop icons
             if ( big_icon != app_settings.big_icon_size )
             {
                 app_settings.big_icon_size = big_icon;
@@ -438,6 +447,9 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             }
             app_settings.big_icon_size = big_icon;
             app_settings.small_icon_size = small_icon;
+
+            update_bookmark_icons();            
+            update_volume_icons();            
         }
 
         if ( tool_icon != app_settings.tool_icon_size )
@@ -630,8 +642,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             if ( root_set_change )
             {
                 // task
-                xset_msg_dialog( GTK_WINDOW( dlg ), 0, "Save Root Settings", NULL, 0, "You will now be asked for your root password to save the root settings for this user to a file in /etc/spacefm/  Supplying the password in the next window is recommended to improve your security.", NULL );
-                PtkFileTask* task = ptk_file_exec_new( "Save Root Settings", NULL, NULL,
+                xset_msg_dialog( GTK_WINDOW( dlg ), 0, _("Save Root Settings"), NULL, 0, _("You will now be asked for your root password to save the root settings for this user to a file in /etc/spacefm/  Supplying the password in the next window is recommended to improve your security."), NULL );
+                PtkFileTask* task = ptk_file_exec_new( _("Save Root Settings"), NULL, NULL,
                                                                     NULL );
                 task->task->exec_command = g_strdup_printf( "echo" );
                 task->task->exec_as_user = g_strdup_printf( "root" );

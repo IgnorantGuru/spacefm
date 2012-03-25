@@ -2345,6 +2345,7 @@ void ptk_open_files_with_app( const char* cwd,
     char* new_dir = NULL;
     char* choosen_app = NULL;
     GtkWidget* toplevel;
+    PtkFileBrowser* fb;
 
     for ( l = sel_files; l; l = l->next )
     {

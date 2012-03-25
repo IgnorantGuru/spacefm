@@ -40,7 +40,7 @@ const int side_pane_mode_default = PTK_FB_SIDE_PANE_BOOKMARKS;
 const gboolean show_thumbnail_default = FALSE;
 const int max_thumb_size_default = 4 << 20;
 const int big_icon_size_default = 48;
-const int small_icon_size_default = 20;
+const int small_icon_size_default = 22;
 const int tool_icon_size_default = 0;
 const gboolean single_click_default = FALSE;
 const gboolean show_location_bar_default = TRUE;
@@ -810,6 +810,13 @@ void load_settings( char* config_dir )
             }
         }
     }
+    if ( ver < 8 ) // < 0.7.2
+    {
+        if ( app_settings.small_icon_size == 20 )
+            app_settings.small_icon_size = 22;
+        if ( app_settings.big_icon_size == 20 )
+            app_settings.big_icon_size = 22;
+    }
 }
 
 
@@ -826,7 +833,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "7" );  // 0.7.0
+    xset_set( "config_version", "s", "8" );  // 0.7.2
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -2830,6 +2837,7 @@ XSet* xset_custom_copy( XSet* set, gboolean copy_next )
     newset->title = g_strdup( set->title );
     newset->b = set->b;
     newset->menu_style = set->menu_style;
+    newset->context = g_strdup( set->context );
     newset->line = g_strdup( set->line );
 
     newset->task = mset->task;
@@ -7395,19 +7403,19 @@ void xset_defaults()
         xset_set_set( set, "title", "mlabel -i %v ::%l" );
 
         set = xset_get( "label_cmd_ntfs" );
-        xset_set_set( set, "desc", "ntfslabel -f %v %l" );
+        xset_set_set( set, "desc", "/sbin/ntfslabel -f %v %l" );
         xset_set_set( set, "title", set->desc );
 
         set = xset_get( "label_cmd_btrfs" );
-        xset_set_set( set, "desc", "btrfs filesystem label %v %l" );
+        xset_set_set( set, "desc", "/sbin/btrfs filesystem label %v %l" );
         xset_set_set( set, "title", set->desc );
 
         set = xset_get( "label_cmd_reiserfs" );
-        xset_set_set( set, "desc", "reiserfstune -l %l %v" );
+        xset_set_set( set, "desc", "/sbin/reiserfstune -l %l %v" );
         xset_set_set( set, "title", set->desc );
 
     set = xset_set( "dev_root_check", "label", _("_Check") );
-    xset_set_set( set, "desc", "fsck %v" );
+    xset_set_set( set, "desc", "/sbin/fsck %v" );
        
     set = xset_set( "dev_root_fstab", "label", _("_Edit fstab") );
     xset_set_set( set, "icon", "gtk-edit" );
@@ -7418,39 +7426,39 @@ void xset_defaults()
 
         set = xset_set( "dev_fmt_vfat", "label", "_vfat" );
         xset_set_set( set, "desc", "vfat" );
-        xset_set_set( set, "title", "mkfs -t vfat %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t vfat %v" );
 
         set = xset_set( "dev_fmt_ntfs", "label", "_ntfs" );
         xset_set_set( set, "desc", "ntfs" );
-        xset_set_set( set, "title", "mkfs -t ntfs %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t ntfs %v" );
 
         set = xset_set( "dev_fmt_ext2", "label", "ext_2" );
         xset_set_set( set, "desc", "ext2" );
-        xset_set_set( set, "title", "mkfs -t ext2 %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t ext2 %v" );
 
         set = xset_set( "dev_fmt_ext3", "label", "ext_3" );
         xset_set_set( set, "desc", "ext3" );
-        xset_set_set( set, "title", "mkfs -t ext3 %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t ext3 %v" );
 
         set = xset_set( "dev_fmt_ext4", "label", "ext_4" );
         xset_set_set( set, "desc", "ext4" );
-        xset_set_set( set, "title", "mkfs -t ext4 %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t ext4 %v" );
 
         set = xset_set( "dev_fmt_btrfs", "label", "_btrfs" );
         xset_set_set( set, "desc", "btrfs" );
-        xset_set_set( set, "title", "mkfs -t btrfs %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t btrfs %v" );
 
         set = xset_set( "dev_fmt_reis", "label", "_reiserfs" );
         xset_set_set( set, "desc", "reiserfs" );
-        xset_set_set( set, "title", "mkfs -t reiserfs %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t reiserfs %v" );
 
         set = xset_set( "dev_fmt_reis4", "label", "r_eiser4" );
         xset_set_set( set, "desc", "reiser4" );
-        xset_set_set( set, "title", "mkfs -t reiser4 %v" );
+        xset_set_set( set, "title", "/sbin/mkfs -t reiser4 %v" );
 
         set = xset_set( "dev_fmt_swap", "label", "_swap" );
         xset_set_set( set, "desc", "swap" );
-        xset_set_set( set, "title", "mkswap %v" );
+        xset_set_set( set, "title", "/sbin/mkswap %v" );
 
         set = xset_set( "dev_fmt_zero", "label", "_zero" );
         xset_set_set( set, "desc", "zero" );
@@ -7466,11 +7474,11 @@ void xset_defaults()
 
         set = xset_set( "dev_back_fsarc", "label", "_FSArchiver" );
         xset_set_set( set, "desc", "FSArchiver" );
-        xset_set_set( set, "title", "fsarchiver -vo -z 7 savefs %s %v" );
+        xset_set_set( set, "title", "/usr/sbin/fsarchiver -vo -z 7 savefs %s %v" );
 
         set = xset_set( "dev_back_part", "label", "_Partimage" );
         xset_set_set( set, "desc", "Partimage" );
-        xset_set_set( set, "title", "partimage -dbo -V 4050 save %v %s" );
+        xset_set_set( set, "title", "/usr/sbin/partimage -dbo -V 4050 save %v %s" );
 
         set = xset_set( "dev_back_mbr", "label", "_MBR" );
         xset_set_set( set, "desc", "MBR" );
@@ -7483,8 +7491,8 @@ void xset_defaults()
     xset_set_set( set, "desc", "dev_rest_file sep_mr4 dev_rest_info" );
 
         set = xset_set( "dev_rest_file", "label", _("_From File") );
-        xset_set_set( set, "desc", "fsarchiver -v restfs %s id=0,dest=%v" );
-        xset_set_set( set, "title", "partimage -b restore %v %s" );
+        xset_set_set( set, "desc", "/usr/sbin/fsarchiver -v restfs %s id=0,dest=%v" );
+        xset_set_set( set, "title", "/usr/sbin/partimage -b restore %v %s" );
 
         set = xset_set( "dev_rest_info", "label", _("File _Info") );
     

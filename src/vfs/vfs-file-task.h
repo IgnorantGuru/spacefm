@@ -152,7 +152,6 @@ struct _VFSFileTask
                              // for su commands, must use /bin/bash -c
                              // as su does not execute binaries
     char* exec_script;
-    char* exec_export_script;
     gboolean exec_keep_tmp;  // diagnostic to keep temp files
     gpointer exec_browser;
     gpointer exec_desktop;

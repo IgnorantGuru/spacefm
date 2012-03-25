@@ -170,7 +170,7 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by, GtkSortT
 GList* desktop_window_get_selected_items( DesktopWindow* win );
 GList* desktop_window_get_selected_files( DesktopWindow* win );
 
-gboolean desktop_write_exports( VFSFileTask* vtask, char* value );
+gboolean desktop_write_exports( VFSFileTask* vtask, char* value, FILE* file );
 void desktop_context_fill( DesktopWindow* win, gpointer context );
 void desktop_window_rename_selected_files( DesktopWindow* win,
                                                         GList* files, char* cwd );

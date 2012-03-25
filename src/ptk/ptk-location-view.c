@@ -39,7 +39,6 @@
 static GtkTreeModel* model = NULL;
 static GtkTreeModel* bookmodel = NULL;
 static int n_vols = 0;
-static guint icon_size = 20;    /* FIXME: icon size should not be hard coded */
 static guint theme_changed = 0; /* GtkIconTheme::"changed" handler */
 static guint theme_bookmark_changed = 0; /* GtkIconTheme::"changed" handler */
 
@@ -100,6 +99,9 @@ gboolean volume_is_visible( VFSVolume* vol );
 gboolean run_command( char* command, char** output );
 void update_all();
 
+const char* data_loss_overwrite = N_("DATA LOSS WARNING - overwriting");
+const char* type_yes_to_proceed = N_("Type yes and press Enter to proceed, or no to cancel");
+const char* press_enter_to_close = N_("[ Finished ]  Press Enter to close");
 
 /*  Drag & Drop/Clipboard targets  */
 static GtkTargetEntry drag_targets[] = { {"text/uri-list", 0 , 0 } };
@@ -151,7 +153,7 @@ static void on_model_destroy( gpointer data, GObject* object )
     g_signal_handler_disconnect( icon_theme, theme_changed );
 }
 
-static void update_icons()
+void update_volume_icons()
 {
     GtkIconTheme* icon_theme;
     GtkTreeIter it;
@@ -171,7 +173,7 @@ static void update_icons()
             {
                 if ( vfs_volume_get_icon( vol ) )
                     icon = vfs_load_icon ( icon_theme, vfs_volume_get_icon( vol ),
-                                                                        icon_size );
+                                                    app_settings.small_icon_size );
                 else
                     icon = NULL;
                 gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
@@ -414,7 +416,7 @@ void ptk_location_view_init_model( GtkListStore* list )
     {
         add_volume( (VFSVolume*)l->data, FALSE );
     }
-    update_icons();
+    update_volume_icons();
 }
 
 GtkTreeView* ptk_location_view_new( PtkFileBrowser* file_browser )
@@ -437,7 +439,7 @@ GtkTreeView* ptk_location_view_new( PtkFileBrowser* file_browser )
         ptk_location_view_init_model( list );
         icon_theme = gtk_icon_theme_get_default();
         theme_changed = g_signal_connect( icon_theme, "changed",
-                                         G_CALLBACK( update_icons ), NULL );
+                                         G_CALLBACK( update_volume_icons ), NULL );
     }
     else
     {
@@ -546,7 +548,7 @@ void add_volume( VFSVolume* vol, gboolean set_icon )
         icon_theme = gtk_icon_theme_get_default();
         icon = vfs_load_icon ( icon_theme,
                                           vfs_volume_get_icon( vol ),
-                                          icon_size );
+                                          app_settings.small_icon_size );
         gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
         if ( icon )
             gdk_pixbuf_unref( icon );
@@ -603,7 +605,7 @@ void update_volume( VFSVolume* vol )
     icon_theme = gtk_icon_theme_get_default();
     icon = vfs_load_icon ( icon_theme,
                                       vfs_volume_get_icon( vol ),
-                                      icon_size );
+                                      app_settings.small_icon_size );
     gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         COL_ICON,
                         icon,
@@ -820,31 +822,16 @@ static void on_check_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
 
         char* cmd = replace_string( set->s, "%v", vol->device_file, FALSE );
-        // direct task
+        // task
         PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
         char* task_name = g_strdup_printf( _("Check As Root %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, cmd );
+        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
         g_free( cmd );
-        if ( change_root )
-        {
-            task->task->exec_command = scmd;
-            task->task->exec_write_root = TRUE;
-        }
-        else
-        {
-            task->task->exec_direct = TRUE;
-            // argv max size 7
-            // for su commands, must use /bin/bash -c
-            // as su does not execute binaries but passes command to shell
-            int a = 0;
-            task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-            task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-            task->task->exec_argv[a++] = scmd;
-            task->task->exec_argv[a++] = NULL;
-        }
+        task->task->exec_command = scmd;
+        task->task->exec_write_root = change_root;
         task->task->exec_as_user = g_strdup_printf( "root" );
         task->task->exec_sync = FALSE;
         task->task->exec_popup = FALSE;
@@ -892,40 +879,14 @@ static void on_mount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         cmd = g_strdup_printf( "echo %s; echo; %s", s1, s1 );
         g_free( s1 );
         
-        // direct task
+        // task
         PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
         char* task_name = g_strdup_printf( _("Mount As Root %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-        if ( change_root )
-        {
-            task->task->exec_command = g_strdup( cmd );
-            task->task->exec_write_root = TRUE;
-        }
-        else
-        {
-            task->task->exec_direct = TRUE;
-            // argv max size 7
-            // for su commands, must use /bin/bash -c
-            // as su does not execute binaries but passes command to shell
-            int a = 0;
-            char* gsu;
-            if ( ( gsu = get_valid_gsu() ) && ( !strcmp( gsu, "/usr/bin/gksu" )
-                                            || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
-                // gksu* needs one arg with command single-quoted
-                task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash -c '%s'", cmd );
-            else
-            {
-                task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-                task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-                task->task->exec_argv[a++] = g_strdup( cmd );
-            }
-            task->task->exec_argv[a++] = NULL;
-            if ( gsu )
-                g_free( gsu );
-        }
-        g_free( cmd );
+        task->task->exec_command = cmd;
+        task->task->exec_write_root = change_root;
         task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_as_user = g_strdup_printf( "root" );
         task->task->exec_sync = TRUE;
@@ -964,7 +925,7 @@ static void on_umount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
 
-        // direct task
+        // task
         char* s1 = replace_string( set->s, "%v", vol->device_file, FALSE );
         char* cmd = g_strdup_printf( "echo %s; echo; %s", s1, s1 );
         g_free( s1 );
@@ -974,34 +935,8 @@ static void on_umount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
         task->task->exec_type = VFS_EXEC_UDISKS;
-        if ( change_root )
-        {
-            task->task->exec_command = g_strdup( cmd );
-            task->task->exec_write_root = TRUE;
-        }
-        else
-        {
-            task->task->exec_direct = TRUE;
-            // argv max size 7
-            // for su commands, must use /bin/bash -c
-            // as su does not execute binaries but passes command to shell
-            int a = 0;
-            char* gsu;
-            if ( ( gsu = get_valid_gsu() ) && ( !strcmp( gsu, "/usr/bin/gksu" )
-                                            || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
-                // gksu* needs one arg with command single-quoted
-                task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash -c '%s'", cmd );
-            else
-            {
-                task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-                task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-                task->task->exec_argv[a++] = g_strdup( cmd );
-            }
-            task->task->exec_argv[a++] = NULL;
-            if ( gsu )
-                g_free( gsu );
-        }
-        g_free( cmd );
+        task->task->exec_command = cmd;
+        task->task->exec_write_root = change_root;
         task->task->exec_as_user = g_strdup_printf( "root" );
         task->task->exec_sync = TRUE;
         task->task->exec_popup = FALSE;
@@ -1106,53 +1041,12 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
         else
             xset_set_set( set, "x", new_label_cmd );
             
-        // direct task
+        // task
         PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
         char* task_name = g_strdup_printf( _("Label As Root %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-/*
-        //task->task->exec_type = VFS_EXEC_UDISKS;
-        task->task->exec_direct = TRUE;
-        // argv max size 7
-        // for su commands, must use /bin/bash -c
-        // as su does not execute binaries but passes command to shell
-        int a = 0;
-        char* gsu;
-        char* s1;
-        char* cmd;
-        if ( ( gsu = get_valid_gsu() ) && ( !strcmp( gsu, "/usr/bin/gksu" )
-                                        || !strcmp( gsu, "/usr/bin/gksudo" ) ) )
-        {
-            // gksu* needs one arg with command single-quoted
-            // double-quotes must be escaped
-            char* s1 = new_label;
-            new_label = g_strdup_printf( "\\\"%s\\\"", s1 );
-            g_free( s1 );
-            s1 = replace_string( new_label_cmd, "%v", vol->device_file, FALSE );
-            char* cmd = replace_string( s1, "%l", new_label, FALSE );
-            g_free( s1 );
-            task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash -c '%s'", cmd );
-            g_free( cmd );
-        }
-        else
-        {
-            s1 = new_label;
-            new_label = g_strdup_printf( "\"%s\"", s1 );
-            g_free( s1 );
-            s1 = replace_string( new_label_cmd, "%v", vol->device_file, FALSE );
-            char* cmd = replace_string( s1, "%l", new_label, FALSE );
-            g_free( s1 );
-            task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-            task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-            task->task->exec_argv[a++] = g_strdup( cmd );
-            g_free( cmd );
-        }
-        task->task->exec_argv[a++] = NULL;
-        if ( gsu )
-            g_free( gsu );
-*/
         task->task->exec_write_root = change_root;
         char* s1 = new_label;
         new_label = g_strdup_printf( "\"%s\"", s1 );
@@ -1512,7 +1406,6 @@ static void on_sync( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                                                                 "file_browser" );
     
     PtkFileTask* task = ptk_file_exec_new( _("Sync"), NULL, view, file_browser->task_view );
-    //task->exec_type = ;
     task->task->exec_browser = NULL;
     task->task->exec_action = g_strdup_printf( "sync" );
     task->task->exec_command = g_strdup_printf( "sync" );
@@ -1578,7 +1471,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     }
     else
         msg = g_strdup_printf( _("You are about to format %s %s- ALL DATA WILL BE LOST.\n\nEnter %s format command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\nEDIT WITH CARE   This command is run as root"), vol->device_file, entire, set->desc, vol->device_file );
-    if ( xset_text_dialog( view, "Format",
+    if ( xset_text_dialog( view, _("Format"),
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, "DATA LOSS WARNING", msg, set->s,
@@ -1586,32 +1479,17 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
                                                                     && set->s )
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
-        // direct task
+        // task
         char* cmd = replace_string( set->s, "%v", vol->device_file, FALSE );
         PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
-        char* task_name = g_strdup_printf( "Format %s", vol->device_file );
+        char* task_name = g_strdup_printf( _("Format %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"DATA LOSS WARNING - overwriting %s\"; echo; echo -n \"Type yes and press Enter to proceed, or no to cancel: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, vol->device_file, cmd );
+        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, _(data_loss_overwrite), vol->device_file, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
         g_free( cmd );
-        if ( change_root )
-        {
-            task->task->exec_command = scmd;
-            task->task->exec_write_root = TRUE;
-        }
-        else
-        {
-            task->task->exec_direct = TRUE;
-            // argv max size 7
-            // for su commands, must use /bin/bash -c
-            // as su does not execute binaries but passes command to shell
-            int a = 0;
-            task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-            task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-            task->task->exec_argv[a++] = scmd;
-            task->task->exec_argv[a++] = NULL;
-        }
+        task->task->exec_command = scmd;
+        task->task->exec_write_root = change_root;
         task->task->exec_as_user = g_strdup_printf( "root" );
         task->task->exec_sync = FALSE;
         task->task->exec_popup = FALSE;
@@ -1783,41 +1661,40 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     g_free( bfile );
     g_free( bname );
 
-    // direct task
+    // task
     PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     char* task_name = g_strdup_printf( _("%s Restore %s"), type, vfile );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
     g_free( task_name );
     char* scmd;
+    
     if ( job == 2 )
-        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"DATA LOSS WARNING - overwriting MBR boot code of %s\"; echo; echo -n \"Type yes and press Enter to proceed, or no to cancel: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, vfile, cmd );
+        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s \"; read s", cmd, _("DATA LOSS WARNING - overwriting MBR boot code of"), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
     else if ( job == 1 )
-        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"DATA LOSS WARNING - overwriting %s\"; echo; echo -n \"Type yes and press Enter to proceed, or no to cancel: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, vfile, cmd );    
+        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, _(data_loss_overwrite), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );    
     else
     {
-        scmd = g_strdup_printf( "echo \">>> fsarchiver archinfo %s\"; echo; fsarchiver archinfo %s; echo; echo \">>> %s\"; echo; echo \"DATA LOSS WARNING - overwriting %s\"; echo; echo -n \"Type yes and press Enter to proceed, or no to cancel: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", sfile, sfile, cmd, vfile, cmd );
+        // sudo has trouble finding fsarchiver because it's not in user path
+        char* fsarc_bin = g_strdup( "/usr/sbin/fsarchiver" );
+        if ( !g_file_test( fsarc_bin, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( fsarc_bin );
+            fsarc_bin = g_strdup( "/sbin/fsarchiver" );
+            if ( !g_file_test( fsarc_bin, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( fsarc_bin );
+                fsarc_bin = g_strdup( "fsarchiver" );
+            }
+        }
+        scmd = g_strdup_printf( "echo \">>> %s archinfo %s\"; echo; %s archinfo %s; echo; echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", fsarc_bin, sfile, fsarc_bin, sfile, cmd, _(data_loss_overwrite), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
+        g_free( fsarc_bin );
     }
     g_free( cmd );
     g_free( vfile );
     g_free( sfile );
-    if ( change_root )
-    {
-        task->task->exec_command = scmd;
-        task->task->exec_write_root = TRUE;
-    }
-    else
-    {
-        task->task->exec_direct = TRUE;
-        // argv max size 7
-        // for su commands, must use /bin/bash -c
-        // as su does not execute binaries but passes command to shell
-        int a = 0;
-        task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-        task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-        task->task->exec_argv[a++] = scmd;
-        task->task->exec_argv[a++] = NULL;
-    }
+    task->task->exec_command = scmd;
+    task->task->exec_write_root = change_root;
     task->task->exec_as_user = g_strdup_printf( "root" );
     task->task->exec_sync = FALSE;
     task->task->exec_popup = FALSE;
@@ -1862,11 +1739,37 @@ static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
     
     if ( g_str_has_suffix( bfile, ".fsa" ) || strstr( bfile, "fsarchiver" ) )
     {
-        cmd = g_strdup_printf( "fsarchiver archinfo %s", sfile );
+        // sudo has trouble finding fsarchiver because it's not in user path
+        char* fsarc_bin = g_strdup( "/usr/sbin/fsarchiver" );
+        if ( !g_file_test( fsarc_bin, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( fsarc_bin );
+            fsarc_bin = g_strdup( "/sbin/fsarchiver" );
+            if ( !g_file_test( fsarc_bin, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( fsarc_bin );
+                fsarc_bin = g_strdup( "fsarchiver" );
+            }
+        }
+        cmd = g_strdup_printf( "%s archinfo %s", fsarc_bin, sfile );
+        g_free( fsarc_bin );
     }
     else if ( g_str_has_suffix( bfile, ".000" ) || strstr( bfile, "partimage" ) )
     {
-        cmd = g_strdup_printf( "partimage imginfo %s", sfile );
+        // sudo has trouble finding partimage because it's not in user path
+        char* pi_bin = g_strdup( "/usr/sbin/partimage" );
+        if ( !g_file_test( pi_bin, G_FILE_TEST_EXISTS ) )
+        {
+            g_free( pi_bin );
+            pi_bin = g_strdup( "/sbin/partimage" );
+            if ( !g_file_test( pi_bin, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( pi_bin );
+                pi_bin = g_strdup( "partimage" );
+            }
+        }
+        cmd = g_strdup_printf( "%s imginfo %s", pi_bin, sfile );
+        g_free( pi_bin );
     }
     else if ( g_str_has_suffix( bfile, ".mbr.bin" )
             || g_str_has_suffix( bfile, ".mbr" )
@@ -1885,20 +1788,11 @@ static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
     g_free( bfile );
     g_free( sfile );
 
-    // direct task
+    // task
     PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     PtkFileTask* task = ptk_file_exec_new( _("Restore Info"), NULL, view, file_browser->task_view );
-    //task->task->exec_type = VFS_EXEC_UDISKS;
-    task->task->exec_direct = TRUE;
-    // argv max size 7
-    // for su commands, must use /bin/bash -c
-    // as su does not execute binaries but passes command to shell
-    int a = 0;
-    task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-    task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-    task->task->exec_argv[a++] = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, cmd );
-    task->task->exec_argv[a++] = NULL;
+    task->task->exec_command = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
     g_free( cmd );
     task->task->exec_as_user = g_strdup_printf( "root" );
     task->task->exec_sync = FALSE;
@@ -1917,6 +1811,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     GtkWidget* view;
     XSet* set;
     char* msg;
+    char* msg2;
     if ( !item )
     {
         view = view2;
@@ -1928,14 +1823,6 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         set = (XSet*)g_object_get_data( G_OBJECT(item), "set" );
     }
 
-    if ( vol->is_mounted )
-    {
-        msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can back it up."), vol->device_file );
-        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"), NULL, 0, msg, NULL );
-        g_free( msg );
-        return;
-    }
-    
     char* vfile;
     char* bfile;
     char* vshort;
@@ -1965,12 +1852,25 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         vfile = g_strdup( vol->device_file );
         vshort = g_path_get_basename( vfile );
         bfile = g_strdup_printf( "backup-%s%s.fsarchiver.fsa", hostname, vshort );
+        if ( vol->is_mounted )
+            msg2 = g_strdup_printf( _("\n\nWARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."), vol->device_file );
+        else
+            msg2 = g_strdup( "" );
     }
     else if ( !strcmp( set->name, "dev_back_part" ) )
     {
+        if ( vol->is_mounted )
+        {
+            msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can create a backup using Partimage."), vol->device_file );
+            xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"), NULL, 0, msg, NULL );
+            g_free( msg );
+            g_free( hostname );
+            return;
+        }    
         vfile = g_strdup( vol->device_file );
         vshort = g_path_get_basename( vfile );
         bfile = g_strdup_printf( "backup-%s%s.partimage", hostname, vshort );
+        msg2 = g_strdup( "" );
     }
     else
         return;  // failsafe
@@ -2023,9 +1923,10 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         if ( !set->s )
             set->s = g_strdup( set->title );
         char* old_set_s = g_strdup( set->s );
-        msg = g_strdup_printf( _("Enter %s backup command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%s\tbackup file ( %s )\n\nEDIT WITH CARE   This command is run as root"),
-                                                set->desc, vol->device_file, bshort );
-        if ( xset_text_dialog( view, "Backup", NULL, TRUE, msg, NULL, set->s,
+        msg = g_strdup_printf( _("Enter %s backup command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%s\tbackup file ( %s )%s\n\nEDIT WITH CARE   This command is run as root"),
+                                                set->desc, vol->device_file, bshort, msg2 );
+        g_free( msg2 );
+        if ( xset_text_dialog( view, _("Backup"), NULL, TRUE, msg, NULL, set->s,
                                                         &set->s, set->title, TRUE )
                                                                     && set->s )
         {
@@ -2050,32 +1951,17 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     g_free( bfile );
     g_free( bshort );
 
-    // direct task
+    // task
     PtkFileBrowser* file_browser = (GtkWidget*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     char* task_name = g_strdup_printf( _("%s Backup %s"), set->desc, vfile );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
     g_free( task_name );
     g_free( vfile );
-    char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"[ Finished ]  Press Enter to close: \"; read s", cmd, cmd );
+    char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
     g_free( cmd );    
-    if ( change_root )
-    {
-        task->task->exec_command = scmd;
-        task->task->exec_write_root = TRUE;
-    }
-    else
-    {
-        task->task->exec_direct = TRUE;
-        // argv max size 7
-        // for su commands, must use /bin/bash -c
-        // as su does not execute binaries but passes command to shell
-        int a = 0;
-        task->task->exec_argv[a++] = g_strdup_printf( "/bin/bash" );
-        task->task->exec_argv[a++] = g_strdup_printf( "-c" );
-        task->task->exec_argv[a++] = scmd;
-        task->task->exec_argv[a++] = NULL;
-    }
+    task->task->exec_command = scmd;
+    task->task->exec_write_root = change_root;
     task->task->exec_as_user = g_strdup_printf( "root" );
     task->task->exec_sync = FALSE;
     task->task->exec_popup = FALSE;
@@ -2188,7 +2074,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
         info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; " );
 
-    flags = g_strdup_printf( "echo DEVICE ; echo %s       ", vol->device_file );
+    flags = g_strdup_printf( "echo %s ; echo %s       ", _("DEVICE"), vol->device_file );
     if ( vol->is_removable )
         { old_flags = flags; flags = g_strdup_printf( "%s removable", flags ); g_free( old_flags ); }
     else
@@ -2236,10 +2122,10 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "df" );
         if ( !path )
-            df = g_strdup_printf( "echo USAGE ; echo \"( please install df )\" ; echo ; " );
+            df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", _("USAGE") );
         else
         {
-            df = g_strdup_printf( "echo USAGE ; %s -hT %s ; echo ; ", path, vol->mount_point );
+            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, vol->mount_point );
             g_free( path );
         }
     }
@@ -2248,10 +2134,10 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( vol->is_mountable )
         {
             vfs_file_size_to_string_format( size_str, vol->size, NULL );
-            df = g_strdup_printf( "echo USAGE ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", vol->device_file, vol->fs_type, size_str );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", _("USAGE"), vol->device_file, vol->fs_type, size_str );
         }
         else
-            df = g_strdup_printf( "echo USAGE ; echo \"%s      ( no media )\" ; echo ; ", vol->device_file );
+            df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", _("USAGE"), vol->device_file );
     }
     path = g_find_program_in_path( "udisks" );
     if ( !path )
@@ -2265,13 +2151,13 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "lsof" );
         if ( !path )
-            lsof = g_strdup_printf( "echo PROCESSES ; echo \"( please install lsof )\" ; echo ; " );
+            lsof = g_strdup_printf( "echo %s ; echo \"( %s lsof )\" ; echo ; ", _("PROCESSES"), _("please install") );
         else
         {
             if ( !strcmp( vol->mount_point, "/" ) )
-                lsof = g_strdup_printf( "echo PROCESSES ; %s -w | grep /$ | head -n 500 ; echo ; ", path );
+                lsof = g_strdup_printf( "echo %s ; %s -w | grep /$ | head -n 500 ; echo ; ", _("PROCESSES"), path );
             else
-                lsof = g_strdup_printf( "echo PROCESSES ; %s -w %s | head -n 500 ; echo ; ", path, vol->mount_point );
+                lsof = g_strdup_printf( "echo %s ; %s -w %s | head -n 500 ; echo ; ", _("PROCESSES"), path, vol->mount_point );
             g_free( path );
         }
     }
@@ -2455,7 +2341,7 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
     else if ( !strcmp( set->name, "dev_rest_info" ) )
         on_restore_info( NULL, view, set );
     else if ( g_str_has_prefix( set->name, "dev_icon_" ) )
-        update_icons();
+        update_volume_icons();
     else if ( !strcmp( set->name, "dev_dispname" ) )
         update_names();
     else if ( !strcmp( set->name, "dev_menu_sync" ) )
@@ -2683,13 +2569,15 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set = xset_set_cb( "dev_back_fsarc", on_backup, vol );
                 xset_set_ob1( set, "view", view );
                 xset_set_ob2( set, "set", set );
+                set->disable = !vol;
             set = xset_set_cb( "dev_back_part", on_backup, vol );
                 xset_set_ob1( set, "view", view );
                 xset_set_ob2( set, "set", set );
+                set->disable = ( !vol || ( vol && vol->is_mounted ) );
             set = xset_set_cb( "dev_back_mbr", on_backup, vol );
                 xset_set_ob1( set, "view", view );
                 xset_set_ob2( set, "set", set );
-                set->disable = ( vol && vol->is_optical );
+                set->disable = ( !vol || ( vol && vol->is_optical ) );
 
             set = xset_set_cb( "dev_rest_file", on_restore, vol );
                 xset_set_ob1( set, "view", view );
@@ -2713,20 +2601,20 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         set = xset_get( "dev_menu_restore" );
             set->disable = ( vol && vol->is_mounted );
         set = xset_get( "dev_menu_backup" );
-            set->disable = ( vol && vol->is_mounted );
+            set->disable = !vol;
 
         xset_set_cb_panel( file_browser->mypanel, "font_dev", main_update_fonts,
                                                                     file_browser );
-        xset_set_cb( "dev_icon_audiocd", update_icons, NULL );
-        xset_set_cb( "dev_icon_optical_mounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_optical_media", update_icons, NULL );
-        xset_set_cb( "dev_icon_optical_nomedia", update_icons, NULL );
-        xset_set_cb( "dev_icon_floppy_mounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_floppy_unmounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_remove_mounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_remove_unmounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_internal_mounted", update_icons, NULL );
-        xset_set_cb( "dev_icon_internal_unmounted", update_icons, NULL );
+        xset_set_cb( "dev_icon_audiocd", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_optical_mounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_optical_media", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_optical_nomedia", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_floppy_mounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_floppy_unmounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_remove_mounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_remove_unmounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_internal_mounted", update_volume_icons, NULL );
+        xset_set_cb( "dev_icon_internal_unmounted", update_volume_icons, NULL );
         xset_set_cb( "dev_dispname", update_names, NULL );
         
         set = xset_get( "dev_exec_fs" );
@@ -3288,13 +3176,16 @@ void update_bookmark_icons()
     XSet* set = xset_get( "book_icon" );
     char* book_icon = set->icon;
     if ( book_icon && book_icon[0] != '\0' )
-        icon = vfs_load_icon ( icon_theme, book_icon, icon_size );
+        icon = vfs_load_icon ( icon_theme, book_icon, app_settings.small_icon_size );
     if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "user-bookmarks", icon_size );    
+        icon = vfs_load_icon ( icon_theme, "user-bookmarks",
+                                                    app_settings.small_icon_size );    
     if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "gnome-fs-directory", icon_size );  
+        icon = vfs_load_icon ( icon_theme, "gnome-fs-directory",
+                                                    app_settings.small_icon_size );  
     if ( !icon )
-        icon = vfs_load_icon ( icon_theme, "gtk-directory", icon_size );  
+        icon = vfs_load_icon ( icon_theme, "gtk-directory",
+                                                    app_settings.small_icon_size );  
 
     if ( gtk_tree_model_get_iter_first( bookmodel, &it ) )
     {
