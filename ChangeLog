@@ -7,6 +7,7 @@
     fixed panel bar always shown on cancel fullscreen
     no folder size display; right-align size column
     moved refresh to after home/default on left toolbar
+    remove unused ptk_file_browser_open_folder_as_root (uninit var warning suse)
 0.7.2   2012-03-05:
     exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
         added /usr/bin/spacefm-auth)
