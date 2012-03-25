@@ -7080,7 +7080,7 @@ void xset_defaults()
     set_last->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "toolbar_left", "label", _("_Left Toolbar") );
-    xset_set_set( set, "desc", "tool_device tool_book tool_dirtree tool_newtab tool_newtabhere tool_back tool_backmenu tool_forward tool_forwardmenu tool_up tool_refresh tool_home tool_default" );
+    xset_set_set( set, "desc", "tool_device tool_book tool_dirtree tool_newtab tool_newtabhere tool_back tool_backmenu tool_forward tool_forwardmenu tool_up tool_home tool_default tool_refresh" );
     set->menu_style = XSET_MENU_SUBMENU;
 
     set = xset_set( "toolbar_right", "label", _("_Right Toolbar") );

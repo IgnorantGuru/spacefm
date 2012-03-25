@@ -6,6 +6,7 @@
     changed debug info for sf ticket 88000
     fixed panel bar always shown on cancel fullscreen
     no folder size display; right-align size column
+    moved refresh to after home/default on left toolbar
 0.7.2   2012-03-05:
     exec function redesign (single script, noexec /tmp ok, ktsuss2 support,
         added /usr/bin/spacefm-auth)
