@@ -2705,7 +2705,9 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
     char* stderr = NULL;
     char* msg;
     gboolean ret;
-    
+
+printf("xset_custom_copy_files( %s, %s )\n", src->name, dest->name );
+
     // copy command dir
     
     // do this for backwards compat - will copy old script
@@ -2717,9 +2719,11 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
         path_src = g_build_filename( src->plug_dir, src->plug_name, NULL );
     else
         path_src = g_build_filename( settings_config_dir, "scripts", src->name, NULL );
+printf("    path_src=%s\n", path_src );
 
     if ( !g_file_test( path_src, G_FILE_TEST_EXISTS ) )
     {
+printf("    path_src !EXISTS\n");
         if ( !src->plugin )
         {
             command = NULL;
@@ -2750,6 +2754,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
     }
     else
     {
+printf("    path_src EXISTS\n");
         path_dest = g_build_filename( settings_config_dir, "scripts", dest->name, NULL );
 
         command = g_strdup_printf( "cp -a %s %s", path_src, path_dest );
@@ -2758,13 +2763,16 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
 
     if ( command )
     {
+printf("    path_dest=%s\n", path_dest );
+printf("    command=%s\n", command );
         ret = g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
         g_free( command );
 
         if ( !ret )
         {
             msg = g_strdup_printf( _("An error occured copying command files\n\n%s"),
-                                                                            stderr );
+                                                                stderr ? stderr : "" );
+printf("    err=%s\n", msg );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
                                                                     0, msg, NULL );
             g_free( msg );
@@ -2775,6 +2783,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
             g_free( stdout );
         stderr = stdout = NULL;
         command = g_strdup_printf( "chmod -R go-rwx %s", path_dest );
+printf("    command2=%s\n", command );
         g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
         g_free( command );
         if ( stderr )
@@ -2800,7 +2809,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
         if ( !ret )
         {
             msg = g_strdup_printf( _("An error occured copying command data files\n\n%s"),
-                                                                            stderr );
+                                                                stderr ? stderr : "" );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
                                                                     0, msg, NULL );
             g_free( msg );
@@ -2823,6 +2832,7 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
 
 XSet* xset_custom_copy( XSet* set, gboolean copy_next )
 {
+printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
     XSet* mset = set;
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
@@ -2864,6 +2874,7 @@ XSet* xset_custom_copy( XSet* set, gboolean copy_next )
     if ( set->menu_style == XSET_MENU_SUBMENU && set->child )
     {
         XSet* set_child = xset_get( set->child );
+printf("    copy submenu %s\n", set_child->name );
         XSet* newchild = xset_custom_copy( set_child, TRUE );
         newset->child = g_strdup( newchild->name );
         newchild->parent = g_strdup( newset->name );
@@ -2872,6 +2883,7 @@ XSet* xset_custom_copy( XSet* set, gboolean copy_next )
     if ( copy_next && set->next )
     {
         XSet* set_next = xset_get( set->next );
+printf("    copy next %s\n", set_next->name );
         XSet* newnext = xset_custom_copy( set_next, TRUE );
         newnext->prev = g_strdup( newset->name );
         newset->next = g_strdup( newnext->name );        
