@@ -399,6 +399,8 @@ void on_view_popup( GtkTextView *entry, GtkMenu *menu, gpointer user_data )
     set->browser = set->desktop = NULL;
     xset_add_menuitem( NULL, NULL, menu, accel_group, set );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 void ptk_file_task_progress_open( PtkFileTask* task )

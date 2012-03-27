@@ -33,7 +33,11 @@ uidir=$(filedir)/ui
 # sfm don't install mount.rules for no-hal build
 if USE_HAL
 file_DATA = \
-	mount.rules
+	mount.rules \
+	spacefm-manual-en.html
+else
+file_DATA = \
+	spacefm-manual-en.html
 endif
 
 # GtkBuilder UI definition files

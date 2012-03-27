@@ -8,22 +8,25 @@
 <tr>
 <td width="20%" valign="top">
 <font size=+2>SpaceFM</font><br><br>
-<a href="http://spacefm.sourceforge.net/">Homepage</a><br>
-<a href="http://sourceforge.net/projects/spacefm/files/">Downloads</a><br>
-<a href="http://sourceforge.net/p/spacefm/tickets/">Bugs & Requests</a><br>
-<a href="http://sourceforge.net/p/spacefm/discussion/">Forum</a><br>
-<a href="http://spacefm.wikispaces.com/">Wiki</a><br>
-<a href="http://spacefm.sourceforge.net/spacefm-manual-en.html">User's Manual</a><br>
+<a href="http://ignorantguru.github.com/spacefm/">Homepage</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a><br>
+<a href="http://ignorantguru.github.com/spacefm/news.html">News</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/wiki">Wiki</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/issues">Report Issues</a><br>
+<a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">User's Manual</a><br>
 </td>
 
 <td valign="top">
-<a name="toc"></a><font size=+3><a href="http://spacefm.sourceforge.net/spacefm-manual-en.html">SpaceFM User's Manual</a></font><br><br>
+<a name="toc"></a><font size=+3><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">SpaceFM User's Manual</a></font><br><br>
 
 <p><b>This document is under construction and incomplete.</b>
 
-<p>This manual uses your browser's settings for fonts, font sizes, and colors.<br><br>
+<p>This manual uses your browser's settings for fonts, font sizes, and colors.
 
-<p><b>DISCLAIMER</b>
+<p><b>TIP:</b>  For help within SpaceFM, <i>right</i>-click on a menu item and select <a href="#designmode-designmenu-help">Help</a>.  Or, highlight the menu item (hover your mouse cursor over it) and press F1.  Some dialogs also include a Help button which links to this manual.
+
+
+<br><br><br><b>DISCLAIMER</b>
 <br>While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br><br><br>
 
 
@@ -73,6 +76,7 @@
     <a href="#designmode-style">Style</a><br>
     <a href="#designmode-command">Command</a><br>
     <a href="#designmode-toolbars">Toolbars</a><br>
+    <a href="#designmode-shortcuts">Shortcuts</a><br>
 </ul>
 <a href="#plugins">Plugins</a>
 <ul>
@@ -264,9 +268,14 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>The <a href="http://spacefm.sourceforge.net/">SpaceFM Homepage</a> provides the most up-to-date download and installation information.  SpaceFM is primarily distributed from its <a href="http://sourceforge.net/projects/spacefm/">Sourceforge project page</a>, which includes <a href="http://sourceforge.net/projects/spacefm/files/">downloads</a>, the <a href="http://sourceforge.net/p/spacefm/blog/">latest news</a>, <a href="http://sourceforge.net/p/spacefm/tickets/">bug reports & requests</a>, and the <a href="http://sourceforge.net/p/spacefm/discussion/">forum</a>.  The <a href="http://spacefm.wikispaces.com/">SpaceFM Wiki</a> (just getting started) contains user-contributed <a href="http://spacefm.wikispaces.com/userplugins">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
+<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros.
 
-<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.txt file for the current version and <a href="http://spacefm.sourceforge.net/spacefm.SHA256.txt">these instructions</a>.
+<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
+
+The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
+
+<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.  (This is usually unnecessary when downloading from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.)
+
 
 
 <!-- @end installation-downloads-->
@@ -297,23 +306,86 @@
 <a name="installation-packages"/><a href="#installation-packages"><font size=+2>Packages</font></a>
 <!-- @Installation @Packages -->
 
-<ul>
-    <li>Debian (Ubuntu, etc) deb packages are available in the <a href="http://sourceforge.net/projects/spacefm/files/">project files</a> and are also available via <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  Remember to <a href="http://spacefm.sourceforge.net/spacefm.SHA256.txt">authenticate</a>.  NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
-    
-    <li>Easily build your own deb package from source using the instructions in the <a href="http://sourceforge.net/projects/spacefm/files/README/download">README</a> file.
+<br><br><br>
+<table border=1 cellpadding="5" width="80%">
+<tr>
+	<th>Distro</th>
+	<th>Packages &amp; Repositories*</th>
+</tr>
+<tr>
+<td><b>Debian,<br>Ubuntu,<br>etc</b></td>
+<td>
+	deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
+	<br><br>NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
+	<br><br><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+</td>
+</tr>
 
-    <li>Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
-    
-    <li><a href="http://www.sabayon.org/">Sabayon</a> includes spacefm in its repositories
-    
-    <li>Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+<tr>
+<td><b>antiX<b></td>
+<td>
+	<a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
+</td>
+</tr>
 
-    <li><a href="http://www.pclinuxos.com/">PCLinuxOS</a> has spacefm test packages available (see forum)
-    
-    <li><a href="http://vectorlinux.com/">VectorLinux</a> has spacefm test packages available
-	
-    <li><i>Know of packages for another distro?</i>  <a href="http://spacefm.wikispaces.com/info">please share it</a>
-</ul>
+<tr>
+<td><b>Arch Linux</b></td>
+<td>
+	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+</td>
+</tr>
+
+<tr>
+<td><b>Gentoo</b></td>
+<td>
+	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
+</td>
+
+<tr>
+<td><b>openSUSE</b></td>
+<td>
+	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
+
+	<p>openSUSE Tumbleweed repo:<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/</a>
+
+	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
+
+	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
+</td>
+</tr>
+
+<tr>
+<td><b>PCLinuxOS</b></td>
+<td>
+	spacefm test packages available (see forum)
+</td>
+</tr>
+
+<tr>
+<td><b>Sabayon</b></td>
+<td>
+	Includes spacefm in its repositories
+</td>
+</tr>
+
+<tr>
+<td><b>VectorLinux</b></td>
+<td>
+	spacefm test packages available
+</td>
+</tr>
+
+<tr>
+<td><b><i>Other</i></b></td>
+<td>
+	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use the easy manual build instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
+</td>
+</tr>
+</table>
+<P><i>* For the most up to date table, please visit the <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a></i>
+
 
 
 <!-- @end installation-packages-->
@@ -344,7 +416,7 @@
 <a name="installation-installer"/><a href="#installation-installer"><font size=+2>Installer</font></a>
 <!-- @Installation @Installer -->
 
-<p>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in the <a href="http://sourceforge.net/projects/spacefm/files/">project files</a>.  Remember to <a href="http://spacefm.sourceforge.net/spacefm.SHA256.txt">authenticate</a>.  The installer extracts, builds, and installs automatically.
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>.  The installer extracts, builds, and installs automatically.
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
@@ -400,7 +472,7 @@ Or, to see the help for alternate build options, run:
 
 <p>To build SpaceFM step-by-step, first install <b>required <i>build</i> dependencies</b> as detailed in the <a href="#installation-installer">Installer instructions</a> above.
 
-<p>Next, download the tarball (eg spacefm-x.x.x.tar.xz) from the <a href="http://sourceforge.net/projects/spacefm/files/">project files</a>, authenticate, extract the tarball to a working folder, and enter the directory in a terminal.
+<p>Next, download the tarball (eg spacefm-x.x.x.tar.xz) from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>, extract the tarball to a working folder, and enter the directory in a terminal.
 
 <p>For a default build and install as /usr/local/bin/spacefm, run configure like this:
 <pre>    ./configure</pre>
@@ -411,7 +483,7 @@ Or, to see the help for alternate build options, run:
 
 <p><b>IF</b> you don't want to use the inotify kernel support and instead want fam or gamin to detect directory changes, add to configure: <code>--disable-inotify</code>
         
-<p>SpaceFM already supports ktsuss, gksu, gksudo, and kdesu.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
+<p>SpaceFM already supports ktsuss, gnomesu, gksu, gksudo, and kdesu.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
 
 <p>Next, <b>run make</b> and complete the installation:
 <pre>    make
@@ -920,6 +992,10 @@ The SpaceFM executable file.
 <p><a name="programfiles-usr-bin-spacefm-auth"/><a href="#programfiles-usr-bin-spacefm-auth"><b>bin/spacefm-auth</b></a><br>
 This script is used internally by spacefm to authenticate temporary scripts run as another user (using /usr/bin/sha256sum).  This file should not be modified or run directly.  This file was added to SpaceFM version 0.7.2 to simplify the command line for su programs, which often handle special characters poorly and have inconsistent command line usage.  If spacefm-auth or /usr/bin/sha256sum are missing, SpaceFM will operate in a less secure mode.
 
+<!-- # share/spacefm/spacefm-manual-en.html #manual -->
+<p><a name="programfiles-usr-manual"/><a href="#programfiles-usr-manual"><b>share/spacefm/spacefm-manual-en.html</b></a><br>
+A local copy of this manual you're reading.  This copy is accessed when using context-sensitive help within SpaceFM.  If available, a version for your language will automatically be used.  To use a different manual location within SpaceFM, set your preference in Help|Options|Manual Location.
+
 <!-- # share/spacefm/plugins/ #plugins -->
 <p><a name="programfiles-usr-plugins"/><a href="#programfiles-usr-plugins"><b>share/spacefm/plugins/</b></a><br>
 A folder containing <a href="#plugins">plugins</a> installed by the user.  Plugin files should NOT be copied directly to this folder.  Instead, use <a href="#plugins-install">Plugins|Install</a> to install them, or <a href="#designmode-designmenu-remove">Design Mode</a> to remove them.  However, if you make a package for your plugin, you can instruct the package manager to install the correct uncompressed files to this folder, allowing users to install your plugin via their package manager.
@@ -1068,7 +1144,9 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <a name="devices-menu"/><a href="#devices-menu"><font size=+2>Menu</font></a>
 <!-- @Devices @Menu -->
 
-<p>To access the Devices menu, right-click on a Devices list.  By right-clicking directly on a listed device, more options will be available.  The Devices context menu includes:
+<p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the design menu.
+
+<p>The Devices context menu includes:
 
 <!-- #Remove -->
 <p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove</b></a><br>
@@ -1612,6 +1690,7 @@ Font opens a font selection dialog which allows you to select the font to be use
         <li><a href="#designmode-style">Style</a>
         <li><a href="#designmode-command">Command</a>
         <li><a href="#designmode-toolbars">Toolbars</a>
+        <li><a href="#designmode-shortcuts">Shortcuts</a>
     </ul>
     <li><a href="#plugins">Plugins</a>
 </ul>
@@ -1620,13 +1699,13 @@ Font opens a font selection dialog which allows you to select the font to be use
 <a name="designmode-introduction"/><a href="#designmode-introduction"><font size=+2>Introduction</font></a>
 <!-- @Design Mode @Introduction -->
 
-<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the design menu.
+<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>design menu</i>.
 
-<p>To open the design menu, right-click*, middle-click, or ctrl-click on a menu item.  The design menu is available for most menu items.  Note that Design Mode will not work in the Bookmarks menu and in variable parts of the Open context menu.  * Using right-click for Design Mode is optional (see View|Preferences|Interface|Right-click opens design menu).
+<p>To open the design menu, simply right-click on a menu item.  The design menu is available for most menu items, but is not available in the Bookmarks menu and in variable parts of the Open context menu.  Alternatively, to open the design menu using a shortcut key, press F2 while the menu item is highlighted.
 
-<p>To open the design menu for a submenu, first close the submenu (by clicking on it), then right-, middle-, or ctrl-click on the submenu name.
+<p>To open the design menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
 
-<p>Design Mode can also be used to customize toolbars, although you cannot click directly on toolbar items.  See the <a href="#designmode-toolbars">Toolbars section</a> for details.
+<p>Although you cannot right-click directly on toolbar items, Design Mode can be used to customize toolbars via their config menus, as detailed in the <a href="#designmode-toolbars">Toolbars section</a>.
 
 <p>While Design Mode works in almost all menus, a good place to practice is the Tools menu, which is reserved for your custom commands.
 
@@ -1655,6 +1734,7 @@ Font opens a font selection dialog which allows you to select the font to be use
         <li><a href="#designmode-style">Style</a>
         <li><a href="#designmode-command">Command</a>
         <li><a href="#designmode-toolbars">Toolbars</a>
+        <li><a href="#designmode-shortcuts">Shortcuts</a>
     </ul>
     <li><a href="#plugins">Plugins</a>
 </ul>
@@ -1663,7 +1743,15 @@ Font opens a font selection dialog which allows you to select the font to be use
 <a name="designmode-designmenu"/><a href="#designmode-designmenu"><font size=+2>Design Menu</font></a>
 <!-- @Design Mode @Design Menu -->
 
-<p>When you right-, middle-, or crtl-click on a menu item, you will be presented with a design menu which gives you extensive control over how the item is displayed and performs.
+<p>When you right-click on a menu item, or press F2 while the menu item is highlighted, you will be presented with a design menu which gives you extensive control over how the item is displayed and performs.
+
+<p>TIP: For help with a menu item in the design menu itself, highlight the design menu item and press F1.
+
+<!-- # Show #show -->
+<p><a name="designmode-designmenu-show"/><a href="#designmode-designmenu-show"><b>Show</b></a><br>
+The Show item will only be visible in the design menu when it is opened from a <a href="#designmode-toolbars">toolbar config menu</a>.  Checking the Show option will show this item in the toolbar, and unchecking it will remove it from the toolbar.
+
+<p>When a toolbar item is shown, an asterisk will appear next to it's name in the toolbar config menu.
 
 <!-- # Name #name -->
 <p><a name="designmode-designmenu-name"/><a href="#designmode-designmenu-name"><b>Name</b></a><br>
@@ -1671,9 +1759,11 @@ The Name item allows you to change a menu item's name as it appears in the menu.
 
 <!-- # Key -->
 <p><a name="designmode-designmenu-key"/><a href="#designmode-designmenu-key"><b>Key</b></a><br>
-The Key item allows you to bind any shortcut key to the current menu item, and to change or unset an existing shortcut key.  When you select Key, a dialog will open asking you to press your key combination (for example Ctrl-G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key option can be used on built-in and custom commands, but cannot be used on a submenu.
+The Key item allows you to bind any shortcut key to the current menu item, and to change or unset an existing shortcut key.  When you select Key, a dialog will open asking you to press your key combination (for example Ctrl+G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key option can be used on built-in and custom commands, but cannot be used on a submenu.
 
 <p>After you have set a key combination, when you reopen the menu the new key shortcut will be displayed in the menu.
+
+<p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
 <!-- # Icon -->
 <p><a name="designmode-designmenu-icon"/><a href="#designmode-designmenu-icon"><b>Icon</b></a><br>
@@ -1683,6 +1773,8 @@ The Icon item allows you to set or change an icon for a menu item.  A dialog wil
 
 <p>To browse the available icons on your system, open /usr/share/icons/.  When you enter an icon name, GTK will search there for an appropriate icon, and will also search ~/.icons/ and ~/.local/share/icons/.
 
+<p>You can also change the icon for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+I, <b>or</b> use the mouse shortcut Shift + Middle-Click.
+
 <!-- # Style -->
 <p><a name="designmode-designmenu-style"/><a href="#designmode-designmenu-style"><b>Style</b></a><br>
 If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (normal, checkbox, or input), and change the input dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the Style section below for details.
@@ -1691,13 +1783,27 @@ If a menu item is a custom command, the Style submenu allows you to change the t
 <p><a name="designmode-designmenu-command"/><a href="#designmode-designmenu-command"><b>Command</b></a><br>
 Only available for custom menu items, the Command submenu allows you to set and change the custom command which is run when the menu item is selected, allows you to browse the files associated with the command or plugin, and provides options for how your command is run.  See the Command section below for details.
 
+<!-- # Help -->
+<p><a name="designmode-designmenu-help"/><a href="#designmode-designmenu-help"><b>Help</b></a><br>
+Help opens contextual help for a menu item.  For built-in commands, the SpaceFM user's manual will be opened in your browser.  If no help is currently available, Help will be disabled.  [Note: Because the user's manual is still incomplete, not all menu items will have help available.]
+
+<p>Your browser may be customized in Help|Options|Browser, and a custom location for the user's manual can be set in Help|Options|Manual Location.
+
+<p>For custom commands, including plugins, Help will open the plain text README file for the command in your text editor.  If no README file exists for a custom command, selecting Help will create one for you to edit.
+
+<p>You can also open help for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F1, <b>or</b> use the mouse shortcut Alt + Middle-Click.  F1 may also be used from within the design menu itself to show help for a design menu item.
+
 <!-- # Cut -->
 <p><a name="designmode-designmenu-cut"/><a href="#designmode-designmenu-cut"><b>Cut</b></a><br>
 The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.  Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.
 
+<p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
+
 <!-- # Copy -->
 <p><a name="designmode-designmenu-copy"/><a href="#designmode-designmenu-copy"><b>Copy</b></a><br>
 Similarly, Copy copies the current menu item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item.  You cannot copy built-in menu items, only custom ones.
+
+<p>You can also copy a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+C, <b>or</b> use the mouse shortcut Ctrl + Left-or-Right-Click.
 
 <!-- # Paste -->
 <p><a name="designmode-designmenu-paste"/><a href="#designmode-designmenu-paste"><b>Paste</b></a><br>
@@ -1711,6 +1817,8 @@ If you previously cut or copied a menu item onto the design clipboard, the Paste
 
 <p>Paste, Cut, and Copy can also be used on the separators between menu items.  To move a command to directly after a separator, copy the command to the design menu, right-click on a separator, and select Paste.  You can also cut, copy, and paste the separators themselves, providing they are not built-in.
 
+<p>You can also paste a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+V, <b>or</b> use the mouse shortcut Shift + Left-or-Right-Click.
+
 <!-- # Remove -->
 <p><a name="designmode-designmenu-remove"/><a href="#designmode-designmenu-remove"><b>Remove</b></a><br>
 Remove is used to remove any custom command or separator.  It cannot be used on built-in commands or separators.  When used on a <a href="#plugins">plugin</a>, Remove will uninstall the plugin (root password required).
@@ -1722,6 +1830,8 @@ Remove is used to remove any custom command or separator.  It cannot be used on 
 <p>WHEN REMOVING A SUBMENU, all commands and submenus contained within it are deleted as described above.
 
 <p>Note that a submenu in SpaceFM can never be empty.  As a result, if you remove the last item from a submenu, a new command will automatically be added to it.
+
+<p>You can also remove a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press the Delete key, <b>or</b> use the mouse shortcut Ctrl + Shift + Middle-Click.
 
 <!-- # Export -->
 <p><a name="designmode-designmenu-export"/><a href="#designmode-designmenu-export"><b>Export</b></a><br>
@@ -1745,6 +1855,8 @@ The New item creates a new custom command, which will be inserted after the curr
 <pre>    date</pre>
 
 <p>When you click the new menu item, a dialog will open showing you the current date and time.  
+
+<p>You can also add a new menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item where you want to insert the new item, and press the Insert key, <b>or</b> use the mouse shortcut Ctrl + Shift + Left-or-Right-Click.
 
 <!-- # Submenu -->
 <p><a name="designmode-designmenu-submenu"/><a href="#designmode-designmenu-submenu"><b>Submenu</b></a><br>
@@ -1775,6 +1887,7 @@ The Separator item adds a new separator line into the menu after the current men
         <li>Style
         <li><a href="#designmode-command">Command</a>
         <li><a href="#designmode-toolbars">Toolbars</a>
+        <li><a href="#designmode-shortcuts">Shortcuts</a>
     </ul>
     <li><a href="#plugins">Plugins</a>
 </ul>
@@ -1782,7 +1895,6 @@ The Separator item adds a new separator line into the menu after the current men
 <td valign="top">
 <a name="designmode-style"/><a href="#designmode-style"><font size=+2>Style</font></a>
 <!-- @Design Mode @Style -->
-
 <p>The Style submenu of the design menu allows you to control a menu item's appearance.  For custom commands, you can choose whether the item acts as a normal menu item, a checkbox, or prompts the user for input.  For built-in as well as custom commands, the Style menu also contains the context rules which determine if and how a menu item is displayed based on the file browser's context.
 
 <!-- # Normal -->
@@ -1875,6 +1987,8 @@ The context dialog allows you to set rules which determine when and how a menu i
 
 <p>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.
 
+<p>You can also open the context dialog for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F3, <b>or</b> use the mouse shortcut Ctrl + Alt + Middle-Click.
+
 <!-- # Ignore Context -->
 <p><a name="designmode-style-ignorecontext"/><a href="#designmode-style-ignorecontext"><b>Ignore Context</b></a><br>
 The 'Ignore Context (global)' item in the Style submenu, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown.  This is a global setting - it disables context rules in all windows of the current instance.
@@ -1904,6 +2018,7 @@ The 'Ignore Context (global)' item in the Style submenu, if checked, causes all 
         <li><a href="#designmode-style">Style</a>
         <li>Command
         <li><a href="#designmode-toolbars">Toolbars</a>
+        <li><a href="#designmode-shortcuts">Shortcuts</a>
     </ul>
     <li><a href="#plugins">Plugins</a>
 </ul>
@@ -1921,6 +2036,8 @@ The Edit items allow you to edit the current command.  Edit will perform differe
 <p>Edit works a little differently with <a href="#plugins">plugins</a>.  If the plugin is command type <a href="#designmode-command-line">line</a>, you are permitted to edit the command line of the plugin.  However, note that your changes will be lost when you exit SpaceFM - the plugin will revert to its saved command line when SpaceFM restarts.  Likewise, if the plugin uses command type <a href="#designmode-command-custom">custom</a>, you can temporarily change the executable used, but the change will not be saved.  When making a temporary change to a plugin, only the current user is affected by the change.
 
 <p>If the plugin is a <a href="#designmode-command-script">script</a>, Edit will open the script in your editor.  To actually make changes to an installed plugin's script, you must use Edit As Root.  
+
+<p>You can edit a menu item's command using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F4, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Copy -->
 <p><a name="designmode-command-copy"/><a href="#designmode-command-copy"><b>Copy</b></a><br>
@@ -2181,6 +2298,7 @@ The Scroll option, which is checked by default for new commands, determines the 
         <li><a href="#designmode-style">Style</a>
         <li><a href="#designmode-command">Command</a>
         <li>Toolbars
+        <li><a href="#designmode-shortcuts">Shortcuts</a>
     </ul>
     <li><a href="#plugins">Plugins</a>
 </ul>
@@ -2191,13 +2309,13 @@ The Scroll option, which is checked by default for new commands, determines the 
 
 <p>There are up to three toolbars shown in each SpaceFM panel: toolbars to the left and right of the Smartbar in the Toolbox, and one in the Side Toolbar.  To show or hide toolbars, right-click on the file list and check or uncheck View|Toolbox or View|Side Toolbar.
 
-<p>Toolbars can also be customized using <a href="#designmode">Design Mode</a>.  Although you cannot right- or middle-click on a toolbar, each toolbar has a config menu for the purpose of customization.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
+<p>Toolbars can also be customized using <a href="#designmode">Design Mode</a>.  Although you cannot right-click directly on a toolbar, each toolbar has a config menu for the purpose of customization.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
 
 <p>To access a toolbar's config menu, click the leftmost icon on the toolbar (at the far left of the panel).  The 'Left Toolbar' config menu is used to customize the toolbar in the Toolbox to the left of the Smartbar, and 'Right Toolbar' is used to customize the toolbar to the right.  The 'Side Toolbar' menu configures the Side Toolbar.
 
-<p>In these menus, Design Mode works as always - use right-click, middle-click, or ctrl-click to open the design menu for any item.  But there are a few differences in these menus.
+<p>In these menus, Design Mode works as always - use right-click or F2 to open the design menu for any highlighted item.  But there are a few differences in these menus.
 
-<p>Toolbar config menus show <i>all</i> available tool items, with an asterisk (*) next to the name of currently shown items, and no asterisk next to the name of hidden items.  When opening the design menu on a toolbar config menu item, the topmost item will be a 'Show' checkbox.  If checked, this item will be shown in the toolbar.  If unchecked, this item will be hidden.
+<p>Toolbar config menus show <i>all</i> available tool items, with an asterisk (*) next to the name of currently shown items, and no asterisk next to the name of hidden items.  When opening the design menu on a toolbar config menu item, the topmost item will be <a href="#designmode-designmenu-show">Show</a>.  If checked, this item will be shown in the toolbar.  If unchecked, this item will be hidden.
 
 <p>You can add custom commands to these menus (and thus to the toolbars), but you cannot add submenus.  There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.
 
@@ -2205,6 +2323,112 @@ The Scroll option, which is checked by default for new commands, determines the 
 
 
 <!-- @end designmode-toolbars-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#programfiles">Program Files</a>
+    <li><a href="#devices">Devices</a>
+    <li>Design Mode
+    <ul>
+        <li><a href="#designmode-introduction">Introduction</a>
+        <li><a href="#designmode-designmenu">Design Menu</a>
+        <li><a href="#designmode-style">Style</a>
+        <li><a href="#designmode-command">Command</a>
+        <li><a href="#designmode-toolbars">Toolbars</a>
+        <li>Shortcuts
+    </ul>
+    <li><a href="#plugins">Plugins</a>
+</ul>
+</td>
+<td valign="top">
+<a name="designmode-shortcuts"/><a href="#designmode-shortcuts"><font size=+2>Shortcuts</font></a>
+<!-- @Design Mode @Shortcuts -->
+
+<p>In addition to right-clicking on a menu item and using the <a href="file:///data/tmp/spacefm-manual-en.html#designmode-designmenu">design menu</a>, design mode keyboard and mouse shortcuts are also available.  These shortcuts are NOT required - all you really need to know is 'right-click opens the design menu'.
+
+<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.
+
+<br><br><br>
+<table border=1 cellpadding="5"><caption><b>Design Mode Shortcuts</b></caption>
+<tr>
+	<th>Action</th>
+	<th>Key Combo</th>
+	<th>Mouse Combo</th>
+</tr>
+<tr>
+	<td>Design Menu</td>
+	<td>F2</td>
+	<td>Right</td>
+</tr>
+<tr>
+	<td>Cut</td>
+	<td>Ctrl + X</td>
+	<td>Alt + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Copy</td>
+	<td>Ctrl + C</td>
+	<td>Ctrl + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Paste</td>
+	<td>Ctrl + V</td>
+	<td>Shift + Left-or-Right</td>
+</tr>
+<tr>
+	<td>New</td>
+	<td>Insert</td>
+	<td>Ctrl + Shift + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Edit Command</td>
+	<td>F4 or Ctrl + E</td>
+	<td>Middle</td>
+</tr>
+<tr>
+	<td>Help</td>
+	<td>F1</td>
+	<td>Alt + Middle</td>
+</tr>
+<tr>
+	<td>Set Key</td>
+	<td>Ctrl + K</td>
+	<td>Ctrl + Middle</td>
+</tr>
+<tr>
+	<td>Set Icon</td>
+	<td>Ctrl + I</td>
+	<td>Shift + Middle</td>
+</tr>
+<tr>
+	<td>Remove</td>
+	<td>Delete</td>
+	<td>Ctrl + Shift + Middle</td>
+</tr>
+<tr>
+	<td>Context</td>
+	<td>F3</td>
+	<td>Ctrl + Alt + Middle</td>
+</tr>
+</table>
+<br>
+
+<p>These shortcuts will also work after the design menu has been shown.
+
+<p><b>The F1 keyboard shortcut is special</b> in that it can also be used to show help on items in the design menu itself.  Highlight a design menu item (such as Export) and press F1.
+
+<p>If the shortcut action is not available for the current menu item (for example, performing Remove on a built-in command), the design menu will be opened instead.
+
+<p>NOTE:  Some window managers may be configured to use some of these mouse combos for other purposes.  For these to work within SpaceFM, you may need to disable them in your window manager.
+
+<!-- @end designmode-shortcuts-->
 <br><br></td></tr>
 
 
@@ -2237,9 +2461,11 @@ The Scroll option, which is checked by default for new commands, determines the 
 <a name="plugins-introduction"/><a href="#plugins-introduction"><font size=+2>Introduction</font></a>
 <!-- @Plugins @Introduction -->
 
-<p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom command can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also optionally store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.
+<p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom command can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.
 
-<p>Eventually, some plugins will be included with SpaceFM.  Additionally, user-contributed plugins can be shared and obtained in the <a href="http://spacefm.wikispaces.com/userplugins">SpaceFM Wiki</a>.  <b>It is your responsibility to evaluate the safety and applicability to your purposes of all plugins.</b>
+<p>Eventually, some plugins will be included with SpaceFM.  Additionally, user-contributed plugins can be shared and obtained in the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">SpaceFM Wiki</a>.
+
+<p><b>It is your responsibility to evaluate the safety and applicability to your purposes of all plugins.</b>
 
 
 <!-- @end plugins-introduction-->
@@ -2272,6 +2498,8 @@ The Scroll option, which is checked by default for new commands, determines the 
 
 <p>The best way to create a plugin, whether for your own use or for others, is to <a href="#designmode-designmenu-new">create a custom command</a>.  Develop the command to work the way you want, and set any design menu options for how the command is best run.  When you're ready to create the plugin, simply use <a href="#designmode-designmenu-export">Export</a> on the <a href="#designmode-designmenu">design menu</a> to save the command to a plugin file.
 
+<p>A plugin may also contain multiple related commands and submenus of commands.  To create such a plugin, simply export a <a href="#designmode-designmenu-submenu">submenu</a>.
+
 <p>Exporting commands as plugins also provides a way to back up commands.  By exporting it to a plugin file, your custom command becomes portable and self-contained - you can always use the plugin file to import it back into any SpaceFM session, either as a normal custom command, or as an installed plugin.
 
 <!-- # Plugin File #file -->
@@ -2280,9 +2508,7 @@ The SpaceFM plugin file uses a simple and open format.  The plugin file is simpl
 
 <p>A plugin file, such as Example.spacefm-plugin.tar.gz, contains a single file named 'plugin' which SpaceFM uses to define the contents of the plugin.  This file is plain text and can be viewed in your editor, but should NOT be edited.  In addition, plugin files contain one or more command directories, one for each command in the plugin.  Plugins may be a single command, or they may be a single submenu which contains an unlimited number of commands and submenus.  Thus a set of commands with related functions can be distributed as a single submenu plugin.  (To create a submenu plugin, simply export a <a href="#designmode-designmenu-submenu">submenu</a>.)
 
-<p>Tip:  If you have a larger plugin, you can manually convert it to tar.xz format and SpaceFM will accept it (only tar.gz or tar.xz).
-
-<p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
+<p>TIP:  If you have a larger plugin, you can manually convert it to tar.xz format and SpaceFM will accept it (only tar.gz or tar.xz).
 
 <!-- # Extra Files #extra -->
 <p><a name="plugins-creationandfiles-extra"/><a href="#plugins-creationandfiles-extra"><b>Extra Files</b></a><br>
@@ -2290,9 +2516,9 @@ Additional files required by your plugin can be added to the command directory, 
 
 <p>You may also add a file named 'icon'.  SpaceFM will automatically display this icon for the plugin if no other icon is <a href="#designmode-designmenu-icon">set in the design menu</a>.  Small icons work best, as your icon may not be resized.  If you don't want to include a custom 'icon' file, you can also simply set a standard icon for the command using the design menu.  Users can also override your default icon in this way.  Keep in mind that the user may be using a different icon theme than you are, so try to stick with common icon names.  Using an absolute path for the icon is not recommended.
 
-<p>In addition, consider adding a 'readme' or 'about' file to the command directory which explains what your plugin does, and may include an email address, website, license terms, etc.
+<p>In addition, adding a README file to the command directory is recommended.  This file will be created automatically if you select <a href="#designmode-designmenu-help">Help</a> from the design menu.  This file explains what your plugin does, how to use it, and may include an email address, website, license terms, etc.
 
-<p>If multiple commands in your plugin need to access shared files, consider placing them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-command-browse-plugin">Command|Browse|Plugin</a> from the design menu.
+<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-command-browse-plugin">Command|Browse|Plugin</a> from the design menu.  One limitation to using this directory is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.
 
 <!-- # Data Files #data -->
 <p><a name="plugins-creationandfiles-data"/><a href="#plugins-creationandfiles-data"><b>Data Files</b></a><br>
@@ -2301,8 +2527,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <p>Remember that the data directory may not exist, so make sure your script always creates it before attempting to use it.  Place this command in the initial part of your script:
 <pre>    mkdir -p "$fm_cmd_data"</pre>
 
-<p>Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
-
+<p>Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.  For example, some entries may be included in the plugin file even if they are currently disabled in the command.
 
 <!-- @end plugins-creationandfiles-->
 <br><br></td></tr>
@@ -2332,18 +2557,21 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <a name="plugins-install"/><a href="#plugins-install"><font size=+2>Install</font></a>
 <!-- @Plugins @Install -->
 
-<p>When a plugin is installed, it gains root protection (it cannot be modified by normal users), and becomes accessible to all users of SpaceFM on your system.  Installing a plugin helps protect the plugin's contents from tampering, but it also limits what you can change.
+<p>When a plugin is installed, it is added to the Plugins menu where it gains root protection (it cannot be modified by normal users) and becomes accessible to all users of SpaceFM on your system.  Installing a plugin helps protect the plugin's contents from tampering, but it also limits what you can change.
 
-<p>To install a plugin using a plugin file, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine its contents before running it).  wget is required when installing from URL (this program is already installed on most versions of Linux).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
+<p>To install a plugin using a plugin file, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
 
 <p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
 
-<p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus such changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
+<p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the design menu, or highlight the menu item and press F1.
 
-<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the design menu, and <a href="#designmode-designmenu-paste">paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom command.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
+<p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus these changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
+
+<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the design menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom command.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
 
 <p>You can also <a href="#designmode-designmenu-export">export</a> an installed plugin.  Unless you made changes to the plugin directory as root, the exported plugin file will essentially be a copy of the original plugin file.
 
+<p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
 
 <!-- @end plugins-install-->
 <br><br></td></tr>
@@ -2379,6 +2607,8 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>If option Plugins|Copy|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
 
+<p>IMPORTANT: Due to a problem in SpaceFM versions 0.7.2 and prior, copying an installed plugin to another menu may not copy all required plugin files. To avoid this problem, run the following command (this only needs to be done one time, and only when using SpaceFM <= 0.7.2):
+<pre>    mkdir -p ~/.config/spacefm/scripts</pre>
 
 <!-- @end plugins-copy-->
 <br><br></td></tr>
@@ -2433,7 +2663,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-03-05
+<p>Updated 2012-03-27&nbsp;&nbsp;(SpaceFM version 0.7.3next)
 <br><br>
 </center>
 </td></tr></table>

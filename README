@@ -7,8 +7,8 @@ USE AT YOUR OWN RISK
 
 
 For updates and instructions visit:
-    http://spacefm.sourceforge.net/
-    http://spacefm.sourceforge.net/spacefm-manual-en.html
+    http://ignorantguru.github.com/spacefm/
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html
 
 
 CONTENTS:
@@ -33,25 +33,40 @@ DESCRIPTION:
 PACKAGES:
 
     Debian/Ubuntu packages are available here:
+        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+        or
         http://sourceforge.net/projects/spacefm/files/
         
         For signatures and SHA256 sums see 
-            http://spacefm.sourceforge.net/spacefm.SHA256.txt
+            http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
     
     and are also available in the author's PPA:
         http://igurublog.wordpress.com/downloads/ppa/
     
-    Gentoo's portage tree includes spacefm:
-        http://packages.gentoo.org/package/x11-misc/spacefm
 
-    Sabayon includes spacefm in its repositories:
-        http://www.sabayon.org/
-        
+    antiX's current test release includes spacefm:    
+        http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
+    
     Arch Linux's AUR includes spacefm:
         http://aur.archlinux.org/packages.php?ID=55777
     
+    Gentoo's portage tree includes spacefm:
+        http://packages.gentoo.org/package/x11-misc/spacefm
+
+	openSUSE 12.1 repo (add the following repo to Yast software manager):
+        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1
+
+	openSUSE Tumbleweed repo:
+        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/
+
+    openSUSE rpm packages:
+        http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true
+
     PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
+        
+    Sabayon includes spacefm in its repositories:
+        http://www.sabayon.org/
         
     VectorLinux has spacefm test packages available:
         http://vectorlinux.com/
@@ -60,10 +75,7 @@ PACKAGES:
 INSTALLER:
 
     A self-extracting installer is available:
-        http://sourceforge.net/projects/spacefm/files/
-
-        For signatures and SHA256 sums see 
-            http://spacefm.sourceforge.net/spacefm.SHA256.txt
+        https://github.com/IgnorantGuru/spacefm/tree/master/packages
 
     The installer MUST be run in a terminal.  It automatically builds and
     installs.  Run it like this:

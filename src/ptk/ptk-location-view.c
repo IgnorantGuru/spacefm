@@ -816,7 +816,7 @@ static void on_check_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, _("CHECK AS ROOT"), msg, set->s,
-                                        &set->s, set->desc, TRUE )
+                                        &set->s, set->desc, TRUE, set->line )
                                                                     && set->s )
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
@@ -867,7 +867,7 @@ static void on_mount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, _("MOUNT AS ROOT"), msg, set->s,
-                                        &set->s, set->z, TRUE )
+                                        &set->s, set->z, TRUE, set->line )
                                                                     && set->s )
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
@@ -920,7 +920,7 @@ static void on_umount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, _("UNMOUNT AS ROOT"), msg, set->s,
-                                        &set->s, set->z, TRUE )
+                                        &set->s, set->z, TRUE, set->line )
                                                                     && set->s )
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
@@ -995,7 +995,7 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
     if ( !xset_text_dialog( view, _("Change Volume Label"),
                                         NULL,
                                         FALSE, msg, NULL, vol->label, &new_label,
-                                        NULL, FALSE ) )
+                                        NULL, FALSE, set->line ) )
     {
         g_free( msg );
         return;
@@ -1030,7 +1030,7 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, _("LABEL AS ROOT"), msg, label_cmd,
-                                        &new_label_cmd, def_cmd, TRUE )
+                                        &new_label_cmd, def_cmd, TRUE, set->line )
                                                                 && new_label_cmd )
     {
         gboolean change_root = ( !label_cmd || !new_label_cmd
@@ -1312,7 +1312,7 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     // get user options
     XSet* set = xset_get( "dev_remount_options" );
     if ( !xset_text_dialog( view, set->title, NULL, TRUE, set->desc, NULL, set->s,
-                                                        &set->s, set->z, FALSE ) )
+                                                        &set->s, set->z, FALSE, set->line ) )
         return;
 
     char* mount_command = vfs_volume_get_mount_command( vol, set->s );
@@ -1475,7 +1475,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
                                         TRUE, "DATA LOSS WARNING", msg, set->s,
-                                        &set->s, set->title, TRUE )
+                                        &set->s, set->title, TRUE, set->line )
                                                                     && set->s )
     {
         gboolean change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
@@ -1627,7 +1627,7 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                                 GTK_ICON_SIZE_DIALOG ),
                         TRUE, _("DATA LOSS WARNING"), msg, set_cmd, &new_cmd, def_cmd,
-                        TRUE )  && new_cmd )
+                        TRUE, set->line )  && new_cmd )
         {
             change_root = ( !set_cmd || !new_cmd || strcmp( set_cmd, new_cmd ) );
 
@@ -1927,7 +1927,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
                                                 set->desc, vol->device_file, bshort, msg2 );
         g_free( msg2 );
         if ( xset_text_dialog( view, _("Backup"), NULL, TRUE, msg, NULL, set->s,
-                                                        &set->s, set->title, TRUE )
+                                            &set->s, set->title, TRUE, set->line )
                                                                     && set->s )
         {
             change_root = ( !old_set_s || strcmp( old_set_s, set->s ) );
@@ -2218,7 +2218,7 @@ static void on_showhide( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
         msg = g_strdup( set->desc );
     if ( xset_text_dialog( view, set->title, NULL, TRUE, msg, NULL, set->s, &set->s,
-                                                                    NULL, FALSE ) )
+                                                                    NULL, FALSE, set->line ) )
         update_all();
     g_free( msg );
 }
@@ -2245,7 +2245,7 @@ static void on_automountlist( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view
     else
         msg = g_strdup( set->desc );
     if ( xset_text_dialog( view, set->title, NULL, TRUE, msg, NULL, set->s, &set->s,
-                                                                    NULL, FALSE ) )
+                                                        NULL, FALSE, set->line ) )
     {
         // update view / automount all?
     }
@@ -2641,6 +2641,8 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         gtk_widget_show_all( GTK_WIDGET(popup) );
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
+        g_signal_connect( popup, "key-press-event",
+                          G_CALLBACK( xset_menu_keypress ), NULL );
 
         gtk_menu_popup( popup, NULL, NULL, NULL, NULL, evt->button, evt->time );
     }
@@ -2850,7 +2852,7 @@ void on_bookmark_rename( GtkMenuItem* item, PtkFileBrowser* file_browser )
                                                     file_browser->side_book ) );
         if ( xset_text_dialog( file_browser, _("Rename Bookmark"), NULL, FALSE,
                                     _("Enter new bookmark name:"), NULL, name, &name,
-                                                                    NULL, FALSE )
+                                    NULL, FALSE, NULL )
                                     && name )
             ptk_bookmarks_rename( dir_path, name );
         g_free( name );
@@ -2870,7 +2872,7 @@ void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser )
         char* path = g_strdup( dir_path );
         char* msg = g_strdup_printf( _("Enter new folder for bookmark '%s':"), name );
         if ( xset_text_dialog( file_browser, _("Edit Bookmark Location"), NULL, FALSE,
-                                    msg, NULL, path, &path, NULL, FALSE )
+                                    msg, NULL, path, &path, NULL, FALSE, NULL )
                                     && path )
             ptk_bookmarks_change( dir_path, path );
         g_free( msg );
@@ -3000,6 +3002,8 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         gtk_widget_show_all( GTK_WIDGET( popup ) );
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
+        g_signal_connect( popup, "key-press-event",
+                          G_CALLBACK( xset_menu_keypress ), NULL );
         gtk_menu_popup( popup, NULL, NULL, NULL, NULL, evt->button, evt->time );
 
         return TRUE;

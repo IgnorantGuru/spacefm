@@ -144,6 +144,8 @@ void set_window_title( FMMainWindow* main_window, PtkFileBrowser* file_browser )
 void on_task_column_selected( GtkMenuItem* item, GtkTreeView* view );
 void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* name2 );
 void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
+void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
@@ -375,7 +377,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     else
     {
         // get url
-        if ( !xset_text_dialog( main_window, _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE ) || !path || path[0] == '\0' )
+        if ( !xset_text_dialog( main_window, _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-copy" ) || !path || path[0] == '\0' )
             return;
         type = 1;  //url
     }
@@ -1391,6 +1393,8 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->file_menu_item ), newmenu );
     
     // View
@@ -1452,6 +1456,8 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->view_menu_item ), newmenu );
 
     // Bookmarks
@@ -1466,6 +1472,8 @@ void rebuild_menus( FMMainWindow* main_window )
     main_window->plug_menu = create_plugins_menu( main_window );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->plug_menu_item ),
                                                     main_window->plug_menu );
+    g_signal_connect( main_window->plug_menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     
     // Tool
     XSet* child_set;
@@ -1482,16 +1490,22 @@ void rebuild_menus( FMMainWindow* main_window )
         child_set = xset_get( set->child );
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->tool_menu_item ), newmenu );
     
     // Help
     newmenu = gtk_menu_new();
     xset_set_cb( "main_design_help", main_design_mode, main_window );
     xset_set_cb( "main_about", on_about_activate, main_window );
-    menu_elements = g_strdup_printf( "main_design_help main_about" );
+    xset_set_cb( "main_help", on_main_help_activate, main_window );
+    xset_set_cb( "main_homepage", on_homepage_activate, main_window );
+    menu_elements = g_strdup_printf( "main_help main_design_help main_homepage sep_h1 main_help_opt sep_h2 main_about" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->help_menu_item ), newmenu );
 //printf("rebuild_menus  DONE\n");
 }
@@ -2142,6 +2156,8 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
             gtk_widget_show_all( GTK_WIDGET( popup ) );
             g_signal_connect( popup, "selection-done",
                   G_CALLBACK( gtk_widget_destroy ), NULL );
+            g_signal_connect( popup, "key-press-event",
+                              G_CALLBACK( xset_menu_keypress ), NULL );
             gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
                                 NULL, NULL, event->button, event->time );
         }
@@ -2430,6 +2446,8 @@ on_file_assoc_activate ( GtkMenuItem *menuitem,
 /* callback used to open default browser when URLs got clicked */
 static void open_url( GtkAboutDialog *dlg, const gchar *url, gpointer data)
 {
+    xset_open_url( dlg, url );
+#if 0
     /* FIXME: is there any better way to do this? */
     char* programs[] = { "xdg-open", "gnome-open" /* Sorry, KDE users. :-P */, "exo-open" };
     int i;
@@ -2445,6 +2463,17 @@ static void open_url( GtkAboutDialog *dlg, const gchar *url, gpointer data)
              break;
         }
     }
+#endif
+}
+
+void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_show_help( main_window, NULL, NULL );
+}
+
+void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_open_url( main_window, NULL );
 }
 
 void
@@ -3146,6 +3175,10 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     update_window_title( NULL, main_window );
                 else if ( !strcmp( xname, "about" ) )
                     on_about_activate( NULL, main_window );
+                else if ( !strcmp( xname, "help" ) )
+                    on_main_help_activate( NULL, main_window );
+                else if ( !strcmp( xname, "homepage" ) )
+                    on_homepage_activate( NULL, main_window );
             }
             else if ( g_str_has_prefix( set->name, "panel_" ) )
             {
@@ -4314,6 +4347,8 @@ gboolean on_task_button_press_event( GtkTreeView* view, GdkEventButton *event,
         gtk_widget_show_all( GTK_WIDGET( popup ) );
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
+        g_signal_connect( popup, "key_press_event",
+                          G_CALLBACK( xset_menu_keypress ), NULL );
         gtk_menu_popup( popup, NULL, NULL, NULL, NULL, event->button, event->time );
     }
     return FALSE;

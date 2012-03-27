@@ -263,10 +263,14 @@ icon_DATA = spacefm.png \
 
 filedir = $(datadir)/spacefm
 uidir = $(filedir)/ui
+@USE_HAL_FALSE@file_DATA = \
+@USE_HAL_FALSE@	spacefm-manual-en.html
+
 
 # sfm don't install mount.rules for no-hal build
 @USE_HAL_TRUE@file_DATA = \
-@USE_HAL_TRUE@	mount.rules
+@USE_HAL_TRUE@	mount.rules \
+@USE_HAL_TRUE@	spacefm-manual-en.html
 
 
 # GtkBuilder UI definition files

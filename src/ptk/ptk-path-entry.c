@@ -439,6 +439,8 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     set = xset_set_cb( "path_help", ptk_path_entry_help, file_browser );
     xset_add_menuitem( file_browser, file_browser, menu, accel_group, set );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 void on_entry_insert( GtkEntryBuffer *buf, guint position, gchar *chars,

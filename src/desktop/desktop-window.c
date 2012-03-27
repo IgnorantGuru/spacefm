@@ -1539,7 +1539,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 char* msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
                 g_free( target );
                 if ( !xset_text_dialog( win, _("Change Desktop Item Name"), NULL, FALSE, msg,
-                                                NULL, name, &new_name, NULL, FALSE ) || !new_name )
+                                    NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
                 {
                     g_free( msg );
                     g_free( path );

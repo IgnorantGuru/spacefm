@@ -567,6 +567,8 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
     g_object_set_data( G_OBJECT( popup ), "toolbar", toolbar );
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( on_toolbar_config_done ), file_browser );
+    g_signal_connect( popup, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_popup( popup, NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );
 }
 
@@ -1268,6 +1270,8 @@ void on_status_bar_popup( GtkWidget *widget, GtkMenu *menu,
     xset_add_menu( NULL, file_browser, menu, accel_group, desc );
     g_free( desc );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 /*

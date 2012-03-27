@@ -1224,6 +1224,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
+    g_signal_connect (popup, "key-press-event",
+                    G_CALLBACK (xset_menu_keypress), NULL );
     return popup;
 }
 
