@@ -19,9 +19,9 @@
 
 <font face="Arial" size=+1>
 <br>
-SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, optional udisks-based device manager, customizable menu system, and bash integration.
+SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, optional udisks-based device manager, customizable menu system, and bash integration.&nbsp;&nbsp;<a href="#highlights">read more</a>
 
-<p><b>IMPORTANT</b>  This is a test release.  Please carefully test functions before relying on them.  USE AT YOUR OWN RISK.
+<p><b>IMPORTANT</b>  This is still a test release.  Please carefully test functions before relying on them.
 
 <p>Some aspects of this project are just getting started, so please check back regularly for updates.
 <br>
@@ -37,6 +37,91 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, option
 </ul>
 
 
+<h3>Packages</h3>
+
+<center>
+<table border=1 cellpadding="5" width="80%">
+<tr>
+	<th>Distro</th>
+	<th>Packages &amp; Repositories</th>
+</tr>
+<tr>
+<td><b>Debian,<br>Ubuntu,<br>etc</b></td>
+<td>
+	deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
+	<br><br>NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
+	<br><br><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+</td>
+</tr>
+
+<tr>
+<td><b>antiX<b></td>
+<td>
+	<a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
+</td>
+</tr>
+
+<tr>
+<td><b>Arch Linux</b></td>
+<td>
+	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+</td>
+</tr>
+
+<tr>
+<td><b>Gentoo</b></td>
+<td>
+	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
+</td>
+
+<tr>
+<td><b>openSUSE</b></td>
+<td>
+	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
+
+	<p>openSUSE Tumbleweed repo:<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/</a>
+
+	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
+
+	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
+</td>
+</tr>
+
+<tr>
+<td><b>PCLinuxOS</b></td>
+<td>
+	spacefm test packages available (see forum)
+</td>
+</tr>
+
+<tr>
+<td><b>Sabayon</b></td>
+<td>
+	Includes spacefm in its repositories
+</td>
+</tr>
+
+<tr>
+<td><b>VectorLinux</b></td>
+<td>
+	spacefm test packages available
+</td>
+</tr>
+
+<tr>
+<td><b><i>Other</i></b></td>
+<td>
+	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use the easy manual build instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
+</td>
+</tr>
+</table>
+<i>Know of another distro?  Please <a href="http://igurublog.wordpress.com/contact-ignorantguru/">let us know</a>.</i>
+</center>
+
+
+<a name="highlights">&nbsp;</a>
 <h3>Highlights</h3>
 <ul>
 	<li>Lightweight -  Written in C with GTK2 stability, inotify kernel support, optional udisks
@@ -64,6 +149,7 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, option
 	<li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
 	<li>Alternate Builds - deprecated support for hal (replaces udisks) and fam/gamin (replaces inotify)
 </ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#introduction-about">read more</a>
 <h3>Limitations</h3>
 <ul>
 	<li>SpaceFM makes no network connections and is not a network browser.  It browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to mount the shares locally.
@@ -74,27 +160,10 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, option
 <br>
 <hr>
 
-<h3>PACKAGES</h3>
 
-<ul>
-	<li>Debian/Ubuntu packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
-	
-	<li>Easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
 
-	<li>Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
-	
-	<li><a href="http://www.sabayon.org/">Sabayon</a> includes spacefm in its repositories
-	
-	<li><a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
-	
-	<li>Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
-
-	<li><a href="http://www.pclinuxos.com/">PCLinuxOS</a> has spacefm test packages available (see forum)
-	
-	<li><a href="http://vectorlinux.com/">VectorLinux</a> has spacefm test packages available
-</ul>
-
-<p><h3>INSTALLER</h3>
+<a name="installer">&nbsp;</a>
+<p><h3>Installer</h3>
 
 <p>A self-extracting installer is available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>.  The installer MUST be run in a terminal.  It automatically builds and installs, and should work with any recent distro.  Run it like this:
 <p>
@@ -129,7 +198,7 @@ SpaceFM Icons &amp; Logo by Goran Simovic (C) 2012<br>
 	</td>
 -->
 	<td>
-		<div align="left"><i>Updated 2012-03-17</i></div>
+		<div align="left"><i>Updated 2012-03-27</i></div>
 	</td>
 	<td>
 		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>
