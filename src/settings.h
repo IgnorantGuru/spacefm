@@ -76,7 +76,6 @@ typedef struct
     PtkBookmarks* bookmarks;
     /* Units */
     gboolean use_si_prefix;
-    gboolean right_design;
 }
 AppSettings;
 

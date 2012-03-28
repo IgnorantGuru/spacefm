@@ -75,7 +75,6 @@ void xset_parse( char* line );
 void read_root_settings();
 void xset_defaults();
 const gboolean use_si_prefix_default = FALSE;
-const gboolean right_design_default = TRUE;
 GList* xsets = NULL;
 GList* keysets = NULL;
 XSet* set_clipboard = NULL;
@@ -107,6 +106,7 @@ const char* enter_command_line = N_("Enter program or bash command line:\n\nUse:
 const char* icon_desc = N_("Enter an icon name, icon file path, or stock item name:\n\nNot all icons may work due to various issues.");
 
 const char* enter_menu_name = N_("Enter menu item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.");
+const char* enter_menu_name_new = N_("Enter new menu item name:\n\nPrecede a character with an underscore (_) to underline that character as a shortcut key if desired.\n\nTIP: To change this menu item later, right-click on the menu item to open the design menu.");
 
 static const char* context_sub[] = 
 {
@@ -292,8 +292,6 @@ static void parse_general_settings( char* line )
     }
     //else if ( 0 == strcmp( name, "use_si_prefix" ) )
     //    app_settings.use_si_prefix = atoi( value );
-    else if ( 0 == strcmp( name, "right_design" ) )
-        app_settings.right_design = atoi( value );
     else if ( 0 == strcmp( name, "no_execute" ) )
         app_settings.no_execute = atoi( value );  //MOD
     else if ( 0 == strcmp( name, "home_folder" ) )
@@ -488,7 +486,6 @@ void load_settings( char* config_dir )
     /* app_settings.iconTheme = NULL; */
     //app_settings.terminal = NULL;
     app_settings.use_si_prefix = use_si_prefix_default;
-    app_settings.right_design = right_design_default;
     //app_settings.show_location_bar = show_location_bar_default;
     //app_settings.home_folder = NULL;   //MOD
     app_settings.no_execute = TRUE;   //MOD
@@ -957,8 +954,6 @@ char* save_settings( gpointer main_window_ptr )
         */
         //if ( app_settings.terminal )
         //    fprintf( file, "terminal=%s\n", app_settings.terminal );
-        if ( app_settings.right_design != right_design_default )
-            fprintf( file, "right_design=%d\n", !!app_settings.right_design );
         //if ( app_settings.use_si_prefix != use_si_prefix_default )
         //    fprintf( file, "use_si_prefix=%d\n", !!app_settings.use_si_prefix );
 //        if ( app_settings.show_location_bar != show_location_bar_default )
@@ -3738,7 +3733,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         if ( !set->menu_label || ( set->menu_label && set->menu_label[0] == '\0' )
                 || ( set->menu_label && !strcmp( set->menu_label, _("New _Command") ) ) )
         {
-            if ( !xset_text_dialog( parent, _("Change Menu Name"), NULL, FALSE, _(enter_menu_name),
+            if ( !xset_text_dialog( parent, _("Change Menu Name"), NULL, FALSE, _(enter_menu_name_new),
                                             NULL, set->menu_label, &set->menu_label,
                                                                         NULL, FALSE, "#designmode-designmenu-name" ) )
                 return;
@@ -5439,7 +5434,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             g_free( msg );
         }
         name = g_strdup_printf( _("New _Command") );
-        if ( !xset_text_dialog( parent, _("Set Menu Name"), NULL, FALSE, _(enter_menu_name),
+        if ( !xset_text_dialog( parent, _("Set Menu Name"), NULL, FALSE, _(enter_menu_name_new),
                                                         NULL, name, &name,
                                                         NULL, FALSE,
                                                         "#designmode-designmenu-new" ) )
@@ -8813,11 +8808,14 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "plug_ifile plug_iurl" );
     xset_set_set( set, "icon", "gtk-add" );
+    set->line = g_strdup( "#plugins-install" );
 
         set = xset_set( "plug_ifile", "label", _("_File") );
         xset_set_set( set, "icon", "gtk-file" );
+        set->line = g_strdup( "#plugins-install" );
         set = xset_set( "plug_iurl", "label", _("_URL") );
         xset_set_set( set, "icon", "gtk-network" );
+        set->line = g_strdup( "#plugins-install" );
 
     set_last = xset_get( "sep_p1" );
     set_last->menu_style = XSET_MENU_SEP;
@@ -8826,14 +8824,18 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "plug_cfile plug_curl sep_p1 plug_cverb" );
     xset_set_set( set, "icon", "gtk-copy" );
+    set->line = g_strdup( "#plugins-copy" );
 
         set = xset_set( "plug_cfile", "label", _("_File") );
         xset_set_set( set, "icon", "gtk-file" );
+        set->line = g_strdup( "#plugins-copy" );
         set = xset_set( "plug_curl", "label", _("_URL") );
         xset_set_set( set, "icon", "gtk-network" );
+        set->line = g_strdup( "#plugins-copy" );
         set = xset_set( "plug_cverb", "label", _("_Verbose") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#plugins-copy" );
         
     set = xset_set( "plug_browse", "label", _("_Browse") );
 
@@ -8855,6 +8857,9 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-help" );
 
     set = xset_set( "main_homepage", "label", _("_Homepage") );
+    xset_set_set( set, "icon", "spacefm" );
+
+    set = xset_set( "main_getplug", "label", _("_Get Plugins") );
     xset_set_set( set, "icon", "spacefm" );
 
     set = xset_set( "main_help_opt", "label", _("_Options") );

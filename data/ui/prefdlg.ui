@@ -568,23 +568,10 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="right_design">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Right-click opens design menu</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">6</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="root_bar">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Show root user indicator</property>
+                    <property name="label" translatable="yes">Show root user indicator color</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                   </object>

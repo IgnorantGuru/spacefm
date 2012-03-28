@@ -37,13 +37,12 @@ PACKAGES:
         or
         http://sourceforge.net/projects/spacefm/files/
         
+        also available in the author's PPA:
+            http://igurublog.wordpress.com/downloads/ppa/
+
         For signatures and SHA256 sums see 
             http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
-    
-    and are also available in the author's PPA:
-        http://igurublog.wordpress.com/downloads/ppa/
-    
-
+        
     antiX's current test release includes spacefm:    
         http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
     
@@ -53,14 +52,14 @@ PACKAGES:
     Gentoo's portage tree includes spacefm:
         http://packages.gentoo.org/package/x11-misc/spacefm
 
-	openSUSE 12.1 repo (add the following repo to Yast software manager):
+    openSUSE 12.1 repo (add the following repo to Yast software manager):
         http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1
 
-	openSUSE Tumbleweed repo:
+    openSUSE Tumbleweed repo:
         http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/
 
     openSUSE rpm packages:
-        http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true
+        http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true
 
     PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
@@ -154,8 +153,8 @@ reporting it, including a full backtrace.
 
 1)  Install build dependencies (see BUILD INSTRUCTIONS above).
 
-2)  Install the 'gdb' GNU Debugger, and debugging symbols for gtk.  On debian,
-    this is done like this:
+2)  Install the 'gdb' GNU Debugger, and debugging symbols for gtk.  For example
+    on Debian, this is done like this:
 
     apt-get install gdb libc6-dbg libglib2.0-0-dbg libgtk2.0-0-dbg librsvg2-dbg
 
@@ -178,7 +177,7 @@ reporting it, including a full backtrace.
     In gdb, enter 'run' at the prompt.  SpaceFM will start.  When the crash
     occurs, gdb will freeze SpaceFM.  Return to the terminal running gdb and
     enter 'bt full'.  Provide the output with your detailed bug report at
-        http://sourceforge.net/p/spacefm/tickets/
+        https://github.com/IgnorantGuru/spacefm/issues
     
     NOTE: When SpaceFM is built this way, it may run more slowly.  Once you are
     done debugging, be sure to install a normal (optimized) build.

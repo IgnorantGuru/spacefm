@@ -81,10 +81,10 @@
 <a href="#plugins">Plugins</a>
 <ul>
     <a href="#plugins-introduction">Introduction</a><br>
-    <a href="#plugins-creationandfiles">Creation And Files</a><br>
     <a href="#plugins-install">Install</a><br>
     <a href="#plugins-copy">Copy</a><br>
     <a href="#plugins-uninstall">Uninstall</a><br>
+    <a href="#plugins-creationandfiles">Creation And Files</a><br>
 </ul>
 </blockquote></td></tr>
 
@@ -268,13 +268,13 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros.
+<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
 The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
 
-<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.  (This is usually unnecessary when downloading from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.)
+<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
 
 
@@ -1323,9 +1323,9 @@ The Backup submenu allows you to perform a backup of a selected device or MBR.  
 
 <p>An advantage to FSArchiver is that it supports more filesystem types than Partimage, including ext4 and btrfs, and several compression methods.  Other advantages include file exclusion, multi-thread compression, and encryption.  The data may also be restored to any partition large enough to hold it, regardless of the original partition's size.  FSArchiver is also currently maintained, while Partimage is no longer actively developed.  There are additional differences between Partimage and FSArchiver - see their websites for details.
 
-<p>By default, FSArchiver will backup unmounted volumes and volumes mounted read-only.  To backup a volume mounted read-write, you must add --allow-rw-mounted to the command.  This may create inconsistencies in the backup.  Run <code>man fsarchiver</code> for details.
+<p>By default, FSArchiver will backup unmounted volumes and volumes mounted read-only.  To backup a volume which is mounted read-write, you must add --allow-rw-mounted to the command.  This may create inconsistencies in the backup.  Run <code>man fsarchiver</code> for details.
 
-<p>To create an FSArchiver backup, right-click on an unmounted device and select Root|Backup|FSArchiver.  A file save dialog will open asking you to select a filename and location.  Keep in mind that the archive size may be 50% or more of the total data saved in the filesystem.  Choose a save location with ample space.
+<p>To create an FSArchiver backup, right-click on a device and select Root|Backup|FSArchiver.  A file save dialog will open asking you to select a filename and location.  Keep in mind that the archive size may be 50% or more of the total data saved in the filesystem.  Choose a save location with ample space.
 
 <p>Next a command dialog will show you the FSArchiver command to be used, and allow you to edit it.  When you click OK, the command will be run immediately in a terminal.
 
@@ -1369,9 +1369,9 @@ To restore the contents of a device, partition, or MBR using a backup archive fi
 
 <!-- #Restore|File Info #resinfo -->
 <p><a name="devices-root-resinfo"/><a href="#devices-root-resinfo"><b>Restore|File Info</b></a><br>
-To examine the summary information in a backup file, select Root|Restore|File Info and select the backup file.  This is most useful for <a href="#devices-root-fsarc">FSArchiver</a> archives.
+To examine the summary information in a backup file, select Root|Restore|File Info and select the backup file.
 
-<p>Restore|File Info makes no changes to the backup file or any device - it only displays information about the backup file.  It may need to run FSArchiver as root to do so.
+<p>Restore|File Info makes no changes to the backup file or any device - it only displays information about the backup file.  It may need to run as root to do so.
 
 <!-- #Edit fstab #fstab -->
 <p><a name="devices-root-fstab"/><a href="#devices-root-fstab"><b>Edit fstab</b></a><br>
@@ -1777,11 +1777,11 @@ The Icon item allows you to set or change an icon for a menu item.  A dialog wil
 
 <!-- # Style -->
 <p><a name="designmode-designmenu-style"/><a href="#designmode-designmenu-style"><b>Style</b></a><br>
-If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (normal, checkbox, or input), and change the input dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the Style section below for details.
+If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (normal, checkbox, or input), and change the input dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the <a href="#designmode-style">Style</a> section below for details.
 
 <!-- # Command -->
 <p><a name="designmode-designmenu-command"/><a href="#designmode-designmenu-command"><b>Command</b></a><br>
-Only available for custom menu items, the Command submenu allows you to set and change the custom command which is run when the menu item is selected, allows you to browse the files associated with the command or plugin, and provides options for how your command is run.  See the Command section below for details.
+Only available for custom menu items, the Command submenu allows you to set and change the custom command which is run when the menu item is selected, allows you to browse the files associated with the command or plugin, and provides options for how your command is run.  See the <a href="#designmode-command">Command</a> section below for details.
 
 <!-- # Help -->
 <p><a name="designmode-designmenu-help"/><a href="#designmode-designmenu-help"><b>Help</b></a><br>
@@ -1789,13 +1789,15 @@ Help opens contextual help for a menu item.  For built-in commands, the SpaceFM 
 
 <p>Your browser may be customized in Help|Options|Browser, and a custom location for the user's manual can be set in Help|Options|Manual Location.
 
-<p>For custom commands, including plugins, Help will open the plain text README file for the command in your text editor.  If no README file exists for a custom command, selecting Help will create one for you to edit.
+<p>For custom commands, including plugins, Help will open the plain text README file for the command in your text editor.  If no README file exists for a custom command, selecting Help will create one for you to edit.  This file may also be named 'README.mkd' or 'README.txt'.
 
 <p>You can also open help for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F1, <b>or</b> use the mouse shortcut Alt + Middle-Click.  F1 may also be used from within the design menu itself to show help for a design menu item.
 
 <!-- # Cut -->
 <p><a name="designmode-designmenu-cut"/><a href="#designmode-designmenu-cut"><b>Cut</b></a><br>
-The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.  Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.
+The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
+
+<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.
 
 <p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
 
@@ -1849,7 +1851,7 @@ The Export item, which is only available for custom commands, will open a save d
 <p><a name="designmode-designmenu-new"/><a href="#designmode-designmenu-new"><b>New</b></a><br>
 The New item creates a new custom command, which will be inserted after the current menu item.  This works similarly to Paste, except that instead of copying or moving a command, you're creating a new one.
 
-<p>You will be prompted for a menu name for the command, followed by a prompt for a command line.  If you just want to create the command and set the command line later, you can leave this blank and click OK.  The command line accepts anything you would normally enter in a bash command line, and may include variables.  It can be as simple as a program's name you want to run when this menu item is selected, or as complex as a one-line bash script.  For more information, please see the Command section.
+<p>You will be prompted for a menu name for the command, followed by a prompt for a <a href="#designmode-command-line">command line</a>.  If you just want to create the command and set the command line later, you can leave this blank and click OK.  The command line accepts anything you would normally enter in a bash command line, and may include variables.  It can be as simple as a program's name you want to run when this menu item is selected, or as complex as a one-line bash script.  For more information, please see the Command section.
 
 <p>For example, right-click on a menu item and select New.  Enter 'Current Time' for the menu name.  For the command line, enter:
 <pre>    date</pre>
@@ -2088,11 +2090,11 @@ The Plugin browse item will only be enabled when in the design menu of a <a href
 
 <!-- # Line -->
 <p><a name="designmode-command-line"/><a href="#designmode-command-line"><b>Line</b></a><br>
-Any one of the Line, Script, or Custom radio buttons may be selected.  This determines the type of command.  By default, new commands will have Line set.
+Any one of the Line, Script, or Custom options may be selected.  This determines the type of command.  By default, new commands will have Line set.
 
-<p>When Line is selected, the command is executed as a single command line.  Clicking the Edit button allows you to edit the command line, as does clicking Line.
+<p>When Line is selected, the command is executed as a single command line.  To edit the command line, right-click on the menu item and select Command|Edit.
 
-<p>The command line may contain any single-line command or script which you would normally enter at a bash command prompt.  When run, your command line is inserted into a temporary bash script, so you can do anything in this line which is valid in bash.
+<p>The command line may contain a program name to be run or any single-line command which you would normally enter at a bash command prompt.  When run, your command line is inserted into a temporary bash script, so you can do anything in this line which is valid in bash.
 
 <p>In addition, you may use the following substitution variables in your command line:
 <center><table width="70%">
@@ -2146,7 +2148,7 @@ Any one of the Line, Script, or Custom radio buttons may be selected.  This dete
 <p><a name="designmode-command-script"/><a href="#designmode-command-script"><b>Script</b></a><br>
 Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  Select Command|Script, and a bash script will be generated and opened in your configured editor.  You can simply add your commands to this script and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-command-edit">Command|Edit</a> from the design menu to access the script of any custom command.
 
-<p>At their simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  See the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for more information.
+<p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  See the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for more information.
 
 <p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.  Scroll to the end of the command script to see help on what bash variables are available for use.  
 
@@ -2450,10 +2452,10 @@ The Scroll option, which is checked by default for new commands, determines the 
     <li>Plugins
     <ul>
         <li>Introduction
-        <li><a href="#plugins-creationandfiles">Creation And Files</a>
         <li><a href="#plugins-install">Install</a>
         <li><a href="#plugins-copy">Copy</a>
         <li><a href="#plugins-uninstall">Uninstall</a>
+        <li><a href="#plugins-creationandfiles">Creation And Files</a>
     </ul>
 </ul>
 </td>
@@ -2485,10 +2487,123 @@ The Scroll option, which is checked by default for new commands, determines the 
     <li>Plugins
     <ul>
         <li><a href="#plugins-introduction">Introduction</a>
-        <li>Creation And Files
+        <li>Install
+        <li><a href="#plugins-copy">Copy</a>
+        <li><a href="#plugins-uninstall">Uninstall</a>
+        <li><a href="#plugins-creationandfiles">Creation And Files</a>
+    </ul>
+</ul>
+</td>
+<td valign="top">
+<a name="plugins-install"/><a href="#plugins-install"><font size=+2>Install</font></a>
+<!-- @Plugins @Install -->
+
+<p>When a plugin is installed, it is added to the Plugins menu where it gains root protection (it cannot be modified by normal users) and becomes accessible to all users of SpaceFM on your system.  Installing a plugin helps protect the plugin's contents from tampering, but it also limits what you can change.
+
+<p>To install a plugin using a <a href="#plugins-creationandfiles-file">plugin file</a>, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
+
+<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
+
+<p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the design menu, or highlight the menu item and press F1.
+
+<p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus these changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
+
+<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the design menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom command.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
+
+<p>You can also <a href="#designmode-designmenu-export">export</a> an installed plugin.  Unless you made changes to the plugin directory as root, the exported plugin file will essentially be a copy of the original plugin file.
+
+<p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
+
+<!-- @end plugins-install-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#programfiles">Program Files</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li>Plugins
+    <ul>
+        <li><a href="#plugins-introduction">Introduction</a>
+        <li><a href="#plugins-install">Install</a>
+        <li>Copy
+        <li><a href="#plugins-uninstall">Uninstall</a>
+        <li><a href="#plugins-creationandfiles">Creation And Files</a>
+    </ul>
+</ul>
+</td>
+<td valign="top">
+<a name="plugins-copy"/><a href="#plugins-copy"><font size=+2>Copy</font></a>
+<!-- @Plugins @Copy -->
+
+<p>Instead of installing a plugin, you can import it into any SpaceFM menu which supports design mode.  When imported in this way, the plugin loses root protection and becomes a normal custom command.
+
+<p>To do so, use Plugins|Copy|File to import a plugin file, or Plugins|Copy|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the design menu to paste the command into any location in any supported menu.  As with any commands, you cannot paste the command into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
+
+<p>If option Plugins|Copy|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
+
+<p>IMPORTANT: Due to a problem in SpaceFM versions 0.7.2 and prior, copying an installed plugin to another menu may not copy all required plugin files. To avoid this problem, run the following command (this only needs to be done one time, and only when using SpaceFM <= 0.7.2):
+<pre>    mkdir -p ~/.config/spacefm/scripts</pre>
+
+<!-- @end plugins-copy-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#programfiles">Program Files</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li>Plugins
+    <ul>
+        <li><a href="#plugins-introduction">Introduction</a>
+        <li><a href="#plugins-install">Install</a>
+        <li><a href="#plugins-copy">Copy</a>
+        <li>Uninstall
+        <li><a href="#plugins-creationandfiles">Creation And Files</a>
+    </ul>
+</ul>
+</td>
+<td valign="top">
+<a name="plugins-uninstall"/><a href="#plugins-uninstall"><font size=+2>Uninstall</font></a>
+<!-- @Plugins @Uninstall -->
+
+<p>To uninstall a plugin, use <a href="#designmode-designmenu-remove">Remove</a> on the design menu.  You will be prompted for the root password, and all files and settings associated with the plugin will be removed.
+
+<p>If the installed plugin is a <a href="#designmode-designmenu-submenu">submenu</a> plugin, you can only remove the top submenu of the plugin.  You cannot remove individual items from within it.
+
+<!-- @end plugins-uninstall-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#programfiles">Program Files</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li>Plugins
+    <ul>
+        <li><a href="#plugins-introduction">Introduction</a>
         <li><a href="#plugins-install">Install</a>
         <li><a href="#plugins-copy">Copy</a>
         <li><a href="#plugins-uninstall">Uninstall</a>
+        <li>Creation And Files
     </ul>
 </ul>
 </td>
@@ -2529,126 +2644,13 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.  For example, some entries may be included in the plugin file even if they are currently disabled in the command.
 
+
+
+
+
+
+
 <!-- @end plugins-creationandfiles-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#programfiles">Program Files</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li>Plugins
-    <ul>
-        <li><a href="#plugins-introduction">Introduction</a>
-        <li><a href="#plugins-creationandfiles">Creation And Files</a>
-        <li>Install
-        <li><a href="#plugins-copy">Copy</a>
-        <li><a href="#plugins-uninstall">Uninstall</a>
-    </ul>
-</ul>
-</td>
-<td valign="top">
-<a name="plugins-install"/><a href="#plugins-install"><font size=+2>Install</font></a>
-<!-- @Plugins @Install -->
-
-<p>When a plugin is installed, it is added to the Plugins menu where it gains root protection (it cannot be modified by normal users) and becomes accessible to all users of SpaceFM on your system.  Installing a plugin helps protect the plugin's contents from tampering, but it also limits what you can change.
-
-<p>To install a plugin using a plugin file, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
-
-<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
-
-<p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the design menu, or highlight the menu item and press F1.
-
-<p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus these changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
-
-<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the design menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom command.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
-
-<p>You can also <a href="#designmode-designmenu-export">export</a> an installed plugin.  Unless you made changes to the plugin directory as root, the exported plugin file will essentially be a copy of the original plugin file.
-
-<p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
-
-<!-- @end plugins-install-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#programfiles">Program Files</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li>Plugins
-    <ul>
-        <li><a href="#plugins-introduction">Introduction</a>
-        <li><a href="#plugins-creationandfiles">Creation And Files</a>
-        <li><a href="#plugins-install">Install</a>
-        <li>Copy
-        <li><a href="#plugins-uninstall">Uninstall</a>
-    </ul>
-</ul>
-</td>
-<td valign="top">
-<a name="plugins-copy"/><a href="#plugins-copy"><font size=+2>Copy</font></a>
-<!-- @Plugins @Copy -->
-
-<p>Instead of installing a plugin, you can import it into any SpaceFM menu which supports design mode.  When imported in this way, the plugin loses root protection and becomes a normal custom command.
-
-<p>To do so, use Plugins|Copy|File to import a plugin file, or Plugins|Copy|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the design menu to paste the command into any location in any supported menu.  As with any commands, you cannot paste the command into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
-
-<p>If option Plugins|Copy|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
-
-<p>IMPORTANT: Due to a problem in SpaceFM versions 0.7.2 and prior, copying an installed plugin to another menu may not copy all required plugin files. To avoid this problem, run the following command (this only needs to be done one time, and only when using SpaceFM <= 0.7.2):
-<pre>    mkdir -p ~/.config/spacefm/scripts</pre>
-
-<!-- @end plugins-copy-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#programfiles">Program Files</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li>Plugins
-    <ul>
-        <li><a href="#plugins-introduction">Introduction</a>
-        <li><a href="#plugins-creationandfiles">Creation And Files</a>
-        <li><a href="#plugins-install">Install</a>
-        <li><a href="#plugins-copy">Copy</a>
-        <li>Uninstall
-    </ul>
-</ul>
-</td>
-<td valign="top">
-<a name="plugins-uninstall"/><a href="#plugins-uninstall"><font size=+2>Uninstall</font></a>
-<!-- @Plugins @Uninstall -->
-
-<p>To uninstall a plugin, use <a href="#designmode-designmenu-remove">Remove</a> on the design menu.  You will be prompted for the root password, and all files and settings associated with the plugin will be removed.
-
-<p>If the installed plugin is a <a href="#designmode-designmenu-submenu">submenu</a> plugin, you can only remove the top submenu of the plugin.  You cannot remove individual items from within it.
-
-
-
-
-
-
-
-<!-- @end plugins-uninstall-->
 <br><br></td></tr>
 
 
@@ -2663,7 +2665,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-03-27&nbsp;&nbsp;(SpaceFM version 0.7.3next)
+<p>Updated 2012-03-28&nbsp;&nbsp;(SpaceFM version 0.7.3next)
 <br><br>
 </center>
 </td></tr></table>

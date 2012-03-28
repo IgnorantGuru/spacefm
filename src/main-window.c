@@ -146,6 +146,7 @@ void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* n
 void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
 void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
@@ -982,7 +983,7 @@ void on_main_icon()
 
 void main_design_mode( FMMainWindow* main_window )
 {
-    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items and add your own custom commands to menus.\n\nTo open the design menu, simply right-click, middle-click or ctrl-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL );
+    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL );
 }
 
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
@@ -1500,7 +1501,8 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_about", on_about_activate, main_window );
     xset_set_cb( "main_help", on_main_help_activate, main_window );
     xset_set_cb( "main_homepage", on_homepage_activate, main_window );
-    menu_elements = g_strdup_printf( "main_help main_design_help main_homepage sep_h1 main_help_opt sep_h2 main_about" );
+    xset_set_cb( "main_getplug", on_getplug_activate, main_window );
+    menu_elements = g_strdup_printf( "main_help main_design_help main_homepage main_getplug sep_h1 main_help_opt sep_h2 main_about" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
@@ -2476,6 +2478,11 @@ void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     xset_open_url( main_window, NULL );
 }
 
+void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_open_url( main_window, "https://github.com/IgnorantGuru/spacefm/wiki/plugins/" );
+}
+
 void
 on_about_activate ( GtkMenuItem *menuitem,
                     gpointer user_data )
@@ -3179,6 +3186,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_main_help_activate( NULL, main_window );
                 else if ( !strcmp( xname, "homepage" ) )
                     on_homepage_activate( NULL, main_window );
+                else if ( !strcmp( xname, "getplug" ) )
+                    on_getplug_activate( NULL, main_window );
             }
             else if ( g_str_has_prefix( set->name, "panel_" ) )
             {
