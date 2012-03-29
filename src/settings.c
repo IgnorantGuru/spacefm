@@ -2788,8 +2788,9 @@ void xset_custom_copy_files( XSet* src, XSet* dest )
     char* stderr = NULL;
     char* msg;
     gboolean ret;
-
-printf("xset_custom_copy_files( %s, %s )\n", src->name, dest->name );
+    gint exit_status;
+    
+//printf("xset_custom_copy_files( %s, %s )\n", src->name, dest->name );
 
     // copy command dir
     
@@ -2802,11 +2803,11 @@ printf("xset_custom_copy_files( %s, %s )\n", src->name, dest->name );
         path_src = g_build_filename( src->plug_dir, src->plug_name, NULL );
     else
         path_src = g_build_filename( settings_config_dir, "scripts", src->name, NULL );
-printf("    path_src=%s\n", path_src );
+//printf("    path_src=%s\n", path_src );
 
     if ( !g_file_test( path_src, G_FILE_TEST_EXISTS ) )
     {
-printf("    path_src !EXISTS\n");
+//printf("    path_src !EXISTS\n");
         if ( !src->plugin )
         {
             command = NULL;
@@ -2837,25 +2838,28 @@ printf("    path_src !EXISTS\n");
     }
     else
     {
-printf("    path_src EXISTS\n");
+//printf("    path_src EXISTS\n");
+        path_dest = g_build_filename( settings_config_dir, "scripts", NULL );
+        g_mkdir_with_parents( path_dest, 0700 );
+        chmod( path_dest, 0700 );
+        g_free( path_dest );
         path_dest = g_build_filename( settings_config_dir, "scripts", dest->name, NULL );
-
         command = g_strdup_printf( "cp -a %s %s", path_src, path_dest );
     }
     g_free( path_src );
 
     if ( command )
     {
-printf("    path_dest=%s\n", path_dest );
-printf("    command=%s\n", command );
-        ret = g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+//printf("    path_dest=%s\n", path_dest );
+        printf( "COMMAND=%s\n", command );
+        ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status, NULL );
         g_free( command );
+        printf( "%s%s", stdout, stderr );
 
-        if ( !ret )
+        if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
         {
             msg = g_strdup_printf( _("An error occured copying command files\n\n%s"),
                                                                 stderr ? stderr : "" );
-printf("    err=%s\n", msg );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
                                                                 0, msg, NULL, NULL );
             g_free( msg );
@@ -2866,13 +2870,9 @@ printf("    err=%s\n", msg );
             g_free( stdout );
         stderr = stdout = NULL;
         command = g_strdup_printf( "chmod -R go-rwx %s", path_dest );
-printf("    command2=%s\n", command );
-        g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+        printf( "COMMAND=%s\n", command );
+        g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
         g_free( command );
-        if ( stderr )
-            g_free( stderr );
-        if ( stdout )
-            g_free( stdout );
         g_free( path_dest );
     }
     
@@ -2887,9 +2887,11 @@ printf("    command2=%s\n", command );
         command = g_strdup_printf( "cp -a %s %s", path_src, path_dest );
         g_free( path_src );
         stderr = stdout = NULL;
-        ret = g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+        printf( "COMMAND=%s\n", command );
+        ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status, NULL );
         g_free( command );
-        if ( !ret )
+        printf( "%s%s", stdout, stderr );
+        if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
         {
             msg = g_strdup_printf( _("An error occured copying command data files\n\n%s"),
                                                                 stderr ? stderr : "" );
@@ -2904,18 +2906,15 @@ printf("    command2=%s\n", command );
         stderr = stdout = NULL;
         command = g_strdup_printf( "chmod -R go-rwx %s", path_dest );
         g_free( path_dest );
-        g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+        printf( "COMMAND=%s\n", command );
+        g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
         g_free( command );
-        if ( stderr )
-            g_free( stderr );
-        if ( stdout )
-            g_free( stdout );
     }
 }
 
 XSet* xset_custom_copy( XSet* set, gboolean copy_next )
 {
-printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
+//printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
     XSet* mset = set;
     if ( set->plugin && set->shared_key )
         mset = xset_get_plugin_mirror( set );
@@ -2957,7 +2956,7 @@ printf("\nxset_custom_copy( %s, %d )\n", set->name, copy_next );
     if ( set->menu_style == XSET_MENU_SUBMENU && set->child )
     {
         XSet* set_child = xset_get( set->child );
-printf("    copy submenu %s\n", set_child->name );
+//printf("    copy submenu %s\n", set_child->name );
         XSet* newchild = xset_custom_copy( set_child, TRUE );
         newset->child = g_strdup( newchild->name );
         newchild->parent = g_strdup( newset->name );
@@ -2966,7 +2965,7 @@ printf("    copy submenu %s\n", set_child->name );
     if ( copy_next && set->next )
     {
         XSet* set_next = xset_get( set->next );
-printf("    copy next %s\n", set_next->name );
+//printf("    copy next %s\n", set_next->name );
         XSet* newnext = xset_custom_copy( set_next, TRUE );
         newnext->prev = g_strdup( newset->name );
         newset->next = g_strdup( newnext->name );        
@@ -3024,7 +3023,8 @@ _redo:
                 g_dir_close( dir );
                 command = g_strdup_printf( "rm -rf %s/%s", path, name );
                 stderr = stdout = NULL;
-                g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+                printf( "COMMAND=%s\n", command );
+                g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
                 g_free( command );
                 if ( stderr )
                     g_free( stderr );
@@ -3260,6 +3260,7 @@ XSet* xset_import_plugin( char* plug_dir )
     }
     
     // read plugin file into xsets
+    gboolean plugin_good = FALSE;
     char* plugin = g_build_filename( plug_dir, "plugin", NULL );    
     FILE* file = fopen( plugin, "r" );
     if ( !file )
@@ -3283,10 +3284,17 @@ XSet* xset_import_plugin( char* plug_dir )
             continue;
         }
         if ( func )
+        {
             xset_parse_plugin( plug_dir, line );
+            if ( !plugin_good )
+                plugin_good = TRUE;
+        }
     }
     fclose( file );
 
+    if ( !plugin_good )
+        return NULL;
+        
     // clean plugin sets, set type
     gboolean top = TRUE;
     XSet* rset = NULL;
@@ -3319,7 +3327,8 @@ typedef struct _PluginData
 void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
 {
     XSet* set;
-    
+    char* msg;
+//printf("on_install_plugin_cb\n");
     if ( plugin_data->job == 2 ) // uninstall
     {
         if ( !g_file_test( plugin_data->plug_dir, G_FILE_TEST_EXISTS ) )
@@ -3335,7 +3344,14 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
         if ( g_file_test( plugin, G_FILE_TEST_EXISTS ) )
         {
             set = xset_import_plugin( plugin_data->plug_dir );
-            if ( plugin_data->job == 1 )
+            if ( !set )
+            {
+                msg = g_strdup_printf( _("The imported plugin folder does not contain a valid plugin.\n\n(%s/)"), plugin_data->plug_dir );
+                xset_msg_dialog( plugin_data->main_window, GTK_MESSAGE_ERROR, "Invalid Plugin",
+                                                    NULL, 0, msg, NULL, NULL );
+                g_free( msg );
+            }
+            else if ( plugin_data->job == 1 )
             {
                 // copy
                 set->plugin_top = FALSE;  // don't show tmp plugin in Plugins menu
@@ -3344,7 +3360,6 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                 if ( xset_get_b( "plug_cverb" ) )
                 {
                     char* label = clean_label( set->menu_label, FALSE, FALSE );
-                    char* msg;
                     if ( geteuid() == 0 )
                         msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu."), label );
                     else
@@ -3355,8 +3370,6 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     g_free( msg );
                 }
             }
-            //else if ( plugin_data->job == 0 )
-            //    main_window_on_plugins_change( NULL );
         }
         g_free( plugin );
     }
@@ -3472,7 +3485,7 @@ void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int typ
         own = g_strdup_printf( "chmod -R go+rX-w %s", plug_dir_q );
     }
         
-    task->task->exec_command = g_strdup_printf( "rm -rf %s ; mkdir -p %s && cd %s %s&& tar --exclude='/*' --keep-old-files -x%sf %s ; err=$?; if [ $err -ne 0 ] || [ ! -e plugin ]; then rm -rf %s ; echo Error installing plugin ; exit $err ; fi ; %s %s",
+    task->task->exec_command = g_strdup_printf( "rm -rf %s ; mkdir -p %s && cd %s %s&& tar --exclude='/*' --keep-old-files -x%sf %s ; err=$?; if [ $err -ne 0 ] || [ ! -e plugin ]; then rm -rf %s ; echo 'Error installing plugin (invalid plugin file?)'; exit 1 ; fi ; %s %s",
                                 plug_dir_q, plug_dir_q, plug_dir_q,
                                 wget, compression, file_path_q, plug_dir_q, own, rem );
     g_free( plug_dir_q );
@@ -3558,7 +3571,8 @@ gboolean xset_custom_export_files( XSet* set, char* plug_dir )
     }
     g_free( path_src );
     g_free( path_dest );
-    gboolean ret = g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+    printf( "COMMAND=%s\n", command );
+    gboolean ret = g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
     g_free( command );
     if ( stderr )
         g_free( stderr );
@@ -3921,7 +3935,8 @@ void xset_custom_delete( XSet* set, gboolean delete_next )
     g_free( path2 );
     g_free( path3 );
     g_free( cscript );
-    g_spawn_command_line_sync( command, &stdout, &stderr, NULL, NULL );
+    printf( "COMMAND=%s\n", command );
+    g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
     g_free( command );
     if ( stderr )
         g_free( stderr );

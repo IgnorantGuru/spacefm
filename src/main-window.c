@@ -573,11 +573,15 @@ void import_all_plugins( FMMainWindow* main_window )
                 if ( g_file_test( plug_file, G_FILE_TEST_EXISTS ) )
                 {
                     plug_dir = g_build_filename( paths[i], name, NULL );
-                    xset_import_plugin( plug_dir );
+                    if ( xset_import_plugin( plug_dir ) )
+                    {
+                        found = TRUE;
+                        if ( i == 1 )
+                            found_plugins = TRUE;
+                    }
+                    else
+                        printf("Invalid Plugin Ignored: %s/\n", plug_dir );
                     g_free( plug_dir );
-                    found = TRUE;
-                    if ( i == 1 )
-                        found_plugins = TRUE;
                 }
                 g_free( plug_file );
             }
@@ -585,9 +589,6 @@ void import_all_plugins( FMMainWindow* main_window )
         }
     }
     clean_plugin_mirrors();
-
-    //if ( found )
-    //    main_window_on_plugins_change( main_window );
 }
 
 gboolean on_autosave_timer( FMMainWindow* main_window )
