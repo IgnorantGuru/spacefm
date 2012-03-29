@@ -152,6 +152,7 @@ void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 static gboolean delayed_focus( GtkWidget* widget );
+static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser );
 
 
 static GtkWindowClass *parent_class = NULL;
@@ -1088,7 +1089,8 @@ void focus_panel( GtkMenuItem* item, gpointer mw, int p )
     FMMainWindow* main_window = (FMMainWindow*)mw;
     
     if ( item )
-        panel_num = g_object_get_data( G_OBJECT( item ), "panel_num" );
+        panel_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ),
+                                                                    "panel_num" ) );
     else
         panel_num = p;
 
@@ -1435,25 +1437,25 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_pbar", show_panels_all_windows, main_window );
     
     set = xset_set_cb( "panel_prev", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -1 );
+        xset_set_ob1_int( set, "panel_num", -1 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_next", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -2 );
+        xset_set_ob1_int( set, "panel_num", -2 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_hide", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -3 );
+        xset_set_ob1_int( set, "panel_num", -3 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_1", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 1 );
+        xset_set_ob1_int( set, "panel_num", 1 );
         set->disable = ( main_window->curpanel == 1 );
     set = xset_set_cb( "panel_2", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 2 );
+        xset_set_ob1_int( set, "panel_num", 2 );
         set->disable = ( main_window->curpanel == 2 );
     set = xset_set_cb( "panel_3", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 3 );
+        xset_set_ob1_int( set, "panel_num", 3 );
         set->disable = ( main_window->curpanel == 3 );
     set = xset_set_cb( "panel_4", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 4 );
+        xset_set_ob1_int( set, "panel_num", 4 );
         set->disable = ( main_window->curpanel == 4 );
         
     main_task_prepare_menu( main_window, newmenu, accel_group );
@@ -2067,10 +2069,11 @@ void main_window_open_in_panel( PtkFileBrowser* file_browser, int panel_num,
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
     // focus original panel
-    while( gtk_events_pending() )
-        gtk_main_iteration();
+    //while( gtk_events_pending() )
+    //    gtk_main_iteration();
     //gtk_widget_grab_focus( GTK_WIDGET( main_window->notebook ) );
-    gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    g_idle_add( ( GSourceFunc ) delayed_focus_file_browser, file_browser );
 }
 
 gboolean main_window_panel_is_visible( PtkFileBrowser* file_browser, int panel )
@@ -2575,6 +2578,15 @@ static gboolean delayed_focus( GtkWidget* widget )
     gdk_threads_enter();
 //printf( "delayed_focus %#x\n", widget);
     gtk_widget_grab_focus( widget );
+    gdk_threads_leave();
+    return FALSE;
+}
+
+static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser )
+{
+    gdk_threads_enter();
+    gtk_widget_grab_focus( file_browser->folder_view );
+    set_panel_focus( NULL, file_browser );
     gdk_threads_leave();
     return FALSE;
 }
@@ -4033,7 +4045,7 @@ gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
             esc_path = bash_quote( task->task->dest_dir );
             fprintf( file, "fm_task_dest_dir=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->current_item );
+            esc_path = bash_quote( task->task->current_file );
             fprintf( file, "fm_task_current_src_file=%s\n", esc_path );
             g_free( esc_path );
             esc_path = bash_quote( task->task->current_dest );

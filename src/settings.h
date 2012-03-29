@@ -352,6 +352,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                                     XSet* set );
 GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size );
 XSet* xset_set_cb( char* name, int (*cb_func) (), gpointer cb_data );
+XSet* xset_set_ob1_int( XSet* set, char* ob1, int ob1_int );
 XSet* xset_set_ob1( XSet* set, char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, char* ob2, gpointer ob2_data );
 XSet* xset_is( char* name );

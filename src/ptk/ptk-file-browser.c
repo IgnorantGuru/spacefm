@@ -577,7 +577,7 @@ void on_toggle_sideview( GtkMenuItem* item, PtkFileBrowser* file_browser, int jo
     focus_folder_view( file_browser );
     int job;
     if ( item )
-        job = (int*)g_object_get_data( G_OBJECT(item), "job" );
+        job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
     else
         job = job2;
 //printf("on_toggle_sideview  %d\n", job);
@@ -625,17 +625,17 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     set = xset_set_cb( "stool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "stool_dirtree", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_book", on_toggle_sideview, file_browser );
         xset_set_b( "stool_book", xset_get_b_panel( file_browser->mypanel,
                                                                     "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_device", on_toggle_sideview, file_browser );
         xset_set_b( "stool_device", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "stool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "stool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -992,17 +992,17 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     set = xset_set_cb( "tool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "tool_dirtree", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_book", on_toggle_sideview, file_browser );
         xset_set_b( "tool_book", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_device", on_toggle_sideview, file_browser );
         xset_set_b( "tool_device", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "tool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "tool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -1062,15 +1062,15 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     // callbacks right
     set = xset_set_cb( "rtool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_dirtree", xset_get_b_panel( file_browser->mypanel, "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
    set = xset_set_cb( "rtool_book", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_book", xset_get_b_panel( file_browser->mypanel, "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "rtool_device", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_device", xset_get_b_panel( file_browser->mypanel, "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "rtool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "rtool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -1809,7 +1809,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     }
 
     // select previously selected files
-    gint* elementn = -1;
+    gint elementn = -1;
     GList* l;
     GList* element = NULL;
     //printf("    search for %s\n", (char*)file_browser->curHistory->data );
@@ -1868,7 +1868,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
         GtkTreeIter it;
         GtkTreePath* tp;
         GtkTreeSelection* tree_sel;
-        gboolean* firstsel = TRUE;
+        gboolean firstsel = TRUE;
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
             tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( file_browser->folder_view ) );
         for ( l = element->data; l; l = l->next )
@@ -2157,7 +2157,7 @@ static void on_history_menu_item_activate( GtkWidget* menu_item,
     else
     {
         //MOD sync curhistsel
-        gint* elementn = -1;
+        gint elementn = -1;
         elementn = g_list_position( file_browser->history, file_browser->curHistory );
         if ( elementn != -1 )
             file_browser->curhistsel = g_list_nth( file_browser->histsel, elementn );
@@ -5780,7 +5780,7 @@ void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, in
     GtkWidget* widget;
     int job;
     if ( item )
-        job = g_object_get_data( G_OBJECT( item ), "job" );
+        job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "job" ) );
     else
         job = job2;
 
@@ -5846,7 +5846,7 @@ void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
     GtkNotebook* notebook = file_browser->mynotebook;
     int tab_num;
     if ( item )
-        tab_num = g_object_get_data( G_OBJECT( item ), "tab_num" );
+        tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "tab_num" ) );
     else
         tab_num = t;
     
