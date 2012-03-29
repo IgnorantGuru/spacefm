@@ -76,7 +76,6 @@ typedef struct
     PtkBookmarks* bookmarks;
     /* Units */
     gboolean use_si_prefix;
-    gboolean right_design;
 }
 AppSettings;
 
@@ -160,7 +159,11 @@ enum {
     XSET_JOB_EXPORT,
     XSET_JOB_BROWSE_FILES,
     XSET_JOB_BROWSE_DATA,
-    XSET_JOB_BROWSE_PLUGIN
+    XSET_JOB_BROWSE_PLUGIN,
+    XSET_JOB_HELP,
+    XSET_JOB_HELP_COMMAND,
+    XSET_JOB_HELP_BROWSE,
+    XSET_JOB_HELP_STYLE
 };
 
 typedef struct
@@ -197,7 +200,7 @@ typedef struct
     char* prev;
     char* parent;
     char* child;
-    char* line;
+    char* line;             // or help if lock
     // x = line/script/custom
     // y = user
     // z = custom executable
@@ -252,6 +255,8 @@ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
     "/usr/bin/gksu",
     "/usr/bin/gksudo",
     "/usr/bin/kdesu",
+    "/usr/bin/gnomesu",
+    "/usr/bin/xdg-su",
     "/bin/su",
     "/usr/bin/sudo"
 };
@@ -347,25 +352,29 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                                     XSet* set );
 GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size );
 XSet* xset_set_cb( char* name, int (*cb_func) (), gpointer cb_data );
+XSet* xset_set_ob1_int( XSet* set, char* ob1, int ob1_int );
 XSet* xset_set_ob1( XSet* set, char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, char* ob2, gpointer ob2_data );
 XSet* xset_is( char* name );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
+gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
+                                                            gpointer user_data );
 gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
                             gboolean large, char* msg1, char* msg2,
                             char* defstring, char** answer, char* defreset,
-                            gboolean edit_care );
+                            gboolean edit_care, char* help );
 char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
                         char* title, char* deffolder, char* deffile );
 void xset_edit( GtkWidget* parent, char* path, gboolean force_root, gboolean no_root );
+void xset_open_url( GtkWidget* parent, char* url );
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
             GtkToolbar* toolbar, GtkTooltips* tooltips, char* elements );
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                         GtkToolbar* toolbar, GtkTooltips* tooltips,
                         GtkIconSize icon_size, XSet* set );
 int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* image,
-                                        int buttons, char* msg1, char* msg2 );
+                                int buttons, char* msg1, char* msg2, char* help );
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, char* text, gboolean def_font );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, char* path );
@@ -375,6 +384,7 @@ void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int typ
 XSet* xset_import_plugin( char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( char* orig_name );
+void xset_show_help( GtkWidget* parent, XSet* set, char* anchor );
 
 
 

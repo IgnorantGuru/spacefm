@@ -1,2 +1,3 @@
 packages export-ignore
+data/spacefm-manual-en.src export-ignore
 .gitattributes export-ignore

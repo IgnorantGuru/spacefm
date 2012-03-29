@@ -982,7 +982,17 @@ void fm_find_files( const char** search_dirs )
     data->win = (GtkWidget*)gtk_builder_get_object( builder, "win" );
     g_object_set_data_full( G_OBJECT( data->win ), "find-files", data, (GDestroyNotify)free_data );
 
-    gtk_window_set_icon_name( GTK_WINDOW( data->win ), GTK_STOCK_FIND );
+    GdkPixbuf* icon = NULL;
+    GtkIconTheme* theme = gtk_icon_theme_get_default();
+    if ( theme )
+        icon = gtk_icon_theme_load_icon( theme, "spacefm-find", 48, 0, NULL );
+    if ( icon )
+    {
+        gtk_window_set_icon( GTK_WINDOW( data->win ), icon );
+        g_object_unref( icon );
+    }
+    else
+        gtk_window_set_icon_name( GTK_WINDOW( data->win ), GTK_STOCK_FIND );
 
     /* search criteria pane */
     data->search_criteria = (GtkWidget*)gtk_builder_get_object( builder, "search_criteria" );

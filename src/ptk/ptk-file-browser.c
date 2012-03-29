@@ -475,29 +475,25 @@ void on_toolbar_hide( GtkWidget* widget, PtkFileBrowser* file_browser,
 
 void on_toolbar_help( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-    xset_msg_dialog( file_browser, 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to change the toolbar items.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and use Design Mode to show or unshow an item, change the icon, or add a custom tool item.  The Left Toolbar menu changes the tool items to the left of the Smartbar.\n\nFor help with Design Mode click View|Design Mode."), NULL );
+    xset_msg_dialog( file_browser, 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to customize the toolbars.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n\nFor more information, click the Help button below."), NULL, "#designmode-toolbars" );
 }
 
 void on_toolbar_config_done( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-printf(  "on_toolbar_config_done\n");
     if ( !widget || !file_browser )
         return;
         
     if ( !GTK_IS_WIDGET( widget ) )
         return;
-printf( "    1111\n");
+
     GtkToolbar* toolbar = (GtkToolbar*)g_object_get_data( G_OBJECT(widget), "toolbar" );
 
-printf( "    2222\n");
     gtk_widget_destroy( widget );
     
-printf( "    3333\n");
     if ( toolbar == file_browser->toolbar )
         rebuild_toolbar_all_windows( 0, file_browser );
     else if ( toolbar == file_browser->side_toolbar )
         rebuild_toolbar_all_windows( 1, file_browser );
-printf(  "on_toolbar_config_done DONE\n");
 }
 
 void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -571,6 +567,8 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
     g_object_set_data( G_OBJECT( popup ), "toolbar", toolbar );
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( on_toolbar_config_done ), file_browser );
+    g_signal_connect( popup, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_popup( popup, NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );
 }
 
@@ -579,7 +577,7 @@ void on_toggle_sideview( GtkMenuItem* item, PtkFileBrowser* file_browser, int jo
     focus_folder_view( file_browser );
     int job;
     if ( item )
-        job = (int*)g_object_get_data( G_OBJECT(item), "job" );
+        job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
     else
         job = job2;
 //printf("on_toggle_sideview  %d\n", job);
@@ -627,17 +625,17 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     set = xset_set_cb( "stool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "stool_dirtree", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_book", on_toggle_sideview, file_browser );
         xset_set_b( "stool_book", xset_get_b_panel( file_browser->mypanel,
                                                                     "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_device", on_toggle_sideview, file_browser );
         xset_set_b( "stool_device", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "stool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "stool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -947,17 +945,25 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
 {
 //printf(" ptk_file_browser_rebuild_toolbox\n");
     XSet* set;
+    
+    if ( !file_browser )
+        return;
+
     // destroy
     if ( file_browser->toolbar )
     {
-        gtk_widget_destroy( file_browser->toolbar );
-        file_browser->path_bar = ( GtkEntry* )ptk_path_entry_new( file_browser );
-        g_signal_connect( file_browser->path_bar, "activate",
-                            G_CALLBACK(on_address_bar_activate), file_browser );
-        g_signal_connect( file_browser->path_bar, "focus-in-event",
-                                        G_CALLBACK(on_address_bar_focus_in), file_browser );
+        if ( GTK_IS_WIDGET( file_browser->toolbar ) )
+        {
+            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n", file_browser->toolbar );
+            // crashing here? http://sourceforge.net/p/spacefm/tickets/88000/?page=0
+            gtk_widget_destroy( file_browser->toolbar );  
+            printf("    DONE\n" );
+        }
+        file_browser->toolbar = NULL;
+        file_browser->path_bar = NULL;
     }
-    else if ( !file_browser->path_bar )
+
+    if ( !file_browser->path_bar )
     {
         file_browser->path_bar = ( GtkEntry* )ptk_path_entry_new( file_browser );
         g_signal_connect( file_browser->path_bar, "activate",
@@ -986,17 +992,17 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     set = xset_set_cb( "tool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "tool_dirtree", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_book", on_toggle_sideview, file_browser );
         xset_set_b( "tool_book", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_device", on_toggle_sideview, file_browser );
         xset_set_b( "tool_device", xset_get_b_panel( file_browser->mypanel,
                                                                 "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "tool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "tool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -1056,15 +1062,15 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     // callbacks right
     set = xset_set_cb( "rtool_dirtree", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_dirtree", xset_get_b_panel( file_browser->mypanel, "show_dirtree" ) );
-        xset_set_ob1( set, "job", 0 );
+        xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
    set = xset_set_cb( "rtool_book", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_book", xset_get_b_panel( file_browser->mypanel, "show_book" ) );
-        xset_set_ob1( set, "job", 1 );
+        xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "rtool_device", on_toggle_sideview, file_browser );
         xset_set_b( "rtool_device", xset_get_b_panel( file_browser->mypanel, "show_devmon" ) );
-        xset_set_ob1( set, "job", 2 );
+        xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "rtool_newtab", on_shortcut_new_tab_activate, file_browser );
     xset_set_cb( "rtool_newtabhere", on_shortcut_new_tab_here, file_browser );
@@ -1264,6 +1270,8 @@ void on_status_bar_popup( GtkWidget *widget, GtkMenu *menu,
     xset_add_menu( NULL, file_browser, menu, accel_group, desc );
     g_free( desc );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 /*
@@ -1801,7 +1809,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     }
 
     // select previously selected files
-    gint* elementn = -1;
+    gint elementn = -1;
     GList* l;
     GList* element = NULL;
     //printf("    search for %s\n", (char*)file_browser->curHistory->data );
@@ -1860,7 +1868,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
         GtkTreeIter it;
         GtkTreePath* tp;
         GtkTreeSelection* tree_sel;
-        gboolean* firstsel = TRUE;
+        gboolean firstsel = TRUE;
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
             tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( file_browser->folder_view ) );
         for ( l = element->data; l; l = l->next )
@@ -2149,7 +2157,7 @@ static void on_history_menu_item_activate( GtkWidget* menu_item,
     else
     {
         //MOD sync curhistsel
-        gint* elementn = -1;
+        gint elementn = -1;
         elementn = g_list_position( file_browser->history, file_browser->curHistory );
         if ( elementn != -1 )
             file_browser->curhistsel = g_list_nth( file_browser->histsel, elementn );
@@ -3620,6 +3628,9 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
             gtk_tree_view_column_set_visible( col, 
                     xset_get_b_panel( file_browser->mypanel, set_names[j] ) );
         }
+
+        if ( cols[j] == COL_FILE_SIZE )
+            gtk_cell_renderer_set_alignment( renderer, 1, 0 );
         
         gtk_tree_view_column_pack_start( col, renderer, TRUE );       
         gtk_tree_view_column_set_attributes( col, renderer, "text", cols[ j ], NULL );
@@ -3808,11 +3819,11 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                         g_free( file_path );
                     }
                 }
-                //MOD always suggest move
+                //MOD always suggest copy
                 //if( file_browser->drag_source_dev != dest_dev )     /* src and dest are on different devices */
                 //    drag_context->suggested_action = GDK_ACTION_COPY;
                 //else
-                    drag_context->suggested_action = GDK_ACTION_MOVE;
+                    drag_context->suggested_action = GDK_ACTION_COPY;
             }
             g_free( dest_dir );
             g_strfreev( list );
@@ -3824,7 +3835,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             if ( 0 == ( drag_context->action &
                         ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
             {
-                drag_context->action = GDK_ACTION_MOVE;
+                drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
             }
             gtk_drag_finish ( drag_context, TRUE, FALSE, time );
 
@@ -4818,7 +4829,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Destination same as source"), NULL );
+            xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
             return;
         }
@@ -4848,7 +4859,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
     }
     else
     {
-        xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Invalid destination"), NULL );
+        xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Invalid destination"), NULL, NULL );
     }
 }
 
@@ -4892,7 +4903,7 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
         {
             str = g_strdup_printf( _("Delete %d selected item%s as root ?"),
                                             item_count, item_count > 1 ? "s" : "" );
-            if ( xset_msg_dialog( file_browser, GTK_MESSAGE_WARNING, _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO, _("DELETE AS ROOT"), str ) != GTK_RESPONSE_YES )
+            if ( xset_msg_dialog( file_browser, GTK_MESSAGE_WARNING, _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO, _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
             {
                 g_free( str );
                 return;
@@ -4995,7 +5006,7 @@ void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_brows
 void ptk_file_browser_hide_selected( PtkFileBrowser* file_browser,
                                                     GList* files, char* cwd )
 {
-    if ( xset_msg_dialog( file_browser, 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL ) != GTK_RESPONSE_OK )
+    if ( xset_msg_dialog( file_browser, 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL, NULL ) != GTK_RESPONSE_OK )
         return;
     
     VFSFileInfo* file;
@@ -5738,11 +5749,12 @@ void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_bro
     fm_find_files( dirs );
 }
 
+/*
 void ptk_file_browser_open_folder_as_root( GtkMenuItem *menuitem,
                                                 PtkFileBrowser* file_browser )
 {
     const char* cwd;
-    char* cmd_line;
+    //char* cmd_line;
     GError *err = NULL;
     char* argv[5];  //MOD
     
@@ -5759,15 +5771,16 @@ void ptk_file_browser_open_folder_as_root( GtkMenuItem *menuitem,
         ptk_show_error( gtk_widget_get_toplevel( file_browser ), _("Error"), err->message );
         g_error_free( err );
     }
-    g_free( cmd_line );
+    //g_free( cmd_line );
 }
+*/
 
 void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, int job2 )
 {
     GtkWidget* widget;
     int job;
     if ( item )
-        job = g_object_get_data( G_OBJECT( item ), "job" );
+        job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "job" ) );
     else
         job = job2;
 
@@ -5833,7 +5846,7 @@ void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
     GtkNotebook* notebook = file_browser->mynotebook;
     int tab_num;
     if ( item )
-        tab_num = g_object_get_data( G_OBJECT( item ), "tab_num" );
+        tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "tab_num" ) );
     else
         tab_num = t;
     

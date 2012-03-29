@@ -1539,7 +1539,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 char* msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
                 g_free( target );
                 if ( !xset_text_dialog( win, _("Change Desktop Item Name"), NULL, FALSE, msg,
-                                                NULL, name, &new_name, NULL, FALSE ) || !new_name )
+                                    NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
                 {
                     g_free( msg );
                     g_free( path );
@@ -1560,7 +1560,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                         vfs_dir_emit_file_changed( win->dir, filename, file );
                     g_free( path );
                     g_free( filename );
-                    xset_msg_dialog( win, GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL );
+                    xset_msg_dialog( win, GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
                     break;
                 }
                 if ( win->dir )
@@ -2252,7 +2252,6 @@ GCompareDataFunc get_sort_func( DesktopWindow* win )
             break;
         default:
             comp = comp_item_by_name;
-            return;
     }
     return comp;
 }

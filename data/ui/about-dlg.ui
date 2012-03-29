@@ -8,7 +8,7 @@
     <property name="program_name">SpaceFM</property>
     <property name="comments" translatable="no">by IgnorantGuru</property>
     <property name="copyright" translatable="yes">Copyright (C) 2012    GPL2</property>
-    <property name="website">http://spacefm.sourceforge.net/</property>
+    <property name="website">http://ignorantguru.github.com/spacefm/</property>
     <property name="license" translatable="yes">SpaceFM - Copyright (C) 2012   GPL2
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
@@ -18,7 +18,7 @@ USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be u
 The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 2 (LGPL2).
 
 You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</property>
-    <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@users.sourceforge.net&gt;
+    <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@gmx.com&gt;
 
 Source code taken from other projects:
  * pcmanfm-mod: IgnorantGuru http://igurublog.wordpress.com/downloads/mod-pcmanfm/
@@ -33,7 +33,9 @@ Source code taken from other projects:
      * thunar-vfs and libexo: Benedikt Meurer
      * gnome-mount: David Zeuthen</property>
     <property comments="Please replace this line with your own names, one name per line. " name="translator_credits" translatable="yes">translator-credits</property>
-    <property name="artists" translatable="yes">The icons were taken from Tango Projects icon set</property>
+    <property name="artists" translatable="yes">SpaceFM icons and logo by Goran Simovic
+
+Additional icons were taken from Tango Projects icon set</property>
     <property name="logo_icon_name">spacefm</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">

@@ -144,10 +144,15 @@ void set_window_title( FMMainWindow* main_window, PtkFileBrowser* file_browser )
 void on_task_column_selected( GtkMenuItem* item, GtkTreeView* view );
 void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* name2 );
 void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
+void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 static gboolean delayed_focus( GtkWidget* widget );
+static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser );
 
 
 static GtkWindowClass *parent_class = NULL;
@@ -375,7 +380,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     else
     {
         // get url
-        if ( !xset_text_dialog( main_window, _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE ) || !path || path[0] == '\0' )
+        if ( !xset_text_dialog( main_window, _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-copy" ) || !path || path[0] == '\0' )
             return;
         type = 1;  //url
     }
@@ -398,7 +403,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
             msg = g_strdup_printf( _("This plugin's filename is invalid.  Please rename it using alpha-numeric ASCII characters and try again.") );
             xset_msg_dialog( main_window, GTK_MESSAGE_ERROR,
                                         _("Invalid Plugin Filename"), NULL,
-                                        0, msg, NULL );
+                                        0, msg, NULL, "#plugins-install" );
             {
                 g_free( plug_dir_name );
                 g_free( path );
@@ -421,7 +426,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
             if ( xset_msg_dialog( main_window, GTK_MESSAGE_WARNING,
                                         _("Overwrite Plugin ?"), NULL,
                                         GTK_BUTTONS_YES_NO,
-                                        msg, NULL ) != GTK_RESPONSE_YES )
+                                        msg, NULL, "#plugins-install" ) != GTK_RESPONSE_YES )
             {
                 g_free( plug_dir_name );
                 g_free( plug_dir );
@@ -569,11 +574,15 @@ void import_all_plugins( FMMainWindow* main_window )
                 if ( g_file_test( plug_file, G_FILE_TEST_EXISTS ) )
                 {
                     plug_dir = g_build_filename( paths[i], name, NULL );
-                    xset_import_plugin( plug_dir );
+                    if ( xset_import_plugin( plug_dir ) )
+                    {
+                        found = TRUE;
+                        if ( i == 1 )
+                            found_plugins = TRUE;
+                    }
+                    else
+                        printf("Invalid Plugin Ignored: %s/\n", plug_dir );
                     g_free( plug_dir );
-                    found = TRUE;
-                    if ( i == 1 )
-                        found_plugins = TRUE;
                 }
                 g_free( plug_file );
             }
@@ -581,9 +590,6 @@ void import_all_plugins( FMMainWindow* main_window )
         }
     }
     clean_plugin_mirrors();
-
-    //if ( found )
-    //    main_window_on_plugins_change( main_window );
 }
 
 gboolean on_autosave_timer( FMMainWindow* main_window )
@@ -639,7 +645,8 @@ void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
         char* msg = g_strdup_printf( _("Error: Unable to save session file\n\n( %s )"), err_msg );
         g_free( err_msg );
         xset_msg_dialog( main_window, GTK_MESSAGE_ERROR, _("Save Session Error"),
-                                                            NULL, 0, msg, NULL );
+                                                    NULL, 0, msg, NULL, 
+                                                    "#programfiles-home-session" );
         g_free( msg );
     }    
 }
@@ -883,7 +890,7 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 else
                     gtk_widget_modify_font( a_browser->side_book, NULL );
             }
-            // smartbar
+            // pathbar
             if ( a_browser->path_bar )
             {
                 fontname = xset_get_s_panel( p, "font_path" );
@@ -978,9 +985,9 @@ void on_main_icon()
     }
 }
 
-void main_design_mode( FMMainWindow* main_window )
+void main_design_mode( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items and add your own custom commands to menus.\n\nTo open the design menu, simply right-click, middle-click or ctrl-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL );
+    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
 }
 
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
@@ -1082,7 +1089,8 @@ void focus_panel( GtkMenuItem* item, gpointer mw, int p )
     FMMainWindow* main_window = (FMMainWindow*)mw;
     
     if ( item )
-        panel_num = g_object_get_data( G_OBJECT( item ), "panel_num" );
+        panel_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ),
+                                                                    "panel_num" ) );
     else
         panel_num = p;
 
@@ -1391,6 +1399,8 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->file_menu_item ), newmenu );
     
     // View
@@ -1398,7 +1408,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_prefs", on_preference_activate, main_window );
     xset_set_cb( "font_task", main_update_fonts, file_browser );
     xset_set_cb( "main_full", on_fullscreen_activate, main_window );
-    xset_set_cb( "main_design_mode", main_design_mode, NULL );
+    xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
     menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks sep_v2 main_title main_icon sep_v3 main_full main_design_mode main_prefs" );
@@ -1427,31 +1437,33 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_pbar", show_panels_all_windows, main_window );
     
     set = xset_set_cb( "panel_prev", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -1 );
+        xset_set_ob1_int( set, "panel_num", -1 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_next", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -2 );
+        xset_set_ob1_int( set, "panel_num", -2 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_hide", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", -3 );
+        xset_set_ob1_int( set, "panel_num", -3 );
         set->disable = ( vis_count == 1 );
     set = xset_set_cb( "panel_1", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 1 );
+        xset_set_ob1_int( set, "panel_num", 1 );
         set->disable = ( main_window->curpanel == 1 );
     set = xset_set_cb( "panel_2", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 2 );
+        xset_set_ob1_int( set, "panel_num", 2 );
         set->disable = ( main_window->curpanel == 2 );
     set = xset_set_cb( "panel_3", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 3 );
+        xset_set_ob1_int( set, "panel_num", 3 );
         set->disable = ( main_window->curpanel == 3 );
     set = xset_set_cb( "panel_4", focus_panel, main_window );
-        xset_set_ob1( set, "panel_num", 4 );
+        xset_set_ob1_int( set, "panel_num", 4 );
         set->disable = ( main_window->curpanel == 4 );
         
     main_task_prepare_menu( main_window, newmenu, accel_group );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->view_menu_item ), newmenu );
 
     // Bookmarks
@@ -1466,6 +1478,8 @@ void rebuild_menus( FMMainWindow* main_window )
     main_window->plug_menu = create_plugins_menu( main_window );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->plug_menu_item ),
                                                     main_window->plug_menu );
+    g_signal_connect( main_window->plug_menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     
     // Tool
     XSet* child_set;
@@ -1482,16 +1496,23 @@ void rebuild_menus( FMMainWindow* main_window )
         child_set = xset_get( set->child );
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->tool_menu_item ), newmenu );
     
     // Help
     newmenu = gtk_menu_new();
-    xset_set_cb( "main_design_help", main_design_mode, main_window );
+    xset_set_cb( "main_faq", on_main_faq, main_window );
     xset_set_cb( "main_about", on_about_activate, main_window );
-    menu_elements = g_strdup_printf( "main_design_help main_about" );
+    xset_set_cb( "main_help", on_main_help_activate, main_window );
+    xset_set_cb( "main_homepage", on_homepage_activate, main_window );
+    xset_set_cb( "main_getplug", on_getplug_activate, main_window );
+    menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_getplug sep_h2 main_help_opt sep_h3 main_about" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
+    g_signal_connect( newmenu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->help_menu_item ), newmenu );
 //printf("rebuild_menus  DONE\n");
 }
@@ -2048,10 +2069,11 @@ void main_window_open_in_panel( PtkFileBrowser* file_browser, int panel_num,
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
     // focus original panel
-    while( gtk_events_pending() )
-        gtk_main_iteration();
+    //while( gtk_events_pending() )
+    //    gtk_main_iteration();
     //gtk_widget_grab_focus( GTK_WIDGET( main_window->notebook ) );
-    gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    g_idle_add( ( GSourceFunc ) delayed_focus_file_browser, file_browser );
 }
 
 gboolean main_window_panel_is_visible( PtkFileBrowser* file_browser, int panel )
@@ -2142,6 +2164,8 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
             gtk_widget_show_all( GTK_WIDGET( popup ) );
             g_signal_connect( popup, "selection-done",
                   G_CALLBACK( gtk_widget_destroy ), NULL );
+            g_signal_connect( popup, "key-press-event",
+                              G_CALLBACK( xset_menu_keypress ), NULL );
             gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
                                 NULL, NULL, event->button, event->time );
         }
@@ -2430,6 +2454,8 @@ on_file_assoc_activate ( GtkMenuItem *menuitem,
 /* callback used to open default browser when URLs got clicked */
 static void open_url( GtkAboutDialog *dlg, const gchar *url, gpointer data)
 {
+    xset_open_url( dlg, url );
+#if 0
     /* FIXME: is there any better way to do this? */
     char* programs[] = { "xdg-open", "gnome-open" /* Sorry, KDE users. :-P */, "exo-open" };
     int i;
@@ -2445,6 +2471,27 @@ static void open_url( GtkAboutDialog *dlg, const gchar *url, gpointer data)
              break;
         }
     }
+#endif
+}
+
+void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_show_help( main_window, NULL, NULL );
+}
+
+void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_show_help( main_window, NULL, "#quickstart-faq" );
+}
+
+void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_open_url( main_window, NULL );
+}
+
+void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_open_url( main_window, "https://github.com/IgnorantGuru/spacefm/wiki/plugins/" );
 }
 
 void
@@ -2535,6 +2582,15 @@ static gboolean delayed_focus( GtkWidget* widget )
     return FALSE;
 }
 
+static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser )
+{
+    gdk_threads_enter();
+    gtk_widget_grab_focus( file_browser->folder_view );
+    set_panel_focus( NULL, file_browser );
+    gdk_threads_leave();
+    return FALSE;
+}
+
 void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser )
 {
     int p, pages, cur_tabx;
@@ -2582,7 +2638,8 @@ void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     {
         gtk_window_unfullscreen( GTK_WIDGET( main_window ) );
         gtk_widget_show( main_window->menu_bar );
-        gtk_widget_show( main_window->panelbar );
+        if ( xset_get_b( "main_pbar" ) )
+            gtk_widget_show( main_window->panelbar );
     }
 }
 
@@ -3034,7 +3091,7 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
         browser = (PtkFileBrowser*) 
                             fm_main_window_get_current_file_browser( main_window );
         if ( browser && browser->path_bar && gtk_widget_has_focus( browser->path_bar ) )
-            return FALSE;  // send to smartbar
+            return FALSE;  // send to pathbar
     }
 
     for ( l = xsets; l; l = l->next )
@@ -3134,9 +3191,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_fullscreen_activate( NULL, main_window );
                 else if ( !strcmp( xname, "prefs" ) )
                     on_preference_activate( NULL, main_window );
-                else if ( !strcmp( xname, "design_mode" ) 
-                        || !strcmp( xname, "design_help" ) )
-                    main_design_mode( main_window );
+                else if ( !strcmp( xname, "design_mode" ) )
+                    main_design_mode( NULL, main_window );
                 else if ( !strcmp( xname, "pbar" ) )
                     show_panels_all_windows( NULL, main_window );
                 else if ( !strcmp( xname, "icon" ) )
@@ -3145,6 +3201,14 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     update_window_title( NULL, main_window );
                 else if ( !strcmp( xname, "about" ) )
                     on_about_activate( NULL, main_window );
+                else if ( !strcmp( xname, "help" ) )
+                    on_main_help_activate( NULL, main_window );
+                else if ( !strcmp( xname, "faq" ) )
+                    on_main_faq( NULL, main_window );
+                else if ( !strcmp( xname, "homepage" ) )
+                    on_homepage_activate( NULL, main_window );
+                else if ( !strcmp( xname, "getplug" ) )
+                    on_getplug_activate( NULL, main_window );
             }
             else if ( g_str_has_prefix( set->name, "panel_" ) )
             {
@@ -3242,7 +3306,7 @@ const char* task_names[] =
 
 void on_reorder( GtkWidget* item, GtkWidget* parent )
 {
-    xset_msg_dialog( parent, 0, _("Reorder Columns Help"), NULL, 0, _("To change the order of the columns, drag the column header to the desired location."), NULL );
+    xset_msg_dialog( parent, 0, _("Reorder Columns Help"), NULL, 0, _("To change the order of the columns, drag the column header to the desired location."), NULL, NULL );
 }
 
 void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
@@ -3981,7 +4045,7 @@ gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
             esc_path = bash_quote( task->task->dest_dir );
             fprintf( file, "fm_task_dest_dir=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->current_item );
+            esc_path = bash_quote( task->task->current_file );
             fprintf( file, "fm_task_current_src_file=%s\n", esc_path );
             g_free( esc_path );
             esc_path = bash_quote( task->task->current_dest );
@@ -4313,6 +4377,8 @@ gboolean on_task_button_press_event( GtkTreeView* view, GdkEventButton *event,
         gtk_widget_show_all( GTK_WIDGET( popup ) );
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
+        g_signal_connect( popup, "key_press_event",
+                          G_CALLBACK( xset_menu_keypress ), NULL );
         gtk_menu_popup( popup, NULL, NULL, NULL, NULL, event->button, event->time );
     }
     return FALSE;

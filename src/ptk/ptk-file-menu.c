@@ -290,13 +290,15 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
 
 void on_open_in_tab( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    int tab_num = (int)g_object_get_data( G_OBJECT( menuitem ), "tab_num" );
+    int tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( menuitem ),
+                                                                "tab_num" ) );
     ptk_file_browser_open_in_tab( data->browser, tab_num, data->file_path );
 }
 
 void on_open_in_panel( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    int panel_num = (int)g_object_get_data( G_OBJECT( menuitem ), "panel_num" );
+    int panel_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( menuitem ),
+                                                                "panel_num" ) );
     main_window_open_in_panel( data->browser, panel_num, data->file_path );
 }
 
@@ -317,7 +319,8 @@ void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int o
 
     int sort_order;
     if ( menuitem )
-        sort_order = (int)g_object_get_data( G_OBJECT(menuitem), "sortorder" );    
+        sort_order = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(menuitem),
+                                                                "sortorder" ) );    
     else
         sort_order = order;
     
@@ -689,10 +692,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             {
                 // Open Dir
                 set = xset_set_cb( "opentab_prev", on_open_in_tab, data );
-                    xset_set_ob1( set, "tab_num", -1 );
+                    xset_set_ob1_int( set, "tab_num", -1 );
                     set->disable = ( tab_num == 1 );
                 set = xset_set_cb( "opentab_next", on_open_in_tab, data );
-                    xset_set_ob1( set, "tab_num", -2 );
+                    xset_set_ob1_int( set, "tab_num", -2 );
                     set->disable = ( tab_num == tab_count );
                 set = xset_set_cb( "opentab_new", on_popup_open_in_new_tab_activate,
                                                                         data );
@@ -700,23 +703,23 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 {
                     name = g_strdup_printf( "opentab_%d", i );
                     set = xset_set_cb( name, on_open_in_tab, data );
-                        xset_set_ob1( set, "tab_num", i );
+                        xset_set_ob1_int( set, "tab_num", i );
                         set->disable = ( i > tab_count ) || ( i == tab_num );
                     g_free( name );
                 }
 
                 set = xset_set_cb( "open_in_panelprev", on_open_in_panel, data );
-                    xset_set_ob1( set, "panel_num", -1 );
+                    xset_set_ob1_int( set, "panel_num", -1 );
                     set->disable = ( panel_count == 1 );
                 set = xset_set_cb( "open_in_panelnext", on_open_in_panel, data );
-                    xset_set_ob1( set, "panel_num", -2 );
+                    xset_set_ob1_int( set, "panel_num", -2 );
                     set->disable = ( panel_count == 1 );
 
                 for ( i = 1; i < 5; i++ )
                 {
                     name = g_strdup_printf( "open_in_panel%d", i );
                     set = xset_set_cb( name, on_open_in_panel, data );
-                        xset_set_ob1( set, "panel_num", i );
+                        xset_set_ob1_int( set, "panel_num", i );
                         //set->disable = ( p == i );
                     g_free( name );
                 }
@@ -792,31 +795,31 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_cb( "go_set_default", ptk_file_browser_set_default_folder, browser );
         xset_set_cb( "go_refresh", ptk_file_browser_refresh, browser );
         set = xset_set_cb( "focus_path_bar", ptk_file_browser_focus, browser );
-            xset_set_ob1( set, "job", 0 );
+            xset_set_ob1_int( set, "job", 0 );
         set = xset_set_cb( "focus_filelist", ptk_file_browser_focus, browser );
-            xset_set_ob1( set, "job", 4 );
+            xset_set_ob1_int( set, "job", 4 );
         set = xset_set_cb( "focus_dirtree", ptk_file_browser_focus, browser );
-            xset_set_ob1( set, "job", 1 );
+            xset_set_ob1_int( set, "job", 1 );
         set = xset_set_cb( "focus_book", ptk_file_browser_focus, browser );
-            xset_set_ob1( set, "job", 2 );
+            xset_set_ob1_int( set, "job", 2 );
         set = xset_set_cb( "focus_device", ptk_file_browser_focus, browser );
-            xset_set_ob1( set, "job", 3 );
+            xset_set_ob1_int( set, "job", 3 );
         
         // Go > Tab >
         set = xset_set_cb( "tab_prev", ptk_file_browser_go_tab, browser );
-            xset_set_ob1( set, "tab_num", -1 );
+            xset_set_ob1_int( set, "tab_num", -1 );
             set->disable = ( tab_count < 2 );
         set = xset_set_cb( "tab_next", ptk_file_browser_go_tab, browser );
-            xset_set_ob1( set, "tab_num", -2 );
+            xset_set_ob1_int( set, "tab_num", -2 );
             set->disable = ( tab_count < 2 );
         set = xset_set_cb( "tab_close", ptk_file_browser_go_tab, browser );
-            xset_set_ob1( set, "tab_num", -3 );
+            xset_set_ob1_int( set, "tab_num", -3 );
 
         for ( i = 1; i < 11; i++ )
         {
             name = g_strdup_printf( "tab_%d", i );
             set = xset_set_cb( name, ptk_file_browser_go_tab, browser );
-                xset_set_ob1( set, "tab_num", i );
+                xset_set_ob1_int( set, "tab_num", i );
                 set->disable = ( i > tab_count ) || ( i == tab_num );
             g_free( name );
         }
@@ -1068,37 +1071,37 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         radio_group = NULL;
         set = xset_set_cb( "sortby_name", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_NAME );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_NAME );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_size", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_SIZE );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_SIZE );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_type", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_TYPE );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_TYPE );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_perm", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_PERM );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_PERM );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_owner", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_OWNER );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_OWNER );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_date", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", PTK_FB_SORT_BY_MTIME );
+            xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_MTIME );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ? XSET_B_TRUE : XSET_B_FALSE;
 
         radio_group = NULL;
         set = xset_set_cb( "sortby_ascend", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", -1 );
+            xset_set_ob1_int( set, "sortorder", -1 );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_type == GTK_SORT_ASCENDING ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_descend", on_popup_sortby, browser );
-            xset_set_ob1( set, "sortorder", -2 );
+            xset_set_ob1_int( set, "sortorder", -2 );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_type == GTK_SORT_DESCENDING ? XSET_B_TRUE : XSET_B_FALSE;
 
@@ -1224,6 +1227,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
+    g_signal_connect (popup, "key-press-event",
+                    G_CALLBACK (xset_menu_keypress), NULL );
     return popup;
 }
 

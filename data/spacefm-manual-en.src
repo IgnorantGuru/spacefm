@@ -1,0 +1,1625 @@
+ <html>
+<head>
+    <title>SpaceFM User's Manual</title>
+</head>
+<body>
+<br><br>
+<table cellspacing="0" cellpadding="10" align="center" width="80%" border=2>
+<tr>
+<td width="20%" valign="top">
+<font size=+2>SpaceFM</font><br><br>
+<a href="http://ignorantguru.github.com/spacefm/">Homepage</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a><br>
+<a href="http://ignorantguru.github.com/spacefm/news.html">News</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/wiki">Wiki</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/issues">Report Issues</a><br>
+<a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">User's Manual</a><br>
+</td>
+
+<td valign="top">
+<a name="toc"></a><font size=+3><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">SpaceFM User's Manual</a></font><br><br>
+
+<p><b>This document is under construction and incomplete.</b>
+
+<p>This manual uses your browser's settings for fonts, font sizes, and colors.
+
+<p><b><a name="context-help">TIP:</a></b>  For help within SpaceFM, <i>right</i>-click on a menu item and select <a href="#designmode-designmenu-help">Help</a>.  Or, highlight the menu item (hover your mouse cursor over it) and press F1.  Some dialogs also include a Help button which links to this manual.
+
+
+<br><br><br><b>DISCLAIMER</b>
+<br>While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br><br><br>
+
+
+<!-- @Introduction @About -->
+
+<p>SpaceFM is a multi-panel tabbed file manager for Linux which is lightweight and has minimal dependencies, yet is capable and very flexible.
+
+<!-- # Design Goals #goals -->
+
+<ul>
+    <li>Provide <b>a flexible user interface</b> which rivals the flexibility and capabilities of the Linux command line.  Using SpaceFM and making gradual adjustments as you go, you become the designer of your own version of the file manager.  Almost every built-in menu and toolbar item can be renamed or hidden from view, bound to any keyboard shortcut, and given a custom icon.  You can also <b>add your own custom commands and submenus</b> to any position in most menus.  Like word processor macros, custom commands allow you to easily run commonly used programs or automate tasks using SpaceFM's unique integration with the bash scripting language.
+
+    <p><li>Provide <b>flexibility in window components, behavior, and appearance</b>.  How many panels you want displayed, how they are arranged and sized, what each panel contains, what fonts are used, and how they respond to your actions are largely up to you.  SpaceFM can be a single window containing icons of a single folder's contents, or a multi-panel, tabbed arrangement of detailed file lists, devices, bookmarks, and folder trees.
+    
+    <p><li>Keep the user <b>interface as simple and clean as possible</b>.  Although SpaceFM's UI has been redesigned, it is still inspired by the simplicity and clarity of PCManFM's UI.
+      
+    <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.
+    
+    <p><li>Provide a <b>task manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the task manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the task manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
+    
+    <p><li>Provide a <b>plugin capability</b> which extends the base capabilities.  Plugins can be copied into most menus as custom commands, or can be installed as root for added protection and multi-user access.  Some plugins will eventually be included in SpaceFM's installation.  In addition. <b>any custom command you create can easily be saved as a plugin</b> and shared with other users.
+    
+    <p><li>Provide <b>a common interface to multiple su and graphical su programs, terminals, and editors</b>.  You simply select which utilities you want to use for these functions, and SpaceFM's task manager handles the details of running your commands as other users, in a terminal, etc.
+    
+    <p><li>Provide extensive <b>system maintenance capabilities</b>.  Perform-as-root functions allow you to edit, copy, move, and delete files and folders as root, change permissions, and create links.  SpaceFM can also be run as root for full system maintenance needs.
+    
+    <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM's unique udisks device management support is text stream based, meaning it does not require or use udisks libraries.  This makes it very resilient to API/library changes and bugs, and also allows you to clearly diagnose udisks problems or replace udisks with custom scripts that emulate its behavior.  If udisks is unwanted, SpaceFM runs fine without it - only the device manager will be disabled.  (SpaceFM can also be built with deprecated HAL support.)
+</ul>
+
+<!-- # Limitations -->
+<ul>
+    <li>SpaceFM makes no network connections and is <b>not a network browser</b>.  It browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to mount the shares locally.
+</ul>
+
+
+<!-- @Introduction @History -->
+
+<p>SpaceFM was developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed numerous bugs, and kept the legacy version alive for those who prefered it for its light dependencies, HAL support, and added features.
+
+<p>PCManFM-Mod was then used as a base for developing SpaceFM, which included a major redesign of the user interface, multiple panel support, a udisks-based device manager, inotify support, and removed dependencies on fam/gamin and HAL.  Much of the internal VFS which had been developed and debugged in legacy PCManFM and PCManFM-Mod was retained and extended, providing SpaceFM with a reliable VFS to build upon.
+
+<p>Due to the extensive changes in many parts of the project, SpaceFM was released with its new name as an alpha test version in January 2012.  It is currently in alpha testing.
+
+
+<!-- @Introduction @Highlights -->
+
+<ul>
+    <li>Lightweight -  Written in C with GTK2 stability, inotify kernel support, optional udisks
+    <li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
+    <li>Flexible - Can appear very simple or very complex depending on configuration
+    <li>Multiple Windows - A single instance opens multiple windows
+    <li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a task manager pane
+    <li>Tabbed - Each browser panel supports multiple folder tabs
+    <li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
+    <li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
+    <li>Device Manager - Loose udisks integration for manual and customized automatic device management, plus easily format, backup and restore partitions and MBRs
+    <li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
+    <li>MIME - Manages MIME file types and default actions
+    <li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
+    <li>Plugins - Install, copy, and export custom commands as plugins
+    <li>Bash Integration - Built-in bash scripting support for custom commands, with file manager data exported as bash variables
+    <li>Output Control - Monitor the stdout/stderr output of built-in and custom commands, with error detection and popup control, or run commands in a terminal
+    <li>Fonts & Icons - Easily configure custom fonts and icons in each panel or pane for a unique look
+    <li>Styles - Show files as icons or in lists with customized columns
+    <li>Find-As-You-Type - File list allows you to quickly locate a file with a case-insensitive substring search of filenames - just type a few letters
+    <li>File Search - Flexibly search for file names, sizes, content, etc. with no daemons
+    <li>System Management - Safely perform quick commands as root or run a root instance
+    <li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
+    <li>Archives - Single-click, built-in archive creation and extraction, or use external apps
+    <li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
+    <li>Alternate Builds - deprecated support for hal (replaces udisks) and fam/gamin (replaces inotify)
+</ul>
+
+
+<!-- @Installation @Downloads -->
+
+<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.
+
+<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
+
+The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
+
+<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
+
+
+
+<!-- @Installation @Packages -->
+
+<br><br><br>
+<table border=1 cellpadding="5" width="80%">
+<tr>
+	<th>Distro</th>
+	<th>Packages &amp; Repositories*</th>
+</tr>
+<tr>
+<td><b>Debian,<br>Ubuntu,<br>etc</b></td>
+<td>
+	deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
+	<br><br>NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
+	<br><br><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+</td>
+</tr>
+
+<tr>
+<td><b>antiX<b></td>
+<td>
+	<a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
+</td>
+</tr>
+
+<tr>
+<td><b>Arch Linux</b></td>
+<td>
+	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+</td>
+</tr>
+
+<tr>
+<td><b>Gentoo</b></td>
+<td>
+	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
+</td>
+
+<tr>
+<td><b>openSUSE</b></td>
+<td>
+	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
+
+	<p>openSUSE Tumbleweed repo:<br>
+	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/</a>
+
+	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
+
+	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
+</td>
+</tr>
+
+<tr>
+<td><b>PCLinuxOS</b></td>
+<td>
+	spacefm test packages available (see forum)
+</td>
+</tr>
+
+<tr>
+<td><b>Sabayon</b></td>
+<td>
+	Includes spacefm in its repositories
+</td>
+</tr>
+
+<tr>
+<td><b>VectorLinux</b></td>
+<td>
+	spacefm test packages available
+</td>
+</tr>
+
+<tr>
+<td><b><i>Other</i></b></td>
+<td>
+	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use the easy manual build instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
+</td>
+</tr>
+</table>
+<P><i>* For the most up to date table, please visit the <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a></i>
+
+
+
+<!-- @Installation @Installer -->
+
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>.  The installer extracts, builds, and installs automatically.
+
+<P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
+
+<blockquote><i>autotools-dev dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
+
+<p><b>Also</b> Recommended:
+<blockquote><i>udisks ktsuss|gksu wget eject lsof</i></blockquote>
+
+<p><b>IF</b> building with HAL support, you also need:
+<blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i></blockquote>
+
+<p><b>IF</b> disabling inotify support, you also need fam or gamin:
+<blockquote><i>fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev</i></blockquote>
+
+Next, <b>run the installer</b> in a terminal like this (substitute the correct version for "x.x.x"):
+<pre>    bash spacefm-x.x.x-installer.sh</pre>
+
+Or, to see the help for alternate build options, run:
+<pre>    bash spacefm-x.x.x-installer.sh --help</pre>
+
+<p><b>If build dependencies are missing</b>, examine the errors, install required dependencies, and run the installer again.
+
+<p><b>To upgrade to the latest version</b>, just download the latest installer and run it.
+
+
+<!-- @Installation @Manual Build -->
+
+<p>To build SpaceFM step-by-step, first install <b>required <i>build</i> dependencies</b> as detailed in the <a href="#installation-installer">Installer instructions</a> above.
+
+<p>Next, download the tarball (eg spacefm-x.x.x.tar.xz) from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>, extract the tarball to a working folder, and enter the directory in a terminal.
+
+<p>For a default build and install as /usr/local/bin/spacefm, run configure like this:
+<pre>    ./configure</pre>
+
+<p><b>If configure reports missing dependencies</b>, install them and run configure again before proceeding to make.
+
+<p><b>IF</b> HAL support is desired (this will disable udisks support and will seriously limit device manager capabilities), add <code>--enable-hal</code> to the configure command above.
+
+<p><b>IF</b> you don't want to use the inotify kernel support and instead want fam or gamin to detect directory changes, add to configure: <code>--disable-inotify</code>
+        
+<p>SpaceFM already supports ktsuss, gnomesu, gksu, gksudo, and kdesu.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
+
+<p>Next, <b>run make</b> and complete the installation:
+<pre>    make
+    sudo make install
+    sudo update-mime-database /usr/share/mime > /dev/null
+    sudo update-desktop-database -q
+</pre>
+
+
+<!-- @Installation @Uninstall -->
+
+<p>If you installed SpaceFM from a package, <b>use your package manager</b> to remove it.  Otherwise, if you installed via the self-extracting installer or a manual build, you can remove SpaceFM (including plugins) with these commands, <b>all run as root</b>:
+
+<p>(these commands assume you installed with the default <code>--prefix=/usr/local</code> - adjust as needed)
+<pre>    rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
+    rm -r /usr/local/share/spacefm
+    rm /usr/local/share/pixmaps/spacefm.png
+    rm /usr/local/share/pixmaps/spacefm-root.png
+    rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
+    rm /usr/local/share/applications/spacefm*.desktop
+    rm /usr/local/share/mime/packages/spacefm-mime.xml
+    update-mime-database /usr/local/share/mime > /dev/null
+    update-desktop-database -q</pre>
+
+
+<!-- @Invocation @Command Line -->
+
+<p>To see SpaceFM's command line usage run <code>spacefm --help</code>
+<pre>Usage:
+  spacefm [OPTION...] [DIR | FILE]... 
+
+Help Options:
+  -h, --help               Show help options
+  --help-all               Show all help options
+  --help-gtk               Show GTK+ Options
+
+Application Options:
+  -t, --new-tab            Open folders in last used window (default)
+  -w, --new-window         Open folders in new window
+  -p, --panel=P            Open folders in panel 'P' (1-4)
+  --desktop                Launch desktop manager
+  --desktop-pref           Show desktop settings
+  --show-pref=N            Show Preferences ('N' is the Pref tab number)
+  -d, --daemon-mode        Run as a daemon
+  -c, --config-dir=DIR     Use DIR as configuration directory
+  -f, --find-files         Show File Search
+  --set-wallpaper          Set desktop wallpaper to FILE
+  --profile=PROFILE        No function - for compatibility only
+  --no-desktop             No function - for compatibility only
+  --display=DISPLAY        X display to use</pre>
+  
+<p>Normally, your session file and other user files are saved in ~/.config/spacefm/  To make SpaceFM read and save your files in another folder (~/.config/spacefm-alt in this example), stop ALL <i>instances</i> of SpaceFM and run:
+<pre>    # first stop all instances:
+    killall spacefm
+    
+    # then:
+    spacefm --config-dir ~/.config/spacefm-alt</pre>
+
+<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.
+
+<!-- @Invocation @Windows -->
+
+<p>To open an initial SpaceFM window, run 'spacefm' with or without a folder specification:
+<pre>    spacefm
+    
+    # or to open a folder:
+    spacefm /home
+    
+    # or to open several folders in tabs:
+    spacefm /home /usr/bin
+</pre>
+
+<p>To open an additional folder in a new tab of the last used window:
+<pre>    spacefm /etc</pre>
+
+<p>Or to open a second window:
+<pre>    spacefm -w
+
+    # or to open a specified folder in a new window:
+    spacefm -w /boot
+</pre>
+
+<p>To open a File Search window:
+<pre>    spacefm --find-files</pre>
+
+<p>SpaceFM maintains <a href="#programfiles-tmp-socket">a socket</a> for each user/display combination, so when you open multiple windows using the same user and display, all windows are run from a single instance of SpaceFM.  Unless a <a href="#invocation-daemonmode">daemon</a> or the <a href="#invocation-desktopmanager">desktop manager</a> is running, SpaceFM will exit when all windows are closed.
+
+<p>When a window is closed, the current folder tabs are saved to your session file if option File|Save Tabs is checked.  The next time you run SpaceFM, these folder tabs will be re-opened in addition to opening tabs for any folders you specify on the command line.
+
+<p>To specify what panel folders are opened in, use:
+<pre>    # open a folder in panel 2:
+    spacefm --panel=2 /usr/bin</pre>
+
+<p>If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
+<pre>    # open a file:
+    spacefm /etc/fstab</pre>
+
+
+<!-- @Invocation @GTK Themes -->
+
+<p>Because multiple panels in SpaceFM use many GUI elements, the GTK2 theme you're using may have a significant impact on performance.  Some themes are 'heavier' than others.  For example, the Clearlooks theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
+
+<p>It is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
+<pre>    GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</pre>
+
+<p>You can also test SpaceFM's speed with no theme, which should be faster than any theme:
+<pre>    GTK2_RC_FILES="" spacefm</pre>
+
+<p>To specify a theme within a desktop file, copy SpaceFM's desktop file to your home folder:
+<pre>    mkdir -p ~/.local/share/applications
+    cp <a href="#programfiles-usr-spac-dt">/usr/local/share/applications/spacefm.desktop</a> ~/.local/share/applications/
+    # OR
+    cp /usr/share/applications/spacefm.desktop</a> ~/.local/share/applications/</pre>
+
+Then open ~/.local/share/applications/spacefm.desktop in your editor and set the Exec= line using env.  For example:
+<blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
+
+<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK themes</a>
+
+
+<!-- @Invocation @Desktop Manager -->
+
+<p>SpaceFM includes a lightweight desktop manager to manage desktop icons and show wallpaper.  This works well with Openbox, for example, which doesn't include a desktop manager.  To start a desktop manager daemon, first terminate any other software which is managing your desktop, then run:
+<pre>    spacefm --desktop</pre>
+
+<p>You can also run <code>spacefm --desktop</code> from your login script.  For example, if you're using Openbox, add this line to ~/.config/openbox/autostart.sh:
+<pre>    ( spacefm --desktop ) &amp;</pre>
+
+<p>While managing the desktop, SpaceFM's <a href="#devices">volume monitor</a> will also be running, meaning that if configured to do so, it will automount devices.
+
+<p>To set the wallpaper from the command line, run a command like:
+<pre>    spacefm --set-wallpaper <i>/home/user/wallpaper.jpg</i></pre>
+
+<p>To open the desktop preferences window from the command line run:
+<pre>    spacefm --desktop-pref</pre>
+
+<p>To stop management of the desktop prematurely (before logoff), send spacefm a quit signal:
+<pre>    killall spacefm</pre>
+
+
+<!-- @Invocation @Daemon Mode -->
+
+<p>If you want SpaceFM always running in the background, ready to quickly open windows and automount volumes, but <i>don't</i> want it to manage the desktop, start a daemon instance of SpaceFM:
+<pre>    spacefm -d</pre>
+
+<p>No window will open in this case, but an instance will be started if not already running, and it will continue running for the duration of your X login session.  You can also start the daemon from your login script.
+
+<p>One particular use for daemon mode is to make sure udisks removes leftover folders from /media.  By default, SpaceFM will unmount removable devices on exit to prevent folders remaining in /media at shutdown (unless you uncheck option <a href="#devices-settings-exit">Settings|Auto-Mount|Unmount On Exit</a>) in the Devices list.  If running as a normal instance, this means devices will be unmounted whenever you close the last SpaceFM window.  When running as a daemon (or as a desktop manager daemon), devices won't be unmounted until you logoff.
+
+<p>To stop a daemon mode instance, send SpaceFM a quit signal:
+<pre>    killall spacefm</pre>
+
+
+<!-- @Quick Start @Frequently Asked Questions #faq -->
+
+<ul>
+    <a href="#context-help">How do I see help for a menu item?</a><br>
+    <a href="#designmode">How do I set or change key shortcuts and icons?</a><br>
+    <a href="#designmode-toolbars">How do I customize the toolbars?</a><br>
+    <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
+    <a href="#designmode-new">How do I create a custom menu command?</a><br>
+    <a href="#designmode-designmenu-cut">How do I move a custom command to another menu or menu position?</a><br>
+    <a href="#designmode-designmenu-copy">How do I copy a plugin to another menu?</a><br>
+</ul>
+
+
+<!-- @Design Mode @Introduction -->
+
+<p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>design menu</i>.
+
+<p>To open the design menu, simply right-click on a menu item.  The design menu is available for most menu items, but is not available in the Bookmarks menu and in variable parts of the Open context menu.  Alternatively, to open the design menu using a shortcut key, press F2 while the menu item is highlighted.
+
+<p>To open the design menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
+
+<p>Although you cannot right-click directly on toolbar items, Design Mode can be used to customize toolbars via their config menus, as detailed in the <a href="#designmode-toolbars">Toolbars section</a>.
+
+<p>While Design Mode works in almost all menus, a good place to practice is the Tools menu, which is reserved for your custom commands.
+
+<p>When working with Design Mode, it is important to distinguish between two types of menu items: built-in and custom.  Built-in items, such as Rename on the file list context menu, are part of the SpaceFM program, whereas custom items are custom commands you have added.  Design Mode can be used on both types of items, but in different ways.  For example, custom commands can be removed, while built-in items cannot (although they can be hidden).  You will note that some of the design menu's functions will be disabled or enabled depending on the type of menu item.
+
+<p>Custom commands in SpaceFM are like word processor macros - they allow you to automate tasks.  You might create a quick custom command just for today's use, and delete it when you're done, while other commands may become a regular part of your file manager use.  The design menu allows you to quickly create, move, copy, and remove custom commands.  You don't need to be a programmer to use them - just a little knowledge of the command line gets you started.
+
+
+<!-- @Design Mode @Design Menu -->
+
+<p>When you right-click on a menu item, or press F2 while the menu item is highlighted, you will be presented with a design menu which gives you extensive control over how the item is displayed and performs.
+
+<p>TIP: For help with a menu item in the design menu itself, highlight the design menu item and press F1.
+
+<!-- # Show #show -->
+The Show item will only be visible in the design menu when it is opened from a <a href="#designmode-toolbars">toolbar config menu</a>.  Checking the Show option will show this item in the toolbar, and unchecking it will remove it from the toolbar.
+
+<p>When a toolbar item is shown, an asterisk will appear next to it's name in the toolbar config menu.
+
+<!-- # Name #name -->
+The Name item allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key if desired.  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
+
+<!-- # Key -->
+The Key item allows you to bind any shortcut key to the current menu item, and to change or unset an existing shortcut key.  When you select Key, a dialog will open asking you to press your key combination (for example Ctrl+G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key option can be used on built-in and custom commands, but cannot be used on a submenu.
+
+<p>After you have set a key combination, when you reopen the menu the new key shortcut will be displayed in the menu.
+
+<p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
+
+<!-- # Icon -->
+The Icon item allows you to set or change an icon for a menu item.  A dialog will allow you to enter an icon name such as 'folder', a stock item name such as 'GTK_STOCK_OPEN' or 'gtk-open', or an absolute path to an icon file.  For best results, use an icon name or stock name so that the icon can be automatically sized.  When using an absolute path, the icon may not be sized correctly.  Due to various issues, not all icons may work.  If an icon fails to load, you will see a broken icon image instead.  If successful, the icon will appear in the menu next to the menu item.
+
+<p>To remove an icon, simply clear the text box where the icon name is entered and click OK.  (For plugins, clearing the box will show the default icon for the plugin, if any.)
+
+<p>To browse the available icons on your system, open /usr/share/icons/.  When you enter an icon name, GTK will search there for an appropriate icon, and will also search ~/.icons/ and ~/.local/share/icons/.
+
+<p>You can also change the icon for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+I, <b>or</b> use the mouse shortcut Shift + Middle-Click.
+
+<!-- # Style -->
+If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (normal, checkbox, or input), and change the input dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the <a href="#designmode-style">Style</a> section below for details.
+
+<!-- # Command -->
+Only available for custom menu items, the Command submenu allows you to set and change the custom command which is run when the menu item is selected, allows you to browse the files associated with the command or plugin, and provides options for how your command is run.  See the <a href="#designmode-command">Command</a> section below for details.
+
+<!-- # Help -->
+Help opens contextual help for a menu item.  For built-in commands, the SpaceFM user's manual will be opened in your browser.  If no help is currently available, Help will be disabled.  [Note: Because the user's manual is still incomplete, not all menu items will have help available.]
+
+<p>Your browser may be customized in Help|Options|Browser, and a custom location for the user's manual can be set in Help|Options|Manual Location.
+
+<p>For custom commands, including plugins, Help will open the plain text README file for the command in your text editor.  If no README file exists for a custom command, selecting Help will create one for you to edit.  This file may also be named 'README.mkd' or 'README.txt'.
+
+<p>You can also open help for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F1, <b>or</b> use the mouse shortcut Alt + Middle-Click.  F1 may also be used from within the design menu itself to show help for a design menu item.
+
+<!-- # Cut -->
+The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
+
+<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.
+
+<p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
+
+<!-- # Copy -->
+Similarly, Copy copies the current menu item onto the design clipboard.  Again, you will not observe any immediate change to the menu after copying an item.  You cannot copy built-in menu items, only custom ones.
+
+<p>You can also copy a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+C, <b>or</b> use the mouse shortcut Ctrl + Left-or-Right-Click.
+
+<!-- # Paste -->
+If you previously cut or copied a menu item onto the design clipboard, the Paste item in the design menu will be enabled for use.  Determine where in what menu you want to paste the item, right-click on an existing item to open the design menu, and select Paste.  The menu item will be copied or moved from it's original menu location and will be placed <i>after</i> the item you clicked on.
+
+<p>For example, to move a custom command called 'Test' from the Tools menu to the file list's context menu:  Open the Tools menu and right-click on 'Test' to open the design menu.  Select Cut.  Now right-click on the file list and right-click on a menu item, such as 'Rename'.  Select Paste in the design menu.  Right-click again on the file list and you will see your 'Test' command has been moved from the Tools menu and has been placed immediately after the 'Rename' item.
+
+<p>When copying a custom command, note that everything contained in the command is copied, including <a href="#designmode-command-script">script</a>, extra files you added to the <a href="#designmode-command-browse-files">command</a> or <a href="#designmode-command-browse-data">data</a> directories, settings, etc.
+
+<p>You can also copy plugins from the Plugins menu (although you cannot cut them).  When a plugin, which is root-installed and -protected, is copied, the copy is no longer protected by root.  The copy is now a custom command which you can alter in any way.  Copying a plugin provides a means of changing and customizing it.  It can also then be exported and reinstalled as a plugin.  See the <a href="#plugins">Plugins</a> section for details.
+
+<p>Paste, Cut, and Copy can also be used on the separators between menu items.  To move a command to directly after a separator, copy the command to the design menu, right-click on a separator, and select Paste.  You can also cut, copy, and paste the separators themselves, providing they are not built-in.
+
+<p>You can also paste a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+V, <b>or</b> use the mouse shortcut Shift + Left-or-Right-Click.
+
+<!-- # Remove -->
+Remove is used to remove any custom command or separator.  It cannot be used on built-in commands or separators.  When used on a <a href="#plugins">plugin</a>, Remove will uninstall the plugin (root password required).
+
+<p>Unless you have unchecked option View|Preferences|Interface|Confirm delete/remove, you will be presented with a confirmation dialog before the item is removed.
+
+<p>IMPORTANT:  When a custom command is removed, all files and settings are deleted, including any extra files you added to the <a href="#designmode-command-browse-files">command directory</a>, any files stored in the command's <a href="#designmode-command-browse-data">data directory</a>, and the <a href="#designmode-command-script">command script</a>.  When a plugin is uninstalled using Remove, the plugin is removed for all users, and all settings, files and <a href="#plugins-creationandfiles-data">plugin-data</a> for the plugin are deleted.
+
+<p>WHEN REMOVING A SUBMENU, all commands and submenus contained within it are deleted as described above.
+
+<p>Note that a submenu in SpaceFM can never be empty.  As a result, if you remove the last item from a submenu, a new command will automatically be added to it.
+
+<p>You can also remove a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press the Delete key, <b>or</b> use the mouse shortcut Ctrl + Shift + Middle-Click.
+
+<!-- # Export -->
+The Export item, which is only available for custom commands, will open a save dialog, allowing you to save the custom command into a plugin file.  This is how plugins are created for SpaceFM - you create a custom command, then simply export it.
+
+<p>Once your command has been exported to a plugin file, the file can then be used to import the command back into either the Plugins menu or another menu, or can be shared with other users of SpaceFM.  Exporting also provides a mechanism for backing up custom commands - the plugin file acts as a backup copy of your command which can always be imported into any SpaceFM session.
+
+<p>When using export on a plugin, a new plugin file is created - generally this creates a copy of the original plugin (unless you modified the installed plugin files as root).
+
+<p>You can also export a group of custom commands into one plugin file by exporting a custom submenu, which means the plugin file will contain all commands and submenus contained in the submenu.  This provides way to share multiple related plugins in a single plugin file.
+
+<p>For more information on plugins, please see the <a href="#plugins">Plugins</a> section.
+
+<!-- # New -->
+The New item creates a new custom command, which will be inserted after the current menu item.  This works similarly to Paste, except that instead of copying or moving a command, you're creating a new one.
+
+<p>You will be prompted for a menu name for the command, followed by a prompt for a <a href="#designmode-command-line">command line</a>.  If you just want to create the command and set the command line later, you can leave this blank and click OK.  The command line accepts anything you would normally enter in a bash command line, and may include variables.  It can be as simple as a program's name you want to run when this menu item is selected, or as complex as a one-line bash script.  For more information, please see the <a href="#designmode-command">Command</a> section.
+
+<p>For example, right-click on a menu item and select New.  Enter 'Current Time' for the menu name.  For the command line, enter:
+<pre>    date</pre>
+
+<p>When you click the new menu item, a dialog will open showing you the current date and time.  
+
+<p>You can also add a new menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item where you want to insert the new item, and press the Insert key, <b>or</b> use the mouse shortcut Ctrl + Shift + Left-or-Right-Click.
+
+<!-- # Submenu -->
+The Submenu item adds a new submenu into the menu after the current menu item.  You will be prompted for the new submenu's name.  Because a submenu in SpaceFM can never be empty, a new command named "New Command" will automatically be added to the new submenu.
+
+<!-- # Separator -->
+The Separator item adds a new separator line into the menu after the current menu item.  Design Mode works on separators too - right-click on a separator to open its design menu, which allows you to remove it, change it's context rules, or paste items after it.
+
+
+<!-- @Design Mode @Style -->
+<p>The Style submenu of the design menu allows you to control a menu item's appearance.  For custom commands, you can choose whether the item acts as a normal menu item, a checkbox, or prompts the user for input.  For built-in as well as custom commands, the Style menu also contains the context rules which determine if and how a menu item is displayed based on the file browser's context.
+
+<!-- # Normal -->
+If your command's style is set to Normal, it will be displayed as a normal menu item, with an optional icon to the left, and a key shortcut to the right.  When clicked, your custom command will be run immediately.  Normal is the default style for new commands.
+
+<!-- # Checkbox -->
+If your command's style is set to Checkbox, it will be displayed as a checkbox menu item with a checkbox to the left, and a key shortcut to the right.  No icon will be displayed.  The checkbox will contain or not contain a checkmark.  Each time the user clicks the menu item, the checkbox will be toggled (if checked it will uncheck; if unchecked it will check), just like the checkbox menu items you are accustomed to.  After the checkbox is toggled, your custom command will be run.
+
+<p>Your custom command can read the value of the checkbox using the variable $fm_value.  This will equal 1 if checked, or 0 if unchecked.  This allows your command to take different actions depending on the state of the checkbox.
+
+<p>For example, add a new custom menu item called 'Checker'.  Then open the design menu for the new item and select Style|Checkbox.  Open the design menu again and select <a href="#designmode-command-line">Command|Line</a>.  Enter or paste this command line into the Edit Command Line dialog:
+<pre>    if [ $fm_value -eq 1 ]; then echo "Box is checked"; else echo "Box is unchecked"; fi</pre>
+
+<p>Now when you click your menu item, you will be told if the box is checked or unchecked - each time you click the item, it will change.
+
+<!-- # Input -->
+If your command's style is set to Input, it will be displayed as a normal menu item, with an optional icon to the left, and a key shortcut to the right.  However, when the item is clicked, the user will be prompted to enter text.  If the user the clicks OK, your custom command will then be run.  If the user clicks cancel, the command will not be run.
+
+<p>Your custom command can read the text entered by the user using the variable "$fm_value".  The last text entered in the box will be remembered and will be the default entry next time the item is clicked.
+
+<p>For example, add a new custom menu item called 'Your Name'.  Then open the design menu for the new item and select Style|Input.  A dialog will open asking you for the message to be displayed for the user.  Enter 'Please enter your name:' into this dialog and click OK.  Now open the design menu again and select Command|Line.  Enter or paste this command line into the Edit Command Line dialog:
+<pre>    echo "Your name is $fm_value."</pre>
+
+<p>When you click the menu item, you will be asked for your name, and if you click OK, told your name.
+
+<!-- # Message -->
+The Message item will be enabled only if the style is set to <a href="#designmode-style-input">Input</a>.  This is the same dialog you saw when you first selected Style|Input - it allows you to change the message seen by the user when the item is clicked.
+
+<p>Although all the text must be on one line, you can create linebreaks in the displayed dialog text by inserting \n for a linefeed.  Or to insert a tab, use \t.  No other format characters should be used in this dialog.  For example:
+<pre>    Please enter your name:\n\nFull name is required</pre>
+
+
+<!-- # Context -->
+The context dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items.
+
+<p>Context refers to the state of the entire file browser window when the menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
+
+<p>By default, the top line of the context dialog reads "Show item if context matches any rule:", and is followed by an empty rule box.  When the rule box is empty, the item will always be shown regardless of context.
+
+<p>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are the most useful for most purposes.
+
+<p>As an initial example, we will add a rule which shows the current menu item when the selected file is an audio file.  Note that when determining the context, only the type and name of the <i>first</i> selected file is considered.  If multiple files are selected, this can be determined, but the type of each selected file cannot be individually tested.
+
+<p>Set the rule subject to 'MIME Type'.  The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  For this example, set the verb to 'begins with'.
+
+<p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value from the drop-down list.  Each subject chosen will have a different list of common values.  In this example, choose 'audio/' from the drop-down list.
+
+<p>Below the value box containing 'audio/' is a 'Value:' label, which may or may not show a value.  This label shows the subject's value in the <i>current context</i>.  When you opened the design menu, the file browser had a context - perhaps some files or a device were selected, the browser was in a particular directory, etc.  For example, if a file is selected and the subject is 'MIME Type', then the file's MIME type will currently appear next to 'Value:'.  If no file is selected, then 'Value:' will show nothing.  (Tip:  You can quickly copy a value into the value box by double-clicking it.)
+
+<p>Now the words in the Edit Rule box should read 'MIME Type... begins with... audio/'.  To add this rule to the rule box above, click the Add button.  'MIME Type begins with audio/' will be added to the list of rules.  For this rule to be satisfied, the MIME type of the first selected file must begin with the text "audio/".  Thus a file of type "audio/mpeg" (an MP3 file), or of type "audio/x-wav" (a WAV file) would match this rule, but a file of type "video/x-msvideo" (an AVI video file) would not.  (You can see the MIME type of any file by right-clicking on it in the file list and selecting Properties|Info.)  In this way, our rule will only match the context if the first selected file is an audio file.
+
+<p>The context dialog will let you know the result of the current set of rules.  Below the rules box to the right, you will see "Current: Show" or "Current: Hide", depending on the current context.  If the first selected file is an audio file, it will read "Current: Show", meaning that with the current context, this menu item will be shown in the menu.  If instead it reads "Current: Hide", then the menu item will be hidden from view for the current context - it will not appear in the menu.
+
+<p>The top line of the context dialog is also now enabled.  For example, we can change 'Show item if context matches any rule:' to 'Enable item if context matches any rule:'.  If the action is to 'Show', its opposite is to hide.  If the action is to 'Enable', then its opposite to disable.  Thus if we change the top line to read 'Enable item if context matches any rule:', then the menu item will be enabled or disabled depending on context, but will never be completely hidden from view in the menu.  Or, to reverse the logic, action can be set to 'Hide' or 'Disable' when any rule is matched.
+
+<p>The 'matches any rules:' box can also be changed so that it requires all rules to be matched instead of just one.  This is like putting an AND between the rules, instead of OR.  Or you can reverse the matching logic by choosing one of the 'doesn't match' options.
+
+
+<p>For this example, set the top line to read 'Enable item if context matches any rule:'.  We now have a context rule set which reads 'Enable item if context matches any rule: MIME Type begins with audio/'.
+
+<p>Click OK to accept this rule set.  Then select an audio file in the file browser's file list.  Open the menu where your item appears, and it will be enabled for use.  Next select another kind of file, such as a text or video file.  Open the menu again, and the menu item will be disabled.
+
+<p>In order to open the design menu again for this menu item, you must first select an audio file (you cannot open the design menu on a disabled menu item).  Or you can set Ignore Context (see below).
+
+<br>
+<p>The context dialog includes a few more features for editing rules.  To remove a rule, click the rule, then click the Remove button.  If all rules are removed and you click OK, the item will be shown regardless of context.
+
+<p>To change a rule in the list, click the rule, then edit the rule using the Edit Rule box.  When the rule is how you want it to appear, click the Apply button to update the rule in the list.
+
+<p>The best way to learn to use the context rules is to practice with a file selected.  In this way you can use the 'Value:' and 'Current:' labels to see context values and observe the result of changing the rules.
+
+<p>Some context subjects are boolean - they will equal 'true' or 'false' (these words must be in english even if the rest of the rule is translated).  For example, the rule subject 'Multiple Selected' will always equal 'true' or 'false', depending on whether more than one file is selected in the file list of the current panel.  Thus if your custom command is designed to work with only one selected file, you might set a context rule to disable it if the user has selected multiple files.
+
+<p>Other context subjects, such as 'Panel Count', contain a number, and you can test whether they are equal to, less than, or greater than a value.  For example, the rule 'Panel Count is greater than 1' will only match if the user has multiple panels shown.
+
+<p>As a more advanced use, it's also possible to use || (or) or && (and) in the test value to provide a list of possibilities (use || or &&, but not both in the same rule).  For example, this rule:
+&nbsp;&nbsp;&nbsp;&nbsp;MIME Type begins with audio/ || video/
+
+<p>causes two tests to be performed.  If the MIME Type begins with 'audio/' OR the MIME Type begins with 'video/', then the rule matches.  Likewise, the rule:
+&nbsp;&nbsp;&nbsp;&nbsp;Device Properties contains dvd && blank
+
+<p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would tell you if the currently selected device contains a blank DVD.
+
+<p>It is important to note that built-in menu items sometimes have a built-in context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+
+<p>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.
+
+<p>You can also open the context dialog for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F3, <b>or</b> use the mouse shortcut Ctrl + Alt + Middle-Click.
+
+<!-- # Ignore Context -->
+The 'Ignore Context (global)' item in the Style submenu, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown.  This is a global setting - it disables context rules in all windows of the current instance.
+
+<p>If you need to change the context of an item you have disabled or hidden, you can either create the appropriate context so that the item is shown and enabled, or you can open the design menu for any other item and check 'Ignore Context (global)'.  This will allow you to then access the design menu of the item and change its context.  When you are finished, you can uncheck 'Ignore Context (global)'.
+
+<p>Note that Ignore Context does not affect the built-in context of built-in items - for example, even with Ignore Context checked, the file list's Paste menu item will still be disabled if the clipboard is empty.
+
+
+<!-- @Design Mode @Command -->
+
+<p>The Command submenu of the design menu gives you substantial control over the type of custom command you're using and how it is run, lets you quickly edit your command, and also lets you browse files associated with the command.
+
+<!-- # Edit &amp; Edit As Root #edit -->
+The Edit items allow you to edit the current command.  Edit will perform differently depending on the type of command (see types below).  If your command is a command <a href="#designmode-command-line">line</a>, a dialog will open which will allow you to edit the command line.  If a command <a href="#designmode-command-script">script</a> is used, Edit will open the script in your configured editor.  Edit As Root, if shown, works similarly, except that the script will be opened by root in root's editor.  Finally, if the command is type <a href="#designmode-command-custom">custom</a>, Edit will either open a file dialog allowing you to select the custom executable binary, or if the target is a text file (usually a script), it will be opened in your editor.
+
+<p>Edit works a little differently with <a href="#plugins">plugins</a>.  If the plugin is command type <a href="#designmode-command-line">line</a>, you are permitted to edit the command line of the plugin.  However, note that your changes will be lost when you exit SpaceFM - the plugin will revert to its saved command line when SpaceFM restarts.  Likewise, if the plugin uses command type <a href="#designmode-command-custom">custom</a>, you can temporarily change the executable used, but the change will not be saved.  When making a temporary change to a plugin, only the current user is affected by the change.
+
+<p>If the plugin is a <a href="#designmode-command-script">script</a>, Edit will open the script in your editor.  To actually make changes to an installed plugin's script, you must use Edit As Root.  
+
+<p>You can edit a menu item's command using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press F4, <b>or</b> use the mouse shortcut Middle-Click.
+
+<!-- # Copy -->
+Copy in the Command submenu is a convenience item used to copy the current command to the main (files & text) clipboard.  For a command <a href="#designmode-command-line">line</a>, Copy will copy the command line to the clipboard.  For a command <a href="#designmode-command-script">script</a> or <a href="#designmode-command-custom">custom</a> command, the path of the script or executable will be copied to the clipboard.
+
+<!-- # Browse -->
+The browse submenu allows you to quickly open folders associated with a command.  This can be used to browse a plugin's files as a security check before running the plugin.  When designing more complex scripts, Browse can be used to help manage associated files.
+
+<!-- # Browse|Files #browse-files -->
+Each command has several folders where associated files are stored.   Browse|Files opens the 'command directory' ("$fm_cmd_dir").  The command directory contains the command script if any, as well as other files you may have added for use by the command.  For a custom menu item, the command directory will be something like:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;~/.config/spacefm/scripts/cstm_00000000/
+
+<p>Or for a plugin:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/usr/share/spacefm/plugins/PLUGIN-FILENAME/cstm_00000000/<br>
+(/usr/local may also be used depending on install location)
+
+<p>While you may modify files in the command directory when creating and maintaining your command, the command script should not modify this directory while the command is running.  The reason is that if you later install the command as a plugin, it will probably no longer have write access to this directory.
+
+<p>When exporting a command, all files in the command directory are included in the plugin file.  There are several special files:  'exec.sh' is the command script, if any.  'icon' is a custom icon file for the command or plugin - it will automatically be shown if no icon is set.  You can also include a 'readme' file in this directory which describes your command or plugin.
+
+<p>All files in the command directory are deleted when the command or plugin is removed!
+
+<!-- # Browse|Data #browse-data -->
+Commands also have an associated data directory ("$fm_cmd_data"), which may or may not exist.  The data directory is used to store persistent settings or data used by the command or plugin.  The data directory for both custom menu items and plugins will be something like:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;~/.config/spacefm/plugin-data/cstm_00000000/
+
+<p>This directory is created on demand, so if you plan to use it in a script, first make sure it exists:
+<pre>    mkdir -p "$fm_cmd_data"</pre>
+
+<p>SpaceFM does not automatically store any files in this directory - it is entirely up to you or the plugin creator how it is used.  To see what persistent data a plugin is storing in your home folder, browse Data.
+
+<p>All files in the data directory are deleted when the command or plugin is removed!
+
+<!-- # Browse|Plugin #browse-plugin -->
+The Plugin browse item will only be enabled when in the design menu of a <a href="#plugins">plugin</a>.  It takes you to the top level of a plugin's directories, so you can browse all its files (except its <a href="#designmode-command-browse-data">data directory</a>, which is stored in the user's home folder).  The plugin directory will be something like:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;/usr/share/spacefm/plugins/PLUGIN-FILENAME/<br>
+(/usr/local may also be used depending on install location)
+
+<p>Plugins may contain multiple commands (a submenu plugin), so this directory may have several command directories within it, but will at least contain one command directory as well as a 'plugin' file which defines the contents of the plugin.  If the plugin is a command <a href="#designmode-command-line">line</a>, the command line will be listed in the 'plugin' file.  Review the contents of this file, but it should NOT be edited.
+
+<p>Before using a plugin obtained from another user, browse Plugin to make sure you understand what each command does.  Keep in mind that plugins can do anything on your system which the current user is permitted to do.
+
+<p>The plugin directory contained a mirror copy of the contents of the <a href="#plugins-creationandfiles-file">plugin archive file</a> (eg Example.spacefm-plugin.tar.gz) when the plugin was installed.  Its contents will not change unless the directory contents are modified by the root user.
+
+<!-- # Line -->
+Any one of the Line, Script, or Custom options may be selected.  This determines the type of command.  By default, new commands will have Line set.
+
+<p>When Line is selected, the command is executed as a single command line.  To edit the command line, right-click on the menu item and select Command|Edit.
+
+<p>The command line may contain a program name to be run or any single-line command which you would normally enter at a bash command prompt.  When run, your command line is inserted into a temporary bash script, so you can do anything in this line which is valid in bash.
+
+<p>In addition, you may use the following substitution variables in your command line:
+<center><table width="70%">
+	<tr>
+		<td>%F</td> <td>selected files</td>
+	</tr><tr>
+		<td>%f</td> <td>first selected file</td>
+	</tr><tr>
+		<td>%N</td>	<td>selected filenames</td>
+	</tr><tr>
+		<td>%n</td> <td>first selected filename</td>
+	</tr><tr>
+		<td>%d</td>	<td>current directory</td>
+	</tr><tr>
+		<td>%v</td>	<td>selected device (eg /dev/sda1)</td>
+	</tr><tr>
+		<td>%m</td>	<td>device mount point (eg /media/dvd)</td>
+	</tr><tr>
+		<td>%l</td> <td>device label</td>
+	</tr><tr>
+		<td>%b</td>	<td>selected bookmark</td>
+	</tr><tr>
+		<td>%t</td>	<td>selected task directory</td>
+	</tr><tr>
+		<td>%p</td> <td>task pid</td>
+	</tr><tr>
+		<td>%a</td>	<td>menu item value</td>
+	</tr>
+</table></center>
+
+<p>For example, to calculate the MD5 sum of all selected filenames, use this command line:
+<pre>    md5sum %N</pre>
+
+<p>Before your command is run, the substitution variables will be replaced with their current values.  Do NOT place quotes around substitution variables - they will be quoted automatically when required.
+
+<p>Bash variables, described below in <a href="#designmode-command-script">Script</a>, can also be used in command lines (bash variables SHOULD in general be "double quoted").
+
+<p>To experiment with variables, use the echo command to simply print their values.  For example, the following command line will print the current directory:
+<pre>    echo %d</pre>
+
+<p>Command lines can also contain single-line bash scripts containing multiple commands.  For example, this command line will print the currect directory and the first selected file path:
+<pre>    echo "Current directory:" %d ; echo "First file:" %f</pre>
+
+<p>This command line will print the current time, once per second, for ten seconds, then stop:
+<pre>    while (( x < 10 )); do date; sleep 1; (( x++ )); done</pre>
+
+<p>Environment variables can also be included.  For example, to run claws-mail using a custom DISPLAY variable:
+<pre>    DISPLAY=:1 claws-mail</pre>
+
+<!-- # Script -->
+Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  Select Command|Script, and a bash script will be generated and opened in your configured editor.  You can simply add your commands to this script and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-command-edit">Command|Edit</a> from the design menu to access the script of any custom command.
+
+<p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  See the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for more information.
+
+<p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.  Scroll to the end of the command script to see help on what bash variables are available for use.  
+
+<p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
+<pre>    md5sum "${fm_filenames[@]}"</pre>
+
+<p>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
+
+<p>If your script needs to save changing, persistent data to the user's home folder (to keep track of user preferences, for example), the <a href="#designmode-command-browse-data">data directory</a> should be used ("$fm_cmd_data").  Because this directory may not already exist, always run this command before using it:
+<pre>    mkdir -p "$fm_cmd_dir"</pre>
+
+<p>If your script needs a temporary directory to work in, you can create one automatically using this convenience function:
+<pre>    tmp="$(fm_new_tmp)"</pre>
+
+<p>Your new, empty temporary directory will be created, and its path will be placed in $tmp by the above command.  Before the end of your script, be sure to clean up by destroying the temporary directory:
+<pre>    rm -rf "$tmp"</pre>
+
+<p>To see additional variables and example scripts, scroll to the end of a command script.
+
+<p>When you export a command, the command script and any files in the command directory are included in the plugin file.  When you remove a command, all of these files AND the data directory are deleted!
+
+<!-- # Custom -->
+In addition to Line and Script, a command's type may also be set to Custom.  This will allow you to select any executable file (including a script) or desktop file to be run by this command.  When using Custom, you cannot directly modify the command line used to run the program or script.
+
+<p>When the Custom target is an executable, no filenames are passed to the program, so integration with the file browser is limited.  If the Custom target is a desktop file, and the Exec line of the file contains substitution variables %f, %F, %d, or %D, these will be used to pass selected files or the current directory to the program as command line arguments.
+
+<p>One use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
+
+<!-- # Run In Terminal #terminal -->
+Regardless of what type a custom command is (line, script, or custom), there are various ways it can be run when clicked.  If your command is a command-line program which produces much output, or you need to be able to interact with it (enter input, etc), check the Run In Terminal option in the Command submenu.
+
+<p>Each time your command is run, a terminal will be opened and the command will be run within it.  The terminal program used is configured globally in View|Preferences|Advanced|Terminal.
+
+<p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  (If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  However, normally it is not useful to run the terminal window as a task, as nothing will be shown in the output monitor.)
+
+<!-- # Keep Terminal #keep -->
+Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output then exit.  Without Keep Terminal, the terminal window would close before you had a chance to read the output.  
+
+<p>When Keep Terminal is enabled, after the command finishes you will be presented with a message like:
+<pre><i>&nbsp;&nbsp;[ Finished ]  Press Enter to close or s + Enter for a shell:</i></pre>
+
+<p>To close the window, simply press Enter.  If you want to enter an interactive bash shell, press s then Enter.  When finished with the shell, type 'exit'.
+
+<p>With other programs or commands, it is not useful for the terminal to be held open after the command has finished.  For these commands, uncheck Keep Terminal.
+
+<!-- # Run As User #user -->
+Run As User opens a dialog which allows you to enter a username.  When the command is run, your configured terminal or graphical su program will be used to run the command as this username, instead of as the current SpaceFM user.  Depending on the su program used, you will be prompted to enter either the user's password or root's password.
+
+<p>To run a command as root, "root" may be entered as the Run As User username.  However, running commands as root in this way is generally NOT recommended.  Because the command line or script is generally saved with normal user permissions, as well as the SpaceFM session file which contains settings for the command, you are running a command which is not protected by root, as root.  This means that any intrusion into your normal user account could lead to this command's contents being modified.  You may then run this command as root not realizing it has been modified, which may compromise your system security at the root level.
+
+<p>To run commands more safely as root, consider exporting the command and installing it as a plugin.  Plugins enjoy root protection from modification, so when they are run as root, you have more assurance that they have not been tampered with.
+
+<p>Another option is to run SpaceFM itself as root when needed (select File|Root Window).  In this way, all commands and settings are stored in root's home (/root/.config/spacefm), and are protected by root.  Yet running SpaceFM as root puts much power at your fingertips - accidentally deleting a file or folder may render your system unusable!  When run as root, everything you do in the file browser is done as root, including opening applications.  At the very least, be sure to have an up-to-date system backup if running SpaceFM as root.  It is up to you to evaluate this option for your purposes.
+
+<p>When running a custom command as another non-root user, depending on the permissions of your SpaceFM config and scripts directories, this user may not have permission to access the command directory, including the command script.  To avoid this limitation, you can use a command line, or use a script which is in a mutually accessible directory.
+
+<p>To run a command as the current user, simply leave the Run As User dialog box empty and click OK.
+
+<!-- # Run As Task #task -->
+Run As Task, which is enabled by default for new commands, changes several aspects of how your command is run.  If Run As Task is UNchecked, the command is run <i>asynchronously</i> - it is run and forgotten by SpaceFM.  This is useful for running a program such as Firefox, for example.  SpaceFM doesn't need to wait for Firefox to finish or monitor its output - it can be run and forgotten.  For commands which simply start applications or produce no output, you may want to uncheck Run As Task.
+
+<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's task manager will monitor the task, and if the task runs for longer than about one half second, the task manager will auto-show and will add the task to the running tasks list.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
+
+<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see Popup options below for details.)  
+
+<p>SpaceFM's output monitor is designed to display small amounts of text, to be used for monitoring the output of commands as they run.  However, the output monitor is not a terminal and cannot handle large amounts of fast text, nor does it allow you to enter input.  If your command produces large amounts of text quickly or requires interaction, you will need to use Run In Terminal instead.  (If the output monitor sees hundreds of lines of text in less than a second or so, it will close the output channels, which may cause the command to terminate.)
+
+<p>To stop a task prematurely, raise the output monitor and click the Stop button, or right-click on the task in the tasks list and select 'Stop Task'.  When SpaceFM stops a task, it sends the process and all its child processes a QUIT signal, followed several seconds later by KILL signals.  If the process was run as another user, you will be prompted to enter the user's password (or root's password) again to stop the task.
+
+<p>When the <a href="#designmode-command-terminal">Run In Terminal</a> option is checked, the Run As Task option will be unchecked automatically as a convenience.  Although not normally useful, it is possible to use these options together (just check Run As Task again after checking Run In Terminal).  When both are checked, the terminal window itself is run as a task, the output monitor will generally be empty, and errors may not be detected.  Mostly this is useful only for monitoring when the command has finished (when the terminal window closes, it will be removed from the tasks list).
+
+<!-- # Popup Task #popup -->
+The Popup Task/Error/Output and Scroll options are only enabled if Run As Task is checked.  If Popup Task is checked, the output monitor dialog for the task will be raised as soon as the task is added to the tasks list, even if no output has occured.  The output monitor will not be shown if the task completes in less than about one half second.
+
+<p>Use Popup Task if you want a popup anytime the task runs for more than a moment.  When the task finishes, the popup will remain, allowing you to review any output.  You can also close the monitor prematurely while the task is still running by clicking the Close button - the task will continue running in the tasks list.
+
+<p>Note that the global task manager settings found in View|Tasks|Popups take precedence.  If Popup All Tasks is checked, the task will popup even if the command's Popup Task option is unchecked.
+
+<p>By default, Popup Task is unchecked in new commands.
+
+<!-- # Popup Error #poperr -->
+If Popup Error is checked and the exit status of your command is not zero, the output monitor dialog will be raised to show the error.  Popup Error only has an effect at the moment the command finishes.  If unchecked, the exit status is ignored.
+
+<p>Popup Error provides a convenient way to get feedback on the success of your command.  When the command finishes successfully it will simply be removed from the tasks list.  However, if an error occurs then the popup will be raised.
+
+<p>Even if your command does not produce a usuable exit status, you can terminate your command line or script with a non-zero exit status to trigger the error popup.  For example:
+<pre>    if [ ! -e file.output ]; then exit 1; fi</pre>
+(If the file 'file.output' does not exist, then exit with exit status 1, triggering an error popup if Popup Error is checked.)
+
+<p>To see another example, scroll to the end of a command script:
+<pre>    # Script Example 3:
+
+    # Copy selected files to panel 2
+      # make sure panel 2 is visible ?
+      # and files are selected ?
+      # and current panel isn't 2 ?
+    if [ "${fm_pwd_panel[2]}" != "" ] \
+                && [ "${fm_files[0]}" != "" ] \
+                && [ "$fm_panel" != 2 ]; then
+        cp "${fm_files[@]}" "${fm_pwd_panel[2]}"
+    else
+        echo "Can't copy to panel 2"
+        exit 1    # shows error if 'Popup Error' enabled
+    fi</pre>
+
+<p>By default, Popup Error is checked in new commands.
+
+<!-- # Popup Output #popout -->
+If Popup Output is checked, the output monitor will be shown the instant output is detected (even if the task runs so quickly that it is not shown in the tasks list).  If you close the monitor, it will be raised again any time additional output occurs.
+
+<p>Popup Output can be used to alert you when your task has produced output.  By default, it is checked in new commands.
+
+<!-- # Scroll -->
+The Scroll option, which is checked by default for new commands, determines the auto-scroll behavior of the output monitor.  If checked, the monitor will automatically scroll down to the end of the output (unless the user has moved the scrollbar up from the bottom position).  If unchecked, the output will not automatically scroll to the end.
+
+<p>With some commands, it's useful to read the output from the top and scroll down manually.  For example, if you right-click on a device in the Devices list and select Properties, you will see a non-auto-scrolling output monitor - the cursor stays at the very beginning of the output so you can read it.
+
+<p>With other commands, you're most interested in the end of the output, so you want the output monitor to behave like a terminal and scroll to the end as new output is added.  For example, errors usually appear at the end, so if you want to know why the command stopped prematurely, you're most interested in the end of the output.  When you want the output monitor to behave like a terminal in this regard, check Scroll.
+
+<p>Even if Scroll is checked, you can always manually move the scrollbar up to inhibit auto-scrolling.
+
+
+<!-- @Design Mode @Toolbars -->
+
+<p>SpaceFM includes two primary toolbars: the main Toolbar (which is divided into a Left Toolbar, Path Bar, and Right Toolbar) and a Side Toolbar.  To show or hide the Toolbar or Side Toolbar, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
+
+<p>Toolbars can also be customized using <a href="#designmode">Design Mode</a>.  Although you cannot right-click directly on a toolbar, each toolbar has a config menu for the purpose of customization.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
+
+<p>To access a toolbar's config menu, click the leftmost icon on the toolbar (at the far left of the panel).  The 'Left Toolbar' config menu is used to customize the toolbar to the left of the Path Bar, and 'Right Toolbar' is used to customize the toolbar to the right.  The 'Side Toolbar' menu configures the Side Toolbar.
+
+<p>In these menus, Design Mode works as always - use right-click or F2 to open the design menu for any highlighted item.  But there are a few differences in these menus.
+
+<p>Toolbar config menus show <i>all</i> available tool items, with an asterisk (*) next to the name of currently shown items, and no asterisk next to the name of hidden items.  When opening the design menu on a toolbar config menu item, the topmost item will be <a href="#designmode-designmenu-show">Show</a>.  If checked, the tool item will be shown in the toolbar.  If unchecked, the tool item will be hidden.
+
+<p>You can add custom commands to these menus (and thus to the toolbars), but you cannot add submenus.  There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.
+
+<p>Commands can also be <a href="#designmode-designmenu-paste">pasted</a> to and <a href="#designmode-designmenu-copy">copied</a> from the toolbar config menus.
+
+
+<!-- @Design Mode @Shortcuts -->
+
+<p>In addition to right-clicking on a menu item and using the <a href="file:///data/tmp/spacefm-manual-en.html#designmode-designmenu">design menu</a>, design mode keyboard and mouse shortcuts are also available.  These shortcuts are NOT required - all you really need to know is 'right-click opens the design menu'.
+
+<p>To use these shortcuts, highlight the menu item (hover your mouse cursor over it, or use the keyboard arrows to highlight the menu item), then use the key or mouse combo shown below.  These shortcuts are only available for use when a menu is open.
+
+<br><br><br>
+<table border=1 cellpadding="5"><caption><b>Design Mode Shortcuts</b></caption>
+<tr>
+	<th>Action</th>
+	<th>Key Combo</th>
+	<th>Mouse Combo</th>
+</tr>
+<tr>
+	<td>Design Menu</td>
+	<td>F2</td>
+	<td>Right</td>
+</tr>
+<tr>
+	<td>Cut</td>
+	<td>Ctrl + X</td>
+	<td>Alt + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Copy</td>
+	<td>Ctrl + C</td>
+	<td>Ctrl + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Paste</td>
+	<td>Ctrl + V</td>
+	<td>Shift + Left-or-Right</td>
+</tr>
+<tr>
+	<td>New</td>
+	<td>Insert</td>
+	<td>Ctrl + Shift + Left-or-Right</td>
+</tr>
+<tr>
+	<td>Edit Command</td>
+	<td>F4 or Ctrl + E</td>
+	<td>Middle</td>
+</tr>
+<tr>
+	<td>Help</td>
+	<td>F1</td>
+	<td>Alt + Middle</td>
+</tr>
+<tr>
+	<td>Set Key</td>
+	<td>Ctrl + K</td>
+	<td>Ctrl + Middle</td>
+</tr>
+<tr>
+	<td>Set Icon</td>
+	<td>Ctrl + I</td>
+	<td>Shift + Middle</td>
+</tr>
+<tr>
+	<td>Remove</td>
+	<td>Delete</td>
+	<td>Ctrl + Shift + Middle</td>
+</tr>
+<tr>
+	<td>Context</td>
+	<td>F3</td>
+	<td>Ctrl + Alt + Middle</td>
+</tr>
+</table>
+<br>
+
+<p>These shortcuts will also work after the design menu has been shown.
+
+<p><b>The F1 keyboard shortcut is special</b> in that it can also be used to show help on items in the design menu itself.  Highlight a design menu item (such as Export) and press F1.
+
+<p>If the shortcut action is not available for the current menu item (for example, performing Remove on a built-in command), the design menu will be opened instead.
+
+<p>NOTE:  Some window managers may be configured to use some of these mouse combos for other purposes.  For these to work within SpaceFM, you may need to disable them in your window manager.
+
+
+<!-- @Plugins @Introduction -->
+
+<p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom command can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.
+
+<p>Eventually, some plugins will be included with SpaceFM.  Additionally, user-contributed plugins can be shared and obtained in the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">SpaceFM Wiki</a>.
+
+<p><b>It is your responsibility to evaluate the safety and applicability to your purposes of all plugins.</b>
+
+
+<!-- @Plugins @Install -->
+
+<p>When a plugin is installed, it is added to the Plugins menu where it gains root protection (it cannot be modified by normal users) and becomes accessible to all users of SpaceFM on your system.  Installing a plugin helps protect the plugin's contents from tampering, but it also limits what you can change.
+
+<p>To install a plugin using a <a href="#plugins-creationandfiles-file">plugin file</a>, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
+
+<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
+
+<p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the design menu, or highlight the menu item and press F1.
+
+<p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus these changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
+
+<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the design menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom command.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
+
+<p>You can also <a href="#designmode-designmenu-export">export</a> an installed plugin.  Unless you made changes to the plugin directory as root, the exported plugin file will essentially be a copy of the original plugin file.
+
+<p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
+
+<!-- @Plugins @Copy -->
+
+<p>Instead of installing a plugin, you can import it into any SpaceFM menu which supports design mode.  When imported in this way, the plugin loses root protection and becomes a normal custom command.
+
+<p>To do so, use Plugins|Copy|File to import a plugin file, or Plugins|Copy|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the design menu to paste the command into any location in any supported menu.  As with any commands, you cannot paste the command into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
+
+<p>If option Plugins|Copy|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
+
+<p>IMPORTANT: Due to a problem in SpaceFM versions 0.7.2 and prior, copying an installed plugin to another menu may not copy all required plugin files. To avoid this problem, run the following command (this only needs to be done one time, and only when using SpaceFM <= 0.7.2):
+<pre>    mkdir -p ~/.config/spacefm/scripts</pre>
+
+<!-- @Plugins @Uninstall -->
+
+<p>To uninstall a plugin, use <a href="#designmode-designmenu-remove">Remove</a> on the design menu.  You will be prompted for the root password, and all files and settings associated with the plugin will be removed.
+
+<p>If the installed plugin is a <a href="#designmode-designmenu-submenu">submenu</a> plugin, you can only remove the top submenu of the plugin.  You cannot remove individual items from within it.
+
+<!-- @Plugins @Creation And Files -->
+
+<p>The best way to create a plugin, whether for your own use or for others, is to <a href="#designmode-designmenu-new">create a custom command</a>.  Develop the command to work the way you want, and set any design menu options for how the command is best run.  When you're ready to create the plugin, simply use <a href="#designmode-designmenu-export">Export</a> on the <a href="#designmode-designmenu">design menu</a> to save the command to a plugin file.
+
+<p>A plugin may also contain multiple related commands and submenus of commands.  To create such a plugin, simply export a <a href="#designmode-designmenu-submenu">submenu</a>.
+
+<p>Exporting commands as plugins also provides a way to back up commands.  By exporting it to a plugin file, your custom command becomes portable and self-contained - you can always use the plugin file to import it back into any SpaceFM session, either as a normal custom command, or as an installed plugin.
+
+<!-- # Plugin File #file -->
+The SpaceFM plugin file uses a simple and open format.  The plugin file is simply a tar.gz archive.  This allows you to open any plugin file and examine its contents using your text editor.  With the possible exception of any extra files included within the plugin, all files are plain text files.  When creating plugins, try to honor this design by using open, accessible text file formats.
+
+<p>A plugin file, such as Example.spacefm-plugin.tar.gz, contains a single file named 'plugin' which SpaceFM uses to define the contents of the plugin.  This file is plain text and can be viewed in your editor, but should NOT be edited.  In addition, plugin files contain one or more command directories, one for each command in the plugin.  Plugins may be a single command, or they may be a single submenu which contains an unlimited number of commands and submenus.  Thus a set of commands with related functions can be distributed as a single submenu plugin.  (To create a submenu plugin, simply export a <a href="#designmode-designmenu-submenu">submenu</a>.)
+
+<p>TIP:  If you have a larger plugin, you can manually convert it to tar.xz format and SpaceFM will accept it (only tar.gz or tar.xz).
+
+<!-- # Extra Files #extra -->
+Additional files required by your plugin can be added to the command directory, accessed in the design menu via <a href="#designmode-command-browse-files">Command|Browse|Files</a>.  When the command is <a href="#designmode-designmenu-export">exported</a>, these files will be included in the <a href="#plugins-creationandfiles-file">plugin file</a>.  The <a href="#designmode-command-script">command script</a> (exec.sh) is located in the command directory.  Files in the command directory should be considered read-only (once your plugin is <a href="#plugins-install">installed</a>, your script will probably not have permission to modify them).
+
+<p>You may also add a file named 'icon'.  SpaceFM will automatically display this icon for the plugin if no other icon is <a href="#designmode-designmenu-icon">set in the design menu</a>.  Small icons work best, as your icon may not be resized.  If you don't want to include a custom 'icon' file, you can also simply set a standard icon for the command using the design menu.  Users can also override your default icon in this way.  Keep in mind that the user may be using a different icon theme than you are, so try to stick with common icon names.  Using an absolute path for the icon is not recommended.
+
+<p>In addition, adding a README file to the command directory is recommended.  This file will be created automatically if you select <a href="#designmode-designmenu-help">Help</a> from the design menu.  This file explains what your plugin does, how to use it, and may include an email address, website, license terms, etc.
+
+<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-command-browse-plugin">Command|Browse|Plugin</a> from the design menu.  One limitation to using this directory is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.
+
+<!-- # Data Files #data -->
+If necessary, your plugin can maintain changing, persistent data files in the user's home folder to store user preferences and other changing data.  Your script should store these files only in the data directory ("$fm_cmd_data", accessed via <a href="#designmode-command-browse-data">Command|Browse|Data</a>).  Data files are NOT included when the command or plugin is exported, and they are deleted when the command or plugin is removed.  Each command or plugin has its own data directory.  If you need to populate the data directory with initial files, consider making your script copy them from the command directory when it is first run.  Because it is located in the user's home folder, you should always document what files you are storing in the data directory.  Most plugins do not require any data files.
+
+<p>Remember that the data directory may not exist, so make sure your script always creates it before attempting to use it.  Place this command in the initial part of your script:
+<pre>    mkdir -p "$fm_cmd_data"</pre>
+
+<p>Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.  For example, some entries may be included in the plugin file even if they are currently disabled in the command.
+
+
+<!-- @Devices @Introduction -->
+
+<p>SpaceFM includes a programmable udisks-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
+
+<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udisks executable.  SpaceFM interfaces with udisks using text streams.  This makes it resilient to library/API changes and bugs, and also makes it easier for the user to diagnose problems.  SpaceFM manipulates devices using the udisks command line interface, so you can run these same commands yourself to troubleshoot behavior, or create your own custom commands to manipulate devices.  Although an advanced topic, udisks can also be replaced on your system with a script or wrapper script which emulates udisks behavior.  As long as its text responses are compatible, SpaceFM will use it instead of udisks.
+
+<p>SpaceFM does not configure udisks on your system.  It merely runs the udisks executable.  If you receive 'Not Authorized' or other similar errors when mounting, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.
+
+<p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udisks version.  It can only be used to manually mount and unmount devices.  Thus the udisks version is recommended.  This manual deals exclusively with the udisks device manager.
+
+<p>SpaceFM can also be used without udisks or HAL installed.  However, all device manager functions will be disabled (the Devices list will always be empty, and no device events will be detected or acted upon).
+
+<p>To have the device manager always running, responding to events even while no SpaceFM windows are open, run SpaceFM as a  <a href="#invocation-daemonmode">daemon</a> or <a href="#invocation-desktopmanager">desktop manager</a>.
+
+<p>When testing the device manager, it may be useful to run the initial instance of SpaceFM in a terminal, so that you can see additional diagnostic output as its running.  Just open a terminal window and run <code>spacefm</code>.
+
+
+<!-- @Devices @List -->
+
+<p>Each panel or tab in SpaceFM can display a Devices list to show devices and permit configuration of the underlying volume monitor.  A Devices list is your interface to the volume monitor's information and actions.  Even if multiple Devices lists are displayed or multiple SpaceFM windows are open, only one volume monitor will be running.
+
+<p>To show or hide a Devices list in each panel, right-click on the file list and check or uncheck option View|Devices.  You can also show or hide the list using the 'Devices' toggle tool item on a toolbar.
+
+<p>By default, <b>the Devices list will display only removable and optical devices which contain media</b>.  If your Devices list is empty, this means there are no removable or optical devices with media, or udisks is not installed or is not working properly on your system.  To show additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
+
+
+<!-- @Devices @Devices Menu -->
+
+<p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the design menu.
+
+<p>The Devices context menu includes:
+
+<!-- #Remove -->
+The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the task manager will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the task manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
+
+<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
+
+<p>If you click Remove and nothing seems to happen, this also indicates the device is ready to be removed.
+
+<p>When a device is removed or unmounted, any tabs showing directories on the device may be automatically closed.
+
+<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting Remove.  Thus to quickly remove a device, just middle-click on it.
+
+<!-- #Reload -->
+Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
+
+
+<!-- #Unmount -->
+Unmount will simply run a udisks unmount command on the selected device.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
+
+<p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
+<pre>    udisks --unmount /dev/sdX</pre>
+
+<p>For troubleshooting, if you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to access the device, the device is in use, or udisks is not properly installed and authorized.
+
+<!-- #Sync -->
+Sync merely runs a sync command to commit all data to all devices.  If the command takes longer than about one half second, the task manager will auto-show and the Sync command will be listed until finished.
+
+<p>It is valuable to sync before removing or unmounting devices.  If you use the Remove or Reload menu items, a sync is performed automatically.
+
+<!-- #Open -->
+Selecting Open will cause the selected device to be mounted if it is not already mounted, and then the mount point directory of the device will be opened in the current tab.  If an error occurs, the error will be shown.  If the command takes longer than about one half second, the task manager will auto-show and the Open command will be listed until finished.
+
+<p>You can also open a device by simply left-clicking on it, but there are several differences.  When left-clicking on a device, no error will be shown if the mount fails.  Your indication that the mount failed is that the directory is not opened.  To see the details of the error, you must right-click on the device and select Open.  Also, the behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
+
+<p>To mount, SpaceFM runs a udisks mount command on the selected device.  Udisks determines the mount point, usually an automatically created subfolder in /media.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
+
+<p>If the device has an entry in /etc/fstab, udisks will use that mount point instead, and will not remove it when unmounting.
+
+<p>The device will be mounted using SpaceFM's Mount Options.  If the device has an fstab entry, options specified there may take precedence.  Udisks may also automatically add or change some mount options.
+
+<!-- #Tab -->
+Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
+
+<!-- #Mount -->
+Mount will simply run a udisks mount command on the selected device.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
+
+<p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
+<pre>    udisks --mount /dev/sdX</pre>
+
+<p>If you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to mount the device, the device is in use, or udisks is not properly installed and authorized.
+
+<!-- #Re/mount -->
+The Re/mount item is used to mount or remount a device using specific mount options.  A dialog will open asking you for the mount options to be used.  If mounted, the device will first be unmounted.  Then the device will be mounted using the specified options.
+
+<p>Note that udisks cannot perform a true remount - the device will be unmounted and mounted.
+
+<p>Re/mount accepts extended mount options, as detailed in <a href="#devices-settings-opts">Mount Options</a>.
+
+<!-- #Root -->
+The Root submenu allows you to perform actions on a device as root.  Dialog messages should be read carefully when using any command in the Root submenu, because actions performed as root can affect any aspect of your system.  SpaceFM will explain what is about to happen and will let you examine the final command line before it is executed.
+
+<p>For details, see the <a href="#devices-root">Root</a> section below.
+
+<!-- #Settings -->
+The Settings submenu allows you to (globally) configure the appearance of the Devices list, controlling what devices are listed, how they are listed, what icons are used, etc., and also allows you to set the volume monitor to run commands on various events, such as device insertions, etc.
+
+<p>For details, see the <a href="#devices-settings">Settings</a> section below.
+
+<!-- #Properties -->
+The Properties item will gather and show information about the currently selected device.
+
+<p>If mounted, any mtab lines related to the device will be shown in DEVICE, showing you how and where the device is mounted.
+
+<p>USAGE will show information about the filesystem on the device.
+
+<p>If the device has any related lines in the /etc/fstab file, these will be listed in FSTAB.  These may include lines which are disabled (# comments).
+
+<p>In the INFO section, the device's UUID will be listed if known, as well as detailed information from udisks on the device's properties.
+
+<p>The PROCESSES section, shown for mounted devices, uses lsof to display any processes which are using the device.  Sometimes when unmounting a device, you will receive an error that the device is in use.  You can check this processes list to see what is holding the device open.
+
+
+<!-- @Devices @Root -->
+<p>The Root submenu allows you to perform actions on a device as root.  When performing commands as root, SpaceFM will use your configured Terminal SU or Graphical SU program to run the command.
+
+<p>When most items on this menu are selected, a dialog will open showing you the exact command to be run, and allowing you to edit it.  If SpaceFM knows how to perform the function on the selected device type, a default command will already be present.
+
+<p>In order to edit the default command, you must first depress the Edit button.  To restore the command to its default, depress Edit and then press Default.
+
+<p>Most items accept the substitution variable %v in their command, which is used to insert the device file (eg /dev/sda2).  Some commands accept additional substitution variables.  These will be displayed in the dialog's instructions.
+
+<p>When performing commands which result in data loss, such as format, the exact command line to be run will be displayed in the terminal after you enter the root password.  You will need to type the word 'yes' and press Enter to execute the command.
+
+<p>The following functions are included:
+
+<!-- #Unmount -->
+By default, SpaceFM will use udisks to unmount as root, but you can change this to any command, such as umount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).
+
+<!-- #Mount -->
+Mount works similarly to Unmount, except that the selected device is mounted as root.
+
+<!-- #Label -->
+Label is used to change the volume label of a device.  First, a dialog will open asking you to enter the volume label.  The device's current volume label, if any, will be entered as default.  To unset a volume label, leave the entry blank.
+
+<p>Next the command used to change the volume label on this filesystem type will be shown.  If SpaceFM doesn't know how to change the volume label for this type, the command will be blank and you will have to supply your own.  This dialog remembers the change label command used for each filesystem type.
+
+<p>When you click OK, your Graphical SU program will be used to run the command (no terminal will open).
+
+<p>IMPORTANT:  SpaceFM will display a warning in both dialogs if the device is currently mounted.  Although some filesystem types permit it, it is generally good practice to unmount a volume before changing its label.
+
+<!-- #Check -->
+Check runs a filesystem check on the device, using fsck by default.  The command dialog remembers the check command used for each filesystem type.
+
+<p>Check may only be used on unmounted filesystems.
+
+<!-- #Format -->
+The Format submenu allows you to format or simply erase a device or partition.  Although Format will work on an entire device, it is up to you to decide what device or device partition you want to format.
+
+<p>The submenu contains common filesystem types to choose from.  To format, select the type and review or edit the command in the dialog.  This dialog remembers the format command used for each filesystem type.  When you click OK, the command will be run in a terminal.  After entering the root password, you will be shown the exact command to be run, and you must type the word 'yes' and press Enter to execute it.
+
+<p>The format submenu also contain 'zero' and 'urandom'.  If selected, the device will be overwritten with zeroes or random values to completely erase it.  As with filesystem formats, you can edit the particular command used.  Edit with care!
+
+<p>To test out the format function without actually formatting anything, try using format on a DVD drive, or an empty drive.  The entire procedure will be the same - you will merely receive an error when the command is finally executed.  This will allow you to safely review how SpaceFM conducts a format.  Just be sure you know which device is the DVD or empty drive!
+
+<!-- #Backup|FSArchiver #fsarc -->
+The Backup submenu allows you to perform a backup of a selected device or MBR.  There are several supported backup types.
+
+<p>FSArchiver (<a href="http://www.fsarchiver.org/">website</a>) is a modern program which creates an archive of a filesystem.  It is similar to tar, except that the archive includes checksums, can be restored if corrupted, and includes additional information.
+
+<p>One disadvantage to using FSArchiver is that unlike <a href="#devices-root-parti">Partimage</a>, the on disk locations of files will change when restored.  For most files this won't matter, but in the case of grub's stage files, moving them can cause the grub boot process to no longer work.  Thus if you restore a volume containing grub's files using an FSArchiver archive, you will then need to reinstall grub to the MBR (so that it knows accurately where it's files are - these locations are stored in the MBR's boot code).
+
+<p>An advantage to FSArchiver is that it supports more filesystem types than Partimage, including ext4 and btrfs, and several compression methods.  Other advantages include file exclusion, multi-thread compression, and encryption.  The data may also be restored to any partition large enough to hold it, regardless of the original partition's size.  FSArchiver is also currently maintained, while Partimage is no longer actively developed.  There are additional differences between Partimage and FSArchiver - see their websites for details.
+
+<p>By default, FSArchiver will backup unmounted volumes and volumes mounted read-only.  To backup a volume which is mounted read-write, you must add --allow-rw-mounted to the command.  This may create inconsistencies in the backup.  Run <code>man fsarchiver</code> for details.
+
+<p>To create an FSArchiver backup, right-click on a device and select Root|Backup|FSArchiver.  A file save dialog will open asking you to select a filename and location.  Keep in mind that the archive size may be 50% or more of the total data saved in the filesystem.  Choose a save location with ample space.
+
+<p>Next a command dialog will show you the FSArchiver command to be used, and allow you to edit it.  When you click OK, the command will be run immediately in a terminal.
+
+<!-- #Backup|Partimage #parti -->
+Although older than <a href="#devices-root-fsarc">FSArchiver</a>, Partimage (<a href="http://www.partimage.org/">website</a>) is still a valuable if simpler backup tool.  One advantage to Partimage is that the backup preserves the on disk locations of files, which means there is no grub MBR breakage.  However, Partimage does have some limitations when compared to FSArchiver:
+
+<ul>
+    <li>Partimage cannot be used to backup ext4 or btrfs filesystems.
+    <li>Partimage cannot be used to backup mounted filesystems.
+    <li>Partimage can only restore to a partition which is the same size or larger than the original partition, regardless of the actual amount of data in the archive.
+    <li>Archives have no internal checksums, so it is not possible to detect corruption (unless you manually create an MD5 sum and check it yourself, etc.)
+    <li>There is no built-in ability to encrypt an archive.
+</ul>
+
+There are additional differences between Partimage and FSArchiver - see their websites for details.
+
+<p>To create a Partimage backup, right-click on an unmounted device and select Root|Backup|Partimage.  A file save dialog will open asking you to select a filename and location.  Keep in mind that the archive size may be 50% or more of the total data saved in the filesystem.  Choose a save location with ample space.  Note that Partimage will add a '.000' volume extension to the name you select.
+
+<p>Next a command dialog will show you the Partimage command to be used, and allow you to edit it.  By default, the command will break the archive into archive volumes 4G in size.  This can be adjusted by carefully editing the command.  When you click OK, the command will be run immediately in a terminal.
+
+<!-- #Backup|MBR #mbr -->
+SpaceFM can also create a backup of a device's Master Boot Record (MBR).  This is a small backup (512 bytes) which contains the entire MBR.  (<A href="http://en.wikibooks.org/wiki/How_To_Backup_Operating_Systems#How_The_Computer_Boots_-_The_MBR_Explained">What Is The MBR?</a>)
+
+<p>After selecting Root|Backup|MBR, a file save dialog will open asking you to select a filename and location.  This is a very small backup file.  When you click OK, a terminal will open and the command will be executed immediately.  (It is not possible to edit the MBR backup command.)
+
+<!-- #Restore|From File #resfile -->
+To restore the contents of a device, partition, or MBR using a backup archive file, right-click on the target partition and select Root|Restore|From File. A choose file dialog will open for you to choose a backup file.  This may be any backup file created by SpaceFM, including an <a href="#devices-root-fsarc">FSArchiver</a>, <a href="#devices-root-parti">Partimage</a>, or <a href="#devices-root-mbr">MBR</a> archive file.  (If the file was not created by SpaceFM but uses one of these formats, it may be possible to use the file if the file is named appropriately.)
+
+<p>Next a dialog will show the restoration command to be used, and allow you to edit it.  When you click OK, a terminal will open prompting you for the root password.  Once entered, the exact command to be run will be shown.  You will need to type the word 'yes' and press Enter to execute it.
+
+<p>IMPORTANT:  Restoring data to a partition overwrites any existing filesystem.
+
+<p>After restoring from an FSArchiver backup, if the filesystem contains grub's files, you may need to reinstall grub to the MBR to restore normal boot behavior.  (Reinstalling grub is not handled by SpaceFM, and is outside the scope of this manual, but you can create a custom command to do so.)
+
+<p>When restoring an MBR, only the first 448 bytes of the MBR are restored.  This portion contains the boot code.  The remaining portion of the MBR contains the primary partition table.  This portion is NOT restored (it is generally not useful to do so, and in the case of an out of date backup, could cause extreme data loss).  However, the <a href="#devices-root-mbr">MBR backup file</a> created by SpaceFM does contain the full 512 byte MBR, so if you do want to restore the entire MBR, consult appropriate instructions such as <a href="http://en.wikibooks.org/wiki/How_To_Backup_Operating_Systems#MBR_Restoration">these</a>.
+
+<p>To practice restoring a file without making real changes, consider restoring to a DVD or empty drive as the target.  This will allow you to see the entire process, except that the final command will fail when executed.  Just be sure you know which device is your DVD or empty drive!
+
+<!-- #Restore|File Info #resinfo -->
+To examine the summary information in a backup file, select Root|Restore|File Info and select the backup file.
+
+<p>Restore|File Info makes no changes to the backup file or any device - it only displays information about the backup file.  It may need to run as root to do so.
+
+<!-- #Edit fstab #fstab -->
+Edit fstab is a convenience function which simply opens the /etc/fstab file as root using root's editor (configured in View|Preferences|Advanced).
+
+
+<!-- @Devices @Settings -->
+<p>The Settings submenu is your interface for controlling the appearance and behavior of the Devices list and volume monitor.  Options include:
+
+<!-- #Show|Internal Drives #internal -->
+By default, the Devices list will only show removable and optical drives, while hiding internal system drives.  If option Show|Internal Drives is checked, internal system drives will also be shown in the Devices list.  For the root user, option Show|Internal Drives is checked by default.
+
+<p>Internal drives are often treated differently by udisks.  You may not be able to mount or unmount them as a normal (non-root) user without making changes to /etc/fstab or to the udisks/policykit authorization rules.
+
+<p>Note that some external esata drives report themselves as internal, so they may not be shown unless Show|Internal Drives is checked.  Another solution with these drives is to enter an exception for them in <a href="#devices-settings-vol">Show|Volumes</a>.
+
+<!-- #Show|Empty Drives #empty -->
+By default, the Devices list will only show drives which contain media, and will hide empty drives.  If option Show|Empty Drives is checked, drives not containing media will also be shown.
+
+<p>Properties can still be obtained on empty drives, and you can use Remove or Reload to open or close the tray.
+
+<!-- #Show|Partition Tables #table -->
+By default, the Devices list will not show devices which contain partition tables, such as a whole device file (eg /dev/sda) which contains the primary partition table in its MBR, or a partition (eg /dev/sda4) which contains the extended partition table.  Normally you will not work with these device files so it is not useful to show them.  If you do want them shown, check option Show|Partition Tables.  If the device is internal, option Show|Internal Drives is also required.
+
+<p>IMPORTANT:  For some purposes, a whole device file, such as /dev/sda, designates not just the primary partition table, but also the entire device including partitions (/dev/sda1, /dev/sda2, etc.)  Thus if you format /dev/sda, for example, you will overwrite all partitions on the entire device.
+
+<p>However, in some cases a device uses no partitions, and the entire device has been formatted with a single filesystem.  In this case, the Devices list does not consider the whole device file a partition table, so option Show|Partition Tables will have no effect on it being shown.
+
+<p>The size displayed for a whole device file (eg /dev/sda) will generally be the size of the entire device (including all partitions), regardless of whether it contains a partition table or a filesystem.
+
+<p>Specifically, SpaceFM considers a device to be a partition table if its udisks properties include a 'partition table:' line, or the device is a partition of type 0x05 (extended partition).
+
+<!-- #Show|Ignore Udisks Hide #hide -->
+Some devices may have their udev property UDISKS_PRESENTATION_HIDE set to 1.  This is a hint to software that the device should be hidden.  By default, SpaceFM will honor these hints and hide such devices.  To ignore such hints, check option Show|Ignore Udisks Hide.
+
+<p>The hide policy of a device can be seen by selecting <a href="#devices-menu-properties">Properties</a> for the device and observing the value of 'presentation hide:' in the INFO section.
+
+<p>To ignore UDISKS_PRESENTATION_HIDE for a specific device, use <a href="#devices-settings-vol">Show|Volumes</a>.
+
+<!-- #Show|Volumes #vol -->
+The Show|Volumes dialog allows you to specify display exceptions for some devices.  When deciding whether to show or hide a device in the Devices list, SpaceFM will first consult the Show|Volumes list.  If the device is present, it will be shown or hidden based on its entry in this list.  All other show or hide settings will be ignored for this device.
+
+<p>One example use for Show|Volumes is to show an external esata drive which is erroneously identified by udisks as internal.  Even if option <a href="#devices-settings-internal">Show|Internal Drives</a> is unchecked, the drive <i>will</i> be shown if listed in Show|Volumes.
+
+<p>Show|Volumes opens a dialog which allows you to specify device files, volume labels, or device IDs in a space-separated list.  There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.
+
+<p>For example, to force showing device /dev/sdd1, include:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>/dev/sdd1
+
+<p>Or, to force hiding of /dev/sdd1, include:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>-</b>/dev/sdd1
+
+<p>The '/dev/' portion of the device file MUST be included.
+
+<p>Devices can also be identified by volume label.  For example, to always hide a device with volume label "Label With Space" use:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>-</b>Label With Space
+
+<p>DO NOT use quotes to enclose the label, even if it contains spaces.
+
+<p>Finally, a device's ID may be used:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>ata-OCZ-part4
+
+<p>For example, this list in Show|Volumes:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>/dev/sdd1 <b>-</b>Label With Space <b>+</b>ata-OCZ-part4
+
+<p>would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label "Label With Space" to be hidden.
+
+<!-- #Show|Display Name #name -->
+Display Name opens a dialog which allows you to edit the display name format used for the Devices list.  This controls how device names are displayed.
+
+<p>In addition to separator characters of your choice, the following substitution variables may be used:
+<center><table width="70%">
+	<tr>
+		<td>%v</td> <td>device filename (eg sdd1)</td>
+	</tr><tr>
+		<td>%s</td> <td>total size (eg 800G)</td>
+	</tr><tr>
+		<td>%t</td>	<td>fstype (eg ext4)</td>
+	</tr><tr>
+		<td>%l</td> <td>volume label (eg Label or [no media])</td>
+	</tr><tr>
+		<td>%m</td>	<td>mount point if mounted, or ---</td>
+	</tr><tr>
+		<td>%i</td>	<td>device ID</td>
+	</tr>
+</table></center>
+
+<p>A device in the list is guaranteed to have a unique, non-blank device filename - no two will be alike.  The other values may be duplicated or empty in some cases.
+
+<p>After you click OK, the display names of the currently shown devices will be updated.  The list is sorted alphabetically, ignoring spaces.
+
+<!-- #Auto Mount|Mount Optical #optical -->
+The Auto Mount submenu allows you to control the auto-mounting behavior of the volume monitor.  This determines what happens when a new device or new medium is inserted, whether a new tab is opened, and the auto-unmount behavior.
+
+<p>IMPORTANT:  If you have multiple auto-mount solutions installed and running, this can create confusing behavior.  For example, if you use devmon, then when using SpaceFM's auto-mount features, it is best to disable devmon.
+
+<p>If option Mount Optical is checked, optical devices such as CD/DVD drives will be automatically mounted when media is inserted, and at SpaceFM startup.
+
+<p>TIP: For additional information on what the volume monitor is doing, try running SpaceFM in a terminal.  Information on devices being auto-mounted will be printed to the terminal, and error messages generated by your command may be seen there as well.
+
+<!-- #Auto Mount|Mount Removable #remove -->
+If option Mount Removable is checked, the device will be automatically mounted whenever a removable device is inserted, and at SpaceFM startup.
+
+<!-- #Auto Mount|Ignore Udisks No Policy #nopolicy -->
+Some devices may have their udev property UDISKS_PRESENTATION_NOPOLICY set to 1.  This is a hint to software that the device should not be automatically mounted.  By default, SpaceFM will honor these hints and not auto-mount such devices.  To ignore such hints, check option Show|Ignore Udisks No Policy.
+
+<p>The policy of a device can be seen by selecting <a href="#devices-menu-properties">Properties</a> for the device and observing the value of 'presentation nopolicy:' in the INFO section.
+
+<p>To ignore UDISKS_PRESENTATION_NOPOLICY for a specific device, use <a href="#devices-settings-vol">Show|Volumes</a>.
+
+<!-- #Auto Mount|Mount Volumes #mvol -->
+The Mount Volumes list works similarly to the <a href="#devices-settings-vol">Show|Volumes</a> list, except that it determines what devices will or will not be auto-mounted (and auto-unmounted, if option <a href="#devices-settings-exit">Unmount On Exit</a> is checked).  When deciding whether to auto-mount a device, SpaceFM will first consult the Mount Volumes list.  If the device is present, it will or will not be auto-mounted based on its entry in this list.  All other auto-mount settings will be ignored for this device.
+
+<p>Mount Volumes opens a dialog which allows you to specify device files, volume labels, or device IDs in a space-separated list.  There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.
+
+<p>For example, to force auto-mounting of device /dev/sdc1, include:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>/dev/sdc1
+
+<p>Or, to inhibit auto-mounting of /dev/sdc1, include:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>-</b>/dev/sdc1
+
+<p>The '/dev/' portion of the device file MUST be included.
+
+<p>Devices can also be identified by volume label.  For example, to inhibit auto-mounting of a device with volume label "Label With Space" use:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>-</b>Label With Space
+
+<p>DO NOT use quotes to enclose the label, even if it contains spaces.
+
+<p>Finally, a device's ID may be used:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>ata-OCZ-part4
+
+<p>For example, this list in Mount Volumes:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;<b>+</b>/dev/sdc1 <b>-</b>Label With Space <b>+</b>ata-OCZ-part4
+
+<p>would cause /dev/sdc1 and the OCZ device to be auto-mounted, and the volume with label "Label With Space" to not be auto-mounted.
+
+<!-- #Auto Mount|Open Tab #tab -->
+If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new tab will be opened for the mount point directory of the device.  If unchecked, the mount point directory will not be automatically opened.
+
+<p>Note that the Open Tab option only affects what happens after a device is auto-mounted by SpaceFM.  It has no effect on devices mounted by other means, nor does it apply to devices mounted by user action within SpaceFM.
+
+<!-- #Auto Mount|Unmount On Exit #exit -->
+If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  This occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
+
+<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder will be left behind by udisks when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM unmounts devices on exit by default.
+
+<p>If you uncheck option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
+
+<!-- #Auto Run|On Mount #runm -->
+Auto Run|On Mount opens a dialog which allows you to set a command line to be run when a removable drive or optical data disc is auto-mounted by SpaceFM.  This command can be as simple as a program name to be run, or can be a one line bash script.  The following substitution variables may be used in the command line:
+<center><table width="70%">
+	<tr>
+		<td>%v</td> <td>device (eg /dev/sda1)</td>
+	</tr><tr>
+		<td>%l</td> <td>device volume label</td>
+	</tr><tr>
+		<td>%m</td>	<td>device mount point (eg /media/disk)</td>
+	</tr>
+</table></center>
+
+<p>Note:  When the command is run, %v, %l, and %m refer to the device being added or removed, not the device which is currently selected in the Devices list.
+  
+<p>For this command to be run, <b>the device must be auto-mounted by SpaceFM</b>.  It will not be run for devices mounted by other means, or for devices mounted by user action within SpaceFM.
+
+<p>The command will not be run for devices which are auto-mounted at SpaceFM's initial startup.  Thus Auto Run affects devices you add after SpaceFM is running.
+
+<p>For additional information on what the volume monitor is doing, try running SpaceFM in a terminal.  Information on devices being auto-mounted will be printed to the terminal, and error messages generated by your command may be seen there as well.
+
+<p>For example, to automatically add a mounted volume to traydevice, set the On Mount command line to:
+<pre>    traydevice %v</pre>
+
+<p>Another example:  To have notify-send alert you of new drive mounts:
+<pre>    notify-send --icon=block-device --urgency=low "Volume %l has been mounted"</pre>
+
+<!-- #Auto Run|On Audio CD #runa -->
+Similar to <a href="#devices-settings-runm">Auto Run|On Mount</a>, Auto Run|On Audio CD opens a dialog which allows you to set a command line to be run when an audio CD is inserted in a qualified optical device.
+
+<p>The command will be run only if: a) option <a href="#devices-settings-optical">Mount Optical</a> is checked, AND b) the device qualifies for auto-mounting based on <a href="#devices-settings-mvol">Mount Volumes</a> (ie it is not inhibited).
+
+<p>The command will not be run for media which is already inserted during SpaceFM's initial startup.  Thus Auto Run|On Audio CD affects media you insert after SpaceFM is running.
+
+<p>For example, to set an audio CD to automatically start playing in the vlc media player, set the On Audio CD command line to:
+<pre>    vlc --verbose=-1 cdda://%v</pre>
+
+<!-- #Auto Run|On Video DVD #runv -->
+Similar to <a href="#devices-settings-runa">Auto Run|On Audio CD</a>, Auto Run|On Video DVD opens a dialog which allows you to set a command line to be run when a video DVD is inserted in a qualified optical device.
+
+<p>The command will be run only if: a) the device is auto-mounted by SpaceFM, AND b) the device contains a video DVD.
+
+<p>The command will not be run for devices which are auto-mounted at SpaceFM's initial startup, nor will it be run for devices mounted by other means, nor for devices mounted by user action within SpaceFM.
+
+<p>For example, to set a video DVD to automatically start in the vlc media player, set the On Video DVD command line to:
+<pre>    vlc --verbose=-1 dvd://%v</pre>
+
+<!-- #Auto Run|On Insert #runi -->
+Auto Run|On Insert opens a dialog which allows you to set a command line to be run when any device is inserted.  This allows you to connect your command to the insertion (device added) event.
+
+<p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
+
+<p>Note that when inserting a single drive, your command may be run several times - once for each device file added.  For example, if you insert device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  A script can run 'udisks --show-info' to get current information on a device's status.
+
+<!-- #Auto Run|On Unmount #runu -->
+Auto Run|On Unmount opens a dialog which allows you to set a command line to be run when any device is unmounted by any means.
+
+<p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
+
+<p>For example, to automatically remove the drive from traydevice, set the On Unmount command line to:
+<pre>    pkill -f "traydevice %v"</pre>
+
+<!-- #Auto Run|On Remove #runr -->
+Auto Run|On Remove opens a dialog which allows you to set a command line to be run when any device is removed.  This allows you to connect your command to the removal event.
+
+<p>The device must be removed.  Ejection of media will not cause this command to be run.
+
+<p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
+
+<p>Note that when removing a single drive, your command may be run several times - once for each device file removed.  For example, if you remove device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  Note that when the command is run, %v equals the device file which has been removed, not the device file which is selected in the Devices list.
+
+<!-- #Mount Options #opts -->
+Mount Options opens a dialog which allows you to set default mount options to be used for all mounts, including auto-mounts.  In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
+
+<p>For example, this set of options:
+<br>&nbsp;&nbsp;&nbsp;&nbsp;nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4
+
+<p>will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.
+
+<p>Note that some options, such as nosuid, may be added by udisks even if you don't include them.  Also, options specified in fstab may take precedence.
+
+<!-- #Single Click #single -->
+If option Single Click is checked, the Devices list operates in single-click mode: a single left-click on a device will open it.  If unchecked, a single-click will only select a device, and a double-click is required to open it.
+
+<!-- #New Tab #newtab -->
+If option New Tab is checked, when a device is opened with a single or double click (depending on option <a href="#devices-settings-single">Single Click</a>), the mount point directory will be opened in a new tab in the current panel.  If unchecked, the mount point directory will be opened in the current tab.
+
+<!-- #Icon #icon -->
+The Icon submenu allows you to set custom icons to be displayed at the left of devices in the Devices list.  For example, to change the icon used for an internal, mounted drive, click Icon|Internal Mounted and enter the desired icon name.
+
+<p>By default, SpaceFM reuses a limited number of icons so that only stock GTK icons are required.  If you would like the device icons to better reflect the changing state of devices, it is valuable to customize these icons.
+
+<!-- #Font #font -->
+Font opens a font selection dialog which allows you to select the font to be used for the Devices list.  Select a font family, style, and size and click OK, or click Default to use your <a href="#invocation-gtkthemes">GTK theme's</a> font.
+
+
+<!-- @Program Files @/home -->
+
+<p>All files in your home folder which are directly saved or modified by SpaceFM are located in ~/.config/spacefm/ (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a>).  These include:
+
+<!-- # session -->
+Holds most user settings and customizations.  This file is plain text so you can review its contents, but <b>it should NOT be edited</b>.  SpaceFM saves the current session anytime you make a change to the configuration (at most once every 15 seconds or so).  If SpaceFM can't find a session file at startup, it will use session-last or session-prior instead.  If all session, session-last, and session-prior files are deleted, SpaceFM will be restored to factory default settings.
+
+<!-- # session-last &amp; session-prior #last -->
+These are the session files from your last and prior-to-last runs of SpaceFM.  If you encounter a configuration problem or loss of settings when starting or using SpaceFM, be sure to make a backup copy of these files before running SpaceFM again.  To revert to an older session, stop all instances of SpaceFM and rename the older session file 'session'.
+
+<!-- # session.tmp #tmp -->
+For stability, when SpaceFM saves your session file, it first saves it as 'session.tmp'.  If successful, it then renames it 'session', overwriting the old session file.  Usually you won't find a session.tmp file because it is quickly written and renamed.
+
+<!-- # bookmarks -->
+Contains your folder bookmarks.  Currently, this file is in the same format as GTK's bookmarks (~/.gtk-bookmarks).  To copy your GTK bookmarks into SpaceFM (replacing any SpaceFM bookmarks you have added) use:
+<pre>    cp ~/.gtk-bookmarks ~/.config/spacefm/bookmarks</pre>
+
+<!-- # plugin-data/ -->
+Contains the <a href="#designmode-command-browse-data">data directories</a> for custom commands and plugins, if any.  If commands need to store persistent user data, this is where they store it.  It is should generally be safe to remove files from this folder, but your commands may lose their settings.
+
+<!-- # scripts/ -->
+Contains the <a href="#designmode-command-browse-files">command directories</a> for custom commands you have added to SpaceFM's menus or toolbars, if any.
+
+<p>Because SpaceFM is highly configurable, you may have much time and effort invested in your SpaceFM config folder, so it's a good idea to <b>keep an up-to-date backup!</b>
+
+
+<!-- @Program Files @/etc -->
+
+<p>The first time you click OK in the View|Preferences dialog, and anytime you change your terminal or root editor in that dialog, SpaceFM will ask to save some settings as root to /etc/spacefm/ &nbsp;Although optional, this is recommended to help secure your use of SpaceFM's perform-as-root commands.  Also, anytime you run a perform-as-root command, such as to <a href="#devices-root-format">format a partition</a>, these settings may be updated.  Without these settings saved as root, your system security may be more easily compromised.
+
+<p>The following files may be found in /etc/spacefm:
+
+<!-- # USERNAME-as-root #as-root -->
+For each USERNAME who runs SpaceFM, you may find this file which contains the user's prefered root editor, terminal, and other perform-as-root settings.  This file should NOT be edited.
+
+<!-- # spacefm.conf #conf -->
+This file is designed to be edited by the administrative user.  Currently, the only setting in this file is tmp_dir, which specifies what <a href="#programfiles-tmp">temporary directory</a> SpaceFM should use.  If unset, it defaults to /tmp.  If this file is not present and you want to specify a different temporary directory (/dev/shm in this example), create the file /etc/spacefm.conf as root and add this line:
+<blockquote>tmp_dir=/dev/shm</blockquote>
+
+Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
+
+<!-- @Program Files @/tmp -->
+
+<p>SpaceFM writes small files to the temporary directory (which can be changed in <a href="#programfiles-etc-conf">spacefm.conf</a>).  These include:
+
+<!-- # .spacefm-socketDISPLAY-USERNAME #socket -->
+A socket which SpaceFM uses to <a href="#invocation-windows">open additional windows</a> and other functions, removing the need to start additional instances of the entire program.  DISPLAY is the current display of the user (eg :0) and USERNAME the username.  Generally, this file will be removed when the current instance of SpaceFM exits.
+
+<!-- # spacefm.tmp/ #shrtmp -->
+This folder, shared by all users, contains temporary files used for running a command as another user, including root.  Once a root command is run, this folder will be owned by root.
+
+<!-- # spacefm-USERNAME-PID.tmp/ #pidtmp -->
+This folder contains temporary files used by USERNAME running SpaceFM instance PID.  It is owned by the user and will be deleted on exit.  Other users can access this folder, but usually not the files within it, unless a command is being run as another user.
+
+<!-- # spacefm*.tmp/ID-tmp.sh #exec -->
+A temporary bash script used to execute a command run in SpaceFM, which will be deleted when the command completes.  ID will be an eight digit hexadecimal number.  This script creates a suitable bash environment for the command being run, including import of file manager variables for use in commands.  While the command is running, you can import the file manager variables from this script into another script using:
+<pre>    $fm_import
+    # OR
+    source <i>ID</i>-tmp.sh</pre>
+
+<!-- # spacefm*.tmp/ID/ #dattmp-->
+A folder used to store temporary data, usually plugin data which has been copied via <a href="#plugins-copy">Plugins|Copy</a>, where ID is an eight digit hexadecimal number.  
+
+
+<!-- @Program Files @/usr -->
+
+<p>The parent folder (--prefix=) for files listed below may be '/usr' or '/usr/local' depending on how you installed SpaceFM.  With the exception of plugins installed by the user, all files stored in /usr are created only when SpaceFM is installed, and are not changed by SpaceFM.  These include:
+
+<!-- # bin/spacefm #bin-spacefm -->
+The SpaceFM executable file.
+
+<!-- # bin/spacefm-auth #bin-spacefm-auth -->
+This script is used internally by spacefm to authenticate temporary scripts run as another user (using /usr/bin/sha256sum).  This file should not be modified or run directly.  This file was added to SpaceFM version 0.7.2 to simplify the command line for su programs, which often handle special characters poorly and have inconsistent command line usage.  If spacefm-auth or /usr/bin/sha256sum are missing, SpaceFM will operate in a less secure mode.
+
+<!-- # share/spacefm/spacefm-manual-en.html #manual -->
+A local copy of this manual you're reading.  This copy is accessed when using context-sensitive help within SpaceFM.  If available, a version for your language will automatically be used.  To use a different manual location within SpaceFM, set your preference in Help|Options|Manual Location.
+
+<!-- # share/spacefm/plugins/ #plugins -->
+A folder containing <a href="#plugins">plugins</a> installed by the user.  Plugin files should NOT be copied directly to this folder.  Instead, use <a href="#plugins-install">Plugins|Install</a> to install them, or <a href="#designmode-designmenu-remove">Design Mode</a> to remove them.  However, if you make a package for your plugin, you can instruct the package manager to install the correct uncompressed files to this folder, allowing users to install your plugin via their package manager.
+
+<!-- # share/spacefm/included/ #included -->
+Plugins included in a standard SpaceFM installation.  This folder should NOT be modified.
+
+<!-- # share/spacefm/ui/ #ui -->
+A folder containing glade files for some of SpaceFM's dialogs.
+
+<!-- # share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png #png -->
+The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
+
+<!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
+Alternate SpaceFM icons.
+
+<!-- # share/locale/*/LC_MESSAGES/spacefm.mo #mo -->
+Language files used by SpaceFM, where '*' is a locale.
+
+<!-- # share/applications/spacefm.desktop #spac-dt -->
+A desktop file which opens a SpaceFM <a href="#invocation-windows">window</a>.
+
+<!-- # share/applications/spacefm-find.desktop #find-dt -->
+A desktop file which open a SpaceFM File Search window.
+
+<!-- # share/applications/spacefm-folder-handler.desktop #fold-dt -->
+A desktop file which uses SpaceFM to open a folder
+
+<!-- # share/mime/packages/spacefm-mime.xml #mime -->
+Additional MIME types provided by libmimetype, adding globs for some missing but frequently seen file types.
+
+
+
+
+
+<!-- @tail -->
+
+</table>
+<br>
+<center>
+<p><b>This document is under construction and incomplete.</b>
+
+<p>Copyright (C) @@@year@@@
+
+<p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
+<br>
+<p>@@@version@@@
+<br><br>
+</center>
+</td></tr></table>
+</body></head></html>

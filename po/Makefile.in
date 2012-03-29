@@ -17,42 +17,42 @@
 # We have the following line for use by intltoolize:
 # INTLTOOL_MAKEFILE
 
-GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
-PACKAGE = @PACKAGE@
-VERSION = @VERSION@
+GETTEXT_PACKAGE = spacefm
+PACKAGE = spacefm
+VERSION = 0.7.3
 
-SHELL = @SHELL@
+SHELL = /bin/bash
 
-srcdir = @srcdir@
-top_srcdir = @top_srcdir@
-top_builddir = @top_builddir@
-VPATH = @srcdir@
+srcdir = .
+top_srcdir = ..
+top_builddir = ..
 
-prefix = @prefix@
-exec_prefix = @exec_prefix@
-datadir = @datadir@
-datarootdir = @datarootdir@
-libdir = @libdir@
-DATADIRNAME = @DATADIRNAME@
+
+prefix = /usr
+exec_prefix = ${prefix}
+datadir = ${datarootdir}
+datarootdir = ${prefix}/share
+libdir = ${exec_prefix}/lib
+DATADIRNAME = share
 itlocaledir = $(prefix)/$(DATADIRNAME)/locale
 subdir = po
-install_sh = @install_sh@
-# Automake >= 1.8 provides @mkdir_p@.
+install_sh = ${SHELL} /data2/git-pub/spacefm/install-sh
+# Automake >= 1.8 provides /bin/mkdir -p.
 # Until it can be supposed, use the safe fallback:
 mkdir_p = $(install_sh) -d
 
-INSTALL = @INSTALL@
-INSTALL_DATA = @INSTALL_DATA@
+INSTALL = /usr/bin/install -c
+INSTALL_DATA = ${INSTALL} -m 644
 
-GMSGFMT = @GMSGFMT@
-MSGFMT = @MSGFMT@
-XGETTEXT = @XGETTEXT@
-INTLTOOL_UPDATE = @INTLTOOL_UPDATE@
-INTLTOOL_EXTRACT = @INTLTOOL_EXTRACT@
+GMSGFMT = /usr/bin/msgfmt
+MSGFMT = /usr/bin/msgfmt
+XGETTEXT = /usr/bin/xgettext
+INTLTOOL_UPDATE = /usr/bin/intltool-update
+INTLTOOL_EXTRACT = /usr/bin/intltool-extract
 MSGMERGE = INTLTOOL_EXTRACT="$(INTLTOOL_EXTRACT)" XGETTEXT="$(XGETTEXT)" srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT="$(INTLTOOL_EXTRACT)" XGETTEXT="$(XGETTEXT)" srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
 
-ALL_LINGUAS = @ALL_LINGUAS@
+ALL_LINGUAS = af ar da ca cs de es et eu fa fi fr gl he hr hu id it ja ko lt ml ms nb nl nn pl ps pt pt_BR ru sk sl sv tr uk ur ur_PK vi zh_CN zh_TW
 
 PO_LINGUAS=$(shell if test -r $(srcdir)/LINGUAS; then grep -v "^\#" $(srcdir)/LINGUAS; else echo "$(ALL_LINGUAS)"; fi)
 
@@ -73,7 +73,7 @@ CATALOGS=$(shell LINGUAS="$(USE_LINGUAS)"; for lang in $$LINGUAS; do printf "$$l
 .SUFFIXES:
 .SUFFIXES: .po .pox .gmo .mo .msg .cat
 
-AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+AM_DEFAULT_VERBOSITY = 1
 INTLTOOL_V_MSGFMT = $(INTLTOOL__v_MSGFMT_$(V))
 INTLTOOL__v_MSGFMT_= $(INTLTOOL__v_MSGFMT_$(AM_DEFAULT_VERBOSITY))
 INTLTOOL__v_MSGFMT_0 = @echo "  MSGFMT" $@;
@@ -94,7 +94,7 @@ INTLTOOL__v_MSGFMT_0 = @echo "  MSGFMT" $@;
 	  && rm -f $@ && gencat $@ $*.msg
 
 
-all: all-@USE_NLS@
+all: all-yes
 
 all-yes: $(CATALOGS)
 all-no:
@@ -103,7 +103,7 @@ $(GETTEXT_PACKAGE).pot: $(POTFILES)
 	$(GENPOT)
 
 install: install-data
-install-data: install-data-@USE_NLS@
+install-data: install-data-yes
 install-data-no: all
 install-data-yes: all
 	linguas="$(USE_LINGUAS)"; \

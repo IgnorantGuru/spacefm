@@ -293,8 +293,6 @@ void ptk_file_browser_go_home( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_go_default( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_add_bookmark ( GtkMenuItem *menuitem, PtkFileBrowser* file_browser );
 void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_browser );
-void ptk_file_browser_open_folder_as_root ( GtkMenuItem *menuitem,
-                                                PtkFileBrowser* file_browser );
 void on_shortcut_new_tab_activate( GtkMenuItem* item,
                                           PtkFileBrowser* file_browser );
 void on_shortcut_new_window_activate( GtkMenuItem* item,

@@ -262,6 +262,12 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 void get_socket_name( char* buf, int len )
 {
     char* dpy = gdk_get_display();
+    if ( dpy && !strcmp( dpy, ":0.0" ) )
+    {
+        // treat :0.0 as :0 to prevent multiple instances on screen 0
+        g_free( dpy );
+        dpy = g_strdup( ":0" );
+    }
     g_snprintf( buf, len, "/tmp/.spacefm-socket%s-%s", dpy, g_get_user_name() );
     g_free( dpy );
 }
@@ -385,7 +391,7 @@ gboolean single_instance_check()
         ret = 1;
         goto _exit;
     }
-    return ;
+    return TRUE;
 
 _exit:
 

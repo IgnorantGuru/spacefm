@@ -1,7 +1,8 @@
 SpaceFM:
 
-Developer: IgnorantGuru <ignorantguru@users.sourceforge.net>
-Icon:      The icons were taken from Tango Projects icon set
+Developer: IgnorantGuru <ignorantguru@gmx.com>
+Icons:     SpaceFM icons and logo by Goran Simovic
+           Additional icons were taken from Tango Projects icon set
 
 
 ==============================================================================
@@ -47,6 +48,3 @@ External source code taken from other projects:
  * Text and icon renderer uese code from Jonathan Blandford
  * Desktop icons use code from Brian Tarricone
 
-Icon:
- * Taken from "nuoveXT 2" icon theme created by Alexandre Moore (saki).
-   http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625

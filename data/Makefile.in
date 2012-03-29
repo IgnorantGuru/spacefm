@@ -79,6 +79,7 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
 AMTAR = @AMTAR@
+AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -126,6 +127,10 @@ INTLTOOL_EXTRACT = @INTLTOOL_EXTRACT@
 INTLTOOL_MERGE = @INTLTOOL_MERGE@
 INTLTOOL_PERL = @INTLTOOL_PERL@
 INTLTOOL_UPDATE = @INTLTOOL_UPDATE@
+INTLTOOL_V_MERGE = @INTLTOOL_V_MERGE@
+INTLTOOL_V_MERGE_OPTIONS = @INTLTOOL_V_MERGE_OPTIONS@
+INTLTOOL__v_MERGE_ = @INTLTOOL__v_MERGE_@
+INTLTOOL__v_MERGE_0 = @INTLTOOL__v_MERGE_0@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
@@ -207,6 +212,8 @@ htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
+intltool__v_merge_options_ = @intltool__v_merge_options_@
+intltool__v_merge_options_0 = @intltool__v_merge_options_0@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
@@ -238,14 +245,33 @@ DISTCLEANFILES = spacefm.desktop \
 
 icondir = $(datadir)/pixmaps
 icon_DATA = spacefm.png \
-			spacefm-root.png
+			spacefm-root.png \
+			spacefm-find.png \
+			spacefm-128-cube-blue.png \
+			spacefm-128-cube-green.png \
+			spacefm-128-cube-red.png \
+			spacefm-128-pyramid-blue.png \
+			spacefm-128-pyramid-green.png \
+			spacefm-128-pyramid-red.png \
+			spacefm-48-cube-blue.png \
+			spacefm-48-cube-green.png \
+			spacefm-48-cube-red.png \
+			spacefm-48-folder-blue.png \
+			spacefm-48-folder-red.png \
+			spacefm-48-pyramid-blue.png \
+			spacefm-48-pyramid-green.png \
+			spacefm-48-pyramid-red.png
 
 filedir = $(datadir)/spacefm
 uidir = $(filedir)/ui
+@USE_HAL_FALSE@file_DATA = \
+@USE_HAL_FALSE@	spacefm-manual-en.html
+
 
 # sfm don't install mount.rules for no-hal build
 @USE_HAL_TRUE@file_DATA = \
-@USE_HAL_TRUE@	mount.rules
+@USE_HAL_TRUE@	mount.rules \
+@USE_HAL_TRUE@	spacefm-manual-en.html
 
 
 # GtkBuilder UI definition files

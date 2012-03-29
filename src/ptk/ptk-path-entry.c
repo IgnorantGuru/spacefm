@@ -374,8 +374,8 @@ void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_INFO,
                                   GTK_BUTTONS_OK,
-                                  "In addition to a folder or file path, commands can be entered in the Smartbar.  Prefixes:\n\t$\trun as task\n\t&\trun and forget\n\t+\trun in terminal\n\t!\trun as root\nUse:\n\t%%F\tselected files  or  %%f first selected file\n\t%%N\tselected filenames  or  %%n first selected filename\n\t%%d\tcurrent directory\n\t%%v\tselected device (eg /dev/sda1)\n\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n\t%%b\tselected bookmark\n\t%%t\tselected task directory;  %%p task pid\n\t%%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc\n\nExample:  $ echo \"Current Directory: %%d\"\nExample:  +! umount %v" );
-    gtk_window_set_title( GTK_WINDOW( dlg ), "Smartbar Help" );
+                                  "In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n\t$\trun as task\n\t&\trun and forget\n\t+\trun in terminal\n\t!\trun as root\nUse:\n\t%%F\tselected files  or  %%f first selected file\n\t%%N\tselected filenames  or  %%n first selected filename\n\t%%d\tcurrent directory\n\t%%v\tselected device (eg /dev/sda1)\n\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n\t%%b\tselected bookmark\n\t%%t\tselected task directory;  %%p task pid\n\t%%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc\n\nExample:  $ echo \"Current Directory: %%d\"\nExample:  +! umount %v" );
+    gtk_window_set_title( GTK_WINDOW( dlg ), "Path Bar Help" );
     gtk_dialog_run( GTK_DIALOG( dlg ) );
     gtk_widget_destroy( dlg );
 }
@@ -385,7 +385,7 @@ static gboolean on_button_release(GtkEntry      *entry,
                                                                     gpointer        user_data)
 {
     if ( GDK_BUTTON_RELEASE != evt->type )
-        return;
+        return FALSE;
     if ( ( ( evt->state & GDK_CONTROL_MASK ) && 1 == evt->button ) )
     {
         int pos;
@@ -439,6 +439,8 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     set = xset_set_cb( "path_help", ptk_path_entry_help, file_browser );
     xset_add_menuitem( file_browser, file_browser, menu, accel_group, set );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 void on_entry_insert( GtkEntryBuffer *buf, guint position, gchar *chars,

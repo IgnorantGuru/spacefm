@@ -88,17 +88,15 @@ void ptk_menu_add_items_from_data( GtkWidget* menu,
     {
       if( ! ent->stock_icon ) /* End of menu */
         break;
-      if ( ent->stock_icon != GTK_STOCK_CANCEL )  //MOD  omit menu item
-        menu_item = gtk_separator_menu_item_new();
+        menu_item = gtk_separator_menu_item_new();      
     }
-    if ( ent->stock_icon != GTK_STOCK_CANCEL )  //MOD  omit menu item
-    {
-        gtk_menu_shell_append ( GTK_MENU_SHELL(menu), menu_item );
-        if( G_UNLIKELY(ent->ret) ) {/* Return */
-          *ent->ret = menu_item;
-          ent->ret = NULL;
-        }
+
+    gtk_menu_shell_append ( GTK_MENU_SHELL(menu), menu_item );
+    if( G_UNLIKELY(ent->ret) ) {// Return
+      *ent->ret = menu_item;
+      ent->ret = NULL;
     }
+
   }
 }
 

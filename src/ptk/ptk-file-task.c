@@ -247,10 +247,10 @@ void ptk_file_task_run( PtkFileTask* task )
     }
 }
 
-gboolean ptk_file_task_kill( GPid pid )
+gboolean ptk_file_task_kill( gpointer pid )
 {
-//printf("SIGKILL %d\n", pid );
-    kill( pid, SIGKILL );
+//printf("SIGKILL %d\n", GPOINTER_TO_INT( pid ) );
+    kill( GPOINTER_TO_INT( pid ), SIGKILL );
     return FALSE;
 }
 
@@ -284,7 +284,7 @@ void ptk_file_task_cancel( PtkFileTask* task )
                 vfs_file_task_kill_cpids( cpids, SIGTERM );
             // SIGKILL 2 seconds later in case SIGTERM fails
             g_timeout_add( 2500, ( GSourceFunc ) ptk_file_task_kill,
-                                                    task->task->exec_pid );
+                                        GINT_TO_POINTER( task->task->exec_pid ) );
             if ( cpids )
                 g_timeout_add( 2500, ( GSourceFunc ) ptk_file_task_kill_cpids,
                                                     cpids );
@@ -399,6 +399,8 @@ void on_view_popup( GtkTextView *entry, GtkMenu *menu, gpointer user_data )
     set->browser = set->desktop = NULL;
     xset_add_menuitem( NULL, NULL, menu, accel_group, set );
     gtk_widget_show_all( menu );
+    g_signal_connect( menu, "key-press-event",
+                      G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
 void ptk_file_task_progress_open( PtkFileTask* task )

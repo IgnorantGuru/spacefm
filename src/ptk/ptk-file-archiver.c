@@ -307,7 +307,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
         char* afile = g_path_get_basename( udest_file );
         char* msg = g_strdup_printf( _("Archive '%s' exists.\n\nOverwrite?"), afile );
         g_free( afile );
-        if ( xset_msg_dialog( file_browser, GTK_MESSAGE_QUESTION, _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL, msg, NULL ) != GTK_RESPONSE_OK )
+        if ( xset_msg_dialog( file_browser, GTK_MESSAGE_QUESTION, _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL, msg, NULL, NULL ) != GTK_RESPONSE_OK )
         {
             g_free( udest_file );
             g_free( s1 );
