@@ -159,6 +159,12 @@
         <col id="0">/usr/bin/kdesu</col>
       </row>
       <row>
+        <col id="0">/usr/bin/gnomesu</col>
+      </row>
+      <row>
+        <col id="0">/usr/bin/xdg-su</col>
+      </row>
+      <row>
         <col id="0">/bin/su</col>
       </row>
       <row>

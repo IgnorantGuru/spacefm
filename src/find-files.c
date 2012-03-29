@@ -988,7 +988,7 @@ void fm_find_files( const char** search_dirs )
         icon = gtk_icon_theme_load_icon( theme, "spacefm-find", 48, 0, NULL );
     if ( icon )
     {
-        gtk_window_set_icon( data->win, icon );
+        gtk_window_set_icon( GTK_WINDOW( data->win ), icon );
         g_object_unref( icon );
     }
     else

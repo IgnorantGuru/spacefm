@@ -1454,6 +1454,12 @@ static void vfs_file_task_exec( VFSFileTask* task )
             argv[a++] = g_strdup( "-c" );
             single_arg = TRUE;
         }
+        else if ( !strcmp( use_su, "/usr/bin/gnomesu" )
+                                        || !strcmp( use_su, "/usr/bin/xdg-su" ) )
+        {
+            argv[a++] = g_strdup( "-c" );
+            single_arg = TRUE;
+        }
     }
 
     if ( sum_script )

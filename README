@@ -26,8 +26,6 @@ DESCRIPTION:
 
     SpaceFM is a multi-panel tabbed file manager with built-in VFS, optional
     udisks-based device manager, customizable menu system, and bash integration.
-    SpaceFM is a fork of legacy PCManFM.  Earlier versions of this program were
-    released under the name PCManFM-Mod.
 
 
 PACKAGES:
@@ -101,7 +99,7 @@ BUILD:
         libglib2.0-0 libgtk2.0-0 libpango1.0-0 libstartup-notification0
         libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev
         libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev
-        libgdk-pixbuf2.0-0
+        libgdk-pixbuf2.0-0 bash
  
     NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 users
         may not be able to install SpaceFM due to repositories missing package
