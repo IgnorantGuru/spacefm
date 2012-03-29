@@ -685,7 +685,7 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
-            suggested_action = GDK_ACTION_MOVE;
+            suggested_action = GDK_ACTION_COPY;   //sfm was MOVE
         drag_context->suggested_action = suggested_action;
         gdk_drag_status( drag_context, suggested_action, time );
 //    }

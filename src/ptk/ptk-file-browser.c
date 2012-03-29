@@ -3819,11 +3819,11 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                         g_free( file_path );
                     }
                 }
-                //MOD always suggest move
+                //MOD always suggest copy
                 //if( file_browser->drag_source_dev != dest_dev )     /* src and dest are on different devices */
                 //    drag_context->suggested_action = GDK_ACTION_COPY;
                 //else
-                    drag_context->suggested_action = GDK_ACTION_MOVE;
+                    drag_context->suggested_action = GDK_ACTION_COPY;
             }
             g_free( dest_dir );
             g_strfreev( list );
@@ -3835,7 +3835,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             if ( 0 == ( drag_context->action &
                         ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
             {
-                drag_context->action = GDK_ACTION_MOVE;
+                drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
             }
             gtk_drag_finish ( drag_context, TRUE, FALSE, time );
 
