@@ -817,6 +817,30 @@ void load_settings( char* config_dir )
         if ( app_settings.big_icon_size == 20 )
             app_settings.big_icon_size = 22;
     }
+    if ( ver < 9 ) // < 0.7.3
+    {
+        for ( i = 1; i < 5; i++ )
+        {
+            set = xset_get_panel( i, "show_toolbox" );
+            if ( set->menu_label && !strcmp( set->menu_label, "_Toolbox" ) )
+            {
+                g_free( set->menu_label );
+                set->menu_label = g_strdup( "_Toolbar" );
+            }
+        }
+        set = xset_get( "focus_path_bar" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Smartbar" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( "_Path Bar" );
+        }
+        set = xset_get( "path_help" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Smartbar Help" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( "_Path Bar Help" );
+        }
+    }
 }
 
 
@@ -833,7 +857,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "8" );  // 0.7.2
+    xset_set( "config_version", "s", "9" );  // 0.7.3
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -2604,7 +2628,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
         FILE* file;
         int i;
         const char* script_default_head = "#!/bin/bash\n$fm_import    # import file manager variables (scroll down for info)\n#\n# Enter your commands here:     ( then save this file )\n";
-        const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Smartbar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       udisks no_policy set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 3:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       Create a new command script to see the latest list of variables.\n\n";
+        const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       udisks no_policy set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 3:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       Create a new command script to see the latest list of variables.\n\n";
 
         file = fopen( path, "w" );
 
@@ -2833,7 +2857,7 @@ printf("    command=%s\n", command );
                                                                 stderr ? stderr : "" );
 printf("    err=%s\n", msg );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
-                                                                    0, msg, NULL );
+                                                                0, msg, NULL, NULL );
             g_free( msg );
         }
         if ( stderr )
@@ -2870,7 +2894,7 @@ printf("    command2=%s\n", command );
             msg = g_strdup_printf( _("An error occured copying command data files\n\n%s"),
                                                                 stderr ? stderr : "" );
             xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Copy Command Error"), NULL,
-                                                                    0, msg, NULL );
+                                                            0, msg, NULL, NULL );
             g_free( msg );
         }
         if ( stderr )
@@ -3326,7 +3350,8 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     else
                         msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
                     g_free( label );
-                    xset_msg_dialog( plugin_data->main_window, 0, "Copy Plugin", NULL, 0, msg, NULL );
+                    xset_msg_dialog( plugin_data->main_window, 0, "Copy Plugin",
+                                                        NULL, 0, msg, NULL, NULL );
                     g_free( msg );
                 }
             }
@@ -3353,9 +3378,11 @@ void xset_remove_plugin( GtkWidget* parent, PtkFileBrowser* file_browser, XSet* 
     if ( !app_settings.no_confirm )
     {
         char* label = clean_label( set->menu_label, FALSE, FALSE );
-        msg = g_strdup_printf( _("Uninstall the '%s' plugin?\n\n( %s )"), label, set->plug_dir );
+        msg = g_strdup_printf( _("Uninstall the '%s' plugin?\n\n( %s )"), label,
+                                                                set->plug_dir );
         g_free( label );
-        if ( xset_msg_dialog( parent, GTK_MESSAGE_WARNING, _("Uninstall Plugin"), NULL, GTK_BUTTONS_YES_NO, msg, NULL ) != GTK_RESPONSE_YES )
+        if ( xset_msg_dialog( parent, GTK_MESSAGE_WARNING, _("Uninstall Plugin"),
+                    NULL, GTK_BUTTONS_YES_NO, msg, NULL, NULL ) != GTK_RESPONSE_YES )
         {
             g_free( msg );
             return;
@@ -3699,7 +3726,8 @@ _rmtmp_error:
 _export_error:
     g_free( plug_dir );
     g_free( path );    
-    xset_msg_dialog( parent, GTK_MESSAGE_ERROR, _("Export Error"), NULL, 0, _("Unable to create temporary files"), NULL );
+    xset_msg_dialog( parent, GTK_MESSAGE_ERROR, _("Export Error"), NULL, 0,
+                            _("Unable to create temporary files"), NULL, NULL );
 }
 
 void xset_custom_activate( GtkWidget* item, XSet* set )
@@ -3735,7 +3763,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         {
             if ( !xset_text_dialog( parent, _("Change Menu Name"), NULL, FALSE, _(enter_menu_name_new),
                                             NULL, set->menu_label, &set->menu_label,
-                                                                        NULL, FALSE, "#designmode-designmenu-name" ) )
+                                            NULL, FALSE, "#designmode-designmenu-new" ) )
                 return;
         }
     }
@@ -5048,7 +5076,7 @@ void xset_show_help( GtkWidget* parent, XSet* set, char* anchor )
             if ( xset_msg_dialog( dlgparent, GTK_MESSAGE_QUESTION,
                                                 _("User's Manual Not Found"), NULL,
                                                 GTK_BUTTONS_YES_NO,
-                                                _("Read the user's manual online?\n\nThe local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."), NULL ) != GTK_RESPONSE_YES )
+                                                _("Read the user's manual online?\n\nThe local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."), NULL, NULL ) != GTK_RESPONSE_YES )
                 return;
             manual = g_strdup( user_manual_url );
             xset_set( "main_help_url", "s", manual );
@@ -5079,9 +5107,9 @@ void xset_show_help( GtkWidget* parent, XSet* set, char* anchor )
             if ( !url )
             {
                 if ( set->plugin )
-                    xset_msg_dialog( dlgparent, 0, _("Help Not Available"), NULL, 0, _("This plugin does not include a README file."), NULL );
+                    xset_msg_dialog( dlgparent, 0, _("Help Not Available"), NULL, 0, _("This plugin does not include a README file."), NULL, NULL );
                 else
-                    xset_msg_dialog( dlgparent, 0, _("Creation Failed"), NULL, 0, _("An error occured creating a README file for this command."), NULL );
+                    xset_msg_dialog( dlgparent, 0, _("Creation Failed"), NULL, 0, _("An error occured creating a README file for this command."), NULL, NULL );
             }
             xset_edit( dlgparent, url, FALSE, TRUE );
             g_free( url );
@@ -5103,7 +5131,7 @@ void xset_show_help( GtkWidget* parent, XSet* set, char* anchor )
 
     if ( !xset_get_b( "main_help" ) )
     {
-        xset_msg_dialog( dlgparent, 0, _("Manual Opened ?"), NULL, 0, _("The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n\nThis message will not repeat."), NULL );
+        xset_msg_dialog( dlgparent, 0, _("Manual Opened ?"), NULL, 0, _("The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n\nThis message will not repeat."), NULL, NULL );
         xset_set_b( "main_help", TRUE );
     }
 }
@@ -5426,7 +5454,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             name = set->name + 14;
             msg = g_strdup_printf( _("You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n\nAdd commands or menus here which you only want to appear for this one MIME type."), name[0] == '\0' ? "(none)" : name );
             if ( xset_msg_dialog( parent, 0, _("New Context Command"), NULL,
-                            GTK_BUTTONS_OK_CANCEL, msg, NULL ) != GTK_RESPONSE_OK )
+                            GTK_BUTTONS_OK_CANCEL, msg, NULL, NULL ) != GTK_RESPONSE_OK )
             {
                 g_free( msg );
                 break;
@@ -5474,7 +5502,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         {
             name = set->name + 14;
             msg = g_strdup_printf( _("You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n\nAdd commands or menus here which you only want to appear for this one MIME type."), name[0] == '\0' ? _("(none)") : name );
-            if ( xset_msg_dialog( parent, 0, "New Context Submenu", NULL, GTK_BUTTONS_OK_CANCEL, msg, NULL ) != GTK_RESPONSE_OK )
+            if ( xset_msg_dialog( parent, 0, "New Context Submenu", NULL, GTK_BUTTONS_OK_CANCEL, msg, NULL, NULL ) != GTK_RESPONSE_OK )
             {
                 g_free( msg );
                 break;
@@ -6093,12 +6121,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     {
         if ( xset_job_is_valid( set, job ) )
         {
-printf("VALID\n");
             gtk_menu_shell_deactivate( (GtkMenu*)widget );
-if ( GTK_IS_WIDGET( item ) )
-    printf("ITEM\n");
-else
-    printf("NOT ITEM\n");
             g_object_set_data( G_OBJECT( item ), "job", job );
             xset_design_job( item, set );
             return TRUE;
@@ -6705,7 +6728,6 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
     {
         if ( xset_job_is_valid( set, job ) )
         {
-printf("VALID\n");
             if ( menu )
                 gtk_menu_shell_deactivate( menu );
             g_object_set_data( G_OBJECT( item ), "job", job );
@@ -6784,7 +6806,6 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     {
         if ( xset_job_is_valid( set, job ) )
         {
-printf("VALID\n");
             gtk_menu_shell_deactivate( (GtkMenu*)widget );
             g_object_set_data( G_OBJECT( item ), "job", job );
             xset_design_job( item, set );
@@ -6929,9 +6950,11 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
     }
     else if ( rset->menu_style == XSET_MENU_ICON )
     {
-        if ( xset_text_dialog( parent, _("Set Icon"), NULL, FALSE, _(icon_desc), NULL,
-                                                    rset->icon, &rset->icon,
-                                                            NULL, FALSE, NULL ) )
+        if ( xset_text_dialog( parent, rset->title ? rset->title : _("Set Icon"),
+                                NULL, FALSE,
+                                rset->desc? rset->desc : _(icon_desc), NULL,
+                                rset->icon, &rset->icon,
+                                NULL, FALSE, NULL ) )
         {
             if ( cb_func )
                 (*cb_func) ( item, cb_data );
@@ -6956,7 +6979,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* image,
-                                        int buttons, char* msg1, char* msg2 )
+                                int buttons, char* msg1, char* msg2, char* help )
 {   
     /* action=
     GTK_MESSAGE_INFO,
@@ -6967,17 +6990,19 @@ int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* imag
     GtkWidget* dlgparent = NULL;
     
     if ( parent )
-         dlgparent = gtk_widget_get_toplevel( parent );
+        dlgparent = gtk_widget_get_toplevel( parent );
+
     if ( !buttons )
         buttons = GTK_BUTTONS_OK;
     if ( action == 0 )
         action = GTK_MESSAGE_INFO;
         
     GtkWidget* dlg = gtk_message_dialog_new( dlgparent,
-                                              GTK_DIALOG_MODAL,
+                                              GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                               action,
                                               buttons,
                                               msg1 );
+
     if ( msg2 )
         gtk_message_dialog_format_secondary_text( dlg, msg2 );
     if ( image )
@@ -6985,8 +7010,40 @@ int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* imag
     if ( title )
         gtk_window_set_title( GTK_WINDOW( dlg ), title );
 
+    if ( help )
+    {
+        GtkWidget* btn_help = gtk_button_new_with_mnemonic( _("_Help") );
+        gtk_dialog_add_action_widget( dlg, btn_help, GTK_RESPONSE_HELP );
+        gtk_button_set_image( btn_help, xset_get_image( "GTK_STOCK_HELP",
+                                                            GTK_ICON_SIZE_BUTTON ) );
+        gtk_button_set_focus_on_click( btn_help, FALSE );
+        gtk_widget_set_can_focus( btn_help, FALSE );
+    }
+
     gtk_widget_show_all( dlg );
-    int response = gtk_dialog_run( GTK_DIALOG( dlg ) );
+    int response;
+    while ( response = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
+    {
+        if ( response == GTK_RESPONSE_HELP )
+        {
+            // btn_help clicked
+            if ( help )
+            {
+                if ( help[0] == '#' )
+                {
+                    // as anchor
+                    xset_show_help( dlg, NULL, help );                    
+                }
+                else if ( xset_is( help ) )
+                {
+                    // as set name
+                    xset_show_help( dlg, xset_get( help ), NULL );
+                }
+            }
+        }
+        else
+            break;
+    }
     gtk_widget_destroy( dlg );
     return response;
 }
@@ -8784,6 +8841,8 @@ void xset_defaults()
 
     set = xset_set( "main_icon", "label", _("_Window Icon") );
     set->menu_style = XSET_MENU_ICON;
+    set->title = g_strdup( _("Set Window Icon") );
+    set->desc = g_strdup( _("Enter an icon name, icon file path, or stock item name:\n\nNot all icons may work due to various issues.\n\nProvided alternate SpaceFM icons:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nFor example: spacefm-48-pyramid-green") );
 
     set = xset_set( "main_full", "label", _("_Fullscreen") );
     set->menu_style = XSET_MENU_CHECK;
@@ -8850,10 +8909,13 @@ void xset_defaults()
     set_last = xset_get( "sep_h2" );
     set_last->menu_style = XSET_MENU_SEP;
 
+    set_last = xset_get( "sep_h3" );
+    set_last->menu_style = XSET_MENU_SEP;
+
     set = xset_set( "main_help", "label", _("_User's Manual") );
     xset_set_set( set, "icon", "gtk-help" );
 
-    set = xset_set( "main_design_help", "label", _("_Keys & Icons") );
+    set = xset_set( "main_faq", "label", _("How do I... (_FAQ)") );
     xset_set_set( set, "icon", "gtk-help" );
 
     set = xset_set( "main_homepage", "label", _("_Homepage") );
@@ -9201,7 +9263,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "focus_path_bar focus_filelist focus_dirtree focus_book focus_device" );    
 
-        set = xset_set( "focus_path_bar", "label", _("_Smartbar") );
+        set = xset_set( "focus_path_bar", "label", _("_Path Bar") );
             xset_set_set( set, "icon", "gtk-dialog-question" );
         set = xset_set( "focus_filelist", "label", _("_File List") );
             xset_set_set( set, "icon", "gtk-file" );
@@ -9270,7 +9332,7 @@ void xset_defaults()
     set = xset_set( "view_refresh", "label", _("_Refresh") );
     xset_set_set( set, "icon", "gtk-refresh" );
 
-    set = xset_set( "path_help", "label", _("_Smartbar Help") );
+    set = xset_set( "path_help", "label", _("_Path Bar Help") );
     xset_set_set( set, "icon", "gtk-help" );
 
     // EDIT
@@ -9526,7 +9588,7 @@ void xset_defaults()
 
 
     // PANEL ONE
-    set = xset_set( "panel1_show_toolbox", "label", _("_Toolbox") );
+    set = xset_set( "panel1_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
@@ -9577,7 +9639,7 @@ void xset_defaults()
     set = xset_set( "panel1_font_path", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
-    xset_set_set( set, "title", _("Smartbar Font (Panel 1)") );
+    xset_set_set( set, "title", _("Path Bar Font (Panel 1)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
 
     set = xset_set( "panel1_font_tab", "label", _("_Font") );
@@ -9631,7 +9693,7 @@ void xset_defaults()
     set->x = g_strdup_printf( "%d", 5 );
 
     // PANEL TWO
-    set = xset_set( "panel2_show_toolbox", "label", _("_Toolbox") );
+    set = xset_set( "panel2_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
     xset_set_set( set, "shared_key", "panel1_show_toolbox" );
     set->b = XSET_B_TRUE;
@@ -9690,7 +9752,7 @@ void xset_defaults()
     set = xset_set( "panel2_font_path", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
-    xset_set_set( set, "title", _("Smartbar Font (Panel 2)") );
+    xset_set_set( set, "title", _("Path Bar Font (Panel 2)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
 
     set = xset_set( "panel2_font_tab", "label", _("_Font") );
@@ -9751,7 +9813,7 @@ void xset_defaults()
     xset_set_set( set, "shared_key", "panel1_detcol_date" );
 
     // PANEL THREE
-    set = xset_set( "panel3_show_toolbox", "label", _("_Toolbox") );
+    set = xset_set( "panel3_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
     xset_set_set( set, "shared_key", "panel1_show_toolbox" );
     set->b = XSET_B_TRUE;
@@ -9811,7 +9873,7 @@ void xset_defaults()
     set = xset_set( "panel3_font_path", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
-    xset_set_set( set, "title", _("Smartbar Font (Panel 3)") );
+    xset_set_set( set, "title", _("Path Bar Font (Panel 3)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
 
     set = xset_set( "panel3_font_tab", "label", _("_Font") );
@@ -9872,7 +9934,7 @@ void xset_defaults()
     xset_set_set( set, "shared_key", "panel1_detcol_date" );
 
     // PANEL FOUR
-    set = xset_set( "panel4_show_toolbox", "label", _("_Toolbox") );
+    set = xset_set( "panel4_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
     xset_set_set( set, "shared_key", "panel1_show_toolbox" );
     set->b = XSET_B_TRUE;
@@ -9931,7 +9993,7 @@ void xset_defaults()
     set = xset_set( "panel4_font_path", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
-    xset_set_set( set, "title", _("Smartbar Font (Panel 4)") );
+    xset_set_set( set, "title", _("Path Bar Font (Panel 4)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
 
     set = xset_set( "panel4_font_tab", "label", _("_Font") );

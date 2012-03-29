@@ -145,6 +145,7 @@ void on_task_column_selected( GtkMenuItem* item, GtkTreeView* view );
 void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* name2 );
 void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
 void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
@@ -401,7 +402,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
             msg = g_strdup_printf( _("This plugin's filename is invalid.  Please rename it using alpha-numeric ASCII characters and try again.") );
             xset_msg_dialog( main_window, GTK_MESSAGE_ERROR,
                                         _("Invalid Plugin Filename"), NULL,
-                                        0, msg, NULL );
+                                        0, msg, NULL, "#plugins-install" );
             {
                 g_free( plug_dir_name );
                 g_free( path );
@@ -424,7 +425,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
             if ( xset_msg_dialog( main_window, GTK_MESSAGE_WARNING,
                                         _("Overwrite Plugin ?"), NULL,
                                         GTK_BUTTONS_YES_NO,
-                                        msg, NULL ) != GTK_RESPONSE_YES )
+                                        msg, NULL, "#plugins-install" ) != GTK_RESPONSE_YES )
             {
                 g_free( plug_dir_name );
                 g_free( plug_dir );
@@ -642,7 +643,8 @@ void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
         char* msg = g_strdup_printf( _("Error: Unable to save session file\n\n( %s )"), err_msg );
         g_free( err_msg );
         xset_msg_dialog( main_window, GTK_MESSAGE_ERROR, _("Save Session Error"),
-                                                            NULL, 0, msg, NULL );
+                                                    NULL, 0, msg, NULL, 
+                                                    "#programfiles-home-session" );
         g_free( msg );
     }    
 }
@@ -886,7 +888,7 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 else
                     gtk_widget_modify_font( a_browser->side_book, NULL );
             }
-            // smartbar
+            // pathbar
             if ( a_browser->path_bar )
             {
                 fontname = xset_get_s_panel( p, "font_path" );
@@ -981,9 +983,9 @@ void on_main_icon()
     }
 }
 
-void main_design_mode( FMMainWindow* main_window )
+void main_design_mode( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL );
+    xset_msg_dialog( main_window, 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
 }
 
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
@@ -1403,7 +1405,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_prefs", on_preference_activate, main_window );
     xset_set_cb( "font_task", main_update_fonts, file_browser );
     xset_set_cb( "main_full", on_fullscreen_activate, main_window );
-    xset_set_cb( "main_design_mode", main_design_mode, NULL );
+    xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
     menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks sep_v2 main_title main_icon sep_v3 main_full main_design_mode main_prefs" );
@@ -1497,12 +1499,12 @@ void rebuild_menus( FMMainWindow* main_window )
     
     // Help
     newmenu = gtk_menu_new();
-    xset_set_cb( "main_design_help", main_design_mode, main_window );
+    xset_set_cb( "main_faq", on_main_faq, main_window );
     xset_set_cb( "main_about", on_about_activate, main_window );
     xset_set_cb( "main_help", on_main_help_activate, main_window );
     xset_set_cb( "main_homepage", on_homepage_activate, main_window );
     xset_set_cb( "main_getplug", on_getplug_activate, main_window );
-    menu_elements = g_strdup_printf( "main_help main_design_help main_homepage main_getplug sep_h1 main_help_opt sep_h2 main_about" );
+    menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_getplug sep_h2 main_help_opt sep_h3 main_about" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
@@ -2473,6 +2475,11 @@ void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     xset_show_help( main_window, NULL, NULL );
 }
 
+void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_show_help( main_window, NULL, "#quickstart-faq" );
+}
+
 void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
     xset_open_url( main_window, NULL );
@@ -3071,7 +3078,7 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
         browser = (PtkFileBrowser*) 
                             fm_main_window_get_current_file_browser( main_window );
         if ( browser && browser->path_bar && gtk_widget_has_focus( browser->path_bar ) )
-            return FALSE;  // send to smartbar
+            return FALSE;  // send to pathbar
     }
 
     for ( l = xsets; l; l = l->next )
@@ -3171,9 +3178,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_fullscreen_activate( NULL, main_window );
                 else if ( !strcmp( xname, "prefs" ) )
                     on_preference_activate( NULL, main_window );
-                else if ( !strcmp( xname, "design_mode" ) 
-                        || !strcmp( xname, "design_help" ) )
-                    main_design_mode( main_window );
+                else if ( !strcmp( xname, "design_mode" ) )
+                    main_design_mode( NULL, main_window );
                 else if ( !strcmp( xname, "pbar" ) )
                     show_panels_all_windows( NULL, main_window );
                 else if ( !strcmp( xname, "icon" ) )
@@ -3184,6 +3190,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_about_activate( NULL, main_window );
                 else if ( !strcmp( xname, "help" ) )
                     on_main_help_activate( NULL, main_window );
+                else if ( !strcmp( xname, "faq" ) )
+                    on_main_faq( NULL, main_window );
                 else if ( !strcmp( xname, "homepage" ) )
                     on_homepage_activate( NULL, main_window );
                 else if ( !strcmp( xname, "getplug" ) )
@@ -3285,7 +3293,7 @@ const char* task_names[] =
 
 void on_reorder( GtkWidget* item, GtkWidget* parent )
 {
-    xset_msg_dialog( parent, 0, _("Reorder Columns Help"), NULL, 0, _("To change the order of the columns, drag the column header to the desired location."), NULL );
+    xset_msg_dialog( parent, 0, _("Reorder Columns Help"), NULL, 0, _("To change the order of the columns, drag the column header to the desired location."), NULL, NULL );
 }
 
 void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )

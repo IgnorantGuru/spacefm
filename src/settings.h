@@ -371,7 +371,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
                         GtkToolbar* toolbar, GtkTooltips* tooltips,
                         GtkIconSize icon_size, XSet* set );
 int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* image,
-                                        int buttons, char* msg1, char* msg2 );
+                                int buttons, char* msg1, char* msg2, char* help );
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, char* text, gboolean def_font );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, char* path );

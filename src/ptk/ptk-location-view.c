@@ -800,7 +800,7 @@ static void on_check_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( vol->is_mounted )
     {
         msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can check it."), vol->device_file );
-        xset_msg_dialog( view, 0, _("Device Is Mounted"), NULL, 0, msg, NULL );
+        xset_msg_dialog( view, 0, _("Device Is Mounted"), NULL, 0, msg, NULL, "#devices-root-check" );
         g_free( msg );
         return;
     }
@@ -1450,7 +1450,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     if ( vol->is_mounted )
     {
         msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can format it."), vol->device_file );
-        xset_msg_dialog( view, 0, _("Device Is Mounted"), NULL, 0, msg, NULL );
+        xset_msg_dialog( view, 0, _("Device Is Mounted"), NULL, 0, msg, NULL, "#devices-root-format" );
         g_free( msg );
         return;
     }
@@ -1529,7 +1529,9 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     if ( vol->is_mounted )
     {
         msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can restore it."), vol->device_file );
-        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"), NULL, 0, msg, NULL );
+        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"), NULL, 0,
+                                                        msg, NULL,
+                                                        "#devices-root-resfile" );
         g_free( msg );
         return;
     }
@@ -1569,7 +1571,7 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         type = "MBR";
         vfile = g_strndup( vol->device_file, 8 );
         msg = g_strdup_printf( _("You are about to overwrite the MBR boot code of %s using %s.\n\nThis change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n\nProceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"), vfile, bname );
-        if ( xset_msg_dialog( view, GTK_MESSAGE_WARNING, _("Restore MBR"), NULL, GTK_BUTTONS_YES_NO, _("DATA LOSS WARNING"), msg ) != GTK_RESPONSE_YES )
+        if ( xset_msg_dialog( view, GTK_MESSAGE_WARNING, _("Restore MBR"), NULL, GTK_BUTTONS_YES_NO, _("DATA LOSS WARNING"), msg, "#devices-root-resfile" ) != GTK_RESPONSE_YES )
         {
             g_free( vfile );
             g_free( bfile );
@@ -1581,7 +1583,7 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     }
     else
     {
-        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Unknown Type"), NULL, 0, _("The selected file is not a recognized backup file.\n\nFSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."), NULL );
+        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Unknown Type"), NULL, 0, _("The selected file is not a recognized backup file.\n\nFSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."), NULL, "#devices-root-resinfo" );
         g_free( bfile );
         g_free( bname );
         return;
@@ -1775,13 +1777,13 @@ static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
             || g_str_has_suffix( bfile, ".mbr" )
             || g_str_has_suffix( bfile, "-MBR-back" ) )
     {
-        xset_msg_dialog( view, 0, _("MBR File"), NULL, 0, _("Based on its name, the selected file appears to be an MBR backup file.  No other information is available for this type of backup."), NULL );
+        xset_msg_dialog( view, 0, _("MBR File"), NULL, 0, _("Based on its name, the selected file appears to be an MBR backup file.  No other information is available for this type of backup."), NULL, "#devices-root-resinfo" );
         g_free( bfile );
         return;
     }
     else
     {
-        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Unknown Type"), NULL, 0, _("The selected file is not a recognized backup file.\n\nFSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."), NULL );
+        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Unknown Type"), NULL, 0, _("The selected file is not a recognized backup file.\n\nFSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."), NULL, "#devices-root-resinfo" );
         g_free( bfile );
         return;
     }
@@ -1862,7 +1864,8 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         if ( vol->is_mounted )
         {
             msg = g_strdup_printf( _("%s is currently mounted.  You must unmount it before you can create a backup using Partimage."), vol->device_file );
-            xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"), NULL, 0, msg, NULL );
+            xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Device Is Mounted"),
+                                                        NULL, 0, msg, NULL, "#devices-root-parti" );
             g_free( msg );
             g_free( hostname );
             return;
@@ -1894,7 +1897,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         char* volb = g_strdup_printf( "%s.000", sfile );
         if ( g_file_test( volb, G_FILE_TEST_EXISTS ) )
         {
-            if ( xset_msg_dialog( view, GTK_MESSAGE_QUESTION, _("Overwrite?"), NULL, GTK_BUTTONS_YES_NO, _("The selected backup already exists.  Overwrite?"), NULL ) != GTK_RESPONSE_YES )
+            if ( xset_msg_dialog( view, GTK_MESSAGE_QUESTION, _("Overwrite?"), NULL, GTK_BUTTONS_YES_NO, _("The selected backup already exists.  Overwrite?"), NULL, "#devices-root-parti" ) != GTK_RESPONSE_YES )
             {
                 g_free( vfile );
                 g_free( bfile );

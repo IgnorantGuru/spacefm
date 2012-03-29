@@ -874,7 +874,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
 
 void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Alt-Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL );
+    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Alt-Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
 }
 
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
@@ -1827,7 +1827,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     if ( xset_msg_dialog( mset->parent, GTK_MESSAGE_QUESTION,
                                             _("Create Parent Folder"), NULL,
                                              GTK_BUTTONS_YES_NO,
-                                             _("The parent folder does not exist.  Create it?"), NULL )
+                                             _("The parent folder does not exist.  Create it?"), NULL, NULL )
                                                             != GTK_RESPONSE_YES )
                         goto _continue_free;
                 }
@@ -1856,7 +1856,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 if ( xset_msg_dialog( mset->parent, GTK_MESSAGE_WARNING,
                                         _("Overwrite Existing File"), NULL,
                                          GTK_BUTTONS_YES_NO,
-                                         _("OVERWRITE WARNING"), _("The file path exists.  Overwrite existing file?") )
+                                         _("OVERWRITE WARNING"), _("The file path exists.  Overwrite existing file?"), NULL )
                                                         != GTK_RESPONSE_YES )
                     goto _continue_free;
                 overwrite = TRUE;

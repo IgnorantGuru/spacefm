@@ -1179,7 +1179,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                        _("Terminal SU Not Available"), NULL, 0, str, NULL );
+                            _("Terminal SU Not Available"), NULL, 0, str, NULL, NULL );
                 //vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
@@ -1189,7 +1189,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                        _("Graphical SU Not Available"), NULL, 0, str, NULL );
+                            _("Graphical SU Not Available"), NULL, 0, str, NULL, NULL );
                 //vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
@@ -1207,7 +1207,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
         str = _("Cannot create temporary directory");
         g_warning ( str );
         xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                _("Error"), NULL, 0, str, NULL );
+                                _("Error"), NULL, 0, str, NULL, NULL );
         //vfs_file_task_exec_error( task, 0, str );
         goto _exit_with_error_lean;
     }
@@ -1235,7 +1235,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
             g_warning ( str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                    _("Terminal Not Available"), NULL, 0, str, NULL );
+                            _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
             //vfs_file_task_exec_error( task, 0, str );
             goto _exit_with_error_lean;
         }

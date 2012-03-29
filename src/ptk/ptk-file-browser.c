@@ -475,7 +475,7 @@ void on_toolbar_hide( GtkWidget* widget, PtkFileBrowser* file_browser,
 
 void on_toolbar_help( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-    xset_msg_dialog( file_browser, 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to change the toolbar items.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and use Design Mode to show or unshow an item, change the icon, or add a custom tool item.  The Left Toolbar menu changes the tool items to the left of the Smartbar.\n\nFor help with Design Mode click View|Design Mode."), NULL );
+    xset_msg_dialog( file_browser, 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to customize the toolbars.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n\nFor more information, click the Help button below."), NULL, "#designmode-toolbars" );
 }
 
 void on_toolbar_config_done( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -4829,7 +4829,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Destination same as source"), NULL );
+            xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
             return;
         }
@@ -4859,7 +4859,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
     }
     else
     {
-        xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Invalid destination"), NULL );
+        xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Invalid destination"), NULL, NULL );
     }
 }
 
@@ -4903,7 +4903,7 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
         {
             str = g_strdup_printf( _("Delete %d selected item%s as root ?"),
                                             item_count, item_count > 1 ? "s" : "" );
-            if ( xset_msg_dialog( file_browser, GTK_MESSAGE_WARNING, _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO, _("DELETE AS ROOT"), str ) != GTK_RESPONSE_YES )
+            if ( xset_msg_dialog( file_browser, GTK_MESSAGE_WARNING, _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO, _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
             {
                 g_free( str );
                 return;
@@ -5006,7 +5006,7 @@ void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_brows
 void ptk_file_browser_hide_selected( PtkFileBrowser* file_browser,
                                                     GList* files, char* cwd )
 {
-    if ( xset_msg_dialog( file_browser, 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL ) != GTK_RESPONSE_OK )
+    if ( xset_msg_dialog( file_browser, 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL, NULL ) != GTK_RESPONSE_OK )
         return;
     
     VFSFileInfo* file;

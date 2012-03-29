@@ -12,6 +12,7 @@ DISTCLEANFILES = spacefm.desktop \
 icondir = $(datadir)/pixmaps
 icon_DATA = spacefm.png \
 			spacefm-root.png \
+			spacefm-find.png \
 			spacefm-128-cube-blue.png \
 			spacefm-128-cube-green.png \
 			spacefm-128-cube-red.png \
