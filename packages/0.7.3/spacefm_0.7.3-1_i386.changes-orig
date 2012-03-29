@@ -1,0 +1,22 @@
+Format: 1.8
+Date: Thu, 29 Mar 2012 19:53:12 +0000
+Source: spacefm
+Binary: spacefm
+Architecture: i386
+Version: 0.7.3-1
+Distribution: unstable
+Urgency: low
+Maintainer: IgnorantGuru <ignorantguru@gmx.com>
+Changed-By: IgnorantGuru <ignorantguru@gmx.com>
+Description: 
+ spacefm    - A multi-panel tabbed file manager with built-in VFS, optional
+Changes: 
+ spacefm (0.7.3-1) unstable; urgency=low
+ .
+   * release
+Checksums-Sha1: 
+ a7df85f2d3f38d6dd36dd5c883bf8c3fc32ba80b 875206 spacefm_0.7.3-1_i386.deb
+Checksums-Sha256: 
+ e7fb8a76b02327c50ce47cc927e411f2ff873bf5445bc1c85bb53b03f621c98c 875206 spacefm_0.7.3-1_i386.deb
+Files: 
+ 89605665e82ea4cbc0233e18fd09d045 875206 utils optional spacefm_0.7.3-1_i386.deb
