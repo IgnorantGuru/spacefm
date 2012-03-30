@@ -38,7 +38,7 @@ endif
 
 # html-doc
 htmldir = @htmldir@
-html_data = spacefm-manual-en.html
+html_DATA = spacefm-manual-en.html
 
 # GtkBuilder UI definition files
 ui_in_files= \
