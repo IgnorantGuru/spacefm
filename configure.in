@@ -182,6 +182,9 @@ AM_CONDITIONAL(DESKTOP_INTEGRATION, test "$desktop_integration" = "yes")
 dnl advanced compiler tweaking
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
+dnl support user-specified manual-location
+CPPFLAGS="$CPPFLAGS -DHTMLDOCLOC=\\\"$htmldir\\\""
+
 AC_CHECK_FUNC(euidaccess,[AC_DEFINE(HAVE_EUIDACCESS,[],[Define to 1 if euidaccess is available])])
 AC_CHECK_FUNC(eaccess,[AC_DEFINE(HAVE_EACCESS,[],[Define to 1 if eaccess is available])])
 
