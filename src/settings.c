@@ -4284,7 +4284,7 @@ char* xset_get_manual_url()
     // find file
     int j;
     char* path;
-    char* locations[] = { "/usr/share/spacefm", "/usr/local/share/spacefm" };
+    char* locations[] = { HTMLDOCLOC };
     for ( i = 0; i < G_N_ELEMENTS( locations ); ++i )
     {
         j = 0;
