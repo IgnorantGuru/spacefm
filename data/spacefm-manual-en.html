@@ -1,4 +1,4 @@
- <html>
+<html>
 <head>
     <title>SpaceFM User's Manual</title>
 </head>
@@ -79,7 +79,7 @@
 <ul>
     <a href="#devices-introduction">Introduction</a><br>
     <a href="#devices-list">List</a><br>
-    <a href="#devices-devicesmenu">Devices Menu</a><br>
+    <a href="#devices-menu">Menu</a><br>
     <a href="#devices-root">Root</a><br>
     <a href="#devices-settings">Settings</a><br>
 </ul>
@@ -1871,7 +1871,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <ul>
         <li>Introduction
         <li><a href="#devices-list">List</a>
-        <li><a href="#devices-devicesmenu">Devices Menu</a>
+        <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
     </ul>
@@ -1915,7 +1915,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <ul>
         <li><a href="#devices-introduction">Introduction</a>
         <li>List
-        <li><a href="#devices-devicesmenu">Devices Menu</a>
+        <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
     </ul>
@@ -1951,7 +1951,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <ul>
         <li><a href="#devices-introduction">Introduction</a>
         <li><a href="#devices-list">List</a>
-        <li>Devices Menu
+        <li>Menu
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
     </ul>
@@ -1959,15 +1959,15 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 </ul>
 </td>
 <td valign="top">
-<a name="devices-devicesmenu"/><a href="#devices-devicesmenu"><font size=+2>Devices Menu</font></a>
-<!-- @Devices @Devices Menu -->
+<a name="devices-menu"/><a href="#devices-menu"><font size=+2>Menu</font></a>
+<!-- @Devices @Menu -->
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the design menu.
 
 <p>The Devices context menu includes:
 
 <!-- #Remove -->
-<p><a name="devices-devicesmenu-remove"/><a href="#devices-devicesmenu-remove"><b>Remove</b></a><br>
+<p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove</b></a><br>
 The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the task manager will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the task manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
@@ -1979,12 +1979,12 @@ The Remove item is used to remove a device and eject media.  When you click Remo
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting Remove.  Thus to quickly remove a device, just middle-click on it.
 
 <!-- #Reload -->
-<p><a name="devices-devicesmenu-reload"/><a href="#devices-devicesmenu-reload"><b>Reload</b></a><br>
+<p><a name="devices-menu-reload"/><a href="#devices-menu-reload"><b>Reload</b></a><br>
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
 
 
 <!-- #Unmount -->
-<p><a name="devices-devicesmenu-unmount"/><a href="#devices-devicesmenu-unmount"><b>Unmount</b></a><br>
+<p><a name="devices-menu-unmount"/><a href="#devices-menu-unmount"><b>Unmount</b></a><br>
 Unmount will simply run a udisks unmount command on the selected device.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
 
 <p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
@@ -1993,13 +1993,13 @@ Unmount will simply run a udisks unmount command on the selected device.  No syn
 <p>For troubleshooting, if you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to access the device, the device is in use, or udisks is not properly installed and authorized.
 
 <!-- #Sync -->
-<p><a name="devices-devicesmenu-sync"/><a href="#devices-devicesmenu-sync"><b>Sync</b></a><br>
+<p><a name="devices-menu-sync"/><a href="#devices-menu-sync"><b>Sync</b></a><br>
 Sync merely runs a sync command to commit all data to all devices.  If the command takes longer than about one half second, the task manager will auto-show and the Sync command will be listed until finished.
 
 <p>It is valuable to sync before removing or unmounting devices.  If you use the Remove or Reload menu items, a sync is performed automatically.
 
 <!-- #Open -->
-<p><a name="devices-devicesmenu-open"/><a href="#devices-devicesmenu-open"><b>Open</b></a><br>
+<p><a name="devices-menu-open"/><a href="#devices-menu-open"><b>Open</b></a><br>
 Selecting Open will cause the selected device to be mounted if it is not already mounted, and then the mount point directory of the device will be opened in the current tab.  If an error occurs, the error will be shown.  If the command takes longer than about one half second, the task manager will auto-show and the Open command will be listed until finished.
 
 <p>You can also open a device by simply left-clicking on it, but there are several differences.  When left-clicking on a device, no error will be shown if the mount fails.  Your indication that the mount failed is that the directory is not opened.  To see the details of the error, you must right-click on the device and select Open.  Also, the behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
@@ -2011,11 +2011,11 @@ Selecting Open will cause the selected device to be mounted if it is not already
 <p>The device will be mounted using SpaceFM's Mount Options.  If the device has an fstab entry, options specified there may take precedence.  Udisks may also automatically add or change some mount options.
 
 <!-- #Tab -->
-<p><a name="devices-devicesmenu-tab"/><a href="#devices-devicesmenu-tab"><b>Tab</b></a><br>
+<p><a name="devices-menu-tab"/><a href="#devices-menu-tab"><b>Tab</b></a><br>
 Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
 
 <!-- #Mount -->
-<p><a name="devices-devicesmenu-mount"/><a href="#devices-devicesmenu-mount"><b>Mount</b></a><br>
+<p><a name="devices-menu-mount"/><a href="#devices-menu-mount"><b>Mount</b></a><br>
 Mount will simply run a udisks mount command on the selected device.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
 
 <p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
@@ -2024,7 +2024,7 @@ Mount will simply run a udisks mount command on the selected device.  If the com
 <p>If you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to mount the device, the device is in use, or udisks is not properly installed and authorized.
 
 <!-- #Re/mount -->
-<p><a name="devices-devicesmenu-remount"/><a href="#devices-devicesmenu-remount"><b>Re/mount</b></a><br>
+<p><a name="devices-menu-remount"/><a href="#devices-menu-remount"><b>Re/mount</b></a><br>
 The Re/mount item is used to mount or remount a device using specific mount options.  A dialog will open asking you for the mount options to be used.  If mounted, the device will first be unmounted.  Then the device will be mounted using the specified options.
 
 <p>Note that udisks cannot perform a true remount - the device will be unmounted and mounted.
@@ -2032,19 +2032,19 @@ The Re/mount item is used to mount or remount a device using specific mount opti
 <p>Re/mount accepts extended mount options, as detailed in <a href="#devices-settings-opts">Mount Options</a>.
 
 <!-- #Root -->
-<p><a name="devices-devicesmenu-root"/><a href="#devices-devicesmenu-root"><b>Root</b></a><br>
+<p><a name="devices-menu-root"/><a href="#devices-menu-root"><b>Root</b></a><br>
 The Root submenu allows you to perform actions on a device as root.  Dialog messages should be read carefully when using any command in the Root submenu, because actions performed as root can affect any aspect of your system.  SpaceFM will explain what is about to happen and will let you examine the final command line before it is executed.
 
 <p>For details, see the <a href="#devices-root">Root</a> section below.
 
 <!-- #Settings -->
-<p><a name="devices-devicesmenu-settings"/><a href="#devices-devicesmenu-settings"><b>Settings</b></a><br>
+<p><a name="devices-menu-settings"/><a href="#devices-menu-settings"><b>Settings</b></a><br>
 The Settings submenu allows you to (globally) configure the appearance of the Devices list, controlling what devices are listed, how they are listed, what icons are used, etc., and also allows you to set the volume monitor to run commands on various events, such as device insertions, etc.
 
 <p>For details, see the <a href="#devices-settings">Settings</a> section below.
 
 <!-- #Properties -->
-<p><a name="devices-devicesmenu-properties"/><a href="#devices-devicesmenu-properties"><b>Properties</b></a><br>
+<p><a name="devices-menu-properties"/><a href="#devices-menu-properties"><b>Properties</b></a><br>
 The Properties item will gather and show information about the currently selected device.
 
 <p>If mounted, any mtab lines related to the device will be shown in DEVICE, showing you how and where the device is mounted.
@@ -2058,7 +2058,7 @@ The Properties item will gather and show information about the currently selecte
 <p>The PROCESSES section, shown for mounted devices, uses lsof to display any processes which are using the device.  Sometimes when unmounting a device, you will receive an error that the device is in use.  You can check this processes list to see what is holding the device open.
 
 
-<!-- @end devices-devicesmenu-->
+<!-- @end devices-menu-->
 <br><br></td></tr>
 
 
@@ -2076,7 +2076,7 @@ The Properties item will gather and show information about the currently selecte
     <ul>
         <li><a href="#devices-introduction">Introduction</a>
         <li><a href="#devices-list">List</a>
-        <li><a href="#devices-devicesmenu">Devices Menu</a>
+        <li><a href="#devices-menu">Menu</a>
         <li>Root
         <li><a href="#devices-settings">Settings</a>
     </ul>
@@ -2215,7 +2215,7 @@ Edit fstab is a convenience function which simply opens the /etc/fstab file as r
     <ul>
         <li><a href="#devices-introduction">Introduction</a>
         <li><a href="#devices-list">List</a>
-        <li><a href="#devices-devicesmenu">Devices Menu</a>
+        <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li>Settings
     </ul>
@@ -2745,7 +2745,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-03-29&nbsp;&nbsp;(SpaceFM version 0.7.3)
+<p>Updated 2012-03-30&nbsp;&nbsp;(SpaceFM version 0.7.3+)
 <br><br>
 </center>
 </td></tr></table>
