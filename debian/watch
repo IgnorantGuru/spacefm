@@ -1,2 +1,2 @@
 version=3
-https://github.com/IgnorantGuru/spacefm>/tags .*/tarball/(\d[\d\.]+)
+https://github.com/IgnorantGuru/spacefm/tags .*/tarball/(\d[\d\.]+)
