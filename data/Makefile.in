@@ -73,8 +73,10 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" \
-	"$(DESTDIR)$(icondir)" "$(DESTDIR)$(uidir)"
-DATA = $(desktop_DATA) $(file_DATA) $(icon_DATA) $(ui_DATA)
+	"$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" \
+	"$(DESTDIR)$(uidir)"
+DATA = $(desktop_DATA) $(file_DATA) $(html_DATA) $(icon_DATA) \
+	$(ui_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -208,6 +210,8 @@ host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
+
+# html-doc
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -264,15 +268,12 @@ icon_DATA = spacefm.png \
 
 filedir = $(datadir)/spacefm
 uidir = $(filedir)/ui
-@USE_HAL_FALSE@file_DATA = \
-@USE_HAL_FALSE@	spacefm-manual-en.html
-
 
 # sfm don't install mount.rules for no-hal build
 @USE_HAL_TRUE@file_DATA = \
-@USE_HAL_TRUE@	mount.rules \
-@USE_HAL_TRUE@	spacefm-manual-en.html
+@USE_HAL_TRUE@	mount.rules
 
+html_DATA = spacefm-manual-en.html
 
 # GtkBuilder UI definition files
 ui_in_files = \
@@ -369,6 +370,24 @@ uninstall-fileDATA:
 	@list='$(file_DATA)'; test -n "$(filedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(filedir)'; $(am__uninstall_files_from_dir)
+install-htmlDATA: $(html_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(htmldir)" || $(MKDIR_P) "$(DESTDIR)$(htmldir)"
+	@list='$(html_DATA)'; test -n "$(htmldir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(htmldir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(htmldir)" || exit $$?; \
+	done
+
+uninstall-htmlDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(html_DATA)'; test -n "$(htmldir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(htmldir)'; $(am__uninstall_files_from_dir)
 install-iconDATA: $(icon_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(icondir)" || $(MKDIR_P) "$(DESTDIR)$(icondir)"
@@ -446,7 +465,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(uidir)"; do \
+	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(uidir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -501,8 +520,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-desktopDATA install-fileDATA install-iconDATA \
-	install-uiDATA
+install-data-am: install-desktopDATA install-fileDATA install-htmlDATA \
+	install-iconDATA install-uiDATA
 
 install-dvi: install-dvi-am
 
@@ -547,7 +566,7 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
-	uninstall-iconDATA uninstall-uiDATA
+	uninstall-htmlDATA uninstall-iconDATA uninstall-uiDATA
 
 .MAKE: install-am install-strip
 
@@ -556,13 +575,14 @@ uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-desktopDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-fileDATA \
-	install-html install-html-am install-iconDATA install-info \
-	install-info-am install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip install-uiDATA \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
-	uninstall-desktopDATA uninstall-fileDATA uninstall-iconDATA \
+	install-html install-html-am install-htmlDATA install-iconDATA \
+	install-info install-info-am install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	install-uiDATA installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-am uninstall-desktopDATA \
+	uninstall-fileDATA uninstall-htmlDATA uninstall-iconDATA \
 	uninstall-uiDATA
 
 @INTLTOOL_DESKTOP_RULE@

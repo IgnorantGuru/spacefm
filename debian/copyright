@@ -1,9 +1,9 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: spacefm
-Source: http://sourceforge.net/projects/spacefm/files/
+Source: https://github.com/IgnorantGuru/spacefm/tree/master/packages/current/
 
 Files: *
-Copyright: 2011 IgnorantGuru <ignorantguru@users.sourceforge.net>
+Copyright: 2012 IgnorantGuru <ignorantguru@gmx.com>
 License: GPL-2+
 
 License: GPL-2+

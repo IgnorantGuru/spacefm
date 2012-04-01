@@ -411,15 +411,18 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
                 return;
             }
         }
-        
-        if ( !g_file_test( "/usr/share/spacefm/plugins", G_FILE_TEST_IS_DIR ) &&
-                g_file_test( "/usr/local/share/spacefm/plugins", G_FILE_TEST_IS_DIR ) )
+
+        if ( DATADIR )
+            plug_dir = g_build_filename( DATADIR, "spacefm", "plugins",
+                                                            plug_dir_name, NULL );
+        else if ( !g_file_test( "/usr/share/spacefm/plugins", G_FILE_TEST_IS_DIR ) &&
+                    g_file_test( "/usr/local/share/spacefm/plugins", G_FILE_TEST_IS_DIR ) )
             plug_dir = g_build_filename( "/usr/local/share/spacefm/plugins",
-                                                    plug_dir_name, NULL );
+                                                        plug_dir_name, NULL );
         else
             plug_dir = g_build_filename( "/usr/share/spacefm/plugins",
                                                     plug_dir_name, NULL );
-
+        
         if ( g_file_test( plug_dir, G_FILE_TEST_EXISTS ) )
         {
             msg = g_strdup_printf( _("There is already a plugin installed as '%s'.  Overwrite ?\n\nTip: You can also rename this plugin file to install it under a different name."), plug_dir_name );
@@ -443,7 +446,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         // copy job
         char* hex8;
         plug_dir = NULL;
-        while ( !plug_dir || g_file_test( plug_dir, G_FILE_TEST_EXISTS ) )
+        while ( !plug_dir || ( plug_dir && g_file_test( plug_dir, G_FILE_TEST_EXISTS ) ) )
         {
             hex8 = randhex8();
             if ( plug_dir )
@@ -556,24 +559,52 @@ void import_all_plugins( FMMainWindow* main_window )
     int i;
     gboolean found = FALSE;
     gboolean found_plugins = FALSE;
-    const char* paths[] = {
-        "/usr/local/share/spacefm/included",
-        "/usr/local/share/spacefm/plugins",
-        "/usr/share/spacefm/included",
-        "/usr/share/spacefm/plugins"
-    };
 
-    for ( i = 0; i < G_N_ELEMENTS( paths ); i++ )
+    // get potential locations
+    char* path;
+    GList* locations = NULL;
+    if ( DATADIR )
     {
-        dir = g_dir_open( paths[i], 0, NULL );
+        locations = g_list_append( locations, g_build_filename( DATADIR,
+                                                    "spacefm", "included", NULL ) );
+        locations = g_list_append( locations, g_build_filename( DATADIR,
+                                                    "spacefm", "plugins", NULL ) );
+    }
+    gchar ** sdir = g_get_system_data_dirs();
+    for( ; *sdir; ++sdir )
+    {
+        path = g_build_filename( *sdir, "spacefm", "included", NULL );
+        if ( !g_list_find_custom( locations, path, (GFunc)g_strcmp0 ) )
+            locations = g_list_append( locations, path );
+        else
+            g_free( path );
+        path = g_build_filename( *sdir, "spacefm", "plugins", NULL );
+        if ( !g_list_find_custom( locations, path, (GFunc)g_strcmp0 ) )
+            locations = g_list_append( locations, path );
+        else
+            g_free( path );
+    }
+    if ( !g_list_find_custom( locations, "/usr/local/share/spacefm/included", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/local/share/spacefm/included" ) );
+    if ( !g_list_find_custom( locations, "/usr/share/spacefm/included", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/share/spacefm/included" ) );
+    if ( !g_list_find_custom( locations, "/usr/local/share/spacefm/plugins", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/local/share/spacefm/plugins" ) );
+    if ( !g_list_find_custom( locations, "/usr/share/spacefm/plugins", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/share/spacefm/plugins" ) );
+
+    GList* l;
+    for ( l = locations; l; l = l->next )
+    {
+        dir = g_dir_open( (char*)l->data, 0, NULL );
         if ( dir )
         {
             while ( ( name = g_dir_read_name( dir ) ) )
             {
-                plug_file = g_build_filename( paths[i], name, "plugin", NULL );
+                plug_file = g_build_filename( (char*)l->data, name, "plugin", NULL );
                 if ( g_file_test( plug_file, G_FILE_TEST_EXISTS ) )
                 {
-                    plug_dir = g_build_filename( paths[i], name, NULL );
+                    plug_dir = g_build_filename( (char*)l->data, name, NULL );
                     if ( xset_import_plugin( plug_dir ) )
                     {
                         found = TRUE;
@@ -581,7 +612,7 @@ void import_all_plugins( FMMainWindow* main_window )
                             found_plugins = TRUE;
                     }
                     else
-                        printf("Invalid Plugin Ignored: %s/\n", plug_dir );
+                        printf( "Invalid Plugin Ignored: %s/\n", plug_dir );
                     g_free( plug_dir );
                 }
                 g_free( plug_file );
@@ -589,6 +620,9 @@ void import_all_plugins( FMMainWindow* main_window )
             g_dir_close( dir );
         }
     }
+    g_list_foreach( locations, (GFunc)g_free, NULL );
+    g_list_free( locations );
+    
     clean_plugin_mirrors();
 }
 

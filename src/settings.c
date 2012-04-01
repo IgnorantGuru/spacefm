@@ -3118,11 +3118,11 @@ GList* xset_get_plugins( gboolean included )
     
     for ( l = xsets; l; l = l->next )
     {
-        if ( ((XSet*)l->data)->plugin && ((XSet*)l->data)->plugin_top )
+        if ( ((XSet*)l->data)->plugin && ((XSet*)l->data)->plugin_top && 
+                                                    ((XSet*)l->data)->plug_dir )
         {
             set = (XSet*)l->data;
-            if ( g_str_has_prefix( set->plug_dir, "/usr/share/spacefm/included/" )
-                    || g_str_has_prefix( set->plug_dir, "/usr/local/share/spacefm/included/" ) )
+            if ( strstr( set->plug_dir, "/included/" ) )
             {
                 if ( included )
                     plugins = g_list_prepend( plugins, l->data );
@@ -3301,9 +3301,6 @@ XSet* xset_import_plugin( char* plug_dir )
     }
     fclose( file );
 
-    if ( !plugin_good )
-        return NULL;
-        
     // clean plugin sets, set type
     gboolean top = TRUE;
     XSet* rset = NULL;
@@ -3322,7 +3319,7 @@ XSet* xset_import_plugin( char* plug_dir )
             }
         }
     }
-    return rset;
+    return plugin_good ? rset : NULL;
 }
 
 typedef struct _PluginData
@@ -3390,12 +3387,11 @@ void xset_remove_plugin( GtkWidget* parent, PtkFileBrowser* file_browser, XSet* 
 {
     char* msg;
     
-    if ( !file_browser || !set->plugin_top || !set->plug_dir )
+    if ( !file_browser || !set || !set->plugin_top || !set->plug_dir )
         return;
 
-    if ( !g_str_has_prefix( set->plug_dir, "/usr/local/share/spacefm/plugins/" ) &&
-                !g_str_has_prefix( set->plug_dir, "/usr/share/spacefm/plugins/" ) )
-        return;   // safety - don't allow removal of included
+    if ( strstr( set->plug_dir, "/included/" ) )
+        return;   // failsafe - don't allow removal of included
         
     if ( !app_settings.no_confirm )
     {
@@ -4245,6 +4241,7 @@ void xset_open_url( GtkWidget* parent, char* url )
 
 char* xset_get_manual_url()
 {
+    char* path;
     char* url;
     url = xset_get_s( "main_help_url" );
     if ( url )
@@ -4270,53 +4267,64 @@ char* xset_get_manual_url()
         ll[0] = '\0';
 
     // get potential filenames
-    char* name[3];
-    int i = 0;
+    GList* names = NULL;
     if ( locale && locale[0] != '\0' )
-        name[i++] = g_strdup_printf( "spacefm-manual-%s.html", locale );
+        names = g_list_append( names, g_strdup_printf( "spacefm-manual-%s.html",
+                                                                    locale ) );
     if ( l && l[0] != '\0' && g_strcmp0( l, locale ) )
-        name[i++] = g_strdup_printf( "spacefm-manual-%s.html", l );
+        names = g_list_append( names, g_strdup_printf( "spacefm-manual-%s.html", l ) );
     if ( g_strcmp0( l, "en" ) )
-        name[i++] = g_strdup( "spacefm-manual-en.html" );
-    name[i] = NULL;
+        names = g_list_append( names, g_strdup( "spacefm-manual-en.html" ) );
+    names = g_list_append( names, g_strdup( "spacefm-manual.html" ) );
     g_free( l );
 
-    // find file
-    int j;
-    char* path;
-    char* locations[] = { "/usr/share/spacefm", "/usr/local/share/spacefm" };
-    for ( i = 0; i < G_N_ELEMENTS( locations ); ++i )
+    // get potential locations
+    GList* locations = NULL;
+    if ( HTMLDIR )
+        locations = g_list_append( locations, g_strdup( HTMLDIR ) );
+    if ( DATADIR )
+        locations = g_list_append( locations, g_build_filename( DATADIR,
+                                                            "spacefm", NULL ) );
+    gchar ** dir = g_get_system_data_dirs();
+    for( ; *dir; ++dir )
     {
-        j = 0;
-        while ( name[j] )
+        path = g_build_filename( *dir, "spacefm", NULL );
+        if ( !g_list_find_custom( locations, path, (GFunc)g_strcmp0 ) )
+            locations = g_list_append( locations, path );
+        else
+            g_free( path );
+    }
+    if ( !g_list_find_custom( locations, "/usr/local/share/spacefm", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/local/share/spacefm" ) );
+    if ( !g_list_find_custom( locations, "/usr/share/spacefm", (GFunc)g_strcmp0 ) )
+        locations = g_list_append( locations, g_strdup( "/usr/share/spacefm" ) );
+    
+    GList* loc;
+    GList* ln;
+    for ( loc = locations; loc && !url; loc = loc->next )
+    {
+        for ( ln = names; ln; ln = ln->next )
         {
-            path = g_build_filename( locations[i], name[j], NULL );
+            path = g_build_filename( (char*)loc->data, (char*)ln->data, NULL );
             if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
             {
                 url = path;
-                path = g_strdup_printf( "file://%s", url );
-                g_free( url );
-                j = 0;
-                while ( name[j] )
-                {
-                    g_free( name[j] );
-                    j++;
-                }
-                return path;
+                break;
             }
             g_free( path );
-            j++;
         }
     }
-
-    j = 0;
-    while ( name[j] )
-    {
-        g_free( name[j] );
-        j++;
-    }
-
-    return NULL;
+    g_list_foreach( names, (GFunc)g_free, NULL );
+    g_list_foreach( locations, (GFunc)g_free, NULL );
+    g_list_free( names );
+    g_list_free( locations );
+    
+    if ( !url )
+        return NULL;
+    
+    path = g_strdup_printf( "file://%s", url );
+    g_free( url );
+    return path;
 }
 
 XSetContext* xset_context_new()
@@ -5892,10 +5900,9 @@ gboolean xset_job_is_valid( XSet* set, int job )
 
     if ( set->plugin )
     {
-        if ( !set->plugin_top || g_str_has_prefix( set->plug_dir,
-                                "/usr/share/spacefm/included/" )
-                              || g_str_has_prefix( set->plug_dir,
-                                "/usr/local/share/spacefm/included/" ) )
+        if ( !set->plug_dir )
+            return FALSE;
+        if ( !set->plugin_top || strstr( set->plug_dir, "/included/" ) )
             no_remove = TRUE;
     }
     
@@ -6215,10 +6222,12 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
         
     if ( set->plugin )
     {
-        if ( !set->plugin_top || g_str_has_prefix( set->plug_dir,
-                                "/usr/share/spacefm/included/" )
-                              || g_str_has_prefix( set->plug_dir,
-                                "/usr/local/share/spacefm/included/" ) )
+        if ( set->plug_dir )
+        {
+            if ( !set->plugin_top || strstr( set->plug_dir, "/included/" ) )
+                no_remove = TRUE;
+        }
+        else
             no_remove = TRUE;
     }
     
@@ -6410,9 +6419,7 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
             else if ( !mime_type_is_text_file( set->z, NULL ) )
                 edit_as_root = FALSE;
         }
-        if ( set->plugin && set->plug_dir && 
-                ( g_str_has_prefix( set->plug_dir, "/usr/share/spacefm/included/" )
-                || g_str_has_prefix( set->plug_dir, "/usr/local/share/spacefm/included/" ) ) )
+        if ( set->plugin && set->plug_dir && strstr( set->plug_dir, "/included/" ) )
             edit_as_root = FALSE;
         if ( edit_as_root )
             newitem = xset_design_additem( submenu, _("E_dit As Root"),

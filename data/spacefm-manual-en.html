@@ -17,7 +17,7 @@
 </td>
 
 <td valign="top">
-<a name="toc"></a><font size=+3><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">SpaceFM User's Manual</a></font><br><br>
+<font size=+3><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">SpaceFM User's Manual</a></font><br><br>
 
 <p><b>This document is under construction and incomplete.</b>
 
@@ -31,7 +31,7 @@
 
 
 <!-- @toc -->
-<font size=+2>Table Of Contents</font><br><br><blockquote>
+<font size=+2><a name="toc">Table Of Contents</a></font><br><br><blockquote>
 <a href="#introduction">Introduction</a>
 <ul>
     <a href="#introduction-about">About</a><br>
@@ -430,7 +430,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
-<blockquote><i>autotools-dev dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
+<blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
 <blockquote><i>udisks ktsuss|gksu wget eject lsof</i></blockquote>
@@ -494,7 +494,7 @@ Or, to see the help for alternate build options, run:
 
 <p><b>IF</b> you don't want to use the inotify kernel support and instead want fam or gamin to detect directory changes, add to configure: <code>--disable-inotify</code>
         
-<p>SpaceFM already supports ktsuss, gnomesu, gksu, gksudo, and kdesu.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
+<p>SpaceFM already supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
 
 <p>Next, <b>run make</b> and complete the installation:
 <pre>    make
@@ -539,7 +539,7 @@ Or, to see the help for alternate build options, run:
 <pre>    rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
     rm -r /usr/local/share/spacefm
     rm /usr/local/share/pixmaps/spacefm.png
-    rm /usr/local/share/pixmaps/spacefm-root.png
+    rm /usr/local/share/pixmaps/spacefm-*.png
     rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
     rm /usr/local/share/applications/spacefm*.desktop
     rm /usr/local/share/mime/packages/spacefm-mime.xml
@@ -990,7 +990,7 @@ Help opens contextual help for a menu item.  For built-in commands, the SpaceFM 
 <p><a name="designmode-designmenu-cut"/><a href="#designmode-designmenu-cut"><b>Cut</b></a><br>
 The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
 
-<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.
+<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.  You can copy submenus, which copies all the items within the submenu recursively.
 
 <p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
 
@@ -2682,9 +2682,9 @@ The SpaceFM executable file.
 <p><a name="programfiles-usr-bin-spacefm-auth"/><a href="#programfiles-usr-bin-spacefm-auth"><b>bin/spacefm-auth</b></a><br>
 This script is used internally by spacefm to authenticate temporary scripts run as another user (using /usr/bin/sha256sum).  This file should not be modified or run directly.  This file was added to SpaceFM version 0.7.2 to simplify the command line for su programs, which often handle special characters poorly and have inconsistent command line usage.  If spacefm-auth or /usr/bin/sha256sum are missing, SpaceFM will operate in a less secure mode.
 
-<!-- # share/spacefm/spacefm-manual-en.html #manual -->
-<p><a name="programfiles-usr-manual"/><a href="#programfiles-usr-manual"><b>share/spacefm/spacefm-manual-en.html</b></a><br>
-A local copy of this manual you're reading.  This copy is accessed when using context-sensitive help within SpaceFM.  If available, a version for your language will automatically be used.  To use a different manual location within SpaceFM, set your preference in Help|Options|Manual Location.
+<!-- # share/doc/spacefm/spacefm-manual-en.html #manual -->
+<p><a name="programfiles-usr-manual"/><a href="#programfiles-usr-manual"><b>share/doc/spacefm/spacefm-manual-en.html</b></a><br>
+A local copy of this manual you're reading (also may be in share/spacefm/, or in your distro's standard html docs folder).  This copy is accessed when using context-sensitive help within SpaceFM.  If available, a version for your language will automatically be used.  To use a different manual location within SpaceFM, set your preference in Help|Options|Manual Location.
 
 <!-- # share/spacefm/plugins/ #plugins -->
 <p><a name="programfiles-usr-plugins"/><a href="#programfiles-usr-plugins"><b>share/spacefm/plugins/</b></a><br>
@@ -2745,7 +2745,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-03-30&nbsp;&nbsp;(SpaceFM version 0.7.3+)
+<p>Updated 2012-04-01&nbsp;&nbsp;(SpaceFM version 0.7.3+)
 <br><br>
 </center>
 </td></tr></table>

@@ -14411,6 +14411,8 @@ fi
 
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
+CPPFLAGS="$CPPFLAGS -DDATADIR=\\\"$datadir\\\" -DHTMLDIR=\\\"$htmldir\\\""
+
 ac_fn_c_check_func "$LINENO" "euidaccess" "ac_cv_func_euidaccess"
 if test "x$ac_cv_func_euidaccess" = xyes; then :
 

@@ -1,2 +1,2 @@
 version=3
-http://sf.net/spacefm/spacefm-(.*)\.tar\.xz
+http://github.com/IgnorantGuru/spacefm/raw/master/packages/current/spacefm-(.*)\.tar\.xz
