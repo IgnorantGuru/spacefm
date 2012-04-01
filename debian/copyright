@@ -1,6 +1,6 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: spacefm
-Source: https://github.com/IgnorantGuru/spacefm/tree/master/packages/current/
+Source: https://github.com/IgnorantGuru/spacefm/tree/master/packages/
 
 Files: *
 Copyright: 2012 IgnorantGuru <ignorantguru@gmx.com>

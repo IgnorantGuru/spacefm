@@ -168,7 +168,7 @@ gboolean check_overwrite( VFSFileTask* task,
     return ! should_abort( task );
 }
 
-static void
+static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
                        const char* src_file,
                        const char* dest_file )
@@ -184,17 +184,18 @@ vfs_file_task_do_copy( VFSFileTask* task,
     ssize_t rsize;
     char* new_dest_file = NULL;
     gboolean dest_exists;
+    gboolean copy_fail = FALSE;
     int result;
 
     if ( should_abort( task ) )
-        return ;
+        return FALSE;
     if ( lstat( src_file, &file_stat ) == -1 )
     {
         /* Error occurred */
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
         //call_state_callback( task, VFS_FILE_TASK_ERROR );
         if ( should_abort( task ) )
-            return ;
+            return FALSE;
     }
 
     task->current_file = src_file;
@@ -227,7 +228,9 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     break;
                 sub_src_file = g_build_filename( src_file, file_name, NULL );
                 sub_dest_file = g_build_filename( dest_file, file_name, NULL );
-                vfs_file_task_do_copy( task, sub_src_file, sub_dest_file );
+                if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
+                                                            && !copy_fail )
+                    copy_fail = TRUE;
                 g_free(sub_dest_file );
                 g_free(sub_src_file );
             }
@@ -239,7 +242,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
             /* Move files to different device: Need to delete source files */
             if ( ( task->type == VFS_FILE_TASK_MOVE
                  || task->type == VFS_FILE_TASK_TRASH )
-                 && !should_abort( task ) )
+                 && !should_abort( task ) && !copy_fail )
             {
                 if ( (result = rmdir( src_file )) )
                 {
@@ -278,6 +281,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     task->error = errno;
+                    copy_fail = TRUE;
                     //call_state_callback( task, VFS_FILE_TASK_ERROR );
                     //goto _return_;
                 }                
@@ -289,7 +293,9 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 //chmod( dest_file, file_stat.st_mode );
 
                 /* Move files to different device: Need to delete source files */
-                if( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH )
+                if ( ( task->type == VFS_FILE_TASK_MOVE
+                                            || task->type == VFS_FILE_TASK_TRASH )
+                                            && !copy_fail )
                 {
                     result = unlink( src_file );
                     if ( result )
@@ -353,10 +359,11 @@ vfs_file_task_do_copy( VFSFileTask* task,
                         task->progress += rsize;
                     else
                     {
+                        close( wfd );
                         vfs_file_task_error( task, errno, _("Writing"), dest_file );
                         task->error = errno;
+                        copy_fail = TRUE;
                         //call_state_callback( task, VFS_FILE_TASK_ERROR );
-                        //close( wfd );
                         break;
                     }
                     call_progress_callback( task );
@@ -373,7 +380,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
         
                 /* Move files to different device: Need to delete source files */
                 if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
-                     && !should_abort( task ) )
+                     && !should_abort( task ) && !copy_fail )
                 {
                     result = unlink( src_file );
                     if ( result )
@@ -399,10 +406,12 @@ vfs_file_task_do_copy( VFSFileTask* task,
             //call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
     }
+    return !copy_fail;
 _return_:
 
     if ( new_dest_file )
         g_free( new_dest_file );
+    return FALSE;
 }
 
 static void
