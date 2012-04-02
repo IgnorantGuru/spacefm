@@ -1,4 +1,7 @@
-0.7.4
+0.7.5
+
+
+0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8
     no del on move error independent of error control fixes #9
