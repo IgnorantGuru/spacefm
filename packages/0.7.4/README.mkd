@@ -1,1 +1,7 @@
 **To save a file** click on the link and click 'View Raw'
+
+Notice To Debian/Ubuntu Users:
+------------------------------
+
+Due [SpaceFM issue #11](https://github.com/IgnorantGuru/spacefm/issues/11), Ubuntu 11, Debian Testing, and possibly others may not be able to run SpaceFM successfully when installed via the distributed SpaceFM deb packages or IgnorantGuru's PPA.  It is recommended that you use the [self-extracting installer](http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#installation-installer) instead, or build from source per the instructions in the [README](https://github.com/IgnorantGuru/spacefm/blob/master/README).
+
