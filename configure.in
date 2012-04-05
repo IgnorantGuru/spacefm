@@ -95,6 +95,10 @@ dnl Check HAL support
     else
         AC_MSG_ERROR([To use HAL support, you must have developing packages of dbus-glib-1 (>=0.31), hal(>=0.5.0), and hal-storage, or you can use --disable-hal to disable HAL support.])
     fi
+else
+    PKG_CHECK_MODULES(LIBUDEV, [libudev >= 143])
+    AC_SUBST(LIBUDEV_CFLAGS)
+    AC_SUBST(LIBUDEV_LIBS)
 fi
 AM_CONDITIONAL(USE_HAL, test "$use_hal" = "yes")
 AC_SUBST(HAL_CFLAGS)
@@ -217,29 +221,27 @@ echo SpaceFM...................................... : Version $VERSION
 echo
 echo Prefix....................................... : $prefix
 if test x"$use_hal" = x"yes"; then
-echo Udisks support............................... : no
-echo Linux HAL support............................ : $use_hal
+echo Linux device support......................... : hal
 else
-echo Udisks support............................... : yes \(built-in\)
+echo Linux device support......................... : libudev
 fi
 if test x"$use_inotify" = x"yes"; then
-echo Linux inotify support........................ : $use_inotify
+echo Linux file change monitor support............ : inotify
 else
-echo Linux inotify support........................ : $use_inotify
-echo FAM/Gamin support............................ : yes
+echo Linux file change monitor support............ : fam/gamin
 fi
 echo 64-bit Large file support.................... : $largefile
 #echo Show warnings if run as super user........... : $superuser_checks
 if test ! -z "$preferable_sudo"; then
-echo Preferable program to switch to super user... : $preferable_sudo
+echo Additional program to switch to super user... : $preferable_sudo
 fi
 echo Desktop icon integration..................... : $desktop_integration
 echo
-echo The binary will be installed as $prefix/bin/spacefm
+echo "The binary will be installed as $prefix/bin/spacefm"
 echo
-echo http://spacefm.sourceforge.net/
-#echo
-#echo Please read README carefully if you are packaging SpaceFM.
+echo 'Homepage: http://ignorantguru.github.com/spacefm/'
+echo
+echo Please read README carefully if you are packaging SpaceFM.
 echo
 echo
 

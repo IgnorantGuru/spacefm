@@ -19,10 +19,10 @@ Depends: dbus, desktop-file-utils, bash, libc6, libcairo2, libdbus-1-3,
  libstartup-notification0, libx11-6, shared-mime-info,
  hal, libhal-storage1, libhal1, libdbus-glib-1-2
 Recommends: 
-Suggests: ktsuss, gksu, wget, udisks, eject, lsof
+Suggests: eject, lsof, wget, ktsuss, gksu
 Conflicts: spacefm
-Description: A multi-panel tabbed file manager with built-in VFS, optional
- udisks-based device manager*, customizable menu system, and bash integration.
- * This package is built with deprecated HAL support in place of udisks (device
- manager functions are limited).
+Description: A multi-panel tabbed file manager with built-in VFS, udev-based
+ device manager*, customizable menu system, and bash integration.
+ * This package is built with deprecated HAL support in place of libudev
+ (device manager functions are very limited).
 

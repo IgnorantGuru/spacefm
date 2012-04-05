@@ -560,8 +560,11 @@ void ptk_file_task_progress_open( PtkFileTask* task )
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_text_view_set_wrap_mode( task->error_view, GTK_WRAP_WORD_CHAR );
     gtk_text_view_set_editable( task->error_view, FALSE );
-    gtk_text_view_scroll_to_mark( task->error_view, task->mark_end,
-                                                        0.0, FALSE, 0, 0 );
+    if ( !task->task->exec_scroll_lock )
+    {
+        gtk_text_view_scroll_to_mark( task->error_view, task->mark_end,
+                                                            0.0, FALSE, 0, 0 );
+    }
     char* fontname = xset_get_s( "task_pop_font" );
     if ( fontname )
     {

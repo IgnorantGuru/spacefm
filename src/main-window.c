@@ -3497,9 +3497,9 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
             { old_flags = flags; flags = g_strdup_printf( "%s floppy", flags ); g_free( old_flags ); }
 
         if ( !vol->is_user_visible )
-            { old_flags = flags; flags = g_strdup_printf( "%s udisks_hide", flags ); g_free( old_flags ); }
+            { old_flags = flags; flags = g_strdup_printf( "%s policy_hide", flags ); g_free( old_flags ); }
         if ( vol->nopolicy )
-            { old_flags = flags; flags = g_strdup_printf( "%s udisks_noauto", flags ); g_free( old_flags ); }
+            { old_flags = flags; flags = g_strdup_printf( "%s policy_noauto", flags ); g_free( old_flags ); }
 
         if ( vol->is_mounted )
             { old_flags = flags; flags = g_strdup_printf( "%s mounted", flags ); g_free( old_flags ); }
@@ -3657,7 +3657,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     c->valid = TRUE;
 }
 
-gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file )
+gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
 {
     int result, p, num_pages, i;
     char* cwd;

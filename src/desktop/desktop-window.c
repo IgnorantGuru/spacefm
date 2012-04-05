@@ -2632,7 +2632,7 @@ void desktop_context_fill( DesktopWindow* win, gpointer context )
     c->valid = TRUE;
 }
 
-gboolean desktop_write_exports( VFSFileTask* vtask, char* value, FILE* file )
+gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
 {
     int result;
     char* cwd = vfs_get_desktop_dir();

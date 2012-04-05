@@ -57,7 +57,8 @@ const mode_t chmod_flags[] =
 static void get_total_size_of_dir( VFSFileTask* task,
                                    const char* path,
                                    off_t* size );
-void vfs_file_task_error( VFSFileTask* task, int errnox, char* action, char* target );
+void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
+                                                            const char* target );
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
@@ -986,9 +987,9 @@ if ( !( cond & G_IO_NVAL ) )
         goto _unref_channel;
     }
 
-    GIOChannelError *error = NULL;
+    GError *error = NULL;
     gchar buf[2048];
-    if ( g_io_channel_read_chars( channel, &buf, sizeof( buf ), &size, &error ) ==
+    if ( g_io_channel_read_chars( channel, buf, sizeof( buf ), &size, &error ) ==
                                                 G_IO_STATUS_NORMAL && size > 0 )
     {
         gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
@@ -1107,7 +1108,7 @@ void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action )
 {
 //printf("vfs_file_task_exec_error\n");
     GtkTextIter iter;
-    char* err_msg;
+    const char* err_msg;
     char* new_msg;
     
     if ( errnox )
@@ -1142,7 +1143,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     int result;
     FILE* file;
     char* terminal = NULL;
-    char* value;
+    const char* value;
     char* sum_script = NULL;
     GtkWidget* parent = NULL;
     gboolean success;
@@ -1299,7 +1300,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
         // build - write root settings
         if ( task->exec_write_root && geteuid() != 0 )
         {
-            char* this_user = g_get_user_name();
+            const char* this_user = g_get_user_name();
             if ( this_user && this_user[0] != '\0' )
             {
                 char* root_set_path= g_strdup_printf(
@@ -1635,14 +1636,9 @@ _exit_with_error:
             unlink( task->exec_script );
     }
 _exit_with_error_lean:
-    if ( terminal )
-        g_free( terminal );
-    if ( value )
-        g_free( value );
-    if ( su )
-        g_free( su );
-    if ( gsu )
-        g_free( gsu );
+    g_free( terminal );
+    g_free( su );
+    g_free( gsu );
     task->exec_sync = FALSE;  // triggers FINISH
 }
 
@@ -1979,11 +1975,12 @@ void vfs_file_task_set_state_callback( VFSFileTask* task,
     task->state_cb_data = user_data;
 }
 
-void vfs_file_task_error( VFSFileTask* task, int errnox, char* action, char* target )
+void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
+                                                            const char* target )
 {
     char* old_msgs;
     
-    char* err_msg = g_strerror( errnox );
+    const char* err_msg = g_strerror( errnox );
     if ( !task->err_msgs )
         task->err_msgs = g_strdup_printf( _("\n%s %s\nError: %s\n"), action, target,
                                                         err_msg );
