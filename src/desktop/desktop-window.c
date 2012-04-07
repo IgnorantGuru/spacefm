@@ -1004,16 +1004,48 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
 
         if( clicked_item )
         {
-            if( evt->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK) )
+            if( evt->state & ( GDK_CONTROL_MASK) )
                 clicked_item->is_selected = ! clicked_item->is_selected;
+            else if ( evt->state & ( GDK_SHIFT_MASK ) )
+            {
+                // select range from last focus
+                if ( self->focus )
+                {
+                    int i;
+                    l = g_list_find( self->items, clicked_item );
+                    int pos_clicked = g_list_position( self->items, l );
+                    l = g_list_find( self->items, self->focus );
+                    int pos_focus = g_list_position( self->items, l );
+                    if ( pos_focus >= 0 && pos_clicked >= 0 )
+                    {
+                        if ( pos_clicked < pos_focus )
+                        {
+                            i = pos_focus;
+                            pos_focus = pos_clicked;
+                            pos_clicked = i;
+                        }
+                        for ( i = pos_focus; i <= pos_clicked; i++ )
+                        {
+                            l = g_list_nth( self->items, i );
+                            if ( l )
+                            {
+                                item = (DesktopItem*) l->data;
+                                item->is_selected = TRUE;
+                                redraw_item( DESKTOP_WINDOW(w), item );
+                            }
+                        }
+                    }
+                }
+                clicked_item->is_selected = TRUE;
+            }
             else
                 clicked_item->is_selected = TRUE;
 
-            if( self->focus && self->focus != item )
+            if( self->focus && self->focus != clicked_item )
             {
                 DesktopItem* old_focus = self->focus;
                 if( old_focus )
-		    redraw_item( DESKTOP_WINDOW(w), old_focus );
+                    redraw_item( DESKTOP_WINDOW(w), old_focus );
             }
             self->focus = clicked_item;
             redraw_item( self, clicked_item );
