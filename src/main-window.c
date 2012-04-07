@@ -2417,9 +2417,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
                       G_CALLBACK( on_file_browser_before_chdir ), main_window );
     g_signal_connect( file_browser, "begin-chdir",
                       G_CALLBACK( on_file_browser_begin_chdir ), main_window );
+*/
     g_signal_connect( file_browser, "content-change",
                       G_CALLBACK( on_file_browser_content_change ), main_window );
-*/
     g_signal_connect( file_browser, "after-chdir",
                       G_CALLBACK( on_file_browser_after_chdir ), main_window );
     g_signal_connect( file_browser, "open-item",
@@ -2829,7 +2829,7 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
 //    fm_main_window_update_command_ui( main_window, file_browser );
-//    fm_main_window_update_status_bar( main_window, file_browser );
+    fm_main_window_update_status_bar( main_window, file_browser );
 
     //gtk_paned_set_position ( GTK_PANED ( file_browser ), main_window->splitter_pos );
 
@@ -2894,7 +2894,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     if ( !file_browser )
         return;
         //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
-
+    
     free_space[0] = '\0';
 #ifdef HAVE_STATVFS
 // FIXME: statvfs support should be moved to src/vfs

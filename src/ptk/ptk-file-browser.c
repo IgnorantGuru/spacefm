@@ -2255,7 +2255,6 @@ void on_folder_content_update ( FolderContent* content,
 }
 #endif
 
-#if 0   //MOD  these were used to signal main_window
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     gdk_threads_enter();
@@ -2270,7 +2269,6 @@ static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
     g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
                 file_browser );
 }
-#endif
 
 static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
                                         PtkFileBrowser* file_browser )
@@ -2281,8 +2279,8 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
         on_close_notebook_page( NULL, file_browser );
         //ptk_file_browser_chdir( file_browser, g_get_home_dir(), PTK_FB_CHDIR_ADD_HISTORY);
     }
-    //else
-    //    on_folder_content_changed( dir, file, file_browser );
+    else
+        on_folder_content_changed( dir, file, file_browser );
 }
 
 static void on_sort_col_changed( GtkTreeSortable* sortable,
@@ -2372,12 +2370,12 @@ void on_dir_file_listed( VFSDir* dir,
 
     if ( G_LIKELY( ! is_cancelled ) )
     {
-        //g_signal_connect( dir, "file-created",
-        //                  G_CALLBACK( on_folder_content_changed ), file_browser );
+        g_signal_connect( dir, "file-created",
+                          G_CALLBACK( on_folder_content_changed ), file_browser );
         g_signal_connect( dir, "file-deleted",
                           G_CALLBACK( on_file_deleted ), file_browser );
-        //g_signal_connect( dir, "file-changed",
-        //                  G_CALLBACK( on_folder_content_changed ), file_browser );
+        g_signal_connect( dir, "file-changed",
+                          G_CALLBACK( on_folder_content_changed ), file_browser );
     }
 
     ptk_file_browser_update_model( file_browser );
