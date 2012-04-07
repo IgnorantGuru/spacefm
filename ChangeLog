@@ -5,6 +5,7 @@
     corrected race condition create tmp dir
     status bar update fixes
     side box fixed size fixes #6
+    fixed scroll setting not retained between sessions fixes #13
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

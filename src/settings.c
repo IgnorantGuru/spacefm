@@ -1731,6 +1731,8 @@ static void xset_write_set( FILE* file, XSet* set )
             fprintf( file, "%s-term=%d\n", set->name, set->in_terminal );
         if ( set->keep_terminal != XSET_B_UNSET )
             fprintf( file, "%s-keep=%d\n", set->name, set->keep_terminal );
+        if ( set->scroll_lock != XSET_B_UNSET )
+            fprintf( file, "%s-scroll=%d\n", set->name, set->scroll_lock );
     }
 }
 
@@ -1981,6 +1983,13 @@ XSet* xset_set_set( XSet* set, char* var, char* value )
             set->keep_terminal = XSET_B_TRUE;
         else
             set->keep_terminal = XSET_B_UNSET;
+    }
+    else if ( !strcmp( var, "scroll" ) )
+    {
+        if ( !strcmp( value, "1" ) )
+            set->scroll_lock = XSET_B_TRUE;
+        else
+            set->scroll_lock = XSET_B_UNSET;
     }
     else if ( !strcmp( var, "disable" ) )
     {
