@@ -1295,8 +1295,9 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     // lists area
     file_browser->hpane = gtk_hpaned_new();
     file_browser->side_vbox = gtk_vbox_new( FALSE, 0 );
+    gtk_widget_set_size_request( file_browser->side_vbox, 140, -1 );
     file_browser->folder_view_scroll = gtk_scrolled_window_new( NULL, NULL );
-    gtk_paned_pack1 ( file_browser->hpane, file_browser->side_vbox, TRUE, TRUE );
+    gtk_paned_pack1 ( file_browser->hpane, file_browser->side_vbox, FALSE, FALSE );
     gtk_paned_pack2 ( file_browser->hpane, file_browser->folder_view_scroll, TRUE, TRUE );
 
     // fill side
