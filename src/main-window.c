@@ -444,6 +444,16 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     else
     {
         // copy job
+        const char* user_tmp = xset_get_user_tmp_dir();
+        if ( !user_tmp )
+        {
+            xset_msg_dialog( main_window, GTK_MESSAGE_ERROR,
+                                _("Error Creating Temp Directory"), NULL, 0, 
+                                _("Unable to create temporary directory"), NULL,
+                                NULL );
+            g_free( path );
+            return;
+        }
         char* hex8;
         plug_dir = NULL;
         while ( !plug_dir || ( plug_dir && g_file_test( plug_dir, G_FILE_TEST_EXISTS ) ) )
@@ -451,7 +461,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
             hex8 = randhex8();
             if ( plug_dir )
                 g_free( plug_dir );
-            plug_dir = g_build_filename( xset_get_user_tmp_dir(), hex8, NULL );
+            plug_dir = g_build_filename( user_tmp, hex8, NULL );
             g_free( hex8 );
         }
     }

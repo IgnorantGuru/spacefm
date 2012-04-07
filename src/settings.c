@@ -542,11 +542,6 @@ void load_settings( char* config_dir )
         chmod( settings_shared_tmp_dir, S_IRWXU | S_IRWXG | S_IRWXO | S_ISVTX );
     }
 
-    // user tmp
-    str = g_strdup_printf( "spacefm-%s-%d.tmp", g_get_user_name(), getpid() );
-    settings_user_tmp_dir = g_build_filename( settings_tmp_dir, str, NULL );
-    g_free( str );
-    
     // load session
     int x = 0;
     do
@@ -1139,12 +1134,30 @@ char* xset_get_shared_tmp_dir()
 
 char* xset_get_user_tmp_dir()
 {
-    if ( !g_file_test( settings_user_tmp_dir, G_FILE_TEST_EXISTS ) )
+    if ( settings_user_tmp_dir && 
+                    g_file_test( settings_user_tmp_dir, G_FILE_TEST_EXISTS ) )
+        return settings_user_tmp_dir;
+
+    char* rand;
+    char* name;
+    int count = 0;
+    int ret;
+    do
     {
-        g_mkdir_with_parents( settings_user_tmp_dir,
-                                S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
-        chmod( settings_user_tmp_dir,
-                                S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
+        g_free( settings_user_tmp_dir );
+        rand = randhex8();
+        name =  g_strdup_printf( "spacefm-%s-%s.tmp", g_get_user_name(), rand );
+        g_free( rand );
+        settings_user_tmp_dir = g_build_filename( settings_tmp_dir, name, NULL );
+        g_free( name );
+        count++;
+    } while ( count < 1000 && ( ret = mkdir( settings_user_tmp_dir,
+                        S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) != 0 ) );
+    if ( ret != 0 )
+    {
+        g_free( settings_user_tmp_dir );
+        settings_user_tmp_dir = NULL;
+        g_warning( "Unable to create temporary directory in %s", settings_tmp_dir );
     }
     return settings_user_tmp_dir;
 }
@@ -2128,7 +2141,7 @@ void read_root_settings()
 
 void write_src_functions( FILE* file )
 {
-    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    while [ -e \"$fm_tmp1\" ]; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    done\n    mkdir -p \"$fm_tmp1\"\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex\n}\n\n", file );
+    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n			unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\n", file );
 }
 
 GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size )
@@ -3674,6 +3687,8 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     if ( !set->plugin )
     {
         s1 = xset_get_user_tmp_dir();
+        if ( !s1 )
+            goto _export_error;
         while ( !plug_dir || g_file_test( plug_dir, G_FILE_TEST_EXISTS ) )
         {
             hex8 = randhex8();

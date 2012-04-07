@@ -1212,7 +1212,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     else
         tmp = xset_get_user_tmp_dir();
  
-    if ( !g_file_test( tmp, G_FILE_TEST_IS_DIR ) )
+    if ( !tmp || ( tmp && !g_file_test( tmp, G_FILE_TEST_IS_DIR ) ) )
     {
         str = _("Cannot create temporary directory");
         g_warning ( str );
