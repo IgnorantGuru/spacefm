@@ -735,7 +735,6 @@ gboolean update_file_info( VFSDir* dir, VFSFileInfo* file )
     file->name = NULL;
 
     full_path = g_build_filename( dir->path, file_name, NULL );
-
     if ( G_LIKELY( full_path ) )
     {
         if( G_LIKELY( vfs_file_info_get( file, full_path, file_name ) ) )
@@ -827,8 +826,12 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
             {
                 // file already exists in dir file_list
                 file = vfs_file_info_ref( (VFSFileInfo*)ll->data );
-                g_signal_emit( dir, signals[ FILE_CHANGED_SIGNAL ], 0, file );
-                vfs_file_info_unref( file );
+                if ( update_file_info( dir, file ) )
+                {
+                    g_signal_emit( dir, signals[ FILE_CHANGED_SIGNAL ], 0, file );
+                    vfs_file_info_unref( file );
+                }
+                // else was deleted, signaled, and unrefed in update_file_info
             }
             g_free( (char*)l->data );  // free file_name string
         }

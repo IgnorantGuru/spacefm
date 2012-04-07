@@ -2909,6 +2909,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     }
 #endif
 
+    // note: total size won't include content changes since last selection change
     n = ptk_file_browser_get_n_sel( file_browser, &total_size );
 
     char* link_info = NULL;  //MOD added
