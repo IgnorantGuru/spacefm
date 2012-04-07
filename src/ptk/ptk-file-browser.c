@@ -4446,19 +4446,22 @@ int no_write_access = 0;
             // first file is archive - use default archive action
             if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
             {
-                ptk_file_archiver_extract( file_browser, sel_files,
+                ptk_file_archiver_extract( file_browser, NULL, sel_files,
+                                        ptk_file_browser_get_cwd( file_browser ),
                                         ptk_file_browser_get_cwd( file_browser ) );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_exto" ) || 
                         ( xset_get_b( "arc_def_ex" ) && no_write_access ) )
             {
-                ptk_file_archiver_extract( file_browser, sel_files, NULL );
+                ptk_file_archiver_extract( file_browser, NULL, sel_files, 
+                                ptk_file_browser_get_cwd( file_browser ), NULL );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_list" ) )
             {
-                ptk_file_archiver_extract( file_browser, sel_files, "////LIST" );
+                ptk_file_archiver_extract( file_browser, NULL, sel_files,
+                            ptk_file_browser_get_cwd( file_browser ), "////LIST" );
                 goto _done;
             }
         }

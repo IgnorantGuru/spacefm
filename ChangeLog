@@ -8,6 +8,7 @@
     scroll setting retained between sessions fixes #13
     fixed file info update on existing fixes #14 fixes #15
     reuse window on open folder on desktop fixes #16
+    built-in archive functions on desktop closes #18
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

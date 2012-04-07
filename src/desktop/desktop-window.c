@@ -39,6 +39,7 @@
 #include "pref-dialog.h"
 #include "ptk-file-browser.h"
 #include "ptk-clipboard.h"
+#include "ptk-file-archiver.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -911,7 +912,7 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
     }
 }
 
-static void open_clicked_item( DesktopItem* clicked_item )
+static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
     if( vfs_file_info_is_dir( clicked_item->fi ) )  /* this is a folder */
     {
@@ -924,8 +925,44 @@ static void open_clicked_item( DesktopItem* clicked_item )
     {
         GList* sel_files = NULL;
         sel_files = g_list_prepend( sel_files, clicked_item->fi );
+        
+        // archive?
+        if( sel_files && !xset_get_b( "arc_def_open" ) )
+        {
+            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
+            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+            vfs_file_info_unref( file );    
+            if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+            {
+                int no_write_access = ptk_file_browser_no_access ( 
+                                                    vfs_get_desktop_dir(), NULL );
+
+                // first file is archive - use default archive action
+                if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
+                {
+                    ptk_file_archiver_extract( NULL, GTK_WIDGET( self ), sel_files,
+                                    vfs_get_desktop_dir(), vfs_get_desktop_dir() );
+                    goto _done;
+                }
+                else if ( xset_get_b( "arc_def_exto" ) || 
+                            ( xset_get_b( "arc_def_ex" ) && no_write_access ) )
+                {
+                    ptk_file_archiver_extract( NULL, GTK_WIDGET( self ), sel_files, 
+                                                    vfs_get_desktop_dir(), NULL );
+                    goto _done;
+                }
+                else if ( xset_get_b( "arc_def_list" ) )
+                {
+                    ptk_file_archiver_extract( NULL, GTK_WIDGET( self ), sel_files,
+                                                vfs_get_desktop_dir(), "////LIST" );
+                    goto _done;
+                }
+            }
+        }
+
         ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL, NULL,
                                                             TRUE, FALSE ); //MOD
+_done:
         g_list_free( sel_files );
     }
 }
@@ -1043,7 +1080,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     {
         if( clicked_item && evt->button == 1)   /* left double click */
         {
-            open_clicked_item( clicked_item );
+            open_clicked_item( self, clicked_item );
             goto out;
         }
     }
@@ -1080,7 +1117,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
     {
         if( clicked_item )
         {
-            open_clicked_item( clicked_item );
+            open_clicked_item( self, clicked_item );
             return TRUE;
         }
     }

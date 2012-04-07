@@ -22,9 +22,9 @@
 G_BEGIN_DECLS
 
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char* cwd );
-
-void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                                                char* dest_dir );
+void ptk_file_archiver_extract( PtkFileBrowser* file_browser,
+                                            GtkWidget* desktop, GList* files,
+                                            const char* cwd, char* dest_dir );
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
                                                 gboolean extract );
 

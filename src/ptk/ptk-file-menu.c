@@ -731,8 +731,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
 
-        if ( browser && mime_type && 
-                            ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        if ( mime_type && ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
         {
             item = gtk_separator_menu_item_new ();
             gtk_menu_shell_append( submenu, item );
@@ -1554,19 +1553,22 @@ void on_popup_compress_activate ( GtkMenuItem *menuitem,
 void on_popup_extract_to_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files, NULL );
+    ptk_file_archiver_extract( data->browser, data->desktop, data->sel_files,
+                                                        data->cwd, NULL );
 }
 
 void on_popup_extract_here_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files, data->cwd );
+    ptk_file_archiver_extract( data->browser, data->desktop, data->sel_files,
+                                                        data->cwd, data->cwd );
 }
 
 void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files, "////LIST" );
+    ptk_file_archiver_extract( data->browser, data->desktop, data->sel_files,
+                                                        data->cwd, "////LIST" );
 }
 
 static void

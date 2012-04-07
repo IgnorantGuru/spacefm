@@ -387,10 +387,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
 */
 }
 
-void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                                                char* dest_dir )
+void ptk_file_archiver_extract( PtkFileBrowser* file_browser,
+                                            GtkWidget* desktop, GList* files,
+                                            const char* cwd, char* dest_dir )
 {
     GtkWidget* dlg;
+    GtkWidget* dlgparent = NULL;
     char* choose_dir = NULL;
     gboolean create_parent;
     gboolean write_access;
@@ -413,10 +415,16 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     if( !files )
         return;
+        
+    if ( file_browser )
+        dlgparent = gtk_widget_get_toplevel( file_browser );
+    //else if ( desktop )
+    //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
+        
     if( !dest_dir )
     {
         dlg = gtk_file_chooser_dialog_new( _("Extract To"),
-                                           gtk_widget_get_toplevel( file_browser ),
+                                           dlgparent,
                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                            GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
@@ -435,8 +443,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         gtk_widget_show_all( hbox );
         gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
 
-        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg),
-                                    ptk_file_browser_get_cwd( file_browser ) );
+        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
 
         int width = xset_get_int( "arc_dlg", "x" );
         int height = xset_get_int( "arc_dlg", "y" );
@@ -502,8 +509,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             continue;
     
         // handler found
-        full_path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
-                                        vfs_file_info_get_name( file ), NULL );
+        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ), NULL );
         full_quote = bash_quote( full_path );
         dest_quote = bash_quote( dest );
         if ( list_contents )
@@ -576,9 +582,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         g_free( full_path );
 
         // task
-        char* task_name = g_strdup_printf( _("Extract %s"), vfs_file_info_get_name( file ) );
-        PtkFileTask* task = ptk_file_exec_new( task_name, ptk_file_browser_get_cwd( file_browser ),
-                                            file_browser, file_browser->task_view );
+        char* task_name = g_strdup_printf( _("Extract %s"),
+                                                vfs_file_info_get_name( file ) );
+        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
+                                file_browser ? file_browser->task_view : NULL );
         g_free( task_name );
         task->task->exec_command = cmd;
         task->task->exec_browser = file_browser;
