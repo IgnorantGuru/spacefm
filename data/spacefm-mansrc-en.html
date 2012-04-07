@@ -566,6 +566,8 @@ If your command's style is set to Input, it will be displayed as a normal menu i
 
 <p>When you click the menu item, you will be asked for your name, and if you click OK, told your name.
 
+<p>NOTE:  When exporting a command, the last value entered in the input dialog will be exported with the plugin, even if Input is no longer the selected style.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
+
 <!-- # Message -->
 The Message item will be enabled only if the style is set to <a href="#designmode-style-input">Input</a>.  This is the same dialog you saw when you first selected Style|Input - it allows you to change the message seen by the user when the item is clicked.
 
@@ -748,6 +750,8 @@ Any one of the Line, Script, or Custom options may be selected.  This determines
 <p>Environment variables can also be included.  For example, to run claws-mail using a custom DISPLAY variable:
 <pre>    DISPLAY=:1 claws-mail</pre>
 
+<p>NOTE:  When exporting a command, the value of the command line will be exported with the plugin even if Line is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
+
 <!-- # Script -->
 Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  Select Command|Script, and a bash script will be generated and opened in your configured editor.  You can simply add your commands to this script and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-command-edit">Command|Edit</a> from the design menu to access the script of any custom command.
 
@@ -779,6 +783,8 @@ In addition to Line and Script, a command's type may also be set to Custom.  Thi
 <p>When the Custom target is an executable, no filenames are passed to the program, so integration with the file browser is limited.  If the Custom target is a desktop file, and the Exec line of the file contains substitution variables %f, %F, %d, or %D, these will be used to pass selected files or the current directory to the program as command line arguments.
 
 <p>One use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
+
+<p>NOTE:  When exporting a command, the value of the custom target will be exported with the plugin even if Custom is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <!-- # Run In Terminal #terminal -->
 Regardless of what type a custom command is (line, script, or custom), there are various ways it can be run when clicked.  If your command is a command-line program which produces much output, or you need to be able to interact with it (enter input, etc), check the Run In Terminal option in the Command submenu.
@@ -1558,8 +1564,8 @@ A socket which SpaceFM uses to <a href="#invocation-windows">open additional win
 <!-- # spacefm.tmp/ #shrtmp -->
 This folder, shared by all users, contains temporary files used for running a command as another user, including root.  Once a root command is run, this folder will be owned by root.
 
-<!-- # spacefm-USERNAME-PID.tmp/ #pidtmp -->
-This folder contains temporary files used by USERNAME running SpaceFM instance PID.  It is owned by the user and will be deleted on exit.  Other users can access this folder, but usually not the files within it, unless a command is being run as another user.
+<!-- # spacefm-USERNAME-RANDOM.tmp/ #pidtmp -->
+This folder contains temporary files used by USERNAME running SpaceFM.  It is owned by the user and will be deleted on exit.  Other users can access this folder, but usually not the files within it, unless a command is being run as another user.
 
 <!-- # spacefm*.tmp/ID-tmp.sh #exec -->
 A temporary bash script used to execute a command run in SpaceFM, which will be deleted when the command completes.  ID will be an eight digit hexadecimal number.  This script creates a suitable bash environment for the command being run, including import of file manager variables for use in commands.  While the command is running, you can import the file manager variables from this script into another script using:

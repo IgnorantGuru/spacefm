@@ -3,7 +3,7 @@
     udisks v1 & v2 now supported for mount/unmount as normal user
     added device Settings|Un/Mount Command options to customize mount program
     corrected race condition create tmp dir
-    status bar update
+    status bar update fixes
     side box fixed size fixes #6
 0.7.4   2012-04-01:
     added git build instructions to README
