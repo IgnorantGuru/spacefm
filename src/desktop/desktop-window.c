@@ -2194,12 +2194,20 @@ DesktopItem* hit_test( DesktopWindow* self, int x, int y )
  *  We really need better and cleaner APIs for this */
 void open_folders( GList* folders )
 {
-    FMMainWindow* main_window = FM_MAIN_WINDOW(fm_main_window_new());
-    //FM_MAIN_WINDOW( main_window ) ->splitter_pos = app_settings.splitter_pos;
-    gtk_window_set_default_size( GTK_WINDOW( main_window ),
-                                 app_settings.width,
-                                 app_settings.height );
-    gtk_widget_show( GTK_WIDGET(main_window) );
+    FMMainWindow* main_window;
+    
+    main_window = fm_main_window_get_last_active();
+    
+    if ( !main_window )
+    {
+        main_window = FM_MAIN_WINDOW(fm_main_window_new());
+        //FM_MAIN_WINDOW( main_window ) ->splitter_pos = app_settings.splitter_pos;
+        gtk_window_set_default_size( GTK_WINDOW( main_window ),
+                                     app_settings.width,
+                                     app_settings.height );
+        gtk_widget_show( GTK_WIDGET(main_window) );
+    }
+    
     while( folders )
     {
         VFSFileInfo* fi = (VFSFileInfo*)folders->data;
