@@ -39,8 +39,8 @@ static gboolean query_overwrite( PtkFileTask* task, char** new_dest );
 
 static void enter_callback( GtkEntry* entry, GtkDialog* dlg );   //MOD
 
-PtkFileTask* ptk_file_exec_new( char* item_name, char* dir, GtkWidget* parent,
-                                                    GtkTreeView* task_view )
+PtkFileTask* ptk_file_exec_new( const char* item_name, const char* dir,
+                                    GtkWidget* parent, GtkWidget* task_view )
 {
     GList* files = NULL;
     GtkWidget* parent_win = NULL;
@@ -56,7 +56,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
                                 GList* src_files,
                                 const char* dest_dir,
                                 GtkWindow* parent_window,
-                                GtkTreeView* task_view )
+                                GtkWidget* task_view )
 {
     PtkFileTask * task = g_slice_new0( PtkFileTask );
     task->task = vfs_task_new( type, src_files, dest_dir );
@@ -102,6 +102,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
     return task;
 }
 
+/*
 void ptk_file_task_destroy_delayed( PtkFileTask* task )
 {
     // in case of channel output following process exit
@@ -121,6 +122,7 @@ void ptk_file_task_destroy_delayed( PtkFileTask* task )
         ptk_file_task_destroy( task );
     return FALSE;
 }
+*/
 
 void ptk_file_task_destroy( PtkFileTask* task )
 {
@@ -222,7 +224,7 @@ gboolean ptk_file_task_add_main( PtkFileTask* task )
     {
         ptk_file_task_progress_open( task );
         if ( task->progress_dlg )
-            gtk_window_present( task->progress_dlg );
+            gtk_window_present( GTK_WINDOW( task->progress_dlg ) );
     }
 
     return FALSE;
@@ -319,7 +321,8 @@ void ptk_file_task_cancel( PtkFileTask* task )
                     cmd = g_strdup_printf( "/bin/kill %d ; sleep 3 ; /bin/kill -s KILL %d %s", task->task->exec_pid, task->task->exec_pid, rm_cmd );
                 g_free( rm_cmd );
 
-                PtkFileTask* task2 = ptk_file_exec_new( _("Kill As Other"), NULL, task->parent_window, task->task_view );
+                PtkFileTask* task2 = ptk_file_exec_new( _("Kill As Other"), NULL,
+                                GTK_WIDGET( task->parent_window ), task->task_view );
                 task2->task->exec_command = cmd;
                 task2->task->exec_as_user = g_strdup( task->task->exec_as_user );
                 task2->task->exec_sync = FALSE;
@@ -393,12 +396,14 @@ void on_view_popup( GtkTextView *entry, GtkMenu *menu, gpointer user_data )
     xset_context_new();
 
     XSet* set = xset_get( "sep_v9" );
-    set->browser = set->desktop = NULL;
-    xset_add_menuitem( NULL, NULL, menu, accel_group, set );
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
     set = xset_get( "task_pop_font" );
-    set->browser = set->desktop = NULL;
-    xset_add_menuitem( NULL, NULL, menu, accel_group, set );
-    gtk_widget_show_all( menu );
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
     g_signal_connect( menu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }
@@ -441,11 +446,13 @@ void ptk_file_task_progress_open( PtkFileTask* task )
                              NULL );
 
     task->progress_btn_stop = gtk_button_new_from_stock( GTK_STOCK_STOP );
-    gtk_dialog_add_action_widget( task->progress_dlg, task->progress_btn_stop,
-                                                            GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_action_widget( GTK_DIALOG( task->progress_dlg ),
+                                                    task->progress_btn_stop,
+                                                    GTK_RESPONSE_CANCEL);
     task->progress_btn_close = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
-    gtk_dialog_add_action_widget( task->progress_dlg, task->progress_btn_close,
-                                                            GTK_RESPONSE_OK);
+    gtk_dialog_add_action_widget( GTK_DIALOG( task->progress_dlg ),
+                                                    task->progress_btn_close,
+                                                    GTK_RESPONSE_OK);
 
     if ( task->task->type != VFS_FILE_TASK_EXEC )
         table = GTK_TABLE(gtk_table_new( 5, 2, FALSE ));
@@ -553,16 +560,16 @@ void ptk_file_task_progress_open( PtkFileTask* task )
                       0, 2, row, row+1, GTK_FILL | GTK_EXPAND, 0, 0, 0 );
 
     // Error log
-    task->scroll = gtk_scrolled_window_new( NULL, NULL );
+    task->scroll = GTK_SCROLLED_WINDOW( gtk_scrolled_window_new( NULL, NULL ) );
     task->error_view = gtk_text_view_new_with_buffer( task->err_buf );
     gtk_container_add ( GTK_CONTAINER ( task->scroll ), task->error_view );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( task->scroll ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-    gtk_text_view_set_wrap_mode( task->error_view, GTK_WRAP_WORD_CHAR );
-    gtk_text_view_set_editable( task->error_view, FALSE );
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( task->error_view ), GTK_WRAP_WORD_CHAR );
+    gtk_text_view_set_editable( GTK_TEXT_VIEW( task->error_view ), FALSE );
     if ( !task->task->exec_scroll_lock )
     {
-        gtk_text_view_scroll_to_mark( task->error_view, task->mark_end,
+        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( task->error_view ), task->mark_end,
                                                             0.0, FALSE, 0, 0 );
     }
     char* fontname = xset_get_s( "task_pop_font" );
@@ -574,8 +581,8 @@ void ptk_file_task_progress_open( PtkFileTask* task )
     }
     g_signal_connect( task->error_view, "populate-popup", G_CALLBACK(on_view_popup), NULL );
     GtkWidget* align = gtk_alignment_new( 1, 1, 1 ,1 );
-    gtk_alignment_set_padding( align, 0, 0, 5, 5 );
-    gtk_container_add ( GTK_CONTAINER ( align ), task->scroll );
+    gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 5, 5 );
+    gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( task->scroll ) );
 
     // Pack
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( task->progress_dlg ) ->vbox ),
@@ -637,7 +644,7 @@ void ptk_file_task_progress_open( PtkFileTask* task )
     else
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                             "gtk-execute", 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-    gtk_window_set_icon( task->progress_dlg, pixbuf );    
+    gtk_window_set_icon( GTK_WINDOW( task->progress_dlg ), pixbuf );    
 
     task->old_err_count = 0;
     task->task->ticks = 10000;
@@ -668,15 +675,14 @@ void ptk_file_task_progress_update( PtkFileTask* task )
             ufile_path = NULL;        
 
         if ( task->aborted )
-            gtk_window_set_title( task->progress_dlg, _("Stopped") );                
+            gtk_window_set_title( GTK_WINDOW( task->progress_dlg ), _("Stopped") );                
         else
         {
             if ( ( task->task->type != VFS_FILE_TASK_EXEC && task->task->err_count )
                                                 || task->task->exec_is_error )
-                gtk_window_set_title( task->progress_dlg, _("Errors") );
+                gtk_window_set_title( GTK_WINDOW( task->progress_dlg ), _("Errors") );
             else
-                gtk_window_set_title( task->progress_dlg, _("Done") );
-            
+                gtk_window_set_title( GTK_WINDOW( task->progress_dlg ), _("Done") );
         }
 /*
         if ( task->aborted )
@@ -820,7 +826,8 @@ void ptk_file_task_progress_update( PtkFileTask* task )
             //scroll to end if scrollbar is mostly down
             GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment (task->scroll);
             if (  adj->upper - adj->value < adj->page_size + 40 )
-                gtk_text_view_scroll_to_mark( task->error_view, task->mark_end,
+                gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( task->error_view ),
+                                                            task->mark_end,
                                                             0.0, FALSE, 0, 0 );
         }
     }
@@ -831,7 +838,7 @@ void ptk_file_task_progress_update( PtkFileTask* task )
     {
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                             "error", 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-        gtk_window_set_icon( task->progress_dlg, pixbuf );    
+        gtk_window_set_icon( GTK_WINDOW( task->progress_dlg ), pixbuf );    
     }
 
     // status

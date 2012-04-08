@@ -247,7 +247,8 @@ static void on_open_files( GtkAction* action, FindFile* data )
                 gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
             }
             gtk_window_present( (GtkWindow*)w );
-            file_browser = fm_main_window_get_current_file_browser( w );
+            file_browser = (PtkFileBrowser*)fm_main_window_get_current_file_browser(
+                                                                (FMMainWindow*)w );
         }
         g_hash_table_foreach_steal( hash, (GHRFunc)open_file, file_browser );
     }
@@ -782,7 +783,7 @@ static void on_add_search_desktop(GtkWidget* menu, FindFile* data)
 
 static void on_add_search_volumes(GtkWidget* menu, FindFile* data)
 {
-    char* path;
+    const char* path;
     const GList* vols = vfs_volume_get_all_volumes(), *l;
     for( l = vols; l; l = l->next )
     {
@@ -839,7 +840,8 @@ static void on_add_search_folder( GtkWidget* btn, FindFile* data )
     /* FIXME: Add all bookmarks */
 
     gtk_widget_show_all( menu );
-    gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, menu_pos, btn, 0, gtk_get_current_event_time() );
+    gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, (GtkMenuPositionFunc)menu_pos,
+                                        btn, 0, gtk_get_current_event_time() );
 }
 
 static void on_remove_search_folder( GtkWidget* btn, FindFile* data )

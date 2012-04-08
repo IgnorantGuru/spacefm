@@ -125,7 +125,7 @@ gboolean on_cmdline_keypress( GtkWidget *widget,
                                  GdkEventKey *event,
                                  GtkNotebook* notebook )
 {
-    gtk_widget_set_sensitive( notebook, gtk_entry_get_text_length(
+    gtk_widget_set_sensitive( GTK_WIDGET( notebook ), gtk_entry_get_text_length(
                                             (GtkEntry*)widget ) == 0 );
     return FALSE;
 }
@@ -167,8 +167,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
     }
 
     view = GTK_TREE_VIEW( (GtkWidget*)gtk_builder_get_object( builder, "recommended_apps" ) );
-    entry = GTK_TREE_VIEW( (GtkWidget*)gtk_builder_get_object( builder, "cmdline" ) );
-    notebook = GTK_TREE_VIEW( (GtkWidget*)gtk_builder_get_object( builder, "notebook" ) );
+    entry = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "cmdline" ) );
+    notebook = GTK_NOTEBOOK( (GtkWidget*)gtk_builder_get_object( builder, "notebook" ) );
 
     model = create_model_from_mime_type( mime_type );
     gtk_tree_view_set_model( view, model );
@@ -259,7 +259,7 @@ on_notebook_switch_page ( GtkNotebook *notebook,
 */
 gchar* app_chooser_dialog_get_selected_app( GtkWidget* dlg )
 {
-    const gchar * app = NULL;
+    gchar * app = NULL;
     GtkBuilder* builder = (GtkBuilder*)g_object_get_data(G_OBJECT(dlg), "builder");
     GtkEntry* entry = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "cmdline" ) );
     GtkNotebook* notebook;
@@ -270,7 +270,7 @@ gchar* app_chooser_dialog_get_selected_app( GtkWidget* dlg )
     GtkTreeModel* model;
     GtkTreeIter it;
 
-    app = gtk_entry_get_text( entry );
+    app = (char*)gtk_entry_get_text( entry );
     if ( app && *app )
     {
         return g_strdup( app );
@@ -329,7 +329,7 @@ on_browse_btn_clicked ( GtkButton *button,
         if( filename )
         {
             entry = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "cmdline" ) );
-            notebook = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "notebook" ) );
+            notebook = GTK_NOTEBOOK( (GtkWidget*)gtk_builder_get_object( builder, "notebook" ) );
             /* FIXME: path shouldn't be hard-coded */
             if( g_str_has_prefix( filename, app_path )
                 && g_str_has_suffix( filename, ".desktop" ) )
@@ -343,10 +343,10 @@ on_browse_btn_clicked ( GtkButton *button,
                 gtk_entry_set_text( entry, filename );
             }
             g_free ( filename );
-            gtk_widget_set_sensitive( notebook, gtk_entry_get_text_length(
-                                            entry ) == 0 );
-            gtk_widget_grab_focus( entry );
-            gtk_editable_set_position( entry, -1 );
+            gtk_widget_set_sensitive( GTK_WIDGET( notebook ), 
+                                gtk_entry_get_text_length( entry ) == 0 );
+            gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+            gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
         }
     }
     gtk_widget_destroy( dlg );
@@ -391,7 +391,7 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
                                            VFSMimeType* mime_type )
 {
     GtkWidget * dlg;
-    const gchar* app = NULL;
+    gchar* app = NULL;
 
     dlg = app_chooser_dialog_new( parent, mime_type );
 

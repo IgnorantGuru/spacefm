@@ -87,7 +87,7 @@ void fm_turn_on_desktop_icons()
         gtk_widget_show_all( desktops[ i ] );
         gdk_window_lower( desktops[ i ] ->window );
 
-        gtk_window_group_add_window( GTK_WINDOW_GROUP(group), desktops[i] );
+        gtk_window_group_add_window( GTK_WINDOW_GROUP(group), GTK_WINDOW( desktops[i] ) );
     }
     fm_desktop_update_colors();
     fm_desktop_update_wallpaper();

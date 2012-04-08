@@ -23,29 +23,29 @@ typedef struct _FMMainWindow
     GtkWidget *main_vbox;
     GtkWidget *menu_bar;
     //MOD
-    GtkMenu* file_menu_item;
-    GtkMenu* view_menu_item;
-    GtkMenu* book_menu_item;
-    GtkMenu* plug_menu_item;
-    GtkMenu* tool_menu_item;
-    GtkMenu* help_menu_item;
-    GtkMenu* book_menu;
-    GtkMenu* plug_menu;
-    GtkNotebook* notebook;  //MOD changed use to current panel
-    GtkNotebook* panel[4];
+    GtkWidget* file_menu_item;
+    GtkWidget* view_menu_item;
+    GtkWidget* book_menu_item;
+    GtkWidget* plug_menu_item;
+    GtkWidget* tool_menu_item;
+    GtkWidget* help_menu_item;
+    GtkWidget* book_menu;
+    GtkWidget* plug_menu;
+    GtkWidget* notebook;  //MOD changed use to current panel
+    GtkWidget* panel[4];
     int panel_slide_x[4];
     int panel_slide_y[4];
     int panel_slide_s[4];
-    GtkToolbar* panelbar;
+    GtkWidget* panelbar;
     GtkWidget* panel_btn[4];
-    GtkImage* panel_image[4];
+    GtkWidget* panel_image[4];
     int curpanel;
-    GtkHPaned* hpane_top;
-    GtkHPaned* hpane_bottom;
-    GtkVPaned* vpane;
-    GtkVPaned* task_vpane;
-    GtkScrolledWindow* task_scroll;
-    GtkTreeView* task_view;
+    GtkWidget* hpane_top;
+    GtkWidget* hpane_bottom;
+    GtkWidget* vpane;
+    GtkWidget* task_vpane;
+    GtkWidget* task_scroll;
+    GtkWidget* task_view;
     
     guint autosave_timer;
 

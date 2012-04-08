@@ -112,8 +112,8 @@ static gboolean filter_func( GtkTreeModel *model,
     VFSFileInfo * file;
     const char* name;
     GtkTreeView* view = ( GtkTreeView* ) data;
-    gboolean show_hidden = ( gboolean ) g_object_get_qdata( G_OBJECT( view ),
-                                                            dir_tree_view_data );
+    gboolean show_hidden = GPOINTER_TO_INT( g_object_get_qdata( G_OBJECT( view ),
+                                                            dir_tree_view_data ) );
 
     if ( show_hidden )
         return TRUE;
@@ -188,7 +188,7 @@ GtkWidget* ptk_dir_tree_view_new( PtkFileBrowser* browser,
     if ( G_UNLIKELY( !dir_tree_view_data ) )
         dir_tree_view_data = g_quark_from_static_string( "show_hidden" );
     g_object_set_qdata( G_OBJECT( dir_tree_view ),
-                        dir_tree_view_data, ( gpointer ) show_hidden );
+                        dir_tree_view_data, GINT_TO_POINTER( show_hidden ) );
     model = get_dir_tree_model();
     filter = gtk_tree_model_filter_new( model, NULL );
     g_object_unref( G_OBJECT( model ) );
@@ -382,7 +382,7 @@ void ptk_dir_tree_view_show_hidden_files( GtkTreeView* dir_tree_view,
 {
     GtkTreeModel * filter;
     g_object_set_qdata( G_OBJECT( dir_tree_view ),
-                        dir_tree_view_data, ( gpointer ) show_hidden );
+                        dir_tree_view_data, GINT_TO_POINTER( show_hidden ) );
     filter = gtk_tree_view_get_model( dir_tree_view );
     gtk_tree_model_filter_refilter( GTK_TREE_MODEL_FILTER( filter ) );
 }

@@ -91,31 +91,31 @@ struct _PtkFileBrowser
     
     //MOD
     int mypanel;
-    GtkNotebook* mynotebook;
-    GtkTreeView* task_view;
+    GtkWidget* mynotebook;
+    GtkWidget* task_view;
     gpointer main_window;
     int* slide_x;
     int* slide_y;
     int* slide_s;
-    GtkHBox* toolbox;
-    GtkEntry* path_bar;
-    GtkHPaned* hpane;
-    GtkVBox* side_vbox;
-    GtkHBox* side_toolbox;
-    GtkVPaned* side_vpane_top;
-    GtkVPaned* side_vpane_bottom;
-    GtkScrolledWindow* side_dir_scroll;
-    GtkScrolledWindow* side_dev_scroll;
-    GtkScrolledWindow* side_book_scroll;
-    GtkTreeView* side_book;
-    GtkTreeView* side_dir;
-    GtkTreeView* side_dev;
-    GtkStatusbar* status_bar;
+    GtkWidget* toolbox;
+    GtkWidget* path_bar;
+    GtkWidget* hpane;
+    GtkWidget* side_vbox;
+    GtkWidget* side_toolbox;
+    GtkWidget* side_vpane_top;
+    GtkWidget* side_vpane_bottom;
+    GtkWidget* side_dir_scroll;
+    GtkWidget* side_dev_scroll;
+    GtkWidget* side_book_scroll;
+    GtkWidget* side_book;
+    GtkWidget* side_dir;
+    GtkWidget* side_dev;
+    GtkWidget* status_bar;
     GtkFrame* status_frame;
     GtkLabel* status_label;
-    GtkImage* status_image;
-    GtkToolbar* toolbar;
-    GtkToolbar* side_toolbar;
+    GtkWidget* status_image;
+    GtkWidget* toolbar;
+    GtkWidget* side_toolbar;
     GtkMenuToolButton* back_menu_btn_left;
     GtkMenuToolButton* forward_menu_btn_left;
     GtkMenuToolButton* back_menu_btn_right;
@@ -157,8 +157,8 @@ struct _PtkFileBrowserClass
 
 GType ptk_file_browser_get_type ( void );
 
-GtkWidget* ptk_file_browser_new( int curpanel, GtkNotebook* notebook,
-                                                    GtkTreeView* task_view,
+GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
+                                                    GtkWidget* task_view,
                                                     gpointer main_window,
                                                     int* slide_x,
                                                     int* slide_y,
@@ -203,7 +203,7 @@ void ptk_file_browser_update_mime_icons( PtkFileBrowser* file_browser );
 gboolean ptk_file_browser_is_busy( PtkFileBrowser* file_browser );
 
 GtkWidget* ptk_file_browser_get_folder_view( PtkFileBrowser* file_browser );
-GtkTreeView* ptk_file_browser_get_side_view( PtkFileBrowser* file_browser );
+GtkWidget* ptk_file_browser_get_side_view( PtkFileBrowser* file_browser );
 
 void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
                                          gboolean show );
@@ -287,7 +287,7 @@ void ptk_file_browser_emit_open( PtkFileBrowser* file_browser,
                                  PtkOpenAction action );
 
 //MOD
-int ptk_file_browser_no_access( char* cwd, char* smode );
+int ptk_file_browser_no_access( const char* cwd, const char* smode );
 void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_go_home( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_go_default( GtkWidget* item, PtkFileBrowser* file_browser );

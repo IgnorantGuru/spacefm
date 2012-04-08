@@ -28,7 +28,7 @@ struct _PtkFileTask
     GtkWidget* progress_btn_close;
     GtkWidget* progress_btn_stop;
     GtkWindow* parent_window;
-    GtkTreeView* task_view;
+    GtkWidget* task_view;
     GtkLabel* from;
     GtkLabel* to;
     GtkLabel* current;
@@ -67,9 +67,9 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
                                 GList* src_files,
                                 const char* dest_dir,
                                 GtkWindow* parent_window,
-                                GtkTreeView* task_view );
-PtkFileTask* ptk_file_exec_new( char* item_name, char* dir, GtkWidget* parent,
-                                                    GtkTreeView* task_view );
+                                GtkWidget* task_view );
+PtkFileTask* ptk_file_exec_new( const char* item_name, const char* dir,
+                                    GtkWidget* parent, GtkWidget* task_view );
 
 void ptk_file_task_destroy( PtkFileTask* task );
 

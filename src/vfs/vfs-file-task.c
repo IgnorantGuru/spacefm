@@ -1137,7 +1137,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     char* su = NULL;
     char* gsu = NULL;
     char* str;
-    char* tmp;
+    const char* tmp;
     char* hex8;
     char* hexname;
     int result;

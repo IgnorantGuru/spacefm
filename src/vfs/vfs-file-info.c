@@ -25,7 +25,7 @@
 
 static int big_thumb_size = 48, small_thumb_size = 20;
 static gboolean utf8_file_name = FALSE;
-static char* desktop_dir = NULL;   //MOD added
+static const char* desktop_dir = NULL;   //MOD added
 
 void vfs_file_info_set_utf8_filename( gboolean is_utf8 )
 {

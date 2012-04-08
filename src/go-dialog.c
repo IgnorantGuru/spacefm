@@ -40,8 +40,9 @@ static gboolean show_go_dialog( GtkWindow* parent, char * initial_path )
 
 gboolean fm_go( FMMainWindow* main_window )
 {
-    int i = gtk_notebook_get_current_page( main_window->notebook );
-    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( main_window->notebook, i ) );
+    int i = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->notebook ) );
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( main_window->notebook ), i ) );
 
     if( file_browser->dir )
     {

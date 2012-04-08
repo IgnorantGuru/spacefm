@@ -30,7 +30,7 @@ static GQuark use_hand_cursor = (GQuark)"hand_cursor";
 static char*
 get_cwd( GtkEntry* entry )
 {
-    char* path = gtk_entry_get_text( entry );    
+    const char* path = gtk_entry_get_text( entry );    
     if ( path[0] == '/' )
         return g_path_get_dirname( path );
     else if ( path[0] != '$' && path[0] != '+' && path[0] != '&'
@@ -155,7 +155,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
     }
     else if ( ( evt->keyval == GDK_Up || evt->keyval == GDK_Down ) && !keymod )
     {
-        char* text = gtk_entry_get_text( entry );
+        const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         if ( text[0] != '$' && text[0] != '+' && text[0] != '&' && text[0] != '!' 
                                                             && text[0] != '\0' )
             return FALSE;  // pass non-command arrows to completion
@@ -245,20 +245,20 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
         }
         if ( line )
         {
-            gtk_entry_set_text( entry, line );
+            gtk_entry_set_text( GTK_ENTRY( entry ), line );
             gtk_editable_set_position( (GtkEditable*)entry, -1 );
         }
         return TRUE;
     }
     else if ( evt->keyval == GDK_Escape && !keymod )
     {
-        char* text = gtk_entry_get_text( entry );
+        const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         if ( text[0] == '$' || text[0] == '+' || text[0] == '&'
                     || text[0] == '!' || text[0] == '\0' || text[0] == ' ' )
         {
-            char* line;
-            char* text = gtk_entry_get_text( entry );
-            char* cwd = ptk_file_browser_get_cwd( edata->browser );
+            const char* line;
+            const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
+            const char* cwd = ptk_file_browser_get_cwd( edata->browser );
             if ( !strcmp( text, "$ " ) || text[0] == '\0' )
                 line = cwd;
             /*
@@ -277,7 +277,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
                 edata->editing = strdup( text );
                 line = "$ ";
             }
-            gtk_entry_set_text( entry, line );
+            gtk_entry_set_text( GTK_ENTRY( entry ), line );
             gtk_editable_set_position( (GtkEditable*)entry, -1 );
             edata->current = NULL;
             return TRUE;   
@@ -285,7 +285,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
     }
     else if ( evt->keyval == GDK_BackSpace && keymod == 1 ) // shift
     {
-        gtk_entry_set_text( entry, "" );
+        gtk_entry_set_text( GTK_ENTRY( entry ), "" );
         return TRUE;
     }
     return FALSE;
@@ -433,12 +433,12 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
 
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set = xset_get( "sep_entry" );
-    xset_add_menuitem( file_browser, file_browser, menu, accel_group, set );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb_panel( file_browser->mypanel, "font_path", main_update_fonts, file_browser );
-    xset_add_menuitem( file_browser, file_browser, menu, accel_group, set );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb( "path_help", ptk_path_entry_help, file_browser );
-    xset_add_menuitem( file_browser, file_browser, menu, accel_group, set );
-    gtk_widget_show_all( menu );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
     g_signal_connect( menu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }
@@ -469,7 +469,7 @@ void entry_data_free( EntryData* edata )
 GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
 {
     GtkWidget* entry = gtk_entry_new();
-    gtk_entry_set_has_frame( entry, TRUE );
+    gtk_entry_set_has_frame( GTK_ENTRY( entry ), TRUE );
     
     // set font
     if ( xset_get_s_panel( file_browser->mypanel, "font_path" ) )
@@ -499,8 +499,9 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
     g_signal_connect( entry, "button-release-event", G_CALLBACK(on_button_release), NULL );
     g_signal_connect( entry, "populate-popup", G_CALLBACK(on_populate_popup), file_browser );
 
-    g_signal_connect_after( G_OBJECT( gtk_entry_get_buffer( entry ) ), "inserted-text",
-                          G_CALLBACK( on_entry_insert ), NULL );
+    g_signal_connect_after( G_OBJECT( gtk_entry_get_buffer( GTK_ENTRY( entry ) ) ),
+                                        "inserted-text",
+                                        G_CALLBACK( on_entry_insert ), NULL );
 
     g_object_weak_ref( G_OBJECT( entry ), (GWeakNotify) entry_data_free, edata );
     g_object_set_data( G_OBJECT( entry ), "edata", edata );

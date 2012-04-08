@@ -27,7 +27,7 @@ void ptk_delete_files( GtkWindow* parent_win,
 
 gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
-                                        char* dest_dir, gboolean clip_copy );
+                                        const char* dest_dir, gboolean clip_copy );
 
 gboolean ptk_create_new_file( GtkWindow* parent_win,
                           const char* cwd,

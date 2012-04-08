@@ -711,7 +711,7 @@ void ptk_file_list_sort ( PtkFileList* list )
     /* save new order */
     new_order = g_new( int, list->n_files );
     for( i = 0, l = list->files; l; l = l->next, ++i )
-        new_order[i] = (guint)g_hash_table_lookup( old_order, l );
+        new_order[i] = GPOINTER_TO_INT( g_hash_table_lookup( old_order, l ) );
     g_hash_table_destroy( old_order );
     path = gtk_tree_path_new ();
     gtk_tree_model_rows_reordered (GTK_TREE_MODEL (list),

@@ -10,6 +10,7 @@
     reuse window on open folder on desktop fixes #16
     built-in archive functions on desktop closes #18
     shift-click selects range on desktop closes #47
+    code review
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

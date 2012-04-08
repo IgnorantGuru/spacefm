@@ -138,7 +138,7 @@ static void on_update_img_preview( GtkFileChooser *chooser, GtkImage* img )
 static void
 dir_unload_thumbnails( const char* path, VFSDir* dir, gpointer user_data )
 {
-    vfs_dir_unload_thumbnails( dir, (gboolean)user_data );
+    vfs_dir_unload_thumbnails( dir, GPOINTER_TO_INT( user_data ) );
 }
 
 static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
@@ -215,7 +215,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 a_window = FM_MAIN_WINDOW( l->data );
                 for ( p = 1; p < 5; p++ )
                 {
-                    notebook = a_window->panel[p-1];
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
                     n = gtk_notebook_get_n_pages( notebook );
                     if ( always_show_tabs )
                         gtk_notebook_set_show_tabs( notebook, TRUE );
@@ -234,7 +234,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 a_window = FM_MAIN_WINDOW( l->data );
                 for ( p = 1; p < 5; p++ )
                 {
-                    notebook = a_window->panel[p-1];
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
                     n = gtk_notebook_get_n_pages( notebook );
                     for ( i = 0; i < n; ++i )
                     {
@@ -379,7 +379,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 a_window = FM_MAIN_WINDOW( l->data );
                 for ( p = 1; p < 5; p++ )
                 {
-                    notebook = a_window->panel[p-1];
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
                     n = gtk_notebook_get_n_pages( notebook );
                     for ( i = 0; i < n; ++i )
                     {
@@ -412,16 +412,16 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 
             /* unload old thumbnails (icons of *.desktop files will be unloaded here, too)  */
             if( big_icon != app_settings.big_icon_size )
-                vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, (gpointer)TRUE );
+                vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, GINT_TO_POINTER( 1 ) );
             if( small_icon != app_settings.small_icon_size )
-                vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, (gpointer)FALSE );
+                vfs_dir_foreach( (GHFunc)dir_unload_thumbnails, GINT_TO_POINTER( 0 ) );
             // update all windows/all panels/all browsers
             for ( l = fm_main_window_get_all(); l; l = l->next )
             {
                 a_window = FM_MAIN_WINDOW( l->data );
                 for ( p = 1; p < 5; p++ )
                 {
-                    notebook = a_window->panel[p-1];
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
                     n = gtk_notebook_get_n_pages( notebook );
                     for ( i = 0; i < n; ++i )
                     {
@@ -473,7 +473,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 a_window = FM_MAIN_WINDOW( l->data );
                 for ( p = 1; p < 5; p++ )
                 {
-                    notebook = a_window->panel[p-1];
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
                     n = gtk_notebook_get_n_pages( notebook );
                     for ( i = 0; i < n; ++i )
                     {
@@ -561,8 +561,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         xset_set( "editor", "s", gtk_entry_get_text( GTK_ENTRY( data->editor ) ) );
         xset_set_b( "editor", gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->editor_terminal ) );
-        char* root_editor = gtk_entry_get_text( GTK_ENTRY( data->root_editor ) );
-        char* old_root_editor = xset_get_s( "root_editor" );
+        const char* root_editor = gtk_entry_get_text( GTK_ENTRY( data->root_editor ) );
+        const char* old_root_editor = xset_get_s( "root_editor" );
         if ( !old_root_editor )
         {
             if ( root_editor[0] != '\0' )
@@ -635,7 +635,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             if ( root_set_change )
             {
                 // task
-                xset_msg_dialog( GTK_WINDOW( dlg ), 0, _("Save Root Settings"), NULL, 0, _("You will now be asked for your root password to save the root settings for this user to a file in /etc/spacefm/  Supplying the password in the next window is recommended to improve your security."), NULL, NULL );
+                xset_msg_dialog( GTK_WIDGET( dlg ), 0, _("Save Root Settings"), NULL, 0, _("You will now be asked for your root password to save the root settings for this user to a file in /etc/spacefm/  Supplying the password in the next window is recommended to improve your security."), NULL, NULL );
                 PtkFileTask* task = ptk_file_exec_new( _("Save Root Settings"), NULL, NULL,
                                                                     NULL );
                 task->task->exec_command = g_strdup_printf( "echo" );
@@ -656,7 +656,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 void on_date_format_changed( GtkComboBox *widget, FMPrefDlg* data )
 {
     char buf[ 128 ];
-    char* etext;
+    const char* etext;
 
     time_t now = time( NULL );
     etext = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( data->date_format ) ) ) );
@@ -667,11 +667,14 @@ void on_date_format_changed( GtkComboBox *widget, FMPrefDlg* data )
 void on_show_thumbnail_toggled( GtkWidget* widget, FMPrefDlg* data )
 {
     gtk_widget_set_sensitive( data->max_thumb_size,
-                    gtk_toggle_button_get_active( data->show_thumbnail ) );
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->show_thumbnail ) ) );
     gtk_widget_set_sensitive( data->thumb_label1, 
-                    gtk_toggle_button_get_active( data->show_thumbnail ) );
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->show_thumbnail ) ) );
     gtk_widget_set_sensitive( data->thumb_label2, 
-                    gtk_toggle_button_get_active( data->show_thumbnail ) );
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->show_thumbnail ) ) );
 }
 
 gboolean fm_edit_preference( GtkWindow* parent, int page )
@@ -924,7 +927,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 #endif
         if ( custom_gsu )
         {
-            GtkListStore* gsu_list = gtk_combo_box_get_model( data->gsu_command );
+            GtkListStore* gsu_list = GTK_LIST_STORE( gtk_combo_box_get_model( 
+                                        GTK_COMBO_BOX( data->gsu_command ) ) );
             gtk_list_store_prepend( gsu_list, &it );
             gtk_list_store_set( GTK_LIST_STORE( gsu_list ), &it, 0, custom_gsu, -1 );
         }

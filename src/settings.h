@@ -85,10 +85,10 @@ extern AppSettings app_settings;
 void load_settings( char* config_dir );
 char* save_settings( gpointer main_window_ptr );
 void free_settings();
-char* xset_get_config_dir();
-char* xset_get_tmp_dir();
-char* xset_get_shared_tmp_dir();
-char* xset_get_user_tmp_dir();
+const char* xset_get_config_dir();
+const char* xset_get_tmp_dir();
+const char* xset_get_shared_tmp_dir();
+const char* xset_get_user_tmp_dir();
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ typedef struct
     char* menu_label;
     int menu_style;         // not saved/read if locked
     char* icon;
-    int (*cb_func) ();      // not saved
+    void (*cb_func) ();      // not saved
     gpointer cb_data;       // not saved
     char* ob1;              // not saved
     gpointer ob1_data;      // not saved
@@ -318,73 +318,75 @@ typedef struct
 
 
 char* randhex8();
-char* replace_string( char* orig, char* str, char* replace, gboolean quote );
+char* replace_string( const char* orig, const char* str, const char* replace,
+                                                            gboolean quote );
 char* replace_line_subs( const char* line );
-char* bash_quote( char* str );
+char* bash_quote( const char* str );
 char* get_valid_su();
 char* get_valid_gsu();
 gboolean xset_copy_file( char* src, char* dest );
-XSet* xset_get( char* name );
-char* xset_get_s( char* name );
-gboolean xset_get_bool( char* name, char* var );
-gboolean xset_get_b( char* name );
-XSet* xset_get_panel( int panel, char* name );
-char* xset_get_s_panel( int panel, char* name );
-gboolean xset_get_b_panel( int panel, char* name );
-gboolean xset_get_bool_panel( int panel, char* name, char* var );
-XSet* xset_set_b( char* name, gboolean bval );
-XSet* xset_set_b_panel( int panel, char* name, gboolean bval );
-int xset_get_int( char* name, char* var );
-int xset_get_int_panel( int panel, char* name, char* var );
-XSet* xset_set_panel( int panel, char* name, char* var, char* value );
-XSet* xset_set_cb_panel( int panel, char* name, int (*cb_func) (), gpointer cb_data );
+XSet* xset_get( const char* name );
+char* xset_get_s( const char* name );
+gboolean xset_get_bool( const char* name, const char* var );
+gboolean xset_get_b( const char* name );
+XSet* xset_get_panel( int panel, const char* name );
+char* xset_get_s_panel( int panel, const char* name );
+gboolean xset_get_b_panel( int panel, const char* name );
+gboolean xset_get_bool_panel( int panel, const char* name, const char* var );
+XSet* xset_set_b( const char* name, gboolean bval );
+XSet* xset_set_b_panel( int panel, const char* name, gboolean bval );
+int xset_get_int( const char* name, const char* var );
+int xset_get_int_panel( int panel, const char* name, const char* var );
+XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value );
+XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data );
 gboolean xset_get_b_set( XSet* set );
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
 
-XSet* xset_set( char* name, char* var, char* value );
-XSet* xset_set_set( XSet* set, char* var, char* value );
+XSet* xset_set( const char* name, const char* var, const char* value );
+XSet* xset_set_set( XSet* set, const char* var, const char* value );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     GtkWidget* menu, GtkAccelGroup *accel_group, char* elements );
 GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                     GtkWidget* menu, GtkAccelGroup *accel_group,
                                     XSet* set );
-GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size );
-XSet* xset_set_cb( char* name, int (*cb_func) (), gpointer cb_data );
-XSet* xset_set_ob1_int( XSet* set, char* ob1, int ob1_int );
-XSet* xset_set_ob1( XSet* set, char* ob1, gpointer ob1_data );
-XSet* xset_set_ob2( XSet* set, char* ob2, gpointer ob2_data );
-XSet* xset_is( char* name );
+GtkWidget* xset_get_image( const char* icon, int icon_size );
+XSet* xset_set_cb( const char* name, void (*cb_func) (), gpointer cb_data );
+XSet* xset_set_ob1_int( XSet* set, const char* ob1, int ob1_int );
+XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
+XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );
+XSet* xset_is( const char* name );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                                                             gpointer user_data );
-gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
-                            gboolean large, char* msg1, char* msg2,
-                            char* defstring, char** answer, char* defreset,
-                            gboolean edit_care, char* help );
+gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* image,
+                            gboolean large, const char* msg1, const char* msg2,
+                            const char* defstring, char** answer, const char* defreset,
+                            gboolean edit_care, const char* help );
 char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
-                        char* title, char* deffolder, char* deffile );
-void xset_edit( GtkWidget* parent, char* path, gboolean force_root, gboolean no_root );
-void xset_open_url( GtkWidget* parent, char* url );
+                        const char* title, const char* deffolder, const char* deffile );
+void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
+void xset_open_url( GtkWidget* parent, const char* url );
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
-            GtkToolbar* toolbar, GtkTooltips* tooltips, char* elements );
+            GtkWidget* toolbar, GtkTooltips* tooltips, const char* elements );
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
-                        GtkToolbar* toolbar, GtkTooltips* tooltips,
-                        GtkIconSize icon_size, XSet* set );
-int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* image,
-                                int buttons, char* msg1, char* msg2, char* help );
-GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, char* text, gboolean def_font );
+                        GtkWidget* toolbar, GtkTooltips* tooltips,
+                        int icon_size, XSet* set );
+int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
+                    int buttons, const char* msg1, const char* msg2, const char* help );
+GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
+                                                            gboolean def_font );
 XSet* xset_custom_new();
-gboolean write_root_settings( FILE* file, char* path );
+gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );
-void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int type,
-                                                                        int job );
-XSet* xset_import_plugin( char* plug_dir );
+void install_plugin_file( gpointer main_win, const char* path, const char* plug_dir,
+                                                            int type, int job );
+XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
-char* plain_ascii_name( char* orig_name );
-void xset_show_help( GtkWidget* parent, XSet* set, char* anchor );
+char* plain_ascii_name( const char* orig_name );
+void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
 
 
 

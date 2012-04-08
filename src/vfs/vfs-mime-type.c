@@ -314,7 +314,7 @@ static void free_cached_icons ( gpointer key,
                                 gpointer user_data )
 {
     VFSMimeType * mime_type = ( VFSMimeType* ) value;
-    gboolean big = ( gboolean ) user_data;
+    gboolean big = GPOINTER_TO_INT( user_data );
     if ( big )
     {
         if ( mime_type->big_icon )
@@ -342,7 +342,7 @@ void vfs_mime_type_set_icon_size( int big, int small )
         /* Unload old cached icons */
         g_hash_table_foreach( mime_hash,
                               free_cached_icons,
-                              ( gpointer ) TRUE );
+                              GINT_TO_POINTER( 1 ) );
     }
     if ( small != small_icon_size )
     {
@@ -350,7 +350,7 @@ void vfs_mime_type_set_icon_size( int big, int small )
         /* Unload old cached icons */
         g_hash_table_foreach( mime_hash,
                               free_cached_icons,
-                              ( gpointer ) FALSE );
+                              GINT_TO_POINTER( 0 ) );
     }
     g_static_rw_lock_writer_unlock( &mime_hash_lock );
 }
@@ -496,10 +496,10 @@ void on_icon_theme_changed( GtkIconTheme *icon_theme,
 
     g_hash_table_foreach( mime_hash,
                           free_cached_icons,
-                          ( gpointer ) TRUE );
+                          GINT_TO_POINTER( 1 ) );
     g_hash_table_foreach( mime_hash,
                           free_cached_icons,
-                          ( gpointer ) FALSE );
+                          GINT_TO_POINTER( 0 ) );
 
     g_static_rw_lock_writer_unlock( &mime_hash_lock );
 }

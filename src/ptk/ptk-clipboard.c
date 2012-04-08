@@ -284,7 +284,7 @@ void ptk_clipboard_paste_files( GtkWindow* parent_win,
                                   files,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
-                                  task_view );
+                                  GTK_WIDGET( task_view ) );
         ptk_file_task_run( task );
     }
 }
@@ -353,7 +353,7 @@ void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                   files,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
-                                  task_view );
+                                  GTK_WIDGET( task_view ) );
         ptk_file_task_run( task );
     }
 }
@@ -438,7 +438,7 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
                                   files,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
-                                  task_view );
+                                  GTK_WIDGET( task_view ) );
         ptk_file_task_run( task );
         
         if ( missing_targets > 0 )

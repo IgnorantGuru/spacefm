@@ -173,7 +173,7 @@ GList* desktop_window_get_selected_files( DesktopWindow* win );
 gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void desktop_context_fill( DesktopWindow* win, gpointer context );
 void desktop_window_rename_selected_files( DesktopWindow* win,
-                                                        GList* files, char* cwd );
+                                                GList* files, const char* cwd );
 
 G_END_DECLS
 
