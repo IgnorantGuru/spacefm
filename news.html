@@ -25,6 +25,22 @@
 <br>
 
 <hr>
+<h3>2012-Apr-09: Debian Packages For 0.7.4 Rebuilt</h3>
+
+Due to changing libraries in Debian sid which are now out of sync with Ubuntu and other Debian variants, the SpaceFM packages for v0.7.4 <a href="https://github.com/IgnorantGuru/spacefm/issues/11">don't always work correctly</a>.  Binary deb packages of SpaceFM will no longer be offered, but to make installing more convenient for Debian users, I have created deb packages that contain the source code and automatically build and install with your package manager.  This will ensure that SpaceFM is built for the specific libraries you have installed on your system.
+
+<p>These packages are available for version 0.7.4 in the <a href="http://igurublog.wordpress.com/downloads/ppa/">new PPA on github</a>.  They should work with your package manager just like the old packages did, except they will take a little longer to install.  If you're not using the PPA, you can obtain them in the updated <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">packages directory</a> (to save a file there, click on the filename, then click 'View Raw').  
+
+<p>If you have already installed 0.7.4, you will need to first remove it, clear your package cache, then install the new package.  With apt-get this is done like this:
+<pre>    apt-get remove spacefm
+    apt-get clean
+    apt-get update
+    apt-get install spacefm</pre>
+
+<p>If you don't want packages that install automatically from source, you can also build your own binary deb packages or build from source using instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a>.  Also, you can submit a packaging request with your distro, asking them to include packages of SpaceFM in their repositories.
+<br><br>
+
+<hr>
 <h3>2012-Apr-06: SpaceFM &amp; Udev</h3>
 
 A <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">blog post</a> on what's currently happening with SpaceFM with regard to udisks2 and other issues.

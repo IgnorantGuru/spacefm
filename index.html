@@ -19,7 +19,7 @@
 
 <font face="Arial" size=+1>
 <br>
-SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, optional udisks-based device manager, customizable menu system, and bash integration.&nbsp;&nbsp;<a href="#highlights">read more</a>
+SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, udev-based device manager, customizable menu system, and bash integration.&nbsp;&nbsp;<a href="#highlights">read more</a>
 
 <p><b>IMPORTANT</b>  This is still a test release.  Please carefully test functions before relying on them.
 
@@ -123,40 +123,39 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, option
 
 
 <a name="highlights">&nbsp;</a>
-<h3>Highlights</h3>
 <ul>
-	<li>Lightweight -  Written in C with GTK2 stability, inotify kernel support, optional udisks
-	<li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
-	<li>Flexible - Can appear very simple or very complex depending on configuration
-	<li>Multiple Windows - A single instance opens multiple windows
-	<li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a task manager pane
-	<li>Tabbed - Each browser panel supports multiple folder tabs
-	<li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
-	<li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
-	<li>Device Manager - Loose udisks integration for manual and customized automatic device management, plus easily format, backup and restore partitions and MBRs
-	<li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
-	<li>MIME - Manages MIME file types and default actions
-	<li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
-	<li>Plugins - Install, copy, and export custom commands as plugins
-	<li>Bash Integration - Built-in bash scripting support for custom commands, with file manager data exported as bash variables
-	<li>Output Control - Monitor the stdout/stderr output of built-in and custom commands, with error detection and popup control, or run commands in a terminal
-	<li>Fonts & Icons - Easily configure custom fonts and icons in each panel or pane for a unique look
-	<li>Styles - Show files as icons or in lists with customized columns
-	<li>Find-As-You-Type - File list allows you to quickly locate a file with a case-insensitive substring search of filenames - just type a few letters
-	<li>File Search - Flexibly search for file names, sizes, content, etc. with no daemons
-	<li>System Management - Safely perform quick commands as root or run a root instance
-	<li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
-	<li>Archives - Single-click, built-in archive creation and extraction, or use external apps
-	<li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
-	<li>Alternate Builds - deprecated support for hal (replaces udisks) and fam/gamin (replaces inotify)
+    <li>Lightweight -  Written in C with GTK2 stability, inotify and libudev kernel support
+    <li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
+    <li>Flexible - Can appear very simple or very complex depending on configuration
+    <li>Multiple Windows - A single instance opens multiple windows
+    <li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a task manager pane
+    <li>Tabbed - Each browser panel supports multiple folder tabs
+    <li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
+    <li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
+    <li>Device Manager - Built-in libudev support for manual and automatic device management, plus easily format, backup and restore partitions and MBRs
+    <li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
+    <li>MIME - Manages MIME file types and default actions
+    <li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
+    <li>Plugins - Install, copy, and export custom commands as plugins
+    <li>Bash Integration - Built-in bash scripting support for custom commands, with file manager data exported as bash variables
+    <li>Output Control - Monitor the stdout/stderr output of built-in and custom commands, with error detection and popup control, or run commands in a terminal
+    <li>Fonts & Icons - Easily configure custom fonts and icons in each panel or pane for a unique look
+    <li>Styles - Show files as icons or in lists with customized columns
+    <li>Find-As-You-Type - File list allows you to quickly locate a file with a case-insensitive substring search of filenames - just type a few letters
+    <li>File Search - Flexibly search for file names, sizes, content, etc. with no daemons
+    <li>System Management - Safely perform quick commands as root or run a root instance
+    <li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
+    <li>Archives - Single-click, built-in archive creation and extraction, or use external apps
+    <li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
+    <li>Alternate Builds - deprecated support for hal (replaces libudev & udisks) and fam/gamin (replaces inotify)
 </ul>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#introduction-about">read more</a>
 <h3>Limitations</h3>
 <ul>
-	<li>SpaceFM makes no network connections and is not a network browser.  It browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to mount the shares locally.
+	<li>SpaceFM makes no network connections and is not a network browser.  It browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to browse and mount the shares locally.
 </ul>
 <ul>
-	<li>SpaceFM does not currently support udisks2 (aka 1.9) due to changes in this version.  udisks1 and udisks2 can co-exist on a system, so for use with SpaceFM, you will need to keep udisks1 installed.  udisks2 support in SpaceFM is under review.
+	<li>SpaceFM 0.8.0 does not require udisks (only udevd running).  However, in order to mount or unmount devices as a non-root user, you will need udisks installed, or will need to specify a custom program to be used.  (A custom daemon to remove all reliance on udisks is currently under development.)
 </ul>
 <br>
 <hr>
@@ -176,7 +175,7 @@ bash spacefm-x.x.x-installer.sh --help
 </font></pre></td></tr></table>
 
 <p>The installer requires the build dependencies listed in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Build dependencies include:  (package names may vary on your distro)
-<blockquote><i>autotools-dev dbus bash desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
+<blockquote><i>autotools-dev dbus bash desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p>If any dependencies are missing, examine the error, install missing packages, and try again.
 
@@ -199,7 +198,7 @@ SpaceFM Icons &amp; Logo by Goran Simovic (C) 2012<br>
 	</td>
 -->
 	<td>
-		<div align="left"><i>Updated 2012-03-30</i></div>
+		<div align="left"><i>Updated 2012-04-05</i></div>
 	</td>
 	<td>
 		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>
