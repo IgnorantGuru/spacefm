@@ -43,7 +43,7 @@
     <a href="#installation-downloads">Downloads</a><br>
     <a href="#installation-packages">Packages</a><br>
     <a href="#installation-installer">Installer</a><br>
-    <a href="#installation-manualbuild">Manual Build</a><br>
+    <a href="#installation-manualbuild">Manual Builds </a><br>
     <a href="#installation-uninstall">Uninstall</a><br>
 </ul>
 <a href="#invocation">Invocation</a>
@@ -263,7 +263,7 @@
         <li>Downloads
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -278,7 +278,7 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.
+<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -302,7 +302,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
         <li><a href="#installation-downloads">Downloads</a>
         <li>Packages
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -324,36 +324,43 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 	<th>Packages &amp; Repositories*</th>
 </tr>
 <tr>
-<td><b>Debian,<br>Ubuntu,<br>etc</b></td>
+<td valign="top"><b>Debian<br>Ubuntu<br>etc</b></td>
 <td>
-	deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
-	<br><br>NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
-	<br><br><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+	NOTE: These convenience deb packages contain the source code and 
+	will build and install SpaceFM automatically.
+
+	<p>NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 
+	users may not be able to install SpaceFM due to repositories 
+	missing package libgdk-pixbuf2.0-0
+
+	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
+
+	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
 </td>
 </tr>
 
 <tr>
-<td><b>antiX<b></td>
+<td valign="top"><b>antiX<b></td>
 <td>
 	<a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
 </td>
 </tr>
 
 <tr>
-<td><b>Arch Linux</b></td>
+<td valign="top"><b>Arch Linux</b></td>
 <td>
-	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a> and <a href="http://aur.archlinux.org/packages.php?ID=58247">spacefm-git</a>
 </td>
 </tr>
 
 <tr>
-<td><b>Gentoo</b></td>
+<td valign="top"><b>Gentoo</b></td>
 <td>
 	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
 </td>
 
 <tr>
-<td><b>openSUSE</b></td>
+<td valign="top"><b>openSUSE</b></td>
 <td>
 	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
 	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
@@ -368,30 +375,30 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 </tr>
 
 <tr>
-<td><b>PCLinuxOS</b></td>
+<td valign="top"><b>PCLinuxOS</b></td>
 <td>
 	spacefm test packages available (see forum)
 </td>
 </tr>
 
 <tr>
-<td><b>Sabayon</b></td>
+<td valign="top"><b>Sabayon</b></td>
 <td>
 	Includes spacefm in its repositories
 </td>
 </tr>
 
 <tr>
-<td><b>VectorLinux</b></td>
+<td valign="top"><b>VectorLinux</b></td>
 <td>
 	spacefm test packages available
 </td>
 </tr>
 
 <tr>
-<td><b><i>Other</i></b></td>
+<td valign="top"><b><i>Other</i></b></td>
 <td>
-	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use the easy manual build instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
+	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use one of the <a href="#installation-manualbuild">manual build methods</a>
 </td>
 </tr>
 </table>
@@ -413,7 +420,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li>Installer
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -428,11 +435,11 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <a name="installation-installer"/><a href="#installation-installer"><font size=+2>Installer</font></a>
 <!-- @Installation @Installer -->
 
-<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>.  The installer extracts, builds, and installs automatically.
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
-<blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143), libudev-dev</i></blockquote>
+<blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
 <blockquote><i>eject, lsof, wget, ktsuss|gksu, udisks</i></blockquote>
@@ -469,7 +476,7 @@ Or, to see the help for alternate build options, run:
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li>Manual Build
+        <li>Manual Builds 
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -481,31 +488,17 @@ Or, to see the help for alternate build options, run:
 </ul>
 </td>
 <td valign="top">
-<a name="installation-manualbuild"/><a href="#installation-manualbuild"><font size=+2>Manual Build</font></a>
-<!-- @Installation @Manual Build -->
+<a name="installation-manualbuild"/><a href="#installation-manualbuild"><font size=+2>Manual Builds </font></a>
+<!-- @Installation @Manual Builds #manualbuild -->
 
-<p>To build SpaceFM step-by-step, first install <b>required <i>build</i> dependencies</b> as detailed in the <a href="#installation-installer">Installer instructions</a> above.
+<p>For easy-to-follow manual build instructions, please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Sections there include:
 
-<p>Next, download the tarball (eg spacefm-x.x.x.tar.xz) from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>, extract the tarball to a working folder, and enter the directory in a terminal.
-
-<p>For a default build and install as /usr/local/bin/spacefm, run configure like this:
-<pre>    ./configure</pre>
-
-<p><b>If configure reports missing dependencies</b>, install them and run configure again before proceeding to make.
-
-<p><b>IF</b> HAL support is desired (this will disable udisks support and will seriously limit device manager capabilities), add <code>--enable-hal</code> to the configure command above.
-
-<p><b>IF</b> you don't want to use the inotify kernel support and instead want fam or gamin to detect directory changes, add to configure: <code>--disable-inotify</code>
-        
-<p>SpaceFM already supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
-
-<p>Next, <b>run make</b> and complete the installation:
-<pre>    make
-    sudo make install
-    sudo update-mime-database /usr/share/mime > /dev/null
-    sudo update-desktop-database -q
-</pre>
-
+<ul>
+    <li>BUILD - build SpaceFM from source
+    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
+    <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
+    <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
+</ul>
 
 <!-- @end installation-manualbuild-->
 <br><br></td></tr>
@@ -521,7 +514,7 @@ Or, to see the help for alternate build options, run:
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li>Uninstall
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -2764,7 +2757,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-04-07&nbsp;&nbsp;(SpaceFM version 0.7.4+)
+<p>Updated 2012-04-09&nbsp;&nbsp;(SpaceFM version 0.7.4+)
 <br><br>
 </center>
 </td></tr></table>
