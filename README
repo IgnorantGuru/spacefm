@@ -53,6 +53,9 @@ PACKAGES
     Gentoo's portage tree includes spacefm:
         http://packages.gentoo.org/package/x11-misc/spacefm
 
+    Foresight includes spacefm in its repositories, Foresight Lxde includes spacefm as default in system:
+        http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
+
     openSUSE 12.1 repo (add the following repo to Yast software manager):
         http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1
 
