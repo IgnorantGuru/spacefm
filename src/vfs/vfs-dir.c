@@ -486,7 +486,7 @@ char* gethidden( const char* path )  //MOD added
     g_free( hidden_path );
     if ( fd != -1 )
     {
-        struct stat s;
+        struct stat s;   // skip stat64
         if ( G_LIKELY( fstat( fd, &s ) != -1 ) )
         {
             char* buf = g_malloc( s.st_size + 1 );
@@ -998,7 +998,7 @@ const char* vfs_get_desktop_dir()
         g_free( def );
         if( G_LIKELY( fd != -1 ) )
         {
-            struct stat s;
+            struct stat s;   // skip stat64
             if( G_LIKELY( fstat( fd, &s ) != -1 ) )
             {
                 char* buf = g_malloc( s.st_size + 1 );

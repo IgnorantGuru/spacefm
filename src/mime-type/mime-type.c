@@ -85,7 +85,7 @@ static gboolean mime_type_is_data_plain_text( const char* data, int len );
  * Mime-type of the file is determined by cheking the filename only.
  * If statbuf != NULL, it will be used to determine if the file is a directory.
 */
-const char* mime_type_get_by_filename( const char* filename, struct stat* statbuf )
+const char* mime_type_get_by_filename( const char* filename, struct stat64* statbuf )
 {
     const char* type = NULL, *suffix_pos = NULL, *prev_suffix_pos = (const char*)-1;
     int i;
@@ -143,15 +143,15 @@ const char* mime_type_get_by_filename( const char* filename, struct stat* statbu
  * efifciency, too. Otherwise, the function will try to get the basename of
  * the specified file again.
 */
-const char* mime_type_get_by_file( const char* filepath, struct stat* statbuf, const char* basename )
+const char* mime_type_get_by_file( const char* filepath, struct stat64* statbuf, const char* basename )
 {
     const char* type;
-    struct stat _statbuf;
+    struct stat64 _statbuf;
 
     if( statbuf == NULL || G_UNLIKELY( S_ISLNK(statbuf->st_mode) ) )
     {
         statbuf = &_statbuf;
-        if( stat ( filepath, statbuf ) == -1 )
+        if( stat64 ( filepath, statbuf ) == -1 )
             return XDG_MIME_TYPE_UNKNOWN;
     }
 
@@ -297,7 +297,7 @@ static char* parse_xml_desc( const char* buf, size_t len, const char* locale )
 static char* _mime_type_get_desc( const char* type, const char* data_dir, const char* locale )
 {
     int fd;
-    struct stat statbuf;
+    struct stat statbuf;   // skip stat64
     char *buffer, *_locale, *desc;
     char file_path[ 256 ];
 
@@ -540,8 +540,8 @@ gboolean mime_type_is_text_file( const char *file_path, const char* mime_type )
     file = open ( file_path, O_RDONLY );
     if ( file != -1 )
     {
-        struct stat statbuf;
-        if( fstat( file, &statbuf ) != -1 )
+        struct stat64 statbuf;
+        if( fstat64( file, &statbuf ) != -1 )
         {
             if( S_ISREG( statbuf.st_mode ) )
             {

@@ -3830,7 +3830,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
         if( file_browser->pending_drag_status )
         {
             dev_t dest_dev;
-            struct stat statbuf;
+            struct stat statbuf;    // skip stat64
             if( stat( dest_dir, &statbuf ) == 0 )
             {
                 dest_dev = statbuf.st_dev;
@@ -3903,7 +3903,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                 /* We only want to update drag status, not really want to drop */
                 if( file_browser->pending_drag_status )
                 {
-                    struct stat statbuf;
+                    struct stat statbuf;    // skip stat64
                     if( stat( dest_dir, &statbuf ) == 0 )
                     {
                         file_browser->pending_drag_status = 0;

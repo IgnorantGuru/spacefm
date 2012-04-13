@@ -108,14 +108,14 @@ struct _VFSFileTask
     /* For chmod */
     guchar *chmod_actions;  /* If chmod is not needed, this should be NULL */
 
-    off_t total_size; /* Total size of the files to be processed, in bytes */
-    off_t progress; /* Total size of current processed files, in btytes */
+    off64_t total_size; /* Total size of the files to be processed, in bytes */
+    off64_t progress; /* Total size of current processed files, in btytes */
     int percent; /* progress (percentage) */
     time_t start_time;  //MOD
     time_t last_time;   //MOD
     time_t update_time;   //MOD
-    off_t current_speed;   //MOD
-    off_t current_progress; //MOD
+    off64_t current_speed;   //MOD
+    off64_t current_progress; //MOD
     guint current_item;  //MOD
     guint ticks;
     guint flood_ticks;

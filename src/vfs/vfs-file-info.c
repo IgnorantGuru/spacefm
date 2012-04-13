@@ -106,7 +106,7 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
                             const char* file_path,
                             const char* base_name )
 {
-    struct stat file_stat;
+    struct stat64 file_stat;
     vfs_file_info_clear( fi );
 
     if ( base_name )
@@ -114,7 +114,7 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
     else
         fi->name = g_path_get_basename( file_path );
 
-    if ( lstat( file_path, &file_stat ) == 0 )
+    if ( lstat64( file_path, &file_stat ) == 0 )
     {
         /* This is time-consuming but can save much memory */
         fi->mode = file_stat.st_mode;
@@ -122,6 +122,7 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         fi->uid = file_stat.st_uid;
         fi->gid = file_stat.st_gid;
         fi->size = file_stat.st_size;
+//printf("size %s %llu\n", fi->name, fi->size );
         fi->mtime = file_stat.st_mtime;
         fi->atime = file_stat.st_atime;
         fi->blksize = file_stat.st_blksize;
@@ -200,7 +201,7 @@ void vfs_file_info_reload_mime_type( VFSFileInfo* fi,
                                      const char* full_path )
 {
     VFSMimeType * old_mime_type;
-    struct stat file_stat;
+    struct stat64 file_stat;
 
     /* convert VFSFileInfo to struct stat */
     /* In current implementation, only st_mode is used in

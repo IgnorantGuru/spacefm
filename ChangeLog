@@ -1,4 +1,4 @@
-0.8.0
+0.7.5
     replaced udisks with libudev kernel support for device detection and info
     udisks v1 & v2 now supported for mount/unmount as normal user
     added device Settings|Un/Mount Command options to customize mount program
@@ -11,6 +11,7 @@
     built-in archive functions on desktop closes #18
     shift-click selects range on desktop closes #47
     code review
+    consistent 64bit file size support fixes #60
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

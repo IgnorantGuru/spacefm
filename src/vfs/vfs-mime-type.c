@@ -159,7 +159,7 @@ VFSMimeType* vfs_mime_type_get_from_file_name( const char* ufile_name )
 
 VFSMimeType* vfs_mime_type_get_from_file( const char* file_path,
                                           const char* base_name,
-                                          struct stat* pstat )
+                                          struct stat64* pstat )
 {
     const char * type;
     type = mime_type_get_by_file( file_path, pstat, base_name );

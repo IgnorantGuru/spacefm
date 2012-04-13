@@ -2606,7 +2606,7 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
 
 char* vfs_volume_device_info( const char* device_file )
 {
-    struct stat statbuf;
+    struct stat statbuf;    // skip stat64
     struct udev_device *udevice;
     
     if ( !udev )

@@ -1488,7 +1488,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
         {
             GdkDragAction suggested_action = 0;
             dev_t dest_dev;
-            struct stat statbuf;
+            struct stat statbuf;    // skip stat64
 
             if( stat( dest_dir ? dest_dir : vfs_get_desktop_dir(), &statbuf ) == 0 )
             {
