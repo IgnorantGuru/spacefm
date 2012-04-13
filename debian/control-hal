@@ -23,6 +23,6 @@ Suggests: eject, lsof, wget, ktsuss, gksu
 Conflicts: spacefm
 Description: A multi-panel tabbed file manager with built-in VFS, udev-based
  device manager*, customizable menu system, and bash integration.
- * This package is built with deprecated HAL support in place of libudev
+ * This package is built with deprecated HAL support in place of udev
  (device manager functions are very limited).
 

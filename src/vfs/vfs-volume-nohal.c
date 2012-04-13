@@ -2669,6 +2669,11 @@ char* vfs_volume_device_mount_cmd( const char* device_file, const char* options 
                 command = g_strdup_printf( "%s --mount %s",
                                         s1, device_file );
         }
+        else if ( s1 = g_find_program_in_path( "pmount" ) )
+        {
+            // pmount
+            command = g_strdup_printf( "%s %s", s1, device_file );
+        }
         g_free( s1 );
     }
     else
@@ -2692,14 +2697,17 @@ char* vfs_volume_device_unmount_cmd( const char* device_file )
         if ( s1 = g_find_program_in_path( "udisksctl" ) )
         {
             // udisks2
-            command = g_strdup_printf( "%s unmount -b %s",
-                                        s1, device_file );
+            command = g_strdup_printf( "%s unmount -b %s", s1, device_file );
         }
         else if ( s1 = g_find_program_in_path( "udisks" ) )
         {
             // udisks1
-            command = g_strdup_printf( "%s --unmount %s",
-                                        s1, device_file );
+            command = g_strdup_printf( "%s --unmount %s", s1, device_file );
+        }
+        else if ( s1 = g_find_program_in_path( "pumount" ) )
+        {
+            // pmount
+            command = g_strdup_printf( "%s %s", s1, device_file );
         }
         g_free( s1 );
     }

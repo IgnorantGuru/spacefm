@@ -8647,7 +8647,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-settings-mvol" );
 
     set = xset_set( "dev_mount_options", "label", _("_Mount Options") );
-    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.") );
+    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Default Mount Options") );
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
@@ -8658,19 +8658,19 @@ void xset_defaults()
     set = xset_set( "dev_remount_options", "z", "noexec, nosuid, noatime" );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Re/mount With Options") );
-    xset_set_set( set, "desc", _("Device will be (re)mounted using the options below.\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.") );
+    xset_set_set( set, "desc", _("Device will be (re)mounted using the options below.\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to be run to mount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\t%%o	volume-specific mount options\n\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\t%%o	volume-specific mount options\n\npmount:\t/usr/bin/pmount %v\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-mcmd" );
 
     set = xset_set( "dev_unmount_cmd", "label", _("_Unmount Command") );
-    xset_set_set( set, "desc", _("Enter the command to be run to unmount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\npmount:\t/usr/bin/pumount %v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icon", "gtk-edit" );

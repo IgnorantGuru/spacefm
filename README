@@ -123,7 +123,7 @@ BUILD
         may not be able to install SpaceFM due to repositories missing package
         libgdk-pixbuf2.0-0
 
-    Also Recommended: eject, lsof, wget, ktsuss|gksu, udisks
+    Also Recommended: eject, lsof, wget, ktsuss|gksu, pmount|udisks
 
     IF building with HAL support, you also need:
         hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1
@@ -156,7 +156,7 @@ BUILD
     NOTE: If configure reports missing dependencies, install them and run
     configure again before proceeding to make.
 
-    NOTE: If hal support is desired (this will disable udisks support and will
+    NOTE: If hal support is desired (this will disable udev support and will
     seriously limit device manager capabilities), add --enable-hal to the
     configure command above.
 

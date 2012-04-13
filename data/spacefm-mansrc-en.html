@@ -43,7 +43,7 @@
     
     <p><li>Keep the user <b>interface as simple and clean as possible</b>.  Although SpaceFM's UI has been redesigned, it is still inspired by the simplicity and clarity of PCManFM's UI.
       
-    <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.
+    <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by pmount, udisks, or any program you specify.
     
     <p><li>Provide a <b>task manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the task manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the task manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
     
@@ -53,7 +53,7 @@
     
     <p><li>Provide extensive <b>system maintenance capabilities</b>.  Perform-as-root functions allow you to edit, copy, move, and delete files and folders as root, change permissions, and create links.  SpaceFM can also be run as root for full system maintenance needs.
     
-    <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or it can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM has built-in libudev kernel support for device detection and information, with no dependency on udisks (although you may still want udisks for non-root mounting).  (SpaceFM can also be built with deprecated HAL support instead of libudev.)
+    <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or it can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM has built-in libudev kernel support for device detection and information, with no dependency on udisks (although you may still want udisks or pmount installed for non-root mounting).  (SpaceFM can also be built with deprecated HAL support instead of libudev.)
 </ul>
 
 <!-- # Limitations -->
@@ -70,7 +70,7 @@
 
 <p>Due to the extensive changes in many parts of the project, SpaceFM was released with its new name as an alpha test version in January 2012.
 
-<p>* Beginning with version 0.7.5 in April 2012, SpaceFM replaced udisks with libudev kernel support for device detection and information.  SpaceFM users can set any custom program to be used for non-root user mounting and unmounting (including but not limited to udisks v1/v2).  A custom daemon to remove all reliance on udisks is currently under development.
+<p>* Beginning with version 0.7.5 in April 2012, SpaceFM replaced udisks with libudev kernel support for device detection and information.  SpaceFM users can set any custom program to be used for non-root user mounting and unmounting (including but not limited to pmount and udisks v1/v2).  A custom mount program is also currently under development.
 
 
 <!-- @Introduction @Highlights -->
@@ -99,7 +99,7 @@
     <li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
     <li>Archives - Single-click, built-in archive creation and extraction, or use external apps
     <li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
-    <li>Alternate Builds - deprecated support for hal (replaces libudev & udisks) and fam/gamin (replaces inotify)
+    <li>Alternate Builds - deprecated support for hal (replaces libudev) and fam/gamin (replaces inotify)
 </ul>
 
 
@@ -222,7 +222,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
-<blockquote><i>eject, lsof, wget, ktsuss|gksu, udisks</i></blockquote>
+<blockquote><i>eject, lsof, wget, ktsuss|gksu, pmount|udisks</i></blockquote>
 
 <p><b>IF</b> building with HAL support (device manager functions are very limited), you also need:
 <blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i><br>
@@ -1058,9 +1058,9 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>SpaceFM includes a programmable udev-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
 
-<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires a udevd daemon to be running, but does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
+<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
 
-<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will need to specify another program to be able to mount and unmount devices as a non-root user.  (A lightweight replacement for the udisks command line tool is currently under development.)
+<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or another program you specify to be able to mount and unmount devices as a non-root user.
 
 <p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udev-based version.  It can only be used to manually mount and unmount devices.  Thus the udev-based version is recommended, and this manual deals exclusively with the udev-based device manager.
 
@@ -1100,7 +1100,7 @@ Reload is used to unmount, eject if necessary, and reload a device's media tray 
 
 
 <!-- #Unmount -->
-Unmount will simply run an unmount command on the selected device.  By default, the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, the udisks command line tool or pumount will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
 
 <p>You can run a command similar to the one SpaceFM uses by running a command in a terminal like this (replace the 'X' for a valid device file) (udisks v1 example):
 <pre>    udisks --unmount /dev/sdX</pre>
@@ -1117,29 +1117,37 @@ Selecting Open will cause the selected device to be mounted if it is not already
 
 <p>You can also open a device by simply left-clicking on it, but there are several differences.  When left-clicking on a device, no error will be shown if the mount fails.  Your indication that the mount failed is that the directory is not opened.  To see the details of the error, you must right-click on the device and select Open.  Also, the behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
 
-<p>To mount, SpaceFM runs a mount command on the selected device.  By default, the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
+<p>To mount, SpaceFM runs a mount command on the selected device.  By default, the udisks command line tool or pmount will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
 
 <p>If the device has an entry in /etc/fstab, that mount point may be used instead, and it will not be removed when unmounted.
 
 <p>The device will be mounted using SpaceFM's <a href="#devices-settings-opts">Mount Options</a>.  If the device has an fstab entry, options specified there may take precedence.  The mount program may also automatically add or change some mount options.
 
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set in <a href="#devices-settings-opts">Mount Options</a> will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
+
 <!-- #Tab -->
 Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
 
 <!-- #Mount -->
-Mount will simply run a mount command on the selected device.  By default, the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
+Mount will simply run a mount command on the selected device.  By default, the udisks command line tool or pmount will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
 
 <p>You can run a command similar to the one SpaceFM uses by running a command in a terminal like this (replace the 'X' for a valid device file) (udisks v1 example):
 <pre>    udisks --mount /dev/sdX</pre>
 
 <p>If you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to mount the device, or udisks is not properly installed and authorized.
 
+<p>The device will be mounted using SpaceFM's <a href="#devices-settings-opts">Mount Options</a>.  If the device has an fstab entry, options specified there may take precedence.  The mount program may also automatically add or change some mount options.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set in <a href="#devices-settings-opts">Mount Options</a> will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
+
 <!-- #Re/mount -->
 The Re/mount item is used to mount or remount a device using specific mount options.  A dialog will open asking you for the mount options to be used.  If mounted, the device will first be unmounted.  Then the device will be mounted using the specified options.
 
-<p>Because udisks cannot perform a true remount, the device will be unmounted and mounted.
+<p>Because mount programs such as udisks and pmount cannot perform a true remount, the device will be unmounted and mounted.
 
 <p>Re/mount accepts extended mount options, as detailed in <a href="#devices-settings-opts">Mount Options</a>.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
 <!-- #Root -->
 The Root submenu allows you to perform actions on a device as root.  Dialog messages should be read carefully when using any command in the Root submenu, because actions performed as root can affect any aspect of your system.  SpaceFM will explain what is about to happen and will let you examine the final command line before it is executed.
@@ -1179,7 +1187,7 @@ The Properties item will gather and show information about the currently selecte
 <p>The following functions are included:
 
 <!-- #Unmount -->
-By default, SpaceFM will use udisks to unmount as root, but you can change this to any command, such as umount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
+By default, SpaceFM will use udisks to unmount as root, but you can change this to any command in the dialog, such as umount or pumount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
 
 <!-- #Mount -->
 Mount works similarly to Unmount, except that the selected device is mounted as root.
@@ -1272,7 +1280,7 @@ Edit fstab is a convenience function which simply opens the /etc/fstab file as r
 <!-- #Show|Internal Drives #internal -->
 By default, the Devices list will only show removable and optical drives, while hiding internal system drives.  If option Show|Internal Drives is checked, internal system drives will also be shown in the Devices list.  For the root user, option Show|Internal Drives is checked by default.
 
-<p>Internal drives are often treated differently by udisks.  You may not be able to mount or unmount them as a normal (non-root) user without making changes to /etc/fstab or to the udisks policykit authorization rules.
+<p>Internal drives are often treated differently by udisks and other mount programs.  You may not be able to mount or unmount them as a normal (non-root) user without making changes to /etc/fstab or to the udisks policykit authorization rules.
 
 <p>Note that some external esata drives report themselves as internal, so they may not be shown unless Show|Internal Drives is checked.  Another solution with these drives is to enter an exception for them in <a href="#devices-settings-vol">Show|Volumes</a>.
 
@@ -1486,17 +1494,19 @@ Mount Options opens a dialog which allows you to set default mount options to be
 
 <p>will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.
 
-<p>Note that some options, such as nosuid, may be added by the udisks or other mount program even if you don't include them.  Also, options specified in fstab may take precedence.
+<p>Note that some options, such as nosuid, may be added by the udisks or other mount program even if you don't include them.  Options specified in fstab may take precedence.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
 <!-- #Mount Command #mcmd -->
-Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Specific options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
+Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Specific options should NOT be entered here (unless you're adding pmount's command line options) - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
 
-<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
+<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks), or pmount.
 
 <!-- #Unmount Command #ucmd -->
 Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting.  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
 
-<p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
+<p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks), or pmount's unmount tool (/usr/bin/pumount).
 
 <!-- #Single Click #single -->
 If option Single Click is checked, the Devices list operates in single-click mode: a single left-click on a device will open it.  If unchecked, a single-click will only select a device, and a double-click is required to open it.
