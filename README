@@ -57,6 +57,10 @@ PACKAGES
         http://aur.archlinux.org/packages.php?ID=55777
         http://aur.archlinux.org/packages.php?ID=58247
     
+    Foresight Lxde uses SpaceFM as its default file manager; Foresight includes
+    spacefm in its repositories:
+        http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
+
     Gentoo's portage tree includes spacefm:
         http://packages.gentoo.org/package/x11-misc/spacefm
 
