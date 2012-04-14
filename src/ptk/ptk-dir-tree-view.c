@@ -94,6 +94,11 @@ on_dir_tree_view_drag_motion ( GtkWidget *widget,
                             guint time,
                             PtkFileBrowser* file_browser );
 
+static gboolean on_dir_tree_view_drag_leave ( GtkWidget *widget,
+                            GdkDragContext *drag_context,
+                            guint time,
+                            PtkFileBrowser* file_browser );
+
 static gboolean
 on_dir_tree_view_drag_drop ( GtkWidget *widget,
                             GdkDragContext *drag_context,
@@ -219,6 +224,10 @@ GtkWidget* ptk_dir_tree_view_new( PtkFileBrowser* browser,
                        browser );
     g_signal_connect ( ( gpointer ) dir_tree_view, "drag-motion",
                        G_CALLBACK ( on_dir_tree_view_drag_motion ),
+                       browser );
+
+    g_signal_connect ( ( gpointer ) dir_tree_view, "drag-leave",
+                       G_CALLBACK ( on_dir_tree_view_drag_leave ),
                        browser );
 
     g_signal_connect ( ( gpointer ) dir_tree_view, "drag-drop",
@@ -514,18 +523,26 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
 }
 
 //MOD drag n drop
-static char* dir_tree_view_get_drop_dir( GtkWidget* view, int x, int y )  //MOD added
+static char* dir_tree_view_get_drop_dir( GtkWidget* view, int x, int y )
 {
-    GtkTreePath * tree_path = NULL;
-    GtkTreeModel *model = NULL;
+    GtkTreePath *tree_path = NULL;
+    GtkTreeModel *model;
     GtkTreeIter it;
     VFSFileInfo* file;
     char* dest_path = NULL;
 
-    model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
-    if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
-                                        x, y, &tree_path, NULL, NULL, NULL ) )
+    // if drag is in progress, get the dest row path
+    gtk_tree_view_get_drag_dest_row( GTK_TREE_VIEW( view ), &tree_path, NULL );
+    if ( !tree_path )
     {
+        // no drag in progress, get drop path
+        if ( !gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ),
+                                        x, y, &tree_path, NULL, NULL, NULL ) )
+            tree_path = NULL;
+    }
+    if ( tree_path )
+    {
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
         if ( gtk_tree_model_get_iter( model, &it, tree_path ) )
         {
             gtk_tree_model_get( model, &it,
@@ -539,10 +556,15 @@ static char* dir_tree_view_get_drop_dir( GtkWidget* view, int x, int y )  //MOD 
         }
         gtk_tree_path_free( tree_path );
     }
+/*  this isn't needed?
     // dest_path is a link? resolve
     if ( dest_path && g_file_test( dest_path, G_FILE_TEST_IS_SYMLINK ) )
-        dest_path = g_file_read_link ( dest_path, NULL );
-            
+    {
+        char* old_dest = dest_path;
+        dest_path = g_file_read_link( old_dest, NULL );
+        g_free( old_dest );
+    }
+*/
     return dest_path;
 }
 
@@ -573,6 +595,45 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
         if ( dest_dir )
         {
             puri = list = gtk_selection_data_get_uris( sel_data );
+            if( file_browser->pending_drag_status_tree )
+            {
+                // We only want to update drag status, not really want to drop
+                dev_t dest_dev;
+                struct stat statbuf;    // skip stat64
+                if( stat( dest_dir, &statbuf ) == 0 )
+                {
+                    dest_dev = statbuf.st_dev;
+                    if( 0 == file_browser->drag_source_dev_tree )
+                    {
+                        file_browser->drag_source_dev_tree = dest_dev;
+                        for( ; *puri; ++puri )
+                        {
+                            file_path = g_filename_from_uri( *puri, NULL, NULL );
+                            if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                            {
+                                file_browser->drag_source_dev_tree = statbuf.st_dev;
+                                g_free( file_path );
+                                break;
+                            }
+                            g_free( file_path );
+                        }
+                    }
+                    if( file_browser->drag_source_dev_tree != dest_dev )
+                        // src and dest are on different devices */
+                        drag_context->suggested_action = GDK_ACTION_COPY;
+                    else
+                        drag_context->suggested_action = GDK_ACTION_MOVE;
+                }
+                else
+                    // stat failed
+                    drag_context->suggested_action = GDK_ACTION_COPY;
+
+                g_free( dest_dir );
+                g_strfreev( list );
+                file_browser->pending_drag_status_tree = 0;
+                return;
+            }
+
             if ( puri )
             {
                 if ( 0 == ( drag_context->action &
@@ -619,15 +680,23 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
                                                   GTK_WINDOW( parent_win ),
                                                   file_browser->task_view );
                         ptk_file_task_run( task );
-                        g_free( dest_dir );
                     }
                 }
+                g_free( dest_dir );
                 gtk_drag_finish ( drag_context, TRUE, FALSE, time );
                 return ;
             }
+            g_free( dest_dir );
         }
-        else
-            g_warning ("bad dest_dir in on_dir_tree_view_drag_data_received");
+        //else
+        //    g_warning ("bad dest_dir in on_dir_tree_view_drag_data_received");
+    }
+    /* If we are only getting drag status, not finished. */
+    if( file_browser->pending_drag_status_tree )
+    {
+        drag_context->suggested_action = GDK_ACTION_COPY;
+        file_browser->pending_drag_status_tree = 0;
+        return;
     }
     gtk_drag_finish ( drag_context, FALSE, FALSE, time );
 }
@@ -649,7 +718,6 @@ gboolean on_dir_tree_view_drag_drop ( GtkWidget *widget,
     return TRUE;
 }
 
-
 gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
                                       GdkDragContext *drag_context,
                                       gint x,
@@ -658,11 +726,8 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
                                       PtkFileBrowser* file_browser )  //MOD added
 {
     GdkDragAction suggested_action;
-/* this check isn't needed? 
-
     GdkAtom target;
     GtkTargetList* target_list;
-    char* dest_dir = NULL;
 
     target_list = gtk_target_list_new( drag_targets, G_N_ELEMENTS(drag_targets) );
     target = gtk_drag_dest_find_target( widget, drag_context, target_list );
@@ -672,7 +737,6 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
         gdk_drag_status( drag_context, 0, time);
     else
     {
-*/      
         // Need to set suggested_action because default handler assumes copy
         /* Only 'move' is available. The user force move action by pressing Shift key */
         if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
@@ -685,10 +749,33 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
-            suggested_action = GDK_ACTION_COPY;   //sfm was MOVE
-        drag_context->suggested_action = suggested_action;
-        gdk_drag_status( drag_context, suggested_action, time );
-//    }
+        {
+            int drag_action = xset_get_int( "drag_action", "x" );
+            if ( drag_action == 1 )
+                suggested_action = GDK_ACTION_COPY;
+            else if ( drag_action == 2 )
+                suggested_action = GDK_ACTION_MOVE;
+            else if ( drag_action == 3 )
+                suggested_action = GDK_ACTION_LINK;
+            else
+            {
+                // automatic
+                file_browser->pending_drag_status_tree = 1;
+                gtk_drag_get_data (widget, drag_context, target, time);
+                suggested_action = drag_context->suggested_action;
+            }
+        }
+        drag_context->suggested_action = suggested_action; // needed for default handler
+        gdk_drag_status( drag_context, suggested_action, gtk_get_current_event_time() );
+    }
     return FALSE;
 }
 
+static gboolean on_dir_tree_view_drag_leave ( GtkWidget *widget,
+                                     GdkDragContext *drag_context,
+                                     guint time,
+                                     PtkFileBrowser* file_browser )
+{
+    file_browser->drag_source_dev_tree = 0;
+    return FALSE;
+}

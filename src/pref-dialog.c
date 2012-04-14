@@ -51,6 +51,7 @@ struct _FMPrefDlg
     GtkWidget* use_si_prefix;
     GtkWidget* rubberband;
     GtkWidget* root_bar;
+    GtkWidget* drag_action;
 
     /* Interface tab */
     GtkWidget* always_show_tabs;
@@ -100,6 +101,7 @@ static const char* date_formats[] =
     "%Y-%m-%d",
     "%Y-%m-%d %H:%M:%S"
 };
+static const int drag_actions[] = { 0, 1, 2, 3 };
 /*
 static void
 on_show_desktop_toggled( GtkToggleButton* show_desktop, GtkWidget* desktop_page )
@@ -509,6 +511,11 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             main_window_root_bar_all();
         }
         
+        char* s = g_strdup_printf( "%d",
+                    gtk_combo_box_get_active( GTK_COMBO_BOX( data->drag_action ) ) );
+        xset_set( "drag_action", "x", s );
+        g_free( s );
+
         char* etext = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
                                             GTK_BIN( data->date_format ) ) ) ) );
         if ( etext[0] == '\0' )
@@ -690,6 +697,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         GtkTreeModel* model;
         // this invokes GVFS-RemoteVolumeMonitor via IsSupported
         GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg.ui", NULL );
+        if ( !builder )
+            return FALSE;
         pcmanfm_ref();
 
         data = g_new0( FMPrefDlg, 1 );
@@ -716,6 +725,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 	    data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
         data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
 	    data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
+        data->drag_action = (GtkWidget*)gtk_builder_get_object( builder, "drag_action" );
 
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
         gtk_combo_box_set_model( GTK_COMBO_BOX( data->terminal ), model );
@@ -842,6 +852,19 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->root_bar ),
                                                         xset_get_b( "root_bar" ) );
         gtk_widget_set_sensitive( data->root_bar, geteuid() == 0 );
+
+        int drag_action = xset_get_int( "drag_action", "x" );
+        int drag_action_set = 0;
+        for ( i = 0; i < G_N_ELEMENTS( drag_actions ); ++i )
+        {
+            if ( drag_actions[ i ] == drag_action )
+            {
+                drag_action_set = i;
+                break;
+            }
+        }
+        gtk_combo_box_set_active( GTK_COMBO_BOX( data->drag_action ), drag_action_set );
+
 
         /* Setup 'Desktop' tab */
 

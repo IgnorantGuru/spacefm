@@ -37,6 +37,7 @@
     <a href="#introduction-about">About</a><br>
     <a href="#introduction-history">History</a><br>
     <a href="#introduction-highlights">Highlights</a><br>
+    <a href="#introduction-limitations">Limitations</a><br>
 </ul>
 <a href="#installation">Installation</a>
 <ul>
@@ -107,6 +108,7 @@
         <li>About
         <li><a href="#introduction-history">History</a>
         <li><a href="#introduction-highlights">Highlights</a>
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -166,6 +168,7 @@
         <li><a href="#introduction-about">About</a>
         <li>History
         <li><a href="#introduction-highlights">Highlights</a>
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -202,6 +205,7 @@
         <li><a href="#introduction-about">About</a>
         <li><a href="#introduction-history">History</a>
         <li>Highlights
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -243,8 +247,42 @@
     <li>Alternate Builds - deprecated support for hal (replaces libudev) and fam/gamin (replaces inotify)
 </ul>
 
-
 <!-- @end introduction-highlights-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li>Introduction
+    <ul>
+        <li><a href="#introduction-about">About</a>
+        <li><a href="#introduction-history">History</a>
+        <li><a href="#introduction-highlights">Highlights</a>
+        <li>Limitations
+    </ul>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="introduction-limitations"/><a href="#introduction-limitations"><font size=+2>Limitations</font></a>
+<!-- @Introduction @Limitations -->
+
+<ul>
+	<li>SpaceFM makes no network connections and is not a network browser.  It currently browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to browse and mount the shares locally.<br><br>
+	
+	<li>SpaceFM 0.7.5 does not require udisks (only udev).  However, in order to mount or unmount devices as a non-root user, you will need pmount or udisks installed, or will need to specify a custom program to be used.  Also, a custom mount solution is currently under development.
+</ul>
+
+
+<!-- @end introduction-limitations-->
 <br><br></td></tr>
 
 
@@ -678,7 +716,7 @@ Application Options:
 
 <p>When a window is closed, the current folder tabs are saved to your session file if option File|Save Tabs is checked.  The next time you run SpaceFM, these folder tabs will be re-opened in addition to opening tabs for any folders you specify on the command line.
 
-<p>To specify what panel folders are opened in, use:
+<p>To specify a specific panel in which to open a folder, use:
 <pre>    # open a folder in panel 2:
     spacefm --panel=2 /usr/bin</pre>
 
@@ -1900,7 +1938,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
 
-<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or another program you specify to be able to mount and unmount devices as a non-root user.
+<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
 
 <p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udev-based version.  It can only be used to manually mount and unmount devices.  Thus the udev-based version is recommended, and this manual deals exclusively with the udev-based device manager.
 
@@ -2489,7 +2527,7 @@ Mount Options opens a dialog which allows you to set default mount options to be
 
 <!-- #Mount Command #mcmd -->
 <p><a name="devices-settings-mcmd"/><a href="#devices-settings-mcmd"><b>Mount Command</b></a><br>
-Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Specific options should NOT be entered here (unless you're adding pmount's command line options) - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
+Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Except for pmount's command line options, mount options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
 
 <p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks), or pmount.
 
@@ -2551,11 +2589,11 @@ Font opens a font selection dialog which allows you to select the font to be use
 <a name="programfiles-home"/><a href="#programfiles-home"><font size=+2>/home</font></a>
 <!-- @Program Files @/home -->
 
-<p>All files in your home folder which are directly saved or modified by SpaceFM are located in ~/.config/spacefm/ (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a>).
+<p>Your entire SpaceFM configuration, including settings and custom commands, is stored in the config directory: <b>~/.config/spacefm/</b> (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a> to specify another location).
 
 <p>If the config directory doesn't exist, and <a href="#programfiles-etc-xdg">/etc/xdg/spacefm/</a> does exist, the contents of /etc/xdg/spacefm/ will be copied to the new config directory on startup.
 
-<p>Files in ~/.config/spacefm/ include:
+<p><b>Files in ~/.config/spacefm/ include:</b>
 
 <!-- # session -->
 <p><a name="programfiles-home-session"/><a href="#programfiles-home-session"><b>session</b></a><br>
@@ -2584,6 +2622,9 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 
 <p>Because SpaceFM is highly configurable, you may have much time and effort invested in your SpaceFM config folder, so it's a good idea to <b>keep an up-to-date backup!</b>
 
+<!-- # ~/.local/share/applications/ #localapps -->
+<p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
+This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the defaults.list file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
 
 <!-- @end programfiles-home-->
 <br><br></td></tr>
@@ -2753,6 +2794,10 @@ Alternate SpaceFM icons.
 <p><a name="programfiles-usr-mo"/><a href="#programfiles-usr-mo"><b>share/locale/*/LC_MESSAGES/spacefm.mo</b></a><br>
 Language files used by SpaceFM, where '*' is a locale.
 
+<!-- # share/applications/ #usrapps -->
+<p><a name="programfiles-usr-usrapps"/><a href="#programfiles-usr-usrapps"><b>share/applications/</b></a><br>
+This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks both <a href="#programfiles-home-localapps">~/.local/share/applications/</a> and /usr/share/applications/ to determine what application to use to open files.  Settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+
 <!-- # share/applications/spacefm.desktop #spac-dt -->
 <p><a name="programfiles-usr-spac-dt"/><a href="#programfiles-usr-spac-dt"><b>share/applications/spacefm.desktop</b></a><br>
 A desktop file which opens a SpaceFM <a href="#invocation-windows">window</a>.
@@ -2788,7 +2833,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-04-13&nbsp;&nbsp;(SpaceFM version 0.7.4+)
+<p>Updated 2012-04-14&nbsp;&nbsp;(SpaceFM version 0.7.4+)
 <br><br>
 </center>
 </td></tr></table>

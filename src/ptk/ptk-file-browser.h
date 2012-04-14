@@ -79,6 +79,10 @@ struct _PtkFileBrowser
     gboolean busy : 1;
     gboolean pending_drag_status : 1;
     dev_t drag_source_dev;
+    int drag_x;
+    int drag_y;
+    gboolean pending_drag_status_tree : 1;
+    dev_t drag_source_dev_tree;
 
     /* folder view */
     GtkWidget* folder_view;

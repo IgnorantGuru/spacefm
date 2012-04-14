@@ -10265,6 +10265,7 @@ void xset_default_keys()
     def_key( "go_back", 65361, 8 );
     def_key( "go_forward", 65363, 8 );
     def_key( "go_up", 65362, 8 );
+    def_key( "focus_path_bar", 0x6c, 4 );   // Ctrl-L
     def_key( "view_refresh", 65474, 0 );
     def_key( "prop_info", 0xff0d, 8 );
     def_key( "prop_perm", 112, 4 );

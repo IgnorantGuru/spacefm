@@ -3758,20 +3758,29 @@ static char* folder_view_get_drop_dir( PtkFileBrowser* file_browser, int x, int 
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {
         exo_icon_view_widget_to_icon_coords ( EXO_ICON_VIEW( file_browser->folder_view ),
-                                              x, y, &x, &y );
+                                          x, y, &x, &y );
         tree_path = folder_view_get_tree_path_at_pos( file_browser, x, y );
         model = exo_icon_view_get_model( EXO_ICON_VIEW( file_browser->folder_view ) );
     }
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {
-        gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
-                                       NULL, &col, NULL, NULL );
-        if ( col == gtk_tree_view_get_column( GTK_TREE_VIEW( file_browser->folder_view ), 0 ) )
+        // if drag is in progress, get the dest row path
+        gtk_tree_view_get_drag_dest_row( GTK_TREE_VIEW( file_browser->folder_view ),
+                                                                &tree_path, NULL );
+        if ( !tree_path )
         {
-            gtk_tree_view_get_dest_row_at_pos ( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
-                                                &tree_path, NULL );
-            model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+            // no drag in progress, get drop path
+            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
+                                           NULL, &col, NULL, NULL );
+            if ( col == gtk_tree_view_get_column( GTK_TREE_VIEW( file_browser->folder_view ), 0 ) )
+            {
+                gtk_tree_view_get_dest_row_at_pos ( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
+                                                    &tree_path, NULL );
+                model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+            }
         }
+        else
+            model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
     }
     if ( tree_path )
     {
@@ -3785,6 +3794,15 @@ static char* folder_view_get_drop_dir( PtkFileBrowser* file_browser, int x, int 
             {
                 dest_path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                               vfs_file_info_get_name( file ), NULL );
+/*  this isn't needed?
+                // dest_path is a link? resolve
+                if ( g_file_test( dest_path, G_FILE_TEST_IS_SYMLINK ) )
+                {
+                    char* old_dest = dest_path;
+                    dest_path = g_file_read_link( old_dest, NULL );
+                    g_free( old_dest );
+                }
+*/
             }
             else  /* Drop on a file, not folder */
             {
@@ -3824,111 +3842,126 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
 
     if ( ( sel_data->length >= 0 ) && ( sel_data->format == 8 ) )
     {
-        dest_dir = folder_view_get_drop_dir( file_browser, x, y );
-        puri = list = gtk_selection_data_get_uris( sel_data );
-        /* We only want to update drag status, not really want to drop */
-        if( file_browser->pending_drag_status )
+        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            dest_dir = folder_view_get_drop_dir( file_browser, x, y );
+        else
+            // use stored x and y because exo_icon_view has no get_drag_dest_row
+            dest_dir = folder_view_get_drop_dir( file_browser,
+                                    file_browser->drag_x, file_browser->drag_y );
+//printf("FB dest_dir = %s\n", dest_dir );
+        if ( dest_dir )
         {
-            dev_t dest_dev;
-            struct stat statbuf;    // skip stat64
-            if( stat( dest_dir, &statbuf ) == 0 )
+            puri = list = gtk_selection_data_get_uris( sel_data );
+            
+            if( file_browser->pending_drag_status )
             {
-                dest_dev = statbuf.st_dev;
-                if( 0 == file_browser->drag_source_dev )
+                // We only want to update drag status, not really want to drop
+                dev_t dest_dev;
+                struct stat statbuf;    // skip stat64
+                if( stat( dest_dir, &statbuf ) == 0 )
                 {
-                    file_browser->drag_source_dev = dest_dev;
-                    for( ; *puri; ++puri )
+                    dest_dev = statbuf.st_dev;
+                    if( 0 == file_browser->drag_source_dev )
                     {
-                        file_path = g_filename_from_uri( *puri, NULL, NULL );
-                        if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                        file_browser->drag_source_dev = dest_dev;
+                        for( ; *puri; ++puri )
                         {
-                            file_browser->drag_source_dev = statbuf.st_dev;
+                            file_path = g_filename_from_uri( *puri, NULL, NULL );
+                            if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                            {
+                                file_browser->drag_source_dev = statbuf.st_dev;
+                                g_free( file_path );
+                                break;
+                            }
                             g_free( file_path );
-                            break;
                         }
-                        g_free( file_path );
                     }
+                    if( file_browser->drag_source_dev != dest_dev )
+                        // src and dest are on different devices */
+                        drag_context->suggested_action = GDK_ACTION_COPY;
+                    else
+                        drag_context->suggested_action = GDK_ACTION_MOVE;
                 }
-                //MOD always suggest copy
-                //if( file_browser->drag_source_dev != dest_dev )     /* src and dest are on different devices */
-                //    drag_context->suggested_action = GDK_ACTION_COPY;
-                //else
-                    drag_context->suggested_action = GDK_ACTION_COPY;
-            }
-            g_free( dest_dir );
-            g_strfreev( list );
-            file_browser->pending_drag_status = 0;
-            return;
-        }
-        if ( puri )
-        {
-            if ( 0 == ( drag_context->action &
-                        ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
-            {
-                drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
-            }
-            gtk_drag_finish ( drag_context, TRUE, FALSE, time );
-
-            while ( *puri )
-            {
-                if ( **puri == '/' )
-                    file_path = g_strdup( *puri );
                 else
-                    file_path = g_filename_from_uri( *puri, NULL, NULL );
+                    // stat failed
+                    drag_context->suggested_action = GDK_ACTION_COPY;
 
-                if ( file_path )
-                    files = g_list_prepend( files, file_path );
-                ++puri;
+                g_free( dest_dir );
+                g_strfreev( list );
+                file_browser->pending_drag_status = 0;
+                return;
             }
-            g_strfreev( list );
-
-            switch ( drag_context->action )
+            if ( puri )
             {
-            case GDK_ACTION_COPY:
-                file_action = VFS_FILE_TASK_COPY;
-                break;
-            case GDK_ACTION_LINK:
-                file_action = VFS_FILE_TASK_LINK;
-                break;
-                /* FIXME:
-                  GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled */
-            default:
-                break;
-            }
-
-            if ( files )
-            {
-                /* g_print( "dest_dir = %s\n", dest_dir ); */
-
-                /* We only want to update drag status, not really want to drop */
-                if( file_browser->pending_drag_status )
+                if ( 0 == ( drag_context->action &
+                            ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
-                    struct stat statbuf;    // skip stat64
-                    if( stat( dest_dir, &statbuf ) == 0 )
+                    drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
+                }
+                gtk_drag_finish ( drag_context, TRUE, FALSE, time );
+
+                while ( *puri )
+                {
+                    if ( **puri == '/' )
+                        file_path = g_strdup( *puri );
+                    else
+                        file_path = g_filename_from_uri( *puri, NULL, NULL );
+
+                    if ( file_path )
+                        files = g_list_prepend( files, file_path );
+                    ++puri;
+                }
+                g_strfreev( list );
+
+                switch ( drag_context->action )
+                {
+                case GDK_ACTION_COPY:
+                    file_action = VFS_FILE_TASK_COPY;
+                    break;
+                case GDK_ACTION_LINK:
+                    file_action = VFS_FILE_TASK_LINK;
+                    break;
+                    /* FIXME:
+                      GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled */
+                default:
+                    break;
+                }
+
+                if ( files )
+                {
+                    /* g_print( "dest_dir = %s\n", dest_dir ); */
+
+                    /* We only want to update drag status, not really want to drop */
+                    if( file_browser->pending_drag_status )
                     {
-                        file_browser->pending_drag_status = 0;
+                        struct stat statbuf;    // skip stat64
+                        if( stat( dest_dir, &statbuf ) == 0 )
+                        {
+                            file_browser->pending_drag_status = 0;
 
+                        }
+                        g_list_foreach( files, (GFunc)g_free, NULL );
+                        g_list_free( files );
+                        g_free( dest_dir );
+                        return;
                     }
-                    g_list_foreach( files, (GFunc)g_free, NULL );
-                    g_list_free( files );
-                    g_free( dest_dir );
-                    return;
+                    else /* Accept the drop and perform file actions */
+                    {
+                        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+                        task = ptk_file_task_new( file_action,
+                                                  files,
+                                                  dest_dir,
+                                                  GTK_WINDOW( parent_win ),
+                                                  file_browser->task_view );
+                        ptk_file_task_run( task );
+                    }
                 }
-                else /* Accept the drop and perform file actions */
-                {
-                    parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-                    task = ptk_file_task_new( file_action,
-                                              files,
-                                              dest_dir,
-                                              GTK_WINDOW( parent_win ),
-                                              file_browser->task_view );
-                    ptk_file_task_run( task );
-                    g_free( dest_dir );
-                }
+                g_free( dest_dir );
+                gtk_drag_finish ( drag_context, TRUE, FALSE, time );
+                return ;
             }
-            gtk_drag_finish ( drag_context, TRUE, FALSE, time );
-            return ;
         }
+        g_free( dest_dir );
     }
 
     /* If we are only getting drag status, not finished. */
@@ -4168,9 +4201,23 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
         /* Several different actions are available. We have to figure out a good default action. */
         else
         {
-            file_browser->pending_drag_status = 1;
-            gtk_drag_get_data (widget, drag_context, target, time);
-            suggested_action = drag_context->suggested_action;
+            int drag_action = xset_get_int( "drag_action", "x" );
+            if ( drag_action == 1 )
+                suggested_action = GDK_ACTION_COPY;
+            else if ( drag_action == 2 )
+                suggested_action = GDK_ACTION_MOVE;
+            else if ( drag_action == 3 )
+                suggested_action = GDK_ACTION_LINK;
+            else
+            {
+                // automatic
+                file_browser->pending_drag_status = 1;
+                // store x and y because exo_icon_view has no get_drag_dest_row
+                file_browser->drag_x = x;
+                file_browser->drag_y = y;
+                gtk_drag_get_data (widget, drag_context, target, time);
+                suggested_action = drag_context->suggested_action;
+            }
         }
         gdk_drag_status( drag_context, suggested_action, time );
     }
