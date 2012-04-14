@@ -22,6 +22,7 @@ CONTENTS
     BUILD NEXT
     CREATE DEB PACKAGE
     UNINSTALL
+    TRANSLATIONS
     LICENSE
 
 
@@ -286,6 +287,81 @@ Otherwise, run these command AS ROOT:
     rm /usr/local/share/mime/packages/spacefm-mime.xml
     update-mime-database /usr/local/share/mime > /dev/null
     update-desktop-database -q
+
+
+
+TRANSLATIONS
+
+Translating SpaceFM doesn't require any special tools - just a text editor.
+To create a translation of SpaceFM for your language, follow these steps.
+    
+1)  Install build dependencies listed above in BUILD, download the SpaceFM
+    source code tarball, and extract it.
+
+2)  Open a terminal and enter the source code subdirectory 'po'
+
+3)  Generate a spacefm.pot file:
+
+        intltool-update --pot
+
+4)  Create a .po file for your language.  This example uses french (fr) -
+    change 'fr' in the examples below to your language:
+    
+        cp fr.po fr-old.po     # copy the old po file for reference
+        cp spacefm.pot fr.po   # create a new po file
+
+5)  Open fr.po in your text editor.  Translate each msgid into the
+    corresponding msgstr.  To see examples, consult fr-old.po
+    
+6)  cd into the directory containing configure and run make normally:
+
+        cd ..
+        ./configure
+        make
+        
+    If necessary, correct any syntax errors or warnings produced by make
+    relating to your .po file and repeat step 6 until make is successful.
+
+7)  Test your translation by installing and running spacefm:
+
+        sudo make install
+        rm -rf /tmp/spacefm-test
+        spacefm --config-dir /tmp/spacefm-test
+
+    NOTE:  Because of SpaceFM's design mode, your newly translated strings will
+    only appear in menu item names when starting with a fresh config
+    directory as shown above.
+
+8)  Once translations in menus and dialogs are the way you want them, release
+    your translated .po file:
+
+    If you are familiar with github, you can clone the spacefm repo and do a
+    pull request.
+    
+    OR, add the .po file to a public gist https://gist.github.com/ or host
+    it elsewhere, then open a new issue asking for your file to be merged into
+    the source:  https://github.com/IgnorantGuru/spacefm/issues/new
+    
+    OR, email your .po file:  http://igurublog.wordpress.com/contact-ignorantguru/
+    
+9)  Translated strings will change occassionally as new SpaceFM versions are
+    released.  To update your translation:
+
+    Generate a spacefm.pot file:
+
+        intltool-update --pot
+    
+    Then merge the new strings with the already translated ones:
+
+        intltool-update --dist fr
+        
+    OR, if you don’t want to overwrite fr.po initially, you can merge into a
+    new test file:
+
+        intltool-update --dist --output-file=fr-test.po fr
+
+    Then complete any missing or fuzzy translations in the .po file, and repeat
+    steps 7 and 8.
 
 
 LICENSE
