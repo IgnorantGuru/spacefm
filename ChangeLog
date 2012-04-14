@@ -16,6 +16,7 @@
     added automatic use of pmount if udisks not installed
     copy user config skeleton from /etc/xdg/spacefm
     default drag action option; repair automatic drag context
+    file search size limit toggles sensitivity
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

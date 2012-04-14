@@ -973,6 +973,26 @@ static gboolean on_view_button_press( GtkTreeView* view, GdkEventButton* evt, Fi
     return FALSE;
 }
 
+void on_use_size_lower_toggled( GtkWidget* widget, FindFile* data )
+{
+    gtk_widget_set_sensitive( data->size_lower,
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->use_size_lower ) ) );
+    gtk_widget_set_sensitive( data->size_lower_unit, 
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->use_size_lower ) ) );
+}
+
+void on_use_size_upper_toggled( GtkWidget* widget, FindFile* data )
+{
+    gtk_widget_set_sensitive( data->size_upper,
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->use_size_upper ) ) );
+    gtk_widget_set_sensitive( data->size_upper_unit, 
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->use_size_upper ) ) );
+}
+
 void fm_find_files( const char** search_dirs )
 {
     FindFile* data = g_slice_new0(FindFile);
@@ -1019,6 +1039,12 @@ void fm_find_files( const char** search_dirs )
     data->size_upper = (GtkWidget*)gtk_builder_get_object( builder, "size_upper" );
     data->size_lower_unit = (GtkWidget*)gtk_builder_get_object( builder, "size_lower_unit" );
     data->size_upper_unit = (GtkWidget*)gtk_builder_get_object( builder, "size_upper_unit" );
+    g_signal_connect( data->use_size_lower, "toggled",
+                            G_CALLBACK( on_use_size_lower_toggled ), data );
+    g_signal_connect( data->use_size_upper, "toggled",
+                            G_CALLBACK( on_use_size_upper_toggled ), data );
+    on_use_size_lower_toggled( data->use_size_lower, data );
+    on_use_size_upper_toggled( data->use_size_upper, data );
 
     data->date_limit = (GtkWidget*)gtk_builder_get_object( builder, "date_limit" );
     data->date1 = (GtkWidget*)gtk_builder_get_object( builder, "date1" );
