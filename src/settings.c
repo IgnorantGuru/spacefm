@@ -542,6 +542,18 @@ void load_settings( char* config_dir )
         chmod( settings_shared_tmp_dir, S_IRWXU | S_IRWXG | S_IRWXO | S_ISVTX );
     }
 
+    // copy /etc/xdg/spacefm
+    if ( !g_file_test( settings_config_dir, G_FILE_TEST_EXISTS ) 
+                && g_file_test( "/etc/xdg/spacefm", G_FILE_TEST_IS_DIR ) )
+    {
+        char* command = g_strdup_printf( "cp -r /etc/xdg/spacefm '%s'",
+                                                        settings_config_dir );
+        printf( "COMMAND=%s\n", command );
+        g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
+        g_free( command );
+        chmod( settings_config_dir, S_IRWXU );
+    }
+    
     // load session
     int x = 0;
     do
@@ -8663,14 +8675,14 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\t%%o	volume-specific mount options\n\npmount:\t/usr/bin/pmount %v\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\npmount:\t/usr/bin/pmount %v\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-mcmd" );
 
     set = xset_set( "dev_unmount_cmd", "label", _("_Unmount Command") );
-    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v	device file ( /dev/sda5 )\n\npmount:\t/usr/bin/pumount %v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\npmount:\t/usr/bin/pumount %v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icon", "gtk-edit" );

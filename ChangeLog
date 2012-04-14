@@ -14,6 +14,7 @@
     consistent 64bit file size support fixes #60
     added Foresight Linux to README and manual closes #59
     added automatic use of pmount if udisks not installed
+    copy user config skeleton from /etc/xdg/spacefm
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

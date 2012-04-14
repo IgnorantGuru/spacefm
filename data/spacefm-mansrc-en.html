@@ -123,21 +123,6 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 	<th>Distro</th>
 	<th>Packages &amp; Repositories*</th>
 </tr>
-<tr>
-<td valign="top"><b>Debian<br>Ubuntu<br>etc</b></td>
-<td>
-	NOTE: These convenience deb packages contain the source code and 
-	will build and install SpaceFM automatically.
-
-	<p>NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 
-	users may not be able to install SpaceFM due to repositories 
-	missing package libgdk-pixbuf2.0-0
-
-	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
-
-	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
-</td>
-</tr>
 
 <tr>
 <td valign="top"><b>antiX<b></td>
@@ -150,6 +135,19 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <td valign="top"><b>Arch Linux</b></td>
 <td>
 	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a> and <a href="http://aur.archlinux.org/packages.php?ID=58247">spacefm-git</a>
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b><a name="deb">Debian-based</a></b></td>
+<td>
+	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.
+
+	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+
+	<p>NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 
+	users may not be able to install SpaceFM due to repositories 
+	missing package libgdk-pixbuf2.0-0
 </td>
 </tr>
 
@@ -192,6 +190,13 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <td valign="top"><b>Sabayon</b></td>
 <td>
 	Includes spacefm in its repositories
+</td>
+</tr>
+
+<tr>
+<td><b>Ubuntu</b></td>
+<td>
+	See <a href="#deb">Debian</a>
 </td>
 </tr>
 
@@ -302,7 +307,7 @@ Application Options:
     # then:
     spacefm --config-dir ~/.config/spacefm-alt</pre>
 
-<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.
+<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
 
 <!-- @Invocation @Windows -->
 
@@ -1525,7 +1530,11 @@ Font opens a font selection dialog which allows you to select the font to be use
 
 <!-- @Program Files @/home -->
 
-<p>All files in your home folder which are directly saved or modified by SpaceFM are located in ~/.config/spacefm/ (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a>).  These include:
+<p>All files in your home folder which are directly saved or modified by SpaceFM are located in ~/.config/spacefm/ (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a>).
+
+<p>If the config directory doesn't exist, and <a href="#programfiles-etc-xdg">/etc/xdg/spacefm/</a> does exist, the contents of /etc/xdg/spacefm/ will be copied to the new config directory on startup.
+
+<p>Files in ~/.config/spacefm/ include:
 
 <!-- # session -->
 Holds most user settings and customizations.  This file is plain text so you can review its contents, but <b>it should NOT be edited</b>.  SpaceFM saves the current session anytime you make a change to the configuration (at most once every 15 seconds or so).  If SpaceFM can't find a session file at startup, it will use session-last or session-prior instead.  If all session, session-last, and session-prior files are deleted, SpaceFM will be restored to factory default settings.
@@ -1563,6 +1572,10 @@ This file is designed to be edited by the administrative user.  Currently, the o
 <blockquote>tmp_dir=/dev/shm</blockquote>
 
 Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
+
+<!-- # /etc/xdg/spacefm/ #xdg -->
+This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user, the contents of /etc/xdg/spacefm/ will be copied to the new config directory.  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+<pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
 
 <!-- @Program Files @/tmp -->
 

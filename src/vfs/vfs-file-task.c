@@ -360,7 +360,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                         task->progress += rsize;
                     else
                     {
-                        close( wfd );
                         vfs_file_task_error( task, errno, _("Writing"), dest_file );
                         task->error = errno;
                         copy_fail = TRUE;
