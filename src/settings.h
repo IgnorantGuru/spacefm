@@ -254,9 +254,10 @@ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
     "/usr/bin/ktsuss",
     "/usr/bin/gksu",
     "/usr/bin/gksudo",
-    "/usr/bin/kdesu",
     "/usr/bin/gnomesu",
     "/usr/bin/xdg-su",
+    "/usr/bin/kdesu",   // may be translated to "$(kde4-config --path libexec)/kdesu"
+    "/usr/bin/kdesudo",
     "/bin/su",
     "/usr/bin/sudo"
 };

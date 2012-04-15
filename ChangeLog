@@ -18,6 +18,7 @@
     default drag action option; repair automatic drag context
     file search size limit toggles sensitivity
     added translation instructions to the README
+    support for kdesudo and $(kde4-config --path libexec)/kdesu
 0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8

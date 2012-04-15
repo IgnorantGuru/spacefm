@@ -1271,9 +1271,30 @@ char* get_valid_gsu()  // may return NULL
             set_gsu = g_strdup( gsu_commands[0] );
         xset_set( "gsu_command", "s", set_gsu );
     }
+    
     if ( custom_gsu )
         g_free( custom_gsu );
     char* str = g_find_program_in_path( set_gsu );
+    
+    if ( !str && !strcmp( set_gsu, "/usr/bin/kdesu" ) )
+    {
+        // kdesu may be in libexec path
+        char* stdout;
+        if ( g_spawn_command_line_sync( "kde4-config --path libexec",
+                                            &stdout, NULL, NULL, NULL ) 
+                                            && stdout && stdout[0] != '\0' )
+        {
+            if ( str = strchr( stdout, '\n' ) )
+               str[0] = '\0';
+            str = g_build_filename( stdout, "kdesu", NULL );
+            g_free( stdout );
+            if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( str );
+                str = NULL;
+            }
+        }
+    }
     g_free( set_gsu );
     return str;
 }

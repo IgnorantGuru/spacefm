@@ -1448,9 +1448,9 @@ static void vfs_file_task_exec( VFSFileTask* task )
             argv[a++] = g_strdup( "SpaceFM Command" );
             single_arg = TRUE;
         }
-        else if ( !strcmp( use_su, "/usr/bin/kdesu" ) )
+        else if ( strstr( use_su, "kdesu" ) )
         {
-            // kdesu
+            // kdesu kdesudo
             argv[a++] = g_strdup( "-d" );
             argv[a++] = g_strdup( "-c" );
             single_arg = TRUE;
@@ -1553,7 +1553,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     i = 0;
     while ( argv[i] )
     {
-        printf( "%s%s", i == 1 ? "" : "  ", argv[i] );
+        printf( "%s%s", i == 0 ? "" : "  ", argv[i] );
         i++;
     }
     printf( "\n" );
