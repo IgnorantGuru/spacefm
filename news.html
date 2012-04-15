@@ -22,12 +22,75 @@
 	<a href="http://ignorantguru.github.com/spacefm/">&lt;&lt;&lt; Homepage</a>
 <br>
 <center><h2>&gt;&gt;&gt;&nbsp;&nbsp;SpaceFM News&nbsp;&nbsp;&gt;&gt;&gt;</h2></center>
-<br>
 
-<hr>
-<h3>2012-Apr-09: Debian Packages For 0.7.4 Rebuilt</h3>
 
-Due to changing libraries in Debian sid which are now out of sync with Ubuntu and other Debian variants, the SpaceFM packages for v0.7.4 <a href="https://github.com/IgnorantGuru/spacefm/issues/11">don't always work correctly</a>.  Binary deb packages of SpaceFM will no longer be offered, but to make installing more convenient for Debian users, I have created deb packages that contain the source code and automatically build and install with your package manager.  This will ensure that SpaceFM is built for the specific libraries you have installed on your system.
+<!-- --------------------------------------------------------------------- -->
+<br><br><hr>
+<big><b>0.7.5 released</b></big><br>
+2012-Apr-14
+
+<p>Changes in SpaceFM 0.7.5:
+
+<ul>
+    <li><b>removes dependency on udisks</b> - Although SpaceFM has never had a strict udisks dependency, the device manager used udisks for device detection, information, and mounting.  As of v0.7.5, SpaceFM can now be used without udisks.  SpaceFM now speaks to the kernel directly (via libudev) for device detection and information.  For mounting devices as a non-root user, udisks v1, udisks v2, or pmount will be automatically detected and used, or you can <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-mcmd">specify a custom command</a>.  There is also a custom mount solution <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">currently under development</a>.<br><br>
+
+    <li>The built-in archive extraction methods may now be used in the desktop manager<br><br>
+
+    <li>An option View|Preferences|Interface|Default Drag Action has been added which allows you to control what action is performed by default when dragging files.  When set to Automatic, the drag will move files to the same device, and copy files to a different device.  Or the option can be set to always Move, Copy, or Link.  Regardless of the default setting, you can always override it by holding down keys.  Hold down Ctrl to force a copy, Shift to force a move, or Ctrl+Shift to force a link.<br><br>
+
+    <li>SpaceFM has undergone a code review to clear all compiler warnings in the entire project, which resulted in a few potential problems being corrected.<br><br>
+
+    <li>If no user configuration exists, SpaceFM will now read a default config from <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#programfiles-etc-xdg">/etc/xdg/spacefm/</a>  This allows distros and admins to set a default configuration.<br><br>
+    
+    <li>SpaceFM is now the default file manager for the upcoming <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Lxde">Foresight Lxde</a>, and Foresight includes spacefm in its repositories.<br><br>
+    
+    <li><b>kdesudo</b> is now supported.  Also, when configured for /usr/bin/kdesu, SpaceFM will now also look in the $(kde4-config --path libexec) directory for kdesu (as KDE4 may no longer install kdesu to the user's path).<br><br>
+    
+    <li>The side box containing Devices, Bookmarks, and Tree is now fixed-width, meaning its width will not change unless you drag the slider to change it.<br><br>
+    
+    <li>Although no major new sections have been added, the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">user's manual</a> has been updated to reflect changes in this version.<br><br>
+    
+    <li>Instructions for <b>translators</b> have been added to the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a>.<br><br>
+
+    <li>The provided <b>deb packages</b> in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (also in the <a href="http://igurublog.wordpress.com/downloads/ppa/">PPA</a>) now contain the source code and build automatically from source.  Although this requires additional build dependencies and takes a little longer, this will make the packages work more reliably on most Debian-based distros.  Or, you can build your own deb package using the easy instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.<br>
+    <b>NOTE:</b>  The <a href="http://igurublog.wordpress.com/downloads/ppa/">location of IgnorantGuru's PPA</a> has changed.  Please update your sources.list to continue receiving updates:
+    <pre>    deb http://ignorantguru.github.com/debian/ unstable main</pre>
+    
+    <li>A number of new user-contributed plugins have been added to the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">wiki</a> since the last release<br><br>
+    
+    <li>A number of issues have been corrected as detailed below.<br><br>
+</ul>
+
+0.7.5 changelog:
+<ul>
+    replaced udisks with libudev kernel support for device detection and info<br>
+    udisks v1 & v2 now supported for mount/unmount as normal user<br>
+    added device Settings|Un/Mount Command options to customize mount program<br>
+    corrected race condition create tmp dir<br>
+    status bar update fixes<br>
+    side box fixed size fixes #6<br>
+    scroll setting retained between sessions fixes #13<br>
+    fixed file info update on existing fixes #14 fixes #15<br>
+    reuse window on open folder on desktop fixes #16<br>
+    built-in archive functions on desktop closes #18<br>
+    shift-click selects range on desktop closes #47<br>
+    code review<br>
+    consistent 64bit file size support fixes #60<br>
+    added Foresight Linux to README and manual closes #59<br>
+    added automatic use of pmount if udisks not installed<br>
+    copy user config skeleton from /etc/xdg/spacefm<br>
+    default drag action option; repair automatic drag context<br>
+    file search size limit toggles sensitivity<br>
+    added translation instructions to the README<br>
+    support for kdesudo and $(kde4-config --path libexec)/kdesu<br>
+</ul>
+
+<!-- --------------------------------------------------------------------- -->
+<br><hr>
+<big><b>Debian Packages For 0.7.4 Rebuilt</b></big><br>
+2012-Apr-09
+
+<p>Due to changing libraries in Debian sid which are now out of sync with Ubuntu and other Debian variants, the SpaceFM packages for v0.7.4 <a href="https://github.com/IgnorantGuru/spacefm/issues/11">don't always work correctly</a>.  Binary deb packages of SpaceFM will no longer be offered, but to make installing more convenient for Debian users, I have created deb packages that contain the source code and automatically build and install with your package manager.  This will ensure that SpaceFM is built for the specific libraries you have installed on your system.
 
 <p>These packages are available for version 0.7.4 in the <a href="http://igurublog.wordpress.com/downloads/ppa/">new PPA on github</a>.  They should work with your package manager just like the old packages did, except they will take a little longer to install.  If you're not using the PPA, you can obtain them in the updated <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">packages directory</a> (to save a file there, click on the filename, then click 'View Raw').  
 
@@ -38,24 +101,28 @@ Due to changing libraries in Debian sid which are now out of sync with Ubuntu an
     apt-get install spacefm</pre>
 
 <p>If you don't want packages that install automatically from source, you can also build your own binary deb packages or build from source using instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a>.  Also, you can submit a packaging request with your distro, asking them to include packages of SpaceFM in their repositories.
-<br><br>
 
-<hr>
-<h3>2012-Apr-06: SpaceFM &amp; Udev</h3>
 
-A <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">blog post</a> on what's currently happening with SpaceFM with regard to udisks2 and other issues.
+<!-- --------------------------------------------------------------------- -->
+<br><br><hr>
+<big><b>SpaceFM &amp; Udev</b></big><br>
+2012-Apr-06
+
+<p>A <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">blog post</a> on what's currently happening with SpaceFM with regard to udisks2 and other issues.
 
 <p>A number of new SpaceFM plugins have recently been added to the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">wiki</a>.  The latest addition is <a href="http://www.jpfleury.net/en/software/corbeille-spacefm.php">JP Fleury's Corbeille-SpaceFM</a>, a freedesktop-compliant trash plugin optimized for speed and large files, available in French and English.  He has some <a href="http://www.jpfleury.net/en/software/corbeille-spacefm.php">speed comparisons</a> there that look promising!
 
 <p>This means there are now several trash plugins to choose from.  Some of the plugins are from Arch users, with some discussion in the <a href="https://bbs.archlinux.org/viewtopic.php?id=133657">SpaceFM Arch forum thread</a> (the later pages deal more with plugins).
 
 <p>Also, a new official <b>SpaceFM IRC channel</b>:  <i>#spacefm on <a href="http://freenode.net/irc_servers.shtml">irc.freenode.net</a></i>.  This is more intended for general chat than for support, but we'll see what develops.  OmegaPhil is in charge there.
-<br><br>
 
-<hr>
-<h3>2012-Apr-01: 0.7.4 released</h3>
 
-IMPORTANT:  A bug was discovered in spacefm version <=0.7.3 which can cause files to be deleted when a move fails.  Please update to 0.7.4.
+<!-- --------------------------------------------------------------------- -->
+<br><br><hr>
+<big><b>0.7.4 released</b></big><br>
+2012-Apr-01
+
+<p>IMPORTANT:  A bug was discovered in spacefm version <=0.7.3 which can cause files to be deleted when a move fails.  Please update to 0.7.4.
 
 <br><br>
 0.7.4 ChangeLog:
@@ -65,10 +132,13 @@ IMPORTANT:  A bug was discovered in spacefm version <=0.7.3 which can cause file
     no del on move error independent of error control fixes #9<br>
 </ul>
 
-<hr>
-<h3>2012-Mar-29: 0.7.3 released</h3>
 
-SpaceFM 0.7.3 adds some important features and bugfixes:
+<!-- --------------------------------------------------------------------- -->
+<br><hr>
+<big><b>0.7.3 released</b></big><br>
+2012-Mar-29
+
+<p>SpaceFM 0.7.3 adds some important features and bugfixes:
 <ul>
 	<li>The new SpaceFM icons by Goran Simovic are now included, plus alternates (/usr/share/pixmaps/spacefm*.png).  If you've set View|Window Icon to a custom icon, you may want to clear it and check out the new default icon.  There is also a new icon for File Search.
 	<li>The user's manual is available in the updated Help menu (now installed to /usr/share/spacefm), and context-sensitive help has been added.  To receive help on a menu item, just right-click on it and select Help from the design menu.  [Because the user's manual is incomplete, not everything has help available.  The device manager menu is fully documented, as is the design menu.]  For help in the design menu, hover the mouse over an item and press F1.  Help also works for plugins and custom commands - it opens a README file for you to view or edit.
@@ -103,7 +173,8 @@ Also, there are now a number of <a href="https://github.com/IgnorantGuru/spacefm
     changed default drag action to copy (hold shift or ctrl+shift to override)<br>
 </ul>
 
-<hr>
+<!-- --------------------------------------------------------------------- -->
+<br><hr>
 
 <br><br><br><a href="http://sourceforge.net/p/spacefm/blog/">See older news items on the old Sourceforge blog (no longer updated)</a><br><br>
 
@@ -125,7 +196,7 @@ SpaceFM Icons &amp; Logo by Goran Simovic (C) 2012<br>
 		<div align="left"><a href="http://ignorantguru.github.com/spacefm/">&lt;&lt;&lt; Homepage</a></div>
 	</td>
 	<td>
-		<div align="left"><i>Updated 2012-03-29</i></div>
+		<div align="left"><i>Updated 2012-04-14</i></div>
 	</td>
 	<td>
 		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>

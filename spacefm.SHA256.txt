@@ -29,10 +29,8 @@ Why Authenticate?
    spacefm-x.x.x.SHA256.asc
    spacefm-x.x.x.tar.xz
    spacefm-x.x.x-installer.sh
-   spacefm_x.x.x-1_i386.deb
-   spacefm_x.x.x-1_amd64.deb
-   spacefm-hal_x.x.x-1_i386.deb
-   spacefm-hal_x.x.x-1_amd64.deb
+   spacefm_x.x.x-1_all.deb
+   spacefm-hal_x.x.x-1_all.deb
 
 
 3) Check signature and files:
@@ -44,10 +42,8 @@ Why Authenticate?
      gpg: Signature made <SIGNATURE DATE> using DSA key ID 01937621    <--
  --> spacefm-x.x.x.tar.xz: OK
  --> spacefm-x.x.x-installer.sh: OK
- --> spacefm_x.x.x-1_i386.deb: OK
- --> spacefm_x.x.x-1_amd64.deb: OK
- --> spacefm-hal_x.x.x-1_i386.deb: OK
- --> spacefm-hal_x.x.x-1_amd64.deb: OK
+ --> spacefm_x.x.x-1_all.deb: OK
+ --> spacefm-hal_x.x.x-1_all.deb: OK
  --> gpg: Good signature from IgnorantGuru <EMAIL>
      gpg: WARNING: This key is not certified with a trusted signature!
      gpg:          There is no indication that the signature belongs to the owner.
@@ -61,7 +57,7 @@ Why Authenticate?
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iF4EAREIAAYFAk90x9AACgkQJ6WsWgGTdiG+TwEA3PUo82rEX+oAegbvYR0rWwZ7
-beCRzHWRFtOw3OLdmioA/jTxuPMbTWtUMtX2RoeJ/9QFmurNKKqeP3kqV4+mfdhI
-=DqnV
+iF4EAREIAAYFAk+DP9EACgkQJ6WsWgGTdiEPtgD/VpK9e6pbhIvBLJyXWdJDq8MK
+CSdj8BZ7ooKsLBQQeacBAKUeoP5TCiH2CSrTalY7kGEMrKWbCQtKwATAugOQ5eUy
+=TAsk
 -----END PGP SIGNATURE-----
