@@ -32,7 +32,7 @@
 <p>Changes in SpaceFM 0.7.5:
 
 <ul>
-    <li><b>removes dependency on udisks</b> - Although SpaceFM has never had a strict udisks dependency, the device manager used udisks for device detection, information, and mounting.  As of v0.7.5, SpaceFM can now be used without udisks.  SpaceFM now speaks to the kernel directly (via libudev) for device detection and information.  For mounting devices as a non-root user, udisks v1, udisks v2, or pmount will be automatically detected and used, or you can <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-mcmd">specify a custom command</a>.  There is also a custom mount solution <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">currently under development</a>.<br><br>
+    <li><b>removes dependency on udisks</b> - Although SpaceFM has never had a strict udisks dependency, the device manager used udisks for device detection, information, and mounting.  As of v0.7.5, SpaceFM can now be used without udisks.  SpaceFM now uses udev directly for device detection and information.  For mounting devices as a non-root user, udisks v1, udisks v2, or pmount will be automatically detected and used, or you can <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-mcmd">specify a custom command</a>.  There is also a custom mount solution <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">currently under development</a>.  These changes do not affect the hal build of SpaceFM.<br><br>
 
     <li>The built-in archive extraction methods may now be used in the desktop manager<br><br>
 
@@ -55,7 +55,6 @@
     <li>The provided <b>deb packages</b> in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (also in the <a href="http://igurublog.wordpress.com/downloads/ppa/">PPA</a>) now contain the source code and build automatically from source.  Although this requires additional build dependencies and takes a little longer, this will make the packages work more reliably on most Debian-based distros.  Or, you can build your own deb package using the easy instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.<br>
     <b>NOTE:</b>  The <a href="http://igurublog.wordpress.com/downloads/ppa/">location of IgnorantGuru's PPA</a> has changed.  Please update your sources.list to continue receiving updates:
     <pre>    deb http://ignorantguru.github.com/debian/ unstable main</pre>
-    <b>UPDATE:</b>  The deb packages for 0.7.5 were built with an incorrect timestamp on the source code (thanks to a kde livecd I was testing with that changed my system clock).  As a result, you may receive an error trying to install them until a few hours have passed.  Due to git, fixing this is more trouble than its worth - it's easier to wait a few hours.<br><br>
     
     <li>A number of new user-contributed plugins have been added to the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">wiki</a> since the last release<br><br>
     
