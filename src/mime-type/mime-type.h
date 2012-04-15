@@ -61,7 +61,7 @@ void mime_type_finalize();
  * If statbuf != NULL, it will be used to determine if the file is a directory,
  * or if the file is an executable file.
 */
-const char* mime_type_get_by_filename( const char* filename, struct stat* statbuf );
+const char* mime_type_get_by_filename( const char* filename, struct stat64* statbuf );
 
 /*
  * Get mime-type info of the specified file (slow, but more accurate):
@@ -76,7 +76,7 @@ const char* mime_type_get_by_filename( const char* filename, struct stat* statbu
  * efifciency, too. Otherwise, the function will try to get the basename of
  * the specified file again.
 */
-const char* mime_type_get_by_file( const char* filepath, struct stat* statbuf, const char* basename );
+const char* mime_type_get_by_file( const char* filepath, struct stat64* statbuf, const char* basename );
 
 gboolean mime_type_is_text_file( const char * file_path, const char * mime_type );
 

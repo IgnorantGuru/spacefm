@@ -133,7 +133,8 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
         gtk_entry_buffer_delete_text( gtk_entry_get_buffer( entry ), 0, -1 );
 }
 
-void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char* cwd )
+void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
+                                                                const char* cwd )
 {
     GList* l;
     GtkWidget* dlg;
@@ -150,7 +151,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
     char* desc;
 
     dlg = gtk_file_chooser_dialog_new( _("Save Archive"),
-                                       gtk_widget_get_toplevel( file_browser ),
+                                       GTK_WINDOW( gtk_widget_get_toplevel(
+                                             GTK_WIDGET( file_browser ) ) ),
                                        GTK_FILE_CHOOSER_ACTION_SAVE,
                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                        GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL );
@@ -171,7 +173,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
         }
     }
     gtk_file_chooser_set_filter( GTK_FILE_CHOOSER(dlg), filter );
-    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(combo), NULL );
+    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model( 
+                                                    GTK_COMBO_BOX( combo ) ), NULL );
     i = xset_get_int( "arc_dlg", "z" );
     if ( i < 0 || i > n - 1 )
         i = 0;
@@ -191,8 +194,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
         gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
     //gtk_entry_set_width_chars( entry, 30 );
     GtkWidget* align = gtk_alignment_new( 0, 0, .5, 1 );
-    gtk_alignment_set_padding( align, 0, 0, 0, 0 );
-    gtk_container_add ( GTK_CONTAINER ( align ), entry );
+    gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 0, 0 );
+    gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( entry ) );
     gtk_box_pack_start( GTK_BOX(hbox), align, TRUE, TRUE, 4 );
     g_object_set_data( G_OBJECT( dlg ), "entry", entry );
 
@@ -307,7 +310,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
         char* afile = g_path_get_basename( udest_file );
         char* msg = g_strdup_printf( _("Archive '%s' exists.\n\nOverwrite?"), afile );
         g_free( afile );
-        if ( xset_msg_dialog( file_browser, GTK_MESSAGE_QUESTION, _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL, msg, NULL, NULL ) != GTK_RESPONSE_OK )
+        if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_QUESTION,
+                                        _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL,
+                                        msg, NULL, NULL ) != GTK_RESPONSE_OK )
         {
             g_free( udest_file );
             g_free( s1 );
@@ -337,8 +342,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
     
     // task
     char* task_name = g_strdup_printf( _("Archive") );
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
-                                        file_browser, file_browser->task_view );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
+                                                        file_browser->task_view );
     g_free( task_name );
     task->task->exec_command = cmd;
     task->task->exec_browser = file_browser;
@@ -388,9 +393,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files, char*
 }
 
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                                                char* dest_dir )
+                                            const char* cwd, const char* dest_dir )
 {
     GtkWidget* dlg;
+    GtkWidget* dlgparent = NULL;
     char* choose_dir = NULL;
     gboolean create_parent;
     gboolean write_access;
@@ -404,7 +410,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     char* full_path;
     char* full_quote;
     char* dest_quote;
-    char* dest;
+    const char* dest;
     char* cmd;
     char* str;
     int i, n, j;
@@ -413,10 +419,16 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     if( !files )
         return;
+        
+    if ( file_browser )
+        dlgparent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+    //else if ( desktop )
+    //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
+        
     if( !dest_dir )
     {
         dlg = gtk_file_chooser_dialog_new( _("Extract To"),
-                                           gtk_widget_get_toplevel( file_browser ),
+                                           GTK_WINDOW( dlgparent ),
                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                            GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                            GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
@@ -424,10 +436,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
         GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
                                                     _("Cre_ate subfolder(s)") );
-        gtk_toggle_button_set_active( chk_parent, xset_get_b( "arc_dlg" ) );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
+                                                    xset_get_b( "arc_dlg" ) );
         GtkWidget* chk_write = gtk_check_button_new_with_mnemonic(
                                                     _("Make contents user-_writable") );
-        gtk_toggle_button_set_active( chk_write,
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_write ),
                                 xset_get_int( "arc_dlg", "s" ) == 1 && geteuid() != 0 );
         gtk_widget_set_sensitive( chk_write, geteuid() != 0 );
         gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
@@ -435,8 +448,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         gtk_widget_show_all( hbox );
         gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
 
-        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg),
-                                    ptk_file_browser_get_cwd( file_browser ) );
+        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
 
         int width = xset_get_int( "arc_dlg", "x" );
         int height = xset_get_int( "arc_dlg", "y" );
@@ -465,8 +477,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 g_free( str );
             }
             choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER(dlg) );
-            create_parent = gtk_toggle_button_get_active( chk_parent );
-            write_access = gtk_toggle_button_get_active( chk_write );
+            create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
+            write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
             xset_set_b( "arc_dlg", create_parent );
             str = g_strdup_printf( "%d", write_access ? 1 : 0 );
             xset_set( "arc_dlg", "s", str );
@@ -502,8 +514,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             continue;
     
         // handler found
-        full_path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
-                                        vfs_file_info_get_name( file ), NULL );
+        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ), NULL );
         full_quote = bash_quote( full_path );
         dest_quote = bash_quote( dest );
         if ( list_contents )
@@ -576,9 +587,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         g_free( full_path );
 
         // task
-        char* task_name = g_strdup_printf( _("Extract %s"), vfs_file_info_get_name( file ) );
-        PtkFileTask* task = ptk_file_exec_new( task_name, ptk_file_browser_get_cwd( file_browser ),
-                                            file_browser, file_browser->task_view );
+        char* task_name = g_strdup_printf( _("Extract %s"),
+                                                vfs_file_info_get_name( file ) );
+        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
+                                file_browser ? file_browser->task_view : NULL );
         g_free( task_name );
         task->task->exec_command = cmd;
         task->task->exec_browser = file_browser;

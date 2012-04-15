@@ -1,10 +1,6 @@
 /*
 *  C Interface: vfs-volume
 *
-* Description:
-*
-*
-* Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
 *
 * Copyright: See COPYING file that comes with this distribution
 *
@@ -78,7 +74,7 @@ struct _VFSVolume
 {
     char* udi;
     char* disp_name;
-    const char* icon;
+    char* icon;
     char* mount_point;
     char* device_file;
     gboolean is_mounted : 1;
@@ -108,6 +104,9 @@ char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options );
 char* vfs_volume_get_mount_options( VFSVolume* vol, char* options );
 void vfs_volume_automount( VFSVolume* vol );
 void vfs_volume_set_info( VFSVolume* volume );
+char* vfs_volume_device_mount_cmd( const char* device_file, const char* options );
+char* vfs_volume_device_unmount_cmd( const char* device_file );
+char* vfs_volume_device_info( const char* device_file );
 
 #endif
 

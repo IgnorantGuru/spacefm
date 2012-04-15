@@ -1,4 +1,25 @@
-0.7.4
+0.7.5   2012-04-14:
+    replaced udisks with libudev kernel support for device detection and info
+    udisks v1 & v2 now supported for mount/unmount as normal user
+    added device Settings|Un/Mount Command options to customize mount program
+    corrected race condition create tmp dir
+    status bar update fixes
+    side box fixed size fixes #6
+    scroll setting retained between sessions fixes #13
+    fixed file info update on existing fixes #14 fixes #15
+    reuse window on open folder on desktop fixes #16
+    built-in archive functions on desktop closes #18
+    shift-click selects range on desktop closes #47
+    code review
+    consistent 64bit file size support fixes #60
+    added Foresight Linux to README and manual closes #59
+    added automatic use of pmount if udisks not installed
+    copy user config skeleton from /etc/xdg/spacefm
+    default drag action option; repair automatic drag context
+    file search size limit toggles sensitivity
+    added translation instructions to the README
+    support for kdesudo and $(kde4-config --path libexec)/kdesu
+0.7.4   2012-04-01:
     added git build instructions to README
     better standards compliance for data doc dirs fixes #8
     no del on move error independent of error control fixes #9

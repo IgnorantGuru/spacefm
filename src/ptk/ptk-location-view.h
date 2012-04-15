@@ -21,8 +21,8 @@
 G_BEGIN_DECLS
 
 /* Create a new location view */
-GtkTreeView* ptk_location_view_new( PtkFileBrowser* file_browser );
-GtkTreeView* ptk_bookmark_view_new( PtkFileBrowser* file_browser );
+GtkWidget* ptk_location_view_new( PtkFileBrowser* file_browser );
+GtkWidget* ptk_bookmark_view_new( PtkFileBrowser* file_browser );
 
 gboolean ptk_location_view_chdir( GtkTreeView* location_view, const char* path );
 

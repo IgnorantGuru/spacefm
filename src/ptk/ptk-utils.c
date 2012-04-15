@@ -100,7 +100,7 @@ void ptk_menu_add_items_from_data( GtkWidget* menu,
   }
 }
 
-
+#if 0
 GtkWidget* ptk_toolbar_add_items_from_data( GtkWidget* toolbar,
                                             PtkToolItemEntry* entries,
                                             gpointer cb_data,
@@ -190,6 +190,7 @@ GtkWidget* ptk_toolbar_add_items_from_data( GtkWidget* toolbar,
   }
   return NULL;
 }
+#endif
 
 void ptk_show_error(GtkWindow* parent, const char* title, const char* message )
 {

@@ -83,7 +83,7 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
 
 static void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view );
 
-static GtkTreeView* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser );
+static GtkWidget* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser );
 
 static void on_dir_file_listed( VFSDir* dir,
                                              gboolean is_cancelled,
@@ -416,7 +416,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
 
     if ( widget == file_browser->hpane )
     {
-        pos = gtk_paned_get_position( file_browser->hpane );
+        pos = gtk_paned_get_position( GTK_PANED( file_browser->hpane ) );
         if ( !fullscreen )
         {
             posa = g_strdup_printf( "%d", pos );
@@ -427,7 +427,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     }
     else
     {
-        pos = gtk_paned_get_position( file_browser->side_vpane_top );
+        pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_top ) );
         if ( !fullscreen )
         {
             posa = g_strdup_printf( "%d", pos );
@@ -436,7 +436,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
         }
         *file_browser->slide_y = pos;
 
-        pos = gtk_paned_get_position( file_browser->side_vpane_bottom );
+        pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_bottom ) );
         if ( !fullscreen )
         {
             posa = g_strdup_printf( "%d", pos );
@@ -475,7 +475,7 @@ void on_toolbar_hide( GtkWidget* widget, PtkFileBrowser* file_browser,
 
 void on_toolbar_help( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-    xset_msg_dialog( file_browser, 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to customize the toolbars.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n\nFor more information, click the Help button below."), NULL, "#designmode-toolbars" );
+    xset_msg_dialog( GTK_WIDGET( file_browser ), 0, _("Toolbar Config Menu Help"), NULL, 0, _("These toolbar config menus allow you to customize the toolbars.\n\nEnter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n\nFor more information, click the Help button below."), NULL, "#designmode-toolbars" );
 }
 
 void on_toolbar_config_done( GtkWidget* widget, PtkFileBrowser* file_browser )
@@ -486,7 +486,7 @@ void on_toolbar_config_done( GtkWidget* widget, PtkFileBrowser* file_browser )
     if ( !GTK_IS_WIDGET( widget ) )
         return;
 
-    GtkToolbar* toolbar = (GtkToolbar*)g_object_get_data( G_OBJECT(widget), "toolbar" );
+    GtkWidget* toolbar = (GtkWidget*)g_object_get_data( G_OBJECT(widget), "toolbar" );
 
     gtk_widget_destroy( widget );
     
@@ -502,12 +502,12 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
 
     if ( !widget || !file_browser )
         return;
-    GtkToolbar* toolbar = (GtkToolbar*)g_object_get_data( G_OBJECT(widget), "toolbar" );
+    GtkWidget* toolbar = (GtkWidget*)g_object_get_data( G_OBJECT(widget), "toolbar" );
     if ( !toolbar )
         return;
 
     focus_folder_view( file_browser );
-    GtkMenu* popup = gtk_menu_new();
+    GtkWidget* popup = gtk_menu_new();
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     xset_context_new();
 
@@ -569,7 +569,7 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
                       G_CALLBACK( on_toolbar_config_done ), file_browser );
     g_signal_connect( popup, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
-    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );
+    gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL, 0, gtk_get_current_event_time() );
 }
 
 void on_toggle_sideview( GtkMenuItem* item, PtkFileBrowser* file_browser, int job2  )
@@ -606,19 +606,19 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     // new
     file_browser->side_toolbar = gtk_toolbar_new();
     GtkTooltips* tooltips = gtk_tooltips_new();
-    gtk_box_pack_start( file_browser->side_toolbox, file_browser->side_toolbar,
-                                                                TRUE, TRUE, 0 );
-    gtk_toolbar_set_style( file_browser->side_toolbar, GTK_TOOLBAR_ICONS );
+    gtk_box_pack_start( GTK_BOX( file_browser->side_toolbox ),
+                                    file_browser->side_toolbar, TRUE, TRUE, 0 );
+    gtk_toolbar_set_style( GTK_TOOLBAR( file_browser->side_toolbar ), GTK_TOOLBAR_ICONS );
     if ( app_settings.tool_icon_size > 0 
                         && app_settings.tool_icon_size <= GTK_ICON_SIZE_DIALOG )
-        gtk_toolbar_set_icon_size( file_browser->side_toolbar,
+        gtk_toolbar_set_icon_size( GTK_TOOLBAR( file_browser->side_toolbar ),
                                                     app_settings.tool_icon_size );
 
     // config
     GtkIconSize icon_size = gtk_toolbar_get_icon_size( GTK_TOOLBAR ( 
                                                     file_browser->side_toolbar ) );
     set = xset_set_cb( "toolbar_config", on_toolbar_config, file_browser );
-    xset_add_toolitem( file_browser, file_browser, file_browser->side_toolbar,
+    xset_add_toolitem( GTK_WIDGET( file_browser ), file_browser, file_browser->side_toolbar,
                                                     tooltips, icon_size, set );
 
     // callbacks    
@@ -655,7 +655,7 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
 
     // side
     set = xset_get( "toolbar_side" );
-    xset_add_toolbar( file_browser, file_browser, file_browser->side_toolbar,
+    xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser, file_browser->side_toolbar,
                                                             tooltips, set->desc );
 
     // get side buttons
@@ -696,7 +696,7 @@ void select_file( PtkFileBrowser* file_browser, char* path )
     GtkTreeSelection* tree_sel;
     GtkTreeModel* model = NULL;
     VFSFileInfo* file;
-    char* file_name;
+    const char* file_name;
 
     char* name = g_path_get_basename( path );
     
@@ -766,7 +766,7 @@ gboolean on_address_bar_focus_in( GtkWidget *entry, GdkEventFocus* evt,
 
 void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
 {
-    char* text;
+    const char* text;
     gchar *dir_path, *final_path;
     GList* l;
     char* str;
@@ -817,8 +817,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         {
             g_free( command );
             g_free( prefix );
-            ptk_path_entry_help( entry, file_browser );
-            gtk_editable_set_position( entry, -1 );
+            ptk_path_entry_help( entry, GTK_WIDGET( file_browser ) );
+            gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
             return;
         }
 
@@ -873,8 +873,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
 
         // task
         char* task_name = g_strdup( gtk_entry_get_text( GTK_ENTRY( entry ) ) );
-        char* cwd = ptk_file_browser_get_cwd( file_browser );
-        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, file_browser,
+        const char* cwd = ptk_file_browser_get_cwd( file_browser );
+        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
                                                             file_browser->task_view );
         g_free( task_name );
         // don't free cwd!
@@ -900,9 +900,9 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         str = prefix;
         prefix = g_strdup_printf( "%s ", str );
         g_free( str );
-        gtk_entry_set_text( entry, prefix );
+        gtk_entry_set_text( GTK_ENTRY( entry ), prefix );
         g_free( prefix );
-        gtk_editable_set_position( entry, -1 );
+        gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
         edata->current = NULL;
     }
     else
@@ -936,7 +936,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             g_free( dir_path );
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
-        gtk_editable_set_position( entry, -1 );
+        gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
     }
     g_free( final_path );
 }
@@ -954,7 +954,8 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     {
         if ( GTK_IS_WIDGET( file_browser->toolbar ) )
         {
-            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n", file_browser->toolbar );
+            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n",
+                                                        file_browser->toolbar );
             // crashing here? http://sourceforge.net/p/spacefm/tickets/88000/?page=0
             gtk_widget_destroy( file_browser->toolbar );  
             printf("    DONE\n" );
@@ -965,7 +966,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
 
     if ( !file_browser->path_bar )
     {
-        file_browser->path_bar = ( GtkEntry* )ptk_path_entry_new( file_browser );
+        file_browser->path_bar = ptk_path_entry_new( file_browser );
         g_signal_connect( file_browser->path_bar, "activate",
                             G_CALLBACK(on_address_bar_activate), file_browser );
         g_signal_connect( file_browser->path_bar, "focus-in-event",
@@ -975,18 +976,20 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     // new
     file_browser->toolbar = gtk_toolbar_new();
     GtkTooltips* tooltips = gtk_tooltips_new();
-    gtk_box_pack_start( file_browser->toolbox, file_browser->toolbar, TRUE, TRUE, 0 );
-    gtk_toolbar_set_style( file_browser->toolbar, GTK_TOOLBAR_ICONS );
+    gtk_box_pack_start( GTK_BOX( file_browser->toolbox ), file_browser->toolbar,
+                                                                TRUE, TRUE, 0 );
+    gtk_toolbar_set_style( GTK_TOOLBAR( file_browser->toolbar ), GTK_TOOLBAR_ICONS );
     if ( app_settings.tool_icon_size > 0 
                         && app_settings.tool_icon_size <= GTK_ICON_SIZE_DIALOG )
-        gtk_toolbar_set_icon_size( file_browser->toolbar, app_settings.tool_icon_size );
+        gtk_toolbar_set_icon_size( GTK_TOOLBAR( file_browser->toolbar ),
+                                                    app_settings.tool_icon_size );
 
     // config
     GtkIconSize icon_size = gtk_toolbar_get_icon_size( GTK_TOOLBAR ( 
                                                             file_browser->toolbar ) );
     set = xset_set_cb( "toolbar_config", on_toolbar_config, file_browser );
-    xset_add_toolitem( file_browser, file_browser, file_browser->toolbar, tooltips,
-                                                                icon_size, set );
+    xset_add_toolitem( GTK_WIDGET( file_browser ), file_browser,
+                                file_browser->toolbar, tooltips, icon_size, set );
 
     // callbacks    
     set = xset_set_cb( "tool_dirtree", on_toggle_sideview, file_browser );
@@ -1022,8 +1025,8 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
 
     // left
     set = xset_get( "toolbar_left" );
-    xset_add_toolbar( file_browser, file_browser, file_browser->toolbar, tooltips,
-                                                                        set->desc );
+    xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser,
+                                        file_browser->toolbar, tooltips, set->desc );
 
     // get left buttons
     set = xset_get( "tool_dirtree" );
@@ -1051,7 +1054,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     file_browser->up_btn[0] = set->ob2_data;
     
     // pathbar
-    GtkHBox* hbox = gtk_hbox_new( FALSE, 0 );
+    GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
     GtkToolItem* toolitem = gtk_tool_item_new();
     gtk_tool_item_set_expand ( toolitem, TRUE );
     gtk_toolbar_insert( GTK_TOOLBAR( file_browser->toolbar ), toolitem, -1 );
@@ -1095,7 +1098,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
         set->ob2_data = NULL;
         
     set = xset_get( "toolbar_right" );
-    xset_add_toolbar( file_browser, file_browser, file_browser->toolbar, tooltips,
+    xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser, file_browser->toolbar, tooltips,
                                                                     set->desc );
 
     // get right buttons
@@ -1135,35 +1138,41 @@ void ptk_file_browser_status_change( PtkFileBrowser* file_browser, gboolean pane
     GdkColor color;
     
     // image
-    gtk_widget_set_sensitive( file_browser->status_image, panel_focus );
+    gtk_widget_set_sensitive( GTK_WIDGET( file_browser->status_image ), panel_focus );
 
     // text color
     if ( panel_focus )
     {
         scolor = xset_get_s( "status_text" );
         if ( scolor && gdk_color_parse( scolor, &color ) )
-            gtk_widget_modify_fg( file_browser->status_label, GTK_STATE_NORMAL, &color );
+            gtk_widget_modify_fg( GTK_WIDGET( file_browser->status_label ),
+                                                    GTK_STATE_NORMAL, &color );
         else
-            gtk_widget_modify_fg( file_browser->status_label, GTK_STATE_NORMAL, NULL );
+            gtk_widget_modify_fg( GTK_WIDGET( file_browser->status_label ),
+                                                    GTK_STATE_NORMAL, NULL );
     }
     else
-        gtk_widget_modify_fg( file_browser->status_label, GTK_STATE_NORMAL, NULL );
+        gtk_widget_modify_fg( GTK_WIDGET( file_browser->status_label ),
+                                                    GTK_STATE_NORMAL, NULL );
 
     // frame border color
     if ( panel_focus )
     {
         scolor = xset_get_s( "status_border" );
         if ( scolor && gdk_color_parse( scolor, &color ) )
-            gtk_widget_modify_bg( file_browser->status_frame, GTK_STATE_NORMAL, &color );
+            gtk_widget_modify_bg( GTK_WIDGET( file_browser->status_frame ),
+                                                    GTK_STATE_NORMAL, &color );
         else
-            gtk_widget_modify_bg( file_browser->status_frame, GTK_STATE_NORMAL, NULL );
+            gtk_widget_modify_bg( GTK_WIDGET( file_browser->status_frame ),
+                                                    GTK_STATE_NORMAL, NULL );
             // below caused visibility issues with some themes
             //gtk_widget_modify_bg( file_browser->status_frame, GTK_STATE_NORMAL,
             //                            &GTK_WIDGET( file_browser->status_frame )
             //                            ->style->fg[ GTK_STATE_SELECTED ] );
     }
     else
-        gtk_widget_modify_bg( file_browser->status_frame, GTK_STATE_NORMAL, NULL );
+        gtk_widget_modify_bg( GTK_WIDGET( file_browser->status_frame ),
+                                                    GTK_STATE_NORMAL, NULL );
 }
 
 gboolean on_status_bar_button_press( GtkWidget *widget,
@@ -1239,7 +1248,7 @@ void on_status_middle_click_config( GtkMenuItem *menuitem, XSet* set )
     }
 }
 
-void on_status_bar_popup( GtkWidget *widget, GtkMenu *menu,
+void on_status_bar_popup( GtkWidget *widget, GtkWidget *menu,
                                                 PtkFileBrowser* file_browser )
 {
     GSList* radio_group = NULL;
@@ -1289,15 +1298,19 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     file_browser->path_bar = NULL;
     file_browser->toolbar = NULL;
     file_browser->toolbox = gtk_hbox_new( FALSE, 0 );
-    gtk_box_pack_start( GTK_BOX ( file_browser ), file_browser->toolbox, FALSE, FALSE, 0 );
+    gtk_box_pack_start( GTK_BOX ( file_browser ), file_browser->toolbox, FALSE,
+                                                                    FALSE, 0 );
     ptk_file_browser_rebuild_toolbox( NULL, file_browser );
 
     // lists area
     file_browser->hpane = gtk_hpaned_new();
     file_browser->side_vbox = gtk_vbox_new( FALSE, 0 );
+    gtk_widget_set_size_request( file_browser->side_vbox, 140, -1 );
     file_browser->folder_view_scroll = gtk_scrolled_window_new( NULL, NULL );
-    gtk_paned_pack1 ( file_browser->hpane, file_browser->side_vbox, TRUE, TRUE );
-    gtk_paned_pack2 ( file_browser->hpane, file_browser->folder_view_scroll, TRUE, TRUE );
+    gtk_paned_pack1 ( GTK_PANED( file_browser->hpane ), file_browser->side_vbox,
+                                                                FALSE, FALSE );
+    gtk_paned_pack2 ( GTK_PANED( file_browser->hpane ), 
+                                    file_browser->folder_view_scroll, TRUE, TRUE );
 
     // fill side
     file_browser->side_toolbox = gtk_hbox_new( FALSE, 0 );
@@ -1307,29 +1320,43 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     file_browser->side_dir_scroll = gtk_scrolled_window_new( NULL, NULL );
     file_browser->side_book_scroll = gtk_scrolled_window_new( NULL, NULL );
     file_browser->side_dev_scroll = gtk_scrolled_window_new( NULL, NULL );
-    gtk_box_pack_start ( file_browser->side_vbox, file_browser->side_toolbox, FALSE, FALSE, 0 );
-    gtk_box_pack_start ( file_browser->side_vbox, file_browser->side_vpane_top, TRUE, TRUE, 0 );
-    gtk_paned_pack1 ( file_browser->side_vpane_top, file_browser->side_dev_scroll, TRUE, TRUE );
-    gtk_paned_pack2 ( file_browser->side_vpane_top, file_browser->side_vpane_bottom, TRUE, TRUE );
-    gtk_paned_pack1 ( file_browser->side_vpane_bottom, file_browser->side_book_scroll, TRUE, TRUE );
-    gtk_paned_pack2 ( file_browser->side_vpane_bottom, file_browser->side_dir_scroll, TRUE, TRUE );
+    gtk_box_pack_start ( GTK_BOX( file_browser->side_vbox ),
+                                                    file_browser->side_toolbox,
+                                                    FALSE, FALSE, 0 );
+    gtk_box_pack_start ( GTK_BOX( file_browser->side_vbox ), 
+                                                    file_browser->side_vpane_top, 
+                                                    TRUE, TRUE, 0 );
+    gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_top ), 
+                                                    file_browser->side_dev_scroll, 
+                                                    TRUE, TRUE );
+    gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_top ),
+                                                    file_browser->side_vpane_bottom, 
+                                                    TRUE, TRUE );
+    gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_bottom ),
+                                                    file_browser->side_book_scroll,
+                                                    TRUE, TRUE );
+    gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_bottom ),
+                                                    file_browser->side_dir_scroll, 
+                                                    TRUE, TRUE );
 
     // status bar
     file_browser->status_bar = gtk_statusbar_new();
-    gtk_statusbar_set_has_resize_grip( file_browser->status_bar, FALSE );
+    gtk_statusbar_set_has_resize_grip( GTK_STATUSBAR( file_browser->status_bar ),
+                                                    FALSE );
  
-    GList* children = gtk_container_get_children( GTK_BOX( file_browser->status_bar ) );
+    GList* children = gtk_container_get_children( GTK_CONTAINER( file_browser->status_bar ) );
     file_browser->status_frame = GTK_FRAME( children->data );
     g_list_free( children );
     children = gtk_container_get_children( 
-                GTK_BOX( gtk_statusbar_get_message_area( file_browser->status_bar ) ) );
+                        GTK_CONTAINER( gtk_statusbar_get_message_area( GTK_STATUSBAR(
+                                            file_browser->status_bar ) ) ) );
     file_browser->status_label = GTK_LABEL( children->data );
     g_list_free( children );
     file_browser->status_image = xset_get_image( "gtk-yes", GTK_ICON_SIZE_MENU ); //don't know panel yet
-    gtk_box_pack_start ( file_browser->status_bar, file_browser->status_image,
+    gtk_box_pack_start ( GTK_BOX( file_browser->status_bar ), file_browser->status_image,
                                                                 FALSE, FALSE, 0 );
     gtk_label_set_selectable( file_browser->status_label, TRUE ); // required for button event
-    gtk_widget_set_can_focus( file_browser->status_label, FALSE );
+    gtk_widget_set_can_focus( GTK_WIDGET( file_browser->status_label ), FALSE );
     g_signal_connect( G_OBJECT( file_browser->status_label ), "button-press-event",
                       G_CALLBACK( on_status_bar_button_press ), file_browser );
     g_signal_connect( G_OBJECT( file_browser->status_label ), "populate-popup",
@@ -1340,7 +1367,7 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     {
         PangoFontDescription* font_desc = pango_font_description_from_string(
                         xset_get_s_panel( file_browser->mypanel, "font_status" ) );
-        gtk_widget_modify_font( file_browser->status_label, font_desc );
+        gtk_widget_modify_font( GTK_WIDGET( file_browser->status_label ), font_desc );
         pango_font_description_free( font_desc );
     }
 
@@ -1515,11 +1542,12 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         if ( !file_browser->side_dir )
         {
             file_browser->side_dir = ptk_file_browser_create_dir_tree( file_browser );
-            gtk_container_add( file_browser->side_dir_scroll, file_browser->side_dir );
+            gtk_container_add( GTK_CONTAINER( file_browser->side_dir_scroll ), 
+                                                        file_browser->side_dir );
         }
         gtk_widget_show_all( file_browser->side_dir_scroll );
         if ( file_browser->side_dir && file_browser->file_list )
-            ptk_dir_tree_view_chdir( file_browser->side_dir,
+            ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
                                     ptk_file_browser_get_cwd( file_browser ) );
     }
     else
@@ -1535,7 +1563,8 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         if ( !file_browser->side_book )
         {
             file_browser->side_book = ptk_bookmark_view_new( file_browser );
-            gtk_container_add( file_browser->side_book_scroll, file_browser->side_book );
+            gtk_container_add( GTK_CONTAINER( file_browser->side_book_scroll ),
+                                                    file_browser->side_book );
         }
         gtk_widget_show_all( file_browser->side_book_scroll );
     }
@@ -1552,7 +1581,8 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         if ( !file_browser->side_dev )
         {
             file_browser->side_dev = ptk_location_view_new( file_browser );
-            gtk_container_add( file_browser->side_dev_scroll, file_browser->side_dev );
+            gtk_container_add( GTK_CONTAINER( file_browser->side_dev_scroll ),
+                                                file_browser->side_dev );
         }
         gtk_widget_show_all( file_browser->side_dev_scroll );
     }
@@ -1631,19 +1661,19 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // read each slider's pos from dynamic
     int pos = *file_browser->slide_x;
     if ( pos < 100 ) pos = -1;
-    gtk_paned_set_position( file_browser->hpane, pos );
+    gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
 
     //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" );
     pos = *file_browser->slide_y;
     if ( pos < 20 ) pos = -1;
-    gtk_paned_set_position( file_browser->side_vpane_top, pos );
+    gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_top ), pos );
     while (gtk_events_pending ()) // let other sliders adjust
         gtk_main_iteration ();
         
     //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" );
     pos = *file_browser->slide_s;
     if ( pos < 20 ) pos = -1;
-    gtk_paned_set_position( file_browser->side_vpane_bottom, pos );
+    gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_bottom ), pos );
     
 //printf("SETPOS %d %d\n", xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" ),
 //          xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" )  );
@@ -1679,14 +1709,14 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
     // Set column visibility, save widths
     if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        on_folder_view_columns_changed( file_browser->folder_view,
+        on_folder_view_columns_changed( GTK_TREE_VIEW( file_browser->folder_view ),
                                                         file_browser );
 
 //printf("ptk_file_browser_update_views DONE\n");
 }
 
-GtkWidget* ptk_file_browser_new( int curpanel, GtkNotebook* notebook,
-                                                    GtkTreeView* task_view,
+GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
+                                                    GtkWidget* task_view,
                                                     gpointer main_window,
                                                     int* slide_x,
                                                     int* slide_y,
@@ -1737,18 +1767,18 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkNotebook* notebook,
         icon_name = set->icon;
     else
         icon_name = "gtk-yes";
-    gtk_image_set_from_icon_name( file_browser->status_image, icon_name,
+    gtk_image_set_from_icon_name( GTK_IMAGE( file_browser->status_image ), icon_name,
                                                             GTK_ICON_SIZE_MENU );
     // set status bar font
     char* fontname = xset_get_s_panel( curpanel, "font_status" );
     if ( fontname )
     {
         PangoFontDescription* font_desc = pango_font_description_from_string( fontname );
-        gtk_widget_modify_font( file_browser->status_label, font_desc );
+        gtk_widget_modify_font( GTK_WIDGET( file_browser->status_label ), font_desc );
         pango_font_description_free( font_desc );
     }
 
-    gtk_widget_show_all( file_browser );
+    gtk_widget_show_all( GTK_WIDGET( file_browser ) );
     
     ptk_file_browser_update_views( NULL, file_browser );
    
@@ -1781,7 +1811,7 @@ void ptk_file_browser_update_tab_label( PtkFileBrowser* file_browser )
     GList* children;
     gchar* name;
 
-    label = gtk_notebook_get_tab_label ( file_browser->mynotebook,
+    label = gtk_notebook_get_tab_label ( GTK_NOTEBOOK( file_browser->mynotebook ),
                                          GTK_WIDGET( file_browser ) );
     hbox = GTK_CONTAINER( gtk_bin_get_child ( GTK_BIN( label ) ) );
     children = gtk_container_get_children( hbox );
@@ -1912,7 +1942,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
 
 void enable_toolbar( PtkFileBrowser* file_browser )
 {
-    char* cwd = ptk_file_browser_get_cwd( file_browser );  // may be NULL
+    const char* cwd = ptk_file_browser_get_cwd( file_browser );  // may be NULL
     int i;
     for ( i = 0; i < 3; i++ )
     {
@@ -1921,39 +1951,39 @@ void enable_toolbar( PtkFileBrowser* file_browser )
         else if ( i == 2 && !file_browser->side_toolbar )
             continue;
         if ( file_browser->back_btn[i] )
-            gtk_widget_set_sensitive( file_browser->back_btn[i],
+            gtk_widget_set_sensitive( GTK_WIDGET( file_browser->back_btn[i] ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->prev );
         if ( file_browser->forward_btn[i] )
-            gtk_widget_set_sensitive( file_browser->forward_btn[i],
+            gtk_widget_set_sensitive( GTK_WIDGET( file_browser->forward_btn[i] ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->next );
         if ( file_browser->up_btn[i] )
-            gtk_widget_set_sensitive( file_browser->up_btn[i],
+            gtk_widget_set_sensitive( GTK_WIDGET( file_browser->up_btn[i] ),
                                         !cwd || ( cwd && strcmp( cwd, "/" ) ) );
     }
     if ( file_browser->toolbar && file_browser->back_menu_btn_left )
-        gtk_widget_set_sensitive( file_browser->back_menu_btn_left,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->back_menu_btn_left ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->prev );
     if ( file_browser->toolbar && file_browser->forward_menu_btn_left )
-        gtk_widget_set_sensitive( file_browser->forward_menu_btn_left,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->forward_menu_btn_left ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->next );
     if ( file_browser->toolbar && file_browser->back_menu_btn_right )
-        gtk_widget_set_sensitive( file_browser->back_menu_btn_right,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->back_menu_btn_right ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->prev );
     if ( file_browser->toolbar && file_browser->forward_menu_btn_right )
-        gtk_widget_set_sensitive( file_browser->forward_menu_btn_right,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->forward_menu_btn_right ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->next );
     if ( file_browser->side_toolbar && file_browser->back_menu_btn_side )
-        gtk_widget_set_sensitive( file_browser->back_menu_btn_side,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->back_menu_btn_side ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->prev );
     if ( file_browser->side_toolbar && file_browser->forward_menu_btn_side )
-        gtk_widget_set_sensitive( file_browser->forward_menu_btn_side,
+        gtk_widget_set_sensitive( GTK_WIDGET( file_browser->forward_menu_btn_side ),
                                                 file_browser->curHistory &&
                                                 file_browser->curHistory->next );
 }
@@ -2133,7 +2163,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     ptk_file_browser_update_tab_label( file_browser );
 
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
-    gtk_entry_set_text( file_browser->path_bar, disp_path );
+    gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
     EntryData* edata = (EntryData*)g_object_get_data(
                                     G_OBJECT( file_browser->path_bar ), "edata" );
     if ( edata )
@@ -2188,7 +2218,7 @@ static GtkWidget* add_history_menu_item( PtkFileBrowser* file_browser,
 static void on_show_history_menu( GtkMenuToolButton* btn, PtkFileBrowser* file_browser )
 {
     //GtkMenuShell* menu = (GtkMenuShell*)gtk_menu_tool_button_get_menu(btn);
-    GtkMenu* menu = gtk_menu_new();
+    GtkWidget* menu = gtk_menu_new();
     GList *l;
 
     if ( btn == (GtkMenuToolButton*)file_browser->back_menu_btn_left 
@@ -2255,7 +2285,6 @@ void on_folder_content_update ( FolderContent* content,
 }
 #endif
 
-#if 0   //MOD  these were used to signal main_window
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
     gdk_threads_enter();
@@ -2270,7 +2299,6 @@ static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
     g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
                 file_browser );
 }
-#endif
 
 static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
                                         PtkFileBrowser* file_browser )
@@ -2281,8 +2309,8 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
         on_close_notebook_page( NULL, file_browser );
         //ptk_file_browser_chdir( file_browser, g_get_home_dir(), PTK_FB_CHDIR_ADD_HISTORY);
     }
-    //else
-    //    on_folder_content_changed( dir, file, file_browser );
+    else
+        on_folder_content_changed( dir, file, file_browser );
 }
 
 static void on_sort_col_changed( GtkTreeSortable* sortable,
@@ -2372,12 +2400,12 @@ void on_dir_file_listed( VFSDir* dir,
 
     if ( G_LIKELY( ! is_cancelled ) )
     {
-        //g_signal_connect( dir, "file-created",
-        //                  G_CALLBACK( on_folder_content_changed ), file_browser );
+        g_signal_connect( dir, "file-created",
+                          G_CALLBACK( on_folder_content_changed ), file_browser );
         g_signal_connect( dir, "file-deleted",
                           G_CALLBACK( on_file_deleted ), file_browser );
-        //g_signal_connect( dir, "file-changed",
-        //                  G_CALLBACK( on_folder_content_changed ), file_browser );
+        g_signal_connect( dir, "file-changed",
+                          G_CALLBACK( on_folder_content_changed ), file_browser );
     }
 
     ptk_file_browser_update_model( file_browser );
@@ -2389,7 +2417,7 @@ void on_dir_file_listed( VFSDir* dir,
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
 
     if ( file_browser->side_dir )
-        ptk_dir_tree_view_chdir( file_browser->side_dir,
+        ptk_dir_tree_view_chdir( GTK_TREE_VIEW( file_browser->side_dir ),
                                 ptk_file_browser_get_cwd( file_browser ) );
 
 /*
@@ -3087,7 +3115,8 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
     if ( !file_browser->side_dir )
         return FALSE;
     gdk_threads_enter();
-    dir_path = ptk_dir_tree_view_get_selected_dir( file_browser->side_dir );
+    dir_path = ptk_dir_tree_view_get_selected_dir( GTK_TREE_VIEW(
+                                                    file_browser->side_dir ) );
         
     if ( dir_path )
     {
@@ -3116,11 +3145,11 @@ on_dir_tree_sel_changed ( GtkTreeSelection *treesel,
 void on_shortcut_new_tab_activate( GtkMenuItem* item,
                                           PtkFileBrowser* file_browser )
 {
-    char* dir_path;
+    const char* dir_path;
 
     focus_folder_view( file_browser );
     if ( xset_get_s( "go_set_default" ) )
-        dir_path = g_strdup( xset_get_s( "go_set_default" ) );
+        dir_path = xset_get_s( "go_set_default" );
     else
         dir_path = g_get_home_dir();
 
@@ -3139,14 +3168,14 @@ void on_shortcut_new_tab_activate( GtkMenuItem* item,
 void on_shortcut_new_tab_here( GtkMenuItem* item,
                                           PtkFileBrowser* file_browser )
 {
-    char* dir_path;
+    const char* dir_path;
 
     focus_folder_view( file_browser );
     dir_path = ptk_file_browser_get_cwd( file_browser );
     if ( !g_file_test( dir_path, G_FILE_TEST_IS_DIR ) )
     {
         if ( xset_get_s( "go_set_default" ) )
-            dir_path = g_strdup( xset_get_s( "go_set_default" ) );
+            dir_path = xset_get_s( "go_set_default" );
         else
             dir_path = g_get_home_dir();
     }
@@ -3208,7 +3237,7 @@ static PtkMenuItemEntry shortcut_popup_menu[] =
 void on_folder_view_columns_changed( GtkTreeView *view,
                                                 PtkFileBrowser* file_browser )
 {
-    char* title;
+    const char* title;
     char* pos;
     XSet* set = NULL;
     int i, j, width;
@@ -3268,7 +3297,7 @@ void on_folder_view_destroy( GtkTreeView *view, PtkFileBrowser* file_browser )
     if ( id )
     {
         gulong hand = g_signal_handler_find( ( gpointer ) view, G_SIGNAL_MATCH_ID,
-                                        id, NULL, NULL, NULL, NULL );
+                                        id, 0, NULL, NULL, NULL );
         if ( hand )
             g_signal_handler_disconnect( ( gpointer ) view, hand );
     }
@@ -3568,7 +3597,7 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
                 if ( cols[j] == COL_FILE_NAME && !app_settings.always_show_tabs
                                 && file_browser->view_mode == PTK_FB_LIST_VIEW
                                 && gtk_notebook_get_n_pages(
-                                            file_browser->mynotebook ) == 1 )
+                                GTK_NOTEBOOK( file_browser->mynotebook ) ) == 1 )
                 {
                     // when tabs are added, the width of the notebook decreases
                     // by a few pixels, meaning there is not enough space for
@@ -3580,13 +3609,14 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
                     // below causes increasing reduction of column every time new tab is 
                     // added and closed - undesirable
                     PtkFileBrowser* first_fb = (PtkFileBrowser*)
-                            gtk_notebook_get_nth_page( file_browser->mynotebook, 0 );
+                                        gtk_notebook_get_nth_page( GTK_NOTEBOOK(
+                                                file_browser->mynotebook ), 0 );
                     
                     if ( first_fb && first_fb->view_mode == PTK_FB_LIST_VIEW &&
                                             GTK_IS_TREE_VIEW( first_fb->folder_view ) )
                     {
                         GtkTreeViewColumn* first_col = gtk_tree_view_get_column(
-                                                            first_fb->folder_view, 0 );
+                                    GTK_TREE_VIEW( first_fb->folder_view ), 0 );
                         if ( first_col )
                         {
                             int first_width = gtk_tree_view_column_get_width( first_col );
@@ -3645,7 +3675,7 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
 
 void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
 {
-    char* tmpcwd;  //MOD
+    const char* tmpcwd;  //MOD
     /*
     * FIXME:
     * Do nothing when there is unfinished task running in the
@@ -3728,20 +3758,29 @@ static char* folder_view_get_drop_dir( PtkFileBrowser* file_browser, int x, int 
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {
         exo_icon_view_widget_to_icon_coords ( EXO_ICON_VIEW( file_browser->folder_view ),
-                                              x, y, &x, &y );
+                                          x, y, &x, &y );
         tree_path = folder_view_get_tree_path_at_pos( file_browser, x, y );
         model = exo_icon_view_get_model( EXO_ICON_VIEW( file_browser->folder_view ) );
     }
     else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
     {
-        gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
-                                       NULL, &col, NULL, NULL );
-        if ( col == gtk_tree_view_get_column( GTK_TREE_VIEW( file_browser->folder_view ), 0 ) )
+        // if drag is in progress, get the dest row path
+        gtk_tree_view_get_drag_dest_row( GTK_TREE_VIEW( file_browser->folder_view ),
+                                                                &tree_path, NULL );
+        if ( !tree_path )
         {
-            gtk_tree_view_get_dest_row_at_pos ( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
-                                                &tree_path, NULL );
-            model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+            // no drag in progress, get drop path
+            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
+                                           NULL, &col, NULL, NULL );
+            if ( col == gtk_tree_view_get_column( GTK_TREE_VIEW( file_browser->folder_view ), 0 ) )
+            {
+                gtk_tree_view_get_dest_row_at_pos ( GTK_TREE_VIEW( file_browser->folder_view ), x, y,
+                                                    &tree_path, NULL );
+                model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+            }
         }
+        else
+            model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
     }
     if ( tree_path )
     {
@@ -3755,6 +3794,15 @@ static char* folder_view_get_drop_dir( PtkFileBrowser* file_browser, int x, int 
             {
                 dest_path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                               vfs_file_info_get_name( file ), NULL );
+/*  this isn't needed?
+                // dest_path is a link? resolve
+                if ( g_file_test( dest_path, G_FILE_TEST_IS_SYMLINK ) )
+                {
+                    char* old_dest = dest_path;
+                    dest_path = g_file_read_link( old_dest, NULL );
+                    g_free( old_dest );
+                }
+*/
             }
             else  /* Drop on a file, not folder */
             {
@@ -3794,111 +3842,126 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
 
     if ( ( sel_data->length >= 0 ) && ( sel_data->format == 8 ) )
     {
-        dest_dir = folder_view_get_drop_dir( file_browser, x, y );
-        puri = list = gtk_selection_data_get_uris( sel_data );
-        /* We only want to update drag status, not really want to drop */
-        if( file_browser->pending_drag_status )
+        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            dest_dir = folder_view_get_drop_dir( file_browser, x, y );
+        else
+            // use stored x and y because exo_icon_view has no get_drag_dest_row
+            dest_dir = folder_view_get_drop_dir( file_browser,
+                                    file_browser->drag_x, file_browser->drag_y );
+//printf("FB dest_dir = %s\n", dest_dir );
+        if ( dest_dir )
         {
-            dev_t dest_dev;
-            struct stat statbuf;
-            if( stat( dest_dir, &statbuf ) == 0 )
+            puri = list = gtk_selection_data_get_uris( sel_data );
+            
+            if( file_browser->pending_drag_status )
             {
-                dest_dev = statbuf.st_dev;
-                if( 0 == file_browser->drag_source_dev )
+                // We only want to update drag status, not really want to drop
+                dev_t dest_dev;
+                struct stat statbuf;    // skip stat64
+                if( stat( dest_dir, &statbuf ) == 0 )
                 {
-                    file_browser->drag_source_dev = dest_dev;
-                    for( ; *puri; ++puri )
+                    dest_dev = statbuf.st_dev;
+                    if( 0 == file_browser->drag_source_dev )
                     {
-                        file_path = g_filename_from_uri( *puri, NULL, NULL );
-                        if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                        file_browser->drag_source_dev = dest_dev;
+                        for( ; *puri; ++puri )
                         {
-                            file_browser->drag_source_dev = statbuf.st_dev;
+                            file_path = g_filename_from_uri( *puri, NULL, NULL );
+                            if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                            {
+                                file_browser->drag_source_dev = statbuf.st_dev;
+                                g_free( file_path );
+                                break;
+                            }
                             g_free( file_path );
-                            break;
                         }
-                        g_free( file_path );
                     }
+                    if( file_browser->drag_source_dev != dest_dev )
+                        // src and dest are on different devices */
+                        drag_context->suggested_action = GDK_ACTION_COPY;
+                    else
+                        drag_context->suggested_action = GDK_ACTION_MOVE;
                 }
-                //MOD always suggest copy
-                //if( file_browser->drag_source_dev != dest_dev )     /* src and dest are on different devices */
-                //    drag_context->suggested_action = GDK_ACTION_COPY;
-                //else
-                    drag_context->suggested_action = GDK_ACTION_COPY;
-            }
-            g_free( dest_dir );
-            g_strfreev( list );
-            file_browser->pending_drag_status = 0;
-            return;
-        }
-        if ( puri )
-        {
-            if ( 0 == ( drag_context->action &
-                        ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
-            {
-                drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
-            }
-            gtk_drag_finish ( drag_context, TRUE, FALSE, time );
-
-            while ( *puri )
-            {
-                if ( **puri == '/' )
-                    file_path = g_strdup( *puri );
                 else
-                    file_path = g_filename_from_uri( *puri, NULL, NULL );
+                    // stat failed
+                    drag_context->suggested_action = GDK_ACTION_COPY;
 
-                if ( file_path )
-                    files = g_list_prepend( files, file_path );
-                ++puri;
+                g_free( dest_dir );
+                g_strfreev( list );
+                file_browser->pending_drag_status = 0;
+                return;
             }
-            g_strfreev( list );
-
-            switch ( drag_context->action )
+            if ( puri )
             {
-            case GDK_ACTION_COPY:
-                file_action = VFS_FILE_TASK_COPY;
-                break;
-            case GDK_ACTION_LINK:
-                file_action = VFS_FILE_TASK_LINK;
-                break;
-                /* FIXME:
-                  GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled */
-            default:
-                break;
-            }
-
-            if ( files )
-            {
-                /* g_print( "dest_dir = %s\n", dest_dir ); */
-
-                /* We only want to update drag status, not really want to drop */
-                if( file_browser->pending_drag_status )
+                if ( 0 == ( drag_context->action &
+                            ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
-                    struct stat statbuf;
-                    if( stat( dest_dir, &statbuf ) == 0 )
+                    drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
+                }
+                gtk_drag_finish ( drag_context, TRUE, FALSE, time );
+
+                while ( *puri )
+                {
+                    if ( **puri == '/' )
+                        file_path = g_strdup( *puri );
+                    else
+                        file_path = g_filename_from_uri( *puri, NULL, NULL );
+
+                    if ( file_path )
+                        files = g_list_prepend( files, file_path );
+                    ++puri;
+                }
+                g_strfreev( list );
+
+                switch ( drag_context->action )
+                {
+                case GDK_ACTION_COPY:
+                    file_action = VFS_FILE_TASK_COPY;
+                    break;
+                case GDK_ACTION_LINK:
+                    file_action = VFS_FILE_TASK_LINK;
+                    break;
+                    /* FIXME:
+                      GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled */
+                default:
+                    break;
+                }
+
+                if ( files )
+                {
+                    /* g_print( "dest_dir = %s\n", dest_dir ); */
+
+                    /* We only want to update drag status, not really want to drop */
+                    if( file_browser->pending_drag_status )
                     {
-                        file_browser->pending_drag_status = 0;
+                        struct stat statbuf;    // skip stat64
+                        if( stat( dest_dir, &statbuf ) == 0 )
+                        {
+                            file_browser->pending_drag_status = 0;
 
+                        }
+                        g_list_foreach( files, (GFunc)g_free, NULL );
+                        g_list_free( files );
+                        g_free( dest_dir );
+                        return;
                     }
-                    g_list_foreach( files, (GFunc)g_free, NULL );
-                    g_list_free( files );
-                    g_free( dest_dir );
-                    return;
+                    else /* Accept the drop and perform file actions */
+                    {
+                        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+                        task = ptk_file_task_new( file_action,
+                                                  files,
+                                                  dest_dir,
+                                                  GTK_WINDOW( parent_win ),
+                                                  file_browser->task_view );
+                        ptk_file_task_run( task );
+                    }
                 }
-                else /* Accept the drop and perform file actions */
-                {
-                    parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-                    task = ptk_file_task_new( file_action,
-                                              files,
-                                              dest_dir,
-                                              GTK_WINDOW( parent_win ),
-                                              file_browser->task_view );
-                    ptk_file_task_run( task );
-                    g_free( dest_dir );
-                }
+                g_free( dest_dir );
+                gtk_drag_finish ( drag_context, TRUE, FALSE, time );
+                return ;
             }
-            gtk_drag_finish ( drag_context, TRUE, FALSE, time );
-            return ;
         }
+        g_free( dest_dir );
     }
 
     /* If we are only getting drag status, not finished. */
@@ -4138,9 +4201,23 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
         /* Several different actions are available. We have to figure out a good default action. */
         else
         {
-            file_browser->pending_drag_status = 1;
-            gtk_drag_get_data (widget, drag_context, target, time);
-            suggested_action = drag_context->suggested_action;
+            int drag_action = xset_get_int( "drag_action", "x" );
+            if ( drag_action == 1 )
+                suggested_action = GDK_ACTION_COPY;
+            else if ( drag_action == 2 )
+                suggested_action = GDK_ACTION_MOVE;
+            else if ( drag_action == 3 )
+                suggested_action = GDK_ACTION_LINK;
+            else
+            {
+                // automatic
+                file_browser->pending_drag_status = 1;
+                // store x and y because exo_icon_view has no get_drag_dest_row
+                file_browser->drag_x = x;
+                file_browser->drag_y = y;
+                gtk_drag_get_data (widget, drag_context, target, time);
+                suggested_action = drag_context->suggested_action;
+            }
         }
         gdk_drag_status( drag_context, suggested_action, time );
     }
@@ -4312,7 +4389,7 @@ void ptk_file_browser_paste( PtkFileBrowser* file_browser )
     ptk_clipboard_paste_files(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         dest_dir ? dest_dir : ptk_file_browser_get_cwd( file_browser ),
-        file_browser->task_view );
+        GTK_TREE_VIEW( file_browser->task_view ) );
     if ( dest_dir )
         g_free( dest_dir );
     if ( sel_files )
@@ -4327,7 +4404,7 @@ void ptk_file_browser_paste_link( PtkFileBrowser* file_browser )  //MOD added
     ptk_clipboard_paste_links(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         ptk_file_browser_get_cwd( file_browser ),
-        file_browser->task_view );
+        GTK_TREE_VIEW( file_browser->task_view ) );
 }
 
 void ptk_file_browser_paste_target( PtkFileBrowser* file_browser )  //MOD added
@@ -4335,7 +4412,7 @@ void ptk_file_browser_paste_target( PtkFileBrowser* file_browser )  //MOD added
     ptk_clipboard_paste_targets(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         ptk_file_browser_get_cwd( file_browser ),
-        file_browser->task_view );
+        GTK_TREE_VIEW( file_browser->task_view ) );
 }
 
 gboolean ptk_file_browser_can_cut_or_copy( PtkFileBrowser* file_browser )
@@ -4386,7 +4463,7 @@ void ptk_file_browser_delete( PtkFileBrowser* file_browser )
     parent_win = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
     ptk_delete_files( GTK_WINDOW( parent_win ),
                       ptk_file_browser_get_cwd( file_browser ),
-                      sel_files, file_browser->task_view );
+                      sel_files, GTK_TREE_VIEW( file_browser->task_view ) );
     vfs_file_info_list_free( sel_files );
 }
 
@@ -4448,18 +4525,21 @@ int no_write_access = 0;
             if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
             {
                 ptk_file_archiver_extract( file_browser, sel_files,
+                                        ptk_file_browser_get_cwd( file_browser ),
                                         ptk_file_browser_get_cwd( file_browser ) );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_exto" ) || 
                         ( xset_get_b( "arc_def_ex" ) && no_write_access ) )
             {
-                ptk_file_archiver_extract( file_browser, sel_files, NULL );
+                ptk_file_archiver_extract( file_browser, sel_files, 
+                                ptk_file_browser_get_cwd( file_browser ), NULL );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_list" ) )
             {
-                ptk_file_archiver_extract( file_browser, sel_files, "////LIST" );
+                ptk_file_archiver_extract( file_browser, sel_files,
+                            ptk_file_browser_get_cwd( file_browser ), "////LIST" );
                 goto _done;
             }
         }
@@ -4487,7 +4567,7 @@ void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser 
     VFSFileInfo* file;
     char* file_dir;
 
-    char* cwd = ptk_file_browser_get_cwd( file_browser );
+    const char* cwd = ptk_file_browser_get_cwd( file_browser );
     
     // get files from clip
     gnome_target = gdk_atom_intern( "x-special/gnome-copied-files", FALSE );
@@ -4796,8 +4876,9 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
             folder = set2->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( file_browser, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                                _("Choose Location"), folder, NULL );
+        path = xset_file_dialog( GTK_WIDGET( file_browser ),
+                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                            _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
             if ( !strcmp( setname, "copy_loc" ) )
@@ -4829,7 +4910,9 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Destination same as source"), NULL, NULL );
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                                        _("Invalid Destination"), NULL, 0,
+                                        _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
             return;
         }
@@ -4859,7 +4942,9 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
     }
     else
     {
-        xset_msg_dialog( file_browser, GTK_MESSAGE_ERROR, _("Invalid Destination"), NULL, 0, _("Invalid destination"), NULL, NULL );
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                                    _("Invalid Destination"), NULL, 0,
+                                    _("Invalid destination"), NULL, NULL );
     }
 }
 
@@ -4903,7 +4988,9 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
         {
             str = g_strdup_printf( _("Delete %d selected item%s as root ?"),
                                             item_count, item_count > 1 ? "s" : "" );
-            if ( xset_msg_dialog( file_browser, GTK_MESSAGE_WARNING, _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO, _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
+            if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_WARNING,
+                                _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
+                                _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
             {
                 g_free( str );
                 return;
@@ -4921,7 +5008,7 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
             folder = set->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( file_browser, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        path = xset_file_dialog( GTK_WIDGET( file_browser ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                                 _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
@@ -4950,7 +5037,7 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
     g_free( file_paths );
 
     // root task
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, file_browser,
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
                                             file_browser->task_view );
     g_free( task_name );
     task->task->exec_command = cmd;
@@ -5006,7 +5093,7 @@ void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_brows
 void ptk_file_browser_hide_selected( PtkFileBrowser* file_browser,
                                                     GList* files, char* cwd )
 {
-    if ( xset_msg_dialog( file_browser, 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL, NULL ) != GTK_RESPONSE_OK )
+    if ( xset_msg_dialog( GTK_WIDGET( file_browser ), 0, _("Hide File"), NULL, GTK_BUTTONS_OK_CANCEL, _("The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n\nTo unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."), NULL, NULL ) != GTK_RESPONSE_OK )
         return;
     
     VFSFileInfo* file;
@@ -5088,7 +5175,7 @@ void ptk_file_browser_show_hidden_files( PtkFileBrowser* file_browser,
 
     if ( file_browser->side_dir )
     {
-        ptk_dir_tree_view_show_hidden_files( file_browser->side_dir,
+        ptk_dir_tree_view_show_hidden_files( GTK_TREE_VIEW( file_browser->side_dir ),
                                              file_browser->show_hidden_files );
     }
 }
@@ -5140,7 +5227,7 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
 }
 
 
-GtkTreeView* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser )
+GtkWidget* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser )
 {
     GtkWidget * dir_tree;
     GtkTreeSelection* dir_tree_sel;
@@ -5163,7 +5250,7 @@ GtkTreeView* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser )
         pango_font_description_free( font_desc );
     }
 
-    return GTK_TREE_VIEW ( dir_tree );
+    return dir_tree;
 }
 
 int file_list_order_from_sort_order( PtkFBSortOrder order )
@@ -5695,7 +5782,7 @@ void ptk_file_browser_set_single_click_timeout( PtkFileBrowser* file_browser, gu
 
 ////////////////////////////////////////////////////////////////////////////
 
-int ptk_file_browser_no_access( char* cwd, char* smode )
+int ptk_file_browser_no_access( const char* cwd, const char* smode )
 {
     int mode;
     if ( !smode )
@@ -5733,7 +5820,9 @@ void ptk_file_browser_add_bookmark( GtkMenuItem *menuitem, PtkFileBrowser* file_
         g_free( name );
     }
     else
-        ptk_show_error( gtk_widget_get_toplevel( file_browser ), _("Error"),
+        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
+                                                GTK_WIDGET( file_browser ) ) ),
+                                                _("Error"),
                                                 _("Bookmark already exists") );
 
 }
@@ -5843,7 +5932,7 @@ void ptk_file_browser_focus_me( PtkFileBrowser* file_browser )
 void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
                                                                         int t )
 {
-    GtkNotebook* notebook = file_browser->mynotebook;
+    GtkWidget* notebook = file_browser->mynotebook;
     int tab_num;
     if ( item )
         tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( item ), "tab_num" ) );
@@ -5852,19 +5941,20 @@ void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
     
     if ( tab_num == -1 )  // prev
     {
-        if ( gtk_notebook_get_current_page( notebook ) == 0 )
-            gtk_notebook_set_current_page( notebook, 
-                            gtk_notebook_get_n_pages( notebook ) - 1 );
+        if ( gtk_notebook_get_current_page( GTK_NOTEBOOK( notebook ) ) == 0 )
+            gtk_notebook_set_current_page( GTK_NOTEBOOK( notebook ), 
+                                            gtk_notebook_get_n_pages( 
+                                            GTK_NOTEBOOK( notebook ) ) - 1 );
         else
-            gtk_notebook_prev_page( notebook );
+            gtk_notebook_prev_page( GTK_NOTEBOOK( notebook ) );
     }
     else if ( tab_num == -2 )  // next
     {
-        if ( gtk_notebook_get_current_page( notebook ) + 1 ==
-                                gtk_notebook_get_n_pages( notebook ) )
-            gtk_notebook_set_current_page( notebook, 0 );
+        if ( gtk_notebook_get_current_page( GTK_NOTEBOOK( notebook ) ) + 1 ==
+                                gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) ) )
+            gtk_notebook_set_current_page( GTK_NOTEBOOK( notebook ), 0 );
         else
-            gtk_notebook_next_page( notebook );
+            gtk_notebook_next_page( GTK_NOTEBOOK( notebook ) );
     }
     else if ( tab_num == -3 )  // close
     {
@@ -5882,8 +5972,9 @@ void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
 */    }
     else
     {
-        if ( tab_num <= gtk_notebook_get_n_pages( notebook ) && tab_num > 0 )
-            gtk_notebook_set_current_page( notebook, tab_num - 1 );
+        if ( tab_num <= gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) ) &&
+                                                                tab_num > 0 )
+            gtk_notebook_set_current_page( GTK_NOTEBOOK( notebook ), tab_num - 1 );
     }
 }
 
@@ -5891,9 +5982,9 @@ void ptk_file_browser_open_in_tab( PtkFileBrowser* file_browser, int tab_num,
                                                         char* file_path )
 {
     int page_x;
-    GtkNotebook* notebook = file_browser->mynotebook;
-    int cur_page = gtk_notebook_get_current_page( notebook );
-    int pages = gtk_notebook_get_n_pages( notebook );
+    GtkWidget* notebook = file_browser->mynotebook;
+    int cur_page = gtk_notebook_get_current_page( GTK_NOTEBOOK( notebook ) );
+    int pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
     
     if ( tab_num == -1 )  // prev
         page_x = cur_page - 1;
@@ -5905,7 +5996,8 @@ void ptk_file_browser_open_in_tab( PtkFileBrowser* file_browser, int tab_num,
     if ( page_x > -1 && page_x < pages && page_x != cur_page )
     {
         PtkFileBrowser* a_browser = (PtkFileBrowser*)gtk_notebook_get_nth_page(
-                                                            notebook, page_x );
+                                            GTK_NOTEBOOK( notebook ), page_x );
+                            
         ptk_file_browser_chdir( a_browser, file_path, PTK_FB_CHDIR_ADD_HISTORY );     
     }
 }
@@ -6045,7 +6137,7 @@ void ptk_file_browser_on_permission( GtkMenuItem* item, PtkFileBrowser* file_bro
     // task
     PtkFileTask* task = ptk_file_exec_new( set->menu_label,
                                         cwd,
-                                        file_browser,
+                                        GTK_WIDGET( file_browser ),
                                         file_browser->task_view );
     task->task->exec_command = g_strdup_printf( "%s %s %s", prog, cmd, file_paths );
     g_free( cmd );
@@ -6192,7 +6284,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         ptk_file_browser_focus( NULL, browser, i );
     }
     else if ( !strcmp( set->name, "view_reorder_col" ) )
-        on_reorder( NULL, browser );
+        on_reorder( NULL, GTK_WIDGET( browser ) );
     else if ( !strcmp( set->name, "view_refresh" ) )
         ptk_file_browser_refresh( NULL, browser );
     else if ( g_str_has_prefix( set->name, "sortby_" ) )
@@ -6226,7 +6318,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         on_popup_sortby( NULL, browser, i );
     }
     else if ( !strcmp( set->name, "path_help" ) )
-        ptk_path_entry_help( NULL, browser );
+        ptk_path_entry_help( NULL, GTK_WIDGET( browser ) );
     else if ( g_str_has_prefix( set->name, "panel" ) )
     {
         i = 0;
@@ -6262,7 +6354,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
                 main_update_fonts( NULL, browser );
             else if ( g_str_has_prefix( xname, "detcol_" )  // shared key
                                 && browser->view_mode == PTK_FB_LIST_VIEW )
-                on_folder_view_columns_changed( browser->folder_view,
+                on_folder_view_columns_changed( GTK_TREE_VIEW( browser->folder_view ),
                                                             browser );
             else if ( !strcmp( xname, "icon_status" ) )  // shared key
                 on_status_effect_change( NULL, browser );

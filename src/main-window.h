@@ -23,29 +23,29 @@ typedef struct _FMMainWindow
     GtkWidget *main_vbox;
     GtkWidget *menu_bar;
     //MOD
-    GtkMenu* file_menu_item;
-    GtkMenu* view_menu_item;
-    GtkMenu* book_menu_item;
-    GtkMenu* plug_menu_item;
-    GtkMenu* tool_menu_item;
-    GtkMenu* help_menu_item;
-    GtkMenu* book_menu;
-    GtkMenu* plug_menu;
-    GtkNotebook* notebook;  //MOD changed use to current panel
-    GtkNotebook* panel[4];
+    GtkWidget* file_menu_item;
+    GtkWidget* view_menu_item;
+    GtkWidget* book_menu_item;
+    GtkWidget* plug_menu_item;
+    GtkWidget* tool_menu_item;
+    GtkWidget* help_menu_item;
+    GtkWidget* book_menu;
+    GtkWidget* plug_menu;
+    GtkWidget* notebook;  //MOD changed use to current panel
+    GtkWidget* panel[4];
     int panel_slide_x[4];
     int panel_slide_y[4];
     int panel_slide_s[4];
-    GtkToolbar* panelbar;
+    GtkWidget* panelbar;
     GtkWidget* panel_btn[4];
-    GtkImage* panel_image[4];
+    GtkWidget* panel_image[4];
     int curpanel;
-    GtkHPaned* hpane_top;
-    GtkHPaned* hpane_bottom;
-    GtkVPaned* vpane;
-    GtkVPaned* task_vpane;
-    GtkScrolledWindow* task_scroll;
-    GtkTreeView* task_view;
+    GtkWidget* hpane_top;
+    GtkWidget* hpane_bottom;
+    GtkWidget* vpane;
+    GtkWidget* task_vpane;
+    GtkWidget* task_scroll;
+    GtkWidget* task_view;
     
     guint autosave_timer;
 
@@ -135,7 +135,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser );
-gboolean main_write_exports( VFSFileTask* vtask, char* value, FILE* file );
+gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );
 void on_reorder( GtkWidget* item, GtkWidget* parent );
 char* main_window_get_tab_cwd( PtkFileBrowser* file_browser, int tab_num );

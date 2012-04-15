@@ -333,7 +333,7 @@ gboolean single_instance_check()
         write( sock, &cmd, sizeof(char) );
         if( G_UNLIKELY( show_pref > 0 ) )
         {
-            cmd = (unsigned char*)show_pref;
+            cmd = (unsigned char)show_pref;
             write( sock, &cmd, sizeof(char) );
         }
         else
@@ -570,9 +570,9 @@ static void init_desktop_or_daemon()
     init_folder();
 
     signal( SIGPIPE, SIG_IGN );
-    signal( SIGHUP, gtk_main_quit );
-    signal( SIGINT, gtk_main_quit );
-    signal( SIGTERM, gtk_main_quit );
+    signal( SIGHUP, (void*)gtk_main_quit );
+    signal( SIGINT, (void*)gtk_main_quit );
+    signal( SIGTERM, (void*)gtk_main_quit );
 
     if( desktop )
         fm_turn_on_desktop_icons();
@@ -644,7 +644,7 @@ gboolean handle_parsed_commandline_args()
     else if( find_files ) /* find files */
     {
         init_folder();
-        fm_find_files( files );
+        fm_find_files( (const char**)files );
         find_files = FALSE;
     }
 #ifdef DESKTOP_INTEGRATION

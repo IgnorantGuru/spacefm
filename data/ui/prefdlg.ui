@@ -156,19 +156,41 @@
         <col id="0">/usr/bin/gksudo</col>
       </row>
       <row>
-        <col id="0">/usr/bin/kdesu</col>
-      </row>
-      <row>
         <col id="0">/usr/bin/gnomesu</col>
       </row>
       <row>
         <col id="0">/usr/bin/xdg-su</col>
       </row>
       <row>
+        <col id="0">/usr/bin/kdesu</col>
+      </row>
+      <row>
+        <col id="0">/usr/bin/kdesudo</col>
+      </row>
+      <row>
         <col id="0">/bin/su</col>
       </row>
       <row>
         <col id="0">/usr/bin/sudo</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="modeldrag">
+    <columns>
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Automatic</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Copy</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Move</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Link</col>
       </row>
     </data>
   </object>
@@ -557,7 +579,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                   </packing>
                 </child>
                 <child>
@@ -571,6 +593,43 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkHBox" id="hboxdrag">
+                    <property name="visible">True</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel" id="labeldrag">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Default Drag Action:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBox" id="drag_action">
+                        <property name="visible">True</property>
+                        <property name="model">modeldrag</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="rendererdrag"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
                 <child>

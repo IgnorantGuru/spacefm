@@ -37,13 +37,14 @@
     <a href="#introduction-about">About</a><br>
     <a href="#introduction-history">History</a><br>
     <a href="#introduction-highlights">Highlights</a><br>
+    <a href="#introduction-limitations">Limitations</a><br>
 </ul>
 <a href="#installation">Installation</a>
 <ul>
     <a href="#installation-downloads">Downloads</a><br>
     <a href="#installation-packages">Packages</a><br>
     <a href="#installation-installer">Installer</a><br>
-    <a href="#installation-manualbuild">Manual Build</a><br>
+    <a href="#installation-manualbuild">Manual Builds </a><br>
     <a href="#installation-uninstall">Uninstall</a><br>
 </ul>
 <a href="#invocation">Invocation</a>
@@ -107,6 +108,7 @@
         <li>About
         <li><a href="#introduction-history">History</a>
         <li><a href="#introduction-highlights">Highlights</a>
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -133,7 +135,7 @@
     
     <p><li>Keep the user <b>interface as simple and clean as possible</b>.  Although SpaceFM's UI has been redesigned, it is still inspired by the simplicity and clarity of PCManFM's UI.
       
-    <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.
+    <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by pmount, udisks, or any program you specify.
     
     <p><li>Provide a <b>task manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the task manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the task manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
     
@@ -143,7 +145,7 @@
     
     <p><li>Provide extensive <b>system maintenance capabilities</b>.  Perform-as-root functions allow you to edit, copy, move, and delete files and folders as root, change permissions, and create links.  SpaceFM can also be run as root for full system maintenance needs.
     
-    <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM's unique udisks device management support is text stream based, meaning it does not require or use udisks libraries.  This makes it very resilient to API/library changes and bugs, and also allows you to clearly diagnose udisks problems or replace udisks with custom scripts that emulate its behavior.  If udisks is unwanted, SpaceFM runs fine without it - only the device manager will be disabled.  (SpaceFM can also be built with deprecated HAL support.)
+    <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or it can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM has built-in libudev kernel support for device detection and information, with no dependency on udisks (although you may still want udisks or pmount installed for non-root mounting).  (SpaceFM can also be built with deprecated HAL support instead of libudev.)
 </ul>
 
 <!-- # Limitations -->
@@ -166,6 +168,7 @@
         <li><a href="#introduction-about">About</a>
         <li>History
         <li><a href="#introduction-highlights">Highlights</a>
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -182,9 +185,11 @@
 
 <p>SpaceFM was developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed numerous bugs, and kept the legacy version alive for those who prefered it for its light dependencies, HAL support, and added features.
 
-<p>PCManFM-Mod was then used as a base for developing SpaceFM, which included a major redesign of the user interface, multiple panel support, a udisks-based device manager, inotify support, and removed dependencies on fam/gamin and HAL.  Much of the internal VFS which had been developed and debugged in legacy PCManFM and PCManFM-Mod was retained and extended, providing SpaceFM with a reliable VFS to build upon.
+<p>PCManFM-Mod was then used as a base for developing SpaceFM, which included a major redesign of the user interface, multiple panel support, a udisks-based device manager*, inotify support, and removed dependencies on fam/gamin and HAL.  Much of the internal VFS which had been developed and debugged in legacy PCManFM and PCManFM-Mod was retained and extended, providing SpaceFM with a reliable VFS to build upon.
 
-<p>Due to the extensive changes in many parts of the project, SpaceFM was released with its new name as an alpha test version in January 2012.  It is currently in alpha testing.
+<p>Due to the extensive changes in many parts of the project, SpaceFM was released with its new name as an alpha test version in January 2012.
+
+<p>* Beginning with version 0.7.5 in April 2012, SpaceFM replaced udisks with libudev kernel support for device detection and information.  SpaceFM users can set any custom program to be used for non-root user mounting and unmounting (including but not limited to pmount and udisks v1/v2).  A custom mount program is also currently under development.
 
 
 <!-- @end introduction-history-->
@@ -200,6 +205,7 @@
         <li><a href="#introduction-about">About</a>
         <li><a href="#introduction-history">History</a>
         <li>Highlights
+        <li><a href="#introduction-limitations">Limitations</a>
     </ul>
     <li><a href="#installation">Installation</a>
     <li><a href="#invocation">Invocation</a>
@@ -215,7 +221,7 @@
 <!-- @Introduction @Highlights -->
 
 <ul>
-    <li>Lightweight -  Written in C with GTK2 stability, inotify kernel support, optional udisks
+    <li>Lightweight -  Written in C with GTK2 stability, inotify and libudev kernel support
     <li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
     <li>Flexible - Can appear very simple or very complex depending on configuration
     <li>Multiple Windows - A single instance opens multiple windows
@@ -223,7 +229,7 @@
     <li>Tabbed - Each browser panel supports multiple folder tabs
     <li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
     <li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
-    <li>Device Manager - Loose udisks integration for manual and customized automatic device management, plus easily format, backup and restore partitions and MBRs
+    <li>Device Manager - Built-in libudev support for manual and automatic device management, plus easily format, backup and restore partitions and MBRs
     <li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
     <li>MIME - Manages MIME file types and default actions
     <li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
@@ -238,11 +244,45 @@
     <li>File Management - Extensive move, copy, link, drag-n-drop, and clipboard control
     <li>Archives - Single-click, built-in archive creation and extraction, or use external apps
     <li>Daemon Mode - Run in the background to automount devices and autorun apps, and quickly open browser windows
-    <li>Alternate Builds - deprecated support for hal (replaces udisks) and fam/gamin (replaces inotify)
+    <li>Alternate Builds - deprecated support for hal (replaces libudev) and fam/gamin (replaces inotify)
+</ul>
+
+<!-- @end introduction-highlights-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li>Introduction
+    <ul>
+        <li><a href="#introduction-about">About</a>
+        <li><a href="#introduction-history">History</a>
+        <li><a href="#introduction-highlights">Highlights</a>
+        <li>Limitations
+    </ul>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="introduction-limitations"/><a href="#introduction-limitations"><font size=+2>Limitations</font></a>
+<!-- @Introduction @Limitations -->
+
+<ul>
+	<li>SpaceFM makes no network connections and is not a network browser.  It currently browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to browse and mount the shares locally.<br><br>
+	
+	<li>SpaceFM 0.7.5 does not require udisks (only udev).  However, in order to mount or unmount devices as a non-root user, you will need pmount or udisks installed, or will need to specify a custom program to be used.  Also, a custom mount solution is currently under development.
 </ul>
 
 
-<!-- @end introduction-highlights-->
+<!-- @end introduction-limitations-->
 <br><br></td></tr>
 
 
@@ -261,7 +301,7 @@
         <li>Downloads
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -276,7 +316,7 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a> and <a href="http://sourceforge.net/projects/spacefm/">Sourceforge</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.
+<p>The <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a> provides the most up-to-date installation information.  SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -300,7 +340,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
         <li><a href="#installation-downloads">Downloads</a>
         <li>Packages
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -321,37 +361,49 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 	<th>Distro</th>
 	<th>Packages &amp; Repositories*</th>
 </tr>
-<tr>
-<td><b>Debian,<br>Ubuntu,<br>etc</b></td>
-<td>
-	deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.
-	<br><br>NOTE: Users of stable <b>Debian Squeeze and Ubuntu 10.04</b> may not be able to install SpaceFM because it requires libgtk >= 2.24 and libgdk-pixbuf2.0. 
-	<br><br><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
-</td>
-</tr>
 
 <tr>
-<td><b>antiX<b></td>
+<td valign="top"><b>antiX<b></td>
 <td>
 	<a href="http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml">antiX's current test release</a> includes SpaceFM
 </td>
 </tr>
 
 <tr>
-<td><b>Arch Linux</b></td>
+<td valign="top"><b>Arch Linux</b></td>
 <td>
-	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a>
+	Arch Linux's AUR includes <a href="https://aur.archlinux.org/packages.php?ID=55777">spacefm</a> and <a href="http://aur.archlinux.org/packages.php?ID=58247">spacefm-git</a>
 </td>
 </tr>
 
 <tr>
-<td><b>Gentoo</b></td>
+<td valign="top"><b><a name="deb">Debian-based</a></b></td>
+<td>
+	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.
+
+	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
+
+	<p>NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 
+	users may not be able to install SpaceFM due to repositories 
+	missing package libgdk-pixbuf2.0-0
+</td>
+</tr>
+
+<tr>
+<td><b>Foresight</b></td>
+<td>
+	Foresight Lxde uses SpaceFM as its default file manager; Foresight includes <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm">spacefm</a> in its repositories
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b>Gentoo</b></td>
 <td>
 	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
 </td>
 
 <tr>
-<td><b>openSUSE</b></td>
+<td valign="top"><b>openSUSE</b></td>
 <td>
 	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
 	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
@@ -366,30 +418,37 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 </tr>
 
 <tr>
-<td><b>PCLinuxOS</b></td>
+<td valign="top"><b>PCLinuxOS</b></td>
 <td>
 	spacefm test packages available (see forum)
 </td>
 </tr>
 
 <tr>
-<td><b>Sabayon</b></td>
+<td valign="top"><b>Sabayon</b></td>
 <td>
 	Includes spacefm in its repositories
 </td>
 </tr>
 
 <tr>
-<td><b>VectorLinux</b></td>
+<td><b>Ubuntu</b></td>
+<td>
+	See <a href="#deb">Debian</a>
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b>VectorLinux</b></td>
 <td>
 	spacefm test packages available
 </td>
 </tr>
 
 <tr>
-<td><b><i>Other</i></b></td>
+<td valign="top"><b><i>Other</i></b></td>
 <td>
-	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use the easy manual build instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
+	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use one of the <a href="#installation-manualbuild">manual build methods</a>
 </td>
 </tr>
 </table>
@@ -411,7 +470,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li>Installer
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -426,17 +485,18 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <a name="installation-installer"/><a href="#installation-installer"><font size=+2>Installer</font></a>
 <!-- @Installation @Installer -->
 
-<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>.  The installer extracts, builds, and installs automatically.
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
-<blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev</i></blockquote>
+<blockquote><i>autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
-<blockquote><i>udisks ktsuss|gksu wget eject lsof</i></blockquote>
+<blockquote><i>eject, lsof, wget, ktsuss|gksu, pmount|udisks</i></blockquote>
 
-<p><b>IF</b> building with HAL support, you also need:
-<blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i></blockquote>
+<p><b>IF</b> building with HAL support (device manager functions are very limited), you also need:
+<blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i><br>
+With HAL, you do NOT need: <i>libudev0 libudev-dev</i></blockquote>
 
 <p><b>IF</b> disabling inotify support, you also need fam or gamin:
 <blockquote><i>fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev</i></blockquote>
@@ -466,7 +526,7 @@ Or, to see the help for alternate build options, run:
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li>Manual Build
+        <li>Manual Builds 
         <li><a href="#installation-uninstall">Uninstall</a>
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -478,31 +538,17 @@ Or, to see the help for alternate build options, run:
 </ul>
 </td>
 <td valign="top">
-<a name="installation-manualbuild"/><a href="#installation-manualbuild"><font size=+2>Manual Build</font></a>
-<!-- @Installation @Manual Build -->
+<a name="installation-manualbuild"/><a href="#installation-manualbuild"><font size=+2>Manual Builds </font></a>
+<!-- @Installation @Manual Builds #manualbuild -->
 
-<p>To build SpaceFM step-by-step, first install <b>required <i>build</i> dependencies</b> as detailed in the <a href="#installation-installer">Installer instructions</a> above.
+<p>For easy-to-follow manual build instructions, please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Sections there include:
 
-<p>Next, download the tarball (eg spacefm-x.x.x.tar.xz) from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a>, extract the tarball to a working folder, and enter the directory in a terminal.
-
-<p>For a default build and install as /usr/local/bin/spacefm, run configure like this:
-<pre>    ./configure</pre>
-
-<p><b>If configure reports missing dependencies</b>, install them and run configure again before proceeding to make.
-
-<p><b>IF</b> HAL support is desired (this will disable udisks support and will seriously limit device manager capabilities), add <code>--enable-hal</code> to the configure command above.
-
-<p><b>IF</b> you don't want to use the inotify kernel support and instead want fam or gamin to detect directory changes, add to configure: <code>--disable-inotify</code>
-        
-<p>SpaceFM already supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.  To build with an additional custom su program ('/usr/bin/mysu' in this example), add to the configure command: <code>--with-preferable-sudo=/usr/bin/mysu</code>
-
-<p>Next, <b>run make</b> and complete the installation:
-<pre>    make
-    sudo make install
-    sudo update-mime-database /usr/share/mime > /dev/null
-    sudo update-desktop-database -q
-</pre>
-
+<ul>
+    <li>BUILD - build SpaceFM from source
+    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
+    <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
+    <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
+</ul>
 
 <!-- @end installation-manualbuild-->
 <br><br></td></tr>
@@ -518,7 +564,7 @@ Or, to see the help for alternate build options, run:
         <li><a href="#installation-downloads">Downloads</a>
         <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Build</a>
+        <li><a href="#installation-manualbuild">Manual Builds </a>
         <li>Uninstall
     </ul>
     <li><a href="#invocation">Invocation</a>
@@ -612,7 +658,7 @@ Application Options:
     # then:
     spacefm --config-dir ~/.config/spacefm-alt</pre>
 
-<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.
+<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
 
 <!-- @end invocation-commandline-->
 <br><br></td></tr>
@@ -670,7 +716,7 @@ Application Options:
 
 <p>When a window is closed, the current folder tabs are saved to your session file if option File|Save Tabs is checked.  The next time you run SpaceFM, these folder tabs will be re-opened in addition to opening tabs for any folders you specify on the command line.
 
-<p>To specify what panel folders are opened in, use:
+<p>To specify a specific panel in which to open a folder, use:
 <pre>    # open a folder in panel 2:
     spacefm --panel=2 /usr/bin</pre>
 
@@ -990,7 +1036,7 @@ Help opens contextual help for a menu item.  For built-in commands, the SpaceFM 
 <p><a name="designmode-designmenu-cut"/><a href="#designmode-designmenu-cut"><b>Cut</b></a><br>
 The next items on the design menu, including Cut, Copy, and Paste, allow you to move and copy custom menu items.  Menu items are cut, copied, and pasted in a similar way to how you cut, copy, and paste files or text, except that instead of the main clipboard, the design clipboard is used.
 
-<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.  You can copy submenus, which copies all the items within the submenu recursively.
+<p>Cut cuts the current menu item onto the design clipboard.  This will not affect the contents of your main (text & files) clipboard.  You will not observe any change in the menu after cutting an item - until you paste it.  You cannot cut built-in menu items, only custom ones.  You can cut and copy submenus, which copies all the items within the submenu recursively.
 
 <p>You can also cut a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the design menu.  Highlight the menu item and press Ctrl+X, <b>or</b> use the mouse shortcut Alt + Left-or-Right-Click.
 
@@ -1118,6 +1164,8 @@ If your command's style is set to Input, it will be displayed as a normal menu i
 <pre>    echo "Your name is $fm_value."</pre>
 
 <p>When you click the menu item, you will be asked for your name, and if you click OK, told your name.
+
+<p>NOTE:  When exporting a command, the last value entered in the input dialog will be exported with the plugin, even if Input is no longer the selected style.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <!-- # Message -->
 <p><a name="designmode-style-message"/><a href="#designmode-style-message"><b>Message</b></a><br>
@@ -1339,6 +1387,8 @@ Any one of the Line, Script, or Custom options may be selected.  This determines
 <p>Environment variables can also be included.  For example, to run claws-mail using a custom DISPLAY variable:
 <pre>    DISPLAY=:1 claws-mail</pre>
 
+<p>NOTE:  When exporting a command, the value of the command line will be exported with the plugin even if Line is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
+
 <!-- # Script -->
 <p><a name="designmode-command-script"/><a href="#designmode-command-script"><b>Script</b></a><br>
 Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  Select Command|Script, and a bash script will be generated and opened in your configured editor.  You can simply add your commands to this script and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-command-edit">Command|Edit</a> from the design menu to access the script of any custom command.
@@ -1372,6 +1422,8 @@ In addition to Line and Script, a command's type may also be set to Custom.  Thi
 <p>When the Custom target is an executable, no filenames are passed to the program, so integration with the file browser is limited.  If the Custom target is a desktop file, and the Exec line of the file contains substitution variables %f, %F, %d, or %D, these will be used to pass selected files or the current directory to the program as command line arguments.
 
 <p>One use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
+
+<p>NOTE:  When exporting a command, the value of the custom target will be exported with the plugin even if Custom is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <!-- # Run In Terminal #terminal -->
 <p><a name="designmode-command-terminal"/><a href="#designmode-command-terminal"><b>Run In Terminal</b></a><br>
@@ -1882,19 +1934,17 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <a name="devices-introduction"/><a href="#devices-introduction"><font size=+2>Introduction</font></a>
 <!-- @Devices @Introduction -->
 
-<p>SpaceFM includes a programmable udisks-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
+<p>SpaceFM includes a programmable udev-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
 
-<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udisks executable.  SpaceFM interfaces with udisks using text streams.  This makes it resilient to library/API changes and bugs, and also makes it easier for the user to diagnose problems.  SpaceFM manipulates devices using the udisks command line interface, so you can run these same commands yourself to troubleshoot behavior, or create your own custom commands to manipulate devices.  Although an advanced topic, udisks can also be replaced on your system with a script or wrapper script which emulates udisks behavior.  As long as its text responses are compatible, SpaceFM will use it instead of udisks.
+<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, but does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
 
-<p>SpaceFM does not configure udisks on your system.  It merely runs the udisks executable.  If you receive 'Not Authorized' or other similar errors when mounting, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.
+<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
 
-<p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udisks version.  It can only be used to manually mount and unmount devices.  Thus the udisks version is recommended.  This manual deals exclusively with the udisks device manager.
-
-<p>SpaceFM can also be used without udisks or HAL installed.  However, all device manager functions will be disabled (the Devices list will always be empty, and no device events will be detected or acted upon).
+<p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udev-based version.  It can only be used to manually mount and unmount devices.  Thus the udev-based version is recommended, and this manual deals exclusively with the udev-based device manager.
 
 <p>To have the device manager always running, responding to events even while no SpaceFM windows are open, run SpaceFM as a  <a href="#invocation-daemonmode">daemon</a> or <a href="#invocation-desktopmanager">desktop manager</a>.
 
-<p>When testing the device manager, it may be useful to run the initial instance of SpaceFM in a terminal, so that you can see additional diagnostic output as its running.  Just open a terminal window and run <code>spacefm</code>.
+<p>When testing the device manager, it may be useful to run the initial instance of SpaceFM in a terminal, so that you can see additional diagnostic output as it's running.  Just open a terminal window and run <code>spacefm</code>.
 
 
 <!-- @end devices-introduction-->
@@ -1930,7 +1980,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To show or hide a Devices list in each panel, right-click on the file list and check or uncheck option View|Devices.  You can also show or hide the list using the 'Devices' toggle tool item on a toolbar.
 
-<p>By default, <b>the Devices list will display only removable and optical devices which contain media</b>.  If your Devices list is empty, this means there are no removable or optical devices with media, or udisks is not installed or is not working properly on your system.  To show additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
+<p>By default, <b>the Devices list will display only removable and optical devices which contain media</b>.  If your Devices list is empty, this means there are no removable or optical devices with media (or the udevd daemon is not installed or is not working properly on your system).  To show additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
 
 
 <!-- @end devices-list-->
@@ -1985,9 +2035,9 @@ Reload is used to unmount, eject if necessary, and reload a device's media tray 
 
 <!-- #Unmount -->
 <p><a name="devices-menu-unmount"/><a href="#devices-menu-unmount"><b>Unmount</b></a><br>
-Unmount will simply run a udisks unmount command on the selected device.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, the udisks command line tool or pumount will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
 
-<p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
+<p>You can run a command similar to the one SpaceFM uses by running a command in a terminal like this (replace the 'X' for a valid device file) (udisks v1 example):
 <pre>    udisks --unmount /dev/sdX</pre>
 
 <p>For troubleshooting, if you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to access the device, the device is in use, or udisks is not properly installed and authorized.
@@ -2004,11 +2054,13 @@ Selecting Open will cause the selected device to be mounted if it is not already
 
 <p>You can also open a device by simply left-clicking on it, but there are several differences.  When left-clicking on a device, no error will be shown if the mount fails.  Your indication that the mount failed is that the directory is not opened.  To see the details of the error, you must right-click on the device and select Open.  Also, the behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
 
-<p>To mount, SpaceFM runs a udisks mount command on the selected device.  Udisks determines the mount point, usually an automatically created subfolder in /media.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
+<p>To mount, SpaceFM runs a mount command on the selected device.  By default, the udisks command line tool or pmount will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
 
-<p>If the device has an entry in /etc/fstab, udisks will use that mount point instead, and will not remove it when unmounting.
+<p>If the device has an entry in /etc/fstab, that mount point may be used instead, and it will not be removed when unmounted.
 
-<p>The device will be mounted using SpaceFM's Mount Options.  If the device has an fstab entry, options specified there may take precedence.  Udisks may also automatically add or change some mount options.
+<p>The device will be mounted using SpaceFM's <a href="#devices-settings-opts">Mount Options</a>.  If the device has an fstab entry, options specified there may take precedence.  The mount program may also automatically add or change some mount options.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set in <a href="#devices-settings-opts">Mount Options</a> will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
 <!-- #Tab -->
 <p><a name="devices-menu-tab"/><a href="#devices-menu-tab"><b>Tab</b></a><br>
@@ -2016,20 +2068,26 @@ Tab works similarly to open, except that the device's mount point directory will
 
 <!-- #Mount -->
 <p><a name="devices-menu-mount"/><a href="#devices-menu-mount"><b>Mount</b></a><br>
-Mount will simply run a udisks mount command on the selected device.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
+Mount will simply run a mount command on the selected device.  By default, the udisks command line tool or pmount will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
 
-<p>You can run a command similar to the one SpaceFM uses by running udisks in a terminal like this (replace the 'X' for a valid device file):
+<p>You can run a command similar to the one SpaceFM uses by running a command in a terminal like this (replace the 'X' for a valid device file) (udisks v1 example):
 <pre>    udisks --mount /dev/sdX</pre>
 
-<p>If you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to mount the device, the device is in use, or udisks is not properly installed and authorized.
+<p>If you are unsuccessful running such a command in a terminal, SpaceFM will probably be unsuccessful too.  This may indicate you do not have permission to mount the device, or udisks is not properly installed and authorized.
+
+<p>The device will be mounted using SpaceFM's <a href="#devices-settings-opts">Mount Options</a>.  If the device has an fstab entry, options specified there may take precedence.  The mount program may also automatically add or change some mount options.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set in <a href="#devices-settings-opts">Mount Options</a> will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
 <!-- #Re/mount -->
 <p><a name="devices-menu-remount"/><a href="#devices-menu-remount"><b>Re/mount</b></a><br>
 The Re/mount item is used to mount or remount a device using specific mount options.  A dialog will open asking you for the mount options to be used.  If mounted, the device will first be unmounted.  Then the device will be mounted using the specified options.
 
-<p>Note that udisks cannot perform a true remount - the device will be unmounted and mounted.
+<p>Because mount programs such as udisks and pmount cannot perform a true remount, the device will be unmounted and mounted.
 
 <p>Re/mount accepts extended mount options, as detailed in <a href="#devices-settings-opts">Mount Options</a>.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
 <!-- #Root -->
 <p><a name="devices-menu-root"/><a href="#devices-menu-root"><b>Root</b></a><br>
@@ -2053,7 +2111,7 @@ The Properties item will gather and show information about the currently selecte
 
 <p>If the device has any related lines in the /etc/fstab file, these will be listed in FSTAB.  These may include lines which are disabled (# comments).
 
-<p>In the INFO section, the device's UUID will be listed if known, as well as detailed information from udisks on the device's properties.
+<p>In the INFO section, the device's UUID will be listed if known, as well as detailed information from udev on the device's properties.
 
 <p>The PROCESSES section, shown for mounted devices, uses lsof to display any processes which are using the device.  Sometimes when unmounting a device, you will receive an error that the device is in use.  You can check this processes list to see what is holding the device open.
 
@@ -2100,7 +2158,7 @@ The Properties item will gather and show information about the currently selecte
 
 <!-- #Unmount -->
 <p><a name="devices-root-unmount"/><a href="#devices-root-unmount"><b>Unmount</b></a><br>
-By default, SpaceFM will use udisks to unmount as root, but you can change this to any command, such as umount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).
+By default, SpaceFM will use udisks to unmount as root, but you can change this to any command in the dialog, such as umount or pumount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
 
 <!-- #Mount -->
 <p><a name="devices-root-mount"/><a href="#devices-root-mount"><b>Mount</b></a><br>
@@ -2231,7 +2289,7 @@ Edit fstab is a convenience function which simply opens the /etc/fstab file as r
 <p><a name="devices-settings-internal"/><a href="#devices-settings-internal"><b>Show|Internal Drives</b></a><br>
 By default, the Devices list will only show removable and optical drives, while hiding internal system drives.  If option Show|Internal Drives is checked, internal system drives will also be shown in the Devices list.  For the root user, option Show|Internal Drives is checked by default.
 
-<p>Internal drives are often treated differently by udisks.  You may not be able to mount or unmount them as a normal (non-root) user without making changes to /etc/fstab or to the udisks/policykit authorization rules.
+<p>Internal drives are often treated differently by udisks and other mount programs.  You may not be able to mount or unmount them as a normal (non-root) user without making changes to /etc/fstab or to the udisks policykit authorization rules.
 
 <p>Note that some external esata drives report themselves as internal, so they may not be shown unless Show|Internal Drives is checked.  Another solution with these drives is to enter an exception for them in <a href="#devices-settings-vol">Show|Volumes</a>.
 
@@ -2251,11 +2309,11 @@ By default, the Devices list will not show devices which contain partition table
 
 <p>The size displayed for a whole device file (eg /dev/sda) will generally be the size of the entire device (including all partitions), regardless of whether it contains a partition table or a filesystem.
 
-<p>Specifically, SpaceFM considers a device to be a partition table if its udisks properties include a 'partition table:' line, or the device is a partition of type 0x05 (extended partition).
+<p>Specifically, SpaceFM considers a device to be a partition table if its udev properties include a 'partition table:' line, or the device is a partition of type 0x05 (extended partition).
 
-<!-- #Show|Ignore Udisks Hide #hide -->
-<p><a name="devices-settings-hide"/><a href="#devices-settings-hide"><b>Show|Ignore Udisks Hide</b></a><br>
-Some devices may have their udev property UDISKS_PRESENTATION_HIDE set to 1.  This is a hint to software that the device should be hidden.  By default, SpaceFM will honor these hints and hide such devices.  To ignore such hints, check option Show|Ignore Udisks Hide.
+<!-- #Show|Ignore Hide Policy #hide -->
+<p><a name="devices-settings-hide"/><a href="#devices-settings-hide"><b>Show|Ignore Hide Policy</b></a><br>
+Some devices may have their udev property UDISKS_PRESENTATION_HIDE set to 1.  This is a hint to software that the device should be hidden.  By default, SpaceFM will honor these hints and hide such devices.  To ignore such hints, check option Show|Ignore Hide Policy.
 
 <p>The hide policy of a device can be seen by selecting <a href="#devices-menu-properties">Properties</a> for the device and observing the value of 'presentation hide:' in the INFO section.
 
@@ -2265,7 +2323,7 @@ Some devices may have their udev property UDISKS_PRESENTATION_HIDE set to 1.  Th
 <p><a name="devices-settings-vol"/><a href="#devices-settings-vol"><b>Show|Volumes</b></a><br>
 The Show|Volumes dialog allows you to specify display exceptions for some devices.  When deciding whether to show or hide a device in the Devices list, SpaceFM will first consult the Show|Volumes list.  If the device is present, it will be shown or hidden based on its entry in this list.  All other show or hide settings will be ignored for this device.
 
-<p>One example use for Show|Volumes is to show an external esata drive which is erroneously identified by udisks as internal.  Even if option <a href="#devices-settings-internal">Show|Internal Drives</a> is unchecked, the drive <i>will</i> be shown if listed in Show|Volumes.
+<p>One example use for Show|Volumes is to show an external esata drive which is erroneously identified by udev as internal.  Even if option <a href="#devices-settings-internal">Show|Internal Drives</a> is unchecked, the drive <i>will</i> be shown if listed in Show|Volumes.
 
 <p>Show|Volumes opens a dialog which allows you to specify device files, volume labels, or device IDs in a space-separated list.  There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.
 
@@ -2329,9 +2387,9 @@ The Auto Mount submenu allows you to control the auto-mounting behavior of the v
 <p><a name="devices-settings-remove"/><a href="#devices-settings-remove"><b>Auto Mount|Mount Removable</b></a><br>
 If option Mount Removable is checked, the device will be automatically mounted whenever a removable device is inserted, and at SpaceFM startup.
 
-<!-- #Auto Mount|Ignore Udisks No Policy #nopolicy -->
-<p><a name="devices-settings-nopolicy"/><a href="#devices-settings-nopolicy"><b>Auto Mount|Ignore Udisks No Policy</b></a><br>
-Some devices may have their udev property UDISKS_PRESENTATION_NOPOLICY set to 1.  This is a hint to software that the device should not be automatically mounted.  By default, SpaceFM will honor these hints and not auto-mount such devices.  To ignore such hints, check option Show|Ignore Udisks No Policy.
+<!-- #Auto Mount|Ignore No Policy #nopolicy -->
+<p><a name="devices-settings-nopolicy"/><a href="#devices-settings-nopolicy"><b>Auto Mount|Ignore No Policy</b></a><br>
+Some devices may have their udev property UDISKS_PRESENTATION_NOPOLICY set to 1.  This is a hint to software that the device should not be automatically mounted.  By default, SpaceFM will honor these hints and not auto-mount such devices.  To ignore such hints, check option Show|Ignore No Policy.
 
 <p>The policy of a device can be seen by selecting <a href="#devices-menu-properties">Properties</a> for the device and observing the value of 'presentation nopolicy:' in the INFO section.
 
@@ -2374,7 +2432,7 @@ If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new t
 <p><a name="devices-settings-exit"/><a href="#devices-settings-exit"><b>Auto Mount|Unmount On Exit</b></a><br>
 If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  This occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
 
-<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder will be left behind by udisks when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM unmounts devices on exit by default.
+<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media or /run/media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM unmounts devices on exit by default.
 
 <p>If you uncheck option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
 
@@ -2433,7 +2491,7 @@ Auto Run|On Insert opens a dialog which allows you to set a command line to be r
 
 <p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
 
-<p>Note that when inserting a single drive, your command may be run several times - once for each device file added.  For example, if you insert device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  A script can run 'udisks --show-info' to get current information on a device's status.
+<p>Note that when inserting a single drive, your command may be run several times - once for each device file added.  For example, if you insert device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  (If udisks is installed, a script can run <code>udisks --show-info /dev/sdX</code> or <code>udisksctl info -b /dev/sdX</code> to get current information on a device's status.)
 
 <!-- #Auto Run|On Unmount #runu -->
 <p><a name="devices-settings-runu"/><a href="#devices-settings-runu"><b>Auto Run|On Unmount</b></a><br>
@@ -2463,7 +2521,21 @@ Mount Options opens a dialog which allows you to set default mount options to be
 
 <p>will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.
 
-<p>Note that some options, such as nosuid, may be added by udisks even if you don't include them.  Also, options specified in fstab may take precedence.
+<p>Note that some options, such as nosuid, may be added by the udisks or other mount program even if you don't include them.  Options specified in fstab may take precedence.
+
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
+
+<!-- #Mount Command #mcmd -->
+<p><a name="devices-settings-mcmd"/><a href="#devices-settings-mcmd"><b>Mount Command</b></a><br>
+Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Except for pmount's command line options, mount options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
+
+<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks), or pmount.
+
+<!-- #Unmount Command #ucmd -->
+<p><a name="devices-settings-ucmd"/><a href="#devices-settings-ucmd"><b>Unmount Command</b></a><br>
+Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting.  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
+
+<p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks), or pmount's unmount tool (/usr/bin/pumount).
 
 <!-- #Single Click #single -->
 <p><a name="devices-settings-single"/><a href="#devices-settings-single"><b>Single Click</b></a><br>
@@ -2517,7 +2589,11 @@ Font opens a font selection dialog which allows you to select the font to be use
 <a name="programfiles-home"/><a href="#programfiles-home"><font size=+2>/home</font></a>
 <!-- @Program Files @/home -->
 
-<p>All files in your home folder which are directly saved or modified by SpaceFM are located in ~/.config/spacefm/ (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a>).  These include:
+<p>Your entire SpaceFM configuration, including settings and custom commands, is stored in the config directory: <b>~/.config/spacefm/</b> (unless you use <code>--config-dir</code> on the <a href="#invocation-commandline">command line</a> to specify another location).
+
+<p>If the config directory doesn't exist, and <a href="#programfiles-etc-xdg">/etc/xdg/spacefm/</a> does exist, the contents of /etc/xdg/spacefm/ will be copied to the new config directory on startup.
+
+<p><b>Files in ~/.config/spacefm/ include:</b>
 
 <!-- # session -->
 <p><a name="programfiles-home-session"/><a href="#programfiles-home-session"><b>session</b></a><br>
@@ -2546,6 +2622,9 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 
 <p>Because SpaceFM is highly configurable, you may have much time and effort invested in your SpaceFM config folder, so it's a good idea to <b>keep an up-to-date backup!</b>
 
+<!-- # ~/.local/share/applications/ #localapps -->
+<p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
+This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the defaults.list file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
 
 <!-- @end programfiles-home-->
 <br><br></td></tr>
@@ -2590,6 +2669,11 @@ This file is designed to be edited by the administrative user.  Currently, the o
 
 Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
 
+<!-- # /etc/xdg/spacefm/ #xdg -->
+<p><a name="programfiles-etc-xdg"/><a href="#programfiles-etc-xdg"><b>/etc/xdg/spacefm/</b></a><br>
+This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user, the contents of /etc/xdg/spacefm/ will be copied to the new config directory.  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+<pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
+
 <!-- @end programfiles-etc-->
 <br><br></td></tr>
 
@@ -2628,9 +2712,9 @@ A socket which SpaceFM uses to <a href="#invocation-windows">open additional win
 <p><a name="programfiles-tmp-shrtmp"/><a href="#programfiles-tmp-shrtmp"><b>spacefm.tmp/</b></a><br>
 This folder, shared by all users, contains temporary files used for running a command as another user, including root.  Once a root command is run, this folder will be owned by root.
 
-<!-- # spacefm-USERNAME-PID.tmp/ #pidtmp -->
-<p><a name="programfiles-tmp-pidtmp"/><a href="#programfiles-tmp-pidtmp"><b>spacefm-USERNAME-PID.tmp/</b></a><br>
-This folder contains temporary files used by USERNAME running SpaceFM instance PID.  It is owned by the user and will be deleted on exit.  Other users can access this folder, but usually not the files within it, unless a command is being run as another user.
+<!-- # spacefm-USERNAME-RANDOM.tmp/ #pidtmp -->
+<p><a name="programfiles-tmp-pidtmp"/><a href="#programfiles-tmp-pidtmp"><b>spacefm-USERNAME-RANDOM.tmp/</b></a><br>
+This folder contains temporary files used by USERNAME running SpaceFM.  It is owned by the user and will be deleted on exit.  Other users can access this folder, but usually not the files within it, unless a command is being run as another user.
 
 <!-- # spacefm*.tmp/ID-tmp.sh #exec -->
 <p><a name="programfiles-tmp-exec"/><a href="#programfiles-tmp-exec"><b>spacefm*.tmp/ID-tmp.sh</b></a><br>
@@ -2710,6 +2794,10 @@ Alternate SpaceFM icons.
 <p><a name="programfiles-usr-mo"/><a href="#programfiles-usr-mo"><b>share/locale/*/LC_MESSAGES/spacefm.mo</b></a><br>
 Language files used by SpaceFM, where '*' is a locale.
 
+<!-- # share/applications/ #usrapps -->
+<p><a name="programfiles-usr-usrapps"/><a href="#programfiles-usr-usrapps"><b>share/applications/</b></a><br>
+This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks both <a href="#programfiles-home-localapps">~/.local/share/applications/</a> and /usr/share/applications/ to determine what application to use to open files.  Settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+
 <!-- # share/applications/spacefm.desktop #spac-dt -->
 <p><a name="programfiles-usr-spac-dt"/><a href="#programfiles-usr-spac-dt"><b>share/applications/spacefm.desktop</b></a><br>
 A desktop file which opens a SpaceFM <a href="#invocation-windows">window</a>.
@@ -2745,7 +2833,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-04-01&nbsp;&nbsp;(SpaceFM version 0.7.3+)
+<p>Updated 2012-04-14&nbsp;&nbsp;(SpaceFM version 0.7.5)
 <br><br>
 </center>
 </td></tr></table>

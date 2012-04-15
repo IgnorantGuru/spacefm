@@ -120,7 +120,7 @@ gboolean vfs_app_desktop_rename( char* desktop_file_path, char* new_name )   //s
     }
 
     // get user's locale
-    char* locale = NULL;
+    const char* locale = NULL;
     const char* const * langs = g_get_language_names();
     char* dot = strchr( langs[0], '.' );
     if( dot )

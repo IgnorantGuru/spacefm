@@ -259,6 +259,8 @@ LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_EXPORT_OPTIONS = @LIBTOOL_EXPORT_OPTIONS@
+LIBUDEV_CFLAGS = @LIBUDEV_CFLAGS@
+LIBUDEV_LIBS = @LIBUDEV_LIBS@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
@@ -470,10 +472,18 @@ spacefm_CFLAGS = \
     @GTK_CFLAGS@ \
     @SN_CFLAGS@ \
     @HAL_CFLAGS@ \
+    @LIBUDEV_CFLAGS@ \
     @G_CAST_CHECKS@ \
     -Werror-implicit-function-declaration
 
-spacefm_LDADD = @GTK_LIBS@ $(INTLLIBS) @FAM_LIBS@ @HAL_LIBS@ @SN_LIBS@
+spacefm_LDADD = \
+    @GTK_LIBS@ \
+    $(INTLLIBS) \
+    @FAM_LIBS@ \
+    @HAL_LIBS@ \
+    @SN_LIBS@ \
+    @LIBUDEV_LIBS@
+
 xml_purge_SOURCES = xml-purge.c
 xml_purge_CFLAGS = @GTK_CFLAGS@
 xml_purge_LDADD = @GTK_LIBS@

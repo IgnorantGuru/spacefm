@@ -123,10 +123,17 @@ spacefm_CFLAGS = \
     @GTK_CFLAGS@ \
     @SN_CFLAGS@ \
     @HAL_CFLAGS@ \
+    @LIBUDEV_CFLAGS@ \
     @G_CAST_CHECKS@ \
     -Werror-implicit-function-declaration
 
-spacefm_LDADD = @GTK_LIBS@ $(INTLLIBS) @FAM_LIBS@ @HAL_LIBS@ @SN_LIBS@
+spacefm_LDADD = \
+    @GTK_LIBS@ \
+    $(INTLLIBS) \
+    @FAM_LIBS@ \
+    @HAL_LIBS@ \
+    @SN_LIBS@ \
+    @LIBUDEV_LIBS@
 
 noinst_PROGRAMS=xml-purge
 xml_purge_SOURCES=xml-purge.c

@@ -176,7 +176,7 @@ static const char* context_sub_list[] =
     "0%%%%%",  //"Device Label",
     "0%%%%%btrfs%%%%%ext2%%%%%ext3%%%%%ext4%%%%%ext2 || ext3 || ext4%%%%%ntfs%%%%%reiser4%%%%%reiserfs%%%%%swap%%%%%ufs%%%%%vfat%%%%%xfs",  //Device FSType",
     "0%%%%%",  //"Device UDI",
-    "2%%%%%audiocd%%%%%blank%%%%%dvd%%%%%dvd && blank%%%%%ejectable%%%%%floppy%%%%%internal%%%%%mountable%%%%%mounted%%%%%no_media%%%%%optical%%%%%optical && blank%%%%%optical && mountable%%%%%optical && mounted%%%%%removable%%%%%removable && mountable%%%%%removable && mounted%%%%%removable || optical%%%%%table%%%%%udisks_hide%%%%%udisks_noauto",  //"Device Properties",
+    "2%%%%%audiocd%%%%%blank%%%%%dvd%%%%%dvd && blank%%%%%ejectable%%%%%floppy%%%%%internal%%%%%mountable%%%%%mounted%%%%%no_media%%%%%optical%%%%%optical && blank%%%%%optical && mountable%%%%%optical && mounted%%%%%removable%%%%%removable && mountable%%%%%removable && mounted%%%%%removable || optical%%%%%table%%%%%policy_hide%%%%%policy_noauto",  //"Device Properties",
 	"8%%%%%0%%%%%1%%%%%2",  //"Task Count",
 	"0%%%%%",  //"Task Dir",
 	"0%%%%%change%%%%%copy%%%%%delete%%%%%link%%%%%move%%%%%run%%%%%trash",  //"Task Type",
@@ -542,10 +542,17 @@ void load_settings( char* config_dir )
         chmod( settings_shared_tmp_dir, S_IRWXU | S_IRWXG | S_IRWXO | S_ISVTX );
     }
 
-    // user tmp
-    str = g_strdup_printf( "spacefm-%s-%d.tmp", g_get_user_name(), getpid() );
-    settings_user_tmp_dir = g_build_filename( settings_tmp_dir, str, NULL );
-    g_free( str );
+    // copy /etc/xdg/spacefm
+    if ( !g_file_test( settings_config_dir, G_FILE_TEST_EXISTS ) 
+                && g_file_test( "/etc/xdg/spacefm", G_FILE_TEST_IS_DIR ) )
+    {
+        char* command = g_strdup_printf( "cp -r /etc/xdg/spacefm '%s'",
+                                                        settings_config_dir );
+        printf( "COMMAND=%s\n", command );
+        g_spawn_command_line_sync( command, NULL, NULL, NULL, NULL );
+        g_free( command );
+        chmod( settings_config_dir, S_IRWXU );
+    }
     
     // load session
     int x = 0;
@@ -572,11 +579,11 @@ void load_settings( char* config_dir )
                 path = g_build_filename( settings_config_dir, "main", NULL );
                 break;
             case 5:
-                path = g_build_filename( g_get_user_config_dir, "pcmanfm",
+                path = g_build_filename( g_get_user_config_dir(), "pcmanfm",
                                                                 "main.lxde", NULL );
                 break;
             case 6:
-                path = g_build_filename( g_get_user_config_dir, "pcmanfm",
+                path = g_build_filename( g_get_user_config_dir(), "pcmanfm",
                                                                 "main", NULL );
                 break;
             default:
@@ -783,7 +790,7 @@ void load_settings( char* config_dir )
         if ( set->menu_label && !strcmp( set->menu_label, "Ignore Udisks _Hide Policy" ) )
         {
             g_free( set->menu_label );
-            set->menu_label = g_strdup( "Ignore Udisks _Hide" );
+            set->menu_label = g_strdup( "Ignore _Hide Policy" );
         }
         set = xset_get( "dev_show_hide_volumes" );
         if ( set->menu_label && !strcmp( set->menu_label, "Show _Volumes..." ) )
@@ -844,6 +851,21 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( "_Path Bar Help" );
         }
     }
+    if ( ver < 10 ) // < 0.8.0
+    {
+        set = xset_get( "dev_ignore_udisks_hide" );
+        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _Hide") ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Ignore _Hide Policy") );
+        }
+        set = xset_get( "dev_ignore_udisks_nopolicy" );
+        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _No Policy") ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Ignore _No Policy") );
+        }
+    }
 }
 
 
@@ -860,7 +882,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "9" );  // 0.7.3
+    xset_set( "config_version", "s", "10" );  // 0.8.0
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -869,7 +891,7 @@ char* save_settings( gpointer main_window_ptr )
         for ( p = 1; p < 5; p++ )
         {
             set = xset_get_panel( p, "show" );            
-            pages = gtk_notebook_get_n_pages( main_window->panel[p-1] );
+            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) );
             if ( pages )  // panel was shown
             {
                 if ( set->s )
@@ -880,8 +902,8 @@ char* save_settings( gpointer main_window_ptr )
                 tabs = g_strdup_printf( "" );
                 for ( g = 0; g < pages; g++ )
                 {
-                    file_browser = (PtkFileBrowser*)gtk_notebook_get_nth_page(
-                                                        main_window->panel[p-1], g );
+                    file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                        GTK_NOTEBOOK( main_window->panel[p-1] ), g ) );
                     old_tabs = tabs;
                     tabs = g_strdup_printf( "%s///%s", old_tabs,
                                         ptk_file_browser_get_cwd( file_browser ) );
@@ -896,7 +918,7 @@ char* save_settings( gpointer main_window_ptr )
                 if ( set->x )
                     g_free( set->x );
                 set->x = g_strdup_printf( "%d", gtk_notebook_get_current_page(
-                                                        main_window->panel[p-1] ) );
+                                        GTK_NOTEBOOK( main_window->panel[p-1] ) ) );
             }
         }
     }
@@ -1076,7 +1098,7 @@ char* save_settings( gpointer main_window_ptr )
 _save_error:
     if ( errno )
     {
-        err_msg = g_strerror( errno );
+        err_msg = (char*)g_strerror( errno );
         if ( err_msg )
             err_msg = g_strdup( err_msg );
     }
@@ -1100,17 +1122,17 @@ void free_settings()
     xset_free_all();
 }
 
-char* xset_get_config_dir()
+const char* xset_get_config_dir()
 {
     return settings_config_dir;
 }
 
-char* xset_get_tmp_dir()
+const char* xset_get_tmp_dir()
 {
     return settings_tmp_dir;
 }
 
-char* xset_get_shared_tmp_dir()
+const char* xset_get_shared_tmp_dir()
 {
     if ( !g_file_test( settings_shared_tmp_dir, G_FILE_TEST_EXISTS ) )
     {
@@ -1122,14 +1144,32 @@ char* xset_get_shared_tmp_dir()
     return settings_shared_tmp_dir;
 }
 
-char* xset_get_user_tmp_dir()
+const char* xset_get_user_tmp_dir()
 {
-    if ( !g_file_test( settings_user_tmp_dir, G_FILE_TEST_EXISTS ) )
+    if ( settings_user_tmp_dir && 
+                    g_file_test( settings_user_tmp_dir, G_FILE_TEST_EXISTS ) )
+        return settings_user_tmp_dir;
+
+    char* rand;
+    char* name;
+    int count = 0;
+    int ret;
+    do
     {
-        g_mkdir_with_parents( settings_user_tmp_dir,
-                                S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
-        chmod( settings_user_tmp_dir,
-                                S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH );
+        g_free( settings_user_tmp_dir );
+        rand = randhex8();
+        name =  g_strdup_printf( "spacefm-%s-%s.tmp", g_get_user_name(), rand );
+        g_free( rand );
+        settings_user_tmp_dir = g_build_filename( settings_tmp_dir, name, NULL );
+        g_free( name );
+        count++;
+    } while ( count < 1000 && ( ret = mkdir( settings_user_tmp_dir,
+                        S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH ) != 0 ) );
+    if ( ret != 0 )
+    {
+        g_free( settings_user_tmp_dir );
+        settings_user_tmp_dir = NULL;
+        g_warning( "Unable to create temporary directory in %s", settings_tmp_dir );
     }
     return settings_user_tmp_dir;
 }
@@ -1231,9 +1271,30 @@ char* get_valid_gsu()  // may return NULL
             set_gsu = g_strdup( gsu_commands[0] );
         xset_set( "gsu_command", "s", set_gsu );
     }
+    
     if ( custom_gsu )
         g_free( custom_gsu );
     char* str = g_find_program_in_path( set_gsu );
+    
+    if ( !str && !strcmp( set_gsu, "/usr/bin/kdesu" ) )
+    {
+        // kdesu may be in libexec path
+        char* stdout;
+        if ( g_spawn_command_line_sync( "kde4-config --path libexec",
+                                            &stdout, NULL, NULL, NULL ) 
+                                            && stdout && stdout[0] != '\0' )
+        {
+            if ( str = strchr( stdout, '\n' ) )
+               str[0] = '\0';
+            str = g_build_filename( stdout, "kdesu", NULL );
+            g_free( stdout );
+            if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
+            {
+                g_free( str );
+                str = NULL;
+            }
+        }
+    }
     g_free( set_gsu );
     return str;
 }
@@ -1419,7 +1480,7 @@ void xset_free( XSet* set )
     set_last = NULL;
 }
 
-XSet* xset_new( char* name )
+XSet* xset_new( const char* name )
 {
     XSet* set = g_slice_new( XSet );
     set->name = g_strdup( name );
@@ -1438,8 +1499,8 @@ XSet* xset_new( char* name )
     set->ob1_data = NULL;
     set->ob2 = NULL;
     set->ob2_data = NULL;
-    set->key = NULL;
-    set->keymod = NULL;
+    set->key = 0;
+    set->keymod = 0;
     set->shared_key = NULL;
     set->icon = NULL;
     set->desc = NULL;
@@ -1465,7 +1526,7 @@ XSet* xset_new( char* name )
     return set;
 }
 
-XSet* xset_get( char* name )
+XSet* xset_get( const char* name )
 {
     GList* l;
 
@@ -1486,7 +1547,7 @@ XSet* xset_get( char* name )
     return xsets->data;    
 }
 
-XSet* xset_get_panel( int panel, char* name )
+XSet* xset_get_panel( int panel, const char* name )
 {
     XSet* set;
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
@@ -1495,7 +1556,7 @@ XSet* xset_get_panel( int panel, char* name )
     return set;
 }
 
-char* xset_get_s( char* name )
+char* xset_get_s( const char* name )
 {
     XSet* set = xset_get( name );
     if ( set )
@@ -1504,7 +1565,7 @@ char* xset_get_s( char* name )
         return NULL;
 }
 
-char* xset_get_s_panel( int panel, char* name )
+char* xset_get_s_panel( int panel, const char* name )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     char* s = xset_get_s( fullname );
@@ -1512,13 +1573,13 @@ char* xset_get_s_panel( int panel, char* name )
     return s;
 }
 
-gboolean xset_get_b( char* name )
+gboolean xset_get_b( const char* name )
 {
     XSet* set = xset_get( name );
     return ( set->b == XSET_B_TRUE );
 }
 
-gboolean xset_get_b_panel( int panel, char* name )
+gboolean xset_get_b_panel( int panel, const char* name )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     gboolean b = xset_get_b( fullname );
@@ -1531,7 +1592,7 @@ gboolean xset_get_b_set( XSet* set )
     return ( set->b == XSET_B_TRUE );
 }
 
-XSet* xset_is( char* name )
+XSet* xset_is( const char* name )
 {
     XSet* set;
     GList* l;
@@ -1550,7 +1611,7 @@ XSet* xset_is( char* name )
     return NULL;
 }
 
-XSet* xset_set_b( char* name, gboolean bval )
+XSet* xset_set_b( const char* name, gboolean bval )
 {
     XSet* set = xset_get( name );
 
@@ -1561,7 +1622,7 @@ XSet* xset_set_b( char* name, gboolean bval )
     return set;
 }
 
-XSet* xset_set_b_panel( int panel, char* name, gboolean bval )
+XSet* xset_set_b_panel( int panel, const char* name, gboolean bval )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     XSet* set = xset_set_b( fullname, bval );
@@ -1569,7 +1630,7 @@ XSet* xset_set_b_panel( int panel, char* name, gboolean bval )
     return set;
 }
 
-gboolean xset_get_bool( char* name, char* var )
+gboolean xset_get_bool( const char* name, const char* var )
 {
     XSet* set = xset_get( name );
     if ( !strcmp( var, "b" ) )
@@ -1610,7 +1671,7 @@ gboolean xset_get_bool( char* name, char* var )
     return !!atoi( varstring );
 }
 
-gboolean xset_get_bool_panel( int panel, char* name, char* var )
+gboolean xset_get_bool_panel( int panel, const char* name, const char* var )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     gboolean bool = xset_get_bool( fullname, var );
@@ -1618,7 +1679,7 @@ gboolean xset_get_bool_panel( int panel, char* name, char* var )
     return bool;
 }
 
-int xset_get_int( char* name, char* var )
+int xset_get_int( const char* name, const char* var )
 {
     XSet* set = xset_get( name );
     char* varstring = NULL;
@@ -1639,7 +1700,7 @@ int xset_get_int( char* name, char* var )
     return atoi( varstring );
 }
 
-int xset_get_int_panel( int panel, char* name, char* var )
+int xset_get_int_panel( int panel, const char* name, const char* var )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     int i = xset_get_int( fullname, var );
@@ -1703,6 +1764,8 @@ static void xset_write_set( FILE* file, XSet* set )
             fprintf( file, "%s-term=%d\n", set->name, set->in_terminal );
         if ( set->keep_terminal != XSET_B_UNSET )
             fprintf( file, "%s-keep=%d\n", set->name, set->keep_terminal );
+        if ( set->scroll_lock != XSET_B_UNSET )
+            fprintf( file, "%s-scroll=%d\n", set->name, set->scroll_lock );
     }
 }
 
@@ -1755,7 +1818,7 @@ void xset_parse( char* line )
     }
 }
 
-XSet* xset_set_cb( char* name, int (*cb_func) (), gpointer cb_data )
+XSet* xset_set_cb( const char* name, void (*cb_func) (), gpointer cb_data )
 {
     XSet* set = xset_get( name );
     set->cb_func = cb_func;
@@ -1763,7 +1826,7 @@ XSet* xset_set_cb( char* name, int (*cb_func) (), gpointer cb_data )
     return set;
 }
 
-XSet* xset_set_cb_panel( int panel, char* name, int (*cb_func) (), gpointer cb_data )
+XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
     XSet* set = xset_set_cb( fullname, cb_func, cb_data );
@@ -1771,7 +1834,7 @@ XSet* xset_set_cb_panel( int panel, char* name, int (*cb_func) (), gpointer cb_d
     return set;
 }
 
-XSet* xset_set_ob1_int( XSet* set, char* ob1, int ob1_int )
+XSet* xset_set_ob1_int( XSet* set, const char* ob1, int ob1_int )
 {
     if ( set->ob1 )
         g_free( set->ob1 );
@@ -1780,7 +1843,7 @@ XSet* xset_set_ob1_int( XSet* set, char* ob1, int ob1_int )
     return set;
 }
 
-XSet* xset_set_ob1( XSet* set, char* ob1, gpointer ob1_data )
+XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data )
 {
     if ( set->ob1 )
         g_free( set->ob1 );
@@ -1789,7 +1852,7 @@ XSet* xset_set_ob1( XSet* set, char* ob1, gpointer ob1_data )
     return set;
 }
 
-XSet* xset_set_ob2( XSet* set, char* ob2, gpointer ob2_data )
+XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data )
 {
     if ( set->ob2 )
         g_free( set->ob2 );
@@ -1798,7 +1861,7 @@ XSet* xset_set_ob2( XSet* set, char* ob2, gpointer ob2_data )
     return set;
 }
 
-XSet* xset_set_set( XSet* set, char* var, char* value )
+XSet* xset_set_set( XSet* set, const char* var, const char* value )
 {
     if ( !set )
         return NULL;
@@ -1954,6 +2017,13 @@ XSet* xset_set_set( XSet* set, char* var, char* value )
         else
             set->keep_terminal = XSET_B_UNSET;
     }
+    else if ( !strcmp( var, "scroll" ) )
+    {
+        if ( !strcmp( value, "1" ) )
+            set->scroll_lock = XSET_B_TRUE;
+        else
+            set->scroll_lock = XSET_B_UNSET;
+    }
     else if ( !strcmp( var, "disable" ) )
     {
         if ( !strcmp( value, "1" ) )
@@ -1964,7 +2034,7 @@ XSet* xset_set_set( XSet* set, char* var, char* value )
     return set;
 }
 
-XSet* xset_set( char* name, char* var, char* value )
+XSet* xset_set( const char* name, const char* var, const char* value )
 {
     XSet* set = xset_get( name );
     if ( !set->lock || ( strcmp( var, "style" ) && strcmp( var, "desc" )
@@ -1974,7 +2044,7 @@ XSet* xset_set( char* name, char* var, char* value )
         return set;
 }
 
-XSet* xset_set_panel( int panel, char* name, char* var, char* value )
+XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value )
 {
     XSet* set;
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
@@ -1983,7 +2053,8 @@ XSet* xset_set_panel( int panel, char* name, char* var, char* value )
     return set;
 }
 
-void write_root_saver( FILE* file, char* path, char* name, char* var, char* value )
+void write_root_saver( FILE* file, const char* path, const char* name,
+                                            const char* var, const char* value )
 {
     if ( !value )
         return;
@@ -1995,7 +2066,7 @@ void write_root_saver( FILE* file, char* path, char* name, char* var, char* valu
     g_free( qsave );
 }
 
-gboolean write_root_settings( FILE* file, char* path )
+gboolean write_root_settings( FILE* file, const char* path )
 {
     GList* l;
     XSet* set;
@@ -2113,10 +2184,10 @@ void read_root_settings()
 
 void write_src_functions( FILE* file )
 {
-    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    while [ -e \"$fm_tmp1\" ]; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    done\n    mkdir -p \"$fm_tmp1\"\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex\n}\n\n", file );
+    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n			unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\n", file );
 }
 
-GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size )
+GtkWidget* xset_get_image( const char* icon, int icon_size )
 {
 /*
     GTK_ICON_SIZE_MENU,
@@ -2128,7 +2199,7 @@ GtkWidget* xset_get_image( char* icon, GtkIconSize icon_size )
 */
     GtkWidget* image = NULL;
     gchar* stockid = NULL;
-    char* icontail;
+    const char* icontail;
 
     if ( !icon || icon[0] == '\0' )
         return NULL;
@@ -2358,7 +2429,7 @@ void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     }
 }
 
-GtkWidget* xset_new_menuitem( char* label, char* icon )
+GtkWidget* xset_new_menuitem( const char* label, const char* icon )
 {
     GtkWidget* image = NULL;
     GtkWidget* item;
@@ -2501,7 +2572,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         if ( set->tool && set->tool == XSET_B_TRUE )
         {
             char* ml = g_strdup_printf( "%s *", set->menu_label );
-            gtk_menu_item_set_label( item, ml );
+            gtk_menu_item_set_label( GTK_MENU_ITEM( item ), ml );
             g_free( ml );
         }
         
@@ -2637,7 +2708,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
         FILE* file;
         int i;
         const char* script_default_head = "#!/bin/bash\n$fm_import    # import file manager variables (scroll down for info)\n#\n# Enter your commands here:     ( then save this file )\n";
-        const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       udisks no_policy set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 3:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       Create a new command script to see the latest list of variables.\n\n";
+        const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 3:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       Create a new command script to see the latest list of variables.\n\n";
 
         file = fopen( path, "w" );
 
@@ -3014,7 +3085,7 @@ void clean_plugin_mirrors()
     }
     
     // remove plugin-data for non-existent xsets
-    char* name;
+    const char* name;
     char* command;
     char* stdout;
     char* stderr;
@@ -3131,11 +3202,11 @@ GList* xset_get_plugins( gboolean included )
                 plugins = g_list_prepend( plugins, l->data );
         }
     }
-    plugins = g_list_sort( plugins, compare_plugin_sets );
+    plugins = g_list_sort( plugins, (GCompareFunc)compare_plugin_sets );
     return plugins;
 }
 
-XSet* xset_get_by_plug_name( char* plug_dir, char* plug_name )
+XSet* xset_get_by_plug_name( const char* plug_dir, const char* plug_name )
 {
     GList* l;
     if ( !plug_name )
@@ -3159,7 +3230,7 @@ XSet* xset_get_by_plug_name( char* plug_dir, char* plug_name )
     return set;
 }
 
-void xset_parse_plugin( char* plug_dir, char* line )
+void xset_parse_plugin( const char* plug_dir, char* line )
 {
     char* sep = strchr( line, '=' );
     char* name;
@@ -3242,11 +3313,11 @@ void xset_parse_plugin( char* plug_dir, char* line )
     }
 }
 
-XSet* xset_import_plugin( char* plug_dir )
+XSet* xset_import_plugin( const char* plug_dir )
 {
     char line[ 2048 ];
     char* section_name;
-    SettingsParseFunc func = NULL;
+    gboolean func;
     GList* l;
     XSet* set;
 
@@ -3287,9 +3358,9 @@ XSet* xset_import_plugin( char* plug_dir )
         {
             section_name = strtok( line, "]" );
             if ( 0 == strcmp( line + 1, "Plugin" ) )
-                func = &xset_parse_plugin;
+                func = TRUE;
             else
-                func = NULL;
+                func = FALSE;
             continue;
         }
         if ( func )
@@ -3353,7 +3424,7 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
             if ( !set )
             {
                 msg = g_strdup_printf( _("The imported plugin folder does not contain a valid plugin.\n\n(%s/)"), plugin_data->plug_dir );
-                xset_msg_dialog( plugin_data->main_window, GTK_MESSAGE_ERROR, "Invalid Plugin",
+                xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ), GTK_MESSAGE_ERROR, "Invalid Plugin",
                                                     NULL, 0, msg, NULL, NULL );
                 g_free( msg );
             }
@@ -3371,7 +3442,8 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     else
                         msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
                     g_free( label );
-                    xset_msg_dialog( plugin_data->main_window, 0, "Copy Plugin",
+                    xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
+                                                        0, "Copy Plugin",
                                                         NULL, 0, msg, NULL, NULL );
                     g_free( msg );
                 }
@@ -3426,14 +3498,14 @@ void xset_remove_plugin( GtkWidget* parent, PtkFileBrowser* file_browser, XSet* 
     plugin_data->plug_dir = g_strdup( set->plug_dir );
     plugin_data->set = set;
     plugin_data->job = 2;
-    task->complete_notify = on_install_plugin_cb;
+    task->complete_notify = (GFunc)on_install_plugin_cb;
     task->user_data = plugin_data;
 
     ptk_file_task_run( task );
 }
 
-void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int type,
-                                                                        int job )
+void install_plugin_file( gpointer main_win, const char* path, const char* plug_dir,
+                                                            int type, int job )
 {
     char* wget;
     char* file_path;
@@ -3444,7 +3516,8 @@ void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int typ
     
     FMMainWindow* main_window = (FMMainWindow*)main_win;
     // task
-    PtkFileTask* task = ptk_file_exec_new( _("Install Plugin"), NULL, main_window,
+    PtkFileTask* task = ptk_file_exec_new( _("Install Plugin"), NULL,
+                                                        GTK_WIDGET( main_window ),
                                                         main_window->task_view );
 
     char* plug_dir_q = bash_quote( plug_dir );
@@ -3507,7 +3580,7 @@ void install_plugin_file( gpointer main_win, char* path, char* plug_dir, int typ
     plugin_data->main_window = main_window;
     plugin_data->plug_dir = g_strdup( plug_dir );
     plugin_data->job = job;
-    task->complete_notify = on_install_plugin_cb;
+    task->complete_notify = (GFunc)on_install_plugin_cb;
     task->user_data = plugin_data;
 
     ptk_file_task_run( task );
@@ -3658,7 +3731,9 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     char* hex8;
     if ( !set->plugin )
     {
-        s1 = xset_get_user_tmp_dir();
+        s1 = (char*)xset_get_user_tmp_dir();
+        if ( !s1 )
+            goto _export_error;
         while ( !plug_dir || g_file_test( plug_dir, G_FILE_TEST_EXISTS ) )
         {
             hex8 = randhex8();
@@ -3752,8 +3827,8 @@ _export_error:
 void xset_custom_activate( GtkWidget* item, XSet* set )
 {
     GtkWidget* parent;
-    GtkTreeView* task_view = NULL;
-    char* cwd;
+    GtkWidget* task_view = NULL;
+    const char* cwd;
     char* command;
     char* s;
     char* value = NULL;
@@ -3764,13 +3839,13 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
 
     if ( set->browser )
     {
-        parent = set->browser;
+        parent = GTK_WIDGET( set->browser );
         task_view = set->browser->task_view;
         cwd = ptk_file_browser_get_cwd( set->browser );
     }
     else
     {
-        parent = set->desktop;
+        parent = GTK_WIDGET( set->desktop );
         cwd = vfs_get_desktop_dir();
     }
     
@@ -4061,7 +4136,7 @@ XSet* xset_custom_new()
     return set;
 }
 
-gboolean have_x_access( char* path )
+gboolean have_x_access( const char* path )
 {
     struct stat results;  
 
@@ -4075,7 +4150,7 @@ gboolean have_x_access( char* path )
     return FALSE;
 }
 
-gboolean have_rw_access( char* path )
+gboolean have_rw_access( const char* path )
 {
     struct stat results;  
 
@@ -4091,7 +4166,7 @@ gboolean have_rw_access( char* path )
     return FALSE;
 }
 
-gboolean dir_has_files( char* path )
+gboolean dir_has_files( const char* path )
 {
     GDir* dir;
     gboolean ret = FALSE;
@@ -4109,7 +4184,7 @@ gboolean dir_has_files( char* path )
     return ret;
 }
 
-void xset_edit( GtkWidget* parent, char* path, gboolean force_root, gboolean no_root )
+void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root )
 {
     gboolean as_root = FALSE;
     gboolean terminal;
@@ -4179,9 +4254,9 @@ void xset_edit( GtkWidget* parent, char* path, gboolean force_root, gboolean no_
     ptk_file_task_run( task );
 }
 
-void xset_open_url( GtkWidget* parent, char* url )
+void xset_open_url( GtkWidget* parent, const char* url )
 {
-    char* browser;
+    const char* browser;
     char* command = NULL;
 
     if ( !url )
@@ -4252,7 +4327,7 @@ char* xset_get_manual_url()
     }
     
     // get user's locale
-    char* locale = NULL;
+    const char* locale = NULL;
     const char* const * langs = g_get_language_names();
     char* dot = strchr( langs[0], '.' );
     if( dot )
@@ -4285,18 +4360,20 @@ char* xset_get_manual_url()
     if ( DATADIR )
         locations = g_list_append( locations, g_build_filename( DATADIR,
                                                             "spacefm", NULL ) );
-    gchar ** dir = g_get_system_data_dirs();
+    const gchar* const * dir = g_get_system_data_dirs();
     for( ; *dir; ++dir )
     {
         path = g_build_filename( *dir, "spacefm", NULL );
-        if ( !g_list_find_custom( locations, path, (GFunc)g_strcmp0 ) )
+        if ( !g_list_find_custom( locations, path, (GCompareFunc)g_strcmp0 ) )
             locations = g_list_append( locations, path );
         else
             g_free( path );
     }
-    if ( !g_list_find_custom( locations, "/usr/local/share/spacefm", (GFunc)g_strcmp0 ) )
+    if ( !g_list_find_custom( locations, "/usr/local/share/spacefm",
+                                                    (GCompareFunc)g_strcmp0 ) )
         locations = g_list_append( locations, g_strdup( "/usr/local/share/spacefm" ) );
-    if ( !g_list_find_custom( locations, "/usr/share/spacefm", (GFunc)g_strcmp0 ) )
+    if ( !g_list_find_custom( locations, "/usr/share/spacefm",
+                                                    (GCompareFunc)g_strcmp0 ) )
         locations = g_list_append( locations, g_strdup( "/usr/share/spacefm" ) );
     
     GList* loc;
@@ -4362,17 +4439,17 @@ typedef struct
     GtkWidget* dlg;
     GtkWidget* parent;
 
-    GtkTreeView* view;
+    GtkWidget* view;
     GtkButton* btn_remove;
     GtkButton* btn_add;
     GtkButton* btn_apply;
     GtkButton* btn_ok;
 
-    GtkComboBox* box_sub;
-    GtkComboBox* box_comp;
-    GtkComboBox* box_value;
-    GtkComboBox* box_match;
-    GtkComboBox* box_action;
+    GtkWidget* box_sub;
+    GtkWidget* box_comp;
+    GtkWidget* box_value;
+    GtkWidget* box_match;
+    GtkWidget* box_action;
     GtkLabel* current_value;
     GtkLabel* test;
     
@@ -4489,7 +4566,7 @@ int xset_context_test( char* rules, gboolean def_disable )
                 test = strcmp( xset_context->var[sub], eleval );        
                 break;
             case CONTEXT_COMP_CONTAINS:
-                test = strstr( xset_context->var[sub], eleval );
+                test = !!strstr( xset_context->var[sub], eleval );
                 break;
             case CONTEXT_COMP_NCONTAINS:
                 test = !strstr( xset_context->var[sub], eleval );
@@ -4585,12 +4662,12 @@ char* context_build( ContextData* ctxt )
     char* new_context = NULL;
     char* old_context;
     
-    GtkTreeModel* model = gtk_tree_view_get_model( ctxt->view );
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
         new_context = g_strdup_printf( "%d%%%%%%%%%%%d",
-                                gtk_combo_box_get_active( ctxt->box_action ),
-                                gtk_combo_box_get_active( ctxt->box_match ) );
+                        gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_action ) ),
+                        gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_match ) ) );
         do
         {
             gtk_tree_model_get( model, &it, 
@@ -4612,11 +4689,13 @@ void enable_context( ContextData* ctxt )
 {
     GtkTreeIter it;
     gboolean is_sel = gtk_tree_selection_get_selected( 
-                        gtk_tree_view_get_selection( ctxt->view ), NULL, NULL );
-    gtk_widget_set_sensitive( ctxt->btn_remove, is_sel );
-    gtk_widget_set_sensitive( ctxt->btn_apply, is_sel );
-    gtk_widget_set_sensitive( ctxt->hbox_match, gtk_tree_model_get_iter_first( 
-                                gtk_tree_view_get_model( ctxt->view ), &it ) );
+                        gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) ),
+                        NULL, NULL );
+    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_remove ), is_sel );
+    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_apply ), is_sel );
+    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->hbox_match ),
+                        gtk_tree_model_get_iter_first( 
+                        gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) ), &it ) );
     if ( xset_context && xset_context->valid )
     {
         char* rules = context_build( ctxt );
@@ -4656,22 +4735,24 @@ void on_context_button_press( GtkWidget* widget, ContextData* ctxt )
     GtkTreeSelection* tree_sel;
     GtkTreeModel* model;
 
-    if ( widget == ctxt->btn_add || widget == ctxt->btn_apply )
+    if ( widget == GTK_WIDGET( ctxt->btn_add ) || 
+                                        widget == GTK_WIDGET( ctxt->btn_apply ) )
     {
-        int sub = gtk_combo_box_get_active( ctxt->box_sub );
-        int comp = gtk_combo_box_get_active( ctxt->box_comp );
+        int sub = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_sub ) );
+        int comp = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_comp ) );
         if ( sub < 0 || comp < 0 )
             return;
-        model = gtk_tree_view_get_model( ctxt->view );
-        if ( widget == ctxt->btn_add )
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
             gtk_list_store_append( GTK_LIST_STORE( model ), &it );
         else
         {
-            tree_sel = gtk_tree_view_get_selection( ctxt->view );
+            tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
             if ( !gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
                 return;
         }
-        char* value = gtk_combo_box_text_get_active_text( ctxt->box_value );
+        char* value = gtk_combo_box_text_get_active_text( 
+                                        GTK_COMBO_BOX_TEXT( ctxt->box_value ) );
         char* disp = context_display( sub, comp, value );
         gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                                     CONTEXT_COL_DISP, disp,
@@ -4681,17 +4762,17 @@ void on_context_button_press( GtkWidget* widget, ContextData* ctxt )
                                     -1 );
         g_free( disp );
         g_free( value );
-        gtk_widget_set_sensitive( ctxt->btn_ok, TRUE );
-        if ( widget == ctxt->btn_add )
-            gtk_tree_selection_select_iter( gtk_tree_view_get_selection( ctxt->view ),
-                                                                            &it );
+        gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), TRUE );
+        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
+            gtk_tree_selection_select_iter( gtk_tree_view_get_selection(
+                                        GTK_TREE_VIEW( ctxt->view ) ), &it );
         enable_context( ctxt );
         return;
     }
     
     //remove
-    model = gtk_tree_view_get_model( ctxt->view );
-    tree_sel = gtk_tree_view_get_selection( ctxt->view );
+    model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+    tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
     if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
         
@@ -4703,26 +4784,26 @@ void on_context_sub_changed( GtkComboBox* box, ContextData* ctxt )
     GtkTreeIter it;
     char* value;
     
-    GtkTreeModel* model = gtk_combo_box_get_model( ctxt->box_value );
+    GtkTreeModel* model = gtk_combo_box_get_model( GTK_COMBO_BOX( ctxt->box_value ) );
     while ( gtk_tree_model_get_iter_first( model, &it ) )
-        gtk_list_store_remove( model, &it );
+        gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
     
-    int sub = gtk_combo_box_get_active( ctxt->box_sub );
+    int sub = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_sub ) );
     if ( sub < 0 )
         return;
-    char* elements = context_sub_list[sub];
+    char* elements = (char*)context_sub_list[sub];
     char* def_comp = get_element_next( &elements );
     if ( def_comp )
     {
-        gtk_combo_box_set_active( ctxt->box_comp, atoi( def_comp ) );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_comp ), atoi( def_comp ) );
         g_free( def_comp );
     }
     while ( value = get_element_next( &elements ) )
     {
-        gtk_combo_box_text_append_text( ctxt->box_value, value );    
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_value ), value );    
         g_free( value );
     }
-    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( ctxt->box_value ) ), "" );
+    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( ctxt->box_value ) ) ), "" );
     if ( xset_context && xset_context->valid )
         gtk_label_set_text( ctxt->current_value, xset_context->var[sub] );
 }
@@ -4734,7 +4815,7 @@ void on_context_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
     char* value;
     int sub, comp;
 
-    GtkTreeModel* model = gtk_tree_view_get_model( ctxt->view );
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
         return;
     gtk_tree_model_get( model, &it, 
@@ -4742,9 +4823,9 @@ void on_context_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
                                     CONTEXT_COL_SUB, &sub,
                                     CONTEXT_COL_COMP, &comp,
                                     -1 );
-    gtk_combo_box_set_active( ctxt->box_sub, sub );
-    gtk_combo_box_set_active( ctxt->box_comp, comp );
-    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( ctxt->box_value ) ), value );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), sub );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_comp ), comp );
+    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( ctxt->box_value ) ) ), value );
     gtk_widget_grab_focus( ctxt->box_value );
     //enable_context( ctxt );
 }
@@ -4755,8 +4836,9 @@ gboolean on_current_value_button_press( GtkWidget *widget,
 {
     if ( event->type == GDK_2BUTTON_PRESS && event->button == 1 )
     {
-        gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( ctxt->box_value ) ),
-                                    gtk_label_get_text( ctxt->current_value ) );
+        gtk_entry_set_text( GTK_ENTRY( 
+                                gtk_bin_get_child( GTK_BIN( ctxt->box_value ) ) ),
+                                gtk_label_get_text( ctxt->current_value ) );
         gtk_widget_grab_focus( ctxt->box_value );
         return TRUE;
     }
@@ -4786,10 +4868,10 @@ static gboolean on_context_entry_keypress( GtkWidget *entry, GdkEventKey* event,
 {    
     if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
     {
-        if ( gtk_widget_get_sensitive( ctxt->btn_apply ) )
-            on_context_button_press( ctxt->btn_apply, ctxt );
+        if ( gtk_widget_get_sensitive( GTK_WIDGET( ctxt->btn_apply ) ) )
+            on_context_button_press( GTK_WIDGET( ctxt->btn_apply ), ctxt );
         else
-            on_context_button_press( ctxt->btn_add, ctxt );
+            on_context_button_press( GTK_WIDGET( ctxt->btn_add ), ctxt );
         return TRUE;
     }
     return FALSE;
@@ -4809,7 +4891,7 @@ void xset_context_dlg( XSet* set )
         ctxt->parent = gtk_widget_get_toplevel( GTK_WIDGET( set->desktop ) );
 
     ctxt->dlg = gtk_dialog_new_with_buttons( _("Context Rules"),
-                                ctxt->parent,
+                                GTK_WINDOW( ctxt->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL );
 
@@ -4818,29 +4900,33 @@ void xset_context_dlg( XSet* set )
     if ( width && height )
         gtk_window_set_default_size( GTK_WINDOW( ctxt->dlg ), width, height );
 
-    gtk_button_set_focus_on_click( gtk_dialog_add_button( ctxt->dlg, GTK_STOCK_HELP,
-                                                GTK_RESPONSE_HELP ), FALSE );
-    gtk_dialog_add_button( ctxt->dlg, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL );
-    ctxt->btn_ok = gtk_dialog_add_button( ctxt->dlg, GTK_STOCK_OK, GTK_RESPONSE_OK );
+    gtk_button_set_focus_on_click( GTK_BUTTON( gtk_dialog_add_button( 
+                                                GTK_DIALOG( ctxt->dlg ),
+                                                GTK_STOCK_HELP,
+                                                GTK_RESPONSE_HELP ) ), FALSE );
+    gtk_dialog_add_button( GTK_DIALOG( ctxt->dlg ), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL );
+    ctxt->btn_ok = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( ctxt->dlg ),
+                                                GTK_STOCK_OK, GTK_RESPONSE_OK ) );
 
     GtkListStore* list = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_INT, 
                                                 G_TYPE_INT, G_TYPE_STRING );
 
     // Listview
     ctxt->view = exo_tree_view_new();
-    gtk_tree_view_set_model( GTK_TREE_VIEW( ctxt->view ), list );
+    gtk_tree_view_set_model( GTK_TREE_VIEW( ctxt->view ), GTK_TREE_MODEL( list ) );
     exo_tree_view_set_single_click( (ExoTreeView*)ctxt->view, TRUE );
     gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( ctxt->view ), FALSE );
 
-    GtkScrolledWindow* scroll = gtk_scrolled_window_new( NULL, NULL );
+    GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( scroll ), ctxt->view );    
     g_signal_connect( G_OBJECT( ctxt->view ), "row-activated",
                           G_CALLBACK( on_context_row_activated ), ctxt );
-    g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( ctxt->view ) ),
-                          "changed",
-                          G_CALLBACK( on_context_selection_change ), ctxt );
+    g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( 
+                            GTK_TREE_VIEW( ctxt->view ) ) ),
+                            "changed",
+                            G_CALLBACK( on_context_selection_change ), ctxt );
 
     // col display
     col = gtk_tree_view_column_new();
@@ -4849,25 +4935,25 @@ void xset_context_dlg( XSet* set )
     gtk_tree_view_column_pack_start( col, renderer, TRUE );
     gtk_tree_view_column_set_attributes( col, renderer,
                                          "text", CONTEXT_COL_DISP, NULL );
-    gtk_tree_view_append_column ( ctxt->view, col );
+    gtk_tree_view_append_column ( GTK_TREE_VIEW( ctxt->view ), col );
     gtk_tree_view_column_set_expand ( col, TRUE );
 
     // list buttons
-    ctxt->btn_remove = gtk_button_new_with_mnemonic( _("_Remove") );
+    ctxt->btn_remove = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Remove") ) );
     gtk_button_set_image( ctxt->btn_remove, xset_get_image( "GTK_STOCK_REMOVE",
                                                         GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( ctxt->btn_remove, FALSE );
     g_signal_connect( G_OBJECT( ctxt->btn_remove ), "clicked",
                           G_CALLBACK( on_context_button_press ), ctxt );
 
-    ctxt->btn_add = gtk_button_new_with_mnemonic( _("_Add") );
+    ctxt->btn_add = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Add") ) );
     gtk_button_set_image( ctxt->btn_add, xset_get_image( "GTK_STOCK_ADD",
                                                         GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( ctxt->btn_add, FALSE );
     g_signal_connect( G_OBJECT( ctxt->btn_add ), "clicked",
                           G_CALLBACK( on_context_button_press ), ctxt );
 
-    ctxt->btn_apply = gtk_button_new_with_mnemonic( _("A_pply") );
+    ctxt->btn_apply = GTK_BUTTON( gtk_button_new_with_mnemonic( _("A_pply") ) );
     gtk_button_set_image( ctxt->btn_apply, xset_get_image( "GTK_STOCK_APPLY",
                                                         GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( ctxt->btn_apply, FALSE );
@@ -4876,54 +4962,64 @@ void xset_context_dlg( XSet* set )
 
     // boxes
     ctxt->box_sub = gtk_combo_box_text_new();
-    gtk_combo_box_set_focus_on_click( ctxt->box_sub, FALSE );
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_sub ), FALSE );
     for ( i = 0; i < G_N_ELEMENTS( context_sub ); i++ )
-        gtk_combo_box_text_append_text( ctxt->box_sub, _(context_sub[i]) );
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_sub ), _(context_sub[i]) );
     g_signal_connect( G_OBJECT( ctxt->box_sub ), "changed",
                       G_CALLBACK( on_context_sub_changed ), ctxt );
 
     ctxt->box_comp = gtk_combo_box_text_new();
-    gtk_combo_box_set_focus_on_click( ctxt->box_comp, FALSE );
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_comp ), FALSE );
     for ( i = 0; i < G_N_ELEMENTS( context_comp ); i++ )
-        gtk_combo_box_text_append_text( ctxt->box_comp, _(context_comp[i]) );
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_comp ),
+                                                            _(context_comp[i]) );
     
     ctxt->box_value = gtk_combo_box_text_new_with_entry();
-    gtk_combo_box_set_focus_on_click( ctxt->box_value, FALSE );
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_value ), FALSE );
 
     ctxt->box_match = gtk_combo_box_text_new();
-    gtk_combo_box_set_focus_on_click( ctxt->box_match, FALSE );
-    gtk_combo_box_text_append_text( ctxt->box_match, _("matches any rule:") );
-    gtk_combo_box_text_append_text( ctxt->box_match, _("matches all rules:") );
-    gtk_combo_box_text_append_text( ctxt->box_match, _("doesn't match any rule:") );
-    gtk_combo_box_text_append_text( ctxt->box_match, _("doesn't match all rules:") );
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_match ), FALSE );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_match ),
+                                                    _("matches any rule:") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_match ),
+                                                    _("matches all rules:") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_match ),
+                                                    _("doesn't match any rule:") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_match ),
+                                                    _("doesn't match all rules:") );
     g_signal_connect( G_OBJECT( ctxt->box_match ), "changed",
                       G_CALLBACK( on_context_action_changed ), ctxt );
 
     ctxt->box_action = gtk_combo_box_text_new();
-    gtk_combo_box_set_focus_on_click( ctxt->box_action, FALSE );
-    gtk_combo_box_text_append_text( ctxt->box_action, _("Show") );
-    gtk_combo_box_text_append_text( ctxt->box_action, _("Enable") );
-    gtk_combo_box_text_append_text( ctxt->box_action, _("Hide") );
-    gtk_combo_box_text_append_text( ctxt->box_action, _("Disable") );
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_action ), FALSE );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_action ),
+                                                    _("Show") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_action ),
+                                                    _("Enable") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_action ), 
+                                                    _("Hide") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->box_action ),
+                                                    _("Disable") );
     g_signal_connect( G_OBJECT( ctxt->box_action ), "changed",
                       G_CALLBACK( on_context_action_changed ), ctxt );
 
-    ctxt->current_value = gtk_label_new( NULL );
+    ctxt->current_value = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_ellipsize( ctxt->current_value, PANGO_ELLIPSIZE_MIDDLE );
     gtk_label_set_selectable( ctxt->current_value, TRUE );
-    gtk_misc_set_alignment( ctxt->current_value, 0, 0 );
+    gtk_misc_set_alignment( GTK_MISC( ctxt->current_value ), 0, 0 );
     g_signal_connect( G_OBJECT( ctxt->current_value ), "button-press-event",
                           G_CALLBACK( on_current_value_button_press ), ctxt );
     g_signal_connect_after( G_OBJECT( gtk_entry_get_buffer( GTK_ENTRY( 
-                                    gtk_bin_get_child( ctxt->box_value ) ) ) ),
+                                    gtk_bin_get_child( 
+                                    GTK_BIN( ctxt->box_value ) ) ) ) ),
                                     "inserted-text",
                                     G_CALLBACK( on_context_entry_insert ), NULL );
     g_signal_connect( G_OBJECT( GTK_ENTRY( 
-                                    gtk_bin_get_child( ctxt->box_value ) ) ),
+                                    gtk_bin_get_child( GTK_BIN( ctxt->box_value  ) ) ) ),
                                     "key-press-event",
                                     G_CALLBACK( on_context_entry_keypress ), ctxt );
 
-    ctxt->test = gtk_label_new( NULL );
+    ctxt->test = GTK_LABEL( gtk_label_new( NULL ) );
 
     //PACK
     gtk_container_set_border_width( GTK_CONTAINER ( ctxt->dlg ), 10 );
@@ -4960,7 +5056,7 @@ void xset_context_dlg( XSet* set )
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( ctxt->dlg )->vbox ),
                         GTK_WIDGET( hbox_btns ), FALSE, TRUE, 4 );
                         
-    ctxt->frame = gtk_frame_new( _("Edit Rule") );
+    ctxt->frame = GTK_FRAME( gtk_frame_new( _("Edit Rule") ) );
     GtkWidget* vbox_frame = gtk_vbox_new( FALSE, 4 );
     gtk_container_add ( GTK_CONTAINER ( ctxt->frame ), vbox_frame );
     GtkWidget* hbox_frame = gtk_hbox_new( FALSE, 4 );
@@ -5013,18 +5109,18 @@ void xset_context_dlg( XSet* set )
         i = atoi( match );
         if ( i < 0 || i > 3 )
             i = 0;
-        gtk_combo_box_set_active( ctxt->box_match, i );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), i );
         i = atoi( action );
         if ( i < 0 || i > 3 )
             i = 0;
-        gtk_combo_box_set_active( ctxt->box_action, i );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), i );
         g_free( match );
         g_free( action );
     }
     else
     {
-        gtk_combo_box_set_active( ctxt->box_match, 0 );
-        gtk_combo_box_set_active( ctxt->box_action, 0 );        
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), 0 );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), 0 );        
         if ( match )
             g_free( match );
         if ( action )
@@ -5051,11 +5147,11 @@ void xset_context_dlg( XSet* set )
             g_free( value );
         is_rules = TRUE;
     }
-    gtk_combo_box_set_active( ctxt->box_sub, 0 );
-    gtk_widget_set_sensitive( ctxt->btn_ok, is_rules );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), 0 );
+    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), is_rules );
 
     // run
-    gtk_widget_show_all( ctxt->dlg );
+    gtk_widget_show_all( GTK_WIDGET( ctxt->dlg ) );
     enable_context( ctxt );
     int response;
     while ( response = gtk_dialog_run( GTK_DIALOG( ctxt->dlg ) ) )
@@ -5089,7 +5185,7 @@ void xset_context_dlg( XSet* set )
     g_slice_free( ContextData, ctxt );
 }
 
-void xset_show_help( GtkWidget* parent, XSet* set, char* anchor )
+void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor )
 {
     GtkWidget* dlgparent = NULL;
     char* url;
@@ -5098,7 +5194,7 @@ void xset_show_help( GtkWidget* parent, XSet* set, char* anchor )
     if ( parent )
         dlgparent = parent;
     else if ( set )
-        dlgparent = set->browser ? set->browser : set->desktop;
+        dlgparent = set->browser ? GTK_WIDGET( set->browser ) : GTK_WIDGET( set->desktop );
 
     if ( !set || ( set && set->lock ) )
     {
@@ -5174,7 +5270,7 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
     int* newkey = (int*)g_object_get_data( G_OBJECT(dlg), "newkey" );
     int* newkeymod = (int*)g_object_get_data( G_OBJECT(dlg), "newkeymod" );
     GtkWidget* btn = (GtkWidget*)g_object_get_data( G_OBJECT(dlg), "btn" );
-    XSet* set = (GtkWidget*)g_object_get_data( G_OBJECT(dlg), "set" );
+    XSet* set = (XSet*)g_object_get_data( G_OBJECT(dlg), "set" );
     XSet* set2;
     XSet* keyset = NULL;
     
@@ -5188,7 +5284,7 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
     
     if ( !event->keyval ) // || ( event->keyval < 1000 && !keymod ) )
     {
-        gtk_message_dialog_format_secondary_text( dlg, NULL );
+        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), NULL );
         return TRUE;
     }
     if ( set->shared_key )
@@ -5216,14 +5312,14 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
             else
                 name = g_strdup( "( no name )" );
 
-            gtk_message_dialog_format_secondary_text( dlg, _("    Keycode: %#4x  Modifier: %#x\n\nThis key combination is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."), event->keyval, keymod, name );
+            gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("    Keycode: %#4x  Modifier: %#x\n\nThis key combination is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."), event->keyval, keymod, name );
             g_free( name );
             *newkey = event->keyval;
             *newkeymod = keymod;
             return TRUE;
         }
     }
-    gtk_message_dialog_format_secondary_text( dlg, _("    Keycode: %#4x  Modifier: %#x"),
+    gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("    Keycode: %#4x  Modifier: %#x"),
                                                             event->keyval, keymod );
     *newkey = event->keyval;
     *newkeymod = keymod;
@@ -5288,24 +5384,24 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                       keymsg );
                                       
         GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
-        gtk_button_set_label( btn_cancel, _("Cancel") );
-        gtk_button_set_image( btn_cancel, xset_get_image( "GTK_STOCK_CANCEL",
+        gtk_button_set_label( GTK_BUTTON( btn_cancel ), _("Cancel") );
+        gtk_button_set_image( GTK_BUTTON( btn_cancel ), xset_get_image( "GTK_STOCK_CANCEL",
                                                         GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( dlg, btn_cancel, GTK_RESPONSE_CANCEL);
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_cancel, GTK_RESPONSE_CANCEL);
 
         GtkWidget* btn_unset = gtk_button_new_from_stock( GTK_STOCK_NO );
-        gtk_button_set_label( btn_unset, _("Unset") );
-        gtk_button_set_image( btn_unset, xset_get_image( "GTK_STOCK_REMOVE",
+        gtk_button_set_label( GTK_BUTTON( btn_unset ), _("Unset") );
+        gtk_button_set_image( GTK_BUTTON( btn_unset ), xset_get_image( "GTK_STOCK_REMOVE",
                                                         GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( dlg, btn_unset, GTK_RESPONSE_NO);
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_unset, GTK_RESPONSE_NO);
         if ( set->key <= 0 )
             gtk_widget_set_sensitive( btn_unset, FALSE );
 
         GtkWidget* btn = gtk_button_new_from_stock( GTK_STOCK_APPLY );
-        gtk_button_set_label( btn, _("Set") );
-        gtk_button_set_image( btn, xset_get_image( "GTK_STOCK_YES",
+        gtk_button_set_label( GTK_BUTTON( btn ), _("Set") );
+        gtk_button_set_image( GTK_BUTTON( btn ), xset_get_image( "GTK_STOCK_YES",
                                                         GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( dlg, btn, GTK_RESPONSE_OK);
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn, GTK_RESPONSE_OK);
         gtk_widget_set_sensitive( btn, FALSE );
         
         g_object_set_data( G_OBJECT(dlg), "set", set );
@@ -5872,7 +5968,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             mset->scroll_lock = XSET_B_TRUE;
         break;
     case XSET_JOB_SHOW:
-        if ( gtk_check_menu_item_get_active( GTK_MENU_ITEM( item ) ) )
+        if ( gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( item ) ) )
             set->tool = XSET_B_TRUE;
         else
             set->tool = XSET_B_FALSE;
@@ -5991,7 +6087,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         if ( event->keyval == GDK_F1 )
         {
             char* help = NULL;
-            job = (GtkWidget*)g_object_get_data( G_OBJECT(item), "job" );
+            job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
             switch ( job ) {
             case XSET_JOB_KEY:
                 help = "#designmode-designmenu-key";
@@ -6113,7 +6209,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             }
             if ( !help )
                 help = "#designmode";
-            gtk_menu_shell_deactivate( (GtkMenu*)widget );
+            gtk_menu_shell_deactivate( GTK_MENU_SHELL( widget ) );
             xset_show_help( NULL, NULL, help );
             return TRUE;
         }
@@ -6152,7 +6248,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     {
         if ( xset_job_is_valid( set, job ) )
         {
-            gtk_menu_shell_deactivate( (GtkMenu*)widget );
+            gtk_menu_shell_deactivate( GTK_MENU_SHELL( widget ) );
             g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
             xset_design_job( item, set );
             return TRUE;
@@ -6166,13 +6262,13 @@ void xset_design_destroy( GtkWidget* item, GtkWidget* design_menu )
 //printf( "xset_design_destroy\n");
     // close design_menu if menu deactivated
     gtk_widget_set_sensitive( item, TRUE );
-    gtk_menu_shell_deactivate( design_menu );
+    gtk_menu_shell_deactivate( GTK_MENU_SHELL( design_menu ) );
 }
 
 void on_menu_hide(GtkWidget *widget, GtkWidget* design_menu )
 {
     gtk_widget_set_sensitive( widget, TRUE );
-    gtk_menu_shell_deactivate( design_menu );
+    gtk_menu_shell_deactivate( GTK_MENU_SHELL( design_menu ) );
 }
 
 GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
@@ -6186,7 +6282,7 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
         else
         {
             item = gtk_image_menu_item_new_with_mnemonic( label );
-            gtk_image_menu_item_set_image( item, 
+            gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), 
                       gtk_image_new_from_stock( stock_icon, GTK_ICON_SIZE_MENU ) );
         }
     }
@@ -6199,10 +6295,10 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
     return item;
 }
 
-static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint32 time )
+static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, guint32 time )
 {
     GtkWidget* newitem;
-    GtkMenu* submenu;
+    GtkWidget* submenu;
     GtkWidget* submenu2;
     GSList* radio_group;
     char* label;
@@ -6286,7 +6382,7 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
     if ( g_str_has_prefix( set->name, "open_all_type_" ) )
         open_all = TRUE;
     
-    GtkWidget* design_menu = GTK_MENU(gtk_menu_new());
+    GtkWidget* design_menu = gtk_menu_new();
     GtkAccelGroup* accel_group = gtk_accel_group_new();
 
     if ( toolshow )
@@ -6331,7 +6427,7 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
     newitem = gtk_image_menu_item_new_with_mnemonic( _("_Style") );
     submenu = gtk_menu_new();
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( newitem ), submenu );
-    gtk_image_menu_item_set_image( newitem, 
+    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
           gtk_image_new_from_stock( GTK_STOCK_ITALIC, GTK_ICON_SIZE_MENU ) );
     gtk_container_add ( GTK_CONTAINER ( design_menu ), newitem );
     gtk_widget_set_sensitive( newitem, ( !set->plugin && !set->lock &&
@@ -6394,7 +6490,7 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
     newitem = gtk_image_menu_item_new_with_mnemonic( _("C_ommand") );
     submenu = gtk_menu_new();
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( newitem ), submenu );
-    gtk_image_menu_item_set_image( newitem, 
+    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
           gtk_image_new_from_stock( GTK_STOCK_EXECUTE, GTK_ICON_SIZE_MENU ) );
     gtk_container_add ( GTK_CONTAINER ( design_menu ), newitem );
     gtk_widget_set_sensitive( newitem, !set->lock && (
@@ -6436,7 +6532,7 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
     newitem = gtk_image_menu_item_new_with_mnemonic( _("_Browse") );
     submenu2 = gtk_menu_new();
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( newitem ), submenu2 );
-    gtk_image_menu_item_set_image( newitem, 
+    gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
           gtk_image_new_from_stock( GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU ) );
     gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
     gtk_widget_set_sensitive( newitem, !set->lock ); 
@@ -6655,8 +6751,8 @@ static void xset_design_show_menu( GtkMenu* menu, XSet* set, guint button, guint
     gtk_widget_set_sensitive( newitem, !set->plugin );
                                 
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );
-    gtk_menu_popup( design_menu, menu, NULL, NULL, NULL, button, time );
-    gtk_widget_set_sensitive( menu, FALSE );
+    gtk_menu_popup( GTK_MENU( design_menu ), GTK_WIDGET( menu ), NULL, NULL, NULL, button, time );
+    gtk_widget_set_sensitive( GTK_WIDGET( menu ), FALSE );
     
     g_signal_connect( menu, "hide", G_CALLBACK( on_menu_hide ),
                                                             design_menu );
@@ -6760,7 +6856,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
         if ( xset_job_is_valid( set, job ) )
         {
             if ( menu )
-                gtk_menu_shell_deactivate( menu );
+                gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
             g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
             xset_design_job( item, set );
         }
@@ -6798,7 +6894,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         }
         else if ( event->keyval == GDK_F2 )
         {
-            xset_design_show_menu( (GtkMenu*)widget, set, 0, event->time );
+            xset_design_show_menu( widget, set, 0, event->time );
             return TRUE;
         }
         else if ( event->keyval == GDK_F3 )
@@ -6822,7 +6918,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         {
             if ( set->lock )
             {
-                xset_design_show_menu( (GtkMenu*)widget, set, 0, event->time );
+                xset_design_show_menu( widget, set, 0, event->time );
                 return TRUE;
             }
             else
@@ -6837,12 +6933,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     {
         if ( xset_job_is_valid( set, job ) )
         {
-            gtk_menu_shell_deactivate( (GtkMenu*)widget );
+            gtk_menu_shell_deactivate( GTK_MENU_SHELL( widget ) );
             g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
             xset_design_job( item, set );
         }
         else
-            xset_design_show_menu( (GtkMenu*)widget, set, 0, event->time );
+            xset_design_show_menu( widget, set, 0, event->time );
         return TRUE;
     }
     return FALSE;
@@ -6851,7 +6947,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
 void xset_menu_cb( GtkWidget* item, XSet* set )
 {
     GtkWidget* parent;
-    int (*cb_func) () = NULL;
+    void (*cb_func) () = NULL;
     gpointer cb_data = NULL;
     char* title;
     XSet* mset;  // mirror set or set
@@ -6859,11 +6955,11 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
     
     if ( item )
     {
-        cb_func = (GFunc*)g_object_get_data( G_OBJECT(item), "cb_func" );
+        cb_func = (void *)g_object_get_data( G_OBJECT(item), "cb_func" );
         cb_data = g_object_get_data( G_OBJECT(item), "cb_data" );
     }
     
-    parent = set->browser ? set->browser : set->desktop;
+    parent = set->browser ? GTK_WIDGET( set->browser ) : GTK_WIDGET( set->desktop );
 
     if ( set->plugin )
     {
@@ -7009,8 +7105,9 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         main_window_autosave( rset->browser );
 }
 
-int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* image,
-                                int buttons, char* msg1, char* msg2, char* help )
+int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
+                                int buttons, const char* msg1, const char* msg2,
+                                const char* help )
 {   
     /* action=
     GTK_MESSAGE_INFO,
@@ -7028,26 +7125,26 @@ int xset_msg_dialog( GtkWidget* parent, int action, char* title, GtkWidget* imag
     if ( action == 0 )
         action = GTK_MESSAGE_INFO;
         
-    GtkWidget* dlg = gtk_message_dialog_new( dlgparent,
+    GtkWidget* dlg = gtk_message_dialog_new( GTK_WINDOW( dlgparent ),
                                               GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                               action,
                                               buttons,
                                               msg1 );
 
     if ( msg2 )
-        gtk_message_dialog_format_secondary_text( dlg, msg2 );
+        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2 );
     if ( image )
-        gtk_message_dialog_set_image( dlg, image );
+        gtk_message_dialog_set_image( GTK_MESSAGE_DIALOG( dlg ), image );
     if ( title )
         gtk_window_set_title( GTK_WINDOW( dlg ), title );
 
     if ( help )
     {
         GtkWidget* btn_help = gtk_button_new_with_mnemonic( _("_Help") );
-        gtk_dialog_add_action_widget( dlg, btn_help, GTK_RESPONSE_HELP );
-        gtk_button_set_image( btn_help, xset_get_image( "GTK_STOCK_HELP",
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_help, GTK_RESPONSE_HELP );
+        gtk_button_set_image( GTK_BUTTON( btn_help ), xset_get_image( "GTK_STOCK_HELP",
                                                             GTK_ICON_SIZE_BUTTON ) );
-        gtk_button_set_focus_on_click( btn_help, FALSE );
+        gtk_button_set_focus_on_click( GTK_BUTTON( btn_help ), FALSE );
         gtk_widget_set_can_focus( btn_help, FALSE );
     }
 
@@ -7163,24 +7260,27 @@ void on_multi_input_popup( GtkTextView *input, GtkMenu *menu, gpointer user_data
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set = xset_get( "sep_multi" );
     set->menu_style = XSET_MENU_SEP;
-    set->browser = set->desktop = NULL;
-    xset_add_menuitem( NULL, NULL, menu, accel_group, set );
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb( "input_font", on_multi_input_font_change, input );
-    set->browser = set->desktop = NULL;
-    xset_add_menuitem( NULL, NULL, menu, accel_group, set );
-    gtk_widget_show_all( menu );
-    g_signal_connect( menu, "key-press-event",
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
+    g_signal_connect( G_OBJECT( menu ), "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
-GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, char* text, gboolean def_font )
+GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
+                                                            gboolean def_font )
 {
     GtkTextIter iter;
 
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scrolled ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-    GtkTextView* input = gtk_text_view_new();
-    gtk_container_add ( GTK_CONTAINER ( scrolled ), input );
+    GtkTextView* input = GTK_TEXT_VIEW( gtk_text_view_new() );
+    gtk_container_add ( GTK_CONTAINER ( scrolled ), GTK_WIDGET( input ) );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( input );
 	gtk_text_view_set_wrap_mode( input, GTK_WRAP_CHAR );  //GTK_WRAP_WORD_CHAR
 
@@ -7207,16 +7307,16 @@ static gboolean on_input_keypress ( GtkWidget *widget, GdkEventKey *event, GtkWi
 {
     if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
     {
-        gtk_dialog_response( dlg, GTK_RESPONSE_OK );
+        gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_OK );
         return TRUE;
     }
     return FALSE;
 }
 
-gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
-                            gboolean large, char* msg1, char* msg2,
-                            char* defstring, char** answer, char* defreset,
-                            gboolean edit_care, char* help )
+gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* image,
+                            gboolean large, const char* msg1, const char* msg2,
+                            const char* defstring, char** answer, const char* defreset,
+                            gboolean edit_care, const char* help )
 {   
     GtkTextIter iter, siter;
     int width, height;
@@ -7224,7 +7324,7 @@ gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
 
     if ( parent )
          dlgparent = gtk_widget_get_toplevel( parent );
-    GtkWidget* dlg = gtk_message_dialog_new( dlgparent,
+    GtkWidget* dlg = gtk_message_dialog_new( GTK_WINDOW( dlgparent ),
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_QUESTION,
                                   GTK_BUTTONS_NONE,
@@ -7237,7 +7337,7 @@ gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
         if ( width && height )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
         else
-            gtk_widget_set_size_request( GTK_WINDOW( dlg ), 600, -1 );
+            gtk_widget_set_size_request( GTK_WIDGET( dlg ), 600, -1 );
     }
     else
     {
@@ -7250,12 +7350,13 @@ gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
     gtk_window_set_resizable( GTK_WINDOW( dlg ), TRUE );
 
     if ( msg2 )
-        gtk_message_dialog_format_secondary_text( dlg, msg2 );
+        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2 );
     if ( image )
-        gtk_message_dialog_set_image( dlg, image );
+        gtk_message_dialog_set_image( GTK_MESSAGE_DIALOG( dlg ), image );
 
     // input view
-    GtkScrolledWindow* scroll_input = gtk_scrolled_window_new( NULL, NULL );
+    GtkScrolledWindow* scroll_input = GTK_SCROLLED_WINDOW( gtk_scrolled_window_new(
+                                                                    NULL, NULL ) );
     GtkTextView* input = multi_input_new( scroll_input, defstring, TRUE );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( input );
 
@@ -7273,36 +7374,37 @@ gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
     if ( help )
     {
         btn_help = gtk_button_new_with_mnemonic( _("_Help") );
-        gtk_dialog_add_action_widget( dlg, btn_help, GTK_RESPONSE_HELP );
-        gtk_button_set_image( btn_help, xset_get_image( "GTK_STOCK_HELP",
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_help, GTK_RESPONSE_HELP );
+        gtk_button_set_image( GTK_BUTTON( btn_help ), xset_get_image( "GTK_STOCK_HELP",
                                                             GTK_ICON_SIZE_BUTTON ) );
-        gtk_button_set_focus_on_click( btn_help, FALSE );
+        gtk_button_set_focus_on_click( GTK_BUTTON( btn_help ), FALSE );
     }
 
     if ( edit_care )
     {
         btn_edit = gtk_toggle_button_new_with_mnemonic( _("_Edit") );
-        gtk_dialog_add_action_widget( dlg, btn_edit, GTK_RESPONSE_YES );
-        gtk_button_set_image( btn_edit, xset_get_image( "GTK_STOCK_DIALOG_WARNING",
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_edit, GTK_RESPONSE_YES );
+        gtk_button_set_image( GTK_BUTTON( btn_edit ), xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                                             GTK_ICON_SIZE_BUTTON ) );
-        gtk_button_set_focus_on_click( btn_edit, FALSE );
+        gtk_button_set_focus_on_click( GTK_BUTTON( btn_edit ), FALSE );
         gtk_text_view_set_editable( input, FALSE );
     }
 
     if ( defreset )
     {
         btn_default = gtk_button_new_with_mnemonic( _("_Default") );
-        gtk_dialog_add_action_widget( dlg, btn_default, GTK_RESPONSE_NO );
-        gtk_button_set_image( btn_default, xset_get_image( "GTK_STOCK_REVERT_TO_SAVED",
-                                                            GTK_ICON_SIZE_BUTTON ) );
-        gtk_button_set_focus_on_click( btn_default, FALSE );
+        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_default, GTK_RESPONSE_NO );
+        gtk_button_set_image( GTK_BUTTON( btn_default ), 
+                                        xset_get_image( "GTK_STOCK_REVERT_TO_SAVED",
+                                        GTK_ICON_SIZE_BUTTON ) );
+        gtk_button_set_focus_on_click( GTK_BUTTON( btn_default ), FALSE );
     }
 
     GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
-    gtk_dialog_add_action_widget( dlg, btn_cancel, GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_cancel, GTK_RESPONSE_CANCEL);
 
     GtkWidget* btn_ok = gtk_button_new_from_stock( GTK_STOCK_OK );
-    gtk_dialog_add_action_widget( dlg, btn_ok, GTK_RESPONSE_OK);
+    gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_ok, GTK_RESPONSE_OK);
 
     // show
     gtk_widget_show_all( dlg );
@@ -7355,10 +7457,12 @@ gboolean xset_text_dialog( GtkWidget* parent, char* title, GtkWidget* image,
         {
             // btn_edit clicked
             gtk_text_view_set_editable( input,
-                                        gtk_toggle_button_get_active( btn_edit ) );
+                                        gtk_toggle_button_get_active( 
+                                        GTK_TOGGLE_BUTTON( btn_edit ) ) );
             if ( btn_default )
                 gtk_widget_set_sensitive( btn_default,
-                                        gtk_toggle_button_get_active( btn_edit ) );
+                                        gtk_toggle_button_get_active( 
+                                        GTK_TOGGLE_BUTTON( btn_edit ) ) );
         }
         else if ( response == GTK_RESPONSE_NO )
         {
@@ -7461,7 +7565,7 @@ static gboolean on_fontdlg_keypress ( GtkWidget *widget, GdkEventKey *event,
 {
     if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
     {
-        gtk_dialog_response( dlg, GTK_RESPONSE_YES );
+        gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_YES );
         return TRUE;
     }
     return FALSE;
@@ -7475,11 +7579,13 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     GtkWidget* dlg = gtk_font_selection_dialog_new( title );
     
     if ( deffont )
-        gtk_font_selection_dialog_set_font_name( dlg, deffont );
+        gtk_font_selection_dialog_set_font_name( GTK_FONT_SELECTION_DIALOG( dlg ),
+                                                                        deffont );
     if ( title )
         gtk_window_set_title( GTK_WINDOW( dlg ), title );
     if ( preview )
-        gtk_font_selection_dialog_set_preview_text( dlg, preview );
+        gtk_font_selection_dialog_set_preview_text( GTK_FONT_SELECTION_DIALOG( dlg ),
+                                                                        preview );
 
         
     int width = xset_get_int( "font_dlg", "x" );
@@ -7488,10 +7594,12 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
         gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
 
     // add default button, rename OK
-    GtkButton* btn = gtk_button_new_from_stock( GTK_STOCK_YES );
-    gtk_dialog_add_action_widget( GTK_DIALOG(dlg), btn, GTK_RESPONSE_YES);
-    gtk_widget_show( btn );
-    GtkButton* ok = gtk_font_selection_dialog_get_ok_button( dlg );
+    GtkButton* btn = GTK_BUTTON( gtk_button_new_from_stock( GTK_STOCK_YES ) );
+    gtk_dialog_add_action_widget( GTK_DIALOG(dlg), GTK_WIDGET( btn ),
+                                                            GTK_RESPONSE_YES);
+    gtk_widget_show( GTK_WIDGET( btn ) );
+    GtkButton* ok = GTK_BUTTON( gtk_font_selection_dialog_get_ok_button( 
+                                            GTK_FONT_SELECTION_DIALOG( dlg ) ) );
     gtk_button_set_label( ok, "_Default" );
     image = xset_get_image( "GTK_STOCK_YES", GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( ok, image );
@@ -7518,7 +7626,8 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
 
     if( response == GTK_RESPONSE_YES )
     {
-        char* fontname2 = gtk_font_selection_dialog_get_font_name( dlg );
+        char* fontname2 = gtk_font_selection_dialog_get_font_name( 
+                                                GTK_FONT_SELECTION_DIALOG( dlg ) );
         char* trim_fontname = g_strstrip( fontname2 );
         fontname = g_strdup( trim_fontname );
         g_free( fontname2 );
@@ -7534,7 +7643,7 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
 }
 
 char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
-                        char* title, char* deffolder, char* deffile )
+                        const char* title, const char* deffolder, const char* deffile )
 {
     char* path;
 /*  Actions:
@@ -7544,7 +7653,7 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
  *      GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER  */
     GtkWidget* dlgparent = gtk_widget_get_toplevel( parent );
     GtkWidget* dlg = gtk_file_chooser_dialog_new( title,
-                                   dlgparent, action,
+                                   GTK_WINDOW( dlgparent ), action,
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
     //gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
@@ -7561,9 +7670,8 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
             gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), path );
         else
         {
-            path = g_get_home_dir();
+            path = (char*)g_get_home_dir();
             gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), path );
-            g_free( path );
         }
     }
     if ( deffile )
@@ -7624,8 +7732,9 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
     GtkWidget* dlg = gtk_color_selection_dialog_new( title );
     GtkWidget* color_sel;
 
-    gtk_button_set_label( ((GtkColorSelectionDialog*)dlg)->help_button, _("_Unset") );
-    gtk_button_set_image( ((GtkColorSelectionDialog*)dlg)->help_button,
+    gtk_button_set_label( GTK_BUTTON( ((GtkColorSelectionDialog*)dlg)->help_button ),
+                                                                    _("_Unset") );
+    gtk_button_set_image( GTK_BUTTON( ((GtkColorSelectionDialog*)dlg)->help_button ),
                     xset_get_image( "GTK_STOCK_REMOVE", GTK_ICON_SIZE_BUTTON ) );
 
     if ( defcolor && defcolor[0] != '\0' )
@@ -7633,8 +7742,10 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
         if ( gdk_color_parse( defcolor, &color ) )
         {
             printf( "        gdk_color_to_string = %s\n", gdk_color_to_string( &color ) );
-            color_sel = gtk_color_selection_dialog_get_color_selection( dlg );
-            gtk_color_selection_set_current_color( color_sel, &color );
+            color_sel = gtk_color_selection_dialog_get_color_selection( 
+                                            GTK_COLOR_SELECTION_DIALOG( dlg ) );
+            gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( color_sel ),
+                                                                        &color );
         }
     }
 
@@ -7644,8 +7755,10 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
     if ( response == GTK_RESPONSE_OK )
     {
         // color_sel must be set directly before get_current_color
-        color_sel = gtk_color_selection_dialog_get_color_selection( dlg );
-        gtk_color_selection_get_current_color( color_sel, &color );
+        color_sel = gtk_color_selection_dialog_get_color_selection( 
+                                            GTK_COLOR_SELECTION_DIALOG( dlg ) );
+        gtk_color_selection_get_current_color( GTK_COLOR_SELECTION( color_sel ),
+                                            &color );
         scolor = gdk_color_to_string( &color );
     }
     else if ( response == GTK_RESPONSE_HELP )
@@ -7657,10 +7770,10 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
 }
 
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
-                        GtkToolbar* toolbar, GtkTooltips* tooltips,
-                        GtkIconSize icon_size, XSet* set )
+                        GtkWidget* toolbar, GtkTooltips* tooltips,
+                        int icon_size, XSet* set )
 {
-    GtkImage* image = NULL;
+    GtkWidget* image = NULL;
     GtkWidget* btn;
     XSet* set_next;
 
@@ -7686,7 +7799,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             btn = GTK_WIDGET( gtk_toggle_tool_button_new() );
             gtk_tool_button_set_icon_widget( GTK_TOOL_BUTTON( btn ), image );
             gtk_tool_button_set_label( GTK_TOOL_BUTTON( btn ), set->menu_label );
-            gtk_toggle_tool_button_set_active( GTK_TOOL_BUTTON( btn ), xset_get_b_set( set ) );
+            gtk_toggle_tool_button_set_active( GTK_TOGGLE_TOOL_BUTTON( btn ),
+                                                        xset_get_b_set( set ) );
             // pass btn back to add_toolbar caller
             set->ob2_data = btn;
             // ob2 in use ?
@@ -7703,7 +7817,8 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             if ( set->lock )
             {
                 // Create initial menu for btn
-                gtk_menu_tool_button_set_menu( btn, gtk_menu_new() );
+                gtk_menu_tool_button_set_menu( GTK_MENU_TOOL_BUTTON( btn ),
+                                                                gtk_menu_new() );
                 // pass btn back to add_toolbar caller
                 set->ob2_data = btn;
                 // ob2 in use ?
@@ -7716,18 +7831,18 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
             }
             else if ( set->child )
             {
-                GtkMenu* submenu = gtk_menu_new();
+                GtkWidget* submenu = gtk_menu_new();
                 GtkAccelGroup* accel_group = gtk_accel_group_new();
                 XSet* set_child = xset_get( set->child );
                 xset_add_menuitem( NULL, file_browser, submenu, accel_group, set_child );
-                gtk_menu_tool_button_set_menu( btn, submenu );
+                gtk_menu_tool_button_set_menu( GTK_MENU_TOOL_BUTTON( btn ), submenu );
                 gtk_widget_show_all( submenu );
             }
         }
         else if ( set-> menu_style == XSET_MENU_SEP )
         {
             btn = GTK_WIDGET( gtk_separator_tool_item_new() );
-            gtk_separator_tool_item_set_draw( btn, TRUE ); 
+            gtk_separator_tool_item_set_draw( GTK_SEPARATOR_TOOL_ITEM( btn ), TRUE ); 
         }
         else
             return NULL;
@@ -7789,7 +7904,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
         //if ( set->x )
         //    gtk_tool_item_set_tooltip( GTK_TOOL_ITEM( btn ), tooltips, set->x, NULL);
 
-        gtk_toolbar_insert( toolbar, GTK_TOOL_ITEM( btn ), -1 );
+        gtk_toolbar_insert( GTK_TOOLBAR( toolbar ), GTK_TOOL_ITEM( btn ), -1 );
     }
     
     // next toolitem
@@ -7804,7 +7919,7 @@ GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
 }
 
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
-            GtkToolbar* toolbar, GtkTooltips* tooltips, char* elements )
+            GtkWidget* toolbar, GtkTooltips* tooltips, const char* elements )
 {
     char* space;
     XSet* set;
@@ -7812,7 +7927,7 @@ void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
     if ( !elements )
         return;
 
-    GtkIconSize icon_size = gtk_toolbar_get_icon_size( toolbar );
+    GtkIconSize icon_size = gtk_toolbar_get_icon_size( GTK_TOOLBAR( toolbar ) );
         
     while ( elements[0] == ' ' )
         elements++;
@@ -7835,10 +7950,11 @@ void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
     }
 }
 
-char *replace_string( char* orig, char* str, char* replace, gboolean quote )
+char *replace_string( const char* orig, const char* str, const char* replace,
+                                                                gboolean quote )
 {   // replace all occurrences of str in orig with replace, optionally quoting
     char* rep;
-    char* cur;
+    const char* cur;
     char* result = NULL;
     char* old_result;
     char* s;
@@ -7903,7 +8019,7 @@ char *replace_string( char* orig, char* str, char* replace, gboolean quote )
 */
 }
 
-char* bash_quote( char* str )
+char* bash_quote( const char* str )
 {  
     if ( !str )
         return g_strdup( "''" );
@@ -7913,7 +8029,7 @@ char* bash_quote( char* str )
     return s2;
 }
 
-char* plain_ascii_name( char* orig_name )
+char* plain_ascii_name( const char* orig_name )
 {
     if ( !orig_name )
         return g_strdup( "" );
@@ -8471,7 +8587,7 @@ void xset_defaults()
         xset_set_set( set, "desc", _("To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n\nExample:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\nThis would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n\nThere must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n\n") );
         set->line = g_strdup( "#devices-settings-vol" );
 
-        set = xset_set( "dev_ignore_udisks_hide", "label", _("Ignore Udisks _Hide") );
+        set = xset_set( "dev_ignore_udisks_hide", "label", _("Ignore _Hide Policy") );
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-hide" );
 
@@ -8554,7 +8670,7 @@ void xset_defaults()
         xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n\nUse:\n\t%%v\tdevice removed (eg /dev/sda1)\n\t%%l\tdevice label\n\t%%m\tdevice mount point (eg /media/disk)") );
         set->line = g_strdup( "#devices-settings-runr" );
 
-    set = xset_set( "dev_ignore_udisks_nopolicy", "label", _("Ignore Udisks _No Policy") );
+    set = xset_set( "dev_ignore_udisks_nopolicy", "label", _("Ignore _No Policy") );
     set->menu_style = XSET_MENU_CHECK;
     set->line = g_strdup( "#devices-settings-nopolicy" );
 
@@ -8564,7 +8680,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-settings-mvol" );
 
     set = xset_set( "dev_mount_options", "label", _("_Mount Options") );
-    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by udisks even if you don't include them.  Options in fstab take precedence.") );
+    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Default Mount Options") );
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
@@ -8575,9 +8691,23 @@ void xset_defaults()
     set = xset_set( "dev_remount_options", "z", "noexec, nosuid, noatime" );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Re/mount With Options") );
-    xset_set_set( set, "desc", _("Device will be (re)mounted using the options below.\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by udisks even if you don't include them.  Options in fstab take precedence.") );
+    xset_set_set( set, "desc", _("Device will be (re)mounted using the options below.\n\nIn addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n\nExample:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nThis will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n\nNote: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here.") );
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
     set->line = g_strdup( "#devices-menu-remount" );
+
+    set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\npmount:\t/usr/bin/pmount %v\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n\nLeave blank for auto-detection.") );
+    set->menu_style = XSET_MENU_STRING;
+    xset_set_set( set, "title", _("Mount Command") );
+    xset_set_set( set, "icon", "gtk-edit" );
+    set->line = g_strdup( "#devices-settings-mcmd" );
+
+    set = xset_set( "dev_unmount_cmd", "label", _("_Unmount Command") );
+    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\npmount:\t/usr/bin/pumount %v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
+    set->menu_style = XSET_MENU_STRING;
+    xset_set_set( set, "title", _("Unmount Command") );
+    xset_set_set( set, "icon", "gtk-edit" );
+    set->line = g_strdup( "#devices-settings-ucmd" );
 
     // dev icons
     set_last = xset_get( "sep_i1" );
@@ -10156,6 +10286,7 @@ void xset_default_keys()
     def_key( "go_back", 65361, 8 );
     def_key( "go_forward", 65363, 8 );
     def_key( "go_up", 65362, 8 );
+    def_key( "focus_path_bar", 0x6c, 4 );   // Ctrl-L
     def_key( "view_refresh", 65474, 0 );
     def_key( "prop_info", 0xff0d, 8 );
     def_key( "prop_perm", 112, 4 );

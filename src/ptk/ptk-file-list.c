@@ -658,7 +658,6 @@ static gint ptk_file_list_compare( gconstpointer a,
     ret = vfs_file_info_is_dir(file1) - vfs_file_info_is_dir(file2);
     if( ret )
         return -ret;
-
     /* FIXME: strings should not be treated as ASCII when sorted  */
     switch( list->sort_col )
     {
@@ -667,7 +666,13 @@ static gint ptk_file_list_compare( gconstpointer a,
                                   vfs_file_info_get_disp_name(file2) );
         break;
     case COL_FILE_SIZE:
-        ret = file1->size - file2->size;
+        if ( file1->size > file2->size )
+            ret = 1;
+        else if ( file1->size == file2->size )
+            ret = 0;
+        else
+            ret = -1;
+        //ret = file1->size - file2->size;
         break;
     case COL_FILE_DESC:
         ret = g_ascii_strcasecmp( vfs_file_info_get_mime_type_desc(file1),
@@ -711,7 +716,7 @@ void ptk_file_list_sort ( PtkFileList* list )
     /* save new order */
     new_order = g_new( int, list->n_files );
     for( i = 0, l = list->files; l; l = l->next, ++i )
-        new_order[i] = (guint)g_hash_table_lookup( old_order, l );
+        new_order[i] = GPOINTER_TO_INT( g_hash_table_lookup( old_order, l ) );
     g_hash_table_destroy( old_order );
     path = gtk_tree_path_new ();
     gtk_tree_model_rows_reordered (GTK_TREE_MODEL (list),

@@ -42,7 +42,7 @@ VFSMimeType* vfs_mime_type_get_from_file_name( const char* ufile_name );
 
 VFSMimeType* vfs_mime_type_get_from_file( const char* file_path,  /* Should be on-disk encoding */
                                           const char* base_name,  /* Should be in UTF-8 */
-                                          struct stat* pstat );   /* Can be NULL */
+                                          struct stat64* pstat );   /* Can be NULL */
 
 VFSMimeType* vfs_mime_type_get_from_type( const char* type );
 
