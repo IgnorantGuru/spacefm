@@ -32,7 +32,8 @@
 <p>Changes in SpaceFM 0.7.5:
 
 <ul>
-    <li><b>removes dependency on udisks</b> - Although SpaceFM has never had a strict udisks dependency, the device manager used udisks for device detection, information, and mounting.  As of v0.7.5, SpaceFM can now be used without udisks.  SpaceFM now uses udev directly for device detection and information.  For mounting devices as a non-root user, udisks v1, udisks v2, or pmount will be automatically detected and used, or you can <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-mcmd">specify a custom command</a>.  There is also a custom mount solution <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">currently under development</a>.  These changes do not affect the hal build of SpaceFM.<br><br>
+    <li><b>removes dependency on udisks</b> - Although SpaceFM has never had a strict udisks dependency, the device manager used udisks for device detection, information, and mounting.  As of v0.7.5, SpaceFM can now be used without udisks.  SpaceFM now uses udev directly for device detection and information.  For mounting devices as a non-root user, udisks v1, udisks v2, or pmount will be automatically detected and used, or you can <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-mcmd">specify a custom command</a>.  There is also a custom mount solution <a href="http://igurublog.wordpress.com/2012/04/06/spacefm-udev/">currently under development</a>.  These changes do not affect the hal build of SpaceFM.<br>
+    <b>UPDATE:</b>  If you're testing SpaceFM without udisks installed, you may want to <a href="https://github.com/IgnorantGuru/spacefm/issues/66">enable kernel polling</a> on your system.<br><br>
 
     <li>The built-in archive extraction methods may now be used in the desktop manager<br><br>
 
