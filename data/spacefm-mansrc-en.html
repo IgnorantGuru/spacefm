@@ -343,7 +343,21 @@ Application Options:
 <pre>    # open a folder in panel 2:
     spacefm --panel=2 /usr/bin</pre>
 
-<p>If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
+<p>As a more advanced example, consider wanting to open multiple SpaceFM windows, each containing different folder tabs in each panel, using a single command.  For this, you may want to uncheck option File|Save Tabs, then use a script like this to start SpaceFM:
+<pre>
+    #!/bin/bash
+
+    spacefm -w --panel=1 /etc /usr &amp;
+    sleep 0.2
+    spacefm --panel=2 /bin /lib &amp;
+    sleep 0.2
+    spacefm -w --panel=1 /boot /media &amp;
+    sleep 0.2
+    spacefm --panel=2 /sbin /var &amp;</pre>
+The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A sleep time of 0.1 may also work on your system.
+
+<p><b>Opening Files</b><br>
+If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
 <pre>    # open a file:
     spacefm /etc/fstab</pre>
 
@@ -1577,7 +1591,7 @@ This file is designed to be edited by the administrative user.  Currently, the o
 Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
-This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user, the contents of /etc/xdg/spacefm/ will be copied to the new config directory.  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user when spacefm is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
 <pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
 
 <!-- @Program Files @/tmp -->

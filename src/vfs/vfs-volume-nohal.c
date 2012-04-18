@@ -857,25 +857,69 @@ void info_device_properties( device_t *device )
     device->device_automount_hint = g_strdup( udev_device_get_property_value(
                                             device->udevice, "UDISKS_AUTOMOUNT_HINT") );
 
-    // device_is_media_available
-    gboolean media_available;
-    gboolean is_cd, is_floppy;
-    if ( value = udev_device_get_property_value( device->udevice, "ID_CDROM" ) )
-        is_cd = atoi( value ) != 0;
-    else
-        is_cd = FALSE;
-
-    if ( value = udev_device_get_property_value( device->udevice, "ID_DRIVE_FLOPPY" ) )
-        is_floppy = atoi( value ) != 0;
-    else
-        is_floppy = FALSE;
-
-    if (device->device_is_removable)
+    // filesystem properties
+    gchar *decoded_string;
+    const gchar *partition_scheme;
+    gint partition_type = 0;
+    
+    partition_scheme = udev_device_get_property_value( device->udevice, "UDISKS_PARTITION_SCHEME");
+    if ( value = udev_device_get_property_value( device->udevice, "UDISKS_PARTITION_TYPE") )
+        partition_type = atoi( value );
+    if (g_strcmp0 (partition_scheme, "mbr") == 0 && (partition_type == 0x05 || 
+                                                   partition_type == 0x0f || 
+                                                   partition_type == 0x85))
     {
-        media_available = FALSE;
+    }
+    else
+    {
+        device->id_usage = g_strdup( udev_device_get_property_value( device->udevice,
+                                                        "ID_FS_USAGE" ) );
+        device->id_type = g_strdup( udev_device_get_property_value( device->udevice,
+                                                        "ID_FS_TYPE" ) );
+        device->id_version = g_strdup( udev_device_get_property_value( device->udevice,
+                                                        "ID_FS_VERSION" ) );
+        device->id_uuid = g_strdup( udev_device_get_property_value( device->udevice,
+                                                        "ID_FS_UUID" ) );
+
+        if ( value = udev_device_get_property_value( device->udevice, "ID_FS_LABEL_ENC" ) )
+        {
+            decoded_string = decode_udev_encoded_string ( value );
+            g_strstrip (decoded_string);
+            device->id_label = decoded_string;
+        }
+        else if ( value = udev_device_get_property_value( device->udevice, "ID_FS_LABEL" ) )
+        {
+            device->id_label = g_strdup( value );
+        }
+    }
+
+    // device_is_media_available
+    gboolean media_available = FALSE;
+    
+    if ( ( device->id_usage && device->id_usage[0] != '\0' ) ||
+         ( device->id_type  && device->id_type[0]  != '\0' ) ||
+         ( device->id_uuid  && device->id_uuid[0]  != '\0' ) ||
+         ( device->id_label && device->id_label[0] != '\0' ) )
+    {
+         media_available = TRUE;
+    }
+    else if ( device->device_is_removable )
+    {
+        gboolean is_cd, is_floppy;
+        if ( value = udev_device_get_property_value( device->udevice, "ID_CDROM" ) )
+            is_cd = atoi( value ) != 0;
+        else
+            is_cd = FALSE;
+
+        if ( value = udev_device_get_property_value( device->udevice, "ID_DRIVE_FLOPPY" ) )
+            is_floppy = atoi( value ) != 0;
+        else
+            is_floppy = FALSE;
 
         if ( !is_cd && !is_floppy )
         {
+            // this test is limited for non-root - user may not have read
+            // access to device file even if media is present
             int fd;
             fd = open( device->devnode, O_RDONLY );
             if ( fd >= 0 )
@@ -1230,42 +1274,6 @@ void info_partition( device_t *device )
     }
 }
 
-void info_filesystem( device_t *device )
-{
-    gchar *decoded_string;
-    const gchar *partition_scheme;
-    gint partition_type = 0;
-    const char* value;
-
-    partition_scheme = udev_device_get_property_value( device->udevice, "UDISKS_PARTITION_SCHEME");
-    if ( value = udev_device_get_property_value( device->udevice, "UDISKS_PARTITION_TYPE") )
-        partition_type = atoi( value );
-    if (g_strcmp0 (partition_scheme, "mbr") == 0 && (partition_type == 0x05 || 
-                                                   partition_type == 0x0f || 
-                                                   partition_type == 0x85))
-        return;
-
-    device->id_usage = g_strdup( udev_device_get_property_value( device->udevice,
-                                                    "ID_FS_USAGE" ) );
-    device->id_type = g_strdup( udev_device_get_property_value( device->udevice,
-                                                    "ID_FS_TYPE" ) );
-    device->id_version = g_strdup( udev_device_get_property_value( device->udevice,
-                                                    "ID_FS_VERSION" ) );
-    device->id_uuid = g_strdup( udev_device_get_property_value( device->udevice,
-                                                    "ID_FS_UUID" ) );
-
-    if ( value = udev_device_get_property_value( device->udevice, "ID_FS_LABEL_ENC" ) )
-    {
-        decoded_string = decode_udev_encoded_string ( value );
-        g_strstrip (decoded_string);
-        device->id_label = decoded_string;
-    }
-    else if ( value = udev_device_get_property_value( device->udevice, "ID_FS_LABEL" ) )
-    {
-        device->id_label = g_strdup( value );
-    }
-}
-
 void info_optical_disc( device_t *device )
 {
     const char *cdrom_disc_state;
@@ -1425,7 +1433,6 @@ gboolean device_get_info( device_t *device )
     device->device_is_mounted = ( device->mount_points != NULL );
     info_partition_table( device );
     info_partition( device );
-    info_filesystem( device );
     info_optical_disc( device );
     return TRUE;
 }

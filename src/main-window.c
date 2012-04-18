@@ -533,6 +533,8 @@ GtkWidget* create_plugins_menu( FMMainWindow* main_window )
         g_list_free( plugins );
         
     gtk_widget_show_all( plug_menu );
+    if ( set->disable )
+        gtk_widget_hide( item );  // temporary until included available
     return plug_menu;
 }
 
