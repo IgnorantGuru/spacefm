@@ -88,6 +88,9 @@ PACKAGES
     Other:
         See INSTALLER below
 
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+
 
 INSTALLER
 
@@ -109,6 +112,9 @@ INSTALLER
         bash spacefm-x.x.x-installer.sh --help
 
     To reinstall or upgrade, just run the latest installer again.
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
 BUILD
@@ -171,6 +177,9 @@ BUILD
     To build with an additional custom su program ('/usr/bin/mysu' in this
     example), add:
         --with-preferable-sudo=/usr/bin/mysu  # to the configure command
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
     For general build information consult the INSTALL file.
 

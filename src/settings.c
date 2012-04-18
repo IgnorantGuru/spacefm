@@ -8575,7 +8575,7 @@ void xset_defaults()
 
         set = xset_set( "dev_show_empty", "label", _("_Empty Drives") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = geteuid() == 0 ? XSET_B_TRUE : XSET_B_UNSET;
+        set->b = XSET_B_TRUE;  //geteuid() == 0 ? XSET_B_TRUE : XSET_B_UNSET;
         set->line = g_strdup( "#devices-settings-empty" );
 
         set = xset_set( "dev_show_partition_tables", "label", _("_Partition Tables") );

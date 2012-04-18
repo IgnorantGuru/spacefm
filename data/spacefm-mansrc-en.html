@@ -116,6 +116,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 
 <p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
+<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
 
 <!-- @Installation @Packages -->
@@ -247,6 +248,7 @@ Or, to see the help for alternate build options, run:
 
 <p><b>To upgrade to the latest version</b>, just download the latest installer and run it.
 
+<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
 <!-- @Installation @Manual Builds #manualbuild -->
 
@@ -1078,9 +1080,9 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>SpaceFM includes a programmable udev-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
 
-<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, but does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
+<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, and enabling <a href="#devices-kernpoll">kernel polling</a> is recommended.  The monitor does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
 
-<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
+<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you use pmount or specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
 
 <p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udev-based version.  It can only be used to manually mount and unmount devices.  Thus the udev-based version is recommended, and this manual deals exclusively with the udev-based device manager.
 
@@ -1095,7 +1097,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To show or hide a Devices list in each panel, right-click on the file list and check or uncheck option View|Devices.  You can also show or hide the list using the 'Devices' toggle tool item on a toolbar.
 
-<p>By default, <b>the Devices list will display only removable and optical devices which contain media</b>.  If your Devices list is empty, this means there are no removable or optical devices with media (or the udevd daemon is not installed or is not working properly on your system).  To show additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
+<p><b>The Devices list will display only removable and optical devices</b>.  If your Devices list is empty, this means there are no removable or optical devices with media, the udevd daemon is not installed or is not working properly on your system, or you may need to enable <a href="#devices-kernpoll">kernel polling</a> for media detection.  To show or hide additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
 
 
 <!-- @Devices @Menu -->
@@ -1308,6 +1310,8 @@ By default, the Devices list will only show removable and optical drives, while 
 By default, the Devices list will only show drives which contain media, and will hide empty drives.  If option Show|Empty Drives is checked, drives not containing media will also be shown.
 
 <p>Properties can still be obtained on empty drives, and you can use Remove or Reload to open or close the tray.
+
+<p>NOTE:  For proper detection of media, enabling <a href="#devices-kernpoll">kernel polling</a> may be required.
 
 <!-- #Show|Partition Tables #table -->
 By default, the Devices list will not show devices which contain partition tables, such as a whole device file (eg /dev/sda) which contains the primary partition table in its MBR, or a partition (eg /dev/sda4) which contains the extended partition table.  Normally you will not work with these device files so it is not useful to show them.  If you do want them shown, check option Show|Partition Tables.  If the device is internal, option Show|Internal Drives is also required.
@@ -1541,6 +1545,51 @@ The Icon submenu allows you to set custom icons to be displayed at the left of d
 
 <!-- #Font #font -->
 Font opens a font selection dialog which allows you to select the font to be used for the Devices list.  Select a font family, style, and size and click OK, or click Default to use your <a href="#invocation-gtkthemes">GTK theme's</a> font.
+
+
+<!-- @Devices @How To Enable Kernel Polling #kernpoll -->
+<p>When using SpaceFM without udisks, and without the udisks-daemon running, you may need to enable kernel polling for device media changes to be detected.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
+
+<p>Kernel polling is a new feature of the Linux kernel and udev, so most distros don't yet have it enabled.  Even if you are using udisks, enabling kernel polling is recommended to eliminate the need for udisks to do userspace polling.  Kernel polling also corrects a common issue where the eject button on a drive won't respond with the newer udev when udisks is not used.
+
+<p>To use kernel polling, your Linux kernel needs to be <b>2.6.38 or newer</b>, and udev must be <b>version 173</b> or newer.
+
+<p>You can deterime if kernel polling is enabled by running these commands:
+<pre>
+    cat /sys/module/block/parameters/events_dfl_poll_msecs
+    cat /sys/block/sr0/events_poll_msecs
+</pre>
+
+If you get 0 or -1 from those commands, then it's probably disabled.
+
+<p><b>To enable kernel polling temporarily</b>, enable common polling for the block module:
+<pre>
+    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+</pre>
+
+Any number between 2000 and 5000 (milliseconds) should be reasonable - the higher 5000 means poll every 5 seconds, which is less overhead but a little slower.
+
+<p><b>OR</b> you can enable polling just for a single device like this (/dev/sr0 in this example):
+<pre>
+    sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
+</pre>
+
+The change should be immediate - media will be detected and the eject button on the drive should work normally again.  However, the above changes will be lost when you reboot.
+
+<p><b>To make polling permanent</b> (survives a reboot), add one of the above commands to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file), like this (without the sudo):
+<pre>
+    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
+</pre>
+
+<b>OR</b> you can pass this option to the kernel boot command line in grub:
+<blockquote>
+    <i>block.events_dfl_poll_msecs=2000</i>
+</blockquote>
+
+References:<br>
+<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org/msg15714.html</a><br>
+<a href="http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/">uam-can-now-mount-cds-and-dvds</a><br>
+<a href="https://bugs.archlinux.org/task/25609">bugs.archlinux.org</a><br>
 
 
 <!-- @Program Files @/home -->
