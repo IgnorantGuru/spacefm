@@ -8621,7 +8621,7 @@ void xset_defaults()
         set->line = g_strdup( "#devices-settings-tab" );
 
         set = xset_set( "dev_unmount_quit", "label", _("_Unmount On Exit") );
-        set->b = XSET_B_TRUE;
+        set->b = XSET_B_UNSET;
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-exit" );
 

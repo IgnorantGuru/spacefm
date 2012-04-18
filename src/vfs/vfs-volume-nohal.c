@@ -3110,7 +3110,7 @@ gboolean vfs_volume_init()
     udev = udev_new();
     if ( !udev )
     {
-        printf( "spacefm: unable to initialize udev - is udevd running?\n" );
+        printf( "spacefm: unable to initialize udev\n" );
         return TRUE;
     }
 

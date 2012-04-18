@@ -1,3 +1,6 @@
+0.7.6
+    unmount on exit no longer default (affects new installs)
+    
 0.7.5   2012-04-14:
     replaced udisks with libudev kernel support for device detection and info
     udisks v1 & v2 now supported for mount/unmount as normal user
