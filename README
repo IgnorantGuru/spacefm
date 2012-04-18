@@ -39,19 +39,21 @@ PACKAGES
         http://aur.archlinux.org/packages.php?ID=55777
         http://aur.archlinux.org/packages.php?ID=58247
     
-    Debian-based deb packages are available in Downloads (to save a file, click
-        on its filename and click 'View Raw'):
+    Debian-based deb packages are available in Downloads:
+        (to save a file, click on its filename and click 'View Raw'):
         https://github.com/IgnorantGuru/spacefm/tree/master/packages
     
         and are also available in the author's PPA:
             http://igurublog.wordpress.com/downloads/ppa/
         
         These convenience deb packages contain the source code and will build
-        and install SpaceFM automatically on most Debian-based distros. 
+        and install SpaceFM automatically on most Debian-based distros.
+        $TMPDIR (usually /tmp) must NOT be mounted noexec. Or see CREATE DEB
+        PACKAGE below.
 
-        NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 users
-              may not be able to install SpaceFM due to repositories missing
-              package libgdk-pixbuf2.0-0
+        NOTE: SpaceFM requires libgtk >= 2.24.  Debian Squeeze and Ubuntu 10.04
+              users also may not be able to install SpaceFM due to repositories
+              missing package libgdk-pixbuf2.0-0
 
         For signatures and SHA256 sums see 
             http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
