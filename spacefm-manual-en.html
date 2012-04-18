@@ -83,6 +83,7 @@
     <a href="#devices-menu">Menu</a><br>
     <a href="#devices-root">Root</a><br>
     <a href="#devices-settings">Settings</a><br>
+    <a href="#devices-kernpoll">How To Enable Kernel Polling </a><br>
 </ul>
 <a href="#programfiles">Program Files</a>
 <ul>
@@ -318,6 +319,7 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 
 <p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
+<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
 
 <!-- @end installation-downloads-->
@@ -373,13 +375,11 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <tr>
 <td valign="top"><b><a name="deb">Debian-based</a></b></td>
 <td>
-	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.
+	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.  $TMPDIR (usually /tmp) must NOT be mounted noexec.
 
 	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
 
-	<p>NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 
-	users may not be able to install SpaceFM due to repositories 
-	missing package libgdk-pixbuf2.0-0
+	<p>NOTE: SpaceFM requires libgtk >= 2.24.  Debian Squeeze and Ubuntu 10.04 users also may not be able to install SpaceFM due to repositories missing package libgdk-pixbuf2.0-0
 </td>
 </tr>
 
@@ -505,6 +505,7 @@ Or, to see the help for alternate build options, run:
 
 <p><b>To upgrade to the latest version</b>, just download the latest installer and run it.
 
+<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
 <!-- @end installation-installer-->
 <br><br></td></tr>
@@ -714,7 +715,21 @@ Application Options:
 <pre>    # open a folder in panel 2:
     spacefm --panel=2 /usr/bin</pre>
 
-<p>If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
+<p>As a more advanced example, consider wanting to open multiple SpaceFM windows, each containing different folder tabs in each panel, using a single command.  For this, you may want to uncheck option File|Save Tabs, then use a script like this to start SpaceFM:
+<pre>
+    #!/bin/bash
+
+    spacefm -w --panel=1 /etc /usr &amp;
+    sleep 0.2
+    spacefm --panel=2 /bin /lib &amp;
+    sleep 0.2
+    spacefm -w --panel=1 /boot /media &amp;
+    sleep 0.2
+    spacefm --panel=2 /sbin /var &amp;</pre>
+The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A sleep time of 0.1 may also work on your system.
+
+<p><b>Opening Files</b><br>
+If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
 <pre>    # open a file:
     spacefm /etc/fstab</pre>
 
@@ -1920,6 +1935,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
+        <li><a href="#devices-kernpoll">How To Enable Kernel Polling </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -1930,9 +1946,9 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>SpaceFM includes a programmable udev-based device manager which lists device volumes, allows you to mount and unmount devices, and detects changes, insertions, and removals.  On events, SpaceFM can auto-mount and auto-open devices, and run commands you specify.  In addition, perform-as-root commands allow you to mount and unmount as root; change volume labels; and check, format, erase, backup, and restore partitions.  Like most parts of SpaceFM, the behavior and appearance of the device manager is customizable.
 
-<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, but does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
+<p>Whenever SpaceFM is running, whether a window is visible or not, a volume monitor is running to monitor device events and take actions.  The volume monitor requires the udevd daemon to be running for device event detection, and enabling <a href="#devices-kernpoll">kernel polling</a> is recommended.  The monitor does NOT require udisks to be installed or running.  SpaceFM mounts and unmounts devices using the udisks command line tool (v1 or v2), pmount, or any custom program you specify.  You can run these same command lines yourself in a terminal to troubleshoot behavior, or create your own custom commands to manipulate devices.
 
-<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
+<p>NOTE: SpaceFM does not configure udisks on your system.  It merely runs the udisks command line tool to mount and unmount devices (unless you use pmount or specify another program).  If you receive 'Not Authorized' or other similar errors from udisks when mounting, or you are prompted for a password, this indicates that udisks or its dependencies are not properly installed or configured.  This must be corrected in your system configuration, not in SpaceFM.  SpaceFM can also be used without udisks installed.  However, you will then need pmount or <a href="#devices-settings-mcmd">another program you specify</a> to be able to mount and unmount devices as a non-root user.
 
 <p>Deprecated HAL support can also be used in SpaceFM (alternate build required).  However, SpaceFM's HAL device manager is far less capable than the udev-based version.  It can only be used to manually mount and unmount devices.  Thus the udev-based version is recommended, and this manual deals exclusively with the udev-based device manager.
 
@@ -1962,6 +1978,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
+        <li><a href="#devices-kernpoll">How To Enable Kernel Polling </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -1974,7 +1991,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>To show or hide a Devices list in each panel, right-click on the file list and check or uncheck option View|Devices.  You can also show or hide the list using the 'Devices' toggle tool item on a toolbar.
 
-<p>By default, <b>the Devices list will display only removable and optical devices which contain media</b>.  If your Devices list is empty, this means there are no removable or optical devices with media (or the udevd daemon is not installed or is not working properly on your system).  To show additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
+<p><b>The Devices list will display only removable and optical devices</b>.  If your Devices list is empty, this means there are no removable or optical devices with media, the udevd daemon is not installed or is not working properly on your system, or you may need to enable <a href="#devices-kernpoll">kernel polling</a> for media detection.  To show or hide additional devices, use the <a href="#devices-settings">Show</a> submenu described below.
 
 
 <!-- @end devices-list-->
@@ -1998,6 +2015,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
         <li>Menu
         <li><a href="#devices-root">Root</a>
         <li><a href="#devices-settings">Settings</a>
+        <li><a href="#devices-kernpoll">How To Enable Kernel Polling </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -2131,6 +2149,7 @@ The Properties item will gather and show information about the currently selecte
         <li><a href="#devices-menu">Menu</a>
         <li>Root
         <li><a href="#devices-settings">Settings</a>
+        <li><a href="#devices-kernpoll">How To Enable Kernel Polling </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -2270,6 +2289,7 @@ Edit fstab is a convenience function which simply opens the /etc/fstab file as r
         <li><a href="#devices-menu">Menu</a>
         <li><a href="#devices-root">Root</a>
         <li>Settings
+        <li><a href="#devices-kernpoll">How To Enable Kernel Polling </a>
     </ul>
     <li><a href="#programfiles">Program Files</a>
 </ul>
@@ -2292,6 +2312,8 @@ By default, the Devices list will only show removable and optical drives, while 
 By default, the Devices list will only show drives which contain media, and will hide empty drives.  If option Show|Empty Drives is checked, drives not containing media will also be shown.
 
 <p>Properties can still be obtained on empty drives, and you can use Remove or Reload to open or close the tray.
+
+<p>NOTE:  For proper detection of media, enabling <a href="#devices-kernpoll">kernel polling</a> may be required.
 
 <!-- #Show|Partition Tables #table -->
 <p><a name="devices-settings-table"/><a href="#devices-settings-table"><b>Show|Partition Tables</b></a><br>
@@ -2554,6 +2576,79 @@ Font opens a font selection dialog which allows you to select the font to be use
 <br><br></td></tr>
 
 
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li>Devices
+    <ul>
+        <li><a href="#devices-introduction">Introduction</a>
+        <li><a href="#devices-list">List</a>
+        <li><a href="#devices-menu">Menu</a>
+        <li><a href="#devices-root">Root</a>
+        <li><a href="#devices-settings">Settings</a>
+        <li>How To Enable Kernel Polling 
+    </ul>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="devices-kernpoll"/><a href="#devices-kernpoll"><font size=+2>How To Enable Kernel Polling </font></a>
+<!-- @Devices @How To Enable Kernel Polling #kernpoll -->
+<p>When using SpaceFM without udisks, and without the udisks-daemon running, you may need to enable kernel polling for device media changes to be detected.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
+
+<p>Kernel polling is a new feature of the Linux kernel and udev, so most distros don't yet have it enabled.  Even if you are using udisks, enabling kernel polling is recommended to eliminate the need for udisks to do userspace polling.  Kernel polling also corrects a common issue where the eject button on a drive won't respond with the newer udev when udisks is not used.
+
+<p>To use kernel polling, your Linux kernel needs to be <b>2.6.38 or newer</b>, and udev must be <b>version 173</b> or newer.
+
+<p>You can deterime if kernel polling is enabled by running these commands:
+<pre>
+    cat /sys/module/block/parameters/events_dfl_poll_msecs
+    cat /sys/block/sr0/events_poll_msecs
+</pre>
+
+If you get 0 or -1 from those commands, then it's probably disabled.
+
+<p><b>To enable kernel polling temporarily</b>, enable common polling for the block module:
+<pre>
+    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+</pre>
+
+Any number between 2000 and 5000 (milliseconds) should be reasonable - the higher 5000 means poll every 5 seconds, which is less overhead but a little slower.
+
+<p><b>OR</b> you can enable polling just for a single device like this (/dev/sr0 in this example):
+<pre>
+    sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
+</pre>
+
+The change should be immediate - media will be detected and the eject button on the drive should work normally again.  However, the above changes will be lost when you reboot.
+
+<p><b>To make polling permanent</b> (survives a reboot), add one of the above commands to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file), like this (without the sudo):
+<pre>
+    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
+</pre>
+
+<b>OR</b> you can pass this option to the kernel boot command line in grub:
+<blockquote>
+    <i>block.events_dfl_poll_msecs=2000</i>
+</blockquote>
+
+References:<br>
+<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org/msg15714.html</a><br>
+<a href="http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/">uam-can-now-mount-cds-and-dvds</a><br>
+<a href="https://bugs.archlinux.org/task/25609">bugs.archlinux.org</a><br>
+
+
+<!-- @end devices-kernpoll-->
+<br><br></td></tr>
+
+
 <tr><td colspan=2>
 <center><a name="programfiles"/><a href="#programfiles"><font size=+2>Program Files</font></a></center>
 </td></tr>
@@ -2665,7 +2760,7 @@ Be sure to use a temporary directory which is root-owned/protected and user-writ
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
 <p><a name="programfiles-etc-xdg"/><a href="#programfiles-etc-xdg"><b>/etc/xdg/spacefm/</b></a><br>
-This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user, the contents of /etc/xdg/spacefm/ will be copied to the new config directory.  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user when spacefm is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
 <pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
 
 <!-- @end programfiles-etc-->
@@ -2827,7 +2922,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-04-14&nbsp;&nbsp;(SpaceFM version 0.7.5+)
+<p>Updated 2012-04-18&nbsp;&nbsp;(SpaceFM version 0.7.5+)
 <br><br>
 </center>
 </td></tr></table>
