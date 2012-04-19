@@ -1,4 +1,4 @@
-0.7.6
+0.7.6   2012-04-19:
     unmount on exit no longer default (affects new installs)
     documented deb packages require $TMPDIR not be noexec closes #64
     relax has media criteria fixes #68

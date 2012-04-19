@@ -72,7 +72,7 @@ GdkPixbuf* vfs_load_icon( GtkIconTheme* theme, const char* icon_name, int size )
     }
     return icon;
 }
-
+/*
 static char* find_su_program( GError** err )
 {
     char* su;
@@ -80,7 +80,7 @@ static char* find_su_program( GError** err )
 #ifdef PREFERABLE_SUDO_PROG
     su = g_find_program_in_path( PREFERABLE_SUDO_PROG );
 #else
-    /* Use default search rules */
+    // Use default search rules
     su = g_find_program_in_path( "ktsuss" );
     if ( ! su )
         su = g_find_program_in_path( "gksudo" );
@@ -146,6 +146,7 @@ gboolean vfs_sudo_cmd_sync( const char* cwd, char* argv[],
     g_free( su );
     return ret;
 }
+*/
 
 /*
 static char* argv_to_cmdline( char** argv )

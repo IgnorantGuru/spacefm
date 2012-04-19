@@ -284,7 +284,9 @@ GdkPixbuf* vfs_file_info_get_small_icon( VFSFileInfo* fi )
 {
     if ( fi->flags & VFS_FILE_INFO_DESKTOP_ENTRY && fi->small_thumbnail )  //sfm
         return gdk_pixbuf_ref( fi->small_thumbnail );
-    
+
+    if( G_UNLIKELY(!fi->mime_type) )
+        return NULL;
     return vfs_mime_type_get_icon( fi->mime_type, FALSE );
 }
 
