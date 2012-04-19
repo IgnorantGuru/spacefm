@@ -24,6 +24,34 @@
 <center><h2>&gt;&gt;&gt;&nbsp;&nbsp;SpaceFM News&nbsp;&nbsp;&gt;&gt;&gt;</h2></center>
 
 
+
+<!-- --------------------------------------------------------------------- -->
+<br><hr>
+<big><b>0.7.6 released</b></big><br>
+2012-Apr-19
+
+<p>SpaceFM 0.7.6 is a maintenance release to fix a few issues with 0.7.5, especially media detection.  Also, file permissions now show the SUID and SGID bits, and also Linux file type (char device, block device, pipe, socket), like ls output.
+
+<p>The <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll">recommendation to enable kernel polling</a> has been added to the user's manual and README.  This especially important for <b>media detection when udisks is not used</b>.
+
+<p>Please note that the provided deb packages since version 0.7.5 require $TMPDIR (usually /tmp) to be mounted <b>without noexec</b> (these packages build from source in $TMPDIR).  Otherwise you may want to build a deb package from source per the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a>.
+
+<br>
+<br>
+0.7.6 ChangeLog:
+<ul>
+    unmount on exit no longer default (affects new installs)<br>
+    documented deb packages require $TMPDIR not be noexec closes #64<br>
+    relax has media criteria fixes #68<br>
+    hack for icon theme missing application-x-xz-compressed-tar fixes #55<br>
+    added kernel polling recommendation to docs closes #66<br>
+    desktop new tab present window fixes #16<br>
+    file permissions show SUID and SGID bits<br>
+    file permissions show char device, block device, pipe, socket<br>
+    panel show inhibit tab creation on spec<br>
+</ul>
+
+
 <!-- --------------------------------------------------------------------- -->
 <br><br><hr>
 <big><b>0.7.5 released</b></big><br>

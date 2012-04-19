@@ -862,9 +862,10 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <p>If you want SpaceFM always running in the background, ready to quickly open windows and automount volumes, but <i>don't</i> want it to manage the desktop, start a daemon instance of SpaceFM:
 <pre>    spacefm -d</pre>
 
-<p>No window will open in this case, but an instance will be started if not already running, and it will continue running for the duration of your X login session.  You can also start the daemon from your login script.
+<p>No window will open in this case, but an instance will be started if not already running, and it will continue running for the duration of your X login session.  You can also start the daemon from your login script.  For example, if using Openbox, add this line to ~/.config/openbox/autostart.sh:
+<pre>    (sleep 2 && spacefm -d) &</pre>
 
-<p>One particular use for daemon mode is to make sure udisks removes leftover folders from /media.  By default, SpaceFM will unmount removable devices on exit to prevent folders remaining in /media at shutdown (unless you uncheck option <a href="#devices-settings-exit">Settings|Auto-Mount|Unmount On Exit</a>) in the Devices list.  If running as a normal instance, this means devices will be unmounted whenever you close the last SpaceFM window.  When running as a daemon (or as a desktop manager daemon), devices won't be unmounted until you logoff.
+<p>One particular use for daemon mode is to make sure udisks removes leftover folders from /media.  SpaceFM can unmount removable devices on exit to prevent folders remaining in /media at shutdown (if you check option <a href="#devices-settings-exit">Settings|Auto-Mount|Unmount On Exit</a>).  If running as a normal instance, this means devices will be unmounted whenever you close the last SpaceFM window.  When running as a daemon (or as a desktop manager daemon), devices won't be unmounted until you logoff.
 
 <p>To stop a daemon mode instance, send SpaceFM a quit signal:
 <pre>    killall spacefm</pre>
@@ -2448,9 +2449,9 @@ If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new t
 <p><a name="devices-settings-exit"/><a href="#devices-settings-exit"><b>Auto Mount|Unmount On Exit</b></a><br>
 If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  This occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
 
-<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media or /run/media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM unmounts devices on exit by default.
+<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media or /run/media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
 
-<p>If you uncheck option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
+<p>If you don't check option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
 
 <!-- #Auto Run|On Mount #runm -->
 <p><a name="devices-settings-runm"/><a href="#devices-settings-runm"><b>Auto Run|On Mount</b></a><br>
@@ -2922,7 +2923,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-04-18&nbsp;&nbsp;(SpaceFM version 0.7.5+)
+<p>Updated 2012-04-19&nbsp;&nbsp;(SpaceFM version 0.7.6)
 <br><br>
 </center>
 </td></tr></table>
