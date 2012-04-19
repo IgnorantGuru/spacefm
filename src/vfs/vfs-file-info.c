@@ -284,7 +284,9 @@ GdkPixbuf* vfs_file_info_get_small_icon( VFSFileInfo* fi )
 {
     if ( fi->flags & VFS_FILE_INFO_DESKTOP_ENTRY && fi->small_thumbnail )  //sfm
         return gdk_pixbuf_ref( fi->small_thumbnail );
-    
+
+    if( G_UNLIKELY(!fi->mime_type) )
+        return NULL;
     return vfs_mime_type_get_icon( fi->mime_type, FALSE );
 }
 
@@ -357,18 +359,49 @@ time_t* vfs_file_info_get_atime( VFSFileInfo* fi )
 
 static void get_file_perm_string( char* perm, mode_t mode )
 {
-    perm[ 0 ] = S_ISDIR( mode ) ? 'd' : ( S_ISLNK( mode ) ? 'l' : '-' );
+    if ( S_ISREG( mode ) ) //sfm
+        perm[0] = '-';
+    else if ( S_ISDIR( mode ) )
+        perm[0] = 'd';
+    else if ( S_ISLNK( mode ) )
+        perm[0] = 'l';
+    else if ( G_UNLIKELY( S_ISCHR( mode ) ) )
+        perm[0] = 'c';
+    else if ( G_UNLIKELY( S_ISBLK( mode ) ) )
+        perm[0] = 'b';
+    else if ( G_UNLIKELY( S_ISFIFO( mode ) ) )
+        perm[0] = 'p';
+    else if ( G_UNLIKELY( S_ISSOCK( mode ) ) )
+        perm[0] = 's';
+    else
+        perm[0] = '-';
     perm[ 1 ] = ( mode & S_IRUSR ) ? 'r' : '-';
     perm[ 2 ] = ( mode & S_IWUSR ) ? 'w' : '-';
-    perm[ 3 ] = ( mode & S_IXUSR ) ? 'x' : '-';
+    if ( G_UNLIKELY( mode & S_ISUID ) ) //sfm
+    {
+        if ( G_LIKELY( mode & S_IXUSR ) )
+            perm[ 3 ] = 's';
+        else
+            perm[ 3 ] = 'S';        
+    }
+    else
+        perm[ 3 ] = ( mode & S_IXUSR ) ? 'x' : '-';
     perm[ 4 ] = ( mode & S_IRGRP ) ? 'r' : '-';
     perm[ 5 ] = ( mode & S_IWGRP ) ? 'w' : '-';
-    perm[ 6 ] = ( mode & S_IXGRP ) ? 'x' : '-';
+    if ( G_UNLIKELY( mode & S_ISGID ) ) //sfm
+    {
+        if ( G_LIKELY( mode & S_IXGRP ) )
+            perm[ 6 ] = 's';
+        else
+            perm[ 6 ] = 'S';        
+    }
+    else
+        perm[ 6 ] = ( mode & S_IXGRP ) ? 'x' : '-';
     perm[ 7 ] = ( mode & S_IROTH ) ? 'r' : '-';
     perm[ 8 ] = ( mode & S_IWOTH ) ? 'w' : '-';
-    if ( mode & S_ISVTX ) //MOD
+    if ( G_UNLIKELY( mode & S_ISVTX ) ) //MOD
     {
-        if ( mode & S_IXOTH )
+        if ( G_LIKELY( mode & S_IXOTH ) )
             perm[ 9 ] = 't';
         else
             perm[ 9 ] = 'T';        

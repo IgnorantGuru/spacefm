@@ -1,9 +1,7 @@
-README for SpaceFM v0.7.5 ALPHA TEST VERSION
+README for SpaceFM v0.7.6 ALPHA TEST VERSION
 
 
-USE AT YOUR OWN RISK
-
-    This is a test release - please test functions carefully
+This is a test release - please test functions carefully.
 
 
 For updates and instructions visit:
@@ -34,23 +32,6 @@ DESCRIPTION
 
 PACKAGES
 
-    Debian/Ubuntu packages are available here:
-        NOTE: These convenience deb packages contain the source code and will
-              build and install SpaceFM automatically.
-
-        NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 users
-              may not be able to install SpaceFM due to repositories missing
-              package libgdk-pixbuf2.0-0
-
-        https://github.com/IgnorantGuru/spacefm/tree/master/packages
-            (To save a file, click on its filename and click 'View Raw')
-            
-        also available via the author's PPA:
-            http://igurublog.wordpress.com/downloads/ppa/
-
-        For signatures and SHA256 sums see 
-            http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
-        
     antiX's current test release includes spacefm:    
         http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
     
@@ -58,6 +39,25 @@ PACKAGES
         http://aur.archlinux.org/packages.php?ID=55777
         http://aur.archlinux.org/packages.php?ID=58247
     
+    Debian-based deb packages are available in Downloads:
+        (to save a file, click on its filename and click 'View Raw'):
+        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+    
+        and are also available in the author's PPA:
+            http://igurublog.wordpress.com/downloads/ppa/
+        
+        These convenience deb packages contain the source code and will build
+        and install SpaceFM automatically on most Debian-based distros.
+        $TMPDIR (usually /tmp) must NOT be mounted noexec. Or see CREATE DEB
+        PACKAGE below.
+
+        NOTE: SpaceFM requires libgtk >= 2.24.  Debian Squeeze and Ubuntu 10.04
+              users also may not be able to install SpaceFM due to repositories
+              missing package libgdk-pixbuf2.0-0
+
+        For signatures and SHA256 sums see 
+            http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
+        
     Foresight Lxde uses SpaceFM as its default file manager; Foresight includes
     spacefm in its repositories:
         http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
@@ -80,11 +80,16 @@ PACKAGES
     Sabayon includes spacefm in its repositories:
         http://www.sabayon.org/
         
+    Ubuntu: see 'Debian-based' above
+
     VectorLinux has spacefm test packages available:
         http://vectorlinux.com/
     
     Other:
         See INSTALLER below
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
 INSTALLER
@@ -108,14 +113,17 @@ INSTALLER
 
     To reinstall or upgrade, just run the latest installer again.
 
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+
 
 BUILD
 
 1)  Install required build dependencies (below are Debian package names - 
     packages names on your distro may vary but should be similar):
 
-        autotools-dev bash dbus desktop-file-utils libc6 libcairo2 libdbus-1-3
-        libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0
+        autotools-dev bash build-essential dbus desktop-file-utils libc6
+        libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0
         libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config
         libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev
         libdbus-1-dev libgdk-pixbuf2.0-0 libudev0 (>=143) libudev-dev
@@ -169,6 +177,9 @@ BUILD
     To build with an additional custom su program ('/usr/bin/mysu' in this
     example), add:
         --with-preferable-sudo=/usr/bin/mysu  # to the configure command
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
     For general build information consult the INSTALL file.
 
@@ -289,79 +300,10 @@ Otherwise, run these command AS ROOT:
     update-desktop-database -q
 
 
-
 TRANSLATIONS
 
-Translating SpaceFM doesn't require any special tools - just a text editor.
-To create a translation of SpaceFM for your language, follow these steps.
-    
-1)  Install build dependencies listed above in BUILD, download the SpaceFM
-    source code tarball, and extract it.
-
-2)  Open a terminal and enter the source code subdirectory 'po'
-
-3)  Generate a spacefm.pot file:
-
-        intltool-update --pot
-
-4)  Create a .po file for your language.  This example uses french (fr) -
-    change 'fr' in the examples below to your language:
-    
-        cp fr.po fr-old.po     # copy the old po file for reference
-        cp spacefm.pot fr.po   # create a new po file
-
-5)  Open fr.po in your text editor.  Translate each msgid into the
-    corresponding msgstr.  To see examples, consult fr-old.po
-    
-6)  cd into the directory containing configure and run make normally:
-
-        cd ..
-        ./configure
-        make
-        
-    If necessary, correct any syntax errors or warnings produced by make
-    relating to your .po file and repeat step 6 until make is successful.
-
-7)  Test your translation by installing and running spacefm:
-
-        sudo make install
-        rm -rf /tmp/spacefm-test
-        spacefm --config-dir /tmp/spacefm-test
-
-    NOTE:  Because of SpaceFM's design mode, your newly translated strings will
-    only appear in menu item names when starting with a fresh config
-    directory as shown above.
-
-8)  Once translations in menus and dialogs are the way you want them, release
-    your translated .po file:
-
-    If you are familiar with github, you can clone the spacefm repo and do a
-    pull request.
-    
-    OR, add the .po file to a public gist https://gist.github.com/ or host
-    it elsewhere, then open a new issue asking for your file to be merged into
-    the source:  https://github.com/IgnorantGuru/spacefm/issues/new
-    
-    OR, email your .po file:  http://igurublog.wordpress.com/contact-ignorantguru/
-    
-9)  Translated strings will change occassionally as new SpaceFM versions are
-    released.  To update your translation:
-
-    Generate a spacefm.pot file:
-
-        intltool-update --pot
-    
-    Then merge the new strings with the already translated ones:
-
-        intltool-update --dist fr
-        
-    OR, if you don’t want to overwrite fr.po initially, you can merge into a
-    new test file:
-
-        intltool-update --dist --output-file=fr-test.po fr
-
-    Then complete any missing or fuzzy translations in the .po file, and repeat
-    steps 7 and 8.
+Adding or updating a translation of SpaceFM doesn't require any special tools,
+just a text editor.  For instructions, see the TRANSLATE file.
 
 
 LICENSE

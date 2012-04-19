@@ -752,13 +752,23 @@ gboolean handle_parsed_commandline_args()
                             // change to user-specified panel
                             if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel-1] ) )
                             {
-                                xset_set_b_panel( panel, "show", TRUE );
+                                // set panel to load real_path on panel show
+                                //     if panel has no saved tabs
+                                set = xset_get_panel( panel, "show" );
+                                if ( !set->s )
+                                {
+                                    set->s = g_strdup_printf( "///%s", real_path );
+                                    tab_added = TRUE;
+                                }
+                                // show panel
+                                set->b = XSET_B_TRUE;
                                 show_panels_all_windows( NULL, main_window );
                             }
                             main_window->curpanel = panel;
                             main_window->notebook = main_window->panel[panel-1];
                         }
-                        fm_main_window_add_new_tab( main_window, real_path );
+                        if ( !tab_added )
+                            fm_main_window_add_new_tab( main_window, real_path );
                     }
                     gtk_window_present( GTK_WINDOW( main_window ) );
                     ret = TRUE;
