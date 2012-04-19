@@ -360,15 +360,31 @@ static void get_file_perm_string( char* perm, mode_t mode )
     perm[ 0 ] = S_ISDIR( mode ) ? 'd' : ( S_ISLNK( mode ) ? 'l' : '-' );
     perm[ 1 ] = ( mode & S_IRUSR ) ? 'r' : '-';
     perm[ 2 ] = ( mode & S_IWUSR ) ? 'w' : '-';
-    perm[ 3 ] = ( mode & S_IXUSR ) ? 'x' : '-';
+    if ( G_UNLIKELY( mode & S_ISUID ) ) //sfm
+    {
+        if ( G_LIKELY( mode & S_IXUSR ) )
+            perm[ 3 ] = 's';
+        else
+            perm[ 3 ] = 'S';        
+    }
+    else
+        perm[ 3 ] = ( mode & S_IXUSR ) ? 'x' : '-';
     perm[ 4 ] = ( mode & S_IRGRP ) ? 'r' : '-';
     perm[ 5 ] = ( mode & S_IWGRP ) ? 'w' : '-';
-    perm[ 6 ] = ( mode & S_IXGRP ) ? 'x' : '-';
+    if ( G_UNLIKELY( mode & S_ISGID ) ) //sfm
+    {
+        if ( G_LIKELY( mode & S_IXGRP ) )
+            perm[ 6 ] = 's';
+        else
+            perm[ 6 ] = 'S';        
+    }
+    else
+        perm[ 6 ] = ( mode & S_IXGRP ) ? 'x' : '-';
     perm[ 7 ] = ( mode & S_IROTH ) ? 'r' : '-';
     perm[ 8 ] = ( mode & S_IWOTH ) ? 'w' : '-';
-    if ( mode & S_ISVTX ) //MOD
+    if ( G_UNLIKELY( mode & S_ISVTX ) ) //MOD
     {
-        if ( mode & S_IXOTH )
+        if ( G_LIKELY( mode & S_IXOTH ) )
             perm[ 9 ] = 't';
         else
             perm[ 9 ] = 'T';        
