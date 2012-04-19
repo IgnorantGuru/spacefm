@@ -411,9 +411,10 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <p>If you want SpaceFM always running in the background, ready to quickly open windows and automount volumes, but <i>don't</i> want it to manage the desktop, start a daemon instance of SpaceFM:
 <pre>    spacefm -d</pre>
 
-<p>No window will open in this case, but an instance will be started if not already running, and it will continue running for the duration of your X login session.  You can also start the daemon from your login script.
+<p>No window will open in this case, but an instance will be started if not already running, and it will continue running for the duration of your X login session.  You can also start the daemon from your login script.  For example, if using Openbox, add this line to ~/.config/openbox/autostart.sh:
+<pre>    (sleep 2 && spacefm -d) &</pre>
 
-<p>One particular use for daemon mode is to make sure udisks removes leftover folders from /media.  By default, SpaceFM will unmount removable devices on exit to prevent folders remaining in /media at shutdown (unless you uncheck option <a href="#devices-settings-exit">Settings|Auto-Mount|Unmount On Exit</a>) in the Devices list.  If running as a normal instance, this means devices will be unmounted whenever you close the last SpaceFM window.  When running as a daemon (or as a desktop manager daemon), devices won't be unmounted until you logoff.
+<p>One particular use for daemon mode is to make sure udisks removes leftover folders from /media.  SpaceFM can unmount removable devices on exit to prevent folders remaining in /media at shutdown (if you check option <a href="#devices-settings-exit">Settings|Auto-Mount|Unmount On Exit</a>).  If running as a normal instance, this means devices will be unmounted whenever you close the last SpaceFM window.  When running as a daemon (or as a desktop manager daemon), devices won't be unmounted until you logoff.
 
 <p>To stop a daemon mode instance, send SpaceFM a quit signal:
 <pre>    killall spacefm</pre>
@@ -1436,9 +1437,9 @@ If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new t
 <!-- #Auto Mount|Unmount On Exit #exit -->
 If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  This occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
 
-<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media or /run/media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM unmounts devices on exit by default.
+<p>If udisks mounts a device, and there is no fstab entry for the device, udisks may create a subfolder for the device mount point in /media or /run/media.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind when the computer is shut down.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
 
-<p>If you uncheck option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
+<p>If you don't check option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
 
 <!-- #Auto Run|On Mount #runm -->
 Auto Run|On Mount opens a dialog which allows you to set a command line to be run when a removable drive or optical data disc is auto-mounted by SpaceFM.  This command can be as simple as a program name to be run, or can be a one line bash script.  The following substitution variables may be used in the command line:

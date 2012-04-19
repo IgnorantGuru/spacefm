@@ -4,6 +4,7 @@
     relax has media criteria fixes #68
     hack for icon theme missing application-x-xz-compressed-tar fixes #55
     added kernel polling recommendation to docs closes #66
+    desktop new tab present window fixes #16
 0.7.5   2012-04-14:
     replaced udisks with libudev kernel support for device detection and info
     udisks v1 & v2 now supported for mount/unmount as normal user

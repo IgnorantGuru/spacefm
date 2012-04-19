@@ -2305,6 +2305,7 @@ void open_folders( GList* folders )
         g_free( path );
         folders = folders->next;
     }
+    gtk_window_present( GTK_WINDOW( main_window ) );
 }
 
 GCompareDataFunc get_sort_func( DesktopWindow* win )
