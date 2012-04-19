@@ -6,6 +6,7 @@
     added kernel polling recommendation to docs closes #66
     desktop new tab present window fixes #16
     file permissions show SUID and SGID bits
+    file permissions show char device, block device, pipe, socket
     panel show inhibit tab creation on spec
 0.7.5   2012-04-14:
     replaced udisks with libudev kernel support for device detection and info

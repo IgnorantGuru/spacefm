@@ -357,7 +357,22 @@ time_t* vfs_file_info_get_atime( VFSFileInfo* fi )
 
 static void get_file_perm_string( char* perm, mode_t mode )
 {
-    perm[ 0 ] = S_ISDIR( mode ) ? 'd' : ( S_ISLNK( mode ) ? 'l' : '-' );
+    if ( S_ISREG( mode ) ) //sfm
+        perm[0] = '-';
+    else if ( S_ISDIR( mode ) )
+        perm[0] = 'd';
+    else if ( S_ISLNK( mode ) )
+        perm[0] = 'l';
+    else if ( G_UNLIKELY( S_ISCHR( mode ) ) )
+        perm[0] = 'c';
+    else if ( G_UNLIKELY( S_ISBLK( mode ) ) )
+        perm[0] = 'b';
+    else if ( G_UNLIKELY( S_ISFIFO( mode ) ) )
+        perm[0] = 'p';
+    else if ( G_UNLIKELY( S_ISSOCK( mode ) ) )
+        perm[0] = 's';
+    else
+        perm[0] = '-';
     perm[ 1 ] = ( mode & S_IRUSR ) ? 'r' : '-';
     perm[ 2 ] = ( mode & S_IWUSR ) ? 'w' : '-';
     if ( G_UNLIKELY( mode & S_ISUID ) ) //sfm
