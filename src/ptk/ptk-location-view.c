@@ -2036,6 +2036,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     char* fstab = NULL;
     char* cmd;
     char* info;
+    char* esc_path;
     
     if ( !item )
         view = view2;
@@ -2172,8 +2173,10 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", _("USAGE") );
         else
         {
-            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, vol->mount_point );
+            esc_path = bash_quote( vol->mount_point );
+            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, esc_path );
             g_free( path );
+            g_free( esc_path );
         }
     }
     else
@@ -2201,7 +2204,11 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             if ( !strcmp( vol->mount_point, "/" ) )
                 lsof = g_strdup_printf( "echo %s ; %s -w | grep /$ | head -n 500 ; echo ; ", _("PROCESSES"), path );
             else
-                lsof = g_strdup_printf( "echo %s ; %s -w %s | head -n 500 ; echo ; ", _("PROCESSES"), path, vol->mount_point );
+            {
+                esc_path = bash_quote( vol->mount_point );
+                lsof = g_strdup_printf( "echo %s ; %s -w %s | head -n 500 ; echo ; ", _("PROCESSES"), path, esc_path );
+                g_free( esc_path );
+            }
             g_free( path );
         }
     }
