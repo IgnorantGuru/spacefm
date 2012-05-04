@@ -77,7 +77,7 @@ const ArchiveHandler handlers[]=
         },
         {
             "application/x-rar",
-            NULL,
+            "rar a -r %o",
             "unrar -o- x",
             "unrar lt",
             ".rar", "arc_rar", TRUE
@@ -363,9 +363,21 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
     g_free( task_name );
-    task->task->exec_command = cmd;
     task->task->exec_browser = file_browser;
-    task->task->exec_sync = TRUE;
+    if ( format == 3 || format == 4 || format == 6 )
+    {
+        // use terminal for noisy rar, 7z, zip creation
+        task->task->exec_terminal = TRUE;
+        task->task->exec_sync = FALSE;
+        s1 = cmd;
+        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, _("[ Finished With Errors ]  Press Enter to close") );
+        g_free( s1 );
+    }
+    else
+    {
+        task->task->exec_sync = TRUE;
+    }
+    task->task->exec_command = cmd;
     task->task->exec_show_error = TRUE;
     task->task->exec_export = TRUE;
     //task->task->exec_keep_tmp = TRUE;
