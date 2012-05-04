@@ -2,6 +2,7 @@
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding
     extract zip, rar, 7z in terminal for output & password prompt fixes #72
+    if no 7za, use 7zr for 7zip extraction and creation closes #62
 0.7.6   2012-04-19:
     unmount on exit no longer default (affects new installs)
     documented deb packages require $TMPDIR not be noexec closes #64

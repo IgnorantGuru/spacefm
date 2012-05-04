@@ -63,7 +63,7 @@ const ArchiveHandler handlers[]=
         },
         {
             "application/x-7z-compressed",
-            "7za %o a",
+            "7za %o a", // hack - also uses 7zr if available
             "7za x",
             "7za l",
             ".7z", "arc_7z", TRUE
@@ -141,6 +141,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     GtkFileFilter* filter;
     char* dest_file;
     char* ext;
+    char* str;
+    char* cmd;
     int res;
     //char **argv, **cmdv;
     int argc, cmdc, i, n;
@@ -295,6 +297,22 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     }
     else
         s1 = g_strdup( handlers[format].compress_cmd );
+        
+    if ( format == 4 )
+    {
+        // for 7z use 7za OR 7zr
+        str = g_find_program_in_path( "7za" );
+        if ( !str )
+            str = g_find_program_in_path( "7zr" );
+        if ( str )
+        {
+            cmd = s1;
+            s1 = replace_string( cmd, "7za", str, FALSE );
+            g_free( cmd );
+            g_free( str );
+        }
+    }
+
     udest_file = g_filename_display_name( dest_file );
     if ( !g_str_has_suffix( udest_file, handlers[format].file_ext ) )
     {
@@ -324,7 +342,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     
     char* udest_quote = bash_quote( udest_file );
     //char* cmd = g_strdup_printf( "%s %s \"${fm_filenames[@]}\"", s1, udest_quote );
-    char* cmd = g_strdup_printf( "%s %s", s1, udest_quote );
+    cmd = g_strdup_printf( "%s %s", s1, udest_quote );
     g_free( udest_file );
     g_free( udest_quote );
     g_free( s1 );
@@ -587,11 +605,26 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             else
                 prompt = g_strdup_printf( "" );
             
+            char* handler = NULL;
+            if ( i == 4 )
+            {
+                // for 7z use 7za OR 7zr
+                str = g_find_program_in_path( "7za" );
+                if ( !str )
+                    str = g_find_program_in_path( "7zr" );
+                if ( str )
+                {
+                    handler = replace_string( handlers[i].extract_cmd, "7za", str, FALSE );
+                    g_free( str );
+                }
+            }
             cmd = g_strdup_printf( "cd %s && %s%s %s%s%s", dest_quote, mkparent,
-                                handlers[i].extract_cmd, full_quote, prompt, perm );
+                                handler ? handler : handlers[i].extract_cmd,
+                                full_quote, prompt, perm );
             g_free( mkparent );
             g_free( perm );
             g_free( prompt );
+            g_free( handler );
         }
         g_free( dest_quote );
         g_free( full_quote );
