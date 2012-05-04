@@ -57,7 +57,7 @@ const ArchiveHandler handlers[]=
         {
             "application/zip",
             "zip %o -r",
-            "unzip -qq",
+            "unzip",
             "unzip -l",
             ".zip", "arc_zip", TRUE
         },
@@ -407,6 +407,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     GList* l;
     char* mkparent;
     char* perm;
+    char* prompt;
     char* full_path;
     char* full_quote;
     char* dest_quote;
@@ -514,6 +515,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             continue;
     
         // handler found
+        gboolean keep_term = TRUE;
         full_path = g_build_filename( cwd, vfs_file_info_get_name( file ), NULL );
         full_quote = bash_quote( full_path );
         dest_quote = bash_quote( dest );
@@ -575,12 +577,21 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                     perm = g_strdup_printf( "" );
             }
             
-            cmd = g_strdup_printf( "cd %s && %s%s %s%s", dest_quote, mkparent,
-                                handlers[i].extract_cmd, full_quote, perm );
+            if ( i == 3 || i == 4 || i == 6 )
+            {
+                // zip 7z rar in terminal for password & output
+                list_contents = TRUE;  // run in terminal
+                keep_term = FALSE;
+                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", _("[ Finished With Errors ]  Press Enter to close") );
+            }
+            else
+                prompt = g_strdup_printf( "" );
+            
+            cmd = g_strdup_printf( "cd %s && %s%s %s%s%s", dest_quote, mkparent,
+                                handlers[i].extract_cmd, full_quote, prompt, perm );
             g_free( mkparent );
             g_free( perm );
-            if ( i == 4 )  //application/x-7z-compressed
-                list_contents = TRUE;  // run in terminal
+            g_free( prompt );
         }
         g_free( dest_quote );
         g_free( full_quote );
@@ -598,7 +609,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         task->task->exec_show_error = TRUE;
         task->task->exec_show_output = list_contents;
         task->task->exec_terminal = list_contents;
-        task->task->exec_keep_terminal = TRUE;
+        task->task->exec_keep_terminal = keep_term;
         task->task->exec_export = FALSE;
     //task->task->exec_keep_tmp = TRUE;
         XSet* set = xset_get( "arc_extract" );
