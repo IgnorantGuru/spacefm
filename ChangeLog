@@ -1,5 +1,6 @@
 0.7.6+
     escape mount point in dev props scripts fixes #70
+    fixed File|File Search keybinding
 0.7.6   2012-04-19:
     unmount on exit no longer default (affects new installs)
     documented deb packages require $TMPDIR not be noexec closes #64

@@ -3270,7 +3270,7 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_new_window_activate( NULL, main_window );
                 else if ( !strcmp( xname, "root_window" ) )
                     on_open_current_folder_as_root( NULL, main_window );
-                else if ( !strcmp( xname, "search_window" ) )
+                else if ( !strcmp( xname, "search" ) )
                     on_find_file_activate( NULL, main_window );
                 else if ( !strcmp( xname, "terminal" ) )
                     on_open_terminal_activate( NULL, main_window );
