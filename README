@@ -1,4 +1,4 @@
-README for SpaceFM v0.7.6+ ALPHA TEST VERSION
+README for SpaceFM v0.7.6+ BETA TEST VERSION
 
 
 This is a test release - please test functions carefully.
@@ -35,8 +35,10 @@ PACKAGES
     antiX's current test release includes spacefm:    
         http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
     
-    Arch Linux's AUR includes spacefm and spacefm-git:
-        http://aur.archlinux.org/packages.php?ID=55777
+    Arch Linux's [community] repository includes spacefm:
+        http://www.archlinux.org/packages/community/i686/spacefm/
+        http://www.archlinux.org/packages/community/x86_64/spacefm/
+    and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
         http://aur.archlinux.org/packages.php?ID=58247
     
     Debian-based deb packages are available in Downloads:
