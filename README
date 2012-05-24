@@ -1,9 +1,6 @@
 README for SpaceFM v0.7.6+ BETA TEST VERSION
 
 
-This is a test release - please test functions carefully.
-
-
 For updates and instructions visit:
     http://ignorantguru.github.com/spacefm/
     http://ignorantguru.github.com/spacefm/news.html
@@ -137,7 +134,7 @@ BUILD
         may not be able to install SpaceFM due to repositories missing package
         libgdk-pixbuf2.0-0
 
-    Also Recommended: eject, lsof, wget, ktsuss|gksu, pmount|udisks
+    Also Recommended: udevil|pmount|udisks, eject, lsof, wget, ktsuss|gksu
 
     IF building with HAL support, you also need:
         hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1
