@@ -81,7 +81,10 @@ PACKAGES
         
     Sabayon includes spacefm in its repositories:
         http://www.sabayon.org/
-        
+
+    SliTaz includes spacefm in its repositories:
+        http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search" 
+
     Ubuntu: see 'Debian-based' above
 
     VectorLinux has spacefm test packages available:
