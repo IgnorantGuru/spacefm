@@ -2794,7 +2794,8 @@ gboolean xset_copy_file( char* src, char* dest )
     if ( ( inF = open( src, O_RDONLY ) ) == -1 )
         return FALSE;
      
-    if ( ( ouF = open( dest, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR ) ) == -1 )
+    unlink( dest );
+    if ( ( ouF = open( dest, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR ) ) == -1 )
     {
         close(inF);            
         return FALSE;
