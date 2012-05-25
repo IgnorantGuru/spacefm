@@ -1280,7 +1280,11 @@ static void vfs_file_task_exec( VFSFileTask* task )
             if ( task->exec_browser )
                 success = main_write_exports( task, value, file );
             else
+#ifdef DESKTOP_INTEGRATION
                 success = desktop_write_exports( task, value, file );
+#else
+                success = FALSE;
+#endif
             if ( !success ) goto _exit_with_error;
         }
         else

@@ -550,8 +550,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     if ( browser )
         main_context_fill( browser, context );
+#ifdef DESKTOP_INTEGRATION
     else
         desktop_context_fill( desktop, context );
+#endif
 
     // OPEN >
     //item = gtk_separator_menu_item_new ();
@@ -1542,11 +1544,13 @@ on_popup_rename_activate ( GtkMenuItem *menuitem,
     if ( data->browser )
         ptk_file_browser_rename_selected_files( data->browser, data->sel_files,
                                                                     data->cwd );
+#ifdef DESKTOP_INTEGRATION
     else if ( data->desktop && data->sel_files )
     {
         desktop_window_rename_selected_files( data->desktop, data->sel_files,
                                                                     data->cwd );
     }
+#endif
 }
 
 void on_popup_compress_activate ( GtkMenuItem *menuitem,
