@@ -1162,8 +1162,10 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         data->complete = TRUE;
         if ( data->complete_notify )
         {
+            GDK_THREADS_ENTER();
             data->complete_notify( task, data->user_data );
             data->complete_notify = NULL;
+            GDK_THREADS_LEAVE();
         }
         main_task_view_remove_task( data );
         
