@@ -1,4 +1,6 @@
-0.7.6+
+0.7.8
+
+0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding
     extract zip, rar, 7z in terminal for output & password prompt fixes #72
@@ -6,6 +8,7 @@
     added rar creation closes #36 ; rar zip & 7z creation runs in terminal
     fixed hang on new tab added after mount
     fixed make errors with --disable-desktop-integration fixes #78
+    udevil discovery; pmount ahead of udisks
 0.7.6   2012-04-19:
     unmount on exit no longer default (affects new installs)
     documented deb packages require $TMPDIR not be noexec closes #64
