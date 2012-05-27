@@ -17,9 +17,7 @@
 <br>
 SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, udev-based device manager, customizable menu system, and bash integration.&nbsp;&nbsp;<a href="#highlights">read more</a>
 
-<p><b>IMPORTANT</b>  This is still a test release.  Please carefully test functions before relying on them.
 
-<p>Some aspects of this project are just getting started, so please check back regularly for updates.
 <br>
 <h3>Links</h3>
 
@@ -72,7 +70,7 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, udev-b
 <tr>
 <td><b>Foresight</b></td>
 <td>
-	Foresight Lxde uses SpaceFM as its default file manager; Foresight includes <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm">spacefm</a> in its repositories
+	Foresight Lxde includes SpaceFM as its default file manager; Foresight includes <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm">spacefm</a> in its repositories
 </td>
 </tr>
 
@@ -94,6 +92,13 @@ SpaceFM is a multi-panel tabbed file manager for Linux with built-in VFS, udev-b
 	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
 
 	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b>Parted Magic</b></td>
+<td>
+	<a href="http://partedmagic.com/doku.php">Parted Magic</a> includes SpaceFM as its default file manager
 </td>
 </tr>
 
@@ -174,10 +179,7 @@ NOTE: Enabling <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#introduction-about">read more</a>
 <h3>Limitations</h3>
 <ul>
-	<li>SpaceFM makes no network connections and is not a network browser.  It currently browses only mounted filesystems and does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to browse and mount the shares locally.
-</ul>
-<ul>
-	<li>SpaceFM 0.7.5 does not require udisks (only udev).  However, in order to mount or unmount devices as a non-root user, you will need pmount or udisks installed, or will need to specify a custom program to be used.  A custom mount solution is currently under development.  Also, enabling <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
+	<li>SpaceFM makes no network connections and currently browses only mounted filesystems.  It does not navigate smb://, ftp://, and similar URLs.  It is possible to add custom commands which automate mounting of network shares, or to use another program to browse and mount the shares locally.  Some network support will be added to SpaceFM shortly.
 </ul>
 <br>
 <hr>
@@ -199,7 +201,7 @@ bash spacefm-x.x.x-installer.sh --help
 <p>The installer requires the build dependencies listed in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Build dependencies include:  (package names may vary on your distro)
 <blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0 libgdk-pixbuf2.0-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
-Also <b>recommended</b>: <i>eject, lsof, wget, ktsuss|gksu, pmount|udisks</i>
+Also <b>recommended</b>: <i><a href="http://ignorantguru.github.com/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu</i>
 
 <p>If any dependencies are missing, examine the error, install missing packages, and try again.
 
@@ -223,7 +225,7 @@ SpaceFM Icons &amp; Logo by Goran Simovic (C) 2012<br>
 	</td>
 -->
 	<td>
-		<div align="left"><i>Updated 2012-05-05</i></div>
+		<div align="left"><i>Updated 2012-05-27</i></div>
 	</td>
 	<td>
 		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>
