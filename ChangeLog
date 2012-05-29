@@ -1,5 +1,5 @@
-0.7.8
-
+0.7.7+
+    use/update mimeapps.list over defaults.list closes #71
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding
