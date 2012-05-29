@@ -183,7 +183,7 @@ static char* get_actions( const char* dir, const char* type, GArray* actions )
                 if( !is_removed && -1 == strv_index( (char**)actions->data, apps[i] ) )
                 {
                     /* check for app existence */
-                    path = mime_type_locate_desktop_file( dir, apps[i] );
+                    path = mime_type_locate_desktop_file( NULL, apps[i] );
                     if( G_LIKELY(path) )
                     {
 //g_print( "            EXISTS\n");
@@ -627,7 +627,6 @@ void mime_type_set_default_action( const char* type, const char* desktop_id )
 
     // remove new default from [Removed Associations]
     char* removed = NULL;
-    gboolean removed_changed = FALSE;
     apps = g_key_file_get_string_list( file, "Removed Associations", type, &n_apps,
                                                                         NULL );
     if ( apps )
@@ -640,18 +639,202 @@ void mime_type_set_default_action( const char* type, const char* desktop_id )
                 str = removed;
                 removed = g_strdup_printf( "%s%s;", str ? str : "", apps[i] );
                 g_free( str );
-                removed_changed = TRUE;
             }
         }
         g_strfreev( apps );
     }
     
     // update key file - removed
-    if ( removed_changed )
-    {
+    if ( removed )
         g_key_file_set_string( file, "Removed Associations", type, removed );
-        g_free( removed );
+    else
+        g_key_file_remove_key( file, "Removed Associations", type, NULL );
+    g_free( removed );
+    
+    // save
+    data = g_key_file_to_data( file, &len, NULL );
+    g_key_file_free( file );
+    save_to_file( path, data, len );
+    g_free( path );
+    g_free( data );
+}
+
+/* adds application to [Removed Associations] */
+void mime_type_remove_action( const char* type, const char* desktop_id )
+{   //sfm 0.7.7+ added
+    GKeyFile* file;
+    gsize len = 0;
+    char* data = NULL;
+    char** apps;
+    gsize n_apps, i;
+    char* str;
+    
+    if ( !( type && type[0] != '\0' && desktop_id && desktop_id[0] != '\0' ) )
+        return;
+        
+    char* dir = g_build_filename( g_get_user_data_dir(), "applications", NULL );
+    char* path = g_build_filename( dir, "mimeapps.list", NULL );
+
+    g_mkdir_with_parents( dir, 0700 );
+    g_free( dir );
+
+    // Load old file content, if available
+    file = g_key_file_new();
+    g_key_file_load_from_file( file, path, 0, NULL );
+    
+    // remove app from [Added Associations]
+    char* new_action = NULL;
+    apps = g_key_file_get_string_list( file, "Added Associations", type, &n_apps,
+                                                                        NULL );
+    if ( apps )
+    {
+        for ( i = 0; i < n_apps; ++i )
+        {
+            g_strstrip( apps[i] );
+            if ( apps[i][0] != '\0' && strcmp( apps[i], desktop_id ) )
+            {
+                str = new_action;
+                new_action = g_strdup_printf( "%s%s;", str ? str : "", apps[i] );
+                g_free( str );
+            }
+        }
+        g_strfreev( apps );
     }
+
+    // update key file - added
+    if ( new_action )
+        g_key_file_set_string( file, "Added Associations", type, new_action );
+    else
+        g_key_file_remove_key( file, "Added Associations", type, NULL );
+    g_free( new_action );
+
+    // add app to [Removed Associations]
+    char* removed = NULL;
+    gboolean is_removed = FALSE;
+    apps = g_key_file_get_string_list( file, "Removed Associations", type, &n_apps,
+                                                                        NULL );
+    if ( apps )
+    {
+        for ( i = 0; i < n_apps; ++i )
+        {
+            g_strstrip( apps[i] );
+            if ( apps[i][0] != '\0' )
+            {
+                if ( !strcmp( apps[i], desktop_id ) )
+                {
+                    is_removed = TRUE;
+                    break;
+                }
+                str = removed;
+                removed = g_strdup_printf( "%s%s;", str ? str : "", apps[i] );
+                g_free( str );
+            }
+        }
+        g_strfreev( apps );
+    }
+
+    // update key file
+    if ( !is_removed )
+    {
+        str = removed;
+        removed = g_strdup_printf( "%s%s;", str ? str : "", desktop_id );
+        g_free( str );
+        g_key_file_set_string( file, "Removed Associations", type, removed );
+    }
+    g_free( removed );
+    
+    // save
+    data = g_key_file_to_data( file, &len, NULL );
+    g_key_file_free( file );
+    save_to_file( path, data, len );
+    g_free( path );
+    g_free( data );
+}
+
+/* appends app to type in Added Associations */
+void mime_type_append_action( const char* type, const char* desktop_id )
+{   //sfm 0.7.7+ added
+    // http://www.freedesktop.org/wiki/Specifications/mime-actions-spec
+    GKeyFile* file;
+    gsize len = 0;
+    char* data = NULL;
+    char** apps;
+    gsize n_apps, i;
+    char* str;
+    
+    if ( !( type && type[0] != '\0' && desktop_id && desktop_id[0] != '\0' ) )
+        return;
+        
+    char* dir = g_build_filename( g_get_user_data_dir(), "applications", NULL );
+    char* path = g_build_filename( dir, "mimeapps.list", NULL );
+
+    g_mkdir_with_parents( dir, 0700 );
+    g_free( dir );
+
+    // Load old file content, if available
+    file = g_key_file_new();
+    g_key_file_load_from_file( file, path, 0, NULL );
+    
+    // append app to [Added Associations]
+    char* new_action = NULL;
+    gboolean is_present = FALSE;
+    apps = g_key_file_get_string_list( file, "Added Associations", type, &n_apps,
+                                                                        NULL );
+    if ( apps )
+    {
+        for ( i = 0; i < n_apps; ++i )
+        {
+            g_strstrip( apps[i] );
+            if ( apps[i][0] != '\0' )
+            {
+                if ( !strcmp( apps[i], desktop_id ) )
+                {
+                    is_present = TRUE;
+                    break;
+                }
+                str = new_action;
+                new_action = g_strdup_printf( "%s%s;", str ? str : "", apps[i] );
+                g_free( str );
+            }
+        }
+        g_strfreev( apps );
+    }
+
+    // update key file - added
+    if ( !is_present )
+    {
+        str = new_action;
+        new_action = g_strdup_printf( "%s%s;", str ? str : "", desktop_id );
+        g_free( str );
+        g_key_file_set_string( file, "Added Associations", type, new_action );
+    }
+    g_free( new_action );
+
+    // remove app from [Removed Associations]
+    char* removed = NULL;
+    apps = g_key_file_get_string_list( file, "Removed Associations", type, &n_apps,
+                                                                        NULL );
+    if ( apps )
+    {
+        for ( i = 0; i < n_apps; ++i )
+        {
+            g_strstrip( apps[i] );
+            if ( apps[i][0] != '\0' && strcmp( apps[i], desktop_id ) )
+            {
+                str = removed;
+                removed = g_strdup_printf( "%s%s;", str ? str : "", apps[i] );
+                g_free( str );
+            }
+        }
+        g_strfreev( apps );
+    }
+    
+    // update key file - removed
+    if ( removed )
+        g_key_file_set_string( file, "Removed Associations", type, removed );
+    else
+        g_key_file_remove_key( file, "Removed Associations", type, NULL );
+    g_free( removed );
     
     // save
     data = g_key_file_to_data( file, &len, NULL );

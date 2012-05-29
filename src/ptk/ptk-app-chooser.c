@@ -392,6 +392,7 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
 {
     GtkWidget * dlg;
     gchar* app = NULL;
+    gchar* custom = NULL;
 
     dlg = app_chooser_dialog_new( parent, mime_type );
 
@@ -411,7 +412,9 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
             else if ( strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN )
                       && strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ))
             {
-                vfs_mime_type_add_action( mime_type, app, NULL );
+                vfs_mime_type_add_action( mime_type, app, &custom );
+                g_free( app );
+                app = custom;
             }
         }
     }

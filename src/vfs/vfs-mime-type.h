@@ -73,10 +73,15 @@ char* vfs_mime_type_get_default_action( VFSMimeType* mime_type );
 void vfs_mime_type_set_default_action( VFSMimeType* mime_type,
                                        const char* desktop_id );
 
+void vfs_mime_type_remove_action( VFSMimeType* mime_type,
+                                       const char* desktop_id );
+
 /* If user-custom desktop file is created, it's returned in custom_desktop. */
 void vfs_mime_type_add_action( VFSMimeType* mime_type,
                                const char* desktop_id,
                                char** custom_desktop );
+
+void vfs_mime_type_append_action( const char* type, const char* desktop_id );
 
 char** vfs_mime_type_get_all_known_apps();
 
@@ -86,6 +91,8 @@ char** vfs_mime_type_join_actions( char** list1, gsize len1,
 GList* vfs_mime_type_add_reload_cb( GFreeFunc cb, gpointer user_data );
 
 void vfs_mime_type_remove_reload_cb( GList* cb );
+
+char* vfs_mime_type_locate_desktop_file( const char* dir, const char* desktop_id );
 
 G_END_DECLS
 

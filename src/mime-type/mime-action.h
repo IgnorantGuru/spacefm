@@ -61,6 +61,11 @@ char* mime_type_get_default_action( const char* type );
  */
 void mime_type_set_default_action( const char* type, const char* desktop_id );
 
+/* adds application to [Removed Associations] */  //sfm
+void mime_type_remove_action( const char* type, const char* desktop_id );
+
+void mime_type_append_action( const char* type, const char* desktop_id );
+
 /* Locate the file path of desktop file by desktop_id */
 char* mime_type_locate_desktop_file( const char* dir, const char* desktop_id );
 

@@ -86,7 +86,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Recommended Apps</property>
+                <property name="label" translatable="yes">_Associated Apps</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>
@@ -112,7 +112,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_All Apps</property>
+                <property name="label" translatable="yes">A_ll Apps</property>
                 <property name="use_underline">True</property>
               </object>
               <packing>

@@ -469,6 +469,12 @@ void vfs_mime_type_set_default_action( VFSMimeType* mime_type,
     g_free( cust_desktop );
 }
 
+void vfs_mime_type_remove_action( VFSMimeType* mime_type,
+                                       const char* desktop_id )
+{
+    mime_type_remove_action( mime_type->type, desktop_id );
+}
+
 /* If user-custom desktop file is created, it's returned in custom_desktop. */
 void vfs_mime_type_add_action( VFSMimeType* mime_type,
                                const char* desktop_id,
@@ -477,6 +483,9 @@ void vfs_mime_type_add_action( VFSMimeType* mime_type,
     //MOD  don't create custom desktop file if desktop_id is not a command
     if ( !g_str_has_suffix( desktop_id, ".desktop" ) )
         mime_type_add_action( mime_type->type, desktop_id, custom_desktop );
+    else if ( custom_desktop )  //sfm
+        *custom_desktop = g_strdup( desktop_id );
+        
 }
 
 /*
@@ -525,4 +534,14 @@ void vfs_mime_type_remove_reload_cb( GList* cb )
 {
     g_slice_free( VFSMimeReloadCbEnt, cb->data );
     reload_cb = g_list_delete_link( reload_cb, cb );
+}
+
+char* vfs_mime_type_locate_desktop_file( const char* dir, const char* desktop_id )
+{
+    return mime_type_locate_desktop_file( dir, desktop_id );
+}
+
+void vfs_mime_type_append_action( const char* type, const char* desktop_id )
+{
+    mime_type_append_action( type, desktop_id );
 }
