@@ -1341,12 +1341,30 @@ enum {
     APP_JOB_EDIT_LIST,
     APP_JOB_ADD,
     APP_JOB_BROWSE,
-    APP_JOB_SHARE
+    APP_JOB_BROWSE_SHARED,
+    APP_JOB_EDIT_TYPE,
+    APP_JOB_VIEW
 };
+
+char* get_shared_desktop_file_location( const char* name )
+{
+    const gchar* const * dirs;
+    char* ret;
+
+    dirs = g_get_system_data_dirs();
+    for ( ; *dirs; ++dirs )
+    {
+        if ( ret = vfs_mime_type_locate_desktop_file( *dirs, name ) )
+            return ret;
+    }
+    return NULL;
+}
 
 void app_job( GtkWidget* item, GtkWidget* app_item )
 {
     char* path;
+    char* str;
+    
     VFSAppDesktop* desktop_file = ( VFSAppDesktop* ) g_object_get_data( 
                                         G_OBJECT( app_item ), "desktop_file" );
     if ( !( desktop_file && desktop_file->file_name ) )
@@ -1392,6 +1410,12 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                             : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
         g_free( path );
         break;
+    case APP_JOB_VIEW:
+        path = get_shared_desktop_file_location( desktop_file->file_name );
+        if ( path )
+            xset_edit( data->browser ? GTK_WIDGET( data->browser )
+                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+        break;
     case APP_JOB_EDIT_LIST:
         path = g_build_filename( g_get_user_data_dir(), "applications",
                                                     "mimeapps.list", NULL );
@@ -1419,9 +1443,13 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         if ( data->browser )
             ptk_file_browser_emit_open( data->browser, path, PTK_OPEN_NEW_TAB );
         break;
-    case APP_JOB_SHARE:
-        path = g_build_filename( "/usr/share", "applications", NULL );
-
+    case APP_JOB_BROWSE_SHARED:
+        str = get_shared_desktop_file_location( desktop_file->file_name );
+        if ( str )
+            path = g_path_get_dirname( str );
+        else
+            path = g_strdup( "/usr/share/applications" );
+        g_free( str );
         if ( data->browser )
             ptk_file_browser_emit_open( data->browser, path, PTK_OPEN_NEW_TAB );
         break;
@@ -1547,7 +1575,9 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
 {
     GtkWidget* newitem;
     char* str;
-    
+    char* path;
+    const char* icon;
+
     if ( !( data && data->info ) )
         return;
     
@@ -1561,15 +1591,6 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
 
     GtkWidget* app_menu = gtk_menu_new();
     GtkAccelGroup* accel_group = gtk_accel_group_new();
-
-    // Mime Type
-    str = g_strdup_printf( "<%s>", type );
-    newitem = app_menu_additem( app_menu, str,
-                                NULL, APP_JOB_NONE, app_item, data );
-    gtk_widget_set_sensitive( newitem, FALSE );
-
-    // Separator
-    gtk_container_add ( GTK_CONTAINER ( app_menu ), gtk_separator_menu_item_new() );
 
     // Set Default
     newitem = app_menu_additem( app_menu, _("_Set As Default"),
@@ -1591,34 +1612,74 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
     // Edit
     if ( desktop_file->file_name )
     {
-        char* path = g_build_filename( g_get_user_data_dir(), "applications",
+        path = g_build_filename( g_get_user_data_dir(), "applications",
                                                     desktop_file->file_name, NULL );
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
-            str = g_strdup_printf( "%s %s", _("_Edit"), desktop_file->file_name );
+        {
+            str = g_strdup_printf( "/home %s", desktop_file->file_name );
+            icon = GTK_STOCK_EDIT;
+        }
         else
-            str = g_strdup_printf( "%s %s (%s)", _("_Edit"), desktop_file->file_name,
-                                                                    _("copy") );
+        {
+            str = g_strdup_printf( "/home %s (%s)", desktop_file->file_name,
+                                                                    _("missing") );
+            icon = GTK_STOCK_NEW;
+        }
         newitem = app_menu_additem( app_menu, str,
-                                    GTK_STOCK_EDIT, APP_JOB_EDIT, app_item, data );
+                                    icon, APP_JOB_EDIT, app_item, data );
         g_free( str );
         g_free( path );
     }
     
+    // View /usr .desktop
+    if ( desktop_file->file_name )
+    {
+        str = g_strdup_printf( "/usr %s", desktop_file->file_name );
+        newitem = app_menu_additem( app_menu, str,
+                                    GTK_STOCK_OPEN, APP_JOB_VIEW, app_item, data );
+        g_free( str );
+        path = get_shared_desktop_file_location( desktop_file->file_name );
+
+        gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!path );
+        g_free( path );
+    }
+
+    // Edit <type> (+create)
+    str = replace_string( type, "/", ".", FALSE );
+    path = g_strdup_printf( "/usr/share/mime/spacefm-%s.xml", str );
+    g_free( str );
+    if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
+    {
+        str = g_strdup_printf( "<%s>", type );
+        icon = GTK_STOCK_EDIT;
+    }
+    else
+    {
+        str = g_strdup_printf( "<%s> (%s)", type, _("missing") );
+        icon = GTK_STOCK_NEW;
+    }
+    newitem = app_menu_additem( app_menu, str,
+                                icon, APP_JOB_EDIT_TYPE, app_item, data );
+    g_free( str );
+    g_free( path );
+    
+    
     // Edit List
-    newitem = app_menu_additem( app_menu, _("Edit _mimeapps.list"),
+    newitem = app_menu_additem( app_menu, "_mimeapps.list",
                                 GTK_STOCK_EDIT, APP_JOB_EDIT_LIST, app_item, data );
 
     // Separator
     gtk_container_add ( GTK_CONTAINER ( app_menu ), gtk_separator_menu_item_new() );
 
     // User
-    newitem = app_menu_additem( app_menu, _("_User applications/"),
+    newitem = app_menu_additem( app_menu, "/home applications/",
                                 GTK_STOCK_DIRECTORY, APP_JOB_BROWSE, app_item, data );
     gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!data->browser );    
 
     // Share
-    newitem = app_menu_additem( app_menu, _("_Share applications/"),
-                                GTK_STOCK_DIRECTORY, APP_JOB_SHARE, app_item, data );
+    newitem = app_menu_additem( app_menu, "/usr applications/",
+                                GTK_STOCK_DIRECTORY, APP_JOB_BROWSE_SHARED,
+                                app_item, data );
     gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!data->browser );    
 
 
