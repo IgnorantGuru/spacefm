@@ -95,7 +95,7 @@ const ArchiveHandler handlers[]=
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
     GtkFileChooser* dlg = GTK_FILE_CHOOSER(user_data);
-/*
+
     int i, n, len;
     char* ext = NULL;
     char *path, *name, *new_name;
@@ -123,16 +123,16 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free( ext );
     gtk_file_chooser_set_current_name( dlg, new_name );
     g_free( new_name );
-*/
+
     // set options
-    int i = gtk_combo_box_get_active(combo);
+    i = gtk_combo_box_get_active(combo);
     GtkEntry* entry = (GtkEntry*)g_object_get_data( G_OBJECT(dlg), "entry" );
     if ( xset_get_s( handlers[i].name ) )
         gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
     else
         gtk_entry_buffer_delete_text( gtk_entry_get_buffer( entry ), 0, -1 );
 }
-
+                                                        
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                                                 const char* cwd )
 {
@@ -205,16 +205,22 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
 
     gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
-//#if GTK_CHECK_VERSION(2, 8, 0)
-//    gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
-//#endif
+    gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
+
     if( files )
     {
-        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg),
-                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ) );
+//        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg),
+//                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ) );
+
+
+        ext = gtk_combo_box_get_active_text( GTK_COMBO_BOX(combo) );
+        dest_file = g_strjoin( NULL, 
+                        vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
+                        ext, NULL );
+        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), dest_file );
+        g_free( dest_file );
 
 /*
-        ext = gtk_combo_box_get_active_text( GTK_COMBO_BOX(combo) );
         if ( !files->next )
         {
             dest_file = g_build_filename( cwd,
@@ -237,8 +243,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         }
         else
             gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), "new archive" );
-        g_free( ext );
 */
+        g_free( ext );
+
     }
     gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
     
@@ -314,15 +321,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     }
 
     udest_file = g_filename_display_name( dest_file );
+/*
     if ( !g_str_has_suffix( udest_file, handlers[format].file_ext ) )
     {
         g_free( dest_file );
         dest_file = udest_file;
         udest_file = g_strdup_printf( "%s%s", dest_file, handlers[format].file_ext );
     }
+*/
     g_free( dest_file );
     
     // overwrite?
+/*
     if ( g_file_test( udest_file, G_FILE_TEST_EXISTS ) )
     {
         char* afile = g_path_get_basename( udest_file );
@@ -339,7 +349,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         }
         g_free( msg );
     }
-    
+*/    
     char* udest_quote = bash_quote( udest_file );
     //char* cmd = g_strdup_printf( "%s %s \"${fm_filenames[@]}\"", s1, udest_quote );
     cmd = g_strdup_printf( "%s %s", s1, udest_quote );
