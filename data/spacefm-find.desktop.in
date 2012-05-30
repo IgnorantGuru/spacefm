@@ -8,5 +8,5 @@ Icon=spacefm-find
 StartupNotify=true
 Type=Application
 Terminal=false
-MimeType=x-directory/normal;inode/directory;
+MimeType=inode/directory;
 _Comment=Search for files and folders

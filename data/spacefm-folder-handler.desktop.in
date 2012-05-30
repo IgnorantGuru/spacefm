@@ -9,6 +9,5 @@ Terminal=false
 Icon=spacefm
 StartupNotify=true
 Type=Application
-MimeType=x-directory/gnome-default-handler;x-directory/normal;inode/directory;
-#NotShowIn=GNOME;
+MimeType=inode/directory;
 
