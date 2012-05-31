@@ -1733,7 +1733,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         {
             str2 = replace_string( desktop_file->file_name, ".desktop", "._desktop",
                                                                         FALSE );
-            str = g_strdup_printf( "%s (%s)", str2, _("missing") );
+            str = g_strdup_printf( "%s (*%s)", str2, _("copy") );
             g_free( str2 );
             icon = GTK_STOCK_NEW;
         }
@@ -1775,7 +1775,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         g_free( path );
         str = replace_string( type, "/", "-", FALSE );
         path = str;
-        str = g_strdup_printf( "%s._xml (%s)", path, _("missing") );
+        str = g_strdup_printf( "%s._xml (*%s)", path, _("new") );
         g_free( path );
         icon = GTK_STOCK_NEW;
     }
