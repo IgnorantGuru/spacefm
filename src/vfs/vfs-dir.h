@@ -119,6 +119,8 @@ const char* vfs_get_trash_dir();
 /* call function "func" for every VFSDir instances */
 void vfs_dir_foreach( GHFunc func, gpointer user_data );
 
+void vfs_dir_monitor_mime();
+
 G_END_DECLS
 
 #endif

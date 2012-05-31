@@ -1112,3 +1112,58 @@ void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big )
     }
     g_mutex_unlock( dir->mutex );
 }
+
+//sfm added mime change timer
+guint mime_change_timer = 0;
+VFSDir* mime_dir = NULL;
+
+gboolean on_mime_change_timer( gpointer user_data )
+{
+    //printf("MIME-UPDATE on_timer\n" );
+    char* cmd = g_strdup_printf( "update-mime-database %s/mime",
+                                                    g_get_user_data_dir() );
+    g_spawn_command_line_async( cmd, NULL );
+    g_free( cmd );
+    g_source_remove( mime_change_timer );
+    mime_change_timer = 0;
+    return FALSE;
+}
+
+void mime_change( gpointer user_data )
+{
+    if ( mime_change_timer )
+    {
+        // timer is already running, so ignore request
+        //printf("MIME-UPDATE already set\n" );
+        return;
+    }
+    if ( mime_dir )
+    {
+        // update mime database in 2 seconds 
+        mime_change_timer = g_timeout_add_seconds( 2,
+                                    ( GSourceFunc ) on_mime_change_timer, NULL );
+        //printf("MIME-UPDATE timer started\n" );
+    }
+}
+
+void vfs_dir_monitor_mime()
+{
+    // start watching for changes
+    if ( mime_dir )
+        return;
+    char* path = g_build_filename( g_get_user_data_dir(), "mime/packages", NULL );
+    if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
+    {
+        mime_dir = vfs_dir_get_by_path( path );
+        if ( mime_dir )
+        {
+            g_signal_connect( mime_dir, "file-listed", G_CALLBACK( mime_change ), NULL );
+            g_signal_connect( mime_dir, "file-created", G_CALLBACK( mime_change ), NULL );
+            g_signal_connect( mime_dir, "file-deleted", G_CALLBACK( mime_change ), NULL );
+            g_signal_connect( mime_dir, "file-changed", G_CALLBACK( mime_change ), NULL );
+        }
+        //printf("MIME-UPDATE watch started\n" );
+    }
+    g_free( path );
+}
+
