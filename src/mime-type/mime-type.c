@@ -294,15 +294,14 @@ static char* parse_xml_desc( const char* buf, size_t len, const char* locale )
     return g_strndup( eng_comment, eng_comment_len );
 }
 
-static char* _mime_type_get_desc( const char* type, const char* data_dir, const char* locale )
+static char* _mime_type_get_desc( const char* file_path, const char* locale )
 {
     int fd;
     struct stat statbuf;   // skip stat64
     char *buffer, *_locale, *desc;
-    char file_path[ 256 ];
+    //char file_path[ 256 ];  //sfm to improve speed, file_path is passed
 
-    /* FIXME: This path shouldn't be hard-coded. */
-    g_snprintf( file_path, 256, "%s/mime/%s.xml", data_dir, type );
+    //g_snprintf( file_path, 256, "%s/mime/%s.xml", data_dir, type );
 
     fd = open ( file_path, O_RDONLY, 0 );
     if ( G_UNLIKELY( fd == -1 ) )
@@ -356,24 +355,39 @@ char* mime_type_get_desc( const char* type, const char* locale )
 {
     char* desc;
     const gchar* const * dir;
+    char file_path[ 256 ];
 
-    dir = g_get_system_data_dirs();
-    for( ; *dir; ++dir )
-    {
-        desc = _mime_type_get_desc( type, *dir, locale );
-        if( G_LIKELY(desc) )
-            return desc;
-    }
-
-    /*
+    /*  //sfm 0.7.7+ FIXED
      * FIXME: According to specs on freedesktop.org, user_data_dir has
      * higher priority than system_data_dirs, but in most cases, there was
      * no file, or very few files in user_data_dir, so checking it first will
      * result in many unnecessary open() system calls, yealding bad performance.
      * Since the spec really sucks, we don't follow it here.
      */
-    desc = _mime_type_get_desc( type, g_get_user_data_dir(), locale );
-    return desc;
+    /* FIXME: This path shouldn't be hard-coded. */
+    g_snprintf( file_path, 256, "%s/mime/%s.xml", g_get_user_data_dir(), type );
+    if ( access( file_path, F_OK ) != -1 )
+    {
+        desc = _mime_type_get_desc( file_path, locale );
+        if ( desc )
+            return desc;
+    }
+    
+    // look in system dirs
+    dir = g_get_system_data_dirs();
+    for( ; *dir; ++dir )
+    {
+        /* FIXME: This path shouldn't be hard-coded. */
+        g_snprintf( file_path, 256, "%s/mime/%s.xml", *dir, type );
+        if ( access( file_path, F_OK ) != -1 )
+        {
+            desc = _mime_type_get_desc( file_path, locale );
+            if( G_LIKELY(desc) )
+                return desc;
+        }
+    }
+
+    return NULL;
 }
 
 void mime_type_finalize()
