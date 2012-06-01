@@ -2204,6 +2204,14 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
+    // when two curlftpfs tabs are open and middle click to close second,
+    // sometimes segfaults on destroy - g_idle_add had no effect
+/*
+    Program received signal SIGSEGV, Segmentation fault.
+    0x00007ffff78fda2a in gtk_notebook_button_release (event=0x8df5e0, 
+        widget=0x81a020) at /tmp/buildd/gtk+2.0-2.24.10/gtk/gtknotebook.c:3017
+    3017	/tmp/buildd/gtk+2.0-2.24.10/gtk/gtknotebook.c: No such file or directory.
+*/
     gtk_widget_destroy( GTK_WIDGET( file_browser ) );
 
     if ( !app_settings.always_show_tabs )
@@ -2217,6 +2225,17 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     update_window_title( NULL, main_window );
 }
 
+/*
+static gboolean delayed_close_notebook_page( PtkFileBrowser* file_browser )
+{
+printf("delayed_close_notebook_page\n");
+    gdk_threads_enter();
+    on_close_notebook_page( NULL, file_browser );
+    gdk_threads_leave();
+    return FALSE;
+}
+*/
+
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
                            PtkFileBrowser* file_browser)  //MOD added
 {
@@ -2227,7 +2246,9 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
     {
         if ( event->button == 2 )
         {
+            //g_idle_add( ( GSourceFunc ) delayed_close_notebook_page, file_browser );
             on_close_notebook_page( NULL, file_browser );
+            return TRUE;
         }
         else if ( event->button == 3 )
         {
@@ -2258,6 +2279,7 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
                               G_CALLBACK( xset_menu_keypress ), NULL );
             gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
                                 NULL, NULL, event->button, event->time );
+            return TRUE;
         }
     }    
     return FALSE;

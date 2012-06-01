@@ -41,8 +41,10 @@
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
+VFSVolume* vfs_volume_read_by_mount( const char* mount_points );
 static void vfs_volume_device_added ( VFSVolume* volume, gboolean automount );
 static void vfs_volume_device_removed ( char* device_file );
+static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 
 
@@ -1577,6 +1579,8 @@ void parse_mounts( gboolean report )
 //printf("\n@@@@@@@@@@@@@ parse_mounts %s\n\n", report ? "TRUE" : "FALSE" );
     contents = NULL;
     lines = NULL;
+    struct udev_device *udevice;
+    dev_t dev;
 
     error = NULL;
     if (!g_file_get_contents ("/proc/self/mountinfo", &contents, NULL, &error))
@@ -1646,16 +1650,35 @@ void parse_mounts( gboolean report )
         }
         if ( !devmount )
         {
-//printf("     new devmount\n");
-            devmount = g_slice_new0( devmount_t );
-            devmount->major = major;
-            devmount->minor = minor;
-            devmount->mount_points = NULL;
-            devmount->mounts = NULL;
-            newmounts = g_list_prepend( newmounts, devmount );
+//printf("     new devmount %s\n", mount_point);
+            if ( report )
+            {
+                devmount = g_slice_new0( devmount_t );
+                devmount->major = major;
+                devmount->minor = minor;
+                devmount->mount_points = NULL;
+                devmount->mounts = NULL;
+                newmounts = g_list_prepend( newmounts, devmount );
+            }
+            else
+            {
+                // initial load !report don't add non-block devices
+                dev = makedev( major, minor );
+                udevice = udev_device_new_from_devnum( udev, 'b', dev );
+                if ( udevice )
+                {
+                    udev_device_unref( udevice );
+                    devmount = g_slice_new0( devmount_t );
+                    devmount->major = major;
+                    devmount->minor = minor;
+                    devmount->mount_points = NULL;
+                    devmount->mounts = NULL;
+                    newmounts = g_list_prepend( newmounts, devmount );
+                }
+            }
         }
 
-        if ( !g_list_find( devmount->mounts, mount_point ) )
+        if ( devmount && !g_list_find( devmount->mounts, mount_point ) )
         {
 //printf("    prepended\n");
             devmount->mounts = g_list_prepend( devmount->mounts, mount_point );
@@ -1691,8 +1714,6 @@ void parse_mounts( gboolean report )
     
     // compare old and new lists
     GList* found;
-    struct udev_device *udevice;
-    dev_t dev;
     if ( report )
     {
         for ( l = newmounts; l; l = l->next )
@@ -1718,11 +1739,13 @@ void parse_mounts( gboolean report )
             else
             {
                 // new mount
-//printf("    new mount %d:%d\n", devmount->major, devmount->minor );
-                dev = makedev( devmount->major, devmount->minor );
-                udevice = udev_device_new_from_devnum( udev, 'b', dev );
-                if ( udevice )
-                    changed = g_list_prepend( changed, udevice );
+//printf("    new mount %d:%d %s\n", devmount->major, devmount->minor, devmount->mount_points );
+                devmount_t* devcopy = g_slice_new0( devmount_t );
+                devcopy->major = devmount->major;
+                devcopy->minor = devmount->minor;
+                devcopy->mount_points = g_strdup( devmount->mount_points );
+                devcopy->mounts = NULL;
+                changed = g_list_prepend( changed, devcopy );
             }
         }
     }
@@ -1734,13 +1757,13 @@ void parse_mounts( gboolean report )
 //printf("remain %d:%d\n", devmount->major, devmount->minor );
         if ( report )
         {
-            dev = makedev( devmount->major, devmount->minor );
-            udevice = udev_device_new_from_devnum( udev, 'b', dev );
-            if ( udevice )
-                changed = g_list_prepend( changed, udevice );
+            changed = g_list_prepend( changed, devmount );
         }
-        g_free( devmount->mount_points );
-        g_slice_free( devmount_t, devmount );
+        else
+        {
+            g_free( devmount->mount_points );
+            g_slice_free( devmount_t, devmount );
+        }
     }
     g_list_free( devmounts );
     devmounts = newmounts;
@@ -1752,22 +1775,37 @@ void parse_mounts( gboolean report )
         char* devnode;
         for ( l = changed; l; l = l->next )
         {
-            udevice = (struct udev_device*)l->data;
+            devnode = NULL;
+            devmount = (devmount_t*)l->data;
+            dev = makedev( devmount->major, devmount->minor );
+            udevice = udev_device_new_from_devnum( udev, 'b', dev );
             if ( udevice )
-            {
                 devnode = g_strdup( udev_device_get_devnode( udevice ) );
-                if ( devnode )
-                {
-                    printf( "changed: %s\n", devnode );
-                    if ( volume = vfs_volume_read_by_device( udevice ) )
-                        vfs_volume_device_added( volume, TRUE );  //frees volume if needed
-                    g_free( devnode );
-                }
-                udev_device_unref( udevice );
+            if ( devnode )
+            {
+                printf( "mount changed: %s\n", devnode );
+                if ( volume = vfs_volume_read_by_device( udevice ) )
+                    vfs_volume_device_added( volume, TRUE );  //frees volume if needed
+                g_free( devnode );
             }
+            else
+            {
+                // not a block device
+                if ( volume = vfs_volume_read_by_mount( devmount->mount_points ) )
+                {
+                    printf( "network mount changed: %s\n", devmount->mount_points );
+                    vfs_volume_device_added( volume, FALSE ); //frees volume if needed
+                }
+                else
+                    vfs_volume_nonblock_removed( devmount->mount_points );
+            }
+            udev_device_unref( udevice );
+            g_free( devmount->mount_points );
+            g_slice_free( devmount_t, devmount );
         }
         g_list_free( changed );
     }
+//printf ( "END PARSE\n");
 }
 
 static void free_devmounts()
@@ -2120,76 +2158,93 @@ void vfs_volume_set_info( VFSVolume* volume )
         return;
 
     // set device icon
-    if ( volume->is_audiocd )
-        volume->icon = g_strdup_printf( "dev_icon_audiocd" );
-    else if ( volume->is_optical )
+    if ( volume->device_type == DEVICE_TYPE_BLOCK )
     {
-        if ( volume->is_mounted )
-            volume->icon = g_strdup_printf( "dev_icon_optical_mounted" );
-        else if ( volume->is_mountable )
-            volume->icon = g_strdup_printf( "dev_icon_optical_media" );
+        if ( volume->is_audiocd )
+            volume->icon = g_strdup_printf( "dev_icon_audiocd" );
+        else if ( volume->is_optical )
+        {
+            if ( volume->is_mounted )
+                volume->icon = g_strdup_printf( "dev_icon_optical_mounted" );
+            else if ( volume->is_mountable )
+                volume->icon = g_strdup_printf( "dev_icon_optical_media" );
+            else
+                volume->icon = g_strdup_printf( "dev_icon_optical_nomedia" );
+        }
+        else if ( volume->is_floppy )
+        {
+            if ( volume->is_mounted )
+                volume->icon = g_strdup_printf( "dev_icon_floppy_mounted" );
+            else
+                volume->icon = g_strdup_printf( "dev_icon_floppy_unmounted" );
+            volume->is_mountable = TRUE;
+        }
+        else if ( volume->is_removable )
+        {
+            if ( volume->is_mounted )
+                volume->icon = g_strdup_printf( "dev_icon_remove_mounted" );
+            else
+                volume->icon = g_strdup_printf( "dev_icon_remove_unmounted" );
+        }
         else
-            volume->icon = g_strdup_printf( "dev_icon_optical_nomedia" );
+        {
+            if ( volume->is_mounted )
+            {
+                if ( g_str_has_prefix( volume->device_file, "/dev/loop" ) )
+                    volume->icon = g_strdup_printf( "dev_icon_file" );
+                else
+                    volume->icon = g_strdup_printf( "dev_icon_internal_mounted" );
+            }
+            else
+                volume->icon = g_strdup_printf( "dev_icon_internal_unmounted" );
+        }
     }
-    else if ( volume->is_floppy )
+    else if ( volume->device_type == DEVICE_TYPE_NETWORK )
+        volume->icon = g_strdup_printf( "dev_icon_network" );
+    
+    // set disp_id using by-id
+    if ( volume->device_type == DEVICE_TYPE_BLOCK )
     {
-        if ( volume->is_mounted )
-            volume->icon = g_strdup_printf( "dev_icon_floppy_mounted" );
-        else
-            volume->icon = g_strdup_printf( "dev_icon_floppy_unmounted" );
-        volume->is_mountable = TRUE;
-    }
-    else if ( volume->is_removable )
-    {
-        if ( volume->is_mounted )
-            volume->icon = g_strdup_printf( "dev_icon_remove_mounted" );
-        else
-            volume->icon = g_strdup_printf( "dev_icon_remove_unmounted" );
+        if ( volume->is_floppy && !volume->udi )
+            disp_id = g_strdup_printf( _(":floppy") );
+        else if ( volume->udi )
+        {
+            if ( lastcomma = strrchr( volume->udi, '/' ) )
+            {
+                lastcomma++;
+                if ( !strncmp( lastcomma, "usb-", 4 ) )
+                    lastcomma += 4;
+                else if ( !strncmp( lastcomma, "ata-", 4 ) )
+                    lastcomma += 4;
+                else if ( !strncmp( lastcomma, "scsi-", 5 ) )
+                    lastcomma += 5;
+            }
+            else
+                lastcomma = volume->udi;
+            if ( lastcomma[0] != '\0' )
+            {
+                disp_id = g_strdup_printf( ":%.16s", lastcomma );
+            }
+        }
+        else if ( volume->is_optical )
+            disp_id = g_strdup_printf( _(":optical") );
+        if ( !disp_id )
+            disp_id = g_strdup_printf( "" );
+        // table type
+        if ( volume->is_table )
+        {
+            if ( volume->fs_type && volume->fs_type[0] == '\0' )
+            {
+                g_free( volume->fs_type );
+                volume->fs_type = NULL;
+            }
+            if ( !volume->fs_type )
+                volume->fs_type = g_strdup( "table" );
+        }
     }
     else
-    {
-        if ( volume->is_mounted )
-            volume->icon = g_strdup_printf( "dev_icon_internal_mounted" );
-        else
-            volume->icon = g_strdup_printf( "dev_icon_internal_unmounted" );
-    }
-    // set disp_id using by-id
-    if ( volume->is_floppy && !volume->udi )
-        disp_id = g_strdup_printf( _(":floppy") );
-    else if ( volume->udi )
-    {
-        if ( lastcomma = strrchr( volume->udi, '/' ) )
-        {
-            lastcomma++;
-            if ( !strncmp( lastcomma, "usb-", 4 ) )
-                lastcomma += 4;
-            else if ( !strncmp( lastcomma, "ata-", 4 ) )
-                lastcomma += 4;
-            else if ( !strncmp( lastcomma, "scsi-", 5 ) )
-                lastcomma += 5;
-        }
-        else
-            lastcomma = volume->udi;
-        if ( lastcomma[0] != '\0' )
-        {
-            disp_id = g_strdup_printf( ":%.16s", lastcomma );
-        }
-    }
-    else if ( volume->is_optical )
-        disp_id = g_strdup_printf( _(":optical") );
-    if ( !disp_id )
-        disp_id = g_strdup_printf( "" );
-    // table type
-    if ( volume->is_table )
-    {
-        if ( volume->fs_type && volume->fs_type[0] == '\0' )
-        {
-            g_free( volume->fs_type );
-            volume->fs_type = NULL;
-        }
-        if ( !volume->fs_type )
-            volume->fs_type = g_strdup( "table" );
-    }
+        disp_id = g_strdup( volume->udi );
+    
     // set display name
     if ( volume->is_mounted )
     {
@@ -2241,6 +2296,8 @@ void vfs_volume_set_info( VFSVolume* volume )
     }
     if ( !strncmp( volume->device_file, "/dev/", 5 ) )
         disp_device = g_strdup( volume->device_file + 5 );
+    else if ( g_str_has_prefix( volume->device_file, "curlftpfs#" ) )
+        disp_device = g_strdup( volume->device_file + 10 );
     else
         disp_device = g_strdup( volume->device_file );
     if ( volume->fs_type && volume->fs_type[0] != '\0' )
@@ -2314,6 +2371,7 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     
     // translate device info to VFSVolume
     volume = g_slice_new0( VFSVolume );
+    volume->device_type = DEVICE_TYPE_BLOCK;
     volume->device_file = g_strdup( device->devnode );
     volume->udi = g_strdup( device->device_by_id );
     volume->is_optical = device->device_is_optical_disc;
@@ -2389,6 +2447,407 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
 */
     return volume;
 }
+
+static gboolean path_is_mounted_mtab( const char* path, char** device_file )
+{
+    gchar *contents;
+    gchar **lines;
+    GError *error;
+    guint n;
+    gboolean ret = FALSE;
+    char* str;
+    char* file;
+    char* point;
+    gchar encoded_file[PATH_MAX];
+    gchar encoded_point[PATH_MAX];
+
+    if ( !path )
+        return FALSE;
+
+    contents = NULL;
+    lines = NULL;
+    error = NULL;
+    if ( !g_file_get_contents( "/proc/mounts", &contents, NULL, NULL ) )
+    {
+        if ( !g_file_get_contents( "/etc/mtab", &contents, NULL, &error ) )
+        {
+            g_warning ("Error reading mtab: %s", error->message);
+            g_error_free (error);
+            return FALSE;
+        }
+    }
+    lines = g_strsplit( contents, "\n", 0 );
+    for ( n = 0; lines[n] != NULL; n++ )
+    {
+        if ( lines[n][0] == '\0' )
+            continue;
+
+        if ( sscanf( lines[n],
+                  "%s %s ",
+                  encoded_file,
+                  encoded_point ) != 2 )
+        {
+            g_warning ("Error parsing mtab line '%s'", lines[n]);
+            continue;
+        }
+
+        point = g_strcompress( encoded_point );
+        if ( !g_strcmp0( point, path ) )
+        {
+            if ( device_file )
+                *device_file = g_strcompress( encoded_file );
+            ret = TRUE;
+            break;
+        }
+        g_free( point );
+    }
+    g_free( contents );
+    g_strfreev( lines );
+    return ret;
+}
+
+int parse_network_url( const char* url, const char* fstype,
+                                                        netmount_t** netmount )
+{   // returns 0=not a network url  1=valid network url  2=invalid network url
+    if ( !url || !netmount )
+        return 0;
+
+    int ret = 0;
+    char* str;
+    char* str2;
+    netmount_t* nm = g_slice_new0( netmount_t );
+    nm->fstype = NULL;
+    nm->host = NULL;
+    nm->ip = NULL;
+    nm->port = NULL;
+    nm->user = NULL;
+    nm->pass = NULL;
+    nm->path = NULL;
+
+    if ( fstype && ( !strcmp( fstype, "nfs" ) || !strcmp( fstype, "smbfs" ) ) )
+        ret = 2;
+
+    char* orig_url = strdup( url );
+    char* xurl = orig_url;
+    if ( g_str_has_prefix( xurl, "ftp:" ) || g_str_has_prefix( xurl, "smb:" )
+        || g_str_has_prefix( xurl, "nfs:" ) || g_str_has_prefix( xurl, "curlftpfs#ftp:" )
+        || ( fstype && ( !strcmp( fstype, "curlftpfs" ) || !strcmp( fstype, "ftpfs" ) ) ) )
+    {
+        // mount nfs|smb|ftp:[//][<user>[:<pass>]@]<host>[:<port>]/<path>
+        // mount -t [curl]ftpfs [<user>[:<pass>]@]<host>[:<port>][/<path>]
+        if ( g_str_has_prefix( xurl, "smb:" ) )
+        {
+            nm->fstype = g_strdup( "smbfs" );
+            xurl += 4;
+        }
+        else if ( g_str_has_prefix( xurl, "nfs:" ) )
+        {
+            nm->fstype = g_strdup( "nfs" );
+            xurl += 4;
+        }
+        else if ( fstype && ( !strcmp( fstype, "curlftpfs" )
+                                                || !strcmp( fstype, "ftpfs" ) ) )
+        {
+            if ( g_str_has_prefix( xurl, "ftp:" ) )
+                xurl += 4;
+            else if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
+                xurl += 14;
+            nm->fstype = g_strdup( fstype );
+        }
+        else if ( g_str_has_prefix( xurl, "ftp:" ) )
+        {
+            // detect curlftpfs or ftpfs
+            if ( str = g_find_program_in_path( "curlftpfs" ) )
+                nm->fstype = g_strdup( "curlftpfs" );
+            else
+                nm->fstype = g_strdup( "ftpfs" );
+            g_free( str );
+            xurl += 4;
+        }
+        else if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
+        {
+            nm->fstype = g_strdup( "curlftpfs" );
+            xurl += 14;
+        }
+
+        ret = 2;
+        while ( xurl[0] == '/' )
+            xurl++;
+        char* trim_url = g_strdup( xurl );
+
+        // path
+        if ( str = strchr( xurl, '/' ) )
+        {
+            nm->path = g_strdup( str );
+            str[0] = '\0';
+        }
+        // user:pass
+        if ( str = strchr( xurl, '@' ) )
+        {
+            str[0] = '\0';
+            if ( str2 = strchr( xurl, ':' ) )
+            {
+                str2[0] = '\0';
+                if ( str2[1] != '\0' )
+                    nm->pass = g_strdup( str2 + 1 );
+            }
+            if ( xurl[0] != '\0' )
+                nm->user = g_strdup( xurl );
+            xurl = str + 1;
+        }
+        // host:port
+        if ( xurl[0] == '[' )
+        {
+            // ipv6 literal
+            if ( str = strchr( xurl, ']' ) )
+            {
+                str[0] = '\0';
+                if ( xurl[1] != '\0' )
+                    nm->host = g_strdup( xurl + 1 );
+                if ( str[1] == ':' && str[2] != '\0' )
+                    nm->port = g_strdup( str + 1 );
+            }
+        }
+        else if ( xurl[0] != '\0' )
+        {
+            if ( str = strchr( xurl, ':' ) )
+            {
+                str[0] = '\0';
+                if ( str[1] != '\0' )
+                    nm->port = g_strdup( str + 1 );
+            }
+            nm->host = g_strdup( xurl );
+        }
+
+        // url
+        if ( nm->host )
+        {
+            if ( g_str_has_prefix( url, "smb:" ) )
+                nm->url = g_strdup_printf( "//%s%s", nm->host, nm->path ? nm->path : "/" );
+            else if ( g_str_has_prefix( url, "nfs:" ) )
+                nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
+            else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
+                nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s%s%s%s%s",
+                                nm->user ? nm->user : "",
+                                nm->pass ? ":" : "",
+                                nm->pass ? nm->pass : "",
+                                nm->user || nm->pass ? "@" : "",
+                                nm->host,
+                                nm->port ? ":" : "",
+                                nm->port ? nm->port : "",
+                                nm->path ? nm->path : "/" );
+            else if ( !g_strcmp0( nm->fstype, "ftpfs" ) )
+                nm->url = g_strdup( "none" );
+            else
+                nm->url = g_strdup( trim_url );
+        }
+        g_free( trim_url );
+    }
+    else if ( g_str_has_prefix( xurl, "//" ) )
+    {
+        // mount [-t smbfs] //host[:<port>]/<path>
+        nm->fstype = g_strdup( "smbfs" );
+        nm->url = g_strdup( xurl );
+        ret = 2;
+
+        while ( xurl[0] == '/' )
+            xurl++;
+
+        // path
+        if ( str = strchr( xurl, '/' ) )
+        {
+            nm->path = g_strdup( str );
+            str[0] = '\0';
+        }
+
+        // host:port
+        if ( xurl[0] == '[' )
+        {
+            // ipv6 literal
+            if ( str = strchr( xurl, ']' ) )
+            {
+                str[0] = '\0';
+                if ( xurl[1] != '\0' )
+                    nm->host = g_strdup( xurl + 1 );
+                if ( str[1] == ':' && str[2] != '\0' )
+                    nm->port = g_strdup( str + 1 );
+            }
+        }
+        else if ( xurl[0] != '\0' )
+        {
+            if ( str = strchr( xurl, ':' ) )
+            {
+                str[0] = '\0';
+                if ( str[1] != '\0' )
+                    nm->port = g_strdup( str + 1 );
+            }
+            nm->host = g_strdup( xurl );
+        }
+    }
+    else if ( strstr( xurl, ":/" ) && xurl[0] != ':' && xurl[0] != '/' )
+    {
+        // mount [-t nfs] host:/path
+        nm->fstype = g_strdup( "nfs" );
+        nm->url = g_strdup( xurl );
+        ret = 2;
+
+        // path
+        str = strstr( xurl, ":/" );
+        nm->path = g_strdup( str + 1 );
+        str[0] = '\0';
+
+        // host
+        if ( xurl[0] == '[' )
+        {
+            // ipv6 literal
+            if ( str = strchr( xurl, ']' ) )
+            {
+                str[0] = '\0';
+                if ( xurl[1] != '\0' )
+                    nm->host = g_strdup( xurl + 1 );
+            }
+        }
+        else if ( xurl[0] != '\0' )
+            nm->host = g_strdup( xurl );
+    }
+    g_free( orig_url );
+
+    // check user supplied fstype
+    gboolean bad_type = FALSE;
+/*
+    if ( fstype && ret == 2 && nm->host )
+    {
+        if ( !strcmp( nm->fstype, "nfs" ) && strcmp( fstype, "nfs" ) )
+        {
+            wlog( "udevil: error: invalid type '%s' for NFS share - must be 'nfs'\n",
+                                                                fstype, 2 );
+            bad_type = TRUE;
+        }
+        else if ( !strcmp( nm->fstype, "smbfs" ) && strcmp( fstype, "smbfs" ) )
+        {
+            wlog( "udevil: error: invalid type '%s' for SMB share - must be 'smbfs'\n",
+                                                                fstype, 2 );
+            bad_type = TRUE;
+        }
+        else if ( !strcmp( nm->fstype, "ftpfs" ) || !strcmp( nm->fstype, "curlftpfs" ) )
+        {
+            if ( strcmp( fstype, "ftpfs" ) && strcmp( fstype, "curlftpfs" ) )
+            {
+                wlog( "udevil: error: invalid type '%s' for FTP share - must be 'ftpfs' or 'curlftpfs'\n",
+                                                                    fstype, 2 );
+                bad_type = TRUE;
+            }
+            else
+            {
+                g_free( nm->fstype );
+                nm->fstype = g_strdup( fstype );
+            }
+        }
+    }
+
+    // check user pass port
+    if ( ret == 2 && !bad_type && nm->host )
+    {
+        if ( ( nm->user && strchr( nm->user, ' ' ) )
+                || ( nm->pass && strchr( nm->pass, ' ' ) )
+                || ( nm->port && strchr( nm->port, ' ' ) ) )
+        {
+            wlog( "udevil: error: invalid network url\n", fstype, 2 );
+            bad_type = TRUE;
+        }
+    }
+
+    // lookup ip
+    if ( ret == 2 && !bad_type )
+    {
+        if ( nm->host )
+        {
+            if ( !( nm->ip = get_ip( nm->host ) ) || ( nm->ip && nm->ip[0] == '\0' ) )
+            {
+                wlog( "udevil: error: lookup host '%s' failed\n", nm->host, 2 );
+                g_free( nm->host );
+                nm->host = NULL;
+            }
+        }
+        else
+            wlog( "udevil: error: '%s' is not a recognized network url\n", url, 2 );
+    }
+*/
+    if ( ret == 0 || !nm->host || bad_type )
+    {
+        g_free( nm->url );
+        g_free( nm->fstype );
+        g_free( nm->host );
+        g_free( nm->ip );
+        g_free( nm->port );
+        g_free( nm->user );
+        g_free( nm->pass );
+        g_free( nm->path );
+        g_slice_free( netmount_t, nm );
+        return ret;
+    }
+
+    *netmount = nm;
+    return 1;
+}
+
+VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
+{   // read a non-block device
+    VFSVolume* volume;
+    char* str;
+    int i;
+    struct stat64 statbuf;
+    netmount_t *netmount = NULL;
+    
+    if ( !mount_points )
+        return NULL;
+
+    // get single mount point
+    char* point = g_strdup( mount_points );
+    if ( str = strchr( point, ',' ) )
+        str[0] = '\0';
+    g_strstrip( point );
+    if ( !( point && point[0] == '/' ) )
+        return NULL;
+
+    // get device name
+    char* name = NULL;
+    if ( !( path_is_mounted_mtab( point, &name ) && name && name[0] != '\0' ) )
+        return NULL;
+
+    i = parse_network_url( name, NULL, &netmount );
+    if ( i != 1 )
+        return NULL;
+
+    // network URL
+    volume = g_slice_new0( VFSVolume );
+    volume->device_type = DEVICE_TYPE_NETWORK;
+    volume->udi = netmount->url;
+    volume->label = netmount->host;
+    volume->fs_type = netmount->fstype;
+    volume->size = 0;
+    volume->device_file = name;
+    volume->is_mounted = TRUE;
+    volume->ever_mounted = TRUE;
+    volume->open_main_window = NULL;
+    volume->mount_point = point;
+    volume->disp_name = NULL;
+    volume->icon = NULL;
+    volume->automount_time = 0;
+    volume->inhibit_auto = FALSE;
+
+    // free unused netmount
+    g_free( netmount->ip );
+    g_free( netmount->port );
+    g_free( netmount->user );
+    g_free( netmount->pass );
+    g_free( netmount->path );
+    g_slice_free( netmount_t, netmount );
+
+    vfs_volume_set_info( volume );
+    return volume;
+}
+
 
 #if 0
 VFSVolume* vfs_volume_read_by_device( char* device_file )
@@ -2558,7 +3017,7 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
     char* test;
     char* value;
     
-    if ( !vol->is_mountable || vol->is_blank )
+    if ( !vol->is_mountable || vol->is_blank || vol->device_type != DEVICE_TYPE_BLOCK )
         return FALSE;
 
     char* showhidelist = g_strdup_printf( " %s ", xset_get_s( "dev_automount_volumes" ) );
@@ -2714,7 +3173,7 @@ char* vfs_volume_device_unmount_cmd( const char* device_file )
         if ( s1 = g_find_program_in_path( "udevil" ) )
         {
             // udevil
-            command = g_strdup_printf( "%s --verbose umount %s", s1, device_file );
+            command = g_strdup_printf( "%s --verbose umount '%s'", s1, device_file );
         }
         else if ( s1 = g_find_program_in_path( "pumount" ) )
         {
@@ -2863,7 +3322,7 @@ char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options )
 void vfs_volume_exec( VFSVolume* vol, char* command )
 {
 //printf( "vfs_volume_exec %s %s\n", vol->device_file, command );
-    if ( !command || command[0] == '\0' )
+    if ( !command || command[0] == '\0' || vol->device_type != DEVICE_TYPE_BLOCK )
         return;
 
     char *s1;
@@ -2897,7 +3356,8 @@ void vfs_volume_autoexec( VFSVolume* vol )
 
     // Note: audiocd is is_mountable
     if ( !vol->is_mountable || global_inhibit_auto ||
-                                                !vfs_volume_is_automount( vol ) )
+                                        !vfs_volume_is_automount( vol ) ||
+                                        vol->device_type != DEVICE_TYPE_BLOCK )
         return;
 
     if ( vol->is_audiocd )
@@ -3090,6 +3550,39 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
     }
 }
 
+static gboolean vfs_volume_nonblock_removed( const char* mount_points )
+{
+    GList* l;
+    VFSVolume* volume;
+    char* str;
+    
+    if ( !mount_points )
+        return FALSE;
+    char* point = g_strdup( mount_points );
+    if ( str = strchr( point, ',' ) )
+        str[0] = '\0';
+    g_strstrip( point );
+    if ( !( point && point[0] == '/' ) )
+        return FALSE;
+
+    for ( l = volumes; l; l = l->next )
+    {
+        if ( ((VFSVolume*)l->data)->device_type != DEVICE_TYPE_BLOCK &&
+                    !g_strcmp0( ((VFSVolume*)l->data)->mount_point, point ) )
+        {
+            // remove volume
+            printf( "network mount removed: %s\n", point );
+            volume = (VFSVolume*)l->data;
+            volumes = g_list_remove( volumes, volume );
+            call_callbacks( volume, VFS_VOLUME_REMOVED );
+            vfs_free_volume_members( volume );
+            g_slice_free( VFSVolume, volume );
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 static void vfs_volume_device_removed( char* device_file )
 {
     GList* l;
@@ -3100,7 +3593,8 @@ static void vfs_volume_device_removed( char* device_file )
 
     for ( l = volumes; l; l = l->next )
     {
-        if ( !strcmp( ((VFSVolume*)l->data)->device_file, device_file ) )
+        if ( ((VFSVolume*)l->data)->device_type == DEVICE_TYPE_BLOCK &&
+                !g_strcmp0( ((VFSVolume*)l->data)->device_file, device_file ) )
         {
             // remove volume
             //printf("remove volume %s\n", device_file );
@@ -3136,7 +3630,7 @@ gboolean vfs_volume_init()
         return TRUE;
     }
 
-    // read all mount points
+    // read all block mount points
     parse_mounts( FALSE );
 
     // enumerate devices
@@ -3160,6 +3654,9 @@ gboolean vfs_volume_init()
         }
         udev_enumerate_unref(enumerate);
     }
+
+    // enumerate non-block
+    parse_mounts( TRUE );
 
     // start udev monitor
     umonitor = udev_monitor_new_from_netlink( udev, "udev" );
@@ -3215,7 +3712,7 @@ gboolean vfs_volume_init()
 
     // start resume autoexec timer
     g_timeout_add_seconds( 3, ( GSourceFunc ) on_cancel_inhibit_timer, NULL );
-
+    
     return TRUE;
 finish_:
     if ( umonitor )

@@ -774,6 +774,15 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
     text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         
     gtk_editable_select_region( (GtkEditable*)entry, 0, 0 );    // clear selection 
+
+    if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
+    {
+        str = g_strdup( text );
+        mount_network( file_browser, str );
+        g_free( str );
+        return;
+    }
+    
     // Convert to on-disk encoding
     dir_path = g_filename_from_utf8( text, -1, NULL, NULL, NULL );
     final_path = vfs_file_resolve_path( ptk_file_browser_get_cwd( file_browser ),

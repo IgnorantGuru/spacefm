@@ -851,7 +851,7 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( "_Path Bar Help" );
         }
     }
-    if ( ver < 10 ) // < 0.8.0
+    if ( ver < 10 ) // < 0.7.5
     {
         set = xset_get( "dev_ignore_udisks_hide" );
         if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _Hide") ) )
@@ -882,7 +882,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "10" );  // 0.8.0
+    xset_set( "config_version", "s", "11" );  // 0.7.7+
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -8566,7 +8566,7 @@ void xset_defaults()
     // dev settings
     set = xset_set( "dev_show", "label", _("S_how") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "dev_show_internal_drives dev_show_empty dev_show_partition_tables dev_ignore_udisks_hide dev_show_hide_volumes dev_dispname" );
+    xset_set_set( set, "desc", "dev_show_internal_drives dev_show_empty dev_show_partition_tables dev_show_net dev_show_file dev_ignore_udisks_hide dev_show_hide_volumes dev_dispname" );
     set->line = g_strdup( "#devices-settings-internal" );
 
         set = xset_set( "dev_show_internal_drives", "label", _("_Internal Drives") );
@@ -8582,6 +8582,16 @@ void xset_defaults()
         set = xset_set( "dev_show_partition_tables", "label", _("_Partition Tables") );
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-table" );
+
+        set = xset_set( "dev_show_net", "label", _("Mounted _Networks") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->line = g_strdup( "#devices-settings-table" );
+        set->b = XSET_B_TRUE;
+
+        set = xset_set( "dev_show_file", "label", _("Mounted _Files") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->line = g_strdup( "#devices-settings-table" );
+        set->b = XSET_B_TRUE;
 
         set = xset_set( "dev_show_hide_volumes", "label", _("_Volumes...") );
         xset_set_set( set, "title", _("Show/Hide Volumes") );
@@ -8720,9 +8730,12 @@ void xset_defaults()
     set_last = xset_get( "sep_i3" );
     set_last->menu_style = XSET_MENU_SEP;
 
+    set_last = xset_get( "sep_i4" );
+    set_last->menu_style = XSET_MENU_SEP;
+
     set = xset_set( "dev_icon", "label", _("_Icon") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "dev_icon_internal_mounted dev_icon_internal_unmounted sep_i1 dev_icon_remove_mounted dev_icon_remove_unmounted sep_i2 dev_icon_optical_mounted dev_icon_optical_media dev_icon_optical_nomedia dev_icon_audiocd sep_i3 dev_icon_floppy_mounted dev_icon_floppy_unmounted" );
+    xset_set_set( set, "desc", "dev_icon_internal_mounted dev_icon_internal_unmounted sep_i1 dev_icon_remove_mounted dev_icon_remove_unmounted sep_i2 dev_icon_optical_mounted dev_icon_optical_media dev_icon_optical_nomedia dev_icon_audiocd sep_i3 dev_icon_floppy_mounted dev_icon_floppy_unmounted sep_i4 dev_icon_network dev_icon_file" );
     set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_audiocd", "label", _("Audio CD") );
@@ -8774,6 +8787,16 @@ void xset_defaults()
         set = xset_set( "dev_icon_internal_unmounted", "label", _("Internal Unmounted") );
         set->menu_style = XSET_MENU_ICON;
         xset_set_set( set, "icon", "gtk-harddisk" );
+        set->line = g_strdup( "#devices-settings-icon" );
+
+        set = xset_set( "dev_icon_network", "label", _("Mounted Network") );
+        set->menu_style = XSET_MENU_ICON;
+        xset_set_set( set, "icon", "gtk-network" );
+        set->line = g_strdup( "#devices-settings-icon" );
+
+        set = xset_set( "dev_icon_file", "label", _("Mounted File") );
+        set->menu_style = XSET_MENU_ICON;
+        xset_set_set( set, "icon", "gtk-file" );
         set->line = g_strdup( "#devices-settings-icon" );
 
     // Bookmark list

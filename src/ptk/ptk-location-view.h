@@ -51,6 +51,8 @@ void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser );
 void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser );
 
+void mount_network( PtkFileBrowser* file_browser, const char* url );
+
 G_END_DECLS
 
 #endif

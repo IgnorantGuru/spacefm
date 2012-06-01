@@ -178,7 +178,7 @@ void update_volume_icons()
                     icon = NULL;
                 gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
                 if ( icon )
-                    gdk_pixbuf_unref( icon );                
+                    g_object_unref( icon );                
             }
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
@@ -363,7 +363,7 @@ void on_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
     if ( !vol )
         return;
 
-    if ( !vfs_volume_is_mounted( vol ) )
+    if ( !vfs_volume_is_mounted( vol ) && vol->device_type == DEVICE_TYPE_BLOCK )
     {
         try_mount( view, vol );
         if ( vfs_volume_is_mounted( vol ) )
@@ -551,7 +551,7 @@ void add_volume( VFSVolume* vol, gboolean set_icon )
                                           app_settings.small_icon_size );
         gtk_list_store_set( GTK_LIST_STORE( model ), &it, COL_ICON, icon, -1 );
         if ( icon )
-            gdk_pixbuf_unref( icon );
+            g_object_unref( icon );
     }
     ++n_vols;
 }
@@ -614,7 +614,7 @@ void update_volume( VFSVolume* vol )
                         COL_PATH,
                         vfs_volume_get_mount_point( vol ), -1 );
     if ( icon )
-        gdk_pixbuf_unref( icon );
+        g_object_unref( icon );
 }
 
 #ifdef HAVE_HAL
@@ -701,6 +701,98 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
 
 
 #else
+
+void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
+{
+    const GList* l;
+    VFSVolume* vol;
+    const GList* volumes = vfs_volume_get_all_volumes();
+    for ( l = volumes; l; l = l->next )
+    {
+        vol = (VFSVolume*)l->data;
+        if ( strstr( vol->device_file, ao->device_file ) )
+        {
+            if ( vol->is_mounted )
+            {
+                // TODO: verify file_browser is still a browser
+                ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
+                                                            ao->job );
+            }
+            break;
+        }
+    }
+    g_free( ao->device_file );
+    g_slice_free( AutoOpen, ao );
+}
+
+void mount_network( PtkFileBrowser* file_browser, const char* url )
+{
+    netmount_t *netmount = NULL;
+    
+    char* str = g_find_program_in_path( "udevil" );
+    if ( !str )
+    {
+        g_free( str );
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                        _("udevil Not Installed"), NULL, 0,
+                        _("Mounting a network share requires udevil to be installed."),
+                        NULL, NULL );
+        return;
+    }
+    g_free( str );
+    
+    // parse
+    char* neturl = NULL;
+    int i = parse_network_url( url, NULL, &netmount );
+    if ( i != 1 )
+    {
+        // unrecognized url - clean it up in case udevil can mount it
+        if ( str = strstr( url, "://" ) )
+            neturl = g_strdup( str + 3 );
+        else
+            neturl = g_strdup( url );
+        if ( str = strchr( neturl, ':' ) )
+            str[0] = '\0';
+    }
+    else
+    {
+        neturl = netmount->url;
+        g_free( netmount->fstype );
+        g_free( netmount->host );
+        g_free( netmount->ip );
+        g_free( netmount->port );
+        g_free( netmount->user );
+        g_free( netmount->pass );
+        g_free( netmount->path );
+        g_slice_free( netmount_t, netmount );        
+    }
+        
+    // task
+    AutoOpen* ao = g_slice_new0( AutoOpen );
+    ao->device_file = neturl;
+    ao->file_browser = file_browser;
+    //if ( xset_get_b( "dev_newtab" ) )
+    //    ao->job = PTK_OPEN_NEW_TAB;
+    //else
+        ao->job = PTK_OPEN_DIR;
+    char* line = g_strdup_printf( "udevil --verbose mount '%s'", url );
+    char* task_name = g_strdup_printf( _("Netmount %s"), url );
+    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
+                                                        file_browser->task_view );
+    g_free( task_name );
+    task->task->exec_command = line;
+    task->task->exec_sync = TRUE;
+    task->task->exec_popup = FALSE;
+    task->task->exec_show_output = FALSE;
+    task->task->exec_show_error = TRUE;
+    XSet* set = xset_get( "dev_icon_network" );
+    task->task->exec_icon = g_strdup( set->icon );
+    task->complete_notify = (GFunc)on_autoopen_net_cb;
+    task->user_data = ao;
+    ptk_file_task_run( task );
+
+    return;
+}
 
 static void popup_missing_mount( GtkWidget* view, int job )
 {
@@ -1052,6 +1144,23 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         view = view2;
     else
         view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                                "file_browser" );
+
+    if ( vol->device_type != DEVICE_TYPE_BLOCK )
+    {
+        char* str = g_find_program_in_path( "udevil" );
+        if ( !str )
+        {
+            g_free( str );
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("udevil Not Installed"), NULL, 0,
+                            _("Unmounting a network share requires udevil to be installed."),
+                            NULL, NULL );
+            return;
+        }
+        g_free( str );
+    }
     
     // task
     char* line = vfs_volume_device_unmount_cmd( vol->device_file );
@@ -1060,8 +1169,6 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         popup_missing_mount( view, 1 );
         return;
     }
-    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
-                                                                "file_browser" );
     char* task_name = g_strdup_printf( _("Unmount %s"), vol->device_file );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view,
                                                         file_browser->task_view );
@@ -1089,6 +1196,21 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
 
+    if ( vol->device_type != DEVICE_TYPE_BLOCK )
+    {
+        char* str = g_find_program_in_path( "udevil" );
+        if ( !str )
+        {
+            g_free( str );
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("udevil Not Installed"), NULL, 0,
+                            _("Unmounting a network share requires udevil to be installed."),
+                            NULL, NULL );
+            return;
+        }
+        g_free( str );
+    }
+
     if ( vfs_volume_is_mounted( vol ) )
     {
         // task
@@ -1100,7 +1222,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             return;
         }
 
-        if ( vol->is_optical || vol->requires_eject )
+        if ( vol->device_type == DEVICE_TYPE_BLOCK &&
+                                        ( vol->is_optical || vol->requires_eject ) )
             eject = g_strdup_printf( "\nelse\n    eject %s", vol->device_file );
         else
             eject = g_strdup( "" );
@@ -2348,6 +2471,14 @@ gboolean volume_is_visible( VFSVolume* vol )
     }
     g_free( showhidelist );
     
+    // network
+    if ( vol->device_type == DEVICE_TYPE_NETWORK )
+        return xset_get_b( "dev_show_net" );
+    
+    if ( g_str_has_prefix( vol->device_file, "/dev/loop" ) && vol->is_mounted &&
+                                                xset_get_b( "dev_show_file" ) )
+        return TRUE;
+        
     // internal?
     if ( !vol->is_removable && !xset_get_b( "dev_show_internal_drives" ) )
         return FALSE;
@@ -2379,6 +2510,8 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
     if  ( !strcmp( set->name, "dev_show_internal_drives" )
             || !strcmp( set->name, "dev_show_empty" )
             || !strcmp( set->name, "dev_show_partition_tables" )
+            || !strcmp( set->name, "dev_show_net" )
+            || !strcmp( set->name, "dev_show_file" )
             || !strcmp( set->name, "dev_ignore_udisks_hide" )
             || !strcmp( set->name, "dev_show_hide_volumes" )
             || !strcmp( set->name, "dev_automount_optical" )
@@ -2510,7 +2643,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !vol;
         set = xset_set_cb( "dev_menu_reload", on_reload, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !vol;
+            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
         set = xset_set_cb( "dev_menu_sync", on_sync, vol );
             xset_set_ob1( set, "view", view );
         set = xset_set_cb( "dev_menu_open", on_open, vol );
@@ -2533,12 +2666,14 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !vol;
         set = xset_set_cb( "dev_root_label", on_change_label, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !vol;
+            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
         xset_set_cb( "dev_root_fstab", on_root_fstab, view );
 
         xset_set_cb( "dev_show_internal_drives", update_all, NULL );
         xset_set_cb( "dev_show_empty", update_all, NULL );
         xset_set_cb( "dev_show_partition_tables", update_all, NULL );
+        xset_set_cb( "dev_show_net", update_all, NULL );
+        xset_set_cb( "dev_show_file", update_all, NULL );
         xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
         xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
         set = xset_set_cb( "dev_automount_optical", update_all, NULL );
@@ -2640,19 +2775,22 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
 
         set = xset_set_cb( "dev_prop", on_prop, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !vol;
+            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
 
         set = xset_get( "dev_menu_root" );
             set->disable = !vol;
         set = xset_get( "dev_menu_format" );
-            set->disable = ( vol && vol->is_mounted );
+            set->disable =  !( vol && !vol->is_mounted && 
+                                        vol->device_type == DEVICE_TYPE_BLOCK );
         set = xset_set_cb( "dev_root_check", on_check_root, vol );
-            set->disable = ( vol && vol->is_mounted );
+            set->disable =  !( vol && !vol->is_mounted && 
+                                        vol->device_type == DEVICE_TYPE_BLOCK );
             xset_set_ob1( set, "view", view );
         set = xset_get( "dev_menu_restore" );
-            set->disable = ( vol && vol->is_mounted );
+            set->disable = !( vol && !vol->is_mounted && 
+                                        vol->device_type == DEVICE_TYPE_BLOCK );
         set = xset_get( "dev_menu_backup" );
-            set->disable = !vol;
+            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
 
         xset_set_cb_panel( file_browser->mypanel, "font_dev", main_update_fonts,
                                                                     file_browser );
@@ -2679,7 +2817,6 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
         xset_set_set( set, "desc", menu_elements );
         g_free( menu_elements );
-
 
         menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_menu_settings dev_prop" );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
@@ -3258,7 +3395,7 @@ void update_bookmark_icons()
             gtk_list_store_set( list, &it, COL_ICON, icon, -1 );
     }
     if ( icon )
-        gdk_pixbuf_unref( icon );
+        g_object_unref( icon );
 }
 
 void full_update_bookmark_icons()

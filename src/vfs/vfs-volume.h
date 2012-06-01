@@ -70,13 +70,19 @@ gboolean vfs_volume_eject_by_udi( const char* udi, GError** err );
 
 #else
 
+enum{
+    DEVICE_TYPE_BLOCK,
+    DEVICE_TYPE_NETWORK
+};
+
 struct _VFSVolume
 {
+    int device_type;
+    char* device_file;
     char* udi;
     char* disp_name;
     char* icon;
     char* mount_point;
-    char* device_file;
     gboolean is_mounted : 1;
     /* gboolean is_hotpluggable : 1; */
     gboolean is_removable : 1;
@@ -99,6 +105,17 @@ struct _VFSVolume
     char* fs_type;
 };
 
+typedef struct netmount_t {
+    char* url;
+    char* fstype;
+    char* host;
+    char* ip;
+    char* port;
+    char* user;
+    char* pass;
+    char* path;
+} netmount_t;
+
 gboolean vfs_volume_command( char* command, char** output );
 char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options );
 char* vfs_volume_get_mount_options( VFSVolume* vol, char* options );
@@ -107,6 +124,8 @@ void vfs_volume_set_info( VFSVolume* volume );
 char* vfs_volume_device_mount_cmd( const char* device_file, const char* options );
 char* vfs_volume_device_unmount_cmd( const char* device_file );
 char* vfs_volume_device_info( const char* device_file );
+int parse_network_url( const char* url, const char* fstype,
+                                                        netmount_t** netmount );
 
 #endif
 
