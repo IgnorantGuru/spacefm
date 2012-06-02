@@ -866,6 +866,15 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( _("Ignore _No Policy") );
         }
     }
+    if ( ver < 11 ) // < 0.7.7+
+    {
+        set = xset_get( "main_faq" );
+        if ( set->menu_label && !strcmp( set->menu_label, _("How do I... (_FAQ)") ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_FAQ") );
+        }
+    }
 }
 
 
@@ -9102,10 +9111,13 @@ void xset_defaults()
     set = xset_set( "main_help", "label", _("_User's Manual") );
     xset_set_set( set, "icon", "gtk-help" );
 
-    set = xset_set( "main_faq", "label", _("How do I... (_FAQ)") );
+    set = xset_set( "main_faq", "label", _("_FAQ") );
     xset_set_set( set, "icon", "gtk-help" );
 
     set = xset_set( "main_homepage", "label", _("_Homepage") );
+    xset_set_set( set, "icon", "spacefm" );
+
+    set = xset_set( "main_news", "label", _("SpaceFM _News") );
     xset_set_set( set, "icon", "spacefm" );
 
     set = xset_set( "main_getplug", "label", _("_Get Plugins") );

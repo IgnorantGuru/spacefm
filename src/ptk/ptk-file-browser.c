@@ -2527,8 +2527,11 @@ void ptk_file_browser_go_default( GtkWidget* item, PtkFileBrowser* file_browser 
     if ( path && path[0] != '\0' )
         ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), path,
                                                     PTK_FB_CHDIR_ADD_HISTORY );
-    else
+    else if ( geteuid() != 0 )
         ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), g_get_home_dir(),
+                                                    PTK_FB_CHDIR_ADD_HISTORY );
+    else
+        ptk_file_browser_chdir( PTK_FILE_BROWSER( file_browser ), "/",
                                                     PTK_FB_CHDIR_ADD_HISTORY );
 }
 

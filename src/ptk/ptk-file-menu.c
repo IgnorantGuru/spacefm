@@ -1348,7 +1348,9 @@ enum {
     APP_JOB_VIEW_OVER,
     APP_JOB_UPDATE,
     APP_JOB_BROWSE_MIME,
-    APP_JOB_BROWSE_MIME_USR
+    APP_JOB_BROWSE_MIME_USR,
+    APP_JOB_HELP,
+    APP_JOB_USR
 };
 
 char* get_shared_desktop_file_location( const char* name )
@@ -1386,6 +1388,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                                                         desktop_file->file_name );
         break;
     case APP_JOB_REMOVE:
+        // for text files, spacefm displays both the actions for the type
+        // and the actions for text/plain, so removing an app may appear to not
+        // work if that app is still associated with text/plain
         vfs_mime_type_remove_action( vfs_file_info_get_mime_type( data->info ),
                                                         desktop_file->file_name );
         break;
@@ -1560,6 +1565,12 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_spawn_command_line_async( path, NULL );
         g_free( path );
         break;
+    case APP_JOB_HELP:
+            xset_show_help( GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
+                                                GTK_WIDGET( data->browser ) :
+                                                GTK_WIDGET( data->desktop ) ) ),
+                                        NULL, "#designmode-mime" );
+        break;
     }
 }
 
@@ -1568,13 +1579,19 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
 {
     int job = -1;
     XSet* set;
-
+    PtkFileMenu* app_data = NULL;
+    VFSAppDesktop* desktop_file = NULL;
+    
     GtkWidget* item = GTK_MENU_SHELL( menu )->active_menu_item;
     if ( item )
     {
-        VFSAppDesktop* desktop_file = ( VFSAppDesktop* ) g_object_get_data( 
+        // if original menu, desktop_file will be set
+        desktop_file = ( VFSAppDesktop* ) g_object_get_data( 
                                     G_OBJECT( item ), "desktop_file" );
-        if ( !desktop_file )
+        // else if app menu, data will be set
+        app_data = (PtkFileMenu*)g_object_get_data( G_OBJECT(item), "data" );
+
+        if ( !desktop_file && !app_data )
             return FALSE;
     }
     else
@@ -1587,62 +1604,73 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     {        
         if ( event->keyval == GDK_F1 )
         {
-            show_app_menu( menu, item, data, 0, event->time );
-            return TRUE;
-        }
-        else if ( event->keyval == GDK_F2 )
-        {
-            show_app_menu( menu, item, data, 0, event->time );
-            return TRUE;
-        }
-/*
-        else if ( event->keyval == GDK_F3 )
-            job = XSET_JOB_CONTEXT;
-        else if ( event->keyval == GDK_F4 )
-            job = XSET_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
-            job = XSET_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
-            job = XSET_JOB_COMMAND;
-*/
-    }
-/*
-    else if ( keymod == GDK_CONTROL_MASK )
-    {
-        if ( event->keyval == GDK_c )
-            job = XSET_JOB_COPY;
-        else if ( event->keyval == GDK_x )
-            job = XSET_JOB_CUT;
-        else if ( event->keyval == GDK_v )
-            job = XSET_JOB_PASTE;
-        else if ( event->keyval == GDK_e )
-        {
-            if ( set->lock )
+            char* help = NULL;
+            if ( app_data )
             {
-                xset_design_show_menu( widget, set, 0, event->time );
-                return TRUE;
+                job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
+                switch ( job ) {
+                case APP_JOB_DEFAULT:
+                    help = "#designmode-mime-set";
+                    break;
+                case APP_JOB_REMOVE:
+                    help = "#designmode-mime-remove";
+                    break;
+                case APP_JOB_ADD:
+                    help = "#designmode-mime-add";
+                    break;
+                case APP_JOB_EDIT:
+                    help = "#designmode-mime-appdesktop";
+                    break;
+                case APP_JOB_EDIT_LIST:
+                    help = "#designmode-mime-mimeappslist";
+                    break;
+                case APP_JOB_BROWSE:
+                    help = "#designmode-mime-appdir";
+                    break;
+                case APP_JOB_EDIT_TYPE:
+                    help = "#designmode-mime-xml";
+                    break;
+                case APP_JOB_BROWSE_MIME:
+                    help = "#designmode-mime-mimedir";
+                    break;
+                case APP_JOB_USR:
+                    help = "#designmode-mime-usr";
+                    break;
+                case APP_JOB_BROWSE_SHARED:
+                case APP_JOB_VIEW:
+                case APP_JOB_VIEW_TYPE:
+                case APP_JOB_VIEW_OVER:
+                case APP_JOB_BROWSE_MIME_USR:
+                    help = "#designmode-mime-usr";
+                    break;
+                }
             }
-            else
-                job = XSET_JOB_EDIT;
+            if ( !help )
+                help = "#designmode-mime";
+            gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+            xset_show_help( NULL, NULL, help );
+            return TRUE;
         }
-        else if ( event->keyval == GDK_k )
-            job = XSET_JOB_KEY;
-        else if ( event->keyval == GDK_i )
-            job = XSET_JOB_ICON;
-    }
-    if ( job != -1 )
-    {
-        if ( xset_job_is_valid( set, job ) )
+        else if ( desktop_file && event->keyval == GDK_F2 )
         {
-            gtk_menu_shell_deactivate( GTK_MENU_SHELL( widget ) );
-            g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
-            xset_design_job( item, set );
+            show_app_menu( menu, item, data, 0, event->time );
+            return TRUE;
         }
-        else
-            xset_design_show_menu( widget, set, 0, event->time );
+        else if ( event->keyval == GDK_F4 )
+            job = APP_JOB_EDIT;
+        else if ( event->keyval == GDK_Delete )
+            job = APP_JOB_REMOVE;
+        else if ( event->keyval == GDK_Insert )
+            job = APP_JOB_ADD;
+    }
+    if ( desktop_file && job != -1 )
+    {
+        gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+        g_object_set_data( G_OBJECT( item ), "job", GINT_TO_POINTER( job ) );
+        g_object_set_data( G_OBJECT( item ), "data", data );
+        app_job( item, item );
         return TRUE;
     }
-*/
     return FALSE;
 }
 
@@ -1803,6 +1831,10 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
     gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
           gtk_image_new_from_stock( GTK_STOCK_DIRECTORY, GTK_ICON_SIZE_MENU ) );
     gtk_container_add ( GTK_CONTAINER ( app_menu ), newitem );
+    g_object_set_data( G_OBJECT( newitem ), "job", GINT_TO_POINTER( APP_JOB_USR ) );
+    g_object_set_data( G_OBJECT( newitem ), "data", data );
+    g_signal_connect( submenu, "key_press_event",
+                      G_CALLBACK( app_menu_keypress ), data );
 
         // View /usr .desktop
         if ( desktop_file->file_name )
@@ -1851,6 +1883,14 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!data->browser &&
                     g_file_test( "/usr/share/mime/packages", G_FILE_TEST_IS_DIR ) );    
 
+    // Separator
+    gtk_container_add ( GTK_CONTAINER ( app_menu ), gtk_separator_menu_item_new() );
+
+    // Help
+    newitem = app_menu_additem( app_menu, "_Help",
+                                GTK_STOCK_HELP, APP_JOB_HELP,
+                                app_item, data );
+
     // show menu
     gtk_widget_show_all( GTK_WIDGET( app_menu ) );
     gtk_menu_popup( GTK_MENU( app_menu ), GTK_WIDGET( menu ), NULL, NULL, NULL,
@@ -1860,8 +1900,8 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
     g_signal_connect( menu, "hide", G_CALLBACK( on_app_menu_hide ), app_menu );
     g_signal_connect( app_menu, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
-    //g_signal_connect( app_menu, "key_press_event",
-    //                  G_CALLBACK( app_menu_keypress ), ??? );
+    g_signal_connect( app_menu, "key_press_event",
+                      G_CALLBACK( app_menu_keypress ), data );
 }
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,

@@ -147,6 +147,7 @@ void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
 void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
+void on_news_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void update_window_title( GtkMenuItem* item, FMMainWindow* main_window );
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
@@ -1058,7 +1059,7 @@ void on_main_icon()
 
 void main_design_mode( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_msg_dialog( GTK_WIDGET( main_window ), 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu and variable parts of the Open context menu do not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
+    xset_msg_dialog( GTK_WIDGET( main_window ), 0, _("Design Mode Help"), NULL, 0, _("Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n\nTo open the design menu, simply right-click on a menu item.\n\nTo use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n\nTo modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."), NULL, "#designmode" );
 }
 
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
@@ -1328,7 +1329,12 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                             if ( g_file_test( tab_dir, G_FILE_TEST_IS_DIR ) )
                                 folder_path = tab_dir;
                             else if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
-                                folder_path = g_get_home_dir();
+                            {
+                                if ( geteuid() != 0 )
+                                    folder_path = g_get_home_dir();
+                                else
+                                    folder_path = "/";
+                            }
                             fm_main_window_add_new_tab( main_window, folder_path );
                         }
                         g_free( tab_dir );
@@ -1357,7 +1363,12 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                 {
                     // open default tab
                     if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
-                        folder_path = g_get_home_dir();                        
+                    {
+                        if ( geteuid() != 0 )
+                            folder_path = g_get_home_dir();
+                        else
+                            folder_path = "/";
+                    }
                     fm_main_window_add_new_tab( main_window, folder_path );
                 }
             }
@@ -1590,8 +1601,9 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_about", on_about_activate, main_window );
     xset_set_cb( "main_help", on_main_help_activate, main_window );
     xset_set_cb( "main_homepage", on_homepage_activate, main_window );
+    xset_set_cb( "main_news", on_news_activate, main_window );
     xset_set_cb( "main_getplug", on_getplug_activate, main_window );
-    menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_getplug sep_h2 main_help_opt sep_h3 main_about" );
+    menu_elements = g_strdup_printf( "main_faq main_help sep_h1 main_homepage main_news main_getplug sep_h2 main_help_opt sep_h3 main_about" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
@@ -2220,8 +2232,17 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
             gtk_notebook_set_show_tabs( notebook, FALSE );
     }
     if ( gtk_notebook_get_n_pages ( notebook ) == 0 )
-        fm_main_window_add_new_tab( main_window,
-                                        xset_get_s( "go_set_default" ) );
+    {
+        char* path = xset_get_s( "go_set_default" );
+        if ( !( path && path[0] != '\0' ) )
+        {
+            if ( geteuid() != 0 )
+                path =  g_get_home_dir();
+            else
+                path = "/";
+        }
+        fm_main_window_add_new_tab( main_window, path );
+    }
     update_window_title( NULL, main_window );
 }
 
@@ -2600,6 +2621,11 @@ void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
     xset_open_url( GTK_WIDGET( main_window ), NULL );
+}
+
+void on_news_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
+{
+    xset_open_url( GTK_WIDGET( main_window ), "http://ignorantguru.github.com/spacefm/news.html" );
 }
 
 void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
@@ -3322,6 +3348,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_main_faq( NULL, main_window );
                 else if ( !strcmp( xname, "homepage" ) )
                     on_homepage_activate( NULL, main_window );
+                else if ( !strcmp( xname, "news" ) )
+                    on_news_activate( NULL, main_window );
                 else if ( !strcmp( xname, "getplug" ) )
                     on_getplug_activate( NULL, main_window );
             }

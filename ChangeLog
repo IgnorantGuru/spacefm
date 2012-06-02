@@ -3,6 +3,7 @@
     added design mode on mime apps opens editor menu
     deprecated MimeType x-directory removed from spacefm desktop files
     new archive save dialog uses literal filename and extension fixes #82
+    accept options in terminal program setting
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding
