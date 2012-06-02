@@ -12,7 +12,7 @@ CONTENTS
     DESCRIPTION
     PACKAGES
     INSTALLER
-    BUILD 
+    BUILD
     BUILD DEBUG
     BUILD NEXT
     CREATE DEB PACKAGE
@@ -29,22 +29,22 @@ DESCRIPTION
 
 PACKAGES
 
-    antiX's current test release includes spacefm:    
+    antiX's current test release includes spacefm:
         http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
-    
+
     Arch Linux's [community] repository includes spacefm:
         http://www.archlinux.org/packages/community/i686/spacefm/
         http://www.archlinux.org/packages/community/x86_64/spacefm/
     and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
         http://aur.archlinux.org/packages.php?ID=58247
-    
+
     Debian-based deb packages are available in Downloads:
         (to save a file, click on its filename and click 'View Raw'):
         https://github.com/IgnorantGuru/spacefm/tree/master/packages
-    
+
         and are also available in the author's PPA:
             http://igurublog.wordpress.com/downloads/ppa/
-        
+
         These convenience deb packages contain the source code and will build
         and install SpaceFM automatically on most Debian-based distros.
         $TMPDIR (usually /tmp) must NOT be mounted noexec. Or see CREATE DEB
@@ -54,9 +54,9 @@ PACKAGES
               users also may not be able to install SpaceFM due to repositories
               missing package libgdk-pixbuf2.0-0
 
-        For signatures and SHA256 sums see 
+        For signatures and SHA256 sums see
             http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
-        
+
     Foresight Lxde uses SpaceFM as its default file manager; Foresight includes
     spacefm in its repositories:
         http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
@@ -75,18 +75,18 @@ PACKAGES
 
     PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
-        
+
     Sabayon includes spacefm in its repositories:
         http://www.sabayon.org/
 
     SliTaz includes spacefm in its repositories:
-        http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search" 
+        http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search"
 
     Ubuntu: see 'Debian-based' above
 
     VectorLinux has spacefm test packages available:
         http://vectorlinux.com/
-    
+
     Other:
         See INSTALLER below
 
@@ -103,14 +103,14 @@ INSTALLER
     The installer requires the build dependencies listed below in BUILD.  If
     any dependencies are missing, examine the error, install missing packages,
     and try again.
-       
+
     The installer MUST be run in a terminal.  It automatically builds and
     installs.  Run it like this:
-    
+
         bash spacefm-x.x.x-installer.sh
-        
+
     or to see options:
-    
+
         bash spacefm-x.x.x-installer.sh --help
 
     To reinstall or upgrade, just run the latest installer again.
@@ -121,7 +121,7 @@ INSTALLER
 
 BUILD
 
-1)  Install required build dependencies (below are Debian package names - 
+1)  Install required build dependencies (below are Debian package names -
     packages names on your distro may vary but should be similar):
 
         autotools-dev bash build-essential dbus desktop-file-utils libc6
@@ -129,7 +129,7 @@ BUILD
         libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config
         libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev
         libdbus-1-dev libgdk-pixbuf2.0-0 libudev0 (>=143) libudev-dev
- 
+
     NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 users
         may not be able to install SpaceFM due to repositories missing package
         libgdk-pixbuf2.0-0
@@ -145,7 +145,7 @@ BUILD
         fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev
 
     configure will report anything missing when you run it as shown below.
-    
+
 2)  Use these commands to download the SpaceFM tarball and build:
 
         # Download & Extract
@@ -153,14 +153,14 @@ BUILD
         wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
-        
+
         # Build & Install
         ./configure
         make
         sudo make install
         sudo update-mime-database /usr/share/mime > /dev/null
         sudo update-desktop-database -q
-        
+
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
 
@@ -174,7 +174,7 @@ BUILD
     NOTE: If you don't want to use the inotify kernel support and instead
     want fam or gamin to detect directory changes, add to configure:
         --disable-inotify
-        
+
     NOTE: SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
     To build with an additional custom su program ('/usr/bin/mysu' in this
     example), add:
@@ -211,28 +211,31 @@ For other distros:
         wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
-        
+
         # Build & Install
         CFLAGS='-ggdb -O1' STRIP='!strip' ./configure
         make
         sudo make install
         sudo update-mime-database /usr/share/mime > /dev/null
         sudo update-desktop-database -q
-        
+
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
 
 4)  Run spacefm with the debugger:
 
         gdb /usr/local/bin/spacefm
-        
+
     In gdb, enter 'run' at the prompt.  SpaceFM will start.  When the crash
-    occurs, gdb will freeze SpaceFM.  Return to the terminal running gdb and
-    enter 'bt full'.  Provide the output with your detailed bug report at
-        https://github.com/IgnorantGuru/spacefm/issues
-    
-    NOTE: When SpaceFM is built this way, it may run more slowly.  Once you are
-    done debugging, be sure to install a normal (optimized) build.
+    occurs, gdb will freeze SpaceFM.  If SpaceFM hangs, press Ctrl-C in gdb to
+    interrupt it, or run 'killall -s KILL spacefm' in another terminal.
+
+5)  In the terminal running gdb enter 'bt full'.  Provide the output with your
+    detailed bug report at https://github.com/IgnorantGuru/spacefm/issues
+
+    NOTE: When SpaceFM is built this way, it may run more slowly and use more
+    memory.  Once you are done debugging, be sure to install a normal
+    (optimized) build.
 
 
 BUILD NEXT
@@ -247,12 +250,12 @@ build dependencies listed above in BUILD, then:
     wget -O spacefm-next.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/next
     tar xzf spacefm-next.tar.gz
     cd IgnorantGuru-spacefm-*
-    
+
     # Build, & Install
     ./autogen.sh   # pass desired configure options (if any) here to autogen.sh
     make
     sudo make install
-    
+
     # Remove Temporary Files
     cd / && rm -rf /tmp/spacefm-next
 
@@ -312,23 +315,23 @@ LICENSE
 
     SpaceFM - Copyright (C) 2012   GPL2
 
-    This program is free software; you can redistribute it and/or modify it 
-    under the terms of the GNU General Public License as published by the 
-    Free Software Foundation; either version 2 of the License, or (at your 
+    This program is free software; you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the
+    Free Software Foundation; either version 2 of the License, or (at your
     option) any later version.
 
-    USE AT YOUR OWN RISK.  This program is distributed in the hope that it 
-    will be useful, but WITHOUT ANY WARRANTY; without even the implied 
-    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See 
+    USE AT YOUR OWN RISK.  This program is distributed in the hope that it
+    will be useful, but WITHOUT ANY WARRANTY; without even the implied
+    warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
     the GNU General Public License for more details.
 
-    The 'exo' libraries and source code used by this software are licensed 
-    under the GNU General Public License and the GNU Lesser General Public 
+    The 'exo' libraries and source code used by this software are licensed
+    under the GNU General Public License and the GNU Lesser General Public
     License version 2 (LGPL2).
 
-    You should have received a copy of the GNU General Public License and 
-    the GNU Lesser General Public License along with this program; if not, 
-    write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth 
+    You should have received a copy of the GNU General Public License and
+    the GNU Lesser General Public License along with this program; if not,
+    write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth
     Floor, Boston, MA  02110-1301, USA.
 
     See COPYING file.

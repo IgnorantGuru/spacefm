@@ -27,6 +27,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #include "vfs-dir.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
@@ -34,7 +35,6 @@
 #include "glib-utils.h" /* for g_mkdir_with_parents */
 #include "ptk-file-task.h"
 #include "main-window.h"
-
 
 static GtkTreeModel* model = NULL;
 static GtkTreeModel* bookmodel = NULL;
@@ -212,6 +212,7 @@ void update_all()
             }
             else
                 havevol = FALSE;
+
             if ( volume_is_visible( vol ) )
             {
                 if ( havevol )
@@ -791,6 +792,84 @@ void mount_network( PtkFileBrowser* file_browser, const char* url )
     task->user_data = ao;
     ptk_file_task_run( task );
 
+    return;
+}
+
+void open_external_tab( const char* path )
+{
+    char* prog = g_find_program_in_path( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( "spacefm" );
+    char* quote_path = bash_quote( path );
+    char* line = g_strdup_printf( "%s -t %s", prog, quote_path );
+    g_spawn_command_line_async( line, NULL );
+    g_free( prog );
+    g_free( quote_path );
+    g_free( line );    
+}
+
+void mount_iso( PtkFileBrowser* file_browser, const char* path )
+{
+    char* udevil = g_find_program_in_path( "udevil" );
+    if ( !udevil )
+    {
+        g_free( udevil );
+        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                        GTK_MESSAGE_ERROR,
+                        _("udevil Not Installed"), NULL, 0,
+                        _("Mounting a disc image file requires udevil to be installed."),
+                        NULL, NULL );
+        return;
+    }
+    
+    char* stdout = NULL;
+    char* stderr = NULL;
+    char* command;
+    gboolean ret;
+    gint exit_status;
+    
+    char* str = bash_quote( path );
+    command = g_strdup_printf( "%s mount %s", udevil, str );
+    g_free( str );
+    g_free( udevil );
+    ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status, NULL );
+    g_free( command );
+    if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
+    {
+        if ( str = strstr( stderr, " is already mounted at " ) )
+        {
+            char* str2;
+            if ( str2 = strstr( str, " (or specify mount point" ) )
+            {
+                str2[0] = '\0';
+                if ( file_browser )
+                    ptk_file_browser_emit_open( file_browser, g_strdup( str + 23 ),
+                                                                PTK_OPEN_NEW_TAB );
+                else
+                    open_external_tab( str + 23 );
+                goto _exit_mount_iso;
+            }
+        }
+        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                            GTK_MESSAGE_ERROR, _("Mount Disc Image Failed"), NULL,
+                            0, stderr, NULL, NULL );
+    }
+    else if ( g_str_has_prefix( stdout, "Mounted " ) &&
+                                            ( str = strstr( stdout, " at " ) ) )
+    {
+        while ( g_str_has_suffix( stdout, "\n" ) )
+            stdout[ strlen( stdout ) - 1 ] = '\0';
+        if ( file_browser )
+            ptk_file_browser_emit_open( file_browser, g_strdup( str + 4 ),
+                                                    PTK_OPEN_NEW_TAB );
+        else
+            open_external_tab( str + 4 );
+    }
+_exit_mount_iso:
+    g_free( stderr );
+    g_free( stdout );
     return;
 }
 
@@ -2431,6 +2510,7 @@ static void on_automountlist( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view
 gboolean volume_is_visible( VFSVolume* vol )
 {
 #ifndef HAVE_HAL
+
    // check show/hide
     int i, j;
     char* test;
@@ -2475,9 +2555,15 @@ gboolean volume_is_visible( VFSVolume* vol )
     if ( vol->device_type == DEVICE_TYPE_NETWORK )
         return xset_get_b( "dev_show_net" );
     
-    if ( g_str_has_prefix( vol->device_file, "/dev/loop" ) && vol->is_mounted &&
-                                                xset_get_b( "dev_show_file" ) )
-        return TRUE;
+    // loop
+    if ( g_str_has_prefix( vol->device_file, "/dev/loop" ) )
+    {
+        if ( vol->is_mounted && xset_get_b( "dev_show_file" ) )
+            return TRUE;
+        if ( !vol->is_mountable && !vol->is_mounted )
+            return FALSE;
+        // fall through
+    }
         
     // internal?
     if ( !vol->is_removable && !xset_get_b( "dev_show_internal_drives" ) )

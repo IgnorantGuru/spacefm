@@ -34,6 +34,7 @@
 #include "ptk-app-chooser.h"
 #include "settings.h"  //MOD
 #include "main-window.h"
+#include "ptk-location-view.h"
 //#include "ptk-bookmarks.h"
 
 #define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
@@ -421,6 +422,11 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
                                                 _("Bookmark already exists") );
 }
 
+void on_popup_mount_iso( GtkMenuItem *menuitem, PtkFileMenu* data )
+{
+    mount_iso( data->browser, data->file_path );
+}
+
 static void ptk_file_menu_free( PtkFileMenu *data )
 {
     if ( data->file_path )
@@ -792,6 +798,22 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
+        }
+        else if ( mime_type && ( 
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+        {
+            item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
+            gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
+
+            set = xset_set_cb( "iso_mount", on_popup_mount_iso, data );
+            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
+
+            set = xset_get( "iso_auto" );
+            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
+            str = g_find_program_in_path( "udevil" );
+            set->disable = !str;
+            g_free( str );
         }
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
@@ -1566,9 +1588,8 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( path );
         break;
     case APP_JOB_HELP:
-            xset_show_help( GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
-                                                GTK_WIDGET( data->browser ) :
-                                                GTK_WIDGET( data->desktop ) ) ),
+            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :
+                                        GTK_WIDGET( data->desktop ),
                                         NULL, "#designmode-mime" );
         break;
     }

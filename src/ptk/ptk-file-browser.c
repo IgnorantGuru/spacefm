@@ -4556,7 +4556,30 @@ int no_write_access = 0;
             }
         }
     }
-
+    
+    if ( sel_files && xset_get_b( "iso_auto" ) )
+    {
+        VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
+        VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+        if ( mime_type && ( 
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+        {
+            char* str = g_find_program_in_path( "udevil" );
+            if ( str )
+            {
+                g_free( str );
+                str = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
+                                            vfs_file_info_get_name( file ), NULL );
+                mount_iso( file_browser, str );
+                g_free( str );
+                vfs_file_info_unref( file );
+                goto _done;
+            }
+        }
+        vfs_file_info_unref( file );
+    }
+    
     ptk_open_files_with_app( ptk_file_browser_get_cwd( file_browser ),
                          sel_files, app_desktop, file_browser, FALSE, FALSE );
 _done:

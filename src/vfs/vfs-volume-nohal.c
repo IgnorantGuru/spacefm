@@ -905,6 +905,8 @@ void info_device_properties( device_t *device )
     {
          media_available = TRUE;
     }
+    else if ( g_str_has_prefix( device->devnode, "/dev/loop" ) )
+        media_available = FALSE;
     else if ( device->device_is_removable )
     {
         gboolean is_cd, is_floppy;
@@ -1433,6 +1435,8 @@ gboolean device_get_info( device_t *device )
     device->device_is_system_internal = info_is_system_internal( device );
     device->mount_points = info_mount_points( device );
     device->device_is_mounted = ( device->mount_points != NULL );
+    if ( device->device_is_mounted )
+        device->device_is_media_available = TRUE;
     info_partition_table( device );
     info_partition( device );
     info_optical_disc( device );
@@ -2360,10 +2364,7 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
         return NULL;
     device_t* device = device_alloc( udevice );
     if ( !device_get_info( device ) || !device->devnode
-                                || !g_str_has_prefix( device->devnode, "/dev/" )
-                                || ( g_str_has_prefix( device->devnode, "/dev/loop" )
-                                                    && !device->id_usage
-                                                    && !device->device_is_mounted ) )
+                                || !g_str_has_prefix( device->devnode, "/dev/" ) )
     {
         device_free( device );
         return NULL;
@@ -3514,7 +3515,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                     ((VFSVolume*)l->data)->inhibit_auto = FALSE;
                 }
             }
-                
+
             call_callbacks( (VFSVolume*)l->data, VFS_VOLUME_CHANGED );
 
             vfs_free_volume_members( volume );

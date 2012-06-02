@@ -40,6 +40,7 @@
 #include "ptk-file-browser.h"
 #include "ptk-clipboard.h"
 #include "ptk-file-archiver.h"
+#include "ptk-location-view.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -958,6 +959,29 @@ static void open_clicked_item( DesktopItem* clicked_item )
                     goto _done;
                 }
             }
+        }
+
+        if ( sel_files && xset_get_b( "iso_auto" ) )
+        {
+            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
+            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+            if ( mime_type && ( 
+                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
+                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+            {
+                char* str = g_find_program_in_path( "udevil" );
+                if ( str )
+                {
+                    g_free( str );
+                    str = g_build_filename( vfs_get_desktop_dir(),
+                                                vfs_file_info_get_name( file ), NULL );
+                    mount_iso( NULL, str );
+                    g_free( str );
+                    vfs_file_info_unref( file );
+                    goto _done;
+                }
+            }
+            vfs_file_info_unref( file );
         }
 
         ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL, NULL,
