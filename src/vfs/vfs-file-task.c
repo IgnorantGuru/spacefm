@@ -1142,6 +1142,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     int result;
     FILE* file;
     char* terminal = NULL;
+    char** terminalv = NULL;
     const char* value;
     char* sum_script = NULL;
     GtkWidget* parent = NULL;
@@ -1189,7 +1190,6 @@ static void vfs_file_task_exec( VFSFileTask* task )
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal SU Not Available"), NULL, 0, str, NULL, NULL );
-                //vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
             gsu = get_valid_gsu();
@@ -1199,7 +1199,6 @@ static void vfs_file_task_exec( VFSFileTask* task )
                 g_warning ( str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Graphical SU Not Available"), NULL, 0, str, NULL, NULL );
-                //vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
         }
@@ -1217,7 +1216,6 @@ static void vfs_file_task_exec( VFSFileTask* task )
         g_warning ( str );
         xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                                 _("Error"), NULL, 0, str, NULL, NULL );
-        //vfs_file_task_exec_error( task, 0, str );
         goto _exit_with_error_lean;
     }
     
@@ -1236,16 +1234,18 @@ static void vfs_file_task_exec( VFSFileTask* task )
     if ( task->exec_terminal )
     {
         // get terminal
-        char* main_term = xset_get_s( "main_terminal" );
-        if ( main_term && main_term[0] != '\0' )
-            terminal = g_find_program_in_path( main_term );
-        if ( !terminal || terminal[0] == '\0' )
+        str = g_strdup( xset_get_s( "main_terminal" ) );
+        g_strstrip( str );
+        terminalv = g_strsplit( str, " ", 0 );
+        g_free( str );
+        if ( terminalv && terminalv[0] && terminalv[0][0] != '\0' )
+            terminal = g_find_program_in_path( terminalv[0] );
+        if ( !( terminal && terminal[0] == '/' ) )
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
             g_warning ( str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
-            //vfs_file_task_exec_error( task, 0, str );
             goto _exit_with_error_lean;
         }
     }
@@ -1400,7 +1400,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
 
     // Spawn
     GPid pid;
-    gchar *argv[25] = { NULL };
+    gchar *argv[35];
     gint out, err;
     int a = 0;
     char* use_su;
@@ -1411,6 +1411,19 @@ static void vfs_file_task_exec( VFSFileTask* task )
     {
         // terminal
         argv[a++] = terminal;
+
+        // terminal options - add <=9 options
+        for ( i = 0; terminalv[i]; i++ )
+        {
+            if ( i == 0 || a > 9 || terminalv[i][0] == '\0' )
+                g_free( terminalv[i] );
+            else
+                argv[a++] = terminalv[i];  // steal
+        }
+        g_free( terminalv );  // all strings freed or stolen
+        terminalv = NULL;
+
+        // automatic terminal options
         if ( strstr( terminal, "roxterm" ) )
         {
             argv[a++] = g_strdup_printf( "--disable-sm" );
@@ -1639,6 +1652,7 @@ _exit_with_error:
             unlink( task->exec_script );
     }
 _exit_with_error_lean:
+    g_strfreev( terminalv );
     g_free( terminal );
     g_free( su );
     g_free( gsu );

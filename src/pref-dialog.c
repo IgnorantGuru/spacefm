@@ -173,6 +173,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     GtkNotebook* notebook;
     int cur_tabx, p;
     FMMainWindow* a_window;
+    char* str;
 
     GtkWidget * tab_label;
     /* interface settings */
@@ -595,6 +596,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         //MOD terminal
         char* old_terminal = xset_get_s( "main_terminal" );
         char* terminal = gtk_combo_box_get_active_text( GTK_COMBO_BOX( data->terminal ) );
+        g_strstrip( terminal );
         if ( !old_terminal && terminal[0] != '\0' )
         {
             xset_set( "main_terminal", "s", terminal );
@@ -605,7 +607,17 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             xset_set( "main_terminal", "s", terminal );
             root_set_change = TRUE;
         }
-          
+        if ( str = strchr( terminal, ' ' ) )
+            str[0] = '\0';
+        str = g_find_program_in_path( terminal );
+        if ( !str )
+        {
+            str = g_strdup_printf( "Unable to find terminal program '%s'", terminal );
+            ptk_show_error( GTK_WINDOW( dlg ), "Error", str );
+        }
+        g_free( str );
+        g_free( terminal );
+        
         /* save to config file */
 
         char* err_msg = save_settings( NULL );
