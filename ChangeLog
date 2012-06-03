@@ -9,6 +9,7 @@
     mount iso files from Open context menu; auto-mount iso
     added Root|Edit udevil.conf to devices menu
     allow edit bookmark to network URL
+    corrected Click runs executables pref not saved fixes #84
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

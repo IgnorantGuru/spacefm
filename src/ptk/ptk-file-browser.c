@@ -778,7 +778,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
     if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
     {
         str = g_strdup( text );
-        mount_network( file_browser, str );
+        mount_network( file_browser, str, FALSE );
         g_free( str );
         return;
     }

@@ -63,6 +63,7 @@ void on_bookmark_row_deleted( GtkTreeView* view, GtkTreePath* tree_path,
 void on_bookmark_row_inserted( GtkTreeView* view, GtkTreePath* tree_path,
                               GtkTreeViewColumn *col, gpointer user_data );
 void full_update_bookmark_icons();
+void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol );
 
 
 static gboolean update_drag_dest_row( GtkWidget *widget, GdkDragContext *drag_context,
@@ -726,7 +727,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
     g_slice_free( AutoOpen, ao );
 }
 
-void mount_network( PtkFileBrowser* file_browser, const char* url )
+void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
 {
     netmount_t *netmount = NULL;
     
@@ -767,14 +768,43 @@ void mount_network( PtkFileBrowser* file_browser, const char* url )
         g_free( netmount->path );
         g_slice_free( netmount_t, netmount );        
     }
-        
+
+    // already mounted?
+    const GList* l;
+    VFSVolume* vol;
+    const GList* volumes = vfs_volume_get_all_volumes();
+    for ( l = volumes; l; l = l->next )
+    {
+        vol = (VFSVolume*)l->data;
+        if ( strstr( vol->device_file, neturl ) )
+        {
+            if ( vol->is_mounted )
+            {
+                if ( new_tab )
+                {
+                    ptk_file_browser_emit_open( file_browser, vol->mount_point,
+                                                            PTK_OPEN_NEW_TAB );
+                }
+                else
+                {
+                    if ( strcmp( vol->mount_point, ptk_file_browser_get_cwd( file_browser ) ) )
+                        ptk_file_browser_chdir( file_browser, vol->mount_point,
+                                                                PTK_FB_CHDIR_ADD_HISTORY );
+                }
+                g_free( neturl );
+                return;
+            }
+            break;
+        }
+    }
+
     // task
     AutoOpen* ao = g_slice_new0( AutoOpen );
     ao->device_file = neturl;
     ao->file_browser = file_browser;
-    //if ( xset_get_b( "dev_newtab" ) )
-    //    ao->job = PTK_OPEN_NEW_TAB;
-    //else
+    if ( new_tab )
+        ao->job = PTK_OPEN_NEW_TAB;
+    else
         ao->job = PTK_OPEN_DIR;
     char* line = g_strdup_printf( "udevil mount '%s'", url );
     char* task_name = g_strdup_printf( _("Netmount %s"), url );
@@ -2681,6 +2711,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
     GtkWidget* item;
     VFSVolume* vol = NULL;
     XSet* set;
+    char* str;
     
     if( evt->type != GDK_BUTTON_PRESS )
         return FALSE;
@@ -2763,6 +2794,9 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_cb( "dev_root_fstab", on_root_fstab, view );
         xset_set_cb( "dev_root_udevil", on_root_udevil, view );
 
+        set = xset_set_cb( "dev_menu_mark", on_bookmark_device, vol );
+            xset_set_ob1( set, "view", view );
+
         xset_set_cb( "dev_show_internal_drives", update_all, NULL );
         xset_set_cb( "dev_show_empty", update_all, NULL );
         xset_set_cb( "dev_show_partition_tables", update_all, NULL );
@@ -2778,7 +2812,13 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         set = xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
             xset_set_ob1( set, "view", view );
 
-        char* menu_elements = g_strdup_printf( "dev_menu_remove dev_menu_reload dev_menu_unmount dev_menu_sync sep_dm1 dev_menu_open dev_menu_tab dev_menu_mount dev_menu_remount" );
+        if ( vol && ( g_str_has_prefix( vol->device_file, "//" )
+                                            || strstr( vol->device_file, ":/" ) ) )
+            str = " dev_menu_mark";
+        else
+            str = "";
+
+        char* menu_elements = g_strdup_printf( "dev_menu_remove dev_menu_reload dev_menu_unmount dev_menu_sync sep_dm1 dev_menu_open dev_menu_tab dev_menu_mount dev_menu_remount%s", str );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
 #else
@@ -3111,6 +3151,37 @@ void ptk_bookmark_view_init_model( GtkListStore* list )
     update_bookmark_icons();
 }
 
+int book_item_comp( const char* item, const char* path )
+{
+    return strcmp( ptk_bookmarks_item_get_path( item ), path );
+}
+
+void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
+{
+    char* url;
+    GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                                    "file_browser" );
+    if ( !view || !file_browser )
+        return;
+
+    if ( g_str_has_prefix( vol->device_file, "curlftpfs#" ) )
+        url = vol->device_file + 10;
+    else
+        url = vol->device_file;
+    if ( ! g_list_find_custom( app_settings.bookmarks->list,
+                               url,
+                               ( GCompareFunc ) book_item_comp ) )
+    {
+        ptk_bookmarks_append( url, url );
+    }
+    else
+        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
+                                                GTK_WIDGET( file_browser ) ) ),
+                                                _("Error"),
+                                                _("Bookmark already exists") );
+}
+
 void on_bookmark_remove( GtkMenuItem* item, PtkFileBrowser* file_browser )
 {
     char * dir_path;
@@ -3177,7 +3248,7 @@ void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser )
                                         GTK_TREE_VIEW( file_browser->side_book ) );
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
     {
-        mount_network( file_browser, dir_path );
+        mount_network( file_browser, dir_path, xset_get_b( "book_newtab" ) );
         g_free( dir_path );
     }
     else if ( dir_path )
@@ -3199,7 +3270,7 @@ void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
                                         GTK_TREE_VIEW( file_browser->side_book ) );
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
     {
-        mount_network( file_browser, dir_path );
+        mount_network( file_browser, dir_path, TRUE );
         g_free( dir_path );
     }
     else if ( dir_path )
@@ -3220,7 +3291,7 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
                                         GTK_TREE_VIEW( file_browser->side_book ) );
 
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
-        mount_network( file_browser, dir_path );
+        mount_network( file_browser, dir_path, xset_get_b( "book_newtab" ) );
     else if ( dir_path )
     {
         if ( !xset_get_b( "book_newtab" ) )

@@ -1018,7 +1018,7 @@ char* save_settings( gpointer main_window_ptr )
 //            fprintf( file, "show_location_bar=%d\n", app_settings.show_location_bar );
 /*        if ( app_settings.home_folder )
             fprintf( file, "home_folder=%s\n", app_settings.home_folder );  //MOD
-*/        if ( app_settings.no_execute )
+*/        if ( !app_settings.no_execute )
             fprintf( file, "no_execute=%d\n", !!app_settings.no_execute );  //MOD
         if ( app_settings.no_confirm )
             fprintf( file, "no_confirm=%d\n", !!app_settings.no_confirm );  //MOD
@@ -8386,6 +8386,9 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-redo" );
     set->line = g_strdup( "#devices-menu-remount" );
    
+    set = xset_set( "dev_menu_mark", "label", _("_Bookmark") );
+    xset_set_set( set, "icon", "gtk-add" );
+
     set_last = xset_get( "sep_mr1" );
     set_last->menu_style = XSET_MENU_SEP;
 
