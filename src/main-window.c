@@ -235,8 +235,10 @@ void on_bookmarks_change( PtkBookmarks* bookmarks, FMMainWindow* main_window )
       *  In that way, gtk+ will hang.  So some dirty hack is used here.
       *  We popup down the old menu, if it's currently shown.
       */
-    gtk_menu_popdown( (GtkMenu*)gtk_menu_item_get_submenu ( GTK_MENU_ITEM (
-                                            main_window->book_menu_item ) ) );
+    GtkMenu* menu = (GtkMenu*)gtk_menu_item_get_submenu ( GTK_MENU_ITEM (
+                                            main_window->book_menu_item ) );
+    if ( menu )
+        gtk_menu_popdown( menu );
     gtk_menu_item_set_submenu ( GTK_MENU_ITEM ( main_window->book_menu_item ),
                                             GTK_WIDGET( main_window->book_menu ) );
 }

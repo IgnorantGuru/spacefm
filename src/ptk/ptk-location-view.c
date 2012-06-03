@@ -3175,7 +3175,12 @@ void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser )
 
     dir_path = ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( dir_path )
+    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
+    {
+        mount_network( file_browser, dir_path );
+        g_free( dir_path );
+    }
+    else if ( dir_path )
     {
         if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
             ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
@@ -3192,7 +3197,12 @@ void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
         
     dir_path = ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( dir_path )
+    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
+    {
+        mount_network( file_browser, dir_path );
+        g_free( dir_path );
+    }
+    else if ( dir_path )
     {
         ptk_file_browser_emit_open( file_browser, dir_path, PTK_OPEN_NEW_TAB );
     }
@@ -3203,12 +3213,15 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
                                  GtkTreeViewColumn *column,
                                  PtkFileBrowser* file_browser )
 {
-    char * dir_path;
+    char * dir_path = NULL;
 
     //ptk_file_browser_focus_me( file_browser );
     dir_path = ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( dir_path )
+
+    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
+        mount_network( file_browser, dir_path );
+    else if ( dir_path )
     {
         if ( !xset_get_b( "book_newtab" ) )
         {
@@ -3218,10 +3231,10 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
         else
         {
             ptk_file_browser_emit_open( file_browser, dir_path, PTK_OPEN_NEW_TAB );
-            return;
+            dir_path = NULL;
         }
-        g_free( dir_path );
     }
+    g_free( dir_path );
 }
 
 static gboolean on_bookmark_button_press_event( GtkTreeView* view,
@@ -3291,9 +3304,9 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         g_free( menu_elements );
 
         gtk_widget_show_all( GTK_WIDGET( popup ) );
-        g_signal_connect( popup, "selection-done",
+        g_signal_connect( GTK_MENU( popup ), "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
-        g_signal_connect( popup, "key-press-event",
+        g_signal_connect( GTK_MENU( popup ), "key-press-event",
                           G_CALLBACK( xset_menu_keypress ), NULL );
         gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL, evt->button, evt->time );
 

@@ -147,7 +147,28 @@ static void load( const char* path )
                     g_free(upath);
                     g_free( basename );
                 }
-            } else {
+            }
+            else if ( g_str_has_prefix( uri, "//" ) || strstr( uri, ":/" ) )
+            {
+                name = strtok( NULL, "\r\n" );
+                if( name )
+                {
+                    name_len = strlen( name );
+                    basename = NULL;
+                }
+                else
+                {
+                    name = basename = g_strdup( uri );
+                    name_len = strlen( basename );
+                }
+                item = ptk_bookmarks_item_new( name, name_len,
+                                               uri, strlen( uri ) );
+                bookmarks.list = g_list_append( bookmarks.list,
+                                                item );
+                g_free( basename );
+            }
+            else
+            {
                 unusedLine = unparsedLine_new();
                 unusedLine->lineNum = lineNum;
                 unusedLine->line = strdup(line_buf);
@@ -329,15 +350,18 @@ static void ptk_bookmarks_save_item( GList* l, FILE* file )
     item = (char*)l->data;
     upath = ptk_bookmarks_item_get_path( item );
     path = g_filename_from_utf8( upath, -1, NULL, NULL, NULL );
+
     if( path )
     {
         uri = g_filename_to_uri( path, NULL, NULL );
-        g_free( path );
         if( uri )
         {
             fprintf( file, "%s %s\n", uri, item );
             g_free( uri );
         }
+        else if ( g_str_has_prefix( path, "//" ) || strstr( path, ":/" ) )
+            fprintf( file, "%s %s\n", path, item );
+        g_free( path );
     }
 }
 
