@@ -776,7 +776,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url )
     //    ao->job = PTK_OPEN_NEW_TAB;
     //else
         ao->job = PTK_OPEN_DIR;
-    char* line = g_strdup_printf( "udevil --verbose mount '%s'", url );
+    char* line = g_strdup_printf( "udevil mount '%s'", url );
     char* task_name = g_strdup_printf( _("Netmount %s"), url );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
@@ -1169,7 +1169,7 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
     {
         label_cmd = set->x;
         def_cmd = set->title;
-        msg = g_strdup_printf( _("Enter change label command for fstype '%s':\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%l\tnew label ( \"%s\" )\n\nEDIT WITH CARE   This command is run as root%s"), vol->fs_type, vol->device_file, new_label, mount_warn );
+        msg = g_strdup_printf( _("Enter change label command for fstype '%s':\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%l\tnew label ( \"%s\" )\n\nEDIT WITH CARE   This command is run as root%s"), vol->fs_type ? vol->fs_type : "none", vol->device_file, new_label, mount_warn );
     }
     g_free( mount_warn );
     if ( xset_text_dialog( view, _("Change Label As Root"),
@@ -1964,6 +1964,11 @@ static void on_root_fstab( GtkMenuItem* item, GtkWidget* view )
     xset_edit( view, "/etc/fstab", TRUE, FALSE );
 }
 
+static void on_root_udevil( GtkMenuItem* item, GtkWidget* view )
+{
+    xset_edit( view, "/etc/udevil/udevil.conf", TRUE, FALSE );
+}
+
 static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
 {
     XSet* set;
@@ -2608,6 +2613,8 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
         on_automountlist( NULL, vol, view );
     else if ( !strcmp( set->name, "dev_root_fstab" ) )
         on_root_fstab( NULL, view );
+    else if ( !strcmp( set->name, "dev_root_udevil" ) )
+        on_root_udevil( NULL, view );
     else if ( !strcmp( set->name, "dev_rest_info" ) )
         on_restore_info( NULL, view, set );
     else if ( g_str_has_prefix( set->name, "dev_icon_" ) )
@@ -2754,6 +2761,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             xset_set_ob1( set, "view", view );
             set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
         xset_set_cb( "dev_root_fstab", on_root_fstab, view );
+        xset_set_cb( "dev_root_udevil", on_root_udevil, view );
 
         xset_set_cb( "dev_show_internal_drives", update_all, NULL );
         xset_set_cb( "dev_show_empty", update_all, NULL );

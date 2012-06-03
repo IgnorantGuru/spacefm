@@ -8397,7 +8397,7 @@ void xset_defaults()
 
     set = xset_set( "dev_menu_root", "label", _("_Root") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "dev_root_unmount dev_root_mount sep_mr1 dev_root_label sep_mr2 dev_root_check dev_menu_format dev_menu_backup dev_menu_restore sep_mr3 dev_root_fstab" );
+    xset_set_set( set, "desc", "dev_root_unmount dev_root_mount sep_mr1 dev_root_label sep_mr2 dev_root_check dev_menu_format dev_menu_backup dev_menu_restore sep_mr3 dev_root_fstab dev_root_udevil" );
     xset_set_set( set, "icon", "gtk-dialog-warning" );
     set->line = g_strdup( "#devices-root" );
     
@@ -8468,6 +8468,10 @@ void xset_defaults()
     set = xset_set( "dev_root_fstab", "label", _("_Edit fstab") );
     xset_set_set( set, "icon", "gtk-edit" );
     set->line = g_strdup( "#devices-root-fstab" );
+       
+    set = xset_set( "dev_root_udevil", "label", _("Edit u_devil.conf") );
+    xset_set_set( set, "icon", "gtk-edit" );
+    set->line = g_strdup( "#devices-root-udevil" );
        
     set = xset_set( "dev_menu_format", "label", _("_Format") );
     set->menu_style = XSET_MENU_SUBMENU;

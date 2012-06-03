@@ -2434,6 +2434,12 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
     }
+    else if ( g_str_has_prefix( set->name, "iso_" ) )
+    {
+        xname = set->name + 4;
+        if ( !strcmp( xname, "mount" ) )
+            on_popup_mount_iso( NULL, data );
+    }
     else if ( g_str_has_prefix( set->name, "new_" ) )
     {
         xname = set->name + 4;

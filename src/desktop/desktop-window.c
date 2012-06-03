@@ -915,6 +915,8 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
 
 static void open_clicked_item( DesktopItem* clicked_item )
 {
+    char* path = NULL;
+
     if( vfs_file_info_is_dir( clicked_item->fi ) )  /* this is a folder */
     {
         GList* sel_files = NULL;
@@ -932,6 +934,8 @@ static void open_clicked_item( DesktopItem* clicked_item )
         {
             VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+            path = g_build_filename( vfs_get_desktop_dir(),
+                                            vfs_file_info_get_name( file ), NULL );
             vfs_file_info_unref( file );    
             if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
             {
@@ -946,13 +950,17 @@ static void open_clicked_item( DesktopItem* clicked_item )
                     goto _done;
                 }
                 else if ( xset_get_b( "arc_def_exto" ) || 
-                            ( xset_get_b( "arc_def_ex" ) && no_write_access ) )
+                        ( xset_get_b( "arc_def_ex" ) && no_write_access &&
+                                            !( g_str_has_suffix( path, ".gz" ) && 
+                                            !g_str_has_suffix( path, ".tar.gz" ) ) ) )
                 {
                     ptk_file_archiver_extract( NULL, sel_files, 
                                                     vfs_get_desktop_dir(), NULL );
                     goto _done;
                 }
-                else if ( xset_get_b( "arc_def_list" ) )
+                else if ( xset_get_b( "arc_def_list" ) && 
+                            !( g_str_has_suffix( path, ".gz" ) && 
+                                            !g_str_has_suffix( path, ".tar.gz" ) ) )
                 {
                     ptk_file_archiver_extract( NULL, sel_files,
                                                 vfs_get_desktop_dir(), "////LIST" );
@@ -987,6 +995,7 @@ static void open_clicked_item( DesktopItem* clicked_item )
         ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL, NULL,
                                                             TRUE, FALSE ); //MOD
 _done:
+        g_free( path );
         g_list_free( sel_files );
     }
 }
