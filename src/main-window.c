@@ -1129,8 +1129,10 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     int cur_tabx, p;
 //printf("update_views_all_windows\n");
     // do this browser first
-    ptk_file_browser_update_views( NULL, file_browser );
     p = file_browser->mypanel;
+    // PROBLEM: this may allow close events to destroy fb, so make sure its
+    // still a widget after this
+    ptk_file_browser_update_views( NULL, file_browser );
 
     // do other windows
     for ( l = all_windows; l; l = l->next )
@@ -2210,6 +2212,9 @@ void main_window_get_counts( PtkFileBrowser* file_browser, int* panel_count,
 
 void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
 {
+//printf( "\n============== on_close_notebook_page fb=%#x\n", file_browser );
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        return;
     GtkNotebook* notebook = GTK_NOTEBOOK(
                                  gtk_widget_get_ancestor( GTK_WIDGET( file_browser ),
                                                           GTK_TYPE_NOTEBOOK ) );
@@ -2218,14 +2223,16 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
-    // when two curlftpfs tabs are open and middle click to close second,
-    // sometimes segfaults on destroy - g_idle_add had no effect
-/*
-    Program received signal SIGSEGV, Segmentation fault.
-    0x00007ffff78fda2a in gtk_notebook_button_release (event=0x8df5e0, 
-        widget=0x81a020) at /tmp/buildd/gtk+2.0-2.24.10/gtk/gtknotebook.c:3017
-    3017	/tmp/buildd/gtk+2.0-2.24.10/gtk/gtknotebook.c: No such file or directory.
-*/
+    // save slider positions of tab to be closed
+    ptk_file_browser_slider_release( NULL, NULL, file_browser );
+
+    // without this signal blocked, on_close_notebook_page is called while
+    // ptk_file_browser_update_views is still in progress causing segfault
+    g_signal_handlers_block_matched( main_window->notebook,
+            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
+
+    // remove page can also be used to destroy - same result
+    //gtk_notebook_remove_page( notebook, gtk_notebook_get_current_page( notebook ) );
     gtk_widget_destroy( GTK_WIDGET( file_browser ) );
 
     if ( !app_settings.always_show_tabs )
@@ -2244,20 +2251,32 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                 path = "/";
         }
         fm_main_window_add_new_tab( main_window, path );
+        goto _done_close;
     }
+
+    // update view of new current tab
+    int cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->notebook ) );
+    if ( cur_tabx != -1 )
+    {
+        PtkFileBrowser* a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                    GTK_NOTEBOOK( notebook ), cur_tabx ) );
+ 
+        // PROBLEM: this may allow close events to destroy fb, so make sure its
+        // still a widget after this
+        ptk_file_browser_update_views( NULL, a_browser );
+        if ( GTK_IS_WIDGET( a_browser ) )
+        {
+            fm_main_window_update_status_bar( main_window, a_browser );
+            g_idle_add( ( GSourceFunc ) delayed_focus, a_browser->folder_view );
+        }
+    }
+
+_done_close:
+    g_signal_handlers_unblock_matched( main_window->notebook,
+            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
+
     update_window_title( NULL, main_window );
 }
-
-/*
-static gboolean delayed_close_notebook_page( PtkFileBrowser* file_browser )
-{
-printf("delayed_close_notebook_page\n");
-    gdk_threads_enter();
-    on_close_notebook_page( NULL, file_browser );
-    gdk_threads_leave();
-    return FALSE;
-}
-*/
 
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
                            PtkFileBrowser* file_browser)  //MOD added
@@ -2269,7 +2288,6 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
     {
         if ( event->button == 2 )
         {
-            //g_idle_add( ( GSourceFunc ) delayed_close_notebook_page, file_browser );
             on_close_notebook_page( NULL, file_browser );
             return TRUE;
         }
@@ -2461,7 +2479,7 @@ void fm_main_window_update_tab_label( FMMainWindow* main_window,
         gtk_label_set_text( text, name );
         g_free( name );
 
-g_list_free( children );  //sfm 0.6.0 enabled
+        g_list_free( children );  //sfm 0.6.0 enabled
     }
 }
 
@@ -2475,7 +2493,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 
     PtkFileBrowser* curfb = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser
                                                                 ( main_window ) );
-    if ( curfb )
+    if ( GTK_IS_WIDGET( curfb ) )
     {
         // save sliders of current fb ( new tab while task manager is shown changes vals )
         ptk_file_browser_slider_release( NULL, NULL, curfb );
@@ -2489,7 +2507,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
                                     &main_window->panel_slide_x[i],
                                     &main_window->panel_slide_y[i],
                                     &main_window->panel_slide_s[i] );
-
+    if ( !file_browser )
+        return;
+//printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
     ptk_file_browser_set_single_click_timeout( file_browser, 400 );
@@ -2716,19 +2736,30 @@ on_new_window_activate ( GtkMenuItem *menuitem,
 
 static gboolean delayed_focus( GtkWidget* widget )
 {
-    gdk_threads_enter();
+    if ( GTK_IS_WIDGET( widget ) )
+    {
+        gdk_threads_enter();
 //printf( "delayed_focus %#x\n", widget);
-    gtk_widget_grab_focus( widget );
-    gdk_threads_leave();
+        if ( GTK_IS_WIDGET( widget ) )
+            gtk_widget_grab_focus( widget );
+        gdk_threads_leave();
+    }
     return FALSE;
 }
 
 static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser )
 {
-    gdk_threads_enter();
-    gtk_widget_grab_focus( file_browser->folder_view );
-    set_panel_focus( NULL, file_browser );
-    gdk_threads_leave();
+    if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
+    {
+        gdk_threads_enter();
+//printf( "delayed_focus_file_browser fb=%#x\n", file_browser );
+        if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
+        {
+            gtk_widget_grab_focus( file_browser->folder_view );
+            set_panel_focus( NULL, file_browser );
+        }
+        gdk_threads_leave();
+    }
     return FALSE;
 }
 
@@ -2921,27 +2952,27 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
         ptk_file_browser_slider_release( NULL, NULL, curfb );
 
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );
-//printf("on_folder_notebook_switch_pape  panel change %d %d\n", file_browser->mypanel, page_num );
+//printf("on_folder_notebook_switch_pape fb=%#x   panel=%d   page=%d\n", file_browser, file_browser->mypanel, page_num );
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
-//    fm_main_window_update_command_ui( main_window, file_browser );
     fm_main_window_update_status_bar( main_window, file_browser );
 
-    //gtk_paned_set_position ( GTK_PANED ( file_browser ), main_window->splitter_pos );
-
     set_window_title( main_window, file_browser );
-    
+
     // block signal in case tab is being closed due to main iteration in update views
-    g_signal_handlers_block_matched( main_window->panel[file_browser->mypanel - 1],
-            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-    
+//    g_signal_handlers_block_matched( main_window->panel[file_browser->mypanel - 1],
+//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
+
+    // PROBLEM: this may allow close events to destroy fb, so make sure its
+    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
     
-    g_signal_handlers_unblock_matched( main_window->panel[file_browser->mypanel - 1],
-            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-//printf("call delayed (switch) #%d %d\n", page_num, file_browser->folder_view);
-    g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
+//    g_signal_handlers_unblock_matched( main_window->panel[file_browser->mypanel - 1],
+//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
+
+    if ( GTK_IS_WIDGET( file_browser ) )
+        g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
 }
 
 void on_file_browser_open_item( PtkFileBrowser* file_browser,
@@ -2988,7 +3019,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     struct statvfs fs_stat = {0};
 #endif
 
-    if ( !file_browser )
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_STATUSBAR( file_browser->status_bar ) ) )
         return;
         //file_browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
     

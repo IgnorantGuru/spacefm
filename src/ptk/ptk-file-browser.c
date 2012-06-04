@@ -411,7 +411,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
 {
     int pos;
     char* posa;
-//printf("ptk_file_browser_slider_release\n");
+//printf("ptk_file_browser_slider_release fb=%#x\n", file_browser );
     gboolean fullscreen = xset_get_b( "main_full" );
 
     if ( widget == file_browser->hpane )
@@ -1414,7 +1414,7 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
 void ptk_file_browser_finalize( GObject *obj )
 {
     PtkFileBrowser * file_browser = PTK_FILE_BROWSER( obj );
-
+//printf("ptk_file_browser_finalize\n");
     if ( file_browser->dir )
     {
         g_signal_handlers_disconnect_matched( file_browser->dir,
@@ -1514,7 +1514,7 @@ void create_side_views( PtkFileBrowser* file_browser, int mode )
 void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browser )
 {
     int i;
-//printf("ptk_file_browser_update_views\n");
+//printf("ptk_file_browser_update_views fb=%#x\n", file_browser );
 
     // hide/show browser widgets based on user settings
     int p = file_browser->mypanel;
@@ -1657,18 +1657,21 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     }
     
     // set slider positions
+
 /*
- * // don't need to block signals for release event method
+    // don't need to block signals for release event method
     g_signal_handlers_block_matched( file_browser->hpane, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     on_slider_change, NULL );
+                                     ptk_file_browser_slider_release, NULL );
     g_signal_handlers_block_matched( file_browser->side_vpane_top, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     on_slider_change, NULL );
+                                     ptk_file_browser_slider_release, NULL );
     g_signal_handlers_block_matched( file_browser->side_vpane_bottom, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     on_slider_change, NULL );
+                                     ptk_file_browser_slider_release, NULL );
 */
+    int pos;
+    
     //int pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "x" );
     // read each slider's pos from dynamic
-    int pos = *file_browser->slide_x;
+    pos = *file_browser->slide_x;
     if ( pos < 100 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
 
@@ -1676,27 +1679,30 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     pos = *file_browser->slide_y;
     if ( pos < 20 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_top ), pos );
-    while (gtk_events_pending ()) // let other sliders adjust
+    
+    // hack to let other sliders adjust
+    // FIXME: this may allow close events to destroy fb, so make sure its
+    // still a widget after this - find a better way to do this
+    while (gtk_events_pending ())
         gtk_main_iteration ();
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_PANED( file_browser->side_vpane_bottom ) ) )
+        return;
         
     //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" );
     pos = *file_browser->slide_s;
     if ( pos < 20 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_bottom ), pos );
-    
-//printf("SETPOS %d %d\n", xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" ),
-//          xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" )  );
-    
+        
     // save slider positions (they change when set)
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
     
 /*
     g_signal_handlers_unblock_matched( file_browser->hpane, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       on_slider_change, NULL );
+                                       ptk_file_browser_slider_release, NULL );
     g_signal_handlers_unblock_matched( file_browser->side_vpane_top, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       on_slider_change, NULL );
+                                       ptk_file_browser_slider_release, NULL );
     g_signal_handlers_unblock_matched( file_browser->side_vpane_bottom, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       on_slider_change, NULL );
+                                       ptk_file_browser_slider_release, NULL );
 */
 
     // List Styles
@@ -1721,7 +1727,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
         on_folder_view_columns_changed( GTK_TREE_VIEW( file_browser->folder_view ),
                                                         file_browser );
 
-//printf("ptk_file_browser_update_views DONE\n");
+//printf("ptk_file_browser_update_views fb=%#x DONE\n", file_browser);
 }
 
 GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
@@ -1789,9 +1795,11 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
 
     gtk_widget_show_all( GTK_WIDGET( file_browser ) );
     
+    // PROBLEM: this may allow close events to destroy fb, so make sure its
+    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
    
-    return ( GtkWidget* ) file_browser;
+    return GTK_IS_WIDGET( file_browser ) ? ( GtkWidget* ) file_browser : NULL;
 }
 
 gboolean ptk_file_restrict_homedir( const char* folder_path ) {
@@ -3255,6 +3263,9 @@ void on_folder_view_columns_changed( GtkTreeView *view,
     int i, j, width;
     GtkTreeViewColumn* col;
     
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_TREE_VIEW( view ) ) )
+        return;
+        
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
     gboolean fullscreen = xset_get_b( "main_full" );
@@ -5975,6 +5986,7 @@ void ptk_file_browser_focus_me( PtkFileBrowser* file_browser )
 void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
                                                                         int t )
 {
+//printf( "ptk_file_browser_go_tab fb=%#x\n", file_browser );
     GtkWidget* notebook = file_browser->mynotebook;
     int tab_num;
     if ( item )
@@ -6002,17 +6014,7 @@ void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
     else if ( tab_num == -3 )  // close
     {
         on_close_notebook_page( NULL, file_browser );
-/*        // must switch page before close current or seg fault unless only
-        int page = gtk_notebook_get_current_page( notebook );
-        if ( gtk_notebook_get_current_page( notebook ) + 1
-                            == gtk_notebook_get_n_pages( notebook ) )
-            gtk_notebook_prev_page( notebook );
-        else
-            gtk_notebook_next_page( notebook );
-        gtk_notebook_remove_page( notebook, page );
-        if ( gtk_notebook_get_n_pages ( notebook ) == 0 )
-            on_shortcut_new_tab_activate( NULL, file_browser );
-*/    }
+    }
     else
     {
         if ( tab_num <= gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) ) &&
