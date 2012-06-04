@@ -47,6 +47,7 @@ static void vfs_volume_device_removed ( char* device_file );
 static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 void vfs_volume_special_unmounted( const char* device_file );
+void unmount_if_mounted( const char* device_file );
 
 
 typedef struct _VFSVolumeCallbackData
@@ -3537,8 +3538,15 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 else if ( !was_audiocd && volume->is_audiocd )
                     vfs_volume_autoexec( volume );
                 
-                if ( !was_mountable && volume->is_mountable )   //media inserted
+                //media inserted ?
+                if ( !was_mountable && volume->is_mountable )
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_insert" ) );
+                
+                // media ejected ?
+                if ( was_mountable && !volume->is_mountable && volume->is_mounted &&
+                            ( ( volume->is_optical && xset_get_b( "dev_automount_optical" ) )
+                            || ( volume->is_removable && xset_get_b( "dev_automount_removable" ) ) ) )
+                    unmount_if_mounted( volume->device_file );
             }
             return;
         }
@@ -3608,6 +3616,9 @@ static void vfs_volume_device_removed( char* device_file )
             //printf("remove volume %s\n", device_file );
             volume = (VFSVolume*)l->data;
             vfs_volume_exec( volume, xset_get_s( "dev_exec_remove" ) );
+            if ( volume->is_mounted && volume->is_removable &&
+                                        xset_get_b( "dev_automount_removable" ) )
+                unmount_if_mounted( volume->device_file );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
@@ -3615,6 +3626,16 @@ static void vfs_volume_device_removed( char* device_file )
             return;
         }
     }
+}
+
+void unmount_if_mounted( const char* device_file )
+{
+    char* str = vfs_volume_device_unmount_cmd( device_file );
+    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' /proc/mounts &>/dev/null && %s &>/dev/null\"", device_file, str );
+    g_free( str );
+//printf("unmount_if_mounted: %s\n", line );
+    g_spawn_command_line_async( line, NULL );
+    g_free( line );
 }
 
 void vfs_volume_special_unmount_all()
