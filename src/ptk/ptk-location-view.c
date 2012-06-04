@@ -716,9 +716,10 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
         {
             if ( vol->is_mounted )
             {
-                // TODO: verify file_browser is still a browser
-                ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
-                                                            ao->job );
+                vfs_volume_special_mounted( ao->device_file );
+                if ( GTK_IS_WIDGET( ao->file_browser ) )
+                    ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
+                                                                        ao->job );
             }
             break;
         }
@@ -868,7 +869,7 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
     g_free( command );
     if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
     {
-        if ( str = strstr( stderr, " is already mounted at " ) )
+        if ( stderr && ( str = strstr( stderr, " is already mounted at " ) ) )
         {
             char* str2;
             if ( str2 = strstr( str, " (or specify mount point" ) )
@@ -886,16 +887,24 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
                             GTK_MESSAGE_ERROR, _("Mount Disc Image Failed"), NULL,
                             0, stderr, NULL, NULL );
     }
-    else if ( g_str_has_prefix( stdout, "Mounted " ) &&
-                                            ( str = strstr( stdout, " at " ) ) )
+    else
     {
-        while ( g_str_has_suffix( stdout, "\n" ) )
-            stdout[ strlen( stdout ) - 1 ] = '\0';
-        if ( file_browser )
-            ptk_file_browser_emit_open( file_browser, g_strdup( str + 4 ),
-                                                    PTK_OPEN_NEW_TAB );
-        else
-            open_external_tab( str + 4 );
+        if ( stdout && g_str_has_prefix( stdout, "Mounted " ) &&
+                                                ( str = strstr( stdout, " at " ) ) )
+        {
+            while ( g_str_has_suffix( stdout, "\n" ) )
+                stdout[ strlen( stdout ) - 1 ] = '\0';
+            if ( file_browser )
+                ptk_file_browser_emit_open( file_browser, g_strdup( str + 4 ),
+                                                        PTK_OPEN_NEW_TAB );
+            else
+                open_external_tab( str + 4 );
+
+            // let mount be detected
+            while (gtk_events_pending ())
+                gtk_main_iteration ();            
+            vfs_volume_special_mounted( str + 4 );
+        }
     }
 _exit_mount_iso:
     g_free( stderr );
@@ -1393,9 +1402,9 @@ void on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
             vol->inhibit_auto = FALSE;
             if ( vol->is_mounted )
             {
-                // TODO: verify file_browser is still a browser
-                ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
-                                                            ao->job );
+                if ( GTK_IS_WIDGET( ao->file_browser ) )
+                    ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
+                                                                    ao->job );
             }
             break;
         }

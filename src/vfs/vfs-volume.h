@@ -126,6 +126,7 @@ char* vfs_volume_device_unmount_cmd( const char* device_file );
 char* vfs_volume_device_info( const char* device_file );
 int parse_network_url( const char* url, const char* fstype,
                                                         netmount_t** netmount );
+void vfs_volume_special_mounted( const char* device_file );
 
 #endif
 

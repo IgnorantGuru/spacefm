@@ -46,6 +46,7 @@ static void vfs_volume_device_added ( VFSVolume* volume, gboolean automount );
 static void vfs_volume_device_removed ( char* device_file );
 static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
+void vfs_volume_special_unmounted( const char* device_file );
 
 
 typedef struct _VFSVolumeCallbackData
@@ -55,6 +56,7 @@ typedef struct _VFSVolumeCallbackData
 }VFSVolumeCallbackData;
 
 static GList* volumes = NULL;
+static GList* special_mounts = NULL;
 static GArray* callbacks = NULL;
 GPid monpid = 0;
 gboolean global_inhibit_auto = FALSE;
@@ -3528,7 +3530,10 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 if ( !was_mounted && volume->is_mounted )
                     vfs_volume_autoexec( volume );
                 else if ( was_mounted && !volume->is_mounted )
+                {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
+                    vfs_volume_special_unmounted( volume->device_file );
+                }
                 else if ( !was_audiocd && volume->is_audiocd )
                     vfs_volume_autoexec( volume );
                 
@@ -3574,6 +3579,7 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
             // remove volume
             printf( "network mount removed: %s\n", point );
             volume = (VFSVolume*)l->data;
+            vfs_volume_special_unmounted( volume->device_file );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
@@ -3581,6 +3587,7 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
             return TRUE;
         }
     }
+
     return FALSE;
 }
 
@@ -3608,6 +3615,81 @@ static void vfs_volume_device_removed( char* device_file )
             return;
         }
     }
+}
+
+void vfs_volume_special_unmount_all()
+{
+    GList* l;
+    char* line;
+    
+    for ( l = special_mounts; l; l = l->next )
+    {
+        if ( l->data )
+        {
+            line = g_strdup_printf( "udevil umount '%s'", (char*)l->data );
+            printf( _("\nAuto-Unmount: %s\n"), line );
+            g_spawn_command_line_async( line, NULL );
+            g_free( line );
+            g_free( l->data );
+        }
+    }
+    g_list_free( special_mounts );
+    special_mounts = NULL;
+}
+
+void vfs_volume_special_unmounted( const char* device_file )
+{
+    GList* l;
+    
+    if ( !device_file )
+        return;
+
+    for ( l = special_mounts; l; l = l->next )
+    {
+        if ( !g_strcmp0( (char*)l->data, device_file ) )
+        {
+//printf("special_mounts --- %s\n", (char*)l->data );        
+            g_free( l->data );
+            special_mounts = g_list_remove( special_mounts, l->data );
+            return;
+        }
+    }
+}
+
+void vfs_volume_special_mounted( const char* device_file )
+{
+    GList* l;
+    char* mfile = NULL;
+    
+    if ( !device_file )
+        return;
+//printf("vfs_volume_special_mounted %s\n", device_file );
+    // is device_file an ISO mount point?  get device file
+    if ( !g_str_has_prefix( device_file, "/dev/" ) )
+    {
+        for ( l = volumes; l; l = l->next )
+        {
+            if ( ((VFSVolume*)l->data)->device_type == DEVICE_TYPE_BLOCK &&
+                    ((VFSVolume*)l->data)->is_mounted &&
+                    g_str_has_prefix( ((VFSVolume*)l->data)->device_file, "/dev/loop" ) &&
+                    !g_strcmp0( ((VFSVolume*)l->data)->mount_point, device_file ) )
+            {
+                mfile = ((VFSVolume*)l->data)->device_file;
+                break;
+            }
+        }
+    }
+
+    if ( !mfile )
+        mfile = device_file;
+
+    for ( l = special_mounts; l; l = l->next )
+    {
+        if ( !g_strcmp0( (char*)l->data, mfile ) )
+            return;
+    }
+//printf("special_mounts +++ %s\n", mfile );
+    special_mounts = g_list_prepend( special_mounts, g_strdup( mfile ) );
 }
 
 gboolean on_cancel_inhibit_timer( gpointer user_data )
@@ -3774,6 +3856,10 @@ gboolean vfs_volume_finalize()
         }
     }
     volumes = NULL;
+
+    // unmount networks and files mounted during this session
+    vfs_volume_special_unmount_all();
+
     return TRUE;
 }
 
