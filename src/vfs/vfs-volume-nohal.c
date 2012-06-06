@@ -3544,8 +3544,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 
                 // media ejected ?
                 if ( was_mountable && !volume->is_mountable && volume->is_mounted &&
-                            ( ( volume->is_optical && xset_get_b( "dev_automount_optical" ) )
-                            || ( volume->is_removable && xset_get_b( "dev_automount_removable" ) ) ) )
+                            ( volume->is_optical || volume->is_removable ) )
                     unmount_if_mounted( volume->device_file );
             }
             return;
@@ -3616,8 +3615,7 @@ static void vfs_volume_device_removed( char* device_file )
             //printf("remove volume %s\n", device_file );
             volume = (VFSVolume*)l->data;
             vfs_volume_exec( volume, xset_get_s( "dev_exec_remove" ) );
-            if ( volume->is_mounted && volume->is_removable &&
-                                        xset_get_b( "dev_automount_removable" ) )
+            if ( volume->is_mounted && volume->is_removable )
                 unmount_if_mounted( volume->device_file );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
@@ -3630,10 +3628,15 @@ static void vfs_volume_device_removed( char* device_file )
 
 void unmount_if_mounted( const char* device_file )
 {
+    if ( !device_file )
+        return;
     char* str = vfs_volume_device_unmount_cmd( device_file );
-    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' /proc/mounts &>/dev/null && %s &>/dev/null\"", device_file, str );
+    char* mtab = "/etc/mtab";
+    if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
+        mtab = "/proc/mounts";
+    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s &>/dev/null && %s &>/dev/null\"", device_file, mtab, str );
     g_free( str );
-//printf("unmount_if_mounted: %s\n", line );
+    printf("Unmount-If-Mounted: %s\n", line );
     g_spawn_command_line_async( line, NULL );
     g_free( line );
 }
