@@ -3631,10 +3631,13 @@ void unmount_if_mounted( const char* device_file )
     if ( !device_file )
         return;
     char* str = vfs_volume_device_unmount_cmd( device_file );
+    if ( !str )
+        return;
     char* mtab = "/etc/mtab";
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
         mtab = "/proc/mounts";
-    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s &>/dev/null && %s &>/dev/null\"", device_file, mtab, str );
+    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s &>/dev/null && %s &>/dev/null\"",
+                                                        device_file, mtab, str );
     g_free( str );
     printf("Unmount-If-Mounted: %s\n", line );
     g_spawn_command_line_async( line, NULL );
