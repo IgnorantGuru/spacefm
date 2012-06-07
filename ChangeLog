@@ -11,6 +11,7 @@
     allow edit bookmark to network URL
     corrected Click runs executables pref not saved fixes #84
     auto-unmount removed media and devices
+    support xfce terminal
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

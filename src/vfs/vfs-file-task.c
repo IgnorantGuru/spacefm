@@ -1436,7 +1436,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
 
         if ( strstr( terminal, "xfce4-terminal" ) 
                                 || strstr( terminal, "gnome-terminal" )
-                                || strstr( terminal, "terminator" ) )
+                                || strstr( terminal, "terminator" )
+                                || g_str_has_suffix( terminal, "/terminal" ) ) // xfce
             argv[a++] = g_strdup( "-x" );
         else
             argv[a++] = g_strdup( "-e" );

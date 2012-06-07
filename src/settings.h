@@ -229,6 +229,7 @@ typedef struct
 static const char* terminal_programs[] =  //for pref-dialog.c
 {
     "roxterm",
+    "terminal",
     "xfce4-terminal",
     "gnome-terminal",
     "aterm",
