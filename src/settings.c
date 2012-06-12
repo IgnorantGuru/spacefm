@@ -4181,7 +4181,7 @@ gboolean dir_has_files( const char* path )
     GDir* dir;
     gboolean ret = FALSE;
     
-    if ( !g_file_test( path, G_FILE_TEST_IS_DIR ) )
+    if ( !( path && g_file_test( path, G_FILE_TEST_IS_DIR ) ) )
         return FALSE;
         
     dir = g_dir_open( path, 0, NULL );
@@ -8867,6 +8867,14 @@ void xset_defaults()
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
+    set = xset_set( "move_target", "label", _("_Target") );
+    set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
+
+    set = xset_set( "move_template", "label", _("_Template") );
+    set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
+
     set = xset_set( "move_option", "label", _("_Option") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "move_copy move_link move_copyt move_linkt move_as_root" );
@@ -9420,7 +9428,7 @@ void xset_defaults()
 
     set = xset_set( "open_new", "label", _("_New") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "new_file new_folder new_archive sep_o1 tab_new tab_new_here new_bookmark" );
+    xset_set_set( set, "desc", "new_file new_folder new_link new_archive sep_o1 tab_new tab_new_here new_bookmark" );
     xset_set_set( set, "icon", "gtk-new" );
 
         set = xset_set( "new_file", "label", _("_File") );
@@ -9430,6 +9438,9 @@ void xset_defaults()
 
         set = xset_set( "new_folder", "label", _("Fol_der") );
         xset_set_set( set, "icon", "gtk-directory" );
+
+        set = xset_set( "new_link", "label", _("_Link") );
+        xset_set_set( set, "icon", "gtk-file" );
 
         set = xset_set( "new_open_folder", "label", _("Fo_lder & Open") );
 

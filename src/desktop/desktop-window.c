@@ -1675,7 +1675,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
         }
         else
         {
-            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE ) )
+            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE, 0 ) )
                 break;
         }
     }
@@ -2175,7 +2175,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     int w, h;
 
     if( item->fi->big_thumbnail )
-        icon = gdk_pixbuf_ref( item->fi->big_thumbnail );
+        icon = g_object_ref( item->fi->big_thumbnail );
     else
         icon = vfs_file_info_get_big_icon( item->fi );
 

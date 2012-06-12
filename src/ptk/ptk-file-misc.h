@@ -25,9 +25,10 @@ void ptk_delete_files( GtkWindow* parent_win,
                        GList* sel_files,
                        GtkTreeView* task_view );
 
-gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
-                                        const char* dest_dir, gboolean clip_copy );
+                                        const char* dest_dir, gboolean clip_copy,
+                                        int create_new );
 
 gboolean ptk_create_new_file( GtkWindow* parent_win,
                           const char* cwd,

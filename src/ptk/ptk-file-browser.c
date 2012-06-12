@@ -4320,7 +4320,7 @@ void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
     for ( l = files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
-        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE ) )
+        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE, 0 ) )
             break;
     }
 }
@@ -4682,7 +4682,7 @@ void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser 
         file = vfs_file_info_new();
         vfs_file_info_get( file, file_path, NULL );
         file_dir = g_path_get_dirname( file_path );
-        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut ) )
+        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut, 0 ) )
         {
             vfs_file_info_unref( file );
             g_free( file_dir );

@@ -3686,7 +3686,7 @@ void vfs_volume_special_unmounted( const char* device_file )
 void vfs_volume_special_mounted( const char* device_file )
 {
     GList* l;
-    char* mfile = NULL;
+    const char* mfile = NULL;
     
     if ( !device_file )
         return;

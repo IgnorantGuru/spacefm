@@ -205,9 +205,9 @@ void vfs_mime_type_unref( gpointer mime_type_ )
     {
         g_free( mime_type->type );
         if ( mime_type->big_icon )
-            gdk_pixbuf_unref( mime_type->big_icon );
+            g_object_unref( mime_type->big_icon );
         if ( mime_type->small_icon )
-            gdk_pixbuf_unref( mime_type->small_icon );
+            g_object_unref( mime_type->small_icon );
         /* g_strfreev( mime_type->actions ); */
 
         g_slice_free( VFSMimeType, mime_type );
@@ -225,13 +225,13 @@ GdkPixbuf* vfs_mime_type_get_icon( VFSMimeType* mime_type, gboolean big )
     if ( big )
     {
         if ( G_LIKELY( mime_type->big_icon ) )     /* big icon */
-            return gdk_pixbuf_ref( mime_type->big_icon );
+            return g_object_ref( mime_type->big_icon );
         size = big_icon_size;
     }
     else    /* small icon */
     {
         if ( G_LIKELY( mime_type->small_icon ) )
-            return gdk_pixbuf_ref( mime_type->small_icon );
+            return g_object_ref( mime_type->small_icon );
         size = small_icon_size;
     }
 
@@ -248,7 +248,7 @@ GdkPixbuf* vfs_mime_type_get_icon( VFSMimeType* mime_type, gboolean big )
             mime_type->big_icon = icon;
         else
             mime_type->small_icon = icon;
-        return icon ? gdk_pixbuf_ref( icon ) : NULL;
+        return icon ? g_object_ref( icon ) : NULL;
     }
 
     sep = strchr( mime_type->type, '/' );
@@ -314,7 +314,7 @@ GdkPixbuf* vfs_mime_type_get_icon( VFSMimeType* mime_type, gboolean big )
         mime_type->big_icon = icon;
     else
         mime_type->small_icon = icon;
-    return icon ? gdk_pixbuf_ref( icon ) : NULL;
+    return icon ? g_object_ref( icon ) : NULL;
 }
 
 static void free_cached_icons ( gpointer key,
@@ -327,7 +327,7 @@ static void free_cached_icons ( gpointer key,
     {
         if ( mime_type->big_icon )
         {
-            gdk_pixbuf_unref( mime_type->big_icon );
+            g_object_unref( mime_type->big_icon );
             mime_type->big_icon = NULL;
         }
     }
@@ -335,7 +335,7 @@ static void free_cached_icons ( gpointer key,
     {
         if ( mime_type->small_icon )
         {
-            gdk_pixbuf_unref( mime_type->small_icon );
+            g_object_unref( mime_type->small_icon );
             mime_type->small_icon = NULL;
         }
     }

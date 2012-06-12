@@ -68,12 +68,12 @@ static void vfs_file_info_clear( VFSFileInfo* fi )
     }
     if ( fi->big_thumbnail )
     {
-        gdk_pixbuf_unref( fi->big_thumbnail );
+        g_object_unref( fi->big_thumbnail );
         fi->big_thumbnail = NULL;
     }
     if ( fi->small_thumbnail )
     {
-        gdk_pixbuf_unref( fi->small_thumbnail );
+        g_object_unref( fi->small_thumbnail );
         fi->small_thumbnail = NULL;
     }
 
@@ -256,7 +256,7 @@ GdkPixbuf* vfs_file_info_get_big_icon( VFSFileInfo* fi )
             {
                 icon_name = ( char* ) g_object_steal_data(
                                 G_OBJECT(fi->big_thumbnail), "name" );
-                gdk_pixbuf_unref( fi->big_thumbnail );
+                g_object_unref( fi->big_thumbnail );
                 fi->big_thumbnail = NULL;
             }
             if ( G_LIKELY( icon_name ) )
@@ -273,7 +273,7 @@ GdkPixbuf* vfs_file_info_get_big_icon( VFSFileInfo* fi )
             else
                 g_free( icon_name );
         }
-        return fi->big_thumbnail ? gdk_pixbuf_ref( fi->big_thumbnail ) : NULL;
+        return fi->big_thumbnail ? g_object_ref( fi->big_thumbnail ) : NULL;
     }
     if( G_UNLIKELY(!fi->mime_type) )
         return NULL;
@@ -283,7 +283,7 @@ GdkPixbuf* vfs_file_info_get_big_icon( VFSFileInfo* fi )
 GdkPixbuf* vfs_file_info_get_small_icon( VFSFileInfo* fi )
 {
     if ( fi->flags & VFS_FILE_INFO_DESKTOP_ENTRY && fi->small_thumbnail )  //sfm
-        return gdk_pixbuf_ref( fi->small_thumbnail );
+        return g_object_ref( fi->small_thumbnail );
 
     if( G_UNLIKELY(!fi->mime_type) )
         return NULL;
@@ -292,12 +292,12 @@ GdkPixbuf* vfs_file_info_get_small_icon( VFSFileInfo* fi )
 
 GdkPixbuf* vfs_file_info_get_big_thumbnail( VFSFileInfo* fi )
 {
-    return fi->big_thumbnail ? gdk_pixbuf_ref( fi->big_thumbnail ) : NULL;
+    return fi->big_thumbnail ? g_object_ref( fi->big_thumbnail ) : NULL;
 }
 
 GdkPixbuf* vfs_file_info_get_small_thumbnail( VFSFileInfo* fi )
 {
-    return fi->small_thumbnail ? gdk_pixbuf_ref( fi->small_thumbnail ) : NULL;
+    return fi->small_thumbnail ? g_object_ref( fi->small_thumbnail ) : NULL;
 }
 
 const char* vfs_file_info_get_disp_owner( VFSFileInfo* fi )

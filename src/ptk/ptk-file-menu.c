@@ -117,6 +117,10 @@ static void
 on_popup_new_text_file_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data );
 static void
+on_popup_new_link_activate ( GtkMenuItem *menuitem,
+                                  PtkFileMenu* data );
+
+static void
 on_popup_file_properties_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data );
 
@@ -874,6 +878,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         set->disable = no_write_access;
         //set = xset_set_cb( "new_open_file", xxxx, browser );
         set = xset_set_cb( "new_folder", on_popup_new_folder_activate, data );
+        set->disable = no_write_access;
+        set = xset_set_cb( "new_link", on_popup_new_link_activate, data );
         set->disable = no_write_access;
         //xset_set_cb( "new_folder_open", xxxx, browser );
         set = xset_set_cb( "new_archive", on_popup_compress_activate, data );
@@ -2288,10 +2294,14 @@ void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
 }
 
 static void
-create_new_file( PtkFileMenu* data, gboolean create_dir )
+create_new_file( PtkFileMenu* data, int create_new )
 {
     if ( data->cwd )
     {
+        ptk_rename_file( data->desktop, data->browser, data->cwd,
+                        data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
+                        NULL, FALSE, create_new );
+/*
         char* cwd;
         GtkWidget* parent;
         parent = (GtkWidget*)get_toplevel_win( data );
@@ -2305,6 +2315,7 @@ create_new_file( PtkFileMenu* data, gboolean create_dir )
         else
             ptk_create_new_file( GTK_WINDOW( parent ),
                                  cwd, create_dir, NULL );
+*/
     }
 }
 
@@ -2312,14 +2323,21 @@ void
 on_popup_new_folder_activate ( GtkMenuItem *menuitem,
                                PtkFileMenu* data )
 {
-    create_new_file( data, TRUE );
+    create_new_file( data, 2 );
 }
 
 void
 on_popup_new_text_file_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
-    create_new_file( data, FALSE );
+    create_new_file( data, 1 );
+}
+
+void
+on_popup_new_link_activate ( GtkMenuItem *menuitem,
+                                  PtkFileMenu* data )
+{
+    create_new_file( data, 3 );
 }
 
 void

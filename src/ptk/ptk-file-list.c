@@ -453,7 +453,7 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
         if( icon )
         {
             g_value_set_object( value, icon );
-            gdk_pixbuf_unref( icon );
+            g_object_unref( icon );
         }
         break;
     case COL_FILE_SMALL_ICON:
@@ -466,7 +466,7 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
         if( icon )
         {
             g_value_set_object( value, icon );
-            gdk_pixbuf_unref( icon );
+            g_object_unref( icon );
         }
         break;
     case COL_FILE_NAME:

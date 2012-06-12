@@ -44,15 +44,28 @@ typedef struct
     gboolean is_dir;
     gboolean is_link;
     gboolean clip_copy;
+    int create_new;
     
     GtkWidget* dlg;
     GtkWidget* parent;
     PtkFileBrowser* browser;
     DesktopWindow* desktop;
+    
     GtkLabel* label_type;
     GtkLabel* label_mime;
     GtkWidget* hbox_type;
     char* mime_type;
+
+    GtkLabel* label_target;
+    GtkEntry* entry_target;
+    GtkWidget* hbox_target;
+    GtkWidget* browse_target;
+
+    GtkLabel* label_template;
+    GtkComboBox* combo_template;
+    GtkComboBox* combo_template_dir;
+    GtkWidget* hbox_template;
+    GtkWidget* browse_template;
 
     GtkLabel* label_name;
     GtkWidget* scroll_name;
@@ -87,6 +100,10 @@ typedef struct
     GtkWidget* opt_copy_target;
     GtkWidget* opt_link_target;
     GtkWidget* opt_as_root;
+
+    GtkWidget* opt_new_file;
+    GtkWidget* opt_new_folder;
+    GtkWidget* opt_new_link;
     
     GtkWidget* options;
     GtkWidget* browse;
@@ -103,6 +120,9 @@ typedef struct
     gboolean path_exists_file;
     gboolean is_move;
 } MoveSet;
+
+void on_toggled( GtkMenuItem* item, MoveSet* mset );
+char* get_template_dir();
 
 void ptk_delete_files( GtkWindow* parent_win,
                        const char* cwd,
@@ -293,7 +313,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     char* cwd;
     char* str;
     GtkTextIter iter, siter;
-        
+
     g_signal_handlers_block_matched( mset->entry_ext, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                      on_move_change, NULL );
     g_signal_handlers_block_matched( mset->buf_name, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
@@ -453,13 +473,13 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
  
         g_free( full_name );
     }
-    else if ( widget == GTK_WIDGET( mset->buf_full_path ) )
+    else //if ( widget == GTK_WIDGET( mset->buf_full_path ) )
     {
         mset->last_widget = GTK_WIDGET( mset->input_full_path );
         gtk_text_buffer_get_start_iter( mset->buf_full_path, &siter );
         gtk_text_buffer_get_end_iter( mset->buf_full_path, &iter );
         full_path = gtk_text_buffer_get_text( mset->buf_full_path, &siter, &iter, FALSE );
-        
+
         // update name & ext
         if ( full_path[0] == '\0' )
             full_name = g_strdup_printf( "" );
@@ -598,7 +618,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         //gboolean opt_copy_target = gtk_toggle_button_get_active( mset->opt_copy_target );
         //gboolean opt_link_target = gtk_toggle_button_get_active( mset->opt_link_target );
 
-        if ( full_path_same )
+        if ( full_path_same && !mset->create_new )
         {
             gtk_widget_set_sensitive( mset->next, gtk_toggle_button_get_active(
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) ) );
@@ -624,7 +644,8 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         }
         else if ( full_path_exists )
         {
-            if ( mset->is_dir )
+            if ( mset->is_dir || gtk_toggle_button_get_active( 
+                                    GTK_TOGGLE_BUTTON( mset->opt_new_folder ) ) )
             {
                 gtk_widget_set_sensitive( mset->next, FALSE );
                 gtk_label_set_markup_with_mnemonic( mset->label_full_path,
@@ -685,12 +706,21 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         }        
     }
 
-    if ( is_move != mset->is_move )
+    if ( is_move != mset->is_move && !mset->create_new )
     {
         mset->is_move = is_move;
         if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_move ) ) )
             gtk_button_set_label( GTK_BUTTON( mset->next ),
                                         is_move != 0 ? _("_Move") : _("_Rename") );
+    }
+
+    if ( mset->create_new && 
+        gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_link ) ) )
+    {
+        path = g_strdup( gtk_entry_get_text( GTK_ENTRY( mset->entry_target ) ) );
+        g_strstrip( path );
+        gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' ) );
+        g_free( path );
     }
     
     g_signal_handlers_unblock_matched( mset->entry_ext, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
@@ -707,8 +737,11 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
 
 void select_input( GtkWidget* widget, MoveSet* mset )
 {
-    if ( widget == GTK_WIDGET( mset->entry_ext ) )
+    if ( GTK_IS_EDITABLE( widget ) )
         gtk_editable_select_region( GTK_EDITABLE( widget ), 0, -1 );
+    else if ( GTK_IS_COMBO_BOX( widget ) )
+        gtk_editable_select_region( GTK_EDITABLE( GTK_ENTRY( gtk_bin_get_child(
+                                                GTK_BIN( widget ) ) ) ), 0, -1 );
     else
     {
         GtkTextIter iter, siter;
@@ -754,7 +787,8 @@ static gboolean on_button_focus( GtkWidget* widget, GtkDirectionType direction,
 {
     if ( direction == GTK_DIR_TAB_FORWARD || direction == GTK_DIR_TAB_BACKWARD )
     {
-        if ( widget == mset->options )
+        if ( widget == mset->options || widget == mset->opt_move ||
+                                                    widget == mset->opt_new_file )
         {
             GtkWidget* input = NULL;
             if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_name ) ) )
@@ -765,6 +799,15 @@ static gboolean on_button_focus( GtkWidget* widget, GtkDirectionType direction,
                 input = mset->input_path;
             else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_path ) ) )
                 input = mset->input_full_path;
+            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+                                                        mset->entry_target ) ) ) )
+                input = GTK_WIDGET( mset->entry_target );
+            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+                                                        mset->combo_template ) ) ) )
+                input = GTK_WIDGET( mset->combo_template );
+            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+                                                        mset->combo_template_dir ) ) ) )
+                input = GTK_WIDGET( mset->combo_template_dir );
             if ( input )
             {
                 select_input( input, mset );
@@ -800,6 +843,142 @@ void on_revert_button_press( GtkWidget* widget, MoveSet* mset )
     mset->last_widget = temp;
     select_input( mset->last_widget, mset );
     gtk_widget_grab_focus( mset->last_widget );
+}
+
+void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
+{
+    int action;
+    const char* title;
+    const char* text;
+    char* dir;
+    char* name;
+    char* new_path;
+    
+    if ( widget == GTK_WIDGET( mset->browse_target ) )
+    {
+        title = _("Select Link Target");
+        action = GTK_FILE_CHOOSER_ACTION_OPEN;
+        text = gtk_entry_get_text( mset->entry_target );
+        if ( text[0] == '/' )
+        {
+            dir = g_path_get_dirname( text );
+            name = g_path_get_basename( text );
+        }
+        else
+        {
+            dir = g_path_get_dirname( mset->full_path );
+            name = text[0] != '\0' ? g_strdup( text ) : NULL;
+        }
+    }
+    else if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+    {
+        title = _("Select Template File");
+        action = GTK_FILE_CHOOSER_ACTION_OPEN;
+        text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
+                                                    mset->combo_template ) ) ) );
+        if ( text[0] == '/' )
+        {
+            dir = g_path_get_dirname( text );
+            name = g_path_get_basename( text );
+        }
+        else
+        {
+            dir = get_template_dir();
+            if ( !dir )
+                dir = g_path_get_dirname( mset->full_path );
+            name = g_strdup( text );
+        }
+     }
+    else
+    {
+        title = _("Select Template Folder");
+        action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
+        text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
+                                                    mset->combo_template ) ) ) );
+        if ( text[0] == '/' )
+        {
+            dir = g_path_get_dirname( text );
+            name = g_path_get_basename( text );
+        }
+        else
+        {
+            dir = get_template_dir();
+            if ( !dir )
+                dir = g_path_get_dirname( mset->full_path );
+            name = g_strdup( text );
+        }
+    }
+        
+    GtkWidget* dlg = gtk_file_chooser_dialog_new( title,
+                                   GTK_WINDOW( mset->parent ), 
+                                   action,
+                                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                   GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+                    
+
+    if ( !name )
+        gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), dir );
+    else
+    {
+        char* path = g_build_filename( dir, name, NULL );
+        gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( dlg ), path );
+        g_free( path );
+    }
+    g_free( dir );
+    g_free( name );
+
+    int width = xset_get_int( "move_dlg_help", "x" );
+    int height = xset_get_int( "move_dlg_help", "y" );
+    if ( width && height )
+    {
+        // filechooser won't honor default size or size request ?
+        gtk_widget_show_all( dlg );
+        gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
+        gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+        while( gtk_events_pending() )
+            gtk_main_iteration();
+        gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
+    }
+
+    gint response = gtk_dialog_run(GTK_DIALOG(dlg));
+    if( response == GTK_RESPONSE_OK )
+    {
+        new_path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER ( dlg ) );
+        char* path = new_path;
+        GtkWidget* w;
+        if ( widget == GTK_WIDGET( mset->browse_target ) )
+            w = GTK_WIDGET( mset->entry_target );
+        else
+        {
+            if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+                w = gtk_bin_get_child( GTK_BIN( mset->combo_template ) );
+            else
+                w = gtk_bin_get_child( GTK_BIN( mset->combo_template_dir ) );
+            dir = get_template_dir();
+            if ( dir )
+            {
+                if ( g_str_has_prefix( new_path, dir ) && new_path[strlen( dir )] == '/' )
+                    path = new_path + strlen( dir ) + 1;
+                g_free( dir );
+            }
+        }
+        gtk_entry_set_text( GTK_ENTRY( w ), path );
+        g_free( new_path );
+    }
+    
+    width = GTK_WIDGET( dlg ) ->allocation.width;
+    height = GTK_WIDGET( dlg ) ->allocation.height;
+    if ( width && height )
+    {
+        char* str = g_strdup_printf( "%d", width );
+        xset_set( "move_dlg_help", "x", str );
+        g_free( str );
+        str = g_strdup_printf( "%d", height );
+        xset_set( "move_dlg_help", "y", str );
+        g_free( str );
+    }
+
+    gtk_widget_destroy( dlg );
 }
 
 void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
@@ -915,45 +1094,63 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
     gboolean as_root = gtk_toggle_button_get_active( 
                                         GTK_TOGGLE_BUTTON( mset->opt_as_root ) );
 
-    gtk_text_buffer_get_start_iter( mset->buf_full_path, &siter );
-    gtk_text_buffer_get_end_iter( mset->buf_full_path, &iter );
-    char* full_path = gtk_text_buffer_get_text( mset->buf_full_path, &siter, &iter,
-                                                                        FALSE );
-    char* new_path = g_path_get_dirname( full_path );
-
-    gboolean rename = ( !strcmp( mset->old_path, new_path ) || !strcmp( new_path, "." ) );
-    g_free( new_path );
-    g_free( full_path );
+    gboolean new_file = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) );
+    gboolean new_folder = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_folder ) );
+    gboolean new_link = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_link ) );
 
     char* desc = NULL;
-    if ( move )
+    if ( mset->create_new )
     {
-        btn_label = rename ? _("_Rename") : _("_Move");
-        action = _("Move");
+        btn_label = _("C_reate");
+        action = _("Create New");
+        if ( new_file )
+            desc = _("File");
+        else if ( new_folder )
+            desc = _("Folder");
+        else
+            desc = _("Link");
     }
-    else if ( copy )
+    else
     {
-        btn_label = _("C_opy");
-        action = _("Copy");
-    }
-    else if ( link )
-    {
-        btn_label = _("_Link");
-        action = _("Create Link To");
-    }
-    else if ( copy_target )
-    {
-        btn_label = _("C_opy");
-        action = _("Copy");
-        desc = _("Link Target");
-    }
-    else if ( link_target )
-    {
-        btn_label = _("_Link");
-        action = _("Create Link To");
-        desc = _("Target");
-    }
+        gtk_text_buffer_get_start_iter( mset->buf_full_path, &siter );
+        gtk_text_buffer_get_end_iter( mset->buf_full_path, &iter );
+        char* full_path = gtk_text_buffer_get_text( mset->buf_full_path, &siter, &iter,
+                                                                            FALSE );
+        char* new_path = g_path_get_dirname( full_path );
 
+        gboolean rename = ( !strcmp( mset->old_path, new_path ) || !strcmp( new_path, "." ) );
+        g_free( new_path );
+        g_free( full_path );
+
+        if ( move )
+        {
+            btn_label = rename ? _("_Rename") : _("_Move");
+            action = _("Move");
+        }
+        else if ( copy )
+        {
+            btn_label = _("C_opy");
+            action = _("Copy");
+        }
+        else if ( link )
+        {
+            btn_label = _("_Link");
+            action = _("Create Link To");
+        }
+        else if ( copy_target )
+        {
+            btn_label = _("C_opy");
+            action = _("Copy");
+            desc = _("Link Target");
+        }
+        else if ( link_target )
+        {
+            btn_label = _("_Link");
+            action = _("Create Link To");
+            desc = _("Target");
+        }
+    }
+    
     if ( as_root )
         root_msg = _(" As Root");
     else
@@ -981,6 +1178,8 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
 
     mset->full_path_same = FALSE;
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
+    if ( mset->create_new )
+        on_toggled( NULL, mset );
 }
 
 void on_toggled( GtkMenuItem* item, MoveSet* mset )
@@ -1001,7 +1200,9 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     }
 
     if ( xset_get_b( "move_link" ) )
+    {
         gtk_widget_show( mset->opt_link );
+    }
     else
     {
         if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_link ) ) )
@@ -1094,13 +1295,53 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     show( mset->label_full_path );
     show( mset->scroll_full_path );
 
-    if ( xset_get_b( "move_type" ) )
+    if ( !mset->is_link && !mset->create_new && xset_get_b( "move_type" ) )
     {
         show = (GFunc)gtk_widget_show;
     }
     else
         show = (GFunc)gtk_widget_hide;
     show( mset->hbox_type );
+
+    gboolean new_file = FALSE;
+    gboolean new_folder = FALSE;
+    gboolean new_link = FALSE;
+    if ( mset->create_new )
+    {
+        new_file = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) );
+        new_folder = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_folder ) );
+        new_link = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_link ) );
+    }
+    
+    if ( new_link || ( mset->is_link && xset_get_b( "move_target" ) ) )
+    {
+        show = (GFunc)gtk_widget_show;
+    }
+    else
+        show = (GFunc)gtk_widget_hide;
+    show( mset->hbox_target );
+
+    if ( ( new_file || new_folder ) && xset_get_b( "move_template" ) )
+    {
+        show = (GFunc)gtk_widget_show;
+        if ( new_file )
+        {
+            gtk_widget_show( GTK_WIDGET( mset->combo_template ) );
+            gtk_label_set_mnemonic_widget( mset->label_template,
+                                        GTK_WIDGET( mset->combo_template ) );
+            gtk_widget_hide( GTK_WIDGET( mset->combo_template_dir ) );
+        }
+        else
+        {
+            gtk_widget_show( GTK_WIDGET( mset->combo_template_dir ) );
+            gtk_label_set_mnemonic_widget( mset->label_template,
+                                        GTK_WIDGET( mset->combo_template_dir ) );
+            gtk_widget_hide( GTK_WIDGET( mset->combo_template ) );
+        }
+    }
+    else
+        show = (GFunc)gtk_widget_hide;
+    show( mset->hbox_template );
 
     if ( !someone_is_visible )
     {
@@ -1144,11 +1385,19 @@ void on_options_button_press( GtkWidget* btn, MoveSet* mset )
     set = xset_set_cb( "move_path", on_toggled, mset );
     xset_add_menuitem( mset->desktop, mset->browser, popup, accel_group, set );
     set = xset_set_cb( "move_type", on_toggled, mset );
+    set->disable = ( mset->create_new || mset->is_link );
+    xset_add_menuitem( mset->desktop, mset->browser, popup, accel_group, set );
+    set = xset_set_cb( "move_target", on_toggled, mset );
+    set->disable = mset->create_new || !mset->is_link;
+    xset_add_menuitem( mset->desktop, mset->browser, popup, accel_group, set );
+    set = xset_set_cb( "move_template", on_toggled, mset );
+    set->disable = !mset->create_new;
     xset_add_menuitem( mset->desktop, mset->browser, popup, accel_group, set );
 
     set = xset_set_cb( "move_copy", on_toggled, mset );
-        set->disable = mset->clip_copy;
-    xset_set_cb( "move_link", on_toggled, mset );
+        set->disable = mset->clip_copy || mset->create_new;
+    set = xset_set_cb( "move_link", on_toggled, mset );
+        set->disable = mset->create_new;
     set = xset_set_cb( "move_copyt", on_toggled, mset );
         set->disable = !mset->is_link;
     set = xset_set_cb( "move_linkt", on_toggled, mset );
@@ -1194,7 +1443,16 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
         else if ( widget == GTK_WIDGET( mset->label_type ) )
         {
             on_button_focus( mset->options, GTK_DIR_TAB_FORWARD, mset );
-            return TRUE; //input = mset->label_mime;
+            return TRUE;
+        }
+        else if ( widget == GTK_WIDGET( mset->label_target ) )
+            input = GTK_WIDGET( mset->entry_target );
+        else if ( widget == GTK_WIDGET( mset->label_template ) )
+        {
+            if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+                input = GTK_WIDGET( mset->combo_template );
+            else
+                input = GTK_WIDGET( mset->combo_template_dir );
         }
     }
     else if ( direction == GTK_DIR_TAB_BACKWARD )
@@ -1203,7 +1461,16 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
         GtkWidget* first_input;
 
         if ( widget == GTK_WIDGET( mset->label_name ) )
-            input = mset->input_full_path; //label_mime;
+        {
+            if ( mset->combo_template_dir )
+                input = GTK_WIDGET( mset->combo_template_dir );
+            else if ( mset->combo_template )
+                input = GTK_WIDGET( mset->combo_template );
+            else if ( mset->entry_target )
+                input = GTK_WIDGET( mset->entry_target );
+            else
+                input = mset->input_full_path;
+        }
         else if ( widget == GTK_WIDGET( mset->label_ext ) )
             input = mset->input_name;
         else if ( widget == GTK_WIDGET( mset->label_full_name ) )
@@ -1220,16 +1487,32 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
             input = mset->input_full_name;
         else if ( widget == GTK_WIDGET( mset->label_full_path ) )
             input = mset->input_path;
-        else if ( widget == GTK_WIDGET( mset->label_type ) )
+        else
             input = mset->input_full_path;
         
         first_input = input;
         while ( input && !GTK_WIDGET_VISIBLE( gtk_widget_get_parent( input ) ) )
         {
             input2 = NULL;
-            //if ( input == mset->label_mime )
-            //    input2 = mset->input_full_path;
-            if ( input == mset->input_full_path )
+            if ( input == GTK_WIDGET( mset->combo_template_dir ) )
+            {
+                if ( mset->combo_template )
+                    input2 = GTK_WIDGET( mset->combo_template );
+                else if ( mset->entry_target )
+                    input2 = GTK_WIDGET( mset->entry_target );
+                else
+                    input2 = mset->input_full_path;
+            }
+            else if ( input == GTK_WIDGET( mset->combo_template ) )
+            {
+                if ( mset->entry_target )
+                    input2 = GTK_WIDGET( mset->entry_target );
+                else
+                    input2 = mset->input_full_path;
+            }
+            else if ( input == GTK_WIDGET( mset->entry_target ) )
+                input2 = mset->input_full_path;
+            else if ( input == mset->input_full_path )
                 input2 = mset->input_path;
             else if ( input == mset->input_path )
                 input2 = mset->input_full_name;
@@ -1246,15 +1529,24 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
             else if ( input == GTK_WIDGET( mset->entry_ext ) )
                 input2 = mset->input_name;
             else if ( input == mset->input_name )
-                input2 = mset->input_full_path; //mset->label_mime;
-        
+            {
+                if ( mset->combo_template_dir )
+                    input2 = GTK_WIDGET( mset->combo_template_dir );
+                else if ( mset->combo_template )
+                    input2 = GTK_WIDGET( mset->combo_template );
+                else if ( mset->entry_target )
+                    input2 = GTK_WIDGET( mset->entry_target );
+                else
+                    input2 = mset->input_full_path;
+            }
+            
             if ( input2 == first_input )
                 input = NULL;
             else
                 input = input2;
         }
     }
-    
+
     if ( input == GTK_WIDGET( mset->label_mime ) )
     {
         gtk_label_select_region( mset->label_mime, 0, -1 );
@@ -1292,6 +1584,21 @@ void copy_entry_to_clipboard( GtkWidget* widget, MoveSet* mset )
         gtk_clipboard_set_text( clip, mset->mime_type, -1 );
         return;
     }
+    else if ( widget == GTK_WIDGET( mset->label_target ) )
+    {
+        gtk_clipboard_set_text( clip, gtk_entry_get_text( mset->entry_target ), -1 );
+        return;
+    }
+    else if ( widget == GTK_WIDGET( mset->label_template ) )
+    {
+        GtkWidget* w;
+        if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+            w = gtk_bin_get_child( GTK_BIN( mset->combo_template ) );
+        else
+            w = gtk_bin_get_child( GTK_BIN( mset->combo_template_dir ) );
+        gtk_clipboard_set_text( clip, gtk_entry_get_text( GTK_ENTRY( w ) ), -1 );
+    }
+    
     if ( !buf )
         return;
     gtk_text_buffer_get_start_iter( buf, &siter );
@@ -1328,7 +1635,17 @@ gboolean on_label_button_press( GtkWidget *widget,
                     copy_entry_to_clipboard( widget, mset );
                 return TRUE;
             }
-
+            else if ( widget == GTK_WIDGET( mset->label_target ) )
+                input = GTK_WIDGET( mset->entry_target );
+            else if ( widget == GTK_WIDGET( mset->label_template ) )
+            {
+                if ( gtk_toggle_button_get_active( 
+                                        GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+                    input = GTK_WIDGET( mset->combo_template );
+                else
+                    input = GTK_WIDGET( mset->combo_template_dir );
+            }
+            
             if ( input )
             {
                 select_input( input, mset );
@@ -1343,9 +1660,143 @@ gboolean on_label_button_press( GtkWidget *widget,
     return TRUE;
 }
 
-gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+void on_template_changed( GtkWidget* widget, MoveSet* mset )
+{
+    char* str, *str2;
+    if ( !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+        return;
+    char* text = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                        GTK_BIN( mset->combo_template ) ) ) ) );
+    g_strstrip( text );
+    str = text;
+    while ( str2 = strchr( str, '/' ) )
+        str = str2 + 1;
+    if ( str[0] == '.' )
+        str++;
+    if ( str2 = strchr( str, '.' ) )
+        str = str2 + 1;
+    else
+        str = NULL;
+    
+    gtk_entry_set_text( mset->entry_ext, str ? str : "" );
+    g_free( text );
+}
+
+char* get_unique_name( const char* dir, gboolean is_dir )
+{
+    char* name, *path;
+    
+    char* base = is_dir ? "new folder" : "new file";
+    path = g_build_filename( dir, base, NULL );
+    int n = 2;
+    while ( g_file_test( path, G_FILE_TEST_EXISTS ) )
+    {
+        g_free( path );
+        if ( n == 1000 )
+            return g_strdup( base );
+        name = g_strdup_printf( "%s%d", base, n++ );
+        path = g_build_filename( dir, name, NULL );
+        g_free( name );
+    }
+    return path;
+}
+
+char* get_template_dir()
+{
+    char* templates_path = g_strdup( g_getenv( "XDG_TEMPLATES_DIR" ) );
+    if ( !dir_has_files( templates_path ) )
+    {
+        g_free( templates_path );
+        templates_path = g_build_filename( g_get_home_dir(), "Templates", NULL );
+        if ( !dir_has_files( templates_path ) )
+        {
+            g_free( templates_path );
+            templates_path = g_build_filename( g_get_home_dir(), ".templates", NULL );
+            if ( !dir_has_files( templates_path ) )
+            {
+                g_free( templates_path );
+                templates_path = NULL;
+            }
+        }
+    }
+    return templates_path;
+}
+
+GList* get_templates( const char* templates_dir, const char* subdir,
+                                            GList* templates, gboolean getdir )
+{
+    const char* name;
+    char* path;
+    char* subsubdir;
+    char* templates_path;
+    
+    if ( !templates_dir )
+    {
+        templates_path = get_template_dir();
+        if ( templates_path )
+            templates = get_templates( templates_path, NULL, templates, getdir );
+        g_free( templates_path );
+        return templates;
+    }
+    
+    templates_path = g_build_filename( templates_dir, subdir, NULL );
+    GDir* dir = g_dir_open( templates_path, 0, NULL );
+    if ( dir )
+    {
+        while ( name = g_dir_read_name( dir ) )
+        {
+            path = g_build_filename( templates_path, name, NULL );
+            if ( getdir )
+            {
+                if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
+                {
+                    if ( subdir )
+                        subsubdir = g_build_filename( subdir, name, NULL );
+                    else
+                        subsubdir = g_strdup( name );
+                    templates = g_list_prepend( templates,
+                                            g_strdup_printf( "%s/", subsubdir ) );
+                    templates = get_templates( templates_dir, subsubdir, templates,
+                                                                        getdir );
+                    g_free( subsubdir );
+                }
+            }
+            else
+            {
+                if ( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
+                {
+                    if ( subdir )
+                        templates = g_list_prepend( templates, g_build_filename(
+                                                            subdir, name, NULL ) );
+                    else
+                        templates = g_list_prepend( templates, g_strdup( name ) );
+                }
+                else if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
+                {
+                    if ( subdir )
+                    {    
+                        subsubdir = g_build_filename( subdir, name, NULL );
+                        templates = get_templates( templates_dir, subsubdir,
+                                                            templates, getdir );
+                        g_free( subsubdir );
+                    }
+                    else
+                        templates = get_templates( templates_dir, name, templates,
+                                                                        getdir );
+                }
+            }
+            g_free( path );
+        }
+        g_dir_close( dir );
+    }
+    g_free( templates_path );
+    return templates;
+}
+
+gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
-                                        const char* dest_dir, gboolean clip_copy )
+                                        const char* dest_dir, gboolean clip_copy,
+                                        int create_new )
 {   
     char* full_name;
     char* full_path;
@@ -1360,28 +1811,48 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     GtkWidget* task_view = NULL;
     gboolean ret = TRUE;
     gboolean target_missing = FALSE;
+    GList* templates;
+    FILE* touchfile;
     
-    if ( !file_dir || !file )
+    if ( !file_dir )
         return FALSE;
     MoveSet* mset = g_slice_new0( MoveSet );
-
     full_name = NULL;
-    // special processing for files with inconsistent real name and display name
-    if( G_UNLIKELY( vfs_file_info_is_desktop_entry(file) ) )
-        full_name = g_filename_display_name( file->name );
-    if ( !full_name )
-        full_name = g_strdup( vfs_file_info_get_disp_name( file ) );
-    if ( !full_name )
-        full_name = g_strdup( vfs_file_info_get_name( file ) );
-    
-    mset->is_dir = vfs_file_info_is_dir( file );
-    mset->is_link = vfs_file_info_is_symlink( file );
-    mset->clip_copy = clip_copy;
-    mset->full_path = g_build_filename( file_dir, full_name, NULL );
-    if ( dest_dir )
-        mset->new_path = g_build_filename( dest_dir, full_name, NULL );
+
+    if ( !create_new )
+    {
+        if ( !file )
+            return FALSE;
+        // special processing for files with inconsistent real name and display name
+        if( G_UNLIKELY( vfs_file_info_is_desktop_entry(file) ) )
+            full_name = g_filename_display_name( file->name );
+        if ( !full_name )
+            full_name = g_strdup( vfs_file_info_get_disp_name( file ) );
+        if ( !full_name )
+            full_name = g_strdup( vfs_file_info_get_name( file ) );
+        
+        mset->is_dir = vfs_file_info_is_dir( file );
+        mset->is_link = vfs_file_info_is_symlink( file );
+        mset->clip_copy = clip_copy;
+        mset->create_new = create_new;
+        mset->full_path = g_build_filename( file_dir, full_name, NULL );
+        if ( dest_dir )
+            mset->new_path = g_build_filename( dest_dir, full_name, NULL );
+        else
+            mset->new_path = g_strdup( mset->full_path );
+        g_free( full_name );
+        full_name = NULL;
+    }
     else
+    {
+        mset->full_path = get_unique_name( file_dir, ( create_new == 2 ) );
         mset->new_path = g_strdup( mset->full_path );
+        mset->is_dir = FALSE;
+        mset->is_link = FALSE;
+        mset->clip_copy = FALSE;
+        mset->create_new = create_new;
+    }
+    
     mset->old_path = file_dir;
 
     mset->full_path_exists = FALSE;
@@ -1480,6 +1951,8 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     gtk_widget_show_all( mset->dlg );
     
     // Entries
+    
+    // Type
     char* type;
     mset->label_type = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_type, _("<b>Type:</b>") );
@@ -1505,7 +1978,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             type = g_strdup_printf( "symbolic link ( inode/symlink )" );
         }
     }
-    else
+    else if ( file )
     {
         VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
         if ( mime_type )
@@ -1522,6 +1995,11 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             type = g_strdup( mset->mime_type );
         }
     }
+    else //create
+    {
+        mset->mime_type = g_strdup_printf( "?" );
+        type = g_strdup( mset->mime_type );
+    }
     mset->label_mime = GTK_LABEL( gtk_label_new( type ) );
     gtk_label_set_ellipsize( mset->label_mime, PANGO_ELLIPSIZE_MIDDLE );
     g_free( type );
@@ -1534,6 +2012,137 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     g_signal_connect( G_OBJECT( mset->label_type ), "focus",
                           G_CALLBACK( on_label_focus ), mset );
 
+
+    // Target
+    if ( mset->is_link || create_new )
+    {
+        mset->label_target = GTK_LABEL( gtk_label_new( NULL ) );
+        gtk_label_set_markup_with_mnemonic( mset->label_target, _("<b>_Target:</b>") );
+        gtk_misc_set_alignment( GTK_MISC( mset->label_target ), 0, 1 );
+        mset->entry_target = GTK_ENTRY( gtk_entry_new() );
+        gtk_label_set_mnemonic_widget( mset->label_target, GTK_WIDGET( mset->entry_target ) );
+        g_signal_connect( G_OBJECT( mset->entry_target ), "mnemonic-activate",
+                              G_CALLBACK( on_mnemonic_activate ), mset );
+        gtk_label_set_selectable(  mset->label_target, TRUE );
+        g_signal_connect( G_OBJECT( mset->label_target ), "button-press-event",
+                              G_CALLBACK( on_label_button_press ), mset );
+        g_signal_connect( G_OBJECT( mset->label_target ), "focus",
+                              G_CALLBACK( on_label_focus ), mset );
+        //g_signal_connect( G_OBJECT( mset->entry_target ), "key-press-event",
+        //                      G_CALLBACK( on_move_entry_keypress ), mset );
+        //g_signal_connect_after( G_OBJECT( mset->entry_target ), "focus",
+        //                      G_CALLBACK( on_focus ), mset );
+        //gtk_widget_set_sensitive( GTK_WIDGET( mset->entry_target ), !mset->is_dir );
+        //gtk_widget_set_sensitive( GTK_WIDGET( mset->label_target ), !mset->is_dir );
+
+        if ( create_new )
+        {
+            // Target Browse button
+            mset->browse_target = gtk_button_new();
+            gtk_button_set_image( GTK_BUTTON( mset->browse_target ),
+                            xset_get_image( "GTK_STOCK_OPEN", GTK_ICON_SIZE_BUTTON ) );
+            gtk_button_set_focus_on_click( GTK_BUTTON( mset->browse_target ), FALSE );
+            g_signal_connect( G_OBJECT( mset->browse_target ), "clicked",
+                            G_CALLBACK( on_create_browse_button_press ), mset );
+        }
+        else
+        {
+            gtk_entry_set_text( GTK_ENTRY( mset->entry_target ), mset->mime_type );
+            gtk_entry_set_editable( GTK_ENTRY( mset->entry_target ), FALSE );
+            mset->browse_target = NULL;
+        }
+        g_signal_connect( G_OBJECT( mset->entry_target ), "changed",
+                              G_CALLBACK( on_move_change ), mset );
+    }
+    else
+        mset->label_target = NULL;
+        
+    // Template
+    if ( create_new )
+    {
+        mset->label_template = GTK_LABEL( gtk_label_new( NULL ) );
+        gtk_label_set_markup_with_mnemonic( mset->label_template, _("<b>_Template:</b>") );
+        gtk_misc_set_alignment( GTK_MISC( mset->label_template ), 0, 1 );
+        g_signal_connect( G_OBJECT( mset->entry_target ), "mnemonic-activate",
+                              G_CALLBACK( on_mnemonic_activate ), mset );
+        gtk_label_set_selectable(  mset->label_template, TRUE );
+        g_signal_connect( G_OBJECT( mset->label_template ), "button-press-event",
+                              G_CALLBACK( on_label_button_press ), mset );
+        g_signal_connect( G_OBJECT( mset->label_template ), "focus",
+                              G_CALLBACK( on_label_focus ), mset );
+
+        // template combo
+        mset->combo_template = GTK_COMBO_BOX( gtk_combo_box_text_new_with_entry() );
+        gtk_combo_box_set_focus_on_click( mset->combo_template, FALSE );
+
+        // add entries
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
+                                                                    _("Empty File") );
+        templates = NULL;
+        templates = get_templates( NULL, NULL, templates, FALSE );
+        if ( templates )
+        {
+            templates = g_list_sort( templates, (GCompareFunc) g_strcmp0 );
+            GList* l;
+            for ( l = templates; l; l = l->next )
+            {
+                gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
+                                                                    (char*)l->data );
+                g_free( l->data );
+            }
+            g_list_free( templates );
+        }
+        //gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template ),
+        //                                                            _("Add...") );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( mset->combo_template ), 0 );
+        g_signal_connect( G_OBJECT( mset->combo_template ), "changed",
+                                    G_CALLBACK( on_template_changed ), mset );
+        //gtk_label_set_mnemonic_widget( mset->label_template, GTK_WIDGET( mset->combo_template ) );
+
+        // template_dir combo
+        mset->combo_template_dir = GTK_COMBO_BOX( gtk_combo_box_text_new_with_entry() );
+        gtk_combo_box_set_focus_on_click( mset->combo_template_dir, FALSE );
+
+        // add entries
+        gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template_dir ),
+                                                                    _("Empty Folder") );
+        templates = NULL;
+        templates = get_templates( NULL, NULL, templates, TRUE );
+        if ( templates )
+        {
+            templates = g_list_sort( templates, (GCompareFunc) g_strcmp0 );
+            GList* l;
+            for ( l = templates; l; l = l->next )
+            {
+                gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( 
+                                                mset->combo_template_dir ),
+                                                (char*)l->data );
+                g_free( l->data );
+            }
+            g_list_free( templates );
+        }
+        //gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template_dir ),
+        //                                                        _("Add...") );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( mset->combo_template_dir ), 0 );
+        //g_signal_connect( G_OBJECT( mset->combo_template_dir ), "changed",
+        //                            G_CALLBACK( on_template_changed ), mset );
+        //gtk_label_set_mnemonic_widget( mset->label_template, GTK_WIDGET( 
+        //                                            mset->combo_template_dir ) );
+
+        // Template Browse button
+        mset->browse_template = gtk_button_new();
+        gtk_button_set_image( GTK_BUTTON( mset->browse_template ),
+                        xset_get_image( "GTK_STOCK_OPEN", GTK_ICON_SIZE_BUTTON ) );
+        gtk_button_set_focus_on_click( GTK_BUTTON( mset->browse_template ), FALSE );
+        g_signal_connect( G_OBJECT( mset->browse_template ), "clicked",
+                            G_CALLBACK( on_create_browse_button_press ), mset );
+    }
+    else
+    {
+        mset->label_template = NULL;
+    }
+    
+    // Name
     mset->label_name = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_name, _("<b>_Name:</b>") );
     gtk_misc_set_alignment( GTK_MISC( mset->label_name ), 0, 0 );
@@ -1558,6 +2167,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                           G_CALLBACK( on_focus ), mset );
     mset->blank_name = GTK_LABEL( gtk_label_new( NULL ) );
     
+    // Ext
     mset->label_ext = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_ext, _("<b>E_xtension:</b>") );
     gtk_misc_set_alignment( GTK_MISC( mset->label_ext ), 0, 1 );
@@ -1579,6 +2189,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     gtk_widget_set_sensitive( GTK_WIDGET( mset->entry_ext ), !mset->is_dir );
     gtk_widget_set_sensitive( GTK_WIDGET( mset->label_ext ), !mset->is_dir );
 
+    // Filename
     mset->label_full_name = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_full_name, _("<b>_Filename:</b>") );    gtk_misc_set_alignment( GTK_MISC( mset->label_full_name ), 0, 0 );
     mset->scroll_full_name = gtk_scrolled_window_new( NULL, NULL );
@@ -1602,6 +2213,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                           G_CALLBACK( on_focus ), mset );
     mset->blank_full_name = GTK_LABEL( gtk_label_new( NULL ) );
 
+    // Parent
     mset->label_path = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_path, _("<b>_Parent:</b>") );
     gtk_misc_set_alignment( GTK_MISC( mset->label_path ), 0, 0 );
@@ -1625,6 +2237,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                           G_CALLBACK( on_focus ), mset );
     mset->blank_path = GTK_LABEL( gtk_label_new( NULL ) );
 
+    // Path
     mset->label_full_path = GTK_LABEL( gtk_label_new( NULL ) );
     gtk_label_set_markup_with_mnemonic( mset->label_full_path, _("<b>P_ath:</b>") );
     gtk_misc_set_alignment( GTK_MISC( mset->label_full_path ), 0, 0 );
@@ -1650,6 +2263,7 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     g_signal_connect( G_OBJECT( mset->input_full_path ), "focus",
                           G_CALLBACK( on_focus ), mset );
 
+    // Options
     mset->opt_move =  gtk_radio_button_new_with_mnemonic( NULL, _("Mov_e") );
     mset->opt_copy =  gtk_radio_button_new_with_mnemonic_from_widget(
                                     GTK_RADIO_BUTTON(mset->opt_move), _("Cop_y") );
@@ -1660,12 +2274,26 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     mset->opt_link_target =  gtk_radio_button_new_with_mnemonic_from_widget( 
                                     GTK_RADIO_BUTTON(mset->opt_move), _("Link Tar_get") );
     mset->opt_as_root = gtk_check_button_new_with_mnemonic( _("A_s Root") );
+
+    mset->opt_new_file = gtk_radio_button_new_with_mnemonic( NULL, _("Fil_e") );
+    mset->opt_new_folder = gtk_radio_button_new_with_mnemonic_from_widget( 
+                        GTK_RADIO_BUTTON( mset->opt_new_file ), _("F_older") );
+    mset->opt_new_link = gtk_radio_button_new_with_mnemonic_from_widget( 
+                        GTK_RADIO_BUTTON( mset->opt_new_file ), _("_Link") );
+
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_move ), FALSE );
+    g_signal_connect( G_OBJECT( mset->opt_move ), "focus",
+                                            G_CALLBACK( on_button_focus ), mset );
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_copy ), FALSE );
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_link ), FALSE );
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_copy_target ), FALSE );
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_link_target ), FALSE );
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_as_root ), FALSE );
+    gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_new_file ), FALSE );
+    g_signal_connect( G_OBJECT( mset->opt_new_file ), "focus",
+                                            G_CALLBACK( on_button_focus ), mset );
+    gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_new_folder ), FALSE );
+    gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_new_link ), FALSE );
     gtk_widget_set_sensitive( mset->opt_copy_target, mset->is_link && !target_missing );
     gtk_widget_set_sensitive( mset->opt_link_target, mset->is_link );
     g_signal_connect( G_OBJECT( mset->opt_move ), "toggled",
@@ -1680,6 +2308,12 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         G_CALLBACK( on_opt_toggled ), mset );
     g_signal_connect( G_OBJECT( mset->opt_as_root ), "toggled",
                                         G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_file ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_folder ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_link ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
 
     // Pack
     gtk_container_set_border_width( GTK_CONTAINER ( mset->dlg ), 10 );
@@ -1693,7 +2327,9 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     gtk_box_pack_start( GTK_BOX( mset->hbox_ext ),
                         GTK_WIDGET( mset->label_ext ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_ext ),
-                        GTK_WIDGET( mset->entry_ext ), TRUE, TRUE, 5 );
+                            GTK_WIDGET( gtk_label_new( " " ) ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( mset->hbox_ext ),
+                        GTK_WIDGET( mset->entry_ext ), TRUE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
                         GTK_WIDGET( mset->hbox_ext ), FALSE, TRUE, 5 );
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
@@ -1726,17 +2362,66 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
                         GTK_WIDGET( mset->hbox_type ), FALSE, TRUE, 5 );
 
+    mset->hbox_target = gtk_hbox_new( FALSE, 0 );
+    if ( mset->label_target )
+    {
+        gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
+                            GTK_WIDGET( mset->label_target ), FALSE, TRUE, 0 );
+        if ( !create_new )
+            gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
+                            GTK_WIDGET( gtk_label_new( " " ) ), FALSE, TRUE, 0 );
+        gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
+                            GTK_WIDGET( mset->entry_target ), TRUE, TRUE,
+                            create_new ? 3 : 0 );
+        if ( mset->browse_target )
+            gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
+                            GTK_WIDGET( mset->browse_target ), FALSE, TRUE, 0 );
+        gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+                            GTK_WIDGET( mset->hbox_target ), FALSE, TRUE, 5 );
+    }
+
+    mset->hbox_template = gtk_hbox_new( FALSE, 0 );
+    if ( mset->label_template )
+    {
+        gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
+                            GTK_WIDGET( mset->label_template ), FALSE, TRUE, 0 );
+        gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
+                            GTK_WIDGET( mset->combo_template ), TRUE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
+                            GTK_WIDGET( mset->combo_template_dir ), TRUE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
+                            GTK_WIDGET( mset->browse_template ), FALSE, TRUE, 0 );
+        gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+                            GTK_WIDGET( mset->hbox_template ), FALSE, TRUE, 5 );
+    }
+
     GtkWidget* hbox = gtk_hbox_new( FALSE, 4 );
+    if ( create_new )
+    {
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( gtk_label_new( _("New") ) ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_new_file ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_new_folder ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_new_link ), FALSE, TRUE, 3 );
+    }
+    else
+    {
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_move ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_copy ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_link ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_copy_target ), FALSE, TRUE, 3 );
+        gtk_box_pack_start( GTK_BOX( hbox ),
+                            GTK_WIDGET( mset->opt_link_target ), FALSE, TRUE, 3 );
+    }
     gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( mset->opt_move ), FALSE, TRUE, 3 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( mset->opt_copy ), FALSE, TRUE, 3 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( mset->opt_link ), FALSE, TRUE, 3 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( mset->opt_copy_target ), FALSE, TRUE, 3 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( mset->opt_link_target ), FALSE, TRUE, 3 );
+                            GTK_WIDGET( gtk_label_new( "  " ) ), FALSE, TRUE, 3 );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( mset->opt_as_root ), FALSE, TRUE, 6 );
     gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
@@ -1751,6 +2436,17 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         GTK_TOGGLE_BUTTON( mset->opt_copy ) ->active = TRUE;
         GTK_TOGGLE_BUTTON( mset->opt_move ) ->active = FALSE;
     }
+    else if ( create_new == 2 )
+    {
+        GTK_TOGGLE_BUTTON( mset->opt_new_folder ) ->active = TRUE;
+        GTK_TOGGLE_BUTTON( mset->opt_new_file ) ->active = FALSE;
+    }
+    else if ( create_new == 3 )
+    {
+        GTK_TOGGLE_BUTTON( mset->opt_new_link ) ->active = TRUE;
+        GTK_TOGGLE_BUTTON( mset->opt_new_file ) ->active = FALSE;
+    }
+    
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     on_opt_toggled( NULL, mset );
 
@@ -1821,9 +2517,10 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             gboolean overwrite = FALSE;
             char* msg;
             
-            if ( mset->full_path_same || !strcmp( full_path, mset->full_path ) )
+            if ( !create_new && ( mset->full_path_same ||
+                                    !strcmp( full_path, mset->full_path ) ) )
                 break;  // not changed, proceed to next file
-                        
+
             // determine job
             gboolean move = gtk_toggle_button_get_active( 
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) );
@@ -1837,6 +2534,13 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                             GTK_TOGGLE_BUTTON( mset->opt_link_target ) );
             gboolean as_root = gtk_toggle_button_get_active( 
                                             GTK_TOGGLE_BUTTON( mset->opt_as_root ) );
+            gboolean new_file = gtk_toggle_button_get_active( 
+                                            GTK_TOGGLE_BUTTON( mset->opt_new_file ) );
+            gboolean new_folder = gtk_toggle_button_get_active( 
+                                            GTK_TOGGLE_BUTTON( mset->opt_new_folder ) );
+            gboolean new_link = gtk_toggle_button_get_active( 
+                                            GTK_TOGGLE_BUTTON( mset->opt_new_link ) );
+
             if ( as_root )
                 root_msg = _(" As Root");
             else
@@ -1885,7 +2589,157 @@ gboolean  ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 overwrite = TRUE;
             }
 
-            if ( copy || copy_target )
+            if ( create_new && new_link )
+            {
+                // new link task
+                task_name = g_strdup_printf( _("Create Link%s"), root_msg );
+                PtkFileTask* task = ptk_file_exec_new( task_name, NULL, mset->parent,
+                                                                    task_view );
+                g_free( task_name );
+
+                str = g_strdup( gtk_entry_get_text( mset->entry_target ) );
+                g_strstrip( str );
+                while ( g_str_has_suffix( str, "/" ) && str[1] != '\0' )
+                    str[strlen( str ) - 1] = '\0';
+                from_path = bash_quote( str );
+                g_free( str );
+                to_path = bash_quote( full_path );
+
+                if ( overwrite )
+                {
+                    task->task->exec_command = g_strdup_printf( "%sln -sf %s %s",
+                                                root_mkdir, from_path, to_path );
+                }
+                else
+                {
+                    task->task->exec_command = g_strdup_printf( "%sln -s %s %s",
+                                                root_mkdir, from_path, to_path );
+                }
+                g_free( from_path );
+                g_free( to_path );
+                task->task->exec_sync = TRUE;
+                task->task->exec_popup = FALSE;
+                task->task->exec_show_output = FALSE;
+                task->task->exec_show_error = TRUE;
+                task->task->exec_export = FALSE;
+                task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                ptk_file_task_run( task );                
+            }
+            else if ( create_new && new_file )
+            {
+                // new file task
+                if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent(
+                                        GTK_WIDGET( mset->combo_template ) ) ) )
+                {
+                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                        GTK_BIN( mset->combo_template ) ) ) ) );
+                    g_strstrip( str );
+                    if ( str[0] == '/' )
+                        from_path = bash_quote( str );
+                    else if ( !g_strcmp0( _("Empty File"), str ) || str[0] == '\0' )
+                        from_path = NULL;
+                    else
+                    {
+                        char* tdir = get_template_dir();
+                        if ( tdir )
+                        {
+                            from_path = g_build_filename( tdir, str, NULL );
+                            g_free( str );
+                            g_free( tdir );
+                            str = from_path;
+                            from_path = bash_quote( str );
+                        }
+                        else
+                            from_path = NULL;
+                    }
+                    g_free( str );
+                }
+                else
+                    from_path = NULL;
+                to_path = bash_quote( full_path );
+                char* over_cmd;
+                if ( overwrite )
+                    over_cmd = g_strdup_printf( "rm -f %s && ", to_path );
+                else
+                    over_cmd = g_strdup( "" );
+
+                task_name = g_strdup_printf( _("Create New File%s"), root_msg );
+                PtkFileTask* task = ptk_file_exec_new( task_name, NULL, mset->parent,
+                                                                    task_view );
+                g_free( task_name );
+                if ( !from_path )
+                    task->task->exec_command = g_strdup_printf( "%s%stouch %s",
+                                            root_mkdir, over_cmd, to_path );
+                else
+                    task->task->exec_command = g_strdup_printf( "%s%scp -f %s %s",
+                                            root_mkdir, over_cmd, from_path, to_path );
+                g_free( from_path );
+                g_free( to_path );
+                g_free( over_cmd );
+                task->task->exec_sync = TRUE;
+                task->task->exec_popup = FALSE;
+                task->task->exec_show_output = FALSE;
+                task->task->exec_show_error = TRUE;
+                task->task->exec_export = FALSE;
+                task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                ptk_file_task_run( task );                
+            }
+            else if ( create_new )
+            {
+                // new folder task
+                if ( !new_folder )
+                    goto _continue_free;  // failsafe
+                if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent(
+                                        GTK_WIDGET( mset->combo_template_dir ) ) ) )
+                {
+                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                        GTK_BIN( mset->combo_template_dir ) ) ) ) );
+                    g_strstrip( str );
+                    if ( str[0] == '/' )
+                        from_path = bash_quote( str );
+                    else if ( !g_strcmp0( _("Empty Folder"), str ) || str[0] == '\0' )
+                        from_path = NULL;
+                    else
+                    {
+                        char* tdir = get_template_dir();
+                        if ( tdir )
+                        {
+                            from_path = g_build_filename( tdir, str, NULL );
+                            g_free( str );
+                            g_free( tdir );
+                            str = from_path;
+                            from_path = bash_quote( str );
+                        }
+                        else
+                            from_path = NULL;
+                    }
+                    g_free( str );
+                }
+                else
+                    from_path = NULL;
+                to_path = bash_quote( full_path );
+
+                task_name = g_strdup_printf( _("Create New Folder%s"), root_msg );
+                PtkFileTask* task = ptk_file_exec_new( task_name, NULL, mset->parent,
+                                                                    task_view );
+                g_free( task_name );
+                if ( !from_path )
+                    task->task->exec_command = g_strdup_printf( "%smkdir %s",
+                                            root_mkdir, to_path );
+                else
+                    task->task->exec_command = g_strdup_printf( "%scp -rL %s %s",
+                                            root_mkdir, from_path, to_path );
+                g_free( from_path );
+                g_free( to_path );
+                task->task->exec_sync = TRUE;
+                task->task->exec_popup = FALSE;
+                task->task->exec_show_output = FALSE;
+                task->task->exec_show_error = TRUE;
+                task->task->exec_export = FALSE;
+                task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                ptk_file_task_run( task );                
+            }
+            else if ( copy || copy_target )
             {
                 // copy task
                 task_name = g_strdup_printf( _("Copy%s"), root_msg );

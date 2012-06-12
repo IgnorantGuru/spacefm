@@ -88,7 +88,7 @@ static void add_list_item( GtkListStore* list, VFSAppDesktop* desktop )
                         COL_APP_NAME, vfs_app_desktop_get_disp_name( desktop ),
                         COL_DESKTOP_FILE, vfs_app_desktop_get_name( desktop ), -1 );
     if ( icon )
-        gdk_pixbuf_unref( icon );
+        g_object_unref( icon );
 }
 
 static GtkTreeModel* create_model_from_mime_type( VFSMimeType* mime_type )

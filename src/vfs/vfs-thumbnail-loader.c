@@ -407,7 +407,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         result = gdk_pixbuf_scale_simple(
                      thumbnail,
                      w, h, GDK_INTERP_BILINEAR );
-        gdk_pixbuf_unref( thumbnail );
+        g_object_unref( thumbnail );
     }
 
     g_free( thumbnail_file );

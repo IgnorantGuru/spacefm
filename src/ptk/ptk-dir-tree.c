@@ -386,7 +386,7 @@ void ptk_dir_tree_get_value ( GtkTreeModel *tree_model,
         if( icon )
         {
             g_value_set_object( value, icon );
-            gdk_pixbuf_unref( icon );
+            g_object_unref( icon );
         }
         break;
     case COL_DIR_TREE_DISP_NAME:

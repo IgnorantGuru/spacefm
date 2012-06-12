@@ -327,6 +327,7 @@ char* bash_quote( const char* str );
 char* get_valid_su();
 char* get_valid_gsu();
 gboolean xset_copy_file( char* src, char* dest );
+gboolean dir_has_files( const char* path );
 XSet* xset_get( const char* name );
 char* xset_get_s( const char* name );
 gboolean xset_get_bool( const char* name, const char* var );

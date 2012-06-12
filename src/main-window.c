@@ -2242,7 +2242,7 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     }
     if ( gtk_notebook_get_n_pages ( notebook ) == 0 )
     {
-        char* path = xset_get_s( "go_set_default" );
+        const char* path = xset_get_s( "go_set_default" );
         if ( !( path && path[0] != '\0' ) )
         {
             if ( geteuid() != 0 )

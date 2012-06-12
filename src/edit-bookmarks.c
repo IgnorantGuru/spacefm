@@ -88,7 +88,7 @@ static void on_add( GtkButton* btn, gpointer data )
     }
 
     if( icon )
-        gdk_pixbuf_unref( icon );
+        g_object_unref( icon );
 }
 
 static void on_delete( GtkButton* btn, gpointer data )
@@ -173,7 +173,7 @@ gboolean edit_bookmarks( GtkWindow* parent )
                             -1);
     }
     if( icon )
-        gdk_pixbuf_unref( icon );
+        g_object_unref( icon );
 
     scroll = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(scroll),

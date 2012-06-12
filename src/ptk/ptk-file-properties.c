@@ -273,7 +273,7 @@ static void on_combo_change( GtkComboBox* combo, gpointer user_data )
                                             1, vfs_app_desktop_get_disp_name(app),
                                             2, action, -1 );
                         if( icon )
-                            gdk_pixbuf_unref( icon );
+                            g_object_unref( icon );
                         vfs_app_desktop_unref( app );
                         exist = TRUE;
                     }
@@ -482,7 +482,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                                     1, vfs_app_desktop_get_disp_name(desktop),
                                     2, *action, -1 );
                 if( icon )
-                    gdk_pixbuf_unref( icon );
+                    g_object_unref( icon );
                 vfs_app_desktop_unref( desktop );
             }
         }
