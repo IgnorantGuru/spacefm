@@ -266,9 +266,10 @@ To build a deb file of SpaceFM on your Debian-based distro:
 
 1)  Install build dependencies (see BUILD section above) plus 'debhelper'.
 
-2)  Use these commands to download and extract the SpaceFM tarball:
+2)  Use these commands to download and extract the SpaceFM tarball (be sure to
+    USE A TMP BUILD PATH THAT DOES NOT CONTAIN SPACES):
 
-        mkdir /tmp/spacefm-build && cd /tmp/spacefm-build
+        mkdir /tmp/spacefm-build && cd /tmp/spacefm-build   # no spaces in path
         # Note: you can change "master" to "next" if you want the next branch:
         wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
