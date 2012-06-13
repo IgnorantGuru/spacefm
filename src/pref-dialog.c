@@ -48,7 +48,7 @@ struct _FMPrefDlg
     GtkWidget* small_icon_size;
     GtkWidget* tool_icon_size;
     GtkWidget* single_click;
-    GtkWidget* use_si_prefix;
+    //GtkWidget* use_si_prefix;
     GtkWidget* rubberband;
     GtkWidget* root_bar;
     GtkWidget* drag_action;
@@ -169,7 +169,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     char* wallpaper;
     const GList* l;
     PtkFileBrowser* file_browser;
-    gboolean use_si_prefix;
+    //gboolean use_si_prefix;
     GtkNotebook* notebook;
     int cur_tabx, p;
     FMMainWindow* a_window;
@@ -461,9 +461,9 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         }
 
 	    /* unit settings changed? */
-	    use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
-        if( use_si_prefix != app_settings.use_si_prefix )
-            app_settings.use_si_prefix = use_si_prefix;
+	    //use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
+        //if( use_si_prefix != app_settings.use_si_prefix )
+        //    app_settings.use_si_prefix = use_si_prefix;
 
         /* single click changed? */
         single_click = gtk_toggle_button_get_active( (GtkToggleButton*)data->single_click );
@@ -734,7 +734,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->small_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "small_icon_size" );
         data->tool_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "tool_icon_size" );
         data->single_click = (GtkWidget*)gtk_builder_get_object( builder, "single_click" );
-	    data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
+	    //data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
         data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
 	    data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
         data->drag_action = (GtkWidget*)gtk_builder_get_object( builder, "drag_action" );
@@ -880,7 +880,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         /* Setup 'Desktop' tab */
 
-    	gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
+    	//gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 /*
         data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
         g_signal_connect( data->show_desktop, "toggled",

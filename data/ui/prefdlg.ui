@@ -1283,7 +1283,6 @@
       </object>
     </child>
     <action-widgets>
-      <action-widget response="0">use_si_prefix</action-widget>
       <action-widget response="-6">cancelbutton</action-widget>
       <action-widget response="-5">okbutton</action-widget>
     </action-widgets>

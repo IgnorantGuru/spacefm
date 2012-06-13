@@ -1021,7 +1021,8 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
         if( ! (evt->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)) )
         {
             /* don't cancel selection if clicking on selected items */
-            if( !( (evt->button == 1 || evt->button == 3) && clicked_item && clicked_item->is_selected) )
+            if( !( (evt->button == 1 || evt->button == 3 || evt->button == 0)
+                                && clicked_item && clicked_item->is_selected) )
             {
                 for( l = self->items; l ;l = l->next )
                 {

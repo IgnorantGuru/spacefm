@@ -645,7 +645,8 @@ Help Options:
   --help-gtk               Show GTK+ Options
 
 Application Options:
-  -t, --new-tab            Open folders in last used window (default)
+  -t, --new-tab            Open folders in new tab of last window (default)
+  -r, --reuse-tab          Open folder in current tab of last used window
   -w, --new-window         Open folders in new window
   -p, --panel=P            Open folders in panel 'P' (1-4)
   --desktop                Launch desktop manager
@@ -1820,7 +1821,7 @@ The next item on the MIME menu will be the name of an xml file which can be used
 
 <!-- # mime/packages/ #mimedir -->
 <p><a name="designmode-mime-mimedir"/><a href="#designmode-mime-mimedir"><b>mime/packages/</b></a><br>
-Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see mime-type.xml above).  After adding, editing, or removing files from this folder, you may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect. 
+Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect. 
 
 <!-- # usr/ #usr -->
 <p><a name="designmode-mime-usr"/><a href="#designmode-mime-usr"><b>usr/</b></a><br>
