@@ -564,7 +564,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                      ( guint64 ) vfs_file_info_get_blocks( file ) * 512 );
             gtk_label_set_text( data->size_on_disk_label, buf );
             
-            gtk_label_set_text( data->count_label, "1 file" );
+            gtk_label_set_text( data->count_label, _("1 file") );
         }
         gtk_label_set_text( GTK_LABEL( mtime ),
                             vfs_file_info_get_disp_mtime( file ) );
