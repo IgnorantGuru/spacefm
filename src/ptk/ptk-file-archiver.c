@@ -455,6 +455,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     char* cmd;
     char* str;
     int i, n, j;
+    struct stat64 statbuf;
     const char* suffix[] = { ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz",
                                             ".txz", ".zip", ".rar", ".7z" };
 
@@ -564,6 +565,27 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // list contents
             cmd = g_strdup_printf( "%s %s | more -d", handlers[i].list_cmd, full_quote );
         }
+        else if ( !strcmp( type, "application/x-gzip" ) )
+        {
+            // extract .gz
+            char* base = g_build_filename( dest, vfs_file_info_get_name( file ),
+                                                                        NULL );
+            if ( g_str_has_suffix( base, ".gz" ) )
+                base[strlen(base)-3] = '\0';
+            char* test_path = g_strdup( base );
+            n = 1;
+            while ( lstat64( test_path, &statbuf ) == 0 )
+            {
+                g_free( test_path );
+                test_path = g_strdup_printf( "%s-copy%d", base, ++n );
+            }
+            g_free( dest_quote );
+            dest_quote = bash_quote( test_path );
+            g_free( test_path );
+            g_free( base );
+            cmd = g_strdup_printf( "%s -c %s > %s", handlers[i].extract_cmd,
+                                                    full_quote, dest_quote );
+        }
         else
         {
             // extract
@@ -590,7 +612,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 char* parent_path = g_build_filename( dest, parent_name, NULL );
                 char* parent_orig = g_strdup( parent_path );
                 n = 1;
-                while ( g_file_test( parent_path, G_FILE_TEST_EXISTS ) )
+                while ( lstat64( parent_path, &statbuf ) == 0 )
                 {
                     g_free( parent_path );
                     parent_path = g_strdup_printf( "%s-copy%d", parent_orig, ++n );
