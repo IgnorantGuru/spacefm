@@ -24,6 +24,7 @@
     fixes extract multiple zip,7z,rar files
     changed File Name Contains: to Filename: in File Search fixes #86
     corrected duplicated menu key shortcuts fixes #92
+    error on missing edit udevil.conf fixes #98
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

@@ -2005,7 +2005,12 @@ static void on_root_fstab( GtkMenuItem* item, GtkWidget* view )
 
 static void on_root_udevil( GtkMenuItem* item, GtkWidget* view )
 {
-    xset_edit( view, "/etc/udevil/udevil.conf", TRUE, FALSE );
+    if ( g_file_test( "/etc/udevilx", G_FILE_TEST_IS_DIR ) )
+        xset_edit( view, "/etc/udevil/udevil.conf", TRUE, FALSE );
+    else
+        xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Directory Missing"), NULL, 0,
+                _("The /etc/udevil directory was not found.  Is udevil installed?"),
+                                                                    NULL, NULL );
 }
 
 static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
