@@ -7610,10 +7610,10 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     gtk_widget_show( GTK_WIDGET( btn ) );
     GtkButton* ok = GTK_BUTTON( gtk_font_selection_dialog_get_ok_button( 
                                             GTK_FONT_SELECTION_DIALOG( dlg ) ) );
-    gtk_button_set_label( ok, "_Default" );
+    gtk_button_set_label( ok, _("_Default") );
     image = xset_get_image( "GTK_STOCK_YES", GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( ok, image );
-    gtk_button_set_label( btn, "_OK" );
+    gtk_button_set_label( btn, _("_OK") );
     image = xset_get_image( "GTK_STOCK_OK", GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( btn, image );
 
