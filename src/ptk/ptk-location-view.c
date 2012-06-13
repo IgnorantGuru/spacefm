@@ -2368,7 +2368,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
         info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; " );
 
-    flags = g_strdup_printf( "echo %s ; echo %s       ", _("DEVICE"), vol->device_file );
+    flags = g_strdup_printf( "echo %s ; echo %s       ", "DEVICE", vol->device_file );
     if ( vol->is_removable )
         { old_flags = flags; flags = g_strdup_printf( "%s removable", flags ); g_free( old_flags ); }
     else
@@ -2416,11 +2416,11 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "df" );
         if ( !path )
-            df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", _("USAGE") );
+            df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", "USAGE" );
         else
         {
             esc_path = bash_quote( vol->mount_point );
-            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, esc_path );
+            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", "USAGE", path, esc_path );
             g_free( path );
             g_free( esc_path );
         }
@@ -2430,10 +2430,10 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( vol->is_mountable )
         {
             vfs_file_size_to_string_format( size_str, vol->size, NULL );
-            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", _("USAGE"), vol->device_file, vol->fs_type ? vol->fs_type : "", size_str );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", "USAGE", vol->device_file, vol->fs_type ? vol->fs_type : "", size_str );
         }
         else
-            df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", _("USAGE"), vol->device_file );
+            df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", "USAGE", vol->device_file );
     }
 
     char* udisks_info = vfs_volume_device_info( vol->device_file );
@@ -2444,15 +2444,15 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "lsof" );
         if ( !path )
-            lsof = g_strdup_printf( "echo %s ; echo \"( %s lsof )\" ; echo ; ", _("PROCESSES"), _("please install") );
+            lsof = g_strdup_printf( "echo %s ; echo \"( %s lsof )\" ; echo ; ", "PROCESSES", "please install" );
         else
         {
             if ( !strcmp( vol->mount_point, "/" ) )
-                lsof = g_strdup_printf( "echo %s ; %s -w | grep /$ | head -n 500 ; echo ; ", _("PROCESSES"), path );
+                lsof = g_strdup_printf( "echo %s ; %s -w | grep /$ | head -n 500 ; echo ; ", "PROCESSES", path );
             else
             {
                 esc_path = bash_quote( vol->mount_point );
-                lsof = g_strdup_printf( "echo %s ; %s -w %s | head -n 500 ; echo ; ", _("PROCESSES"), path, esc_path );
+                lsof = g_strdup_printf( "echo %s ; %s -w %s | head -n 500 ; echo ; ", "PROCESSES", path, esc_path );
                 g_free( esc_path );
             }
             g_free( path );
