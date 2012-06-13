@@ -2350,23 +2350,26 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     //printf("dev=%s\nuuid=%s\nfstab=%s\n", vol->device_file, uuid, fstab );
     if ( uuid && fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '%s'; echo INFO ; echo 'UUID=%s' ; ",
-                                                                    fstab, uuid );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s'; echo %s ; echo 'UUID=%s' ; ",
+                                fstab, _("INFO"), uuid );
         g_free( uuid );
         g_free( fstab );
     }
     else if ( uuid && !fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; echo 'UUID=%s' ; ", uuid );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo ; echo %s ; echo 'UUID=%s' ; ",
+                                _("( not found )"), _("INFO"), uuid );
         g_free( uuid );
     }
     else if ( !uuid && fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo INFO ; ", fstab );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo %s ; ",
+                                fstab, _("INFO") );
         g_free( fstab );
     }
     else
-        info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; " );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo ; echo %s ; ",
+                                 _("( not found )"), _("INFO") );
 
     flags = g_strdup_printf( "echo %s ; echo %s       ", _("DEVICE"), vol->device_file );
     if ( vol->is_removable )
@@ -2416,11 +2419,13 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "df" );
         if ( !path )
-            df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", _("USAGE") );
+            df = g_strdup_printf( "echo %s ; echo \"%s\" ; echo ; ",
+                                  _("USAGE"), _("( please install df )") );
         else
         {
             esc_path = bash_quote( vol->mount_point );
-            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, esc_path );
+            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ",
+                                  _("USAGE"), path, esc_path );
             g_free( path );
             g_free( esc_path );
         }
@@ -2430,10 +2435,14 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( vol->is_mountable )
         {
             vfs_file_size_to_string_format( size_str, vol->size, NULL );
-            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", _("USAGE"), vol->device_file, vol->fs_type ? vol->fs_type : "", size_str );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  %s\" ; echo ; ",
+                                  _("USAGE"), vol->device_file,
+                                  vol->fs_type ? vol->fs_type : "",
+                                  size_str, _("( not mounted )") );
         }
         else
-            df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", _("USAGE"), vol->device_file );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s\" ; echo ; ",
+                                  _("USAGE"), vol->device_file, _("( no media )") );
     }
 
     char* udisks_info = vfs_volume_device_info( vol->device_file );
@@ -2444,7 +2453,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "lsof" );
         if ( !path )
-            lsof = g_strdup_printf( "echo %s ; echo \"( %s lsof )\" ; echo ; ", _("PROCESSES"), _("please install") );
+            lsof = g_strdup_printf( "echo %s ; echo \"%s\" ; echo ; ", _("PROCESSES"), _("( please install lsof )") );
         else
         {
             if ( !strcmp( vol->mount_point, "/" ) )
