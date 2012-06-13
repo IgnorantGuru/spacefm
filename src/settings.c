@@ -9263,7 +9263,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Task Manager Font") );
-    xset_set_set( set, "desc", "copying  File  1:15  65.2 M  30.2 M/s" );
+    xset_set_set( set, "desc", _("copying  File  1:15  65.2 M  30.2 M/s") );
 
     set = xset_set( "task_columns", "label", _("_Columns") );
     set->menu_style = XSET_MENU_SUBMENU;
