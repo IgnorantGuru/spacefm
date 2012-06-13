@@ -2373,38 +2373,38 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
     flags = g_strdup_printf( "echo %s ; echo %s       ", _("DEVICE"), vol->device_file );
     if ( vol->is_removable )
-        { old_flags = flags; flags = g_strdup_printf( "%s removable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("removable") ); g_free( old_flags ); }
     else
-        { old_flags = flags; flags = g_strdup_printf( "%s internal", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("internal") ); g_free( old_flags ); }
 
     if ( vol->requires_eject )
-        { old_flags = flags; flags = g_strdup_printf( "%s ejectable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("ejectable") ); g_free( old_flags ); }
     
     if ( vol->is_optical )
-        { old_flags = flags; flags = g_strdup_printf( "%s optical", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("optical") ); g_free( old_flags ); }
     if ( vol->is_table )
-        { old_flags = flags; flags = g_strdup_printf( "%s table", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("table") ); g_free( old_flags ); }
     if ( vol->is_floppy )
-        { old_flags = flags; flags = g_strdup_printf( "%s floppy", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("floppy") ); g_free( old_flags ); }
 
     if ( !vol->is_user_visible )
-        { old_flags = flags; flags = g_strdup_printf( "%s policy_hide", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("policy_hide") ); g_free( old_flags ); }
     if ( vol->nopolicy )
-        { old_flags = flags; flags = g_strdup_printf( "%s policy_noauto", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("policy_noauto") ); g_free( old_flags ); }
 
     if ( vol->is_mounted )
-        { old_flags = flags; flags = g_strdup_printf( "%s mounted", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("mounted") ); g_free( old_flags ); }
     else if ( vol->is_mountable && !vol->is_table )    
-        { old_flags = flags; flags = g_strdup_printf( "%s mountable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("mountable") ); g_free( old_flags ); }
     else
-        { old_flags = flags; flags = g_strdup_printf( "%s no_media", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("no_media") ); g_free( old_flags ); }
 
     if ( vol->is_blank )
-        { old_flags = flags; flags = g_strdup_printf( "%s blank", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("blank") ); g_free( old_flags ); }
     if ( vol->is_audiocd )
-        { old_flags = flags; flags = g_strdup_printf( "%s audiocd", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %S", flags, _("audiocd") ); g_free( old_flags ); }
     if ( vol->is_dvd )
-        { old_flags = flags; flags = g_strdup_printf( "%s dvd", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("dvd") ); g_free( old_flags ); }
                 
     if ( vol->is_mounted )
     {
