@@ -2975,6 +2975,15 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
         g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
 }
 
+void main_window_open_path_in_current_tab( FMMainWindow* main_window, const char* path )
+{
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
+    if ( !file_browser )
+        return;
+    ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
+}
+
 void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                 const char* path, PtkOpenAction action,
                                 FMMainWindow* main_window )

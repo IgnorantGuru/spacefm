@@ -1027,7 +1027,7 @@ SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specificatio
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
-<p>MIME knows what applications are installed on your system by examining <a href="http://freedesktop.org/wiki/Specifications/desktop-entry-spec">.desktop files</a>.  When an application is installed, it will usually install one or more .desktop files for itself to /usr/share/applications or /usr/local/share/applications.  These .desktop files determine the display name of the Application (which may differ from the executable's name), translated display names, the command used to execute the application, an icon for the application, what MIME file types the application can open, and other specifics.
+<p>MIME knows what applications are installed on your system by examining <a href="http://freedesktop.org/wiki/Specifications/desktop-entry-spec">.desktop files</a>.  When an application is installed, it will usually install one or more .desktop files for itself to /usr/share/applications or /usr/local/share/applications.  These .desktop files determine the display name of the application (which may differ from the executable's name), translated display names, the command used to execute the application, an icon for the application, what MIME file types the application can open, and other specifics.
 
 <p>If you would like to change anything in an application's .desktop file, the correct way to do so is to copy the desktop file to ~/.local/share/applications in your home folder, and make changes in the copy.  (Changes made directly in /usr/share/applications may be lost when the software is upgraded.)  You can also add your own custom .desktop files to run programs or scripts.  When MIME looks for a desktop file, first it looks in ~/.local/share/applications, then in /usr/local/share/applications, and then in /usr/share/applications, using the first copy it finds.  Thus copies in your home folder always take precedence, and will not be modified when software is upgraded.
 
@@ -1085,7 +1085,7 @@ The next item on the MIME menu will be the name of an xml file which can be used
 <p>You can also use this menu item simply to see the MIME type of the selected file.  For example, if the name of this menu item is "application-zip.xml", then you know the MIME type is "application/zip".
 
 <!-- # mime/packages/ #mimedir -->
-Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see mime-type.xml above).  After adding, editing, or removing files from this folder, you may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect. 
+Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect. 
 
 <!-- # usr/ #usr -->
 The usr/ submenu gives you access to files and folders in /usr/share/applications/ and /usr/share/mime/packages/ (or in some cases, /usr/local/share/...).

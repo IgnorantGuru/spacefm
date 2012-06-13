@@ -1754,7 +1754,7 @@ SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specificatio
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
-<p>MIME knows what applications are installed on your system by examining <a href="http://freedesktop.org/wiki/Specifications/desktop-entry-spec">.desktop files</a>.  When an application is installed, it will usually install one or more .desktop files for itself to /usr/share/applications or /usr/local/share/applications.  These .desktop files determine the display name of the Application (which may differ from the executable's name), translated display names, the command used to execute the application, an icon for the application, what MIME file types the application can open, and other specifics.
+<p>MIME knows what applications are installed on your system by examining <a href="http://freedesktop.org/wiki/Specifications/desktop-entry-spec">.desktop files</a>.  When an application is installed, it will usually install one or more .desktop files for itself to /usr/share/applications or /usr/local/share/applications.  These .desktop files determine the display name of the application (which may differ from the executable's name), translated display names, the command used to execute the application, an icon for the application, what MIME file types the application can open, and other specifics.
 
 <p>If you would like to change anything in an application's .desktop file, the correct way to do so is to copy the desktop file to ~/.local/share/applications in your home folder, and make changes in the copy.  (Changes made directly in /usr/share/applications may be lost when the software is upgraded.)  You can also add your own custom .desktop files to run programs or scripts.  When MIME looks for a desktop file, first it looks in ~/.local/share/applications, then in /usr/local/share/applications, and then in /usr/share/applications, using the first copy it finds.  Thus copies in your home folder always take precedence, and will not be modified when software is upgraded.
 
@@ -3059,7 +3059,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-06-02&nbsp;&nbsp;(SpaceFM version 0.7.7+)
+<p>Updated 2012-06-13&nbsp;&nbsp;(SpaceFM version 0.7.7+)
 <br><br>
 </center>
 </td></tr></table>

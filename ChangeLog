@@ -14,7 +14,8 @@
     support xfce terminal
     improve new file/folder/link dialog
     change deprecated gdk_pixbuf_ref to g_object_ref
-    don't remove .gz file when extracting closes #90    
+    don't remove .gz file when extracting closes #90
+    CLI added -r, --reuse-tab  Open folder in current tab of last used window
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

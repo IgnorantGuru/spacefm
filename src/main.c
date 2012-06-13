@@ -57,6 +57,7 @@ char* run_cmd = NULL;  //MOD
 typedef enum{
     CMD_OPEN = 1,
     CMD_OPEN_TAB,
+    CMD_REUSE_TAB,
     CMD_DAEMON_MODE,
     CMD_PREF,
     CMD_WALLPAPER,
@@ -86,6 +87,7 @@ static gboolean no_desktop = FALSE;
 static gboolean old_show_desktop = FALSE;
 
 static gboolean new_tab = TRUE;
+static gboolean reuse_tab = FALSE;  //sfm
 static gboolean new_window = FALSE;
 static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
@@ -109,7 +111,8 @@ static int n_pcmanfm_ref = 0;
 
 static GOptionEntry opt_entries[] =
 {
-    { "new-tab", 't', 0, G_OPTION_ARG_NONE, &new_tab, N_("Open folders in last used window (default)"), NULL },
+    { "new-tab", 't', 0, G_OPTION_ARG_NONE, &new_tab, N_("Open folders in new tab of last window (default)"), NULL },
+    { "reuse-tab", 'r', 0, G_OPTION_ARG_NONE, &reuse_tab, N_("Open folder in current tab of last used window"), NULL },
     { "new-window", 'w', 0, G_OPTION_ARG_NONE, &new_window, N_("Open folders in new window"), NULL },
     { "panel", 'p', 0, G_OPTION_ARG_INT, &panel, N_("Open folders in panel 'P' (1-4)"), "P" },
     { "desktop", '\0', 0, G_OPTION_ARG_NONE, &desktop, N_("Launch desktop manager"), NULL },
@@ -183,6 +186,10 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 
             switch( args->str[0] )
             {
+            case CMD_REUSE_TAB:
+                new_tab = FALSE;
+                reuse_tab = TRUE;
+                break;
             case CMD_PANEL1:
                 panel = 1;
                 break;
@@ -312,6 +319,8 @@ gboolean single_instance_check()
             else
                 cmd = CMD_OPEN;
         }
+        else if ( reuse_tab )
+            cmd = CMD_REUSE_TAB;
         else if( show_pref > 0 )
             cmd = CMD_PREF;
         else if ( desktop_pref )  //MOD
@@ -623,7 +632,7 @@ gboolean handle_parsed_commandline_args()
     }
 
     /* get the last active window, if available */
-    if( new_tab )
+    if( new_tab || reuse_tab )
     {
         main_window = fm_main_window_get_last_active();
     }
@@ -768,7 +777,16 @@ gboolean handle_parsed_commandline_args()
                             main_window->notebook = main_window->panel[panel-1];
                         }
                         if ( !tab_added )
-                            fm_main_window_add_new_tab( main_window, real_path );
+                        {
+                            if ( reuse_tab )
+                            {
+                                main_window_open_path_in_current_tab( main_window,
+                                                                        real_path );
+                                reuse_tab = FALSE;
+                            }
+                            else
+                                fm_main_window_add_new_tab( main_window, real_path );
+                        }
                     }
                     gtk_window_present( GTK_WINDOW( main_window ) );
                     ret = TRUE;

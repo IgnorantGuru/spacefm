@@ -1597,7 +1597,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
             if ( task->exec_script )
                 unlink( task->exec_script );
         }
-        vfs_file_task_exec_error( task, errno, _("Error executing command") );
+        vfs_file_task_exec_error( task, errno, _("Error executing command - see stdout (run spacefm in a terminal) for debug info") );
         task->exec_sync = FALSE;  // triggers FINISH
         return;
     }
