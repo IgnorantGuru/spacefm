@@ -689,7 +689,7 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     enable_toolbar( file_browser );
 }
 
-void select_file( PtkFileBrowser* file_browser, char* path )
+void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
 {
     GtkTreeIter it;
     GtkTreePath* tree_path;
@@ -941,7 +941,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
                 ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
             }
             else
-                select_file( file_browser, final_path );
+                ptk_file_browser_select_file( file_browser, final_path );
             g_free( dir_path );
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
@@ -1849,7 +1849,7 @@ void ptk_file_browser_select_last( PtkFileBrowser* file_browser ) //MOD added
     // select one file?
     if ( file_browser->select_path )
     {
-        select_file( file_browser, file_browser->select_path );
+        ptk_file_browser_select_file( file_browser, file_browser->select_path );
         g_free( file_browser->select_path );
         file_browser->select_path = NULL;
         return;
@@ -4320,7 +4320,7 @@ void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
     for ( l = files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
-        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE, 0 ) )
+        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE, 0, NULL ) )
             break;
     }
 }
@@ -4682,7 +4682,8 @@ void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser 
         file = vfs_file_info_new();
         vfs_file_info_get( file, file_path, NULL );
         file_dir = g_path_get_dirname( file_path );
-        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut, 0 ) )
+        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut,
+                                                                    0, NULL ) )
         {
             vfs_file_info_unref( file );
             g_free( file_dir );

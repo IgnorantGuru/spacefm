@@ -1675,7 +1675,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
         }
         else
         {
-            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE, 0 ) )
+            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE, 0, NULL ) )
                 break;
         }
     }

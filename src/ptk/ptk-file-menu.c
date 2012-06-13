@@ -1889,7 +1889,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         g_free( str );
         str = g_strdup_printf( "%s._xml", type );
         newitem = app_menu_additem( submenu, str,
-                                    GTK_STOCK_OPEN, APP_JOB_VIEW_TYPE, app_item,
+                                    GTK_STOCK_FILE, APP_JOB_VIEW_TYPE, app_item,
                                                                         data );
         g_free( str );
         gtk_widget_set_sensitive( GTK_WIDGET( newitem ),
@@ -2296,11 +2296,55 @@ void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
 static void
 create_new_file( PtkFileMenu* data, int create_new )
 {
+    char* cwd;
+    
     if ( data->cwd )
     {
-        ptk_rename_file( data->desktop, data->browser, data->cwd,
+        char* path = NULL;
+        int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
                         data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
-                        NULL, FALSE, create_new );
+                        NULL, FALSE, create_new, &path );
+/*  this doesn't work due to cache delay and/or exec task?   use complete_notify?
+        if ( result && path && data->browser )
+        {
+            // select file
+            cwd = g_path_get_dirname( path );
+            if ( !g_strcmp0( cwd, data->cwd ) )
+            {
+                VFSFileInfo* file = vfs_file_info_new();
+                vfs_file_info_get( file, path, NULL );
+                vfs_dir_emit_file_created( data->browser->dir,
+                                        vfs_file_info_get_name( file ), file );
+                vfs_file_info_unref( file );
+                while (gtk_events_pending ())
+                    gtk_main_iteration ();
+                ptk_file_browser_select_file( data->browser, path );
+            }
+            g_free( cwd );
+        }
+*/
+        if ( result == 2 && path && data->browser )
+        {
+            if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
+            {
+                ptk_file_browser_chdir( data->browser, path,
+                                                        PTK_FB_CHDIR_ADD_HISTORY );
+            }
+            else if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
+            {
+                VFSFileInfo* file = vfs_file_info_new();
+                vfs_file_info_get( file, path, NULL );
+                GList* sel_files = NULL;
+                sel_files = g_list_prepend( sel_files, file );
+                cwd = g_path_get_dirname( path );
+                ptk_open_files_with_app( cwd, sel_files,
+                                         NULL, data->browser, FALSE, TRUE );
+                vfs_file_info_unref( file );
+                g_list_free( sel_files );
+                g_free( cwd );
+            }
+            g_free( path );
+        }
 /*
         char* cwd;
         GtkWidget* parent;

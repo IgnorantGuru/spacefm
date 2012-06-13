@@ -110,6 +110,7 @@ typedef struct
     GtkWidget* revert;
     GtkWidget* cancel;
     GtkWidget* next;
+    GtkWidget* open;
     
     GtkWidget* last_widget;
     
@@ -555,6 +556,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
 //printf("path=%s   full=%s\n", path, full_path );
 
     // tests
+    struct stat64 statbuf;
     gboolean full_path_exists = FALSE;
     gboolean full_path_exists_dir = FALSE;
     gboolean full_path_same = FALSE;
@@ -568,13 +570,13 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     }
     else
     {
-        if ( g_file_test( full_path, G_FILE_TEST_EXISTS ) )
+        if ( lstat64( full_path, &statbuf ) == 0 )
         {
             full_path_exists = TRUE;
             if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
                 full_path_exists_dir = TRUE;
         }
-        else if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
+        else if ( lstat64( path, &statbuf ) == 0 )
         {
             if ( !g_file_test( path, G_FILE_TEST_IS_DIR ) )
                 path_exists_file = TRUE;
@@ -722,6 +724,9 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' ) );
         g_free( path );
     }
+    
+    if ( mset->open )
+        gtk_widget_set_sensitive( mset->open, gtk_widget_get_sensitive( mset->next ) );
     
     g_signal_handlers_unblock_matched( mset->entry_ext, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                      on_move_change, NULL );
@@ -988,7 +993,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     // action create folder does not work properly so not used:
     //  it creates a folder by default with no way to stop it
     //  it gives 'folder already exists' error popup
-    GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Rename / Move"),
+    GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Select File Path"),
                                    GTK_WINDOW( mset->parent ), 
                                    //mset->is_dir ? GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER :
                                    GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -1054,7 +1059,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
 
 void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Alt-Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
+    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
 }
 
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
@@ -1660,41 +1665,31 @@ gboolean on_label_button_press( GtkWidget *widget,
     return TRUE;
 }
 
-void on_template_changed( GtkWidget* widget, MoveSet* mset )
-{
-    char* str, *str2;
-    if ( !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
-        return;
-    char* text = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                        GTK_BIN( mset->combo_template ) ) ) ) );
-    g_strstrip( text );
-    str = text;
-    while ( str2 = strchr( str, '/' ) )
-        str = str2 + 1;
-    if ( str[0] == '.' )
-        str++;
-    if ( str2 = strchr( str, '.' ) )
-        str = str2 + 1;
-    else
-        str = NULL;
-    
-    gtk_entry_set_text( mset->entry_ext, str ? str : "" );
-    g_free( text );
-}
-
-char* get_unique_name( const char* dir, gboolean is_dir )
+char* get_unique_name( const char* dir, const char* ext )
 {
     char* name, *path;
     
-    char* base = is_dir ? "new folder" : "new file";
-    path = g_build_filename( dir, base, NULL );
+    char* base = _("new");
+    if ( ext && ext[0] != '\0' )
+    {
+        name = g_strdup_printf( "%s.%s", base, ext );
+        path = g_build_filename( dir, name, NULL );
+        g_free( name );
+    }
+    else
+        path = g_build_filename( dir, base, NULL );
+        
     int n = 2;
-    while ( g_file_test( path, G_FILE_TEST_EXISTS ) )
+    struct stat64 statbuf;
+    while ( lstat64( path, &statbuf ) == 0 ) // g_file_test doesn't see broken links
     {
         g_free( path );
         if ( n == 1000 )
             return g_strdup( base );
-        name = g_strdup_printf( "%s%d", base, n++ );
+        if ( ext && ext[0] != '\0' )
+            name = g_strdup_printf( "%s%d.%s", base, n++, ext );
+        else
+            name = g_strdup_printf( "%s%d", base, n++ );
         path = g_build_filename( dir, name, NULL );
         g_free( name );
     }
@@ -1793,10 +1788,52 @@ GList* get_templates( const char* templates_dir, const char* subdir,
     return templates;
 }
 
-gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+void on_template_changed( GtkWidget* widget, MoveSet* mset )
+{
+    char* str, *str2;
+    if ( !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
+        return;
+    char* text = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                        GTK_BIN( mset->combo_template ) ) ) ) );
+    g_strstrip( text );
+    str = text;
+    while ( str2 = strchr( str, '/' ) )
+        str = str2 + 1;
+    if ( str[0] == '.' )
+        str++;
+    if ( str2 = strchr( str, '.' ) )
+        str = str2 + 1;
+    else
+        str = NULL;
+    
+    gtk_entry_set_text( mset->entry_ext, str ? str : "" );
+
+    // need new name due to extension added?
+    GtkTextIter iter, siter;
+    gtk_text_buffer_get_start_iter( mset->buf_full_path, &siter );
+    gtk_text_buffer_get_end_iter( mset->buf_full_path, &iter );
+    char* full_path = gtk_text_buffer_get_text( mset->buf_full_path, &siter, &iter, FALSE );
+    struct stat64 statbuf;
+    if ( lstat64( full_path, &statbuf ) == 0 ) // g_file_test doesn't see broken links
+    {
+        char* dir = g_path_get_dirname( full_path );
+        g_free( full_path );
+        full_path = get_unique_name( dir, str );
+        if ( full_path )
+        {
+            gtk_text_buffer_set_text( mset->buf_full_path, full_path, -1 );
+        }
+        g_free( dir );
+    }
+    g_free( full_path );
+
+    g_free( text );
+}
+
+int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
-                                        int create_new )
+                                        int create_new, char** file_new )
 {   
     char* full_name;
     char* full_path;
@@ -1809,20 +1846,21 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     char* str;
     GtkTextIter iter, siter;
     GtkWidget* task_view = NULL;
-    gboolean ret = TRUE;
+    int ret = 1;
     gboolean target_missing = FALSE;
     GList* templates;
     FILE* touchfile;
-    
+    struct stat64 statbuf;
+
     if ( !file_dir )
-        return FALSE;
+        return 0;
     MoveSet* mset = g_slice_new0( MoveSet );
     full_name = NULL;
 
     if ( !create_new )
     {
         if ( !file )
-            return FALSE;
+            return 0;
         // special processing for files with inconsistent real name and display name
         if( G_UNLIKELY( vfs_file_info_is_desktop_entry(file) ) )
             full_name = g_filename_display_name( file->name );
@@ -1845,7 +1883,7 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     }
     else
     {
-        mset->full_path = get_unique_name( file_dir, ( create_new == 2 ) );
+        mset->full_path = get_unique_name( file_dir, NULL );
         mset->new_path = g_strdup( mset->full_path );
         mset->is_dir = FALSE;
         mset->is_link = FALSE;
@@ -1938,6 +1976,15 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                         GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_label( GTK_BUTTON( mset->next ), _("_Rename") );
 
+    if ( create_new )
+    {
+        mset->open = gtk_button_new_with_mnemonic( _("& _Open") );
+        gtk_dialog_add_action_widget( GTK_DIALOG( mset->dlg ), mset->open, GTK_RESPONSE_APPLY);
+        gtk_button_set_focus_on_click( GTK_BUTTON( mset->open ), FALSE );
+    }
+    else
+        mset->open = NULL;
+
     // Window
     int width = xset_get_int( "move_dlg_font", "x" );
     int height = xset_get_int( "move_dlg_font", "y" );
@@ -2028,8 +2075,8 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                               G_CALLBACK( on_label_button_press ), mset );
         g_signal_connect( G_OBJECT( mset->label_target ), "focus",
                               G_CALLBACK( on_label_focus ), mset );
-        //g_signal_connect( G_OBJECT( mset->entry_target ), "key-press-event",
-        //                      G_CALLBACK( on_move_entry_keypress ), mset );
+        g_signal_connect( G_OBJECT( mset->entry_target ), "key-press-event",
+                              G_CALLBACK( on_move_entry_keypress ), mset );
         //g_signal_connect_after( G_OBJECT( mset->entry_target ), "focus",
         //                      G_CALLBACK( on_focus ), mset );
         //gtk_widget_set_sensitive( GTK_WIDGET( mset->entry_target ), !mset->is_dir );
@@ -2097,6 +2144,8 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         gtk_combo_box_set_active( GTK_COMBO_BOX( mset->combo_template ), 0 );
         g_signal_connect( G_OBJECT( mset->combo_template ), "changed",
                                     G_CALLBACK( on_template_changed ), mset );
+        g_signal_connect( G_OBJECT( gtk_bin_get_child( GTK_BIN( mset->combo_template ) ) ),
+                        "key-press-event", G_CALLBACK( on_move_entry_keypress ), mset );
         //gtk_label_set_mnemonic_widget( mset->label_template, GTK_WIDGET( mset->combo_template ) );
 
         // template_dir combo
@@ -2124,6 +2173,8 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         //gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( mset->combo_template_dir ),
         //                                                        _("Add...") );
         gtk_combo_box_set_active( GTK_COMBO_BOX( mset->combo_template_dir ), 0 );
+        g_signal_connect( G_OBJECT( gtk_bin_get_child( GTK_BIN( mset->combo_template_dir ) ) ),
+                        "key-press-event", G_CALLBACK( on_move_entry_keypress ), mset );
         //g_signal_connect( G_OBJECT( mset->combo_template_dir ), "changed",
         //                            G_CALLBACK( on_template_changed ), mset );
         //gtk_label_set_mnemonic_widget( mset->label_template, GTK_WIDGET( 
@@ -2277,7 +2328,7 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
 
     mset->opt_new_file = gtk_radio_button_new_with_mnemonic( NULL, _("Fil_e") );
     mset->opt_new_folder = gtk_radio_button_new_with_mnemonic_from_widget( 
-                        GTK_RADIO_BUTTON( mset->opt_new_file ), _("F_older") );
+                        GTK_RADIO_BUTTON( mset->opt_new_file ), _("Fol_der") );
     mset->opt_new_link = gtk_radio_button_new_with_mnemonic_from_widget( 
                         GTK_RADIO_BUTTON( mset->opt_new_file ), _("_Link") );
 
@@ -2490,7 +2541,7 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     int response;
     while ( response = gtk_dialog_run( GTK_DIALOG( mset->dlg ) ) )
     {
-        if ( response == GTK_RESPONSE_OK )
+        if ( response == GTK_RESPONSE_OK || response == GTK_RESPONSE_APPLY )
         {
             gtk_text_buffer_get_start_iter( mset->buf_full_path, &siter );
             gtk_text_buffer_get_end_iter( mset->buf_full_path, &iter );
@@ -2517,10 +2568,23 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             gboolean overwrite = FALSE;
             char* msg;
             
+            if ( file_new )
+                *file_new = g_strdup( full_path );
+
+            if ( response == GTK_RESPONSE_APPLY )
+                ret = 2;
+            
             if ( !create_new && ( mset->full_path_same ||
                                     !strcmp( full_path, mset->full_path ) ) )
-                break;  // not changed, proceed to next file
-
+            {
+                // not changed, proceed to next file
+                g_free( full_path );
+                g_free( full_name );
+                g_free( path );
+                g_free( old_path );
+                break;
+            }
+            
             // determine job
             gboolean move = gtk_toggle_button_get_active( 
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) );
@@ -2575,7 +2639,7 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     goto _continue_free;
                 }
             }
-            else if ( g_file_test( full_path, G_FILE_TEST_EXISTS ) )
+            else if ( lstat64( full_path, &statbuf ) == 0 )
             {
                 // overwrite
                 if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
@@ -2644,6 +2708,15 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                         if ( tdir )
                         {
                             from_path = g_build_filename( tdir, str, NULL );
+                            if ( !g_file_test( from_path, G_FILE_TEST_IS_REGULAR ) )
+                            {
+                                ptk_show_error( GTK_WINDOW( mset->dlg ), _("Template Missing"),
+                                                    _("The specified template does not exist") );
+                                g_free( from_path );
+                                g_free( str );
+                                g_free( tdir );
+                                goto _continue_free;
+                            }
                             g_free( str );
                             g_free( tdir );
                             str = from_path;
@@ -2705,6 +2778,15 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                         if ( tdir )
                         {
                             from_path = g_build_filename( tdir, str, NULL );
+                            if ( !g_file_test( from_path, G_FILE_TEST_IS_DIR ) )
+                            {
+                                ptk_show_error( GTK_WINDOW( mset->dlg ), _("Template Missing"),
+                                                    _("The specified template does not exist") );
+                                g_free( from_path );
+                                g_free( str );
+                                g_free( tdir );
+                                goto _continue_free;
+                            }
                             g_free( str );
                             g_free( tdir );
                             str = from_path;
@@ -2873,11 +2955,13 @@ gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     goto _continue_free;
                 }
             }
+            g_free( full_path );
             g_free( full_name );
             g_free( path );
             g_free( old_path );
             break;
 _continue_free:
+            g_free( full_path );
             g_free( full_name );
             g_free( path );
             g_free( old_path );
@@ -2885,12 +2969,12 @@ _continue_free:
         else if ( response == GTK_RESPONSE_CANCEL
                                     || response == GTK_RESPONSE_DELETE_EVENT )
         {
-            ret = FALSE;
+            ret = 0;
             break;
         }
     }
     if ( response == 0 )
-        ret = FALSE;
+        ret = 0;
         
     // save size
     width = GTK_WIDGET( mset->dlg ) ->allocation.width;
