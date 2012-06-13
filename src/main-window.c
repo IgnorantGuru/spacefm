@@ -3478,15 +3478,15 @@ const char* task_titles[] =
         N_( "Status" ), N_( "#" ), N_( "Path" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
         N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "Estimate" ),
-        N_( "Speed" ), N_( "Remain" ), N_( "StartTime" )
+        N_( "Speed" ), N_( "Remain" ), "StartTime"
     };
 const char* task_names[] =
     {
-        N_( "task_col_status" ), N_( "task_col_count" ),
-        N_( "task_col_path" ), N_( "task_col_file" ), N_( "task_col_to" ),
-        N_( "task_col_progress" ), N_( "task_col_total" ), N_( "task_col_started" ),
-        N_( "task_col_elapsed" ), N_( "task_col_curspeed" ), N_( "task_col_curest" ),
-        N_( "task_col_avgspeed" ), N_( "task_col_avgest" )
+        "task_col_status", "task_col_count",
+        "task_col_path", "task_col_file", "task_col_to",
+        "task_col_progress", "task_col_total", "task_col_started",
+        "task_col_elapsed", "task_col_curspeed", "task_col_curest",
+        "task_col_avgspeed", "task_col_avgest"
     };
 
 void on_reorder( GtkWidget* item, GtkWidget* parent )

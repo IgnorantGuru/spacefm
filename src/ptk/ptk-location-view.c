@@ -1762,7 +1762,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     if ( xset_text_dialog( view, _("Format"),
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
-                                        TRUE, "DATA LOSS WARNING", msg, set->s,
+                                        TRUE, _("DATA LOSS WARNING"), msg, set->s,
                                         &set->s, set->title, TRUE, set->line )
                                                                     && set->s )
     {

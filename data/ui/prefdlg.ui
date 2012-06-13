@@ -367,17 +367,6 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkCheckButton" id="no_trash_can">
-                                <property name="can_focus">True</property>
-                                <property name="label" translatable="yes">Disable "Trash Can" and delete files from disk directly</property>
-                                <property name="draw_indicator">True</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkHBox" id="hbox2">
                                 <property name="visible">False</property>
                                 <property name="border_width">4</property>
@@ -457,7 +446,7 @@
                                   <object class="GtkLabel" id="thumb_label2">
                                     <property name="visible">True</property>
                                     <property name="xpad">2</property>
-                                    <property name="label">KB</property>
+                                    <property name="label" translatable="yes">KB</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -532,18 +521,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="hide_folder_content_border">
-                    <property name="visible">False</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Hide folder content border</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="confirm_delete">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -553,7 +530,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">3</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -566,20 +543,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="use_si_prefix">
-                    <property name="visible">False</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Show SI decimal file sizes</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">9</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -587,6 +551,19 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="label" translatable="yes">Rubberband Select</property>
+                    <property name="xalign">0</property>
+                    <property name="draw_indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCheckButton" id="root_bar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Show root user indicator color</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                   </object>
@@ -629,20 +606,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">8</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkCheckButton" id="root_bar">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Show root user indicator color</property>
-                    <property name="xalign">0</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>

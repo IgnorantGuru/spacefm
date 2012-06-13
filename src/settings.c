@@ -7610,10 +7610,10 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     gtk_widget_show( GTK_WIDGET( btn ) );
     GtkButton* ok = GTK_BUTTON( gtk_font_selection_dialog_get_ok_button( 
                                             GTK_FONT_SELECTION_DIALOG( dlg ) ) );
-    gtk_button_set_label( ok, "_Default" );
+    gtk_button_set_label( ok, _("_Default") );
     image = xset_get_image( "GTK_STOCK_YES", GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( ok, image );
-    gtk_button_set_label( btn, "_OK" );
+    gtk_button_set_label( btn, _("_OK") );
     image = xset_get_image( "GTK_STOCK_OK", GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( btn, image );
 
@@ -8723,7 +8723,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\nudevil:\t/usr/bin/udevil --verbose mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\nudevil:\t/usr/bin/udevil --verbose mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
@@ -9263,7 +9263,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Task Manager Font") );
-    xset_set_set( set, "desc", "copying  File  1:15  65.2 M  30.2 M/s" );
+    xset_set_set( set, "desc", _("copying  File  1:15  65.2 M  30.2 M/s") );
 
     set = xset_set( "task_columns", "label", _("_Columns") );
     set->menu_style = XSET_MENU_SUBMENU;

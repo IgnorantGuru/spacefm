@@ -157,19 +157,27 @@ gboolean on_update_labels( FilePropertiesDialogData* data )
     gdk_threads_enter();
 
     vfs_file_size_to_string( buf2, data->total_size );
-    sprintf( buf, _("%s  ( %llu bytes )"), buf2, ( guint64 ) data->total_size );
+    sprintf( buf, _("%s ( %llu bytes )"), buf2, ( guint64 ) data->total_size );
     gtk_label_set_text( data->total_size_label, buf );
 
     vfs_file_size_to_string( buf2, data->size_on_disk );
-    sprintf( buf, _("%s  ( %llu bytes )"), buf2, ( guint64 ) data->size_on_disk );
+    sprintf( buf, _("%s ( %llu bytes )"), buf2, ( guint64 ) data->size_on_disk );
     gtk_label_set_text( data->size_on_disk_label, buf );
 
     char* count;
+    char* count_dir;
     if ( data->total_count_dir )
-        count = g_strdup_printf( _("%d file%s,  %d folder%s"), data->total_count,
-                                    data->total_count > 1 ? "s" : "",
-                                    data->total_count_dir,
-                                    data->total_count_dir > 1 ? "s" : "" );
+    {
+        count_dir = g_strdup_printf( ngettext( "%d folder",
+                                               "%d folders",
+                                               data->total_count_dir ),
+                                     data->total_count_dir );
+        count = g_strdup_printf( ngettext( "%d file, %s",
+                                           "%d files, %s",
+                                           data->total_count ),
+                                 data->total_count, count_dir );
+        g_free( count_dir );
+    }
     else
         count = g_strdup_printf( _("%d files"), data->total_count );
     gtk_label_set_text( data->count_label, count );
@@ -564,7 +572,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                      ( guint64 ) vfs_file_info_get_blocks( file ) * 512 );
             gtk_label_set_text( data->size_on_disk_label, buf );
             
-            gtk_label_set_text( data->count_label, "1 file" );
+            gtk_label_set_text( data->count_label, _("1 file") );
         }
         gtk_label_set_text( GTK_LABEL( mtime ),
                             vfs_file_info_get_disp_mtime( file ) );
