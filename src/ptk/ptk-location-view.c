@@ -1762,7 +1762,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     if ( xset_text_dialog( view, _("Format"),
                                         xset_get_image( "GTK_STOCK_DIALOG_WARNING",
                                         GTK_ICON_SIZE_DIALOG ),
-                                        TRUE, "DATA LOSS WARNING", msg, set->s,
+                                        TRUE, _("DATA LOSS WARNING"), msg, set->s,
                                         &set->s, set->title, TRUE, set->line )
                                                                     && set->s )
     {
@@ -2350,58 +2350,61 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     //printf("dev=%s\nuuid=%s\nfstab=%s\n", vol->device_file, uuid, fstab );
     if ( uuid && fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '%s'; echo INFO ; echo 'UUID=%s' ; ",
-                                                                    fstab, uuid );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s'; echo %s ; echo 'UUID=%s' ; ",
+                                fstab, _("INFO"), uuid );
         g_free( uuid );
         g_free( fstab );
     }
     else if ( uuid && !fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; echo 'UUID=%s' ; ", uuid );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo ; echo %s ; echo 'UUID=%s' ; ",
+                                _("( not found )"), _("INFO"), uuid );
         g_free( uuid );
     }
     else if ( !uuid && fstab )
     {
-        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo INFO ; ", fstab );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo %s ; ",
+                                fstab, _("INFO") );
         g_free( fstab );
     }
     else
-        info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; " );
+        info = g_strdup_printf( "echo FSTAB ; echo '%s' ; echo ; echo %s ; ",
+                                 _("( not found )"), _("INFO") );
 
     flags = g_strdup_printf( "echo %s ; echo %s       ", _("DEVICE"), vol->device_file );
     if ( vol->is_removable )
-        { old_flags = flags; flags = g_strdup_printf( "%s removable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("removable") ); g_free( old_flags ); }
     else
-        { old_flags = flags; flags = g_strdup_printf( "%s internal", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("internal") ); g_free( old_flags ); }
 
     if ( vol->requires_eject )
-        { old_flags = flags; flags = g_strdup_printf( "%s ejectable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("ejectable") ); g_free( old_flags ); }
     
     if ( vol->is_optical )
-        { old_flags = flags; flags = g_strdup_printf( "%s optical", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("optical") ); g_free( old_flags ); }
     if ( vol->is_table )
-        { old_flags = flags; flags = g_strdup_printf( "%s table", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("table") ); g_free( old_flags ); }
     if ( vol->is_floppy )
-        { old_flags = flags; flags = g_strdup_printf( "%s floppy", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("floppy") ); g_free( old_flags ); }
 
     if ( !vol->is_user_visible )
-        { old_flags = flags; flags = g_strdup_printf( "%s policy_hide", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("policy_hide") ); g_free( old_flags ); }
     if ( vol->nopolicy )
-        { old_flags = flags; flags = g_strdup_printf( "%s policy_noauto", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("policy_noauto") ); g_free( old_flags ); }
 
     if ( vol->is_mounted )
-        { old_flags = flags; flags = g_strdup_printf( "%s mounted", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("mounted") ); g_free( old_flags ); }
     else if ( vol->is_mountable && !vol->is_table )    
-        { old_flags = flags; flags = g_strdup_printf( "%s mountable", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("mountable") ); g_free( old_flags ); }
     else
-        { old_flags = flags; flags = g_strdup_printf( "%s no_media", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("no_media") ); g_free( old_flags ); }
 
     if ( vol->is_blank )
-        { old_flags = flags; flags = g_strdup_printf( "%s blank", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("blank") ); g_free( old_flags ); }
     if ( vol->is_audiocd )
-        { old_flags = flags; flags = g_strdup_printf( "%s audiocd", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %S", flags, _("audiocd") ); g_free( old_flags ); }
     if ( vol->is_dvd )
-        { old_flags = flags; flags = g_strdup_printf( "%s dvd", flags ); g_free( old_flags ); }
+        { old_flags = flags; flags = g_strdup_printf( "%s %s", flags, _("dvd") ); g_free( old_flags ); }
                 
     if ( vol->is_mounted )
     {
@@ -2416,11 +2419,13 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "df" );
         if ( !path )
-            df = g_strdup_printf( "echo %s ; echo \"( please install df )\" ; echo ; ", _("USAGE") );
+            df = g_strdup_printf( "echo %s ; echo \"%s\" ; echo ; ",
+                                  _("USAGE"), _("( please install df )") );
         else
         {
             esc_path = bash_quote( vol->mount_point );
-            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ", _("USAGE"), path, esc_path );
+            df = g_strdup_printf( "echo %s ; %s -hT %s ; echo ; ",
+                                  _("USAGE"), path, esc_path );
             g_free( path );
             g_free( esc_path );
         }
@@ -2430,10 +2435,14 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( vol->is_mountable )
         {
             vfs_file_size_to_string_format( size_str, vol->size, NULL );
-            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  ( not mounted )\" ; echo ; ", _("USAGE"), vol->device_file, vol->fs_type ? vol->fs_type : "", size_str );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s  %s  %s\" ; echo ; ",
+                                  _("USAGE"), vol->device_file,
+                                  vol->fs_type ? vol->fs_type : "",
+                                  size_str, _("( not mounted )") );
         }
         else
-            df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", _("USAGE"), vol->device_file );
+            df = g_strdup_printf( "echo %s ; echo \"%s      %s\" ; echo ; ",
+                                  _("USAGE"), vol->device_file, _("( no media )") );
     }
 
     char* udisks_info = vfs_volume_device_info( vol->device_file );
@@ -2444,7 +2453,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         path = g_find_program_in_path( "lsof" );
         if ( !path )
-            lsof = g_strdup_printf( "echo %s ; echo \"( %s lsof )\" ; echo ; ", _("PROCESSES"), _("please install") );
+            lsof = g_strdup_printf( "echo %s ; echo \"%s\" ; echo ; ", _("PROCESSES"), _("( please install lsof )") );
         else
         {
             if ( !strcmp( vol->mount_point, "/" ) )

@@ -853,9 +853,10 @@ void ptk_file_task_progress_update( PtkFileTask* task )
                 else if ( xset_get_b( "task_err_any" ) )
                     errs = g_strdup_printf( _("Error  ( Stop On Any )") );
                 else
-                    errs = g_strdup_printf( _("Stopped with %d error%s"),
-                                        task->old_err_count,
-                                        task->old_err_count > 1 ? "s" : "" );
+                    errs = g_strdup_printf( ngettext( "Stopped with %d error",
+                                                      "Stopped with %d errors",
+                                                      task->old_err_count ),
+                                            task->old_err_count );
             }
             else
                 errs = g_strdup_printf( _("Stopped") );
@@ -865,9 +866,10 @@ void ptk_file_task_progress_update( PtkFileTask* task )
             if ( task->task->type != VFS_FILE_TASK_EXEC )
             {
                 if ( task->old_err_count )
-                    errs = g_strdup_printf( _("Finished with %d error%s"),
-                                        task->old_err_count,
-                                        task->old_err_count > 1 ? "s" : "" );
+                    errs = g_strdup_printf( ngettext( "Finished with %d error",
+                                                      "Finished with %d errors",
+                                                      task->old_err_count ),
+                                            task->old_err_count );
                 else
                     errs = g_strdup_printf( _("Done") );
             }
@@ -888,8 +890,10 @@ void ptk_file_task_progress_update( PtkFileTask* task )
         if ( task->task->type != VFS_FILE_TASK_EXEC )
         {
             if ( task->old_err_count )
-                errs = g_strdup_printf( _("Running with %d error%s..."),
-                    task->old_err_count, task->old_err_count > 1 ? "s" : "" );
+                errs = g_strdup_printf( ngettext( "Running with %d error",
+                                                  "Running with %d errors",
+                                                  task->old_err_count ),
+                                        task->old_err_count );
             else
                 errs = g_strdup_printf( _("Running...") );
         }

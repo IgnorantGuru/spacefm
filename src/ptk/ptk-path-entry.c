@@ -14,6 +14,7 @@
 #include <string.h>
 #include "settings.h"
 #include "main-window.h"
+#include <glib/gi18n.h>
 
 enum
 {
@@ -374,8 +375,8 @@ void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_INFO,
                                   GTK_BUTTONS_OK,
-                                  "In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n\t$\trun as task\n\t&\trun and forget\n\t+\trun in terminal\n\t!\trun as root\nUse:\n\t%%F\tselected files  or  %%f first selected file\n\t%%N\tselected filenames  or  %%n first selected filename\n\t%%d\tcurrent directory\n\t%%v\tselected device (eg /dev/sda1)\n\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n\t%%b\tselected bookmark\n\t%%t\tselected task directory;  %%p task pid\n\t%%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc\n\nExample:  $ echo \"Current Directory: %%d\"\nExample:  +! umount %v" );
-    gtk_window_set_title( GTK_WINDOW( dlg ), "Path Bar Help" );
+                                  _("In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n\t$\trun as task\n\t&\trun and forget\n\t+\trun in terminal\n\t!\trun as root\nUse:\n\t%%F\tselected files  or  %%f first selected file\n\t%%N\tselected filenames  or  %%n first selected filename\n\t%%d\tcurrent directory\n\t%%v\tselected device (eg /dev/sda1)\n\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n\t%%b\tselected bookmark\n\t%%t\tselected task directory;  %%p task pid\n\t%%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc\n\nExample:  $ echo \"Current Directory: %%d\"\nExample:  +! umount %%v") );
+    gtk_window_set_title( GTK_WINDOW( dlg ), _("Path Bar Help") );
     gtk_dialog_run( GTK_DIALOG( dlg ) );
     gtk_widget_destroy( dlg );
 }
