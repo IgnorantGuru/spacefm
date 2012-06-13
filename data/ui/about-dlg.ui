@@ -35,7 +35,7 @@ Source code taken from other projects:
     <property comments="Please replace this line with your own names, one name per line. " name="translator_credits" translatable="yes">translator-credits</property>
     <property name="artists" translatable="yes">SpaceFM icons and logo by Goran Simovic
 
-Additional icons were taken from Tango Projects icon set</property>
+Additional icons were taken from the Tango Desktop Project icon set</property>
     <property name="logo_icon_name">spacefm</property>
     <property name="wrap_license">True</property>
     <child internal-child="vbox">
