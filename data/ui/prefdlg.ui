@@ -457,7 +457,7 @@
                                   <object class="GtkLabel" id="thumb_label2">
                                     <property name="visible">True</property>
                                     <property name="xpad">2</property>
-                                    <property name="label">KB</property>
+                                    <property name="label" translatable="yes">KB</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
