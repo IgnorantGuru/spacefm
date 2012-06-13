@@ -441,12 +441,12 @@ void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //M
 	        if (app_settings.use_si_prefix==TRUE)
 	        {
 	            val = ((gfloat)size) / (( guint64 ) 1000000000000 );
-	            unit = "T";
+	            unit = _("T");
             }
             else
             {
                 val = ((gfloat)size) / ( ( guint64 ) 1 << 40 );
-                unit = "T";  //MOD was TiB
+                unit = _("T");  //MOD was TiB
             }
         }
         else
@@ -459,12 +459,12 @@ void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //M
 	        if (app_settings.use_si_prefix==TRUE)
 	        {
 	            val = ((gfloat)size) / (( guint64 ) 1000000000 );
-	            unit = "G";
+	            unit = _("G");
             }
             else
             {
                 val = ((gfloat)size) / ( ( guint64 ) 1 << 30 );
-                unit = "G";  //MOD was GiB
+                unit = _("G");  //MOD was GiB
             }
         }
     }
@@ -478,12 +478,12 @@ void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //M
 	    if (app_settings.use_si_prefix==TRUE)
 	    {
 	        val = ((gfloat)size) / (( guint64 ) 1000000 );
-	        unit = "M";
+	        unit = _("M");
         }
         else
         {
             val = ((gfloat)size) / ( ( guint64 ) 1 << 20 );
-            unit = "M";  //MOD was MiB
+            unit = _("M");  //MOD was MiB
         }
     }
     else if ( size > ( 1 << 10 ) )
@@ -496,17 +496,17 @@ void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //M
 	    if (app_settings.use_si_prefix==TRUE)
 	    {
 	        val = ((gfloat)size) / (( guint64 ) 1000 );
-	        unit = "K";  //MOD was KB
+	        unit = _("K");  //MOD was KB
 	    }
 	    else
 	    {
 	        val = ((gfloat)size) / ( ( guint64 ) 1 << 10 );
-            unit = "K";  //MOD was KiB
+            unit = _("K");  //MOD was KiB
 	    }
     }
     else
     {
-        unit = size > 1 ? "B" : "B";
+        unit = size > 1 ? _("B") : _("B");
         sprintf( buf, "%u%s", ( guint ) size, unit );
         return ;
     }
@@ -536,12 +536,12 @@ void vfs_file_size_to_string( char* buf, guint64 size )
 	        if (app_settings.use_si_prefix==TRUE)
 	        {
 	            val = ((gfloat)size) / (( guint64 ) 1000000000000 );
-	            unit = "T";
+	            unit = _("T");
             }
             else
             {
                 val = ((gfloat)size) / ( ( guint64 ) 1 << 40 );
-                unit = "T";  //MOD was TiB
+                unit = _("T");  //MOD was TiB
             }
         }
         else
@@ -554,12 +554,12 @@ void vfs_file_size_to_string( char* buf, guint64 size )
 	        if (app_settings.use_si_prefix==TRUE)
 	        {
 	            val = ((gfloat)size) / (( guint64 ) 1000000000 );
-	            unit = "G";
+	            unit = _("G");
             }
             else
             {
                 val = ((gfloat)size) / ( ( guint64 ) 1 << 30 );
-                unit = "G";  //MOD was GiB
+                unit = _("G");  //MOD was GiB
             }
         }
     }
@@ -573,12 +573,12 @@ void vfs_file_size_to_string( char* buf, guint64 size )
 	    if (app_settings.use_si_prefix==TRUE)
 	    {
 	        val = ((gfloat)size) / (( guint64 ) 1000000 );
-	        unit = "M";
+	        unit = _("M");
         }
         else
         {
             val = ((gfloat)size) / ( ( guint64 ) 1 << 20 );
-            unit = "M";  //MOD was MiB
+            unit = _("M");  //MOD was MiB
         }
     }
     else if ( size > ( 1 << 10 ) )
@@ -591,18 +591,18 @@ void vfs_file_size_to_string( char* buf, guint64 size )
 	    if (app_settings.use_si_prefix==TRUE)
 	    {
 	        val = ((gfloat)size) / (( guint64 ) 1000 );
-	        unit = "K";  //MOD was KB
+	        unit = _("K");  //MOD was KB
 	    }
 	    else
 	    {
 	        val = ((gfloat)size) / ( ( guint64 ) 1 << 10 );
-            unit = "K";  //MOD was KiB
+            unit = _("K");  //MOD was KiB
 	    }
     }
     else
     {
         //unit = size > 1 ? "Bytes" : "Byte";
-        unit = "B";
+        unit = _("B");
         sprintf( buf, "%u %s", ( guint ) size, unit );
         return ;
     }
