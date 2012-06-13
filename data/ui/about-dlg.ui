@@ -6,7 +6,7 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <property name="program_name">SpaceFM</property>
-    <property name="comments" translatable="no">by IgnorantGuru</property>
+    <property name="comments" translatable="yes">by IgnorantGuru</property>
     <property name="copyright" translatable="yes">Copyright (C) 2012    GPL2</property>
     <property name="website">http://ignorantguru.github.com/spacefm/</property>
     <property name="license" translatable="yes">SpaceFM - Copyright (C) 2012   GPL2
