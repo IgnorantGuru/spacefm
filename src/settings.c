@@ -8723,7 +8723,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\nudevil:\t/usr/bin/udevil --verbose mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %v --mount-options %%o\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\nudevil:\t/usr/bin/udevil --verbose mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
