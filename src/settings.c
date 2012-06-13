@@ -6734,7 +6734,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                             GDK_Delete, 0, GTK_ACCEL_VISIBLE);
 
     // Export
-    newitem = xset_design_additem( design_menu, _("_Export"),
+    newitem = xset_design_additem( design_menu, _("E_xport"),
                                 GTK_STOCK_SAVE, XSET_JOB_EXPORT, set );
     gtk_widget_set_sensitive( newitem, !set->lock
                                     && set->menu_style < XSET_MENU_SEP );
@@ -8116,7 +8116,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-properties" );
     set->tool = XSET_B_TRUE;
 
-    set = xset_set( "toolbar_help", "label", _("_Help") );
+    set = xset_set( "toolbar_help", "label", _("H_elp") );
     xset_set_set( set, "icon", "gtk-help" );
 
     // toolitems left
@@ -8382,7 +8382,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-add" );
     set->line = g_strdup( "#devices-menu-mount" );
    
-    set = xset_set( "dev_menu_remount", "label", _("_Re/mount") );
+    set = xset_set( "dev_menu_remount", "label", _("Re_/mount") );
     xset_set_set( set, "icon", "gtk-redo" );
     set->line = g_strdup( "#devices-menu-remount" );
    
@@ -8558,7 +8558,7 @@ void xset_defaults()
     set_last = xset_get( "sep_mr4" );
     set_last->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "dev_menu_restore", "label", _("R_estore") );
+    set = xset_set( "dev_menu_restore", "label", _("_Restore") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "dev_rest_file sep_mr4 dev_rest_info" );
     set->line = g_strdup( "#devices-root-resfile" );
@@ -8957,7 +8957,7 @@ void xset_defaults()
     set = xset_set( "main_new_window", "label", _("New _Window") );
     xset_set_set( set, "icon", "spacefm" );
 
-    set = xset_set( "main_root_window", "label", _("_Root Window") );
+    set = xset_set( "main_root_window", "label", _("R_oot Window") );
     xset_set_set( set, "icon", "gtk-dialog-warning" );
 
     set = xset_set( "main_search", "label", _("_File Search") );
@@ -9225,7 +9225,7 @@ void xset_defaults()
     set->x = g_strdup_printf( "%d", 8 );
     set->y = g_strdup( "70" );
     
-    set = xset_set( "task_col_curspeed", "label", _("C_urrent Spee_d") );
+    set = xset_set( "task_col_curspeed", "label", _("C_urrent Speed") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 9 );
     
@@ -9245,7 +9245,7 @@ void xset_defaults()
     set->x = g_strdup_printf( "%d", 12 );
     set->y = g_strdup( "65" );
 
-    xset_set( "task_col_reorder", "label", _("Re_order") );
+    xset_set( "task_col_reorder", "label", _("Reor_der") );
 
     xset_set( "task_stop", "label", _("_Stop Task") );
 
@@ -9520,7 +9520,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icon", "gtk-preferences" );
 
-    set = xset_set( "view_list_style", "label", _("_Style") );
+    set = xset_set( "view_list_style", "label", _("Styl_e") );
     set->menu_style = XSET_MENU_SUBMENU;
 
     set = xset_set( "view_columns", "label", _("_Columns") );
@@ -9552,7 +9552,7 @@ void xset_defaults()
         set = xset_set( "sortby_descend", "label", _("_Descending") );
         set->menu_style = XSET_MENU_RADIO;
 
-    set = xset_set( "view_refresh", "label", _("_Refresh") );
+    set = xset_set( "view_refresh", "label", _("Re_fresh") );
     xset_set_set( set, "icon", "gtk-refresh" );
 
     set = xset_set( "path_help", "label", _("_Path Bar Help") );

@@ -23,6 +23,7 @@
     mouse buttons 8 and 9 on file list go back and forward (like 4 and 5)
     fixes extract multiple zip,7z,rar files
     changed File Name Contains: to Filename: in File Search fixes #86
+    corrected duplicated menu key shortcuts fixes #92
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding
