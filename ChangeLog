@@ -21,6 +21,7 @@
     no cancel sel on desktop right-click in single-click mode fixes #76
     dont open pipes for mime type even if size > 0 closes #80
     mouse buttons 8 and 9 on file list go back and forward (like 4 and 5)
+    fixes extract multiple zip,7z,rar files
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

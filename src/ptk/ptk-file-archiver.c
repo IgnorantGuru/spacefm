@@ -456,6 +456,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     char* str;
     int i, n, j;
     struct stat64 statbuf;
+    gboolean keep_term;
+    gboolean in_term;    
     const char* suffix[] = { ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz",
                                             ".txz", ".zip", ".rar", ".7z" };
 
@@ -556,7 +558,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             continue;
     
         // handler found
-        gboolean keep_term = TRUE;
+        keep_term = TRUE;
+        in_term = FALSE;
         full_path = g_build_filename( cwd, vfs_file_info_get_name( file ), NULL );
         full_quote = bash_quote( full_path );
         dest_quote = bash_quote( dest );
@@ -564,6 +567,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         {
             // list contents
             cmd = g_strdup_printf( "%s %s | more -d", handlers[i].list_cmd, full_quote );
+            in_term = TRUE;
         }
         else if ( !strcmp( type, "application/x-gzip" ) )
         {
@@ -642,7 +646,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             if ( i == 3 || i == 4 || i == 6 )
             {
                 // zip 7z rar in terminal for password & output
-                list_contents = TRUE;  // run in terminal
+                in_term = TRUE;  // run in terminal
                 keep_term = FALSE;
                 prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", _("[ Finished With Errors ]  Press Enter to close") );
             }
@@ -682,10 +686,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         g_free( task_name );
         task->task->exec_command = cmd;
         task->task->exec_browser = file_browser;
-        task->task->exec_sync = !list_contents;
+        task->task->exec_sync = !in_term;
         task->task->exec_show_error = TRUE;
-        task->task->exec_show_output = list_contents;
-        task->task->exec_terminal = list_contents;
+        task->task->exec_show_output = in_term;
+        task->task->exec_terminal = in_term;
         task->task->exec_keep_terminal = keep_term;
         task->task->exec_export = FALSE;
     //task->task->exec_keep_tmp = TRUE;
