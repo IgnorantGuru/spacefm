@@ -143,8 +143,9 @@ void ptk_delete_files( GtkWindow* parent_win,
     {
         // count
         int count = g_list_length( sel_files );
-        char* msg = g_strdup_printf( _("Delete %d selected item%s ?"),
-                                                count, count > 1 ? "s" : "" );
+        char* msg = g_strdup_printf( ngettext( "Delete %d selected item ?",
+                                               "Delete %d selected items ?",
+                                               count ), count );
         dlg = gtk_message_dialog_new( parent_win,
                                       GTK_DIALOG_MODAL,
                                       GTK_MESSAGE_WARNING,

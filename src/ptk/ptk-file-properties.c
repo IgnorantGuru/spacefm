@@ -165,15 +165,23 @@ gboolean on_update_labels( FilePropertiesDialogData* data )
     gtk_label_set_text( data->size_on_disk_label, buf );
 
     char* count;
+    char* count_dir;
     if ( data->total_count_dir )
-        count = g_strdup_printf( _("%d file%s,  %d folder%s"), data->total_count,
-                                    data->total_count > 1 ? "s" : "",
-                                    data->total_count_dir,
-                                    data->total_count_dir > 1 ? "s" : "" );
+    {
+        count_dir = g_strdup_printf( ngettext( "%d folder",
+                                               "%d folders",
+                                               data->total_count_dir ),
+                                     data->total_count_dir );
+        count = g_strdup_printf( ngettext( "%d file,  %s",
+                                           "%d files,  %s",
+                                           data->total_count ),
+                                 data->total_count, count_dir );
+    }
     else
         count = g_strdup_printf( _("%d files"), data->total_count );
     gtk_label_set_text( data->count_label, count );
     g_free( count );
+    g_free( count_dir );
 
     gdk_threads_leave();
 

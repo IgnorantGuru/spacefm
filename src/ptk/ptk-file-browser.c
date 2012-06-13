@@ -5040,8 +5040,9 @@ void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
     {
         if ( !app_settings.no_confirm )
         {
-            str = g_strdup_printf( _("Delete %d selected item%s as root ?"),
-                                            item_count, item_count > 1 ? "s" : "" );
+            str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
+                                             "Delete %d selected items as root ?",
+                                             item_count ), item_count );
             if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_WARNING,
                                 _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
                                 _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
