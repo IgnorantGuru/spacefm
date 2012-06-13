@@ -24,6 +24,7 @@ src/ptk/ptk-dir-tree.c
 src/ptk/ptk-file-menu.c
 src/ptk/ptk-file-misc.c
 src/ptk/ptk-file-properties.c
+src/ptk/ptk-path-entry.c
 src/edit-bookmarks.c
 src/ptk/ptk-app-chooser.c
 src/vfs/vfs-app-desktop.c
