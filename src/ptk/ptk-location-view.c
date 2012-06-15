@@ -807,26 +807,36 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         }
     }
 
-    // task
-    AutoOpen* ao = g_slice_new0( AutoOpen );
-    ao->device_file = neturl;
-    ao->file_browser = file_browser;
-    if ( new_tab )
-        ao->job = PTK_OPEN_NEW_TAB;
-    else
-        ao->job = PTK_OPEN_DIR;
-    
+    // task    
     char* keepterm;
     gboolean in_term = FALSE;
-    if ( !g_strcmp0( fstype, "sshfs" ) || !g_strcmp0( fstype, "smbfs" )
-                                                || !g_strcmp0( fstype, "cifs" )
-                                                || !g_strcmp0( fstype, "curlftpfs" ) )
+    gboolean is_sync = TRUE;
+    if ( !g_strcmp0( fstype, "sshfs" ) )
+    {
+        in_term = TRUE;
+        is_sync = FALSE;
+        keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
+    }
+    else if ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" )
+                                            || !g_strcmp0( fstype, "curlftpfs" ) )
     {
         in_term = TRUE;
         keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
     }
     else
         keepterm = g_strdup( "" );
+
+    AutoOpen* ao = NULL;
+    if ( is_sync )
+    {
+        ao = g_slice_new0( AutoOpen );
+        ao->device_file = neturl;
+        ao->file_browser = file_browser;
+        if ( new_tab )
+            ao->job = PTK_OPEN_NEW_TAB;
+        else
+            ao->job = PTK_OPEN_DIR;
+    }
 
     char* line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
     g_free( keepterm );
@@ -836,7 +846,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
                                                         file_browser->task_view );
     g_free( task_name );
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = is_sync;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
@@ -844,7 +854,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     task->task->exec_keep_terminal = FALSE;
     XSet* set = xset_get( "dev_icon_network" );
     task->task->exec_icon = g_strdup( set->icon );
-    task->complete_notify = (GFunc)on_autoopen_net_cb;
+    task->complete_notify = is_sync ? (GFunc)on_autoopen_net_cb : NULL;
     task->user_data = ao;
     ptk_file_task_run( task );
     return;
