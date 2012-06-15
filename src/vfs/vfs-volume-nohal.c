@@ -2528,37 +2528,73 @@ int parse_network_url( const char* url, const char* fstype,
     nm->pass = NULL;
     nm->path = NULL;
 
-    if ( fstype && ( !strcmp( fstype, "nfs" ) || !strcmp( fstype, "smbfs" ) ) )
-        ret = 2;
+    if ( fstype && ( !strcmp( fstype, "nfs" ) || !strcmp( fstype, "smbfs" ) 
+            || !strcmp( fstype, "cifs" ) || !strcmp( fstype, "sshfs" ) 
+            || !strcmp( fstype, "nfs4" ) ) )
+        ret = 2; //invalid as default response
 
     char* orig_url = strdup( url );
     char* xurl = orig_url;
-    if ( g_str_has_prefix( xurl, "ftp:" ) || g_str_has_prefix( xurl, "smb:" )
-        || g_str_has_prefix( xurl, "nfs:" ) || g_str_has_prefix( xurl, "curlftpfs#ftp:" )
-        || ( fstype && ( !strcmp( fstype, "curlftpfs" ) || !strcmp( fstype, "ftpfs" ) ) ) )
+    gboolean is_colon = FALSE;
+    
+    // determine url type
+    if ( g_str_has_prefix( xurl, "smb:" ) || g_str_has_prefix( xurl, "smbfs:" ) 
+                                               || g_str_has_prefix( xurl, "cifs:" ) 
+                                               || g_str_has_prefix( xurl, "//" ) )
     {
-        // mount nfs|smb|ftp:[//][<user>[:<pass>]@]<host>[:<port>]/<path>
-        // mount -t [curl]ftpfs [<user>[:<pass>]@]<host>[:<port>][/<path>]
-        if ( g_str_has_prefix( xurl, "smb:" ) )
+        ret = 2;
+        // mount [-t smbfs] //host[:<port>]/<path>
+        if ( !g_str_has_prefix( xurl, "//" ) )
+            is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "smbfs" ) && strcmp( fstype, "cifs" ) )
         {
+            //wlog( "udevil: error: invalid type '%s' for SMB share - must be cifs or smbfs\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        if ( !g_strcmp0( fstype, "smbfs" ) || g_str_has_prefix( xurl, "smbfs:" ) )
             nm->fstype = g_strdup( "smbfs" );
-            xurl += 4;
-        }
-        else if ( g_str_has_prefix( xurl, "nfs:" ) )
+        else
+            nm->fstype = g_strdup( "cifs" );
+    }
+    else if ( g_str_has_prefix( xurl, "nfs:" ) )
+    {
+        ret = 2;
+        is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
         {
-            nm->fstype = g_strdup( "nfs" );
-            xurl += 4;
+            //wlog( "udevil: error: invalid type '%s' for NFS share - must be nfs or nfs4\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
         }
-        else if ( fstype && ( !strcmp( fstype, "curlftpfs" )
-                                                || !strcmp( fstype, "ftpfs" ) ) )
+        nm->fstype = g_strdup( "nfs" );
+    }
+    else if ( g_str_has_prefix( xurl, "curlftpfs#" ) )
+    {
+        ret = 2;
+        if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
+            is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "curlftpfs" ) )
         {
-            if ( g_str_has_prefix( xurl, "ftp:" ) )
-                xurl += 4;
-            else if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
-                xurl += 14;
+            //wlog( "udevil: error: invalid type '%s' for curlftpfs share - must be curlftpfs\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        nm->fstype = g_strdup( "curlftpfs" );
+    }
+    else if ( g_str_has_prefix( xurl, "ftp:" ) )
+    {
+        ret = 2;
+        is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "ftpfs" ) && strcmp( fstype, "curlftpfs" ) )
+        {
+            //wlog( "udevil: error: invalid type '%s' for FTP share - must be curlftpfs or ftpfs\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        if ( fstype )
             nm->fstype = g_strdup( fstype );
-        }
-        else if ( g_str_has_prefix( xurl, "ftp:" ) )
+        else
         {
             // detect curlftpfs or ftpfs
             if ( str = g_find_program_in_path( "curlftpfs" ) )
@@ -2566,233 +2602,185 @@ int parse_network_url( const char* url, const char* fstype,
             else
                 nm->fstype = g_strdup( "ftpfs" );
             g_free( str );
-            xurl += 4;
-        }
-        else if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
-        {
-            nm->fstype = g_strdup( "curlftpfs" );
-            xurl += 14;
-        }
-
-        ret = 2;
-        while ( xurl[0] == '/' )
-            xurl++;
-        char* trim_url = g_strdup( xurl );
-
-        // path
-        if ( str = strchr( xurl, '/' ) )
-        {
-            nm->path = g_strdup( str );
-            str[0] = '\0';
-        }
-        // user:pass
-        if ( str = strchr( xurl, '@' ) )
-        {
-            str[0] = '\0';
-            if ( str2 = strchr( xurl, ':' ) )
-            {
-                str2[0] = '\0';
-                if ( str2[1] != '\0' )
-                    nm->pass = g_strdup( str2 + 1 );
-            }
-            if ( xurl[0] != '\0' )
-                nm->user = g_strdup( xurl );
-            xurl = str + 1;
-        }
-        // host:port
-        if ( xurl[0] == '[' )
-        {
-            // ipv6 literal
-            if ( str = strchr( xurl, ']' ) )
-            {
-                str[0] = '\0';
-                if ( xurl[1] != '\0' )
-                    nm->host = g_strdup( xurl + 1 );
-                if ( str[1] == ':' && str[2] != '\0' )
-                    nm->port = g_strdup( str + 1 );
-            }
-        }
-        else if ( xurl[0] != '\0' )
-        {
-            if ( str = strchr( xurl, ':' ) )
-            {
-                str[0] = '\0';
-                if ( str[1] != '\0' )
-                    nm->port = g_strdup( str + 1 );
-            }
-            nm->host = g_strdup( xurl );
-        }
-
-        // url
-        if ( nm->host )
-        {
-            if ( g_str_has_prefix( url, "smb:" ) )
-                nm->url = g_strdup_printf( "//%s%s", nm->host, nm->path ? nm->path : "/" );
-            else if ( g_str_has_prefix( url, "nfs:" ) )
-                nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
-            else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
-                nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s%s%s%s%s",
-                                nm->user ? nm->user : "",
-                                nm->pass ? ":" : "",
-                                nm->pass ? nm->pass : "",
-                                nm->user || nm->pass ? "@" : "",
-                                nm->host,
-                                nm->port ? ":" : "",
-                                nm->port ? nm->port : "",
-                                nm->path ? nm->path : "/" );
-            else if ( !g_strcmp0( nm->fstype, "ftpfs" ) )
-                nm->url = g_strdup( "none" );
-            else
-                nm->url = g_strdup( trim_url );
-        }
-        g_free( trim_url );
-    }
-    else if ( g_str_has_prefix( xurl, "//" ) )
-    {
-        // mount [-t smbfs] //host[:<port>]/<path>
-        nm->fstype = g_strdup( "smbfs" );
-        nm->url = g_strdup( xurl );
-        ret = 2;
-
-        while ( xurl[0] == '/' )
-            xurl++;
-
-        // path
-        if ( str = strchr( xurl, '/' ) )
-        {
-            nm->path = g_strdup( str );
-            str[0] = '\0';
-        }
-
-        // host:port
-        if ( xurl[0] == '[' )
-        {
-            // ipv6 literal
-            if ( str = strchr( xurl, ']' ) )
-            {
-                str[0] = '\0';
-                if ( xurl[1] != '\0' )
-                    nm->host = g_strdup( xurl + 1 );
-                if ( str[1] == ':' && str[2] != '\0' )
-                    nm->port = g_strdup( str + 1 );
-            }
-        }
-        else if ( xurl[0] != '\0' )
-        {
-            if ( str = strchr( xurl, ':' ) )
-            {
-                str[0] = '\0';
-                if ( str[1] != '\0' )
-                    nm->port = g_strdup( str + 1 );
-            }
-            nm->host = g_strdup( xurl );
         }
     }
-    else if ( strstr( xurl, ":/" ) && xurl[0] != ':' && xurl[0] != '/' )
+    else if ( g_str_has_prefix( xurl, "sshfs#" ) )
     {
-        // mount [-t nfs] host:/path
-        nm->fstype = g_strdup( "nfs" );
-        nm->url = g_strdup( xurl );
         ret = 2;
-
-        // path
-        str = strstr( xurl, ":/" );
-        nm->path = g_strdup( str + 1 );
+        if ( g_str_has_prefix( xurl, "sshfs#ssh:" )
+                            || g_str_has_prefix( xurl, "sshfs#sshfs:" ) 
+                            || g_str_has_prefix( xurl, "sshfs#sftp:" ) )
+            is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "sshfs" ) )
+        {
+            //wlog( "udevil: error: invalid type '%s' for sshfs share - must be sshfs\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        nm->fstype = g_strdup( "sshfs" );
+    }
+    else if ( g_str_has_prefix( xurl, "ssh:" ) || g_str_has_prefix( xurl, "sshfs:" ) 
+                                            || g_str_has_prefix( xurl, "sftp:" ) )
+    {
+        ret = 2;
+        is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "sshfs" ) )
+        {
+            //wlog( "udevil: error: invalid type '%s' for sshfs share - must be sshfs\n",
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        nm->fstype = g_strdup( "sshfs" );
+    }
+    else if ( ( str = strstr( xurl, ":/" ) ) && xurl[0] != ':' && xurl[0] != '/' )
+    {
+        ret = 2;
         str[0] = '\0';
-
-        // host
-        if ( xurl[0] == '[' )
+        if ( strchr( xurl, '@' ) || !g_strcmp0( fstype, "sshfs" ) )
+            nm->fstype = g_strdup( "sshfs" );
+        else
         {
-            // ipv6 literal
-            if ( str = strchr( xurl, ']' ) )
+            // mount [-t nfs] host:/path
+            nm->fstype = g_strdup( "nfs" );
+            if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
             {
-                str[0] = '\0';
-                if ( xurl[1] != '\0' )
-                    nm->host = g_strdup( xurl + 1 );
+                //wlog( "udevil: error: invalid type '%s' for NFS share - must be nfs or nfs4\n",
+                //                                                    fstype, 2 );
+                goto _net_free;
             }
         }
-        else if ( xurl[0] != '\0' )
-            nm->host = g_strdup( xurl );
+        str[0] = ':';
     }
+
+    if ( ret != 2 )
+        goto _net_free;
+            
+    // parse
+    if ( is_colon && ( str = strchr( xurl, ':' ) ) )
+    {
+        xurl = str + 1;
+    }
+
+    while ( xurl[0] == '/' )
+        xurl++;
+    char* trim_url = g_strdup( xurl );
+
+    // path
+    if ( str = strchr( xurl, '/' ) )
+    {
+        nm->path = g_strdup( str );
+        str[0] = '\0';
+    }
+    // user:pass
+    if ( str = strchr( xurl, '@' ) )
+    {
+        str[0] = '\0';
+        if ( str2 = strchr( xurl, ':' ) )
+        {
+            str2[0] = '\0';
+            if ( str2[1] != '\0' )
+                nm->pass = g_strdup( str2 + 1 );
+        }
+        if ( xurl[0] != '\0' )
+            nm->user = g_strdup( xurl );
+        xurl = str + 1;
+    }
+    // host:port
+    if ( xurl[0] == '[' )
+    {
+        // ipv6 literal
+        if ( str = strchr( xurl, ']' ) )
+        {
+            str[0] = '\0';
+            if ( xurl[1] != '\0' )
+                nm->host = g_strdup( xurl + 1 );
+            if ( str[1] == ':' && str[2] != '\0' )
+                nm->port = g_strdup( str + 1 );
+        }
+    }
+    else if ( xurl[0] != '\0' )
+    {
+        if ( str = strchr( xurl, ':' ) )
+        {
+            str[0] = '\0';
+            if ( str[1] != '\0' )
+                nm->port = g_strdup( str + 1 );
+        }
+        nm->host = g_strdup( xurl );
+    }
+
+    // url
+    if ( nm->host )
+    {
+        if ( !strcmp( nm->fstype, "cifs" ) || !strcmp( nm->fstype, "smbfs" ) )
+            nm->url = g_strdup_printf( "//%s%s", nm->host, nm->path ? nm->path : "/" );
+        else if ( !strcmp( nm->fstype, "nfs" ) )
+            nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
+        else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
+            nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s%s%s%s%s",
+                            nm->user ? nm->user : "",
+                            nm->pass ? ":" : "",
+                            nm->pass ? nm->pass : "",
+                            nm->user || nm->pass ? "@" : "",
+                            nm->host,
+                            nm->port ? ":" : "",
+                            nm->port ? nm->port : "",
+                            nm->path ? nm->path : "/" );
+        else if ( !g_strcmp0( nm->fstype, "ftpfs" ) )
+            nm->url = g_strdup( "none" );
+        else if ( !g_strcmp0( nm->fstype, "sshfs" ) )
+            nm->url = g_strdup_printf( "sshfs#%s%s%s%s%s:%s%s",
+                            nm->user ? nm->user : "",
+                            nm->pass ? ":" : "",
+                            nm->pass ? nm->pass : "",
+                            nm->user || nm->pass ? "@" : "",
+                            nm->host,
+                            nm->port ? nm->port : "",
+                            nm->path ? nm->path : "/" );
+        else
+            nm->url = g_strdup( trim_url );
+    }
+    g_free( trim_url );
     g_free( orig_url );
 
-    // check user supplied fstype
-    gboolean bad_type = FALSE;
-/*
-    if ( fstype && ret == 2 && nm->host )
+    if ( !nm->host )
     {
-        if ( !strcmp( nm->fstype, "nfs" ) && strcmp( fstype, "nfs" ) )
-        {
-            wlog( "udevil: error: invalid type '%s' for NFS share - must be 'nfs'\n",
-                                                                fstype, 2 );
-            bad_type = TRUE;
-        }
-        else if ( !strcmp( nm->fstype, "smbfs" ) && strcmp( fstype, "smbfs" ) )
-        {
-            wlog( "udevil: error: invalid type '%s' for SMB share - must be 'smbfs'\n",
-                                                                fstype, 2 );
-            bad_type = TRUE;
-        }
-        else if ( !strcmp( nm->fstype, "ftpfs" ) || !strcmp( nm->fstype, "curlftpfs" ) )
-        {
-            if ( strcmp( fstype, "ftpfs" ) && strcmp( fstype, "curlftpfs" ) )
-            {
-                wlog( "udevil: error: invalid type '%s' for FTP share - must be 'ftpfs' or 'curlftpfs'\n",
-                                                                    fstype, 2 );
-                bad_type = TRUE;
-            }
-            else
-            {
-                g_free( nm->fstype );
-                nm->fstype = g_strdup( fstype );
-            }
-        }
+        //wlog( "udevil: error: '%s' is not a recognized network url\n", url, 2 );
+        goto _net_free;
     }
-
+    
     // check user pass port
-    if ( ret == 2 && !bad_type && nm->host )
+    if ( ( nm->user && strchr( nm->user, ' ' ) )
+            || ( nm->pass && strchr( nm->pass, ' ' ) )
+            || ( nm->port && strchr( nm->port, ' ' ) ) )
     {
-        if ( ( nm->user && strchr( nm->user, ' ' ) )
-                || ( nm->pass && strchr( nm->pass, ' ' ) )
-                || ( nm->port && strchr( nm->port, ' ' ) ) )
-        {
-            wlog( "udevil: error: invalid network url\n", fstype, 2 );
-            bad_type = TRUE;
-        }
+        //wlog( "udevil: error: invalid network url\n", fstype, 2 );
+        goto _net_free;
     }
 
+/*
     // lookup ip
-    if ( ret == 2 && !bad_type )
+    if ( !( nm->ip = get_ip( nm->host ) ) || ( nm->ip && nm->ip[0] == '\0' ) )
     {
-        if ( nm->host )
-        {
-            if ( !( nm->ip = get_ip( nm->host ) ) || ( nm->ip && nm->ip[0] == '\0' ) )
-            {
-                wlog( "udevil: error: lookup host '%s' failed\n", nm->host, 2 );
-                g_free( nm->host );
-                nm->host = NULL;
-            }
-        }
-        else
-            wlog( "udevil: error: '%s' is not a recognized network url\n", url, 2 );
+        wlog( "udevil: error: lookup host '%s' failed\n", nm->host, 2 );
+        goto _net_free;
     }
 */
-    if ( ret == 0 || !nm->host || bad_type )
-    {
-        g_free( nm->url );
-        g_free( nm->fstype );
-        g_free( nm->host );
-        g_free( nm->ip );
-        g_free( nm->port );
-        g_free( nm->user );
-        g_free( nm->pass );
-        g_free( nm->path );
-        g_slice_free( netmount_t, nm );
-        return ret;
-    }
-
+    // valid
     *netmount = nm;
     return 1;
+
+_net_free:
+    g_free( nm->url );
+    g_free( nm->fstype );
+    g_free( nm->host );
+    g_free( nm->ip );
+    g_free( nm->port );
+    g_free( nm->user );
+    g_free( nm->pass );
+    g_free( nm->path );
+    g_slice_free( netmount_t, nm );
+    return ret;
 }
 
 VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
@@ -2802,7 +2790,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     int i;
     struct stat64 statbuf;
     netmount_t *netmount = NULL;
-    
+
     if ( !mount_points )
         return NULL;
 
@@ -3639,7 +3627,7 @@ void unmount_if_mounted( const char* device_file )
     char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s &>/dev/null && %s &>/dev/null\"",
                                                         device_file, mtab, str );
     g_free( str );
-    printf("Unmount-If-Mounted: %s\n", line );
+    printf( _("Unmount-If-Mounted: %s\n"), line );
     g_spawn_command_line_async( line, NULL );
     g_free( line );
 }

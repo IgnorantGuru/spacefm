@@ -746,6 +746,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     
     // parse
     char* neturl = NULL;
+    char* fstype = NULL;
     int i = parse_network_url( url, NULL, &netmount );
     if ( i != 1 )
     {
@@ -760,7 +761,14 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     else
     {
         neturl = netmount->url;
-        g_free( netmount->fstype );
+        if ( g_str_has_prefix( neturl, "sshfs#" ) )
+        {
+            // sshfs doesn't include sshfs# prefix in mtab
+            str = neturl;
+            neturl = g_strdup( str + 6 );
+            g_free( str );
+        }
+        fstype = netmount->fstype;
         g_free( netmount->host );
         g_free( netmount->ip );
         g_free( netmount->port );
@@ -807,7 +815,22 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         ao->job = PTK_OPEN_NEW_TAB;
     else
         ao->job = PTK_OPEN_DIR;
-    char* line = g_strdup_printf( "udevil mount '%s'", url );
+    
+    char* keepterm;
+    gboolean in_term = FALSE;
+    if ( !g_strcmp0( fstype, "sshfs" ) || !g_strcmp0( fstype, "smbfs" )
+                                                || !g_strcmp0( fstype, "cifs" )
+                                                || !g_strcmp0( fstype, "curlftpfs" ) )
+    {
+        in_term = TRUE;
+        keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
+    }
+    else
+        keepterm = g_strdup( "" );
+
+    char* line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
+    g_free( keepterm );
+    g_free( fstype );
     char* task_name = g_strdup_printf( _("Netmount %s"), url );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
@@ -817,12 +840,13 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = in_term;
+    task->task->exec_keep_terminal = FALSE;
     XSet* set = xset_get( "dev_icon_network" );
     task->task->exec_icon = g_strdup( set->icon );
     task->complete_notify = (GFunc)on_autoopen_net_cb;
     task->user_data = ao;
     ptk_file_task_run( task );
-
     return;
 }
 
