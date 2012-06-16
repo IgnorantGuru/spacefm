@@ -26,6 +26,63 @@
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><hr><a name="0.7.8"></a>
+<big><b><a href="#0.7.8">0.7.8 released</a></b></big><br>
+2012-Jun-16
+
+<p><b>New in SpaceFM 0.7.8:</b>
+<ul>
+<li>Thanks to <a href="http://www.jpfleury.net/en/">jpfleury</a>, a <b>new and complete french translation</b> is now included for SpaceFM.  Note that due to design mode, your configuration overrides the language file for menu item names.  To see the newly translated menu item names, you must start with a fresh configuration (no session file).  Other internal strings, such as dialogs, will appear translated regardless of your configuration.<br><br>
+<li>Design mode can now be used in the Open context menu on application names to open <b>the new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-mime">MIME Menu</a></b>, which provides a way to easily add and remove application associations, and edit and view relevant MIME files (.desktop, XML MIME file type definition files, etc).  SpaceFM now uses and modifies your mimeapps.list file rather than the old defaults.list.  The new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-mime-mimeworks">How MIME Works</a> section of the manual explains the details.<br><br>
+<li>SpaceFM <b>now accepts ftp://, nfs://, smb://, and ssh:// URLs</b> in the path bar (for formatting, see <a href="http://ignorantguru.github.com/udevil/udevil--help.html">udevil --help</a>.  Requires <a href="http://ignorantguru.github.com/udevil/">udevil</a> and the appropriate network filesystem support (eg curlftpfs, cifs-utils, etc).  [Note:  SpaceFM has some unresolved performance issues with network filesystems - until these are addressed you may find it lags or becomes temporarily unresponsive when the network is busy copying, etc.]<br><br>
+<li>The Open context menu now includes a <b>'Mount ISO' menu item</b> to automatically mount ISO files (requires udevil).  This menu item appears in the Open submenu when you right-click on an ISO file.  The Open|<b>Auto-Mount ISO</b> option can also be checked so SpaceFM will automatically mount and open an ISO file when you click on it.<br><br>
+<li><b>The Devices list now shows mounted networks and mounted ISO files</b> (loop devices) if the new options Show|Mounted Networks and Show|Mounted Files are checked in Settings, and can be used to unmount these (unmounting requires udevil).<br><br>
+<li>Mounted <b>networks can now be bookmarked</b> from the Devices List, or by editing a bookmark.<br><br>
+<li>The new menu item '<b>Edit udevil.conf</b>' has been added to the Devices list context Root submenu.<br><br>
+<li>SpaceFM now <b>automatically unmounts removed devices</b>.  For example, if you remove a usb stick without first unmounting it, SpaceFM will attempt to unmount it for you.<br><br>
+<li><b>Creating a new file, folder, or manual link</b> in SpaceFM now uses a modified version of the rename dialog, providing more space for entering filenames.  This also adds the ability to create in other paths, create as root, create relative links, and <b>create new files and folders using templates</b>.  SpaceFM now looks in $XDG_TEMPLATES_DIR/, ~/Templates/, or ~/.templates/ to find template files.  Templates are simply empty or partially filled files used to create new files (of any type), so instead of an empty file you get a copy of the template file.  Any files or links to files may be placed in your Templates folder.  Subdirectories in the templates folder can also be used to create new folders pre-filled with a set of files, or to organize templates.<br><br>
+<li>A [Create] <b>& Open button</b> has been added to the new file/folder dialog to create a new file or folder and open it in one step.<br><br>
+<li>The new <b>xfce4 'terminal'</b> is now supported.<br><br>
+<li>A new <b>-r, --reuse-tab <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#invocation-commandline">command line</a> option</b> has been added to open a folder in the current tab of an already open SpaceFM window, instead of creating a new tab.  This can also be used on initial startup to prevent SpaceFM from creating a default tab.<br><br>
+<li><b>Mouse buttons 8 and 9</b> can now be used to go back and forward in SpaceFM, in addition to buttons 4 and 5.<br><br>
+<li>A number of <b>new and improved plugins</b> have been contributed to the <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins wiki</a>
+</ul>
+
+For additional changes, see the complete ChangeLog below.
+
+<p>0.7.8 ChangeLog:
+<ul>
+    use/update mimeapps.list over defaults.list closes #71<br>
+    added design mode on mime apps opens MIME menu<br>
+    deprecated MimeType x-directory removed from spacefm desktop files<br>
+    new archive save dialog uses literal filename and extension fixes #82<br>
+    accept options in terminal program setting<br>
+    added user manual MIME Menu section<br>
+    accept network urls<br>
+    mount iso files from Open context menu; auto-mount iso<br>
+    added Root|Edit udevil.conf to devices menu<br>
+    allow edit bookmark to network URL<br>
+    corrected Click runs executables pref not saved fixes #84<br>
+    auto-unmount removed media and devices<br>
+    support xfce terminal<br>
+    improve new file/folder/link dialog<br>
+    change deprecated gdk_pixbuf_ref to g_object_ref<br>
+    don't remove .gz file when extracting closes #90<br>
+    CLI added -r, --reuse-tab  Open folder in current tab of last used window<br>
+    corrected non-translatable strings pulls #100 fixes #88<br>
+    new french translation<br>
+    no cancel sel on desktop right-click in single-click mode fixes #76<br>
+    dont open pipes for mime type even if size > 0 closes #80<br>
+    mouse buttons 8 and 9 on file list go back and forward (like 4 and 5)<br>
+    fixes extract multiple zip,7z,rar files<br>
+    changed File Name Contains: to Filename: in File Search fixes #86<br>
+    corrected duplicated menu key shortcuts fixes #92<br>
+    error on missing edit udevil.conf fixes #98<br>
+    sync new file open; select new closes #35<br>
+</ul>
+<br>
+
+<!-- --------------------------------------------------------------------- -->
 <br><hr>
 <big><b>0.7.7 released</b></big><br>
 2012-May-27
