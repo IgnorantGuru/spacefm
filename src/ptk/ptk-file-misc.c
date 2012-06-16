@@ -119,6 +119,7 @@ typedef struct
     gboolean full_path_same;
     gboolean path_missing;
     gboolean path_exists_file;
+    gboolean mode_change;
     gboolean is_move;
 } MoveSet;
 
@@ -606,7 +607,8 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
                 || mset->full_path_exists != full_path_exists
                 || mset->full_path_exists_dir != full_path_exists_dir
                 || mset->path_missing != path_missing
-                || mset->path_exists_file != path_exists_file )
+                || mset->path_exists_file != path_exists_file
+                || mset->mode_change )
     {
         // state change
         mset->full_path_exists = full_path_exists;
@@ -614,6 +616,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         mset->path_missing = path_missing;
         mset->path_exists_file = path_exists_file;
         mset->full_path_same = full_path_same;
+        mset->mode_change = FALSE;
 
         //gboolean opt_move = gtk_toggle_button_get_active( mset->opt_move );
         //gboolean opt_copy = gtk_toggle_button_get_active( mset->opt_copy );
@@ -1183,6 +1186,7 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
                                     GTK_ICON_SIZE_BUTTON ) );
 
     mset->full_path_same = FALSE;
+    mset->mode_change = TRUE;
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     if ( mset->create_new )
         on_toggled( NULL, mset );
