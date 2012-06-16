@@ -817,8 +817,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         is_sync = FALSE;
         keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
     }
-    else if ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" )
-                                            || !g_strcmp0( fstype, "curlftpfs" ) )
+    else if ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" ) )
     {
         in_term = TRUE;
         keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
@@ -841,6 +840,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     char* line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
     g_free( keepterm );
     g_free( fstype );
+
     char* task_name = g_strdup_printf( _("Netmount %s"), url );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
