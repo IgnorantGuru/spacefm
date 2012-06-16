@@ -1,4 +1,4 @@
-0.7.7+
+0.7.8   2012-06-16:
     use/update mimeapps.list over defaults.list closes #71
     added design mode on mime apps opens MIME menu
     deprecated MimeType x-directory removed from spacefm desktop files
@@ -17,7 +17,7 @@
     don't remove .gz file when extracting closes #90
     CLI added -r, --reuse-tab  Open folder in current tab of last used window
     corrected non-translatable strings pulls #100 fixes #88
-    new french translation
+    new french translation complete
     no cancel sel on desktop right-click in single-click mode fixes #76
     dont open pipes for mime type even if size > 0 closes #80
     mouse buttons 8 and 9 on file list go back and forward (like 4 and 5)
@@ -25,6 +25,7 @@
     changed File Name Contains: to Filename: in File Search fixes #86
     corrected duplicated menu key shortcuts fixes #92
     error on missing edit udevil.conf fixes #98
+    sync new file open; select new closes #35
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

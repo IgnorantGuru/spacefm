@@ -9417,10 +9417,10 @@ void xset_defaults()
         set = xset_set( "arc_def_write", "label", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
 
-    set = xset_set( "iso_mount", "label", _("_Mount Image") );
+    set = xset_set( "iso_mount", "label", _("_Mount ISO") );
     xset_set_set( set, "icon", "gtk-add" );
 
-    set = xset_set( "iso_auto", "label", _("_Auto-Mount Images") );
+    set = xset_set( "iso_auto", "label", _("_Auto-Mount ISO") );
     set->menu_style = XSET_MENU_CHECK;
 
     set_last = xset_get( "sep_o1" );
