@@ -2293,73 +2293,84 @@ void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                                         data->cwd, "////LIST" );
 }
 
+void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
+{
+    VFSFileInfo* file;
+    if ( !ao )
+        return;
+
+    if ( ao->path && GTK_IS_WIDGET( ao->file_browser ) 
+                                && g_file_test( ao->path, G_FILE_TEST_EXISTS ) )
+    {
+        char* cwd = g_path_get_dirname( ao->path );
+
+        // select file
+        if ( !g_strcmp0( cwd, ptk_file_browser_get_cwd( ao->file_browser ) ) )
+        {
+            file = vfs_file_info_new();
+            vfs_file_info_get( file, ao->path, NULL );
+            vfs_dir_emit_file_created( ao->file_browser->dir,
+                                    vfs_file_info_get_name( file ), file );
+            vfs_file_info_unref( file );
+            vfs_dir_flush_notify_cache();
+            ptk_file_browser_select_file( ao->file_browser, ao->path );
+        }
+
+        // open file
+        if ( ao->open_file )
+        {
+            if ( g_file_test( ao->path, G_FILE_TEST_IS_DIR ) )
+            {
+                ptk_file_browser_chdir( ao->file_browser, ao->path,
+                                                        PTK_FB_CHDIR_ADD_HISTORY );
+                ao->path = NULL;
+            }
+            else
+            {
+                file = vfs_file_info_new();
+                vfs_file_info_get( file, ao->path, NULL );
+                GList* sel_files = NULL;
+                sel_files = g_list_prepend( sel_files, file );
+                ptk_open_files_with_app( cwd, sel_files,
+                                         NULL, ao->file_browser, FALSE, TRUE );
+                vfs_file_info_unref( file );
+                g_list_free( sel_files );
+            }
+        }
+        
+        g_free( cwd );
+    }
+    g_free( ao->path );
+    g_slice_free( AutoOpenCreate, ao );
+}
+
 static void
 create_new_file( PtkFileMenu* data, int create_new )
 {
     char* cwd;
+    AutoOpenCreate* ao = NULL;
     
     if ( data->cwd )
     {
-        char* path = NULL;
+        if ( data->browser )
+        {
+            ao = g_slice_new0( AutoOpenCreate );
+            ao->path = NULL;
+            ao->file_browser = data->browser;
+            ao->callback = (GFunc)on_autoopen_create_cb;
+            ao->open_file = FALSE;
+        }
         int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
                         data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
-                        NULL, FALSE, create_new, &path );
-/*  this doesn't work due to cache delay and/or exec task?   use complete_notify?
-        if ( result && path && data->browser )
+                        NULL, FALSE, create_new, ao );
+        if ( result == 0 )
         {
-            // select file
-            cwd = g_path_get_dirname( path );
-            if ( !g_strcmp0( cwd, data->cwd ) )
-            {
-                VFSFileInfo* file = vfs_file_info_new();
-                vfs_file_info_get( file, path, NULL );
-                vfs_dir_emit_file_created( data->browser->dir,
-                                        vfs_file_info_get_name( file ), file );
-                vfs_file_info_unref( file );
-                while (gtk_events_pending ())
-                    gtk_main_iteration ();
-                ptk_file_browser_select_file( data->browser, path );
-            }
-            g_free( cwd );
+            ao->file_browser = NULL;
+            g_free( ao->path );
+            ao->path = NULL;
+            g_slice_free( AutoOpenCreate, ao );
+            ao = NULL;
         }
-*/
-        if ( result == 2 && path && data->browser )
-        {
-            if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
-            {
-                ptk_file_browser_chdir( data->browser, path,
-                                                        PTK_FB_CHDIR_ADD_HISTORY );
-            }
-            else if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
-            {
-                VFSFileInfo* file = vfs_file_info_new();
-                vfs_file_info_get( file, path, NULL );
-                GList* sel_files = NULL;
-                sel_files = g_list_prepend( sel_files, file );
-                cwd = g_path_get_dirname( path );
-                ptk_open_files_with_app( cwd, sel_files,
-                                         NULL, data->browser, FALSE, TRUE );
-                vfs_file_info_unref( file );
-                g_list_free( sel_files );
-                g_free( cwd );
-            }
-            g_free( path );
-        }
-/*
-        char* cwd;
-        GtkWidget* parent;
-        parent = (GtkWidget*)get_toplevel_win( data );
-        if( data->file_path &&
-                        g_file_test( data->file_path, G_FILE_TEST_IS_DIR ) )
-            cwd = data->file_path;
-        else
-            cwd = data->cwd;
-        if( G_LIKELY(data->browser) )
-            ptk_file_browser_create_new_file( data->browser, create_dir );
-        else
-            ptk_create_new_file( GTK_WINDOW( parent ),
-                                 cwd, create_dir, NULL );
-*/
     }
 }
 

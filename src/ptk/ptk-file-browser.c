@@ -698,8 +698,6 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
     VFSFileInfo* file;
     const char* file_name;
 
-    char* name = g_path_get_basename( path );
-    
     PtkFileList* list = PTK_FILE_LIST( file_browser->file_list );
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW 
                                 || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
@@ -716,7 +714,8 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
     }
     if ( !model )
         return;
-
+    char* name = g_path_get_basename( path );
+    
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
         do

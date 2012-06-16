@@ -1834,7 +1834,7 @@ void on_template_changed( GtkWidget* widget, MoveSet* mset )
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
-                                        int create_new, char** file_new )
+                                        int create_new, AutoOpenCreate* auto_open )
 {   
     char* full_name;
     char* full_path;
@@ -2569,9 +2569,6 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             gboolean overwrite = FALSE;
             char* msg;
             
-            if ( file_new )
-                *file_new = g_strdup( full_path );
-
             if ( response == GTK_RESPONSE_APPLY )
                 ret = 2;
             
@@ -2688,6 +2685,13 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_show_error = TRUE;
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                if ( auto_open )
+                {   
+                    auto_open->path = g_strdup( full_path );
+                    auto_open->open_file = ( response == GTK_RESPONSE_APPLY );
+                    task->complete_notify = auto_open->callback;
+                    task->user_data = auto_open;
+                }
                 ptk_file_task_run( task );                
             }
             else if ( create_new && new_file )
@@ -2756,6 +2760,13 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_show_error = TRUE;
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                if ( auto_open )
+                {   
+                    auto_open->path = g_strdup( full_path );
+                    auto_open->open_file = ( response == GTK_RESPONSE_APPLY );
+                    task->complete_notify = auto_open->callback;
+                    task->user_data = auto_open;
+                }
                 ptk_file_task_run( task );                
             }
             else if ( create_new )
@@ -2820,6 +2831,13 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_show_error = TRUE;
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
+                if ( auto_open )
+                {   
+                    auto_open->path = g_strdup( full_path );
+                    auto_open->open_file = ( response == GTK_RESPONSE_APPLY );
+                    task->complete_notify = auto_open->callback;
+                    task->user_data = auto_open;
+                }
                 ptk_file_task_run( task );                
             }
             else if ( copy || copy_target )

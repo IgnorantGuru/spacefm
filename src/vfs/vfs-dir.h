@@ -100,6 +100,7 @@ void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo*
 void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo* file );
 void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name, VFSFileInfo* file );
 void vfs_dir_emit_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file );
+void vfs_dir_flush_notify_cache();
 
 /* get the path of desktop dir */
 const char* vfs_get_desktop_dir();

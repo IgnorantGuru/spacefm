@@ -852,6 +852,15 @@ gboolean notify_file_change( gpointer user_data )
     return FALSE;
 }
 
+void vfs_dir_flush_notify_cache()
+{
+    if ( change_notify_timeout )
+        g_source_remove( change_notify_timeout );
+    change_notify_timeout = 0;
+    g_hash_table_foreach( dir_hash, update_changed_files, NULL );
+    g_hash_table_foreach( dir_hash, update_created_files, NULL );
+}
+
 /* Callback function which will be called when monitored events happen */
 void vfs_dir_monitor_callback( VFSFileMonitor* fm,
                                VFSFileMonitorEvent event,

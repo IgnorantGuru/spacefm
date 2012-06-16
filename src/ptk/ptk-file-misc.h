@@ -20,15 +20,23 @@
 
 G_BEGIN_DECLS
 
+typedef struct _AutoOpenCreate
+{
+    char* path;
+    PtkFileBrowser* file_browser;
+    GFunc callback;
+    gboolean open_file;
+}AutoOpenCreate;
+
 void ptk_delete_files( GtkWindow* parent_win,
                        const char* cwd,
                        GList* sel_files,
                        GtkTreeView* task_view );
 
-gboolean ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
-                                        int create_new, char** file_new );
+                                        int create_new, AutoOpenCreate* auto_open );
 
 gboolean ptk_create_new_file( GtkWindow* parent_win,
                           const char* cwd,
