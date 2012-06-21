@@ -47,6 +47,8 @@ typedef struct _FMMainWindow
     GtkWidget* task_scroll;
     GtkWidget* task_view;
     
+    GMutex* task_mutex;
+    
     guint autosave_timer;
 
 

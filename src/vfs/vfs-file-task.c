@@ -62,17 +62,35 @@ void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
-static gboolean
-call_progress_callback( VFSFileTask* task )
+void append_add_log( VFSFileTask* task, const char* msg, gint msg_len )
 {
-    if ( task->progress_cb )
-    {
-        task->progress_cb( task, task->percent,
-                           task->current_file,
-                           NULL,
-                           task->progress_cb_data );
-    }
+    g_mutex_lock( task->mutex );
+    GtkTextIter iter;
+    gtk_text_buffer_get_iter_at_mark( task->add_log_buf, &iter, task->add_log_end );
+    gtk_text_buffer_insert( task->add_log_buf, &iter, msg, msg_len );
+    g_mutex_unlock( task->mutex );
+}
+
+gboolean call_progress_on_timer( VFSFileTask* task )
+{
+    if ( !g_mutex_trylock( task->mutex ) )
+        return TRUE;  // repeat call_progress_on_timer
+
+    task->progress_cb( task );
+
+    g_source_remove( task->progress_cb_timer );
+    task->progress_cb_timer = 0;
+    g_mutex_unlock( task->mutex );
     return FALSE;
+}
+
+static void call_progress_callback( VFSFileTask* task )
+{
+    if ( task->progress_cb_timer )
+        return;  // timer already running
+    if ( task->progress_cb )
+        task->progress_cb_timer = g_timeout_add( 100,
+                                ( GSourceFunc ) call_progress_on_timer, task );
 }
 
 static void call_state_callback( VFSFileTask* task,
@@ -970,6 +988,7 @@ if ( !( cond & G_IO_NVAL ) )
         // bad file descriptor - occurs with stop on fast output
         goto _unref_channel;
     }
+/*
     else if ( ++task->flood_ticks > 1000 )
     {
         // too much output per second
@@ -985,29 +1004,31 @@ if ( !( cond & G_IO_NVAL ) )
         call_progress_callback( task );
         goto _unref_channel;
     }
-
+*/
     GError *error = NULL;
     gchar buf[2048];
     if ( g_io_channel_read_chars( channel, buf, sizeof( buf ), &size, &error ) ==
                                                 G_IO_STATUS_NORMAL && size > 0 )
     {
-        gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
-                                                            task->exec_mark_end );
+        //gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
+        //                                                    task->exec_mark_end );
         if ( task->exec_type == VFS_EXEC_UDISKS
                                     && task->exec_show_error //prevent progress_cb opening taskmanager
                                     && g_strstr_len( buf, size, "ount failed:" ) )
         {
             // bug in udisks - exit status not set
             if ( size > 81 && !strncmp( buf, "Mount failed: Error mounting: mount exited with exit code 1: helper failed with:\n", 81 ) )  //cleanup output - useless line
-                gtk_text_buffer_insert( task->exec_err_buf, &iter, buf + 81, size - 81 );
+                //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf + 81, size - 81 );
+                append_add_log( task, buf + 81, size - 81 );
             else
-                gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+                //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+                append_add_log( task, buf, size );
             call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
         else  // no error
-            gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
-        task->err_count++;   //notify of new output - does not indicate error for exec
-        task->ticks = 10000;
+            //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+            append_add_log( task, buf, size );
+        //task->err_count++;   //notify of new output - does not indicate error for exec
     }
     else
         printf("cb_exec_out_watch: g_io_channel_read_chars != G_IO_STATUS_NORMAL\n");
@@ -1105,33 +1126,19 @@ char* get_sha256sum( char* path )
 
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action )
 {
-//printf("vfs_file_task_exec_error\n");
-    GtkTextIter iter;
-    const char* err_msg;
-    char* new_msg;
+    char* msg;
     
     if ( errnox )
-    {
-        err_msg = g_strerror( errnox );
-        new_msg = g_strdup_printf( "%s\n%s\n", action, err_msg );
-    }
+        msg = g_strdup_printf( "%s\n%s\n", action, g_strerror( errnox ) );
     else
-    {
-        new_msg = g_strdup_printf( "%s\n", action );
-    }
-                                                        
-    gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
-                                                        task->exec_mark_end );
-    gtk_text_buffer_insert( task->exec_err_buf, &iter, new_msg, -1 );
-    g_free(new_msg );
-    
-    task->err_count = -1;
-    task->ticks = 10000;
-    
+        msg = g_strdup_printf( "%s\n", action );
+
+    append_add_log( task, msg, -1 );
+    g_free( msg );
     call_state_callback( task, VFS_FILE_TASK_ERROR );
 }
 
-static void vfs_file_task_exec( VFSFileTask* task )
+static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 {
     char* su = NULL;
     char* gsu = NULL;
@@ -1671,7 +1678,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                      ( GFunc ) vfs_file_task_delete,
                      ( GFunc ) vfs_file_task_link,
                      ( GFunc ) vfs_file_task_chown_chmod,
-                     ( GFunc ) vfs_file_task_exec};  // not used
+                     ( GFunc ) vfs_file_task_exec};
 
     if ( task->type < VFS_FILE_TASK_MOVE
             || task->type >= VFS_FILE_TASK_LAST )
@@ -1731,7 +1738,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             get_total_size_of_dir( task, ( char* ) l->data, &task->total_size );
         }
     }
-    else
+    else if ( task->type != VFS_FILE_TASK_EXEC )
     {
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
@@ -1806,18 +1813,14 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
 
     task->type = type;
     task->src_paths = src_files;
+    task->dest_dir = g_strdup( dest_dir );
 
-    if ( dest_dir )
-        task->dest_dir = g_strdup( dest_dir );
-    else
-        task->dest_dir = NULL;
     if ( task->type == VFS_FILE_TASK_COPY || task->type == VFS_FILE_TASK_DELETE )
         task->recursive = TRUE;
+    else
+        task->recursive = FALSE;
 
-    task->err_msgs = NULL;
     task->err_count = 0;
-    task->ticks = 10000;
-    task->flood_ticks = 0;
     
     task->exec_type = VFS_EXEC_NORMAL;
     task->exec_action = NULL;
@@ -1841,6 +1844,21 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_scroll_lock = FALSE;
     task->exec_write_root = FALSE;
     task->exec_set = NULL;
+    
+    task->progress_cb_timer = 0;
+    task->mutex = g_mutex_new();
+    
+    GtkTextIter iter;
+    task->add_log_buf = gtk_text_buffer_new( NULL );
+    task->add_log_end = gtk_text_mark_new( NULL, FALSE );
+    gtk_text_buffer_get_end_iter( task->add_log_buf, &iter);
+    gtk_text_buffer_add_mark( task->add_log_buf, task->add_log_end, &iter );
+    
+    task->start_time = time( NULL );
+    task->last_time = task->start_time;
+    task->last_speed = 0;
+    task->last_progress = 0;
+    
     return task;
 }
 
@@ -1863,6 +1881,9 @@ void vfs_file_task_set_chown( VFSFileTask* task,
 
 void vfs_file_task_run ( VFSFileTask* task )
 {
+    task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
+                                                        task, TRUE, NULL );
+/*
     if ( task->type != VFS_FILE_TASK_EXEC )
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );
@@ -1872,6 +1893,7 @@ void vfs_file_task_run ( VFSFileTask* task )
         task->thread = NULL;
         vfs_file_task_exec( task );
     }
+*/
 }
 
 void vfs_file_task_try_abort ( VFSFileTask* task )
@@ -1912,6 +1934,11 @@ void vfs_file_task_free ( VFSFileTask* task )
         g_free(task->exec_command );
     if ( task->exec_script )
         g_free(task->exec_script );
+
+    g_mutex_free( task->mutex );
+
+    gtk_text_buffer_set_text( task->add_log_buf, "", -1 );
+    g_object_unref( task->add_log_buf );
 
     g_slice_free( VFSFileTask, task );
 }
@@ -1996,21 +2023,10 @@ void vfs_file_task_set_state_callback( VFSFileTask* task,
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target )
 {
-    char* old_msgs;
-    
-    const char* err_msg = g_strerror( errnox );
-    if ( !task->err_msgs )
-        task->err_msgs = g_strdup_printf( _("\n%s %s\nError: %s\n"), action, target,
-                                                        err_msg );
-    else
-    {
-        old_msgs = task->err_msgs;
-        task->err_msgs = g_strdup_printf( _("%s\n%s %s\nError: %s\n"), old_msgs,
-                                                        action, target, err_msg );
-        g_free(old_msgs );
-    }
-    task->err_count++;
-    task->ticks = 10000;
+    char* msg = g_strdup_printf( _("\n%s %s\nError: %s\n"), action, target,
+                                                        g_strerror( errnox ) );
+    append_add_log( task, msg, -1 );
+    g_free( msg );
     
     call_state_callback( task, VFS_FILE_TASK_ERROR );
 }
