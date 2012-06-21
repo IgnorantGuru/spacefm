@@ -1429,7 +1429,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
             argv[a++] = g_strdup_printf( "--disable-sm" );
             argv[a++] = g_strdup_printf( "--separate" );
         }
-        else if ( strstr( terminal, "xfce4-terminal" ) )
+        else if ( strstr( terminal, "xfce4-terminal" )
+                                || g_str_has_suffix( terminal, "/terminal" ) )
             argv[a++] = g_strdup_printf( "--disable-server" );
         else if ( strstr( terminal, "gnome-terminal" ) )
             argv[a++] = g_strdup_printf( "--disable-factory" );
