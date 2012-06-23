@@ -2172,6 +2172,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     }
     else
         file_browser->busy = TRUE;
+
     g_signal_connect( file_browser->dir, "file-listed",
                                     G_CALLBACK(on_dir_file_listed), file_browser );
 
@@ -2302,16 +2303,16 @@ void on_folder_content_update ( FolderContent* content,
 
 static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 {
-    gdk_threads_enter();
+    //gdk_threads_enter();  not needed because g_idle_add runs in main loop thread
     g_signal_emit( file_browser, signals[ CONTENT_CHANGE_SIGNAL ], 0 );
-    gdk_threads_leave();
+    //gdk_threads_leave();
     return FALSE;
 }
 
 static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
                                        PtkFileBrowser* file_browser )
 {
-    g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
+     g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
                 file_browser );
 }
 
@@ -3133,7 +3134,7 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
 
     if ( !file_browser->side_dir )
         return FALSE;
-    gdk_threads_enter();
+    //gdk_threads_enter();   //sfm not needed because g_idle_add runs in main loop thread
     dir_path = ptk_dir_tree_view_get_selected_dir( GTK_TREE_VIEW(
                                                     file_browser->side_dir ) );
         
@@ -3150,7 +3151,7 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
         }
         g_free( dir_path );
     }
-    gdk_threads_leave();
+    //gdk_threads_leave();
     return FALSE;
 }
 
@@ -4068,7 +4069,7 @@ gboolean on_folder_view_auto_scroll( GtkScrolledWindow* scroll )
     GtkAdjustment * vadj;
     gdouble vpos;
 
-    gdk_threads_enter();
+    //gdk_threads_enter();   //sfm why is this here?
 
     vadj = gtk_scrolled_window_get_vadjustment( scroll ) ;
     vpos = gtk_adjustment_get_value( vadj );
@@ -4090,7 +4091,7 @@ gboolean on_folder_view_auto_scroll( GtkScrolledWindow* scroll )
             gtk_adjustment_set_value ( vadj, ( vadj->upper - vadj->page_size ) );
     }
 
-    gdk_threads_leave();
+    //gdk_threads_leave();
     return TRUE;
 }
 

@@ -2759,11 +2759,11 @@ static gboolean delayed_focus( GtkWidget* widget )
 {
     if ( GTK_IS_WIDGET( widget ) )
     {
-        gdk_threads_enter();
+        ///gdk_threads_enter();
 //printf( "delayed_focus %#x\n", widget);
         if ( GTK_IS_WIDGET( widget ) )
             gtk_widget_grab_focus( widget );
-        gdk_threads_leave();
+        ///gdk_threads_leave();
     }
     return FALSE;
 }
@@ -2772,14 +2772,14 @@ static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser )
 {
     if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
     {
-        gdk_threads_enter();
+        ///gdk_threads_enter();
 //printf( "delayed_focus_file_browser fb=%#x\n", file_browser );
         if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
         {
             gtk_widget_grab_focus( file_browser->folder_view );
             set_panel_focus( NULL, file_browser );
         }
-        gdk_threads_leave();
+        ///gdk_threads_leave();
     }
     return FALSE;
 }
@@ -3223,7 +3223,7 @@ void on_file_browser_sel_change( PtkFileBrowser* file_browser,
 void on_file_browser_content_change( PtkFileBrowser* file_browser,
                                      FMMainWindow* main_window )
 {
-//printf("content_change  panel %d\n", file_browser->mypanel );
+printf("content_change  panel %d\n", file_browser->mypanel );
     fm_main_window_update_status_bar( main_window, file_browser );
 }
 

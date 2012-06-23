@@ -942,7 +942,6 @@ static void cb_exec_child_cleanup( GPid pid, gint status, char* tmp_file )
 static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
 {
     gboolean bad_status = FALSE;
-printf("child finished  pid=%d exit_status=%d\n", pid, status);
     g_spawn_close_pid( pid );
     task->exec_pid = 0;
 
@@ -961,15 +960,13 @@ printf("child finished  pid=%d exit_status=%d\n", pid, status);
         if ( task->exec_script )
             unlink( task->exec_script );
     }
-    
+    printf("child finished  pid=%d exit_status=%d\n", pid,
+                                    bad_status ? -1 : task->exec_exit_status );
     if ( !task->exec_exit_status && !bad_status )
-    {
         task->percent = 100;
-    }
     else
-    {
         call_state_callback( task, VFS_FILE_TASK_ERROR );
-    }
+
     if ( task->state_cb && !task->exec_channel_out && !task->exec_channel_err )
         call_state_callback( task, VFS_FILE_TASK_FINISH );
 }
@@ -977,6 +974,9 @@ printf("child finished  pid=%d exit_status=%d\n", pid, status);
 static gboolean cb_exec_out_watch( GIOChannel *channel, GIOCondition cond,
                               VFSFileTask* task )
 {
+GThread *self = g_thread_self ();
+printf("cb_exec_out_watch-THREAD = %#x\n", self );
+
 /*
 printf("cb_exec_out_watch %d\n", channel);
 if ( cond & G_IO_IN )
@@ -1168,7 +1168,7 @@ char* get_sha256sum( char* path )
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action )
 {
     char* msg;
-    
+
     if ( errnox )
         msg = g_strdup_printf( "%s\n%s\n", action, g_strerror( errnox ) );
     else
@@ -1662,7 +1662,7 @@ printf("vfs_file_task_exec\n");
     
     task->exec_pid = pid;
 
-    // catch termination
+    // catch termination - is run in the main loop thread
     guint child_watch = g_child_watch_add( pid,
                                     (GChildWatchFunc)cb_exec_child_watch, task );
 
@@ -1675,31 +1675,32 @@ printf("vfs_file_task_exec\n");
     g_io_channel_set_close_on_unref( task->exec_channel_err, TRUE );
 
     // Add watches to channels
-    g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
-                                                (GIOFunc)cb_exec_out_watch, task );
-    //g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_OUT | G_IO_PRI | G_IO_ERR | G_IO_HUP | G_IO_NVAL, (GIOFunc)cb_exec_out_watch, task );
-    g_io_add_watch( task->exec_channel_err, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR,
-                                                (GIOFunc)cb_exec_out_watch, task );
+    // These are run in the main loop thread so use G_PRIORITY_LOW to not
+    // interfere with g_idle_add in vfs-dir/vfs-async-task etc 
+    // "Use this for very low priority background tasks. It is not used within
+    // GLib or GTK+." 
+    g_io_add_watch_full( task->exec_channel_out, G_PRIORITY_LOW,
+                        G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
+                        (GIOFunc)cb_exec_out_watch, task, NULL );
+    //g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
+    //                                            (GIOFunc)cb_exec_out_watch, task );
+    g_io_add_watch_full( task->exec_channel_err, G_PRIORITY_LOW,
+                        G_IO_IN | G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
+                        (GIOFunc)cb_exec_out_watch, task, NULL );
+    //g_io_add_watch( task->exec_channel_err, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR,
+    //                                            (GIOFunc)cb_exec_out_watch, task );
 
     // running
     task->state = VFS_FILE_TASK_RUNNING;
     //call_progress_callback( task );
 
-    // wait for channels
+    // wait
 printf("Waiting...\n");
     task->exec_cond = g_cond_new();
     g_mutex_lock( task->mutex );
     g_cond_wait( task->exec_cond, task->mutex );
     g_cond_free( task->exec_cond );
     task->exec_cond = NULL;
-
-    // close channels
-printf("Closing...\n");
-    if ( task->exec_channel_out )
-        g_io_channel_shutdown( task->exec_channel_out, TRUE, NULL );
-    if ( task->exec_channel_err )
-        g_io_channel_shutdown( task->exec_channel_err, TRUE, NULL );
-    task->exec_channel_out = task->exec_channel_err = 0;
     g_source_remove( child_watch );
     g_mutex_unlock( task->mutex );
 

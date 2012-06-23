@@ -154,7 +154,7 @@ printf("ptk_file_task_destroy ptask=%#x\n", ptask);
     }
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
     {
-//printf("    g_io_channel_shutdown\n");
+printf("    g_io_channel_shutdown\n");
         // channel shutdowns are needed to stop channel reads after task ends.
         // Can't be placed in cb_exec_child_watch because it causes single
         // line output to be lost
@@ -163,7 +163,7 @@ printf("ptk_file_task_destroy ptask=%#x\n", ptask);
         if ( ptask->task->exec_channel_err )
             g_io_channel_shutdown( ptask->task->exec_channel_err, TRUE, NULL );
         ptask->task->exec_channel_out = ptask->task->exec_channel_err = 0;
-//printf("    g_io_channel_shutdown DONE\n");
+printf("    g_io_channel_shutdown DONE\n");
     }
 
     if ( ptask->task )
@@ -328,8 +328,13 @@ gboolean ptk_file_task_kill_cpids( char* cpids )
 
 gboolean ptk_file_task_cancel( PtkFileTask* ptask )
 {
-    GThread *self = g_thread_self ();
-    printf("CANCEL_THREAD = %#x\n", self );
+    //GThread *self = g_thread_self ();
+    //printf("CANCEL_THREAD = %#x\n", self );
+    if ( ptask->timeout )
+    {
+        g_source_remove( ptask->timeout );
+        ptask->timeout = 0;
+    }
     ptask->aborted = TRUE;
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
     {
@@ -390,24 +395,12 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                 ptk_file_task_run( ptask2 );                
             }
         }
-/*
-//printf("ptk_file_task_cancel\n    g_io_channel_shutdown\n");
-        // channel shutdowns are needed to stop channel reads after task ends.
-        // Can't be placed in cb_exec_child_watch because it causes single
-        // line output to be lost
-        if ( ptask->task->exec_channel_out )
-            g_io_channel_shutdown( ptask->task->exec_channel_out, TRUE, NULL );
-        if ( ptask->task->exec_channel_err )
-            g_io_channel_shutdown( ptask->task->exec_channel_err, TRUE, NULL );
-        ptask->task->exec_channel_out = ptask->task->exec_channel_err = 0;
-//printf("    g_io_channel_shutdown DONE\n");
-*/
+
         if ( ptask->task->exec_cond )
         {
             g_mutex_lock( ptask->task->mutex );
             if ( ptask->task->exec_cond )
                 g_cond_broadcast( ptask->task->exec_cond );
-            //g_cond_signal( ptask->task->exec_cond );
             g_mutex_unlock( ptask->task->mutex );
         }
     }
@@ -1110,7 +1103,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         if ( !ptask->progress_dlg && task->type == VFS_FILE_TASK_EXEC 
                                                     && task->exec_show_output )
         {
-            //task->exec_show_output = FALSE; // only open once
+            task->exec_show_output = FALSE; // only open once
             ptask->keep_dlg = TRUE;
             ptk_file_task_progress_open( ptask );
         }
