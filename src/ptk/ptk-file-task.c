@@ -326,8 +326,10 @@ gboolean ptk_file_task_kill_cpids( char* cpids )
     return FALSE;
 }
 
-void ptk_file_task_cancel( PtkFileTask* ptask )
+gboolean ptk_file_task_cancel( PtkFileTask* ptask )
 {
+    GThread *self = g_thread_self ();
+    printf("CANCEL_THREAD = %#x\n", self );
     ptask->aborted = TRUE;
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
     {
@@ -401,6 +403,7 @@ void ptk_file_task_cancel( PtkFileTask* ptask )
     }
     else
         vfs_file_task_try_abort( ptask->task );
+    return FALSE;
 }
 
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
@@ -1201,8 +1204,10 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         gtk_widget_destroy( dlg );
         ret = ( response != GTK_RESPONSE_YES );
 */      
+        0; GThread *self = g_thread_self ();
+        printf("VFS_FILE_TASK_QUERY_ABORT-THREAD = %#x\n", self );
         if ( task->type == VFS_FILE_TASK_EXEC )
-            ptk_file_task_cancel( ptask );   ///////////  need threadsafe @@@@@@@@@@@@@@@@@@@@@@@@@@@
+            g_idle_add( ( GSourceFunc ) ptk_file_task_cancel, ptask );
         ret = FALSE;
         break;
     case VFS_FILE_TASK_ERROR:

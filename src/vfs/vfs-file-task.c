@@ -1192,6 +1192,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 //task->exec_keep_tmp = TRUE;
 
 
+    g_mutex_lock( task->mutex );
     value = task->current_dest;  // variable value temp storage
     task->current_dest = NULL;
 
@@ -1201,7 +1202,6 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         parent = gtk_widget_get_toplevel( task->exec_desktop );
 
     task->state = VFS_FILE_TASK_RUNNING;
-    g_mutex_lock( task->mutex );
     string_copy_free( &task->current_file, src_file );
     task->total_size = 0;
     task->percent = 0;
@@ -1210,7 +1210,6 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     
     if ( should_abort( task ) )
         return;
-
 
     // need su?
     if ( task->exec_as_user )

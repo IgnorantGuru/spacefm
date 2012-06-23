@@ -100,7 +100,7 @@ void ptk_file_task_set_recursive( PtkFileTask* ptask, gboolean recursive );
 
 void ptk_file_task_run( PtkFileTask* ptask );
 
-void ptk_file_task_cancel( PtkFileTask* ptask );
+gboolean ptk_file_task_cancel( PtkFileTask* ptask );
 
 void ptk_file_task_progress_open( PtkFileTask* ptask );
 
