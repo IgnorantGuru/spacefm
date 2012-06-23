@@ -166,6 +166,7 @@ struct _VFSFileTask
     gboolean exec_scroll_lock;
     gboolean exec_write_root;
     gpointer exec_set;
+    GCond* exec_cond;
 };
 
 /*

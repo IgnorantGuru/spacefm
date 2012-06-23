@@ -101,7 +101,16 @@ static void call_state_callback( VFSFileTask* task,
     if ( task->state_cb )
     {
         if ( ! task->state_cb( task, state, NULL, task->state_cb_data ) )
+        {
             task->state = VFS_FILE_TASK_ABORTED;
+            if ( task->type == VFS_FILE_TASK_EXEC && task->exec_cond )
+            {
+                g_mutex_lock( task->mutex );
+                g_cond_broadcast( task->exec_cond );
+                //g_cond_signal( task->exec_cond );
+                g_mutex_unlock( task->mutex );
+            }
+        }
         else
             task->state = VFS_FILE_TASK_RUNNING;
     }
@@ -1188,7 +1197,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     gboolean success;
     int i;
 
-//printf("vfs_file_task_exec\n");
+printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
 
 
@@ -1228,8 +1237,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             {
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
                 g_warning ( str );
-                xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                            _("Terminal SU Not Available"), NULL, 0, str, NULL, NULL );
+                vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
             gsu = get_valid_gsu();
@@ -1237,8 +1245,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             {
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
                 g_warning ( str );
-                xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                            _("Graphical SU Not Available"), NULL, 0, str, NULL, NULL );
+                vfs_file_task_exec_error( task, 0, str );
                 goto _exit_with_error_lean;
             }
         }
@@ -1254,8 +1261,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     {
         str = _("Cannot create temporary directory");
         g_warning ( str );
-        xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                                _("Error"), NULL, 0, str, NULL, NULL );
+        vfs_file_task_exec_error( task, 0, str );
         goto _exit_with_error_lean;
     }
     
@@ -1284,8 +1290,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
             g_warning ( str );
-            xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
-                            _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
+            vfs_file_task_exec_error( task, 0, str );
             goto _exit_with_error_lean;
         }
     }
@@ -1638,7 +1643,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
                 unlink( task->exec_script );
         }
         vfs_file_task_exec_error( task, errno, _("Error executing command - see stdout (run spacefm in a terminal) for debug info") );
-        task->exec_sync = FALSE;  // triggers FINISH
+        //task->exec_sync = FALSE;  // triggers FINISH  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         return;
     }
     else
@@ -1658,7 +1663,8 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     task->exec_pid = pid;
 
     // catch termination
-    g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_watch, task );
+    guint child_watch = g_child_watch_add( pid,
+                                    (GChildWatchFunc)cb_exec_child_watch, task );
 
     // create channels for output
     fcntl( out, F_SETFL,O_NONBLOCK );
@@ -1678,8 +1684,27 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     // running
     task->state = VFS_FILE_TASK_RUNNING;
     //call_progress_callback( task );
-//printf("vfs_file_task_exec DONE\n");
-    return;
+
+    // wait for channels
+printf("Waiting...\n");
+    task->exec_cond = g_cond_new();
+    g_mutex_lock( task->mutex );
+    g_cond_wait( task->exec_cond, task->mutex );
+    g_cond_free( task->exec_cond );
+    task->exec_cond = NULL;
+
+    // close channels
+printf("Closing...\n");
+    if ( task->exec_channel_out )
+        g_io_channel_shutdown( task->exec_channel_out, TRUE, NULL );
+    if ( task->exec_channel_err )
+        g_io_channel_shutdown( task->exec_channel_err, TRUE, NULL );
+    task->exec_channel_out = task->exec_channel_err = 0;
+    g_source_remove( child_watch );
+    g_mutex_unlock( task->mutex );
+
+printf("vfs_file_task_exec DONE\n");
+    return;  // exit thread
 
 // out and err can/should be closed too?
 
@@ -1697,7 +1722,8 @@ _exit_with_error_lean:
     g_free( terminal );
     g_free( su );
     g_free( gsu );
-    task->exec_sync = FALSE;  // triggers FINISH
+    //task->exec_sync = FALSE;  // triggers FINISH  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+printf("vfs_file_task_exec DONE ERROR\n");
 }
 
 static gpointer vfs_file_task_thread ( VFSFileTask* task )
@@ -1885,6 +1911,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_scroll_lock = FALSE;
     task->exec_write_root = FALSE;
     task->exec_set = NULL;
+    task->exec_cond = NULL;
     
     //task->progress_cb_timer = 0;
     task->mutex = g_mutex_new();
@@ -1946,7 +1973,8 @@ void vfs_file_task_abort ( VFSFileTask* task )
 {
     task->state = VFS_FILE_TASK_ABORTED;
     /* Called from another thread */
-    if ( task->thread && g_thread_self() != task->thread )
+    if ( task->thread && g_thread_self() != task->thread
+                                            && task->type != VFS_FILE_TASK_EXEC )
     {
         g_thread_join( task->thread );
         task->thread = NULL;

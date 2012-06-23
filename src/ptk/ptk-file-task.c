@@ -390,6 +390,7 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                 ptk_file_task_run( ptask2 );                
             }
         }
+/*
 //printf("ptk_file_task_cancel\n    g_io_channel_shutdown\n");
         // channel shutdowns are needed to stop channel reads after task ends.
         // Can't be placed in cb_exec_child_watch because it causes single
@@ -400,6 +401,15 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
             g_io_channel_shutdown( ptask->task->exec_channel_err, TRUE, NULL );
         ptask->task->exec_channel_out = ptask->task->exec_channel_err = 0;
 //printf("    g_io_channel_shutdown DONE\n");
+*/
+        if ( ptask->task->exec_cond )
+        {
+            g_mutex_lock( ptask->task->mutex );
+            if ( ptask->task->exec_cond )
+                g_cond_broadcast( ptask->task->exec_cond );
+            //g_cond_signal( ptask->task->exec_cond );
+            g_mutex_unlock( ptask->task->mutex );
+        }
     }
     else
         vfs_file_task_try_abort( ptask->task );
@@ -1195,7 +1205,8 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         break;
     case VFS_FILE_TASK_QUERY_ABORT:
         //printf("VFS_FILE_TASK_QUERY_ABORT\n");
-/*        dlg = gtk_message_dialog_new( GTK_WINDOW( ptask->progress_dlg ),
+        /*
+        dlg = gtk_message_dialog_new( GTK_WINDOW( ptask->progress_dlg ),
                                       GTK_DIALOG_MODAL,
                                       GTK_MESSAGE_QUESTION,
                                       GTK_BUTTONS_YES_NO,
@@ -1203,11 +1214,15 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         response = gtk_dialog_run( GTK_DIALOG( dlg ) );
         gtk_widget_destroy( dlg );
         ret = ( response != GTK_RESPONSE_YES );
-*/      
-        0; GThread *self = g_thread_self ();
-        printf("VFS_FILE_TASK_QUERY_ABORT-THREAD = %#x\n", self );
+        */
+        /* exec task never has query abort ?
         if ( task->type == VFS_FILE_TASK_EXEC )
+        {
+            GThread *self = g_thread_self ();
+            printf("VFS_FILE_TASK_QUERY_ABORT-THREAD = %#x\n", self );
             g_idle_add( ( GSourceFunc ) ptk_file_task_cancel, ptask );
+        }
+        */
         ret = FALSE;
         break;
     case VFS_FILE_TASK_ERROR:
@@ -1217,7 +1232,10 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
 printf("    ptask->item_count = %d\n", task->current_item );
 
         if ( task->type == VFS_FILE_TASK_EXEC )
+        {
+            task->exec_is_error = TRUE;
             ret = FALSE;
+        }
         else if ( xset_get_b( "task_err_any" ) ||
                     ( task->current_item < 2 && xset_get_b( "task_err_first" ) ) )
         {
