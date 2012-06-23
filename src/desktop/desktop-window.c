@@ -265,6 +265,16 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
 
     text_uri_list_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_URI_LIST].target );
     desktop_icon_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_DESKTOP_ICON].target );
+
+    /*  on emit, desktop window is not an object so this doesn't work
+    g_signal_new ( "task-notify",
+                       G_TYPE_FROM_CLASS ( klass ),
+                       G_SIGNAL_RUN_FIRST,
+                       0,
+                       NULL, NULL,
+                       g_cclosure_marshal_VOID__POINTER,
+                       G_TYPE_NONE, 1, G_TYPE_POINTER );
+    */
 }
 
 static void desktop_window_init(DesktopWindow *self)
@@ -351,6 +361,9 @@ static void desktop_window_init(DesktopWindow *self)
     gdk_window_set_events( root, gdk_window_get_events( root )
                            | GDK_PROPERTY_CHANGE_MASK );
     gdk_window_add_filter( root, on_rootwin_event, self );
+
+    //g_signal_connect( G_OBJECT( self ), "task-notify",
+    //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
 }
 
 

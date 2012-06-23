@@ -40,26 +40,32 @@ struct _PtkFileTask
     GtkTextBuffer* log_buf;
     GtkTextMark* log_end;
     gboolean log_appended;
-
-    int percent;
-    off64_t total_size; /* Total size of the files to be processed, in bytes */
-    off64_t progress; /* Total size of current processed files, in btytes */
-    guint item_count;
     guint err_count;
+/*
+    int percent;
+    off64_t total_size;     // Total size of the files to be processed, in bytes
+    off64_t progress;       // Total size of current processed files, in btytes 
+    guint item_count;
     guint old_err_count;
+*/
     gboolean complete;
     gboolean aborted;
 
     /* <private> */
     guint timeout;
+    gboolean restart_timeout;
     guint progress_timer;
-    guint destroy_timer;
+    char progress_count;
     GFunc complete_notify;
     gpointer user_data;
-    const char* current_file;
-    //const char* old_dest_file;
     gboolean keep_dlg;
     
+    GCond* query_cond;
+    GCond* query_cond_last;
+    char** query_new_dest;
+    GtkEntry* query_entry;
+    gboolean query_ret;
+
     char* dsp_file_count;
     char* dsp_size_tally;
     char* dsp_elapsed;

@@ -8071,6 +8071,13 @@ char* clean_label( char* menu_label, gboolean kill_special, gboolean convert_amp
     return s1;
 }
 
+void string_copy_free( char** s, const char* src )
+{
+    char* discard = *s;
+    *s = g_strdup( src );
+    g_free( discard );
+}
+
 void xset_defaults()
 {
     XSet* set;

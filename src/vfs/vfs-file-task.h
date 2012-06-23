@@ -114,8 +114,8 @@ struct _VFSFileTask
     guint current_item;
     int err_count;
     
-    const char* current_file; /* Current processed file */
-    const char* current_dest; /* Current destination file */
+    char* current_file; /* copy of Current processed file */
+    char* current_dest; /* copy of Current destination file */
 
     int error;
 
@@ -128,7 +128,7 @@ struct _VFSFileTask
     VFSFileTaskStateCallback state_cb;
     gpointer state_cb_data;
     
-    guint progress_cb_timer;
+    //guint progress_cb_timer;
     
     GMutex* mutex;
 

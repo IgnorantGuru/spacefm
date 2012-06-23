@@ -207,6 +207,16 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     widget_class->delete_event = (gpointer) fm_main_window_delete_event;
 //widget_class->key_press_event = on_main_window_keypress;  //fm_main_window_key_press_event;
     widget_class->window_state_event = fm_main_window_window_state_event;
+
+    /*  this works but desktop_window doesn't
+    g_signal_new ( "task-notify",
+                       G_TYPE_FROM_CLASS ( klass ),
+                       G_SIGNAL_RUN_FIRST,
+                       0,
+                       NULL, NULL,
+                       g_cclosure_marshal_VOID__POINTER,
+                       G_TYPE_NONE, 1, G_TYPE_POINTER );
+    */
 }
 
 void on_bookmark_item_activate ( GtkMenuItem* menu, gpointer user_data )
@@ -1646,6 +1656,9 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     pcmanfm_ref();
 
+    //g_signal_connect( G_OBJECT( main_window ), "task-notify",
+    //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
+
     /* Start building GUI */
     /*
     NOTE: gtk_window_set_icon_name doesn't work under some WMs, such as IceWM.
@@ -1883,7 +1896,7 @@ void fm_main_window_finalize( GObject *obj )
         g_signal_handler_disconnect( gtk_icon_theme_get_default(), theme_change_notify );
         theme_change_notify = 0;
     }
-
+ 
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
 
@@ -1901,12 +1914,17 @@ void fm_main_window_set_property ( GObject *obj,
 
 static void fm_main_window_close( FMMainWindow* main_window )
 {    
+    /*
+    printf("DISC=%d\n", g_signal_handlers_disconnect_by_func(
+                            G_OBJECT( main_window ),
+                            G_CALLBACK( ptk_file_task_notify_handler ), NULL ) );
+    */
     gtk_widget_destroy( GTK_WIDGET( main_window ) );
 }
 
 void on_abort_tasks_response( GtkDialog* dlg, int response, GtkWidget* main_window )
 {
-    gtk_widget_destroy( GTK_WIDGET( main_window ) );
+    fm_main_window_close( (FMMainWindow*)main_window );
 }
 
 gboolean fm_main_window_delete_event ( GtkWidget *widget,
@@ -3506,7 +3524,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     GList* sel_files;
     int no_write_access = 0, no_read_access = 0;
     VFSVolume* vol;
-    PtkFileTask* task;
+    PtkFileTask* ptask;
     char* path;
     GtkTreeModel* model;
     GtkTreeModel* model_task;
@@ -3774,21 +3792,23 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
         "change",
         "run"
     };
-    if ( task = get_selected_task( file_browser->task_view ) )
+    if ( ptask = get_selected_task( file_browser->task_view ) )
     {
-        c->var[CONTEXT_TASK_TYPE] = g_strdup( job_titles[task->task->type] );
-        if ( task->task->type == VFS_FILE_TASK_EXEC )
+        c->var[CONTEXT_TASK_TYPE] = g_strdup( job_titles[ptask->task->type] );
+        if ( ptask->task->type == VFS_FILE_TASK_EXEC )
         {
-            c->var[CONTEXT_TASK_NAME] = g_strdup( task->task->current_file );
-            c->var[CONTEXT_TASK_DIR] = g_strdup( task->task->dest_dir );
+            c->var[CONTEXT_TASK_NAME] = g_strdup( ptask->task->current_file );
+            c->var[CONTEXT_TASK_DIR] = g_strdup( ptask->task->dest_dir );
         }
         else
         {
             c->var[CONTEXT_TASK_NAME] = g_strdup( "" );
-            if ( task->current_file )
-                c->var[CONTEXT_TASK_DIR] = g_path_get_dirname( task->current_file );
+            g_mutex_lock( ptask->task->mutex );
+            if ( ptask->task->current_file )
+                c->var[CONTEXT_TASK_DIR] = g_path_get_dirname( ptask->task->current_file );
             else
                 c->var[CONTEXT_TASK_DIR] = g_strdup( "" );
+            g_mutex_unlock( ptask->task->mutex );
         }
     }
     else
@@ -4335,13 +4355,13 @@ gboolean main_tasks_running( FMMainWindow* main_window )
     if ( !main_window->task_view || !GTK_IS_TREE_VIEW( main_window->task_view ) )
         return FALSE;
 
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     GtkTreeModel* model = gtk_tree_view_get_model( 
                                     GTK_TREE_VIEW( main_window->task_view ) );
     gboolean ret = gtk_tree_model_get_iter_first( model, &it );
     
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
     return ret;
 }
 
@@ -4367,7 +4387,7 @@ void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -4380,7 +4400,7 @@ void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
 }
 
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
@@ -4422,13 +4442,13 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
         gtk_widget_show( main_window->task_scroll );
     else
     {
-        g_mutex_lock( main_window->task_mutex );
+        //g_mutex_lock( main_window->task_mutex );
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( main_window->task_view ) );
         if ( gtk_tree_model_get_iter_first( model, &it ) )
             gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
         else
             gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
-        g_mutex_unlock( main_window->task_mutex );
+        //g_mutex_unlock( main_window->task_mutex );
     }
 }
 
@@ -4539,7 +4559,7 @@ PtkFileTask* get_selected_task( GtkWidget* view )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
@@ -4547,7 +4567,7 @@ PtkFileTask* get_selected_task( GtkWidget* view )
     {
         gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
     }
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
     return ptask;
 }
 
@@ -4623,7 +4643,7 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
@@ -4640,7 +4660,7 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
             gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
         g_mutex_unlock( ptask->task->mutex );
     }
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
 }
 
 void main_task_view_remove_task( PtkFileTask* ptask )
@@ -4649,6 +4669,7 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     GtkWidget* view;
     GtkTreeModel* model;
     GtkTreeIter it;
+//printf("main_task_view_remove_task  ptask=%d\n", ptask);
 
     view = ptask->task_view;
     if ( !view )
@@ -4657,7 +4678,7 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -4677,9 +4698,10 @@ void main_task_view_remove_task( PtkFileTask* ptask )
             gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
     }
     
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
 
     update_window_title( NULL, main_window );
+//printf("main_task_view_remove_task DONE ptask=%d\n", ptask);
 }
 
 void main_task_view_update_task( PtkFileTask* ptask )
@@ -4692,10 +4714,10 @@ void main_task_view_update_task( PtkFileTask* ptask )
     char* status;
     char* status2 = NULL;
     char* dest_dir;
-    char* path;
-    char* file;
+    char* path = NULL;
+    char* file = NULL;
     
-//printf("main_task_view_update_task  task=%d\n", task);
+//printf("main_task_view_update_task  ptask=%d\n", ptask);
     const char* job_titles[] =
         {
             N_( "moving" ),
@@ -4717,7 +4739,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    g_mutex_lock( main_window->task_mutex );
+    //g_mutex_lock( main_window->task_mutex );
 
     if ( ptask->task->type != 6 )
         dest_dir = ptask->task->dest_dir;
@@ -4749,24 +4771,27 @@ void main_task_view_update_task( PtkFileTask* ptask )
     }
 
     // update row
-    int percent = ptask->percent;
+    int percent = ptask->task->percent;
     if ( percent < 0 )
         percent = 0;
     if ( ptask->task->type != 6 )
     {
-        path = g_path_get_dirname( ptask->current_file );
-        file = g_path_get_basename( ptask->current_file );
+        if ( ptask->task->current_file )
+        {
+            path = g_path_get_dirname( ptask->task->current_file );
+            file = g_path_get_basename( ptask->task->current_file );
+        }
     }
     else
     {
         path = g_strdup( ptask->task->dest_dir ); //cwd
-        file = g_strdup_printf( "( %s )", ptask->current_file );
+        file = g_strdup_printf( "( %s )", ptask->task->current_file );
         //percent = ptask->complete ? 100 : 50;
     }
     
     // icon
     char* iname;
-    if ( ptask->old_err_count && ptask->task->type != 6 )
+    if ( ptask->err_count && ptask->task->type != 6 )
         iname = g_strdup_printf( "error" );
     else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
         iname = g_strdup_printf( "stock_copy" );
@@ -4826,7 +4851,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
     if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
         gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
 
-    g_mutex_unlock( main_window->task_mutex );
+    //g_mutex_unlock( main_window->task_mutex );
 
     update_window_title( NULL, main_window );
 //printf("DONE main_task_view_update_task\n");
