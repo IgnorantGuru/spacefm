@@ -1846,7 +1846,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( main_window->task_scroll ),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     main_window->task_view = main_task_view_new( main_window );
-    main_window->task_mutex = g_mutex_new();
     gtk_container_add( GTK_CONTAINER( main_window->task_scroll ),
                                             GTK_WIDGET( main_window->task_view ) );    
 
@@ -1883,8 +1882,6 @@ void fm_main_window_finalize( GObject *obj )
     all_windows = g_list_remove( all_windows, obj );
     --n_windows;
 
-    if ( ((FMMainWindow*)obj)->task_mutex )
-        g_mutex_free( ((FMMainWindow*)obj)->task_mutex );
     g_object_unref( ((FMMainWindow*)obj)->wgroup );
 
     pcmanfm_unref();
@@ -4355,13 +4352,10 @@ gboolean main_tasks_running( FMMainWindow* main_window )
     if ( !main_window->task_view || !GTK_IS_TREE_VIEW( main_window->task_view ) )
         return FALSE;
 
-    //g_mutex_lock( main_window->task_mutex );
-
     GtkTreeModel* model = gtk_tree_view_get_model( 
                                     GTK_TREE_VIEW( main_window->task_view ) );
     gboolean ret = gtk_tree_model_get_iter_first( model, &it );
     
-    //g_mutex_unlock( main_window->task_mutex );
     return ret;
 }
 
@@ -4387,7 +4381,6 @@ void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -4400,7 +4393,6 @@ void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
-    //g_mutex_unlock( main_window->task_mutex );
 }
 
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
@@ -4442,13 +4434,11 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
         gtk_widget_show( main_window->task_scroll );
     else
     {
-        //g_mutex_lock( main_window->task_mutex );
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( main_window->task_view ) );
         if ( gtk_tree_model_get_iter_first( model, &it ) )
             gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
         else
             gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
-        //g_mutex_unlock( main_window->task_mutex );
     }
 }
 
@@ -4548,7 +4538,6 @@ void main_task_prepare_menu( FMMainWindow* main_window, GtkWidget* menu,
 PtkFileTask* get_selected_task( GtkWidget* view )
 {
     GtkTreeModel* model;
-    //GtkTreePath* tree_path;
     GtkTreeSelection* tree_sel;
     GtkTreeViewColumn* col = NULL;
     GtkTreeIter it;
@@ -4559,7 +4548,6 @@ PtkFileTask* get_selected_task( GtkWidget* view )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
@@ -4567,7 +4555,6 @@ PtkFileTask* get_selected_task( GtkWidget* view )
     {
         gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
     }
-    //g_mutex_unlock( main_window->task_mutex );
     return ptask;
 }
 
@@ -4643,14 +4630,11 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
-    {
-        g_mutex_unlock( main_window->task_mutex );
         return;
-    }
+
     gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
     if ( ptask )
     {
@@ -4660,7 +4644,6 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
             gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
         g_mutex_unlock( ptask->task->mutex );
     }
-    //g_mutex_unlock( main_window->task_mutex );
 }
 
 void main_task_view_remove_task( PtkFileTask* ptask )
@@ -4678,7 +4661,6 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    //g_mutex_lock( main_window->task_mutex );
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -4698,8 +4680,6 @@ void main_task_view_remove_task( PtkFileTask* ptask )
             gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
     }
     
-    //g_mutex_unlock( main_window->task_mutex );
-
     update_window_title( NULL, main_window );
 //printf("main_task_view_remove_task DONE ptask=%d\n", ptask);
 }
@@ -4739,7 +4719,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
-    //g_mutex_lock( main_window->task_mutex );
 
     if ( ptask->task->type != 6 )
         dest_dir = ptask->task->dest_dir;
@@ -4850,8 +4829,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
 
     if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
         gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
-
-    //g_mutex_unlock( main_window->task_mutex );
 
     update_window_title( NULL, main_window );
 //printf("DONE main_task_view_update_task\n");
