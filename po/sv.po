@@ -1,6 +1,6 @@
-# Swedish translation for PCManFM/SpaceFM
-# Copyright (C) 2006-2009 Free Software Foundation, Inc.
-# This file is distributed under the same license as the PCManFM package.
+# Swedish translation for SpaceFM
+# Copyright (C) 2012
+# This file is distributed under the same license as the SpaceFM package.
 # Johan Andersson <nossrednanahoj(at)gmail.com>, 2006.
 # Mikael Magnusson, <mikachu@gmail.com>, 2008.
 # Martin Bagge <brother@bsnet.se>, 2009.
