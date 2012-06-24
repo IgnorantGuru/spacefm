@@ -230,7 +230,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
     if ( ++ptask->progress_count < 6 )
         return TRUE;
     ptask->progress_count = 0;
-printf("on_progress_timer ptask=%#x\n", ptask);
+//printf("on_progress_timer ptask=%#x\n", ptask);
     
     if ( ptask->complete )
     {
@@ -254,11 +254,11 @@ printf("on_progress_timer ptask=%#x\n", ptask);
         if ( !ptask->progress_dlg || ( !ptask->err_count && !ptask->keep_dlg ) )
         {
             ptk_file_task_destroy( ptask );
-printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
             return FALSE;
         }
     }
-printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
     return !ptask->complete;
 }
 
