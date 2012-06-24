@@ -225,7 +225,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     task->current_item++;
     g_mutex_unlock( task->mutex );
     //call_progress_callback( task );
-        
+    
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
@@ -264,7 +264,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
             {
                 if ( should_abort( task ) )
                     break;
-///printf( "DIRCOPY src_file=[%s]  dest_file=[%s]  file_name=[%s]\n", src_file, dest_file, file_name );
+//printf( "DIRCOPY src_file=[%s]  dest_file=[%s]  file_name=[%s]\n", src_file, dest_file, file_name );
                 sub_src_file = g_build_filename( src_file, file_name, NULL );
                 sub_dest_file = g_build_filename( dest_file, file_name, NULL );
                 if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
@@ -1739,6 +1739,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
     GList * l;
     struct stat64 file_stat;
     dev_t dest_dev = 0;
+    off64_t size;
     GFunc funcs[] = {( GFunc ) vfs_file_task_move,
                      ( GFunc ) vfs_file_task_copy,
                      ( GFunc ) vfs_file_task_move,  /* trash */
@@ -1804,9 +1805,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                         goto _exit_thread;
                 }
             }
-            g_mutex_lock( task->mutex );
             get_total_size_of_dir( task, ( char* ) l->data, &task->total_size );
-            g_mutex_unlock( task->mutex );
         }
     }
     else if ( task->type != VFS_FILE_TASK_EXEC )
@@ -1840,17 +1839,20 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             else if ( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH )
                 task->recursive = ( file_stat.st_dev != dest_dev );
 
-            g_mutex_lock( task->mutex );
             if ( task->recursive )
             {
-                get_total_size_of_dir( task, ( char* ) l->data,
-                                       &task->total_size );
+                size = 0;
+                get_total_size_of_dir( task, ( char* ) l->data, &size );
+                g_mutex_lock( task->mutex );
+                task->total_size += size;
+                g_mutex_unlock( task->mutex );
             }
             else
             {
+                g_mutex_lock( task->mutex );
                 task->total_size += file_stat.st_size;
+                g_mutex_unlock( task->mutex );
             }
-            g_mutex_unlock( task->mutex );
         }
     }
 
