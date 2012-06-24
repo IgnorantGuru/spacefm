@@ -105,9 +105,9 @@ static void call_state_callback( VFSFileTask* task,
             task->state = VFS_FILE_TASK_ABORTED;
             if ( task->type == VFS_FILE_TASK_EXEC && task->exec_cond )
             {
+                // this is used only if exec task run in non-main loop thread
                 g_mutex_lock( task->mutex );
                 g_cond_broadcast( task->exec_cond );
-                //g_cond_signal( task->exec_cond );
                 g_mutex_unlock( task->mutex );
             }
         }
@@ -974,8 +974,6 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
 static gboolean cb_exec_out_watch( GIOChannel *channel, GIOCondition cond,
                               VFSFileTask* task )
 {
-GThread *self = g_thread_self ();
-printf("cb_exec_out_watch-THREAD = %#x\n", self );
 
 /*
 printf("cb_exec_out_watch %d\n", channel);
@@ -1181,6 +1179,8 @@ void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action )
 
 static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 {
+    // this function is now thread safe but is not currently run in
+    // another thread because gio adds watches to main loop thread anyway
     char* su = NULL;
     char* gsu = NULL;
     char* str;
@@ -1200,7 +1200,6 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
 
-
     g_mutex_lock( task->mutex );
     value = task->current_dest;  // variable value temp storage
     task->current_dest = NULL;
@@ -1215,7 +1214,6 @@ printf("vfs_file_task_exec\n");
     task->total_size = 0;
     task->percent = 0;
     g_mutex_unlock( task->mutex );
-    //call_progress_callback( task );
     
     if ( should_abort( task ) )
         return;
@@ -1237,7 +1235,10 @@ printf("vfs_file_task_exec\n");
             {
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
                 g_warning ( str );
-                vfs_file_task_exec_error( task, 0, str );
+                // do not use xset_msg_dialog if non-main thread
+                //vfs_file_task_exec_error( task, 0, str );
+                xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
+                            _("Terminal SU Not Available"), NULL, 0, str, NULL, NULL );
                 goto _exit_with_error_lean;
             }
             gsu = get_valid_gsu();
@@ -1245,7 +1246,10 @@ printf("vfs_file_task_exec\n");
             {
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
                 g_warning ( str );
-                vfs_file_task_exec_error( task, 0, str );
+                // do not use xset_msg_dialog if non-main thread
+                //vfs_file_task_exec_error( task, 0, str );
+                xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
+                            _("Graphical SU Not Available"), NULL, 0, str, NULL, NULL );
                 goto _exit_with_error_lean;
             }
         }
@@ -1261,7 +1265,10 @@ printf("vfs_file_task_exec\n");
     {
         str = _("Cannot create temporary directory");
         g_warning ( str );
-        vfs_file_task_exec_error( task, 0, str );
+        // do not use xset_msg_dialog if non-main thread
+        //vfs_file_task_exec_error( task, 0, str );
+        xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
+                                _("Error"), NULL, 0, str, NULL, NULL );
         goto _exit_with_error_lean;
     }
     
@@ -1290,7 +1297,10 @@ printf("vfs_file_task_exec\n");
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
             g_warning ( str );
-            vfs_file_task_exec_error( task, 0, str );
+            // do not use xset_msg_dialog if non-main thread
+            //vfs_file_task_exec_error( task, 0, str );
+            xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
+                            _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
             goto _exit_with_error_lean;
         }
     }
@@ -1474,7 +1484,8 @@ printf("vfs_file_task_exec\n");
             argv[a++] = g_strdup_printf( "--disable-sm" );
             argv[a++] = g_strdup_printf( "--separate" );
         }
-        else if ( strstr( terminal, "xfce4-terminal" ) )
+        else if ( strstr( terminal, "xfce4-terminal" )
+                                || g_str_has_suffix( terminal, "/terminal" ) )
             argv[a++] = g_strdup_printf( "--disable-server" );
         else if ( strstr( terminal, "gnome-terminal" ) )
             argv[a++] = g_strdup_printf( "--disable-factory" );
@@ -1662,7 +1673,7 @@ printf("vfs_file_task_exec\n");
     
     task->exec_pid = pid;
 
-    // catch termination - is run in the main loop thread
+    // catch termination (always is run in the main loop thread)
     guint child_watch = g_child_watch_add( pid,
                                     (GChildWatchFunc)cb_exec_child_watch, task );
 
@@ -1682,20 +1693,15 @@ printf("vfs_file_task_exec\n");
     g_io_add_watch_full( task->exec_channel_out, G_PRIORITY_LOW,
                         G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
                         (GIOFunc)cb_exec_out_watch, task, NULL );
-    //g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
-    //                                            (GIOFunc)cb_exec_out_watch, task );
     g_io_add_watch_full( task->exec_channel_err, G_PRIORITY_LOW,
                         G_IO_IN | G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
                         (GIOFunc)cb_exec_out_watch, task, NULL );
-    //g_io_add_watch( task->exec_channel_err, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR,
-    //                                            (GIOFunc)cb_exec_out_watch, task );
 
     // running
     task->state = VFS_FILE_TASK_RUNNING;
-    //call_progress_callback( task );
 
+/* enable if this function is not in main loop thread
     // wait
-printf("Waiting...\n");
     task->exec_cond = g_cond_new();
     g_mutex_lock( task->mutex );
     g_cond_wait( task->exec_cond, task->mutex );
@@ -1703,7 +1709,7 @@ printf("Waiting...\n");
     task->exec_cond = NULL;
     g_source_remove( child_watch );
     g_mutex_unlock( task->mutex );
-
+*/
 printf("vfs_file_task_exec DONE\n");
     return;  // exit thread
 
@@ -1723,6 +1729,7 @@ _exit_with_error_lean:
     g_free( terminal );
     g_free( su );
     g_free( gsu );
+    call_state_callback( task, VFS_FILE_TASK_FINISH );
     //task->exec_sync = FALSE;  // triggers FINISH  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 printf("vfs_file_task_exec DONE ERROR\n");
 }
@@ -1950,19 +1957,16 @@ void vfs_file_task_set_chown( VFSFileTask* task,
 
 void vfs_file_task_run ( VFSFileTask* task )
 {
-    task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
-                                                        task, TRUE, NULL );
-/*
     if ( task->type != VFS_FILE_TASK_EXEC )
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );
     else
     {
-        // don't use another thread for exec
+        // don't use another thread for exec since gio adds watches to main
+        // loop thread anyway
         task->thread = NULL;
-        vfs_file_task_exec( task );
+        vfs_file_task_exec( (char*)task->src_paths->data, task );
     }
-*/
 }
 
 void vfs_file_task_try_abort ( VFSFileTask* task )

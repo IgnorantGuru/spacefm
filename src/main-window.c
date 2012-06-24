@@ -3220,7 +3220,7 @@ void on_file_browser_sel_change( PtkFileBrowser* file_browser,
 void on_file_browser_content_change( PtkFileBrowser* file_browser,
                                      FMMainWindow* main_window )
 {
-printf("content_change  panel %d\n", file_browser->mypanel );
+//printf("content_change  panel %d\n", file_browser->mypanel );
     fm_main_window_update_status_bar( main_window, file_browser );
 }
 

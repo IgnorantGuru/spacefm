@@ -230,7 +230,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
     if ( ++ptask->progress_count < 6 )
         return TRUE;
     ptask->progress_count = 0;
-printf("on_progress_timer ptask=%#x\n", ptask);
+//printf("on_progress_timer ptask=%#x\n", ptask);
     
     if ( ptask->complete )
     {
@@ -254,11 +254,11 @@ printf("on_progress_timer ptask=%#x\n", ptask);
         if ( !ptask->progress_dlg || ( !ptask->err_count && !ptask->keep_dlg ) )
         {
             ptk_file_task_destroy( ptask );
-printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
             return FALSE;
         }
     }
-printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
+//printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
     return !ptask->complete;
 }
 
@@ -270,6 +270,9 @@ printf("ptk_file_task_add_main ptask=%#x\n", ptask);
         g_source_remove( ptask->timeout );
         ptask->timeout = 0;
     }
+
+    if ( ptask->task->exec_popup || xset_get_b( "task_pop_all" ) )
+        ptk_file_task_progress_open( ptask );
 
     on_progress_timer( ptask );
     
@@ -398,6 +401,7 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
 
         if ( ptask->task->exec_cond )
         {
+            // this is used only if exec task run in non-main loop thread
             g_mutex_lock( ptask->task->mutex );
             if ( ptask->task->exec_cond )
                 g_cond_broadcast( ptask->task->exec_cond );
@@ -1111,11 +1115,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
 
     if ( !ptask->progress_dlg )
     {
-        if ( ptask->task->exec_popup || xset_get_b( "task_pop_all" ) )
-        {
-            ptk_file_task_progress_open( ptask );
-        }
-        else if ( task->type != VFS_FILE_TASK_EXEC
+        if ( task->type != VFS_FILE_TASK_EXEC
                                     && ptask->err_count != task->err_count )
         {
             ptask->keep_dlg = TRUE;
@@ -1178,7 +1178,8 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         ptask->complete = TRUE;
 
         g_mutex_lock( task->mutex );
-        string_copy_free( &task->current_file, NULL );
+        if ( task->type != VFS_FILE_TASK_EXEC )
+            string_copy_free( &task->current_file, NULL );
         ptask->progress_count = 50;  // trigger fast display
         g_mutex_unlock( task->mutex );
         //gtk_signal_emit_by_name( GTK_OBJECT( ptask->signal_widget ), "task-notify",
