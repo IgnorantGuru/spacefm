@@ -197,8 +197,10 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
      * but the behavior of the lock is not well-documented. So it's very difficult for use
      * to get things right.
      */
-    GDK_THREADS_LEAVE();
 
+    //sfm this deadlocks on quick dir change
+    //GDK_THREADS_LEAVE(); 
+    
     vfs_async_task_lock( task );
     task->cancel = TRUE;
     vfs_async_task_unlock( task );
@@ -206,7 +208,7 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
     vfs_async_thread_cleanup( task, finalize );
     task->cancelled = TRUE;
 
-    GDK_THREADS_ENTER();
+    //GDK_THREADS_ENTER();
 }
 
 void vfs_async_task_cancel( VFSAsyncTask* task )

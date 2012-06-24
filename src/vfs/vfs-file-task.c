@@ -232,7 +232,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
         if ( should_abort( task ) )
             return FALSE;
     }
-
+sleep( 60 );
     result = 0;
     if ( S_ISDIR( file_stat.st_mode ) )
     {

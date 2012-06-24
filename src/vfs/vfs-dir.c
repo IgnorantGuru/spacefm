@@ -209,6 +209,7 @@ void vfs_dir_finalize( GObject *obj )
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
         /* FIXME: should we generate a "file-list" signal to indicate the dir loading was cancelled? */
+printf("spacefm: vfs_dir_finalize -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
         g_object_unref( dir->task );
         dir->task = NULL;
@@ -715,6 +716,7 @@ void vfs_cancel_load( VFSDir* dir )
     dir->cancel = TRUE;
     if ( dir->task )
     {
+printf("spacefm: vfs_cancel_load -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
         /* don't do g_object_unref on task here since this is done in the handler of "finish" signal. */
         dir->task = NULL;
