@@ -971,9 +971,14 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
             task->last_progress = task->progress;
         }
         // calc percent
-        gdouble dpercent = ( ( gdouble ) task->progress ) / task->total_size;
-        int ipercent = ( int ) ( dpercent * 100 );
-
+        int ipercent;
+        if ( task->total_size )
+        {
+            gdouble dpercent = ( ( gdouble ) task->progress ) / task->total_size;
+            ipercent = ( int ) ( dpercent * 100 );
+        }
+        else
+            ipercent = 50;  // total_size calculation timed out
         if ( ipercent != task->percent )
             task->percent = ipercent;
     }
@@ -1014,7 +1019,10 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         file_count = g_strdup_printf( "%d", task->current_item );
         //size
         vfs_file_size_to_string_format( buf1, task->progress, "%.0f %s" );
-        vfs_file_size_to_string_format( buf2, task->total_size, "%.0f %s" );
+        if ( task->total_size )
+            vfs_file_size_to_string_format( buf2, task->total_size, "%.0f %s" );
+        else
+            sprintf( buf2, "??" );  // total_size calculation timed out
         size_tally = g_strdup_printf( "%s / %s", buf1, buf2 );
         //avg speed
         time_t cur_speed;
@@ -1036,7 +1044,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         speed2 = g_strdup_printf( "%s/s", buf2 );
         //remain cur
         guint remain;
-        if ( cur_speed > 0 )
+        if ( cur_speed > 0 && task->total_size != 0 )
             remain = ( task->total_size - task->progress ) / cur_speed;
         else
             remain = 0;
@@ -1054,7 +1062,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         else
             remain1 = g_strdup_printf( ":%02d", remain );
         //remain avg
-        if ( avg_speed > 0 )
+        if ( avg_speed > 0 && task->total_size != 0 )
             remain = ( task->total_size - task->progress ) / avg_speed;
         else
             remain = 0;

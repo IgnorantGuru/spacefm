@@ -1654,7 +1654,6 @@ printf("vfs_file_task_exec\n");
                 unlink( task->exec_script );
         }
         vfs_file_task_exec_error( task, errno, _("Error executing command - see stdout (run spacefm in a terminal) for debug info") );
-        //task->exec_sync = FALSE;  // triggers FINISH  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         return;
     }
     else
@@ -1730,8 +1729,14 @@ _exit_with_error_lean:
     g_free( su );
     g_free( gsu );
     call_state_callback( task, VFS_FILE_TASK_FINISH );
-    //task->exec_sync = FALSE;  // triggers FINISH  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 printf("vfs_file_task_exec DONE ERROR\n");
+}
+
+gboolean on_size_timeout( VFSFileTask* task )
+{
+    if ( task->state != VFS_FILE_TASK_ABORTED )
+        task->state = VFS_FILE_TASK_TIMEOUT;
+    return FALSE;
 }
 
 static gpointer vfs_file_task_thread ( VFSFileTask* task )
@@ -1739,7 +1744,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
     GList * l;
     struct stat64 file_stat;
     dev_t dest_dev = 0;
-    off64_t size;
+    off64_t size;    
     GFunc funcs[] = {( GFunc ) vfs_file_task_move,
                      ( GFunc ) vfs_file_task_copy,
                      ( GFunc ) vfs_file_task_move,  /* trash */
@@ -1766,11 +1771,18 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
     }
     g_mutex_unlock( task->mutex );
 
+    if ( should_abort( task ) )
+        goto _exit_thread;
     //call_progress_callback( task );
 
     /* Calculate total size of all files */
+    guint size_timeout = 0;
     if ( task->recursive )
     {
+        // start timer to limit the amount of time to spend on this - can be 
+        // VERY slow for network filesystems
+        size_timeout = g_timeout_add_seconds( 5,
+                                       ( GSourceFunc ) on_size_timeout, task );
         for ( l = task->src_paths; l; l = l->next )
         {
             if( task->dest_dir && g_str_has_prefix( task->dest_dir, (char*)l->data ) )
@@ -1784,20 +1796,24 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                     /* It's a dir */
                     if ( task->state_cb )
                     {
+                        // show error
                         char* err;
                         char* disp_src;
                         char* disp_dest;
                         disp_src = g_filename_display_name( (char*)l->data );
                         disp_dest = g_filename_display_name( task->dest_dir );
                         err = g_strdup_printf( _("Destination directory \"%1$s\" is contained in source \"%2$s\""), disp_dest, disp_src );
-                        if ( task->state_cb( task, VFS_FILE_TASK_ERROR,
-                             err, task->state_cb_data ) )
-                            task->state = VFS_FILE_TASK_RUNNING;
-                        else
-                            task->state = VFS_FILE_TASK_ABORTED;
+                        append_add_log( task, err, -1 );
                         g_free(disp_src );
                         g_free(disp_dest );
                         g_free(err );
+
+                        // conditionally abort
+                         if ( task->state_cb( task, VFS_FILE_TASK_ERROR,
+                                                    NULL, task->state_cb_data ) )
+                            task->state = VFS_FILE_TASK_RUNNING;
+                        else
+                            task->state = VFS_FILE_TASK_ABORTED;
                     }
                     else
                         task->state = VFS_FILE_TASK_ABORTED;
@@ -1805,11 +1821,23 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                         goto _exit_thread;
                 }
             }
-            get_total_size_of_dir( task, ( char* ) l->data, &task->total_size );
+            size = 0;
+            get_total_size_of_dir( task, ( char* ) l->data, &size );
+            if ( should_abort( task ) )
+                goto _exit_thread;
+            if ( task->state == VFS_FILE_TASK_TIMEOUT )
+                break;
+            g_mutex_lock( task->mutex );
+            task->total_size += size;
+            g_mutex_unlock( task->mutex );
         }
     }
     else if ( task->type != VFS_FILE_TASK_EXEC )
     {
+        // start timer to limit the amount of time to spend on this - can be 
+        // VERY slow for network filesystems
+        size_timeout = g_timeout_add_seconds( 5,
+                                       ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
             if ( task->dest_dir &&
@@ -1831,8 +1859,6 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                 vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
                 task->error = errno;
                 //call_state_callback( task, VFS_FILE_TASK_ERROR );
-                //if ( should_abort( task ) )
-                    goto _exit_thread;
             }
             if ( S_ISLNK( file_stat.st_mode ) )      /* Don't do deep copy for symlinks */
                 task->recursive = FALSE;
@@ -1853,7 +1879,24 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                 task->total_size += file_stat.st_size;
                 g_mutex_unlock( task->mutex );
             }
+            if ( should_abort( task ) )
+                goto _exit_thread;
+            if ( task->state == VFS_FILE_TASK_TIMEOUT )
+                break;
         }
+    }
+    // cancel the timer
+    if ( should_abort( task ) )
+        goto _exit_thread;
+
+    if ( size_timeout )
+        g_source_remove_by_user_data( task );
+
+    if ( task->state == VFS_FILE_TASK_TIMEOUT )
+    {
+        task->state = VFS_FILE_TASK_RUNNING; 
+        append_add_log( task, _("Timed out calculating total size\n"), -1 );
+        task->total_size = 0;
     }
 
     g_list_foreach( task->src_paths,
@@ -1861,6 +1904,8 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                     task );
 
 _exit_thread:
+    if ( size_timeout )
+        g_source_remove_by_user_data( task );
     if ( task->state_cb )
     {
         call_state_callback( task, VFS_FILE_TASK_FINISH );
@@ -2052,7 +2097,7 @@ void get_total_size_of_dir( VFSFileTask* task,
     {
         while ( (name = g_dir_read_name( dir )) )
         {
-            if ( should_abort( task ) )
+            if ( task->state == VFS_FILE_TASK_TIMEOUT || should_abort( task ) )
                 break;
             full_path = g_build_filename( path, name, NULL );
             lstat64( full_path, &file_stat );
