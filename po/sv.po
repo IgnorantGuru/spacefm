@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-23 22:15+0100\n"
-"PO-Revision-Date: 2012-06-24 08:40+0100\n"
+"PO-Revision-Date: 2012-06-24 10:14+0100\n"
 "Last-Translator: Tomas Forsman <tforsman@foresightlinux.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -297,9 +297,6 @@ msgid "%s%d sel (%s)"
 msgstr ""
 
 #: /home/tforsman/git/spacefm/src/main-window.c:3155
-msgid "hidden"
-msgid_plural "hidden"
-
 #: /home/tforsman/git/spacefm/src/main-window.c:3159
 #, c-format
 msgid "%s%d visible (%s)"
@@ -382,7 +379,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/settings.c:1115
 msgid "Error saving file"
-msgstr ""
+msgstr "Fel vid sparande av fil"
 
 #: /home/tforsman/git/spacefm/src/settings.c:2152
 msgid "Error reading root settings from /etc/spacefm/  Commands run as root may present a security risk"
@@ -475,17 +472,17 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/settings.c:3834
 msgid "Unable to create temporary files"
-msgstr ""
+msgstr "Kunde inte skapa temporärfiler"
 
 #: /home/tforsman/git/spacefm/src/settings.c:3868
 #: /home/tforsman/git/spacefm/src/settings.c:5474
 msgid "Change Menu Name"
-msgstr ""
+msgstr "Ändra namnet på meny"
 
 #: /home/tforsman/git/spacefm/src/settings.c:3893
 #: /home/tforsman/git/spacefm/src/settings.c:5612
 msgid "Set Command Line"
-msgstr ""
+msgstr "Anpassad kommandorad"
 
 #: /home/tforsman/git/spacefm/src/settings.c:3930
 #: /home/tforsman/git/spacefm/src/settings.c:5576
@@ -580,7 +577,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/settings.c:5069
 msgid "Edit Rule"
-msgstr ""
+msgstr "Redigera regel"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5086
 msgid "Value:"
@@ -650,11 +647,11 @@ msgstr "Avbryt"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5403
 msgid "Unset"
-msgstr ""
+msgstr "Nollställ"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5411
 msgid "Set"
-msgstr ""
+msgstr "Ange"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5424
 msgid "Set Key"
@@ -667,7 +664,7 @@ msgstr "Byt ikon"
 #: /home/tforsman/git/spacefm/src/settings.c:5482
 #: /home/tforsman/git/spacefm/src/settings.c:5550
 msgid "Edit Command Line"
-msgstr ""
+msgstr "Redigera kommandoraden"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5587
 msgid "Run As User"
@@ -745,7 +742,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/settings.c:5788
 msgid "Confirm Remove"
-msgstr ""
+msgstr "Bekräfta borttagning"
 
 #: /home/tforsman/git/spacefm/src/settings.c:5811
 #: /home/tforsman/git/spacefm/src/settings.c:5815
@@ -1501,7 +1498,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/settings.c:8757
 msgid "Audio CD"
-msgstr ""
+msgstr "Ljud-cd"
 
 #: /home/tforsman/git/spacefm/src/settings.c:8763
 msgid "Optical Mounted"
@@ -1734,7 +1731,7 @@ msgstr "A_vsluta"
 #: /home/tforsman/git/spacefm/src/settings.c:9643
 #: /home/tforsman/git/spacefm/src/settings.c:9681
 msgid "Panel _1"
-msgstr ""
+msgstr "Panel _1"
 
 #: /home/tforsman/git/spacefm/src/settings.c:9014
 #: /home/tforsman/git/spacefm/src/settings.c:9042
@@ -1742,7 +1739,7 @@ msgstr ""
 #: /home/tforsman/git/spacefm/src/settings.c:9644
 #: /home/tforsman/git/spacefm/src/settings.c:9682
 msgid "Panel _2"
-msgstr ""
+msgstr "Panel _2"
 
 #: /home/tforsman/git/spacefm/src/settings.c:9017
 #: /home/tforsman/git/spacefm/src/settings.c:9043
@@ -1750,7 +1747,7 @@ msgstr ""
 #: /home/tforsman/git/spacefm/src/settings.c:9645
 #: /home/tforsman/git/spacefm/src/settings.c:9683
 msgid "Panel _3"
-msgstr ""
+msgstr "Panel _3"
 
 #: /home/tforsman/git/spacefm/src/settings.c:9020
 #: /home/tforsman/git/spacefm/src/settings.c:9044
@@ -1758,7 +1755,7 @@ msgstr ""
 #: /home/tforsman/git/spacefm/src/settings.c:9646
 #: /home/tforsman/git/spacefm/src/settings.c:9684
 msgid "Panel _4"
-msgstr ""
+msgstr "Panel _4"
 
 #: /home/tforsman/git/spacefm/src/settings.c:9023
 msgid "Panel _Bar"
@@ -2653,7 +2650,7 @@ msgstr "Senast ändrad"
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1741
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1754
 msgid "Accessing"
-msgstr ""
+msgstr "bearbetar"
 
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:250
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:283
@@ -2664,7 +2661,7 @@ msgstr ""
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:618
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:680
 msgid "Removing"
-msgstr ""
+msgstr "Tar bort"
 
 #: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:260
 msgid "Creating Dir"
@@ -2770,7 +2767,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/vfs/vfs-app-desktop.c:509
 msgid "Command not found"
-msgstr ""
+msgstr "Kommandot finns inte"
 
 #: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2216
 msgid ":floppy"
@@ -3201,7 +3198,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:882
 msgid "Finished with error"
-msgstr ""
+msgstr "Färdig men med fel"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:893
 #, c-format
@@ -3660,7 +3657,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2261
 msgid "Backup"
-msgstr ""
+msgstr "Reserv"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2289
 #, c-format
@@ -3687,15 +3684,15 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3230
 msgid "Bookmark already exists"
-msgstr ""
+msgstr "Ett bokmärke med det namnet finns redan."
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3257
 msgid "Rename Bookmark"
-msgstr ""
+msgstr "Byt namn på bokmärke"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3259
 msgid "Enter new bookmark name:"
-msgstr ""
+msgstr "Ange nytt bokmärksnamn:"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3280
 #, c-format
@@ -3834,7 +3831,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-console-output.c:171
 msgid "Command:"
-msgstr ""
+msgstr "Kommando:"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:478
 msgid "Toolbar Config Menu Help"
@@ -3868,7 +3865,7 @@ msgstr ""
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4935
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5067
 msgid "Choose Location"
-msgstr ""
+msgstr "Välj placering..."
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4968
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5000
@@ -3877,7 +3874,7 @@ msgstr ""
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4969
 msgid "Destination same as source"
-msgstr ""
+msgstr "Källa och mål är samma."
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5001
 msgid "Invalid destination"
@@ -4323,10 +4320,12 @@ msgid ""
 "\n"
 "Please input a new one:"
 msgstr ""
+"Angivet filnamn finns redan.\n"
+"Ange ett nytt namn:"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3206
 msgid "The new file cannot be created"
-msgstr ""
+msgstr "Den nya filen kan inte skapas!"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3417
 #, c-format
@@ -4359,120 +4358,120 @@ msgstr "Text"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:148
 msgid "Text to render"
-msgstr ""
+msgstr "Text att rendera"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:155
 msgid "Background color name"
-msgstr ""
+msgstr "Namn på bakgrundsfärg"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:156
 msgid "Background color as a string"
-msgstr ""
+msgstr "Bakgrundsfärg som en sträng"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:163
 msgid "Background color"
-msgstr ""
+msgstr "Bakgrundsfärg"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:164
 msgid "Background color as a GdkColor"
-msgstr ""
+msgstr "Bakgrundsfärg som en GdkColor"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:171
 msgid "Foreground color name"
-msgstr ""
+msgstr "Namn på förgrundsfärg"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:172
 msgid "Foreground color as a string"
-msgstr ""
+msgstr "Förgrundsfärg som en sträng"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:179
 msgid "Foreground color"
-msgstr ""
+msgstr "Förgrundsfärg"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:180
 msgid "Foreground color as a GdkColor"
-msgstr ""
+msgstr "Förgrundsfärg som en GdkColor"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:188
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:196
 msgid "Font"
-msgstr ""
+msgstr "Teckensnitt"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:189
 msgid "Font description as a string"
-msgstr ""
+msgstr "Typsnittsbeskrivning som en sträng"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:197
 msgid "Font description as a PangoFontDescription struct"
-msgstr ""
+msgstr "Typsnittsbeskrivning som en PangoFontDescription-struct"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:204
 msgid "Underline"
-msgstr ""
+msgstr "Understruken"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:205
 msgid "Style of underline for this text"
-msgstr ""
+msgstr "Stil på understrykningen för denna text"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:224
 msgid "Ellipsize"
-msgstr ""
+msgstr "Elliptisera"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:225
 msgid "The preferred place to ellipsize the string, if the cell renderer does not have enough room to display the entire string, if at all"
-msgstr ""
+msgstr "Den föredragna platsen att elliptisera strängen, om det alls ska göras, om förloppsmätaren inte har tillräckligt med utrymme för att visa hela strängen."
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:244
 msgid "Wrap mode"
-msgstr ""
+msgstr "Automatisk radbrytning"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:245
 msgid "How to break the string into multiple lines, if the cell renderer does not have enough room to display the entire string"
-msgstr ""
+msgstr "Hur strängen ska delas upp i flera rader, om cellrenderaren inte har tillräckligt med utrymme för att visa hela strängen"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:264
 msgid "Wrap width"
-msgstr ""
+msgstr "Radbrytningsbredd"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:265
 msgid "The width at which the text is wrapped"
-msgstr ""
+msgstr "Bredden på vilken texten radbryts"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:277
 msgid "Background set"
-msgstr ""
+msgstr "Bakgrund inställd"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:278
 msgid "Whether this tag affects the background color"
-msgstr ""
+msgstr "Huruvida denna tagg påverkar bakgrundsfärgen"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:281
 msgid "Foreground set"
-msgstr ""
+msgstr "Förgrund inställd"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:282
 msgid "Whether this tag affects the foreground color"
-msgstr ""
+msgstr "Huruvida denna tagg påverkar förgrundsfärgen"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:285
 msgid "Underline set"
-msgstr ""
+msgstr "Understrykning inställd"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:286
 msgid "Whether this tag affects underlining"
-msgstr ""
+msgstr "Huruvida denna tagg påverkar understrykningen"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:289
 msgid "Ellipsize set"
-msgstr ""
+msgstr "Elliptisering inställd"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:290
 msgid "Whether this tag affects the ellipsize mode"
-msgstr ""
+msgstr "Huruvida denna tagg påverkar elliptiseringsläget"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-dir-tree.c:174
 msgid "File System"
-msgstr ""
+msgstr "Filsystem"
 
 #: /home/tforsman/git/spacefm/src/ptk/ptk-dir-tree.c:396
 msgid "( no subfolder )"
