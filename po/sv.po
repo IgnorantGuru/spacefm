@@ -1,1319 +1,3241 @@
-# Swedish translation for PCManFM
+# Swedish translation for PCManFM/SpaceFM
 # Copyright (C) 2006-2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the PCManFM package.
 # Johan Andersson <nossrednanahoj(at)gmail.com>, 2006.
 # Mikael Magnusson, <mikachu@gmail.com>, 2008.
 # Martin Bagge <brother@bsnet.se>, 2009.
 # Daniel Nylander <po@danielnylander.se>, 2009.
+# Tomas Forsman <tforsman@foresightlinux.se>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PCManFM\n"
+"Project-Id-Version: spacefm\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-28 13:07+0200\n"
-"PO-Revision-Date: 2009-04-21 17:31+0200\n"
-"Last-Translator: Martin Bagge <brother@bsnet.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"POT-Creation-Date: 2012-06-23 22:15+0100\n"
+"PO-Revision-Date: 2012-06-24 08:40+0100\n"
+"Last-Translator: Tomas Forsman <tforsman@foresightlinux.se>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: Swedish\n"
+"X-Poedit-Country: SWEDEN\n"
+"X-Poedit-SearchPath-0: /home/tforsman/git/spacefm\n"
 
-#: ../data/ui/about-dlg.glade.h:1
-msgid "Copyright (C) 2005 - 2008"
-msgstr "Copyright © 2005 - 2008"
+#: /home/tforsman/git/spacefm/src/edit-bookmarks.c:78
+msgid "New Item"
+msgstr "Nytt objekt"
 
-#: ../data/ui/about-dlg.glade.h:2
-msgid ""
-"Lightweight file manager\n"
-"\n"
-"Developed by Hon Jen Yee (PCMan)"
+#: /home/tforsman/git/spacefm/src/edit-bookmarks.c:152
+msgid "Edit Bookmarks"
+msgstr "Redigera bokmärken"
+
+#: /home/tforsman/git/spacefm/src/edit-bookmarks.c:200
+#: /home/tforsman/git/spacefm/src/find-files.c:888
+msgid "Name"
+msgstr "Namn"
+
+#: /home/tforsman/git/spacefm/src/edit-bookmarks.c:209
+msgid "Path"
+msgstr "Sökväg"
+
+#: /home/tforsman/git/spacefm/src/edit-bookmarks.c:232
+msgid "Use drag & drop to sort the items"
+msgstr "Använd dra och släpp för att sortera objekten"
+
+#: /home/tforsman/git/spacefm/src/main.c:366
+msgid "Option --config-dir ignored - an instance is already running"
 msgstr ""
-"Resurssnål filhanterare\n"
-"\n"
-"Utvecklad av Hon Jen Yee (PCMan)"
 
-#: ../data/ui/about-dlg.glade.h:5
-msgid ""
-"The icon was taken from \"nuoveXT 2\" icon theme\n"
-"created by Alexandre Moore (saki).\n"
-"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
+#: /home/tforsman/git/spacefm/src/main.c:399
+msgid "Option --config-dir contains invalid chars - cannot start"
 msgstr ""
-"Ikonerna togs från ikontemat \"nuoveXT 2\"\n"
-"skapat av Alexander Moore (saki).\n"
-"http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
 
-#. Please replace this line with your own names, one name per line.
-#: ../data/ui/about-dlg.glade.h:9
-msgid "translator-credits"
-msgstr ""
-"Daniel Nylander <po@danielnylander.se>\n"
-"Martin Bagge <brother@bsnet.se>\n"
-"Mikael Magnusson <mikachu@gmail.com>\n"
-"Johan Andersson <nossrednanahoj(at)gmail.com>\n"
-"\n"
-"Skicka synpunkter på översättningen till\n"
-"<tp-sv@listor.tp-sv.se>"
-
-#: ../data/ui/about-dlg.glade.h:10
-msgid ""
-"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
-"\n"
-"Source code taken from other projects:\n"
-" * libmd5-rfc: Aladdin Enterprises\n"
-" * Working area detection: Gary Kramlich\n"
-" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
-" * Text and icon renderer uses code from Jonathan Blandford\n"
-" * Desktop icons use code from Brian Tarricone\n"
-" * Volume management uses code from following projects/authors:\n"
-"     * gnome-vfs: David Zeuthen\n"
-"     * thunar-vfs and libexo: Benedikt Meurer\n"
-"     * gnome-mount: David Zeuthen"
-msgstr ""
-"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
-"\n"
-"Källkod hämtad från andra projekt:\n"
-" * libmd5-rfc: Aladdin Enterprises\n"
-" * Working area detection: Gary Kramlich\n"
-" * ExoIconView: os-cillation e.K, Anders Carlsson och Benedikt Meurer\n"
-" * Text- och ikonutritarna använder kod från Jonathan Blandford\n"
-" * Skrivbordsikoner använder kod från Brian Tarricone\n"
-" * Volymhantering använder kod från följande projekt/upphovsmän:\n"
-"     * gnome-vfs: David Zeuthen\n"
-"     * thunar-vfs och libexo: Benedikt Meurer\n"
-"     * gnome-mount: David Zeuthen"
-
-#: ../data/ui/appchooserdlg.glade.h:1
-msgid "Choose an Application"
-msgstr "Välj ett program"
-
-#: ../data/ui/appchooserdlg.glade.h:2
-msgid "File Type To be Opened:"
-msgstr "Filtyp som ska öppnas:"
-
-#: ../data/ui/appchooserdlg.glade.h:3
-msgid "Opened in Terminal"
-msgstr "Öppnas i terminal"
-
-#: ../data/ui/appchooserdlg.glade.h:4
-msgid ""
-"Please choose an application from following lists or enter the command line "
-"by hand:"
-msgstr ""
-"Välj ett program från följande listor eller ange manuellt ett kommando:"
-
-#: ../data/ui/appchooserdlg.glade.h:5
-msgid "Set selected application to default action"
-msgstr "Ange valt program som standardåtgärd"
-
-#: ../data/ui/appchooserdlg.glade.h:6
-msgid "_All Applications"
-msgstr "_Alla program"
-
-#: ../data/ui/appchooserdlg.glade.h:7
-msgid "_Browse"
-msgstr "_Bläddra"
-
-#: ../data/ui/appchooserdlg.glade.h:8
-msgid "_Command Line:"
-msgstr "_Kommandorad:"
-
-#: ../data/ui/appchooserdlg.glade.h:9
-msgid "_Recommended Applications"
-msgstr "_Rekommenderade program"
-
-#: ../data/ui/file-assoc-dlg.glade.h:1
-msgid "Actions Showed in Popup Menus"
-msgstr "Åtgärder som visas i popupmenyer"
-
-#: ../data/ui/file-assoc-dlg.glade.h:2
-msgid "Add _Application"
-msgstr "Lägg till _program"
-
-#: ../data/ui/file-assoc-dlg.glade.h:3
-msgid "Add _Custom Action"
-msgstr "Lägg till a_npassat kommando"
-
-#: ../data/ui/file-assoc-dlg.glade.h:4
-msgid "File Associations"
-msgstr "Filassocieringar"
-
-#: ../data/ui/file-assoc-dlg.glade.h:5
-msgid "Known File Types:"
-msgstr "Kända filtyper:"
-
-#: ../data/ui/file-assoc-dlg.glade.h:6
-msgid "Move _Down"
-msgstr "Flytta _nedåt"
-
-#: ../data/ui/file-assoc-dlg.glade.h:7
-msgid "Move _Up"
-msgstr "Flytta _uppåt"
-
-#. Preparing to do some file operation (Copy, Move, Delete...)
-#: ../data/ui/file_operation.glade.h:2 ../src/ptk/ptk-file-task.c:176
-msgid "Preparing..."
-msgstr "Förbereder..."
-
-#. Processing: <Name of currently proccesed file>
-#. Processing:
-#. Processing: <Name of currently proccesed file>
-#: ../data/ui/file_operation.glade.h:4 ../src/ptk/ptk-file-task.c:169
-msgid "Processing:"
-msgstr "Bearbetar:"
-
-#. Progress:
-#: ../data/ui/file_operation.glade.h:5 ../src/ptk/ptk-file-task.c:184
-msgid "Progress:"
-msgstr "Förlopp:"
-
-#. To: <Destination folder> ex. Copy file to..., Move file to...etc.
-#. To: <Destination folder>
-#. ex. Copy file to..., Move file to...etc.
-#: ../data/ui/file_operation.glade.h:7 ../src/ptk/ptk-file-task.c:154
-msgid "To:"
-msgstr "Till:"
-
-#: ../data/ui/file_properties.glade.h:1
-msgid "<b>File Type:</b>"
-msgstr "<b>Filtyp:</b>"
-
-#: ../data/ui/file_properties.glade.h:2
-msgid "<b>File _Name:</b>"
-msgstr "<b>Fil_namn:</b>"
-
-#: ../data/ui/file_properties.glade.h:3
-msgid "<b>Group:</b>"
-msgstr "<b>Grupp:</b>"
-
-#: ../data/ui/file_properties.glade.h:4
-msgid "<b>Last Access:</b>"
-msgstr "<b>Senast använd:</b>"
-
-#: ../data/ui/file_properties.glade.h:5
-msgid "<b>Last Modification:</b>"
-msgstr "<b>Senast ändrad:</b>"
-
-#: ../data/ui/file_properties.glade.h:6
-msgid "<b>Location:</b>"
-msgstr "<b>Plats:</b>"
-
-#: ../data/ui/file_properties.glade.h:7
-msgid "<b>Open _with:</b>"
-msgstr "<b>Öppna _med:</b>"
-
-#: ../data/ui/file_properties.glade.h:8
-msgid "<b>Other Users:</b>"
-msgstr "<b>Övriga användare:</b>"
-
-#: ../data/ui/file_properties.glade.h:9
-msgid "<b>Owner:</b>"
-msgstr "<b>Ägare:</b>"
-
-#: ../data/ui/file_properties.glade.h:10
-msgid "<b>Size on Disk:</b>"
-msgstr "<b>Storlek på disk:</b>"
-
-#: ../data/ui/file_properties.glade.h:11
-msgid "<b>Total Size of Files:</b>"
-msgstr "<b>Total filstorlek:</b>"
-
-#: ../data/ui/file_properties.glade.h:12
-msgid "<b>_Group:</b>"
-msgstr "<b>_Grupp:</b>"
-
-#: ../data/ui/file_properties.glade.h:13
-msgid "<b>_Owner:</b>"
-msgstr "<b>_Ägare:</b>"
-
-#: ../data/ui/file_properties.glade.h:14
-msgid "Execute"
-msgstr "Kör"
-
-#: ../data/ui/file_properties.glade.h:15
-msgid "File Properties"
-msgstr "Filegenskaper"
-
-#: ../data/ui/file_properties.glade.h:16
-msgid "Read"
-msgstr "Läs"
-
-#. This is used in file attribute
-#: ../data/ui/file_properties.glade.h:18
-msgid "Set GID"
-msgstr "Ange GID"
-
-#. This is used in file attribute
-#: ../data/ui/file_properties.glade.h:20
-msgid "Set UID"
-msgstr "Ange UID"
-
-# Sticky-bit är en teknik
-#. This is used in file attribute
-#: ../data/ui/file_properties.glade.h:22
-msgid "Sticky"
-msgstr "Sticky"
-
-#: ../data/ui/file_properties.glade.h:23
-msgid "Write"
-msgstr "Skriv"
-
-#: ../data/ui/file_properties.glade.h:24 ../data/ui/prefdlg.glade.h:41
-msgid "_General"
-msgstr "A_llmänt"
-
-#: ../data/ui/file_properties.glade.h:25
-msgid "_Permissions"
-msgstr "_Rättigheter"
-
-#: ../data/ui/find-files.glade.h:1
-msgid "<b>File Content</b>"
-msgstr "<b>Filinnehåll</b>"
-
-#: ../data/ui/find-files.glade.h:2
-msgid "<b>File Name Contains:</b>"
-msgstr "<b>Filnamn innehåller:</b>"
-
-#: ../data/ui/find-files.glade.h:3
-msgid "<b>File Size</b>"
-msgstr "<b>Filstorlek</b>"
-
-#: ../data/ui/find-files.glade.h:4
-msgid "<b>File Types to Search</b>"
-msgstr "<b>Filtyper att söka efter</b>"
-
-#: ../data/ui/find-files.glade.h:5
-msgid "<b>Last Modified</b>"
-msgstr "<b>Senast ändrad</b>"
-
-# Inspirerad av Dolphin. "Sökvägar att söka i" kändes klumpigt.
-# PCManFM tillhanda håller en lista med sökvägar som ska sökas, detta är dess rubrikrad.
-#: ../data/ui/find-files.glade.h:6
-msgid "<b>Places to Search</b>"
-msgstr "<b>Platser att söka i</b>"
-
-#: ../data/ui/find-files.glade.h:7
-msgid "<b>Search Result:</b>"
-msgstr "<b>Sökresultat:</b>"
-
-#: ../data/ui/find-files.glade.h:8
-msgid "All Files and Folders"
-msgstr "Alla filer och mappar"
-
-#: ../data/ui/find-files.glade.h:9
-msgid ""
-"Any\n"
-"Within One Day\n"
-"Within One Week\n"
-"Within One Month\n"
-"Within One Year\n"
-"Within Selected Date Range"
-msgstr ""
-"Alla\n"
-"Inom en dag\n"
-"Inom en vecka\n"
-"Inom en månad\n"
-"Inom ett år\n"
-"Inom valt datumintervall"
-
-#: ../data/ui/find-files.glade.h:15
-msgid "Audio Files (mp3, ogg,...)"
-msgstr "Ljudfiler (ogg, mp3,...)"
-
-#: ../data/ui/find-files.glade.h:16
-msgid ""
-"Bytes\n"
-"KB\n"
-"MB\n"
-"GB"
-msgstr ""
-"Byte\n"
-"KB\n"
-"MB\n"
-"GB"
-
-#: ../data/ui/find-files.glade.h:20
-msgid "Case Sensitive"
-msgstr "Skiftlägeskänslig"
-
-#: ../data/ui/find-files.glade.h:21
-msgid "Content"
-msgstr "Innehåll"
-
-#: ../data/ui/find-files.glade.h:22
-msgid "File Contains:"
-msgstr "Filen innehåller:"
-
-#: ../data/ui/find-files.glade.h:23
-msgid "Find Files"
-msgstr "Sök filer"
-
-#: ../data/ui/find-files.glade.h:24
-msgid "General"
-msgstr "Allmänt"
-
-#: ../data/ui/find-files.glade.h:25
-msgid "Greater Than:"
-msgstr "Större än:"
-
-#: ../data/ui/find-files.glade.h:26
-msgid "Image Files (jpg, png,...)"
-msgstr "Bildfiler (jpg, png,...)"
-
-#: ../data/ui/find-files.glade.h:27
-msgid "Plain Text Files"
-msgstr "Vanliga textfiler"
-
-#: ../data/ui/find-files.glade.h:28
-msgid "Search Again"
-msgstr "Sök igen"
-
-#: ../data/ui/find-files.glade.h:29
-msgid "Search Hidden Files"
-msgstr "Sök efter dolda filer"
-
-#: ../data/ui/find-files.glade.h:30
-msgid "Search in Sub Directories"
-msgstr "Sök i underkataloger"
-
-#: ../data/ui/find-files.glade.h:31
-msgid "Size & Date"
-msgstr "Storlek och datum"
-
-#: ../data/ui/find-files.glade.h:32
-msgid "Smaller Than:"
-msgstr "Mindre än:"
-
-#: ../data/ui/find-files.glade.h:33
-msgid "Use Regular Expression"
-msgstr "Använd reguljära uttryck"
-
-#: ../data/ui/find-files.glade.h:34
-msgid "Video Files (avi, mpg,...)"
-msgstr "Videofiler (avi, mpg,...)"
-
-#: ../data/ui/godlg.glade.h:1
-msgid "Go to folder"
-msgstr "Gå till mapp"
-
-#: ../data/ui/prefdlg.glade.h:1
-msgid "<b>Behavior</b>"
-msgstr "<b>Beteende</b>"
-
-#: ../data/ui/prefdlg.glade.h:2
-msgid "<b>Colors</b>"
-msgstr "<b>Färger</b>"
-
-#: ../data/ui/prefdlg.glade.h:3
-msgid "<b>Display</b>"
-msgstr "<b>Visning</b>"
-
-#: ../data/ui/prefdlg.glade.h:4
-msgid "<b>General</b>"
-msgstr "<b>Allmänt</b>"
-
-#: ../data/ui/prefdlg.glade.h:5
-msgid "<b>Wallpaper</b>"
-msgstr "<b>Bakgrundsbild</b>"
-
-#: ../data/ui/prefdlg.glade.h:6
-msgid "Always show the tab bar"
-msgstr "Visa alltid flikfältet"
-
-#: ../data/ui/prefdlg.glade.h:7
-msgid "Background:"
-msgstr "Bakgrund:"
-
-#: ../data/ui/prefdlg.glade.h:8
-msgid "Bookmarks:"
-msgstr "Bokmärken:"
-
-#: ../data/ui/prefdlg.glade.h:9
-msgid "Disable \"Trash Can\" and delete files from disk directly"
-msgstr "Inaktivera \"Papperskorg\" och ta bort filer från disken direkt"
-
-#: ../data/ui/prefdlg.glade.h:10
-msgid "Display image files with supported format as thumbnails"
-msgstr "Visa miniatyrbilder av bildfiler som stöds"
-
-#: ../data/ui/prefdlg.glade.h:11
-msgid "Hide 'Close tab' buttons"
-msgstr "Dölj knappen 'stäng flik'"
-
-#: ../data/ui/prefdlg.glade.h:12
-msgid "Hide folder content border"
-msgstr "Dölj kant för kataloginnehåll"
-
-#: ../data/ui/prefdlg.glade.h:13
-msgid "Hide side pane buttons"
-msgstr "Dölj knappar för sidopanel"
-
-#: ../data/ui/prefdlg.glade.h:14
-msgid "I_nterface"
-msgstr "_Gränssnitt"
-
-#: ../data/ui/prefdlg.glade.h:15
-msgid "Manage the desktop and show file icons"
-msgstr "Hantera skrivbordet och visa filikoner"
-
-#: ../data/ui/prefdlg.glade.h:16
-msgid "Max size of files displayed as thumbnails:"
-msgstr "Maximal storlek på filer som visas som miniatyrbilder:"
-
-#: ../data/ui/prefdlg.glade.h:17
-msgid "Mode:"
-msgstr "Läge: "
-
-#: ../data/ui/prefdlg.glade.h:18
-msgid "On-disk file name encoding:"
-msgstr "Filnamnskodning på disk:"
-
-#: ../data/ui/prefdlg.glade.h:19
-msgid "Open files with single click"
-msgstr "Öppna filer med enkelklick"
-
-#: ../data/ui/prefdlg.glade.h:20
-msgid ""
-"Opened in Current Tab\n"
-"Opened in New Tab\n"
-"Opened in New Window"
-msgstr ""
-"Öppnas i aktuell flik\n"
-"Öppnas i ny flik\n"
-"Öppnas i nytt fönster"
-
-#: ../data/ui/prefdlg.glade.h:23
-msgid "Please select an image file"
-msgstr "Välj en bildfil"
-
-#: ../data/ui/prefdlg.glade.h:24
-msgid "Preferences"
-msgstr "Inställningar"
-
-#: ../data/ui/prefdlg.glade.h:25
-msgid "Shadow:"
-msgstr "Skugga:"
-
-#: ../data/ui/prefdlg.glade.h:26
-msgid "Show \"My Documents\" icon on desktop"
-msgstr "Visa \"Mina dokument\"-ikon på skrivbordet"
-
-#: ../data/ui/prefdlg.glade.h:27
-msgid "Show icons of volumes on desktop"
-msgstr "Visa volymikoner på skrivbordet"
-
-#: ../data/ui/prefdlg.glade.h:28
-msgid "Show menus provided by WM when desktop is clicked"
-msgstr "Visa menyer från fönsterhanteraren när skrivbordet klickas"
-
-#: ../data/ui/prefdlg.glade.h:29
-msgid "Size of Big Icons:"
-msgstr "Storlek på stora ikoner:"
-
-#: ../data/ui/prefdlg.glade.h:30
-msgid "Size of Small Icons:"
-msgstr "Storlek på små ikoner:"
-
-#: ../data/ui/prefdlg.glade.h:31
-msgid ""
-"Stretch to fill the entire screen\n"
-"Stretch to fit the screen\n"
-"Center on the screen\n"
-"Tile the image to fill the entire screen"
-msgstr ""
-"Sträck ut över hela skärmen\n"
-"Sträck ut för att passa skärmen\n"
-"Centrera på skärmen\n"
-"Upprepa bilden för att fylla hela skärmen"
-
-#: ../data/ui/prefdlg.glade.h:35
-msgid "Terminal:"
-msgstr "Terminalprogram:"
-
-#: ../data/ui/prefdlg.glade.h:36
-msgid "Text:"
-msgstr "Text:"
-
-#: ../data/ui/prefdlg.glade.h:37
-msgid "Use SI decimal prefixes instead of IEC binary prefixes"
-msgstr "Använd SI-prefix istället för IEC-binär-prefix"
-
-#: ../data/ui/prefdlg.glade.h:38
-msgid "Wallpaper:"
-msgstr "Bakgrundsbild:"
-
-#: ../data/ui/prefdlg.glade.h:39
-msgid "_Advanced"
-msgstr "A_vancerat"
-
-#: ../data/ui/prefdlg.glade.h:40
-msgid "_Desktop"
-msgstr "_Skrivbord"
-
-#: ../data/ui/prefdlg.glade.h:42
-msgid "_Volume Management"
-msgstr "_Volymhantering"
-
-#: ../src/exo/exo-icon-view.c:696
-msgid "Column Spacing"
-msgstr "Kolumnutrymme"
-
-#: ../src/exo/exo-icon-view.c:697
-msgid "Space which is inserted between grid column"
-msgstr "Utrymme som infogas mellan rutnätskolumner"
-
-#: ../src/exo/exo-icon-view.c:713
-msgid "Number of columns"
-msgstr "Antal kolumner"
-
-#: ../src/exo/exo-icon-view.c:714
-msgid "Number of columns to display"
-msgstr "Antal kolumner att visa"
-
-#: ../src/exo/exo-icon-view.c:728
-msgid "Enable Search"
-msgstr "Aktivera sökning"
-
-#: ../src/exo/exo-icon-view.c:729
-msgid "View allows user to search through columns interactively"
-msgstr "Vy tillåter användaren att interaktivt söka genom kolumner"
-
-#: ../src/exo/exo-icon-view.c:746
-msgid "Width for each item"
-msgstr "Bredd för varje objekt"
-
-#: ../src/exo/exo-icon-view.c:747
-msgid "The width used for each item"
-msgstr "Bredden som används för varje objekt"
-
-#: ../src/exo/exo-icon-view.c:765
-msgid "Layout mode"
-msgstr "Layoutläge"
-
-#: ../src/exo/exo-icon-view.c:766
-msgid "The layout mode"
-msgstr "Läget för layouten"
-
-#: ../src/exo/exo-icon-view.c:782
-msgid "Margin"
-msgstr "Marginal"
-
-#: ../src/exo/exo-icon-view.c:783
-msgid "Space which is inserted at the edges of the icon view"
-msgstr "Utrymme som infogas vid kanterna för ikonvyn"
-
-#: ../src/exo/exo-icon-view.c:799
-msgid "Markup column"
-msgstr "Uppmärkningskolumn"
-
-#: ../src/exo/exo-icon-view.c:800
-msgid "Model column used to retrieve the text if using Pango markup"
-msgstr ""
-"Modellkolumn som används för att hämta texten om Pango-uppmärkning används"
-
-#: ../src/exo/exo-icon-view.c:814
-msgid "Icon View Model"
-msgstr "Ikonvymodell"
-
-#: ../src/exo/exo-icon-view.c:815
-msgid "The model for the icon view"
-msgstr "Modellen för ikonvyn"
-
-#: ../src/exo/exo-icon-view.c:828
-msgid "Orientation"
-msgstr "Orientering"
-
-#: ../src/exo/exo-icon-view.c:829
-msgid ""
-"How the text and icon of each item are positioned relative to each other"
-msgstr "Hur text och ikon för varje objekt placeras relativt till varandra"
-
-#: ../src/exo/exo-icon-view.c:845
-msgid "Pixbuf column"
-msgstr "Pixbuf-kolumn"
-
-#: ../src/exo/exo-icon-view.c:846
-msgid "Model column used to retrieve the icon pixbuf from"
-msgstr "Modellkolumn som används för att hämta ikonens pixbuf från"
-
-#: ../src/exo/exo-icon-view.c:861
-msgid "Reorderable"
-msgstr "Justeringsbar"
-
-#: ../src/exo/exo-icon-view.c:862
-msgid "View is reorderable"
-msgstr "Vyn är justeringsbar"
-
-#: ../src/exo/exo-icon-view.c:877
-msgid "Row Spacing"
-msgstr "Radutrymme"
-
-#: ../src/exo/exo-icon-view.c:878
-msgid "Space which is inserted between grid rows"
-msgstr "Utrymme som infogas mellan rutnätsrader"
-
-#: ../src/exo/exo-icon-view.c:892
-msgid "Search Column"
-msgstr "Sökkolumn"
-
-#: ../src/exo/exo-icon-view.c:893
-msgid "Model column to search through when searching through item"
-msgstr "Modellkolumn att söka genom vid sökning efter objekt"
-
-#: ../src/exo/exo-icon-view.c:907
-msgid "Selection mode"
-msgstr "Markeringsläge"
-
-#: ../src/exo/exo-icon-view.c:908
-msgid "The selection mode"
-msgstr "Markeringsläge"
-
-#: ../src/exo/exo-icon-view.c:923 ../src/exo/exo-tree-view.c:201
-msgid "Single Click"
-msgstr "Enkelklick"
-
-#: ../src/exo/exo-icon-view.c:924 ../src/exo/exo-tree-view.c:202
-msgid "Whether the items in the view can be activated with single clicks"
-msgstr "Huruvida objekten i vyn kan aktiveras med enkelklick"
-
-#: ../src/exo/exo-icon-view.c:940 ../src/exo/exo-tree-view.c:218
-msgid "Single Click Timeout"
-msgstr "Tidsgräns för enkelklick"
-
-#: ../src/exo/exo-icon-view.c:941 ../src/exo/exo-tree-view.c:219
-msgid ""
-"The amount of time after which the item under the mouse cursor will be "
-"selected automatically in single click mode"
-msgstr ""
-"Mängden tid efter vilken objektet under muspekaren kommer att automatiskt "
-"markeras i enkelklicksläge"
-
-#: ../src/exo/exo-icon-view.c:956
-msgid "Spacing"
-msgstr "Mellanrum"
-
-#: ../src/exo/exo-icon-view.c:957
-msgid "Space which is inserted between cells of an item"
-msgstr "Mellanrum som infogas mellan celler för ett objekt"
-
-#: ../src/exo/exo-icon-view.c:972
-msgid "Text column"
-msgstr "Textkolumn"
-
-#: ../src/exo/exo-icon-view.c:973
-msgid "Model column used to retrieve the text from"
-msgstr "Modellkolumn som används för att hämta texten från"
-
-#: ../src/exo/exo-icon-view.c:980
-msgid "Selection Box Color"
-msgstr "Selection Box Color"
-
-#: ../src/exo/exo-icon-view.c:981
-msgid "Color of the selection box"
-msgstr "Färg för väljarrutan"
-
-#: ../src/exo/exo-icon-view.c:987
-msgid "Selection Box Alpha"
-msgstr "Alfa för väljarruta"
-
-#: ../src/exo/exo-icon-view.c:988
-msgid "Opacity of the selection box"
-msgstr "Opacitet för väljarrutan"
-
-# Inte översätta mime-typer
-#. mime-type: application
-#: ../src/file-assoc-dlg.c:34
-msgid "application"
-msgstr "application"
-
-#. mime-type: audio
-#: ../src/file-assoc-dlg.c:37
-msgid "audio"
-msgstr "audio"
-
-#. mime-type: video
-#: ../src/file-assoc-dlg.c:40
-msgid "video"
-msgstr "video"
-
-#. mime-type: text
-#: ../src/file-assoc-dlg.c:43
-msgid "text"
-msgstr "text"
-
-#. mime-type: multipart
-#: ../src/file-assoc-dlg.c:46
-msgid "multipart"
-msgstr "multipart"
-
-#. mime-type: image
-#: ../src/file-assoc-dlg.c:49
-msgid "image"
-msgstr "image"
-
-#. mime-type: message
-#: ../src/file-assoc-dlg.c:52
-msgid "message"
-msgstr "message"
-
-#. mime-type: model
-#: ../src/file-assoc-dlg.c:55
-msgid "model"
-msgstr "model"
-
-#. mime-type: inode
-#: ../src/file-assoc-dlg.c:58
-msgid "inode"
-msgstr "inode"
-
-#. mime-type: packages
-#: ../src/file-assoc-dlg.c:61
-msgid "packages"
-msgstr "packages"
-
-#: ../src/main.c:92
-msgid "Don't show desktop icons."
-msgstr "Visa inte skrivbordsikoner."
-
-#: ../src/main.c:93
-msgid "Run PCManFM as a daemon"
-msgstr "Kör PCManFM som en bakgrundsprocess"
-
-#: ../src/main.c:94
-msgid ""
-"Open folders in new tabs of the last used window instead of creating new "
-"windows"
-msgstr ""
-"Öppna mappar i nya flikar i det senast använda fönstret istället för att "
-"skapa nya fönster"
-
-#: ../src/main.c:95
-msgid ""
-"Open preference dialog. 'n' is the number of page you want to show (1, 2, "
-"3...)."
-msgstr ""
-"Öppna inställningarna. \"n\" är det sidnummer som du vill visa (1,2,3,...)."
-
-#: ../src/main.c:96
-msgid "Find Files with PCManFM"
-msgstr "Sök filer med PCManFM"
-
-#: ../src/main.c:103
-msgid "Set desktop wallpaper"
-msgstr "Ange skrivbordsbakgrund"
-
-#: ../src/main.c:112
-msgid "[FILE1, FILE2,...]"
-msgstr "[FIL1, FIL2,...]"
-
-#: ../src/main.c:339
-msgid "GTK+ icon theme is not properly set"
-msgstr "GTK+-ikontemat är inte korrekt inställt"
-
-#: ../src/main.c:341
+#: /home/tforsman/git/spacefm/src/main.c:682
 #, c-format
 msgid ""
-"<big><b>%s</b></big>\n"
-"\n"
-"This usually means you don't have an XSETTINGS manager running.  Desktop "
-"environment like GNOME or XFCE automatically execute their XSETTING managers "
-"like gnome-settings-daemon or xfce-mcs-manager.\n"
-"\n"
-"<b>If you don't use these desktop environments, you have two choices:\n"
-"1. run an XSETTINGS manager, or\n"
-"2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
-"For example to use the Tango icon theme add a line:\n"
-"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create it "
-"if no such file)\n"
-"\n"
-"<b>NOTICE: The icon theme you choose should be compatible with GNOME, or the "
-"file icons cannot be displayed correctly.</b>  Due to the differences in "
-"icon naming of GNOME and KDE, KDE themes cannot be used.  Currently there is "
-"no standard for this, but it will be solved by freedesktop.org in the future."
+"spacefm: Error: Unable to save session\n"
+"       %s\n"
 msgstr ""
-"<big><b>%s</b></big>\n"
-"\n"
-"Det betyder vanligtvis att du inte har en XSETTINGS-hanterare som körs. "
-"Skrivbordsmiljöer som GNOME och XFCE startar upp en XSETTING hanterare "
-"automatiskt, som tex. gnome-settings-daemon eller xfce-mcs-manager.\n"
-"\n"
-"<b>Om du inte användar dessa skrivbordsmiljöer, har du två möjligheter att "
-"välja mellan:\n"
-"1. kör en XSETTINGS-hanterare, eller\n"
-"2. ändra ikontemat i ~/.gtkrc-2.0.</b>\n"
-"För att exempelvis använda ikontemat Tango - lägg till raden:\n"
-"<i><b>gtk-icon-theme-name=\"Tango\"</b></i> i din ~/.gtkrc-2.0. (skapa filen "
-"om den inte redan existerar)\n"
-"\n"
-"<b>OBS: Ditt valda ikontema måste vara kompatibelt med GNOME, annars kan "
-"filikonerna inte visas korrekt.</b> På grund av skillnader i ikonnamnens "
-"format mellan GNOME och KDE, kan KDE-teman inte användas. För närvarande "
-"finns ingen standard för det, men det ska lösas av freedesktop.org i "
-"framtiden."
 
-#: ../src/main.c:678 ../src/main.c:747 ../src/main.c:798
-#: ../src/main-window.c:1704 ../src/main-window.c:1771
-#: ../src/ptk/ptk-file-browser.c:520 ../src/ptk/ptk-file-browser.c:538
-#: ../src/ptk/ptk-file-task.c:332 ../src/ptk/ptk-console-output.c:225
-#: ../src/ptk/ptk-file-misc.c:258 ../src/ptk/ptk-file-misc.c:326
-#: ../src/ptk/ptk-file-misc.c:415 ../src/ptk/ptk-file-properties.c:701
-#: ../src/ptk/ptk-file-properties.c:712
+#: /home/tforsman/git/spacefm/src/main.c:867
+#: /home/tforsman/git/spacefm/src/main.c:948
+#: /home/tforsman/git/spacefm/src/main.c:999
+#: /home/tforsman/git/spacefm/src/settings.c:7444
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1218
 msgid "Error"
 msgstr "Fel"
 
-#: ../src/main.c:678
+#: /home/tforsman/git/spacefm/src/main.c:867
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr ""
-"Fel: Kunde inte skapa en anslutning till FAM.\n"
-"\n"
-"Har du \"FAM\" eller \"Gamin\" installerat och igång?"
 
-#: ../src/main.c:747
+#: /home/tforsman/git/spacefm/src/main.c:948
 msgid "File doesn't exist"
 msgstr "Filen finns inte"
 
-#: ../src/main.c:794
+#: /home/tforsman/git/spacefm/src/main.c:995
 msgid "Don't know how to open the file"
-msgstr "Vet inte hur filen ska öppnas"
+msgstr "Vet inte hur man ska öppna filen"
 
-#: ../src/main.c:796
+#: /home/tforsman/git/spacefm/src/main.c:997
 #, c-format
 msgid ""
 "Unable to open file:\n"
 "\"%s\"\n"
 "%s"
 msgstr ""
-"Kunde inte öppna filen:\n"
-"\"%s\"\n"
-"%s"
 
-#: ../src/main-window.c:304 ../src/ptk/ptk-file-menu.c:109
-#: ../src/desktop/desktop-window.c:186
-msgid "_Folder"
-msgstr "_Mapp"
+#: /home/tforsman/git/spacefm/src/main-window.c:382
+msgid "Choose Plugin File"
+msgstr "Välj tilläggsfil"
 
-#: ../src/main-window.c:305 ../src/ptk/ptk-file-menu.c:110
-#: ../src/desktop/desktop-window.c:187
-msgid "_Text File"
-msgstr "_Textfil"
+#: /home/tforsman/git/spacefm/src/main-window.c:393
+msgid "Enter Plugin URL"
+msgstr ""
 
-#: ../src/main-window.c:311
-msgid "New _Window"
-msgstr "Nytt fö_nster"
+#: /home/tforsman/git/spacefm/src/main-window.c:393
+msgid ""
+"Enter SpaceFM Plugin URL:\n"
+"\n"
+"(wget will be used to download the plugin file)"
+msgstr ""
 
-#: ../src/main-window.c:312
-msgid "New _Tab"
-msgstr "Ny _flik"
+#: /home/tforsman/git/spacefm/src/main-window.c:413
+msgid "This plugin's filename is invalid.  Please rename it using alpha-numeric ASCII characters and try again."
+msgstr ""
 
-#: ../src/main-window.c:314 ../src/ptk/ptk-file-menu.c:133
-#: ../src/desktop/desktop-window.c:196
-msgid "_Create New"
-msgstr "_Skapa ny"
+#: /home/tforsman/git/spacefm/src/main-window.c:415
+msgid "Invalid Plugin Filename"
+msgstr ""
 
-#: ../src/main-window.c:315
-msgid "File _Properties"
-msgstr "Fil_egenskaper"
+#: /home/tforsman/git/spacefm/src/main-window.c:438
+#, c-format
+msgid ""
+"There is already a plugin installed as '%s'.  Overwrite ?\n"
+"\n"
+"Tip: You can also rename this plugin file to install it under a different name."
+msgstr ""
 
-#: ../src/main-window.c:317
-msgid "Close Tab"
-msgstr "Stäng flik"
+#: /home/tforsman/git/spacefm/src/main-window.c:440
+msgid "Overwrite Plugin ?"
+msgstr ""
 
-#: ../src/main-window.c:318
-msgid "_Close Window"
-msgstr "S_täng fönster"
+#: /home/tforsman/git/spacefm/src/main-window.c:461
+msgid "Error Creating Temp Directory"
+msgstr ""
 
-#: ../src/main-window.c:327 ../src/ptk/ptk-file-menu.c:128
-msgid "_Delete"
-msgstr "_Ta bort"
+#: /home/tforsman/git/spacefm/src/main-window.c:462
+msgid "Unable to create temporary directory"
+msgstr ""
 
-#: ../src/main-window.c:328 ../src/ptk/ptk-file-browser.c:1396
-#: ../src/ptk/ptk-file-menu.c:129
-msgid "_Rename"
-msgstr "_Byt namn"
+#: /home/tforsman/git/spacefm/src/main-window.c:659
+#, c-format
+msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
+msgstr ""
 
-#: ../src/main-window.c:330
-msgid "Select _All"
-msgstr "Markera _allt"
+#: /home/tforsman/git/spacefm/src/main-window.c:703
+#, c-format
+msgid ""
+"Error: Unable to save session file\n"
+"\n"
+"( %s )"
+msgstr ""
 
-#: ../src/main-window.c:331
-msgid "_Invert Selection"
-msgstr "In_vertera markering"
+#: /home/tforsman/git/spacefm/src/main-window.c:705
+msgid "Save Session Error"
+msgstr ""
 
-#: ../src/main-window.c:340
-msgid "Go _Back"
-msgstr "Gå _bakåt"
+#: /home/tforsman/git/spacefm/src/main-window.c:736
+msgid "Open Root Window"
+msgstr ""
 
-#: ../src/main-window.c:341
-msgid "Go _Forward"
-msgstr "Gå _framåt"
+#: /home/tforsman/git/spacefm/src/main-window.c:763
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1248
+msgid "Terminal Not Available"
+msgstr "Terminal är inte tillgänglig"
 
-#: ../src/main-window.c:342
-msgid "Go to _Parent Folder"
-msgstr "Gå till f_öräldramapp"
+#: /home/tforsman/git/spacefm/src/main-window.c:764
+msgid "Please set your terminal program in View|Preferences|Advanced"
+msgstr ""
 
-#: ../src/main-window.c:343
-msgid "Go _Home"
-msgstr "Gå _hem"
+#: /home/tforsman/git/spacefm/src/main-window.c:775
+msgid "Open Terminal"
+msgstr "Öppna Terminal"
 
-#: ../src/main-window.c:355 ../src/desktop/desktop-window.c:173
-msgid "Sort by _Name"
-msgstr "Sortera efter _namn"
+#: /home/tforsman/git/spacefm/src/main-window.c:1064
+msgid "Design Mode Help"
+msgstr ""
 
-#: ../src/main-window.c:356 ../src/desktop/desktop-window.c:174
-msgid "Sort by _Size"
-msgstr "Sortera efter _storlek"
+#: /home/tforsman/git/spacefm/src/main-window.c:1064
+msgid ""
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
+"\n"
+"To open the design menu, simply right-click on a menu item.\n"
+"\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"\n"
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
+msgstr ""
 
-#: ../src/main-window.c:357 ../src/desktop/desktop-window.c:176
-msgid "Sort by _Modification Time"
-msgstr "Sortera efter ändringsdatu_m"
+#: /home/tforsman/git/spacefm/src/main-window.c:1590
+#: /home/tforsman/git/spacefm/src/settings.c:3866
+#: /home/tforsman/git/spacefm/src/settings.c:4091
+#: /home/tforsman/git/spacefm/src/settings.c:5602
+#: /home/tforsman/git/spacefm/src/settings.c:5676
+msgid "New _Command"
+msgstr ""
 
-#: ../src/main-window.c:358 ../src/desktop/desktop-window.c:175
-msgid "Sort by _Type"
-msgstr "Sortera efter _typ"
+#: /home/tforsman/git/spacefm/src/main-window.c:1684
+#, c-format
+msgid "Show Panel %d"
+msgstr ""
 
-#: ../src/main-window.c:359
-msgid "Sort by _Permission"
-msgstr "Sortera efter _rättigheter"
-
-#: ../src/main-window.c:360
-msgid "Sort by _Owner"
-msgstr "Sortera efter ä_gare"
-
-#: ../src/main-window.c:362 ../src/desktop/desktop-window.c:179
-msgid "Ascending"
-msgstr "Stigande"
-
-#: ../src/main-window.c:363 ../src/desktop/desktop-window.c:180
-msgid "Descending"
-msgstr "Fallande"
-
-#: ../src/main-window.c:369
-msgid "_Open Side Pane"
-msgstr "Öppna sid_opanel"
-
-#: ../src/main-window.c:371
-msgid "Show _Location Pane"
-msgstr "Visa _adressrad"
-
-#: ../src/main-window.c:372
-msgid "Show _Directory Tree"
-msgstr "Visa _katalogträd"
-
-#: ../src/main-window.c:378
-msgid "_Refresh"
-msgstr "_Uppdatera"
-
-#: ../src/main-window.c:379
-msgid "Side _Pane"
-msgstr "Sido_panel"
-
-#. PTK_CHECK_MENU_ITEM( N_( "_Full Screen" ), on_fullscreen_activate, GDK_F11, 0 ),
-#: ../src/main-window.c:381
-msgid "L_ocation Bar"
-msgstr "Ad_ressfält"
-
-#: ../src/main-window.c:383
-msgid "Show _Hidden Files"
-msgstr "Visa _dolda filer"
-
-#: ../src/main-window.c:384
-msgid "_Sort..."
-msgstr "_Sortera..."
-
-#: ../src/main-window.c:386
-msgid "View as _Icons"
-msgstr "Visa som _ikoner"
-
-#: ../src/main-window.c:387
-msgid "View as _Compact List"
-msgstr "Visa som _kompakt lista"
-
-#: ../src/main-window.c:388
-msgid "View as Detailed _List"
-msgstr "Visa som detaljerad _lista"
-
-#: ../src/main-window.c:394
-msgid "Open _Terminal"
-msgstr "Öppna _terminal"
-
-#: ../src/main-window.c:395
-msgid "Open Current Folder as _Root"
-msgstr "Öppna aktuell mapp som _root"
-
-#: ../src/main-window.c:399
-msgid "_Find Files"
-msgstr "_Sök efter filer"
-
-#: ../src/main-window.c:405
+#: /home/tforsman/git/spacefm/src/main-window.c:1712
+#: /home/tforsman/git/spacefm/src/settings.c:9083
+#: /home/tforsman/git/spacefm/src/settings.c:9099
+#: /home/tforsman/git/spacefm/src/settings.c:9434
 msgid "_File"
 msgstr "_Arkiv"
 
-#: ../src/main-window.c:406
-msgid "_Edit"
-msgstr "_Redigera"
-
-#. PTK_POPUP_MENU( N_( "_Edit" ), fm_edit_menu ),
-#: ../src/main-window.c:408
-msgid "_Go"
-msgstr "_Gå"
-
-#: ../src/main-window.c:409
-msgid "_Bookmark"
-msgstr "_Bokmärken"
-
-#: ../src/main-window.c:410
+#: /home/tforsman/git/spacefm/src/main-window.c:1715
+#: /home/tforsman/git/spacefm/src/settings.c:9519
 msgid "_View"
 msgstr "_Visa"
 
-#: ../src/main-window.c:411
-msgid "_Tool"
-msgstr "Ver_ktyg"
+#: /home/tforsman/git/spacefm/src/main-window.c:1718
+#: /home/tforsman/git/spacefm/src/settings.c:9495
+#: /home/tforsman/git/spacefm/src/settings.c:9825
+#: /home/tforsman/git/spacefm/src/settings.c:9932
+#: /home/tforsman/git/spacefm/src/settings.c:10052
+#: /home/tforsman/git/spacefm/src/settings.c:10173
+msgid "_Bookmarks"
+msgstr "_Bokmärken"
 
-#: ../src/main-window.c:412
+#: /home/tforsman/git/spacefm/src/main-window.c:1724
+msgid "_Plugins"
+msgstr "_Tillägg"
+
+#: /home/tforsman/git/spacefm/src/main-window.c:1728
+msgid "_Tools"
+msgstr "_Verktyg"
+
+#: /home/tforsman/git/spacefm/src/main-window.c:1731
+#: /home/tforsman/git/spacefm/src/settings.c:6696
+#: /home/tforsman/git/spacefm/src/settings.c:7153
+#: /home/tforsman/git/spacefm/src/settings.c:7386
 msgid "_Help"
 msgstr "_Hjälp"
 
-#: ../src/main-window.c:420
+#: /home/tforsman/git/spacefm/src/main-window.c:1990
+#, c-format
+msgid ""
+"Error: Unable to save session file.  Do you want to exit without saving?\n"
+"\n"
+"( %s )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:1999
+msgid "SpaceFM Error"
+msgstr "SpaceFM fel"
+
+#: /home/tforsman/git/spacefm/src/main-window.c:2015
+msgid "Stop all tasks running in this window?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:2024
+msgid "Aborting tasks..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3045
+#, c-format
+msgid " %s free / %s   "
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3097
+#, c-format
+msgid "  Link-> %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3099
+#, c-format
+msgid "  Link-> %s/"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3102
+#, c-format
+msgid "  !Link-> %s/ (missing)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3110
+#, c-format
+msgid "  Link-> %s (%s)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3113
+#, c-format
+msgid "  !Link-> %s (missing)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3120
+msgid "  !Link-> ( error reading target )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3134
+#, c-format
+msgid "%s%d sel (%s)%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3135
+#, c-format
+msgid "%s%d sel (%s)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3155
+msgid "hidden"
+msgid_plural "hidden"
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3159
+#, c-format
+msgid "%s%d visible (%s)"
+msgid_plural "%s%d visible (%s)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3163
+#, c-format
+msgid "%s%d item"
+msgid_plural "%s%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3354
+msgid "Device manager key shortcuts are disabled in HAL mode"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3494
+msgid "Reorder Columns Help"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/main-window.c:3494
+msgid "To change the order of the columns, drag the column header to the desired location."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/pref-dialog.c:657
+#: /home/tforsman/git/spacefm/src/pref-dialog.c:658
+msgid "Save Root Settings"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/pref-dialog.c:657
+msgid "You will now be asked for your root password to save the root settings for this user to a file in /etc/spacefm/  Supplying the password in the next window is recommended to improve your security."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:439
+msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:445
+msgid "custom tmp_dir does not exist - reverting to /tmp"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:857
+msgid "Ignore Udisks _Hide"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:860
+#: /home/tforsman/git/spacefm/src/settings.c:8617
+msgid "Ignore _Hide Policy"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:863
+msgid "Ignore Udisks _No Policy"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:866
+#: /home/tforsman/git/spacefm/src/settings.c:8700
+msgid "Ignore _No Policy"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:872
+msgid "How do I... (_FAQ)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:875
+#: /home/tforsman/git/spacefm/src/settings.c:9129
+msgid "_FAQ"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:968
+msgid ""
+"# SpaceFM Session File\n"
+"\n"
+"# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
+"\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
+"\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:1115
+msgid "Error saving file"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:2152
+msgid "Error reading root settings from /etc/spacefm/  Commands run as root may present a security risk"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:2154
+msgid "No root settings found in /etc/spacefm/  Setting a root editor in Preferences should remove this warning on startup.   Otherwise commands run as root may present a security risk."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:2951
+#, c-format
+msgid ""
+"An error occured copying command files\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:2953
+#: /home/tforsman/git/spacefm/src/settings.c:2988
+msgid "Copy Command Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:2986
+#, c-format
+msgid ""
+"An error occured copying command data files\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3358
+#, c-format
+msgid "Error reading plugin file %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3436
+#, c-format
+msgid ""
+"The imported plugin folder does not contain a valid plugin.\n"
+"\n"
+"(%s/)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3451
+#, c-format
+msgid ""
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
+"\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3453
+#, c-format
+msgid ""
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
+"\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
+"\n"
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3481
+#, c-format
+msgid ""
+"Uninstall the '%s' plugin?\n"
+"\n"
+"( %s )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3484
+#: /home/tforsman/git/spacefm/src/settings.c:3492
+msgid "Uninstall Plugin"
+msgstr "Avinstallera tillägg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:3529
+msgid "Install Plugin"
+msgstr "Installera tillägg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:3731
+msgid "Save As Plugin File"
+msgstr "Spara som tilläggsfil"
+
+#: /home/tforsman/git/spacefm/src/settings.c:3799
+msgid "Export Plugin"
+msgstr "Eportera tillägg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:3833
+msgid "Export Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3834
+msgid "Unable to create temporary files"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3868
+#: /home/tforsman/git/spacefm/src/settings.c:5474
+msgid "Change Menu Name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3893
+#: /home/tforsman/git/spacefm/src/settings.c:5612
+msgid "Set Command Line"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:3930
+#: /home/tforsman/git/spacefm/src/settings.c:5576
+msgid "Choose Custom Executable"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4217
+msgid "Editor Not Set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4218
+msgid "Please set your editor in View|Preferences|Advanced"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4228
+msgid "Root Editor Not Set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4229
+msgid "Please set root's editor in View|Preferences|Advanced"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4254
+#, c-format
+msgid "Edit %s"
+msgstr "Redigera %s"
+
+#: /home/tforsman/git/spacefm/src/settings.c:4712
+msgid "Current: Show"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4717
+msgid "Current: Hide"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4719
+msgid "Current: Disable"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4903
+msgid "Context Rules"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4952
+#: /home/tforsman/git/spacefm/src/settings.c:6730
+msgid "_Remove"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4959
+msgid "_Add"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4966
+msgid "A_pply"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4993
+msgid "matches any rule:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4995
+msgid "matches all rules:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4997
+msgid "doesn't match any rule:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:4999
+msgid "doesn't match all rules:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5006
+msgid "Show"
+msgstr "Visa"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5008
+msgid "Enable"
+msgstr "Aktivera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5010
+msgid "Hide"
+msgstr "Dölj"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5012
+msgid "Disable"
+msgstr "Inaktivera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5041
+msgid "item if context"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5069
+msgid "Edit Rule"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5086
+msgid "Value:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5215
+msgid "User's Manual Not Found"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5217
+msgid ""
+"Read the user's manual online?\n"
+"\n"
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5248
+msgid "Help Not Available"
+msgstr "Hjälp inte tillgänglig"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5248
+msgid "This plugin does not include a README file."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5250
+msgid "Creation Failed"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5250
+msgid "An error occured creating a README file for this command."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5272
+msgid "Manual Opened ?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5272
+msgid ""
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
+"\n"
+"This message will not repeat."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5325
+#, c-format
+msgid ""
+"    Keycode: %#4x  Modifier: %#x\n"
+"\n"
+"This key combination is already assigned to '%s'.\n"
+"\n"
+"Press a different key or click Set to replace the current key assignment."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5332
+#, c-format
+msgid "    Keycode: %#4x  Modifier: %#x"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5386
+#, c-format
+msgid "Press your key combination for menu item '%s' then click Set.  To remove the current key assignment, click Unset."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5397
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5403
+msgid "Unset"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5411
+msgid "Set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5424
+msgid "Set Key"
+msgstr "Ange nyckel"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5465
+msgid "Change Icon"
+msgstr "Byt ikon"
+
+#: /home/tforsman/git/spacefm/src/settings.c:5482
+#: /home/tforsman/git/spacefm/src/settings.c:5550
+msgid "Edit Command Line"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5587
+msgid "Run As User"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5587
+msgid ""
+"Run this command as username:\n"
+"\n"
+"( Leave blank for current user )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5593
+#, c-format
+msgid ""
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
+"\n"
+"Add commands or menus here which you only want to appear for this one MIME type."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5594
+msgid "New Context Command"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5603
+msgid "Set Menu Name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5642
+#, c-format
+msgid ""
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
+"\n"
+"Add commands or menus here which you only want to appear for this one MIME type."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5642
+msgid "(none)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5651
+msgid "Set Submenu Name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5651
+msgid ""
+"Enter submenu name:\n"
+"\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5651
+msgid "New _Submenu"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5767
+msgid "( no name )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5770
+#, c-format
+msgid ""
+"Permanently remove the '%s' SUBMENU AND ALL COMMANDS WITHIN IT?\n"
+"\n"
+"This action will delete all settings and files associated with these items."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5775
+#, c-format
+msgid ""
+"Permanently remove the '%s' command?\n"
+"\n"
+"This action will delete all settings and files associated with this command."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5788
+msgid "Confirm Remove"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5811
+#: /home/tforsman/git/spacefm/src/settings.c:5815
+msgid "Dialog Message"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:5811
+#: /home/tforsman/git/spacefm/src/settings.c:5815
+msgid ""
+"Enter the message to be displayed in this dialog:\n"
+"\n"
+"Use:\n"
+"\t\\n"
+"\tnewline\n"
+"\t\\t\ttab"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6401
+#: /home/tforsman/git/spacefm/src/settings.c:8583
+msgid "S_how"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6412
+#: /home/tforsman/git/spacefm/src/settings.c:8852
+#: /home/tforsman/git/spacefm/src/settings.c:9538
+#: /home/tforsman/git/spacefm/src/settings.c:9888
+#: /home/tforsman/git/spacefm/src/settings.c:10003
+#: /home/tforsman/git/spacefm/src/settings.c:10124
+#: /home/tforsman/git/spacefm/src/settings.c:10244
+msgid "_Name"
+msgstr "_Namn"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6417
+msgid "_Key"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6425
+#: /home/tforsman/git/spacefm/src/settings.c:8752
+#: /home/tforsman/git/spacefm/src/settings.c:8847
+#: /home/tforsman/git/spacefm/src/settings.c:9874
+#: /home/tforsman/git/spacefm/src/settings.c:9884
+#: /home/tforsman/git/spacefm/src/settings.c:9987
+#: /home/tforsman/git/spacefm/src/settings.c:9998
+#: /home/tforsman/git/spacefm/src/settings.c:10108
+#: /home/tforsman/git/spacefm/src/settings.c:10119
+#: /home/tforsman/git/spacefm/src/settings.c:10228
+#: /home/tforsman/git/spacefm/src/settings.c:10239
+msgid "_Icon"
+msgstr "_Ikon"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6437
+msgid "_Style"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6452
+msgid "_Normal"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6461
+msgid "_Checkbox"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6470
+msgid "_Input"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6479
+msgid "_Message"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6488
+msgid "Con_text"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6495
+msgid "Ign_ore Context (global)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6500
+msgid "C_ommand"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6513
+#: /home/tforsman/git/spacefm/src/settings.c:7395
+#: /home/tforsman/git/spacefm/src/settings.c:8831
+#: /home/tforsman/git/spacefm/src/settings.c:9586
+msgid "_Edit"
+msgstr "_Redigera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6531
+msgid "E_dit As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6536
+#: /home/tforsman/git/spacefm/src/settings.c:6713
+#: /home/tforsman/git/spacefm/src/settings.c:8882
+#: /home/tforsman/git/spacefm/src/settings.c:9093
+#: /home/tforsman/git/spacefm/src/settings.c:9565
+msgid "_Copy"
+msgstr "_Kopiera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6542
+#: /home/tforsman/git/spacefm/src/settings.c:9110
+msgid "_Browse"
+msgstr "_Bläddra"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6559
+msgid "_Files"
+msgstr "_Filer"
+
+#: /home/tforsman/git/spacefm/src/settings.c:6562
+msgid "_Files (none)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6576
+msgid "_Data"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6579
+msgid "_Data (none)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6583
+msgid "_Plugin"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6596
+msgid "_Line"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6604
+msgid "_Script"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6616
+#, c-format
+msgid "Custo_m (%s)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6618
+msgid "Custo_m (...)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6622
+msgid "Custo_m"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6636
+msgid "Run _In Terminal"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6641
+msgid "_Keep Terminal"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6652
+#, c-format
+msgid "Run As _User... (%s)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6658
+msgid "Run As _User..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6666
+msgid "Run As _Task"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6671
+msgid "_Popup Task"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6677
+msgid "Popup E_rror"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6683
+msgid "Popup _Output"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6689
+msgid "_Scroll"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6706
+#: /home/tforsman/git/spacefm/src/settings.c:9562
+msgid "Cu_t"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6720
+#: /home/tforsman/git/spacefm/src/settings.c:9568
+msgid "_Paste"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6737
+msgid "E_xport"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6747
+msgid "Ne_w"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6754
+msgid "Sub_menu"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:6759
+msgid "S_eparator"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:7090
+msgid "Set Icon"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:7405
+#: /home/tforsman/git/spacefm/src/settings.c:7613
+#: /home/tforsman/git/spacefm/src/settings.c:9353
+#: /home/tforsman/git/spacefm/src/settings.c:9479
+msgid "_Default"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:7445
+msgid "Your input is invalid because it contains linefeeds"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:7616
+msgid "_OK"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:7746
+msgid "_Unset"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8097
+msgid "_Left Toolbar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8101
+msgid "_Right Toolbar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8105
+#: /home/tforsman/git/spacefm/src/settings.c:9828
+#: /home/tforsman/git/spacefm/src/settings.c:9936
+#: /home/tforsman/git/spacefm/src/settings.c:10056
+#: /home/tforsman/git/spacefm/src/settings.c:10177
+msgid "_Side Toolbar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8109
+#: /home/tforsman/git/spacefm/src/settings.c:8112
+#: /home/tforsman/git/spacefm/src/settings.c:9040
+#: /home/tforsman/git/spacefm/src/settings.c:9686
+msgid "_Hide"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8115
+msgid "Configure Toolbar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8119
+msgid "H_elp"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8123
+#: /home/tforsman/git/spacefm/src/settings.c:8193
+#: /home/tforsman/git/spacefm/src/settings.c:8262
+msgid "Tree"
+msgstr "Träd"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8129
+#: /home/tforsman/git/spacefm/src/settings.c:8199
+#: /home/tforsman/git/spacefm/src/settings.c:8268
+msgid "Bookmarks"
+msgstr "Bokmärken"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8135
+#: /home/tforsman/git/spacefm/src/settings.c:8205
+#: /home/tforsman/git/spacefm/src/settings.c:8274
+msgid "Devices"
+msgstr "Enheter"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8141
+#: /home/tforsman/git/spacefm/src/settings.c:8211
+#: /home/tforsman/git/spacefm/src/settings.c:8280
 msgid "New Tab"
 msgstr "Ny flik"
 
-#: ../src/main-window.c:421
-msgid "Back"
-msgstr "Bakåt"
+#: /home/tforsman/git/spacefm/src/settings.c:8146
+#: /home/tforsman/git/spacefm/src/settings.c:8216
+#: /home/tforsman/git/spacefm/src/settings.c:8285
+msgid "New Tab Here"
+msgstr "Ny flik här"
 
-#: ../src/main-window.c:422
+#: /home/tforsman/git/spacefm/src/settings.c:8151
+#: /home/tforsman/git/spacefm/src/settings.c:8221
+#: /home/tforsman/git/spacefm/src/settings.c:8290
+msgid "Back"
+msgstr "Tillbaka"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8156
+#: /home/tforsman/git/spacefm/src/settings.c:8226
+#: /home/tforsman/git/spacefm/src/settings.c:8295
+msgid "Back Menu"
+msgstr "Tillbaka meny"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8161
+#: /home/tforsman/git/spacefm/src/settings.c:8231
+#: /home/tforsman/git/spacefm/src/settings.c:8300
 msgid "Forward"
 msgstr "Framåt"
 
-#: ../src/main-window.c:423
-msgid "Parent Folder"
-msgstr "Föräldramapp"
+#: /home/tforsman/git/spacefm/src/settings.c:8166
+#: /home/tforsman/git/spacefm/src/settings.c:8236
+#: /home/tforsman/git/spacefm/src/settings.c:8305
+msgid "Forward Menu"
+msgstr "Framåt meny"
 
-#: ../src/main-window.c:424
+#: /home/tforsman/git/spacefm/src/settings.c:8171
+#: /home/tforsman/git/spacefm/src/settings.c:8241
+#: /home/tforsman/git/spacefm/src/settings.c:8310
+msgid "Up"
+msgstr "Upp"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8176
+#: /home/tforsman/git/spacefm/src/settings.c:8246
+#: /home/tforsman/git/spacefm/src/settings.c:8315
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: ../src/main-window.c:425
-msgid "Home Directory"
-msgstr "Hemkatalog"
+#: /home/tforsman/git/spacefm/src/settings.c:8181
+#: /home/tforsman/git/spacefm/src/settings.c:8251
+#: /home/tforsman/git/spacefm/src/settings.c:8320
+msgid "Home"
+msgstr "Hem"
 
-#: ../src/main-window.c:426
-msgid "Open Side Pane"
-msgstr "Öppna sidopanel"
+#: /home/tforsman/git/spacefm/src/settings.c:8186
+#: /home/tforsman/git/spacefm/src/settings.c:8256
+#: /home/tforsman/git/spacefm/src/settings.c:8324
+msgid "Default"
+msgstr "Standard"
 
-#: ../src/main-window.c:432
-msgid "Go"
-msgstr "Gå"
+#: /home/tforsman/git/spacefm/src/settings.c:8329
+msgid "Mount"
+msgstr "Montera"
 
-#: ../src/main-window.c:664
-msgid "Warning: You are in super user mode"
-msgstr "Varning: Du är i administratörsläge"
+#: /home/tforsman/git/spacefm/src/settings.c:8333
+msgid "Mount & Open"
+msgstr "Montera & öppna"
 
-#: ../src/main-window.c:1705
-msgid "Terminal program has not been set"
-msgstr "Terminalprogrammet har inte angivits"
+#: /home/tforsman/git/spacefm/src/settings.c:8337
+msgid "Remove"
+msgstr "Ta bort"
 
-#: ../src/main-window.c:1846
-msgid "_Add to Bookmarks"
-msgstr "_Lägg till i bokmärken"
+#: /home/tforsman/git/spacefm/src/settings.c:8357
+msgid "Remo_ve"
+msgstr ""
 
-#: ../src/main-window.c:1847
-msgid "_Edit Bookmarks"
-msgstr "_Redigera bokmärken"
+#: /home/tforsman/git/spacefm/src/settings.c:8361
+#: /home/tforsman/git/spacefm/src/settings.c:8412
+msgid "_Unmount"
+msgstr ""
 
-#: ../src/main-window.c:1918
-msgid "Loading..."
-msgstr "Läser in..."
+#: /home/tforsman/git/spacefm/src/settings.c:8365
+msgid "Re_load"
+msgstr ""
 
-#: ../src/main-window.c:2103
+#: /home/tforsman/git/spacefm/src/settings.c:8369
+msgid "_Sync"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8373
+#: /home/tforsman/git/spacefm/src/settings.c:8837
+#: /home/tforsman/git/spacefm/src/settings.c:9337
+msgid "_Open"
+msgstr "_Öppna"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8377
+#: /home/tforsman/git/spacefm/src/settings.c:8840
+#: /home/tforsman/git/spacefm/src/settings.c:9458
+#: /home/tforsman/git/spacefm/src/settings.c:9500
+#: /home/tforsman/git/spacefm/src/settings.c:9620
+#: /home/tforsman/git/spacefm/src/settings.c:9658
+msgid "_Tab"
+msgstr "_Flik"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8381
+#: /home/tforsman/git/spacefm/src/settings.c:8407
+msgid "_Mount"
+msgstr "_Montera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8385
+msgid "Re_/mount"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8389
+#: /home/tforsman/git/spacefm/src/settings.c:9447
+msgid "_Bookmark"
+msgstr "_Bokmärken"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8401
+#: /home/tforsman/git/spacefm/src/settings.c:9749
+msgid "_Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8417
+msgid "_Label"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8467
+msgid "_Check"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8471
+msgid "_Edit fstab"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8475
+msgid "Edit u_devil.conf"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8479
+msgid "_Format"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8539
+msgid "_Backup"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8561
+msgid "_Restore"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8566
+msgid "_From File"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8571
+#: /home/tforsman/git/spacefm/src/settings.c:8937
+msgid "File _Info"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8574
+msgid "_Properties"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8577
+msgid "Setti_ngs"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8588
+msgid "_Internal Drives"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8593
+msgid "_Empty Drives"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8598
+msgid "_Partition Tables"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8602
+msgid "Mounted _Networks"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8607
+msgid "Mounted _Files"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8612
+msgid "_Volumes..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8613
+msgid "Show/Hide Volumes"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8614
+msgid ""
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
+"\n"
+"Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
+"\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
+"\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8621
+msgid "_Display Name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8623
+msgid "Set Display Name Format"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8624
 #, c-format
-msgid ", Free space: %s (Total: %s )"
-msgstr ", ledigt utrymme: %s (Totalt: %s )"
+msgid ""
+"Enter device display name format:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice filename (eg sdd1)\n"
+"\t%%s\ttotal size (eg 800G)\n"
+"\t%%t\tfstype (eg ext4)\n"
+"\t%%l\tvolume label (eg Label or [no media])\n"
+"\t%%m\tmount point if mounted, or ---\n"
+"\t%%i\tdevice ID\n"
+msgstr ""
 
-#: ../src/main-window.c:2112
+#: /home/tforsman/git/spacefm/src/settings.c:8630
+msgid "_Auto Mount"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8635
+msgid "Mount _Optical"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8640
+msgid "_Mount Removable"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8645
+msgid "Open _Tab"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8650
+msgid "_Unmount On Exit"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8658
+msgid "Auto _Run"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8664
+msgid "On _Mount"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8666
+msgid "Auto Run On Mount"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8667
 #, c-format
-msgid "%d item selected (%s)%s"
-msgid_plural "%d items selected (%s)%s"
-msgstr[0] "%d objekt markerat (%s)%s"
-msgstr[1] "%d objekt markerade (%s)%s"
+msgid ""
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
 
-#: ../src/main-window.c:2122
+#: /home/tforsman/git/spacefm/src/settings.c:8670
+msgid "On _Audio CD"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8672
+msgid "Auto Run On Audio CD"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8673
 #, c-format
-msgid "%d hidden"
-msgid_plural "%d hidden"
-msgstr[0] "%d dolt"
-msgstr[1] "%d dolda"
+msgid ""
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
 
-#: ../src/main-window.c:2123
+#: /home/tforsman/git/spacefm/src/settings.c:8676
+msgid "On _Video DVD"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8678
+msgid "Auto Run On Video DVD"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8679
 #, c-format
-msgid "%d visible item (%s)%s"
-msgid_plural "%d visible items (%s)%s"
-msgstr[0] "%d synligt objekt (%s)%s"
-msgstr[1] "%d synliga objekt (%s)%s"
+msgid ""
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:521
-msgid "Directory doesn't exist!"
-msgstr "Katalogen finns inte!"
+#: /home/tforsman/git/spacefm/src/settings.c:8682
+msgid "On _Insert"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:1392 ../src/ptk/ptk-file-menu.c:142
-msgid "Open in New _Tab"
-msgstr "Öppna i ny f_lik"
+#: /home/tforsman/git/spacefm/src/settings.c:8684
+msgid "Auto Run On Insert"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:1393 ../src/ptk/ptk-file-menu.c:143
-msgid "Open in New _Window"
-msgstr "Öppna i nytt f_önster"
+#: /home/tforsman/git/spacefm/src/settings.c:8685
+#, c-format
+msgid ""
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice added (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:1646 ../src/edit-bookmarks.c:201
-#: ../src/find-files.c:799
-msgid "Name"
-msgstr "Namn"
+#: /home/tforsman/git/spacefm/src/settings.c:8688
+msgid "On _Unmount"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:820
+#: /home/tforsman/git/spacefm/src/settings.c:8690
+msgid "Auto Run On Unmount"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8691
+#, c-format
+msgid ""
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice unmounted (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8694
+msgid "On _Remove"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8696
+msgid "Auto Run On Remove"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8697
+#, c-format
+msgid ""
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice removed (eg /dev/sda1)\n"
+"\t%%l\tdevice label\n"
+"\t%%m\tdevice mount point (eg /media/disk)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8704
+msgid "Mount _Volumes..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8705
+msgid "Auto-Mount Volumes"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8706
+msgid ""
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
+"\n"
+"Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
+"\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8709
+msgid "_Mount Options"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8710
+msgid ""
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
+"\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
+"\n"
+"Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
+"\n"
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8712
+msgid "Default Mount Options"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8720
+msgid "Re/mount With Options"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8721
+msgid ""
+"Device will be (re)mounted using the options below.\n"
+"\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
+"\n"
+"Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
+"\n"
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8725
+msgid "Mount _Command"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8726
+#, c-format
+msgid ""
+"Enter the command to mount a device:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice file ( eg /dev/sda5 )\n"
+"\t%%o\tvolume-specific mount options\n"
+"\n"
+"udevil:\t/usr/bin/udevil --verbose mount -o %%o %%v\n"
+"pmount:\t/usr/bin/pmount %%v\n"
+"Udisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\n"
+"Udisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n"
+"\n"
+"Leave blank for auto-detection."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8728
+msgid "Mount Command"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8732
+msgid "_Unmount Command"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8733
+#, c-format
+msgid ""
+"Enter the command to unmount a device:\n"
+"\n"
+"Use:\n"
+"\t%%v\tdevice file ( eg /dev/sda5 )\n"
+"\n"
+"udevil:\t/usr/bin/udevil --verbose umount %%v\n"
+"pmount:\t/usr/bin/pumount %%v\n"
+"Udisks1:\t/usr/bin/udisks --unmount %%v\n"
+"Udisks2:\t/usr/bin/udisksctl unmount -b %%v\n"
+"\n"
+"Leave blank for auto-detection."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8735
+msgid "Unmount Command"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8757
+msgid "Audio CD"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8763
+msgid "Optical Mounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8768
+msgid "Optical Has Media"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8773
+msgid "Optical No Media"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8778
+msgid "Floppy Mounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8783
+msgid "Floppy Unmounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8788
+msgid "Removable Mounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8793
+msgid "Removable Unmounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8798
+msgid "Internal Mounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8803
+msgid "Internal Unmounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8808
+msgid "Mounted Network"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8813
+msgid "Mounted File"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8825
+#: /home/tforsman/git/spacefm/src/settings.c:9429
+msgid "_New"
+msgstr "_Ny"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8828
+#: /home/tforsman/git/spacefm/src/settings.c:9571
+msgid "_Rename"
+msgstr "_Döp om"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8834
+msgid "Re_move"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8843
+msgid "_Settings"
+msgstr "_Inställningar"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8855
+msgid "_Filename"
+msgstr "_Filnamn"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8859
+msgid "_Parent"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8862
+msgid "P_ath"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8866
+#: /home/tforsman/git/spacefm/src/settings.c:9542
+#: /home/tforsman/git/spacefm/src/settings.c:9898
+#: /home/tforsman/git/spacefm/src/settings.c:10014
+#: /home/tforsman/git/spacefm/src/settings.c:10135
+#: /home/tforsman/git/spacefm/src/settings.c:10255
+msgid "_Type"
+msgstr "_Typ"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8870
+msgid "_Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8874
+msgid "_Template"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8878
+msgid "_Option"
+msgstr "_Alternativ"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8886
+#: /home/tforsman/git/spacefm/src/settings.c:9442
+msgid "_Link"
+msgstr "_Länk"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8890
+msgid "Copy _Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8893
+msgid "Lin_k Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8896
+msgid "_As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8900
+#: /home/tforsman/git/spacefm/src/settings.c:9262
+#: /home/tforsman/git/spacefm/src/settings.c:9288
+#: /home/tforsman/git/spacefm/src/settings.c:9331
+#: /home/tforsman/git/spacefm/src/settings.c:9843
+#: /home/tforsman/git/spacefm/src/settings.c:9849
+#: /home/tforsman/git/spacefm/src/settings.c:9856
+#: /home/tforsman/git/spacefm/src/settings.c:9862
+#: /home/tforsman/git/spacefm/src/settings.c:9868
+#: /home/tforsman/git/spacefm/src/settings.c:9878
+#: /home/tforsman/git/spacefm/src/settings.c:9956
+#: /home/tforsman/git/spacefm/src/settings.c:9962
+#: /home/tforsman/git/spacefm/src/settings.c:9969
+#: /home/tforsman/git/spacefm/src/settings.c:9975
+#: /home/tforsman/git/spacefm/src/settings.c:9981
+#: /home/tforsman/git/spacefm/src/settings.c:9991
+#: /home/tforsman/git/spacefm/src/settings.c:10077
+#: /home/tforsman/git/spacefm/src/settings.c:10083
+#: /home/tforsman/git/spacefm/src/settings.c:10090
+#: /home/tforsman/git/spacefm/src/settings.c:10096
+#: /home/tforsman/git/spacefm/src/settings.c:10102
+#: /home/tforsman/git/spacefm/src/settings.c:10112
+#: /home/tforsman/git/spacefm/src/settings.c:10197
+#: /home/tforsman/git/spacefm/src/settings.c:10203
+#: /home/tforsman/git/spacefm/src/settings.c:10210
+#: /home/tforsman/git/spacefm/src/settings.c:10216
+#: /home/tforsman/git/spacefm/src/settings.c:10222
+#: /home/tforsman/git/spacefm/src/settings.c:10232
+msgid "_Font"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8903
+msgid "Move Dialog Font"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8904
+msgid "/home/user/Example Filename.ext"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8906
+msgid "T_ips"
+msgstr "T_ips"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8909
+msgid "_Confirm Create"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8917
+msgid "Highlight _Bar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8918
+msgid "Status Bar Highlight Color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8922
+msgid "Highlight _Text"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8923
+msgid "Status Bar Text Highlight Color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8927
+msgid "_Middle Click"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8931
+#: /home/tforsman/git/spacefm/src/settings.c:9591
+msgid "Copy _Name"
+msgstr "Kopiera _namn"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8934
+#: /home/tforsman/git/spacefm/src/settings.c:9594
+msgid "Copy _Path"
+msgstr "Kopiera _sökväg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8941
+msgid "_Hide Panel"
+msgstr "_Dölj panel"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8957
+msgid "New _Window"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8960
+msgid "R_oot Window"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8963
+msgid "_File Search"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8966
+msgid "_Terminal"
+msgstr "_Terminal"
+
+#: /home/tforsman/git/spacefm/src/settings.c:8969
+msgid "_Root Terminal"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8972
+msgid "_Save Session"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8975
+msgid "Save Ta_bs"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:8979
+msgid "E_xit"
+msgstr "A_vsluta"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9010
+#: /home/tforsman/git/spacefm/src/settings.c:9041
+#: /home/tforsman/git/spacefm/src/settings.c:9379
+#: /home/tforsman/git/spacefm/src/settings.c:9643
+#: /home/tforsman/git/spacefm/src/settings.c:9681
+msgid "Panel _1"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9014
+#: /home/tforsman/git/spacefm/src/settings.c:9042
+#: /home/tforsman/git/spacefm/src/settings.c:9380
+#: /home/tforsman/git/spacefm/src/settings.c:9644
+#: /home/tforsman/git/spacefm/src/settings.c:9682
+msgid "Panel _2"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9017
+#: /home/tforsman/git/spacefm/src/settings.c:9043
+#: /home/tforsman/git/spacefm/src/settings.c:9381
+#: /home/tforsman/git/spacefm/src/settings.c:9645
+#: /home/tforsman/git/spacefm/src/settings.c:9683
+msgid "Panel _3"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9020
+#: /home/tforsman/git/spacefm/src/settings.c:9044
+#: /home/tforsman/git/spacefm/src/settings.c:9382
+#: /home/tforsman/git/spacefm/src/settings.c:9646
+#: /home/tforsman/git/spacefm/src/settings.c:9684
+msgid "Panel _4"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9023
+msgid "Panel _Bar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9027
+#: /home/tforsman/git/spacefm/src/settings.c:9466
+msgid "_Go"
+msgstr "_Gå"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9032
+#: /home/tforsman/git/spacefm/src/settings.c:9360
+#: /home/tforsman/git/spacefm/src/settings.c:9377
+#: /home/tforsman/git/spacefm/src/settings.c:9504
+#: /home/tforsman/git/spacefm/src/settings.c:9624
+#: /home/tforsman/git/spacefm/src/settings.c:9641
+#: /home/tforsman/git/spacefm/src/settings.c:9662
+#: /home/tforsman/git/spacefm/src/settings.c:9679
+msgid "_Prev"
+msgstr "_Föregående"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9033
+#: /home/tforsman/git/spacefm/src/settings.c:9361
+#: /home/tforsman/git/spacefm/src/settings.c:9378
+#: /home/tforsman/git/spacefm/src/settings.c:9505
+#: /home/tforsman/git/spacefm/src/settings.c:9625
+#: /home/tforsman/git/spacefm/src/settings.c:9642
+#: /home/tforsman/git/spacefm/src/settings.c:9663
+#: /home/tforsman/git/spacefm/src/settings.c:9680
+msgid "_Next"
+msgstr "_Nästa"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9046
+msgid "Wi_ndow Title"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9048
+msgid "Set Window Title Format"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9049
+#, c-format
+msgid ""
+"Set window title format:\n"
+"\n"
+"Use:\n"
+"\t%%n\tcurrent folder name (eg bin)\n"
+"\t%%d\tcurrent folder path (eg /usr/bin)\n"
+"\t%%p\tcurrent panel number (1-4)\n"
+"\t%%t\tcurrent tab number\n"
+"\t%%P\ttotal number of panels visible\n"
+"\t%%T\ttotal number of tabs in current panel\n"
+"\t*\tasterisk shown if tasks running in window"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9053
+msgid "_Window Icon"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9055
+msgid "Set Window Icon"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9056
+msgid ""
+"Enter an icon name, icon file path, or stock item name:\n"
+"\n"
+"Not all icons may work due to various issues.\n"
+"\n"
+"Provided alternate SpaceFM icons:\n"
+"\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n"
+"\tspacefm-48-folder-[blue|red]\n"
+"\n"
+"For example: spacefm-48-pyramid-green"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9058
+msgid "_Fullscreen"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9061
+msgid "_Design Mode"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9064
+msgid "_Preferences"
+msgstr "_Alternativ"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9067
+msgid "_Tool"
+msgstr "_Verktyg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9077
+msgid "_Install"
+msgstr "_Installera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9086
+#: /home/tforsman/git/spacefm/src/settings.c:9102
+msgid "_URL"
+msgstr "_URL"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9105
+msgid "_Verbose"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9112
+msgid "In_cluded"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9126
+msgid "_User's Manual"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9132
+msgid "_Homepage"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9135
+msgid "SpaceFM _News"
+msgstr "SpaceFM _Nyheter"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9138
+msgid "_Get Plugins"
+msgstr "_Hämta tillägg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9141
+msgid "_Options"
+msgstr "_Alternativ"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9146
+msgid "_Browser"
+msgstr "_Webbläsare"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9148
+msgid "Choose HTML Browser"
+msgstr "Välj webbläsare"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9149
+#, c-format
+msgid ""
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
+"\n"
+"Use:\n"
+"\t%%u\turl\n"
+"\n"
+"(Leave blank for automatic browser detection)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9152
+msgid "_Manual Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9154
+msgid "Choose User's Manual Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9155
+msgid ""
+"Enter local file path or remote URL for the SpaceFM User's Manual:\n"
+"\n"
+"(Leave blank for default)\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9158
+msgid "_About"
+msgstr "_Om"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9177
+msgid "_Tasks"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9181
+msgid "_Status"
+msgstr "_Status"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9187
+msgid "_Count"
+msgstr "_Räkna"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9191
+msgid "_Path"
+msgstr "_Sökväg"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9196
+msgid "_Item"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9201
+msgid "_To"
+msgstr "_Till"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9206
+msgid "_Progress"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9212
+msgid "T_otal"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9218
+msgid "Sta_rted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9222
+msgid "_Elapsed"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9228
+msgid "C_urrent Speed"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9232
+msgid "Current Esti_mate"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9236
+msgid "_Average Speed"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9242
+msgid "A_verage Estimate"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9248
+msgid "Reor_der"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9250
+msgid "_Stop Task"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9252
+msgid "Stop _All Tasks"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9254
+msgid "_Show Manager"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9258
+msgid "_Auto-Hide Manager"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9265
+msgid "Task Manager Font"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9266
+msgid "copying  File  1:15  65.2 M  30.2 M/s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9268
+#: /home/tforsman/git/spacefm/src/settings.c:9526
+msgid "_Columns"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9272
+msgid "_Popups"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9276
+msgid "Popup _All Tasks"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9280
+msgid "Stay On _Top"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9284
+msgid "_Detailed Status"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9291
+msgid "Task Popup Font (affects new tasks)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9292
+msgid "Example Output 0123456789"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9294
+msgid "_Errors"
+msgstr "_Fel"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9298
+msgid "Stop If _First"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9302
+msgid "Stop On _Any"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9306
+msgid "_Continue"
+msgstr "_Fortsätt"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9334
+msgid "Input Font"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9335
+msgid "Example Input 0123456789"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9341
+msgid "E_xecute"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9344
+msgid "Edi_t"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9347
+msgid "Edit As _Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9350
+msgid "_Choose..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9355
+msgid "In _Tab"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9359
+msgid "N_ew"
+msgstr "N_y"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9362
+#: /home/tforsman/git/spacefm/src/settings.c:9508
+#: /home/tforsman/git/spacefm/src/settings.c:9626
+#: /home/tforsman/git/spacefm/src/settings.c:9664
+msgid "Tab _1"
+msgstr "Flik _1"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9363
+#: /home/tforsman/git/spacefm/src/settings.c:9509
+#: /home/tforsman/git/spacefm/src/settings.c:9627
+#: /home/tforsman/git/spacefm/src/settings.c:9665
+msgid "Tab _2"
+msgstr "Flik _2"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9364
+#: /home/tforsman/git/spacefm/src/settings.c:9510
+#: /home/tforsman/git/spacefm/src/settings.c:9628
+#: /home/tforsman/git/spacefm/src/settings.c:9666
+msgid "Tab _3"
+msgstr "Flik _3"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9365
+#: /home/tforsman/git/spacefm/src/settings.c:9511
+#: /home/tforsman/git/spacefm/src/settings.c:9629
+#: /home/tforsman/git/spacefm/src/settings.c:9667
+msgid "Tab _4"
+msgstr "Flik _4"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9366
+#: /home/tforsman/git/spacefm/src/settings.c:9512
+#: /home/tforsman/git/spacefm/src/settings.c:9630
+#: /home/tforsman/git/spacefm/src/settings.c:9668
+msgid "Tab _5"
+msgstr "Flik _5"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9367
+#: /home/tforsman/git/spacefm/src/settings.c:9513
+#: /home/tforsman/git/spacefm/src/settings.c:9631
+#: /home/tforsman/git/spacefm/src/settings.c:9669
+msgid "Tab _6"
+msgstr "Flik _6"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9368
+#: /home/tforsman/git/spacefm/src/settings.c:9514
+#: /home/tforsman/git/spacefm/src/settings.c:9632
+#: /home/tforsman/git/spacefm/src/settings.c:9670
+msgid "Tab _7"
+msgstr "Flik _7"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9369
+#: /home/tforsman/git/spacefm/src/settings.c:9515
+#: /home/tforsman/git/spacefm/src/settings.c:9633
+#: /home/tforsman/git/spacefm/src/settings.c:9671
+msgid "Tab _8"
+msgstr "Flik _8"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9370
+#: /home/tforsman/git/spacefm/src/settings.c:9516
+#: /home/tforsman/git/spacefm/src/settings.c:9634
+#: /home/tforsman/git/spacefm/src/settings.c:9672
+msgid "Tab _9"
+msgstr "Flik _9"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9371
+#: /home/tforsman/git/spacefm/src/settings.c:9517
+#: /home/tforsman/git/spacefm/src/settings.c:9635
+#: /home/tforsman/git/spacefm/src/settings.c:9673
+msgid "Tab 1_0"
+msgstr "Flik 1_0"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9373
+msgid "In _Panel"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9384
+#: /home/tforsman/git/spacefm/src/settings.c:9403
+msgid "_Extract"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9387
+#: /home/tforsman/git/spacefm/src/settings.c:9407
+msgid "Extract _To"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9390
+#: /home/tforsman/git/spacefm/src/settings.c:9410
+msgid "_List Contents"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9396
+msgid "_Archive Default"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9400
+msgid "_Open With App"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9413
+msgid "_Create Subfolder"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9417
+msgid "_Write Access"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9420
+msgid "_Mount ISO"
+msgstr "_Montera ISO"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9423
+msgid "_Auto-Mount ISO"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9437
+msgid "File & _Open"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9439
+msgid "Fol_der"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9445
+msgid "Fo_lder & Open"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9451
+msgid "_Archive"
+msgstr "_Arkiv"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9460
+msgid "Tab _Here"
+msgstr "Flik _Här"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9471
+msgid "_Back"
+msgstr "_Bakåt"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9473
+msgid "_Forward"
+msgstr "_Framåt"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9475
+msgid "_Up"
+msgstr "_Upp"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9477
+msgid "_Home"
+msgstr "_Hem"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9482
+msgid "_Set Default"
+msgstr "_Sätt som standard"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9485
+msgid "Fo_cus"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9489
+msgid "_Path Bar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9491
+msgid "_File List"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9493
+msgid "_Tree"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9497
+msgid "De_vices"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9506
+msgid "_Close"
+msgstr "_Stäng"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9523
+msgid "Styl_e"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9529
+msgid "_Reorder"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9534
+msgid "_Sort"
+msgstr "_Sortera"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9540
+#: /home/tforsman/git/spacefm/src/settings.c:9893
+#: /home/tforsman/git/spacefm/src/settings.c:10008
+#: /home/tforsman/git/spacefm/src/settings.c:10129
+#: /home/tforsman/git/spacefm/src/settings.c:10249
+msgid "_Size"
+msgstr "_Storlek"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9544
+#: /home/tforsman/git/spacefm/src/settings.c:9903
+#: /home/tforsman/git/spacefm/src/settings.c:10020
+#: /home/tforsman/git/spacefm/src/settings.c:10141
+#: /home/tforsman/git/spacefm/src/settings.c:10261
+msgid "_Permission"
+msgstr "_Rättighet"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9546
+#: /home/tforsman/git/spacefm/src/settings.c:9779
+#: /home/tforsman/git/spacefm/src/settings.c:9908
+#: /home/tforsman/git/spacefm/src/settings.c:10026
+#: /home/tforsman/git/spacefm/src/settings.c:10147
+#: /home/tforsman/git/spacefm/src/settings.c:10267
+msgid "_Owner"
+msgstr "_Ägare"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9548
+#: /home/tforsman/git/spacefm/src/settings.c:9913
+#: /home/tforsman/git/spacefm/src/settings.c:10032
+#: /home/tforsman/git/spacefm/src/settings.c:10153
+#: /home/tforsman/git/spacefm/src/settings.c:10273
+msgid "_Modified"
+msgstr "_Ändrad"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9550
+msgid "_Ascending"
+msgstr "_Stigande"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9552
+msgid "_Descending"
+msgstr "_Fallande"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9555
+msgid "Re_fresh"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9558
+msgid "_Path Bar Help"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9574
+#: /home/tforsman/git/spacefm/src/settings.c:9702
+msgid "_Delete"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9597
+msgid "Copy Pa_rent"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9600
+msgid "Paste _Link"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9603
+msgid "Paste _Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9606
+msgid "Paste _As"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9612
+#: /home/tforsman/git/spacefm/src/settings.c:9700
+msgid "_Copy To"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9616
+msgid "L_ocation"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9617
+#: /home/tforsman/git/spacefm/src/settings.c:9656
+msgid "L_ast Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9637
+#: /home/tforsman/git/spacefm/src/settings.c:9675
+msgid "_Panel"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9651
+msgid "_Move To"
+msgstr "_Flytta till"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9655
+msgid "_Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9688
+msgid "_Select All"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9691
+msgid "_Unselect All"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9693
+msgid "_Invert Selection"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9695
+msgid "R_oot"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9701
+msgid "Move _To"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9706
+msgid "Propert_ies"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9711
+msgid "_Info"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9714
+msgid "_Permissions"
+msgstr "_Rättigheter"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9717
+msgid "_Quick"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9739
+#: /home/tforsman/git/spacefm/src/settings.c:9769
+#: /home/tforsman/git/spacefm/src/settings.c:9795
+msgid "_Recursive"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9814
+#: /home/tforsman/git/spacefm/src/settings.c:9919
+#: /home/tforsman/git/spacefm/src/settings.c:10039
+#: /home/tforsman/git/spacefm/src/settings.c:10160
+msgid "_Toolbar"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9818
+#: /home/tforsman/git/spacefm/src/settings.c:9924
+#: /home/tforsman/git/spacefm/src/settings.c:10044
+#: /home/tforsman/git/spacefm/src/settings.c:10165
+msgid "_Devices"
+msgstr "_Enheter"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9821
+#: /home/tforsman/git/spacefm/src/settings.c:9928
+#: /home/tforsman/git/spacefm/src/settings.c:10048
+#: /home/tforsman/git/spacefm/src/settings.c:10169
+msgid "T_ree"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9831
+#: /home/tforsman/git/spacefm/src/settings.c:9940
+#: /home/tforsman/git/spacefm/src/settings.c:10060
+#: /home/tforsman/git/spacefm/src/settings.c:10181
+msgid "_Detailed"
+msgstr "_Detaljerad"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9834
+#: /home/tforsman/git/spacefm/src/settings.c:9944
+#: /home/tforsman/git/spacefm/src/settings.c:10065
+#: /home/tforsman/git/spacefm/src/settings.c:10185
+msgid "_Icons"
+msgstr "_Ikoner"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9837
+#: /home/tforsman/git/spacefm/src/settings.c:9948
+#: /home/tforsman/git/spacefm/src/settings.c:10069
+#: /home/tforsman/git/spacefm/src/settings.c:10189
+msgid "_Compact"
+msgstr "_Kompakt"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9840
+#: /home/tforsman/git/spacefm/src/settings.c:9952
+#: /home/tforsman/git/spacefm/src/settings.c:10073
+#: /home/tforsman/git/spacefm/src/settings.c:10193
+msgid "_Hidden Files"
+msgstr "_Dolda filer"
+
+#: /home/tforsman/git/spacefm/src/settings.c:9846
+msgid "File List Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9847
+msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9852
+msgid "Devices Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9853
+#: /home/tforsman/git/spacefm/src/settings.c:9966
+#: /home/tforsman/git/spacefm/src/settings.c:10087
+#: /home/tforsman/git/spacefm/src/settings.c:10207
+msgid "sr0 [no media] :EXAMPLE"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9859
+msgid "Bookmarks Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9860
+#: /home/tforsman/git/spacefm/src/settings.c:9973
+#: /home/tforsman/git/spacefm/src/settings.c:10094
+#: /home/tforsman/git/spacefm/src/settings.c:10214
+msgid "Example Bookmark Name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9865
+msgid "Path Bar Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9866
+#: /home/tforsman/git/spacefm/src/settings.c:9979
+#: /home/tforsman/git/spacefm/src/settings.c:10100
+#: /home/tforsman/git/spacefm/src/settings.c:10220
+msgid "$ cat /home/user/example"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9871
+msgid "Tab Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9881
+msgid "Status Bar Font (Panel 1)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9882
+#: /home/tforsman/git/spacefm/src/settings.c:9995
+#: /home/tforsman/git/spacefm/src/settings.c:10116
+#: /home/tforsman/git/spacefm/src/settings.c:10236
+msgid "12 G free / 200 G   52 items"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9959
+msgid "File List Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9960
+msgid "Example  2.2 M  file  -rwxr--r--  user:group  2011-02-02 02:22"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9965
+msgid "Devices Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9972
+msgid "Bookmarks Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9978
+msgid "Path Bar Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9984
+msgid "Tab Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:9994
+msgid "Status Bar Font (Panel 2)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10080
+msgid "File List Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10081
+msgid "Example  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10086
+msgid "Devices Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10093
+msgid "Bookmarks Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10099
+msgid "Path Bar Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10105
+msgid "Tab Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10115
+msgid "Status Bar Font (Panel 3)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10200
+msgid "File List Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10201
+msgid "Example  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10206
+msgid "Devices Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10213
+msgid "Bookmarks Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10219
+msgid "Path Bar Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10225
+msgid "Tab Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10235
+msgid "Status Bar Font (Panel 4)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/settings.c:10280
+#: /home/tforsman/git/spacefm/src/settings.c:10287
+msgid "_New Tab"
+msgstr "_Ny flik"
+
+#: /home/tforsman/git/spacefm/src/settings.c:10283
+#: /home/tforsman/git/spacefm/src/settings.c:10292
+msgid "_Single Click"
+msgstr "_Enkelklick"
+
+#: /home/tforsman/git/spacefm/src/find-files.c:758
+msgid "Select a folder"
+msgstr "Välj en mapp"
+
+#: /home/tforsman/git/spacefm/src/find-files.c:807
+msgid "Browse..."
+msgstr "Bläddra..."
+
+#: /home/tforsman/git/spacefm/src/find-files.c:831
+msgid "Local Volumes"
+msgstr "Lokala volymer"
+
+#: /home/tforsman/git/spacefm/src/find-files.c:903
+msgid "Folder"
+msgstr "Mapp"
+
+#: /home/tforsman/git/spacefm/src/find-files.c:909
 msgid "Size"
 msgstr "Storlek"
 
-#: ../src/ptk/ptk-file-browser.c:1646 ../src/find-files.c:824
+#: /home/tforsman/git/spacefm/src/find-files.c:913
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/ptk/ptk-file-browser.c:1647
-msgid "Permission"
-msgstr "Rättigheter"
-
-#: ../src/ptk/ptk-file-browser.c:1647
-msgid "Owner:Group"
-msgstr "Ägare:Grupp"
-
-#: ../src/ptk/ptk-file-browser.c:1647
-msgid "Last Modification"
+#: /home/tforsman/git/spacefm/src/find-files.c:919
+msgid "Last Modified"
 msgstr "Senast ändrad"
 
-#: ../src/ptk/ptk-file-browser.c:2856
-msgid "Location"
-msgstr "Plats"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:196
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:321
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:404
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:446
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:549
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:578
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:659
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:784
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1741
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1754
+msgid "Accessing"
+msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2857
-msgid "Directory Tree"
-msgstr "Katalogträd"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:250
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:283
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:304
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:343
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:388
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:604
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:618
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:680
+msgid "Removing"
+msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:207
-msgid "Trash"
-msgstr "Papperskorg"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:260
+msgid "Creating Dir"
+msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:250
-msgid "Desktop"
-msgstr "Skrivbord"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:314
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:690
+msgid "Creating Link"
+msgstr "Skapar länk"
 
-#: ../src/ptk/ptk-location-view.c:441 ../src/ptk/ptk-location-view.c:635
-msgid "Unable to mount device"
-msgstr "Kan inte montera enhet"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:363
+msgid "Writing"
+msgstr "Skriver"
 
-#: ../src/ptk/ptk-location-view.c:652
-msgid "Unable to unmount device"
-msgstr "Kan inte avmontera enhet"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:396
+msgid "Creating"
+msgstr "Skapar"
 
-#: ../src/ptk/ptk-location-view.c:671
-msgid "Unable to eject device"
-msgstr "Kan inte mata ut enhet"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:474
+msgid "Renaming"
+msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:730
-msgid "_Mount File System"
-msgstr "_Montera filsystem"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:979
+#, c-format
+msgid ""
+"\n"
+"[ %s has been closed due to excessive output.\n"
+"  Please run this command in a terminal. ]\n"
+msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:740
-msgid "_Eject"
-msgstr "Mata _ut"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1085
+msgid "Please install /usr/bin/sha256sum so I can improve your security while running root commands\n"
+msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:746
-msgid "_Unmount File System"
-msgstr "_Avmontera filsystem"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1189
+msgid "Please configure a valid Terminal SU command in View|Preferences|Advanced"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:103
-msgid "Move: "
-msgstr "Flytta: "
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1192
+msgid "Terminal SU Not Available"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:104
-msgid "Copy: "
-msgstr "Kopiera: "
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1198
+msgid "Please configure a valid Graphical SU command in View|Preferences|Advanced"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:105
-msgid "Move to Trash: "
-msgstr "Flytta till papperskorg:"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1201
+msgid "Graphical SU Not Available"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:106
-msgid "Delete: "
-msgstr "Ta bort: "
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1215
+msgid "Cannot create temporary directory"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:107
-msgid "Link: "
-msgstr "Länk: "
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1245
+msgid "Please set a valid terminal program in View|Preferences|Advanced"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:108
-msgid "Change Properties: "
-msgstr "Ändra egenskaper: "
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1371
+msgid "[ Finished ]  Press Enter to close"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:112
-msgid "Moving..."
-msgstr "Flyttar..."
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1374
+msgid "[ Finished ]  Press Enter to close or s + Enter for a shell"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:113
-msgid "Copying..."
-msgstr "Kopierar..."
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1374
+msgid "You are ROOT"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:114
-msgid "Moving to Trash..."
-msgstr "Flyttar till papperskorg...."
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1500
+msgid "spacefm-auth not found in path - this reduces your security"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:115
-msgid "Deleting..."
-msgstr "Tar bort..."
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1600
+msgid "Error executing command - see stdout (run spacefm in a terminal) for debug info"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:116
-msgid "Linking..."
-msgstr "Länkar..."
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1647
+msgid "Error writing temporary file"
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:117
-msgid "Changing Properties"
-msgstr "Ändrar egenskaper"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:1715
+#, c-format
+msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
+msgstr ""
 
-#: ../src/ptk/ptk-file-task.c:320
-msgid "Cancel the operation?"
-msgstr "Avbryt åtgärden?"
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:2003
+#, c-format
+msgid ""
+"\n"
+"%s %s\n"
+"Error: %s\n"
+msgstr ""
 
-#. Ask the user whether to overwrite dir content or not
-#: ../src/ptk/ptk-file-task.c:409
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-task.c:2008
+#, c-format
+msgid ""
+"%s\n"
+"%s %s\n"
+"Error: %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-app-desktop.c:509
+msgid "Command not found"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2216
+msgid ":floppy"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2237
+msgid ":optical"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2282
+msgid "[blank]"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2286
+msgid "[audio]"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:2300
+msgid "[no media]"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3071
+msgid "( udev was unavailable at startup )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3076
+msgid "( cannot stat device file )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3081
+msgid "( not a block device )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3089
+msgid "( no udev device )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3332
+#, c-format
+msgid ""
+"\n"
+"Autoexec: %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3379
+#, c-format
+msgid ""
+"\n"
+"Auto Open Tab for %s in %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3425
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3645
+#, c-format
+msgid ""
+"\n"
+"Auto-Unmount: %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3430
+#, c-format
+msgid ""
+"\n"
+"Auto-Unmount: error: no unmount program available\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3447
+#, c-format
+msgid ""
+"\n"
+"Automount: %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3452
+#, c-format
+msgid ""
+"\n"
+"Automount: error: no mount program available\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-nohal.c:3630
+#, c-format
+msgid "Unmount-If-Mounted: %s\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:444
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:449
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:539
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:544
+msgid "T"
+msgstr "T"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:462
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:467
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:557
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:562
+msgid "G"
+msgstr "G"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:481
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:486
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:576
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:581
+msgid "M"
+msgstr "M"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:499
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:504
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:594
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:599
+msgid "K"
+msgstr "K"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:509
+#: /home/tforsman/git/spacefm/src/vfs/vfs-file-info.c:605
+msgid "B"
+msgstr "B"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:475
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:698
+#, c-format
+msgid "%s Volume"
+msgstr "%s-volym"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:490
+msgid "CD-ROM"
+msgstr "CD-ROM"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:492
+msgid "CD-R"
+msgstr "CD-R"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:494
+msgid "CD-RW"
+msgstr "CD-RW"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:498
+msgid "DVD-ROM"
+msgstr "DVD-ROM"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:500
+msgid "DVD+R"
+msgstr "DVD+R"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:502
+msgid "DVD+RW"
+msgstr "DVD+RW"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:504
+msgid "DVD-R"
+msgstr "DVD-R"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:506
+msgid "DVD-RW"
+msgstr "DVD-RW"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:508
+msgid "DVD-RAM"
+msgstr "DVD-RAM"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:517
+#, c-format
+msgid "%s/%s Drive"
+msgstr "%s/%s-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:519
+#, c-format
+msgid "%s Drive"
+msgstr "%s-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:524
+msgid "Floppy Drive"
+msgstr "Diskettenhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:527
+msgid "Compact Flash Drive"
+msgstr "Compact Flash-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:529
+msgid "Memory Stick Drive"
+msgstr "Memory Stick-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:531
+msgid "Smart Media Drive"
+msgstr "Smart Media-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:533
+msgid "SD/MMC Drive"
+msgstr "SD/MMC-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:535
+msgid "Zip Drive"
+msgstr "Zip-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:538
+msgid "Jaz Drive"
+msgstr "Jaz-enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:541
+msgid "Pen Drive"
+msgstr "Pennenhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:547
+#, c-format
+msgid "%s %s Music Player"
+msgstr "%s %s-musikspelare"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:555
+#, c-format
+msgid "%s %s Digital Camera"
+msgstr "%s %s-digitalkamera"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:586
+msgid "Drive"
+msgstr "Enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:591
+#, c-format
+msgid "External %s"
+msgstr "Extern %s"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:625
+msgid "CD-ROM Disc"
+msgstr "CD-ROM-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:630
+msgid "Blank CD-R Disc"
+msgstr "Tom CD-R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:632
+msgid "CD-R Disc"
+msgstr "CD-R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:637
+msgid "Blank CD-RW Disc"
+msgstr "Tom CD-RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:639
+msgid "CD-RW Disc"
+msgstr "CD-RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:643
+msgid "DVD-ROM Disc"
+msgstr "DVD-ROM-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:648
+msgid "Blank DVD-RAM Disc"
+msgstr "Tom DVD-RAM-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:650
+msgid "DVD-RAM Disc"
+msgstr "DVD-RAM-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:655
+msgid "Blank DVD-R Disc"
+msgstr "Tom DVD-R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:657
+msgid "DVD-R Disc"
+msgstr "DVD-R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:662
+msgid "Blank DVD-RW Disc"
+msgstr "Tom DVD-RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:664
+msgid "DVD-RW Disc"
+msgstr "DVD-RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:670
+msgid "Blank DVD+R Disc"
+msgstr "Tom DVD+R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:672
+msgid "DVD+R Disc"
+msgstr "DVD+R-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:677
+msgid "Blank DVD+RW Disc"
+msgstr "Tom DVD+RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:679
+msgid "DVD+RW Disc"
+msgstr "DVD+RW-skiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:686
+msgid "Audio Disc"
+msgstr "Ljudskiva"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:696
+#, c-format
+msgid "%s Removable Volume"
+msgstr "Flyttbar %s-volym"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:704
+msgid "Volume"
+msgstr "Volym"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:1100
+#, c-format
+msgid "Failed to connect to the HAL daemon: %s"
+msgstr "Kunde inte ansluta till HAL-tjänsten: %s"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:1941
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:1997
+#, c-format
+msgid "Given device \"%s\" is not a volume or drive"
+msgstr "\"%s\" är inte en volym eller enhet"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2073
+#, c-format
+msgid "Device \"%s\" not found in file system device table"
+msgstr "Enheten \"%s\" kunde inte hittas i filsystemets enhetstabell"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2270
+#, c-format
+msgid "Invalid mount option when attempting to mount the volume \"%s\""
+msgstr "Ogiltigt monteringsalternativ vid försök att montera volymen \"%s\""
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2272
+#, c-format
+msgid "The volume \"%s\" uses the <i>%s</i> file system which is not supported by your system"
+msgstr "Volymen \"%s\" använder filsystemet <i>%s</i>, men det stöds inte av ditt system"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2274
+#, c-format
+msgid "An application is preventing the volume \"%s\" from being unmounted"
+msgstr "Ett program hindrar volymen \"%s\" från att avmonteras"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2276
+#, c-format
+msgid "The volume \"%s\" is not mounted"
+msgstr "Volymen \"%s\" är inte monterad"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2278
+#, c-format
+msgid "Error <i>%s</i>"
+msgstr "Fel <i>%s</i>"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2281
+#, c-format
+msgid "The volume \"%s\" was probably mounted manually on the command line"
+msgstr "Volymen \"%s\" monterades antagligen manuellt på kommandoraden"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2289
+msgid "Blank discs cannot be mounted, use a CD recording application to record audio or data on the disc"
+msgstr "Tomma skivor kan inte monteras, använd ett cd-bränningsprogram för att skriva ljud- eller dataspår på skivan"
+
+#: /home/tforsman/git/spacefm/src/vfs/vfs-volume-hal.c:2300
+msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr "Ljudskivor kan inte monteras, använd en musikspelare för att lyssna på ljudspåren"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:324
+msgid "Kill As Other"
+msgstr "Döda som annan"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:487
+msgid "To:"
+msgstr "Till:"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:503
+msgid "Progress:  "
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:536
+msgid "Status:  "
+msgstr "Status:  "
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:541
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:898
+msgid "Running..."
+msgstr "Körs..."
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:678
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:862
+msgid "Stopped"
+msgstr "Stoppad"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:683
+msgid "Errors"
+msgstr "Fel"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:685
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:874
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:884
+msgid "Done"
+msgstr "Färdigt"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:781
+#, c-format
+msgid "%s  (%s)  %s remaining"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:802
+msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:821
+msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:852
+msgid "Error  ( Stop If First )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:854
+msgid "Error  ( Stop On Any )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:856
+#, c-format
+msgid "Stopped with %d error"
+msgid_plural "Stopped with %d errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:869
+#, c-format
+msgid "Finished with %d error"
+msgid_plural "Finished with %d errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:879
+#, c-format
+msgid "Finished with error  ( exit status %d )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:882
+msgid "Finished with error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:893
+#, c-format
+msgid "Running with %d error"
+msgid_plural "Running with %d errors"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:901
+#, c-format
+msgid "Running...  ( pid %d )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1325
 msgid "Do you want to overwrite the folder and its content?"
-msgstr "Vill du skriva över mappen och dess innehåll?"
+msgstr ""
 
-#. Ask the user whether to overwrite the file or not
-#: ../src/ptk/ptk-file-task.c:414
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1330
 msgid "Do you want to overwrite this file?"
-msgstr "Vill du skriva över filen?"
+msgstr ""
 
-#. Rename is required
-#: ../src/ptk/ptk-file-task.c:419
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1335
 msgid "Please choose a new file name."
-msgstr "Välj ett nytt filnamn."
+msgstr ""
 
-#. Ths first %s is a file name, and the second one represents followed message.
-#. ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?"
-#: ../src/ptk/ptk-file-task.c:427
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1343
 #, c-format
 msgid ""
 "\"%s\" already exists.\n"
 "\n"
 "%s"
 msgstr ""
-"\"%s\" finns redan.\n"
-"\n"
-"%s"
 
-#. Ths first %s is a file name, and the second one represents followed message.
-#: ../src/ptk/ptk-file-task.c:432
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1348
 #, c-format
 msgid ""
 "\"%s\"\n"
@@ -1322,650 +3244,1417 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"\"%s\"\n"
-"\n"
-"Destination och källa är samma fil.\n"
-"\n"
-"%s"
 
-#: ../src/ptk/ptk-file-task.c:449
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1365
 msgid "Overwrite"
 msgstr "Skriv över"
 
-#: ../src/ptk/ptk-file-task.c:450
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1366
 msgid "Overwrite All"
 msgstr "Skriv över alla"
 
-#: ../src/ptk/ptk-file-task.c:455
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1371
 msgid "Rename"
 msgstr "Byt namn"
 
-#: ../src/ptk/ptk-file-task.c:456
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1372
 msgid "Skip"
 msgstr "Hoppa över"
 
-#: ../src/ptk/ptk-file-task.c:457
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-task.c:1373
 msgid "Skip All"
 msgstr "Hoppa över alla"
 
-#: ../src/ptk/ptk-file-archiver.c:125
-#, fuzzy
-msgid "Save Compressed Files to..."
-msgstr "Spara komprimerade filer till..."
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:632
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:689
+msgid "Unable to mount device"
+msgstr "Kan inte montera enhet"
 
-#: ../src/ptk/ptk-file-archiver.c:133
-msgid "Format of compressed File:"
-msgstr "Format för komprimerad fil:"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:649
+msgid "Unable to unmount device"
+msgstr "Kan inte avmontera enhet"
 
-#: ../src/ptk/ptk-file-archiver.c:204
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:668
+msgid "Unable to eject device"
+msgstr "Kan inte mata ut enhet"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:740
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:886
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1309
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1358
+msgid "udevil Not Installed"
+msgstr "udevil inte installerad"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:741
+msgid "Mounting a network share requires udevil to be installed."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:844
 #, c-format
-msgid "Creating Compressed File: %s"
-msgstr "Skapar komprimerad fil: %s"
+msgid "Netmount %s"
+msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:207
-msgid "Compress Files"
-msgstr "Komprimera filer"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:887
+msgid "Mounting a disc image file requires udevil to be installed."
+msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:238
-msgid "Extract File to..."
-msgstr "Extrahera fil till..."
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:921
+msgid "Mount Disc Image Failed"
+msgstr ""
 
-#: ../src/ptk/ptk-file-archiver.c:287
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:993
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1472
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1519
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1568
 #, c-format
-msgid "Extracting Files to: %s"
-msgstr "Extraherar filer till: %s"
+msgid "Mount %s"
+msgstr "Montera %s"
 
-#: ../src/ptk/ptk-file-archiver.c:289
-msgid "Extract Files"
-msgstr "Extrahera filer"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1019
+#, c-format
+msgid "%s is currently mounted.  You must unmount it before you can check it."
+msgstr ""
 
-#: ../src/ptk/ptk-console-output.c:67
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1020
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1775
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1854
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2196
+msgid "Device Is Mounted"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1027
+#, c-format
+msgid ""
+"Enter filesystem check command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1032
+msgid "Check As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1035
+msgid "CHECK AS ROOT"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1045
+#, c-format
+msgid "Check As Root %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1078
+#, c-format
+msgid ""
+"Enter mount command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\t%%%%o\tvolume-specific mount options\n"
+"\t\t( %s )\n"
+"\n"
+"Note: fstab overrides some options\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1083
+msgid "Mount As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1086
+msgid "MOUNT AS ROOT"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1102
+#, c-format
+msgid "Mount As Root %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1132
+#, c-format
+msgid ""
+"Enter unmount command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1137
+msgid "Unmount As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1140
+msgid "UNMOUNT AS ROOT"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1152
+#, c-format
+msgid "Unmount As Root %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1208
+#, c-format
+msgid ""
+"\n"
+"\n"
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1212
+#, c-format
+msgid "Enter volume label for %s:%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1214
+msgid "Change Volume Label"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1239
+#, c-format
+msgid ""
+"Enter remove label command for fstype '%s':\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\t%%%%l\tnew label ( \"%s\" )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1245
+#, c-format
+msgid ""
+"Enter change label command for fstype '%s':\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\t%%%%l\tnew label ( \"%s\" )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1248
+msgid "Change Label As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1251
+msgid "LABEL AS ROOT"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1266
+#, c-format
+msgid "Label As Root %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1310
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1359
+msgid "Unmounting a network share requires udevil to be installed."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1324
+#, c-format
+msgid "Unmount %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1402
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1414
+#, c-format
+msgid "Remove %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1626
+#, c-format
+msgid "Remount %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1712
+#, c-format
+msgid "Reload %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1740
+msgid "Sync"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1774
+#, c-format
+msgid "%s is currently mounted.  You must unmount it before you can format it."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1786
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1946
+msgid " ( AN ENTIRE DEVICE ) "
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1792
+#, c-format
+msgid ""
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
+"\n"
+"Enter command to overwrite entire volume with /dev/%s:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1795
+#, c-format
+msgid ""
+"You are about to format %s %s- ALL DATA WILL BE LOST.\n"
+"\n"
+"Enter %s format command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1796
+msgid "Format"
+msgstr "Format"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1799
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1896
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1953
+msgid "DATA LOSS WARNING"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1808
+#, c-format
+msgid "Format %s"
+msgstr "Format %s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1853
+#, c-format
+msgid "%s is currently mounted.  You must unmount it before you can restore it."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1861
+msgid "Choose Backup For Restore"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1895
+#, c-format
+msgid ""
+"You are about to overwrite the MBR boot code of %s using %s.\n"
+"\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
+"\n"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1896
+msgid "Restore MBR"
+msgstr "Återställ MBR"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1908
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2118
+msgid "Unknown Type"
+msgstr "Okänd typ"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1908
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2118
+msgid ""
+"The selected file is not a recognized backup file.\n"
+"\n"
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1949
+#, c-format
+msgid ""
+"You are about to restore %s %susing %s - ALL DATA WILL BE LOST.\n"
+"\n"
+"Enter %s restore command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\t%%%%s\tbackup file ( %s )\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1950
+msgid "Restore"
+msgstr "Återställ"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1991
+#, c-format
+msgid "%s Restore %s"
+msgstr "%s Återställ %s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:1997
+msgid "DATA LOSS WARNING - overwriting MBR boot code of"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2045
+msgid "Directory Missing"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2046
+msgid "The /etc/udevil directory was not found.  Is udevil installed?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2059
+msgid "Choose Backup For Info"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2112
+msgid "MBR File"
+msgstr "MBR fil"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2112
+msgid "Based on its name, the selected file appears to be an MBR backup file.  No other information is available for this type of backup."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2128
+msgid "Restore Info"
+msgstr "Återställ info"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2187
+#, c-format
+msgid ""
+"\n"
+"\n"
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2195
+#, c-format
+msgid "%s is currently mounted.  You must unmount it before you can create a backup using Partimage."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2212
+#, c-format
+msgid "Save %s Backup"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2229
+msgid "Overwrite?"
+msgstr "Skriva över?"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2229
+msgid "The selected backup already exists.  Overwrite?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2258
+#, c-format
+msgid ""
+"Enter %s backup command:\n"
+"\n"
+"Use:\n"
+"\t%%%%v\tdevice file ( %s )\n"
+"\t%%%%s\tbackup file ( %s )%s\n"
+"\n"
+"EDIT WITH CARE   This command is run as root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2261
+msgid "Backup"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2289
+#, c-format
+msgid "%s Backup %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2514
+#, c-format
+msgid "Properties %s"
+msgstr "Egenskaper %s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2551
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2578
+#, c-format
+msgid ""
+"%sCurrently Selected Device: %s\n"
+"Volume Label: %s\n"
+"Device ID: %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:2884
+msgid "_Eject"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3230
+msgid "Bookmark already exists"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3257
+msgid "Rename Bookmark"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3259
+msgid "Enter new bookmark name:"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3280
+#, c-format
+msgid "Enter new folder for bookmark '%s':"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-location-view.c:3281
+msgid "Edit Bookmark Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-path-entry.c:378
+#, c-format
+msgid ""
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
+"\t$\trun as task\n"
+"\t&\trun and forget\n"
+"\t+\trun in terminal\n"
+"\t!\trun as root\n"
+"Use:\n"
+"\t%%F\tselected files  or  %%f first selected file\n"
+"\t%%N\tselected filenames  or  %%n first selected filename\n"
+"\t%%d\tcurrent directory\n"
+"\t%%v\tselected device (eg /dev/sda1)\n"
+"\t%%m\tdevice mount point (eg /media/dvd);  %%l device label\n"
+"\t%%b\tselected bookmark\n"
+"\t%%t\tselected task directory;  %%p task pid\n"
+"\t%%a\tmenu item value\n"
+"\t$fm_panel, $fm_tab, $fm_command, etc\n"
+"\n"
+"Example:  $ echo \"Current Directory: %%d\"\n"
+"Example:  +! umount %%v"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:155
+msgid "Save Archive"
+msgstr "Spara arkiv"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:164
+msgid "Archive Format:"
+msgstr "Arkiv Format:"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:192
+msgid "Options:"
+msgstr "Alternativ:"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:372
+msgid "Archive"
+msgstr "Arkiv"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:383
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:651
+msgid "[ Finished With Errors ]  Press Enter to close"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:474
+msgid "Extract To"
+msgstr "Extrahera till"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:482
+msgid "Cre_ate subfolder(s)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:486
+msgid "Make contents user-_writable"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-archiver.c:682
+#, c-format
+msgid "Extract %s"
+msgstr "Extrahera %s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:160
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:164
+#, c-format
+msgid "%s ( %llu bytes )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:171
+#, c-format
+msgid "%d folder"
+msgid_plural "%d folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:175
+#, c-format
+msgid "%d file, %s"
+msgid_plural "%d files, %s"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:182
+#, c-format
+msgid "%d files"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:328
+msgid "( multiple files )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:439
+msgid "( multiple types )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:508
+msgid "Choose..."
+msgstr "Välj..."
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:564
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:571
+#, c-format
+msgid "%s  ( %llu bytes )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:575
+msgid "1 file"
+msgstr "1 fil"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:605
+msgid "Calculating..."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:773
+msgid "Invalid User"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-properties.c:784
+msgid "Invalid Group"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-console-output.c:67
 msgid ""
 "\n"
 "Complete!"
 msgstr ""
-"\n"
-"Färdig!"
 
-#: ../src/ptk/ptk-console-output.c:171
+#: /home/tforsman/git/spacefm/src/ptk/ptk-console-output.c:171
 msgid "Command:"
-msgstr "Kommando:"
-
-#: ../src/ptk/ptk-dir-tree.c:174
-msgid "File System"
-msgstr "Filsystem"
-
-#: ../src/ptk/ptk-dir-tree.c:397
-msgid "No Sub Folder"
-msgstr "Ingen undermapp"
-
-#: ../src/ptk/ptk-file-menu.c:116
-msgid "E_xtract Here"
-msgstr "E_xtrahera här"
-
-#: ../src/ptk/ptk-file-menu.c:117
-msgid "Extract _To"
-msgstr "Extrahera _till"
-
-#: ../src/ptk/ptk-file-menu.c:123
-msgid "Open _with..."
-msgstr "Öppna _med..."
-
-#: ../src/ptk/ptk-file-menu.c:131
-msgid "Compress"
-msgstr "Komprimera"
-
-#: ../src/ptk/ptk-file-menu.c:132
-msgid "E_xtract"
-msgstr "E_xtrahera"
-
-#: ../src/ptk/ptk-file-menu.c:135
-msgid "_Properties"
-msgstr "_Egenskaper"
-
-#: ../src/ptk/ptk-file-menu.c:144
-msgid "Open in Terminal"
-msgstr "Öppna i terminal"
-
-#: ../src/ptk/ptk-file-menu.c:373
-msgid "_Open with another program"
-msgstr "Öppna _med annat program"
-
-#: ../src/ptk/ptk-file-menu.c:388
-msgid "E_xecute"
-msgstr "_Kör"
-
-#: ../src/ptk/ptk-file-menu.c:397
-#, c-format
-msgid "_Open with \"%s\""
-msgstr "Öppna _med \"%s\""
-
-#. delete some confusing menu item if this menu is for current folder
-#: ../src/ptk/ptk-file-menu.c:408 ../src/ptk/ptk-file-menu.c:417
-#: ../src/find-files.c:229
-msgid "_Open"
-msgstr "Ö_ppna"
-
-#: ../src/ptk/ptk-file-misc.c:60
-msgid "Really delete selected files?"
-msgstr "Vill du verkligen ta bort de markerade filerna?"
-
-#: ../src/ptk/ptk-file-misc.c:121
-msgid "Rename File"
-msgstr "Byt namn på fil"
-
-#: ../src/ptk/ptk-file-misc.c:122
-msgid "Please input new file name:"
-msgstr "Ange nytt filnamn:"
-
-#: ../src/ptk/ptk-file-misc.c:151 ../src/ptk/ptk-file-misc.c:172
-#: ../src/ptk/ptk-file-misc.c:225
-msgid ""
-"The file name you specified already exists.\n"
-"Please input a new one:"
 msgstr ""
-"Angivet filnamn finns redan.\n"
-"Ange ett nytt namn:"
 
-#: ../src/ptk/ptk-file-misc.c:195 ../src/ptk/ptk-file-misc.c:197
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:478
+msgid "Toolbar Config Menu Help"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:478
+msgid ""
+"These toolbar config menus allow you to customize the toolbars.\n"
+"\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
+"\n"
+"For more information, click the Help button below."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:2043
+#, c-format
+msgid ""
+"Directory doesn't exist\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:2064
+#, c-format
+msgid ""
+"Unable to access %s\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4935
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5067
+msgid "Choose Location"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4968
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5000
+msgid "Invalid Destination"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:4969
+msgid "Destination same as source"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5001
+msgid "Invalid destination"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5043
+#, c-format
+msgid "Delete %d selected item as root ?"
+msgid_plural "Delete %d selected items as root ?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5047
+msgid "Confirm Delete As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5048
+msgid "DELETE AS ROOT"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5056
+msgid "Delete As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5075
+msgid "Move As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5081
+msgid "Copy As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5151
+msgid "Hide File"
+msgstr "Dölj fil"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5151
+msgid ""
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
+"\n"
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5164
+msgid "Error hiding files"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-browser.c:5171
+msgid "No files are selected"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:148
+#, c-format
+msgid "Delete %d selected item ?"
+msgid_plural "Delete %d selected items ?"
+msgstr[0] ""
+msgstr[1] ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:157
+msgid "Confirm Delete"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:632
+msgid "<b>P_ath:</b>   <i>original</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:634
+msgid "<b>_Name:</b>   <i>original</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:636
+msgid "<b>_Filename:</b>   <i>original</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:638
+msgid "<b>_Parent:</b>   <i>original</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:644
+msgid "<b>P_ath:</b>   <i>exists as folder</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:646
+msgid "<b>_Name:</b>   <i>exists as folder</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:648
+msgid "<b>_Filename:</b>   <i>exists as folder</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:649
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:663
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:674
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:711
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2274
+msgid "<b>_Parent:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:658
+msgid "<b>P_ath:</b>   <i>exists as file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:660
+msgid "<b>_Name:</b>   <i>exists as file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:662
+msgid "<b>_Filename:</b>   <i>exists as file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:669
+msgid "<b>P_ath:</b>   <i>* overwrite existing file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:671
+msgid "<b>_Name:</b>   <i>* overwrite existing file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:673
+msgid "<b>_Filename:</b>   <i>* overwrite existing file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:681
+msgid "<b>P_ath:</b>   <i>parent exists as file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:683
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:695
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:707
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2203
+msgid "<b>_Name:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:685
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:697
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:709
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2250
+msgid "<b>_Filename:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:687
+msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:693
+msgid "<b>P_ath:</b>   <i>* create parent</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:699
+msgid "<b>_Parent:</b>   <i>* create parent</i>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:705
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2298
+msgid "<b>P_ath:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:720
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1136
+msgid "_Move"
+msgstr "_Flytta"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:868
+msgid "Select Link Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:884
+msgid "Select Template File"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:903
+msgid "Select Template Folder"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1000
+msgid "Select File Path"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1066
+msgid "Rename / Move Tips"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1066
+msgid ""
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
+"\n"
+"* Multiple files can be selected in the file browser to rename a batch of files."
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1113
+msgid "C_reate"
+msgstr "S_kapa"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1114
+msgid "Create New"
+msgstr "Skapa ny"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1116
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1916
+msgid "File"
+msgstr "Fil"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1120
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1912
+msgid "Link"
+msgstr "Länk"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1137
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1943
+msgid "Move"
+msgstr "Flytta"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1141
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1151
+msgid "C_opy"
+msgstr "K_opiera"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1142
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1152
+msgid "Copy"
+msgstr "Kopiera"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1147
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1158
+msgid "Create Link To"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1153
+msgid "Link Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1159
+msgid "Target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1164
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2611
+msgid " As Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1677
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-menu.c:1833
+msgid "new"
+msgstr "ny"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1950
+msgid "Opt_ions"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1966
+msgid "Re_vert"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:1986
+msgid "& _Open"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2010
+msgid "<b>Type:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2020
+#, c-format
+msgid "Link-> %s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2023
+#, c-format
+msgid "!Link-> %s (missing)"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2072
+msgid "<b>_Target:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2116
+msgid "<b>_Template:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2132
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2712
+msgid "Empty File"
+msgstr "Tom fil"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2162
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2789
+msgid "Empty Folder"
+msgstr "Tom mapp"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2228
+msgid "<b>E_xtension:</b>"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2323
+msgid "Mov_e"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2325
+msgid "Cop_y"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2327
+msgid "Lin_k"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2331
+msgid "Link Tar_get"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2332
+msgid "A_s Root"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2334
+msgid "Fil_e"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2458
+msgid "New"
+msgstr "Ny"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2566
+msgid "Path contains linefeeds"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2621
+msgid "Create Parent Folder"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2623
+msgid "The parent folder does not exist.  Create it?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2636
+#, c-format
+msgid ""
+"Error creating parent folder\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2639
+msgid "Mkdir Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2650
+msgid "Overwrite Existing File"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2652
+msgid "OVERWRITE WARNING"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2652
+msgid "The file path exists.  Overwrite existing file?"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2661
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2899
+#, c-format
+msgid "Create Link%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2722
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2799
+msgid "Template Missing"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2723
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2800
+msgid "The specified template does not exist"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2748
+#, c-format
+msgid "Create New File%s"
+msgstr "Skapa ny fil%s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2820
+#, c-format
+msgid "Create New Folder%s"
+msgstr "Skapa ny mapp%s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2850
+#, c-format
+msgid "Copy%s"
+msgstr "Kopiera%s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2863
+msgid "Copy Target Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2864
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2911
+msgid "Error determining link's target"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2910
+msgid "Link Target Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2942
+#, c-format
+msgid "Move%s"
+msgstr "Flytta%s"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2973
+#, c-format
+msgid ""
+"Error renaming file\n"
+"\n"
+"%s"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:2976
+#: /home/tforsman/git/spacefm/src/desktop/desktop-window.c:1667
+msgid "Rename Error"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3142
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3144
 msgid "New Folder"
 msgstr "Ny mapp"
 
-#: ../src/ptk/ptk-file-misc.c:196
-msgid "Input a name for the new folder:"
-msgstr "Ange ett namn för den nya mappen:"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3143
+msgid "New folder name:"
+msgstr "Ny mapp namn:"
 
-#: ../src/ptk/ptk-file-misc.c:202 ../src/ptk/ptk-file-misc.c:204
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3149
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3151
 msgid "New File"
 msgstr "Ny fil"
 
-#: ../src/ptk/ptk-file-misc.c:203
-msgid "Input a name for the new file:"
-msgstr "Ange ett namn för den nya filen:"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3150
+msgid "New filename:"
+msgstr "Nytt filnamn:"
 
-#: ../src/ptk/ptk-file-misc.c:259
-msgid "The new file cannot be created!"
-msgstr "Den nya filen kan inte skapas!"
-
-#: ../src/ptk/ptk-file-properties.c:305
-msgid "Multiple files are selected"
-msgstr "Flera filer har markerats"
-
-#: ../src/ptk/ptk-file-properties.c:384
-msgid "Multiple files of different types"
-msgstr "Flera filer av olika typer"
-
-#: ../src/ptk/ptk-file-properties.c:452
-msgid "Other program..."
-msgstr "Annat program..."
-
-#. The total file size displayed in "File Properties" is not
-#. completely calculated yet. So "Calculating..." is displayed.
-#: ../src/ptk/ptk-file-properties.c:546
-msgid "Calculating..."
-msgstr "Beräknar..."
-
-#: ../src/ptk/ptk-file-properties.c:701
-msgid "Invalid User"
-msgstr "Ogiltig användare"
-
-#: ../src/ptk/ptk-file-properties.c:712
-msgid "Invalid Group"
-msgstr "Ogiltig grupp"
-
-#: ../src/ptk/ptk-file-properties.c:760
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3173
 msgid ""
-"Do you want to recursively apply these changes to all files and sub-folders?"
+"Name already exists.\n"
+"\n"
+"Please input a new one:"
 msgstr ""
-"Vill du verkställa ändringarna rekursivt för alla filer och undermappar?"
 
-#: ../src/edit-bookmarks.c:79
-msgid "New Item"
-msgstr "Nytt objekt"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3206
+msgid "The new file cannot be created"
+msgstr ""
 
-#: ../src/edit-bookmarks.c:153
-msgid "Edit Bookmarks"
-msgstr "Redigera bokmärken"
-
-#: ../src/edit-bookmarks.c:210
-msgid "Path"
-msgstr "Sökväg"
-
-#: ../src/edit-bookmarks.c:233
-msgid "Use drag & drop to sort the items"
-msgstr "Använd dra och släpp för att sortera objekten"
-
-#: ../src/vfs/vfs-app-desktop.c:445
-#, c-format
-msgid "Command not found"
-msgstr "Kommandot finns inte"
-
-#: ../src/vfs/vfs-file-task.c:733
-#, c-format
-msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
-msgstr "Målkatalogen \"%1$s\" finns i källan \"%2$s\""
-
-#: ../src/vfs/vfs-volume-hal.c:475 ../src/vfs/vfs-volume-hal.c:698
-#, c-format
-msgid "%s Volume"
-msgstr "%s-volym"
-
-#: ../src/vfs/vfs-volume-hal.c:490
-msgid "CD-ROM"
-msgstr "CD-ROM"
-
-#: ../src/vfs/vfs-volume-hal.c:492
-msgid "CD-R"
-msgstr "CD-R"
-
-#: ../src/vfs/vfs-volume-hal.c:494
-msgid "CD-RW"
-msgstr "CD-RW"
-
-#: ../src/vfs/vfs-volume-hal.c:498
-msgid "DVD-ROM"
-msgstr "DVD-ROM"
-
-#: ../src/vfs/vfs-volume-hal.c:500
-msgid "DVD+R"
-msgstr "DVD+R"
-
-#: ../src/vfs/vfs-volume-hal.c:502
-msgid "DVD+RW"
-msgstr "DVD+RW"
-
-#: ../src/vfs/vfs-volume-hal.c:504
-msgid "DVD-R"
-msgstr "DVD-R"
-
-#: ../src/vfs/vfs-volume-hal.c:506
-msgid "DVD-RW"
-msgstr "DVD-RW"
-
-#: ../src/vfs/vfs-volume-hal.c:508
-msgid "DVD-RAM"
-msgstr "DVD-RAM"
-
-#: ../src/vfs/vfs-volume-hal.c:517
-#, c-format
-msgid "%s/%s Drive"
-msgstr "%s/%s-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:519
-#, c-format
-msgid "%s Drive"
-msgstr "%s-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:524
-msgid "Floppy Drive"
-msgstr "Diskettenhet"
-
-#: ../src/vfs/vfs-volume-hal.c:527
-msgid "Compact Flash Drive"
-msgstr "Compact Flash-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:529
-msgid "Memory Stick Drive"
-msgstr "Memory Stick-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:531
-msgid "Smart Media Drive"
-msgstr "Smart Media-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:533
-msgid "SD/MMC Drive"
-msgstr "SD/MMC-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:535
-msgid "Zip Drive"
-msgstr "Zip-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:538
-msgid "Jaz Drive"
-msgstr "Jaz-enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:541
-msgid "Pen Drive"
-msgstr "Pennenhet"
-
-#: ../src/vfs/vfs-volume-hal.c:547
-#, c-format
-msgid "%s %s Music Player"
-msgstr "%s %s-musikspelare"
-
-#: ../src/vfs/vfs-volume-hal.c:555
-#, c-format
-msgid "%s %s Digital Camera"
-msgstr "%s %s-digitalkamera"
-
-#: ../src/vfs/vfs-volume-hal.c:586
-msgid "Drive"
-msgstr "Enhet"
-
-#: ../src/vfs/vfs-volume-hal.c:591
-#, c-format
-msgid "External %s"
-msgstr "Extern %s"
-
-#: ../src/vfs/vfs-volume-hal.c:625
-msgid "CD-ROM Disc"
-msgstr "CD-ROM-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:630
-msgid "Blank CD-R Disc"
-msgstr "Tom CD-R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:632
-msgid "CD-R Disc"
-msgstr "CD-R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:637
-msgid "Blank CD-RW Disc"
-msgstr "Tom CD-RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:639
-msgid "CD-RW Disc"
-msgstr "CD-RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:643
-msgid "DVD-ROM Disc"
-msgstr "DVD-ROM-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:648
-msgid "Blank DVD-RAM Disc"
-msgstr "Tom DVD-RAM-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:650
-msgid "DVD-RAM Disc"
-msgstr "DVD-RAM-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:655
-msgid "Blank DVD-R Disc"
-msgstr "Tom DVD-R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:657
-msgid "DVD-R Disc"
-msgstr "DVD-R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:662
-msgid "Blank DVD-RW Disc"
-msgstr "Tom DVD-RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:664
-msgid "DVD-RW Disc"
-msgstr "DVD-RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:670
-msgid "Blank DVD+R Disc"
-msgstr "Tom DVD+R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:672
-msgid "DVD+R Disc"
-msgstr "DVD+R-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:677
-msgid "Blank DVD+RW Disc"
-msgstr "Tom DVD+RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:679
-msgid "DVD+RW Disc"
-msgstr "DVD+RW-skiva"
-
-#: ../src/vfs/vfs-volume-hal.c:686
-msgid "Audio Disc"
-msgstr "Ljudskiva"
-
-#: ../src/vfs/vfs-volume-hal.c:696
-#, c-format
-msgid "%s Removable Volume"
-msgstr "Flyttbar %s-volym"
-
-#: ../src/vfs/vfs-volume-hal.c:704
-msgid "Volume"
-msgstr "Volym"
-
-#: ../src/vfs/vfs-volume-hal.c:1100
-#, c-format
-msgid "Failed to connect to the HAL daemon: %s"
-msgstr "Kunde inte ansluta till HAL-tjänsten: %s"
-
-#. definitely not a device that we're able to mount, eject or unmount
-#: ../src/vfs/vfs-volume-hal.c:1941 ../src/vfs/vfs-volume-hal.c:1997
-#, c-format
-msgid "Given device \"%s\" is not a volume or drive"
-msgstr "\"%s\" är inte en volym eller enhet"
-
-#. tell the caller that no matching device was found
-#: ../src/vfs/vfs-volume-hal.c:2073
-#, c-format
-msgid "Device \"%s\" not found in file system device table"
-msgstr "Enheten \"%s\" kunde inte hittas i filsystemets enhetstabell"
-
-#: ../src/vfs/vfs-volume-hal.c:2256
-#, c-format
-msgid "You are not privileged to mount the volume \"%s\""
-msgstr "Du har inte rättigheter att montera volymen \"%s\""
-
-#: ../src/vfs/vfs-volume-hal.c:2257
-#, c-format
-msgid "You are not privileged to unmount the volume \"%s\""
-msgstr "Du har inte rättigheter att avmontera volymen \"%s\""
-
-#: ../src/vfs/vfs-volume-hal.c:2258
-#, c-format
-msgid "You are not privileged to eject the volume \"%s\""
-msgstr "Du har inte rättigheter att mata ut volymen \"%s\""
-
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
-#: ../src/vfs/vfs-volume-hal.c:2270
-#, c-format
-msgid "Invalid mount option when attempting to mount the volume \"%s\""
-msgstr "Ogiltigt monteringsalternativ vid försök att montera volymen \"%s\""
-
-#: ../src/vfs/vfs-volume-hal.c:2272
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3417
 #, c-format
 msgid ""
-"The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
-"your system"
+"This symlink's target is missing or you do not have permission to access it:\n"
+"%s\n"
+"\n"
+"Target: %s"
 msgstr ""
-"Volymen \"%s\" använder filsystemet <i>%s</i>, men det stöds inte av ditt "
-"system"
 
-#: ../src/vfs/vfs-volume-hal.c:2274
-#, c-format
-msgid "An application is preventing the volume \"%s\" from being unmounted"
-msgstr "Ett program hindrar volymen \"%s\" från att avmonteras"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-misc.c:3420
+msgid "Broken Link"
+msgstr "Trasig länk"
 
-#: ../src/vfs/vfs-volume-hal.c:2276
-#, c-format
-msgid "The volume \"%s\" is not mounted"
-msgstr "Volymen \"%s\" är inte monterad"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-menu.c:1760
+msgid "_Set As Default"
+msgstr "_Ange som standard"
 
-#: ../src/vfs/vfs-volume-hal.c:2278
-#, c-format
-msgid "Error <i>%s</i>"
-msgstr "Fel <i>%s</i>"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-menu.c:1770
+msgid "_Add..."
+msgstr "_Lägg till..."
 
-#. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
-#: ../src/vfs/vfs-volume-hal.c:2281
-#, c-format
-msgid "The volume \"%s\" was probably mounted manually on the command line"
-msgstr "Volymen \"%s\" monterades antagligen manuellt på kommandoraden"
+#: /home/tforsman/git/spacefm/src/ptk/ptk-file-menu.c:1791
+msgid "copy"
+msgstr "kopiera"
 
-#: ../src/vfs/vfs-volume-hal.c:2289
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:147
+msgid "Text"
+msgstr "Text"
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:148
+msgid "Text to render"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:155
+msgid "Background color name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:156
+msgid "Background color as a string"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:163
+msgid "Background color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:164
+msgid "Background color as a GdkColor"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:171
+msgid "Foreground color name"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:172
+msgid "Foreground color as a string"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:179
+msgid "Foreground color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:180
+msgid "Foreground color as a GdkColor"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:188
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:196
+msgid "Font"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:189
+msgid "Font description as a string"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:197
+msgid "Font description as a PangoFontDescription struct"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:204
+msgid "Underline"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:205
+msgid "Style of underline for this text"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:224
+msgid "Ellipsize"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:225
+msgid "The preferred place to ellipsize the string, if the cell renderer does not have enough room to display the entire string, if at all"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:244
+msgid "Wrap mode"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:245
+msgid "How to break the string into multiple lines, if the cell renderer does not have enough room to display the entire string"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:264
+msgid "Wrap width"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:265
+msgid "The width at which the text is wrapped"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:277
+msgid "Background set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:278
+msgid "Whether this tag affects the background color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:281
+msgid "Foreground set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:282
+msgid "Whether this tag affects the foreground color"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:285
+msgid "Underline set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:286
+msgid "Whether this tag affects underlining"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:289
+msgid "Ellipsize set"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-text-renderer.c:290
+msgid "Whether this tag affects the ellipsize mode"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-dir-tree.c:174
+msgid "File System"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/ptk/ptk-dir-tree.c:396
+msgid "( no subfolder )"
+msgstr ""
+
+#: /home/tforsman/git/spacefm/src/desktop/desktop-window.c:1643
 #, c-format
 msgid ""
-"Blank discs cannot be mounted, use a CD recording application to record "
-"audio or data on the disc"
+"Enter new desktop item name:\n"
+"\n"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr ""
-"Tomma skivor kan inte monteras, använd ett cd-bränningsprogram för att "
-"skriva ljud- eller dataspår på skivan"
 
-#: ../src/vfs/vfs-volume-hal.c:2300
-#, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+#: /home/tforsman/git/spacefm/src/desktop/desktop-window.c:1645
+msgid "Change Desktop Item Name"
 msgstr ""
-"Ljudskivor kan inte monteras, använd en musikspelare för att lyssna på "
-"ljudspåren"
 
-#: ../src/desktop/desktop-window.c:193
-msgid "_Icons"
-msgstr "_Ikoner"
+#: /home/tforsman/git/spacefm/src/desktop/desktop-window.c:1667
+msgid "An error occured renaming this desktop item."
+msgstr ""
 
-#: ../src/desktop/desktop-window.c:198
-msgid "_Desktop Settings"
-msgstr "Skrivbor_dsinställningar"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:696
+msgid "Column Spacing"
+msgstr "Kolumnutrymme"
 
-#: ../src/desktop/desktop-window.c:1842
-msgid "My Documents"
-msgstr "Mina dokument"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:697
+msgid "Space which is inserted between grid column"
+msgstr "Utrymme som infogas mellan rutnätskolumner"
 
-#: ../src/find-files.c:230
-msgid "Open Containing _Folder"
-msgstr "Öppna aktuell _mapp"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:713
+msgid "Number of columns"
+msgstr "Antal kolumner"
 
-#: ../src/find-files.c:677
-msgid "Select a folder"
-msgstr "Välj en mapp"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:714
+msgid "Number of columns to display"
+msgstr "Antal kolumner att visa"
 
-#: ../src/find-files.c:722
-msgid "Browse..."
-msgstr "Bläddra..."
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:728
+msgid "Enable Search"
+msgstr "Aktivera sökning"
 
-#: ../src/find-files.c:744
-msgid "All Local Disk Partitions"
-msgstr "Alla lokala diskpartitioner"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:729
+msgid "View allows user to search through columns interactively"
+msgstr "Vy tillåter användaren att interaktivt söka genom kolumner"
 
-#: ../src/find-files.c:814
-msgid "Folder"
-msgstr "Mapp"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:746
+msgid "Width for each item"
+msgstr "Bredd för varje objekt"
 
-#: ../src/find-files.c:830
-msgid "Last Modified"
-msgstr "Senast ändrad"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:747
+msgid "The width used for each item"
+msgstr "Bredden som används för varje objekt"
 
-#~ msgid "Center on the screen"
-#~ msgstr "Centrera på skärmen"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:765
+msgid "Layout mode"
+msgstr "Layoutläge"
 
-#~ msgid "Opened in Current Tab"
-#~ msgstr "Öppnad i denna flik"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:766
+msgid "The layout mode"
+msgstr "Läget för layouten"
 
-#~ msgid "Opened in New Tab"
-#~ msgstr "Öppnad i ny flik"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:782
+msgid "Margin"
+msgstr "Marginal"
 
-#~ msgid "Opened in New Window"
-#~ msgstr "Öppnad i nytt fönster"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:783
+msgid "Space which is inserted at the edges of the icon view"
+msgstr "Utrymme som infogas vid kanterna för ikonvyn"
 
-#~ msgid "Stretch to fill the entire screen"
-#~ msgstr "Sträck ut för att fylla hela skärmen"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:799
+msgid "Markup column"
+msgstr "Uppmärkningskolumn"
 
-#~ msgid "Stretch to fit the screen"
-#~ msgstr "Sträck för att passa skärmen"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:800
+msgid "Model column used to retrieve the text if using Pango markup"
+msgstr "Modellkolumn som används för att hämta texten om Pango-uppmärkning används"
 
-#~ msgid "Tile the image to fill the entire screen"
-#~ msgstr "Lägg i mönster för att fylla hela skärmen"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:814
+msgid "Icon View Model"
+msgstr "Ikonvymodell"
 
-#~ msgid "Any"
-#~ msgstr "När som helst"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:815
+msgid "The model for the icon view"
+msgstr "Modellen för ikonvyn"
 
-#~ msgid "Bytes"
-#~ msgstr "Byte"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:828
+msgid "Orientation"
+msgstr "Orientering"
 
-#~ msgid "GB"
-#~ msgstr "GB"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:829
+msgid "How the text and icon of each item are positioned relative to each other"
+msgstr "Hur text och ikon för varje objekt placeras relativt till varandra"
 
-#~ msgid "KB"
-#~ msgstr "KB"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:845
+msgid "Pixbuf column"
+msgstr "Pixbuf-kolumn"
 
-#~ msgid "MB"
-#~ msgstr "MB"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:846
+msgid "Model column used to retrieve the icon pixbuf from"
+msgstr "Modellkolumn som används för att hämta ikonens pixbuf från"
 
-#~ msgid "Within One Day"
-#~ msgstr "Senaste dagen"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:861
+msgid "Reorderable"
+msgstr "Justeringsbar"
 
-#~ msgid "Within One Month"
-#~ msgstr "Senaste månaden"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:862
+msgid "View is reorderable"
+msgstr "Vyn är justeringsbar"
 
-#~ msgid "Within One Week"
-#~ msgstr "Senaste veckan"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:877
+msgid "Row Spacing"
+msgstr "Radutrymme"
 
-#~ msgid "Within One Year"
-#~ msgstr "Senaste året"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:878
+msgid "Space which is inserted between grid rows"
+msgstr "Utrymme som infogas mellan rutnätsrader"
 
-#~ msgid "Within Selected Date Range"
-#~ msgstr "Inom valt datumområde"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:892
+msgid "Search Column"
+msgstr "Sökkolumn"
 
-#~ msgid "Owner:"
-#~ msgstr "Ägare:"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:893
+msgid "Model column to search through when searching through item"
+msgstr "Modellkolumn att söka genom vid sökning efter objekt"
 
-#~ msgid "gksu or kdesu is not found"
-#~ msgstr "varken gksu eller kdesu kunde hittas"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:907
+msgid "Selection mode"
+msgstr "Markeringsläge"
 
-#~ msgid "Error: %s\n"
-#~ msgstr "Fel: %s\n"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:908
+msgid "The selection mode"
+msgstr "Markeringsläge"
 
-#~ msgid ""
-#~ "The volume \"%s\" is not mounted.\n"
-#~ "Do you want to mount it?"
-#~ msgstr ""
-#~ "Enheten \"%s\" är inte monterad.\n"
-#~ "Vill du montera den nu?"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:923
+#: /home/tforsman/git/spacefm/src/exo/exo-tree-view.c:201
+msgid "Single Click"
+msgstr "Enkelklick"
 
-#~ msgid "Source code taken from other projects:"
-#~ msgstr "Källkod från andra projekt:"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:924
+#: /home/tforsman/git/spacefm/src/exo/exo-tree-view.c:202
+msgid "Whether the items in the view can be activated with single clicks"
+msgstr "Huruvida objekten i vyn kan aktiveras med enkelklick"
 
-#~ msgid " * libmd5-rfc: Aladdin Enterprises"
-#~ msgstr " * libmd5-rfc: Aladdin Enterprises"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:940
+#: /home/tforsman/git/spacefm/src/exo/exo-tree-view.c:218
+msgid "Single Click Timeout"
+msgstr "Tidsgräns för enkelklick"
 
-#~ msgid " * Working area detection: Gary Kramlich"
-#~ msgstr " * Kod för att detektera arbetsytor: Gary Kramlich"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:941
+#: /home/tforsman/git/spacefm/src/exo/exo-tree-view.c:219
+msgid "The amount of time after which the item under the mouse cursor will be selected automatically in single click mode"
+msgstr "Mängden tid efter vilken objektet under muspekaren kommer att automatiskt markeras i enkelklicksläge"
 
-#~ msgid " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
-#~ msgstr ""
-#~ " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:956
+msgid "Spacing"
+msgstr "Mellanrum"
 
-#~ msgid " * Text and icon renderer uese code from Jonathan Blandford"
-#~ msgstr "* Text och ikon-renderare använder kod från Jonathan Blandford"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:957
+msgid "Space which is inserted between cells of an item"
+msgstr "Mellanrum som infogas mellan celler för ett objekt"
 
-#~ msgid " * Desktop icons use code from Brian Tarricone"
-#~ msgstr "* Skrivbordsikoner använder kod från Brian Tarricone"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:972
+msgid "Text column"
+msgstr "Textkolumn"
 
-#~ msgid "PCMan File Manager"
-#~ msgstr "PCMan Filhanterare"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:973
+msgid "Model column used to retrieve the text from"
+msgstr "Modellkolumn som används för att hämta texten från"
 
-#~ msgid "Icon Theme:"
-#~ msgstr "Ikontema:"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:980
+msgid "Selection Box Color"
+msgstr "Selection Box Color"
 
-#~ msgid "A_ddress:"
-#~ msgstr "Sökväg:"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:981
+msgid "Color of the selection box"
+msgstr "Färg för väljarrutan"
 
-#~ msgid " * xdgmime: Red Hat, Inc & Jonathan Blandford"
-#~ msgstr " * xdgmime: Red Hat, Inc & Jonathan Blandford"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:987
+msgid "Selection Box Alpha"
+msgstr "Alfa för väljarruta"
 
-#~ msgid ""
-#~ "File operation failed.\n"
-#~ "\n"
-#~ "Unable to process \"%s\"\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Operationen misslyckades.\n"
-#~ "\n"
-#~ "Kan inte behandla \"%s\"\n"
-#~ "\n"
-#~ "%s"
+#: /home/tforsman/git/spacefm/src/exo/exo-icon-view.c:988
+msgid "Opacity of the selection box"
+msgstr "Opacitet för väljarrutan"
 
-#~ msgid "Edit Bookmark"
-#~ msgstr "Redigera Bokmärke"
-
-#~ msgid "Add to Bookmarks"
-#~ msgstr "Lägg till bokmärke"
-
-#~ msgid "Enter new directory path:"
-#~ msgstr "Ange ny plats:"
-
-#~ msgid "Open Directory _Tree"
-#~ msgstr "Ö_ppna trädvyn"
-
-#~ msgid "Open Terminal"
-#~ msgstr "Öppna via terminal"
