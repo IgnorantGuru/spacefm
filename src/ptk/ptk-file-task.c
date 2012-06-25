@@ -1043,12 +1043,12 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
             speed1 = g_strdup_printf( "%s/s", buf1 );
         speed2 = g_strdup_printf( "%s/s", buf2 );
         //remain cur
-        guint remain;
+        off64_t remain;
         if ( cur_speed > 0 && task->total_size != 0 )
             remain = ( task->total_size - task->progress ) / cur_speed;
         else
             remain = 0;
-        if ( remain == 0 )
+        if ( remain <= 0 )
             remain1 = g_strdup_printf( "n/a" );
         else if ( remain > 3599 )
         {
@@ -1066,7 +1066,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
             remain = ( task->total_size - task->progress ) / avg_speed;
         else
             remain = 0;
-        if ( remain == 0 )
+        if ( remain <= 0 )
             remain2 = g_strdup_printf( "n/a" );
         else if ( remain > 3599 )
         {

@@ -4753,6 +4753,8 @@ void main_task_view_update_task( PtkFileTask* ptask )
     int percent = ptask->task->percent;
     if ( percent < 0 )
         percent = 0;
+    else if ( percent > 100 )
+        percent = 100;
     if ( ptask->task->type != 6 )
     {
         if ( ptask->task->current_file )
