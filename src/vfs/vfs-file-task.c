@@ -408,7 +408,10 @@ vfs_file_task_do_copy( VFSFileTask* task,
         {
             if ( ! check_overwrite( task, dest_file,
                                     &dest_exists, &new_dest_file ) )
+            {
+                close( rfd );
                 goto _return_;
+            }
 
             if ( new_dest_file )
             {
@@ -426,6 +429,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     task->error = errno;
+                    close( rfd );
                     goto _return_;
                 }                
             }
