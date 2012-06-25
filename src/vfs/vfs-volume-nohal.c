@@ -4056,4 +4056,22 @@ gboolean vfs_volume_requires_eject( VFSVolume *vol )
     return vol->requires_eject;
 }
 
+gboolean vfs_volume_dir_avoid_changes( const char* dir )
+{
+    // determines if file change detection should be disabled for this
+    // dir (eg nfs stat calls block when a write is in progress so file
+    // change detection is unwanted)
+    if ( !udev || !dir )
+        return FALSE;
+    struct stat stat_buf;   // skip stat64
+    if ( stat( dir, &stat_buf ) == -1 )
+        return FALSE;
+    struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
+                                                            stat_buf.st_dev );
+    if ( !udevice )
+        return TRUE;
+    const char* devnode = udev_device_get_devnode( udevice );
+    udev_device_unref( udevice );
+    return ( devnode == NULL /* is not a block device */ );
+}
 

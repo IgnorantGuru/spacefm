@@ -92,6 +92,7 @@ struct _VFSFileTask
     GList* src_paths; /* All source files. This list will be freed
                                  after file operation is completed. */
     char* dest_dir; /* Destinaton directory */
+    gboolean avoid_changes;
 
     VFSFileTaskOverwriteMode overwrite_mode ;
     gboolean recursive; /* Apply operation to all files under folders

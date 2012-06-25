@@ -950,6 +950,7 @@ void ptk_file_task_update( PtkFileTask* ptask )
 {
 //printf("ptk_file_task_update ptask=%#x\n", ptask);
     // calculate updated display data
+
     if ( !g_mutex_trylock( ptask->task->mutex ) )
     {
 printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");

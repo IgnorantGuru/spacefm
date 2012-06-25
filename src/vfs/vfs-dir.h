@@ -61,6 +61,7 @@ struct _VFSDir
     gboolean load_complete : 1;
     gboolean cancel: 1;
     gboolean show_hidden : 1;
+    gboolean avoid_changes : 1;  //sfm
 
     struct _VFSThumbnailLoader* thumbnail_loader;
 
@@ -88,6 +89,7 @@ typedef void ( *VFSDirStateCallback ) ( VFSDir* dir, int state, gpointer user_da
 GType vfs_dir_get_type ( void );
 
 VFSDir* vfs_dir_get_by_path( const char* path );
+VFSDir* vfs_dir_get_by_path_soft( const char* path );
 
 gboolean vfs_dir_is_loading( VFSDir* dir );
 void vfs_dir_cancel_load( VFSDir* dir );
@@ -98,7 +100,8 @@ void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big );
 /* emit signals */
 void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo* file );
 void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo* file );
-void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name, VFSFileInfo* file );
+void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
+                                        VFSFileInfo* file, gboolean force );
 void vfs_dir_emit_thumbnail_loaded( VFSDir* dir, VFSFileInfo* file );
 void vfs_dir_flush_notify_cache();
 

@@ -18,6 +18,7 @@
 
 #include <fcntl.h>  /* for open() */
 #include <unistd.h> /* for read */
+#include "vfs-volume.h"
 
 static void vfs_dir_class_init( VFSDirClass* klass );
 static void vfs_dir_init( VFSDir* dir );
@@ -374,10 +375,15 @@ void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo*
     }
 }
 
-void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name, VFSFileInfo* file  )
+void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
+                                        VFSFileInfo* file, gboolean force )
 {
     GList* l;
+//printf("vfs_dir_emit_file_changed dir=%s file_name=%s avoid=%s\n", dir->path, file_name, dir->avoid_changes ? "TRUE" : "FALSE" );
 
+    if ( !force && dir->avoid_changes )
+        return;
+    
     g_mutex_lock( dir->mutex );
 
     l = vfs_dir_find_file( dir, file_name, file );
@@ -386,8 +392,18 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name, VFSFileInfo*
         file = vfs_file_info_ref( ( VFSFileInfo* ) l->data );
         if( !g_slist_find( dir->changed_files, file ) )
         {
-            // update file info the first time
-            if( G_LIKELY( update_file_info( dir, file ) ) )
+            if ( force )
+            {
+                dir->changed_files = g_slist_prepend( dir->changed_files, file );
+                if ( 0 == change_notify_timeout )
+                {
+                    change_notify_timeout = g_timeout_add_full( G_PRIORITY_LOW,
+                                                                100,
+                                                                notify_file_change,
+                                                                NULL, NULL );
+                }
+            }
+            else if( G_LIKELY( update_file_info( dir, file ) ) ) // update file info the first time
             {
                 dir->changed_files = g_slist_prepend( dir->changed_files, file );
                 if ( 0 == change_notify_timeout )
@@ -435,6 +451,13 @@ VFSDir* vfs_dir_new( const char* path )
     VFSDir * dir;
     dir = ( VFSDir* ) g_object_new( VFS_TYPE_DIR, NULL );
     dir->path = g_strdup( path );
+
+#ifdef HAVE_HAL
+    dir->avoid_changes = FALSE;
+#else
+    dir->avoid_changes = vfs_volume_dir_avoid_changes( path );
+#endif
+//printf("vfs_dir_new %s  avoid_changes=%s\n", dir->path, dir->avoid_changes ? "TRUE" : "FALSE" );
     return dir;
 }
 
@@ -845,12 +868,12 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
 
 gboolean notify_file_change( gpointer user_data )
 {
-    GDK_THREADS_ENTER();
+    //GDK_THREADS_ENTER();  //sfm not needed because in main thread?
     g_hash_table_foreach( dir_hash, update_changed_files, NULL );
     g_hash_table_foreach( dir_hash, update_created_files, NULL );
     /* remove the timeout */
     change_notify_timeout = 0;
-    GDK_THREADS_LEAVE();
+    //GDK_THREADS_LEAVE();
     return FALSE;
 }
 
@@ -881,7 +904,7 @@ void vfs_dir_monitor_callback( VFSFileMonitor* fm,
         vfs_dir_emit_file_deleted( dir, file_name, NULL );
         break;
     case VFS_FILE_MONITOR_CHANGE:
-        vfs_dir_emit_file_changed( dir, file_name, NULL );
+        vfs_dir_emit_file_changed( dir, file_name, NULL, FALSE );
         break;
     default:
         g_warning("Error: unrecognized file monitor signal!");
@@ -921,6 +944,16 @@ static void on_theme_changed( GtkIconTheme *icon_theme, gpointer user_data )
     g_hash_table_foreach( dir_hash, (GHFunc)reload_icons, NULL );
 }
 
+VFSDir* vfs_dir_get_by_path_soft( const char* path )
+{
+    if ( G_UNLIKELY( !dir_hash || !path ) )
+        return NULL;
+    VFSDir * dir = g_hash_table_lookup( dir_hash, path );
+    if ( dir )
+        g_object_ref( dir );
+    return dir;
+}
+    
 VFSDir* vfs_dir_get_by_path( const char* path )
 {
     VFSDir * dir = NULL;

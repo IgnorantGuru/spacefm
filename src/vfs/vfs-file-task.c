@@ -36,6 +36,7 @@
 #include <sys/wait.h> //MOD for exec
 #include "main-window.h"
 #include "desktop-window.h"
+#include "vfs-volume.h"
 
 const mode_t chmod_flags[] =
     {
@@ -197,6 +198,46 @@ gboolean check_overwrite( VFSFileTask* task,
     return ! should_abort( task );
 }
 
+void emit_created( const char* path )
+{
+    // for devices like nfs, emit created and flush to avoid a
+    // blocking stat call in GUI thread during writes
+    GDK_THREADS_ENTER();
+    char* dir_path = g_path_get_dirname( path );
+    VFSDir* vdir = vfs_dir_get_by_path_soft( dir_path );
+    g_free( dir_path );
+    if ( vdir && vdir->avoid_changes )
+    {
+        VFSFileInfo* file = vfs_file_info_new();
+        vfs_file_info_get( file, path, NULL );
+        vfs_dir_emit_file_created( vdir,
+                            vfs_file_info_get_name( file ), file );
+        vfs_file_info_unref( file );
+        vfs_dir_flush_notify_cache();
+    }
+    if ( vdir )
+        g_object_unref( vdir );
+    GDK_THREADS_LEAVE();
+}
+
+void update_file_display( const char* path )
+{
+    // for devices like nfs, emit instant changed
+    GDK_THREADS_ENTER();
+    char* dir_path = g_path_get_dirname( path );
+    VFSDir* vdir = vfs_dir_get_by_path_soft( dir_path );
+    g_free( dir_path );
+    if ( vdir && vdir->avoid_changes )
+    {
+        char* filename = g_path_get_basename( path );
+        vfs_dir_emit_file_changed( vdir, filename, NULL, TRUE );
+        g_free( filename );
+    }
+    if ( vdir )
+        g_object_unref( vdir );
+    GDK_THREADS_LEAVE();
+}
+
 static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
                        const char* src_file,
@@ -218,14 +259,14 @@ vfs_file_task_do_copy( VFSFileTask* task,
 
     if ( should_abort( task ) )
         return FALSE;
-
+//printf("vfs_file_task_do_copy( %s, %s )\n", src_file, dest_file );
     g_mutex_lock( task->mutex );
     string_copy_free( &task->current_file, src_file );
     string_copy_free( &task->current_dest, dest_file );
     task->current_item++;
     g_mutex_unlock( task->mutex );
     //call_progress_callback( task );
-    
+
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
@@ -392,6 +433,9 @@ vfs_file_task_do_copy( VFSFileTask* task,
             if ( ( wfd = creat( dest_file,
                                 file_stat.st_mode | S_IWUSR ) ) >= 0 )
             {
+                if ( task->avoid_changes )
+                    emit_created( dest_file );
+
                 struct utimbuf times;
                 while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                 {
@@ -422,6 +466,8 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     times.modtime = file_stat.st_mtime;
                     utime( dest_file, &times );
                 }
+                if ( task->avoid_changes )
+                    update_file_display( dest_file );
         
                 /* Move files to different device: Need to delete source files */
                 if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
@@ -824,6 +870,9 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
         task->progress += src_stat.st_size;
         g_mutex_unlock( task->mutex );
         //call_progress_callback( task );
+
+        if ( task->avoid_changes )
+            update_file_display( src_file );
 
         if ( S_ISDIR( src_stat.st_mode ) && task->recursive )
         {
@@ -1740,6 +1789,7 @@ gboolean on_size_timeout( VFSFileTask* task )
 }
 
 static gpointer vfs_file_task_thread ( VFSFileTask* task )
+//void * vfs_file_task_thread ( void * ptr )
 {
     GList * l;
     struct stat64 file_stat;
@@ -1752,7 +1802,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                      ( GFunc ) vfs_file_task_link,
                      ( GFunc ) vfs_file_task_chown_chmod,
                      ( GFunc ) vfs_file_task_exec};
-
+//VFSFileTask* task = (VFSFileTask*)ptr;
     if ( task->type < VFS_FILE_TASK_MOVE
             || task->type >= VFS_FILE_TASK_LAST )
         goto _exit_thread;
@@ -2005,8 +2055,26 @@ void vfs_file_task_set_chown( VFSFileTask* task,
 void vfs_file_task_run ( VFSFileTask* task )
 {
     if ( task->type != VFS_FILE_TASK_EXEC )
+    {
+#ifdef HAVE_HAL
+        task->avoid_changes = FALSE;
+#else
+        if ( task->type == VFS_FILE_TASK_CHMOD_CHOWN && task->src_paths->data )
+        {
+            char* dir = g_path_get_dirname( (char*)task->src_paths->data );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( dir );
+            g_free( dir );
+        }
+        else
+            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir );
+#endif
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );
+        //task->thread = g_thread_create_full( ( GThreadFunc ) vfs_file_task_thread,
+        //                    task, 0, TRUE, TRUE, G_THREAD_PRIORITY_NORMAL, NULL );
+        //pthread_t tid;
+        //task->thread = pthread_create( &tid, NULL, vfs_file_task_thread, task );
+    }
     else
     {
         // don't use another thread for exec since gio adds watches to main

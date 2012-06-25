@@ -1674,7 +1674,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 {
                     if ( win->dir )
                         // in case file is a link
-                        vfs_dir_emit_file_changed( win->dir, filename, file );
+                        vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
                     g_free( path );
                     g_free( filename );
                     xset_msg_dialog( GTK_WIDGET( win ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
@@ -1682,7 +1682,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 }
                 if ( win->dir )
                     // in case file is a link
-                    vfs_dir_emit_file_changed( win->dir, filename, file );
+                    vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
                 g_free( path );
                 g_free( filename );
             }
