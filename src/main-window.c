@@ -3493,7 +3493,7 @@ enum {
 
 const char* task_titles[] =
     {
-        N_( "Status" ), N_( "#" ), N_( "Dir" ), N_( "Item" ),
+        N_( "Status" ), N_( "#" ), N_( "Folder" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
         N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "Estimate" ),
         N_( "Speed" ), N_( "Remain" ), "StartTime"
@@ -4938,6 +4938,25 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
             gtk_tree_view_column_pack_start( col, renderer, TRUE );
             gtk_tree_view_column_set_attributes( col, renderer,
                                                  "text", cols[j], NULL );
+                                                
+            // ellipsize some columns
+            if ( cols[j] == TASK_COL_FILE || cols[j] == TASK_COL_PATH
+                                                    || cols[j] == TASK_COL_TO )
+            {
+                /* wrap to multiple lines 
+                GValue val = G_VALUE_INIT;
+                g_value_init (&val, G_TYPE_CHAR);
+                g_value_set_char (&val, 100);  // set to width of cell?
+                g_object_set_property (G_OBJECT (renderer), "wrap-width", &val);
+                g_value_unset (&val);
+                */
+                GValue val = G_VALUE_INIT;
+                g_value_init (&val, G_TYPE_CHAR);
+                g_value_set_char (&val, PANGO_ELLIPSIZE_MIDDLE);
+                g_object_set_property (G_OBJECT (renderer), "ellipsize", &val);
+                g_value_unset (&val);     
+                           
+            }
         }
         gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
         gtk_tree_view_column_set_title( col, _( task_titles[j] ) );
