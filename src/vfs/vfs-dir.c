@@ -9,6 +9,10 @@
 *
 */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE  // euidaccess
+#endif
+
 #include "vfs-dir.h"
 #include "vfs-thumbnail-loader.h"
 #include "glib-mem.h"
@@ -509,7 +513,24 @@ static gboolean is_dir_virtual( const char* path )
 char* gethidden( const char* path )  //MOD added
 {
     // Read .hidden into string
-    char* hidden_path = g_build_filename( path, ".hidden", NULL );            
+    char* hidden_path = g_build_filename( path, ".hidden", NULL );     
+
+    // test access first because open() on missing file may cause
+    // long delay on nfs
+    int acc;
+#if defined(HAVE_EUIDACCESS)
+    acc = euidaccess( hidden_path, R_OK );
+#elif defined(HAVE_EACCESS)
+    acc = eaccess( hidden_path, R_OK );
+#else
+    acc = 0;
+#endif
+    if ( acc != 0 )
+    {       
+        g_free( hidden_path );
+        return NULL;
+    }
+
     int fd = open( hidden_path, O_RDONLY );
     g_free( hidden_path );
     if ( fd != -1 )

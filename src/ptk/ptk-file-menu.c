@@ -15,12 +15,11 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-//#include <unistd.h> /* for access */
+#include <unistd.h> /* for access */
 
 #include "ptk-file-menu.h"
 #include <glib.h>
 #include "glib-mem.h"
-#include <glib/gstdio.h>  // for g_access
 #include <string.h>
 #include <stdlib.h>
 
@@ -504,9 +503,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     // test R/W access to cwd instead of selected file
     // Note: network filesystems may become unresponsive here
-    no_read_access = g_access( cwd, R_OK );
-    no_write_access = g_access( cwd, W_OK );
-/*
 #if defined(HAVE_EUIDACCESS)
     no_read_access = euidaccess( cwd, R_OK );
     no_write_access = euidaccess( cwd, W_OK );
@@ -514,7 +510,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     no_read_access = eaccess( cwd, R_OK );
     no_write_access = eaccess( cwd, W_OK );
 #endif
-*/
 
     GtkClipboard* clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     if ( ! gtk_clipboard_wait_is_target_available ( clip,

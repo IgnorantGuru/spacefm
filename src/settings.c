@@ -8,6 +8,10 @@
 #  include <config.h>
 #endif
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE  // euidaccess
+#endif
+
 #include "settings.h"
 #include <stdio.h>
 #include <string.h>
@@ -4148,6 +4152,11 @@ XSet* xset_custom_new()
 
 gboolean have_x_access( const char* path )
 {
+#if defined(HAVE_EUIDACCESS)
+    return ( euidaccess( path, R_OK | X_OK ) == 0 );
+#elif defined(HAVE_EACCESS)
+    return ( eaccess( path, R_OK | X_OK ) == 0 );
+#else
     struct stat results;  
 
     stat( path, &results );
@@ -4158,10 +4167,16 @@ gboolean have_x_access( const char* path )
     if ( ( results.st_mode & S_IXGRP ) && ( getegid() == results.st_gid ) )
         return TRUE;
     return FALSE;
+#endif
 }
 
 gboolean have_rw_access( const char* path )
 {
+#if defined(HAVE_EUIDACCESS)
+    return ( euidaccess( path, R_OK | W_OK ) == 0 );
+#elif defined(HAVE_EACCESS)
+    return ( eaccess( path, R_OK | W_OK ) == 0 );
+#else
     struct stat results;  
 
     stat( path, &results );
@@ -4174,6 +4189,7 @@ gboolean have_rw_access( const char* path )
                                     && ( getegid() == results.st_gid ) )
         return TRUE;
     return FALSE;
+#endif
 }
 
 gboolean dir_has_files( const char* path )
