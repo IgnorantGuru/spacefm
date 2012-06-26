@@ -60,6 +60,7 @@ static void get_total_size_of_dir( VFSFileTask* task,
                                    off_t* size );
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
+void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action );
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
@@ -258,6 +259,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     gboolean dest_exists;
     gboolean copy_fail = FALSE;
     int result;
+    GError *error;
 
     if ( should_abort( task ) )
         return FALSE;
@@ -302,21 +304,35 @@ vfs_file_task_do_copy( VFSFileTask* task,
             g_mutex_unlock( task->mutex );
             //call_progress_callback( task );
 
-            dir = g_dir_open( src_file, 0, NULL );
-            while ( (file_name = g_dir_read_name( dir )) )
+            error = NULL;
+            dir = g_dir_open( src_file, 0, &error );
+            if ( dir )
             {
-                if ( should_abort( task ) )
-                    break;
-//printf( "DIRCOPY src_file=[%s]  dest_file=[%s]  file_name=[%s]\n", src_file, dest_file, file_name );
-                sub_src_file = g_build_filename( src_file, file_name, NULL );
-                sub_dest_file = g_build_filename( dest_file, file_name, NULL );
-                if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
-                                                            && !copy_fail )
-                    copy_fail = TRUE;
-                g_free(sub_dest_file );
-                g_free(sub_src_file );
+                while ( (file_name = g_dir_read_name( dir )) )
+                {
+                    if ( should_abort( task ) )
+                        break;
+                    sub_src_file = g_build_filename( src_file, file_name, NULL );
+                    sub_dest_file = g_build_filename( dest_file, file_name, NULL );
+                    if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
+                                                                && !copy_fail )
+                        copy_fail = TRUE;
+                    g_free(sub_dest_file );
+                    g_free(sub_src_file );
+                }
+                g_dir_close( dir );
             }
-            g_dir_close( dir );
+            else if ( error )
+            {
+                char* msg = g_strdup_printf( "\n%s %s\n%s\n",
+                                _("Accessing"), src_file, error->message );
+                g_error_free( error );
+                vfs_file_task_exec_error( task, 0, msg );
+                g_free( msg );
+                if ( should_abort( task ) )
+                    goto _return_;
+            }
+
             chmod( dest_file, file_stat.st_mode );
             times.actime = file_stat.st_atime;
             times.modtime = file_stat.st_mtime;
@@ -676,6 +692,7 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     gchar* sub_src_file;
     struct stat64 file_stat;
     int result;
+    GError *error;
 
     if ( should_abort( task ) )
         return ;
@@ -695,16 +712,29 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
 
     if ( S_ISDIR( file_stat.st_mode ) )
     {
-        dir = g_dir_open( src_file, 0, NULL );
-        while ( (file_name = g_dir_read_name( dir )) )
+        error = NULL;
+        dir = g_dir_open( src_file, 0, &error );
+        if ( dir )
         {
-            if ( should_abort( task ) )
-                break;
-            sub_src_file = g_build_filename( src_file, file_name, NULL );
-            vfs_file_task_delete( sub_src_file, task );
-            g_free(sub_src_file );
+            while ( (file_name = g_dir_read_name( dir )) )
+            {
+                if ( should_abort( task ) )
+                    break;
+                sub_src_file = g_build_filename( src_file, file_name, NULL );
+                vfs_file_task_delete( sub_src_file, task );
+                g_free(sub_src_file );
+            }
+            g_dir_close( dir );
         }
-        g_dir_close( dir );
+        else if ( error )
+        {
+            char* msg = g_strdup_printf( "\n%s %s\n%s\n",
+                            _("Accessing"), src_file, error->message );
+            g_error_free( error );
+            vfs_file_task_exec_error( task, 0, msg );
+            g_free( msg );
+        }
+
         if ( should_abort( task ) )
             return ;
         result = rmdir( src_file );
@@ -718,7 +748,6 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     else
     {
         result = unlink( src_file );
-sleep( 1 );
         if ( result != 0 )
         {
             vfs_file_task_error( task, errno, _("Removing"), src_file );
@@ -825,8 +854,8 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
     gchar* sub_src_file;
     const gchar* file_name;
     mode_t new_mode;
-
     int result;
+    GError* error;
 
     if( should_abort( task ) )
         return ;
@@ -888,7 +917,9 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
 
         if ( S_ISDIR( src_stat.st_mode ) && task->recursive )
         {
-            if ( (dir = g_dir_open( src_file, 0, NULL )) )
+            error = NULL;
+            dir = g_dir_open( src_file, 0, &error );
+            if ( dir )
             {
                 while ( (file_name = g_dir_read_name( dir )) )
                 {
@@ -899,6 +930,16 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
                     g_free(sub_src_file );
                 }
                 g_dir_close( dir );
+            }
+            else if ( error )
+            {
+                char* msg = g_strdup_printf( "\n%s %s\n%s\n",
+                                _("Accessing"), src_file, error->message );
+                g_error_free( error );
+                vfs_file_task_exec_error( task, 0, msg );
+                g_free( msg );
+                if ( should_abort( task ) )
+                    return ;
             }
             else
             {
