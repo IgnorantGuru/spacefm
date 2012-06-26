@@ -1039,7 +1039,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
             cur_speed = task->last_speed;
         vfs_file_size_to_string_format( buf1, cur_speed, "%.0f %s" );
         if ( cur_speed == 0 )
-            speed1 = g_strdup_printf( "Stalled" );
+            speed1 = g_strdup_printf( _("Stalled") );
         else
             speed1 = g_strdup_printf( "%s/s", buf1 );
         speed2 = g_strdup_printf( "%s/s", buf2 );
@@ -1050,7 +1050,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         else
             remain = 0;
         if ( remain <= 0 )
-            remain1 = g_strdup_printf( "n/a" );
+            remain1 = g_strdup_printf( "" );  // n/a
         else if ( remain > 3599 )
         {
             hours = remain / 3600;
@@ -1068,7 +1068,7 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         else
             remain = 0;
         if ( remain <= 0 )
-            remain2 = g_strdup_printf( "n/a" );
+            remain2 = g_strdup_printf( "" );  // n/a
         else if ( remain > 3599 )
         {
             hours = remain / 3600;

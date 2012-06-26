@@ -718,6 +718,7 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     else
     {
         result = unlink( src_file );
+sleep( 1 );
         if ( result != 0 )
         {
             vfs_file_task_error( task, errno, _("Removing"), src_file );
@@ -1893,7 +1894,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             g_mutex_unlock( task->mutex );
         }
     }
-    else if ( task->type != VFS_FILE_TASK_EXEC )
+    else if ( task->type != VFS_FILE_TASK_EXEC && task->type != VFS_FILE_TASK_DELETE )
     {
         // start timer to limit the amount of time to spend on this - can be 
         // VERY slow for network filesystems
@@ -1998,7 +1999,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->current_file = NULL;
     task->current_dest = NULL;
     
-    if ( task->type == VFS_FILE_TASK_COPY || task->type == VFS_FILE_TASK_DELETE )
+    if ( task->type == VFS_FILE_TASK_COPY ) //sfm || task->type == VFS_FILE_TASK_DELETE )
         task->recursive = TRUE;
     else
         task->recursive = FALSE;

@@ -1,3 +1,12 @@
+0.7.8+
+    new threading
+    network filesystem lag issues improved
+    no file change detection on non-block filesystems
+    timeout size calc after 5 sec
+    don't calc total size of files to delete for speed improvement
+    close copy read file on error
+    handle progress gt 100%
+    remove deadlock on quick dir change
 0.7.8   2012-06-16:
     use/update mimeapps.list over defaults.list closes #71
     added design mode on mime apps opens MIME menu
