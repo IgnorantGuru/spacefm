@@ -319,6 +319,10 @@ vfs_file_task_do_copy( VFSFileTask* task,
             times.actime = file_stat.st_atime;
             times.modtime = file_stat.st_mtime;
             utime( dest_file, &times );
+
+            if ( task->avoid_changes )
+                update_file_display( dest_file );
+
             /* Move files to different device: Need to delete source files */
             if ( ( task->type == VFS_FILE_TASK_MOVE
                  || task->type == VFS_FILE_TASK_TRASH )

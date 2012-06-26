@@ -4063,8 +4063,16 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
     // change detection is unwanted)
     if ( !udev || !dir )
         return FALSE;
+        
+    // canonicalize path
+    char buf[ PATH_MAX + 1 ];
+    char* canon = realpath( dir, buf );
+    if ( !canon )
+        return FALSE;
+    
+    // get devnum
     struct stat stat_buf;   // skip stat64
-    if ( stat( dir, &stat_buf ) == -1 )
+    if ( stat( canon, &stat_buf ) == -1 )
         return FALSE;
     struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
                                                             stat_buf.st_dev );
