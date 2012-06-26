@@ -2960,7 +2960,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
 
         set = xset_get( "dev_menu_root" );
-            set->disable = !vol;
+            //set->disable = !vol;
         set = xset_get( "dev_menu_format" );
             set->disable =  !( vol && !vol->is_mounted && 
                                         vol->device_type == DEVICE_TYPE_BLOCK );
