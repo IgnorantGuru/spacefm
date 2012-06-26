@@ -3493,7 +3493,7 @@ enum {
 
 const char* task_titles[] =
     {
-        N_( "Status" ), N_( "#" ), N_( "Path" ), N_( "Item" ),
+        N_( "Status" ), N_( "#" ), N_( "Dir" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
         N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "Estimate" ),
         N_( "Speed" ), N_( "Remain" ), "StartTime"

@@ -1872,7 +1872,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         if ( desktop_file->file_name )
         {
             newitem = app_menu_additem( submenu, desktop_file->file_name,
-                                        GTK_STOCK_OPEN, APP_JOB_VIEW, app_item, data );
+                                        GTK_STOCK_FILE, APP_JOB_VIEW, app_item, data );
             path = get_shared_desktop_file_location( desktop_file->file_name );
 
             gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!path );

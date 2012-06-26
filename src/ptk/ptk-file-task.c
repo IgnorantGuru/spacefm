@@ -1005,6 +1005,8 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
     elapsed3 = g_strdup_printf( "%s:%02d", elapsed2, secs );
     g_free( elapsed );
     g_free( elapsed2 );
+    g_free( ptask->dsp_elapsed );
+    ptask->dsp_elapsed = elapsed3;
 
     char* file_count;
     char* size_tally;
@@ -1085,8 +1087,6 @@ printf("UPDATE LOCKED  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
         ptask->dsp_file_count = file_count;
         g_free( ptask->dsp_size_tally );
         ptask->dsp_size_tally = size_tally;
-        g_free( ptask->dsp_elapsed );
-        ptask->dsp_elapsed = elapsed3;
         g_free( ptask->dsp_curspeed );
         ptask->dsp_curspeed = speed1;
         g_free( ptask->dsp_curest );
