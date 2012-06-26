@@ -15,11 +15,12 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
-#include <unistd.h> /* for access */
+//#include <unistd.h> /* for access */
 
 #include "ptk-file-menu.h"
 #include <glib.h>
 #include "glib-mem.h"
+#include <glib/gstdio.h>  // for g_access
 #include <string.h>
 #include <stdlib.h>
 
@@ -496,10 +497,16 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     g_signal_connect_after( ( gpointer ) popup, "selection-done",
                             G_CALLBACK ( gtk_widget_destroy ), NULL );
 
-    is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    is_dir = ( info && vfs_file_info_is_dir( info ) );
+    // Note: network filesystems may become unresponsive here
     is_text = info && file_path && vfs_file_info_is_text( info, file_path );
 
-// test R/W access to cwd instead of selected file
+    // test R/W access to cwd instead of selected file
+    // Note: network filesystems may become unresponsive here
+    no_read_access = g_access( cwd, R_OK );
+    no_write_access = g_access( cwd, W_OK );
+/*
 #if defined(HAVE_EUIDACCESS)
     no_read_access = euidaccess( cwd, R_OK );
     no_write_access = euidaccess( cwd, W_OK );
@@ -507,6 +514,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     no_read_access = eaccess( cwd, R_OK );
     no_write_access = eaccess( cwd, W_OK );
 #endif
+*/
 
     GtkClipboard* clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     if ( ! gtk_clipboard_wait_is_target_available ( clip,
@@ -585,8 +593,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         GtkWidget* submenu = gtk_menu_item_get_submenu( item );
 
         // Execute
-        if ( !is_dir && info && file_path && ( vfs_file_info_is_executable( info, file_path )
-                || info->flags & VFS_FILE_INFO_DESKTOP_ENTRY ) )
+        if ( !is_dir && info && file_path && 
+                    ( info->flags & VFS_FILE_INFO_DESKTOP_ENTRY || 
+                        // Note: network filesystems may become unresponsive here
+                        vfs_file_info_is_executable( info, file_path ) ) )
         {
             set = xset_set_cb( "open_execute", on_popup_open_activate, data );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );
@@ -2310,7 +2320,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             file = vfs_file_info_new();
             vfs_file_info_get( file, ao->path, NULL );
             vfs_dir_emit_file_created( ao->file_browser->dir,
-                                    vfs_file_info_get_name( file ), file );
+                                    vfs_file_info_get_name( file ), file, TRUE );
             vfs_file_info_unref( file );
             vfs_dir_flush_notify_cache();
             ptk_file_browser_select_file( ao->file_browser, ao->path );

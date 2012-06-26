@@ -5452,7 +5452,8 @@ void ptk_file_browser_create_new_file( PtkFileBrowser* file_browser,
         PtkFileList* list = PTK_FILE_LIST( file_browser->file_list );
         GtkTreeIter it;
         /* generate created event before FAM to enhance responsiveness. */
-        vfs_dir_emit_file_created( file_browser->dir, vfs_file_info_get_name(file), file );
+        vfs_dir_emit_file_created( file_browser->dir, vfs_file_info_get_name(file),
+                                                                    file, TRUE );
 
         /* select the created file */
         if( ptk_file_list_find_iter( list, &it, file ) )

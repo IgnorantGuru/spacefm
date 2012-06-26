@@ -198,7 +198,7 @@ gboolean check_overwrite( VFSFileTask* task,
     return ! should_abort( task );
 }
 
-void emit_created( const char* path )
+void update_file_display( const char* path )
 {
     // for devices like nfs, emit created and flush to avoid a
     // blocking stat call in GUI thread during writes
@@ -211,7 +211,7 @@ void emit_created( const char* path )
         VFSFileInfo* file = vfs_file_info_new();
         vfs_file_info_get( file, path, NULL );
         vfs_dir_emit_file_created( vdir,
-                            vfs_file_info_get_name( file ), file );
+                            vfs_file_info_get_name( file ), file, TRUE );
         vfs_file_info_unref( file );
         vfs_dir_flush_notify_cache();
     }
@@ -220,6 +220,7 @@ void emit_created( const char* path )
     GDK_THREADS_LEAVE();
 }
 
+/*
 void update_file_display( const char* path )
 {
     // for devices like nfs, emit instant changed
@@ -237,6 +238,7 @@ void update_file_display( const char* path )
         g_object_unref( vdir );
     GDK_THREADS_LEAVE();
 }
+*/
 
 static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
@@ -441,8 +443,9 @@ vfs_file_task_do_copy( VFSFileTask* task,
             if ( ( wfd = creat( dest_file,
                                 file_stat.st_mode | S_IWUSR ) ) >= 0 )
             {
-                if ( task->avoid_changes )
-                    emit_created( dest_file );
+                // sshfs becomes unresponsive with this, nfs is okay with it
+                //if ( task->avoid_changes )
+                //    emit_created( dest_file );
 
                 struct utimbuf times;
                 while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )

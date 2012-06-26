@@ -315,9 +315,13 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
 }
 
 /* signal handlers */
-void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo* file )
+void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo* file,
+                                                                gboolean force )
 {
     GList* l;
+
+    if ( !force && dir->avoid_changes )
+        return;
 
     if ( G_UNLIKELY( 0 == strcmp(file_name, dir->path) ) )
     {
@@ -898,7 +902,7 @@ void vfs_dir_monitor_callback( VFSFileMonitor* fm,
     switch ( event )
     {
     case VFS_FILE_MONITOR_CREATE:
-        vfs_dir_emit_file_created( dir, file_name, NULL );
+        vfs_dir_emit_file_created( dir, file_name, NULL, FALSE );
         break;
     case VFS_FILE_MONITOR_DELETE:
         vfs_dir_emit_file_deleted( dir, file_name, NULL );
