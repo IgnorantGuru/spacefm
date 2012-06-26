@@ -10,6 +10,8 @@
     new swedish translation partially completed (40%)
     task manager Path column renamed Folder
     ellipsize Folder, Item, To task manager columns
+    always enable Root submenu in devices
+    set font new/rename file dialogs Target Template entries
 0.7.8   2012-06-16:
     use/update mimeapps.list over defaults.list closes #71
     added design mode on mime apps opens MIME menu
