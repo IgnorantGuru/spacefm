@@ -324,8 +324,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
             }
             else if ( error )
             {
-                char* msg = g_strdup_printf( "\n%s %s\n%s\n",
-                                _("Accessing"), src_file, error->message );
+                char* msg = g_strdup_printf( "\n%s\n", error->message );
                 g_error_free( error );
                 vfs_file_task_exec_error( task, 0, msg );
                 g_free( msg );
@@ -728,8 +727,7 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
         }
         else if ( error )
         {
-            char* msg = g_strdup_printf( "\n%s %s\n%s\n",
-                            _("Accessing"), src_file, error->message );
+            char* msg = g_strdup_printf( "\n%s\n", error->message );
             g_error_free( error );
             vfs_file_task_exec_error( task, 0, msg );
             g_free( msg );
@@ -933,8 +931,7 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
             }
             else if ( error )
             {
-                char* msg = g_strdup_printf( "\n%s %s\n%s\n",
-                                _("Accessing"), src_file, error->message );
+                char* msg = g_strdup_printf( "\n%s\n", error->message );
                 g_error_free( error );
                 vfs_file_task_exec_error( task, 0, msg );
                 g_free( msg );

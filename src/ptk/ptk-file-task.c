@@ -1232,7 +1232,7 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         printf("VFS_FILE_TASK_ERROR\n");
         g_mutex_lock( task->mutex );
         task->err_count++;
-printf("    ptask->item_count = %d\n", task->current_item );
+        //printf("    ptask->item_count = %d\n", task->current_item );
 
         if ( task->type == VFS_FILE_TASK_EXEC )
         {
