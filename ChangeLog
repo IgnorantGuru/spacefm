@@ -1,5 +1,5 @@
 0.7.8+
-    new threading
+    new threading for tasks
     network filesystem lag issues improved
     no file change detection on non-block filesystems
     timeout size calc after 5 sec
