@@ -14,6 +14,7 @@
     set font new/rename file dialogs Target Template entries
     give errors accessing directories
     verbose tar extract/create
+    fix for urxvtc #106
 0.7.8   2012-06-16:
     use/update mimeapps.list over defaults.list closes #71
     added design mode on mime apps opens MIME menu

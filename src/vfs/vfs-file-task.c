@@ -1485,8 +1485,10 @@ printf("vfs_file_task_exec\n");
         if ( result < 0 ) goto _exit_with_error;
 
         // build - trap rm
-        if ( !task->exec_keep_tmp && terminal && ( strstr( terminal, "lxterminal" )
-                                            || strstr( terminal, "konsole" ) ) )
+        if ( !task->exec_keep_tmp && terminal && 
+                                ( strstr( terminal, "lxterminal" ) ||
+                                  strstr( terminal, "urxvtc" ) ||  // sure no option avail?
+                                  strstr( terminal, "konsole" ) ) )
         {
             // these terminals provide no option to start a new instance, child
             // exit occurs immediately so can't delete tmp files
@@ -1495,7 +1497,7 @@ printf("vfs_file_task_exec\n");
             // *these terminals will not work properly with Run As Task
             
             // note for konsole:  if you create a link to it and execute the
-            // link, it will start of new instance (might also work for lxterminal?)
+            // link, it will start a new instance (might also work for lxterminal?)
             // http://www.linuxjournal.com/content/start-and-control-konsole-dbus
             result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
                                                     task->exec_script );
