@@ -308,8 +308,7 @@ printf("ptk_file_task_run ptask=%#x\n", ptask);
         if ( !ptask->task->exec_sync )
             on_vfs_file_task_state_cb( ptask->task, VFS_FILE_TASK_FINISH, NULL, ptask );
     }
-    if ( !ptask->complete && ( ptask->task->type != VFS_FILE_TASK_EXEC
-                                                    || ptask->task->exec_sync ) )
+    if ( ptask->task->type != VFS_FILE_TASK_EXEC || ptask->task->exec_sync )
         ptask->progress_timer = g_timeout_add( 50, ( GSourceFunc ) on_progress_timer,
                                                                         ptask );
 printf("ptk_file_task_run DONE ptask=%#x\n", ptask);

@@ -1731,6 +1731,7 @@ printf("vfs_file_task_exec\n");
     }
     printf( "\n" );
 
+    char* first_arg = g_strdup( argv[0] );
     if ( task->exec_sync )
     {
         result = g_spawn_async_with_pipes( task->dest_dir, argv, NULL,
@@ -1752,11 +1753,16 @@ printf("vfs_file_task_exec\n");
             if ( task->exec_script )
                 unlink( task->exec_script );
         }
-        vfs_file_task_exec_error( task, errno, _("Error executing command - see stdout (run spacefm in a terminal) for debug info") );
+        str = g_strdup_printf( _("Error executing '%s'\nSee stdout (run spacefm in a terminal) for debug info"), first_arg );
+        g_free( first_arg );
+        vfs_file_task_exec_error( task, errno, str );
+        g_free( str );
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
         return;
     }
     else
         printf( "    pid = %d\n", pid );
+    g_free( first_arg );
 
     if ( !task->exec_sync )
     {
