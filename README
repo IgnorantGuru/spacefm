@@ -29,8 +29,8 @@ DESCRIPTION
 
 PACKAGES
 
-    antiX's current test release includes spacefm:
-        http://news.softpedia.com/news/AntiX-M12-test-2-Has-Linux-Kernel-3-2-9-256940.shtml
+    antiX-12 includes spacefm and udevil:
+        http://sourceforge.net/projects/antix-linux/
 
     Arch Linux's [community] repository includes spacefm:
         http://www.archlinux.org/packages/community/i686/spacefm/
@@ -72,6 +72,9 @@ PACKAGES
 
     openSUSE rpm packages:
         http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true
+
+    Parted Magic includes SpaceFM with udevil as its default file manager:
+        http://partedmagic.com/doku.php
 
     PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
