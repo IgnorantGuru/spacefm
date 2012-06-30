@@ -1769,9 +1769,11 @@ printf("vfs_file_task_exec\n");
         // catch termination to delete tmp
         if ( !task->exec_keep_tmp && !task->exec_direct && task->exec_script )
         {
+            // task can be destroyed while this watch is still active
             g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_cleanup, 
                                                     g_strdup( task->exec_script ) );
         }
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
         return;
     }
     
