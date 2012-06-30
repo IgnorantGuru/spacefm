@@ -704,7 +704,10 @@ static void on_stop_search( GtkWidget* btn, FindFile* data )
 {
     if( data->task && ! vfs_async_task_is_finished( data->task ) )
     {
+        // see note in vfs-async-task.c: vfs_async_task_real_cancel()
+        GDK_THREADS_LEAVE(); 
         vfs_async_task_cancel( data->task );
+        GDK_THREADS_ENTER();
     }
 }
 

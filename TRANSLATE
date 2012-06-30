@@ -19,7 +19,8 @@ To create a translation of SpaceFM for your language, follow these steps.
         cp spacefm.pot fr.po   # create a new po file
 
 5)  Open fr.po in your text editor.  Translate each msgid into the
-    corresponding msgstr.  To see examples, consult fr-old.po
+    corresponding msgstr.  To see examples, consult fr-old.po.  (The program
+    poedit has also been suggested as a convenient way to edit po files.)
     
 6)  cd into the directory containing configure and run make normally:
 

@@ -496,10 +496,13 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     g_signal_connect_after( ( gpointer ) popup, "selection-done",
                             G_CALLBACK ( gtk_widget_destroy ), NULL );
 
-    is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    //is_dir = file_path && g_file_test( file_path, G_FILE_TEST_IS_DIR );
+    is_dir = ( info && vfs_file_info_is_dir( info ) );
+    // Note: network filesystems may become unresponsive here
     is_text = info && file_path && vfs_file_info_is_text( info, file_path );
 
-// test R/W access to cwd instead of selected file
+    // test R/W access to cwd instead of selected file
+    // Note: network filesystems may become unresponsive here
 #if defined(HAVE_EUIDACCESS)
     no_read_access = euidaccess( cwd, R_OK );
     no_write_access = euidaccess( cwd, W_OK );
@@ -585,8 +588,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         GtkWidget* submenu = gtk_menu_item_get_submenu( item );
 
         // Execute
-        if ( !is_dir && info && file_path && ( vfs_file_info_is_executable( info, file_path )
-                || info->flags & VFS_FILE_INFO_DESKTOP_ENTRY ) )
+        if ( !is_dir && info && file_path && 
+                    ( info->flags & VFS_FILE_INFO_DESKTOP_ENTRY || 
+                        // Note: network filesystems may become unresponsive here
+                        vfs_file_info_is_executable( info, file_path ) ) )
         {
             set = xset_set_cb( "open_execute", on_popup_open_activate, data );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );
@@ -1867,7 +1872,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
         if ( desktop_file->file_name )
         {
             newitem = app_menu_additem( submenu, desktop_file->file_name,
-                                        GTK_STOCK_OPEN, APP_JOB_VIEW, app_item, data );
+                                        GTK_STOCK_FILE, APP_JOB_VIEW, app_item, data );
             path = get_shared_desktop_file_location( desktop_file->file_name );
 
             gtk_widget_set_sensitive( GTK_WIDGET( newitem ), !!path );
@@ -2310,7 +2315,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             file = vfs_file_info_new();
             vfs_file_info_get( file, ao->path, NULL );
             vfs_dir_emit_file_created( ao->file_browser->dir,
-                                    vfs_file_info_get_name( file ), file );
+                                    vfs_file_info_get_name( file ), file, TRUE );
             vfs_file_info_unref( file );
             vfs_dir_flush_notify_cache();
             ptk_file_browser_select_file( ao->file_browser, ao->path );

@@ -35,22 +35,22 @@ const ArchiveHandler handlers[]=
     {
         {
             "application/x-bzip-compressed-tar",
-            "tar %o -cjf",
-            "tar -xjf",
+            "tar %o -cvjf",
+            "tar -xvjf",
             "tar -tvf",
             ".tar.bz2", "arc_tar_bz2", TRUE
         },
         {
             "application/x-compressed-tar",
-            "tar %o -czf",
-            "tar -xzf",
+            "tar %o -cvzf",
+            "tar -xvzf",
             "tar -tvf",
             ".tar.gz", "arc_tar_gz", TRUE
         },
         {
             "application/x-xz-compressed-tar",  //MOD added
-            "tar %o -cJf",
-            "tar -xJf",
+            "tar %o -cvJf",
+            "tar -xvJf",
             "tar -tvf",
             ".tar.xz", "arc_tar_xz", TRUE
         },
@@ -70,8 +70,8 @@ const ArchiveHandler handlers[]=
         },
         {
             "application/x-tar",
-            "tar %o -cf",
-            "tar -xf",
+            "tar %o -cvf",
+            "tar -xvf",
             "tar -tvf",
             ".tar", "arc_tar", TRUE
         },

@@ -65,7 +65,8 @@ gboolean global_inhibit_auto = FALSE;
 typedef struct devmount_t {
     guint major;
     guint minor;
-    char *mount_points;
+    char* mount_points;
+    char* fstype;
     GList* mounts;
 } devmount_t;
 
@@ -1588,6 +1589,7 @@ void parse_mounts( gboolean report )
     lines = NULL;
     struct udev_device *udevice;
     dev_t dev;
+    char* str;
 
     error = NULL;
     if (!g_file_get_contents ("/proc/self/mountinfo", &contents, NULL, &error))
@@ -1606,6 +1608,22 @@ void parse_mounts( gboolean report )
     /* See Documentation/filesystems/proc.txt for the format of /proc/self/mountinfo
     *
     * Note that things like space are encoded as \020.
+    * 
+    * This file contains lines of the form:
+    * 36 35 98:0 /mnt1 /mnt2 rw,noatime master:1 - ext3 /dev/root rw,errors=continue
+    * (1)(2)(3)   (4)   (5)      (6)      (7)   (8) (9)   (10)         (11)
+    * (1) mount ID:  unique identifier of the mount (may be reused after umount)
+    * (2) parent ID:  ID of parent (or of self for the top of the mount tree)
+    * (3) major:minor:  value of st_dev for files on filesystem
+    * (4) root:  root of the mount within the filesystem
+    * (5) mount point:  mount point relative to the process's root
+    * (6) mount options:  per mount options
+    * (7) optional fields:  zero or more fields of the form "tag[:value]"
+    * (8) separator:  marks the end of the optional fields
+    * (9) filesystem type:  name of filesystem of the form "type[.subtype]"
+    * (10) mount source:  filesystem specific information or "none"
+    * (11) super options:  per super block options
+    * Parsers should ignore all unrecognised optional fields.
     */
     lines = g_strsplit (contents, "\n", 0);
     for ( n = 0; lines[n] != NULL; n++ )
@@ -1615,7 +1633,8 @@ void parse_mounts( gboolean report )
         guint major, minor;
         gchar encoded_root[PATH_MAX];
         gchar encoded_mount_point[PATH_MAX];
-        gchar *mount_point;
+        gchar* mount_point;
+        gchar* fstype;
       
         if ( strlen( lines[n] ) == 0 )
             continue;
@@ -1644,6 +1663,16 @@ void parse_mounts( gboolean report )
             continue;
         }
 
+        // fstype
+        fstype = strstr( lines[n], " - " );
+        if ( fstype )
+        {
+            fstype += 3;
+            // modifies lines[n]
+            if ( str = strchr( fstype, ' ' ) )
+                str[0] = '\0';
+        }
+            
 //printf("mount_point(%d:%d)=%s\n", major, minor, mount_point );
         devmount = NULL;
         for ( l = newmounts; l; l = l->next )
@@ -1664,6 +1693,7 @@ void parse_mounts( gboolean report )
                 devmount->major = major;
                 devmount->minor = minor;
                 devmount->mount_points = NULL;
+                devmount->fstype = g_strdup( fstype );
                 devmount->mounts = NULL;
                 newmounts = g_list_prepend( newmounts, devmount );
             }
@@ -1679,6 +1709,7 @@ void parse_mounts( gboolean report )
                     devmount->major = major;
                     devmount->minor = minor;
                     devmount->mount_points = NULL;
+                    devmount->fstype = g_strdup( fstype );
                     devmount->mounts = NULL;
                     newmounts = g_list_prepend( newmounts, devmount );
                 }
@@ -1739,6 +1770,7 @@ void parse_mounts( gboolean report )
                     // no change to mount points, so remove from old list
                     devmount = (devmount_t*)found->data;
                     g_free( devmount->mount_points );
+                    g_free( devmount->fstype );
                     devmounts = g_list_remove( devmounts, devmount );
                     g_slice_free( devmount_t, devmount );
                 }
@@ -1751,6 +1783,7 @@ void parse_mounts( gboolean report )
                 devcopy->major = devmount->major;
                 devcopy->minor = devmount->minor;
                 devcopy->mount_points = g_strdup( devmount->mount_points );
+                devcopy->fstype = g_strdup( devmount->fstype );
                 devcopy->mounts = NULL;
                 changed = g_list_prepend( changed, devcopy );
             }
@@ -1769,6 +1802,7 @@ void parse_mounts( gboolean report )
         else
         {
             g_free( devmount->mount_points );
+            g_free( devmount->fstype );
             g_slice_free( devmount_t, devmount );
         }
     }
@@ -1808,6 +1842,7 @@ void parse_mounts( gboolean report )
             }
             udev_device_unref( udevice );
             g_free( devmount->mount_points );
+            g_free( devmount->fstype );
             g_slice_free( devmount_t, devmount );
         }
         g_list_free( changed );
@@ -1826,10 +1861,24 @@ static void free_devmounts()
     {
         devmount = (devmount_t*)l->data;
         g_free( devmount->mount_points );
+        g_free( devmount->fstype );
         g_slice_free( devmount_t, devmount );
     }
     g_list_free( devmounts );
     devmounts = NULL;
+}
+
+const char* get_devmount_fstype( int major, int minor )
+{
+    GList* l;
+    
+    for ( l = devmounts; l; l = l->next )
+    {
+        if ( ((devmount_t*)l->data)->major == major &&
+                                        ((devmount_t*)l->data)->minor == minor )
+            return ((devmount_t*)l->data)->fstype;
+    }
+    return NULL;
 }
 
 static gboolean cb_mount_monitor_watch( GIOChannel *channel, GIOCondition cond,
@@ -4056,4 +4105,40 @@ gboolean vfs_volume_requires_eject( VFSVolume *vol )
     return vol->requires_eject;
 }
 
+gboolean vfs_volume_dir_avoid_changes( const char* dir )
+{
+    // determines if file change detection should be disabled for this
+    // dir (eg nfs stat calls block when a write is in progress so file
+    // change detection is unwanted)
+    // return FALSE to detect changes in this dir, TRUE to avoid change detection
+    if ( !udev || !dir )
+        return FALSE;
+
+    // canonicalize path
+    char buf[ PATH_MAX + 1 ];
+    char* canon = realpath( dir, buf );
+    if ( !canon )
+        return FALSE;
+    
+    // get devnum
+    struct stat stat_buf;   // skip stat64
+    if ( stat( canon, &stat_buf ) == -1 )
+        return FALSE;
+    //printf("    stat_buf.st_dev = %d:%d\n", major(stat_buf.st_dev), minor( stat_buf.st_dev) );
+    struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
+                                                            stat_buf.st_dev );
+    if ( !udevice )
+    {
+        //printf("!udevice %s\n", get_devmount_fstype( major( stat_buf.st_dev ),
+        //                                    minor( stat_buf.st_dev ) ));
+        // tmpfs is not a block device but we want to detect changes
+        return !!g_strcmp0( get_devmount_fstype( major( stat_buf.st_dev ),
+                                            minor( stat_buf.st_dev ) ), "tmpfs" );
+    }
+    
+    const char* devnode = udev_device_get_devnode( udevice );
+    gboolean ret = ( devnode == NULL ); // TRUE if not a block device
+    udev_device_unref( udevice );
+    return ret;
+}
 

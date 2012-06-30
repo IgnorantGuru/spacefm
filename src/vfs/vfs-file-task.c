@@ -36,6 +36,7 @@
 #include <sys/wait.h> //MOD for exec
 #include "main-window.h"
 #include "desktop-window.h"
+#include "vfs-volume.h"
 
 const mode_t chmod_flags[] =
     {
@@ -59,22 +60,42 @@ static void get_total_size_of_dir( VFSFileTask* task,
                                    off_t* size );
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
+void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action );
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
-static gboolean
-call_progress_callback( VFSFileTask* task )
+void append_add_log( VFSFileTask* task, const char* msg, gint msg_len )
 {
-    if ( task->progress_cb )
-    {
-        task->progress_cb( task, task->percent,
-                           task->current_file,
-                           NULL,
-                           task->progress_cb_data );
-    }
+    g_mutex_lock( task->mutex );
+    GtkTextIter iter;
+    gtk_text_buffer_get_iter_at_mark( task->add_log_buf, &iter, task->add_log_end );
+    gtk_text_buffer_insert( task->add_log_buf, &iter, msg, msg_len );
+    g_mutex_unlock( task->mutex );
+}
+/*
+gboolean call_progress_on_timer( VFSFileTask* task )
+{
+    if ( !g_mutex_trylock( task->mutex ) )
+        return TRUE;  // repeat call_progress_on_timer
+
+    task->progress_cb( task );
+
+    g_source_remove( task->progress_cb_timer );
+    task->progress_cb_timer = 0;
+    g_mutex_unlock( task->mutex );
     return FALSE;
 }
 
+static void call_progress_callback( VFSFileTask* task )
+{
+return;
+    if ( task->progress_cb_timer )
+        return;  // timer already running
+    if ( task->progress_cb )
+        task->progress_cb_timer = g_timeout_add( 125,
+                                ( GSourceFunc ) call_progress_on_timer, task );
+}
+*/
 static void call_state_callback( VFSFileTask* task,
                           VFSFileTaskState state )
 {
@@ -82,7 +103,16 @@ static void call_state_callback( VFSFileTask* task,
     if ( task->state_cb )
     {
         if ( ! task->state_cb( task, state, NULL, task->state_cb_data ) )
+        {
             task->state = VFS_FILE_TASK_ABORTED;
+            if ( task->type == VFS_FILE_TASK_EXEC && task->exec_cond )
+            {
+                // this is used only if exec task run in non-main loop thread
+                g_mutex_lock( task->mutex );
+                g_cond_broadcast( task->exec_cond );
+                g_mutex_unlock( task->mutex );
+            }
+        }
         else
             task->state = VFS_FILE_TASK_RUNNING;
     }
@@ -169,6 +199,48 @@ gboolean check_overwrite( VFSFileTask* task,
     return ! should_abort( task );
 }
 
+void update_file_display( const char* path )
+{
+    // for devices like nfs, emit created and flush to avoid a
+    // blocking stat call in GUI thread during writes
+    GDK_THREADS_ENTER();
+    char* dir_path = g_path_get_dirname( path );
+    VFSDir* vdir = vfs_dir_get_by_path_soft( dir_path );
+    g_free( dir_path );
+    if ( vdir && vdir->avoid_changes )
+    {
+        VFSFileInfo* file = vfs_file_info_new();
+        vfs_file_info_get( file, path, NULL );
+        vfs_dir_emit_file_created( vdir,
+                            vfs_file_info_get_name( file ), file, TRUE );
+        vfs_file_info_unref( file );
+        vfs_dir_flush_notify_cache();
+    }
+    if ( vdir )
+        g_object_unref( vdir );
+    GDK_THREADS_LEAVE();
+}
+
+/*
+void update_file_display( const char* path )
+{
+    // for devices like nfs, emit instant changed
+    GDK_THREADS_ENTER();
+    char* dir_path = g_path_get_dirname( path );
+    VFSDir* vdir = vfs_dir_get_by_path_soft( dir_path );
+    g_free( dir_path );
+    if ( vdir && vdir->avoid_changes )
+    {
+        char* filename = g_path_get_basename( path );
+        vfs_dir_emit_file_changed( vdir, filename, NULL, TRUE );
+        g_free( filename );
+    }
+    if ( vdir )
+        g_object_unref( vdir );
+    GDK_THREADS_LEAVE();
+}
+*/
+
 static gboolean
 vfs_file_task_do_copy( VFSFileTask* task,
                        const char* src_file,
@@ -187,21 +259,24 @@ vfs_file_task_do_copy( VFSFileTask* task,
     gboolean dest_exists;
     gboolean copy_fail = FALSE;
     int result;
+    GError *error;
 
     if ( should_abort( task ) )
         return FALSE;
+//printf("vfs_file_task_do_copy( %s, %s )\n", src_file, dest_file );
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    string_copy_free( &task->current_dest, dest_file );
+    task->current_item++;
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
+
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
-        /* Error occurred */
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
-        //call_state_callback( task, VFS_FILE_TASK_ERROR );
         if ( should_abort( task ) )
             return FALSE;
     }
-
-    task->current_file = src_file;
-    task->current_dest = dest_file;
-    call_progress_callback( task );
 
     result = 0;
     if ( S_ISDIR( file_stat.st_mode ) )
@@ -211,35 +286,60 @@ vfs_file_task_do_copy( VFSFileTask* task,
             goto _return_;
 
         if ( new_dest_file )
-            task->current_dest = dest_file = new_dest_file;
-
+        {
+            dest_file = new_dest_file;
+            g_mutex_lock( task->mutex );
+            string_copy_free( &task->current_dest, dest_file );
+            g_mutex_unlock( task->mutex );
+        }
+        
         if ( ! dest_exists )
             result = mkdir( dest_file, file_stat.st_mode | 0700 );
 
         if ( result == 0 )
         {
             struct utimbuf times;
+            g_mutex_lock( task->mutex );
             task->progress += file_stat.st_size;
-            call_progress_callback( task );
+            g_mutex_unlock( task->mutex );
+            //call_progress_callback( task );
 
-            dir = g_dir_open( src_file, 0, NULL );
-            while ( (file_name = g_dir_read_name( dir )) )
+            error = NULL;
+            dir = g_dir_open( src_file, 0, &error );
+            if ( dir )
             {
-                if ( should_abort( task ) )
-                    break;
-                sub_src_file = g_build_filename( src_file, file_name, NULL );
-                sub_dest_file = g_build_filename( dest_file, file_name, NULL );
-                if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
-                                                            && !copy_fail )
-                    copy_fail = TRUE;
-                g_free(sub_dest_file );
-                g_free(sub_src_file );
+                while ( (file_name = g_dir_read_name( dir )) )
+                {
+                    if ( should_abort( task ) )
+                        break;
+                    sub_src_file = g_build_filename( src_file, file_name, NULL );
+                    sub_dest_file = g_build_filename( dest_file, file_name, NULL );
+                    if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
+                                                                && !copy_fail )
+                        copy_fail = TRUE;
+                    g_free(sub_dest_file );
+                    g_free(sub_src_file );
+                }
+                g_dir_close( dir );
             }
-            g_dir_close( dir );
+            else if ( error )
+            {
+                char* msg = g_strdup_printf( "\n%s\n", error->message );
+                g_error_free( error );
+                vfs_file_task_exec_error( task, 0, msg );
+                g_free( msg );
+                if ( should_abort( task ) )
+                    goto _return_;
+            }
+
             chmod( dest_file, file_stat.st_mode );
             times.actime = file_stat.st_atime;
             times.modtime = file_stat.st_mtime;
             utime( dest_file, &times );
+
+            if ( task->avoid_changes )
+                update_file_display( dest_file );
+
             /* Move files to different device: Need to delete source files */
             if ( ( task->type == VFS_FILE_TASK_MOVE
                  || task->type == VFS_FILE_TASK_TRASH )
@@ -249,7 +349,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     vfs_file_task_error( task, errno, _("Removing"), src_file );
                     task->error = errno;
-                    //call_state_callback( task, VFS_FILE_TASK_ERROR );
                     if ( should_abort( task ) )
                         goto _return_;
                 }
@@ -259,7 +358,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
         {  /* result != 0, error occurred */
             vfs_file_task_error( task, errno, _("Creating Dir"), dest_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
     }
     else if ( S_ISLNK( file_stat.st_mode ) )
@@ -272,7 +370,12 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 goto _return_;
 
             if ( new_dest_file )
-                task->current_dest = dest_file = new_dest_file;
+            {
+                dest_file = new_dest_file;
+                g_mutex_lock( task->mutex );
+                string_copy_free( &task->current_dest, dest_file );
+                g_mutex_unlock( task->mutex );
+            }
 
             //MOD if dest is a symlink, delete it first to prevent exists error
             if ( g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
@@ -283,8 +386,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     task->error = errno;
                     copy_fail = TRUE;
-                    //call_state_callback( task, VFS_FILE_TASK_ERROR );
-                    //goto _return_;
                 }                
             }
 
@@ -303,24 +404,23 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     {
                         vfs_file_task_error( task, errno, _("Removing"), src_file );
                         task->error = errno;
-                        //call_state_callback( task, VFS_FILE_TASK_ERROR );
                     }
                 }
+                g_mutex_lock( task->mutex );
                 task->progress += file_stat.st_size;
-                call_progress_callback( task );
+                g_mutex_unlock( task->mutex );
+                //call_progress_callback( task );
             }
             else
             {
                 vfs_file_task_error( task, errno, _("Creating Link"), dest_file );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
             }
         }
         else
         {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
     }
     else
@@ -329,10 +429,18 @@ vfs_file_task_do_copy( VFSFileTask* task,
         {
             if ( ! check_overwrite( task, dest_file,
                                     &dest_exists, &new_dest_file ) )
+            {
+                close( rfd );
                 goto _return_;
+            }
 
             if ( new_dest_file )
-                task->current_dest = dest_file = new_dest_file;
+            {
+                dest_file = new_dest_file;
+                g_mutex_lock( task->mutex );
+                string_copy_free( &task->current_dest, dest_file );
+                g_mutex_unlock( task->mutex );
+            }
 
             //MOD if dest is a symlink, delete it first to prevent overwriting target!
             if ( g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
@@ -342,7 +450,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     task->error = errno;
-                    //call_state_callback( task, VFS_FILE_TASK_ERROR );
+                    close( rfd );
                     goto _return_;
                 }                
             }
@@ -350,6 +458,10 @@ vfs_file_task_do_copy( VFSFileTask* task,
             if ( ( wfd = creat( dest_file,
                                 file_stat.st_mode | S_IWUSR ) ) >= 0 )
             {
+                // sshfs becomes unresponsive with this, nfs is okay with it
+                //if ( task->avoid_changes )
+                //    emit_created( dest_file );
+
                 struct utimbuf times;
                 while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                 {
@@ -357,16 +469,19 @@ vfs_file_task_do_copy( VFSFileTask* task,
                         break;
 
                     if ( write( wfd, buffer, rsize ) > 0 )
+                    {
+                        g_mutex_lock( task->mutex );
                         task->progress += rsize;
+                        g_mutex_unlock( task->mutex );
+                    }
                     else
                     {
                         vfs_file_task_error( task, errno, _("Writing"), dest_file );
                         task->error = errno;
                         copy_fail = TRUE;
-                        //call_state_callback( task, VFS_FILE_TASK_ERROR );
                         break;
                     }
-                    call_progress_callback( task );
+                    //call_progress_callback( task );
                 }
                 close( wfd );
                 //MOD don't chmod link
@@ -377,6 +492,8 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     times.modtime = file_stat.st_mtime;
                     utime( dest_file, &times );
                 }
+                if ( task->avoid_changes )
+                    update_file_display( dest_file );
         
                 /* Move files to different device: Need to delete source files */
                 if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
@@ -387,7 +504,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     {
                         vfs_file_task_error( task, errno, _("Removing"), src_file );
                         task->error = errno;
-                        //call_state_callback( task, VFS_FILE_TASK_ERROR );
                     }
                 }
             }
@@ -395,7 +511,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
             {
                 vfs_file_task_error( task, errno, _("Creating"), dest_file );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
             }
             close( rfd );
         }
@@ -403,7 +518,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
         {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
     }
     return !copy_fail;
@@ -420,7 +534,7 @@ vfs_file_task_copy( char* src_file, VFSFileTask* task )
     gchar * file_name;
     gchar* dest_file;
 
-    call_progress_callback( task );
+    //call_progress_callback( task );
     file_name = g_path_get_basename( src_file );
     dest_file = g_build_filename( task->dest_dir, file_name, NULL );
     g_free(file_name );
@@ -440,6 +554,14 @@ vfs_file_task_do_move ( VFSFileTask* task,
 
     if ( should_abort( task ) )
         return 0;
+
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    string_copy_free( &task->current_dest, dest_file );
+    task->current_item++;
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
+
     /* g_debug( "move \"%s\" to \"%s\"\n", src_file, dest_file ); */
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
@@ -450,21 +572,21 @@ vfs_file_task_do_move ( VFSFileTask* task,
             return 0;
     }
 
-    task->current_file = src_file;
-    task->current_dest = dest_file;
-
     if ( should_abort( task ) )
         return 0;
-
-    call_progress_callback( task );
 
     if ( ! check_overwrite( task, dest_file,
            &dest_exists, &new_dest_file ) )
         return 0;
 
     if ( new_dest_file )
-        task->current_dest = dest_file = new_dest_file;
-
+    {
+        dest_file = new_dest_file;
+        g_mutex_lock( task->mutex );
+        string_copy_free( &task->current_dest, dest_file );
+        g_mutex_unlock( task->mutex );
+    }
+    
     result = rename( src_file, dest_file );
 
     if ( result != 0 )
@@ -473,10 +595,9 @@ vfs_file_task_do_move ( VFSFileTask* task,
             return 18;
         vfs_file_task_error( task, errno, _("Renaming"), src_file );
         task->error = errno;
-        //call_state_callback( task, VFS_FILE_TASK_ERROR );
         if ( should_abort( task ) )
         {
-            g_free(new_dest_file );
+            g_free( new_dest_file );
             return 0;
         }
     }
@@ -484,8 +605,10 @@ vfs_file_task_do_move ( VFSFileTask* task,
     else if ( ! g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
         chmod( dest_file, file_stat.st_mode );
     
+    g_mutex_lock( task->mutex );
     task->progress += file_stat.st_size;
-    call_progress_callback( task );
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
 
     if ( new_dest_file )
         g_free( new_dest_file );
@@ -506,7 +629,9 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
     if ( should_abort( task ) )
         return ;
 
-    task->current_file = src_file;
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    g_mutex_unlock( task->mutex );
 
     file_name = g_path_get_basename( src_file );
     if( task->type == VFS_FILE_TASK_TRASH )
@@ -548,7 +673,6 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
         task->error = errno;
-        //call_state_callback( task, VFS_FILE_TASK_ERROR );
     }
 on_error:
     if( tmpfd >= 0 )
@@ -567,35 +691,48 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     gchar* sub_src_file;
     struct stat64 file_stat;
     int result;
-
-    task->current_file = src_file;
+    GError *error;
 
     if ( should_abort( task ) )
         return ;
+
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    task->current_item++;
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
 
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
         task->error = errno;
-        //call_state_callback( task, VFS_FILE_TASK_ERROR );
-        return ; /* Error occurred */
+        return;
     }
-
-    task->current_file = src_file;
-    call_progress_callback( task );
 
     if ( S_ISDIR( file_stat.st_mode ) )
     {
-        dir = g_dir_open( src_file, 0, NULL );
-        while ( (file_name = g_dir_read_name( dir )) )
+        error = NULL;
+        dir = g_dir_open( src_file, 0, &error );
+        if ( dir )
         {
-            if ( should_abort( task ) )
-                break;
-            sub_src_file = g_build_filename( src_file, file_name, NULL );
-            vfs_file_task_delete( sub_src_file, task );
-            g_free(sub_src_file );
+            while ( (file_name = g_dir_read_name( dir )) )
+            {
+                if ( should_abort( task ) )
+                    break;
+                sub_src_file = g_build_filename( src_file, file_name, NULL );
+                vfs_file_task_delete( sub_src_file, task );
+                g_free(sub_src_file );
+            }
+            g_dir_close( dir );
         }
-        g_dir_close( dir );
+        else if ( error )
+        {
+            char* msg = g_strdup_printf( "\n%s\n", error->message );
+            g_error_free( error );
+            vfs_file_task_exec_error( task, 0, msg );
+            g_free( msg );
+        }
+
         if ( should_abort( task ) )
             return ;
         result = rmdir( src_file );
@@ -603,12 +740,8 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
         {
             vfs_file_task_error( task, errno, _("Removing"), src_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
             return ;
         }
-
-        task->progress += file_stat.st_size;
-        call_progress_callback( task );
     }
     else
     {
@@ -617,13 +750,13 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
         {
             vfs_file_task_error( task, errno, _("Removing"), src_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
             return ;
         }
-
-        task->progress += file_stat.st_size;
-        call_progress_callback( task );
     }
+    g_mutex_lock( task->mutex );
+    task->progress += file_stat.st_size;
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
 }
 
 static void
@@ -647,9 +780,12 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
     //MOD  setup task for check overwrite
     if ( should_abort( task ) )
         return ;
-    task->current_file = src_file;
-    task->current_dest = old_dest_file;
-    call_progress_callback( task );
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    string_copy_free( &task->current_dest, old_dest_file );
+    task->current_item++;
+    g_mutex_unlock( task->mutex );
+    //call_progress_callback( task );
     
     if ( stat64( src_file, &src_stat ) == -1 )
     {
@@ -658,7 +794,6 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
         {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
             if ( should_abort( task ) )
                 return ;
         }
@@ -668,9 +803,15 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
     if ( ! check_overwrite( task, dest_file,
                               &dest_exists, &new_dest_file ) )
         return;
-    if ( new_dest_file )
-        task->current_dest = dest_file = new_dest_file;
 
+    if ( new_dest_file )
+    {
+        dest_file = new_dest_file;
+        g_mutex_lock( task->mutex );
+        string_copy_free( &task->current_dest, dest_file );
+        g_mutex_unlock( task->mutex );
+    }
+    
     //MOD if dest exists, delete it first to prevent exists error
     if ( g_file_test( dest_file, G_FILE_TEST_EXISTS ) )
     {
@@ -679,7 +820,6 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
         {
             vfs_file_task_error( task, errno, _("Removing"), dest_file );
             task->error = errno;
-            //call_state_callback( task, VFS_FILE_TASK_ERROR );
             return;
         }                
     }
@@ -689,16 +829,18 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
     {
         vfs_file_task_error( task, errno, _("Creating Link"), dest_file );
         task->error = errno;
-        //call_state_callback( task, VFS_FILE_TASK_ERROR );
         if ( should_abort( task ) )
             return ;
     }
+
+    g_mutex_lock( task->mutex );
     task->progress += src_stat.st_size;
-    task->current_dest = NULL;
+    g_mutex_unlock( task->mutex );
+
     if ( new_dest_file )
         g_free( new_dest_file );
     g_free( old_dest_file );
-    call_progress_callback( task );
+    //call_progress_callback( task );
 }
 
 static void
@@ -710,14 +852,17 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
     gchar* sub_src_file;
     const gchar* file_name;
     mode_t new_mode;
-
     int result;
+    GError* error;
 
     if( should_abort( task ) )
         return ;
-    task->current_file = src_file;
+    g_mutex_lock( task->mutex );
+    string_copy_free( &task->current_file, src_file );
+    task->current_item++;
+    g_mutex_unlock( task->mutex );
     /* g_debug("chmod_chown: %s\n", src_file); */
-    call_progress_callback( task );
+    //call_progress_callback( task );
 
     if ( lstat64( src_file, &src_stat ) == 0 )
     {
@@ -729,7 +874,6 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
             {
                 vfs_file_task_error( task, errno, "chown", src_file );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
                 if ( should_abort( task ) )
                     return ;
             }
@@ -755,19 +899,25 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
                 {
                     vfs_file_task_error( task, errno, "chmod", src_file );
                     task->error = errno;
-                    //call_state_callback( task, VFS_FILE_TASK_ERROR );
                     if ( should_abort( task ) )
                         return ;
                 }
             }
         }
 
+        g_mutex_lock( task->mutex );
         task->progress += src_stat.st_size;
-        call_progress_callback( task );
+        g_mutex_unlock( task->mutex );
+        //call_progress_callback( task );
+
+        if ( task->avoid_changes )
+            update_file_display( src_file );
 
         if ( S_ISDIR( src_stat.st_mode ) && task->recursive )
         {
-            if ( (dir = g_dir_open( src_file, 0, NULL )) )
+            error = NULL;
+            dir = g_dir_open( src_file, 0, &error );
+            if ( dir )
             {
                 while ( (file_name = g_dir_read_name( dir )) )
                 {
@@ -779,11 +929,19 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
                 }
                 g_dir_close( dir );
             }
+            else if ( error )
+            {
+                char* msg = g_strdup_printf( "\n%s\n", error->message );
+                g_error_free( error );
+                vfs_file_task_exec_error( task, 0, msg );
+                g_free( msg );
+                if ( should_abort( task ) )
+                    return ;
+            }
             else
             {
                 vfs_file_task_error( task, errno, _("Accessing"), src_file );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
                 if ( should_abort( task ) )
                     return ;
             }
@@ -883,7 +1041,6 @@ static void cb_exec_child_cleanup( GPid pid, gint status, char* tmp_file )
 static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
 {
     gboolean bad_status = FALSE;
-printf("child finished  pid=%d exit_status=%d\n", pid, status);
     g_spawn_close_pid( pid );
     task->exec_pid = 0;
 
@@ -902,15 +1059,13 @@ printf("child finished  pid=%d exit_status=%d\n", pid, status);
         if ( task->exec_script )
             unlink( task->exec_script );
     }
-    
+    printf("child finished  pid=%d exit_status=%d\n", pid,
+                                    bad_status ? -1 : task->exec_exit_status );
     if ( !task->exec_exit_status && !bad_status )
-    {
         task->percent = 100;
-    }
     else
-    {
         call_state_callback( task, VFS_FILE_TASK_ERROR );
-    }
+
     if ( task->state_cb && !task->exec_channel_out && !task->exec_channel_err )
         call_state_callback( task, VFS_FILE_TASK_FINISH );
 }
@@ -918,6 +1073,7 @@ printf("child finished  pid=%d exit_status=%d\n", pid, status);
 static gboolean cb_exec_out_watch( GIOChannel *channel, GIOCondition cond,
                               VFSFileTask* task )
 {
+
 /*
 printf("cb_exec_out_watch %d\n", channel);
 if ( cond & G_IO_IN )
@@ -970,6 +1126,7 @@ if ( !( cond & G_IO_NVAL ) )
         // bad file descriptor - occurs with stop on fast output
         goto _unref_channel;
     }
+/*
     else if ( ++task->flood_ticks > 1000 )
     {
         // too much output per second
@@ -985,29 +1142,31 @@ if ( !( cond & G_IO_NVAL ) )
         call_progress_callback( task );
         goto _unref_channel;
     }
-
+*/
     GError *error = NULL;
     gchar buf[2048];
     if ( g_io_channel_read_chars( channel, buf, sizeof( buf ), &size, &error ) ==
                                                 G_IO_STATUS_NORMAL && size > 0 )
     {
-        gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
-                                                            task->exec_mark_end );
+        //gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
+        //                                                    task->exec_mark_end );
         if ( task->exec_type == VFS_EXEC_UDISKS
                                     && task->exec_show_error //prevent progress_cb opening taskmanager
                                     && g_strstr_len( buf, size, "ount failed:" ) )
         {
             // bug in udisks - exit status not set
             if ( size > 81 && !strncmp( buf, "Mount failed: Error mounting: mount exited with exit code 1: helper failed with:\n", 81 ) )  //cleanup output - useless line
-                gtk_text_buffer_insert( task->exec_err_buf, &iter, buf + 81, size - 81 );
+                //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf + 81, size - 81 );
+                append_add_log( task, buf + 81, size - 81 );
             else
-                gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+                //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+                append_add_log( task, buf, size );
             call_state_callback( task, VFS_FILE_TASK_ERROR );
         }
         else  // no error
-            gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
-        task->err_count++;   //notify of new output - does not indicate error for exec
-        task->ticks = 10000;
+            //gtk_text_buffer_insert( task->exec_err_buf, &iter, buf, size );
+            append_add_log( task, buf, size );
+        //task->err_count++;   //notify of new output - does not indicate error for exec
     }
     else
         printf("cb_exec_out_watch: g_io_channel_read_chars != G_IO_STATUS_NORMAL\n");
@@ -1063,7 +1222,7 @@ if ( !( cond & G_IO_NVAL ) )
     //if ( ( cond & G_IO_HUP ) )  // put here in case both G_IO_IN and G_IO_HUP
     //    goto _unref_channel;
 
-    call_progress_callback( task );
+    //call_progress_callback( task );
     return TRUE;
     
 _unref_channel:
@@ -1105,34 +1264,22 @@ char* get_sha256sum( char* path )
 
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action )
 {
-//printf("vfs_file_task_exec_error\n");
-    GtkTextIter iter;
-    const char* err_msg;
-    char* new_msg;
-    
+    char* msg;
+
     if ( errnox )
-    {
-        err_msg = g_strerror( errnox );
-        new_msg = g_strdup_printf( "%s\n%s\n", action, err_msg );
-    }
+        msg = g_strdup_printf( "%s\n%s\n", action, g_strerror( errnox ) );
     else
-    {
-        new_msg = g_strdup_printf( "%s\n", action );
-    }
-                                                        
-    gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
-                                                        task->exec_mark_end );
-    gtk_text_buffer_insert( task->exec_err_buf, &iter, new_msg, -1 );
-    g_free(new_msg );
-    
-    task->err_count = -1;
-    task->ticks = 10000;
-    
+        msg = g_strdup_printf( "%s\n", action );
+
+    append_add_log( task, msg, -1 );
+    g_free( msg );
     call_state_callback( task, VFS_FILE_TASK_ERROR );
 }
 
-static void vfs_file_task_exec( VFSFileTask* task )
+static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
 {
+    // this function is now thread safe but is not currently run in
+    // another thread because gio adds watches to main loop thread anyway
     char* su = NULL;
     char* gsu = NULL;
     char* str;
@@ -1149,10 +1296,10 @@ static void vfs_file_task_exec( VFSFileTask* task )
     gboolean success;
     int i;
 
-//printf("vfs_file_task_exec\n");
+printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
 
-
+    g_mutex_lock( task->mutex );
     value = task->current_dest;  // variable value temp storage
     task->current_dest = NULL;
 
@@ -1162,14 +1309,13 @@ static void vfs_file_task_exec( VFSFileTask* task )
         parent = gtk_widget_get_toplevel( task->exec_desktop );
 
     task->state = VFS_FILE_TASK_RUNNING;
-    task->current_file = ( char* ) task->src_paths->data;
+    string_copy_free( &task->current_file, src_file );
     task->total_size = 0;
-    call_progress_callback( task );
+    task->percent = 0;
+    g_mutex_unlock( task->mutex );
     
     if ( should_abort( task ) )
         return;
-
-    task->percent = 0;
 
     // need su?
     if ( task->exec_as_user )
@@ -1188,6 +1334,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
             {
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
                 g_warning ( str );
+                // do not use xset_msg_dialog if non-main thread
+                //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal SU Not Available"), NULL, 0, str, NULL, NULL );
                 goto _exit_with_error_lean;
@@ -1197,6 +1345,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
             {
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
                 g_warning ( str );
+                // do not use xset_msg_dialog if non-main thread
+                //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Graphical SU Not Available"), NULL, 0, str, NULL, NULL );
                 goto _exit_with_error_lean;
@@ -1214,6 +1364,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
     {
         str = _("Cannot create temporary directory");
         g_warning ( str );
+        // do not use xset_msg_dialog if non-main thread
+        //vfs_file_task_exec_error( task, 0, str );
         xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                                 _("Error"), NULL, 0, str, NULL, NULL );
         goto _exit_with_error_lean;
@@ -1244,6 +1396,8 @@ static void vfs_file_task_exec( VFSFileTask* task )
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
             g_warning ( str );
+            // do not use xset_msg_dialog if non-main thread
+            //vfs_file_task_exec_error( task, 0, str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
             goto _exit_with_error_lean;
@@ -1331,8 +1485,10 @@ static void vfs_file_task_exec( VFSFileTask* task )
         if ( result < 0 ) goto _exit_with_error;
 
         // build - trap rm
-        if ( !task->exec_keep_tmp && terminal && ( strstr( terminal, "lxterminal" )
-                                            || strstr( terminal, "konsole" ) ) )
+        if ( !task->exec_keep_tmp && terminal && 
+                                ( strstr( terminal, "lxterminal" ) ||
+                                  strstr( terminal, "urxvtc" ) ||  // sure no option avail?
+                                  strstr( terminal, "konsole" ) ) )
         {
             // these terminals provide no option to start a new instance, child
             // exit occurs immediately so can't delete tmp files
@@ -1341,7 +1497,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
             // *these terminals will not work properly with Run As Task
             
             // note for konsole:  if you create a link to it and execute the
-            // link, it will start of new instance (might also work for lxterminal?)
+            // link, it will start a new instance (might also work for lxterminal?)
             // http://www.linuxjournal.com/content/start-and-control-konsole-dbus
             result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
                                                     task->exec_script );
@@ -1577,6 +1733,7 @@ static void vfs_file_task_exec( VFSFileTask* task )
     }
     printf( "\n" );
 
+    char* first_arg = g_strdup( argv[0] );
     if ( task->exec_sync )
     {
         result = g_spawn_async_with_pipes( task->dest_dir, argv, NULL,
@@ -1598,28 +1755,35 @@ static void vfs_file_task_exec( VFSFileTask* task )
             if ( task->exec_script )
                 unlink( task->exec_script );
         }
-        vfs_file_task_exec_error( task, errno, _("Error executing command - see stdout (run spacefm in a terminal) for debug info") );
-        task->exec_sync = FALSE;  // triggers FINISH
+        str = g_strdup_printf( _("Error executing '%s'\nSee stdout (run spacefm in a terminal) for debug info"), first_arg );
+        g_free( first_arg );
+        vfs_file_task_exec_error( task, errno, str );
+        g_free( str );
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
         return;
     }
     else
         printf( "    pid = %d\n", pid );
+    g_free( first_arg );
 
     if ( !task->exec_sync )
     {
         // catch termination to delete tmp
         if ( !task->exec_keep_tmp && !task->exec_direct && task->exec_script )
         {
+            // task can be destroyed while this watch is still active
             g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_cleanup, 
                                                     g_strdup( task->exec_script ) );
         }
+        call_state_callback( task, VFS_FILE_TASK_FINISH );
         return;
     }
     
     task->exec_pid = pid;
 
-    // catch termination
-    g_child_watch_add( pid, (GChildWatchFunc)cb_exec_child_watch, task );
+    // catch termination (always is run in the main loop thread)
+    guint child_watch = g_child_watch_add( pid,
+                                    (GChildWatchFunc)cb_exec_child_watch, task );
 
     // create channels for output
     fcntl( out, F_SETFL,O_NONBLOCK );
@@ -1630,17 +1794,32 @@ static void vfs_file_task_exec( VFSFileTask* task )
     g_io_channel_set_close_on_unref( task->exec_channel_err, TRUE );
 
     // Add watches to channels
-    g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
-                                                (GIOFunc)cb_exec_out_watch, task );
-    //g_io_add_watch( task->exec_channel_out, G_IO_IN	| G_IO_OUT | G_IO_PRI | G_IO_ERR | G_IO_HUP | G_IO_NVAL, (GIOFunc)cb_exec_out_watch, task );
-    g_io_add_watch( task->exec_channel_err, G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR,
-                                                (GIOFunc)cb_exec_out_watch, task );
+    // These are run in the main loop thread so use G_PRIORITY_LOW to not
+    // interfere with g_idle_add in vfs-dir/vfs-async-task etc 
+    // "Use this for very low priority background tasks. It is not used within
+    // GLib or GTK+." 
+    g_io_add_watch_full( task->exec_channel_out, G_PRIORITY_LOW,
+                        G_IO_IN	| G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
+                        (GIOFunc)cb_exec_out_watch, task, NULL );
+    g_io_add_watch_full( task->exec_channel_err, G_PRIORITY_LOW,
+                        G_IO_IN | G_IO_HUP | G_IO_NVAL | G_IO_ERR, //want ERR?
+                        (GIOFunc)cb_exec_out_watch, task, NULL );
 
     // running
     task->state = VFS_FILE_TASK_RUNNING;
-    call_progress_callback( task );
-//printf("vfs_file_task_exec DONE\n");
-    return;
+
+/* enable if this function is not in main loop thread
+    // wait
+    task->exec_cond = g_cond_new();
+    g_mutex_lock( task->mutex );
+    g_cond_wait( task->exec_cond, task->mutex );
+    g_cond_free( task->exec_cond );
+    task->exec_cond = NULL;
+    g_source_remove( child_watch );
+    g_mutex_unlock( task->mutex );
+*/
+printf("vfs_file_task_exec DONE\n");
+    return;  // exit thread
 
 // out and err can/should be closed too?
 
@@ -1658,28 +1837,39 @@ _exit_with_error_lean:
     g_free( terminal );
     g_free( su );
     g_free( gsu );
-    task->exec_sync = FALSE;  // triggers FINISH
+    call_state_callback( task, VFS_FILE_TASK_FINISH );
+printf("vfs_file_task_exec DONE ERROR\n");
+}
+
+gboolean on_size_timeout( VFSFileTask* task )
+{
+    if ( task->state != VFS_FILE_TASK_ABORTED )
+        task->state = VFS_FILE_TASK_TIMEOUT;
+    return FALSE;
 }
 
 static gpointer vfs_file_task_thread ( VFSFileTask* task )
+//void * vfs_file_task_thread ( void * ptr )
 {
     GList * l;
     struct stat64 file_stat;
     dev_t dest_dev = 0;
+    off64_t size;    
     GFunc funcs[] = {( GFunc ) vfs_file_task_move,
                      ( GFunc ) vfs_file_task_copy,
                      ( GFunc ) vfs_file_task_move,  /* trash */
                      ( GFunc ) vfs_file_task_delete,
                      ( GFunc ) vfs_file_task_link,
                      ( GFunc ) vfs_file_task_chown_chmod,
-                     ( GFunc ) vfs_file_task_exec};  // not used
-
+                     ( GFunc ) vfs_file_task_exec};
+//VFSFileTask* task = (VFSFileTask*)ptr;
     if ( task->type < VFS_FILE_TASK_MOVE
             || task->type >= VFS_FILE_TASK_LAST )
         goto _exit_thread;
 
+    g_mutex_lock( task->mutex );
     task->state = VFS_FILE_TASK_RUNNING;
-    task->current_file = ( char* ) task->src_paths->data;
+    string_copy_free( &task->current_file, (char*)task->src_paths->data );
     task->total_size = 0;
 
     if( task->type == VFS_FILE_TASK_TRASH )
@@ -1689,12 +1879,20 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         if( ! g_file_test( task->dest_dir, G_FILE_TEST_EXISTS ) )
             g_mkdir_with_parents( task->dest_dir, 0700 );
     }
+    g_mutex_unlock( task->mutex );
 
-    call_progress_callback( task );
+    if ( should_abort( task ) )
+        goto _exit_thread;
+    //call_progress_callback( task );
 
     /* Calculate total size of all files */
+    guint size_timeout = 0;
     if ( task->recursive )
     {
+        // start timer to limit the amount of time to spend on this - can be 
+        // VERY slow for network filesystems
+        size_timeout = g_timeout_add_seconds( 5,
+                                       ( GSourceFunc ) on_size_timeout, task );
         for ( l = task->src_paths; l; l = l->next )
         {
             if( task->dest_dir && g_str_has_prefix( task->dest_dir, (char*)l->data ) )
@@ -1708,20 +1906,24 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                     /* It's a dir */
                     if ( task->state_cb )
                     {
+                        // show error
                         char* err;
                         char* disp_src;
                         char* disp_dest;
                         disp_src = g_filename_display_name( (char*)l->data );
                         disp_dest = g_filename_display_name( task->dest_dir );
                         err = g_strdup_printf( _("Destination directory \"%1$s\" is contained in source \"%2$s\""), disp_dest, disp_src );
-                        if ( task->state_cb( task, VFS_FILE_TASK_ERROR,
-                             err, task->state_cb_data ) )
-                            task->state = VFS_FILE_TASK_RUNNING;
-                        else
-                            task->state = VFS_FILE_TASK_ABORTED;
+                        append_add_log( task, err, -1 );
                         g_free(disp_src );
                         g_free(disp_dest );
                         g_free(err );
+
+                        // conditionally abort
+                         if ( task->state_cb( task, VFS_FILE_TASK_ERROR,
+                                                    NULL, task->state_cb_data ) )
+                            task->state = VFS_FILE_TASK_RUNNING;
+                        else
+                            task->state = VFS_FILE_TASK_ABORTED;
                     }
                     else
                         task->state = VFS_FILE_TASK_ABORTED;
@@ -1729,11 +1931,23 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                         goto _exit_thread;
                 }
             }
-            get_total_size_of_dir( task, ( char* ) l->data, &task->total_size );
+            size = 0;
+            get_total_size_of_dir( task, ( char* ) l->data, &size );
+            if ( should_abort( task ) )
+                goto _exit_thread;
+            if ( task->state == VFS_FILE_TASK_TIMEOUT )
+                break;
+            g_mutex_lock( task->mutex );
+            task->total_size += size;
+            g_mutex_unlock( task->mutex );
         }
     }
-    else
+    else if ( task->type != VFS_FILE_TASK_EXEC && task->type != VFS_FILE_TASK_DELETE )
     {
+        // start timer to limit the amount of time to spend on this - can be 
+        // VERY slow for network filesystems
+        size_timeout = g_timeout_add_seconds( 5,
+                                       ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
             if ( task->dest_dir &&
@@ -1755,8 +1969,6 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                 vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
                 task->error = errno;
                 //call_state_callback( task, VFS_FILE_TASK_ERROR );
-                //if ( should_abort( task ) )
-                    goto _exit_thread;
             }
             if ( S_ISLNK( file_stat.st_mode ) )      /* Don't do deep copy for symlinks */
                 task->recursive = FALSE;
@@ -1765,14 +1977,36 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
 
             if ( task->recursive )
             {
-                get_total_size_of_dir( task, ( char* ) l->data,
-                                       &task->total_size );
+                size = 0;
+                get_total_size_of_dir( task, ( char* ) l->data, &size );
+                g_mutex_lock( task->mutex );
+                task->total_size += size;
+                g_mutex_unlock( task->mutex );
             }
             else
             {
+                g_mutex_lock( task->mutex );
                 task->total_size += file_stat.st_size;
+                g_mutex_unlock( task->mutex );
             }
+            if ( should_abort( task ) )
+                goto _exit_thread;
+            if ( task->state == VFS_FILE_TASK_TIMEOUT )
+                break;
         }
+    }
+    // cancel the timer
+    if ( should_abort( task ) )
+        goto _exit_thread;
+
+    if ( size_timeout )
+        g_source_remove_by_user_data( task );
+
+    if ( task->state == VFS_FILE_TASK_TIMEOUT )
+    {
+        task->state = VFS_FILE_TASK_RUNNING; 
+        append_add_log( task, _("Timed out calculating total size\n"), -1 );
+        task->total_size = 0;
     }
 
     g_list_foreach( task->src_paths,
@@ -1780,6 +2014,8 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                     task );
 
 _exit_thread:
+    if ( size_timeout )
+        g_source_remove_by_user_data( task );
     if ( task->state_cb )
     {
         call_state_callback( task, VFS_FILE_TASK_FINISH );
@@ -1807,18 +2043,16 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
 
     task->type = type;
     task->src_paths = src_files;
-
-    if ( dest_dir )
-        task->dest_dir = g_strdup( dest_dir );
-    else
-        task->dest_dir = NULL;
-    if ( task->type == VFS_FILE_TASK_COPY || task->type == VFS_FILE_TASK_DELETE )
+    task->dest_dir = g_strdup( dest_dir );
+    task->current_file = NULL;
+    task->current_dest = NULL;
+    
+    if ( task->type == VFS_FILE_TASK_COPY ) //sfm || task->type == VFS_FILE_TASK_DELETE )
         task->recursive = TRUE;
+    else
+        task->recursive = FALSE;
 
-    task->err_msgs = NULL;
     task->err_count = 0;
-    task->ticks = 10000;
-    task->flood_ticks = 0;
     
     task->exec_type = VFS_EXEC_NORMAL;
     task->exec_action = NULL;
@@ -1842,6 +2076,22 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_scroll_lock = FALSE;
     task->exec_write_root = FALSE;
     task->exec_set = NULL;
+    task->exec_cond = NULL;
+    
+    //task->progress_cb_timer = 0;
+    task->mutex = g_mutex_new();
+    
+    GtkTextIter iter;
+    task->add_log_buf = gtk_text_buffer_new( NULL );
+    task->add_log_end = gtk_text_mark_new( NULL, FALSE );
+    gtk_text_buffer_get_end_iter( task->add_log_buf, &iter);
+    gtk_text_buffer_add_mark( task->add_log_buf, task->add_log_end, &iter );
+    
+    task->start_time = time( NULL );
+    task->last_time = task->start_time;
+    task->last_speed = 0;
+    task->last_progress = 0;
+    task->current_item = 0;
     return task;
 }
 
@@ -1865,13 +2115,32 @@ void vfs_file_task_set_chown( VFSFileTask* task,
 void vfs_file_task_run ( VFSFileTask* task )
 {
     if ( task->type != VFS_FILE_TASK_EXEC )
+    {
+#ifdef HAVE_HAL
+        task->avoid_changes = FALSE;
+#else
+        if ( task->type == VFS_FILE_TASK_CHMOD_CHOWN && task->src_paths->data )
+        {
+            char* dir = g_path_get_dirname( (char*)task->src_paths->data );
+            task->avoid_changes = vfs_volume_dir_avoid_changes( dir );
+            g_free( dir );
+        }
+        else
+            task->avoid_changes = vfs_volume_dir_avoid_changes( task->dest_dir );
+#endif
         task->thread = g_thread_create( ( GThreadFunc ) vfs_file_task_thread,
                                         task, TRUE, NULL );
+        //task->thread = g_thread_create_full( ( GThreadFunc ) vfs_file_task_thread,
+        //                    task, 0, TRUE, TRUE, G_THREAD_PRIORITY_NORMAL, NULL );
+        //pthread_t tid;
+        //task->thread = pthread_create( &tid, NULL, vfs_file_task_thread, task );
+    }
     else
     {
-        // don't use another thread for exec
+        // don't use another thread for exec since gio adds watches to main
+        // loop thread anyway
         task->thread = NULL;
-        vfs_file_task_exec( task );
+        vfs_file_task_exec( (char*)task->src_paths->data, task );
     }
 }
 
@@ -1884,7 +2153,8 @@ void vfs_file_task_abort ( VFSFileTask* task )
 {
     task->state = VFS_FILE_TASK_ABORTED;
     /* Called from another thread */
-    if ( task->thread && g_thread_self() != task->thread )
+    if ( task->thread && g_thread_self() != task->thread
+                                            && task->type != VFS_FILE_TASK_EXEC )
     {
         g_thread_join( task->thread );
         task->thread = NULL;
@@ -1898,8 +2168,9 @@ void vfs_file_task_free ( VFSFileTask* task )
         g_list_foreach( task->src_paths, ( GFunc ) g_free, NULL );
         g_list_free( task->src_paths );
     }
-    if ( task->dest_dir )
-        g_free(task->dest_dir );
+    g_free( task->dest_dir );
+    g_free( task->current_file );
+    g_free( task->current_dest );
 
     if ( task->chmod_actions )
         g_slice_free1( sizeof( guchar ) * N_CHMOD_ACTIONS,
@@ -1913,6 +2184,11 @@ void vfs_file_task_free ( VFSFileTask* task )
         g_free(task->exec_command );
     if ( task->exec_script )
         g_free(task->exec_script );
+
+    g_mutex_free( task->mutex );
+
+    gtk_text_buffer_set_text( task->add_log_buf, "", -1 );
+    g_object_unref( task->add_log_buf );
 
     g_slice_free( VFSFileTask, task );
 }
@@ -1949,7 +2225,7 @@ void get_total_size_of_dir( VFSFileTask* task,
     {
         while ( (name = g_dir_read_name( dir )) )
         {
-            if ( should_abort( task ) )
+            if ( task->state == VFS_FILE_TASK_TIMEOUT || should_abort( task ) )
                 break;
             full_path = g_build_filename( path, name, NULL );
             lstat64( full_path, &file_stat );
@@ -1997,22 +2273,10 @@ void vfs_file_task_set_state_callback( VFSFileTask* task,
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target )
 {
-    char* old_msgs;
-    
-    const char* err_msg = g_strerror( errnox );
-    if ( !task->err_msgs )
-        task->err_msgs = g_strdup_printf( _("\n%s %s\nError: %s\n"), action, target,
-                                                        err_msg );
-    else
-    {
-        old_msgs = task->err_msgs;
-        task->err_msgs = g_strdup_printf( _("%s\n%s %s\nError: %s\n"), old_msgs,
-                                                        action, target, err_msg );
-        g_free(old_msgs );
-    }
-    task->err_count++;
-    task->ticks = 10000;
-    
+    char* msg = g_strdup_printf( _("\n%s %s\nError: %s\n"), action, target,
+                                                        g_strerror( errnox ) );
+    append_add_log( task, msg, -1 );
+    g_free( msg );
     call_state_callback( task, VFS_FILE_TASK_ERROR );
 }
 

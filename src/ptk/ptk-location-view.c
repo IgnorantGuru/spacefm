@@ -2849,7 +2849,8 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_cb( "dev_show_empty", update_all, NULL );
         xset_set_cb( "dev_show_partition_tables", update_all, NULL );
         xset_set_cb( "dev_show_net", update_all, NULL );
-        xset_set_cb( "dev_show_file", update_all, NULL );
+        set = xset_set_cb( "dev_show_file", update_all, NULL );
+            set->disable = xset_get_b( "dev_show_internal_drives" );
         xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
         xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
         set = xset_set_cb( "dev_automount_optical", update_all, NULL );
@@ -2960,7 +2961,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
 
         set = xset_get( "dev_menu_root" );
-            set->disable = !vol;
+            //set->disable = !vol;
         set = xset_get( "dev_menu_format" );
             set->disable =  !( vol && !vol->is_mounted && 
                                         vol->device_type == DEVICE_TYPE_BLOCK );

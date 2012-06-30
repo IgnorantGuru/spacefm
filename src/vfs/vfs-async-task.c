@@ -134,9 +134,9 @@ void vfs_async_task_finalize(GObject *object)
 gboolean on_idle( gpointer _task )
 {
     VFSAsyncTask *task = VFS_ASYNC_TASK(_task);
-    GDK_THREADS_ENTER();
+    //GDK_THREADS_ENTER();   // not needed because this runs in main thread
     vfs_async_thread_cleanup( task, FALSE );
-    GDK_THREADS_LEAVE();
+    //GDK_THREADS_LEAVE();
     return TRUE;    /* the idle handler is removed in vfs_async_thread_cleanup. */
 }
 
@@ -147,7 +147,7 @@ gpointer vfs_async_task_thread( gpointer _task )
     ret = task->func( task, task->user_data );
 
     vfs_async_task_lock( task );
-    task->idle_id = g_idle_add( on_idle, task );
+    task->idle_id = g_idle_add( on_idle, task );  // runs in main loop thread
     task->ret_val = ret;
     task->finished = TRUE;
     vfs_async_task_unlock( task );
@@ -197,8 +197,10 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
      * but the behavior of the lock is not well-documented. So it's very difficult for use
      * to get things right.
      */
-    GDK_THREADS_LEAVE();
 
+    //sfm this deadlocks on quick dir change
+    //GDK_THREADS_LEAVE(); 
+    
     vfs_async_task_lock( task );
     task->cancel = TRUE;
     vfs_async_task_unlock( task );
@@ -206,7 +208,7 @@ void vfs_async_task_real_cancel( VFSAsyncTask* task, gboolean finalize )
     vfs_async_thread_cleanup( task, finalize );
     task->cancelled = TRUE;
 
-    GDK_THREADS_ENTER();
+    //GDK_THREADS_ENTER();
 }
 
 void vfs_async_task_cancel( VFSAsyncTask* task )

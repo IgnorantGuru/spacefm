@@ -32,27 +32,40 @@ struct _PtkFileTask
     GtkLabel* from;
     GtkLabel* to;
     GtkLabel* current;
-    GtkProgressBar* progress;
+    GtkProgressBar* progress_bar;
     GtkLabel* errors;
     GtkWidget* error_view;
-    int old_err_count;
+    GtkScrolledWindow* scroll;
+
+    GtkTextBuffer* log_buf;
+    GtkTextMark* log_end;
+    gboolean log_appended;
+    guint err_count;
+/*
+    int percent;
+    off64_t total_size;     // Total size of the files to be processed, in bytes
+    off64_t progress;       // Total size of current processed files, in btytes 
+    guint item_count;
+    guint old_err_count;
+*/
     gboolean complete;
     gboolean aborted;
-    GtkTextBuffer* err_buf;
-    GtkTextMark* mark_end;
-    GtkScrolledWindow* scroll;
 
     /* <private> */
     guint timeout;
-    guint exec_timer;
-    guint destroy_timer;
+    gboolean restart_timeout;
+    guint progress_timer;
+    char progress_count;
     GFunc complete_notify;
     gpointer user_data;
-    const char* old_src_file;
-    const char* old_dest_file;
-    int old_percent;
     gboolean keep_dlg;
     
+    GCond* query_cond;
+    GCond* query_cond_last;
+    char** query_new_dest;
+    GtkEntry* query_entry;
+    gboolean query_ret;
+
     char* dsp_file_count;
     char* dsp_size_tally;
     char* dsp_elapsed;
@@ -71,25 +84,25 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
 PtkFileTask* ptk_file_exec_new( const char* item_name, const char* dir,
                                     GtkWidget* parent, GtkWidget* task_view );
 
-void ptk_file_task_destroy( PtkFileTask* task );
+void ptk_file_task_destroy( PtkFileTask* ptask );
 
-void ptk_file_task_set_complete_notify( PtkFileTask* task,
+void ptk_file_task_set_complete_notify( PtkFileTask* ptask,
                                         GFunc callback,
                                         gpointer user_data );
 
-void ptk_file_task_set_chmod( PtkFileTask* task,
+void ptk_file_task_set_chmod( PtkFileTask* ptask,
                               guchar* chmod_actions );
 
-void ptk_file_task_set_chown( PtkFileTask* task,
+void ptk_file_task_set_chown( PtkFileTask* ptask,
                               uid_t uid, gid_t gid );
 
-void ptk_file_task_set_recursive( PtkFileTask* task, gboolean recursive );
+void ptk_file_task_set_recursive( PtkFileTask* ptask, gboolean recursive );
 
-void ptk_file_task_run( PtkFileTask* task );
+void ptk_file_task_run( PtkFileTask* ptask );
 
-void ptk_file_task_cancel( PtkFileTask* task );
+gboolean ptk_file_task_cancel( PtkFileTask* ptask );
 
-void ptk_file_task_progress_open( PtkFileTask* task );
+void ptk_file_task_progress_open( PtkFileTask* ptask );
 
 #endif
 

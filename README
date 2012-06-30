@@ -243,7 +243,7 @@ BUILD NEXT
 The git 'next' branch of SpaceFM is a work in progress which eventually becomes
 the next release version.  The next build is less stable in general, and
 functions may be incomplete.  To build from this branch, install the required
-build dependencies listed above in BUILD, then:
+build dependencies listed above in BUILD plus libtool, then:
 
     # Download & Extract
     mkdir /tmp/spacefm-next && cd /tmp/spacefm-next

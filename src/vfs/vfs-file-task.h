@@ -56,6 +56,7 @@ typedef enum
     VFS_FILE_TASK_QUERY_OVERWRITE,
     VFS_FILE_TASK_ERROR,
     VFS_FILE_TASK_ABORTED,
+    VFS_FILE_TASK_TIMEOUT,
     VFS_FILE_TASK_FINISH
 }VFSFileTaskState;
 
@@ -78,11 +79,7 @@ typedef enum
 
 typedef struct _VFSFileTask VFSFileTask;
 
-typedef void ( *VFSFileTaskProgressCallback ) ( VFSFileTask* task,
-                                                int percent,
-                                                const char* src_file,
-                                                const char* dest_file,
-                                                gpointer user_data );
+typedef void ( *VFSFileTaskProgressCallback ) ( VFSFileTask* task );
 
 typedef gboolean ( *VFSFileTaskStateCallback ) ( VFSFileTask*,
                                                  VFSFileTaskState state,
@@ -95,6 +92,7 @@ struct _VFSFileTask
     GList* src_paths; /* All source files. This list will be freed
                                  after file operation is completed. */
     char* dest_dir; /* Destinaton directory */
+    gboolean avoid_changes;
 
     VFSFileTaskOverwriteMode overwrite_mode ;
     gboolean recursive; /* Apply operation to all files under folders
@@ -111,19 +109,15 @@ struct _VFSFileTask
     off64_t total_size; /* Total size of the files to be processed, in bytes */
     off64_t progress; /* Total size of current processed files, in btytes */
     int percent; /* progress (percentage) */
-    time_t start_time;  //MOD
-    time_t last_time;   //MOD
-    time_t update_time;   //MOD
-    off64_t current_speed;   //MOD
-    off64_t current_progress; //MOD
-    guint current_item;  //MOD
-    guint ticks;
-    guint flood_ticks;
-    int err_count;  //MOD
-    char* err_msgs;
+    time_t start_time;
+    time_t last_time;
+    off64_t last_speed;
+    off64_t last_progress;
+    guint current_item;
+    int err_count;
     
-    const char* current_file; /* Current processed file */
-    const char* current_dest; /* Current destination file */
+    char* current_file; /* copy of Current processed file */
+    char* current_dest; /* copy of Current destination file */
 
     int error;
 
@@ -135,6 +129,13 @@ struct _VFSFileTask
 
     VFSFileTaskStateCallback state_cb;
     gpointer state_cb_data;
+    
+    //guint progress_cb_timer;
+    
+    GMutex* mutex;
+
+    GtkTextBuffer* add_log_buf;
+    GtkTextMark* add_log_end;
     
     //MOD run task
     VFSExecType exec_type;
@@ -167,6 +168,7 @@ struct _VFSFileTask
     gboolean exec_scroll_lock;
     gboolean exec_write_root;
     gpointer exec_set;
+    GCond* exec_cond;
 };
 
 /*

@@ -207,6 +207,16 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     widget_class->delete_event = (gpointer) fm_main_window_delete_event;
 //widget_class->key_press_event = on_main_window_keypress;  //fm_main_window_key_press_event;
     widget_class->window_state_event = fm_main_window_window_state_event;
+
+    /*  this works but desktop_window doesn't
+    g_signal_new ( "task-notify",
+                       G_TYPE_FROM_CLASS ( klass ),
+                       G_SIGNAL_RUN_FIRST,
+                       0,
+                       NULL, NULL,
+                       g_cclosure_marshal_VOID__POINTER,
+                       G_TYPE_NONE, 1, G_TYPE_POINTER );
+    */
 }
 
 void on_bookmark_item_activate ( GtkMenuItem* menu, gpointer user_data )
@@ -1646,6 +1656,9 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     pcmanfm_ref();
 
+    //g_signal_connect( G_OBJECT( main_window ), "task-notify",
+    //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
+
     /* Start building GUI */
     /*
     NOTE: gtk_window_set_icon_name doesn't work under some WMs, such as IceWM.
@@ -1880,7 +1893,7 @@ void fm_main_window_finalize( GObject *obj )
         g_signal_handler_disconnect( gtk_icon_theme_get_default(), theme_change_notify );
         theme_change_notify = 0;
     }
-
+ 
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
 
@@ -1898,12 +1911,17 @@ void fm_main_window_set_property ( GObject *obj,
 
 static void fm_main_window_close( FMMainWindow* main_window )
 {    
+    /*
+    printf("DISC=%d\n", g_signal_handlers_disconnect_by_func(
+                            G_OBJECT( main_window ),
+                            G_CALLBACK( ptk_file_task_notify_handler ), NULL ) );
+    */
     gtk_widget_destroy( GTK_WIDGET( main_window ) );
 }
 
 void on_abort_tasks_response( GtkDialog* dlg, int response, GtkWidget* main_window )
 {
-    gtk_widget_destroy( GTK_WIDGET( main_window ) );
+    fm_main_window_close( (FMMainWindow*)main_window );
 }
 
 gboolean fm_main_window_delete_event ( GtkWidget *widget,
@@ -2738,11 +2756,11 @@ static gboolean delayed_focus( GtkWidget* widget )
 {
     if ( GTK_IS_WIDGET( widget ) )
     {
-        gdk_threads_enter();
+        ///gdk_threads_enter();
 //printf( "delayed_focus %#x\n", widget);
         if ( GTK_IS_WIDGET( widget ) )
             gtk_widget_grab_focus( widget );
-        gdk_threads_leave();
+        ///gdk_threads_leave();
     }
     return FALSE;
 }
@@ -2751,14 +2769,14 @@ static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser )
 {
     if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
     {
-        gdk_threads_enter();
+        ///gdk_threads_enter();
 //printf( "delayed_focus_file_browser fb=%#x\n", file_browser );
         if ( GTK_IS_WIDGET( file_browser ) && GTK_IS_WIDGET( file_browser->folder_view ) )
         {
             gtk_widget_grab_focus( file_browser->folder_view );
             set_panel_focus( NULL, file_browser );
         }
-        gdk_threads_leave();
+        ///gdk_threads_leave();
     }
     return FALSE;
 }
@@ -3475,7 +3493,7 @@ enum {
 
 const char* task_titles[] =
     {
-        N_( "Status" ), N_( "#" ), N_( "Path" ), N_( "Item" ),
+        N_( "Status" ), N_( "#" ), N_( "Folder" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
         N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "Estimate" ),
         N_( "Speed" ), N_( "Remain" ), "StartTime"
@@ -3503,7 +3521,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     GList* sel_files;
     int no_write_access = 0, no_read_access = 0;
     VFSVolume* vol;
-    PtkFileTask* task;
+    PtkFileTask* ptask;
     char* path;
     GtkTreeModel* model;
     GtkTreeModel* model_task;
@@ -3771,21 +3789,23 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
         "change",
         "run"
     };
-    if ( task = get_selected_task( file_browser->task_view ) )
+    if ( ptask = get_selected_task( file_browser->task_view ) )
     {
-        c->var[CONTEXT_TASK_TYPE] = g_strdup( job_titles[task->task->type] );
-        if ( task->task->type == VFS_FILE_TASK_EXEC )
+        c->var[CONTEXT_TASK_TYPE] = g_strdup( job_titles[ptask->task->type] );
+        if ( ptask->task->type == VFS_FILE_TASK_EXEC )
         {
-            c->var[CONTEXT_TASK_NAME] = g_strdup( task->task->current_file );
-            c->var[CONTEXT_TASK_DIR] = g_strdup( task->task->dest_dir );
+            c->var[CONTEXT_TASK_NAME] = g_strdup( ptask->task->current_file );
+            c->var[CONTEXT_TASK_DIR] = g_strdup( ptask->task->dest_dir );
         }
         else
         {
             c->var[CONTEXT_TASK_NAME] = g_strdup( "" );
-            if ( task->old_src_file )
-                c->var[CONTEXT_TASK_DIR] = g_path_get_dirname( task->old_src_file );
+            g_mutex_lock( ptask->task->mutex );
+            if ( ptask->task->current_file )
+                c->var[CONTEXT_TASK_DIR] = g_path_get_dirname( ptask->task->current_file );
             else
                 c->var[CONTEXT_TASK_DIR] = g_strdup( "" );
+            g_mutex_unlock( ptask->task->mutex );
         }
     }
     else
@@ -4249,6 +4269,18 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
     return result >= 0;
 }
 
+FMMainWindow* get_task_view_window( GtkWidget* view )
+{
+    FMMainWindow* a_window;
+    GList* l;
+    for ( l = all_windows; l; l = l->next )
+    {
+        if ( ((FMMainWindow*)l->data)->task_view == view )
+            return (FMMainWindow*)l->data;
+    }
+    return NULL;
+}
+
 void on_task_columns_changed( GtkWidget *view, gpointer user_data )
 {
     const char* title;
@@ -4322,7 +4354,9 @@ gboolean main_tasks_running( FMMainWindow* main_window )
 
     GtkTreeModel* model = gtk_tree_view_get_model( 
                                     GTK_TREE_VIEW( main_window->task_view ) );
-    return gtk_tree_model_get_iter_first( model, &it );
+    gboolean ret = gtk_tree_model_get_iter_first( model, &it );
+    
+    return ret;
 }
 
 void on_task_stop( GtkMenuItem* item, GtkWidget* view, PtkFileTask* task2 )
@@ -4343,6 +4377,10 @@ void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
     GtkTreeModel* model;
     GtkTreeIter it;
     PtkFileTask* task = NULL;
+
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window )
+        return;
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -4500,21 +4538,24 @@ void main_task_prepare_menu( FMMainWindow* main_window, GtkWidget* menu,
 PtkFileTask* get_selected_task( GtkWidget* view )
 {
     GtkTreeModel* model;
-    //GtkTreePath* tree_path;
     GtkTreeSelection* tree_sel;
     GtkTreeViewColumn* col = NULL;
     GtkTreeIter it;
-    PtkFileTask* task = NULL;    
+    PtkFileTask* ptask = NULL;    
 
     if ( !view )
         return NULL;
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window )
+        return;
+
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
     {
-        gtk_tree_model_get( model, &it, TASK_COL_DATA, &task, -1 );
+        gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
     }
-    return task;
+    return ptask;
 }
 
 gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
@@ -4584,29 +4625,41 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
 {
     GtkTreeModel* model;
     GtkTreeIter it;
-    PtkFileTask* task;
+    PtkFileTask* ptask;
     
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window )
+        return;
+
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
         return;
-    gtk_tree_model_get( model, &it, TASK_COL_DATA, &task, -1 );
-    if ( task )
+
+    gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+    if ( ptask )
     {
-        ptk_file_task_progress_open( task );
-        if ( task->progress_dlg )
-            gtk_window_present( GTK_WINDOW( task->progress_dlg ) );
+        g_mutex_lock( ptask->task->mutex );
+        ptk_file_task_progress_open( ptask );
+        if ( ptask->progress_dlg )
+            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
+        g_mutex_unlock( ptask->task->mutex );
     }
 }
 
-void main_task_view_remove_task( PtkFileTask* task )
+void main_task_view_remove_task( PtkFileTask* ptask )
 {
-    PtkFileTask* taskt = NULL;
+    PtkFileTask* ptaskt = NULL;
     GtkWidget* view;
     GtkTreeModel* model;
     GtkTreeIter it;
+//printf("main_task_view_remove_task  ptask=%d\n", ptask);
 
-    view = task->task_view;
+    view = ptask->task_view;
     if ( !view )
+        return;
+
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window )
         return;
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
@@ -4614,11 +4667,11 @@ void main_task_view_remove_task( PtkFileTask* task )
     {
         do
         {
-            gtk_tree_model_get( model, &it, TASK_COL_DATA, &taskt, -1 );
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptaskt, -1 );
         }
-        while ( taskt != task && gtk_tree_model_iter_next( model, &it ) );
+        while ( ptaskt != ptask && gtk_tree_model_iter_next( model, &it ) );
     }
-    if ( taskt == task )
+    if ( ptaskt == ptask )
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
     
     if ( !gtk_tree_model_get_iter_first( model, &it ) )
@@ -4627,22 +4680,13 @@ void main_task_view_remove_task( PtkFileTask* task )
             gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
     }
     
-    // update window title
-    FMMainWindow* a_window;
-    GList* l;
-    for ( l = all_windows; l; l = l->next )
-    {
-        if ( ((FMMainWindow*)l->data)->task_view == view )
-        {
-            update_window_title( NULL, (FMMainWindow*)l->data );
-            break;
-        }
-    }
+    update_window_title( NULL, main_window );
+//printf("main_task_view_remove_task DONE ptask=%d\n", ptask);
 }
 
-void main_task_view_update_task( PtkFileTask* task )
+void main_task_view_update_task( PtkFileTask* ptask )
 {
-    PtkFileTask* taskt = NULL;
+    PtkFileTask* ptaskt = NULL;
     GtkWidget* view;
     GtkTreeModel* model;
     GtkTreeIter it;
@@ -4650,10 +4694,10 @@ void main_task_view_update_task( PtkFileTask* task )
     char* status;
     char* status2 = NULL;
     char* dest_dir;
-    char* path;
-    char* file;
+    char* path = NULL;
+    char* file = NULL;
     
-//printf("main_task_view_update_task  task=%d\n", task);
+//printf("main_task_view_update_task  ptask=%d\n", ptask);
     const char* job_titles[] =
         {
             N_( "moving" ),
@@ -4665,15 +4709,19 @@ void main_task_view_update_task( PtkFileTask* task )
             N_( "running" )
         };
 
-    if ( !task )
+    if ( !ptask )
         return;
     
-    view = task->task_view;
+    view = ptask->task_view;
     if ( !view )
         return;
     
-    if ( task->task->type != 6 )
-        dest_dir = task->task->dest_dir;
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window )
+        return;
+
+    if ( ptask->task->type != 6 )
+        dest_dir = ptask->task->dest_dir;
     else
         dest_dir = NULL;
 
@@ -4682,51 +4730,56 @@ void main_task_view_update_task( PtkFileTask* task )
     {
         do
         {
-            gtk_tree_model_get( model, &it, TASK_COL_DATA, &taskt, -1 );
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptaskt, -1 );
         }
-        while ( taskt != task && gtk_tree_model_iter_next( model, &it ) );
+        while ( ptaskt != ptask && gtk_tree_model_iter_next( model, &it ) );
     }
-    if ( taskt != task )
+    if ( ptaskt != ptask )
     {
         // new row
         char buf[ 64 ];
-        strftime( buf, sizeof( buf ), "%H:%M", localtime( &task->task->start_time ) );
+        strftime( buf, sizeof( buf ), "%H:%M", localtime( &ptask->task->start_time ) );
         char* started = g_strdup( buf );
         gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &it, 0,
                                     TASK_COL_TO, dest_dir,
                                     TASK_COL_STARTED, started,
-                                    TASK_COL_STARTTIME, (gint64)task->task->start_time,
-                                    TASK_COL_DATA, task,
+                                    TASK_COL_STARTTIME, (gint64)ptask->task->start_time,
+                                    TASK_COL_DATA, ptask,
                                     -1 );        
         g_free( started );
     }
 
     // update row
-    int percent = task->old_percent;
+    int percent = ptask->task->percent;
     if ( percent < 0 )
         percent = 0;
-    if ( task->task->type != 6 )
+    else if ( percent > 100 )
+        percent = 100;
+    if ( ptask->task->type != 6 )
     {
-        path = g_path_get_dirname( task->task->current_file );
-        file = g_path_get_basename( task->task->current_file );
+        if ( ptask->task->current_file )
+        {
+            path = g_path_get_dirname( ptask->task->current_file );
+            file = g_path_get_basename( ptask->task->current_file );
+        }
     }
     else
     {
-        path = g_strdup( task->task->dest_dir ); //cwd
-        file = g_strdup_printf( "( %s )", task->task->current_file );
-        //percent = task->complete ? 100 : 50;
+        path = g_strdup( ptask->task->dest_dir ); //cwd
+        file = g_strdup_printf( "( %s )", ptask->task->current_file );
+        //percent = ptask->complete ? 100 : 50;
     }
     
     // icon
     char* iname;
-    if ( task->old_err_count && task->task->type != 6 )
+    if ( ptask->err_count && ptask->task->type != 6 )
         iname = g_strdup_printf( "error" );
-    else if ( task->task->type == 0 || task->task->type == 1 || task->task->type == 4 )
+    else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
         iname = g_strdup_printf( "stock_copy" );
-    else if ( task->task->type == 2 || task->task->type == 3 )
+    else if ( ptask->task->type == 2 || ptask->task->type == 3 )
         iname = g_strdup_printf( "stock_delete" );
-    else if ( task->task->type == 6 && task->task->exec_icon )
-        iname = g_strdup( task->task->exec_icon );
+    else if ( ptask->task->type == 6 && ptask->task->exec_icon )
+        iname = g_strdup( ptask->task->exec_icon );
     else
         iname = g_strdup_printf( "gtk-execute" );
 
@@ -4737,58 +4790,49 @@ void main_task_view_update_task( PtkFileTask* task )
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
                 app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     
-    if ( task->task->type != 6 )
+    if ( ptask->task->type != 6 )
     {
-        if ( !task->old_err_count )
-            status = _(job_titles[ task->task->type ]);
+        if ( !ptask->err_count )
+            status = _(job_titles[ ptask->task->type ]);
         else
         {
-            status2 = g_strdup_printf( "%d error%s %s", task->old_err_count,
-                   task->old_err_count > 1 ? "s" : "", _(job_titles[ task->task->type ]) );
+            status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
+                   ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
             status = status2;
         }
     }
     else
     {
         // exec task
-        if ( task->task->exec_action )
-            status = task->task->exec_action;
+        if ( ptask->task->exec_action )
+            status = ptask->task->exec_action;
         else
-            status = _(job_titles[ task->task->type ]);
+            status = _(job_titles[ ptask->task->type ]);
     }
     
     gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         TASK_COL_ICON, pixbuf,
                         TASK_COL_STATUS, status,
-                        TASK_COL_COUNT, task->dsp_file_count,
+                        TASK_COL_COUNT, ptask->dsp_file_count,
                         TASK_COL_PATH, path,
                         TASK_COL_FILE, file,
                         TASK_COL_PROGRESS, percent,
-                        TASK_COL_TOTAL, task->dsp_size_tally,
-                        TASK_COL_ELAPSED, task->dsp_elapsed,
-                        TASK_COL_CURSPEED, task->dsp_curspeed,
-                        TASK_COL_CUREST, task->dsp_curest,
-                        TASK_COL_AVGSPEED, task->dsp_avgspeed,
-                        TASK_COL_AVGEST, task->dsp_avgest,
+                        TASK_COL_TOTAL, ptask->dsp_size_tally,
+                        TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                        TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                        TASK_COL_CUREST, ptask->dsp_curest,
+                        TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                        TASK_COL_AVGEST, ptask->dsp_avgest,
                         -1 );
     g_free( file );
     g_free( path );
     if ( status2 )
         g_free( status2 );
+
     if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
         gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
 
-    // update window title
-    FMMainWindow* a_window;
-    GList* l;
-    for ( l = all_windows; l; l = l->next )
-    {
-        if ( ((FMMainWindow*)l->data)->task_view == view )
-        {
-            update_window_title( NULL, (FMMainWindow*)l->data );
-            break;
-        }
-    }
+    update_window_title( NULL, main_window );
 //printf("DONE main_task_view_update_task\n");
 }
 
@@ -4894,6 +4938,25 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
             gtk_tree_view_column_pack_start( col, renderer, TRUE );
             gtk_tree_view_column_set_attributes( col, renderer,
                                                  "text", cols[j], NULL );
+                                                
+            // ellipsize some columns
+            if ( cols[j] == TASK_COL_FILE || cols[j] == TASK_COL_PATH
+                                                    || cols[j] == TASK_COL_TO )
+            {
+                /* wrap to multiple lines 
+                GValue val = G_VALUE_INIT;
+                g_value_init (&val, G_TYPE_CHAR);
+                g_value_set_char (&val, 100);  // set to width of cell?
+                g_object_set_property (G_OBJECT (renderer), "wrap-width", &val);
+                g_value_unset (&val);
+                */
+                GValue val = G_VALUE_INIT;
+                g_value_init (&val, G_TYPE_CHAR);
+                g_value_set_char (&val, PANGO_ELLIPSIZE_MIDDLE);
+                g_object_set_property (G_OBJECT (renderer), "ellipsize", &val);
+                g_value_unset (&val);     
+                           
+            }
         }
         gtk_tree_view_append_column ( GTK_TREE_VIEW( view ), col );
         gtk_tree_view_column_set_title( col, _( task_titles[j] ) );

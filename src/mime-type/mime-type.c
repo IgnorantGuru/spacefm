@@ -21,6 +21,10 @@
 
 /* Currently this library is NOT MT-safe */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE  // euidaccess
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -36,6 +40,7 @@
 #include <sys/types.h>
 
 #include "glib-mem.h"
+
 
 /*
  * FIXME:
@@ -358,7 +363,8 @@ char* mime_type_get_desc( const char* type, const char* locale )
     char* desc;
     const gchar* const * dir;
     char file_path[ 256 ];
-
+    int acc;
+    
     /*  //sfm 0.7.7+ FIXED
      * FIXME: According to specs on freedesktop.org, user_data_dir has
      * higher priority than system_data_dirs, but in most cases, there was
@@ -368,7 +374,14 @@ char* mime_type_get_desc( const char* type, const char* locale )
      */
     /* FIXME: This path shouldn't be hard-coded. */
     g_snprintf( file_path, 256, "%s/mime/%s.xml", g_get_user_data_dir(), type );
-    if ( access( file_path, F_OK ) != -1 )
+#if defined(HAVE_EUIDACCESS)
+    acc = euidaccess( file_path, F_OK );
+#elif defined(HAVE_EACCESS)
+    acc = eaccess( file_path, F_OK );
+#else
+    acc = 0;
+#endif
+    if ( acc != -1 )
     {
         desc = _mime_type_get_desc( file_path, locale );
         if ( desc )
@@ -381,7 +394,14 @@ char* mime_type_get_desc( const char* type, const char* locale )
     {
         /* FIXME: This path shouldn't be hard-coded. */
         g_snprintf( file_path, 256, "%s/mime/%s.xml", *dir, type );
-        if ( access( file_path, F_OK ) != -1 )
+#if defined(HAVE_EUIDACCESS)
+        acc = euidaccess( file_path, F_OK );
+#elif defined(HAVE_EACCESS)
+        acc = eaccess( file_path, F_OK );
+#else
+        acc = 0;
+#endif
+        if ( acc != -1 )
         {
             desc = _mime_type_get_desc( file_path, locale );
             if( G_LIKELY(desc) )

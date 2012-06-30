@@ -324,6 +324,7 @@ char* replace_string( const char* orig, const char* str, const char* replace,
                                                             gboolean quote );
 char* replace_line_subs( const char* line );
 char* bash_quote( const char* str );
+void string_copy_free( char** s, const char* src );
 char* get_valid_su();
 char* get_valid_gsu();
 gboolean xset_copy_file( char* src, char* dest );

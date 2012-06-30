@@ -265,6 +265,16 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
 
     text_uri_list_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_URI_LIST].target );
     desktop_icon_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_DESKTOP_ICON].target );
+
+    /*  on emit, desktop window is not an object so this doesn't work
+    g_signal_new ( "task-notify",
+                       G_TYPE_FROM_CLASS ( klass ),
+                       G_SIGNAL_RUN_FIRST,
+                       0,
+                       NULL, NULL,
+                       g_cclosure_marshal_VOID__POINTER,
+                       G_TYPE_NONE, 1, G_TYPE_POINTER );
+    */
 }
 
 static void desktop_window_init(DesktopWindow *self)
@@ -351,6 +361,9 @@ static void desktop_window_init(DesktopWindow *self)
     gdk_window_set_events( root, gdk_window_get_events( root )
                            | GDK_PROPERTY_CHANGE_MASK );
     gdk_window_add_filter( root, on_rootwin_event, self );
+
+    //g_signal_connect( G_OBJECT( self ), "task-notify",
+    //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
 }
 
 
@@ -1661,7 +1674,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 {
                     if ( win->dir )
                         // in case file is a link
-                        vfs_dir_emit_file_changed( win->dir, filename, file );
+                        vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
                     g_free( path );
                     g_free( filename );
                     xset_msg_dialog( GTK_WIDGET( win ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
@@ -1669,7 +1682,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 }
                 if ( win->dir )
                     // in case file is a link
-                    vfs_dir_emit_file_changed( win->dir, filename, file );
+                    vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
                 g_free( path );
                 g_free( filename );
             }
