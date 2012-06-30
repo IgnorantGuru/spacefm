@@ -404,9 +404,10 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         {
             w = h = size;
         }
-        result = gdk_pixbuf_scale_simple(
-                     thumbnail,
-                     w, h, GDK_INTERP_BILINEAR );
+        if ( w > 0 && h > 0 )
+            result = gdk_pixbuf_scale_simple(
+                         thumbnail,
+                         w, h, GDK_INTERP_BILINEAR );
         g_object_unref( thumbnail );
     }
 
