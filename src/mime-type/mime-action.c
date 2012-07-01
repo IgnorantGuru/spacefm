@@ -96,7 +96,7 @@ static int strv_index( char** strv, const char* str )
     return -1;
 }
 
-static char* remove_actions( const char* type, GArray* actions )
+static void remove_actions( const char* type, GArray* actions )
 {   //sfm 0.7.7+ added
     char** removed = NULL;
     gsize n_removed = 0, r;

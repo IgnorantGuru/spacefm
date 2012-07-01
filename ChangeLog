@@ -7,7 +7,8 @@
     close copy read file on error
     handle progress gt 100%
     remove deadlock on quick dir change
-    new swedish translation partially completed (40%)
+    tforsman new swedish translation partially completed (40%)
+    jpfleury updated french translation
     task manager Path column renamed Folder
     ellipsize Folder, Item, To task manager columns
     always enable Root submenu in devices
