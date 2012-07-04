@@ -718,8 +718,12 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
             {
                 vfs_volume_special_mounted( ao->device_file );
                 if ( GTK_IS_WIDGET( ao->file_browser ) )
+                {
+                    GDK_THREADS_ENTER();
                     ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
                                                                         ao->job );
+                    GDK_THREADS_LEAVE();
+                }
             }
             break;
         }
@@ -1422,7 +1426,7 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     ptk_file_task_run( task );
 }
 
-void on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
+gboolean on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
 {
     const GList* l;
     VFSVolume* vol;
@@ -1437,14 +1441,19 @@ void on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
             if ( vol->is_mounted )
             {
                 if ( GTK_IS_WIDGET( ao->file_browser ) )
+                {
+                    GDK_THREADS_ENTER();  // hangs on dvd mount without this - why?
                     ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
                                                                     ao->job );
+                    GDK_THREADS_LEAVE();
+                }
             }
             break;
         }
     }
     g_free( ao->device_file );
     g_slice_free( AutoOpen, ao );
+    return FALSE;
 }
 
 static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
@@ -1479,7 +1488,7 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     task->task->exec_sync = TRUE;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
-    task->task->exec_show_error = FALSE;   // set to true for error on click
+    task->task->exec_show_error = TRUE;   // set to true for error on click
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     task->complete_notify = (GFunc)on_autoopen_cb;
     task->user_data = ao;
