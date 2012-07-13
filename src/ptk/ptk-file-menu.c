@@ -1597,6 +1597,10 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                                                         g_get_user_data_dir() );
         g_spawn_command_line_async( path, NULL );
         g_free( path );
+        path = g_strdup_printf( "update-desktop-database %s/applications",
+                                                        g_get_user_data_dir() );
+        g_spawn_command_line_async( path, NULL );
+        g_free( path );
         break;
     case APP_JOB_HELP:
             xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :

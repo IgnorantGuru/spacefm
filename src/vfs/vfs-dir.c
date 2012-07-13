@@ -1193,6 +1193,10 @@ gboolean on_mime_change_timer( gpointer user_data )
                                                     g_get_user_data_dir() );
     g_spawn_command_line_async( cmd, NULL );
     g_free( cmd );
+    cmd = g_strdup_printf( "update-desktop-database %s/applications",
+                                                    g_get_user_data_dir() );
+    g_spawn_command_line_async( cmd, NULL );
+    g_free( cmd );
     g_source_remove( mime_change_timer );
     mime_change_timer = 0;
     return FALSE;
