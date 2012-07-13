@@ -26,6 +26,42 @@
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><hr><a name="0.7.9"></a>
+<big><b><a href="#0.7.9">0.7.9 released</a></b></big><br>
+2012-Jul-13
+
+<p><b>New in SpaceFM 0.7.9:</b>
+<ul>
+    <li>Parts of SpaceFM's <b>GUI and multi-threaded VFS</b> have been redesigned to allow tasks (such as Copy, Move, or custom commands) to run better.  This improves performance with network filesystems (eg nfs), reduces lag in the GUI during file operations, reduces CPU load during copying and other tasks, eliminates rare crashes caused by thread race conditions, and allows the run dialog to handle fast/flooded output on stdout and stderr.
+    <br><b>TIP:</b>  When copying large files TO a network filesystem, avoid working in the remote directory tab until the copy is complete to avoid GUI lag issues.  (See <a href="https://github.com/IgnorantGuru/spacefm/issues/107">development details</a> on the new threading design)<br><br>
+    <li><b>File changes are no longer detected in filesystems on non-block devices</b> (except tmpfs and ramfs).  This avoids blocking the GUI with network filesystems as copies are in progress, but also means you may need to manually refresh to see the updated file sizes.  (If you encounter a filesystem that you think needs a file change monitoring exception, please report it.)<br><br>
+    <li>As in prior versions, before starting a copy or other task, SpaceFM will recursively calculate the total size of selected files.  As of version 0.7.9, this <b>calculation will time out</b> after 5 seconds, to avoid long delays when using a network filesystem.<br><br>
+    <li>To improve performance, the total <b>size of files being deleted is no longer calculated</b> in advance.  This means that a delete dialog will no longer contain a 'time remaining' estimate.  (Due to filesystem particulars, such estimates were not very accurate anyway.)<br><br>
+    <li>A minor <b>bug where SpaceFM failed to close a file</b> being copied when the copy was aborted or an error occured has been corrected.  This bug caused some files to remain open until SpaceFM was closed, which sometimes interfered with unmounting.<br><br>
+    <li>A bug which caused SpaceFM to fail to <b>report an error when copying an inaccessable subdirectory</b> has been corrected.  (Note that this bug dates all the way back to VFS code from legacy PCManFM, which means this bug is also present in PCManFM-Mod.)<br><br>
+    <li>A deadlock (hang caused by multiple threads) which occured on a <b>quick directory change</b> while a large directory was being loaded has been corrected.<br><br>
+    <li>Tomas Forsman (<a href="http://www.foresightlinux.se/wiki-en/index.php?title=User:TForsman">TForsman</a>), developer of <a href="http://www.foresightlinux.org/">Foresight Linux</a>, has contributed a <b>Swedish translation</b> for SpaceFM which is approximately 40% complete.  TForsman's suggestion for translators to use the 'poedit' program has been added to the TRANSLATE instructions file.<br><br>
+    <li><a href="http://www.jpfleury.net/en/">jpfleury</a> has updated SpaceFM's (complete) <b>French translation</b> for 0.7.9.<br><br>
+    <li>The <b>'Path' column in the task manager has been renamed 'Folder'</b>.<br><br>
+    <li>The Folder, Item, and To columns in the task manager are now <b>ellipsized</b>.<br><br>
+    <li>The <b>Root submenu of the devices menu is now enabled</b> even if no device is selected.<br><br>
+    <li>The <b>rename and new file/folder dialogs now apply custom fonts</b> to all entries<br><br>
+    <li>Due to the improved handling of flooded output, SpaceFM now <b>runs tar verbose</b> for archive extraction and creation<br><br>
+    <li>A problem with use of the <b>urxvtc terminal</b> program has been corrected.  Note that like lxterminal and konsole, urxvtc will not run correctly with both Run As Task and Run In Terminal checked (due to the lack of a separate instance option in these terminals).<br><br>
+    <li>The <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-mime-mimeworks">How MIME Works</a> section of the user's manual has been updated and corrected with regard to <b>update-desktop-database</b>.  SpaceFM also now runs update-desktop-database automatically (in addtion to update-mime-database) if you use the MIME menu to make changes externally.<br><br>    
+    <li><b>udevil is now included with SpaceFM as the default file manager/mount solution for <a href="http://partedmagic.com/doku.php?id=news">Parted Magic</a></b>.<br><br>
+    <li><b><a href="http://sourceforge.net/projects/antix-linux/">antiX-12</a> will include SpaceFM with udevil in its default installation</b> (currently available in antiX testing).<br><br>
+</ul>
+
+<br>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><hr><a name="0.7.8"></a>
 <big><b><a href="#0.7.8">0.7.8 released</a></b></big><br>
 2012-Jun-16
@@ -81,6 +117,9 @@ For additional changes, see the complete ChangeLog below.
     sync new file open; select new closes #35<br>
 </ul>
 <br>
+
+
+
 
 <!-- --------------------------------------------------------------------- -->
 <br><hr>

@@ -222,6 +222,7 @@
     <li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
     <li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
     <li>Device Manager - Built-in libudev support for manual and automatic device management, plus easily format, backup and restore partitions and MBRs
+    <li>Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files (requires <a href="http://ignorantguru.github.com/udevil/">udevil</a>)
     <li>Task Manager - Control or eliminate popup dialogs with multi-tasking abilities - no waiting to move on to your next task
     <li>MIME - Manages MIME file types and default actions
     <li>Custom Menus and Toolbars - Its unique Design Mode allows you to quickly change any menu or toolbar item name, shortcut key, or icon, and insert your own commands or submenus anywhere
@@ -1729,7 +1730,10 @@ SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specificatio
 
 <p>If you would like to change anything in an application's .desktop file, the correct way to do so is to copy the desktop file to ~/.local/share/applications in your home folder, and make changes in the copy.  (Changes made directly in /usr/share/applications may be lost when the software is upgraded.)  You can also add your own custom .desktop files to run programs or scripts.  When MIME looks for a desktop file, first it looks in ~/.local/share/applications, then in /usr/local/share/applications, and then in /usr/share/applications, using the first copy it finds.  Thus copies in your home folder always take precedence, and will not be modified when software is upgraded.
 
-<p>Anytime .desktop files are created or changed, the MIME database needs to be updated.  A user's database can be updated by the user running 'update-mime-database', or to update the system-wide database, 'sudo update-mime-database'.  This command examines all the desktop files and will create a file named 'mimeinfo.cache' which contains all the relevant information for fast access.  The mimeinfo.cache files should never be edited - to update them run 'update-mime-database'.
+<p>Anytime .desktop files are created or changed, the MIME desktop database needs to be updated.  A user's database can be updated by the user running:
+<pre>    update-desktop-database ~/.local/share/applications</pre>
+
+This command examines all the desktop files and will create files named 'mimeinfo.cache' which contain all the relevant information for fast access.  The mimeinfo.cache files should never be edited directly.
 
 <p>To determine what applications are associated with a given MIME type (what applications can be used to open files of that type), SpaceFM and many other programs will build a list of applications by examining the mimeinfo.cache files in ~/.local/share/applications, /usr/local/share/applications, and /usr/share/applications.
 
@@ -1737,7 +1741,11 @@ SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specificatio
 
 <p>The first application listed for a given MIME type in these files, for which a corresponding .desktop file can be found, is considered the 'default application' for this MIME type.  For example, when you click on a file in SpaceFM, the default application is used to open the file (with some exceptions).
 
-<p>To define MIME types, <a href="http://freedesktop.org/wiki/Specifications/AddingMIMETutor">xml files</a> are used.  These may determine a file type using a filename glob (eg *.txt), or may base determination on a file's contents.  freedesktop supplies basic definitions, and additional ones may be added in /usr/share/mime/packages.  Any definitions placed in Overrides.xml will override other definitions.  Users can add xml files to add custom MIME types or to change existing definitions.  These are usually placed in ~/.local/share/mime/packages.  Again, 'update-mime-database' must be run after adding or changing these files.
+<p>To define MIME types, <a href="http://freedesktop.org/wiki/Specifications/AddingMIMETutor">xml files</a> are used.  These may determine a file type using a filename glob (eg *.txt), or may base determination on a file's contents.  freedesktop supplies basic definitions, and additional ones may be added in /usr/share/mime/packages.  Any definitions placed in Overrides.xml will override other definitions.  Users can add xml files to add custom MIME types or to change existing definitions.  These are usually placed in ~/.local/share/mime/packages.  After adding or changing these files, run:
+<pre>    update-mime-database ~/.local/share/mime</pre>
+
+Or to update the system-wide database:
+<pre>    sudo update-mime-database</pre>
 
 <p>At startup, SpaceFM reads and caches these xml files to know how to recognize all the file types on your system.  Because they are cached, you may need to restart SpaceFM after changing MIME type definitions.
 
@@ -1783,7 +1791,7 @@ Selecting applications/ will open the ~/.local/share/applications/ folder in a n
 
 <!-- # mime-type.xml #xml -->
 <p><a name="designmode-mime-xml"/><a href="#designmode-mime-xml"><b>mime-type.xml</b></a><br>
-The next item on the MIME menu will be the name of an xml file which can be used to redefine this MIME type (eg text-plain.xml) for the current user.  Selecting this item will open the file located in ~/.local/share/mime/packages/ using your text editor, allowing you to customize the MIME type definition.  For example, you can change what filename extensions (globs) are used, or change the name of the file type as it appears in the Type column of the file list.  Edit the file and save it.  You may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect.  (SpaceFM will run update-mime-database for you if you opened the file using this menu item.)
+The next item on the MIME menu will be the name of an xml file which can be used to redefine this MIME type (eg text-plain.xml) for the current user.  Selecting this item will open the file located in ~/.local/share/mime/packages/ using your text editor, allowing you to customize the MIME type definition.  For example, you can change what filename extensions (globs) are used, or change the name of the file type as it appears in the Type column of the file list.  Edit the file and save it.  You may then need to run 'update-mime-database ~/.local/share/mime' and/or restart SpaceFM for the changes to take effect.  (SpaceFM will run update-mime-database for you if you opened the file using this menu item.)
 
 <p>If "(*new)" appears next to the xml filename on the menu, this means that the xml file doesn't currently exist in ~/.local/share/mime/packages/.  If you select it, SpaceFM will automatically create the xml file using the definition in /usr/share/mime as a template (if present), and will then open the new xml file in your text editor.  The copy in ~/.local/share/mime/packages/ always takes precedence over other locations.
 
@@ -1791,7 +1799,7 @@ The next item on the MIME menu will be the name of an xml file which can be used
 
 <!-- # mime/packages/ #mimedir -->
 <p><a name="designmode-mime-mimedir"/><a href="#designmode-mime-mimedir"><b>mime/packages/</b></a><br>
-Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run update-mime-database and/or restart SpaceFM for the changes to take effect. 
+Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run 'update-mime-database ~/.local/share/mime' and/or restart SpaceFM for the changes to take effect. 
 
 <!-- # usr/ #usr -->
 <p><a name="designmode-mime-usr"/><a href="#designmode-mime-usr"><b>usr/</b></a><br>
@@ -2821,7 +2829,7 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 
 <!-- # ~/.local/share/applications/ #localapps -->
 <p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
-This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the defaults.list file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
 
 <!-- @end programfiles-home-->
 <br><br></td></tr>
@@ -3030,7 +3038,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-06-30&nbsp;&nbsp;(SpaceFM version 0.7.8+)
+<p>Updated 2012-07-13&nbsp;&nbsp;(SpaceFM version 0.7.9)
 <br><br>
 </center>
 </td></tr></table>
