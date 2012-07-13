@@ -1,4 +1,4 @@
-0.7.8+
+0.7.9:  2012-07-13:
     new threading for tasks
     network filesystem lag issues improved
     no file change detection on non-block filesystems
@@ -17,6 +17,7 @@
     verbose tar extract/create
     fix for urxvtc #106
     check non-zero size before thumbnail scale (pixbuf in #107)
+    run update-desktop-database; mime docs
 0.7.8   2012-06-16:
     use/update mimeapps.list over defaults.list closes #71
     added design mode on mime apps opens MIME menu
