@@ -226,15 +226,24 @@ void on_bookmark_item_activate ( GtkMenuItem* menu, gpointer user_data )
     if ( !path )
         return ;
 
-    if ( !xset_get_b( "book_newtab" ) )
-    {
-        PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
                     fm_main_window_get_current_file_browser( main_window ) );
+        
+    if ( g_str_has_prefix( path, "//" ) || strstr( path, ":/" ) )
+    {
         if ( file_browser )
-            ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
+            mount_network( file_browser, path, xset_get_b( "book_newtab" ) );
     }
     else
-        fm_main_window_add_new_tab( main_window, path );
+    {
+        if ( !xset_get_b( "book_newtab" ) )
+        {
+            if ( file_browser )
+                ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
+        }
+        else
+            fm_main_window_add_new_tab( main_window, path );
+    }
 }
 
 void on_bookmarks_change( PtkBookmarks* bookmarks, FMMainWindow* main_window )

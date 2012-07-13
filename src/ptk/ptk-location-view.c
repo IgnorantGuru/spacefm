@@ -3347,10 +3347,12 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
     //ptk_file_browser_focus_me( file_browser );
     dir_path = ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) );
+    if ( !dir_path )
+        return;
 
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
         mount_network( file_browser, dir_path, xset_get_b( "book_newtab" ) );
-    else if ( dir_path )
+    else
     {
         if ( !xset_get_b( "book_newtab" ) )
         {
