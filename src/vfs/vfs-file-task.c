@@ -1296,7 +1296,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     gboolean success;
     int i;
 
-printf("vfs_file_task_exec\n");
+//printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
 
     g_mutex_lock( task->mutex );
@@ -1818,7 +1818,7 @@ printf("vfs_file_task_exec\n");
     g_source_remove( child_watch );
     g_mutex_unlock( task->mutex );
 */
-printf("vfs_file_task_exec DONE\n");
+//printf("vfs_file_task_exec DONE\n");
     return;  // exit thread
 
 // out and err can/should be closed too?
@@ -1838,7 +1838,7 @@ _exit_with_error_lean:
     g_free( su );
     g_free( gsu );
     call_state_callback( task, VFS_FILE_TASK_FINISH );
-printf("vfs_file_task_exec DONE ERROR\n");
+//printf("vfs_file_task_exec DONE ERROR\n");
 }
 
 gboolean on_size_timeout( VFSFileTask* task )
