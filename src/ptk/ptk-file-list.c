@@ -835,7 +835,6 @@ void ptk_file_list_file_created( VFSDir* dir,
     GtkTreeIter it;
     GtkTreePath* path;
     VFSFileInfo* file2;
-    int result;
     
     if( ! list->show_hidden && vfs_file_info_get_name(file)[0] == '.' )
         return;

@@ -8100,22 +8100,22 @@ void xset_defaults()
     
     srand( (unsigned int)time( 0 ) + getpid() );
 
-    // set_last must be set
+    // set_last must be set (to anything)
     set_last = xset_get( "separator" );
     set_last->menu_style = XSET_MENU_SEP;
 
     // toolbars
-    set_last = xset_get( "sep_tool1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_tool1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_tool2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_tool2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_tool3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_tool3" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_tool4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_tool4" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "toolbar_left", "label", _("_Left Toolbar") );
     xset_set_set( set, "desc", "tool_device tool_book tool_dirtree tool_newtab tool_newtabhere tool_back tool_backmenu tool_forward tool_forwardmenu tool_up tool_home tool_default tool_refresh" );
@@ -8362,20 +8362,20 @@ void xset_defaults()
     set->tool = XSET_B_TRUE;
 
     // dev menu
-    set_last = xset_get( "sep_dm1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_dm1" );
+    set->menu_style = XSET_MENU_SEP;
         
-    set_last = xset_get( "sep_dm2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_dm2" );
+    set->menu_style = XSET_MENU_SEP;
         
-    set_last = xset_get( "sep_dm3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_dm3" );
+    set->menu_style = XSET_MENU_SEP;
         
-    set_last = xset_get( "sep_dm4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_dm4" );
+    set->menu_style = XSET_MENU_SEP;
         
-    set_last = xset_get( "sep_dm5" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_dm5" );
+    set->menu_style = XSET_MENU_SEP;
         
     set = xset_set( "dev_menu_remove", "label", _("Remo_ve") );
     xset_set_set( set, "icon", "gtk-disconnect" );
@@ -8412,14 +8412,14 @@ void xset_defaults()
     set = xset_set( "dev_menu_mark", "label", _("_Bookmark") );
     xset_set_set( set, "icon", "gtk-add" );
 
-    set_last = xset_get( "sep_mr1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_mr1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_mr2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_mr2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_mr3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_mr3" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "dev_menu_root", "label", _("_Root") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -8578,8 +8578,8 @@ void xset_defaults()
         xset_set_set( set, "desc", "MBR" );
         set->line = g_strdup( "#devices-root-mbr" );
 
-    set_last = xset_get( "sep_mr4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_mr4" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "dev_menu_restore", "label", _("_Restore") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -8675,8 +8675,8 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-exit" );
 
-        set_last = xset_get( "sep_ar1" );
-        set_last->menu_style = XSET_MENU_SEP;
+        set = xset_get( "sep_ar1" );
+        set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "dev_exec", "label", _("Auto _Run") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -8760,17 +8760,17 @@ void xset_defaults()
     set->line = g_strdup( "#devices-settings-ucmd" );
 
     // dev icons
-    set_last = xset_get( "sep_i1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_i1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_i2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_i2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_i3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_i3" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_i4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_i4" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "dev_icon", "label", _("_Icon") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -8839,11 +8839,11 @@ void xset_defaults()
         set->line = g_strdup( "#devices-settings-icon" );
 
     // Bookmark list
-    set_last = xset_get( "sep_bk1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_bk1" );
+    set->menu_style = XSET_MENU_SEP;
         
-    set_last = xset_get( "sep_bk2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_bk2" );
+    set->menu_style = XSET_MENU_SEP;
         
     set = xset_set( "book_new", "label", _("_New") );
     xset_set_set( set, "icon", "gtk-new" );
@@ -8934,8 +8934,8 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
  
     // status bar
-    set_last = xset_get( "sep_bar1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_bar1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "status_border", "label", _("Highlight _Bar") );
     xset_set_set( set, "title", _("Status Bar Highlight Color") );
@@ -8968,14 +8968,14 @@ void xset_defaults()
     // MAIN WINDOW MENUS
     
     // File
-    set_last = xset_get( "sep_f1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_f1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_f2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_f2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_f3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_f3" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "main_new_window", "label", _("New _Window") );
     xset_set_set( set, "icon", "spacefm" );
@@ -9003,32 +9003,32 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-quit" );
 
     // View
-    set_last = xset_get( "sep_v1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v3" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v4" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v5" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v5" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v6" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v6" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v7" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v7" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v8" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v8" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_v9" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_v9" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "panel1_show", "label", _("Panel _1") );
     set->menu_style = XSET_MENU_CHECK;
@@ -9110,8 +9110,8 @@ void xset_defaults()
         xset_set_set( set, "icon", "gtk-network" );
         set->line = g_strdup( "#plugins-install" );
 
-    set_last = xset_get( "sep_p1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_p1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "plug_copy", "label", _("_Copy") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9137,14 +9137,14 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-media-play" );
 
     // Help
-    set_last = xset_get( "sep_h1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_h1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_h2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_h2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_h3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_h3" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "main_help", "label", _("_User's Manual") );
     xset_set_set( set, "icon", "gtk-help" );
@@ -9182,20 +9182,20 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-about" );
 
     // Tasks
-    set_last = xset_get( "sep_t1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_t1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_t2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_t2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_t3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_t3" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_t4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_t4" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_t5" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_t5" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "main_tasks", "label", _("_Tasks") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9413,8 +9413,8 @@ void xset_defaults()
     set = xset_set( "arc_list", "label", _("_List Contents") );
     xset_set_set( set, "icon", "gtk-file" );
 
-    set_last = xset_get( "sep_arc1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_arc1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "arc_default", "label", _("_Archive Default") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9446,8 +9446,8 @@ void xset_defaults()
     set = xset_set( "iso_auto", "label", _("_Auto-Mount ISO") );
     set->menu_style = XSET_MENU_CHECK;
 
-    set_last = xset_get( "sep_o1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_o1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "open_new", "label", _("_New") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9483,8 +9483,8 @@ void xset_defaults()
         set = xset_set( "tab_new_here", "label", _("Tab _Here") );
         xset_set_set( set, "icon", "gtk-add" );
 
-    set_last = xset_get( "sep_g1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_g1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "con_go", "label", _("_Go") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9551,14 +9551,14 @@ void xset_defaults()
 
     set = xset_set( "view_reorder_col", "label", _("_Reorder") );
 
-    set_last = xset_get( "sep_s1" );
-    set_last->menu_style = XSET_MENU_SEP;
-    set_last = xset_get( "sep_s2" );
-    set_last->menu_style = XSET_MENU_SEP;
-    set_last = xset_get( "sep_s3" );
-    set_last->menu_style = XSET_MENU_SEP;
-    set_last = xset_get( "sep_s4" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_s1" );
+    set->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_s2" );
+    set->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_s3" );
+    set->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_s4" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "view_sortby", "label", _("_Sort") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9618,14 +9618,14 @@ void xset_defaults()
     set = xset_set( "edit_delete", "label", _("_Delete") );
     xset_set_set( set, "icon", "gtk-delete" );
 
-    set_last = xset_get( "sep_e1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_e1" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_e2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_e2" );
+    set->menu_style = XSET_MENU_SEP;
 
-    set_last = xset_get( "sep_e3" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_e3" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "edit_submenu", "label", _("_Edit") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9650,8 +9650,8 @@ void xset_defaults()
         set = xset_set( "paste_as", "label", _("Paste _As") );
         xset_set_set( set, "icon", "gtk-paste" );
 
-    set_last = xset_get( "sep_c1" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_c1" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "copy_to", "label", _("_Copy To") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -9689,8 +9689,8 @@ void xset_defaults()
             xset_set( "copy_panel_3", "label", _("Panel _3") );
             xset_set( "copy_panel_4", "label", _("Panel _4") );
 
-    set_last = xset_get( "sep_c2" );
-    set_last->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_c2" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "move_to", "label", _("_Move To") );
     set->menu_style = XSET_MENU_SUBMENU;
