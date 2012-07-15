@@ -9457,15 +9457,11 @@ void xset_defaults()
         set = xset_set( "new_file", "label", _("_File") );
         xset_set_set( set, "icon", "gtk-file" );
 
-        set = xset_set( "new_open_file", "label", _("File & _Open") );
-
         set = xset_set( "new_folder", "label", _("Fol_der") );
         xset_set_set( set, "icon", "gtk-directory" );
 
         set = xset_set( "new_link", "label", _("_Link") );
         xset_set_set( set, "icon", "gtk-file" );
-
-        set = xset_set( "new_open_folder", "label", _("Fo_lder & Open") );
 
         set = xset_set( "new_bookmark", "label", _("_Bookmark") );
         xset_set_set( set, "shared_key", "book_new" );

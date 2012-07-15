@@ -893,12 +893,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     {
         set = xset_set_cb( "new_file", on_popup_new_text_file_activate, data );
         set->disable = no_write_access;
-        //set = xset_set_cb( "new_open_file", xxxx, browser );
         set = xset_set_cb( "new_folder", on_popup_new_folder_activate, data );
         set->disable = no_write_access;
         set = xset_set_cb( "new_link", on_popup_new_link_activate, data );
         set->disable = no_write_access;
-        //xset_set_cb( "new_folder_open", xxxx, browser );
         set = xset_set_cb( "new_archive", on_popup_compress_activate, data );
         set->disable = ( !sel_files || !browser );
         set = xset_set_cb( "tab_new", on_shortcut_new_tab_activate, browser );
