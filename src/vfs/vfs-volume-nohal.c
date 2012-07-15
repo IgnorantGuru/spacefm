@@ -2187,9 +2187,9 @@ char* free_slash_total( const char* dir )
     {
         char total_size_str[ 64 ];
         vfs_file_size_to_string_format( size_str, fs_stat.f_bsize * fs_stat.f_bavail,
-                                                                                NULL );
+                                                                        "%.0f%s" );
         vfs_file_size_to_string_format( total_size_str,
-                                        fs_stat.f_frsize * fs_stat.f_blocks, NULL );
+                                fs_stat.f_frsize * fs_stat.f_blocks, "%.0f%s" );
         return g_strdup_printf( "%s/%s", size_str, total_size_str );
     }
 #endif
@@ -2315,7 +2315,7 @@ void vfs_volume_set_info( VFSVolume* volume )
         }
         else */ if ( volume->size > 0 )
         {
-            vfs_file_size_to_string_format( size_str, volume->size, NULL );
+            vfs_file_size_to_string_format( size_str, volume->size, "%.0f%s" );
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else
@@ -2337,7 +2337,7 @@ void vfs_volume_set_info( VFSVolume* volume )
             disp_label = g_strdup_printf( "" );
         if ( volume->size > 0 )
         {
-            vfs_file_size_to_string_format( size_str, volume->size, NULL );
+            vfs_file_size_to_string_format( size_str, volume->size, "%.0f%s" );
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else

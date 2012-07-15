@@ -1,6 +1,7 @@
 0.7.9+
     added sort options #87 #37 #23
-    partially updated ru.po
+    partially updated russian translation ru.po
+    smart size display for free space and tasks closes #115
 0.7.9:  2012-07-13:
     new threading for tasks
     network filesystem lag issues improved

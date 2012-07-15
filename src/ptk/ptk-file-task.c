@@ -1028,9 +1028,9 @@ void ptk_file_task_update( PtkFileTask* ptask )
         //count
         file_count = g_strdup_printf( "%d", task->current_item );
         //size
-        vfs_file_size_to_string_format( buf1, task->progress, "%.0f %s" );
+        vfs_file_size_to_string_format( buf1, task->progress, NULL );
         if ( task->total_size )
-            vfs_file_size_to_string_format( buf2, task->total_size, "%.0f %s" );
+            vfs_file_size_to_string_format( buf2, task->total_size, NULL );
         else
             sprintf( buf2, "??" );  // total_size calculation timed out
         size_tally = g_strdup_printf( "%s / %s", buf1, buf2 );
@@ -1041,12 +1041,12 @@ void ptk_file_task_update( PtkFileTask* ptask )
             avg_speed = task->progress / avg_speed;
         else
             avg_speed = 0;
-        vfs_file_size_to_string_format( buf2, avg_speed, "%.0f %s" );
+        vfs_file_size_to_string_format( buf2, avg_speed, NULL );
         if ( task->last_speed == 0 && task->progress == 0 )
             cur_speed = avg_speed;
         else
             cur_speed = task->last_speed;
-        vfs_file_size_to_string_format( buf1, cur_speed, "%.0f %s" );
+        vfs_file_size_to_string_format( buf1, cur_speed, NULL );
         if ( cur_speed == 0 )
             speed1 = g_strdup_printf( _("Stalled") );
         else

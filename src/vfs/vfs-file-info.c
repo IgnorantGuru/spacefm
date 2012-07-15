@@ -442,9 +442,8 @@ const char* vfs_file_info_get_disp_perm( VFSFileInfo* fi )
 }
 
 void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //MOD added
-{
+{   // if format == NULL uses automatic format based on size
     char * unit;
-    /* guint point; */
     gfloat val;
 
     /*
@@ -529,11 +528,15 @@ void vfs_file_size_to_string_format( char* buf, guint64 size, char* format ) //M
     else
     {
         unit = _("B"); //size > 1 ? _("B") : _("B");
-        sprintf( buf, "%u%s", ( guint ) size, unit );
+        sprintf( buf, "%u %s", ( guint ) size, unit );
         return ;
     }
-    /* sprintf( buf, "%llu.%u %s", size, point, unit ); */
-    sprintf( buf, format ? format : "%.0f%s", val, unit );
+    if ( format )
+        sprintf( buf, format, val, unit );  // "%.0f%s"
+    else if ( val < 10 )
+        sprintf( buf, "%.1f %s", val, unit );
+    else
+        sprintf( buf, "%.0f %s", val, unit );
 }
 
 void vfs_file_size_to_string( char* buf, guint64 size )
