@@ -835,7 +835,8 @@ void ptk_file_list_file_created( VFSDir* dir,
     GtkTreeIter it;
     GtkTreePath* path;
     VFSFileInfo* file2;
-
+    int result;
+    
     if( ! list->show_hidden && vfs_file_info_get_name(file)[0] == '.' )
         return;
 
@@ -863,8 +864,13 @@ void ptk_file_list_file_created( VFSDir* dir,
         }
         else if ( ptk_file_list_compare( file2, file, list ) == 0 )
         {
-            // disp_name matches
-            return;
+            // disp_name matches ?
+            // ptk_file_list_compare may return 0 on differing display names
+            // if case-insensitive - need to compare filenames
+            if ( list->sort_natural && list->sort_case )
+                return;
+            else if ( !strcmp( file->name, file2->name ) )
+                return;
         }
 
         if ( !ll && ptk_file_list_compare( file2, file, list ) > 0 )
