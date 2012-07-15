@@ -700,12 +700,12 @@ static gint ptk_file_list_compare( gconstpointer a,
         return list->sort_order == GTK_SORT_ASCENDING ? result : -result;
 
     // hidden first/last
-	gboolean hidden_a = file_a->disp_name[0] == '.' || file_a->disp_name[0] == '#';
-	gboolean hidden_b = file_b->disp_name[0] == '.' || file_b->disp_name[0] == '#';
-	if ( hidden_a && !hidden_b )
-		result = list->sort_hidden_first ? -1 : 1;
-	else if ( !hidden_a && hidden_b )
-		result = list->sort_hidden_first ? 1 : -1;
+    gboolean hidden_a = file_a->disp_name[0] == '.' || file_a->disp_name[0] == '#';
+    gboolean hidden_b = file_b->disp_name[0] == '.' || file_b->disp_name[0] == '#';
+    if ( hidden_a && !hidden_b )
+        result = list->sort_hidden_first ? -1 : 1;
+    else if ( !hidden_a && hidden_b )
+        result = list->sort_hidden_first ? 1 : -1;
     if ( result != 0 )
         return result;
 	
