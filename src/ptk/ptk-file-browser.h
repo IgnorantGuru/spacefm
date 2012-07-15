@@ -238,6 +238,10 @@ void ptk_file_browser_set_sort_order( PtkFileBrowser* file_browser,
 void ptk_file_browser_set_sort_type( PtkFileBrowser* file_browser,
                                      GtkSortType order );
 
+void ptk_file_browser_set_sort_extra( PtkFileBrowser* file_browser,
+                                                            const char* setname );
+void ptk_file_browser_read_sort_extra( PtkFileBrowser* file_browser );
+
 PtkFBSortOrder ptk_file_browser_get_sort_order( PtkFileBrowser* file_browser );
 
 GtkSortType ptk_file_browser_get_sort_type( PtkFileBrowser* file_browser );

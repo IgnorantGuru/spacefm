@@ -35,6 +35,7 @@
 #include "settings.h"  //MOD
 #include "main-window.h"
 #include "ptk-location-view.h"
+#include "ptk-file-list.h"  //sfm for sort extra
 //#include "ptk-bookmarks.h"
 
 #define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
@@ -322,6 +323,17 @@ void on_file_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 void on_file_root_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     xset_edit( GTK_WIDGET( data->browser ), data->file_path, TRUE, FALSE );
+}
+
+void on_popup_sort_extra( GtkMenuItem *menuitem, PtkFileBrowser* file_browser,
+                                                                    XSet* set2 )
+{
+    XSet* set;
+    if ( menuitem )
+        set = (XSet*)g_object_get_data( G_OBJECT( menuitem ), "set" );
+    else
+        set = set2;
+    ptk_file_browser_set_sort_extra( file_browser, set->name );
 }
 
 void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int order )
@@ -1155,6 +1167,38 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_ob1_int( set, "sortorder", -2 );
             xset_set_ob2( set, NULL, radio_group );
             set->b = browser->sort_type == GTK_SORT_DESCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+
+        set = xset_set_cb( "sortx_natural", on_popup_sort_extra, browser );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_natural ? 
+                                                    XSET_B_TRUE : XSET_B_FALSE;
+        set = xset_set_cb( "sortx_case", on_popup_sort_extra, browser );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_case ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
+            set->disable = !PTK_FILE_LIST( browser->file_list )->sort_natural;
+
+        radio_group = NULL;
+        set = xset_set_cb( "sortx_folders", on_popup_sort_extra, browser );
+            xset_set_ob2( set, NULL, radio_group );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
+                            PTK_LIST_SORT_DIR_FIRST ? XSET_B_TRUE : XSET_B_FALSE;
+        set = xset_set_cb( "sortx_files", on_popup_sort_extra, browser );
+            xset_set_ob2( set, NULL, radio_group );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
+                            PTK_LIST_SORT_DIR_LAST ? XSET_B_TRUE : XSET_B_FALSE;
+        set = xset_set_cb( "sortx_mix", on_popup_sort_extra, browser );
+            xset_set_ob2( set, NULL, radio_group );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
+                            PTK_LIST_SORT_DIR_MIXED ? XSET_B_TRUE : XSET_B_FALSE;
+
+        radio_group = NULL;
+        set = xset_set_cb( "sortx_hidfirst", on_popup_sort_extra, browser );
+            xset_set_ob2( set, NULL, radio_group );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_hidden_first ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
+        set = xset_set_cb( "sortx_hidlast", on_popup_sort_extra, browser );
+            xset_set_ob2( set, NULL, radio_group );
+            set->b = PTK_FILE_LIST( browser->file_list )->sort_hidden_first ? 
+                                                    XSET_B_FALSE : XSET_B_TRUE;
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );

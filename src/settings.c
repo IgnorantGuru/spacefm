@@ -9553,10 +9553,16 @@ void xset_defaults()
 
     set_last = xset_get( "sep_s1" );
     set_last->menu_style = XSET_MENU_SEP;
+    set_last = xset_get( "sep_s2" );
+    set_last->menu_style = XSET_MENU_SEP;
+    set_last = xset_get( "sep_s3" );
+    set_last->menu_style = XSET_MENU_SEP;
+    set_last = xset_get( "sep_s4" );
+    set_last->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "view_sortby", "label", _("_Sort") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "sortby_name sortby_size sortby_type sortby_perm sortby_owner sortby_date sep_s1 sortby_ascend sortby_descend" );
+    xset_set_set( set, "desc", "sortby_name sortby_size sortby_type sortby_perm sortby_owner sortby_date sep_s1 sortby_ascend sortby_descend sep_s2 sortx_natural sortx_case sep_s3 sortx_folders sortx_files sortx_mix sep_s4 sortx_hidfirst sortx_hidlast" );
 
         set = xset_set( "sortby_name", "label", _("_Name") );
         set->menu_style = XSET_MENU_RADIO;
@@ -9573,6 +9579,21 @@ void xset_defaults()
         set = xset_set( "sortby_ascend", "label", _("_Ascending") );
         set->menu_style = XSET_MENU_RADIO;
         set = xset_set( "sortby_descend", "label", _("_Descending") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "sortx_natural", "label", _("Nat_ural") );
+        set->menu_style = XSET_MENU_CHECK;
+        set = xset_set( "sortx_case", "label", _("_Case Sensitive") );
+        set->menu_style = XSET_MENU_CHECK;
+        set = xset_set( "sortx_folders", "label", _("Folders Fi_rst") );
+        set->menu_style = XSET_MENU_RADIO;
+        set = xset_set( "sortx_files", "label", _("F_iles First") );
+        set->menu_style = XSET_MENU_RADIO;
+        set = xset_set( "sortx_mix", "label", _("Mi_xed") );
+        set->menu_style = XSET_MENU_RADIO;
+        set = xset_set( "sortx_hidfirst", "label", _("_Hidden First") );
+        set->menu_style = XSET_MENU_RADIO;
+        set = xset_set( "sortx_hidlast", "label", _("Hidden _Last") );
         set->menu_style = XSET_MENU_RADIO;
 
     set = xset_set( "view_refresh", "label", _("Re_fresh") );
@@ -9938,6 +9959,12 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 5 );
 
+    set = xset_get( "panel1_sort_extra" );
+    set->b = XSET_B_TRUE;  //sort_natural
+    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
+    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
+    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
+    
     // PANEL TWO
     set = xset_set( "panel2_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
@@ -10057,6 +10084,12 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 5 );
     xset_set_set( set, "shared_key", "panel1_detcol_date" );
+
+    set = xset_get( "panel2_sort_extra" );
+    set->b = XSET_B_TRUE;  //sort_natural
+    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
+    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
+    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
 
     // PANEL THREE
     set = xset_set( "panel3_show_toolbox", "label", _("_Toolbar") );
@@ -10179,6 +10212,12 @@ void xset_defaults()
     set->x = g_strdup_printf( "%d", 5 );
     xset_set_set( set, "shared_key", "panel1_detcol_date" );
 
+    set = xset_get( "panel3_sort_extra" );
+    set->b = XSET_B_TRUE;  //sort_natural
+    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
+    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
+    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
+
     // PANEL FOUR
     set = xset_set( "panel4_show_toolbox", "label", _("_Toolbar") );
     set->menu_style = XSET_MENU_CHECK;
@@ -10298,6 +10337,12 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 5 );
     xset_set_set( set, "shared_key", "panel1_detcol_date" );
+
+    set = xset_get( "panel4_sort_extra" );
+    set->b = XSET_B_TRUE;  //sort_natural
+    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
+    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
+    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
 
     //speed
     set = xset_set( "book_newtab", "label", _("_New Tab") );

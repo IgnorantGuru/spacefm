@@ -93,7 +93,7 @@ static void ptk_file_list_set_default_sort_func( GtkTreeSortable *sortable,
                                                  gpointer user_data,
                                                  GtkDestroyNotify destroy );
 
-static void ptk_file_list_sort ( PtkFileList* list );
+//static void ptk_file_list_sort ( PtkFileList* list );  //sfm made non-static
 
 /* signal handlers */
 
@@ -650,6 +650,89 @@ static gint ptk_file_list_compare( gconstpointer a,
                                    gconstpointer b,
                                    gpointer user_data)
 {
+    VFSFileInfo* file_a = (VFSFileInfo*)a;
+    VFSFileInfo* file_b = (VFSFileInfo*)b;
+    PtkFileList* list = (PtkFileList*)user_data;
+    int result;
+    
+    // dirs before/after files
+    if ( list->sort_dir != PTK_LIST_SORT_DIR_MIXED )
+    {
+        result = vfs_file_info_is_dir( file_a ) - vfs_file_info_is_dir( file_b );
+        if ( result != 0 )
+            return list->sort_dir == PTK_LIST_SORT_DIR_FIRST ? -result : result;
+    }
+    
+    // by column
+    switch ( list->sort_col )
+    {
+    case COL_FILE_SIZE:
+        if ( file_a->size > file_b->size )
+            result = 1;
+        else if ( file_a->size == file_b->size )
+            result = 0;
+        else
+            result = -1;
+        break;
+    case COL_FILE_MTIME:
+        if ( file_a->mtime > file_b->mtime )
+            result = 1;
+        else if ( file_a->mtime == file_b->mtime )
+            result = 0;
+        else
+            result = -1;
+        break;
+    case COL_FILE_DESC:
+        result = strcmp( vfs_file_info_get_mime_type_desc( file_a ),
+                         vfs_file_info_get_mime_type_desc( file_b ) );
+        break;
+    case COL_FILE_PERM:
+        result = strcmp( file_a->disp_perm, file_b->disp_perm );
+        break;
+    case COL_FILE_OWNER:
+        result = strcmp( file_a->disp_owner, file_b->disp_owner );
+        break;
+    default:
+        result = 0;
+    }
+
+    if ( result != 0 )
+        return list->sort_order == GTK_SORT_ASCENDING ? result : -result;
+
+    // hidden first/last
+	gboolean hidden_a = file_a->disp_name[0] == '.' || file_a->disp_name[0] == '#';
+	gboolean hidden_b = file_b->disp_name[0] == '.' || file_b->disp_name[0] == '#';
+	if ( hidden_a && !hidden_b )
+		result = list->sort_hidden_first ? -1 : 1;
+	else if ( !hidden_a && hidden_b )
+		result = list->sort_hidden_first ? 1 : -1;
+    if ( result != 0 )
+        return result;
+	
+    // by display name
+    if ( list->sort_natural )
+    {
+        // natural
+        if ( list->sort_case )
+            result = strcmp( file_a->collate_key, file_b->collate_key );
+        else
+            result = strcmp( file_a->collate_icase_key, file_b->collate_icase_key );
+    }
+    else
+    {
+        // non-natural   FIXME: don't compare utf8 as ascii ?
+        // both g_ascii_strcasecmp and g_ascii_strncasecmp appear to be
+        // case insensitive when used on utf8? 
+        result = g_ascii_strcasecmp( file_a->disp_name, file_b->disp_name );
+    }
+    return list->sort_order == GTK_SORT_ASCENDING ? result : -result;
+}
+
+#if 0
+static gint ptk_file_list_compare( gconstpointer a,
+                                   gconstpointer b,
+                                   gpointer user_data)
+{
     VFSFileInfo* file1 = (VFSFileInfo*)a;
     VFSFileInfo* file2 = (VFSFileInfo*)b;
     PtkFileList* list = (PtkFileList*)user_data;
@@ -692,6 +775,7 @@ static gint ptk_file_list_compare( gconstpointer a,
     }
     return list->sort_order == GTK_SORT_ASCENDING ? ret : -ret;
 }
+#endif
 
 void ptk_file_list_sort ( PtkFileList* list )
 {

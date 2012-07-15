@@ -51,6 +51,16 @@ static void vfs_file_info_clear( VFSFileInfo* fi )
         g_free( fi->name );
         fi->name = NULL;
     }
+    if ( fi->collate_key )  //sfm
+    {
+        g_free( fi->collate_key );
+        fi->collate_key = NULL;
+    }    
+    if ( fi->collate_icase_key )  //sfm
+    {
+        g_free( fi->collate_icase_key );
+        fi->collate_icase_key = NULL;
+    }    
     if ( fi->disp_size )
     {
         g_free( fi->disp_size );
@@ -139,6 +149,11 @@ gboolean vfs_file_info_get( VFSFileInfo* fi,
         fi->mime_type = vfs_mime_type_get_from_file( file_path,
                                                      fi->disp_name,
                                                      &file_stat );
+        //sfm get collate keys
+        fi->collate_key = g_utf8_collate_key_for_filename( fi->disp_name, -1 );
+        char* str = g_utf8_casefold( fi->disp_name, -1 );
+        fi->collate_icase_key = g_utf8_collate_key_for_filename( str, -1 );
+        g_free( str );
         return TRUE;
     }
     else
@@ -162,6 +177,13 @@ void vfs_file_info_set_disp_name( VFSFileInfo* fi, const char* name )
     if ( fi->disp_name && fi->disp_name != fi->name )
         g_free( fi->disp_name );
     fi->disp_name = g_strdup( name );
+    //sfm get new collate keys
+    g_free( fi->collate_key );
+    g_free( fi->collate_icase_key );
+    fi->collate_key = g_utf8_collate_key_for_filename( fi->disp_name, -1 );
+    char* str = g_utf8_casefold( fi->disp_name, -1 );
+    fi->collate_icase_key = g_utf8_collate_key_for_filename( str, -1 );
+    g_free( str );
 }
 
 void vfs_file_info_set_name( VFSFileInfo* fi, const char* name )

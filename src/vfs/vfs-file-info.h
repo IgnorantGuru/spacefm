@@ -60,6 +60,8 @@ struct _VFSFileInfo
 
     char* name; /* real name on file system */
     char* disp_name;  /* displayed name (in UTF-8) */
+    char* collate_key;  //sfm sort key
+    char* collate_icase_key;  //sfm case folded sort key
     char* disp_size;  /* displayed human-readable file size */
     char* disp_owner; /* displayed owner:group pair */
     char* disp_mtime; /* displayed last modification time */

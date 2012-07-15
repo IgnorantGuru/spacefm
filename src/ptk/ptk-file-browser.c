@@ -2384,6 +2384,7 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
     if ( old_list )
         g_object_unref( G_OBJECT( old_list ) );
 
+    ptk_file_browser_read_sort_extra( file_browser );  //sfm
     gtk_tree_sortable_set_sort_column_id(
         GTK_TREE_SORTABLE( list ),
         file_list_order_from_sort_order( file_browser->sort_order ),
@@ -5312,6 +5313,7 @@ GtkWidget* ptk_file_browser_create_dir_tree( PtkFileBrowser* file_browser )
 int file_list_order_from_sort_order( PtkFBSortOrder order )
 {
     int col;
+    
     switch ( order )
     {
     case PTK_FB_SORT_BY_NAME:
@@ -5336,6 +5338,84 @@ int file_list_order_from_sort_order( PtkFBSortOrder order )
         col = COL_FILE_NAME;
     }
     return col;
+}
+
+void ptk_file_browser_read_sort_extra( PtkFileBrowser* file_browser )
+{
+    PtkFileList* list = PTK_FILE_LIST( file_browser->file_list );
+    if ( !list )
+        return;
+
+    list->sort_natural = xset_get_b_panel( file_browser->mypanel, "sort_extra" );
+    list->sort_case = xset_get_int_panel( file_browser->mypanel, "sort_extra",
+                                                            "x" ) == XSET_B_TRUE;
+    list->sort_dir = xset_get_int_panel( file_browser->mypanel, "sort_extra", "y" );
+    list->sort_hidden_first = xset_get_int_panel( file_browser->mypanel,
+                                            "sort_extra", "z" ) == XSET_B_TRUE;
+}
+
+void ptk_file_browser_set_sort_extra( PtkFileBrowser* file_browser,
+                                                            const char* setname )
+{
+    if ( !file_browser || !setname )
+        return;
+
+    XSet* set = xset_get( setname );
+
+    if ( !g_str_has_prefix( set->name, "sortx_" ) )
+        return;
+    
+    const char* name = set->name + 6;
+    PtkFileList* list = PTK_FILE_LIST( file_browser->file_list );
+    if ( !list )
+        return;
+    int panel = file_browser->mypanel;
+    char* val = NULL;
+        
+    if ( !strcmp( name, "natural" ) )
+    {
+        list->sort_natural = set->b == XSET_B_TRUE;
+        xset_set_b_panel( panel, "sort_extra", list->sort_natural );
+    }
+    else if ( !strcmp( name, "case" ) )
+    {
+        list->sort_case = set->b == XSET_B_TRUE;
+        val = g_strdup_printf( "%d", set->b );
+        xset_set_panel( panel, "sort_extra", "x", val );
+    }
+    else if ( !strcmp( name, "folders" ) )
+    {
+        list->sort_dir = PTK_LIST_SORT_DIR_FIRST;
+        val = g_strdup_printf( "%d", PTK_LIST_SORT_DIR_FIRST );
+        xset_set_panel( panel, "sort_extra", "y", val );
+    }
+    else if ( !strcmp( name, "files" ) )
+    {
+        list->sort_dir = PTK_LIST_SORT_DIR_LAST;
+        val = g_strdup_printf( "%d", PTK_LIST_SORT_DIR_LAST );
+        xset_set_panel( panel, "sort_extra", "y", val );
+    }
+    else if ( !strcmp( name, "mix" ) )
+    {
+        list->sort_dir = PTK_LIST_SORT_DIR_MIXED;
+        val = g_strdup_printf( "%d", PTK_LIST_SORT_DIR_MIXED );
+        xset_set_panel( panel, "sort_extra", "y", val );
+    }
+    else if ( !strcmp( name, "hidfirst" ) )
+    {
+        list->sort_hidden_first = set->b == XSET_B_TRUE;
+        val = g_strdup_printf( "%d", set->b );
+        xset_set_panel( panel, "sort_extra", "z", val );
+    }
+    else if ( !strcmp( name, "hidlast" ) )
+    {
+        list->sort_hidden_first = set->b != XSET_B_TRUE;
+        val = g_strdup_printf( "%d", set->b == XSET_B_TRUE ?
+                                                    XSET_B_FALSE : XSET_B_TRUE );
+        xset_set_panel( panel, "sort_extra", "z", val );
+    }
+    g_free( val );
+    ptk_file_list_sort( list );
 }
 
 void ptk_file_browser_set_sort_order( PtkFileBrowser* file_browser,
@@ -6365,6 +6445,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             set->b = browser->sort_order == i ? XSET_B_TRUE : XSET_B_FALSE;
         on_popup_sortby( NULL, browser, i );
     }
+    else if ( g_str_has_prefix( set->name, "sortx_" ) )
+        ptk_file_browser_set_sort_extra( browser, set->name );
     else if ( !strcmp( set->name, "path_help" ) )
         ptk_path_entry_help( NULL, GTK_WIDGET( browser ) );
     else if ( g_str_has_prefix( set->name, "panel" ) )
