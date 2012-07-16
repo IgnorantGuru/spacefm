@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 22:14+0400\n"
-"PO-Revision-Date: 2012-07-15 11:42+0300\n"
+"PO-Revision-Date: 2012-07-16 00:28+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -39,7 +39,7 @@ msgstr "Поиск файлов SpaceFM"
 
 #: ../data/spacefm-find.desktop.in.h:2
 msgid "Search for files and folders"
-msgstr "Поиск в файлах и каталогах"
+msgstr "Поиск файлов и каталогов"
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
@@ -218,7 +218,7 @@ msgstr "<b>Размер на диске:</b>"
 
 #: ../data/ui/file_properties.ui.h:9
 msgid "<b>Count:</b>"
-msgstr "<b>Номер:</b>"
+msgstr "<b>Количество:</b>"
 
 #: ../data/ui/file_properties.ui.h:10
 msgid "<b>Opens _With:</b>"
@@ -271,7 +271,7 @@ msgstr "Установить GID"
 
 #: ../data/ui/file_properties.ui.h:22
 msgid "Sticky"
-msgstr "Липкий"
+msgstr "Липкий (Sticky bit)"
 
 #: ../data/ui/file_properties.ui.h:23
 msgid "Recursive (apply changes to folder contents)"
@@ -300,9 +300,8 @@ msgid "GB"
 msgstr "GB"
 
 #: ../data/ui/find-files.ui.h:5
-#, fuzzy
 msgid "Any"
-msgstr "Любой"
+msgstr "Любое"
 
 #: ../data/ui/find-files.ui.h:6
 msgid "Within One Day"
@@ -536,7 +535,7 @@ msgstr "Выделение растяжением"
 
 #: ../data/ui/prefdlg.ui.h:28
 msgid "Show root user indicator color"
-msgstr ""
+msgstr "Выделять цветом окно суперпользователя"
 
 #: ../data/ui/prefdlg.ui.h:29
 msgid "Default Drag Action:"
@@ -1102,7 +1101,7 @@ msgstr "_Закладки"
 
 #: ../src/main-window.c:1746
 msgid "_Plugins"
-msgstr "Плагины"
+msgstr "_Плагины"
 
 #: ../src/main-window.c:1750
 msgid "_Tools"
@@ -1188,13 +1187,13 @@ msgstr "%s%d выбрано (%s)"
 #: ../src/main-window.c:3182
 msgid "hidden"
 msgid_plural "hidden"
-msgstr[0] "%d скрытый"
-msgstr[1] "%d скрытых"
+msgstr[0] "скрытый"
+msgstr[1] "скрытых"
 
 #. msg = g_strdup_printf( ngettext( "%d visible item (%s)%s",
 #. "%d visible items (%s)%s", n ), n, hidden, free_space );
 #: ../src/main-window.c:3186
-#, fuzzy, c-format
+#, c-format
 msgid "%s%d visible (%s)"
 msgid_plural "%s%d visible (%s)"
 msgstr[0] "%s%d видимый (%s)"
@@ -1224,7 +1223,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:1926
 #: ../src/find-files.c:906
 msgid "Folder"
-msgstr "Папка"
+msgstr "Каталог"
 
 #: ../src/main-window.c:3505
 msgid "Item"
@@ -2115,7 +2114,7 @@ msgstr "Стиль"
 
 #: ../src/settings.c:6468
 msgid "_Normal"
-msgstr ""
+msgstr "_Нормальный"
 
 #. Check
 #: ../src/settings.c:6477
@@ -2278,7 +2277,7 @@ msgstr "_Экспортировать"
 #. New > Command
 #: ../src/settings.c:6763
 msgid "Ne_w"
-msgstr ""
+msgstr "_Создать"
 
 #. New > Submenu
 #: ../src/settings.c:6770
@@ -2381,7 +2380,7 @@ msgstr "Новая вкладка"
 #: ../src/settings.c:8239
 #: ../src/settings.c:8308
 msgid "New Tab Here"
-msgstr "Дублировать вкладку"
+msgstr "Новая вкладка здесь"
 
 #: ../src/settings.c:8174
 #: ../src/settings.c:8244
@@ -2441,7 +2440,7 @@ msgstr "Монтировать и открыть"
 
 #: ../src/settings.c:8360
 msgid "Remove"
-msgstr "Убрать"
+msgstr "Извлечь"
 
 #: ../src/settings.c:8380
 msgid "Remo_ve"
@@ -2488,7 +2487,7 @@ msgstr "_Закладки"
 #: ../src/settings.c:8424
 #: ../src/settings.c:9772
 msgid "_Root"
-msgstr ""
+msgstr "От _Суперпользователя"
 
 #: ../src/settings.c:8440
 msgid "_Label"
@@ -2608,7 +2607,7 @@ msgstr ""
 "\t%%v\tимя файла устройства (например, sdd1)\n"
 "\t%%s\tобщий размер (например, 800G)\n"
 "\t%%t\tтип файловой системы (например, ext4)\n"
-"\t%%l\tметка раздела (например, Label or [no media])\n"
+"\t%%l\tметка раздела (например, Label или [нет носителя])\n"
 "\t%%m\tточка монтирования, или --- если устройство не примонтировано\n"
 "\t%%i\tID устройства\n"
 
@@ -2626,7 +2625,7 @@ msgstr "Монтировать съемные"
 
 #: ../src/settings.c:8668
 msgid "Open _Tab"
-msgstr "Открть вкладку"
+msgstr "Открыть вкладку"
 
 #: ../src/settings.c:8673
 msgid "_Unmount On Exit"
@@ -2900,7 +2899,7 @@ msgstr ""
 
 #: ../src/settings.c:8751
 msgid "Mount Command"
-msgstr "Команда монтирования:"
+msgstr "Команда монтирования"
 
 #: ../src/settings.c:8755
 msgid "_Unmount Command"
@@ -2936,7 +2935,7 @@ msgstr ""
 
 #: ../src/settings.c:8758
 msgid "Unmount Command"
-msgstr "Команда размонтирования:"
+msgstr "Команда размонтирования"
 
 #: ../src/settings.c:8780
 msgid "Audio CD"
@@ -2972,7 +2971,7 @@ msgstr "Съёмное устройство размонтировано"
 
 #: ../src/settings.c:8821
 msgid "Internal Mounted"
-msgstr "Внутреннее устройство монтировано"
+msgstr "Внутреннее устройство примонтировано"
 
 #: ../src/settings.c:8826
 msgid "Internal Unmounted"
@@ -2980,7 +2979,7 @@ msgstr "Внутреннее устройство размонтировано"
 
 #: ../src/settings.c:8831
 msgid "Mounted Network"
-msgstr "Сетевой ресурс монтирован"
+msgstr "Сетевой ресурс примонтирован"
 
 #: ../src/settings.c:8836
 msgid "Mounted File"
@@ -2989,7 +2988,7 @@ msgstr "Файл примонтирован"
 #: ../src/settings.c:8848
 #: ../src/settings.c:9452
 msgid "_New"
-msgstr "_Новый"
+msgstr "_Создать"
 
 #: ../src/settings.c:8851
 #: ../src/settings.c:9594
@@ -3111,19 +3110,19 @@ msgstr "Подтверждение со_здания"
 
 #: ../src/settings.c:8940
 msgid "Highlight _Bar"
-msgstr ""
+msgstr "Цвет _фона"
 
 #: ../src/settings.c:8941
 msgid "Status Bar Highlight Color"
-msgstr ""
+msgstr "Цвет фона строки состояния"
 
 #: ../src/settings.c:8945
 msgid "Highlight _Text"
-msgstr ""
+msgstr "Цвет _текста"
 
 #: ../src/settings.c:8946
 msgid "Status Bar Text Highlight Color"
-msgstr ""
+msgstr "Цвет текста в строке состояния"
 
 #: ../src/settings.c:8950
 msgid "_Middle Click"
@@ -3145,7 +3144,7 @@ msgstr "_Скрыть панель"
 
 #: ../src/settings.c:8980
 msgid "New _Window"
-msgstr "Новое _окно"
+msgstr "_Новое окно"
 
 #: ../src/settings.c:8983
 msgid "R_oot Window"
@@ -3162,11 +3161,11 @@ msgstr "_Терминал"
 #. discovery notification
 #: ../src/settings.c:8992
 msgid "_Root Terminal"
-msgstr "_Терминал суперпользователя"
+msgstr "Терминал _суперпользователя"
 
 #: ../src/settings.c:8995
 msgid "_Save Session"
-msgstr "_Сохранить сессию"
+msgstr "Сохранить сесси_ю"
 
 #: ../src/settings.c:8998
 msgid "Save Ta_bs"
@@ -3263,7 +3262,7 @@ msgid ""
 msgstr ""
 "Задать формат заголовка окна:\n"
 "\n"
-"Use:\n"
+"Подстановка:\n"
 "\t%%n\tимя текущего каталога (например, bin\n"
 "\t%%d\tпуть текущего каталога (например, /usr/bin)\n"
 "\t%%p\tномер текущей панели (1-4)\n"
@@ -3409,7 +3408,7 @@ msgstr "_Задачи"
 
 #: ../src/settings.c:9204
 msgid "_Status"
-msgstr "_Статус"
+msgstr "_Состояние"
 
 #. column position
 #. column width
@@ -3487,7 +3486,7 @@ msgstr "Шрифт для менеджера задач"
 
 #: ../src/settings.c:9289
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
-msgstr "копирование файла 1:15  65.2 M  30.2 M/s"
+msgstr "копирование Файл 1:15  65.2 M  30.2 M/s"
 
 #: ../src/settings.c:9291
 #: ../src/settings.c:9549
@@ -3496,7 +3495,7 @@ msgstr "_Колонки"
 
 #: ../src/settings.c:9295
 msgid "_Popups"
-msgstr "_уведомления"
+msgstr "_Уведомления"
 
 #: ../src/settings.c:9299
 msgid "Popup _All Tasks"
@@ -3508,7 +3507,7 @@ msgstr "Всегда повер_х"
 
 #: ../src/settings.c:9307
 msgid "_Detailed Status"
-msgstr "Подро_бный статус"
+msgstr "Подро_бное состояние"
 
 #: ../src/settings.c:9314
 msgid "Task Popup Font (affects new tasks)"
@@ -3524,11 +3523,11 @@ msgstr "О_шибки"
 
 #: ../src/settings.c:9321
 msgid "Stop If _First"
-msgstr "Останавливать в первый раз"
+msgstr "Прервать при ошибке в _начале"
 
 #: ../src/settings.c:9325
 msgid "Stop On _Any"
-msgstr "Останавливать на любой"
+msgstr "Прервать при _любой ошибке"
 
 #: ../src/settings.c:9329
 msgid "_Continue"
@@ -3561,11 +3560,11 @@ msgstr "Выбрать..."
 #. virtual
 #: ../src/settings.c:9378
 msgid "In _Tab"
-msgstr "Новая _вкладка"
+msgstr "Открыть во вкладке"
 
 #: ../src/settings.c:9382
 msgid "N_ew"
-msgstr "_Новый"
+msgstr "_Создать"
 
 #: ../src/settings.c:9385
 #: ../src/settings.c:9531
@@ -3658,7 +3657,7 @@ msgstr "Показать содержимое"
 
 #: ../src/settings.c:9419
 msgid "_Archive Default"
-msgstr ""
+msgstr "По умолчанию для архива:"
 
 #: ../src/settings.c:9423
 msgid "_Open With App"
@@ -3699,7 +3698,7 @@ msgstr "_Архив"
 
 #: ../src/settings.c:9483
 msgid "Tab _Here"
-msgstr "Во вкладке"
+msgstr "Новая вкладка _здесь"
 
 #: ../src/settings.c:9494
 msgid "_Back"
@@ -3870,7 +3869,7 @@ msgstr "_Инвертировать выделение"
 
 #: ../src/settings.c:9718
 msgid "R_oot"
-msgstr ""
+msgstr "От Суперпользователя"
 
 #: ../src/settings.c:9724
 msgid "Move _To"
@@ -3951,7 +3950,7 @@ msgstr "Шрифт списка файлов (Панель 1)"
 
 #: ../src/settings.c:9870
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
-msgstr ""
+msgstr "Пример  1.1 M  файл  -rwxr--r--  user:group  2011-01-01 01:11"
 
 #: ../src/settings.c:9875
 msgid "Devices Font (Panel 1)"
@@ -3962,7 +3961,7 @@ msgstr "Шрифт для устройств (Панель 1)"
 #: ../src/settings.c:10110
 #: ../src/settings.c:10230
 msgid "sr0 [no media] :EXAMPLE"
-msgstr ""
+msgstr "sr0 [нет носителя] :EXAMPLE"
 
 #: ../src/settings.c:9882
 msgid "Bookmarks Font (Panel 1)"
@@ -3984,7 +3983,7 @@ msgstr "Шрифт для строки пути (Панель 1)"
 #: ../src/settings.c:10123
 #: ../src/settings.c:10243
 msgid "$ cat /home/user/example"
-msgstr ""
+msgstr "$ cat /home/user/пример"
 
 #: ../src/settings.c:9894
 msgid "Tab Font (Panel 1)"
@@ -4007,7 +4006,7 @@ msgstr "Шрифт списка файлов (Панель 2)"
 
 #: ../src/settings.c:9983
 msgid "Example  2.2 M  file  -rwxr--r--  user:group  2011-02-02 02:22"
-msgstr ""
+msgstr "Пример  2.2 M  файл  -rwxr--r--  user:group  2011-02-02 02:22"
 
 #: ../src/settings.c:9988
 msgid "Devices Font (Panel 2)"
@@ -4035,7 +4034,7 @@ msgstr "Шрифт списка файлов (Панель 3)"
 
 #: ../src/settings.c:10104
 msgid "Example  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33"
-msgstr ""
+msgstr "Пример  3.3 M  файл  -rwxr--r--  user:group  2012-03-03 03:33"
 
 #: ../src/settings.c:10109
 msgid "Devices Font (Panel 3)"
@@ -4063,7 +4062,7 @@ msgstr "Шрифт списка файлов (Панель 4)"
 
 #: ../src/settings.c:10224
 msgid "Example  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44"
-msgstr ""
+msgstr "Пример  4.4 M  файл  -rwxr--r--  user:group  2012-04-04 04:44"
 
 #: ../src/settings.c:10229
 msgid "Devices Font (Panel 4)"
@@ -4311,7 +4310,7 @@ msgstr "%s сейчас примонтирован.  Чтобы проверит
 #: ../src/ptk/ptk-location-view.c:1863
 #: ../src/ptk/ptk-location-view.c:2205
 msgid "Device Is Mounted"
-msgstr "Устройство монтировано"
+msgstr "Устройство примонтировано"
 
 #: ../src/ptk/ptk-location-view.c:1031
 #, c-format
@@ -4359,7 +4358,7 @@ msgid ""
 msgstr ""
 "Введите команду монтирования:\n"
 "\n"
-"Use:\n"
+"Подстановка:\n"
 "\t%%%%v\tфайл устройства ( %s )\n"
 "\t%%%%o\tособые параметры монтирования раздела\n"
 "\t\t( %s )\n"
@@ -4420,7 +4419,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"ВНИМАНИЕ: раздел %s монтирован. Рекомендуется размонтировать его перед сменой метки."
+"ВНИМАНИЕ: раздел %s примонтирован. Рекомендуется размонтировать его перед сменой метки."
 
 #: ../src/ptk/ptk-location-view.c:1216
 #, c-format
@@ -4782,7 +4781,7 @@ msgstr "Задать размещение закладки"
 
 #: ../src/ptk/ptk-file-task.c:388
 msgid "Kill As Other"
-msgstr ""
+msgstr "Убить от пользователя..."
 
 #: ../src/ptk/ptk-file-task.c:483
 msgid "Move: "
@@ -4794,7 +4793,7 @@ msgstr "Копировать: "
 
 #: ../src/ptk/ptk-file-task.c:485
 msgid "Trash: "
-msgstr "Корзина:"
+msgstr "В корзину:"
 
 #: ../src/ptk/ptk-file-task.c:486
 msgid "Delete: "
@@ -4806,11 +4805,11 @@ msgstr "Ссылка: "
 
 #: ../src/ptk/ptk-file-task.c:488
 msgid "Change: "
-msgstr ""
+msgstr "Изменить:"
 
 #: ../src/ptk/ptk-file-task.c:489
 msgid "Run: "
-msgstr ""
+msgstr "Запустить:"
 
 #: ../src/ptk/ptk-file-task.c:493
 msgid "Moving..."
@@ -4821,9 +4820,8 @@ msgid "Copying..."
 msgstr "Копирование..."
 
 #: ../src/ptk/ptk-file-task.c:495
-#, fuzzy
 msgid "Trashing..."
-msgstr "Подготовка..."
+msgstr "Удаление..."
 
 #: ../src/ptk/ptk-file-task.c:496
 msgid "Deleting..."
@@ -4849,13 +4847,12 @@ msgid "To:"
 msgstr "В: "
 
 #: ../src/ptk/ptk-file-task.c:570
-#, fuzzy
 msgid "Progress:  "
 msgstr "Прогресс:"
 
 #: ../src/ptk/ptk-file-task.c:603
 msgid "Status:  "
-msgstr ""
+msgstr "Состояние:"
 
 #: ../src/ptk/ptk-file-task.c:744
 #: ../src/ptk/ptk-file-task.c:893
@@ -4881,21 +4878,21 @@ msgstr "%s  (%s)  %s остается"
 
 #: ../src/ptk/ptk-file-task.c:850
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
-msgstr ""
+msgstr "[ ---8<---   прочие строки выше были убраны из этого лога ]\n"
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
-msgstr ""
+msgstr "[ ---8<---   прочие ошибки выше были убраны из этого лога ]\n"
 
 #: ../src/ptk/ptk-file-task.c:883
 #, c-format
 msgid "Error  ( Stop If First )"
-msgstr ""
+msgstr "Ошибка ( на первом действии )"
 
 #: ../src/ptk/ptk-file-task.c:885
 #, c-format
 msgid "Error  ( Stop On Any )"
-msgstr ""
+msgstr "Ошибка ( на любом действии )"
 
 #: ../src/ptk/ptk-file-task.c:887
 #, c-format
@@ -5196,11 +5193,11 @@ msgstr "Выбрать цель ссылки"
 
 #: ../src/ptk/ptk-file-misc.c:884
 msgid "Select Template File"
-msgstr "Выбрать файл шаблона"
+msgstr "Выбрать шаблонный файл"
 
 #: ../src/ptk/ptk-file-misc.c:903
 msgid "Select Template Folder"
-msgstr "Выбрать каталог шаблонов"
+msgstr "Выбрать шаблонный каталог"
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -5221,6 +5218,11 @@ msgid ""
 "\n"
 "* Multiple files can be selected in the file browser to rename a batch of files."
 msgstr ""
+"* Чтобы выделить весь текст в поле, кликните по заголовку поля (например 'Имя файла:'), воспользуйтесь сочетаниями клавиши Alt, или используйте Tab.\n"
+"\n"
+"* Чтобы быстро скопировать текст поля в буфер обмена сделайте средний клик, или двойной клик по заголовку поля (например 'Имя файла:').\n"
+"\n"
+"* В диалоге выбора файла можно выбрать несколько файлов для массового переименования."
 
 #: ../src/ptk/ptk-file-misc.c:1125
 msgid "C_reate"
@@ -5398,7 +5400,7 @@ msgstr "Создать новый файл%s"
 #: ../src/ptk/ptk-file-misc.c:2832
 #, c-format
 msgid "Create New Folder%s"
-msgstr "Создать новый каталог"
+msgstr "Создать новый каталог%s"
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2862
@@ -5444,7 +5446,7 @@ msgstr "Ошибка переименования"
 #: ../src/ptk/ptk-file-misc.c:3154
 #: ../src/ptk/ptk-file-misc.c:3156
 msgid "New Folder"
-msgstr "Новая папка"
+msgstr "Новый каталог"
 
 #: ../src/ptk/ptk-file-misc.c:3155
 msgid "New folder name:"
@@ -5494,7 +5496,7 @@ msgstr "Сломанная ссылка"
 #: ../src/ptk/ptk-file-properties.c:164
 #, c-format
 msgid "%s ( %llu bytes )"
-msgstr ""
+msgstr "%s ( %llu байт )"
 
 #: ../src/ptk/ptk-file-properties.c:171
 #, c-format
@@ -5531,7 +5533,7 @@ msgstr "Выбрать..."
 #: ../src/ptk/ptk-file-properties.c:571
 #, c-format
 msgid "%s  ( %llu bytes )"
-msgstr ""
+msgstr "%s  ( %llu байт )"
 
 #: ../src/ptk/ptk-file-properties.c:575
 msgid "1 file"
@@ -5618,35 +5620,34 @@ msgstr "Команда не найдена"
 #: ../src/vfs/vfs-file-info.c:539
 #: ../src/vfs/vfs-file-info.c:544
 msgid "T"
-msgstr ""
+msgstr "T"
 
 #: ../src/vfs/vfs-file-info.c:462
 #: ../src/vfs/vfs-file-info.c:467
 #: ../src/vfs/vfs-file-info.c:557
 #: ../src/vfs/vfs-file-info.c:562
-#, fuzzy
 msgid "G"
-msgstr "Перейти"
+msgstr "G"
 
 #: ../src/vfs/vfs-file-info.c:481
 #: ../src/vfs/vfs-file-info.c:486
 #: ../src/vfs/vfs-file-info.c:576
 #: ../src/vfs/vfs-file-info.c:581
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #: ../src/vfs/vfs-file-info.c:499
 #: ../src/vfs/vfs-file-info.c:504
 #: ../src/vfs/vfs-file-info.c:594
 #: ../src/vfs/vfs-file-info.c:599
 msgid "K"
-msgstr ""
+msgstr "K"
 
 #. unit = size > 1 ? "Bytes" : "Byte";
 #: ../src/vfs/vfs-file-info.c:509
 #: ../src/vfs/vfs-file-info.c:605
 msgid "B"
-msgstr ""
+msgstr "B"
 
 #: ../src/vfs/vfs-file-task.c:276
 #: ../src/vfs/vfs-file-task.c:422
@@ -6065,7 +6066,7 @@ msgstr "( не является блочным устройством )"
 #: ../src/vfs/vfs-volume-nohal.c:3138
 #, c-format
 msgid "( no udev device )"
-msgstr "( нет устройств udev )"
+msgstr "( нет устройства udev )"
 
 #: ../src/vfs/vfs-volume-nohal.c:3381
 #, c-format
@@ -6153,7 +6154,7 @@ msgstr "По _убыванию"
 
 #: ../src/desktop/desktop-window.c:188
 msgid "_Folder"
-msgstr "_Папка"
+msgstr "_Каталог"
 
 #: ../src/desktop/desktop-window.c:189
 msgid "_Text File"
@@ -6188,11 +6189,11 @@ msgstr "Произошла ошибка при переименовании эл
 
 #: ../src/find-files.c:274
 msgid "Open Containing _Folder"
-msgstr "Открыть содержащую элемент папку"
+msgstr "Открыть содержащий _каталог"
 
 #: ../src/find-files.c:761
 msgid "Select a folder"
-msgstr "Выбор папки"
+msgstr "Выбор каталога"
 
 #: ../src/find-files.c:810
 msgid "Browse..."

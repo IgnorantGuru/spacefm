@@ -1,6 +1,6 @@
 0.7.9+
     added sort options #87 #37 #23
-    partially updated russian translation ru.po
+    completed russian translation ru.po
     smart size display for free space and tasks closes #115
     case insensitive sort detect all created files #119
 0.7.9:  2012-07-13:
