@@ -1,9 +1,9 @@
 # translation of ru.po to Russian
-# Roxana Kolosova <mavka@justos.org>, 2006.
-# Anton Dobkin <anton@viansib.ru>, 2008.
-# akdengi <kazancas@gmail.com>, 2009.
 # Vladimir Kudrya <vladimir-csp@yandex.ru>, 2012.
-# #-#-#-#-#  pcmanfm.pot (PACKAGE VERSION)  #-#-#-#-#
+# akdengi <kazancas@gmail.com>, 2009.
+# Anton Dobkin <anton@viansib.ru>, 2008.
+# Roxana Kolosova <mavka@justos.org>, 2006.
+# #-#-#-#-#  spacefm.pot (PACKAGE VERSION)  #-#-#-#-#
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # #-#-#-#-#  ru.po (ru)  #-#-#-#-#
