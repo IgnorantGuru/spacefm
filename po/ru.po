@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 22:14+0400\n"
-"PO-Revision-Date: 2012-07-16 00:28+0300\n"
+"PO-Revision-Date: 2012-07-16 18:32+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -141,7 +141,7 @@ msgid ""
 msgstr ""
 "Значки и логотип SpaceFM были созданы Goran Simovic\n"
 "\n"
-"Другие значи были взяты из набора значков Tango Desktop Project"
+"Другие значки были взяты из набора Tango Desktop Project"
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
@@ -177,7 +177,7 @@ msgstr "_Обзор"
 
 #: ../data/ui/appchooserdlg.ui.h:8
 msgid "Opened in Terminal"
-msgstr "Открыть в терминале"
+msgstr "Открыто в терминале"
 
 #: ../data/ui/appchooserdlg.ui.h:9
 msgid "_Set as default"
@@ -189,7 +189,7 @@ msgstr "Свойства файла"
 
 #: ../data/ui/file_properties.ui.h:2
 msgid "<b>File_name:</b>"
-msgstr "<b>_Имя файла:</b>"
+msgstr "<b>Имя _файла:</b>"
 
 #: ../data/ui/file_properties.ui.h:3
 #: ../src/ptk/ptk-file-misc.c:2022
@@ -227,7 +227,7 @@ msgstr "<b>Открывается _в:</b>"
 #: ../data/ui/file_properties.ui.h:11
 #: ../src/settings.c:9734
 msgid "_Info"
-msgstr "Информация"
+msgstr "_Информация"
 
 #: ../data/ui/file_properties.ui.h:12
 msgid "<b>_Owner:</b>"
@@ -511,7 +511,7 @@ msgstr "<b>Поведение</b>"
 
 #: ../data/ui/prefdlg.ui.h:22
 msgid "_General"
-msgstr "_Основное"
+msgstr "_Основные"
 
 #: ../data/ui/prefdlg.ui.h:23
 msgid "Always show the tab bar"
@@ -651,7 +651,7 @@ msgstr "Отображение даты"
 
 #: ../data/ui/prefdlg.ui.h:57
 msgid "_Advanced"
-msgstr "_Дополнительно"
+msgstr "_Продвинутые"
 
 #: ../src/exo/exo-icon-view.c:696
 msgid "Column Spacing"
@@ -3814,7 +3814,7 @@ msgstr "_Удалить"
 
 #: ../src/settings.c:9620
 msgid "Copy Pa_rent"
-msgstr "Скопировать родительский"
+msgstr "Скопировать родительскийко"
 
 #: ../src/settings.c:9623
 msgid "Paste _Link"
@@ -3849,7 +3849,7 @@ msgstr "_Панель"
 
 #: ../src/settings.c:9674
 msgid "_Move To"
-msgstr "_Переместить в"
+msgstr "Пе_реместить в"
 
 #: ../src/settings.c:9678
 msgid "_Location"
