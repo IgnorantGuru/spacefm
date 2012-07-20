@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 22:14+0400\n"
-"PO-Revision-Date: 2012-07-16 18:32+0300\n"
+"PO-Revision-Date: 2012-07-18 23:07+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -110,15 +110,15 @@ msgid ""
 msgstr ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
-"Source code taken from other projects:\n"
+"Исходный код, взятый из других проектов:\n"
 " * pcmanfm-mod: IgnorantGuru http://igurublog.wordpress.com/downloads/mod-pcmanfm/\n"
 " * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n"
 " * libmd5-rfc: Aladdin Enterprises\n"
-" * Working area detection: Gary Kramlich\n"
+" * определение рабочей области: Gary Kramlich\n"
 " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
-" * Text and icon renderer uses code from Jonathan Blandford\n"
-" * Desktop icons use code from Brian Tarricone\n"
-" * HAL support (deprecated) used code from following projects/authors:\n"
+" * При рендеринге текста и значков используется код от Jonathan Blandford\n"
+" * В обеспечении значков рабочего стола используется код от Brian Tarricone\n"
+" * Для поддержки HAL (устаревшее) использован код от следующих проектов:\n"
 "     * gnome-vfs: David Zeuthen\n"
 "     * thunar-vfs and libexo: Benedikt Meurer\n"
 "     * gnome-mount: David Zeuthen"
@@ -126,12 +126,12 @@ msgstr ""
 #: ../data/ui/about-dlg.ui.h:26
 msgid "translator-credits"
 msgstr ""
+"Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Roxana Kolosova <mavka@justos.org>\n"
 "Lebed Dmitrij <dimaz.sertolovo@gmail.com>\n"
-"Anton Dobkin <anton@viansib.ru> \n"
+"Anton Dobkin <anton@viansib.ru>\n"
 "Tim Marinin <velkhar@gmail.com>\n"
-"Alexander Kazancev <kazancas@gmail.com>\n"
-"Vladimir Kudrya <vladimir-csp@yandex.ru>"
+"Alexander Kazancev <kazancas@gmail.com>"
 
 #: ../data/ui/about-dlg.ui.h:27
 msgid ""
@@ -4244,7 +4244,7 @@ msgstr "Закладка уже существует"
 
 #: ../src/ptk/ptk-location-view.c:103
 msgid "DATA LOSS WARNING - overwriting"
-msgstr "ВНИМАНИЕ: ПОТЕРЯ ДАННЫХ - перезапись"
+msgstr "ПРЕДУПРЕЖДЕНИЕ О ПОТЕРЕ ДАННЫХ - перезапись"
 
 #: ../src/ptk/ptk-location-view.c:104
 msgid "Type yes and press Enter to proceed, or no to cancel"
@@ -4489,7 +4489,7 @@ msgstr "Для размонтирования сетевого ресурса т
 #: ../src/ptk/ptk-location-view.c:1328
 #, c-format
 msgid "Unmount %s"
-msgstr "Размонтировать"
+msgstr "Размонтировать %s"
 
 #: ../src/ptk/ptk-location-view.c:1406
 #: ../src/ptk/ptk-location-view.c:1418
