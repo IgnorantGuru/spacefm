@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 22:14+0400\n"
-"PO-Revision-Date: 2012-07-18 23:07+0300\n"
+"PO-Revision-Date: 2012-07-20 14:05+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -247,7 +247,7 @@ msgstr "<b>Группа:</b>"
 
 #: ../data/ui/file_properties.ui.h:16
 msgid "<b>Other:</b>"
-msgstr "<b>Другое:</b>"
+msgstr "<b>Остальные:</b>"
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -547,7 +547,7 @@ msgstr "И_нтерфейс"
 
 #: ../data/ui/prefdlg.ui.h:31
 msgid "Manage the desktop and show file icons"
-msgstr "Управлять рабочим столом и показать иконки"
+msgstr "Управление рабочим столом и значками"
 
 #: ../data/ui/prefdlg.ui.h:32
 msgid "Show \"My Documents\" icon on desktop"
@@ -575,11 +575,11 @@ msgstr "Режим:"
 
 #: ../data/ui/prefdlg.ui.h:38
 msgid "Wallpaper:"
-msgstr "Обои рабочего стола:"
+msgstr "Фон рабочего стола:"
 
 #: ../data/ui/prefdlg.ui.h:39
 msgid "<b>Wallpaper</b>"
-msgstr "<b>Обои</b>"
+msgstr "<b>Фон рабочего стола</b>"
 
 #: ../data/ui/prefdlg.ui.h:40
 msgid "Background:"
@@ -723,7 +723,7 @@ msgstr "Ориентация"
 
 #: ../src/exo/exo-icon-view.c:829
 msgid "How the text and icon of each item are positioned relative to each other"
-msgstr "Как текст и иконки каждого элемента позиционируются относительно друг-друга"
+msgstr "Как текст и значки каждого элемента позиционируются относительно друг-друга"
 
 #: ../src/exo/exo-icon-view.c:845
 msgid "Pixbuf column"
