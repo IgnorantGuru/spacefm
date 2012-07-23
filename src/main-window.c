@@ -3541,8 +3541,9 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     GtkTreeIter it;
 
     c->valid = FALSE;
-    if ( !file_browser )
+    if ( !GTK_IS_WIDGET( file_browser ) )
         return;
+
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     if ( !main_window )
         return;
@@ -3631,7 +3632,14 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
         c->var[CONTEXT_CLIP_TEXT] = gtk_clipboard_wait_is_text_available( clip ) ?
                                     g_strdup( "true" ) : g_strdup( "false" );
     }
-    
+
+    // hack - Due to ptk_file_browser_update_views main iteration, fb tab may be destroyed
+    // asynchronously - common if gui thread is blocked on stat
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        return;
+    if ( !GTK_IS_WIDGET( file_browser->side_book ) )
+        return;
+        
     if ( file_browser->side_book )
     {
         c->var[CONTEXT_BOOKMARK] = g_strdup( ptk_bookmark_view_get_selected_dir( 

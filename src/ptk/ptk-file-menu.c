@@ -557,7 +557,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         apps = NULL;
         context->var[CONTEXT_MIME] = g_strdup( "" );
     }
-    
+
     // context
     if ( file_path )
         context->var[CONTEXT_NAME] = g_path_get_basename( file_path );
@@ -586,6 +586,16 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     else
         desktop_context_fill( desktop, context );
 #endif
+
+    if ( !context->valid )
+    {
+        // rare exception due to context_fill hacks - fb was probably destroyed
+        g_warning( "context_fill rare exception" );
+        context = xset_context_new();
+        g_slice_free( XSetContext, context );
+        context = NULL;
+        return NULL;
+    }
 
     // OPEN >
     //item = gtk_separator_menu_item_new ();

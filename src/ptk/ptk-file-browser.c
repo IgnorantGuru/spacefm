@@ -2322,6 +2322,8 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     /* The folder itself was deleted */
     if( file == NULL )
     {
+        // Note: on_close_notebook_page calls ptk_file_browser_update_views
+        // which may destroy fb here
         on_close_notebook_page( NULL, file_browser );
         //ptk_file_browser_chdir( file_browser, g_get_home_dir(), PTK_FB_CHDIR_ADD_HISTORY);
     }
@@ -2935,8 +2937,9 @@ static void show_popup_menu( PtkFileBrowser* file_browser,
                     file_path, file,
                     dir_name ? dir_name : cwd,
                     sel_files );
-            gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
-                    NULL, NULL, button, time );
+            if ( popup )
+                gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL,
+                                                            button, time );
 //    }
 //    else if ( sel_files )
 //    {

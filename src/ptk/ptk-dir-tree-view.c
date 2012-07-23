@@ -465,7 +465,8 @@ gboolean on_dir_tree_view_button_press( GtkWidget* view,
                                 dir_name, sel_files );
                     g_free( dir_name );
                     g_free( file_path );
-                    gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
+                    if ( popup )
+                        gtk_menu_popup( GTK_MENU( popup ), NULL, NULL,
                                     NULL, NULL, 3, evt->time );
 
                     vfs_file_info_unref( file );
