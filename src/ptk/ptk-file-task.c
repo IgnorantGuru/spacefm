@@ -1361,13 +1361,13 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     char* file_name;
     char* ufile_name;
     gboolean different_files, is_src_dir, is_dest_dir;
-    struct stat src_stat, dest_stat;
+    struct stat64 src_stat, dest_stat;
 
     different_files = ( 0 != g_strcmp0( ptask->task->current_file,
                                      ptask->task->current_dest ) );
 
-    lstat( ptask->task->current_file, &src_stat );
-    lstat( ptask->task->current_dest, &dest_stat );
+    lstat64( ptask->task->current_file, &src_stat );
+    lstat64( ptask->task->current_dest, &dest_stat );
 
     is_src_dir = !!S_ISDIR( dest_stat.st_mode );
     is_dest_dir = !!S_ISDIR( src_stat.st_mode );

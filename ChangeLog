@@ -3,6 +3,7 @@
     completed russian translation ru.po
     smart size display for free space and tasks closes #115
     case insensitive sort detect all created files #119
+    fix Skip All in overwrite query
 0.7.9:  2012-07-13:
     new threading for tasks
     network filesystem lag issues improved

@@ -144,23 +144,23 @@ gboolean check_overwrite( VFSFileTask* task,
 {
     char * new_dest;
     new_dest = *new_dest_file = NULL;
-    struct stat dest_stat;  // skip stat64
+    struct stat64 dest_stat;
 
     if ( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
     {
-        *dest_exists = !lstat( dest_file, &dest_stat );
+        *dest_exists = !lstat64( dest_file, &dest_stat );
         return TRUE;
     }
     if ( task->overwrite_mode == VFS_FILE_TASK_SKIP_ALL )
     {
-        *dest_exists = !lstat( dest_file, &dest_stat );
-        return FALSE;
+        *dest_exists = !lstat64( dest_file, &dest_stat );
+        return !*dest_exists;
     }
 
     *dest_exists = FALSE;
     if ( task->state_cb )
     {
-        while ( lstat( dest_file, &dest_stat ) != -1 )
+        while ( lstat64( dest_file, &dest_stat ) != -1 )
         {
             *dest_exists = TRUE;
             /* destination file exists */
@@ -340,7 +340,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
             if ( task->avoid_changes )
                 update_file_display( dest_file );
 
-            /* Move files to different device: Need to delete source files */
+            /* Move files to different device: Need to delete source dir */
             if ( ( task->type == VFS_FILE_TASK_MOVE
                  || task->type == VFS_FILE_TASK_TRASH )
                  && !should_abort( task ) && !copy_fail )
@@ -619,8 +619,8 @@ vfs_file_task_do_move ( VFSFileTask* task,
 static void
 vfs_file_task_move( char* src_file, VFSFileTask* task )
 {
-    struct stat src_stat;    // skip stat64
-    struct stat dest_stat;   // skip stat64
+    struct stat64 src_stat;
+    struct stat64 dest_stat;
     gchar* file_name;
     gchar* dest_file;
     GKeyFile* kf;   /* for trash info */
@@ -649,8 +649,8 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
 
     g_free(file_name );
 
-    if ( lstat( src_file, &src_stat ) == 0
-            && lstat( task->dest_dir, &dest_stat ) == 0 )
+    if ( lstat64( src_file, &src_stat ) == 0
+            && lstat64( task->dest_dir, &dest_stat ) == 0 )
     {
         /* Not on the same device */
         if ( src_stat.st_dev != dest_stat.st_dev )
