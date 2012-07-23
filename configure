@@ -646,6 +646,8 @@ CATOBJEXT
 CATALOGS
 MSGFMT_OPTS
 GETTEXT_PACKAGE
+NO_PIXMAPS_FALSE
+NO_PIXMAPS_TRUE
 DESKTOP_INTEGRATION_FALSE
 DESKTOP_INTEGRATION_TRUE
 FAM_LIBS
@@ -833,6 +835,7 @@ enable_largefile
 enable_superuser_checks
 with_preferable_sudo
 enable_desktop_integration
+enable_pixmaps
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1494,6 +1497,8 @@ Optional Features:
   --disable-desktop-integration
                           disable desktop integrations such as icons (default:
                           enable)
+  --disable-pixmaps       disable use of share/pixmaps dir and use share/icons
+                          dir to store icons (default: enable)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -14511,6 +14516,22 @@ else
 fi
 
 
+# Check whether --enable-pixmaps was given.
+if test "${enable_pixmaps+set}" = set; then :
+  enableval=$enable_pixmaps; use_pixmaps=$enableval
+else
+  use_pixmaps="yes"
+fi
+
+ if test ! x"$use_pixmaps" = x"yes"; then
+  NO_PIXMAPS_TRUE=
+  NO_PIXMAPS_FALSE='#'
+else
+  NO_PIXMAPS_TRUE='#'
+  NO_PIXMAPS_FALSE=
+fi
+
+
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
 CPPFLAGS="$CPPFLAGS -DDATADIR=\\\"$datadir\\\" -DHTMLDIR=\\\"$htmldir\\\""
@@ -15448,6 +15469,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${DESKTOP_INTEGRATION_TRUE}" && test -z "${DESKTOP_INTEGRATION_FALSE}"; then
   as_fn_error $? "conditional \"DESKTOP_INTEGRATION\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${NO_PIXMAPS_TRUE}" && test -z "${NO_PIXMAPS_FALSE}"; then
+  as_fn_error $? "conditional \"NO_PIXMAPS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 
@@ -17524,10 +17549,27 @@ $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
 
+resolve_datadir="$(eval echo "$datadir")"
+while [ "${resolve_datadir:0:1}" == "$" ]; do
+    resolve_datadir="$(eval echo "$resolve_datadir")"
+done
+
+resolve_htmldir="$(eval echo "$htmldir")"
+while [ "${resolve_htmldir:0:1}" == "$" ]; do
+    resolve_htmldir="$(eval echo "$resolve_htmldir")"
+done
+
 echo
 echo SpaceFM...................................... : Version $VERSION
 echo
 echo Prefix....................................... : $prefix
+echo Executable................................... : $prefix/bin/spacefm
+if test x"$use_pixmaps" = x"yes"; then
+echo Icon Dir..................................... : "$resolve_datadir/pixmaps/"
+else
+echo Icon Dir..................................... : "$resolve_datadir/icons/hicolor/"
+fi
+echo Documentation Dir............................ : "$resolve_htmldir/"
 if test x"$use_hal" = x"yes"; then
 echo Linux device support......................... : hal
 else
@@ -17545,11 +17587,13 @@ echo Additional program to switch to super user... : $preferable_sudo
 fi
 echo Desktop icon integration..................... : $desktop_integration
 echo
-echo "The binary will be installed as $prefix/bin/spacefm"
-echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo
 echo Please read README carefully if you are packaging SpaceFM.
 echo
 echo
-
+if test ! x"$use_pixmaps" = x"yes"; then
+echo 'IMPORTANT: After make and install, run:'
+echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/hicolor/"
+echo
+fi

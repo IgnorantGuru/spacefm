@@ -12,3 +12,10 @@ EXTRA_DIST = \
 	intltool-merge.in \
 	intltool-update.in
 	
+if NO_PIXMAPS
+all-local:
+	@echo
+	@echo "IMPORTANT: After installation, run:"
+	@echo "           sudo gtk-update-icon-cache -q -t -f $(datadir)/icons/hicolor"
+	@echo
+endif

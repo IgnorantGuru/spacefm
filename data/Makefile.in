@@ -54,7 +54,7 @@ host_triplet = @host@
 subdir = data
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -96,9 +96,10 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" \
 	"$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" \
+	"$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" \
 	"$(DESTDIR)$(uidir)"
 DATA = $(desktop_DATA) $(file_DATA) $(html_DATA) $(icon_DATA) \
-	$(ui_DATA)
+	$(icon128_DATA) $(icon48_DATA) $(ui_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -263,32 +264,56 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 desktopdir = $(datadir)/applications
 dt_in_files = spacefm.desktop.in \
-	       spacefm-find.desktop.in \
-	       spacefm-folder-handler.desktop.in
+			spacefm-find.desktop.in \
+			spacefm-folder-handler.desktop.in
 
 desktop_DATA = $(dt_in_files:.desktop.in=.desktop)
 DISTCLEANFILES = spacefm.desktop \
-		 spacefm-find.desktop \
-		 spacefm-folder-handler.desktop
+			spacefm-find.desktop \
+			spacefm-folder-handler.desktop
 
-icondir = $(datadir)/pixmaps
-icon_DATA = spacefm.png \
-			spacefm-root.png \
-			spacefm-find.png \
-			spacefm-128-cube-blue.png \
-			spacefm-128-cube-green.png \
-			spacefm-128-cube-red.png \
-			spacefm-128-pyramid-blue.png \
-			spacefm-128-pyramid-green.png \
-			spacefm-128-pyramid-red.png \
-			spacefm-48-cube-blue.png \
-			spacefm-48-cube-green.png \
-			spacefm-48-cube-red.png \
-			spacefm-48-folder-blue.png \
-			spacefm-48-folder-red.png \
-			spacefm-48-pyramid-blue.png \
-			spacefm-48-pyramid-green.png \
-			spacefm-48-pyramid-red.png
+@NO_PIXMAPS_TRUE@icon48dir = $(datadir)/icons/hicolor/48x48/apps
+@NO_PIXMAPS_TRUE@icon48_DATA = \
+@NO_PIXMAPS_TRUE@			spacefm.png \
+@NO_PIXMAPS_TRUE@			spacefm-root.png \
+@NO_PIXMAPS_TRUE@			spacefm-find.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-cube-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-cube-green.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-cube-red.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-folder-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-folder-red.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-pyramid-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-pyramid-green.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-pyramid-red.png
+
+@NO_PIXMAPS_TRUE@icon128dir = $(datadir)/icons/hicolor/128x128/apps
+@NO_PIXMAPS_TRUE@icon128_DATA = \
+@NO_PIXMAPS_TRUE@			spacefm-128-cube-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-128-cube-green.png \
+@NO_PIXMAPS_TRUE@			spacefm-128-cube-red.png \
+@NO_PIXMAPS_TRUE@			spacefm-128-pyramid-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-128-pyramid-green.png \
+@NO_PIXMAPS_TRUE@			spacefm-128-pyramid-red.png
+
+@NO_PIXMAPS_FALSE@icondir = $(datadir)/pixmaps
+@NO_PIXMAPS_FALSE@icon_DATA = \
+@NO_PIXMAPS_FALSE@			spacefm.png \
+@NO_PIXMAPS_FALSE@			spacefm-root.png \
+@NO_PIXMAPS_FALSE@			spacefm-find.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-cube-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-cube-green.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-cube-red.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-pyramid-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-pyramid-green.png \
+@NO_PIXMAPS_FALSE@			spacefm-128-pyramid-red.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-cube-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-cube-green.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-cube-red.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-folder-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-folder-red.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-pyramid-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-pyramid-green.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-pyramid-red.png
 
 filedir = $(datadir)/spacefm
 uidir = $(filedir)/ui
@@ -442,6 +467,48 @@ uninstall-iconDATA:
 	@list='$(icon_DATA)'; test -n "$(icondir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(icondir)'; $(am__uninstall_files_from_dir)
+install-icon128DATA: $(icon128_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon128_DATA)'; test -n "$(icon128dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon128dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon128dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon128dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon128dir)" || exit $$?; \
+	done
+
+uninstall-icon128DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon128_DATA)'; test -n "$(icon128dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon128dir)'; $(am__uninstall_files_from_dir)
+install-icon48DATA: $(icon48_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(icon48_DATA)'; test -n "$(icon48dir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(icon48dir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(icon48dir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(icon48dir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(icon48dir)" || exit $$?; \
+	done
+
+uninstall-icon48DATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(icon48_DATA)'; test -n "$(icon48dir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(icon48dir)'; $(am__uninstall_files_from_dir)
 install-uiDATA: $(ui_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(ui_DATA)'; test -n "$(uidir)" || list=; \
@@ -504,7 +571,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(uidir)"; do \
+	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(uidir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -560,7 +627,8 @@ info: info-am
 info-am:
 
 install-data-am: install-desktopDATA install-fileDATA install-htmlDATA \
-	install-iconDATA install-uiDATA
+	install-icon128DATA install-icon48DATA install-iconDATA \
+	install-uiDATA
 
 install-dvi: install-dvi-am
 
@@ -605,7 +673,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
-	uninstall-htmlDATA uninstall-iconDATA uninstall-uiDATA
+	uninstall-htmlDATA uninstall-icon128DATA uninstall-icon48DATA \
+	uninstall-iconDATA uninstall-uiDATA
 
 .MAKE: install-am install-strip
 
@@ -614,15 +683,16 @@ uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-desktopDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-fileDATA \
-	install-html install-html-am install-htmlDATA install-iconDATA \
+	install-html install-html-am install-htmlDATA \
+	install-icon128DATA install-icon48DATA install-iconDATA \
 	install-info install-info-am install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
 	install-uiDATA installcheck installcheck-am installdirs \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	uninstall uninstall-am uninstall-desktopDATA \
-	uninstall-fileDATA uninstall-htmlDATA uninstall-iconDATA \
-	uninstall-uiDATA
+	uninstall-fileDATA uninstall-htmlDATA uninstall-icon128DATA \
+	uninstall-icon48DATA uninstall-iconDATA uninstall-uiDATA
 
 @INTLTOOL_DESKTOP_RULE@
 

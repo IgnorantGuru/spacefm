@@ -183,6 +183,13 @@ if test x"$desktop_integration" = "xyes"; then
 fi
 AM_CONDITIONAL(DESKTOP_INTEGRATION, test "$desktop_integration" = "yes")
 
+AC_ARG_ENABLE(
+    [pixmaps],
+    AS_HELP_STRING([--disable-pixmaps],
+        [disable use of share/pixmaps dir and use share/icons dir to store icons (default: enable)]),
+    use_pixmaps=$enableval, use_pixmaps="yes")
+AM_CONDITIONAL(NO_PIXMAPS, test ! x"$use_pixmaps" = x"yes")
+
 dnl advanced compiler tweaking
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
@@ -216,10 +223,27 @@ po/Makefile.in
 data/Makefile
 ])
 
+resolve_datadir="$(eval echo "$datadir")"
+while [[ "${resolve_datadir:0:1}" == "$" ]]; do
+    resolve_datadir="$(eval echo "$resolve_datadir")"
+done
+
+resolve_htmldir="$(eval echo "$htmldir")"
+while [[ "${resolve_htmldir:0:1}" == "$" ]]; do
+    resolve_htmldir="$(eval echo "$resolve_htmldir")"
+done
+
 echo
 echo SpaceFM...................................... : Version $VERSION
 echo
 echo Prefix....................................... : $prefix
+echo Executable................................... : $prefix/bin/spacefm
+if test x"$use_pixmaps" = x"yes"; then
+echo Icon Dir..................................... : "$resolve_datadir/pixmaps/"
+else
+echo Icon Dir..................................... : "$resolve_datadir/icons/hicolor/"
+fi
+echo Documentation Dir............................ : "$resolve_htmldir/"
 if test x"$use_hal" = x"yes"; then
 echo Linux device support......................... : hal
 else
@@ -237,11 +261,13 @@ echo Additional program to switch to super user... : $preferable_sudo
 fi
 echo Desktop icon integration..................... : $desktop_integration
 echo
-echo "The binary will be installed as $prefix/bin/spacefm"
-echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo
 echo Please read README carefully if you are packaging SpaceFM.
 echo
 echo
-
+if test ! x"$use_pixmaps" = x"yes"; then
+echo 'IMPORTANT: After make and install, run:'
+echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/hicolor/"
+echo
+fi
