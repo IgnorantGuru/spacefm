@@ -158,33 +158,40 @@ BUILD
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        ./configure
-        make
+        ./configure --disable-pixmaps
+        make -s
         sudo make install
-        sudo update-mime-database /usr/share/mime > /dev/null
+        sudo update-mime-database /usr/local/share/mime > /dev/null
         sudo update-desktop-database -q
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
 
-    NOTE: If configure reports missing dependencies, install them and run
-    configure again before proceeding to make.
+    NOTES:
+    a) If configure reports missing dependencies, install them and run
+       configure again before proceeding to make.
 
-    NOTE: If hal support is desired (this will disable udev support and will
-    seriously limit device manager capabilities), add --enable-hal to the
-    configure command above.
+    b) Enabling kernel polling is recommended after installing SpaceFM:
+       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
-    NOTE: If you don't want to use the inotify kernel support and instead
-    want fam or gamin to detect directory changes, add to configure:
-        --disable-inotify
+    c) If hal support is desired (this will disable udev support and will
+       seriously limit device manager capabilities), add --enable-hal to the
+       configure command above.
 
-    NOTE: SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
-    To build with an additional custom su program ('/usr/bin/mysu' in this
-    example), add:
-        --with-preferable-sudo=/usr/bin/mysu  # to the configure command
+    d) If you don't want to use the inotify kernel support and instead
+       want fam or gamin to detect directory changes, add to configure:
+          --disable-inotify
 
-    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
-    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+    e) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
+       To build with an additional custom su program ('/usr/bin/mysu' in this
+       example), add:
+          --with-preferable-sudo=/usr/bin/mysu  # to the configure command
+
+    f) --disable-pixmaps causes icons to be installed to share/icons instead of
+       share/pixmaps for GTK caching.  If you use this option, be sure to
+       run sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+       (or /usr/share/icons/hicolor depending on prefix)
 
     For general build information consult the INSTALL file.
 
@@ -216,11 +223,12 @@ For other distros:
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure
-        make
+        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure --disable-pixmaps
+        make -s
         sudo make install
-        sudo update-mime-database /usr/share/mime > /dev/null
+        sudo update-mime-database /usr/local/share/mime > /dev/null
         sudo update-desktop-database -q
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
@@ -255,9 +263,12 @@ build dependencies listed above in BUILD plus libtool, then:
     cd IgnorantGuru-spacefm-*
 
     # Build, & Install
-    ./autogen.sh   # pass desired configure options (if any) here to autogen.sh
-    make
+    ./autogen.sh --disable-pixmaps  # pass desired configure options here
+    make -s
     sudo make install
+    sudo update-mime-database /usr/local/share/mime > /dev/null
+    sudo update-desktop-database -q
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
     # Remove Temporary Files
     cd / && rm -rf /tmp/spacefm-next
@@ -302,11 +313,14 @@ Otherwise, run these command AS ROOT:
     rm -r /usr/local/share/spacefm
     rm /usr/local/share/pixmaps/spacefm.png
     rm /usr/local/share/pixmaps/spacefm-*.png
+    rm /usr/local/share/icons/hicolor/*/apps/spacefm.png
+    rm /usr/local/share/icons/hicolor/*/apps/spacefm-*.png
     rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
     rm /usr/local/share/applications/spacefm*.desktop
     rm /usr/local/share/mime/packages/spacefm-mime.xml
     update-mime-database /usr/local/share/mime > /dev/null
     update-desktop-database -q
+    gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
 
 TRANSLATIONS

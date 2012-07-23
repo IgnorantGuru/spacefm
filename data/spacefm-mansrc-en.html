@@ -283,11 +283,14 @@ Or, to see the help for alternate build options, run:
     rm -r /usr/local/share/spacefm
     rm /usr/local/share/pixmaps/spacefm.png
     rm /usr/local/share/pixmaps/spacefm-*.png
+    rm /usr/local/share/icons/hicolor/*/apps/spacefm.png
+    rm /usr/local/share/icons/hicolor/*/apps/spacefm-*.png
     rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
     rm /usr/local/share/applications/spacefm*.desktop
     rm /usr/local/share/mime/packages/spacefm-mime.xml
     update-mime-database /usr/local/share/mime > /dev/null
-    update-desktop-database -q</pre>
+    update-desktop-database -q
+    gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor</pre>
 
 
 <!-- @Invocation @Command Line -->
@@ -1790,6 +1793,8 @@ A folder containing glade files for some of SpaceFM's dialogs.
 
 <!-- # share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png #png -->
 The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
+
+<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/*/apps/ instead.
 
 <!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
 Alternate SpaceFM icons.
