@@ -3637,11 +3637,11 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     // asynchronously - common if gui thread is blocked on stat
     if ( !GTK_IS_WIDGET( file_browser ) )
         return;
-    if ( !GTK_IS_WIDGET( file_browser->side_book ) )
-        return;
         
     if ( file_browser->side_book )
     {
+        if ( !GTK_IS_WIDGET( file_browser->side_book ) )
+            return;
         c->var[CONTEXT_BOOKMARK] = g_strdup( ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) ) );
     }
