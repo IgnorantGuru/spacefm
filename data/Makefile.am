@@ -18,6 +18,9 @@ icon48_DATA = \
 			spacefm-48-cube-blue.png \
 			spacefm-48-cube-green.png \
 			spacefm-48-cube-red.png \
+			spacefm-48-faenza-blue.png \
+			spacefm-48-faenza-find.png \
+			spacefm-48-faenza-red.png \
 			spacefm-48-folder-blue.png \
 			spacefm-48-folder-red.png \
 			spacefm-48-pyramid-blue.png \
@@ -47,6 +50,9 @@ icon_DATA = \
 			spacefm-48-cube-blue.png \
 			spacefm-48-cube-green.png \
 			spacefm-48-cube-red.png \
+			spacefm-48-faenza-blue.png \
+			spacefm-48-faenza-find.png \
+			spacefm-48-faenza-red.png \
 			spacefm-48-folder-blue.png \
 			spacefm-48-folder-red.png \
 			spacefm-48-pyramid-blue.png \

@@ -280,6 +280,9 @@ DISTCLEANFILES = spacefm.desktop \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-blue.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-green.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-red.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-faenza-blue.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-faenza-find.png \
+@NO_PIXMAPS_TRUE@			spacefm-48-faenza-red.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-folder-blue.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-folder-red.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-pyramid-blue.png \
@@ -309,6 +312,9 @@ DISTCLEANFILES = spacefm.desktop \
 @NO_PIXMAPS_FALSE@			spacefm-48-cube-blue.png \
 @NO_PIXMAPS_FALSE@			spacefm-48-cube-green.png \
 @NO_PIXMAPS_FALSE@			spacefm-48-cube-red.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-faenza-blue.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-faenza-find.png \
+@NO_PIXMAPS_FALSE@			spacefm-48-faenza-red.png \
 @NO_PIXMAPS_FALSE@			spacefm-48-folder-blue.png \
 @NO_PIXMAPS_FALSE@			spacefm-48-folder-red.png \
 @NO_PIXMAPS_FALSE@			spacefm-48-pyramid-blue.png \
