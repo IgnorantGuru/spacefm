@@ -14,6 +14,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <glib-object.h>
 #include <gdk/gdkkeysyms.h>
 
 #include <string.h>

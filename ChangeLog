@@ -6,6 +6,7 @@
     fix Skip All in overwrite query
     added configure option --disable-pixmaps to install icons to share/icons
     new icons for faenza theme by Goran Simovic
+    G_VALUE_INIT undefined #126
 0.7.9:  2012-07-13:
     new threading for tasks
     network filesystem lag issues improved
