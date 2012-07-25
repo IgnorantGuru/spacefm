@@ -19,7 +19,7 @@
 
 GETTEXT_PACKAGE = spacefm
 PACKAGE = spacefm
-VERSION = 0.7.10
+VERSION = 0.7.10+
 
 SHELL = /bin/bash
 
