@@ -18,9 +18,6 @@ icon48_DATA = \
 			spacefm-48-cube-blue.png \
 			spacefm-48-cube-green.png \
 			spacefm-48-cube-red.png \
-			spacefm-48-faenza-blue.png \
-			spacefm-48-faenza-find.png \
-			spacefm-48-faenza-red.png \
 			spacefm-48-folder-blue.png \
 			spacefm-48-folder-red.png \
 			spacefm-48-pyramid-blue.png \
@@ -35,6 +32,12 @@ icon128_DATA = \
 			spacefm-128-pyramid-blue.png \
 			spacefm-128-pyramid-green.png \
 			spacefm-128-pyramid-red.png
+			
+faenzadir = $(datadir)/icons/Faenza/apps/48
+faenza_DATA = \
+			faenza/spacefm.png \
+			faenza/spacefm-root.png \
+			faenza/spacefm-find.png
 else
 icondir = $(datadir)/pixmaps
 icon_DATA = \

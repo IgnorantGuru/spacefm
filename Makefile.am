@@ -17,5 +17,6 @@ all-local:
 	@echo
 	@echo "IMPORTANT: After installation, run:"
 	@echo "           sudo gtk-update-icon-cache -q -t -f $(datadir)/icons/hicolor"
+	@echo "           sudo gtk-update-icon-cache -q -t -f $(datadir)/icons/Faenza"
 	@echo
 endif

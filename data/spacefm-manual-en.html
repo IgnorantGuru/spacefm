@@ -567,6 +567,8 @@ Or, to see the help for alternate build options, run:
     rm /usr/local/share/pixmaps/spacefm-*.png
     rm /usr/local/share/icons/hicolor/*/apps/spacefm.png
     rm /usr/local/share/icons/hicolor/*/apps/spacefm-*.png
+    rm /usr/local/share/icons/Faenza/apps/48/spacefm.png
+    rm /usr/local/share/icons/Faenza/apps/48/spacefm-*.png
     rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
     rm /usr/local/share/applications/spacefm*.desktop
     rm /usr/local/share/mime/packages/spacefm-mime.xml
@@ -1468,7 +1470,7 @@ Run As Task, which is enabled by default for new commands, changes several aspec
 
 <p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see Popup options below for details.)  
 
-<p>SpaceFM's output monitor is designed to display small amounts of text, to be used for monitoring the output of commands as they run.  However, the output monitor is not a terminal and cannot handle large amounts of fast text, nor does it allow you to enter input.  If your command produces large amounts of text quickly or requires interaction, you will need to use Run In Terminal instead.  (If the output monitor sees hundreds of lines of text in less than a second or so, it will close the output channels, which may cause the command to terminate.)
+<p>SpaceFM's output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to use Run In Terminal instead.
 
 <p>To stop a task prematurely, raise the output monitor and click the Stop button, or right-click on the task in the tasks list and select 'Stop Task'.  When SpaceFM stops a task, it sends the process and all its child processes a QUIT signal, followed several seconds later by KILL signals.  If the process was run as another user, you will be prompted to enter the user's password (or root's password) again to stop the task.
 
@@ -2994,7 +2996,7 @@ A folder containing glade files for some of SpaceFM's dialogs.
 <p><a name="programfiles-usr-png"/><a href="#programfiles-usr-png"><b>share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png</b></a><br>
 The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
 
-<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/*/apps/ instead.
+<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/48x48/apps/, share/icons/hicolor/128x128/apps/, and share/icons/Faenza/apps/48/ instead.
 
 <!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
 <p><a name="programfiles-usr-pngalt"/><a href="#programfiles-usr-pngalt"><b>share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png</b></a><br>
@@ -3043,7 +3045,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-07-23
+<p>Updated 2012-07-25
 <br><br>
 </center>
 </td></tr></table>

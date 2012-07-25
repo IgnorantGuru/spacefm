@@ -71,8 +71,16 @@ if [[ -z "$wh_sudo" ]]; then
 		echo "Running su -c \"gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor\""
 		su -c "gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor"
 	fi
+	if [[ -d /usr/local/share/icons/Faenza ]]; then
+		echo "Running su -c \"gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza\""
+		su -c "gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza"
+	fi
 	echo "Running su -c \"gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor\""
 	su -c "gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor"
+	if [[ -d /usr/share/icons/Faenza ]]; then
+		echo "Running su -c \"gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza\""
+		su -c "gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza"
+	fi
 else
 	echo "Running sudo update-mime-database /usr/share/mime > /dev/null"
 	sudo update-mime-database /usr/share/mime > /dev/null
@@ -82,8 +90,16 @@ else
 		echo "Running sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor"
 		sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 	fi
+	if [[ -d /usr/local/share/icons/Faenza ]]; then
+		echo "Running sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza"
+		sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
+	fi
 	echo "Running sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor"
 	sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+	if [[ -d /usr/share/icons/Faenza ]]; then
+		echo "Running sudo gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza"
+		sudo gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza
+	fi
 fi
 
 echo

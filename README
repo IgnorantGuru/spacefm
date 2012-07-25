@@ -164,6 +164,7 @@ BUILD
         sudo update-mime-database /usr/local/share/mime > /dev/null
         sudo update-desktop-database -q
         sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
 
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
@@ -229,6 +230,7 @@ For other distros:
         sudo update-mime-database /usr/local/share/mime > /dev/null
         sudo update-desktop-database -q
         sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
 
         # Remove Temporary Files
         cd / && rm -rf /tmp/spacefm-build
@@ -269,6 +271,7 @@ build dependencies listed above in BUILD plus libtool, then:
     sudo update-mime-database /usr/local/share/mime > /dev/null
     sudo update-desktop-database -q
     sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
 
     # Remove Temporary Files
     cd / && rm -rf /tmp/spacefm-next
@@ -315,6 +318,8 @@ Otherwise, run these command AS ROOT:
     rm /usr/local/share/pixmaps/spacefm-*.png
     rm /usr/local/share/icons/hicolor/*/apps/spacefm.png
     rm /usr/local/share/icons/hicolor/*/apps/spacefm-*.png
+    rm /usr/local/share/icons/Faenza/apps/48/spacefm.png
+    rm /usr/local/share/icons/Faenza/apps/48/spacefm-*.png
     rm /usr/local/share/locale/*/LC_MESSAGES/spacefm.mo
     rm /usr/local/share/applications/spacefm*.desktop
     rm /usr/local/share/mime/packages/spacefm-mime.xml

@@ -94,12 +94,12 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" \
-	"$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" \
-	"$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" \
-	"$(DESTDIR)$(uidir)"
-DATA = $(desktop_DATA) $(file_DATA) $(html_DATA) $(icon_DATA) \
-	$(icon128_DATA) $(icon48_DATA) $(ui_DATA)
+am__installdirs = "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(faenzadir)" \
+	"$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" \
+	"$(DESTDIR)$(icondir)" "$(DESTDIR)$(icon128dir)" \
+	"$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(uidir)"
+DATA = $(desktop_DATA) $(faenza_DATA) $(file_DATA) $(html_DATA) \
+	$(icon_DATA) $(icon128_DATA) $(icon48_DATA) $(ui_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALL_LINGUAS = @ALL_LINGUAS@
@@ -280,9 +280,6 @@ DISTCLEANFILES = spacefm.desktop \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-blue.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-green.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-cube-red.png \
-@NO_PIXMAPS_TRUE@			spacefm-48-faenza-blue.png \
-@NO_PIXMAPS_TRUE@			spacefm-48-faenza-find.png \
-@NO_PIXMAPS_TRUE@			spacefm-48-faenza-red.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-folder-blue.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-folder-red.png \
 @NO_PIXMAPS_TRUE@			spacefm-48-pyramid-blue.png \
@@ -297,6 +294,12 @@ DISTCLEANFILES = spacefm.desktop \
 @NO_PIXMAPS_TRUE@			spacefm-128-pyramid-blue.png \
 @NO_PIXMAPS_TRUE@			spacefm-128-pyramid-green.png \
 @NO_PIXMAPS_TRUE@			spacefm-128-pyramid-red.png
+
+@NO_PIXMAPS_TRUE@faenzadir = $(datadir)/icons/Faenza/apps/48
+@NO_PIXMAPS_TRUE@faenza_DATA = \
+@NO_PIXMAPS_TRUE@			faenza/spacefm.png \
+@NO_PIXMAPS_TRUE@			faenza/spacefm-root.png \
+@NO_PIXMAPS_TRUE@			faenza/spacefm-find.png
 
 @NO_PIXMAPS_FALSE@icondir = $(datadir)/pixmaps
 @NO_PIXMAPS_FALSE@icon_DATA = \
@@ -410,6 +413,27 @@ uninstall-desktopDATA:
 	@list='$(desktop_DATA)'; test -n "$(desktopdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(desktopdir)'; $(am__uninstall_files_from_dir)
+install-faenzaDATA: $(faenza_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(faenza_DATA)'; test -n "$(faenzadir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(faenzadir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(faenzadir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(faenzadir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(faenzadir)" || exit $$?; \
+	done
+
+uninstall-faenzaDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(faenza_DATA)'; test -n "$(faenzadir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(faenzadir)'; $(am__uninstall_files_from_dir)
 install-fileDATA: $(file_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(file_DATA)'; test -n "$(filedir)" || list=; \
@@ -577,7 +601,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(uidir)"; do \
+	for dir in "$(DESTDIR)$(desktopdir)" "$(DESTDIR)$(faenzadir)" "$(DESTDIR)$(filedir)" "$(DESTDIR)$(htmldir)" "$(DESTDIR)$(icondir)" "$(DESTDIR)$(icon128dir)" "$(DESTDIR)$(icon48dir)" "$(DESTDIR)$(uidir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -632,9 +656,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-desktopDATA install-fileDATA install-htmlDATA \
-	install-icon128DATA install-icon48DATA install-iconDATA \
-	install-uiDATA
+install-data-am: install-desktopDATA install-faenzaDATA \
+	install-fileDATA install-htmlDATA install-icon128DATA \
+	install-icon48DATA install-iconDATA install-uiDATA
 
 install-dvi: install-dvi-am
 
@@ -678,9 +702,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
-	uninstall-htmlDATA uninstall-icon128DATA uninstall-icon48DATA \
-	uninstall-iconDATA uninstall-uiDATA
+uninstall-am: uninstall-desktopDATA uninstall-faenzaDATA \
+	uninstall-fileDATA uninstall-htmlDATA uninstall-icon128DATA \
+	uninstall-icon48DATA uninstall-iconDATA uninstall-uiDATA
 
 .MAKE: install-am install-strip
 
@@ -688,8 +712,8 @@ uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
 	distclean distclean-generic distclean-libtool distdir dvi \
 	dvi-am html html-am info info-am install install-am \
 	install-data install-data-am install-desktopDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-fileDATA \
-	install-html install-html-am install-htmlDATA \
+	install-dvi-am install-exec install-exec-am install-faenzaDATA \
+	install-fileDATA install-html install-html-am install-htmlDATA \
 	install-icon128DATA install-icon48DATA install-iconDATA \
 	install-info install-info-am install-man install-pdf \
 	install-pdf-am install-ps install-ps-am install-strip \
@@ -697,8 +721,9 @@ uninstall-am: uninstall-desktopDATA uninstall-fileDATA \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	uninstall uninstall-am uninstall-desktopDATA \
-	uninstall-fileDATA uninstall-htmlDATA uninstall-icon128DATA \
-	uninstall-icon48DATA uninstall-iconDATA uninstall-uiDATA
+	uninstall-faenzaDATA uninstall-fileDATA uninstall-htmlDATA \
+	uninstall-icon128DATA uninstall-icon48DATA uninstall-iconDATA \
+	uninstall-uiDATA
 
 @INTLTOOL_DESKTOP_RULE@
 
