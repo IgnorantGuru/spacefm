@@ -3,7 +3,7 @@
 # akdengi <kazancas@gmail.com>, 2009.
 # Anton Dobkin <anton@viansib.ru>, 2008.
 # Roxana Kolosova <mavka@justos.org>, 2006.
-# #-#-#-#-#  spacefm.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  pcmanfm.pot (PACKAGE VERSION)  #-#-#-#-#
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # #-#-#-#-#  ru.po (ru)  #-#-#-#-#
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-13 22:14+0400\n"
-"PO-Revision-Date: 2012-07-20 14:05+0300\n"
+"PO-Revision-Date: 2012-07-21 20:26+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -2444,13 +2444,13 @@ msgstr "Извлечь"
 
 #: ../src/settings.c:8380
 msgid "Remo_ve"
-msgstr "_Убрать"
+msgstr "_Извлечь"
 
 #: ../src/settings.c:8384
 #: ../src/settings.c:8435
 #: ../src/ptk/ptk-location-view.c:2900
 msgid "_Unmount"
-msgstr "Размонтировать"
+msgstr "_Размонтировать"
 
 #: ../src/settings.c:8388
 msgid "Re_load"
@@ -2528,7 +2528,7 @@ msgstr "Информация о файле"
 
 #: ../src/settings.c:8597
 msgid "_Properties"
-msgstr "_Свойства"
+msgstr "Сво_йства"
 
 #: ../src/settings.c:8600
 msgid "Setti_ngs"
