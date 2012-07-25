@@ -849,6 +849,7 @@ uninstall-am: uninstall-mimeDATA
 @NO_PIXMAPS_TRUE@	@echo
 @NO_PIXMAPS_TRUE@	@echo "IMPORTANT: After installation, run:"
 @NO_PIXMAPS_TRUE@	@echo "           sudo gtk-update-icon-cache -q -t -f $(datadir)/icons/hicolor"
+@NO_PIXMAPS_TRUE@	@echo "           sudo gtk-update-icon-cache -q -t -f $(datadir)/icons/Faenza"
 @NO_PIXMAPS_TRUE@	@echo
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
