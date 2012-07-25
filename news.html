@@ -26,6 +26,37 @@
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><hr><a name="0.7.10"></a>
+<big><b><a href="#0.7.10">0.7.10 released</a></b></big><br>
+2012-Jul-25
+
+<p><b>Thanks to Vladimir Kudrya for a complete Russian translation</b> of SpaceFM (and udevil 0.3.1).
+
+<p>SpaceFM's icon designer, <b>Goran Simovic, has provided new SpaceFM icons for the Faenza theme</b> (see locations below).
+    
+<p><b>New sort options</b> have been added to allow a natural sort and a case senstive sort.  Also, folders in the file list may now be places after files, or mixed with files.  Hidden files may now be placed after regular files.  Right-click on the file list and select View|Style|Sort to adjust these new options.  Natural sort is now the new default.
+
+<p>The status bar and running tasks now show one decimal place for GB and TB sizes under 10.
+
+<p>A new configure option <b>--disable-pixmaps</b> has been added.  Although it is not the default, it is recommended for packagers and users to build with this option, which causes SpaceFM's icons to be installed to the newer /usr/share/icons/hicolor rather than /usr/share/pixmaps.  This enables GTK's icon cache for these icons.  Also, the Faenza icons will be installed to /usr/share/icons/Faenza with this option.  When building with --disable-pixmaps, <b>after install be sure to run</b>:
+<pre>    sudo gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+    sudo gtk-update-icon-cache -q -t -f /usr/share/icons/Faenza</pre>
+
+Otherwise the icons may not be found.  The provided deb packages, the self-extracting installer, and Arch AUR spacefm-git now build with --disable-pixmaps and run gtk-update-icon-cache automatically.
+
+<p>A problem introduced in SpaceFM 0.7.9 which caused file changes to not be detected on <b>aufs and devtmpfs</b> filesystems has been corrected.
+
+<p>A problem where the Skip All function in the file overwrite query behaved like Cancel has been corrected.
+
+<p>A reported problem building SpaceFM on Slackware should now be corrected.
+<br><br>
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><hr><a name="0.7.9"></a>
 <big><b><a href="#0.7.9">0.7.9 released</a></b></big><br>
 2012-Jul-13
