@@ -4135,7 +4135,8 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         const char* fstype = get_devmount_fstype( major( stat_buf.st_dev ),
                                             minor( stat_buf.st_dev ) );
         return !( !g_strcmp0( fstype, "tmpfs" ) || !g_strcmp0( fstype, "ramfs" )
-               || !g_strcmp0( fstype, "aufs" )  || !g_strcmp0( fstype, "devtmpfs" ) );
+               || !g_strcmp0( fstype, "aufs" )  || !g_strcmp0( fstype, "devtmpfs" )
+               || !g_strcmp0( fstype, "overlayfs" ) );
     }
     
     const char* devnode = udev_device_get_devnode( udevice );
