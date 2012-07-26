@@ -50,7 +50,6 @@ typedef struct _FMMainWindow
     guint autosave_timer;
 
 
-
 //  GtkWidget* toolbar;
 //  GtkEntry* address_bar;
 //  GtkWidget *bookmarks;
@@ -154,6 +153,8 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c );
 void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser );
 void focus_panel( GtkMenuItem* item, gpointer mw, int p );
 void main_window_open_path_in_current_tab( FMMainWindow* main_window, const char* path );
+void main_window_open_network( FMMainWindow* main_window, const char* path,
+                                                            gboolean new_tab );
 
 
 G_END_DECLS

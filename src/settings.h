@@ -39,7 +39,8 @@ typedef struct
 
     gboolean no_execute;    //MOD
     gboolean no_confirm;    //MOD
-    gboolean sdebug;    //MOD
+    gboolean sdebug;            //sfm
+    gboolean load_saved_tabs;   //sfm
     char* date_format;  //MOD for speed dupe of xset
     
     //int open_bookmark_method; /* 1: current tab, 2: new tab, 3: new window */

@@ -461,6 +461,7 @@ void load_settings( char* config_dir )
     XSet* set;
     char* str;
     
+    app_settings.load_saved_tabs = TRUE;
     if ( config_dir )
         settings_config_dir = config_dir;
     else

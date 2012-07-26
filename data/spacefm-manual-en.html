@@ -630,6 +630,7 @@ Help Options:
 Application Options:
   -t, --new-tab            Open folders in new tab of last window (default)
   -r, --reuse-tab          Open folder in current tab of last used window
+  -n, --no-saved-tabs      Don't load saved tabs
   -w, --new-window         Open folders in new window
   -p, --panel=P            Open folders in panel 'P' (1-4)
   --desktop                Launch desktop manager
@@ -643,14 +644,14 @@ Application Options:
   --no-desktop             No function - for compatibility only
   --display=DISPLAY        X display to use</pre>
   
-<p>Normally, your session file and other user files are saved in ~/.config/spacefm/  To make SpaceFM read and save your files in another folder (~/.config/spacefm-alt in this example), stop ALL <i>instances</i> of SpaceFM and run:
+<p>Normally, your session file and other user files are saved in <a href="#programfiles-home">~/.config/spacefm/</a>  To make SpaceFM read and save your files in another folder (~/.config/spacefm-alt in this example), stop ALL <i>instances</i> of SpaceFM and run:
 <pre>    # first stop all instances:
     killall spacefm
     
     # then:
     spacefm --config-dir ~/.config/spacefm-alt</pre>
 
-<p>IMPORTANT:  The config directory may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
+<p>IMPORTANT:  The config directory path may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
 
 <!-- @end invocation-commandline-->
 <br><br></td></tr>
@@ -689,16 +690,28 @@ Application Options:
     
     # or to open several folders in tabs:
     spacefm /home /usr/bin
+
+    # or to not open saved tabs:
+    spacefm -n
 </pre>
 
 <p>To open an additional folder in a new tab of the last used window:
 <pre>    spacefm /etc</pre>
 
-<p>Or to open a second window:
+<p>To open a folder in the current tab of the last used window:
+<pre>    spacefm -r /etc</pre>
+
+<p>To simply bring the SpaceFM window to the top of other windows:
+<pre>    spacefm -r</pre>
+
+<p>To open a second window:
 <pre>    spacefm -w
 
-    # or to open a specified folder in a new window:
+    # or to open a specified folder in a second window:
     spacefm -w /boot
+
+    # or to open a second window without loading saved tabs:
+    spacefm -wn
 </pre>
 
 <p>To open a File Search window:
@@ -706,24 +719,32 @@ Application Options:
 
 <p>SpaceFM maintains <a href="#programfiles-tmp-socket">a socket</a> for each user/display combination, so when you open multiple windows using the same user and display, all windows are run from a single instance of SpaceFM.  Unless a <a href="#invocation-daemonmode">daemon</a> or the <a href="#invocation-desktopmanager">desktop manager</a> is running, SpaceFM will exit when all windows are closed.
 
-<p>When a window is closed, the current folder tabs are saved to your session file if option File|Save Tabs is checked.  The next time you run SpaceFM, these folder tabs will be re-opened in addition to opening tabs for any folders you specify on the command line.
+<p>When a window is closed, the current folder tabs are saved to your session file if option File|Save Tabs is checked.  The next time you run SpaceFM, these folder tabs will be re-opened in addition to opening tabs for any folders you specify on the command line (unless you specify -n on the command line).
 
-<p>To specify a specific panel in which to open a folder, use:
+<p>To specify a specific panel in which to open a folder:
 <pre>    # open a folder in panel 2:
     spacefm --panel=2 /usr/bin</pre>
 
-<p>As a more advanced example, consider wanting to open multiple SpaceFM windows, each containing different folder tabs in each panel, using a single command.  For this, you may want to uncheck option File|Save Tabs, then use a script like this to start SpaceFM:
+<p>To simply show and focus panel 2 in the last used window:
+<pre>    spacefm --panel=2</pre>
+    
+<p>As a more advanced example, consider wanting to open multiple SpaceFM windows, each containing different folder tabs in each panel, using a single command.  For this, use a script like this to start SpaceFM:
 <pre>
     #!/bin/bash
 
-    spacefm -w --panel=1 /etc /usr &amp;
+    # open new window with two tabs in panel 1
+    spacefm -wn --panel=1 /etc /usr &
     sleep 0.2
-    spacefm --panel=2 /bin /lib &amp;
+    # add two tabs to panel 2
+    spacefm -rn --panel=2 /bin /lib
     sleep 0.2
-    spacefm -w --panel=1 /boot /media &amp;
+    # open second window with two tabs in panel 1
+    spacefm -wn --panel=1 /boot /media
     sleep 0.2
-    spacefm --panel=2 /sbin /var &amp;</pre>
-The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A sleep time of 0.1 may also work on your system.
+    # add two tabs to panel 2 of second window    
+    spacefm -rn --panel=2 /sbin /var
+</pre>
+The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A shorter sleep time of 0.1 may also work on your system.
 
 <p><b>Opening Files</b><br>
 If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
@@ -3052,7 +3073,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-07-25&nbsp;&nbsp;(SpaceFM version 0.7.10+)
+<p>Updated 2012-07-26&nbsp;&nbsp;(SpaceFM version 0.7.10+)
 <br><br>
 </center>
 </td></tr></table>

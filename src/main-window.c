@@ -752,7 +752,7 @@ void on_open_current_folder_as_root ( GtkMenuItem *menuitem,
                                                                 main_window ) );
     if ( !file_browser )
         return;
-    // task
+    // root task
     PtkFileTask* task = ptk_file_exec_new( _("Open Root Window"),
                                     ptk_file_browser_get_cwd( file_browser ),
                                     GTK_WIDGET( file_browser ), file_browser->task_view );
@@ -761,11 +761,14 @@ void on_open_current_folder_as_root ( GtkMenuItem *menuitem,
         prog = g_strdup( g_get_prgname() );
     if ( !prog )
         prog = g_strdup( "spacefm" );
-    task->task->exec_command = prog;
+    char* cwd = bash_quote( ptk_file_browser_get_cwd( file_browser ) );
+    task->task->exec_command = g_strdup_printf( "%s %s", prog, cwd );
+    g_free( prog );
+    g_free( cwd );
     task->task->exec_as_user = g_strdup( "root" );
     task->task->exec_sync = FALSE;
     task->task->exec_export = FALSE;
-    task->task->exec_browser = NULL; //file_browser;
+    task->task->exec_browser = NULL;
     ptk_file_task_run( task );
 }
 
@@ -1299,6 +1302,8 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     char* tabs;
     char* end;
     char* tab_dir;
+    char* tabs_add;
+    gboolean tab_added;
     PtkFileBrowser* file_browser;
 
     // show panelbar
@@ -1328,10 +1333,16 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                 main_window->notebook = main_window->panel[p-1];
                 main_window->curpanel = p;
                 // load saved tabs
+                tab_added = FALSE;
                 set = xset_get_panel( p, "show" );
-                if ( set->s )
+                if ( ( set->s && app_settings.load_saved_tabs ) || set->ob1 )
                 {
-                    tabs = set->s;
+                    // set->ob1 is preload path
+                    tabs_add = g_strdup_printf( "%s%s%s", 
+                            set->s && app_settings.load_saved_tabs ? set->s : "",
+                                                        set->ob1 ? "///" : "",
+                                                        set->ob1 ? set->ob1 : "" );
+                    tabs = tabs_add;
                     while ( tabs && !strncmp( tabs, "///", 3 ) )
                     {
                         tabs += 3;
@@ -1360,10 +1371,11 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                                     folder_path = "/";
                             }
                             fm_main_window_add_new_tab( main_window, folder_path );
+                            tab_added = TRUE;
                         }
                         g_free( tab_dir );
                     }
-                    if ( set->x )
+                    if ( set->x && !set->ob1 )
                     {
                         // set current tab
                         cur_tabx = atoi( set->x );
@@ -1382,8 +1394,11 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                             g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
                         }
                     }
+                    g_free( set->ob1 );
+                    set->ob1 = NULL;
+                    g_free( tabs_add );
                 }
-                else
+                if ( !tab_added )
                 {
                     // open default tab
                     if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
@@ -2757,8 +2772,33 @@ void
 on_new_window_activate ( GtkMenuItem *menuitem,
                          gpointer user_data )
 {
+    int cur_tabx, p;
+    PtkFileBrowser* a_browser;
+    XSet* set;
+    
     FMMainWindow* main_window = FM_MAIN_WINDOW( user_data );
-    save_settings( main_window );  // reset saved tabs
+
+    save_settings( main_window );
+
+/* this works - enable if desired
+    // open active tabs only
+    for ( p = 1; p < 5; p++ )
+    {
+        set = xset_get_panel( p, "show" );
+        if ( set->b == XSET_B_TRUE )
+        {
+            // set preload tab to current
+            cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->panel[p-1] ) );
+            a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                            GTK_NOTEBOOK( main_window->panel[p-1] ), cur_tabx ) );
+            if ( GTK_IS_WIDGET( a_browser ) )
+                set->ob1 = g_strdup( ptk_file_browser_get_cwd( a_browser ) );
+            // clear other saved tabs
+            g_free( set->s );
+            set->s = NULL;
+        }
+    }
+*/
     fm_main_window_add_new_window( main_window );
 }
 
@@ -3010,6 +3050,18 @@ void main_window_open_path_in_current_tab( FMMainWindow* main_window, const char
     if ( !file_browser )
         return;
     ptk_file_browser_chdir( file_browser, path, PTK_FB_CHDIR_ADD_HISTORY );
+}
+
+void main_window_open_network( FMMainWindow* main_window, const char* path,
+                                                            gboolean new_tab )
+{
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
+    if ( !file_browser )
+        return;
+    char* str = g_strdup( path );
+    mount_network( file_browser, str, new_tab );
+    g_free( str );
 }
 
 void on_file_browser_open_item( PtkFileBrowser* file_browser,

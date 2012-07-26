@@ -70,7 +70,8 @@ typedef enum{
     CMD_PANEL2,
     CMD_PANEL3,
     CMD_PANEL4,
-    CMD_DESKTOP
+    CMD_DESKTOP,
+    CMD_NO_TABS
 }SocketEvent;
 
 static gboolean folder_initialized = FALSE;
@@ -88,6 +89,7 @@ static gboolean old_show_desktop = FALSE;
 
 static gboolean new_tab = TRUE;
 static gboolean reuse_tab = FALSE;  //sfm
+static gboolean no_tabs = FALSE;     //sfm
 static gboolean new_window = FALSE;
 static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
@@ -113,9 +115,10 @@ static GOptionEntry opt_entries[] =
 {
     { "new-tab", 't', 0, G_OPTION_ARG_NONE, &new_tab, N_("Open folders in new tab of last window (default)"), NULL },
     { "reuse-tab", 'r', 0, G_OPTION_ARG_NONE, &reuse_tab, N_("Open folder in current tab of last used window"), NULL },
+    { "no-saved-tabs", 'n', 0, G_OPTION_ARG_NONE, &no_tabs, N_("Don't load saved tabs"), NULL },
     { "new-window", 'w', 0, G_OPTION_ARG_NONE, &new_window, N_("Open folders in new window"), NULL },
     { "panel", 'p', 0, G_OPTION_ARG_INT, &panel, N_("Open folders in panel 'P' (1-4)"), "P" },
-    { "desktop", '\0', 0, G_OPTION_ARG_NONE, &desktop, N_("Launch desktop manager"), NULL },
+    { "desktop", '\0', 0, G_OPTION_ARG_NONE, &desktop, N_("Launch desktop manager daemon"), NULL },
     { "desktop-pref", '\0', 0, G_OPTION_ARG_NONE, &desktop_pref, N_("Show desktop settings"), NULL },
     { "show-pref", '\0', 0, G_OPTION_ARG_INT, &show_pref, N_("Show Preferences ('N' is the Pref tab number)"), "N" },
     { "daemon-mode", 'd', 0, G_OPTION_ARG_NONE, &daemon_mode, N_("Run as a daemon"), NULL },
@@ -140,7 +143,7 @@ static GOptionEntry opt_entries[] =
     { "umount", 'u', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &umount, NULL, NULL },
     { "eject", 'e', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING, &eject, NULL, NULL },
 #endif
-    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &files, NULL, N_("[DIR | FILE]...")},
+    {G_OPTION_REMAINING, 0, 0, G_OPTION_ARG_FILENAME_ARRAY, &files, NULL, N_("[DIR | FILE | URL]...")},
     { NULL }
 };
 
@@ -184,12 +187,22 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 
             new_tab = TRUE;
 
-            switch( args->str[0] )
+            int argx = 0;
+            if ( args->str[argx] == CMD_NO_TABS )
             {
-            case CMD_REUSE_TAB:
-                new_tab = FALSE;
+                reuse_tab = FALSE;
+                no_tabs = TRUE;
+                argx++;  //another command follows CMD_NO_TABS
+            }
+            if ( args->str[argx] == CMD_REUSE_TAB )
+            {
                 reuse_tab = TRUE;
-                break;
+                new_tab = FALSE;
+                argx++;  //another command follows CMD_REUSE_TAB
+            }
+
+            switch( args->str[argx] )
+            {
             case CMD_PANEL1:
                 panel = 1;
                 break;
@@ -203,22 +216,22 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 panel = 4;
                 break;
             case CMD_OPEN:
-                new_tab = FALSE;
+                new_tab = !args->str[ argx + 1 ];
                 break;
             case CMD_OPEN_PANEL1:
-                new_tab = FALSE;
+                new_tab = !args->str[ argx + 1 ];
                 panel = 1;
                 break;
             case CMD_OPEN_PANEL2:
-                new_tab = FALSE;
+                new_tab = !args->str[ argx + 1 ];
                 panel = 2;
                 break;
             case CMD_OPEN_PANEL3:
-                new_tab = FALSE;
+                new_tab = !args->str[ argx + 1 ];
                 panel = 3;
                 break;
             case CMD_OPEN_PANEL4:
-                new_tab = FALSE;
+                new_tab = !args->str[ argx + 1 ];
                 panel = 4;
                 break;
             case CMD_DAEMON_MODE:
@@ -241,8 +254,8 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 break;
             }
 
-            if( args->str[ 1 ] )
-                files = g_strsplit( args->str + 1, "\n", 0 );
+            if( args->str[ argx + 1 ] )
+                files = g_strsplit( args->str + argx + 1, "\n", 0 );
             else
                 files = NULL;
             g_string_free( args, TRUE );
@@ -258,6 +271,9 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 }
             }
             handle_parsed_commandline_args();
+            panel = 0;
+            no_tabs = FALSE;
+            app_settings.load_saved_tabs = TRUE;
 
             GDK_THREADS_LEAVE();
         }
@@ -308,6 +324,21 @@ gboolean single_instance_check()
         char** file;
         char cmd = CMD_OPEN_TAB;
 
+        if ( no_tabs )
+        {
+            cmd = CMD_NO_TABS;
+            write( sock, &cmd, sizeof(char) );
+            // another command always follows CMD_NO_TABS
+            cmd = CMD_OPEN_TAB;
+        }
+        if ( reuse_tab )
+        {
+            cmd = CMD_REUSE_TAB;
+            write( sock, &cmd, sizeof(char) );
+            // another command always follows CMD_REUSE_TAB
+            cmd = CMD_OPEN;
+        }
+        
         if( daemon_mode )
             cmd = CMD_DAEMON_MODE;
         else if( desktop )
@@ -319,8 +350,6 @@ gboolean single_instance_check()
             else
                 cmd = CMD_OPEN;
         }
-        else if ( reuse_tab )
-            cmd = CMD_REUSE_TAB;
         else if( show_pref > 0 )
             cmd = CMD_PREF;
         else if ( desktop_pref )  //MOD
@@ -353,9 +382,15 @@ gboolean single_instance_check()
                 {
                     char *real_path;
 
-                    /* We send absolute paths because with different
-                       $PWDs resolution would not work. */
-                    real_path = dup_to_absolute_file_path( file );
+                    if ( ( *file[0] != '/' && strstr( *file, ":/" ) )
+                                        || g_str_has_prefix( *file, "//" ) )
+                        real_path = g_strdup( *file );
+                    else
+                    {
+                        /* We send absolute paths because with different
+                           $PWDs resolution would not work. */
+                        real_path = dup_to_absolute_file_path( file );
+                    }
                     write( sock, real_path, strlen( real_path ) );
                     g_free( real_path );
                     write( sock, "\n", 1 );
@@ -615,14 +650,93 @@ char* dup_to_absolute_file_path(char** file)
     return real_path; /* To free with g_free */
 }
 
+static void open_in_tab( FMMainWindow** main_window, const char* real_path )
+{
+    XSet* set;
+    int p;
+
+    // create main window if needed
+    if( G_UNLIKELY( !*main_window ) )
+    {
+        // initialize things required by folder view
+        if( G_UNLIKELY( ! daemon_mode ) )
+            init_folder();
+
+        // preload panel?
+        if ( panel > 0 && panel < 5 )
+            // user specified panel
+            p = panel;
+        else
+        {
+            // use first visible panel
+            for ( p = 1; p < 5; p++ )
+            {
+                if ( xset_get_b_panel( p, "show" ) )
+                    break;
+            }
+        }
+        if ( p == 5 )
+            p = 1;  // no panels were visible (unlikely)
+
+        // set panel to load real_path on window creation
+        set = xset_get_panel( p, "show" );
+        set->ob1 = g_strdup( real_path );
+        set->b = XSET_B_TRUE;
+
+        // create new window
+        *main_window = create_main_window();
+    }
+    else
+    {
+        // existing window
+        gboolean tab_added = FALSE;
+        if ( panel > 0 && panel < 5 )
+        {
+            // change to user-specified panel
+            if ( !gtk_notebook_get_n_pages(
+                            GTK_NOTEBOOK( (*main_window)->panel[panel-1] ) ) )
+            {
+                // set panel to load real_path on panel load
+                set = xset_get_panel( panel, "show" );
+                set->ob1 = g_strdup( real_path );
+                tab_added = TRUE;
+                set->b = XSET_B_TRUE;
+                show_panels_all_windows( NULL, *main_window );
+            }
+            else if ( !GTK_WIDGET_VISIBLE( (*main_window)->panel[panel-1] ) )
+            {
+                // show panel
+                set = xset_get_panel( panel, "show" );
+                set->b = XSET_B_TRUE;
+                show_panels_all_windows( NULL, *main_window );
+            }
+            (*main_window)->curpanel = panel;
+            (*main_window)->notebook = (*main_window)->panel[panel-1];
+        }
+        if ( !tab_added )
+        {
+            if ( reuse_tab )
+            {
+                main_window_open_path_in_current_tab( *main_window,
+                                                        real_path );
+                reuse_tab = FALSE;
+            }
+            else
+                fm_main_window_add_new_tab( *main_window, real_path );
+        }
+    }
+    gtk_window_present( GTK_WINDOW( *main_window ) );
+}
+
 gboolean handle_parsed_commandline_args()
 {
     FMMainWindow * main_window = NULL;
     char** file;
     gboolean ret = TRUE;
     XSet* set;
-    gboolean tab_added;
     int p;
+
+    app_settings.load_saved_tabs = !no_tabs;
     
     // If no files are specified, open home dir by defualt.
     if( G_LIKELY( ! files ) )
@@ -707,7 +821,6 @@ gboolean handle_parsed_commandline_args()
             for( file = files; *file; ++file )
             {
                 char *real_path;
-                tab_added = FALSE;
 
                 if( ! **file )  /* skip empty string */
                     continue;
@@ -716,83 +829,30 @@ gboolean handle_parsed_commandline_args()
 
                 if( g_file_test( real_path, G_FILE_TEST_IS_DIR ) )
                 {
-                    // preload panel?
-                    if ( !main_window )
-                    {
-                        if ( panel > 0 && panel < 5 )
-                            // user specified panel
-                            p = panel;
-                        else
-                        {
-                            // use first visible panel
-                            for ( p = 1; p < 5; p++ )
-                            {
-                                if ( xset_get_b_panel( p, "show" ) )
-                                    break;
-                            }
-                        }
-                        // set panel to load real_path on window creation
-                        //     if panel has no saved tabs
-                        if ( p < 5 )
-                        {
-                            set = xset_get_panel( p, "show" );
-                            if ( !set->s )
-                            {
-                                set->s = g_strdup_printf( "///%s", real_path );
-                                set->b = XSET_B_TRUE;
-                                tab_added = TRUE;
-                            }
-                        }
-                    }
-                    // create main window if needed
-                    if( G_UNLIKELY( ! main_window ) )
-                    {
-                        // initialize things required by folder view
-                        if( G_UNLIKELY( ! daemon_mode ) )
-                            init_folder();
-                        main_window = create_main_window();
-                    }
-                    // add tab
-					//startup_mode = TRUE;  //MOD needed for socket event add tab - not needed in v2
-                    if ( !tab_added )
-                    {
-                        if ( panel > 0 && panel < 5 )
-                        {
-                            // change to user-specified panel
-                            if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel-1] ) )
-                            {
-                                // set panel to load real_path on panel show
-                                //     if panel has no saved tabs
-                                set = xset_get_panel( panel, "show" );
-                                if ( !set->s )
-                                {
-                                    set->s = g_strdup_printf( "///%s", real_path );
-                                    tab_added = TRUE;
-                                }
-                                // show panel
-                                set->b = XSET_B_TRUE;
-                                show_panels_all_windows( NULL, main_window );
-                            }
-                            main_window->curpanel = panel;
-                            main_window->notebook = main_window->panel[panel-1];
-                        }
-                        if ( !tab_added )
-                        {
-                            if ( reuse_tab )
-                            {
-                                main_window_open_path_in_current_tab( main_window,
-                                                                        real_path );
-                                reuse_tab = FALSE;
-                            }
-                            else
-                                fm_main_window_add_new_tab( main_window, real_path );
-                        }
-                    }
-                    gtk_window_present( GTK_WINDOW( main_window ) );
+                    open_in_tab( &main_window, real_path );
                     ret = TRUE;
                 }
-                else
+                else if ( g_file_test( real_path, G_FILE_TEST_EXISTS ) )
                     open_file( real_path );
+                else if ( ( *file[0] != '/' && strstr( *file, ":/" ) )
+                                        || g_str_has_prefix( *file, "//" ) )
+                {
+                    if ( main_window )
+                        main_window_open_network( main_window, *file, TRUE );
+                    else
+                    {
+                        open_in_tab( &main_window, "/" );
+                        main_window_open_network( main_window, *file, FALSE );
+                    }
+                    ret = TRUE;
+                }    
+                else
+                {
+                    char* err_msg = g_strdup_printf( "%s:\n\n%s", _( "File doesn't exist" ),
+                                                        real_path );
+                    ptk_show_error( NULL, _("Error"), err_msg );
+                    g_free( err_msg );
+                }
                 g_free( real_path );
             }
         }
@@ -808,7 +868,18 @@ gboolean handle_parsed_commandline_args()
             }
             else
                 gtk_window_present( GTK_WINDOW( main_window ) );
-            //startup_mode = TRUE;  //MOD needed for socket event add tab - not needed in v2      
+            if ( panel > 0 && panel < 5 )
+            {
+                // user specified a panel with no file, let's show the panel
+                if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel-1] ) )
+                {
+                    // show panel
+                    set = xset_get_panel( panel, "show" );
+                    set->b = XSET_B_TRUE;
+                    show_panels_all_windows( NULL, main_window );
+                }
+                focus_panel( NULL, (gpointer)main_window, 2 );
+            }
         }
     }
 
@@ -897,6 +968,9 @@ int main ( int argc, char *argv[] )
 
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
+    panel = 0;
+    no_tabs = FALSE;
+    app_settings.load_saved_tabs = TRUE;
  
     if( run )   /* run the main loop */
         gtk_main();
@@ -942,12 +1016,6 @@ void open_file( const char* path )
     VFSMimeType* mime_type;
     gboolean opened;
     char* app_name;
-
-    if ( ! g_file_test( path, G_FILE_TEST_EXISTS ) )
-    {
-        ptk_show_error( NULL, _("Error"), _( "File doesn't exist" ) );
-        return ;
-    }
 
     file = vfs_file_info_new();
     vfs_file_info_get( file, path, NULL );
