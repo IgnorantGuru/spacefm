@@ -186,6 +186,9 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
             close( client );
 
             new_tab = TRUE;
+            panel = 0;
+            reuse_tab = FALSE;
+            no_tabs = FALSE;
 
             int argx = 0;
             if ( args->str[argx] == CMD_NO_TABS )
@@ -271,8 +274,6 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 }
             }
             handle_parsed_commandline_args();
-            panel = 0;
-            no_tabs = FALSE;
             app_settings.load_saved_tabs = TRUE;
 
             GDK_THREADS_LEAVE();
@@ -968,8 +969,6 @@ int main ( int argc, char *argv[] )
 
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
-    panel = 0;
-    no_tabs = FALSE;
     app_settings.load_saved_tabs = TRUE;
  
     if( run )   /* run the main loop */

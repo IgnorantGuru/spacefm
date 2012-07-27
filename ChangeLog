@@ -2,8 +2,8 @@
     detect file changes on overlayfs #129
     added --no-saved-tabs, -n command line option to not load saved tabs #110
     --reuse-tab can be used in conjunction with other options
-    specifying --panel=N without a dir shows and focuses panel N
     File|Root Window opens current folder #116
+    specifying --panel=N without a dir shows and focuses panel N
     handle network URLs on command line
     user manual Invocation updated 
 0.7.10  2012-07-25:
