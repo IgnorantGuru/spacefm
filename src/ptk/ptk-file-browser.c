@@ -3359,7 +3359,7 @@ gboolean folder_view_search_equal( GtkTreeModel* model, gint col,
         name = lower_name;
     }
     
-    if ( strchr( key, '*' ) )
+    if ( strchr( key, '*' ) || strchr( key, '?' ) )
     {
         char* key2 = g_strdup_printf( "*%s*", key );
         no_match = fnmatch( key2, name, 0 ) != 0;
