@@ -2160,18 +2160,12 @@ void vfs_volume_monitor_start()
 
 void vfs_free_volume_members( VFSVolume* volume )
 {
-    if ( volume->device_file )
-        g_free ( volume->device_file );
-    if ( volume->udi )
-        g_free ( volume->udi );
-    if ( volume->label )
-        g_free ( volume->label );
-    if ( volume->mount_point )
-        g_free ( volume->mount_point );
-    if ( volume->disp_name )
-        g_free ( volume->disp_name );
-    if ( volume->icon )
-        g_free ( volume->icon );
+    g_free ( volume->device_file );
+    g_free ( volume->udi );
+    g_free ( volume->label );
+    g_free ( volume->mount_point );
+    g_free ( volume->disp_name );
+    g_free ( volume->icon );
 }
 
 char* free_slash_total( const char* dir )

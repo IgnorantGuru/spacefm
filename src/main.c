@@ -920,8 +920,12 @@ int main ( int argc, char *argv[] )
 
     /* initialize GTK+ and parse the command line arguments */
     if( G_UNLIKELY( ! gtk_init_with_args( &argc, &argv, "", opt_entries, GETTEXT_PACKAGE, &err ) ) )
+    {
+        printf( "spacefm: %s\n", err->message );
+        g_error_free( err );
         return 1;
-
+    }
+    
 #if HAVE_HAL
     /* If the user wants to mount/umount/eject a device */
     if( G_UNLIKELY( mount || umount || eject ) )
@@ -936,7 +940,11 @@ int main ( int argc, char *argv[] )
     /* initialize the file alteration monitor */
     if( G_UNLIKELY( ! vfs_file_monitor_init() ) )
     {
+#ifdef USE_INOTIFY
+        ptk_show_error( NULL, _("Error"), _("Error: Unable to initialize inotify file change monitor.\n\nDo you have an inotify-capable kernel?") );
+#else
         ptk_show_error( NULL, _("Error"), _("Error: Unable to establish connection with FAM.\n\nDo you have \"FAM\" or \"Gamin\" installed and running?") );
+#endif
         vfs_file_monitor_clean();
         //free_settings();
         return 1;
