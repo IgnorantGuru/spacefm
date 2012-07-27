@@ -25,6 +25,8 @@
 #include <time.h>
 #include <errno.h>
 
+#include <fnmatch.h>
+
 #include "ptk-file-browser.h"
 
 #include "exo-icon-view.h"
@@ -3336,27 +3338,53 @@ gboolean folder_view_search_equal( GtkTreeModel* model, gint col,
                                                          GtkTreeIter* it,
                                                          gpointer search_data )
 {   
-    if ( col != COL_FILE_NAME )
-        return TRUE;
-
     char* name;
-    char* lower_name;
+    char* lower_name = NULL;
     char* lower_key;
     gboolean no_match;
+
+    if ( col != COL_FILE_NAME )
+        return TRUE;
     
     gtk_tree_model_get( model, it, col, &name, -1 );
 
-    lower_name = g_ascii_strdown( name, -1 );
-    lower_key = g_ascii_strdown( key, -1 );
+    if ( !name || !key )
+        return TRUE;
     
-    if ( !g_ascii_strcasecmp( lower_name, name )
-                                        && !strcmp( lower_key, key ) )
-        // key is all lowercase and name is ascii-like so do icase search
-        no_match = !strstr( lower_name, key );
+    lower_key = g_utf8_strdown( key, -1 );
+    if ( !strcmp( lower_key, key ) )
+    {
+        // key is all lowercase so do icase search
+        lower_name = g_utf8_strdown( name, -1 );
+        name = lower_name;
+    }
+    
+    if ( strchr( key, '*' ) )
+    {
+        char* key2 = g_strdup_printf( "*%s*", key );
+        no_match = fnmatch( key2, name, 0 ) != 0;
+        g_free( key2 );
+    }
     else
-        // do case sensitive search
-        no_match = !strstr( name, key );
-        
+    {
+        gboolean start = ( key[0] == '^' );
+        gboolean end = g_str_has_suffix( key, "$" );
+        char* key2 = g_strdup( key );
+        char* keyp = key2;
+        if ( start )
+            keyp++;
+        if ( end )
+            key2[strlen( key2 )-1] = '\0';
+        if ( start && end )
+            no_match = !strstr( name, keyp );
+        else if (start )
+            no_match = !g_str_has_prefix( name, keyp );
+        else if ( end )
+            no_match = !g_str_has_suffix( name, keyp );
+        else
+            no_match = !strstr( name, key );
+        g_free( key2 );
+    }        
     g_free( lower_name );
     g_free( lower_key );
     return no_match;  //return FALSE for match

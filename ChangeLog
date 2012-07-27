@@ -7,6 +7,7 @@
     handle network URLs on command line
     user manual Invocation updated
     added dependency libgtk2.0-bin [spacefm 0.7.10 with --disable-pixmaps]
+    find-as-you-type search options #85
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po
