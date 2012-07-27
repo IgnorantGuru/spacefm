@@ -5024,7 +5024,7 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
                 g_object_set_property (G_OBJECT (renderer), "wrap-width", &val);
                 g_value_unset (&val);
                 */
-                GValue val = G_VALUE_INIT;
+                GValue val = { 0 };   // G_VALUE_INIT (glib>=2.30) caused to slackware issue ?
                 g_value_init (&val, G_TYPE_CHAR);
                 g_value_set_char (&val, PANGO_ELLIPSIZE_MIDDLE);
                 g_object_set_property (G_OBJECT (renderer), "ellipsize", &val);
