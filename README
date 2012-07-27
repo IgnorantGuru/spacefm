@@ -128,10 +128,11 @@ BUILD
     packages names on your distro may vary but should be similar):
 
         autotools-dev bash build-essential dbus desktop-file-utils libc6
-        libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libpango1.0-0
-        libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config
-        libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev
-        libdbus-1-dev libgdk-pixbuf2.0-0 libudev0 (>=143) libudev-dev
+        libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.24) libgtk2.0-bin
+        libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info
+        intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot
+        libstartup-notification0-dev libdbus-1-dev libgdk-pixbuf2.0-0
+        libudev0 (>=143) libudev-dev
 
     NOTE: libgtk must be >= 2.24.  Debian Squeeze and Ubuntu 10.04 users
         may not be able to install SpaceFM due to repositories missing package
