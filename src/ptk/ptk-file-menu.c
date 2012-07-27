@@ -959,6 +959,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         set = xset_set_cb( "select_un", ptk_file_browser_unselect_all, browser );
         set->disable = !sel_files;
         xset_set_cb( "select_invert", ptk_file_browser_invert_selection, browser );
+        xset_set_cb( "select_patt", ptk_file_browser_select_pattern, browser );
 
 
         static const char* copycmd[] =

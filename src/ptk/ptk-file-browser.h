@@ -267,6 +267,7 @@ void ptk_file_browser_select_all( GtkWidget* item, PtkFileBrowser* file_browser 
 void ptk_file_browser_select_last( PtkFileBrowser* file_browser ); //MOD added
 void ptk_file_browser_invert_selection( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_unselect_all( GtkWidget* item, PtkFileBrowser* file_browser );
+void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser ); //sfm
 
 void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
                                                         GList* files, char* cwd );

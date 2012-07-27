@@ -2653,7 +2653,149 @@ void ptk_file_browser_invert_selection( GtkWidget* item, PtkFileBrowser* file_br
         on_folder_view_item_sel_change( (ExoIconView*)tree_sel,
                                         file_browser );
     }
+}
 
+void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser )
+{
+    GtkTreeModel* model;
+    GtkTreePath* path;
+    GtkTreeIter it;
+    GtkTreeSelection* tree_sel;
+    VFSFileInfo* file;
+    gboolean select;
+    char* name;
+    
+    // get pattern from user  (store in ob1 so it's not saved)
+    XSet* set = xset_get( "select_patt" );
+    if ( !xset_text_dialog( GTK_WIDGET( file_browser ), _("Select By Pattern"), NULL, FALSE, _("Enter pattern to select files and folders:\n\nIf your pattern contains any uppercase characters, the matching will be case sensitive.\n\nExample:  *sp*e?m*"),
+                                        NULL, set->ob1, &set->ob1,
+                                        NULL, FALSE, NULL ) || !set->ob1 )
+        return;
+
+    // case insensitive search ?
+    gboolean icase = FALSE;
+    const char* key = set->ob1;
+    char* lower_key = g_utf8_strdown( key, -1 );
+    if ( !strcmp( lower_key, key ) )
+    {
+        // key is all lowercase so do icase search
+        icase = TRUE;
+    }
+    g_free( lower_key );
+
+    // get model, treesel, and stop signals
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        model = exo_icon_view_get_model( EXO_ICON_VIEW( file_browser->folder_view ) );
+        g_signal_handlers_block_matched( file_browser->folder_view,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        tree_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW( file_browser->folder_view ));
+        g_signal_handlers_block_matched( tree_sel,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+    }
+
+    // test rows
+    gboolean first_select = TRUE;
+    if ( gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            // get file
+            gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+            if ( !file )
+                continue;
+
+            // test name
+            name = (char*)vfs_file_info_get_disp_name( file );
+            if ( icase )
+                name = g_utf8_strdown( name, -1 );
+
+            select = fnmatch( key, name, 0 ) == 0;
+
+            if ( icase )
+                g_free( name );
+            
+            // do selection and scroll to first selected
+            path = gtk_tree_model_get_path( GTK_TREE_MODEL( PTK_FILE_LIST( 
+                                            file_browser->file_list ) ), &it );
+            if ( file_browser->view_mode == PTK_FB_ICON_VIEW
+                                    || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+            {
+                // select
+                if ( exo_icon_view_path_is_selected( 
+                                    EXO_ICON_VIEW( file_browser->folder_view ), path ) )
+                {
+                    if ( !select )
+                        exo_icon_view_unselect_path( 
+                                        EXO_ICON_VIEW( file_browser->folder_view ), path );
+                }
+                else if ( select )
+                    exo_icon_view_select_path( 
+                                        EXO_ICON_VIEW( file_browser->folder_view ), path );
+                
+                // scroll to first and set cursor
+                if ( first_select && select )
+                {
+                    exo_icon_view_set_cursor( EXO_ICON_VIEW( 
+                                file_browser->folder_view ), path, NULL, FALSE );
+                    exo_icon_view_scroll_to_path( EXO_ICON_VIEW(
+                            file_browser->folder_view ), path, TRUE, .25, 0 );
+                    first_select = FALSE;
+                }
+            }
+            else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            {
+                // select
+                if ( gtk_tree_selection_path_is_selected ( tree_sel, path ) )
+                {
+                    if ( !select )
+                        gtk_tree_selection_unselect_path( tree_sel, path );
+                }
+                else if ( select )
+                    gtk_tree_selection_select_path( tree_sel, path );
+
+                // scroll to first and set cursor
+                if ( first_select && select )
+                {
+                    gtk_tree_view_set_cursor(GTK_TREE_VIEW( file_browser->folder_view ),
+                                                                path, NULL, FALSE);
+                    gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
+                                                    path, NULL, TRUE, .25, 0 );
+                    first_select = FALSE;
+                }
+            }
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
+
+    // restore signals and trigger sel change
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        g_signal_handlers_unblock_matched( file_browser->folder_view,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( EXO_ICON_VIEW( file_browser->folder_view ),
+                                        file_browser );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        g_signal_handlers_unblock_matched( tree_sel,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( (ExoIconView*)tree_sel,
+                                        file_browser );
+    }
+    focus_folder_view( file_browser );
 }
 
 /* signal handlers */
@@ -6554,6 +6696,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             ptk_file_browser_unselect_all( NULL, browser );
         else if ( !strcmp( xname, "invert" ) )
             ptk_file_browser_invert_selection( NULL, browser );
+        else if ( !strcmp( xname, "patt" ) )
+            ptk_file_browser_select_pattern( NULL, browser );
     }
     else  // all the rest require ptkfilemenu data
         ptk_file_menu_action( browser, set->name );

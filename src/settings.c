@@ -9626,7 +9626,7 @@ void xset_defaults()
 
     set = xset_set( "edit_submenu", "label", _("_Edit") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "copy_name copy_parent copy_path sep_e1 paste_link paste_target paste_as sep_e2 copy_to move_to edit_root edit_hide sep_e3 select_all select_invert select_un" );
+    xset_set_set( set, "desc", "copy_name copy_parent copy_path sep_e1 paste_link paste_target paste_as sep_e2 copy_to move_to edit_root edit_hide sep_e3 select_all select_patt select_invert select_un" );
     xset_set_set( set, "icon", "gtk-edit" );
 
         set = xset_set( "copy_name", "label", _("Copy _Name") );
@@ -9732,6 +9732,8 @@ void xset_defaults()
     set = xset_set( "select_un", "label", _("_Unselect All") );
 
     set = xset_set( "select_invert", "label", _("_Invert Selection") );
+
+    set = xset_set( "select_patt", "label", _("S_elect By Pattern") );
 
     set = xset_set( "edit_root", "label", _("R_oot") );
     set->menu_style = XSET_MENU_SUBMENU;
