@@ -229,7 +229,7 @@ char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
             segment = g_strndup( seg_start, dot - seg_start );
         else
             segment = g_strdup( seg_start );
-        if ( ( seg_start == full_name || strlen( segment ) > 5
+        if ( ( seg_start == full_name || g_utf8_strlen( segment, -1 ) > 5
                                             || !is_alphanum( segment ) )
                         && !( seg_start != full_name && !strcmp( segment, "desktop" ) ) )
         {
@@ -767,7 +767,8 @@ void select_input( GtkWidget* widget, MoveSet* mset )
             char* name = get_name_extension( full_name, mset->is_dir, &ext );
             g_free( ext );
             g_free( full_name );
-            gtk_text_buffer_get_iter_at_offset( buf, &iter, strlen( name ) );
+            gtk_text_buffer_get_iter_at_offset( buf, &iter,
+                                                    g_utf8_strlen( name, -1 ) );
             g_free( name );
         }
         else
@@ -2678,7 +2679,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 str = g_strdup( gtk_entry_get_text( mset->entry_target ) );
                 g_strstrip( str );
                 while ( g_str_has_suffix( str, "/" ) && str[1] != '\0' )
-                    str[strlen( str ) - 1] = '\0';
+                    str[g_utf8_strlen( str, -1 ) - 1] = '\0';
                 from_path = bash_quote( str );
                 g_free( str );
                 to_path = bash_quote( full_path );
