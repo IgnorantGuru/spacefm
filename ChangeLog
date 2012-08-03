@@ -13,6 +13,8 @@
     added file list Edit|Select By Pattern
     adjust parse url
     Show Output option should open on additional output after closure
+    Remove Text Type Association popup note
+    display file sizes and times in overwrite query
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po

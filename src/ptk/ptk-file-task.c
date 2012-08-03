@@ -1362,6 +1362,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     char* ufile_name;
     gboolean different_files, is_src_dir, is_dest_dir;
     struct stat64 src_stat, dest_stat;
+    char* xmessage = NULL;
 
     different_files = ( 0 != g_strcmp0( ptask->task->current_file,
                                      ptask->task->current_dest ) );
@@ -1382,7 +1383,39 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
         else
         {
             /* Ask the user whether to overwrite the file or not */
-            question = _( "Overwrite this file?" );
+            //question = _( "Overwrite this file?" );
+            char buf[ 64 ];
+            char* src_size;
+            char* src_time;
+            if ( src_stat.st_size == dest_stat.st_size )
+                src_size = g_strdup( _("( same size )") );
+            else
+            {
+                vfs_file_size_to_string( buf, src_stat.st_size );
+                src_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, src_stat.st_size );
+            }
+            vfs_file_size_to_string( buf, dest_stat.st_size );
+            char* dest_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, dest_stat.st_size );
+            if ( src_stat.st_mtime == dest_stat.st_mtime )
+                src_time = g_strdup( _("( same time )\t") );
+            else
+            {
+                strftime( buf, sizeof( buf ),
+                          app_settings.date_format,
+                          localtime( &src_stat.st_mtime ) );
+                src_time = g_strdup( buf );
+            }
+            strftime( buf, sizeof( buf ),
+                      app_settings.date_format,
+                      localtime( &dest_stat.st_mtime ) );
+            char* dest_time = g_strdup( buf );
+            
+            question = xmessage = g_strdup_printf( _("Overwrite this file:\n\t%s\t%s\n\nwith \"%s\" ?\n\t%s\t%s"), dest_time, dest_size, ptask->task->current_file, src_time, src_size );
+            
+            g_free( src_size );
+            g_free( dest_size );
+            g_free( src_time );
+            g_free( dest_time );
         }
     }
     else
@@ -1403,6 +1436,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
         message = _( "\"%s\"\n\nDestination and source are the same file.\n\n%s" );
     }
 
+
     udest_file = g_filename_display_name( ptask->task->current_dest );
     parent_win = ptask->progress_dlg ? ptask->progress_dlg :
                                                 GTK_WIDGET( ptask->parent_window );
@@ -1415,7 +1449,8 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
                                   udest_file,
                                   question );
     g_free( udest_file );
-
+    g_free( xmessage );
+    
     if ( has_overwrite_btn )
     {
         gtk_dialog_add_buttons ( GTK_DIALOG( dlg ),
