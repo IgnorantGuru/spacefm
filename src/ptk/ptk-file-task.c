@@ -1123,7 +1123,7 @@ void ptk_file_task_update( PtkFileTask* ptask )
         if ( !ptask->progress_dlg && task->type == VFS_FILE_TASK_EXEC 
                                                     && task->exec_show_output )
         {
-            task->exec_show_output = FALSE; // only open once
+            //task->exec_show_output = FALSE; // enable to only open once
             ptask->keep_dlg = TRUE;
             ptk_file_task_progress_open( ptask );
         }
