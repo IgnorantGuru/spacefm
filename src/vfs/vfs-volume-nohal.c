@@ -4105,6 +4105,10 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
     // dir (eg nfs stat calls block when a write is in progress so file
     // change detection is unwanted)
     // return FALSE to detect changes in this dir, TRUE to avoid change detection
+    const char* devnode;
+    gboolean ret;
+
+//printf("vfs_volume_dir_avoid_changes( %s )\n", dir );
     if ( !udev || !dir )
         return FALSE;
 
@@ -4119,23 +4123,43 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
     if ( stat( canon, &stat_buf ) == -1 )
         return FALSE;
     //printf("    stat_buf.st_dev = %d:%d\n", major(stat_buf.st_dev), minor( stat_buf.st_dev) );
+
     struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
                                                             stat_buf.st_dev );
-    if ( !udevice )
+    if ( udevice )
+        devnode = udev_device_get_devnode( udevice );
+    else
+        devnode = NULL;
+
+    if ( devnode == NULL )
     {
-        //printf("!udevice %s\n", get_devmount_fstype( major( stat_buf.st_dev ),
-        //                                    minor( stat_buf.st_dev ) ));
-        // tmpfs is not a block device but we want to detect changes
+        // not a block device
         const char* fstype = get_devmount_fstype( major( stat_buf.st_dev ),
                                             minor( stat_buf.st_dev ) );
-        return !( !g_strcmp0( fstype, "tmpfs" ) || !g_strcmp0( fstype, "ramfs" )
+        //printf("    !udevice || !devnode  fstype=%s\n", fstype );
+        if ( !fstype )
+            ret = FALSE;
+        else
+            // blacklist these types for no change detection (if not block device)
+            ret = (    g_str_has_prefix( fstype, "nfs" )    // nfs nfs4 etc
+                    || ( g_str_has_prefix( fstype, "fuse" ) && 
+                                strcmp( fstype, "fuseblk" ) ) // fuse fuse.sshfs curlftpfs(fuse) etc
+                    || strstr( fstype, "cifs" )
+                    || !strcmp( fstype, "smbfs" )
+                    || !strcmp( fstype, "ftpfs" ) );
+        /*  whitelist
+                !g_strcmp0( fstype, "tmpfs" ) || !g_strcmp0( fstype, "ramfs" )
                || !g_strcmp0( fstype, "aufs" )  || !g_strcmp0( fstype, "devtmpfs" )
                || !g_strcmp0( fstype, "overlayfs" ) );
+        */
     }
+    else
+        // block device
+        ret = FALSE;
     
-    const char* devnode = udev_device_get_devnode( udevice );
-    gboolean ret = ( devnode == NULL ); // TRUE if not a block device
-    udev_device_unref( udevice );
+    if ( udevice )
+        udev_device_unref( udevice );
+//printf( "    avoid_changes = %s\n", ret ? "TRUE" : "FALSE" );
     return ret;
 }
 
