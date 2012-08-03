@@ -4702,12 +4702,13 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
     char* path = NULL;
+    VFSMimeType* mime_type = NULL;
 
     // archive?
     if( sel_files && !xset_get_b( "arc_def_open" ) )
     {
         VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-        VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+        mime_type = vfs_file_info_get_mime_type( file );
         path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                             vfs_file_info_get_name( file ), NULL );
         vfs_file_info_unref( file );    
@@ -4746,13 +4747,13 @@ int no_write_access = 0;
                             ptk_file_browser_get_cwd( file_browser ), "////LIST" );
                 goto _done;
             }
-        }
+        }        
     }
     
     if ( sel_files && xset_get_b( "iso_auto" ) )
     {
         VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-        VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+        mime_type = vfs_file_info_get_mime_type( file );
         if ( mime_type && ( 
                 !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
                 !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
@@ -4776,6 +4777,8 @@ int no_write_access = 0;
                          sel_files, app_desktop, file_browser, FALSE, FALSE );
 _done:
     g_free( path );
+    if ( mime_type )
+        vfs_mime_type_unref( mime_type );
     vfs_file_info_list_free( sel_files );
 }
 

@@ -893,7 +893,7 @@ Run As Task, which is enabled by default for new commands, changes several aspec
 
 <p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's task manager will monitor the task, and if the task runs for longer than about one half second, the task manager will auto-show and will add the task to the running tasks list.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
 
-<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see Popup options below for details.)  
+<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)  
 
 <p>SpaceFM's output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to use Run In Terminal instead.
 
@@ -1274,7 +1274,7 @@ Sync merely runs a sync command to commit all data to all devices.  If the comma
 <!-- #Open -->
 Selecting Open will cause the selected device to be mounted if it is not already mounted, and then the mount point directory of the device will be opened in the current tab.  If an error occurs, the error will be shown.  If the command takes longer than about one half second, the task manager will auto-show and the Open command will be listed until finished.
 
-<p>You can also open a device by simply left-clicking on it, but there are several differences.  When left-clicking on a device, no error will be shown if the mount fails.  Your indication that the mount failed is that the directory is not opened.  To see the details of the error, you must right-click on the device and select Open.  Also, the behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
+<p>You can also open a device by simply left-clicking on it.  The behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
 
 <p>To mount, SpaceFM runs a mount command on the selected device.  By default, <a href="http://ignorantguru.github.com/udevil/">udevil</a>, pmount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media/$USER.  If it was automatically created, this subfolder will be automatically removed when the device is unmounted.
 
