@@ -2708,15 +2708,14 @@ int parse_network_url( const char* url, const char* fstype,
         xurl++;
     char* trim_url = g_strdup( xurl );
 
-    // path
-    if ( str = strchr( xurl, '/' ) )
-    {
-        nm->path = g_strdup( str );
-        str[0] = '\0';
-    }
     // user:pass
     if ( str = strchr( xurl, '@' ) )
     {
+        if ( str2 = strchr( str + 1, '@' ) )
+        {
+            // there is a second @ - assume username contains email address
+            str = str2;
+        }
         str[0] = '\0';
         if ( str2 = strchr( xurl, ':' ) )
         {
@@ -2727,6 +2726,12 @@ int parse_network_url( const char* url, const char* fstype,
         if ( xurl[0] != '\0' )
             nm->user = g_strdup( xurl );
         xurl = str + 1;
+    }
+    // path
+    if ( str = strchr( xurl, '/' ) )
+    {
+        nm->path = g_strdup( str );
+        str[0] = '\0';
     }
     // host:port
     if ( xurl[0] == '[' )
@@ -2760,11 +2765,7 @@ int parse_network_url( const char* url, const char* fstype,
         else if ( !strcmp( nm->fstype, "nfs" ) )
             nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
         else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
-            nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s%s%s%s%s",
-                            nm->user ? nm->user : "",
-                            nm->pass ? ":" : "",
-                            nm->pass ? nm->pass : "",
-                            nm->user || nm->pass ? "@" : "",
+            nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s",
                             nm->host,
                             nm->port ? ":" : "",
                             nm->port ? nm->port : "",
@@ -2772,13 +2773,12 @@ int parse_network_url( const char* url, const char* fstype,
         else if ( !g_strcmp0( nm->fstype, "ftpfs" ) )
             nm->url = g_strdup( "none" );
         else if ( !g_strcmp0( nm->fstype, "sshfs" ) )
-            nm->url = g_strdup_printf( "sshfs#%s%s%s%s%s:%s%s",
-                            nm->user ? nm->user : "",
+            nm->url = g_strdup_printf( "sshfs#%s%s%s%s%s:%s",
+                            nm->user ? nm->user : g_get_user_name(),
                             nm->pass ? ":" : "",
                             nm->pass ? nm->pass : "",
-                            nm->user || nm->pass ? "@" : "",
+                            "@",   //nm->user || nm->pass ? "@" : "",
                             nm->host,
-                            nm->port ? nm->port : "",
                             nm->path ? nm->path : "/" );
         else
             nm->url = g_strdup( trim_url );
