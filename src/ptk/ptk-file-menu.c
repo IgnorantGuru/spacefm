@@ -1481,6 +1481,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         // and the actions for text/plain, so removing an app may appear to not
         // work if that app is still associated with text/plain
         vfs_mime_type_remove_action( mime_type, desktop_file->file_name );
+        if ( strcmp( mime_type->type, "text/plain" ) && 
+                                g_str_has_prefix( mime_type->type, "text/" ) )
+            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : GTK_WIDGET( data->desktop ), 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
         break;
     case APP_JOB_EDIT:
         path = g_build_filename( g_get_user_data_dir(), "applications",
