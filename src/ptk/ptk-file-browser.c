@@ -1753,6 +1753,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->mynotebook = notebook;
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
+    file_browser->sel_change_idle = 0;
     file_browser->slide_x = slide_x;
     file_browser->slide_y = slide_y;
     file_browser->slide_s = slide_s;
@@ -2833,8 +2834,7 @@ on_folder_view_row_activated ( GtkTreeView *tree_view,
     ptk_file_browser_open_selected_files_with_app( file_browser, NULL );
 }
 
-void on_folder_view_item_sel_change ( ExoIconView *iconview,
-                                      PtkFileBrowser* file_browser )
+gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
 {
     GList * sel_files;
     GList* sel;
@@ -2842,6 +2842,9 @@ void on_folder_view_item_sel_change ( ExoIconView *iconview,
     GtkTreeModel* model;
     VFSFileInfo* file;
 
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        return FALSE;
+    
     file_browser->n_sel_files = 0;
     file_browser->sel_size = 0;
 
@@ -2867,6 +2870,23 @@ void on_folder_view_item_sel_change ( ExoIconView *iconview,
     g_list_free( sel_files );
 
     g_signal_emit( file_browser, signals[ SEL_CHANGE_SIGNAL ], 0 );
+    file_browser->sel_change_idle = 0;
+    return FALSE;
+}
+
+void on_folder_view_item_sel_change( ExoIconView *iconview,
+                                      PtkFileBrowser* file_browser )
+{
+    /* //sfm on_folder_view_item_sel_change fires for each selected file
+     * when a file is clicked - causes hang if thousands of files are selected
+     * So add only one g_idle_add at a time
+     */
+    if ( file_browser->sel_change_idle )
+        return;
+
+    file_browser->sel_change_idle = g_idle_add( 
+                            (GSourceFunc)on_folder_view_item_sel_change_idle,
+                            file_browser );
 }
 
 #if 0
@@ -3092,13 +3112,13 @@ static void show_popup_menu( PtkFileBrowser* file_browser,
             button = 0;
             time = gtk_get_current_event_time();
         }
-            popup = ptk_file_menu_new( NULL, file_browser,
-                    file_path, file,
-                    dir_name ? dir_name : cwd,
-                    sel_files );
-            if ( popup )
-                gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL,
-                                                            button, time );
+        popup = ptk_file_menu_new( NULL, file_browser,
+                file_path, file,
+                dir_name ? dir_name : cwd,
+                sel_files );
+        if ( popup )
+            gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL,
+                                                        button, time );
 //    }
 //    else if ( sel_files )
 //    {
@@ -3128,7 +3148,7 @@ on_folder_view_button_press_event ( GtkWidget *widget,
 {
     VFSFileInfo * file;
     GtkTreeModel * model = NULL;
-    GtkTreePath *tree_path;
+    GtkTreePath *tree_path = NULL;
     GtkTreeViewColumn* col = NULL;
     GtkTreeIter it;
     gchar *file_path;
@@ -3254,6 +3274,14 @@ on_folder_view_button_press_event ( GtkWidget *widget,
                 }
             }
             show_popup_menu( file_browser, event );
+            /* FIXME if approx 5000 are selected, right-click sometimes unselects all
+             * after this button_press function returns - why?  a gtk or exo bug?
+             * Always happens with above show_popup_menu call disabled
+             * Only when this occurs, cursor is automatically set to current row and 
+             * treesel 'changed' signal fires
+             * Stopping changed signal had no effect
+             * Using connect rather than connect_after had no effect
+             * Removing signal connect had no effect */
             ret = TRUE;
         }
         if ( file )

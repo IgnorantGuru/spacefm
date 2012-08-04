@@ -61,7 +61,8 @@ struct _PtkFileBrowser
     int max_thumbnail;
     int n_sel_files;
     off_t sel_size;
-
+    guint sel_change_idle;
+    
     /* side pane */
     GtkWidget* side_pane_buttons;
     GtkToggleToolButton* location_btn;

@@ -303,7 +303,7 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
 
 void on_popup_select_pattern( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_select_pattern( menuitem, data->browser, NULL );
+    ptk_file_browser_select_pattern( NULL, data->browser, NULL );
 }
 
 void on_open_in_tab( GtkMenuItem *menuitem, PtkFileMenu* data )
