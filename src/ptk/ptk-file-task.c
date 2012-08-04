@@ -1350,8 +1350,9 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
 static void query_overwrite( PtkFileTask* ptask, char** new_dest )
 {
 //printf("query_overwrite ptask=%#x\n", ptask);
-    const char * message;
+    const char* message = NULL;
     const char* question;
+    const char* title;
     GtkWidget* dlg;
     GtkWidget* parent_win;
 
@@ -1379,6 +1380,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
         {
             /* Ask the user whether to overwrite dir content or not */
             question = _( "Overwrite this folder and its contents?" );
+            title = _("Folder Exists");
         }
         else
         {
@@ -1387,6 +1389,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
             char buf[ 64 ];
             char* src_size;
             char* src_time;
+            char* src_rel;
             if ( src_stat.st_size == dest_stat.st_size )
                 src_size = g_strdup( _("( same size )") );
             else
@@ -1397,21 +1400,29 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
             vfs_file_size_to_string( buf, dest_stat.st_size );
             char* dest_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, dest_stat.st_size );
             if ( src_stat.st_mtime == dest_stat.st_mtime )
+            {
                 src_time = g_strdup( _("( same time )\t") );
+                src_rel = "";
+            }
             else
             {
                 strftime( buf, sizeof( buf ),
                           app_settings.date_format,
                           localtime( &src_stat.st_mtime ) );
                 src_time = g_strdup( buf );
+                if ( src_stat.st_mtime > dest_stat.st_mtime )
+                    src_rel = _("( newer ) ");
+                else
+                    src_rel = _("( older ) ");
             }
             strftime( buf, sizeof( buf ),
                       app_settings.date_format,
                       localtime( &dest_stat.st_mtime ) );
             char* dest_time = g_strdup( buf );
             
-            question = xmessage = g_strdup_printf( _("Overwrite this file:\n\t%s\t%s\n\nwith \"%s\" ?\n\t%s\t%s"), dest_time, dest_size, ptask->task->current_file, src_time, src_size );
-            
+            message = xmessage = g_strdup_printf( _("Overwrite \"%%s\":\n\t%s\t%s\n\nwith %s\"%s\" ?\n\t%s\t%s"), dest_time, dest_size, src_rel, ptask->task->current_file, src_time, src_size );
+            question = NULL;
+            title = _("File Exists");
             g_free( src_size );
             g_free( dest_size );
             g_free( src_time );
@@ -1422,13 +1433,15 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     { /* Rename is required */
         question = _( "Please choose a new filename:" );
         has_overwrite_btn = FALSE;
+        title = _("Rename Required");
     }
 
     if ( different_files )
     {
         /* Ths first %s is a file name, and the second one represents followed message.
         ex: "/home/pcman/some_file" already exists.\n\nDo you want to overwrite existing file?" */
-        message = _( "\"%s\" already exists.\n\n%s" );
+        if ( !message )
+            message = _( "\"%s\" already exists.\n\n%s" );
     }
     else
     {
@@ -1450,6 +1463,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
                                   question );
     g_free( udest_file );
     g_free( xmessage );
+    gtk_window_set_title( GTK_WINDOW( dlg ), title );
     
     if ( has_overwrite_btn )
     {
