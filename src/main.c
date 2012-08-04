@@ -275,7 +275,7 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
             }
             handle_parsed_commandline_args();
             app_settings.load_saved_tabs = TRUE;
-
+            
             GDK_THREADS_LEAVE();
         }
     }
@@ -774,6 +774,7 @@ gboolean handle_parsed_commandline_args()
 #ifdef DESKTOP_INTEGRATION
     else if( set_wallpaper ) /* change wallpaper */
     {
+        set_wallpaper = FALSE;
         char* file = files ? files[0] : NULL;
         char* path;
         if( ! file )
@@ -792,10 +793,10 @@ gboolean handle_parsed_commandline_args()
         {
             g_free( app_settings.wallpaper );
             app_settings.wallpaper = file;
+            app_settings.show_wallpaper = TRUE;
             char* err_msg = save_settings( NULL );
             if ( err_msg )
                 printf( _("spacefm: Error: Unable to save session\n       %s\n"), err_msg );
-
             if( desktop && app_settings.show_wallpaper )
             {
                 if( desktop_or_deamon_initialized )
