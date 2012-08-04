@@ -301,6 +301,11 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
                                                                     set->name );
 }
 
+void on_popup_select_pattern( GtkMenuItem *menuitem, PtkFileMenu* data )
+{
+    ptk_file_browser_select_pattern( menuitem, data->browser, NULL );
+}
+
 void on_open_in_tab( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     int tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( menuitem ),
@@ -959,7 +964,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         set = xset_set_cb( "select_un", ptk_file_browser_unselect_all, browser );
         set->disable = !sel_files;
         xset_set_cb( "select_invert", ptk_file_browser_invert_selection, browser );
-        xset_set_cb( "select_patt", ptk_file_browser_select_pattern, browser );
+        xset_set_cb( "select_patt", on_popup_select_pattern, data );
 
 
         static const char* copycmd[] =

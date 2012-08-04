@@ -16,6 +16,7 @@
     Remove Text Type Association popup note
     display file sizes and times in overwrite query
     file change detection blacklist non-block nfs fuse cifs smbfs ftpfs
+    percent in path bar select by pattern
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po

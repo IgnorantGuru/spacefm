@@ -907,6 +907,14 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
         edata->current = NULL;
     }
+    else if ( !g_file_test( final_path, G_FILE_TEST_EXISTS ) && text[0] == '%' )
+    {
+        str = g_strdup( ++text );
+        g_strstrip( str );
+        if ( str && str[0] != '\0' )
+            ptk_file_browser_select_pattern( NULL, file_browser, str );
+        g_free( str );
+    }
     else if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
     {
         str = g_strdup( text );
@@ -2655,7 +2663,8 @@ void ptk_file_browser_invert_selection( GtkWidget* item, PtkFileBrowser* file_br
     }
 }
 
-void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser )
+void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser,
+                                                        const char* search_key )
 {
     GtkTreeModel* model;
     GtkTreePath* path;
@@ -2664,17 +2673,23 @@ void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_brow
     VFSFileInfo* file;
     gboolean select;
     char* name;
+    const char* key;
     
-    // get pattern from user  (store in ob1 so it's not saved)
-    XSet* set = xset_get( "select_patt" );
-    if ( !xset_text_dialog( GTK_WIDGET( file_browser ), _("Select By Pattern"), NULL, FALSE, _("Enter pattern to select files and folders:\n\nIf your pattern contains any uppercase characters, the matching will be case sensitive.\n\nExample:  *sp*e?m*"),
-                                        NULL, set->ob1, &set->ob1,
-                                        NULL, FALSE, NULL ) || !set->ob1 )
-        return;
+    if ( search_key )
+        key = search_key;
+    else
+    {
+        // get pattern from user  (store in ob1 so it's not saved)
+        XSet* set = xset_get( "select_patt" );
+        if ( !xset_text_dialog( GTK_WIDGET( file_browser ), _("Select By Pattern"), NULL, FALSE, _("Enter pattern to select files and folders:\n\nIf your pattern contains any uppercase characters, the matching will be case sensitive.\n\nExample:  *sp*e?m*\n\nTIP: You can also enter '%% PATTERN' in the path bar."),
+                                            NULL, set->ob1, &set->ob1,
+                                            NULL, FALSE, NULL ) || !set->ob1 )
+            return;
+        key = set->ob1;
+    }
 
     // case insensitive search ?
     gboolean icase = FALSE;
-    const char* key = set->ob1;
     char* lower_key = g_utf8_strdown( key, -1 );
     if ( !strcmp( lower_key, key ) )
     {
@@ -6700,7 +6715,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         else if ( !strcmp( xname, "invert" ) )
             ptk_file_browser_invert_selection( NULL, browser );
         else if ( !strcmp( xname, "patt" ) )
-            ptk_file_browser_select_pattern( NULL, browser );
+            ptk_file_browser_select_pattern( NULL, browser, NULL );
     }
     else  // all the rest require ptkfilemenu data
         ptk_file_menu_action( browser, set->name );
