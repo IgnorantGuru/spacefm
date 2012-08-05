@@ -1390,19 +1390,28 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
             char* src_size;
             char* src_time;
             char* src_rel;
+            char* src_rel_size;
+            char* src_rel_time;
             if ( src_stat.st_size == dest_stat.st_size )
+            {
                 src_size = g_strdup( _("( same size )") );
+                src_rel_size = NULL;
+            }
             else
             {
                 vfs_file_size_to_string( buf, src_stat.st_size );
                 src_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, src_stat.st_size );
+                if ( src_stat.st_size > dest_stat.st_size )
+                    src_rel_size = _("larger");
+                else
+                    src_rel_size = _("smaller");
             }
             vfs_file_size_to_string( buf, dest_stat.st_size );
             char* dest_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, dest_stat.st_size );
             if ( src_stat.st_mtime == dest_stat.st_mtime )
             {
                 src_time = g_strdup( _("( same time )\t") );
-                src_rel = "";
+                src_rel_time = NULL;
             }
             else
             {
@@ -1411,10 +1420,16 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
                           localtime( &src_stat.st_mtime ) );
                 src_time = g_strdup( buf );
                 if ( src_stat.st_mtime > dest_stat.st_mtime )
-                    src_rel = _("( newer ) ");
+                    src_rel_time = _("newer");
                 else
-                    src_rel = _("( older ) ");
+                    src_rel_time = _("older");
             }
+            src_rel = g_strdup_printf( "%s%s%s%s%s",
+                                        src_rel_time || src_rel_size ? "( " : "",
+                                        src_rel_time ? src_rel_time : "",
+                                        src_rel_time && src_rel_size ? ", " : "",
+                                        src_rel_size ? src_rel_size : "",
+                                        src_rel_time || src_rel_size ? " ) " : "" );
             strftime( buf, sizeof( buf ),
                       app_settings.date_format,
                       localtime( &dest_stat.st_mtime ) );
@@ -1427,6 +1442,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
             g_free( dest_size );
             g_free( src_time );
             g_free( dest_time );
+            g_free( src_rel );
         }
     }
     else
