@@ -219,22 +219,22 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 panel = 4;
                 break;
             case CMD_OPEN:
-                new_tab = !args->str[ argx + 1 ];
+                new_tab = FALSE;
                 break;
             case CMD_OPEN_PANEL1:
-                new_tab = !args->str[ argx + 1 ];
+                new_tab = FALSE;
                 panel = 1;
                 break;
             case CMD_OPEN_PANEL2:
-                new_tab = !args->str[ argx + 1 ];
+                new_tab = FALSE;
                 panel = 2;
                 break;
             case CMD_OPEN_PANEL3:
-                new_tab = !args->str[ argx + 1 ];
+                new_tab = FALSE;
                 panel = 3;
                 break;
             case CMD_OPEN_PANEL4:
-                new_tab = !args->str[ argx + 1 ];
+                new_tab = FALSE;
                 panel = 4;
                 break;
             case CMD_DAEMON_MODE:
