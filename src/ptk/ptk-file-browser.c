@@ -2491,7 +2491,7 @@ void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
     {
         // open dir and select file
         char* dir_path = g_dirname( canon );
-        if ( strcmp( dir_path, cwd ) )
+        if ( dir_path && strcmp( dir_path, cwd ) )
         {
             file_browser->select_path = strdup( canon );
             ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
