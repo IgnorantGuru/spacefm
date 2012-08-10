@@ -48,6 +48,7 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 void vfs_volume_special_unmounted( const char* device_file );
 void unmount_if_mounted( const char* device_file );
+static void vfs_volume_clean();
 
 
 typedef struct _VFSVolumeCallbackData
@@ -1439,8 +1440,6 @@ gboolean device_get_info( device_t *device )
     device->device_is_system_internal = info_is_system_internal( device );
     device->mount_points = info_mount_points( device );
     device->device_is_mounted = ( device->mount_points != NULL );
-    if ( device->device_is_mounted )
-        device->device_is_media_available = TRUE;
     info_partition_table( device );
     info_partition( device );
     info_optical_disc( device );
@@ -3565,6 +3564,8 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
                     vfs_volume_special_unmounted( volume->device_file );
+                    //remove udevil mount points in case other unmounted
+                    vfs_volume_clean();
                 }
                 else if ( !was_audiocd && volume->is_audiocd )
                     vfs_volume_autoexec( volume );
@@ -3592,6 +3593,29 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
         if ( volume->is_audiocd )
             vfs_volume_autoexec( volume );
     }
+}
+
+static void vfs_volume_clean()
+{   // clean udevil mount points
+    char* udevil;
+    const char* mount_cmd = xset_get_s( "dev_mount_cmd" );
+    const char* umount_cmd = xset_get_s( "dev_unmount_cmd" );
+    
+    // is udevil current u/mount solution?
+    if ( !mount_cmd || !umount_cmd )
+        udevil = g_find_program_in_path( "udevil" );
+    else if ( strstr( mount_cmd, "udevil" ) || strstr( umount_cmd, "udevil" ) )
+        udevil = g_find_program_in_path( "udevil" );
+    else
+        udevil = NULL;
+    
+    if ( !udevil )
+        return;
+    
+    char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
+    g_free( udevil );    
+    g_spawn_command_line_async( line, NULL );
+    g_free( line );
 }
 
 static gboolean vfs_volume_nonblock_removed( const char* mount_points )
@@ -3622,10 +3646,10 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
+            vfs_volume_clean();
             return TRUE;
         }
     }
-
     return FALSE;
 }
 
@@ -3652,9 +3676,10 @@ static void vfs_volume_device_removed( char* device_file )
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
-            return;
+            break;
         }
     }
+    vfs_volume_clean();
 }
 
 void unmount_if_mounted( const char* device_file )
@@ -3918,6 +3943,9 @@ gboolean vfs_volume_finalize()
     // unmount networks and files mounted during this session
     vfs_volume_special_unmount_all();
 
+    // remove unused udevil mount points
+    vfs_volume_clean();
+    
     return TRUE;
 }
 
