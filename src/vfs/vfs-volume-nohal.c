@@ -3613,6 +3613,7 @@ static void vfs_volume_clean()
         return;
     
     char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
+printf("Clean: %s\n", line );
     g_free( udevil );    
     g_spawn_command_line_async( line, NULL );
     g_free( line );
