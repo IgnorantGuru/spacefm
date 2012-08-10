@@ -3178,12 +3178,12 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                 if ( g_file_test( target_path, G_FILE_TEST_EXISTS ) )
                                 {
                                     if ( !strcmp( target, "/" ) )
-                                        link_info = g_strdup_printf( _("  Link-> %s"), target );
+                                        link_info = g_strdup_printf( _("   Link → %s"), target );
                                     else
-                                        link_info = g_strdup_printf( _("  Link-> %s/"), target );
+                                        link_info = g_strdup_printf( _("   Link → %s/"), target );
                                 }
                                 else
-                                    link_info = g_strdup_printf( _("  !Link-> %s/ (missing)"), target );
+                                    link_info = g_strdup_printf( _("   !Link → %s/ (missing)"), target );
                             }
                             else
                             {
@@ -3191,22 +3191,22 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                 {
                                     vfs_file_size_to_string( buf, results.st_size );
                                     lsize = g_strdup( buf );
-                                    link_info = g_strdup_printf( _("  Link-> %s (%s)"), target, lsize );
+                                    link_info = g_strdup_printf( _("   Link → %s (%s)"), target, lsize );
                                 }
                                 else
-                                    link_info = g_strdup_printf( _("  !Link-> %s (missing)"), target );
+                                    link_info = g_strdup_printf( _("   !Link → %s (missing)"), target );
                             }
                             g_free( target );
                             if ( full_target )
                                 g_free( full_target );
                         }
                         else
-                            link_info = g_strdup_printf( _("  !Link-> ( error reading target )") );
+                            link_info = g_strdup_printf( _("   !Link → ( error reading target )") );
                             
                         g_free( file_path );
                     }
                     else
-                        link_info = g_strdup_printf( "  %s", vfs_file_info_get_name( file ) );
+                        link_info = g_strdup_printf( "   %s", vfs_file_info_get_name( file ) );
                     vfs_file_info_unref( file );
                 }
             }
@@ -3220,6 +3220,16 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
     }
     else
     {
+        // cur dir is link ?  canonicalize
+        char* dirmsg;
+        const char* cwd = ptk_file_browser_get_cwd( file_browser );
+        char buf[ PATH_MAX + 1 ];
+        char* canon = realpath( cwd, buf );
+        if ( !canon || !g_strcmp0( canon, cwd ) )
+            dirmsg = g_strdup_printf( "%s", cwd );
+        else
+            dirmsg = g_strdup_printf( "./ → %s", canon );
+
         // MOD add count for .hidden files
         char* xhidden;
         n = ptk_file_browser_get_n_visible_files( file_browser );
@@ -3240,12 +3250,14 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", hn, xhidden, hidtext ), hn );
             //msg = g_strdup_printf( ngettext( "%d visible item (%s)%s",
             //                                 "%d visible items (%s)%s", n ), n, hidden, free_space );
-            msg = g_strdup_printf( ngettext( "%s%d visible (%s)",
-                                             "%s%d visible (%s)", n ), free_space, n, hidden );
+            msg = g_strdup_printf( ngettext( "%s%d visible (%s)   %s",
+                                             "%s%d visible (%s)   %s", n ),
+                                             free_space, n, hidden, dirmsg );
         }
         else
-            msg = g_strdup_printf( ngettext( "%s%d item",
-                                             "%s%d items", n ), free_space, n );
+            msg = g_strdup_printf( ngettext( "%s%d item   %s",
+                                             "%s%d items   %s", n ), free_space, n, dirmsg );
+        g_free( dirmsg );
     }
     gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0, msg );
     g_free( msg );
