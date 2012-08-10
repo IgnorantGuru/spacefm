@@ -20,6 +20,7 @@
     fix hang on click on 5000+ selected files in list view
     clean udevil mount points on device removal, exit
     fix auto umount on eject
+    fix icon view drag target #132
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po

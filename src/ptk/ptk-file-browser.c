@@ -4371,6 +4371,9 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     tree_path = NULL;
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {
+        // store x and y because exo_icon_view has no get_drag_dest_row
+        file_browser->drag_x = x;
+        file_browser->drag_y = y;
         exo_icon_view_widget_to_icon_coords( EXO_ICON_VIEW( widget ), x, y, &x, &y );
         tree_path = exo_icon_view_get_path_at_pos( EXO_ICON_VIEW( widget ), x, y );
         model = exo_icon_view_get_model( EXO_ICON_VIEW( widget ) );
@@ -4452,9 +4455,6 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
             {
                 // automatic
                 file_browser->pending_drag_status = 1;
-                // store x and y because exo_icon_view has no get_drag_dest_row
-                file_browser->drag_x = x;
-                file_browser->drag_y = y;
                 gtk_drag_get_data (widget, drag_context, target, time);
                 suggested_action = drag_context->suggested_action;
             }
