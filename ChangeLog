@@ -23,6 +23,7 @@
     fix icon view drag target #132
     added custom Protocol Handler setting to Path Bar context menu
     status bar show canonicalized current dir
+    added Go|Canonical
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po

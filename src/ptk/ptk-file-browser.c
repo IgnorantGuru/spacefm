@@ -2473,6 +2473,36 @@ void on_dir_file_listed( VFSDir* dir,
     }
 }
 
+void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
+{
+    const char* cwd = ptk_file_browser_get_cwd( file_browser );
+    char buf[ PATH_MAX + 1 ];
+    char* canon = realpath( path, buf );
+    if ( !canon || !g_strcmp0( canon, cwd ) || !g_strcmp0( canon, path ) )
+        return;
+    
+    if ( g_file_test( canon, G_FILE_TEST_IS_DIR ) )
+    {
+        // open dir
+        ptk_file_browser_chdir( file_browser, canon, PTK_FB_CHDIR_ADD_HISTORY );
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    }
+    else if ( g_file_test( canon, G_FILE_TEST_EXISTS ) )
+    {
+        // open dir and select file
+        char* dir_path = g_dirname( canon );
+        if ( strcmp( dir_path, cwd ) )
+        {
+            file_browser->select_path = strdup( canon );
+            ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
+        }
+        else
+            ptk_file_browser_select_file( file_browser, canon );
+        g_free( dir_path );
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
+    }
+}
+
 const char* ptk_file_browser_get_cwd( PtkFileBrowser* file_browser )
 {
     if ( ! file_browser->curHistory )

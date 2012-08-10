@@ -132,6 +132,9 @@ static void on_popup_open_files_activate( GtkMenuItem *menuitem,
                                PtkFileMenu* data );  //MOD
 static void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data );
 
+void
+on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data );
+
 /*
 static void on_popup_run_command( GtkMenuItem *menuitem,
                                PtkFileMenu* data );  //MOD
@@ -869,6 +872,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_cb( "go_home", ptk_file_browser_go_home, browser );
         xset_set_cb( "go_default", ptk_file_browser_go_default, browser );
         xset_set_cb( "go_set_default", ptk_file_browser_set_default_folder, browser );
+        xset_set_cb( "edit_canon", on_popup_canon, data );
         xset_set_cb( "go_refresh", ptk_file_browser_refresh, browser );
         set = xset_set_cb( "focus_path_bar", ptk_file_browser_focus, browser );
             xset_set_ob1_int( set, "job", 0 );
@@ -2496,6 +2500,15 @@ on_popup_file_permissions_activate ( GtkMenuItem *menuitem,
                               data->sel_files, 1 );
 }
 
+void
+on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data )
+{
+    if ( !data->browser )
+        return;
+
+    ptk_file_browser_canon( data->browser, data->file_path ? data->file_path : data->cwd );
+}
+
 void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
 {
     const char * cwd;
@@ -2627,6 +2640,8 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
             on_popup_delete_activate( NULL, data );
         else if ( !strcmp( xname, "hide" ) )
             on_hide_file( NULL, data );
+        else if ( !strcmp( xname, "canon" ) )
+            on_popup_canon( NULL, data );
     }
     else if ( !strcmp( set->name, "copy_name" ) )
         on_popup_copy_name_activate( NULL, data );

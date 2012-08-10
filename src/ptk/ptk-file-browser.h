@@ -270,6 +270,7 @@ void ptk_file_browser_invert_selection( GtkWidget* item, PtkFileBrowser* file_br
 void ptk_file_browser_unselect_all( GtkWidget* item, PtkFileBrowser* file_browser );
 void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_browser,
                                                         const char* search_key ); //sfm
+void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path );
 
 void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
                                                         GList* files, char* cwd );
