@@ -734,19 +734,26 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
 
 void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
 {
+    char* str;
+    char* line;
+    
     netmount_t *netmount = NULL;
     
-    char* str = g_find_program_in_path( "udevil" );
-    if ( !str )
+    char* handler = xset_get_s( "path_hand" );
+    if ( !handler )
     {
+        str = g_find_program_in_path( "udevil" );
+        if ( !str )
+        {
+            g_free( str );
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("udevil Not Installed"), NULL, 0,
+                            _("Mounting a network share requires udevil to be installed, or you can set a custom protocol handler by right-clicking on the Path Bar."),
+                            NULL, NULL );
+            return;
+        }
         g_free( str );
-        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
-                        _("udevil Not Installed"), NULL, 0,
-                        _("Mounting a network share requires udevil to be installed."),
-                        NULL, NULL );
-        return;
     }
-    g_free( str );
     
     // parse
     char* neturl = NULL;
@@ -815,13 +822,14 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     char* keepterm;
     gboolean in_term = FALSE;
     gboolean is_sync = TRUE;
-    if ( !g_strcmp0( fstype, "sshfs" ) )
+    if ( !handler && !g_strcmp0( fstype, "sshfs" ) )
     {
         in_term = TRUE;
         is_sync = FALSE;
         keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
     }
-    else if ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" ) )
+    else if ( !handler &&
+                ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" ) ) )
     {
         in_term = TRUE;
         keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
@@ -841,7 +849,10 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
             ao->job = PTK_OPEN_DIR;
     }
 
-    char* line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
+    if ( handler )
+        line = g_strdup_printf( "%s '%s'", handler, url );
+    else
+        line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
     g_free( keepterm );
     g_free( fstype );
 
@@ -1303,6 +1314,7 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
 
+    /*
     if ( vol->device_type != DEVICE_TYPE_BLOCK )
     {
         char* str = g_find_program_in_path( "udevil" );
@@ -1317,6 +1329,7 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         }
         g_free( str );
     }
+    */
     
     // task
     char* line = vfs_volume_device_unmount_cmd( vol->device_file );
@@ -1352,6 +1365,7 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
 
+    /*
     if ( vol->device_type != DEVICE_TYPE_BLOCK )
     {
         char* str = g_find_program_in_path( "udevil" );
@@ -1366,7 +1380,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         }
         g_free( str );
     }
-
+    */
+    
     if ( vfs_volume_is_mounted( vol ) )
     {
         // task

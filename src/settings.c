@@ -9596,7 +9596,13 @@ void xset_defaults()
     set = xset_set( "view_refresh", "label", _("Re_fresh") );
     xset_set_set( set, "icon", "gtk-refresh" );
 
-    set = xset_set( "path_help", "label", _("_Path Bar Help") );
+    set = xset_set( "path_hand", "label", _("P_rotocol Handler...") );
+    set->menu_style = XSET_MENU_STRING;
+    xset_set_set( set, "title", _("Set Protocol Handler") );
+    xset_set_set( set, "desc", _("Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n\nIf this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n\nTIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n") );
+    xset_set_set( set, "icon", "gtk-execute" );
+
+    set = xset_set( "path_help", "label", _("Path Bar _Help") );
     xset_set_set( set, "icon", "gtk-help" );
 
     // EDIT
