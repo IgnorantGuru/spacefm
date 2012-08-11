@@ -82,6 +82,7 @@
     corrected duplicated menu key shortcuts fixes #92
     error on missing edit udevil.conf fixes #98
     sync new file open; select new closes #35
+    added Design Mode Style|Confirmation (dialog) #52
 0.7.7   2012-05-27:
     escape mount point in dev props scripts fixes #70
     fixed File|File Search keybinding

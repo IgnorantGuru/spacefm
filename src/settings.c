@@ -5824,6 +5824,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_CHECK:
         set->menu_style = XSET_MENU_CHECK;
         break;
+    case XSET_JOB_CONFIRM:
+        if ( !set->desc )
+            set->desc = g_strdup( _("Are you sure?") );
+        if ( xset_text_dialog( parent, _("Dialog Message"), NULL, TRUE, _("Enter the message to be displayed in this dialog:\n\nUse:\n\t\\n\tnewline\n\t\\t\ttab"), NULL, set->desc, &set->desc, NULL, FALSE, "#designmode-style-input" ) )
+            set->menu_style = XSET_MENU_CONFIRM;
+        break;
     case XSET_JOB_DIALOG:
         if ( xset_text_dialog( parent, _("Dialog Message"), NULL, TRUE, _("Enter the message to be displayed in this dialog:\n\nUse:\n\t\\n\tnewline\n\t\\t\ttab"), NULL, set->desc, &set->desc, NULL, FALSE, "#designmode-style-input" ) )
             set->menu_style = XSET_MENU_STRING;
@@ -6176,6 +6182,9 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             case XSET_JOB_CHECK:
                 help = "#designmode-style-checkbox";
                 break;
+            case XSET_JOB_CONFIRM:
+                help = "#designmode-style-confirm";
+                break;
             case XSET_JOB_DIALOG:
                 help = "#designmode-style-input";
                 break;
@@ -6483,6 +6492,15 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
                                     set->menu_style < XSET_MENU_SUBMENU );
 
+    // Confirmation
+    newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("Con_firmation") );
+    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
+    g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_CONFIRM ) );
+    GTK_CHECK_MENU_ITEM (newitem)->active = ( set->menu_style == XSET_MENU_CONFIRM );
+    g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
+    gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
+                                    set->menu_style < XSET_MENU_SUBMENU );
+
     // Dialog
     newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Input") );
     gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
@@ -6495,7 +6513,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // Description
     newitem = xset_design_additem( submenu, _("_Message"),
                                 GTK_STOCK_EDIT, XSET_JOB_MESSAGE, set );
-    gtk_widget_set_sensitive( newitem, ( set->menu_style == XSET_MENU_STRING )
+    gtk_widget_set_sensitive( newitem, ( set->menu_style == XSET_MENU_STRING
+                                      || set->menu_style == XSET_MENU_CONFIRM )
                                             && !set->plugin && !set->lock );
 
     // Separator
@@ -7027,7 +7046,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         else if ( !rset->lock )
             xset_custom_activate( item, rset );
     }
-    else if ( rset->menu_style == XSET_MENU_STRING )
+    else if ( rset->menu_style == XSET_MENU_STRING ||
+              rset->menu_style == XSET_MENU_CONFIRM )
     {
         char* msg;
         char* help;
@@ -7053,7 +7073,19 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
             g_free( tab );
             help = set->name;
         }
-        if ( xset_text_dialog( parent, title, NULL, TRUE, msg, NULL, mset->s,
+        if ( rset->menu_style == XSET_MENU_CONFIRM )
+        {
+            if ( xset_msg_dialog( parent, GTK_MESSAGE_QUESTION, title, NULL,
+                                            GTK_BUTTONS_OK_CANCEL,
+                                            msg, NULL, help ) == GTK_RESPONSE_OK )
+            {
+                if ( cb_func )
+                    (*cb_func) ( item, cb_data );
+                else if ( !set->lock )
+                    xset_custom_activate( item, rset );
+            }
+        }
+        else if ( xset_text_dialog( parent, title, NULL, TRUE, msg, NULL, mset->s,
                                                         &mset->s, default_str,
                                                         FALSE, help ) )
         {

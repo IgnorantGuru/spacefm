@@ -1049,7 +1049,7 @@ The Icon item allows you to set or change an icon for a menu item.  A dialog wil
 
 <!-- # Style -->
 <p><a name="designmode-designmenu-style"/><a href="#designmode-designmenu-style"><b>Style</b></a><br>
-If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (normal, checkbox, or input), and change the input dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the <a href="#designmode-style">Style</a> section below for details.
+If a menu item is a custom command, the Style submenu allows you to change the type of the menu item (Normal, Checkbox, Confirmation, or Input), and change the dialog message.  For all menu items (built-in and custom), it also allows you to set context rules which determine when and how this menu item will appear.  See the <a href="#designmode-style">Style</a> section below for details.
 
 <!-- # Command -->
 <p><a name="designmode-designmenu-command"/><a href="#designmode-designmenu-command"><b>Command</b></a><br>
@@ -1171,7 +1171,7 @@ The Separator item adds a new separator line into the menu after the current men
 <td valign="top">
 <a name="designmode-style"/><a href="#designmode-style"><font size=+2>Style</font></a>
 <!-- @Design Mode @Style -->
-<p>The Style submenu of the design menu allows you to control a menu item's appearance.  For custom commands, you can choose whether the item acts as a normal menu item, a checkbox, or prompts the user for input.  For built-in as well as custom commands, the Style menu also contains the context rules which determine if and how a menu item is displayed based on the file browser's context.
+<p>The Style submenu of the design menu allows you to control a menu item's appearance.  For custom commands, you can choose whether the item acts as a normal menu item, a checkbox, a confirmation dialog, or an input dialog.  For built-in as well as custom commands, the Style menu also contains the context rules which determine if and how a menu item is displayed based on the file browser's context.
 
 <!-- # Normal -->
 <p><a name="designmode-style-normal"/><a href="#designmode-style-normal"><b>Normal</b></a><br>
@@ -1188,9 +1188,15 @@ If your command's style is set to Checkbox, it will be displayed as a checkbox m
 
 <p>Now when you click your menu item, you will be told if the box is checked or unchecked - each time you click the item, it will change.
 
+<!-- # Confirmation #confirm -->
+<p><a name="designmode-style-confirm"/><a href="#designmode-style-confirm"><b>Confirmation</b></a><br>
+If your command's style is set to Confirmation, it will be displayed as a normal menu item with an optional icon to the left, and a key shortcut to the right.  When the item is clicked, the user will be presented with a confirmation dialog with OK and Cancel buttons.  If the user the clicks OK, your custom command will then be run.  If the user clicks Cancel, the command will not be run.  There is also a Help button in this dialog which opens the README file for this command.
+
+<p>To set or change the message which appears in the dialog, set <a href="#designmode-style-message">Message</a>.
+
 <!-- # Input -->
 <p><a name="designmode-style-input"/><a href="#designmode-style-input"><b>Input</b></a><br>
-If your command's style is set to Input, it will be displayed as a normal menu item, with an optional icon to the left, and a key shortcut to the right.  However, when the item is clicked, the user will be prompted to enter text.  If the user the clicks OK, your custom command will then be run.  If the user clicks cancel, the command will not be run.
+If your command's style is set to Input, it will be displayed as a normal menu item with an optional icon to the left, and a key shortcut to the right.  When the item is clicked, the user will be prompted to enter text.  If the user the clicks OK, your custom command will then be run.  If the user clicks Cancel, the command will not be run.  There is also a Help button in this dialog which opens the README file for this command.
 
 <p>Your custom command can read the text entered by the user using the variable "$fm_value".  The last text entered in the box will be remembered and will be the default entry next time the item is clicked.
 
@@ -1199,14 +1205,16 @@ If your command's style is set to Input, it will be displayed as a normal menu i
 
 <p>When you click the menu item, you will be asked for your name, and if you click OK, told your name.
 
+To set or change the message which appears in the dialog, set <a href="#designmode-style-message">Message</a>.
+
 <p>NOTE:  When exporting a command, the last value entered in the input dialog will be exported with the plugin, even if Input is no longer the selected style.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <!-- # Message -->
 <p><a name="designmode-style-message"/><a href="#designmode-style-message"><b>Message</b></a><br>
-The Message item will be enabled only if the style is set to <a href="#designmode-style-input">Input</a>.  This is the same dialog you saw when you first selected Style|Input - it allows you to change the message seen by the user when the item is clicked.
+The Message item will be enabled only if the style is set to <a href="#designmode-style-confirm">Confirmation</a> or <a href="#designmode-style-input">Input</a>.  This is the same dialog you saw when you first selected Style|Confirmation or Style|Input - it allows you to change the message seen by the user when the item is clicked.
 
-<p>Although all the text must be on one line, you can create linebreaks in the displayed dialog text by inserting \n for a linefeed.  Or to insert a tab, use \t.  No other format characters should be used in this dialog.  For example:
-<pre>    Please enter your name:\n\nFull name is required</pre>
+<p>Although all the text must be on one line, you can create linebreaks in the displayed dialog text by inserting <b>\n</b> for a linefeed.  Or to insert a tab, use <b>\t</b>.  No other format characters should be used in this dialog.  For example:
+<pre>    Please enter your value:\n\nA value is required.</pre>
 
 
 <!-- # Context -->
