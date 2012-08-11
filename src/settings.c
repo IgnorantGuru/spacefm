@@ -9502,7 +9502,7 @@ void xset_defaults()
     set = xset_set( "go_set_default", "label", _("_Set Default") );
         xset_set_set( set, "icon", "gtk-save" );
 
-    set = xset_set( "edit_canon", "label", _("C_anonical") );
+    set = xset_set( "edit_canon", "label", _("Re_al Path") );
 
     set = xset_set( "go_focus", "label", _("Fo_cus") );
     set->menu_style = XSET_MENU_SUBMENU;
