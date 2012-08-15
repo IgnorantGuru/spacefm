@@ -368,6 +368,11 @@ static gboolean on_button_press(GtkWidget      *entry,
 }
 #endif
 
+void ptk_path_entry_man( GtkWidget* widget, GtkWidget* parent )
+{
+    xset_show_help( parent, NULL, "#gui-pathbar" );
+}
+
 void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
 {
     GtkWidget* parent_win = gtk_widget_get_toplevel( GTK_WIDGET( parent ) );
@@ -439,7 +444,7 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb_panel( file_browser->mypanel, "font_path", main_update_fonts, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
-    set = xset_set_cb( "path_help", ptk_path_entry_help, file_browser );
+    set = xset_set_cb( "path_help", ptk_path_entry_man, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     gtk_widget_show_all( GTK_WIDGET( menu ) );
     g_signal_connect( menu, "key-press-event",

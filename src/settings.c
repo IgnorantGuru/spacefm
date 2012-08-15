@@ -8444,6 +8444,7 @@ void xset_defaults()
    
     set = xset_set( "dev_menu_mark", "label", _("_Bookmark") );
     xset_set_set( set, "icon", "gtk-add" );
+    set->line = g_strdup( "#devices-menu-bookmark" );
 
     set = xset_get( "sep_mr1" );
     set->menu_style = XSET_MENU_SEP;
@@ -8657,12 +8658,12 @@ void xset_defaults()
 
         set = xset_set( "dev_show_net", "label", _("Mounted _Networks") );
         set->menu_style = XSET_MENU_CHECK;
-        set->line = g_strdup( "#devices-settings-table" );
+        set->line = g_strdup( "#devices-settings-net" );
         set->b = XSET_B_TRUE;
 
         set = xset_set( "dev_show_file", "label", _("Mounted _Files") );
         set->menu_style = XSET_MENU_CHECK;
-        set->line = g_strdup( "#devices-settings-table" );
+        set->line = g_strdup( "#devices-settings-files" );
         set->b = XSET_B_TRUE;
 
         set = xset_set( "dev_show_hide_volumes", "label", _("_Volumes...") );
@@ -9635,6 +9636,7 @@ void xset_defaults()
     xset_set_set( set, "title", _("Set Protocol Handler") );
     xset_set_set( set, "desc", _("Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n\nIf this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n\nTIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n") );
     xset_set_set( set, "icon", "gtk-execute" );
+    set->line = g_strdup( "#gui-pathbar-protohand" );
 
     set = xset_set( "path_help", "label", _("Path Bar _Help") );
     xset_set_set( set, "icon", "gtk-help" );
@@ -9947,6 +9949,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Path Bar Font (Panel 1)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
+    set->line = g_strdup( "#gui-pathbar-font" );
 
     set = xset_set( "panel1_font_tab", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
@@ -10066,6 +10069,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Path Bar Font (Panel 2)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
+    set->line = g_strdup( "#gui-pathbar-font" );
 
     set = xset_set( "panel2_font_tab", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
@@ -10193,6 +10197,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Path Bar Font (Panel 3)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
+    set->line = g_strdup( "#gui-pathbar-font" );
 
     set = xset_set( "panel3_font_tab", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
@@ -10319,6 +10324,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Path Bar Font (Panel 4)") );
     xset_set_set( set, "desc", _("$ cat /home/user/example") );
+    set->line = g_strdup( "#gui-pathbar-font" );
 
     set = xset_set( "panel4_font_tab", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
