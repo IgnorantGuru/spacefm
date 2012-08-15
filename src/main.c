@@ -94,6 +94,7 @@ static gboolean new_window = FALSE;
 static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
 static gboolean profile = FALSE;  //MOD
+static gboolean custom_dialog = FALSE;  //sfm
 static gboolean sdebug = FALSE;
 
 static int show_pref = 0;
@@ -132,6 +133,7 @@ static GOptionEntry opt_entries[] =
 #ifdef DESKTOP_INTEGRATION
     { "set-wallpaper", '\0', 0, G_OPTION_ARG_NONE, &set_wallpaper, N_("Set desktop wallpaper to FILE"), NULL },
 #endif
+    { "dialog", 'g', 0, G_OPTION_ARG_NONE, &custom_dialog, N_("Show a custom dialog (See -g help)"), NULL },
     { "profile", '\0', 0, G_OPTION_ARG_STRING, &profile, N_("No function - for compatibility only"), "PROFILE" },
     { "no-desktop", '\0', 0, G_OPTION_ARG_NONE, &no_desktop, N_("No function - for compatibility only"), NULL },
 
@@ -911,14 +913,6 @@ int main ( int argc, char *argv[] )
     textdomain ( GETTEXT_PACKAGE );
 #endif
 
-    /* Initialize multithreading
-         No matter we use threads or not, it's safer to initialize this earlier. */
-#ifdef _DEBUG_THREAD
-    gdk_threads_set_lock_functions(_debug_gdk_threads_enter, _debug_gdk_threads_leave);
-#endif
-    g_thread_init( NULL );
-    gdk_threads_init ();
-
     /* initialize GTK+ and parse the command line arguments */
     if( G_UNLIKELY( ! gtk_init_with_args( &argc, &argv, "", opt_entries, GETTEXT_PACKAGE, &err ) ) )
     {
@@ -927,6 +921,18 @@ int main ( int argc, char *argv[] )
         return 1;
     }
     
+    // dialog mode?
+    if ( custom_dialog )
+        return custom_dialog_init( &argc, &argv );
+    
+    /* Initialize multithreading  //sfm moved below parse arguments
+         No matter we use threads or not, it's safer to initialize this earlier. */
+#ifdef _DEBUG_THREAD
+    gdk_threads_set_lock_functions(_debug_gdk_threads_enter, _debug_gdk_threads_leave);
+#endif
+    g_thread_init( NULL );
+    gdk_threads_init ();
+
 #if HAVE_HAL
     /* If the user wants to mount/umount/eject a device */
     if( G_UNLIKELY( mount || umount || eject ) )

@@ -8444,6 +8444,7 @@ void xset_defaults()
    
     set = xset_set( "dev_menu_mark", "label", _("_Bookmark") );
     xset_set_set( set, "icon", "gtk-add" );
+    set->line = g_strdup( "#devices-menu-bookmark" );
 
     set = xset_get( "sep_mr1" );
     set->menu_style = XSET_MENU_SEP;
@@ -8657,12 +8658,12 @@ void xset_defaults()
 
         set = xset_set( "dev_show_net", "label", _("Mounted _Networks") );
         set->menu_style = XSET_MENU_CHECK;
-        set->line = g_strdup( "#devices-settings-table" );
+        set->line = g_strdup( "#devices-settings-net" );
         set->b = XSET_B_TRUE;
 
         set = xset_set( "dev_show_file", "label", _("Mounted _Files") );
         set->menu_style = XSET_MENU_CHECK;
-        set->line = g_strdup( "#devices-settings-table" );
+        set->line = g_strdup( "#devices-settings-file" );
         set->b = XSET_B_TRUE;
 
         set = xset_set( "dev_show_hide_volumes", "label", _("_Volumes...") );
