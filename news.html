@@ -25,6 +25,88 @@
 
 
 
+
+<!-- --------------------------------------------------------------------- -->
+<br><hr><a name="0.7.11"></a>
+<big><b><a href="#0.7.11">0.7.11 released</a></b></big><br>
+2012-Aug-15
+
+<p><b>Recommended reading for all SpaceFM users</b> - A new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar">Path Bar</a> section of the user's manual has been added to document the uses and methods of the Path Bar.  The Path Bar probably does more than you know!
+
+<p>SpaceFM's <b>find-as-you-type search</b> function now supports several modes, and also is now UTF-8 compliant:
+
+<ul>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is now used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+
+    <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
+    <ul>
+        <li>If the search key begins with a caret (^), the search will match names <i>beginning</i> with your key.  
+        <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
+        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are not supported in this mode.)
+    </ul><br>
+    <li>As before, anytime you use an uppercase letter anywhere in your search key, the search mode becomes <b>case sensitive</b>.<br><br>
+
+    <li>As before, regardless of mode, you can press down or up arrow to go to the <b>next or previous matched filename</b>.<br><br>
+</ul>
+
+<p><b>In addition, SpaceFM 0.7.11 includes the following changes:</b>
+
+<ul>
+    <li>A new command line option <b>--no-saved-tabs, -n</b> has been added which causes SpaceFM to not load saved tabs when opening a new window, even if File|Saved Tabs was used in the last saved session.  This allows you to open an additional window containing only a single folder, for example.<br><br>
+    <li>Command line option <b>--reuse-tab</b> can now be used in conjunction with other options<br><br>
+    <li>Specifying command line option <b>--panel=N</b> without a folder path now shows and focuses panel N<br><br>
+    <li>The user's manual <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#invocation-windows">Invocation</a> section has been updated with <b>additional command line usage examples</b>.<br><br>
+    <li><b>Network URLs can now be specified on the command line</b> same as folder paths.  This means SpaceFM can now be set as a handler for a given protocol, eg in spacefm.desktop you can set:
+    <blockquote>MimeType=inode/directory;inode/mount-point;x-scheme-handler/ssh;x-scheme-handler/smb;x-scheme-handler/nfs;x-scheme-handler/ftp;</blockquote><br>
+    <li>Edit|<b>Select By Pattern</b> has been added to the file list's context menu to <b>select files by glob</b>.  This function can also be accessed using a <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar-pattern">percent prefix</a> in the Path Bar.<br><br>
+    <li>A <b>custom <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar-protohand">Protocol Handler</a></b> may now be configured, allowing custom scripts or programs to be used to open URLs, and allowing custom protocols to be added.<br><br>
+    <li>When no files are selected, the <b>status bar now displays the current directory</b>.  If the canonicalized path differs, the <b>status bar shows the canonical path</b>.  (The canonical or 'real' path is determined by recursively following all links in the path.)<br><br>
+    <li><b>Go|Real Path has been added</b> to the file list's context menu.  If no files are selected, this will cause SpaceFM to change to the canonical path of the current directory.  If files are selected, the <i>first</i> selected file's path will be canonicalized, and SpaceFM will change to the canonical directory and select the file.  So, for example, selecting a link and selecting Go|Real Path will take you to the real file target, regardless of the number of compounded links in the path.<br><br>
+    <li>File|Root Window now opens the current folder.<br><br>
+    <li><b>libgtk2.0-bin</b> has been added as a SpaceFM dependency when using build option --disable-pixmaps (recommended).  The provided deb packages now include this dependency.<br><br>
+    <li>SpaceFM's <b>overwrite query dialog now shows file times and sizes</b> for comparing the source file to the file you are overwriting<br><br>
+    <li>SpaceFM now automatically runs '<b>udevil clean</b>' if it detects another process unmounting a device, in order to remove any udevil-created mount point.  This is only run if udevil is the default Mount Command or Unmount Command.<br><br>
+    <li><b>Automatic unmounting of ejected media has been corrected</b> - be sure to update to <a href="http://ignorantguru.github.com/udevil/news.html#0.3.2">udevil 0.3.2</a><br><br>
+    <li><b>File change detection</b> is now done on all filesystems <i>except</i> on non-block devices which are type nfs fuse cifs smbfs or ftpfs.  If you encounter an additional filesystem type for which you believe change detection should be disabled (for example a network filesystem which causes GUI hangs while copying) please <a href="https://github.com/IgnorantGuru/spacefm/issues">report the issue</a>.<br><br>
+    <li>Pressing F1 (default help key) while the Path Bar or Devices list are focused will now open the manual to the appropriate section.<br><br>
+    <li>A <b>problem with target selection when dragging and dropping</b> in Icon view mode which caused SpaceFM to drop the files into the wrong folder has been corrected<br><br>
+    <li>Vladimir Kudrya's <b>Russian translation has been updated</b>.<br><br>
+</ul>
+
+<p>0.7.11 ChangeLog:
+<ul>
+added --no-saved-tabs, -n command line option to not load saved tabs #110<br>
+--reuse-tab can be used in conjunction with other options<br>
+File|Root Window opens current folder #116<br>
+specifying --panel=N without a dir shows and focuses panel N<br>
+handle network URLs on command line<br>
+user manual Invocation updated<br>
+added dependency libgtk2.0-bin [spacefm 0.7.10 with --disable-pixmaps]<br>
+find-as-you-type search options #85<br>
+rename dialog name selection UTF-8 compliant #127<br>
+replace G_VALUE_INIT macro #126<br>
+added file list Edit|Select By Pattern<br>
+adjust parse url<br>
+Show Output option should open on additional output after closure<br>
+Remove Text Type Association popup note<br>
+display file sizes and times in overwrite query<br>
+file change detection blacklist non-block nfs fuse cifs smbfs ftpfs #129<br>
+percent in path bar select by pattern<br>
+fix hang on click on 5000+ selected files in list view<br>
+clean udevil mount points on device removal, exit<br>
+fix auto umount on eject<br>
+fix icon view drag target #132<br>
+added custom Protocol Handler setting to Path Bar context menu<br>
+status bar show canonicalized current dir<br>
+added Go|Real Path<br>
+added user manual GUI|Path Bar<br>
+</ul>
+<br>
+
+
+
+
+
 <!-- --------------------------------------------------------------------- -->
 <br><hr><a name="0.7.10"></a>
 <big><b><a href="#0.7.10">0.7.10 released</a></b></big><br>
