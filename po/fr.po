@@ -1,11 +1,11 @@
 # French translation of SpaceFM.
 # This file is distributed under the same license as the SpaceFM package.
 #
-# Ersplus - Fraide <ersplus@free.fr>, 2006.
-# Héonium - Christophe CRIER, 2006.
-# Frederic Bezies <fredbezies@gmail.com>.
-# Robert-André Mauchin <zebob.m@pengzone.org>, 2008.
 # Jean-Philippe Fleury <contact@jpfleury.net>, 2012.
+# Robert-André Mauchin <zebob.m@pengzone.org>, 2008.
+# Frederic Bezies <fredbezies@gmail.com>.
+# Héonium - Christophe CRIER, 2006.
+# Ersplus - Fraide <ersplus@free.fr>, 2006.
 #
 msgid ""
 msgstr ""
@@ -54,16 +54,16 @@ msgid "by IgnorantGuru"
 msgstr "par IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
-msgid "Copyright (C) 2012    GPL2"
-msgstr "Copyright (C) 2012    GPL2"
+msgid "Copyright (C) 2012    GPL3+"
+msgstr "Copyright (C) 2012    GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
-"SpaceFM - Copyright (C) 2012   GPL2\n"
+"SpaceFM - Copyright (C) 2012   GPL3+\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it "
 "under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 2 of the License, or (at your option) "
+"Software Foundation; either version 3 of the License, or (at your option) "
 "any later version.\n"
 "\n"
 "USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
@@ -73,18 +73,18 @@ msgid ""
 "\n"
 "The 'exo' libraries and source code used by this software are licensed under "
 "the GNU General Public License and the GNU Lesser General Public License "
-"version 2 (LGPL2).\n"
+"version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the "
 "GNU Lesser General Public License along with this program; if not, write to "
 "the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
 "MA  02110-1301, USA."
 msgstr ""
-"SpaceFM - Copyright (C) 2012   GPL2\n"
+"SpaceFM - Copyright (C) 2012   GPL3+\n"
 "\n"
 "Ce programme est un logiciel libre ; vous pouvez le redistribuer et/ou le "
 "modifier au titre des clauses de la GNU General Public License, telle que "
-"publiée par la Free Software Foundation ; soit la version 2 de la Licence, "
+"publiée par la Free Software Foundation ; soit la version 3 de la Licence, "
 "ou (à votre discrétion) une version ultérieure quelconque.\n"
 "\n"
 "UTILISATION À VOS PROPRES RISQUES. Ce programme est distribué dans l'espoir "
@@ -94,7 +94,7 @@ msgstr ""
 "\n"
 "La bibliothèque « exo » ainsi que son code source utilisés par ce logiciel "
 "sont distribués sous la GNU General Public License et la GNU Lesser General "
-"Public License version 2 (LGPL2).\n"
+"Public License version 3 (LGPL3).\n"
 "\n"
 "Vous devriez avoir reçu un exemplaire de la GNU General Public License et de "
 "la GNU Lesser General Public License avec ce programme ; si ce n'est pas le "

@@ -1,11 +1,11 @@
 # Swedish translation for SpaceFM
 # Copyright (C) 2012
 # This file is distributed under the same license as the SpaceFM package.
-# Johan Andersson <nossrednanahoj(at)gmail.com>, 2006.
-# Mikael Magnusson, <mikachu@gmail.com>, 2008.
-# Martin Bagge <brother@bsnet.se>, 2009.
-# Daniel Nylander <po@danielnylander.se>, 2009.
 # Tomas Forsman <tforsman@foresightlinux.se>, 2012.
+# Daniel Nylander <po@danielnylander.se>, 2009.
+# Martin Bagge <brother@bsnet.se>, 2009.
+# Mikael Magnusson, <mikachu@gmail.com>, 2008.
+# Johan Andersson <nossrednanahoj(at)gmail.com>, 2006.
 #
 msgid ""
 msgstr ""
