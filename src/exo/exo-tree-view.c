@@ -722,7 +722,7 @@ exo_tree_view_single_click_timeout (gpointer user_data)
   GList             *rows;
   GList             *lp;
 
-  GDK_THREADS_ENTER ();
+  //GDK_THREADS_ENTER ();  //sfm not needed because called from g_idle?
 
   /* verify that we are in single-click mode, have focus and a hover path */
   if (GTK_WIDGET_HAS_FOCUS (tree_view) && tree_view->priv->single_click && tree_view->priv->hover_path != NULL)
@@ -735,7 +735,10 @@ exo_tree_view_single_click_timeout (gpointer user_data)
           gtk_tree_view_get_cursor (GTK_TREE_VIEW (tree_view), &cursor_path, &cursor_column);
 
           /* be sure the row is fully visible */
-          gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (tree_view), tree_view->priv->hover_path, cursor_column, FALSE, 0.0f, 0.0f);
+          gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (tree_view),
+                            tree_view->priv->hover_path, 
+                            0, //sfm was cursor_column - caused horizontal scroll
+                            FALSE, 0.0f, 0.0f);
 
           /* determine the selection and change it appropriately */
           selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
@@ -814,7 +817,7 @@ exo_tree_view_single_click_timeout (gpointer user_data)
         }
     }
 
-  GDK_THREADS_LEAVE ();
+  //GDK_THREADS_LEAVE ();
 
   return FALSE;
 }
