@@ -10440,10 +10440,20 @@ void xset_default_keys()
             keysets = g_list_prepend( keysets, (XSet*)l->data );
     }
 
-    def_key( "tab_prev", 65056, 5 );    // ctrl-tab  or use ctrl-pgdn??
+    def_key( "tab_prev", 65056, 5 );        // ctrl-tab  or use ctrl-pgdn??
     def_key( "tab_next", 65289, 4 );
     def_key( "tab_close", 119, 4 );
     def_key( "tab_new", 116, 4 );
+    def_key( "tab_1", 0x31, 8 );            // Alt-1
+    def_key( "tab_2", 0x32, 8 );
+    def_key( "tab_3", 0x33, 8 );
+    def_key( "tab_4", 0x34, 8 );
+    def_key( "tab_5", 0x35, 8 );
+    def_key( "tab_6", 0x36, 8 );
+    def_key( "tab_7", 0x37, 8 );
+    def_key( "tab_8", 0x38, 8 );
+    def_key( "tab_9", 0x39, 8 );            // Alt-9
+    def_key( "tab_10", 0x30, 8 );           // Alt-0
     def_key( "edit_cut", 120, 4 );
     def_key( "edit_copy", 99, 4 );
     def_key( "edit_paste", 118, 4 );
