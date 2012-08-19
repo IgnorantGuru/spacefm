@@ -480,7 +480,8 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
     gtk_entry_set_has_frame( GTK_ENTRY( entry ), TRUE );
     
     // set font
-    if ( xset_get_s_panel( file_browser->mypanel, "font_path" ) )
+    if ( file_browser->mypanel > 0 && file_browser->mypanel < 5 &&
+                        xset_get_s_panel( file_browser->mypanel, "font_path" ) )
     {
         PangoFontDescription* font_desc = pango_font_description_from_string(
                         xset_get_s_panel( file_browser->mypanel, "font_path" ) );
