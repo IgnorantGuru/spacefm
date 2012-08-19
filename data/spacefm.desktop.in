@@ -1,8 +1,7 @@
 [Desktop Entry]
 Version=1.0
-Encoding=UTF-8
 _Name=SpaceFM
-Categories=Application;System;Utility;Core;GTK;
+Categories=System;FileTools;Utility;Core;GTK;FileManager;
 Exec=spacefm %F
 Icon=spacefm
 StartupNotify=true
