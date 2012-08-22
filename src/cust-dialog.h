@@ -2,11 +2,13 @@
 #define _CUST_DLG_H_
 
 #include <glib.h>
-#include <glib/gi18n.h>
+#include "vfs-file-monitor.h"
+
+G_BEGIN_DECLS
 
 static const char* cdlg_option[] =  // order must match ElementType order
 {
-    "prefix",       "NAME",
+    "prefix",       "NAME|@FILE",
                     N_("Set bash variable name  (Default: \"dialog\")"),
     "title",        "TEXT|@FILE",
                     N_("Set window title"),
@@ -28,15 +30,15 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add a file or pipe viewer"),
     "checkbox",     "LABEL|@FILE [DEFAULT [COMMAND...]]",
                     N_("Add a checkbox option"),
-    "radio",        "{LABEL [...] \"\"}|@FILE [DEFAULT|#INDEX [COMMAND...]]",
+    "radio",        "{LABEL [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
                     N_("Add a row of radio options"),
-    "drop",         "{TEXT [...] \"\"}|@FILE [DEFAULT|#INDEX [COMMAND...]]",
+    "drop",         "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
                     N_("Add a drop-down list"),
-    "combo",        "{TEXT [...] \"\"}|@FILE [DEFAULT|#INDEX [COMMAND...]]",
+    "combo",        "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
                     N_("Add a combo list"),
-    "list",         "{TEXT [...] \"\"}|@FILE [DEFAULT|#INDEX [COMMAND...]]",
+    "list",         "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
                     N_("Add a list box"),
-    "mlist",        "{TEXT [...] \"\"}|@FILE [DEFAULT|#INDEX [COMMAND...]]",
+    "mlist",        "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
                     N_("Add a list box with multiple selections"),
     "status",       "TEXT|@FILE [COMMAND...]",
                     N_("Add a status bar"),
@@ -46,14 +48,14 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add a horizontal line separator"),
     "vsep",         "[WIDTH|@FILE]",
                     N_("Add a vertical line separator"),
-    "button",       "LABEL[@ICON]|STOCK|@FILE [COMMAND...]",
+    "button",       "LABEL[;ICON]|STOCK|@FILE [COMMAND...]",
                     N_("Add STOCK button, or LABEL button with ICON"),
     "hbox",         "[PAD|@FILE]",
                     N_("Add following widgets to a horizontal box"),
     "vbox",         "[PAD|@FILE]",
                     N_("Add following widgets to a vertical box"),
     "close-box",    "",
-                    N_("Close the current box of widgets");
+                    N_("Close the current box of widgets"),
     "width",        "WIDTH|@FILE",
                     N_("Set window width"),
     "height",       "HEIGHT|@FILE",
@@ -63,7 +65,7 @@ static const char* cdlg_option[] =  // order must match ElementType order
     "font",         "FONT|@FILE",
                     N_("Set font"),
     "rcfile",       "FILE|@FILE",
-                    N_("Use GTK RC theme file",
+                    N_("Use GTK RC theme file"),
     "timeout",      "[DELAY|@FILE]",
                     N_("Close window after DELAY seconds"),
     "browse",       "[DIR|FILE|@FILE [save] [dir] [multi] [confirm]]",
@@ -73,9 +75,10 @@ static const char* cdlg_option[] =  // order must match ElementType order
     "command",      "FILE",
                     N_("Read commands from FILE")
 };
+// TEXT starts with ~ for pango
 
 typedef enum {
-    CDLG_WINDOW,
+    CDLG_PREFIX,
     CDLG_TITLE,
     CDLG_WINDOW_ICON,
     CDLG_ICON,
@@ -114,18 +117,21 @@ typedef struct
 {
     ElementType type;
     char* name;
-    GList* val;
-    char* def_val;
+    GList* args;
+    const char* def_val;
+    char* val;
     char* command;
     GList* widgets;
-    gint watch;
+    VFSFileMonitor* monitor;
+    const char* watch_file;
 } CustomElement;
 
 
-int custom_dialog_init( int *argc, char ***argv );
+int custom_dialog_init( int argc, char *argv[] );
 
 
 
+G_END_DECLS
 
 
 #endif

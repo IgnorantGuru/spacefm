@@ -48,6 +48,7 @@
 #include "settings.h"
 
 #include "desktop.h"
+#include "cust-dialog.h"
 
 //gboolean startup_mode = TRUE;  //MOD
 //gboolean design_mode = TRUE;  //MOD
@@ -913,6 +914,32 @@ int main ( int argc, char *argv[] )
     textdomain ( GETTEXT_PACKAGE );
 #endif
 
+    // dialog mode?
+    if ( argc > 1 )
+    {
+        if ( !strcmp( argv[1], "-g" ) || !strcmp( argv[1], "--dialog" ) )
+        {
+            /* initialize the file alteration monitor */
+            if( G_UNLIKELY( ! vfs_file_monitor_init() ) )
+            {
+#ifdef USE_INOTIFY
+                ptk_show_error( NULL, _("Error"), _("Error: Unable to initialize inotify file change monitor.\n\nDo you have an inotify-capable kernel?") );
+#else
+                ptk_show_error( NULL, _("Error"), _("Error: Unable to establish connection with FAM.\n\nDo you have \"FAM\" or \"Gamin\" installed and running?") );
+#endif
+                vfs_file_monitor_clean();
+                return 1;
+            }
+            gtk_init (&argc, &argv);
+            int ret = custom_dialog_init( argc, argv );
+            if ( ret )
+                return ret;
+            gtk_main();
+            vfs_file_monitor_clean();
+            return 0;
+        }
+    }
+
     /* initialize GTK+ and parse the command line arguments */
     if( G_UNLIKELY( ! gtk_init_with_args( &argc, &argv, "", opt_entries, GETTEXT_PACKAGE, &err ) ) )
     {
@@ -921,9 +948,12 @@ int main ( int argc, char *argv[] )
         return 1;
     }
     
-    // dialog mode?
+    // dialog mode with other options?
     if ( custom_dialog )
-        return custom_dialog_init( &argc, &argv );
+    {
+        fprintf( stderr, "spacefm: %s\n", _("--dialog must be first option") );
+        return 1;
+    }
     
     /* Initialize multithreading  //sfm moved below parse arguments
          No matter we use threads or not, it's safer to initialize this earlier. */

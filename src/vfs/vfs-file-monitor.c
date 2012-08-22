@@ -236,8 +236,6 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
     VFSFileMonitorCallbackEntry* callbacks;
 
 //printf( "vfs_file_monitor_remove\n" );
-if ( !fm )
-    printf( "    fm == NULL\n");
     if ( cb && fm && fm->callbacks )
     {
         callbacks = ( VFSFileMonitorCallbackEntry* ) fm->callbacks->data;
