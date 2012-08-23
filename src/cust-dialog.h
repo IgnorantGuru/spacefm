@@ -20,14 +20,16 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add an image"),
     "label",        "TEXT|@FILE [COMMAND...]",
                     N_("Add a text label"),
-    "input",        "[TEXT|@FILE [START [END]]]",
+    "input",        "[TEXT|@FILE [SELSTART [SELEND [COMMAND...]]]]",
                     N_("Add a text entry"),
-    "input-large",  "[TEXT|@FILE [START [END]]]",
+    "input-large",  "[TEXT|@FILE [SELSTART [SELEND [COMMAND...]]]]",
                     N_("Add a large text entry"),
-    "password",     "[TEXT|@FILE]",
+    "password",     "[TEXT|@FILE [COMMAND...]]",
                     N_("Add a password entry"),
-    "viewer",       "FILE|PIPE [scroll]",
+    "viewer",       "FILE|PIPE [--scroll]",
                     N_("Add a file or pipe viewer"),
+    "editor",       "[FILE [SAVEFILE]]",
+                    N_("Add multi-line text editor"),
     "checkbox",     "LABEL|@FILE [DEFAULT [COMMAND...]]",
                     N_("Add a checkbox option"),
     "radio",        "{LABEL [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
@@ -49,7 +51,9 @@ static const char* cdlg_option[] =  // order must match ElementType order
     "vsep",         "[WIDTH|@FILE]",
                     N_("Add a vertical line separator"),
     "button",       "LABEL[;ICON]|STOCK|@FILE [COMMAND...]",
-                    N_("Add STOCK button, or LABEL button with ICON"),
+                    N_("Add STOCK dialog button, or LABEL button with ICON"),
+    "free-button",  "LABEL[;ICON]|STOCK|@FILE [COMMAND...]",
+                    N_("Add STOCK button, or LABEL button with ICON anywhere"),
     "hbox",         "[PAD|@FILE]",
                     N_("Add following widgets to a horizontal box"),
     "vbox",         "[PAD|@FILE]",
@@ -73,9 +77,11 @@ static const char* cdlg_option[] =  // order must match ElementType order
     "browse-filter","FILTER|@FILE",
                     N_("Add a filename filter"),
     "command",      "FILE",
-                    N_("Read commands from FILE")
+                    N_("Read commands from FILE")   // quit; focus; press
 };
 // TEXT starts with ~ for pango
+// scroll vbox?
+// menu?
 
 typedef enum {
     CDLG_PREFIX,
@@ -88,6 +94,7 @@ typedef enum {
     CDLG_INPUT_LARGE,
     CDLG_PASSWORD,
     CDLG_VIEWER,
+    CDLG_EDITOR,
     CDLG_CHECKBOX,
     CDLG_RADIO,
     CDLG_DROP,
@@ -99,6 +106,7 @@ typedef enum {
     CDLG_HSEP,
     CDLG_VSEP,
     CDLG_BUTTON,
+    CDLG_FREE_BUTTON,
     CDLG_HBOX,
     CDLG_VBOX,
     CDLG_CLOSE_BOX,
@@ -120,9 +128,9 @@ typedef struct
     GList* args;
     const char* def_val;
     char* val;
-    char* command;
     GList* widgets;
     VFSFileMonitor* monitor;
+    VFSFileMonitorCallback callback;
     const char* watch_file;
 } CustomElement;
 

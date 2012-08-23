@@ -384,6 +384,8 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                     int buttons, const char* msg1, const char* msg2, const char* help );
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
                                                             gboolean def_font );
+void multi_input_select_region( GtkWidget* input, int start, int end );
+char* multi_input_get_text( GtkWidget* input );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );

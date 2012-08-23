@@ -7331,6 +7331,44 @@ void on_multi_input_popup( GtkTextView *input, GtkMenu *menu, gpointer user_data
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }
 
+char* multi_input_get_text( GtkWidget* input )
+{   // returns a new allocated string or NULL if input is empty
+    GtkTextIter iter, siter;
+
+    if ( !GTK_IS_TEXT_VIEW( input ) )
+        return NULL;
+        
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( input ) );
+    gtk_text_buffer_get_start_iter( buf, &siter );
+    gtk_text_buffer_get_end_iter( buf, &iter );
+    char* ret = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
+    if ( ret && ret[0] == '\0' )
+    {
+        g_free( ret );
+        ret = NULL;
+    }
+    return ret;
+}
+
+void multi_input_select_region( GtkWidget* input, int start, int end )
+{
+    GtkTextIter iter, siter;
+
+    if ( start < 0 || !GTK_IS_TEXT_VIEW( input ) )
+        return;
+        
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( input ) );
+
+    gtk_text_buffer_get_iter_at_offset( buf, &siter, start );
+    
+    if ( end < 0 )
+        gtk_text_buffer_get_end_iter( buf, &iter );
+    else
+        gtk_text_buffer_get_iter_at_offset( buf, &iter, end );
+    
+    gtk_text_buffer_select_range( buf, &iter, &siter );
+}
+
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
                                                             gboolean def_font )
 {

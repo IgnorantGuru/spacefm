@@ -919,6 +919,8 @@ int main ( int argc, char *argv[] )
     {
         if ( !strcmp( argv[1], "-g" ) || !strcmp( argv[1], "--dialog" ) )
         {
+            g_thread_init( NULL );
+            gdk_threads_init ();
             /* initialize the file alteration monitor */
             if( G_UNLIKELY( ! vfs_file_monitor_init() ) )
             {
