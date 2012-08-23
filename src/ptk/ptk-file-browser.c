@@ -1747,6 +1747,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
 {
     PtkFileBrowser * file_browser;
     PtkFBViewMode view_mode;
+    PangoFontDescription* font_desc;
     file_browser = ( PtkFileBrowser* ) g_object_new( PTK_TYPE_FILE_BROWSER, NULL );
     
     file_browser->mypanel = curpanel;
@@ -1797,8 +1798,17 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     char* fontname = xset_get_s_panel( curpanel, "font_status" );
     if ( fontname )
     {
-        PangoFontDescription* font_desc = pango_font_description_from_string( fontname );
+        font_desc = pango_font_description_from_string( fontname );
         gtk_widget_modify_font( GTK_WIDGET( file_browser->status_label ), font_desc );
+        pango_font_description_free( font_desc );
+    }
+
+    // set path bar font (is created before mypanel is set)
+    if ( file_browser->path_bar && 
+                        ( fontname = xset_get_s_panel( curpanel, "font_path" ) ) )
+    {
+        font_desc = pango_font_description_from_string( fontname );
+        gtk_widget_modify_font( GTK_WIDGET( file_browser->path_bar ), font_desc );
         pango_font_description_free( font_desc );
     }
 

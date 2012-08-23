@@ -1,5 +1,10 @@
-0.7.10+
-    detect file changes on overlayfs #129
+0.7.11+
+    fix horiz scroll on single-click mode auto-select #137
+    deprecated keys in spacefm desktop files #136
+    fix path bar font not set on new browser
+    default keys for Go|Tab|Tab N = Alt+1 thru Alt+0
+    license bumped to GPL3+
+0.7.11  2012-08-15:
     added --no-saved-tabs, -n command line option to not load saved tabs #110
     --reuse-tab can be used in conjunction with other options
     File|Root Window opens current folder #116
@@ -15,7 +20,7 @@
     Show Output option should open on additional output after closure
     Remove Text Type Association popup note
     display file sizes and times in overwrite query
-    file change detection blacklist non-block nfs fuse cifs smbfs ftpfs
+    file change detection blacklist non-block nfs fuse cifs smbfs ftpfs #129
     percent in path bar select by pattern
     fix hang on click on 5000+ selected files in list view
     clean udevil mount points on device removal, exit
@@ -23,7 +28,8 @@
     fix icon view drag target #132
     added custom Protocol Handler setting to Path Bar context menu
     status bar show canonicalized current dir
-    added Go|Canonical
+    added Go|Real Path
+    added user manual GUI|Path Bar
 0.7.10  2012-07-25:
     added sort options #87 #37 #23
     completed russian translation ru.po

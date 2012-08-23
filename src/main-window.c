@@ -2675,7 +2675,19 @@ static void open_url( GtkAboutDialog *dlg, const gchar *url, gpointer data)
 
 void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_show_help( GTK_WIDGET( main_window ), NULL, NULL );
+    const char* help;
+    
+    PtkFileBrowser* browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
+    if ( browser && browser->path_bar && gtk_widget_has_focus( 
+                                                GTK_WIDGET( browser->path_bar ) ) )
+        help = "#gui-pathbar";
+    else if ( browser && browser->side_dev && gtk_widget_has_focus( 
+                                                GTK_WIDGET( browser->side_dev ) ) )
+        help = "#devices";
+    else
+        help = NULL;
+    xset_show_help( GTK_WIDGET( main_window ), NULL, help );
 }
 
 void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window )
