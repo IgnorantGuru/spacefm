@@ -9,77 +9,74 @@ G_BEGIN_DECLS
 static const char* cdlg_option[] =  // order must match ElementType order
 {
     "prefix",       "NAME|@FILE",
-                    N_("Set bash variable name  (Default: \"dialog\")"),
+                    N_("Set base variable name  (Default: \"dialog\")"),
     "title",        "TEXT|@FILE",
                     N_("Set window title"),
     "window-icon",  "ICON|@FILE",
                     N_("Set window icon"),
+    "label",        "LABEL|@FILE",
+                    N_("Add a text label"),
+    "button",       "LABEL[:ICON]|STOCK|@FILE [COMMAND...]",
+                    N_("Add STOCK dialog button, or LABEL button with ICON"),
+    "free-button",  "LABEL[:ICON]|STOCK|@FILE [COMMAND...]",
+                    N_("Add STOCK button, or LABEL button with ICON anywhere"),
+    "input",        "[--select START[:END]] [TEXT|@FILE [COMMAND...]]",
+                    N_("Add a text entry"),
+    "input-large",  "[--select START[:END]] [TEXT|@FILE [COMMAND...]]",
+                    N_("Add a large text entry"),
+    "password",     "[TEXT|@FILE [COMMAND...]]",
+                    N_("Add a password entry"),
+    "viewer",       "[--scroll] FILE|PIPE",
+                    N_("Add a file or pipe viewer"),
+    "editor",       "[FILE [SAVEFILE]]",
+                    N_("Add multi-line text editor"),
+    "check",        "LABEL [VALUE|@FILE [COMMAND...]]",
+                    N_("Add a checkbox option"),
+    "radio",        "LABEL [VALUE|@FILE [COMMAND...]]",
+                    N_("Add a radio option"),
+    "drop",         "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
+                    N_("Add a drop-down list.  COMMAND run when clicked."),
+    "combo",        "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
+                    N_("Add a combo list.  COMMAND run when Enter pressed."),
+    "list",         "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
+                    // ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+                    // use --colwidth=W inside column list
+                    N_("Add a list box.  COMMAND run when double-clicked."),
+    "mlist",        "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
+                    N_("Add a list box with multiple selections"),
     "icon",         "ICON|@FILE [COMMAND...]",
                     N_("Add an icon"),
     "image",        "FILE|@FILE [COMMAND...]",
                     N_("Add an image"),
-    "label",        "TEXT|@FILE [COMMAND...]",
-                    N_("Add a text label"),
-    "input",        "[TEXT|@FILE [SELSTART [SELEND [COMMAND...]]]]",
-                    N_("Add a text entry"),
-    "input-large",  "[TEXT|@FILE [SELSTART [SELEND [COMMAND...]]]]",
-                    N_("Add a large text entry"),
-    "password",     "[TEXT|@FILE [COMMAND...]]",
-                    N_("Add a password entry"),
-    "viewer",       "FILE|PIPE [--scroll]",
-                    N_("Add a file or pipe viewer"),
-    "editor",       "[FILE [SAVEFILE]]",
-                    N_("Add multi-line text editor"),
-    "checkbox",     "LABEL|@FILE [DEFAULT [COMMAND...]]",
-                    N_("Add a checkbox option"),
-    "radio",        "{LABEL [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
-                    N_("Add a row of radio options"),
-    "drop",         "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
-                    N_("Add a drop-down list"),
-    "combo",        "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
-                    N_("Add a combo list"),
-    "list",         "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
-                    N_("Add a list box"),
-    "mlist",        "{TEXT [...] \"\"}|@FILE [DEFAULT|+INDEX [COMMAND...]]",
-                    N_("Add a list box with multiple selections"),
+/*
     "status",       "TEXT|@FILE [COMMAND...]",
                     N_("Add a status bar"),
-    "progress",     "[@FILE]",
+*/
+    "progress",     "[VALUE|pulse|@FILE]",
                     N_("Add a progress bar"),
-    "hsep",         "[WIDTH|@FILE]",
+    "hsep",         "( no arguments )",
                     N_("Add a horizontal line separator"),
-    "vsep",         "[WIDTH|@FILE]",
+    "vsep",         "( no arguments )",
                     N_("Add a vertical line separator"),
-    "button",       "LABEL[;ICON]|STOCK|@FILE [COMMAND...]",
-                    N_("Add STOCK dialog button, or LABEL button with ICON"),
-    "free-button",  "LABEL[;ICON]|STOCK|@FILE [COMMAND...]",
-                    N_("Add STOCK button, or LABEL button with ICON anywhere"),
-    "hbox",         "[PAD|@FILE]",
+    "hbox",         "[--compact] [PAD|@FILE]",
                     N_("Add following widgets to a horizontal box"),
-    "vbox",         "[PAD|@FILE]",
+    "vbox",         "[--compact] [PAD|@FILE]",
                     N_("Add following widgets to a vertical box"),
     "close-box",    "",
                     N_("Close the current box of widgets"),
-    "width",        "WIDTH|@FILE",
-                    N_("Set window width"),
-    "height",       "HEIGHT|@FILE",
-                    N_("Set window height"),
-    "pad",          "PAD|@FILE",
-                    N_("Set padding around widgets"),
-    "font",         "FONT|@FILE",
-                    N_("Set font"),
-    "rcfile",       "FILE|@FILE",
-                    N_("Use GTK RC theme file"),
+    "window-size",  "\"WIDTHxHEIGHT [PAD]\"|@FILE",
+                    N_("Set minimum width, height, padding (-1 = don't change)"),
     "timeout",      "[DELAY|@FILE]",
-                    N_("Close window after DELAY seconds"),
-    "browse",       "[DIR|FILE|@FILE [save] [dir] [multi] [confirm]]",
-                    N_("Show a file/folder chooser or save dialog"),
-    "browse-filter","FILTER|@FILE",
-                    N_("Add a filename filter"),
-    "command",      "FILE",
-                    N_("Read commands from FILE")   // quit; focus; press
+                    N_("Automatically close window after DELAY seconds"),
+    "keypress",     "KEYCODE MODIFIER COMMAND...",
+                    N_("Run COMMAND when a key combination is pressed"),
+    "chooser",      "[CHOOSER-OPTIONS] [DIR|FILE|@FILE [COMMAND...]]",
+                    N_("Options: [--save] [--dir] [--multi] [--filter F[:F...]]"),
+    "command",      "FILE|PIPE",
+                    N_("Read commands from FILE or PIPE")
 };
 // TEXT starts with ~ for pango
+// COMMAND internal -- external -- internal ...
 // scroll vbox?
 // menu?
 
@@ -87,9 +84,9 @@ typedef enum {
     CDLG_PREFIX,
     CDLG_TITLE,
     CDLG_WINDOW_ICON,
-    CDLG_ICON,
-    CDLG_IMAGE,
     CDLG_LABEL,
+    CDLG_BUTTON,
+    CDLG_FREE_BUTTON,
     CDLG_INPUT,
     CDLG_INPUT_LARGE,
     CDLG_PASSWORD,
@@ -101,23 +98,19 @@ typedef enum {
     CDLG_COMBO,
     CDLG_LIST,
     CDLG_MLIST,
-    CDLG_STATUS,
+    CDLG_ICON,
+    CDLG_IMAGE,
+    //CDLG_STATUS,
     CDLG_PROGRESS,
     CDLG_HSEP,
     CDLG_VSEP,
-    CDLG_BUTTON,
-    CDLG_FREE_BUTTON,
     CDLG_HBOX,
     CDLG_VBOX,
     CDLG_CLOSE_BOX,
-    CDLG_WIDTH,
-    CDLG_HEIGHT,
-    CDLG_PAD,
-    CDLG_FONT,
-    CDLG_RCFILE,
+    CDLG_WINDOW_SIZE,
     CDLG_TIMEOUT,
-    CDLG_BROWSE,
-    CDLG_BROWSE_FILTER,
+    CDLG_KEYPRESS,
+    CDLG_CHOOSER,
     CDLG_COMMAND
 } ElementType;
 
@@ -126,13 +119,61 @@ typedef struct
     ElementType type;
     char* name;
     GList* args;
-    const char* def_val;
     char* val;
     GList* widgets;
+    GList* cmd_args;
+    const char* def_val;
     VFSFileMonitor* monitor;
     VFSFileMonitorCallback callback;
+    guint timeout;
     const char* watch_file;
+    int option;
+    int option2;
 } CustomElement;
+
+static const char* cdlg_cmd[] =
+{
+    "noop",         "( any arguments )",
+                    N_("No operation - does nothing but evaluate arguments"),
+    "close",        "( no arguments )",
+                    N_("Close the dialog"),
+    "press",        "BUTTON-NAME",
+                    N_("Press button named BUTTON-NAME"),
+    "set",          "NAME VALUE",
+                    N_("Set element NAME to VALUE"),
+    "select",       "NAME [VALUE]",  // also do for inputs?
+                    N_("Select item VALUE (or first/all) in element NAME"),
+    "unselect",     "NAME [VALUE]",
+                    N_("Unselect item VALUE (or all) in element NAME"),
+    "focus",        "NAME",
+                    N_("Focus element NAME"),
+    "hide",         "NAME",
+                    N_("Hide element NAME"),
+    "show",         "NAME",
+                    N_("Show element NAME if previously hidden"),
+    "disable",      "NAME",
+                    N_("Disable element NAME"),
+    "enable",       "NAME",
+                    N_("Enable element NAME if previously disabled"),
+    "source",       "FILE",
+                    N_("Save files and write source output to FILE")
+};
+// special NAME = title windowtitle windowicon windowsize
+
+enum {
+    CMD_NOOP,
+    CMD_CLOSE,
+    CMD_PRESS,
+    CMD_SET,
+    CMD_SELECT,  //allow chooser ?
+    CMD_UNSELECT,
+    CMD_FOCUS,
+    CMD_HIDE,
+    CMD_SHOW,
+    CMD_DISABLE,
+    CMD_ENABLE,
+    CMD_SOURCE
+};
 
 
 int custom_dialog_init( int argc, char *argv[] );
