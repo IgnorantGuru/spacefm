@@ -985,7 +985,11 @@ static void set_element_value( CustomElement* el, const char* name,
         height = -1;
         get_width_height_pad( value, &width, &height, NULL );
         if ( width > 0 && height > 0 )
+        {
             gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+            gtk_window_set_position( GTK_WINDOW( dlg ),
+                                                    GTK_WIN_POS_CENTER_ALWAYS );
+        }
         else
             dlg_warn( _("Dynamic resize requires width and height > 0"), NULL, NULL );
         break;
@@ -1289,7 +1293,11 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             int width = -1, height = -1;
             get_width_height_pad( cvalue, &width, &height, NULL );
             if ( width > 0 && height > 0 )
+            {
                 gtk_window_resize( GTK_WINDOW( el->widgets->data ), width, height );
+                gtk_window_set_position( GTK_WINDOW( el->widgets->data ),
+                                                    GTK_WIN_POS_CENTER_ALWAYS );
+            }
             else
                 dlg_warn( _("Dynamic resize requires width and height > 0"),
                                                                     NULL, NULL );
@@ -3198,7 +3206,11 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             get_text_value( el, (char*)args->data, FALSE, TRUE );
             get_width_height_pad( el->val, &width, &height, NULL );
             if ( width > 0 && height > 0 )
+            {
                 gtk_window_resize( GTK_WINDOW( el->widgets->data ), width, height );
+                gtk_window_set_position( GTK_WINDOW( el->widgets->data ),
+                                                    GTK_WIN_POS_CENTER_ALWAYS );
+            }
             else
                 dlg_warn( _("Dynamic resize requires width and height > 0"),
                                                                 NULL, NULL );
