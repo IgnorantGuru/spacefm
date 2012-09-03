@@ -25,8 +25,8 @@
 #define DEFAULT_PAD 4
 #define DEFAULT_WIDTH 450
 #define DEFAULT_HEIGHT 100
-#define DEFAULT_CHOOSER_WIDTH 600
-#define DEFAULT_CHOOSER_HEIGHT 400
+#define DEFAULT_LARGE_WIDTH 600
+#define DEFAULT_LARGE_HEIGHT 400
 #define MAX_LIST_COLUMNS 32
 #define BASH_VALID "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 #define DEFAULT_MANUAL "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html"
@@ -3348,7 +3348,7 @@ static void build_dialog( GList* elements )
     int height = DEFAULT_HEIGHT;
     gboolean timeout_added = FALSE;
     gboolean is_sized = FALSE;
-    gboolean is_chooser = FALSE;
+    gboolean is_large = FALSE;
     
     // create dialog
     dlg = gtk_dialog_new();
@@ -3411,8 +3411,6 @@ static void build_dialog( GList* elements )
             el->option = 1; // activates auto resize from @FILE
             is_sized = TRUE;
         }
-        else if ( el->type == CDLG_CHOOSER && el->widgets->next && !is_chooser )
-            is_chooser = TRUE;
         else if ( el->type == CDLG_TIMEOUT && el->option && !el->widgets->next
                                                       && !timeout_added )
         {
@@ -3425,13 +3423,20 @@ static void build_dialog( GList* elements )
             gtk_button_set_label( GTK_BUTTON( el->widgets->next->data ), el->val );
             timeout_added = TRUE;
         }
+        if ( !is_large && el->widgets->next && (
+                                                el->type == CDLG_CHOOSER || 
+                                                el->type == CDLG_MLIST || 
+                                                el->type == CDLG_EDITOR || 
+                                                el->type == CDLG_VIEWER || 
+                                                el->type == CDLG_LIST ) )
+            is_large = TRUE;
     }
     g_list_free( boxes );
 
     // resize window
-    if ( is_chooser && !is_sized )
-        gtk_window_set_default_size( GTK_WINDOW( dlg ), DEFAULT_CHOOSER_WIDTH,
-                                                        DEFAULT_CHOOSER_HEIGHT );
+    if ( is_large && !is_sized )
+        gtk_window_set_default_size( GTK_WINDOW( dlg ), DEFAULT_LARGE_WIDTH,
+                                                        DEFAULT_LARGE_HEIGHT );
     
     // show dialog
     gtk_widget_show_all( dlg );
