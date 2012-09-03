@@ -1344,7 +1344,6 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             gtk_widget_set_sensitive( el_name->widgets->next->data, TRUE );
         break;
     case CMD_SOURCE:
-printf("cname=%s\n", cname );
         out = fopen( cname, "w" );
         if ( !out )
         {
@@ -1388,33 +1387,34 @@ static void run_command( CustomElement* el, GList* argslist, char* xvalue )
         if ( icmd == -1 )
         {
             // external command
-            line = NULL;
+            gchar* argv[g_list_length( args ) + 1];
+            int a = 0;
             while ( args && strcmp( (char*)args->data, "--" ) )
             {
-                if ( !line )
+                if ( a == 0 )
                 {
                     if ( ((char*)args->data)[0] == '\0' )
                         break;
-                    arg = g_strdup( (char*)args->data );
+                    argv[a++] = g_strdup( (char*)args->data );
                 }
                 else
-                    arg = replace_vars( el, (char*)args->data, xvalue );
-                str = line;
-                line = g_strdup_printf( "%s%s%s", str ? str : "", str ? " " : "", arg );
-                g_free( str );
-                g_free( arg );
+                    argv[a++] = replace_vars( el, (char*)args->data, xvalue );
                 args = args->next;
             }
-            if ( line )
+            if ( a != 0 )
             {
-                //fprintf( stderr, "LINE=%s\n", line );
+                argv[a++] = NULL;
+                fprintf( stderr, "spacefm-dialog: ASYNC=" );
+                for ( i = 0; i < a - 1; i++ )
+                    fprintf( stderr, "%s%s", i == 0 ? "" : "  ", argv[i] );
+                fprintf( stderr, "\n" );
                 error = NULL;
-                if ( !g_spawn_command_line_async( line, &error ) )
+                if ( !g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
+                                                        NULL, NULL, &error ) )
                 {
                     dlg_warn( "%s", error->message, NULL );
                     g_error_free( error );
                 }
-                g_free( line );
             }
         }
         else
@@ -3402,7 +3402,8 @@ static void show_help()
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
-    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n") );
+    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n") );
+    fprintf( f, _("    LABEL    In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
     fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
     
