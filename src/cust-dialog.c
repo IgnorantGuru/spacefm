@@ -1104,7 +1104,7 @@ static char* get_command_value( CustomElement* el, char* cmdline, char* xvalue )
     if ( line[0] == '\0' )
         return line;
     
-    fprintf( stderr, "SYNC=%s\n", line );
+    //fprintf( stderr, "spacefm-dialog: SYNC=%s\n", line );
     ret = g_spawn_command_line_sync( line, &stdout, NULL, NULL, NULL );
     g_free( line );
     return ret ? stdout : g_strdup( "" );    
@@ -1118,7 +1118,7 @@ static char* replace_vars( CustomElement* el, char* value, char* xvalue )
     char* ptr;
     char* sep;
     char c;
-//printf("replace_vars( %s ) [%s]\n", value, xvalue);
+
     if ( !el || !value )
         return g_strdup( value );
     
@@ -1204,7 +1204,6 @@ static char* replace_vars( CustomElement* el, char* value, char* xvalue )
     str = newval;
     newval = g_strdup_printf( "%s%s", str ? str : "", ptr );
     g_free( str );
-//printf("    return = %s\n", newval);
     return newval;
 }
 
@@ -1272,7 +1271,8 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
         return;
     }
     
-    //fprintf( stderr, "INTERNAL=%s %s %s\n", cdlg_cmd[icmd*3], cname, cvalue );
+    //fprintf( stderr, "spacefm-dialog: INTERNAL=%s %s %s\n", cdlg_cmd[icmd*3],
+    //                                                        cname, cvalue );
     switch ( icmd )
     {
     case CMD_CLOSE:
@@ -1404,10 +1404,12 @@ static void run_command( CustomElement* el, GList* argslist, char* xvalue )
             if ( a != 0 )
             {
                 argv[a++] = NULL;
+                /*
                 fprintf( stderr, "spacefm-dialog: ASYNC=" );
                 for ( i = 0; i < a - 1; i++ )
                     fprintf( stderr, "%s%s", i == 0 ? "" : "  ", argv[i] );
                 fprintf( stderr, "\n" );
+                */
                 error = NULL;
                 if ( !g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL,
                                                         NULL, NULL, &error ) )
@@ -3418,6 +3420,9 @@ static void show_help()
         fprintf( f, "               %s\n", cdlg_cmd[i*3 + 2] );
     }
 
+    fprintf( f, _("\nEXAMPLE WITH COMMANDS:\n") );
+    fprintf( f, _("    spacefm -g --label \"Enter some text and press Enter:\" \\\n               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n               --label \\\n               --button ok\n") );
+    
     fprintf( f, _("\nEXAMPLE SCRIPT:\n") );
     fprintf( f, _("    #!/bin/bash\n    # This script shows a Yes/No dialog\n    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"User pressed Yes - take some action\"\n    else\n        echo \"User did NOT press Yes - abort\"\n    fi\n") );
     fprintf( f, _("\nFor instructions and examples see the SpaceFM User's Manual:\n") );
