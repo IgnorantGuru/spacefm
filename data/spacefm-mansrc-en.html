@@ -1312,65 +1312,72 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <!-- @Dialog @Introduction -->
 
-<p>SpaceFM Dialog is a built-in feature of SpaceFM which allows you to create custom dialogs.  Typically such dialogs are shown from scripts to gather information from the user.  SpaceFM Dialog allows scripts to easily use much of the power of GTK - a dialog can be as simple as a single message prompt or as complex as a mini-app with lists, editors, and other widgets.
+<p>SpaceFM Dialog is a built-in feature of SpaceFM which allows you to easily create and interact with custom GTK dialogs.  Typically such dialogs are shown from scripts to gather information from the user.  SpaceFM Dialog allows scripts to easily use much of the power of GTK - a dialog can be as simple as a single message prompt or as complex as a mini-app with lists, editors, and other widgets.
 
 <p>Dialog elements can have associated commands which are run when the user takes an action (such as pressing a button ), and internal commands can be used to modify the dialog elements while the dialog is running.  When SpaceFM Dialog exits, it writes variables to stdout which can be evaluated directly in bash, or easily parsed in other languages.
+
+<p>Although SpaceFM Dialog is relatively easy to use, this portion of the manual assumes you have a basic understanding of command lines and scripts.  If you don't, try some of the examples and also consult the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for reference.
+
+
 
 <!-- @Dialog @Invocation -->
 <p>SpaceFM Dialog runs as a separate instance, whether other instances of SpaceFM are running or not.  This means you can use SpaceFM Dialog from within custom command scripts in SpaceFM, or in other scripts which run independently.
 
 <p>To see SpaceFM Dialog's help reference, run:
-<pre>spacefm -g help</pre>
+<pre>    spacefm -g help</pre>
 
 The command accepts any number of elements:
-<pre>spacefm -g ELEMENT [OPTIONS] [ARGUMENTS] \
-	   ELEMENT [OPTIONS] [ARGUMENTS] \
-	   ELEMENT [OPTIONS] [ARGUMENTS] \
-	   ...</pre>
+<pre>
+    spacefm -g ELEMENT [OPTIONS] [ARGUMENTS] \
+	       ELEMENT [OPTIONS] [ARGUMENTS] \
+	       ELEMENT [OPTIONS] [ARGUMENTS] \
+	       ...</pre>
 where each ELEMENT has its own options and arguments.  An element represents one piece of the dialog.  It may be a widget, such as a label or button, or it may be an invisible element which controls how the dialog looks or behaves.
 
 For example, to show a dialog with a message label and an OK button, run this command:
-<pre>spacefm -g --label "This is a message." \
-	   --button ok</pre>
+<pre>    spacefm -g --label "This is a message." \
+	       --button ok</pre>
 
 Note: The forward slash (\) at the end of a line tells the terminal that the command is continued on the next line.  You can select both lines above, copy them, and paste them into a terminal to run the above example;  it is not necessary to copy and paste each line individually.  In this manual, SpaceFM Dialog commands are always shown with at most one element on each line for clarity.  These multi-line commands can also be pasted directly into scripts.
 
-When the above command is run, a message dialog will be shown.  When the OK button is pressed, the dialog will close and the following output will be written to the terminal:
-<pre><i>#!/bin/bash
-# SpaceFM Dialog source output - execute this output to set variables
-# Example:  eval "`spacefm --dialog --label "Message" --button ok`"
+<p>When the above command is run, a message dialog will be shown.  When the OK button is pressed, the dialog will close and the following output will be written to the terminal:
+<pre><i>    #!/bin/bash
+    # SpaceFM Dialog source output - execute this output to set variables
+    # Example:  eval "`spacefm --dialog --label "Message" --button ok`"
 
-dialog_label1='This is a message.'
-dialog_pressed='button1'
-dialog_pressed_index='0'
-dialog_pressed_label='ok'
-dialog_button1='ok'
-dialog_windowsize='450x100'</i></pre>
+    dialog_label1='This is a message.'
+    dialog_pressed='button1'
+    dialog_pressed_index='0'
+    dialog_pressed_label='ok'
+    dialog_button1='ok'
+    dialog_windowsize='450x100'</i></pre>
 
 The above source output, written to stdout, is produced by the dialog to allow you to easily use element values in your script.  If using bash or another compatible shell, you can automatically evaluate this output to set the variables.  For example, you can run:
-<pre><b>eval "`</b>spacefm -g --label "This is a message." \
-	          --button ok<b>`"</b></pre>
-Using this method, you will no longer see the output in the terminal when the dialog closes.  Instead, the output is fed into eval, which reads the variable values.  A command enclosed in backticks (`), <i>not to be confused with apostrophes</i> ('), evaluates to a string containing the stdout output of the command.  This output is then double-quoted (") and passed to eval, which interprets it (sets the variables).  (<b>Be sure to double-quote the backticks</b> or some data may be lost!)  After running the above command, we can see the value is set:
-<pre>echo "$dialog_pressed"
-<i>button1</i></pre>
+<pre>    <b>eval "`</b>spacefm -g --label "This is a message." \
+	              --button ok<b>`"</b></pre>
+Using this method, you will no longer see the output in the terminal when the dialog closes.  Instead, the output is fed into eval, which reads the variable values.  A command enclosed in backticks (`), <i>not to be confused with apostrophes</i> ('), evaluates to a string containing the stdout output of the command.  This output is then double-quoted (") and passed to eval, which interprets it (sets the variables).  (<b>Be sure to double-quote the backticks</b> as shown above or some data may be lost!)
+
+<p>After running the above command, we can see the value is set:
+<pre>    echo "$dialog_pressed"
+    <i>button1</i></pre>
 
 If you would like the output to also be written in the terminal, you can use the following method instead:
 <pre>
-<b>out="`</b>spacefm -g --label "This is a message." \
-	         --button ok<b>`"</b>
-eval "$out"   # read
-echo "$out"   # display</pre>
+    <b>out="`</b>spacefm -g --label "This is a message." \
+    	             --button ok<b>`"</b>
+    eval "$out"   # read
+    echo "$out"   # display</pre>
 The above commands place spacefm's output into the variable 'out', then pass that value to eval to set the variables, then echo writes the output to the terminal for you to see.
 
 <p>Yet another method is to write the output to a file, then source the file.  For example:
 <pre>
-spacefm -g --label "This is a message." \
-	   --button ok > /tmp/outputfile
-source /tmp/outputfile  # read
-cat /tmp/outputfile     # display
-rm /tmp/outputfile      # cleanup</pre>
+    spacefm -g --label "This is a message." \
+	       --button ok <b>&gt; /tmp/outputfile</b>
+    source /tmp/outputfile  # read
+    cat /tmp/outputfile     # display
+    rm /tmp/outputfile      # cleanup</pre>
 
-<p>In general, any time you need to use the dialog's variables in your script, you will want to <b>use one of the above methods</b> to evaluate spacefm's output.  Or, if your shell doesn't support eval, you can parse the output manually.
+<p>In general, anytime you need to use the dialog's variables in your script, you will want to <b>use one of the above methods</b> to evaluate spacefm's output.  Or, if your shell doesn't support eval, you can parse the output manually.
 
 
 
@@ -1390,60 +1397,66 @@ Buttons are placed horizontally at the bottom of the dialog.
 Usage: <code><b>--prefix NAME|@FILE</b></code>
 
 <p>--prefix is an invisible element which sets the base variable name that SpaceFM Dialog will use when writing output.  By default, the base name is "dialog" (eg "$dialog_pressed").  In some cases you may want to use another name, especially if your script uses multiple dialogs.  For example:
-<pre>spacefm -g --prefix var</pre>
+<pre>    spacefm -g --prefix var</pre>
 
 In this case, the output will use variables such as "$var_pressed" instead.
 
 <p><b>As with many elements, --prefix also accepts a file instead of a string</b>, and will read the value from the first line of the file.  For example:
-<pre>echo "var" > /tmp/dialog-prefix
-spacefm -g --prefix <b>@</b>/tmp/dialog-prefix</pre>
+<pre>    echo "var" > /tmp/dialog-prefix
+    spacefm -g --prefix <b>@</b>/tmp/dialog-prefix</pre>
 
 The "at" sign (@) indicates that a file path is being specified, and that SpaceFM Dialog should read the value from the first line of the file /tmp/dialog-prefix.  The file is not watched or modified, but its value is not read until output is produced.
-
+<br><br>
 
 <!-- # --title #title -->
 Usage: <code><b>--title TEXT|@FILE</b></code>
 
 <p>The --title element sets the title of the dialog window ("SpaceFM Dialog" is the default title if no --title element is used).  For example:
-<pre>spacefm -g --title "A Window Title"</pre>
+<pre>    spacefm -g --title "A Window Title"</pre>
 
 <b>--title also accepts a file instead of a string</b>.  For example:
-<pre>echo "A Window Title" > /tmp/dialog-title
-spacefm -g --title <b>@</b>/tmp/dialog-title</pre>
+<pre>    echo "A Window Title" > /tmp/dialog-title
+    spacefm -g --title <b>@</b>/tmp/dialog-title</pre>
 
 The title will be read from the first line of the file.  The file is also watched for changes.  This method allows you to later change the window title.  As the dialog is running, in another terminal run:
-<pre>echo "Another Window Title" > /tmp/dialog-title</pre>
-and the dialog window's title will change to reflect the new value.  Thus using a @FILE is one method which allows you to dynamically change the dialog as its running (commands being another method).
+<pre>    echo "Another Window Title" > /tmp/dialog-title</pre>
+and the dialog window's title will change to reflect the new value.  Thus using @FILE is one method which allows you to dynamically change the dialog as its running (commands being another method).
+
+<p>In commands, the value of a title element (%title1) is the title's TEXT.  Also note that even if no --title element has been added to the dialog, you can later use the set command to set 'title' (no numeric suffix).
+<br><br>
 
 <!-- # --window-icon #wicon -->
 Usage: <code><b>--window-icon ICON|@FILE</b></code>
 
 <p>The --window-icon element sets the dialog window's icon ("spacefm-48-pyramid-blue" is the default icon if no --window-icon element is used).  For example:
-<pre>spacefm -g --window-icon gtk-open</pre>
+<pre>    spacefm -g --window-icon gtk-open</pre>
 
 <b>--window-icon also accepts a file instead of a string</b>.  For example:
-<pre>echo "gtk-open" > /tmp/dialog-wicon
-spacefm -g --window-icon <b>@</b>/tmp/dialog-wicon</pre>
+<pre>    echo "gtk-open" > /tmp/dialog-wicon
+    spacefm -g --window-icon <b>@</b>/tmp/dialog-wicon</pre>
 
 The icon name will be read from the first line of the file /tmp/dialog-wicon.  The file is also watched for changes, allowing you to later change the window icon.  As the dialog is running, in another terminal run:
-<pre>echo "gtk-save" > /tmp/dialog-wicon</pre>
+<pre>    echo "gtk-save" > /tmp/dialog-wicon</pre>
 and the dialog window's icon will change to reflect the new value.
+
+<p>In commands, the value of a window-icon (%windowicon1) is the icon name (ICON).  Also note that even if no --window-icon element has been added to the dialog, you can later use the set command to set 'windowicon' (no numeric suffix).
+<br><br>
 
 <!-- # --label #label -->
 Usage: <code><b>--label LABEL|@FILE</b></code>
 
 <p>The --label element adds a GTK label widget to the dialog, which is used to display one or more lines of text, such as a message for the user or a label for an input box.  For example:
-<pre>spacefm -g --label "The process is complete."</pre>
+<pre>    spacefm -g --label "The process is complete."</pre>
 
 <b>--label also accepts a file instead of a string</b>.  For example:
-<pre>echo "The process is complete." > /tmp/dialog-label
-spacefm -g --label <b>@</b>/tmp/dialog-label</pre>
+<pre>    echo "The process is complete." > /tmp/dialog-label
+    spacefm -g --label <b>@</b>/tmp/dialog-label</pre>
 
 The label's text will be read from the file /tmp/dialog-label (which may contain multiple lines).  The file is also watched for changes, allowing you to later change the label's text.  As the dialog is running, in another terminal run:
-<pre>echo "Another processs is complete." > /tmp/dialog-label</pre>
+<pre>    echo "Another processs is complete." > /tmp/dialog-label</pre>
 and the text in the dialog window will change to reflect the new value in the file.
 
-<p>As with most elements, <b>you can add multiple --label elements to a dialog</b>.
+<p><b>As with most elements, you can add multiple --label elements to a dialog</b>.
 
 <p><b>Some escape sequences are unescaped when LABEL is read</b>:
 <center><table width="30%">
@@ -1459,49 +1472,281 @@ and the text in the dialog window will change to reflect the new value in the fi
 </table></center>
 
 <p>For example, to create a label with two lines:
-<pre>spacefm -g --label "This is line 1.\nThis is line 2."</pre>
+<pre>    spacefm -g --label "This is line 1.<b>\n</b>This is line 2."</pre>
 
 <p>Note that you can also set a label to multiple lines by specifying a @FILE which contains multiple lines, in which case \n is not needed (but may be used in files too).
 
 <p><b>Labels can also include Pango markup text</b>, which can be used to italicize, bold, and otherwise stylize portions of text.  The --label element (only) recognizes the prefix character tilde (~) to indicate that your text is Pango markup.  For example:
-<pre>spacefm -g --label "<b>~</b>This is plain.  &lt;b&gt;This is bold.&lt;/b&gt;"</pre>
+<pre>    spacefm -g --label "<b>~</b>This is plain.  &lt;b&gt;This is bold.&lt;/b&gt;"</pre>
 
 <p>Like most elements, <b>--label also accepts a --font option</b> to change the font and font size of the text:
-<pre>spacefm -g --label <b>--font "Times New Roman 16"</b> "The process is complete."</pre>
+<pre>    spacefm -g --label <b>--font "Times New Roman 16"</b> "The process is complete."</pre>
 
 Note that the --font option must come <i>directly after</i> the --label element.  In general it is best to use the default font unless your script is only intended for your own use.
 
+<p>In commands, the value of a label (eg %label1) is the text of the label.
+<br><br>
 
 
 <!-- # --button #button -->
 Usage: <code><b>--button LABEL[:ICON]|STOCK|@FILE [COMMAND...]</b></code>
 
-<p>The --button element adds a button to the dialog.  All buttons are packed horizontally at the bottom of the dialog, in the order in which they are added.  Most dialogs should include at least an "OK" button.
+<p>The --button element adds a button to the dialog.  All buttons are packed horizontally at the bottom of the dialog, in the order in which they are added (to add a button in the upper part of the dialog, use a <a href="#dialog-elements-freebutton">--free-button</a> instead).  Most dialogs should include at least an "OK" button.
 
 <p>The easiest way to add a complete button is to use a STOCK name, which may be any one of:<br>
 <b>&nbsp;&nbsp;&nbsp;ok cancel close open yes no apply delete edit save stop</b> <i>(in lowercase)</i>
-<p>For example, to add a stock OK button:
-<pre>spacefm -g --button ok</pre>
+<p><b>For example, to add a stock OK button:</b>
+<pre>    spacefm -g --button ok</pre>
 The button will include the stock gtk-ok icon on it (taken from your icon theme), and an "OK" label.
 
-<p>If you don't want to use a stock button, you can include a custom button label instead:
-<pre>spacefm -g --button _Update</pre>
-The underscore (_), which is optional, indicates that 'U' is to be shown as the shortcut key for this button (Alt-U).
+<p>If you don't want to use a stock button, <b>you can include a custom button label</b> instead:
+<pre>    spacefm -g --button _Update</pre>
+The underscore (_), which is optional, indicates that 'U' is to be shown as the shortcut key for this button (Alt-U).  Also note that a button label may contain multiple lines if desired.
 
-<p>You can also add an icon to your button using a colon:
-<pre>spacefm -g --button _Update<b>:gtk-apply</b></pre>
+<p><b>You can also add an icon to your button</b> using a colon:
+<pre>    spacefm -g --button _Update<b>:gtk-apply</b></pre>
 
---button also accepts a file instead of a string.  For example:
-<pre>echo "_Update:gtk-apply" > /tmp/dialog-button
-spacefm -g --button <b>@</b>/tmp/dialog-button</pre>
+<b>--button also accepts a file instead of a string</b>.  For example:
+<pre>    echo "_Update:gtk-apply" > /tmp/dialog-button
+    spacefm -g --button <b>@</b>/tmp/dialog-button</pre>
 
 The button's label and icon will be read from the first line of the file /tmp/dialog-button.  The file is also watched for changes, allowing you to later change the button's appearance.  As the dialog is running, in another terminal run:
-<pre>echo "close" > /tmp/dialog-button</pre>
+<pre>    echo "close" > /tmp/dialog-button</pre>
 and the button in the dialog window will change to reflect the new value in the file.
 
+<p><b>When the user presses a button</b>, the dialog window will close if no COMMAND has been associated with the button.  The output will include several variables to allow your script to determine what button was pressed.  For example:
+<pre><i>    dialog_pressed='button1'
+    dialog_pressed_index='0'
+    dialog_pressed_label='_Update:gtk-apply'</i></pre>
+
+The first, "$dialog_pressed", contains the name of the button which was pressed to close the window, in this case "button1" (the first button added).  "$dialog_pressed_index" contains the index of the button.  Buttons are indexed left to right, starting from 0, so the first button you add has index 0, the second index 1, etc.  Finally, "$dialog_pressed_label" contains the "LABEL[:ICON]" used to create the button.  Thus your script can evaluate what button was pressed and take an action, as shown in the example script below:
+<pre>    #!/bin/bash
+    # <b>This script shows a Yes/No dialog</b>
+    # Use QUOTED eval to read variables output by SpaceFM Dialog:
+    eval "`spacefm -g --label "Are you sure?" --button yes --button no`"
+    if [[ "$dialog_pressed" == "button1" ]]; then
+        echo "User pressed Yes - take some action"
+    else
+        echo "User did NOT press Yes - abort"
+    fi
+</pre>
+
+<b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.
+
+<p><b>If a COMMAND is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
+
+<p><b>The following example creates a dialog with a label and a button.</b>  When the button is pressed, the label is set to the current date.
+<pre>
+    spacefm -g --label \
+	       --button 'Get Date' set label1 '%(date)'</pre>
+<br>
+
+<!-- # --free-button #freebutton -->
+Usage: <code><b>--free-button LABEL[:ICON]|STOCK|@FILE [COMMAND...]</b></code>
+
+<p>A --free-button element is similar to a <a href="#dialog-elements-button">--button</a>, except that it is packed into the top area of the dialog like any other widget, instead of being placed in the horizontal row of buttons at the bottom.
+
+<p>Like a --button, if the user presses a --free-button that has no COMMAND, the dialog window will be closed.  The value of "$dialog_pressed_index" will always be -1 for a --free-button.
+<br><br>
+
+<!-- # --input #input -->
+Usage: <code><b>--input [--select START[:END]] [TEXT|@FILE [COMMAND...]]</b></code>
+
+<p>An --input element adds a GTK entry widget to the dialog, which allows the user to enter text in a single-line box.  This can be as simple as:
+<pre>   spacefm -g --input</pre>
+
+If you would like the box to already have default text in it when the dialog is first shown, add your text on the command line:
+<pre>   spacefm -g --input <b>"Some default text"</b></pre>
+
+<b>--input also accepts a file instead of a string</b>.  For example:
+<pre>    echo "Some default text" > /tmp/dialog-input
+    spacefm -g --input <b>@</b>/tmp/dialog-input</pre>
+
+The input's default text will be read from the first line of the file.  The file is also watched for changes, allowing you to later change the input's contents.  As the dialog is running, in another terminal run:
+<pre>    echo "Some other text" > /tmp/dialog-input</pre>
+and the text in the input box will change to reflect the value in the file.
+
+<p><b>Also, when the dialog is closed, the text in the input will be saved to the file</b>.  This method can be used to have the dialog remember the last text entered.  The next time the dialog is run, assuming the file hasn't been deleted, the input will show the text from the previous dialog.
+
+<p><b>A portion of the text may be selected when the dialog first opens</b> using the --select option.  By default, all of the text is selected.  If you only want to select a portion, use a command like:
+<pre>   spacefm -g --input <b>--select 3:6</b> "Some default text"</pre>
+
+Note that the --select option must come <i>directly after</i> the --input element.  The first number (START) is the first character to select, and the second number (:END), if included, is the last.  So "--select 3:6" will select characters 3 thru 6.  Note that counting starts from zero: the first chracter has index 0, the second 1, etc.  If END is negative or omitted, text will be selected from START through the end of the text.
+
+<p><b>--input also accepts a --font option</b> to change the font and font size of the text:
+<pre>    spacefm -g --input <b>--font "Times New Roman 16"</b> "Some default text"</pre>
+
+<b>When the user presses Enter in an input box</b>, one of several things may happen.  If no COMMAND is associated with the input, then the right-most button at the bottom of the dialog will be automatically pressed.  If the dialog has no buttons, nothing will happen.
+
+<p>Or, if a COMMAND is added to the input, the COMMAND(s) will be run and no button will be automatically pressed.  The value of an input (eg %v, %input1, etc) is the text in the box when the command is run.
+
+<p>In SpaceFM Dialog's output, the value of an input can be read from, for example, "$dialog_input1".
+
+<p><b>The following example creates a dialog with an input and a label.</b>  When Enter is pressed in the input box, the text of the input is copied to the label.
+<pre>
+    spacefm -g --label "Enter some text and press Enter:" \
+               --input "" set label2 %v \
+	       --label \
+	       --button close</pre>
+<br>
+
+
+<!-- # --input-large #inputl -->
+Usage: <code><b>--input-large [--select START[:END]] [TEXT|@FILE [COMMAND...]]</b></code>
+
+<p>An --input-large element works identically to an <a href="#dialog-elements-input">--input</a>, except that the text box is larger.  It still contains a single line of text, but the text may be wrapped to several display lines.  Such boxes are useful for editing long lines, such as a file path.
+<br><br>
+
+
+<!-- # --password #password -->
+Usage: <code><b>--password [TEXT|@FILE [COMMAND...]]</b></code>
+
+<p>A --password element, used to enter for a password, is similar to an <a href="#dialog-elements-input">--input</a>, except that the text is hidden.  Also, the options --select and --font have no effect on a --password element.
+<br><br>
 
 
 
+<!-- # --viewer #viewer -->
+Usage: <code><b>--viewer [--scroll] FILE|PIPE</b></code>
+
+<p>A --viewer element adds a read-only multi-line text box to the dialog, and may be used to view the contents of a file or the data written to a pipe.  By writing text to a temporary file, a viewer can also be used to show the user larger amounts of text which won't fit in a --label.  A vertical scroll bar will automatically appear when the text exceeds the size of the box.
+
+<p><b>To view the static or changing contents of a regular file:</b>
+<pre>    spacefm -g --viewer /etc/fstab</pre>
+
+Anytime the contents of the file changes, the viewer will be updated.  If you always want the viewer to scroll to the end of the file (except when the user pulls the scroll handle up), include the --scroll option:
+<pre>    spacefm -g --viewer <b>--scroll</b> /etc/fstab</pre>
+
+<p><b>A --viewer may also be used to monitor data written to a pipe.</b>  This can be used to show the user changing information.  For example:
+<pre>    # First, create a pipe:
+    mkfifo /tmp/dialog-pipe
+    # Next, monitor the pipe:
+    spacefm -g --viewer /tmp/dialog-pipe
+</pre>
+
+When you write text to the pipe, it will be added to the viewer box.  For example, while the dialog is running, in another terminal run:
+<pre>    echo "some text to a pipe" > /tmp/dialog-pipe</pre>
+
+Or:
+<pre>    # Press Ctrl-C to cancel:
+    while (( 1 )); do date > /tmp/dialog-pipe; sleep 1; done</pre>
+
+<p>In commands, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use set (eg 'set viewer1 /etc/mtab').
+
+<p><b>The following example creates a dialog with a file chooser and a viewer.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed.
+<pre>    spacefm -g --label "Double-click a file to view:" \
+               --chooser --filter text/plain . set viewer1 %v \
+               --viewer \
+	       --button close</pre>
+<br>
+
+
+<!-- # --editor #editor -->
+Usage: <code><b>--editor [FILE [SAVEFILE]]</b></code>
+
+<p>Similar to a <a href="#dialog-elements-viewer">--viewer</a>, an --editor element adds a multi-line text box to the dialog.  Unlike a viewer, the user is able to edit the text in the box.  To create an empty editor:
+<pre>    spacefm -g --editor</pre>
+
+Or, to load a text file into the editor:
+<pre>    spacefm -g --editor <b>/etc/fstab</b></pre>
+
+<b>When the dialog is closed, the contents of the editor are lost unless a SAVEFILE is also specified:</b>
+<pre>    spacefm -g --editor /etc/fstab <b>/tmp/fstab-edited</b></pre>
+
+When the above dialog is closed, the contents of the editor will be automatically saved to /tmp/fstab-edited.  Your script can then use this file to replace the original if the user pressed the appropriate button, etc.
+
+<p>Note:  It is possible to set FILE and SAVEFILE to the same path, in which case the original file will automatically be overwritten when the dialog is closed, <i>regardless of what button is pressed</i>!
+
+<p>In commands, the value of an editor (eg %editor1) is the path of the file last loaded.  To load a file into the editor, use set (eg 'set editor1 /etc/mtab').  Also note that the contents of the editor are also saved to SAVEFILE whenever the internal command 'source' is run.
+
+<p><b>The following example creates a dialog with a file chooser and an editor.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed in the editor.  If the user clicks the Save button, the editor's contents are saved to a temporary file (they are also saved when the dialog closes).
+
+<pre>    spacefm -g --label "Double-click a file to edit a copy:" \
+               --chooser --filter text/plain . set editor1 %v \
+               --editor "" /tmp/dialog-copy \
+	       --label \
+	       --button save source /dev/null -- \
+	                     set label2 "Copy saved to /tmp/dialog-copy" \
+	       --button close</pre>
+<br>
+
+
+<!-- # --check #check -->
+Usage: <code><b>--check LABEL [VALUE|@FILE [COMMAND...]]</b></code>
+
+<p>A --check element adds a checkbox and associated label to the dialog, allowing the user to check or uncheck the option.  The value of the checkbox can be read from a variable when the dialog closes, or it can be used by internal commands while the dialog is running.  For example:
+<pre>    spacefm -g --check "Option One"</pre>
+
+By default, the checkbox will not have a check in it.  To set a default value for the checkbox, specify "false" or "0" (unchecked), or "true" or "1" (checked).  For example:
+<pre>    spacefm -g --check "Option One" <b>1</b></pre>
+
+<b>--check also accepts a file instead of a string</b> for the VALUE (but not for the LABEL).  For example:
+<pre>    echo 1 > /tmp/dialog-check
+    spacefm -g --check "Option One" <b>@</b>/tmp/dialog-check</pre>
+
+The checkbox's default value will be read from the first line of the file.  The file is also watched for changes, allowing you to later change the state of the checkbox.  As the dialog is running, in another terminal run:
+<pre>    echo 0 > /tmp/dialog-check</pre>
+and the checkbox state will change to reflect the value in the file.
+
+<p><b>Also, when the dialog is closed, the state of the checkbox will be saved to the file</b>.  This method can be used to have the dialog remember the state.  The next time the dialog is run, assuming the file hasn't been deleted, the checkbox will have the same state as when the previous dialog was closed.
+
+<p>If a COMMAND is included, the COMMAND(s) will be run whenever the checkbox changes state, either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
+
+<p>In commands, the value of a --check element (eg %check1) will equal 1 or 0, reflecting whether the box is checked or not.  If internal command set is used on a --check and the value is not "0", "false", "1", or "true", the check's LABEL is set to the value (eg "set check1 "A new option label"), instead of the state being changed.
+
+<p>In SpaceFM Dialog's output, the value of a check can be read from, for example, "$dialog_check1".
+
+<p><b>The following example creates a dialog with a check and a label.</b>  If the checkbox is checked, the label is shown, otherwise it is hidden.
+<pre>
+    spacefm -g --check "Show text" 1                                       \
+		       hide "%( bash -c '(( %v )) || echo -n label1' )" -- \
+		       show "%( bash -c '(( %v )) &amp;&amp; echo -n label1' )"    \
+	       --label "Some text"
+</pre>
+
+(The check includes two commands: hide and show.  The first bash command outputs the label's name only if %v is 0, causing the label to be hidden.  The second bash command outputs the label's name only if %v is 1, causing the label to be shown.  Normally a script would be used, but in this case bash can run a small script directly for the desired value.)
+<br><br>
+
+
+
+<!-- # --radio #radio -->
+Usage: <code><b>--radio LABEL [VALUE|@FILE [COMMAND...]]</b></code>
+
+<p>A --radio element is similar to a --check, adding a radio button and associated label to the dialog, allowing the user to select or unselect the option.  However, only one of a set of radio buttons may be selected at a given time - selecting one will unselect the others in the set.  To add a --radio element:
+<pre>    spacefm -g --radio "Apples"</pre>
+
+By default, the first --radio element of a set will be selected.  To select another --radio element, include a default VALUE, specifying "false" or "0" (unselected), or "true" or "1" (selected).  For example:
+<pre>    spacefm -g --radio "Apples" <b>1</b></pre>
+
+Remember that only one --radio can be selected, so the last --radio element you add with a 1 VALUE will be selected.
+
+<p>Consecutive --radio elements are part of the same set, until a visible non-radio element is added.  For example, these elements will be part of a set:
+<pre>
+    spacefm -g --radio "Apples"    \
+	       --radio "Oranges" 1 \
+	       --radio "Pears"</pre>
+
+In the above example, Oranges will be selected by default.
+
+<p>As with --check elements, a @FILE may be substituted for VALUE, causing SpaceFM Dialog to read the value from the first line of the file.  The state will be updated if the file is changed.  The value will also be written to the file when the dialog closes.
+
+<p><b>To have a dialog remember the selection of a radio set, you must specify a different file for <i>each element</i>.</b>  For example:
+<pre>
+    spacefm -g --radio "Apples"  <b>@</b>/tmp/dialog-radio<b>1</b> \
+	       --radio "Oranges" <b>@</b>/tmp/dialog-radio<b>2</b> \
+	       --radio "Pears"	 <b>@</b>/tmp/dialog-radio<b>3</b></pre>
+
+The files do not need to be created (they will be created automatically), unless you want to select an option other than the first.  If you run the above command multiple times, you will note that your selection is remembered from the previously closed dialog.
+
+<p>If a COMMAND is included, the COMMAND(s) will be run whenever the radio button is selected (but not when it is unselected), either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
+
+<p>In commands, the value of a --radio element (eg %radio1) will equal 1 or 0.  If internal command set is used on a --radio and the value is not "0", "false", "1", or "true", the radio's LABEL is set to the value (eg "set radio1 "A new option label"), instead of the state being changed.
+
+<p>In SpaceFM Dialog's output, the value of each --radio in a set can be read from, for example, "$dialog_radio1", "$dialog_radio2", etc.
+<br><br>
+TO BE CONTINUED...
+<p>
+    
 <!-- @Plugins @Introduction -->
 
 <p>Like any plugin, a SpaceFM plugin extends the features of the file manager.  What's different about SpaceFM plugins is how readily they're created.  Any custom command can be turned into a plugin simply by exporting it to a plugin file.  SpaceFM plugins use an open format which can include additional files, and can also store persistent data between sessions.  SpaceFM plugins can do anything a bash script can do - which means just about anything.

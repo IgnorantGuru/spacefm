@@ -29,7 +29,7 @@
 #define DEFAULT_LARGE_HEIGHT 400
 #define MAX_LIST_COLUMNS 32
 #define BASH_VALID "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-#define DEFAULT_MANUAL "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html"
+#define DEFAULT_MANUAL "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog"
 
 static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                                                                     int pad );
@@ -1199,7 +1199,7 @@ static char* replace_vars( CustomElement* el, char* value, char* xvalue )
         else if ( sep[1] == '(' )
         {
             // %(line)
-            ptr = strchr( sep, ')' );
+            ptr = strrchr( sep, ')' );
             if ( !ptr )
                 break;
             ptr[0] = '\0';
@@ -1320,7 +1320,8 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
     if ( icmd != CMD_NOOP && icmd != CMD_SOURCE && cname
                                     && !( el_name = el_from_name( el, cname ) ) )
     {
-        dlg_warn( _("element '%s' does not exist"), cname, NULL );
+        if ( cname[0] != '\0' )
+            dlg_warn( _("element '%s' does not exist"), cname, NULL );
         g_free( cname );
         g_free( cvalue );
         return;
@@ -1554,6 +1555,8 @@ static void write_file_value( const char* path, const char* val )
     if ( val && write( f, val, strlen( val ) ) < strlen( val ) )
         dlg_warn( _("error writing file %s: %s"), path + add,
                                                     g_strerror( errno ) );
+    if ( !strchr( val, '\n' ) )
+        write( f, "\n", 1 );
     close( f );
 }
 
@@ -1794,6 +1797,7 @@ static void fill_buffer_from_file( CustomElement* el, GtkTextBuffer* buf,
     }
     while ( ( bytes = read( f, line, sizeof( line ) ) ) > 0 )
     {
+        // TODO: this sometimes fails because of character boundaries being split ?
         if ( !g_utf8_validate( line, bytes, NULL ) )
         {
             close( f );
@@ -1803,7 +1807,7 @@ static void fill_buffer_from_file( CustomElement* el, GtkTextBuffer* buf,
                 gtk_text_buffer_set_text( buf, "", -1 );
             dlg_warn( _("file '%s' contents are not valid UTF-8"), path, NULL );
             return;
-        }        
+        }
         gtk_text_buffer_insert_at_cursor( buf, line, bytes );
     }
     close( f );
