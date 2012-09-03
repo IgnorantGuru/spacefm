@@ -107,6 +107,49 @@ static void get_width_height_pad( char* val, int* width, int* height, int* pad )
     if ( *height <= 0 ) *height = -1;
 }
 
+static char* unescape( const char* t )
+{
+    if ( !t )
+        return NULL;
+    
+    char* s = g_strdup( t );
+
+    int i = 0, j = 0;    
+    while ( t[i] )
+    {
+        switch ( t[i] )
+        {
+        case '\\':
+            switch( t[++i] )
+            {
+            case 'n':
+                s[j] = '\n';
+                break;
+            case 't':
+                s[j] = '\t';
+                break;                
+            case '\\':
+                s[j] = '\\';
+                break;
+            case '\"':
+                s[j] = '\"';
+                break;
+            default:
+                // copy
+                s[j++] = '\\';
+                s[j] = t[i];
+            }
+            break;            
+        default:
+            s[j] = t[i];
+        }
+        ++i;
+        ++j;
+    }
+    s[j] = t[i];  // null char
+    return s;
+}
+
 static void fill_combo_box( CustomElement* el, GList* arglist )
 {
     GList* l;
@@ -705,12 +748,13 @@ static void set_element_value( CustomElement* el, const char* name,
         if ( el_name->widgets->next
                         && ( w = GTK_WIDGET( el_name->widgets->next->data ) ) )
         {
-            if ( value[0] == '~' )
-                gtk_label_set_markup_with_mnemonic( GTK_LABEL( w ), value + 1 );
-            else
-                gtk_label_set_text( GTK_LABEL( w ), value );
             g_free( el_name->val );
-            el_name->val = g_strdup( value );
+            el_name->val = unescape( value );
+            if ( el_name->val[0] == '~' )
+                gtk_label_set_markup_with_mnemonic( GTK_LABEL( w ),
+                                                            el_name->val + 1 );
+            else
+                gtk_label_set_text( GTK_LABEL( w ), el_name->val );
         }
         break;
     case CDLG_BUTTON:
@@ -718,26 +762,28 @@ static void set_element_value( CustomElement* el, const char* name,
         if ( el_name->widgets->next
                         && ( w = GTK_WIDGET( el_name->widgets->next->data ) ) )
         {
-            if ( sep = strrchr( value, ':' ) )
+            g_free( el_name->val );
+            el_name->val = unescape( value );
+            if ( sep = strrchr( el_name->val, ':' ) )
                 sep[0] = '\0';
             else
                 sep = NULL;
             gtk_button_set_image( GTK_BUTTON( w ), NULL );
-            if ( !sep &&  ( !g_strcmp0( value, "ok" )
-                         || !g_strcmp0( value, "cancel" )
-                         || !g_strcmp0( value, "close" )
-                         || !g_strcmp0( value, "open" )
-                         || !g_strcmp0( value, "yes" )
-                         || !g_strcmp0( value, "no" )
-                         || !g_strcmp0( value, "apply" )
-                         || !g_strcmp0( value, "delete" )
-                         || !g_strcmp0( value, "edit" )
-                         || !g_strcmp0( value, "save" )
-                         || !g_strcmp0( value, "stop" ) ) )
+            if ( !sep &&  ( !g_strcmp0( el_name->val, "ok" )
+                         || !g_strcmp0( el_name->val, "cancel" )
+                         || !g_strcmp0( el_name->val, "close" )
+                         || !g_strcmp0( el_name->val, "open" )
+                         || !g_strcmp0( el_name->val, "yes" )
+                         || !g_strcmp0( el_name->val, "no" )
+                         || !g_strcmp0( el_name->val, "apply" )
+                         || !g_strcmp0( el_name->val, "delete" )
+                         || !g_strcmp0( el_name->val, "edit" )
+                         || !g_strcmp0( el_name->val, "save" )
+                         || !g_strcmp0( el_name->val, "stop" ) ) )
             {
                 // stock button
                 gtk_button_set_use_stock( GTK_BUTTON( w ), TRUE );
-                str = g_strdup_printf( "gtk-%s", value );
+                str = g_strdup_printf( "gtk-%s", el_name->val );
                 gtk_button_set_label( GTK_BUTTON( w ), str );
                 g_free( str );
             }
@@ -745,7 +791,7 @@ static void set_element_value( CustomElement* el, const char* name,
             {
                 // custom button
                 gtk_button_set_use_stock( GTK_BUTTON( w ), FALSE );
-                gtk_button_set_label( GTK_BUTTON( w ), value );
+                gtk_button_set_label( GTK_BUTTON( w ), el_name->val );
             }
             // set icon
             if ( sep && sep[1] != '\0' )
@@ -753,8 +799,6 @@ static void set_element_value( CustomElement* el, const char* name,
                                                         GTK_ICON_SIZE_BUTTON ) );
             if ( sep )
                 sep[0] = ':';
-            g_free( el_name->val );
-            el_name->val = g_strdup( value );
         }
         break;
     case CDLG_ICON:
@@ -853,8 +897,10 @@ static void set_element_value( CustomElement* el, const char* name,
             else
             {
                 // update option label
+                str = unescape( value );
                 gtk_button_set_label( GTK_BUTTON( el_name->widgets->next->data ),
-                                                                        value );
+                                                                        str );
+                g_free( str );
             }
         }
         break;
@@ -1833,6 +1879,12 @@ static void write_value( FILE* file, const char* prefix, const char* name,
         quoted = replace_string( str, "\n", "'$'\\n''", FALSE );
         g_free( str );
     }
+    if ( strchr( quoted, '\t' ) )
+    {
+        str = quoted;
+        quoted = replace_string( str, "\t", "'$'\\t''", FALSE );
+        g_free( str );
+    }
     fprintf( file, "%s_%s%s%s=%s\n", prefix, name, sub ? "_" : "", sub ? sub : "",
                                                                     quoted );
     g_free( quoted );
@@ -2458,7 +2510,12 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         break;
     case CDLG_LABEL:
         if ( args )
+        {
             get_text_value( el, (char*)args->data, TRUE, TRUE );
+            str = el->val;
+            el->val = unescape( str );
+            g_free( str );
+        }
         // add label
         if ( !el->widgets->next && box )
         {
@@ -2486,7 +2543,12 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
     case CDLG_BUTTON:
     case CDLG_FREE_BUTTON:
         if ( args )
+        {
             get_text_value( el, (char*)args->data, FALSE, TRUE );
+            str = el->val;
+            el->val = unescape( str );
+            g_free( str );
+        }
         // add button
         if ( !el->widgets->next )
         {
@@ -2810,10 +2872,10 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         // add item
         if ( !el->widgets->next && box && radio )
         {
+            str = unescape( el->args ? (char*)el->args->data : "" );
             if ( el->type == CDLG_CHECKBOX )
             {
-                w = gtk_check_button_new_with_mnemonic( 
-                                        el->args ? (char*)el->args->data : "" );
+                w = gtk_check_button_new_with_mnemonic( str );
                 *radio = NULL;
             }
             else
@@ -2824,8 +2886,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 for ( l = *radio; l; l = l->next )
                     printf( "    button=%#x\n", l->data );
                 */
-                w = gtk_radio_button_new_with_mnemonic( *radio,
-                                        el->args ? (char*)el->args->data : "" );
+                w = gtk_radio_button_new_with_mnemonic( *radio, str );
                 //printf("BUTTON=%#x\n", w );
                 if ( *radio == NULL )
                     *radio = gtk_radio_button_get_group( GTK_RADIO_BUTTON( w ) );
@@ -2838,6 +2899,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     printf( "    button=%#x\n", l->data );
                 */
             }
+            g_free( str );
             gtk_button_set_focus_on_click( GTK_BUTTON( w ), FALSE );
             
             // set font of label
@@ -3405,7 +3467,7 @@ static void show_help()
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
     fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n") );
-    fprintf( f, _("    LABEL    In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
+    fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
     fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
     
