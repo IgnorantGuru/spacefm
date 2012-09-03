@@ -3465,7 +3465,7 @@ static void show_help()
     
     fprintf( f, _("SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\nspecify on the command line, features run-time internal/external commands which\ncan modify elements, and outputs evaluatable/parsable results.\n") );
     fprintf( f, _("Usage:\n") );
-    fprintf( f, _("    spacefm --dialog|-g {ELEMENT [OPTIONS] ARGUMENTS} ...\n") );
+    fprintf( f, _("    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n") );
     fprintf( f, _("Example:\n") );
     fprintf( f, _("    spacefm -g --label \"A message\" --button ok\n") );
     fprintf( f, _("\nELEMENT:       OPTIONS & ARGUMENTS:\n") );
