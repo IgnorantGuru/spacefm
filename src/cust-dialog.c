@@ -25,6 +25,8 @@
 #define DEFAULT_PAD 4
 #define DEFAULT_WIDTH 450
 #define DEFAULT_HEIGHT 100
+#define DEFAULT_CHOOSER_WIDTH 600
+#define DEFAULT_CHOOSER_HEIGHT 400
 #define MAX_LIST_COLUMNS 32
 #define BASH_VALID "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
 #define DEFAULT_MANUAL "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html"
@@ -3268,11 +3270,14 @@ static void build_dialog( GList* elements )
     int width = DEFAULT_WIDTH;
     int height = DEFAULT_HEIGHT;
     gboolean timeout_added = FALSE;
+    gboolean is_sized = FALSE;
+    gboolean is_chooser = FALSE;
     
     // create dialog
     dlg = gtk_dialog_new();
     gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
     gtk_window_set_title( GTK_WINDOW( dlg ), DEFAULT_TITLE );
+    gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
     GdkPixbuf* pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                     DEFAULT_ICON, 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     if ( pixbuf )
@@ -3327,7 +3332,10 @@ static void build_dialog( GList* elements )
                 pad = atoi( (char*)el->args->next->data );
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
             el->option = 1; // activates auto resize from @FILE
+            is_sized = TRUE;
         }
+        else if ( el->type == CDLG_CHOOSER && el->widgets->next && !is_chooser )
+            is_chooser = TRUE;
         else if ( el->type == CDLG_TIMEOUT && el->option && !el->widgets->next
                                                       && !timeout_added )
         {
@@ -3343,6 +3351,11 @@ static void build_dialog( GList* elements )
     }
     g_list_free( boxes );
 
+    // resize window
+    if ( is_chooser && !is_sized )
+        gtk_window_set_default_size( GTK_WINDOW( dlg ), DEFAULT_CHOOSER_WIDTH,
+                                                        DEFAULT_CHOOSER_HEIGHT );
+    
     // show dialog
     gtk_widget_show_all( dlg );
     if ( !timeout_added )
