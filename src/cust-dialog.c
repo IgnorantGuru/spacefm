@@ -43,6 +43,7 @@ static void on_button_clicked( GtkButton *button, CustomElement* el );
 void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
 
+GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
 
 static void set_font( GtkWidget* w, const char* font )
 {
@@ -3448,7 +3449,8 @@ static void build_dialog( GList* elements )
                         GTK_EDITABLE( focus_el->widgets->next->data ),
                         focus_el->option, focus_el->option2 );
         }
-    }    
+    }
+    signal_dialog = dlg;
 }
 
 static void show_help()
@@ -3501,6 +3503,15 @@ static void show_help()
     fprintf( f, _("    #!/bin/bash\n    # This script shows a Yes/No dialog\n    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"User pressed Yes - take some action\"\n    else\n        echo \"User did NOT press Yes - abort\"\n    fi\n") );
     fprintf( f, _("\nFor instructions and examples see the SpaceFM User's Manual:\n") );
     fprintf( f, "    %s\n\n", DEFAULT_MANUAL );
+}
+
+void signal_handler()
+{
+    if ( signal_dialog )
+    {
+        write_source( signal_dialog, NULL, stdout );
+        destroy_dlg( signal_dialog );
+    }
 }
 
 int custom_dialog_init( int argc, char *argv[] )
@@ -3569,6 +3580,11 @@ int custom_dialog_init( int argc, char *argv[] )
         el->args = g_list_append( el->args, argv[ac] );
     }
     build_dialog( elements );
+    
+    signal( SIGHUP, signal_handler );
+    signal( SIGINT, signal_handler );
+    signal( SIGTERM, signal_handler );
+    signal( SIGQUIT, signal_handler );
     return 0;
 }
 
