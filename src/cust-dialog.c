@@ -1051,8 +1051,12 @@ static char* get_element_value( CustomElement* el, const char* name )
     char* str;
     char* str2;
     GList* l;
+    CustomElement* el_name;
 
-    CustomElement* el_name = el_from_name( el, name );
+    if ( !g_strcmp0( el->name, name ) )
+        el_name = el;
+    else
+        el_name = el_from_name( el, name );
     if ( !el_name )
         return g_strdup( "" );
     
@@ -2149,6 +2153,13 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
             str = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER ( 
                                                     el->widgets->next->data ) );
             write_value( out, prefix, el->name, "dir", str );
+            if ( el->args && ((char*)el->args->data)[0] == '@' )
+            {
+                // save file
+                write_value( out, prefix, el->name, "saved",
+                                                (char*)el->args->data + 1 );
+                write_file_value( (char*)el->args->data + 1, str );
+            }
             g_free( str );
             break;
         }
