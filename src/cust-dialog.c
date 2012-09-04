@@ -12,6 +12,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <glib-object.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
