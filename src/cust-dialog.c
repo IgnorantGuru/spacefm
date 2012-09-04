@@ -1564,6 +1564,7 @@ static char* read_file_value( const char* path, gboolean multi )
 {
     FILE* file;
     int f, bytes;
+    const gchar* end;
     
     if ( !g_file_test( path, G_FILE_TEST_EXISTS ) )
     {
@@ -1609,10 +1610,15 @@ static char* read_file_value( const char* path, gboolean multi )
         fclose( file );
         strtok( line, "\r\n" );
     }
-    if ( !g_utf8_validate( line, -1, NULL ) )
+    if ( !g_utf8_validate( line, -1, &end ) )
     {
-        dlg_warn( _("file '%s' contents are not valid UTF-8"), path, NULL );
-        return NULL;
+        if ( multi && end > line )
+            ((char*)end)[0] = '\0';
+        else
+        {
+            dlg_warn( _("file '%s' contents are not valid UTF-8"), path, NULL );
+            return NULL;
+        }
     }        
     return line[0] != '\0' ? g_strdup( line ) : NULL;
 }
@@ -1780,37 +1786,39 @@ static void cb_file_value_change( VFSFileMonitor* fm,
 static void fill_buffer_from_file( CustomElement* el, GtkTextBuffer* buf,
                                    char* path, gboolean watch )
 {
-    int f, bytes;
-    char line[ 2048 ];
-
+    char line[ 4096 ];
+    FILE* file;
+    
     char* pathx = path;
     if ( pathx[0] == '@' )
         pathx++;
     
     gtk_text_buffer_set_text( buf, "", -1 );
     
-    if ( ( f = open( pathx, O_RDONLY ) ) == -1 )
+    file = fopen( pathx, "r" );
+    if ( !file )
     {
         dlg_warn( _("error reading file %s: %s"), pathx,
                                                     g_strerror( errno ) );
         return;
     }
-    while ( ( bytes = read( f, line, sizeof( line ) ) ) > 0 )
+    // read file one line at a time to prevent splitting UTF-8 characters
+    while ( fgets( line, sizeof( line ), file ) )
     {
-        // TODO: this sometimes fails because of character boundaries being split ?
-        if ( !g_utf8_validate( line, bytes, NULL ) )
+        if ( !g_utf8_validate( line, -1, NULL ) )
         {
-            close( f );
+            fclose( file );
             if ( watch )
                 gtk_text_buffer_set_text( buf, _("( file contents are not valid UTF-8 )"), -1 );
             else
                 gtk_text_buffer_set_text( buf, "", -1 );
-            dlg_warn( _("file '%s' contents are not valid UTF-8"), path, NULL );
+            dlg_warn( _("file '%s' contents are not valid UTF-8"), pathx, NULL );
             return;
         }
-        gtk_text_buffer_insert_at_cursor( buf, line, bytes );
+        gtk_text_buffer_insert_at_cursor( buf, line, -1 );
     }
-    close( f );
+    fclose( file );
+
     if ( watch && !el->monitor )
     {
         // start monitoring file

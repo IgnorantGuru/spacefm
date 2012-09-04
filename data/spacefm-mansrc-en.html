@@ -1312,7 +1312,7 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <!-- @Dialog @Introduction -->
 
-<p>SpaceFM Dialog is a built-in feature of SpaceFM which allows you to easily create and interact with custom GTK dialogs.  Typically such dialogs are shown from scripts to gather information from the user.  SpaceFM Dialog allows scripts to easily use much of the power of GTK - a dialog can be as simple as a single message prompt or as complex as a mini-app with lists, editors, and other widgets.
+<p>SpaceFM Dialog is a built-in feature of SpaceFM which allows you to easily create and control custom GTK dialogs.  Typically such dialogs are shown from scripts to gather information from the user.  SpaceFM Dialog allows scripts to easily use much of the power of GTK - a dialog can be as simple as a single message prompt or as complex as a mini-app with lists, editors, and other widgets.
 
 <p>Dialog elements can have associated commands which are run when the user takes an action (such as pressing a button ), and internal commands can be used to modify the dialog elements while the dialog is running.  When SpaceFM Dialog exits, it writes variables to stdout which can be evaluated directly in bash, or easily parsed in other languages.
 
@@ -1384,14 +1384,15 @@ The above commands place spacefm's output into the variable 'out', then pass tha
 <!-- @Dialog @Elements -->
 <p>Elements tell SpaceFM Dialog how to build your dialog.  Each element is similar to a command line - it includes an element followed by arguments.  When SpaceFM Dialog sees a new element on the command line, it knows the arguments for the previous element have ended.
 
-<p>Most visible elements (widgets) are stacked vertically in the dialog (in a vbox):
+<p>Most visible elements (widgets) are stacked vertically in the dialog (in a vbox), while buttons are packed horizontally at the bottom of the dialog:
 <ul>
     ELEMENT1<br>
     ELEMENT2<br>
     ELEMENT3<br>
+    BUTTON1 BUTTON2<br>
 </ul>
-Buttons are placed horizontally at the bottom of the dialog.
 
+The following elements may be used to create dialogs:
 
 <!-- # --prefix #prefix -->
 Usage: <code><b>--prefix NAME|@FILE</b></code>
@@ -1601,7 +1602,7 @@ Usage: <code><b>--input-large [--select START[:END]] [TEXT|@FILE [COMMAND...]]</
 <!-- # --password #password -->
 Usage: <code><b>--password [TEXT|@FILE [COMMAND...]]</b></code>
 
-<p>A --password element, used to enter for a password, is similar to an <a href="#dialog-elements-input">--input</a>, except that the text is hidden.  Also, the options --select and --font have no effect on a --password element.
+<p>A --password element, used to enter a password, is similar to an <a href="#dialog-elements-input">--input</a>, except that the text is hidden.  Also, the options --select and --font have no effect on a --password element.
 <br><br>
 
 
