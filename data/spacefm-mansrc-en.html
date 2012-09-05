@@ -40,19 +40,19 @@
     <li>Provide <b>a flexible user interface</b> which rivals the flexibility and capabilities of the Linux command line.  Using SpaceFM and making gradual adjustments as you go, you become the designer of your own version of the file manager.  Almost every built-in menu and toolbar item can be renamed or hidden from view, bound to any keyboard shortcut, and given a custom icon.  You can also <b>add your own custom commands and submenus</b> to any position in most menus.  Like word processor macros, custom commands allow you to easily run commonly used programs or automate tasks using SpaceFM's unique integration with the bash scripting language.
 
     <p><li>Provide <b>flexibility in window components, behavior, and appearance</b>.  How many panels you want displayed, how they are arranged and sized, what each panel contains, what fonts are used, and how they respond to your actions are largely up to you.  SpaceFM can be a single window containing icons of a single folder's contents, or a multi-panel, tabbed arrangement of detailed file lists, devices, bookmarks, and folder trees.
-    
+
     <p><li>Keep the user <b>interface as simple and clean as possible</b>.  Although SpaceFM's UI has been redesigned, it is still inspired by the simplicity and clarity of PCManFM's UI.
-      
+
     <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by <a href="http://ignorantguru.github.com/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1/v2, or any program you specify.
-    
+
     <p><li>Provide a <b>task manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the task manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the task manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
-    
+
     <p><li>Provide a <b>plugin capability</b> which extends the base capabilities.  Plugins can be copied into most menus as custom commands, or can be installed as root for added protection and multi-user access.  Some plugins will eventually be included in SpaceFM's installation.  In addition. <b>any custom command you create can easily be saved as a plugin</b> and shared with other users.
-    
+
     <p><li>Provide <b>a common interface to multiple su and graphical su programs, terminals, and editors</b>.  You simply select which utilities you want to use for these functions, and SpaceFM's task manager handles the details of running your commands as other users, in a terminal, etc.
-    
+
     <p><li>Provide extensive <b>system maintenance capabilities</b>.  Perform-as-root functions allow you to edit, copy, move, and delete files and folders as root, change permissions, and create links.  SpaceFM can also be run as root for full system maintenance needs.
-    
+
     <p><li>Remain largely <b>independent</b> of particular distributions, desktop environments, and libraries.  Written entirely in C, SpaceFM uses GTK2 for its GUI and allows you to customize many GUI elements without modifying your GTK theme, or it can be run with no theme.  By default, it relies only on stock GTK icons.  SpaceFM has its own built-in virtual filesystem (VFS) code which uses core C filesystem functions for speed and reliability, and has no dependence on gvfs, etc.  It includes built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, SpaceFM can easily be built with deprecated fam/gamin support.)  SpaceFM uses udev for device detection and information, with no dependency on udisks.  (SpaceFM can also be built with deprecated HAL support instead of libudev.)
 </ul>
 
@@ -306,7 +306,7 @@ Or, to see the help for alternate build options, run:
 
 <p>To see SpaceFM's command line usage run <code>spacefm --help</code>
 <pre>Usage:
-  spacefm [OPTION...] [DIR | FILE]... 
+  spacefm [OPTION...] [DIR | FILE]...
 
 Help Options:
   -h, --help               Show help options
@@ -329,11 +329,11 @@ Application Options:
   --profile=PROFILE        No function - for compatibility only
   --no-desktop             No function - for compatibility only
   --display=DISPLAY        X display to use</pre>
-  
+
 <p>Normally, your session file and other user files are saved in <a href="#programfiles-home">~/.config/spacefm/</a>  To make SpaceFM read and save your files in another folder (~/.config/spacefm-alt in this example), stop ALL <i>instances</i> of SpaceFM and run:
 <pre>    # first stop all instances:
     killall spacefm
-    
+
     # then:
     spacefm --config-dir ~/.config/spacefm-alt</pre>
 
@@ -343,10 +343,10 @@ Application Options:
 
 <p>To open an initial SpaceFM window, run 'spacefm' with or without a folder specification:
 <pre>    spacefm
-    
+
     # or to open a folder:
     spacefm /home
-    
+
     # or to open several folders in tabs:
     spacefm /home /usr/bin
 
@@ -386,7 +386,7 @@ Application Options:
 
 <p>To simply show and focus panel 2 in the last used window:
 <pre>    spacefm --panel=2</pre>
-    
+
 <p>As a more advanced example, consider wanting to open multiple SpaceFM windows, each containing different folder tabs in each panel, using a single command.  For this, use a script like this to start SpaceFM:
 <pre>
     #!/bin/bash
@@ -400,7 +400,7 @@ Application Options:
     # open second window with two tabs in panel 1
     spacefm -wn --panel=1 /boot /media
     sleep 0.2
-    # add two tabs to panel 2 of second window    
+    # add two tabs to panel 2 of second window
     spacefm -rn --panel=2 /sbin /var
 </pre>
 The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A shorter sleep time of 0.1 may also work on your system.
@@ -485,7 +485,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <!-- @GUI @Path Bar -->
 
-<p>SpaceFM's Path Bar (address bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At it's simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.  
+<p>SpaceFM's Path Bar (address bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At it's simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
 
 <p>TIP:  To place the cursor in the Path Bar, you can use Go|Focus|Path Bar, accessed from the right-click menu of the file list.  By default, this is assigned to key shortcut Ctrl+L.
 
@@ -551,14 +551,14 @@ case "$protocol" in
         ;;
     ssh )
         # instead of udevil, mount ssh by running sshfs as the current user
-        
+
         # First, create a mountpoint
         mount_point=`mktemp -d ~/ssh-mount-XXXX`
         if [ $? -ne 0 ]; then
             echo "Unable to create mount point" 2>&1
             exit 1
         fi
-        
+
         # Get just the hostname to pass to sshfs
         # See <a href="http://www.tldp.org/LDP/abs/html/refcards.html#AEN22587">http://www.tldp.org/LDP/abs/html/refcards.html#AEN22587</a>
         hostname="${1#*:}"
@@ -570,7 +570,7 @@ case "$protocol" in
 
         # Run sshfs in a terminal to mount hostname to mount point
         $terminal -e "sshfs $hostname: $mount_point; echo; echo Press Enter; read"
-	
+
 	# Attempt to remove mount point in case of mount error
 	rmdir "$mount_point" 2>/dev/null
         ;;
@@ -1023,7 +1023,7 @@ Auto Run|On Mount opens a dialog which allows you to set a command line to be ru
 </table></center>
 
 <p>Note:  When the command is run, %v, %l, and %m refer to the device being added or removed, not the device which is currently selected in the Devices list.
-  
+
 <p>For this command to be run, <b>the device must be auto-mounted by SpaceFM</b>.  It will not be run for devices mounted by other means, or for devices mounted by user action within SpaceFM.
 
 <p>The command will not be run for devices which are auto-mounted at SpaceFM's initial startup.  Thus Auto Run affects devices you add after SpaceFM is running.
@@ -1064,7 +1064,7 @@ Auto Run|On Insert opens a dialog which allows you to set a command line to be r
 <p>Note that when inserting a single drive, your command may be run several times - once for each device file added.  For example, if you insert device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  A script can run one of these commands to get current information on a device's status:
 <pre>    udevil info /dev/sdX
     udisks --show-info /dev/sdX
-    udisksctl info -b /dev/sdX</pre> 
+    udisksctl info -b /dev/sdX</pre>
 
 <!-- #Auto Run|On Unmount #runu -->
 Auto Run|On Unmount opens a dialog which allows you to set a command line to be run when any device is unmounted by any means.
@@ -1285,7 +1285,7 @@ The New item creates a new custom command, which will be inserted after the curr
 <p>For example, right-click on a menu item and select New.  Enter 'Current Time' for the menu name.  For the command line, enter:
 <pre>    date</pre>
 
-<p>When you click the new menu item, a dialog will open showing you the current date and time.  
+<p>When you click the new menu item, a dialog will open showing you the current date and time.
 
 <p>You can also add a new menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item where you want to insert the new item, and press the Insert key, <b>or</b> use the mouse shortcut Ctrl + Shift + Left-or-Right-Click.
 
@@ -1412,7 +1412,7 @@ The Edit items allow you to edit the current command.  Edit will perform differe
 
 <p>Edit works a little differently with <a href="#plugins">plugins</a>.  If the plugin is command type <a href="#designmode-command-line">line</a>, you are permitted to edit the command line of the plugin.  However, note that your changes will be lost when you exit SpaceFM - the plugin will revert to its saved command line when SpaceFM restarts.  Likewise, if the plugin uses command type <a href="#designmode-command-custom">custom</a>, you can temporarily change the executable used, but the change will not be saved.  When making a temporary change to a plugin, only the current user is affected by the change.
 
-<p>If the plugin is a <a href="#designmode-command-script">script</a>, Edit will open the script in your editor.  To actually make changes to an installed plugin's script, you must use Edit As Root.  
+<p>If the plugin is a <a href="#designmode-command-script">script</a>, Edit will open the script in your editor.  To actually make changes to an installed plugin's script, you must use Edit As Root.
 
 <p>You can edit a menu item's command using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4, <b>or</b> use the mouse shortcut Middle-Click.
 
@@ -1520,7 +1520,7 @@ Sometimes a single line isn't enough to do what you want, so SpaceFM provides a 
 
 <p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  See the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for more information.
 
-<p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.  Scroll to the end of the command script to see help on what bash variables are available for use.  
+<p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.  Scroll to the end of the command script to see help on what bash variables are available for use.
 
 <p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
 <pre>    md5sum "${fm_filenames[@]}"</pre>
@@ -1557,7 +1557,7 @@ Regardless of what type a custom command is (line, script, or custom), there are
 <p>When you check the Run In Terminal option, the <a href="#designmode-command-task">Run As Task</a> option will be unchecked automatically as a convenience.  (If you do want both Run In Terminal and Run As Task, you can then check Run As Task as well.  However, normally it is not useful to run the terminal window as a task, as nothing will be shown in the output monitor.)
 
 <!-- # Keep Terminal #keep -->
-Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output then exit.  Without Keep Terminal, the terminal window would close before you had a chance to read the output.  
+Enabled by default when using <a href="#designmode-command-terminal">Run In Terminal</a>, Keep Terminal will cause the terminal to stay open even after the command or program has finished.  This is useful for programs which produce some output then exit.  Without Keep Terminal, the terminal window would close before you had a chance to read the output.
 
 <p>When Keep Terminal is enabled, after the command finishes you will be presented with a message like:
 <pre><i>&nbsp;&nbsp;[ Finished ]  Press Enter to close or s + Enter for a shell:</i></pre>
@@ -1584,7 +1584,7 @@ Run As Task, which is enabled by default for new commands, changes several aspec
 
 <p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's task manager will monitor the task, and if the task runs for longer than about one half second, the task manager will auto-show and will add the task to the running tasks list.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
 
-<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)  
+<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)
 
 <p>SpaceFM's output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to use Run In Terminal instead.
 
@@ -1820,7 +1820,7 @@ The next item on the MIME menu will be the name of an xml file which can be used
 <p>You can also use this menu item simply to see the MIME type of the selected file.  For example, if the name of this menu item is "application-zip.xml", then you know the MIME type is "application/zip".
 
 <!-- # mime/packages/ #mimedir -->
-Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run 'update-mime-database ~/.local/share/mime' and/or restart SpaceFM for the changes to take effect. 
+Selecting mime/packages/ will open the ~/.local/share/mime/packages/ folder in a new tab.  This folder contains your custom xml files used to redefine MIME types (see <a href="#designmode-mime-xml">mime-type.xml</a> above).  After adding, editing, or removing files from this folder, you may then need to run 'update-mime-database ~/.local/share/mime' and/or restart SpaceFM for the changes to take effect.
 
 <!-- # usr/ #usr -->
 The usr/ submenu gives you access to files and folders in /usr/share/applications/ and /usr/share/mime/packages/ (or in some cases, /usr/local/share/...).
@@ -1924,16 +1924,143 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 
 <p>Although SpaceFM Dialog is relatively easy to use, this portion of the manual assumes you have a basic understanding of command lines and scripts.  If you don't, try some of the examples and also consult the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a> for reference.
 
-<p>All of the example commands in this section can be pasted as-is into your terminal for a demonstration.
- 
+<p><b>All of the example commands in this section can be pasted as-is into your terminal for a demonstration.</b>
+
 
 <!-- @Dialog @Invocation -->
 <p>SpaceFM Dialog runs as a separate instance, whether other instances of SpaceFM are running or not.  This means you can use SpaceFM Dialog from within custom command scripts in SpaceFM, or in other scripts which run independently.
 
+<!-- # Help Reference #help -->
 <p>To see SpaceFM Dialog's help reference, run:
-<pre>    spacefm -g help</pre>
+<pre><b>$ spacefm -g help</b>
+SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you
+specify on the command line, features run-time internal/external commands which
+can modify elements, and outputs evaluatable/parsable results.
+Usage:
+    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...
+Example:
+    spacefm -g --label "A message" --button ok
 
-The command accepts any number of elements:
+<a href="#dialog-simple">ELEMENT</a>:       OPTIONS &amp; ARGUMENTS:
+--------       --------------------
+<a href="#dialog-simple-title">--title</a>        TEXT|@FILE
+               Set window title
+<a href="#dialog-simple-wicon">--window-icon</a>  ICON|@FILE
+               Set window icon
+<a href="#dialog-simple-label">--label</a>        LABEL|@FILE
+               Add a text label
+<a href="#dialog-simple-button">--button</a>       LABEL[:ICON]|STOCK|@FILE [COMMAND...]
+               Add STOCK dialog button, or LABEL button with ICON
+<a href="#dialog-simple-freebutton">--free-button</a>  LABEL[:ICON]|STOCK|@FILE [COMMAND...]
+               Add STOCK button, or LABEL button with ICON anywhere
+<a href="#dialog-simple-input">--input</a>        [--select START[:END]] [TEXT|@FILE [COMMAND...]]
+               Add a text entry
+<a href="#dialog-simple-inputl">--input-large</a>  [--select START[:END]] [TEXT|@FILE [COMMAND...]]
+               Add a large text entry
+<a href="#dialog-simple-password">--password</a>     [TEXT|@FILE [COMMAND...]]
+               Add a password entry
+<a href="#dialog-simple-viewer">--viewer</a>       [--scroll] FILE|PIPE
+               Add a file or pipe viewer
+<a href="#dialog-simple-editor">--editor</a>       [FILE [SAVEFILE]]
+               Add multi-line text editor
+<a href="#dialog-simple-check">--check</a>        LABEL [VALUE|@FILE [COMMAND...]]
+               Add a checkbox option
+<a href="#dialog-simple-radio">--radio</a>        LABEL [VALUE|@FILE [COMMAND...]]
+               Add a radio option
+<a href="#dialog-simple-icon">--icon</a>         ICON|@FILE [COMMAND...]
+               Add an icon
+<a href="#dialog-simple-image">--image</a>        FILE|@FILE [COMMAND...]
+               Add an image
+<a href="#dialog-simple-progress">--progress</a>     [VALUE|pulse|@FILE]
+               Add a progress bar
+<a href="#dialog-simple-hsep">--hsep</a>         ( no arguments )
+               Add a horizontal line separator
+<a href="#dialog-simple-vsep">--vsep</a>         ( no arguments )
+               Add a vertical line separator
+<a href="#dialog-simple-timeout">--timeout</a>      [DELAY|@FILE]
+               Automatically close window after DELAY seconds
+<a href="#dialog-lists-drop">--drop</a>         {TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]
+               Add a drop-down list.  COMMAND run when clicked.
+<a href="#dialog-lists-combo">--combo</a>        {TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]
+               Add a combo list.  COMMAND run when Enter pressed.
+<a href="#dialog-lists-list">--list</a>         {[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]
+               Add a list box.  COMMAND run when double-clicked.
+<a href="#dialog-lists-mlist">--mlist</a>        {[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]
+               Add a list box with multiple selections
+<a href="#dialog-lists-chooser">--chooser</a>      [CHOOSER-OPTIONS] [DIR|FILE|@FILE [COMMAND...]]
+               Options: [--save] [--dir] [--multi] [--filter F[:F...]]
+<a href="#dialog-nonvis-prefix">--prefix</a>       NAME|@FILE
+               Set base variable name  (Default: "dialog")
+<a href="#dialog-nonvis-winsize">--window-size</a>  "WIDTHxHEIGHT [PAD]"|@FILE
+               Set minimum width, height, padding (-1 = don't change)
+<a href="#dialog-nonvis-hbox">--hbox</a>         [--compact] [PAD|@FILE]
+               Add following widgets to a horizontal box
+<a href="#dialog-nonvis-vbox">--vbox</a>         [--compact] [PAD|@FILE]
+               Add following widgets to a vertical box
+<a href="#dialog-nonvis-closebox">--close-box</a>
+               Close the current box of widgets
+<a href="#dialog-nonvis-keypress">--keypress</a>     KEYCODE MODIFIER COMMAND...
+               Run COMMAND when a key combination is pressed
+<a href="#dialog-nonvis-command">--command</a>      FILE|PIPE [COMMAND...]
+               Read commands from FILE or PIPE.  COMMAND for init.
+
+The following arguments may be used as shown above:
+    STOCK    One of: ok cancel close open yes no apply delete edit save stop
+    ICON     An icon name, eg:  gtk-open
+    @FILE    A text file from which to read a value.  In some cases this file
+             is monitored, so writing a new value to the file will update the
+             element.  In other cases, the file specifies an initial value.
+    SAVEFILE An <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file if specified.
+    <a href="#dialog-cmd">COMMAND</a>  An <a href="#dialog-int">internal command</a> or executable followed by arguments. Separate
+             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'
+             The following <a href="#dialog-cmd-sub">substitutions</a> may be used in COMMANDs:
+                 %n           Name of the current element
+                 %v           Value of the current element
+                 %NAME        Value of element named NAME (eg: %input1)
+                 %(command)   stdout from a command
+                 %%           %
+    LABEL    The following escape sequences in LABEL are unescaped:
+                 \n   newline
+                 \t   tab
+                 \"   "
+                 \\   \
+             In <a href="#dialog-simple-label">--label</a> elements only, if the first character in LABEL is a
+             tilde (~), pango markup may be used.  For example:
+                 --label '~This is plain. &lt;b&gt;This is bold.&lt;/b&gt;'
+
+In addition to the OPTIONS listed above, a --font option may be used with most
+element types to change the element's font and font size.  For example:
+    --input --font "Times New Roman 16" "Default Text"
+
+<a href="#dialog-int">INTERNAL COMMANDS</a>:
+    <a href="#dialog-int-noop">noop</a>       ( any arguments )
+               No operation - does nothing but evaluate arguments
+    <a href="#dialog-int-close">close</a>      ( no arguments )
+               Close the dialog
+    <a href="#dialog-int-press">press</a>      BUTTON-NAME
+               Press button named BUTTON-NAME
+    <a href="#dialog-int-set">set</a>        NAME VALUE
+               Set element NAME to VALUE
+    <a href="#dialog-int-select">select</a>     NAME [VALUE]
+               Select item VALUE (or first/all) in element NAME
+    <a href="#dialog-int-unselect">unselect</a>   NAME [VALUE]
+               Unselect item VALUE (or all) in element NAME
+    <a href="#dialog-int-focus">focus</a>      NAME [REVERSE]
+               Focus element NAME
+    <a href="#dialog-int-hide">hide</a>       NAME [REVERSE]
+               Hide element NAME
+    <a href="#dialog-int-show">show</a>       NAME [REVERSE]
+               Show element NAME if previously hidden
+    <a href="#dialog-int-disable">disable</a>    NAME [REVERSE]
+               Disable element NAME
+    <a href="#dialog-int-enable">enable</a>     NAME [REVERSE]
+               Enable element NAME if previously disabled
+    <a href="#dialog-int-source">source</a>     FILE
+               Save files and write source output to FILE
+</pre>
+
+<!-- # Usage #usage -->
+The command line accepts any number of elements:
 <pre>
     spacefm -g ELEMENT [OPTIONS] [ARGUMENTS] \
 	       ELEMENT [OPTIONS] [ARGUMENTS] \
@@ -1960,7 +2087,7 @@ When the above command is run, a message dialog will be shown.  When the OK butt
     dialog_button1='ok'
     dialog_windowsize='450x100'</i></pre>
 
-The above source output, written to stdout, is produced by the dialog to allow you to easily use element values in your script.  If using bash or another compatible shell, you can automatically evaluate this output to set the variables.  For example, you can run:
+The above source output, written to stdout, is produced by the dialog to allow you to easily use element values in your script.  (To get this output while the dialog is still running, use <a href="#dialog-int-source">source</a>.) If using bash or another compatible shell, you can automatically evaluate this output to set the variables.  For example, you can run:
 <pre>    <b>eval "`</b>spacefm -g --label "This is a message." \
 	              --button ok<b>`"</b></pre>
 Using this method, you will no longer see the output in the terminal when the dialog closes.  Instead, the output is fed into eval, which reads the variable values.  A command enclosed in backticks (`), <i>not to be confused with apostrophes</i> ('), evaluates to a string containing the stdout output of the command.  This output is then double-quoted (") and passed to eval, which interprets it (sets the variables).  (<b>Be sure to double-quote the backticks</b> as shown above or some data may be lost!)
@@ -2012,11 +2139,11 @@ Usage: <code><b>--title TEXT|@FILE</b></code>
 <pre>    echo "A Window Title" > /tmp/dialog-title
     spacefm -g --title <b>@</b>/tmp/dialog-title</pre>
 
-The title will be read from the first line of the file.  The file is also watched for changes.  This method allows you to later change the window title.  As the dialog is running, in another terminal run:
+The "at" sign (@) indicates that a file path is being specified, and that SpaceFM Dialog should read the value from the first line of the file /tmp/dialog-title.  The file is also watched for changes.  This method allows you to later change the window title.  As the dialog is running, in another terminal run:
 <pre>    echo "Another Window Title" > /tmp/dialog-title</pre>
 and the dialog window's title will change to reflect the new value.  Thus using @FILE is one method which allows you to dynamically change the dialog as its running (commands being another method).
 
-<p>In commands, the value of a title element (%title1) is the title's TEXT.  Also note that even if no --title element has been added to the dialog, you can later use the set command to set 'title' (no numeric suffix).
+<p>In <a href="#dialog-cmd">commands</a>, the value of a title element (%title1) is the title's TEXT.  Also note that even if no --title element has been added to the dialog, you can later use the <a href="#dialog-int-set">set</a> command to set 'title' (no numeric suffix).
 <br><br>
 
 <!-- # --window-icon #wicon -->
@@ -2033,7 +2160,7 @@ The icon name will be read from the first line of the file /tmp/dialog-wicon.  T
 <pre>    echo "gtk-save" > /tmp/dialog-wicon</pre>
 and the dialog window's icon will change to reflect the new value.
 
-<p>In commands, the value of a window-icon (%windowicon1) is the icon name (ICON).  Also note that even if no --window-icon element has been added to the dialog, you can later use the set command to set 'windowicon' (no numeric suffix).
+<p>In <a href="#dialog-cmd">commands</a>, the value of a window-icon (%windowicon1) is the icon name (ICON).  Also note that even if no --window-icon element has been added to the dialog, you can later use the <a href="#dialog-int-set">set</a> command to set 'windowicon' (no numeric suffix).
 
 <p>See also: <a href="#dialog-nonvis-winsize">--window-size</a>
 <br><br>
@@ -2080,7 +2207,7 @@ and the text in the dialog window will change to reflect the new value in the fi
 
 Note that the --font option must come <i>directly after</i> the --label element.  In general it is best to use the default font unless your script is only intended for your own use.
 
-<p>In commands, the value of a label (eg %label1) is the text of the label.
+<p>In <a href="#dialog-cmd">commands</a>, the value of a label (eg %label1) is the text of the label.
 <br><br>
 
 
@@ -2129,7 +2256,7 @@ The first, "$dialog_pressed", contains the name of the button which was pressed 
 
 <b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.
 
-<p><b>If a COMMAND is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
+<p><b>If a <a href="#dialog-cmd">command</a> is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
 
 <p><b>The following example creates a dialog with a label and a button.</b>  When the button is pressed, the label is set to the current date.
 <pre>
@@ -2174,7 +2301,7 @@ Note that the --select option must come <i>directly after</i> the --input elemen
 
 <b>When the user presses Enter in an input box</b>, one of several things may happen.  If no COMMAND is associated with the input, then the right-most button at the bottom of the dialog will be automatically pressed.  If the dialog has no buttons, nothing will happen.
 
-<p>Or, if a COMMAND is added to the input, the COMMAND(s) will be run and no button will be automatically pressed.  The value of an input (eg %v, %input1, etc) is the text in the box when the command is run.
+<p>Or, if a <a href="#dialog-cmd">command</a> is added to the input, the COMMAND(s) will be run and no button will be automatically pressed.  The value of an input (eg %v, %input1, etc) is the text in the box when the command is run.
 
 <p>In SpaceFM Dialog's output, the value of an input can be read from, for example, "$dialog_input1".
 
@@ -2227,7 +2354,7 @@ Or:
 <pre>    # Press Ctrl-C to cancel:
     while (( 1 )); do date > /tmp/dialog-pipe; sleep 1; done</pre>
 
-<p>In commands, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use set (eg 'set viewer1 /etc/mtab').
+<p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').
 
 <p><b>The following example creates a dialog with a <a href="#dialog-lists-chooser">file chooser</a> and a viewer.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed.
 <pre>    spacefm -g --label "Double-click a file to view:" \
@@ -2253,7 +2380,7 @@ When the above dialog is closed, the contents of the editor will be automaticall
 
 <p>Note:  It is possible to set FILE and SAVEFILE to the same path, in which case the original file will automatically be overwritten when the dialog is closed, <i>regardless of what button is pressed</i>!
 
-<p>In commands, the value of an editor (eg %editor1) is the path of the file last loaded.  To load a file into the editor, use set (eg 'set editor1 /etc/mtab').  Also note that the contents of the editor are also saved to SAVEFILE whenever the internal command 'source' is run.
+<p>In <a href="#dialog-cmd">commands</a>, the value of an editor (eg %editor1) is the path of the file last loaded.  To load a file into the editor, use <a href="#dialog-int-set">set</a> (eg 'set editor1 /etc/mtab').  Also note that the contents of the editor are also saved to SAVEFILE whenever the internal command <a href="#dialog-int-source">source</a> is run.
 
 <p><b>The following example creates a dialog with a file chooser and an editor.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed in the editor.  If the user clicks the Save button, the editor's contents are saved to a temporary file (they are also saved when the dialog closes).
 
@@ -2286,21 +2413,19 @@ and the checkbox state will change to reflect the value in the file.
 
 <p><b>Also, when the dialog is closed, the state of the checkbox will be saved to the file</b>.  This method can be used to have the dialog remember the state.  The next time the dialog is run, assuming the file hasn't been deleted, the checkbox will have the same state as when the previous dialog was closed.
 
-<p>If a COMMAND is included, the COMMAND(s) will be run whenever the checkbox changes state, either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the checkbox changes state, either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
 
-<p>In commands, the value of a --check element (eg %check1) will equal 1 or 0, reflecting whether the box is checked or not.  If internal command set is used on a --check and the value is not "0", "false", "1", or "true", the check's LABEL is set to the value (eg "set check1 "A new option label"), instead of the state being changed.
+<p>In commands, the value of a --check element (eg %check1) will equal 1 or 0, reflecting whether the box is checked or not.  If internal command <a href="#dialog-int-set">set</a> is used on a --check and the value is not "0", "false", "1", or "true", the check's LABEL is set to the value (eg "set check1 "A new option label"), instead of the state being changed.
 
 <p>In SpaceFM Dialog's output, the value of a check can be read from, for example, "$dialog_check1".
 
 <p><b>The following example creates a dialog with a check and a label.</b>  If the checkbox is checked, the label is shown, otherwise it is hidden.
 <pre>
-    spacefm -g --check "Show text" 1                                       \
-		       hide "%( bash -c '(( %v )) || echo -n label1' )" -- \
-		       show "%( bash -c '(( %v )) &amp;&amp; echo -n label1' )"    \
-	       --label "Some text"
+    spacefm -g --check "Show text" 1 show label1 %v \
+               --label "Some text"
 </pre>
 
-(The check includes two commands: hide and show.  The first bash command outputs the label's name only if %v is 0, causing the label to be hidden.  The second bash command outputs the label's name only if %v is 1, causing the label to be shown.  Normally a script would be used, but in this case bash can run a small script directly for the desired value.)
+The check's value in the above command works as a reversal in the <a href="#dialog-int-show">show</a> command - if %v is "0" then label1 is hidden, otherwise it is shown.
 <br><br>
 
 
@@ -2334,9 +2459,9 @@ In the above example, Oranges will be selected by default.
 
 The files do not need to be created (they will be created automatically), unless you want to select an option other than the first.  If you run the above command multiple times, you will note that your selection is remembered from the previously closed dialog.
 
-<p>If a COMMAND is included, the COMMAND(s) will be run whenever the radio button is selected (but not when it is unselected), either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the radio button is selected (but not when it is unselected), either due to the user clicking it, its @FILE value changing, or its value being set with an internal command.  (The command is NOT run when the state is set to a default VALUE during dialog creation.)
 
-<p>In commands, the value of a --radio element (eg %radio1) will equal 1 or 0.  If internal command set is used on a --radio and the value is not "0", "false", "1", or "true", the radio's LABEL is set to the value (eg "set radio1 "A new option label"), instead of the state being changed.
+<p>In commands, the value of a --radio element (eg %radio1) will equal 1 or 0.  If internal command <a href="#dialog-int-set">set</a> is used on a --radio and the value is not "0", "false", "1", or "true", the radio's LABEL is set to the value (eg "set radio1 "A new option label"), instead of the state being changed.
 
 <p>In SpaceFM Dialog's output, the value of each --radio in a set can be read from, for example, "$dialog_radio1", "$dialog_radio2", etc.
 <br><br>
@@ -2357,12 +2482,12 @@ In this case, the icon name is read from the first line of the file /tmp/dialog-
 <pre>    echo "gtk-close" > /tmp/dialog-icon</pre>
 and the icon will change to reflect the value in the file.
 
-<p>If a COMMAND is included, the COMMAND(s) will be run whenever the icon is clicked.  For example:
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the icon is clicked.  For example:
 <pre>    spacefm -g --icon gtk-open <b>echo '# %n clicked %v'</b></pre>
 
 When you run the above command and click the icon in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the icon, not necessarily the corner of the icon itself (pack the icon into a compact --vbox for the latter).
 
-<p>In commands, the value of an --icon element (eg %icon1) when referenced from another element will equal the icon name, while the current --icon element's value (%v) will equal the mouse button and click location.  If internal command 'set' is used on an --icon, the icon name is changed.
+<p>In commands, the value of an --icon element (eg %icon1) when referenced from another element will equal the icon name, while the current --icon element's value (%v) will equal the mouse button and click location.  If internal command <a href="#dialog-int-set">set</a> is used on an --icon, the icon name is changed.
 <br><br>
 
 <!-- # --image #image -->
@@ -2381,12 +2506,12 @@ and the image will change to reflect the value in the file.
 
 <p><b>Images are not resized</b>.  They are displayed at their full size, so only small images can be comfortably packed into a dialog.  [Resizing options may be added soon - check this manual for updates.]
 
-<p>If a COMMAND is included, the COMMAND(s) will be run whenever the image is clicked.  For example:
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the image is clicked.  For example:
 <pre>    spacefm -g --image ~/example-image.jpg <b>echo '# %n clicked %v'</b></pre>
 
-When you run the above command and click the image in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact --vbox for the latter).
+When you run the above command and click the image in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
-<p>In commands, the value of an --image element (eg %image1) when referenced from another element will equal the image FILE path, while the current --image element's value (%v) will equal the mouse button and click location.  If internal command 'set' is used on an --image, the image path is changed.
+<p>In commands, the value of an --image element (eg %image1) when referenced from another element will equal the image FILE path, while the current --image element's value (%v) will equal the mouse button and click location.  If internal command <a href="#dialog-int-set">set</a> is used on an --image, the image path is changed.
 <br><br>
 
 <!-- # --progress #progress -->
@@ -2404,7 +2529,7 @@ The file is watched for changes.  To later update the value of the progress bar:
 Or, the progress bar will advance one pulse step each time you run:
 <pre>    echo pulse > /tmp/dialog-progress</pre>
 
-<p>In commands, the value of a --progress element can be set using the internal 'set' command (eg 'set progress1 35' or 'set progress1 pulse').
+<p>In <a href="#dialog-cmd">commands</a>, the value of a --progress element can be set using the internal <a href="#dialog-int-set">set</a> command (eg 'set progress1 35' or 'set progress1 pulse').
 <br><br>
 
 
@@ -2424,9 +2549,9 @@ Usage: <code><b>--vsep</b></code>
 <!-- # --timeout #timeout -->
 Usage: <code><b>--timeout [DELAY|@FILE]</b></code>
 
-<p>A --timeout element adds a Pause button to the dialog, which causes the dialog window to close automatically after DELAY seconds, until the Pause button has been pressed.
+<p>A --timeout element adds a Pause button to the dialog, which causes the dialog window to close automatically after DELAY seconds, unless the Pause button has been pressed.
 
-<p>In commands, the timeout value can be changed while the dialog is running with 'set timeout1 VALUE'.
+<p>In <a href="#dialog-cmd">commands</a>, the timeout value can be changed while the dialog is running with '<a href="#dialog-int-set">set</a> timeout1 VALUE'.
 
 <p>In SpaceFM Dialog's output, if the window closes due to the timeout, "$dialog_pressed" will equal "timeout1", and "$dialog_pressed_index" will equal -3.  (The timeout button is not indexed with the other buttons.)
 <br><br>
@@ -2464,15 +2589,15 @@ To specify a default item, add the default item value or index number.  For exam
 The file /tmp/dialog-drop in the above example will be watched.  When its contents change, the list contents will be updated to reflect the new list in the file.
 
 <p><b>The default value, as an item value or a +N index, may also be read from the contents of a file:</b>
-<pre>    
+<pre>
     echo "Item Two" > /tmp/dialog-dropdef
     spacefm -g --drop @/tmp/dialog-drop <b>@</b>/tmp/dialog-dropdef</pre>
 
 The file /tmp/dialog-dropdef in the above example will NOT be watched - changing its contents while the dialog is running will have no effect.  However, when the dialog closes, the currently selected item in the list will be written to the file.  This will cause the dialog to remember the selected value between sessions.  If you run the above spacefm command multiple times, you will note that your selection is remembered from the previously closed dialog.
 
-<p>If a COMMAND is included, the COMMAND(s) will be run whenever the list selection changes.  (The command is NOT run when the default item is set during dialog creation.)  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the list selection changes.  (The command is NOT run when the default item is set during dialog creation.)  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
 
-<p>In commands, the value of a --drop element (eg %drop1) will equal the currently selected item in the list.  If internal command 'set' is used on a --drop element, the command will set a new file to read the list from.  Or, if the set value is not a file, will select an item in the list.  The internal 'select' command can also be used to select an item in the list.
+<p>In commands, the value of a --drop element (eg %drop1) will equal the currently selected item in the list.  If internal command <a href="#dialog-int-set">set</a> is used on a --drop element, the command will set a new file to read the list from.  Or, if the set value is not a file, will select an item in the list.  The internal <a href="#dialog-int-select">select</a> command can also be used to select an item in the list.
 
 <p>In SpaceFM Dialog's output, the selected item of a --drop element can be read from, for example, "$dialog_drop1", and its index from "$dialog_drop1_index".  (An index of -1 indicates no item is selected.)
 <br><br>
@@ -2487,14 +2612,14 @@ Usage: <code><b>--combo {TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]</b></
 
 <p><b>When the user presses Enter in the text entry box</b>, one of several things may happen.  If no COMMAND is associated with the input, then the right-most button at the bottom of the dialog will be automatically pressed.  If the dialog has no buttons, nothing will happen.
 
-<p>Or, if a COMMAND is included, the COMMAND(s) will be run when the user presses Enter in the text entry box, and no button will be automatically pressed.  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
+<p>Or, if a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user presses Enter in the text entry box, and no button will be automatically pressed.  To include a COMMAND, be sure to include a DEFAULT value on the command line, or "" for no default.
 
-<p>In commands, the value of a --combo element (eg %combo1) will equal the text in the entry box.  If internal command 'set' is used on a --combo element, the command will set a new file to read the list from.  Or, if the set value is not a file, will set the text in the entry box.  The internal 'select' command can also be used to set the text in the box, and the 'unselect' command will clear the text.
+<p>In commands, the value of a --combo element (eg %combo1) will equal the text in the entry box.  If internal command <a href="#dialog-int-set">set</a> is used on a --combo element, the command will set a new file to read the list from.  Or, if the set value is not a file, will set the text in the entry box.  The internal <a href="#dialog-int-select">select</a> command can also be used to set the text in the box, and the <a href="#dialog-int-unselect">unselect</a> command will clear the text.
 
 <p>In SpaceFM Dialog's output, the entry box text of a --combo element can be read from, for example, "$dialog_combo1", and its index from "$dialog_combo1_index".  The index will be set only if the user selects an item from the list, otherwise it will be -1 (even if the text in the entry box equals an item in the list).
 <br><br>
 
-    
+
 <!-- # --list #list -->
 Usage: <code><b>--list {[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]</b></code>
 
@@ -2508,9 +2633,9 @@ Usage: <code><b>--list {[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND
 <pre>
     #!/bin/bash
     # <b>This script creates a list from an array</b>
-    
+
     alist=( "Item One" "Item Two" "Item Three" )
-    eval "`spacefm -g --list "${alist[@]}" -- --button ok`" 
+    eval "`spacefm -g --list "${alist[@]}" -- --button ok`"
     if (( dialog_list1_index != -1 )); then
         echo "Item selected: $dialog_list1"
         echo "Index selected: $dialog_list1_index = ${alist[dialog_list1_index]}"
@@ -2549,10 +2674,10 @@ C
 2
 3
 </i></pre>
-    
+
 Save the above text to a file named '/tmp/dialog-list'.  Note that the --colwidth option must be placed on a line by itself in a file.  Then load the file:
-<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list</pre>  
-    
+<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list</pre>
+
 <b>It's also possible to set a data type for a column.</b>  Data types include 'string' (the default type if none is specified), 'int' (integer), 'double' (a double-precision floating point number), and 'progress' (a progress bar with values ranging 0-100).  Different data types will be displayed and sorted differently.  To define a data type for a column, include it in the column header after a colon.  For example, edit the  '/tmp/dialog-list' so it contains this list with three columns:
 <pre><i>
 ^Job
@@ -2570,13 +2695,13 @@ C
 </i></pre>
 
 In the above example, the "Job" column is type 'string', the "Number" column contains integers, and the "Complete" column will show progress bars.  Once again, show the list:
-<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list</pre>  
+<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list</pre>
 
 Note:  If you want a column header to end with a colon (eg "Number:"), and you want to define a data type, use two colons (eg "Number::int").
 
-<p>If a COMMAND is included, the COMMAND(s) will be run when the user double-clicks an item in the list.
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user double-clicks an item in the list.  If no COMMAND is included, double-clicking an item in the list will automatically press the right-most dialog button, if present.
 
-<p>In commands, the value of a --list element (eg %list1) will equal the currently selected item (first column data, or hidden column - see below).  If internal command 'set' is used on a --list element, the command will set a new file to read the list from.  The internal 'select' command will select an item in the list, and the 'unselect' command will unselect any selection.
+<p>In commands, the value of a --list element (eg %list1) will equal the currently selected item (first column data, or hidden column - see below).  If internal command <a href="#dialog-int-set">set</a> is used on a --list element, the command will set a new file to read the list from.  The internal <a href="#dialog-int-select">select</a> command will select an item in the list, and the <a href="#dialog-int-unselect">unselect</a> command will unselect any selection.
 
 <p>In SpaceFM Dialog's output, the selected item can be read from, for example, "$dialog_list1", and its index from "$dialog_list1_index" (-1 if nothing is selected).
 
@@ -2601,7 +2726,7 @@ C
 </i></pre>
 
 The above list still has only three visible columns.  The values in the "HIDE" column will be returned in the dialog's output, and in commands.  For example, save the above list as '/tmp/dialog-list' and run:
-<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list echo '# %n = %v'</pre>  
+<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list echo '# %n = %v'</pre>
 
 When you double-click an item in the list, the return value will be printed to the terminal (eg "# list1 = return2").
 <br><br>
@@ -2619,7 +2744,7 @@ Usage: <code><b>--mlist {[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAN
 # <b>This script creates an mlist from an array</b>
 
 alist=( Aaa Bbb Ccc Ddd Eee Fff Ggg Hhh )
-eval "`spacefm -g --mlist "${alist[@]}" -- --button ok`" 
+eval "`spacefm -g --mlist "${alist[@]}" -- --button ok`"
 if [[ "${dialog_mlist1[0]}" != "" ]]; then
     echo "Selected items:"
     for item in "${dialog_mlist1[@]}"; do
@@ -2630,7 +2755,7 @@ else
 fi
 </pre>
 
-In commands, the --mlist element's value (eg %v, %mlist1) is set to a list of quoted values (eg 'Aaa' 'Bcc' 'Ccc') which can be passed to an executable's command line.
+In <a href="#dialog-cmd">commands</a>, the --mlist element's value (eg %v, %mlist1) is set to a list of quoted values (eg 'Aaa' 'Bcc' 'Ccc') which can be passed to an executable's command line.
 <br><br>
 
 
@@ -2673,7 +2798,7 @@ Note that it is up to your script to determine if a file already exists before o
 
 <p><b>Filters can be added</b> to control what types of files are displayed.  The F value in a filter can be a MIME type (eg "text/plain" or "video/*") or a filename pattern (eg *.txt).  For example, to allow the user to choose only files with MIME type "text/plain":
 <pre>     spacefm -g --chooser --filter text/plain</pre>
- 
+
 Or to allow the user to select only files ending in ".avi":
 <pre>     spacefm -g --chooser --filter '*.avi'</pre>
 
@@ -2685,7 +2810,7 @@ Or to allow the user to select only files ending in ".avi":
 
 <b>More than one --chooser element can be added to a dialog.</b>
 
-<p>If a COMMAND is included, the COMMAND(s) will be run when the user double-clicks a file in the list.  In commands, the value of a --chooser element (eg %v, %chooser1) will equal the currently selected file or files.  If internal command 'set' is used on a chooser, the command will change directory and/or select a file.
+<p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run when the user double-clicks a file in the list.  In commands, the value of a --chooser element (eg %v, %chooser1) will equal the currently selected file or files.  If internal command <a href="#dialog-int-set">set</a> is used on a chooser, the command will change directory (and/or select a file).  The <a href="#dialog-int-select">select</a> and <a href="#dialog-int-unselect">unselect</a> commands can be used to select and unselect files.
 
 <p>In SpaceFM Dialog's output, the selected file(s) can be read from, for example, "$dialog_chooser1", and the current directory from "$dialog_chooser1_dir".  Note that in some cases, such as when the chooser is in "Recently Used", "$dialog_chooser1_dir" will be null.  Also, if the --multi option is used, "$dialog_chooser1" will be an array containing the selected paths.
 <br><br>
@@ -2730,6 +2855,8 @@ Note that depending on the other elements added, <b>the window may grow larger</
 <p><b>A padding amount can also be included.</b>.  This sets the amount of empty space around widgets (0-20 is a reasonable range of values for PAD, 4 is the default).  For example:
 <pre>    spacefm -g --window-size "800x600 <b>10</b>"</pre>
 
+<b>IMPORTANT:</b>  The --window-size element must be come before other elements on the command line for the padding value to have an effect.
+
 <p><b>The minimum window size and padding can also be read from a file:</b>
 <pre>    spacefm -g --window-size <b>@</b>/tmp/dialog-wsize</pre>
 
@@ -2738,9 +2865,9 @@ When the file is changed, the window will be resized to the specified size.  As 
 
 and the window will be resized.  (Note that the padding will not change once the dialog is running.)  Also, when the dialog closes, the window size (and padding if specified) are written to the file.  Thus when the dialog is next run, it will be at least whatever size the user last resized the window to.
 
-<p>In commands, you can resize the window by using the internal 'set' command on 'windowsize' (eg 'set windowsize 800x600'), even if you have not added a --window-size element.
+<p>In <a href="#dialog-cmd">commands</a>, you can resize the window by using the internal <a href="#dialog-int-set">set</a> command on 'windowsize' (eg 'set windowsize 800x600'), even if you have not added a --window-size element.
 
-<p>In SpaceFM Dialog's output, you can always read the window's last size (and padding if specified) from "$dialog_windowsize", even if you have not added a --window-size element.  To get the current size while the window is running, use the 'source' command.
+<p>In SpaceFM Dialog's output, you can always read the window's last size (and padding if specified) from "$dialog_windowsize" (no numeric suffix), even if you have not added a --window-size element.  To get the current size while the window is running, use the <a href="#dialog-int-source">source</a> command.
 
 <p>See also: <a href="#dialog-simple-title">--title</a> and <a href="#dialog-simple-wicon">--window-icon</a>
 <br><br>
@@ -2775,7 +2902,7 @@ In the above command, the initial --hbox element is packed into the default vbox
                --free-button "Button4" \
                --free-button "Button5"</pre>
 
-You will notice if you resize that window, that the row of buttons expand vertically.  For some elements (like a --list or a --viewer) this is desirable, since the elements expand to fill the window.  For other elements, such as buttons, you don't normally want this expansion.  By default, an hbox will expand vertically consuming available window space, giving the extra space to its children, who in turn expand.  If you don't want the hbox to consume extra vertical space in the window, include the --compact option:
+You will notice that if you resize the above window, the row of buttons expand vertically.  For some elements (like a --list or a --viewer) this is desirable, since the elements expand to fill the window.  For other elements, such as buttons, you don't normally want this expansion.  By default, an hbox will expand vertically consuming available window space, giving the extra space to its children, who in turn expand.  If you don't want the hbox to consume extra vertical space in the window, include the --compact option:
 
 <pre>
     spacefm -g --hbox <b>--compact</b> \
@@ -2797,7 +2924,9 @@ The --compact option tells the box not to expand in the <i>other</i> dimension. 
 	       --free-button "Button2" \
 	       --free-button "Button3"
 </pre>
-<br>
+
+<p><b>If an --hbox is <a href="#dialog-int-hide">hidden</a>, all of its children become invisible.</b>
+<br><br>
 
 
 <!-- # --vbox #vbox -->
@@ -2805,14 +2934,14 @@ Usage: <code><b>--vbox [--compact] [PAD|@FILE]</b></code>
 
 <p>For a general discussion of boxes, see <a href="#dialog-nonvis-hbox">--hbox</a>.  A --vbox element works similarly to an --hbox, except that the child elements in the box are stacked vertically rather than horizontally.
 
-<p>The default box in a dialog is a vbox, so elements are added in a vertical stack.  Adding a --vbox element to the dialog's default vbox will have no apparent affect.  Thus these two commands create the same dialog:
+<p>The default box in a dialog is a vbox, so elements are added in a vertical stack.  Adding a --vbox element to the dialog's default vbox will have no apparent effect.  Thus these two commands create the same dialog:
 <pre>
     spacefm -g --free-button "Button1" \
                --free-button "Button2" \
                --free-button "Button3"
-    
+
     # Produces the same dialog as:
-    
+
     spacefm -g <b>--vbox</b> \
                --free-button "Button1" \
                --free-button "Button2" \
@@ -2829,7 +2958,7 @@ To see the effects of a vbox, we need to pack it into an hbox containing other e
 	       --check "Option Gamma"
 </pre>
 
-In the above example, an hbox is first packed in the dialog.  This hbox contains two elements:  a list and a vbox.  Since its an hbox, those elements are arranged side-by-side, in a row.  So the list and the vbox will be next to each other.  Finally, three check options are packed into the vbox.  Since its a vbox, they are stacked vertically.
+In the above example, an hbox is first packed in the dialog.  This hbox contains two elements:  a list and a vbox.  Since its an hbox, those elements are arranged side-by-side, in a row - the list and the vbox will be next to each other.  Finally, three check options are packed into the vbox.  Since its a vbox, they are stacked vertically.
 
 <p>If we wanted to add another element below all of that, in the original default vbox of the dialog, we would first need to close the boxes we added:
 <pre>
@@ -2871,7 +3000,9 @@ Finally, as with an --hbox, a PAD value may be added to a --vbox to add empty sp
 	       --close-box \
 	       --drop item
 </pre>
-<br>
+
+<p><b>If a --vbox is <a href="#dialog-int-hide">hidden</a>, all of its children become invisible.</b>
+<br><br>
 
 
 <!-- # --close-box #closebox -->
@@ -2898,18 +3029,14 @@ In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MO
 
 <p><b>Multiple --keypress elements can be added to a dialog.</b>
 
-<p>In commands, the value of a --keypress element (eg %v, %keypress1) will equal the keycode and modifier.
+<p>In <a href="#dialog-cmd">commands</a>, the value of a --keypress element (eg %v, %keypress1) will equal the keycode and modifier.
 <br><br>
 
 <!-- # --command #command -->
-Usage: <code><b>--command FILE|PIPE</b></code>
+Usage: <code><b>--command FILE|PIPE [COMMAND...]</b></code>
 
-<p>A --command element causes SpaceFM Dialog to monitor a regular file or a pipe for internal commands.  For example, to monitor a regular file:
-<pre>
-    # First create the file:
-    touch /tmp/dialog-cmd
-    spacefm -g --command /tmp/dialog-cmd
-</pre>
+<p>A --command element causes SpaceFM Dialog to monitor a regular file or a pipe for <a href="#dialog-int">internal commands</a>.  For example, to monitor a regular file:
+<pre>    spacefm -g --command /tmp/dialog-cmd</pre>
 
 No command will be read from the file during dialog creation even if it contains one.  When you write a command to the first line of the file while the dialog is running, it will be run as an internal command.  In another terminal run:
 <pre>    echo "set title A Window Title" > /tmp/dialog-cmd</pre>
@@ -2933,6 +3060,202 @@ Then in another terminal, write text to the pipe:
 
 Note that you may or may not need to add a small delay (eg sleep 0.1) for the source file to be written in response to your command, before reading the file.
 
+<p>COMMAND, if included, specifies initialization <a href="#dialog-cmd">commands</a> for the dialog.  COMMAND(s) associated with a --command element are run only once, just after the dialog is created.  These are used to initialize the dialog, such as <a href="#dialog-int-disable">disabling</a> or <a href="#dialog-int-hide">hiding</a> some elements.  (FILE|PIPE may be "" if you want to include an initialization COMMAND but don't want to watch a command file.)
+
+
+
+
+<!-- @Dialog @Commands #cmd -->
+
+<p>One or more commands may be associated with a SpaceFM Dialog element if the element accepts COMMAND on its command line.  Most commands are run when the element is activated - a user clicks a button, double-clicks an item in a list, presses Enter in a text box, etc.
+
+<P>Commands may be <a href="#dialog-int">internal</a> (used to internally change aspects of the dialog while it's running) or external (an executable to be run).  SpaceFM Dialog recognizes its internal commands by name; any commands which are not internal are run as external.
+
+<p>The COMMAND argument may represent a single command followed by its command arguments, or multiple commands each with arguments.  A "--" argument is used to separate multiple commands.  Both internal and external may be mixed.  For example:
+<pre>
+    spacefm -g --label "Press Button" \
+	       --button "Button" <b>set label1 "Button was pressed" --</b> \
+				 <b>echo '# Button %n was pressed'</b>
+</pre>
+
+The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (echo '# Button was pressed') is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to the terminal.
+
+<p>Although commands are run in the order presented, note that <b>external commands are run asynchronously</b>.  SpaceFM Dialog runs and forgets the command, and doesn't wait for it to finish.  This means later commands may run before an earlier command has finished.  (To run an external command synchronously, run it inside an internal noop command's <a href="#dlgsubcmd">%(command) substitution</a>.)
+
+<!-- # Substitution Variables #sub -->
+Before SpaceFM Dialog runs a command, internal or external, it replaces some variables anywhere in the command or arguments with current values.  The following substitution variables are replaced:<br>
+<center><table width="70%">
+	<tr>
+		<td>%n</td> <td>Name of the current element</td>
+	</tr><tr>
+		<td>%v</td> <td>Value of the current element</td>
+	</tr><tr>
+		<td>%NAME</td> <td>Value of element named NAME (eg: %input1)</td>
+	</tr><tr>
+		<td>%(command)</td> <td>stdout from an external command</td>
+	</tr><tr>
+		<td>%%</td> <td>%</td>
+	</tr>
+</table></center>
+
+<p><b>%n</b><br>
+In the above button example, %n would equal "button1", the name of the element.  Elements are named automatically as they are added.  These are the same names used in the variables in SpaceFM Dialog's output.
+
+<p><b>%v</b><br>
+The value of the current element, or "my value" from the element's perspective, is substituted for %v.  This is equivalent to referring to the element's own value by name (eg %button1 in the above example).
+
+<p><b>%NAME</b><br>
+%NAME is used to get the value of any other element in the dialog.  For example, the text in the first --input element of a dialog is always "%input1".  If element NAME does not exist, %NAME has value "".  Note that the value read from an element may differ from the value used to set an element.  For example, using <a href="#dialog-int-set">set</a> on a --list element sets the file path for the list.  But "%list1" will contain the selected items in the list.
+
+<p><a name="dlgsubcmd"><b>%(command)</b></a><br>
+%(command) executes an external command line <i>synchronously</i>, and is substituted with the stdout output of the command.  For example:
+<pre>
+    spacefm -g --label \
+	       --button 'Get Date' set label1 '<b>%(date +%%D)</b>'</pre>
+
+Generally, you will need to quote the '%(command)' argument as shown above when running spacefm, or the shell will misinterpret the parentheses.  The command line "date +%D" (remember %% is changed to %) is run, and the output is substituted.
+
+<p><b>IMPORTANT:</b>  Because the %(command) command line is run synchronously, SpaceFM Dialog will wait until it finishes.  While it's waiting, the dialog GUI and other functions will be suspended.  If the command takes an appreciable amount of time, you will notice the GUI lags or hangs.  Thus fast commands work best.
+
+<p>Also, if you want to run an external command synchronously, you can run it inside an internal command with %(command).  The <a href="#dialog-int-noop">noop</a> command, which does nothing except evaluate arguments, is good for this, eg noop '%(command)'.  In this case, the stdout output will be discarded, but the command will be run synchronously.
+
+<p>Note that a small bash script can be run directly inside a %(command) substitution by using bash -c.  For example:
+<pre>
+spacefm -g --check Option 0                                                      \
+		   set label1 '<b>%( bash -c "echo -n Option is\ ;</b>                  \
+				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked" )</b>' \
+	   --label "Option is unchecked"
+</pre>
+
+
+<!-- @Dialog @Internal Commands #int -->
+<p>Internal commands are run internally by the dialog to change elements while the dialog is running.  They can be included as part of an element's <A href="#dialog-cmd">COMMAND</a> arguments, or submitted from an external process using a <a href="#dialog-nonvis-command">--command</a> element.
+
+<p>The following internal commands may be used:
+
+<!-- #noop -->
+Usage: <b>noop</b>
+
+<p>The noop (no operation) command simply does nothing, but its arguments, if any, are evaluated.
+
+<p>One use for a noop command is to prevent a dialog closing when a button or other element is activated.  Buttons will automatically close the dialog when pressed if no COMMAND is included.  Other elements, such as lists and inputs, will press the right-most dialog button to close the dialog when they are activated if no COMMAND is included.  To prevent this behavior, you can set COMMAND to noop.  For example:
+<pre>    spacefm -g --button ok noop</pre>
+
+Another use for the noop command is to evaluate arguments.  This can be used to run an external command synchronously as detailed in <a href="#dlgsubcmd">%(command) substitution</a>.  For example:
+<pre>    spacefm -g --button ok <b>noop '%(myscript)'</b> -- close</pre>
+
+In the above example, when the OK button is pressed, first 'myscript' will be run <i>synchronously</i> (an imaginary script which does something critical before closure).  SpaceFM Dialog will wait for it to finish.  Then and only then, the 'close' command will close the dialog.
+
+<!-- #close -->
+Usage: <b>close</b>
+
+<p>The close command simply closes the dialog window, as if the user clicked the X in the top-right corner or used Alt+F4.  $dialog_pressed_index will equal -2.
+
+<!-- #press -->
+Usage: <b>press BUTTON-NAME</b>
+
+<p>The press command presses a button in the dialog, just as if the user clicked it.  It is passed the name of the button to press.  For example:
+<pre>
+    spacefm -g --icon gtk-ok <b>press button1</b> \
+	       --button ok</pre>
+
+When the above command is run and the icon is clicked, the OK button will be pressed, closing the dialog ($dialog_pressed = button1).
+
+<p>Other elements, if no COMMAND is included, will press the right-most dialog button when activated.  The press command can also be used to press another button instead.
+
+<!-- #set -->
+Usage: <b>set NAME VALUE</b>
+
+<p>The set command sets a new VALUE for the element named NAME.  What effect this has will depend on the type of element.  For most elements, set will change what they are displaying or their state.  For details on how a particular element handles set, see the element's <a href="#dialog-simple">documentation</a>.
+
+<p>For example:
+<pre>
+    spacefm -g --label "Press Button" \
+	       --button "Button" <b>set label1 "Button was pressed"</b>
+</pre>
+
+<!-- #select -->
+Usage: <b>select NAME [VALUE]</b>
+
+<p>The select command is used to select an item in any kind of list, or if no VALUE is supplied, all items are selected if possible.  select can also be used to select a filename in a <a href="#dialog-lists-chooser">--chooser</a>, or set the text in a <a href="#dialog-lists-combo">--combo</a>.
+
+<p>For example:
+<pre>
+    spacefm -g --list AAA BBB CCC \
+               --button "Select CCC" <b>select list1 CCC</b> \
+	       --button ok</pre>
+	       
+<!-- #unselect -->
+Usage: <b>unselect NAME [VALUE]</b>
+
+<p>The unselect command is used to unselect an item in any kind of list, or if no VALUE is supplied, all items are unselected.  unselect can also be used to unselect a filename in a <a href="#dialog-lists-chooser">--chooser</a>, or clear the text in a <a href="#dialog-lists-combo">--combo</a>.
+
+<p>For example:
+<pre>
+    spacefm -g --mlist AAA BBB CCC \
+	       --command "" select mlist1 \
+               --button "Unselect All" <b>unselect mlist1</b> \
+	       --button ok</pre>
+
+<!-- #focus -->
+Usage: <b>focus NAME [REVERSE]</b>
+
+<p>The focus command gives the element NAME the focus in the dialog.  The focused element receives keyboard input.
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the focus command to do nothing.  This can be used with the value from a --check element, for example, to make the focus command conditional.
+
+<!-- #hide -->
+Usage: <b>hide NAME [REVERSE]</b>
+
+<p>The hide command makes the element named NAME invisible.  A hidden element takes no space, so other elements may shift position or size in response to an element being hidden.  hide can be used to hide or show dialog elements conditionally in a certain mode or use of the dialog.
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the hide command to have the reversed effect (it becomes a <a href="#dialog-int-show">show</a> command).  This can be used with the value from a --check element, for example, to make the hide command conditional.
+
+<!-- #show -->
+Usage: <b>show NAME [REVERSE]</b>
+
+<p>The show command makes the element named NAME visible.  All elements are visible by default, so a show command only has an effect if an element was previously hidden with <A href="#dialog-int-hide">hide</a> (or a reversed show).
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the show command to have the reversed effect (it becomes a <A href="#dialog-int-hide">hide</a> command).  This can be used with the value from a --check element, for example, to make the show command conditional.  For example:
+<pre>
+    spacefm -g --check "Show text" 1 <b>show label1 %v</b> \
+               --label "Some text"
+</pre>
+
+<!-- #disable -->
+Usage: <b>disable NAME [REVERSE]</b>
+
+<p>The disable command sets the element named NAME insensitive (grayed).  A disabled element cannot be clicked or used by the user.
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the disable command to have the reversed effect (it becomes an <a href="#dialog-int-enable">enable</a> command).  This can be used with the value from a --check element, for example, to make the disable command conditional.
+
+
+<!-- #enable -->
+Usage: <b>enable NAME [REVERSE]</b>
+
+<p>The enable command sets the element named NAME sensitive (not grayed).  All elements are enabled by default, so an enable command only has an effect if an element was previously disabled with <A href="#dialog-int-disable">disable</a> (or a reversed enable).
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the enable command to have the reversed effect (it becomes a <A href="#dialog-int-disable">disable</a> command).  This can be used with the value from a --check element, for example, to make the enable command conditional.
+
+<p>For example (you can't click OK unless you select a function):
+<pre>
+    spacefm -g --label "Select a function and click OK:"           \
+               --drop "Function A" "Function B" "Function C" -- "" \
+	              <b>enable button1 %v</b>                            \
+	       --button ok                                         \
+	       --command "" disable button1
+</pre>
+
+In the above example, the drop's %v equals "", reversing the enable, unless a function is selected.  The <a href="#dialog-nonvis-command">--command</a> element is used to initialize the dialog by disabling button1 when the dialog is first created.
+
+<!-- #source -->
+Usage: <b>source FILE</b>
+
+<p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
+
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> element to SAVEFILE.
+
+<p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 
 
 
@@ -3007,7 +3330,7 @@ A temporary bash script used to execute a command run in SpaceFM, which will be 
     source <i>ID</i>-tmp.sh</pre>
 
 <!-- # spacefm*.tmp/ID/ #dattmp-->
-A folder used to store temporary data, usually plugin data which has been copied via <a href="#plugins-copy">Plugins|Copy</a>, where ID is an eight digit hexadecimal number.  
+A folder used to store temporary data, usually plugin data which has been copied via <a href="#plugins-copy">Plugins|Copy</a>, where ID is an eight digit hexadecimal number.
 
 
 <!-- @Program Files @/usr -->

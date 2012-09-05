@@ -8,8 +8,6 @@ G_BEGIN_DECLS
 
 static const char* cdlg_option[] =  // order must match ElementType order
 {
-    "prefix",       "NAME|@FILE",
-                    N_("Set base variable name  (Default: \"dialog\")"),
     "title",        "TEXT|@FILE",
                     N_("Set window title"),
     "window-icon",  "ICON|@FILE",
@@ -34,16 +32,6 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add a checkbox option"),
     "radio",        "LABEL [VALUE|@FILE [COMMAND...]]",
                     N_("Add a radio option"),
-    "drop",         "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
-                    N_("Add a drop-down list.  COMMAND run when clicked."),
-    "combo",        "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
-                    N_("Add a combo list.  COMMAND run when Enter pressed."),
-    "list",         "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
-                    // ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
-                    // use --colwidth=W inside column list
-                    N_("Add a list box.  COMMAND run when double-clicked."),
-    "mlist",        "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
-                    N_("Add a list box with multiple selections"),
     "icon",         "ICON|@FILE [COMMAND...]",
                     N_("Add an icon"),
     "image",        "FILE|@FILE [COMMAND...]",
@@ -58,22 +46,34 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add a horizontal line separator"),
     "vsep",         "( no arguments )",
                     N_("Add a vertical line separator"),
+    "timeout",      "[DELAY|@FILE]",
+                    N_("Automatically close window after DELAY seconds"),
+    "drop",         "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
+                    N_("Add a drop-down list.  COMMAND run when clicked."),
+    "combo",        "{TEXT... --}|@FILE [DEFAULT|+N|@FILE [COMMAND...]]",
+                    N_("Add a combo list.  COMMAND run when Enter pressed."),
+    "list",         "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
+                    // ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+                    // use --colwidth=W inside column list
+                    N_("Add a list box.  COMMAND run when double-clicked."),
+    "mlist",        "{[^HEAD[:TYPE]] [--colwidth=W] TEXT... --}|@FILE [COMMAND...]]",
+                    N_("Add a list box with multiple selections"),
+    "chooser",      "[CHOOSER-OPTIONS] [DIR|FILE|@FILE [COMMAND...]]",
+                    N_("Options: [--save] [--dir] [--multi] [--filter F[:F...]]"),
+    "prefix",       "NAME|@FILE",
+                    N_("Set base variable name  (Default: \"dialog\")"),
+    "window-size",  "\"WIDTHxHEIGHT [PAD]\"|@FILE",
+                    N_("Set minimum width, height, padding (-1 = don't change)"),
     "hbox",         "[--compact] [PAD|@FILE]",
                     N_("Add following widgets to a horizontal box"),
     "vbox",         "[--compact] [PAD|@FILE]",
                     N_("Add following widgets to a vertical box"),
     "close-box",    "",
                     N_("Close the current box of widgets"),
-    "window-size",  "\"WIDTHxHEIGHT [PAD]\"|@FILE",
-                    N_("Set minimum width, height, padding (-1 = don't change)"),
-    "timeout",      "[DELAY|@FILE]",
-                    N_("Automatically close window after DELAY seconds"),
     "keypress",     "KEYCODE MODIFIER COMMAND...",
                     N_("Run COMMAND when a key combination is pressed"),
-    "chooser",      "[CHOOSER-OPTIONS] [DIR|FILE|@FILE [COMMAND...]]",
-                    N_("Options: [--save] [--dir] [--multi] [--filter F[:F...]]"),
-    "command",      "FILE|PIPE",
-                    N_("Read commands from FILE or PIPE")
+    "command",      "FILE|PIPE [COMMAND...]",
+                    N_("Read commands from FILE or PIPE.  COMMAND for init.")
 };
 // TEXT starts with ~ for pango
 // COMMAND internal -- external -- internal ...
@@ -81,7 +81,6 @@ static const char* cdlg_option[] =  // order must match ElementType order
 // menu?
 
 typedef enum {
-    CDLG_PREFIX,
     CDLG_TITLE,
     CDLG_WINDOW_ICON,
     CDLG_LABEL,
@@ -94,23 +93,24 @@ typedef enum {
     CDLG_EDITOR,
     CDLG_CHECKBOX,
     CDLG_RADIO,
-    CDLG_DROP,
-    CDLG_COMBO,
-    CDLG_LIST,
-    CDLG_MLIST,
     CDLG_ICON,
     CDLG_IMAGE,
     //CDLG_STATUS,
     CDLG_PROGRESS,
     CDLG_HSEP,
     CDLG_VSEP,
+    CDLG_TIMEOUT,
+    CDLG_DROP,
+    CDLG_COMBO,
+    CDLG_LIST,
+    CDLG_MLIST,
+    CDLG_CHOOSER,
+    CDLG_PREFIX,
+    CDLG_WINDOW_SIZE,
     CDLG_HBOX,
     CDLG_VBOX,
     CDLG_CLOSE_BOX,
-    CDLG_WINDOW_SIZE,
-    CDLG_TIMEOUT,
     CDLG_KEYPRESS,
-    CDLG_CHOOSER,
     CDLG_COMMAND
 } ElementType;
 
@@ -135,7 +135,7 @@ static const char* cdlg_cmd[] =
 {
     "noop",         "( any arguments )",
                     N_("No operation - does nothing but evaluate arguments"),
-    "close",        "( no arguments )",
+    "close",        "( no arguments )",  // exit status ?
                     N_("Close the dialog"),
     "press",        "BUTTON-NAME",
                     N_("Press button named BUTTON-NAME"),
@@ -145,15 +145,15 @@ static const char* cdlg_cmd[] =
                     N_("Select item VALUE (or first/all) in element NAME"),
     "unselect",     "NAME [VALUE]",
                     N_("Unselect item VALUE (or all) in element NAME"),
-    "focus",        "NAME",
+    "focus",        "NAME [REVERSE]",
                     N_("Focus element NAME"),
-    "hide",         "NAME",
+    "hide",         "NAME [REVERSE]",
                     N_("Hide element NAME"),
-    "show",         "NAME",
+    "show",         "NAME [REVERSE]",
                     N_("Show element NAME if previously hidden"),
-    "disable",      "NAME",
+    "disable",      "NAME [REVERSE]",
                     N_("Disable element NAME"),
-    "enable",       "NAME",
+    "enable",       "NAME [REVERSE]",
                     N_("Enable element NAME if previously disabled"),
     "source",       "FILE",
                     N_("Save files and write source output to FILE")

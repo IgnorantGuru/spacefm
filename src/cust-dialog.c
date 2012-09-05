@@ -43,6 +43,7 @@ static gboolean destroy_dlg( GtkWidget* dlg );
 static void on_button_clicked( GtkButton *button, CustomElement* el );
 void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
+static gboolean press_last_button( GtkWidget* dlg );
 
 GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
 
@@ -1155,14 +1156,21 @@ static char* get_command_value( CustomElement* el, char* cmdline, char* xvalue )
     char* stdout = NULL;
     gboolean ret;
     gint exit_status;
+    GError* error = NULL;
 
     char* line = replace_vars( el, cmdline, xvalue );
     if ( line[0] == '\0' )
         return line;
     
     //fprintf( stderr, "spacefm-dialog: SYNC=%s\n", line );
-    ret = g_spawn_command_line_sync( line, &stdout, NULL, NULL, NULL );
+    ret = g_spawn_command_line_sync( line, &stdout, NULL, NULL, &error );
     g_free( line );
+
+    if ( !ret )
+    {
+        dlg_warn( "%s", error->message, NULL );
+        g_error_free( error );
+    }
     return ret ? stdout : g_strdup( "" );    
 }
 
@@ -1269,14 +1277,20 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
     char* cvalue = NULL;
     CustomElement* el_name = NULL;
     FILE* out;
+    gboolean reverse = FALSE;
     
     if ( args->next )
     {
         cname = replace_vars( el, (char*)args->next->data, xvalue );
         if ( args->next->next && strcmp( (char*)args->next->next->data, "--" ) )
+        {
             cvalue = replace_vars( el, (char*)args->next->next->data, xvalue );
+            if ( cvalue[0] == '\0' || !strcmp( cvalue, "0" )
+                                                || !strcmp( cvalue, "false" ) )
+                reverse = TRUE;
+        }
     }
-    if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && !cname )
+    if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && icmd != CMD_SOURCE && !cname )
     {
         dlg_warn( _("internal command %s requires an argument"),
                                                             cdlg_cmd[icmd*3], NULL );
@@ -1331,7 +1345,29 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
         g_free( cvalue );
         return;
     }
-    
+    // reversal of function
+    if ( reverse )
+    {
+        switch ( icmd )
+        {
+        case CMD_FOCUS:
+            icmd = -1;
+            break;
+        case CMD_HIDE:
+            icmd = CMD_SHOW;
+            break;
+        case CMD_SHOW:
+            icmd = CMD_HIDE;
+            break;
+        case CMD_DISABLE:
+            icmd = CMD_ENABLE;
+            break;
+        case CMD_ENABLE:
+            icmd = CMD_DISABLE;
+            break;
+        }
+    }
+
     //fprintf( stderr, "spacefm-dialog: INTERNAL=%s %s %s\n", cdlg_cmd[icmd*3],
     //                                                        cname, cvalue );
     switch ( icmd )
@@ -1405,7 +1441,10 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             gtk_widget_set_sensitive( el_name->widgets->next->data, TRUE );
         break;
     case CMD_SOURCE:
-        out = fopen( cname, "w" );
+        if ( !cname || ( cname && cname[0] == '\0' ) )
+            out = stderr;
+        else
+            out = fopen( cname, "w" );
         if ( !out )
         {
             dlg_warn( _("error writing file %s: %s"), cname,
@@ -1413,7 +1452,8 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             break;
         }
         write_source( el->widgets->data, NULL, out );
-        fclose( out );
+        if ( out != stderr )
+            fclose( out );
         break;
     }
     g_free( cname );
@@ -2248,7 +2288,11 @@ static void on_list_row_activated( GtkTreeView *view,
     GtkTreeIter iter;
     
     if ( !el->cmd_args )
+    {
+        press_last_button( el->widgets->data );
         return;
+    }
+    
     // get iter
     GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( !gtk_tree_model_get_iter( model, &iter, tree_path ) )
@@ -2794,7 +2838,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             selstart = 1;  // indicates new
             if ( radio ) *radio = NULL;
         }
-        if ( args && el->type == CDLG_VIEWER && el->widgets->next )
+        if ( args && ((char*)args->data)[0] != '\0' && el->type == CDLG_VIEWER
+                                                    && el->widgets->next )
         {
             // viewer
             buf = gtk_text_view_get_buffer(
@@ -2844,7 +2889,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                                           0.0, FALSE, 0, 0 );
             }
         }
-        else if ( args && selstart && el->type == CDLG_EDITOR && el->widgets->next )
+        else if ( args && ((char*)args->data)[0] != '\0' && selstart &&
+                                el->type == CDLG_EDITOR && el->widgets->next )
         {
             // new editor            
             buf = gtk_text_view_get_buffer(
@@ -2857,8 +2903,9 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
     case CDLG_COMMAND:
         if ( !el->option && args )
         {
-            if ( stat64( (char*)args->data, &statbuf ) != -1 
-                                             && S_ISFIFO( statbuf.st_mode ) )
+            if ( ((char*)args->data)[0] != '\0'
+                                && stat64( (char*)args->data, &statbuf ) != -1 
+                                && S_ISFIFO( statbuf.st_mode ) )
             {
                 // watch pipe
                 GIOChannel* channel = g_io_channel_new_file( (char*)args->data,
@@ -2878,7 +2925,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     }
                 }
             }
-            else
+            else if ( ((char*)args->data)[0] != '\0' )
             {
                 if ( ((char*)args->data)[0] == '@' )
                     str = g_strdup( (char*)args->data );
@@ -2888,6 +2935,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 g_free( str );
             }
             el->option = 1;
+            // init COMMAND
+            el->cmd_args = args->next;
         }
         else if ( el->option && args )
         {
@@ -3480,6 +3529,15 @@ static void build_dialog( GList* elements )
         }
     }
     signal_dialog = dlg;
+    
+    // run init COMMMAND(s)
+    for ( l = elements; l; l = l->next )
+    {
+        if ( ((CustomElement*)l->data)->type == CDLG_COMMAND
+                                    && ((CustomElement*)l->data)->cmd_args )
+            run_command( (CustomElement*)l->data,
+                                    ((CustomElement*)l->data)->cmd_args, NULL );
+    }
 }
 
 static void show_help()
@@ -3509,7 +3567,7 @@ static void show_help()
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
-    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n") );
+    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n                 %%%%           %%\n") );
     fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
     fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
@@ -3530,7 +3588,7 @@ static void show_help()
     
     fprintf( f, _("\nEXAMPLE SCRIPT:\n") );
     fprintf( f, _("    #!/bin/bash\n    # This script shows a Yes/No dialog\n    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"User pressed Yes - take some action\"\n    else\n        echo \"User did NOT press Yes - abort\"\n    fi\n") );
-    fprintf( f, _("\nFor instructions and examples see the SpaceFM User's Manual:\n") );
+    fprintf( f, _("\nFor full documentation and examples see the SpaceFM User's Manual:\n") );
     fprintf( f, "    %s\n\n", DEFAULT_MANUAL );
 }
 
