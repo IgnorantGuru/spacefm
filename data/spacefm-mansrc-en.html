@@ -1525,10 +1525,20 @@ Sometimes a single line isn't enough to do what you want, so SpaceFM provides a 
 
 <p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  For more information on writing scripts, see the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a>.
 
+<p>Command scripts can also evolve into small, full-featured applications using <a href="#dialog">SpaceFM Dialog</a> to show custom dialogs from within the script.
+
 <p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.
 
-<p><a name="exvar"><b>Scroll to the end of the command script</b></a> to see a reference of bash variables available for use:
+<p><a name="exvar">When you select Command|Script</a>, a default bash script is generated as shown below:
 <pre>
+#!/bin/bash
+$fm_import    # import file manager variables (scroll down for info)
+#
+# Enter your commands here:     ( then save this file )
+
+
+
+exit $?
 # Example variables available for use: (imported by $fm_import)
 # These variables represent the state of the file manager when command is run.
 # These variables can also be used in command lines and in the Path Bar.
@@ -1642,10 +1652,13 @@ Sometimes a single line isn't enough to do what you want, so SpaceFM provides a 
 #   fi
 </pre>
 
+<b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.
+
 <p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
 <pre>    md5sum "${fm_filenames[@]}"</pre>
 
-<p>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
+<p><b>Script Directories</b>
+<br>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
 
 <p>If your script needs to save changing, persistent data to the user's home folder (to keep track of user preferences, for example), the <a href="#designmode-command-browse-data">data directory</a> should be used ("$fm_cmd_data").  Because this directory may not already exist, always run this command before using it:
 <pre>    mkdir -p "$fm_cmd_dir"</pre>
@@ -3407,6 +3420,9 @@ Contains the <a href="#designmode-command-browse-data">data directories</a> for 
 Contains the <a href="#designmode-command-browse-files">command directories</a> for custom commands you have added to SpaceFM's menus or toolbars, if any.
 
 <p>Because SpaceFM is highly configurable, you may have much time and effort invested in your SpaceFM config folder, so it's a good idea to <b>keep an up-to-date backup!</b>
+
+<!-- # scripts/default-script #defscript -->
+This file, <i>if you create it</i>, is used as your default <a href="#designmode-command-script">command script</a> rather than the <a href="#exvar">automatically generated one</a>.  When you create a new custom command and set its type to Command|Script, ~/.config/spacefm/scripts/default-script will be copied to the <a href="#designmode-command-browse-files">command directory</a> as exec.sh.
 
 <!-- # ~/.local/share/applications/ #localapps -->
 This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
