@@ -1783,6 +1783,16 @@ if ( !( cond & G_IO_NVAL ) )
     return TRUE;
 }
 
+static gboolean delayed_update_false( CustomElement* el )
+{
+    if ( el->timeout )
+    {
+        g_source_remove( el->timeout );
+        el->timeout = 0;
+    }
+    return FALSE;
+}
+
 static gboolean delayed_update( CustomElement* el )
 {
     if ( el->timeout )
@@ -2062,7 +2072,17 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                 // do not free
                 str = (char*)gtk_entry_get_text( GTK_ENTRY( el->widgets->next->data ) );
             if ( el->args && ((char*)el->args->data)[0] == '@' )
+            {
+                // save file
+                // skip detection of updates while saving file
+                if ( el->timeout )
+                    g_source_remove( el->timeout );
+                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                                          300,
+                                          (GSourceFunc)delayed_update_false,
+                                          el, NULL );
                 write_file_value( (char*)el->args->data, str );
+            }
             write_value( out, prefix, el->name, "default",
                                     el->args ? (char*)el->args->data : NULL );
             write_value( out, prefix, el->name, NULL, str );
@@ -2155,6 +2175,13 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                     str = g_strdup_printf( "%dx%d", width, height );
                 else
                     str = g_strdup_printf( "%dx%d %d", width, height, pad );
+                // skip detection of updates while saving file
+                if ( el->timeout )
+                    g_source_remove( el->timeout );
+                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                                          300,
+                                          (GSourceFunc)delayed_update_false,
+                                          el, NULL );
                 write_file_value( (char*)el->args->data + 1, str );
                 write_value( out, prefix, el->name, "saved",
                                                 (char*)el->args->data + 1 );
@@ -2199,6 +2226,13 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                 // save file
                 write_value( out, prefix, el->name, "saved",
                                                 (char*)el->args->data + 1 );
+                // skip detection of updates while saving file
+                if ( el->timeout )
+                    g_source_remove( el->timeout );
+                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                                          300,
+                                          (GSourceFunc)delayed_update_false,
+                                          el, NULL );
                 write_file_value( (char*)el->args->data + 1, str );
             }
             g_free( str );
