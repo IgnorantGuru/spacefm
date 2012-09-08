@@ -581,7 +581,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             while ( lstat64( test_path, &statbuf ) == 0 )
             {
                 g_free( test_path );
-                test_path = g_strdup_printf( "%s-copy%d", base, ++n );
+                test_path = g_strdup_printf( "%s-%s%d", base, _("copy"), ++n );
             }
             g_free( dest_quote );
             dest_quote = bash_quote( test_path );
@@ -619,7 +619,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 while ( lstat64( parent_path, &statbuf ) == 0 )
                 {
                     g_free( parent_path );
-                    parent_path = g_strdup_printf( "%s-copy%d", parent_orig, ++n );
+                    parent_path = g_strdup_printf( "%s-%s%d", parent_orig,
+                                                                _("copy"), ++n );
                 }
                 g_free( parent_orig );
 
