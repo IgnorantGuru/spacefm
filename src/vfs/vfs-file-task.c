@@ -1869,7 +1869,8 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
 
     g_mutex_lock( task->mutex );
     task->state = VFS_FILE_TASK_RUNNING;
-    string_copy_free( &task->current_file, (char*)task->src_paths->data );
+    string_copy_free( &task->current_file,
+                        task->src_paths ? (char*)task->src_paths->data : NULL );
     task->total_size = 0;
 
     if( task->type == VFS_FILE_TASK_TRASH )
