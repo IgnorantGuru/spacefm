@@ -44,6 +44,7 @@ static void on_button_clicked( GtkButton *button, CustomElement* el );
 void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
 static gboolean press_last_button( GtkWidget* dlg );
+static void on_dlg_close( GtkDialog* dlg );
 
 GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
 
@@ -1937,7 +1938,8 @@ static gboolean destroy_dlg( GtkWidget* dlg )
     GList* elements = (GList*)g_object_get_data( G_OBJECT( dlg ), "elements" );
 
     // remove destroy signal connect
-    g_signal_handlers_disconnect_by_data( dlg, NULL );
+    g_signal_handlers_disconnect_by_func( G_OBJECT( dlg ),
+                                            G_CALLBACK( on_dlg_close ), NULL );
     gtk_widget_destroy( GTK_WIDGET( dlg ) );
     free_elements( elements );
     gtk_main_quit();
