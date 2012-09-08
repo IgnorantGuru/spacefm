@@ -7,6 +7,6 @@ Icon=spacefm
 StartupNotify=true
 Type=Application
 Terminal=false
-MimeType=inode/directory;
+MimeType=MimeType=inode/directory;inode/mount-point;x-scheme-handler/ssh;x-scheme-handler/smb;x-scheme-handler/nfs;x-scheme-handler/ftp;
 _GenericName=File Manager
 _Comment=Browse the file system

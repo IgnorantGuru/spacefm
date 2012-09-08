@@ -3,8 +3,8 @@ TRANSLATIONS
 Translating SpaceFM doesn't require any special tools - just a text editor.
 To create a translation of SpaceFM for your language, follow these steps.
     
-1)  Install build dependencies listed above in BUILD, download the SpaceFM
-    source code tarball, and extract it.
+1)  Install build dependencies, download the SpaceFM source code tarball, and
+    extract it (see README - BUILD).
 
 2)  Open a terminal and enter the source code subdirectory 'po'
 

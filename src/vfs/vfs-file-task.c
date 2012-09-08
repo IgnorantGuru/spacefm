@@ -1143,9 +1143,9 @@ if ( !( cond & G_IO_NVAL ) )
         goto _unref_channel;
     }
 */
-    GError *error = NULL;
+    //GError *error = NULL;
     gchar buf[2048];
-    if ( g_io_channel_read_chars( channel, buf, sizeof( buf ), &size, &error ) ==
+    if ( g_io_channel_read_chars( channel, buf, sizeof( buf ), &size, NULL ) ==
                                                 G_IO_STATUS_NORMAL && size > 0 )
     {
         //gtk_text_buffer_get_iter_at_mark( task->exec_err_buf, &iter,
