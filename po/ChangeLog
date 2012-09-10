@@ -1,6 +1,6 @@
 2012-09-10 IgnorantGuru <ignorantguru@users.sourceforge.net>
 
-    * POTFILES.in updated for cust-dialog.c
+    * POTFILES.in updated for cust-dialog.c cust-dialog.h
 
 2012-07-16 Vladimir Kudrya <vladimir-csp@yandex.ru>
 

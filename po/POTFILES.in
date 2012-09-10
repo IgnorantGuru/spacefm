@@ -12,6 +12,7 @@ data/spacefm.desktop.in
 src/exo/exo-icon-view.c
 src/exo/exo-tree-view.c
 src/cust-dialog.c
+src/cust-dialog.h
 src/main.c
 src/main-window.c
 src/pref-dialog.c
