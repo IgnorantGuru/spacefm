@@ -11,6 +11,7 @@ data/spacefm.desktop.in
 [type: gettext/glade]data/ui/prefdlg.ui
 src/exo/exo-icon-view.c
 src/exo/exo-tree-view.c
+src/cust-dialog.c
 src/main.c
 src/main-window.c
 src/pref-dialog.c

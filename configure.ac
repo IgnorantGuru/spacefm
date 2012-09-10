@@ -26,7 +26,8 @@ AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(X11, XClearWindow)
 
 gtk_modules="gtk+-2.0 >= 2.24.0 \
-             gthread-2.0"
+             gthread-2.0 \
+             gobject-2.0"
 PKG_CHECK_MODULES(GTK, [$gtk_modules])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
