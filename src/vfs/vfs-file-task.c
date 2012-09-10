@@ -362,7 +362,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     }
     else if ( S_ISLNK( file_stat.st_mode ) )
     {
-        if ( ( rfd = readlink( src_file, buffer, sizeof( buffer ) ) ) > 0 )
+        if ( ( rfd = readlink( src_file, buffer, sizeof( buffer ) - 1 ) ) > 0 )
         {
             buffer[rfd] = '\0';  //MOD terminate buffer string
             if ( ! check_overwrite( task, dest_file,

@@ -8,6 +8,7 @@
     Task Show Output raises only once
     custom default command script
     fix crash on no src paths #143
+    fix readlink buffer size
 0.7.11  2012-08-15:
     added --no-saved-tabs, -n command line option to not load saved tabs #110
     --reuse-tab can be used in conjunction with other options
