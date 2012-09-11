@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-08 23:07+0400\n"
-"PO-Revision-Date: 2012-09-08 23:19+0300\n"
+"POT-Creation-Date: 2012-09-10 17:28+0400\n"
+"PO-Revision-Date: 2012-09-10 20:56+0300\n"
 "Last-Translator: Vladimir Kudrya <vladimir-csp@yandex.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -834,6 +834,503 @@ msgstr "Прозрачность области выделения"
 #: ../src/exo/exo-icon-view.c:988
 msgid "Opacity of the selection box"
 msgstr "Прозрачность выделенной области"
+
+#: ../src/cust-dialog.c:432
+#, c-format
+msgid "Too many columns (>%d) in %s"
+msgstr "Слишком много колонок (>%d) в %s"
+
+#: ../src/cust-dialog.c:669 ../src/cust-dialog.c:1633
+#: ../src/cust-dialog.c:1647 ../src/cust-dialog.c:1857
+#, c-format
+msgid "error reading file %s: %s"
+msgstr "Ошибка чтения файла %s: %s"
+
+#: ../src/cust-dialog.c:677 ../src/cust-dialog.c:1665
+#: ../src/cust-dialog.c:1871
+#, c-format
+msgid "file '%s' contents are not valid UTF-8"
+msgstr "содержимое файла '%s' не является корректным UTF-8"
+
+#: ../src/cust-dialog.c:731
+#, c-format
+msgid "Cannot set missing element '%s'"
+msgstr "Элемент '%s' отсутствует, невозможно выполнить set"
+
+#: ../src/cust-dialog.c:856 ../src/cust-dialog.c:945
+#, c-format
+msgid "file '%s' is not a regular file"
+msgstr "файл '%s' не является обычным файлом"
+
+#: ../src/cust-dialog.c:998 ../src/cust-dialog.c:1323
+#: ../src/cust-dialog.c:3325
+msgid "Dynamic resize requires width and height > 0"
+msgstr "Для динамического изменения размера ширина и высота должны быть > 0"
+
+#: ../src/cust-dialog.c:1296
+#, c-format
+msgid "internal command %s requires an argument"
+msgstr "внутренней команде %s требуется аргумент"
+
+#: ../src/cust-dialog.c:1344
+#, c-format
+msgid "element '%s' does not exist"
+msgstr "Элемент '%s' не существует"
+
+#: ../src/cust-dialog.c:1387
+#, c-format
+msgid "internal command press is invalid for non-button %s"
+msgstr "внутренняя команда \"нажать\" не доступна для %s (не кнопка)"
+
+#: ../src/cust-dialog.c:1421
+#, c-format
+msgid "internal command un/select is invalid for %s"
+msgstr "внутренняя команда \"выделить/снять выделение\" недоступна для %s"
+
+#: ../src/cust-dialog.c:1451 ../src/cust-dialog.c:1597
+#: ../src/cust-dialog.c:1602
+#, c-format
+msgid "error writing file %s: %s"
+msgstr "Ошибка при записи файла %s: %s"
+
+#: ../src/cust-dialog.c:1579
+#, c-format
+msgid "'%s' is not an internal command"
+msgstr "'%s' не является внутренней командой"
+
+#: ../src/cust-dialog.c:1620
+#, c-format
+msgid "error creating file %s: %s"
+msgstr "Ошибка создания файла %s: %s"
+
+#: ../src/cust-dialog.c:1734
+#, c-format
+msgid "pipe '%s' data is not valid UTF-8"
+msgstr "данные из потока '%s' не являются корректным UTF-8"
+
+#: ../src/cust-dialog.c:1770 ../src/ptk/ptk-file-task.c:850
+msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
+msgstr "[ ---8<---   прочие строки выше были убраны из этого лога ]\n"
+
+#: ../src/cust-dialog.c:1868
+msgid "( file contents are not valid UTF-8 )"
+msgstr "( содержимое файла не является корректным UTF-8 )"
+
+#: ../src/cust-dialog.c:1997
+#, c-format
+msgid "prefix '%s' is not a valid variable name"
+msgstr "префикс '%s' не является корректным именем переменной"
+
+#. pack timeout button first
+#: ../src/cust-dialog.c:2276 ../src/cust-dialog.c:3482
+#: ../src/cust-dialog.c:3531
+msgid "Pause"
+msgstr "Пауза"
+
+#: ../src/cust-dialog.c:2913
+#, c-format
+msgid "file '%s' is not a regular file or a pipe"
+msgstr "файл '%s' не является обычным файлом или потоком (pipe)"
+
+#: ../src/cust-dialog.c:3584
+#, c-format
+msgid ""
+"SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
+"specify on the command line, features run-time internal/external commands "
+"which\n"
+"can modify elements, and outputs evaluatable/parsable results.\n"
+msgstr ""
+"Диалог SpaceFM создает пользовательский GTK-диалог, содержащий элементы\n"
+"задаваемые в командной строке. Он может включать встроенные и сторонние\n"
+"команды, влияющие на элементы интерфейса или выводящие различные данные.\n"
+
+#: ../src/cust-dialog.c:3585
+#, c-format
+msgid "Usage:\n"
+msgstr "Использование:\n"
+
+#: ../src/cust-dialog.c:3586
+#, c-format
+msgid "    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
+msgstr "    spacefm --dialog|-g {ЭЛЕМЕНТ [ПАРАМЕТРЫ] [АРГУМЕНТЫ...]} ...\n"
+
+#: ../src/cust-dialog.c:3587
+#, c-format
+msgid "Example:\n"
+msgstr "Пример:\n"
+
+#: ../src/cust-dialog.c:3588
+#, c-format
+msgid "    spacefm -g --label \"A message\" --button ok\n"
+msgstr "    spacefm -g --label \"Сообщение\" --button ok\n"
+
+#: ../src/cust-dialog.c:3589
+#, c-format
+msgid ""
+"\n"
+"ELEMENT:       OPTIONS & ARGUMENTS:\n"
+msgstr ""
+"\n"
+"ЭЛЕМЕНТ:       ПАРАМЕТРЫ и АРГУМЕНТЫ:\n"
+
+#: ../src/cust-dialog.c:3590
+#, c-format
+msgid "--------       --------------------\n"
+msgstr "--------       --------------------\n"
+
+#: ../src/cust-dialog.c:3601
+#, c-format
+msgid ""
+"\n"
+"The following arguments may be used as shown above:\n"
+msgstr ""
+"\n"
+"Следующие аргументы могут быть использованы как показано выше:\n"
+
+#: ../src/cust-dialog.c:3602
+#, c-format
+msgid "    STOCK    One of: %s\n"
+msgstr "    ШАБЛОН    Один из: %s\n"
+
+#: ../src/cust-dialog.c:3603
+#, c-format
+msgid "    ICON     An icon name, eg:  gtk-open\n"
+msgstr "    ЗНАЧОК     Имя значка, например:  gtk-open\n"
+
+#: ../src/cust-dialog.c:3604
+#, c-format
+msgid ""
+"    @FILE    A text file from which to read a value.  In some cases this "
+"file\n"
+"             is monitored, so writing a new value to the file will update "
+"the\n"
+"             element.  In other cases, the file specifies an initial value.\n"
+msgstr ""
+"    @ФАЙЛ    текстовый файл, из которого считывается значение.\n"
+"             В некоторых случаях файл мониторится на предмет изменений.\n"
+"             В других случаях берется только исходное значение.\n"
+
+#: ../src/cust-dialog.c:3605
+#, c-format
+msgid ""
+"    SAVEFILE An editor's contents are saved to this file if specified.\n"
+msgstr "    СОХРАНИТЬ_В_ФАЙЛ Сохранить содержимое редактора в этот файл.\n"
+
+#: ../src/cust-dialog.c:3606
+#, c-format
+msgid ""
+"    COMMAND  An internal command or executable followed by arguments. "
+"Separate\n"
+"             multiple commands with a -- argument.  eg: echo '#1' -- echo "
+"'#2'\n"
+"             The following substitutions may be used in COMMANDs:\n"
+"                 %%n           Name of the current element\n"
+"                 %%v           Value of the current element\n"
+"                 %%NAME        Value of element named NAME (eg: %%input1)\n"
+"                 %%(command)   stdout from a command\n"
+"                 %%%%           %%\n"
+msgstr ""
+"    КОМАНДА  внутренняя или сторонняя команда с последющими аргументами\n"
+"             команды разделяются при помощи \"--\", например: echo '#1' -- "
+"echo '#2'\n"
+"             При вводе КОМАНД действует следующая подстановка:\n"
+"                 %%n           Имя текущего элемента\n"
+"                 %%v           Значение текущего элемента\n"
+"                 %%ИМЯ        Значение элемента с именем ИМЯ (пример: "
+"%%input1)\n"
+"                 %%(command)   вывод команды command\n"
+"                 %%%%           %%\n"
+
+#: ../src/cust-dialog.c:3607
+#, c-format
+msgid ""
+"    LABEL    The following escape sequences in LABEL are unescaped:\n"
+"                 \\n   newline\n"
+"                 \\t   tab\n"
+"                 \\\"   \"\n"
+"                 \\\\   \\\n"
+"             In --label elements only, if the first character in LABEL is a\n"
+"             tilde (~), pango markup may be used.  For example:\n"
+"                 --label '~This is plain. <b>This is bold.</b>'\n"
+msgstr ""
+"    МЕТКА    следующие escape-последовательности в МЕТКЕ не выделяются:\n"
+"                 \\n     новая строка\n"
+"                 \\t   табуляция\n"
+"                 \\\"   \"\n"
+"                 \\\\   \\\n"
+"             Только в элементах --label. Если первый символ МЕТКИ - тильда\n"
+"             (~), можно использовать разметку pango.  Например:\n"
+"                 --label '~Обычный текс. <b>Полужирный текст.</b>'\n"
+
+#: ../src/cust-dialog.c:3609
+#, c-format
+msgid ""
+"\n"
+"In addition to the OPTIONS listed above, a --font option may be used with "
+"most\n"
+"element types to change the element's font and font size.  For example:\n"
+"    --input --font \"Times New Roman 16\" \"Default Text\"\n"
+msgstr ""
+"\n"
+"В дополнение к вышеперечисленным ПАРАМЕТРАМ, для большинства\n"
+"элементов можно изменить шрифт/размер с помощью --font. Например:\n"
+"    --input --font \"Times New Roman 16\" \"Обычный текст\"\n"
+
+#: ../src/cust-dialog.c:3611
+#, c-format
+msgid ""
+"\n"
+"INTERNAL COMMANDS:\n"
+msgstr ""
+"\n"
+"ВНУТРЕННИЕ КОМАНДЫ:\n"
+
+#: ../src/cust-dialog.c:3622
+#, c-format
+msgid ""
+"\n"
+"EXAMPLE WITH COMMANDS:\n"
+msgstr ""
+"\n"
+"ПРИМЕР С КОМАНДАМИ:\n"
+
+#: ../src/cust-dialog.c:3623
+#, c-format
+msgid ""
+"    spacefm -g --label \"Enter some text and press Enter:\" \\\n"
+"               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
+"               --label \\\n"
+"               --button ok\n"
+msgstr ""
+"    spacefm -g --label \"Введите текст и нажмите Enter:\" \\\n"
+"               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
+"               --label \\\n"
+"               --button ok\n"
+
+#: ../src/cust-dialog.c:3625
+#, c-format
+msgid ""
+"\n"
+"EXAMPLE SCRIPT:\n"
+msgstr ""
+"\n"
+"ПРИМЕР СКРИПТА:\n"
+
+#: ../src/cust-dialog.c:3626
+#, c-format
+msgid ""
+"    #!/bin/bash\n"
+"    # This script shows a Yes/No dialog\n"
+"    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
+"\"\n"
+"    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
+"        echo \"User pressed Yes - take some action\"\n"
+"    else\n"
+"        echo \"User did NOT press Yes - abort\"\n"
+"    fi\n"
+msgstr ""
+"    #!/bin/bash\n"
+"    # Скрипт показывает диалог Да/Нет. Чтобы диалог SpaceFM\n"
+"    # видел переменные, нужно использовать eval с кавычками:\n"
+"    eval \"`spacefm -g --label \"Вы уверены?\" --button yes --button no`\"\n"
+"    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
+"        echo \"Пользователь нажал Да - выполнить действие\"\n"
+"    else\n"
+"        echo \"Пользователь НЕ нажал Да - отмена\"\n"
+"    fi\n"
+
+#: ../src/cust-dialog.c:3627
+#, c-format
+msgid ""
+"\n"
+"For full documentation and examples see the SpaceFM User's Manual:\n"
+msgstr ""
+"\n"
+"Смотрите полное описание и примеры в Руководстве пользователя SpaceFM:\n"
+
+#: ../src/cust-dialog.c:3654
+#, c-format
+msgid "spacefm: argument is not valid UTF-8\n"
+msgstr "spacefm: аргумент не является корректным UTF-8\n"
+
+#: ../src/cust-dialog.c:3700
+msgid "invalid dialog option"
+msgstr "Некорректный параметр диалога"
+
+#: ../src/cust-dialog.h:12
+msgid "Set window title"
+msgstr "Задать заголовок окна"
+
+#: ../src/cust-dialog.h:14
+msgid "Set window icon"
+msgstr "Задать значок окна"
+
+#: ../src/cust-dialog.h:16
+msgid "Add a text label"
+msgstr "Добавить текстовую метку"
+
+#: ../src/cust-dialog.h:18
+msgid "Add STOCK dialog button, or LABEL button with ICON"
+msgstr "Добавить ШАБЛОННУЮ кнопку диалога, или кнопку с МЕТКОЙ и ЗНАЧКОМ"
+
+#: ../src/cust-dialog.h:20
+msgid "Add STOCK button, or LABEL button with ICON anywhere"
+msgstr "Добавить ШАБЛОННУЮ кнопку, или кнопку с МЕТКОЙ и ЗНАЧКОМ где угодно"
+
+#: ../src/cust-dialog.h:22
+msgid "Add a text entry"
+msgstr "Добавить текстовое поле"
+
+#: ../src/cust-dialog.h:24
+msgid "Add a large text entry"
+msgstr "Добавить большое текстовое поле"
+
+#: ../src/cust-dialog.h:26
+msgid "Add a password entry"
+msgstr "Добавить поле для пароля"
+
+#: ../src/cust-dialog.h:28
+msgid "Add a file or pipe viewer"
+msgstr "Добавить просмотрщик файла или потока данных (pipe)"
+
+#: ../src/cust-dialog.h:30
+msgid "Add multi-line text editor"
+msgstr "Добавить многострочный текстовый редактор"
+
+#: ../src/cust-dialog.h:32
+msgid "Add a checkbox option"
+msgstr "Добавить флажок"
+
+#: ../src/cust-dialog.h:34
+msgid "Add a radio option"
+msgstr "Добавить переключатель"
+
+#: ../src/cust-dialog.h:36
+msgid "Add an icon"
+msgstr "Добавить значок"
+
+#: ../src/cust-dialog.h:38
+msgid "Add an image"
+msgstr "Добавить изображение"
+
+#: ../src/cust-dialog.h:44
+msgid "Add a progress bar"
+msgstr "Добавить прогресс-бар"
+
+#: ../src/cust-dialog.h:46
+msgid "Add a horizontal line separator"
+msgstr "Добавить горизонтальную линию"
+
+#: ../src/cust-dialog.h:48
+msgid "Add a vertical line separator"
+msgstr "Добавить вертикальную линию"
+
+#: ../src/cust-dialog.h:50
+msgid "Automatically close window after DELAY seconds"
+msgstr "Автоматически закрывать окно после ЗАДЕРЖКИ в секундах"
+
+#: ../src/cust-dialog.h:52
+msgid "Add a drop-down list.  COMMAND run when clicked."
+msgstr "Добавить выпадающий список. КОМАНДА выполняется при выборе."
+
+#: ../src/cust-dialog.h:54
+msgid "Add a combo list.  COMMAND run when Enter pressed."
+msgstr ""
+"Добавить редактируемый выпадающий список. КОМАНДА выполняется при нажатии "
+"Enter."
+
+#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. use --colwidth=W inside column list
+#: ../src/cust-dialog.h:58
+msgid "Add a list box.  COMMAND run when double-clicked."
+msgstr "Добавить список. КОМАНДА выполняется при двойном клике."
+
+#: ../src/cust-dialog.h:60
+msgid "Add a list box with multiple selections"
+msgstr "Добавить список с множественным выбором."
+
+#: ../src/cust-dialog.h:62
+msgid "Options: [--save] [--dir] [--multi] [--filter F[:F...]]"
+msgstr "Параметры: [--save] [--dir] [--multi] [--filter F[:F...]]"
+
+#: ../src/cust-dialog.h:64
+msgid "Set base variable name  (Default: \"dialog\")"
+msgstr "Задать основу имени переменной  (По умолчанию: \"dialog\")"
+
+#: ../src/cust-dialog.h:66
+msgid "Set minimum width, height, padding (-1 = don't change)"
+msgstr "Задать минимальные ширину, высоту, отступ (-1 =  не изменять)"
+
+#: ../src/cust-dialog.h:68
+msgid "Add following widgets to a horizontal box"
+msgstr "Добавить следующие виджеты в горизонтальный контейнер"
+
+#: ../src/cust-dialog.h:70
+msgid "Add following widgets to a vertical box"
+msgstr "Добавить следующие виджеты в вертикальный контейнер"
+
+#: ../src/cust-dialog.h:72
+msgid "Close the current box of widgets"
+msgstr "Закрыть текущий контейнер виджетов"
+
+#: ../src/cust-dialog.h:74
+msgid "Run COMMAND when a key combination is pressed"
+msgstr "Выполнить КОМАНДУ при нажатии сочетания клавиш"
+
+#: ../src/cust-dialog.h:76
+msgid "Read commands from FILE or PIPE.  COMMAND for init."
+msgstr "Считать команды из ФАЙЛА или ПОТОКА_ДАННЫХ. КОМАНДА для иницализации."
+
+#: ../src/cust-dialog.h:137
+msgid "No operation - does nothing but evaluate arguments"
+msgstr "Без действия - ничего не делать, только интерпретировать аргументы"
+
+#. exit status ?
+#: ../src/cust-dialog.h:139
+msgid "Close the dialog"
+msgstr "Закрыть диалог"
+
+#: ../src/cust-dialog.h:141
+msgid "Press button named BUTTON-NAME"
+msgstr "Нажать кнопку с именем ИМЯ_КНОПКИ"
+
+#: ../src/cust-dialog.h:143
+msgid "Set element NAME to VALUE"
+msgstr "Выставить ЗНАЧЕНИЕ в качестве ИМЕНИ элемента"
+
+#. also do for inputs?
+#: ../src/cust-dialog.h:145
+msgid "Select item VALUE (or first/all) in element NAME"
+msgstr "Выделить ЗНАЧЕНИЕ (или first/all) в элементе ИМЯ_ЭЛЕМЕНТА"
+
+#: ../src/cust-dialog.h:147
+msgid "Unselect item VALUE (or all) in element NAME"
+msgstr "Снять выделение с ЗНАЧЕНИЯ (или all) в элементе ИМЯ_ЭЛЕМЕНТА"
+
+#: ../src/cust-dialog.h:149
+msgid "Focus element NAME"
+msgstr "Фокус на элемент ИМЯ_ЭЛЕМЕНТА"
+
+#: ../src/cust-dialog.h:151
+msgid "Hide element NAME"
+msgstr "Скрыть элемент ИМЯ_ЭЛЕМЕНТА"
+
+#: ../src/cust-dialog.h:153
+msgid "Show element NAME if previously hidden"
+msgstr "Показать элемент ИМЯ_ЭЛЕМЕНТА, если он был скрыт"
+
+#: ../src/cust-dialog.h:155
+msgid "Disable element NAME"
+msgstr "Выключить элемент ИМЯ_ЭЛЕМЕНТА"
+
+#: ../src/cust-dialog.h:157
+msgid "Enable element NAME if previously disabled"
+msgstr "Включить элемент ИМЯ_ЭЛЕМЕНТА, если он был выключен"
+
+#: ../src/cust-dialog.h:159
+msgid "Save files and write source output to FILE"
+msgstr "Сохранить файлы и записать вывод в ФАЙЛ"
 
 #: ../src/main.c:118
 msgid "Open folders in new tab of last window (default)"
@@ -4940,10 +5437,6 @@ msgstr "Выполнено"
 #, c-format
 msgid "%s  (%s)  %s remaining"
 msgstr "%s  (%s)  %s остается"
-
-#: ../src/ptk/ptk-file-task.c:850
-msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
-msgstr "[ ---8<---   прочие строки выше были убраны из этого лога ]\n"
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
