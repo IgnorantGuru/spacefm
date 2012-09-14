@@ -653,29 +653,30 @@ Or, to see the help for alternate build options, run:
 
 <p>To see SpaceFM's command line usage run <code>spacefm --help</code>
 <pre>Usage:
-  spacefm [OPTION...] [DIR | FILE]...
+  spacefm [OPTION...] [DIR | FILE | URL]... 
 
 Help Options:
-  -h, --help               Show help options
-  --help-all               Show all help options
-  --help-gtk               Show GTK+ Options
+  -h, --help                   Show help options
+  --help-all                   Show all help options
+  --help-gtk                   Show GTK+ Options
 
 Application Options:
-  -t, --new-tab            Open folders in new tab of last window (default)
-  -r, --reuse-tab          Open folder in current tab of last used window
-  -n, --no-saved-tabs      Don't load saved tabs
-  -w, --new-window         Open folders in new window
-  -p, --panel=P            Open folders in panel 'P' (1-4)
-  --desktop                Launch desktop manager
-  --desktop-pref           Show desktop settings
-  --show-pref=N            Show Preferences ('N' is the Pref tab number)
-  -d, --daemon-mode        Run as a daemon
-  -c, --config-dir=DIR     Use DIR as configuration directory
-  -f, --find-files         Show File Search
-  --set-wallpaper          Set desktop wallpaper to FILE
-  --profile=PROFILE        No function - for compatibility only
-  --no-desktop             No function - for compatibility only
-  --display=DISPLAY        X display to use</pre>
+  -t, --new-tab                Open folders in new tab of last window (default)
+  -r, --reuse-tab              Open folder in current tab of last used window
+  -n, --no-saved-tabs          Don't load saved tabs
+  -w, --new-window             Open folders in new window
+  -p, --panel=P                Open folders in panel 'P' (1-4)
+  --desktop                    Launch desktop manager daemon
+  --desktop-pref               Show desktop settings
+  --show-pref=N                Show Preferences ('N' is the Pref tab number)
+  -d, --daemon-mode            Run as a daemon
+  -c, --config-dir=DIR         Use DIR as configuration directory
+  -f, --find-files             Show File Search
+  --set-wallpaper              Set desktop wallpaper to FILE
+  -g, --dialog                 Show a custom dialog (See <a href="#dialog">-g help</a>)
+  --profile=PROFILE            No function - for compatibility only
+  --no-desktop                 No function - for compatibility only
+  --display=DISPLAY            X display to use</pre>
 
 <p>Normally, your session file and other user files are saved in <a href="#programfiles-home">~/.config/spacefm/</a>  To make SpaceFM read and save your files in another folder (~/.config/spacefm-alt in this example), stop ALL <i>instances</i> of SpaceFM and run:
 <pre>    # first stop all instances:
@@ -5145,7 +5146,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-09-08&nbsp;&nbsp;(SpaceFM version 0.7.11+)
+<p>Updated 2012-09-14&nbsp;&nbsp;(SpaceFM version 0.8.0)
 <br><br>
 </center>
 </td></tr></table>

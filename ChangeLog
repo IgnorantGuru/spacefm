@@ -1,4 +1,4 @@
-0.7.11+
+0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136
     fix path bar font not set on new browser
