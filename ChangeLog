@@ -1,6 +1,7 @@
 0.8.0+
     added task manager queue/pause #147
     disable task manager find
+    set minimum dialog and task pane sizes #56
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

@@ -1849,7 +1849,7 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
 
     pos = xset_get_int( "panel_sliders", "z" );
-    if ( pos < 200 ) pos = -1;
+    if ( pos < 200 ) pos = 300;
     gtk_paned_set_position( GTK_PANED( main_window->task_vpane ), pos );
 
     main_window->notebook = main_window->panel[0];
@@ -1900,6 +1900,12 @@ void fm_main_window_init( FMMainWindow* main_window )
     on_task_popup_show( NULL, main_window, NULL );
     show_panels( NULL, main_window );
     main_window_root_bar_all();
+
+printf("window = %d x %d\n", GTK_WIDGET( main_window )->allocation.width, GTK_WIDGET( main_window ) ->allocation.height );
+printf("window-default = %d x %d\n", app_settings.width, app_settings.height );
+
+printf("vpane = %d\n", gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) ) );
+
 }
 
 void fm_main_window_finalize( GObject *obj )

@@ -7418,6 +7418,10 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scrolled ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     GtkTextView* input = GTK_TEXT_VIEW( gtk_text_view_new() );
+    // ubuntu shows input too small so use mininum height
+    gtk_widget_set_size_request( GTK_WIDGET( input ), -1, 50 );
+    gtk_widget_set_size_request( GTK_WIDGET( scrolled ), -1, 50 );
+
     gtk_container_add ( GTK_CONTAINER ( scrolled ), GTK_WIDGET( input ) );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( input );
 	gtk_text_view_set_wrap_mode( input, GTK_WRAP_CHAR );  //GTK_WRAP_WORD_CHAR
@@ -7475,7 +7479,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         if ( width && height )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
         else
-            gtk_widget_set_size_request( GTK_WIDGET( dlg ), 600, -1 );
+            gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 400 );
+            //gtk_widget_set_size_request( GTK_WIDGET( dlg ), 600, 400 );
     }
     else
     {
@@ -7483,6 +7488,9 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         height = xset_get_int( "text_dlg", "y" );
         if ( width && height )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, -1 );
+        else
+            gtk_window_set_default_size( GTK_WINDOW( dlg ), 500, -1 );
+            //gtk_widget_set_size_request( GTK_WIDGET( dlg ), 500, 300 );
     }
     
     gtk_window_set_resizable( GTK_WINDOW( dlg ), TRUE );
