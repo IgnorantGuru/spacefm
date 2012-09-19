@@ -132,8 +132,8 @@ void main_task_add_menu( FMMainWindow* main_window, GtkMenu* menu,
                                                 GtkAccelGroup* accel_group );
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 );
 gboolean main_tasks_running( FMMainWindow* main_window );
-void on_task_stop( GtkMenuItem* item, GtkWidget* view, PtkFileTask* task2 );
-void on_task_stop_all( GtkMenuItem* item, GtkWidget* view );
+void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
+                                                            PtkFileTask* task2 );
 void on_preference_activate ( GtkMenuItem *menuitem, gpointer user_data );
 void main_task_prepare_menu( FMMainWindow* main_window, GtkWidget* menu,
                                                 GtkAccelGroup* accel_group );
@@ -2071,7 +2071,8 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                       G_CALLBACK( gtk_widget_destroy ), dlg );
             gtk_widget_show_all( dlg );
             
-            on_task_stop_all( NULL, main_window->task_view );
+            on_task_stop( NULL, main_window->task_view, xset_get( "task_stop_all" ),
+                                                                        NULL );
             while ( main_tasks_running( main_window ) )
             {
                 while( gtk_events_pending() )
@@ -3527,14 +3528,15 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     on_reorder( NULL, GTK_WIDGET( browser->task_view ) );
                 else if ( g_str_has_prefix( xname, "col_" ) )
                     on_task_column_selected( NULL, browser->task_view );
-                else if ( !strcmp( xname, "stop" ) )
+                else if ( g_str_has_prefix( xname, "stop" ) 
+                       || g_str_has_prefix( xname, "pause" )
+                       || g_str_has_prefix( xname, "que_" )
+                       || !strcmp( xname, "que" )
+                       || g_str_has_prefix( xname, "resume" ) )
                 {
-                    PtkFileTask* task = get_selected_task( browser->task_view );
-                    if ( task )
-                        on_task_stop( NULL, browser->task_view, task );
+                    PtkFileTask* ptask = get_selected_task( browser->task_view );
+                    on_task_stop( NULL, browser->task_view, set, ptask );
                 }
-                else if ( !strcmp( xname, "stop_all" ) )
-                    on_task_stop_all( NULL, browser->task_view );
                 else if ( g_str_has_prefix( xname, "err_" ) )
                     on_task_popup_errset( NULL, main_window, set->name );
             }
@@ -4457,40 +4459,177 @@ gboolean main_tasks_running( FMMainWindow* main_window )
     return ret;
 }
 
-void on_task_stop( GtkMenuItem* item, GtkWidget* view, PtkFileTask* task2 )
-{
-    PtkFileTask* task;
-    if ( item )
-        task = ( PtkFileTask* ) g_object_get_data( G_OBJECT( item ),
-                                                         "task" );
-    else
-        task = task2;
-
-    if ( task && task->task && !task->complete )
-        ptk_file_task_cancel( task );
-}
-
-void on_task_stop_all( GtkMenuItem* item, GtkWidget* view )
+void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
 {
     GtkTreeModel* model;
     GtkTreeIter it;
-    PtkFileTask* task = NULL;
-
+    PtkFileTask* qtask;
+    PtkFileTask* rtask;
+    GSList* running = NULL;
+    GSList* queued = NULL;
+    gboolean smart;
+#ifdef HAVE_HAL
+    smart = FALSE;
+#else
+    smart = xset_get_b( "task_q_smart" );
+#endif
+    if ( !view )
+        return;
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
         return;
 
+//printf("task_start_queued\n");
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
         do
         {
-            gtk_tree_model_get( model, &it, TASK_COL_DATA, &task, -1 );
-            if ( task && task->task && !task->complete )
-                ptk_file_task_cancel( task );
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &qtask, -1 );
+            if ( qtask && qtask->task && !qtask->complete &&
+                                    qtask->task->state == VFS_FILE_TASK_RUNNING )
+            {
+                if ( qtask->task->state_pause == VFS_FILE_TASK_QUEUE )
+                    queued = g_slist_append( queued, qtask );
+                else if ( qtask->task->state_pause == VFS_FILE_TASK_RUNNING )
+                    running = g_slist_append( running, qtask );
+            }
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
+    
+    if ( new_task && new_task->task && !new_task->complete && 
+                            new_task->task->state_pause == VFS_FILE_TASK_QUEUE &&
+                            new_task->task->state == VFS_FILE_TASK_RUNNING )
+        queued = g_slist_append( queued, new_task );
+
+    if ( !queued || ( !smart && running ) )
+        goto _done;
+    
+    if ( !smart )
+    {
+//printf("    start1\n");
+        ptk_file_task_pause( (PtkFileTask*)queued->data, VFS_FILE_TASK_RUNNING );
+//printf("    start1 DONE\n");
+        goto _done;
+    }
+
+    // smart
+    GSList* d;
+    GSList* r;
+    GSList* q;
+    for ( q = queued; q; q = q->next )
+    {
+        qtask = (PtkFileTask*)q->data;
+        if ( !qtask->task->devs )
+        {
+            // qtask has no devices so run it
+            running = g_slist_append( running, qtask );
+            ptk_file_task_pause( qtask, VFS_FILE_TASK_RUNNING );
+            continue;
+        }
+        // does qtask have running devices?
+        for ( r = running; r; r = r->next )
+        {
+            rtask = (PtkFileTask*)r->data;
+            for ( d = qtask->task->devs; d; d = d->next )
+            {
+                if ( g_slist_find( rtask->task->devs, d->data ) )
+                    break;
+            }
+            if ( d )
+                break;
+        }
+        if ( !r )
+        {
+            // qtask has no running devices so run it
+            running = g_slist_append( running, qtask );
+//printf("    start2\n");
+            ptk_file_task_pause( qtask, VFS_FILE_TASK_RUNNING );
+//printf("    start2 DONE\n");
+            continue;
+        }
+    }
+_done:
+    g_slist_free( queued );
+    g_slist_free( running );
+//printf("task_start_queued DONE\n");
+}
+
+void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
+                                                            PtkFileTask* task2 )
+{
+    GtkTreeModel* model = NULL;
+    GtkTreeIter it;
+    PtkFileTask* ptask;
+    XSet* set;
+    int job;
+    enum { JOB_STOP, JOB_PAUSE, JOB_QUEUE, JOB_RESUME };
+
+    if ( item )
+        set = (XSet*)g_object_get_data( G_OBJECT( item ), "set" );
+    else
+        set = set2;
+    if ( !set || !g_str_has_prefix( set->name, "task_" ) )
+        return;
+    
+    char* name = set->name + 5;
+    if ( g_str_has_prefix( name, "stop" ) )
+        job = JOB_STOP;
+    else if ( g_str_has_prefix( name, "pause" ) )
+        job = JOB_PAUSE;
+    else if ( g_str_has_prefix( name, "que" ) )
+        job = JOB_QUEUE;
+    else if ( g_str_has_prefix( name, "resume" ) )
+        job = JOB_RESUME;
+    else
+        return;
+    gboolean all = ( g_str_has_suffix( name, "_all" ) );
+
+    if ( all )
+    {
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
+        ptask = NULL;
+    }
+    else
+    {
+        if ( item )
+            ptask = ( PtkFileTask* ) g_object_get_data( G_OBJECT( item ),
+                                                             "task" );
+        else
+            ptask = task2;
+        if ( !ptask )
+            return;
+    }
+    
+    if ( !model || ( model && gtk_tree_model_get_iter_first( model, &it ) ) )
+    {
+        do
+        {
+            if ( model )
+                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+            if ( ptask && ptask->task && !ptask->complete )
+            {
+                switch ( job )
+                {
+                    case JOB_STOP:
+                        ptk_file_task_cancel( ptask );
+                        break;
+                    case JOB_PAUSE:
+                        ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
+                        break;
+                    case JOB_QUEUE:
+                        ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
+                        break;
+                    case JOB_RESUME:
+                        ptk_file_task_pause( ptask, VFS_FILE_TASK_RUNNING );
+                        break;
+                }
+            }
+        }
+        while ( model && gtk_tree_model_iter_next( model, &it ) );
+    }
+    task_start_queued( view, NULL );
 }
 
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
@@ -4664,7 +4803,7 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     GtkTreeViewColumn* col = NULL;
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
-    PtkFileTask* task = NULL;
+    PtkFileTask* ptask = NULL;
     XSet* set;
     gboolean is_tasks;
     
@@ -4680,7 +4819,7 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
                                         event->y, &tree_path, &col, NULL, NULL );
             //tree_sel = gtk_tree_view_get_selection( view );
             if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &task, -1 );
+                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
         }
 
         // build popup
@@ -4694,16 +4833,41 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
         main_context_fill( file_browser, context );
 
         set = xset_set_cb( "task_stop", on_task_stop, view );
-        xset_set_ob1( set, "task", task );
-        set->disable = !task;
+        xset_set_ob1( set, "task", ptask );
+        set->disable = !ptask;
 
-        set = xset_set_cb( "task_stop_all", on_task_stop_all, view );
+        set = xset_set_cb( "task_pause", on_task_stop, view );
+        xset_set_ob1( set, "task", ptask );
+        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_PAUSE 
+                        || ( ptask->task->type == VFS_FILE_TASK_EXEC && 
+                                                    !ptask->task->exec_pid ) );
+
+        set = xset_set_cb( "task_que", on_task_stop, view );
+        xset_set_ob1( set, "task", ptask );
+        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_QUEUE 
+                        || ( ptask->task->type == VFS_FILE_TASK_EXEC && 
+                                                    !ptask->task->exec_pid ) );
+
+        set = xset_set_cb( "task_resume", on_task_stop, view );
+        xset_set_ob1( set, "task", ptask );
+        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_RUNNING );
+
+        xset_set_cb( "task_stop_all", on_task_stop, view );
+        xset_set_cb( "task_pause_all", on_task_stop, view );
+        xset_set_cb( "task_que_all", on_task_stop, view );
+        xset_set_cb( "task_resume_all", on_task_stop, view );
+        set = xset_get( "task_all" );
         set->disable = !is_tasks;
-        
+    
+#ifdef HAVE_HAL
+        set = xset_get( "task_q_smart" );
+        set->disable = TRUE;
+#endif
+
         main_task_prepare_menu( main_window, popup, accel_group );
 
         xset_set_cb( "font_task", main_update_fonts, file_browser );
-        char* menu_elements = g_strdup_printf( "task_stop sep_t3 task_stop_all sep_t4 task_show_manager task_hide_manager sep_t5 task_columns task_popups task_errors" );
+        char* menu_elements = g_strdup_printf( "task_stop sep_t3 task_pause task_que task_resume task_all sep_t4 task_show_manager task_hide_manager sep_t5 task_columns task_popups task_errors task_queue" );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
         
@@ -4738,6 +4902,12 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
     {
         g_mutex_lock( ptask->task->mutex );
         ptk_file_task_progress_open( ptask );
+        if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING )
+        {
+            // update dlg
+            ptask->pause_change = TRUE;
+            ptask->progress_count = 50;  // trigger fast display
+        }   
         if ( ptask->progress_dlg )
             gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
         g_mutex_unlock( ptask->task->mutex );
@@ -4789,8 +4959,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
     GtkTreeModel* model;
     GtkTreeIter it;
     GdkPixbuf* pixbuf;
-    char* status;
-    char* status2 = NULL;
     char* dest_dir;
     char* path = NULL;
     char* file = NULL;
@@ -4870,7 +5038,11 @@ void main_task_view_update_task( PtkFileTask* ptask )
     
     // icon
     char* iname;
-    if ( ptask->err_count && ptask->task->type != 6 )
+    if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+        iname = g_strdup( GTK_STOCK_MEDIA_PAUSE );
+    else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+        iname = g_strdup( GTK_STOCK_GO_UP );
+    else if ( ptask->err_count && ptask->task->type != 6 )
         iname = g_strdup_printf( "error" );
     else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
         iname = g_strdup_printf( "stock_copy" );
@@ -4888,6 +5060,10 @@ void main_task_view_update_task( PtkFileTask* ptask )
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
                 app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     
+    // status
+    char* status;
+    char* status2 = NULL;
+    char* status3;
     if ( ptask->task->type != 6 )
     {
         if ( !ptask->err_count )
@@ -4907,10 +5083,16 @@ void main_task_view_update_task( PtkFileTask* ptask )
         else
             status = _(job_titles[ ptask->task->type ]);
     }
+    if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+        status3 = g_strdup_printf( "%s %s", _("paused"), status );
+    else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+        status3 = g_strdup_printf( "%s %s", _("queued"), status );
+    else
+        status3 = g_strdup( status );
     
     gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         TASK_COL_ICON, pixbuf,
-                        TASK_COL_STATUS, status,
+                        TASK_COL_STATUS, status3,
                         TASK_COL_COUNT, ptask->dsp_file_count,
                         TASK_COL_PATH, path,
                         TASK_COL_FILE, file,
@@ -4924,8 +5106,8 @@ void main_task_view_update_task( PtkFileTask* ptask )
                         -1 );
     g_free( file );
     g_free( path );
-    if ( status2 )
-        g_free( status2 );
+    g_free( status2 );
+    g_free( status3 );
 
     if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
         gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
@@ -4976,6 +5158,7 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     GtkWidget* view = exo_tree_view_new();
     gtk_tree_view_set_model( GTK_TREE_VIEW( view ), GTK_TREE_MODEL( list ) );
     exo_tree_view_set_single_click( (ExoTreeView*)view, TRUE );
+    gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
     //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, 400 );
 
     // Columns

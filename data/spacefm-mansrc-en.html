@@ -1665,7 +1665,7 @@ exit $?
 <br>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
 
 <p>If your script needs to save changing, persistent data to the user's home folder (to keep track of user preferences, for example), the <a href="#designmode-command-browse-data">data directory</a> should be used ("$fm_cmd_data").  Because this directory may not already exist, always run this command before using it:
-<pre>    mkdir -p "$fm_cmd_dir"</pre>
+<pre>    mkdir -p "$fm_cmd_data"</pre>
 
 <p>If your script needs a temporary directory to work in, you can create one automatically using this convenience function:
 <pre>    tmp="$(fm_new_tmp)"</pre>

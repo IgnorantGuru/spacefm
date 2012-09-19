@@ -128,6 +128,7 @@ int parse_network_url( const char* url, const char* fstype,
                                                         netmount_t** netmount );
 void vfs_volume_special_mounted( const char* device_file );
 gboolean vfs_volume_dir_avoid_changes( const char* dir );
+dev_t get_device_parent( dev_t dev );
 
 #endif
 

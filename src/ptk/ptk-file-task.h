@@ -27,6 +27,7 @@ struct _PtkFileTask
     GtkWidget* progress_dlg;
     GtkWidget* progress_btn_close;
     GtkWidget* progress_btn_stop;
+    GtkWidget* progress_btn_pause;
     GtkWindow* parent_window;
     GtkWidget* task_view;
     GtkLabel* from;
@@ -50,6 +51,7 @@ struct _PtkFileTask
 */
     gboolean complete;
     gboolean aborted;
+    gboolean pause_change;
 
     /* <private> */
     guint timeout;
@@ -101,6 +103,8 @@ void ptk_file_task_set_recursive( PtkFileTask* ptask, gboolean recursive );
 void ptk_file_task_run( PtkFileTask* ptask );
 
 gboolean ptk_file_task_cancel( PtkFileTask* ptask );
+
+void ptk_file_task_pause( PtkFileTask* ptask, int state );
 
 void ptk_file_task_progress_open( PtkFileTask* ptask );
 

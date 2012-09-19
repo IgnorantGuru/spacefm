@@ -2591,7 +2591,7 @@ exit $?
 <br>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
 
 <p>If your script needs to save changing, persistent data to the user's home folder (to keep track of user preferences, for example), the <a href="#designmode-command-browse-data">data directory</a> should be used ("$fm_cmd_data").  Because this directory may not already exist, always run this command before using it:
-<pre>    mkdir -p "$fm_cmd_dir"</pre>
+<pre>    mkdir -p "$fm_cmd_data"</pre>
 
 <p>If your script needs a temporary directory to work in, you can create one automatically using this convenience function:
 <pre>    tmp="$(fm_new_tmp)"</pre>
@@ -5146,7 +5146,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-09-14&nbsp;&nbsp;(SpaceFM version 0.8.0)
+<p>Updated 2012-09-19&nbsp;&nbsp;(SpaceFM version 0.8.0+)
 <br><br>
 </center>
 </td></tr></table>

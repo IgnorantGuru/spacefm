@@ -859,13 +859,13 @@ void load_settings( char* config_dir )
     if ( ver < 10 ) // < 0.7.5
     {
         set = xset_get( "dev_ignore_udisks_hide" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _Hide") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "Ignore Udisks _Hide" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("Ignore _Hide Policy") );
         }
         set = xset_get( "dev_ignore_udisks_nopolicy" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _No Policy") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "Ignore Udisks _No Policy" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("Ignore _No Policy") );
@@ -874,10 +874,41 @@ void load_settings( char* config_dir )
     if ( ver < 11 ) // < 0.7.7+
     {
         set = xset_get( "main_faq" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("How do I... (_FAQ)") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "How do I... (_FAQ)" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("_FAQ") );
+        }
+    }
+    if ( ver < 12 ) // < 0.8.1
+    {
+        set = xset_get( "task_stop" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Stop Task" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Stop") );
+        }
+        set = xset_get( "task_stop_all" );
+        g_free( set->menu_label );
+        set->menu_label = g_strdup( _("_Stop") );
+
+        set = xset_get( "task_show_manager" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Show Manager" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Show _Manager") );
+        }
+        set = xset_get( "task_hide_manager" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Auto-Hide Manager" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Auto-_Hide Manager") );
+        }
+        set = xset_get( "task_errors" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Errors" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Err_ors") );
         }
     }
 }
@@ -896,7 +927,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "11" );  // 0.7.7+
+    xset_set( "config_version", "s", "12" );  // 0.8.1
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -3465,9 +3496,11 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     else
                         msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
                     g_free( label );
+                    GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
                     xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
                                                         0, "Copy Plugin",
                                                         NULL, 0, msg, NULL, NULL );
+                    GDK_THREADS_LEAVE();
                     g_free( msg );
                 }
             }
@@ -9279,7 +9312,7 @@ void xset_defaults()
 
     set = xset_set( "main_tasks", "label", _("_Tasks") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors" );
+    xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors task_queue" );
     
     set = xset_set( "task_col_status", "label", _("_Status") );
     set->menu_style = XSET_MENU_CHECK;
@@ -9350,15 +9383,25 @@ void xset_defaults()
 
     xset_set( "task_col_reorder", "label", _("Reor_der") );
 
-    xset_set( "task_stop", "label", _("_Stop Task") );
+    xset_set( "task_stop", "label", _("_Stop") );
+    xset_set( "task_pause", "label", _("Pa_use") );
+    xset_set( "task_que", "label", _("_Queue") );
+    xset_set( "task_resume", "label", _("_Resume") );
 
-    xset_set( "task_stop_all", "label", _("Stop _All Tasks") );
+    set = xset_set( "task_all", "label", _("_All Tasks") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "task_stop_all task_pause_all task_que_all task_resume_all" );
 
-    set = xset_set( "task_show_manager", "label", _("_Show Manager") );
+        xset_set( "task_stop_all", "label", _("_Stop") );
+        xset_set( "task_pause_all", "label", _("Pa_use") );
+        xset_set( "task_que_all", "label", _("_Queue") );
+        xset_set( "task_resume_all", "label", _("_Resume") );
+
+    set = xset_set( "task_show_manager", "label", _("Show _Manager") );
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_FALSE;
 
-    set = xset_set( "task_hide_manager", "label", _("_Auto-Hide Manager") );
+    set = xset_set( "task_hide_manager", "label", _("Auto-_Hide Manager") );
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_TRUE;
 
@@ -9394,7 +9437,7 @@ void xset_defaults()
         xset_set_set( set, "title", _("Task Popup Font (affects new tasks)") );
         xset_set_set( set, "desc", _("Example Output 0123456789") );
 
-    set = xset_set( "task_errors", "label", _("_Errors") );
+    set = xset_set( "task_errors", "label", _("Err_ors") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_err_first task_err_any task_err_cont" );
 
@@ -9409,6 +9452,18 @@ void xset_defaults()
         set = xset_set( "task_err_cont", "label", _("_Continue") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_FALSE;
+
+    set = xset_set( "task_queue", "label", _("Qu_eue") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "task_q_new task_q_smart" );
+
+        set = xset_set( "task_q_new", "label", _("_Queue New Tasks") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+
+        set = xset_set( "task_q_smart", "label", _("_Smart Queue") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
 
     // PANELS COMMON
     set = xset_get( "sep_new" );

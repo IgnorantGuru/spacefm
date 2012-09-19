@@ -3613,7 +3613,7 @@ static void vfs_volume_clean()
         return;
     
     char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
-printf("Clean: %s\n", line );
+    //printf("Clean: %s\n", line );
     g_free( udevil );    
     g_spawn_command_line_async( line, NULL );
     g_free( line );
@@ -4190,5 +4190,34 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         udev_device_unref( udevice );
 //printf( "    avoid_changes = %s\n", ret ? "TRUE" : "FALSE" );
     return ret;
+}
+
+dev_t get_device_parent( dev_t dev )
+{
+    if ( !udev )
+        return 0;
+
+    struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b', dev );
+    if ( !udevice )
+        return 0;
+    char* native_path = g_strdup( udev_device_get_syspath( udevice ) );
+    udev_device_unref( udevice );
+
+    if ( !native_path || ( native_path && !sysfs_file_exists( native_path, "start" ) ) )
+    {
+        // not a partition if no "start"
+        g_free( native_path );
+        return 0;
+    }
+
+    char* parent = g_path_get_dirname( native_path );
+    g_free( native_path );
+    udevice = udev_device_new_from_syspath( udev, parent );
+    g_free( parent );
+    if ( !udevice )
+        return 0;
+    dev_t retdev = udev_device_get_devnum( udevice );
+    udev_device_unref( udevice );
+    return retdev;    
 }
 
