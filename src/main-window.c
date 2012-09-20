@@ -1900,12 +1900,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     on_task_popup_show( NULL, main_window, NULL );
     show_panels( NULL, main_window );
     main_window_root_bar_all();
-
-printf("window = %d x %d\n", GTK_WIDGET( main_window )->allocation.width, GTK_WIDGET( main_window ) ->allocation.height );
-printf("window-default = %d x %d\n", app_settings.width, app_settings.height );
-
-printf("vpane = %d\n", gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) ) );
-
 }
 
 void fm_main_window_finalize( GObject *obj )

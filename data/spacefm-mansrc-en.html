@@ -1170,6 +1170,100 @@ References:<br>
 
 
 
+<!-- @Tasks @Task Manager #man -->
+<p>SpaceFM's Task Manager helps eliminate popup dialogs, and also allows you to continue working while large files are being copied, etc.  Each SpaceFM window includes a single task manager which lists running tasks, manages the task queue, allows you to stop, pause, queue, and resume tasks, and manages popup dialogs which show output or errors.  Like most parts of SpaceFM, the task manager can also be customized with your own custom commands which manipulate or interact with running tasks.
+
+<p>A task is a job initiated by the user.  SpaceFM's internal functions handle tasks such as a copying, moving, and deleting files.  A task may also run and monitor an external executable, either initiated from within SpaceFM's functions, or from a custom command.
+
+<p>The task manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: Show and Auto-Hide.  If View|Tasks|Show Manager is selected, the task manager is always visible, even when no tasks are running.  Or, if View|Tasks|Auto-Hide Manager is selected (the default), the task manager will become visible when tasks are running, and will be hidden when the last task completes.  The size of the task manager may be adjusted by dragging the pane separator above it.
+
+<p>All panels in each SpaceFM window share a single task manager.  When a task is initiated in any panel and runs for longer than about a half second, it will be added to the task list and the task manager will be shown if in Auto-Hide mode.  If a task finishes in less than about a half second, the task will not be added to the task list.
+
+
+<!-- @Tasks @Task List #list -->
+<p>The Task Manager's Task List lists running tasks.  Information columns can be hidden and moved, allowing you to control how the available information is shown.  New tasks are added to the end of the list.  When a task completes (successfully or with errors), it is immediately removed from the list.
+
+<p>A single left-click on a task in the list will open a popup progress dialog showing the task stats as well as an output monitor.  For internal tasks (copy, move, etc), the output monitor is used to show errors.  For exec tasks (eg a custom command running an executable), the output monitor shows the stdout and stderr output of the command as its produced.
+
+<p>Right-clicking on a task in the list shows the Task List's context menu, which allows you to stop, pause, queue, and resume tasks, and also contains options for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
+
+
+
+<!-- @Tasks @Queue -->
+<p>Each task listed in the Task List may be in one of three states: running, paused, or queued.
+
+<p>A running task is currently executing: files are being copied, or an executable is running, etc.
+
+<p>A paused task has been halted.  For internal tasks such as copy and move, the task thread stops until you resume the task.  For exec tasks (eg a custom command running an executable), the executable has been sent a SIGSTOP signal (similar to pressing Ctrl-S in a terminal).  This will cause many executables to temporarily stop running.  If the executable does not respond to the SIGSTOP signal, it may continue to run even though paused in SpaceFM's Task Manager.  Resuming a paused exec task sends it a SIGCONT signal to continue running (similar to pressing Ctrl-Q in a terminal).
+
+<p>A queued task is also paused.  The only difference is that the Task Manager will automatically resume running a queued task when other tasks complete, whereas a paused task will never resume automatically.
+
+<p>A task's state (running, paused, or queued) can be changed by the user, and in some cases may be changed automatically.
+
+<p>Simply, the queue is used to stop all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to the drive seeking).  Thus it may be desirable to queue the second task, so it will be paused until the first task is completed.
+
+<p>Tasks may be queued automatically when added.  If option View|Tasks|Queue|Queue New Tasks is checked, new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option View|Tasks|Queue|Smart Queue.  Or, you can manually remove the task from the queue by resuming, pausing or stopping it.
+
+
+
+<!-- @Tasks @Menu -->
+<p>The Task List's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on a task in the list.  The options found on this menu are also available in the main menu bar's View|Tasks submenu (convenient if the Task Manager is hidden).
+
+<p>The context menu contains the following items:
+
+<!-- # Stop -->
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task List.  Note that stopping an internal task may leave some files only partially copied, etc.
+
+<p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device, etc.), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not some.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.
+
+<p>An exec task will not be removed from the Task List until it terminates.  This means that is a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
+
+<p>If the command was run as another user, such as root, selecting Stop will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGTERM and SIGKILL signals to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>You can also stop a task by clicking the Stop button in the task's popup dialog.
+
+<!-- # Pause -->
+Pause temporarily halts a task, putting it into a 'paused' state.  It will remain in the paused state until you resume, queue, or stop it, and will never be automatically resumed or queued.
+
+<p>If the task is internal (such as copying files), SpaceFM will suspend the task thread.  Any files currently being read or written will remain open as long as the task is paused.
+
+<p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device, etc.), the process, <i>and all its child processes</i>, are sent a SIGSTOP signal.  This is similar to pressing Ctrl-S in a terminal while a command line program is running - it will often cause the program to temporarily halt execution.  In some cases, a program will not halt on a SIGSTOP signal, but SpaceFM will still list it as being in a 'paused' state until you resume the task.
+
+<p>If the command was run as another user, such as root, selecting Pause will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGSTOP signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>You can also pause a task by clicking the Pause button in the task's popup dialog.
+
+<!-- # Queue -->
+Selecting Queue will change the selected task's state to 'queued'.  In this state, the task is paused, but will resume automatically when other tasks complete.
+
+<p>Note that selecting Queue on a running task may seem to have no effect.  This is because the task may be queued, but then may automatically be removed from the queue and resumed by the Task Manager.  There is no way to force a task to stay in the queue (but you can pause it).
+
+<!-- # Resume -->
+Resume starts the selected task, changing its state to 'running'.  If it was in the Queue it will be removed from the Queue and un-paused, regardless of how it conflicts with other running tasks.
+
+<p>If the task is an exec task, the process, <i>and all its child processes</i>, are sent a SIGCONT signal.  This is similar to pressing Ctrl-Q in a terminal after a command line program has been halted with Ctrl-S.  If the original SIGSTOP halted the execution, SIGCONT should resume it.  If SIGSTOP did not halt execution, SIGCONT will generally have no effect, except that SpaceFM will now list the task as 'running'.
+
+<p>If the command was run as another user, such as root, selecting Resume will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGCONT signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>You can also resume a task by clicking the Resume button in the task's popup dialog.  Tasks may also be resumed automatically by the Task Manager if they are queued.
+
+<!-- # All Tasks #all -->
+The All Tasks submenu is used to place all listed tasks into the selected state.  The Stop, Pause, Queue, and Resume menu items in this submenu have the same affect as detailed above, except that all tasks are affected.
+
+<p>Selecting All Tasks|Queue will place all tasks in the 'queued' state momentarily, but note that one or more of the tasks may then be automatically removed from the queue and resumed.
+
+<!-- # Show Manager #show -->
+The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task List is always visible, even when no tasks are running.  The size of the task manager may be adjusted by dragging the pane separator above it.
+
+<p>This option is also available via the main menu bar's View|Tasks submenu.  You may also associate a key shortcut with it.
+
+<!-- # Auto-Hide Manager #auto -->
+If option Auto-Hide Manager is selected (the default), the Task List will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
+
+<p>Although there is no option to hide the Task List while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option View|Tasks|Popups|Popup All Tasks, so that you are aware that tasks are running.  This combination of a zero-height Task List and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than a Task List.  You can also enable option View|Tasks|Popups|Stay On Top if desired.
+
+
+
 <!-- @Design Mode @Introduction -->
 
 <p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>Design Menu</i>.
