@@ -3588,6 +3588,7 @@ enum {
 
 const char* task_titles[] =
     {
+        // If you change "Status", also change it in on_task_button_press_event
         N_( "Status" ), N_( "#" ), N_( "Folder" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
         N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "CRemain" ),
@@ -4882,6 +4883,39 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
         gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL, event->button,
                                                                     event->time );
     }
+    else if ( event->button == 1 || event->button == 2 ) // left or middle click
+    {    
+        // get selected task
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
+        if ( is_tasks = gtk_tree_model_get_iter_first( model, &it ) )
+        {
+            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
+                                        event->y, &tree_path, &col, NULL, NULL );
+            //tree_sel = gtk_tree_view_get_selection( view );
+            if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
+                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );            
+        }
+        if ( !ptask )
+            return FALSE;
+        if ( event->button == 1 && g_strcmp0( gtk_tree_view_column_get_title( col ),
+                                                                _("Status") ) )
+            return FALSE;
+        char* sname;
+        switch ( ptask->task->state_pause )
+        {
+            case VFS_FILE_TASK_PAUSE:
+                sname = "task_que";
+                break;
+            case VFS_FILE_TASK_QUEUE:
+                sname = "task_resume";
+                break;
+            default:
+                sname = "task_pause";
+        }
+        set = xset_get( sname );
+        on_task_stop( NULL, view, set, ptask );
+        return TRUE;
+    }
     return FALSE;
 }
 
@@ -4965,6 +4999,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
     char* dest_dir;
     char* path = NULL;
     char* file = NULL;
+    XSet* set;
     
 //printf("main_task_view_update_task  ptask=%d\n", ptask);
     const char* job_titles[] =
@@ -5042,9 +5077,15 @@ void main_task_view_update_task( PtkFileTask* ptask )
     // icon
     char* iname;
     if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-        iname = g_strdup( GTK_STOCK_MEDIA_PAUSE );
+    {
+        set = xset_get( "task_pause" );
+        iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
+    }
     else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-        iname = g_strdup( GTK_STOCK_GO_UP );
+    {
+        set = xset_get( "task_que" );
+        iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
+    }
     else if ( ptask->err_count && ptask->task->type != 6 )
         iname = g_strdup_printf( "error" );
     else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )

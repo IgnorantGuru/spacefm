@@ -451,6 +451,7 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
 void set_button_states( PtkFileTask* ptask )
 {
     char* icon;
+    char* iconset;
     char* label;
     gboolean sens = !ptask->complete;
     
@@ -460,20 +461,28 @@ void set_button_states( PtkFileTask* ptask )
     if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
     {
         label = _("Q_ueue");
-        icon = GTK_STOCK_GO_UP;
+        iconset = "task_que";
+        icon = GTK_STOCK_ADD;
     }
     else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
     {
         label = _("Res_ume");
+        iconset = "task_resume";
         icon = GTK_STOCK_MEDIA_PLAY;
     }
     else
     {
         label = _("Pa_use");
+        iconset = "task_pause";
         icon = GTK_STOCK_MEDIA_PAUSE;
         sens = sens && !( ptask->task->type == VFS_FILE_TASK_EXEC && 
                                                     !ptask->task->exec_pid );
     }
+
+    XSet* set = xset_get( iconset );
+    if ( set->icon )
+        icon = set->icon;
+
     gtk_widget_set_sensitive( ptask->progress_btn_pause, sens );
     gtk_button_set_image( GTK_BUTTON( ptask->progress_btn_pause ),
                             xset_get_image( icon,
@@ -715,9 +724,13 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     // Buttons
     // Pause
+    XSet* set = xset_get( "task_pause" );
+    char* pause_icon = set->icon;
+    if ( !pause_icon )
+        pause_icon = GTK_STOCK_MEDIA_PAUSE;
     ptask->progress_btn_pause = gtk_button_new_with_mnemonic( _("_Pause") );
     gtk_button_set_image( GTK_BUTTON( ptask->progress_btn_pause ),
-                            xset_get_image( GTK_STOCK_MEDIA_PAUSE,
+                            xset_get_image( pause_icon,
                                             GTK_ICON_SIZE_BUTTON ) );
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
                                             ptask->progress_btn_pause,

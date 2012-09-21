@@ -971,11 +971,11 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     {
         if ( GTK_IS_WIDGET( file_browser->toolbar ) )
         {
-            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n",
-                                                        file_browser->toolbar );
+            //printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n",
+            //                                            file_browser->toolbar );
             // crashing here? http://sourceforge.net/p/spacefm/tickets/88000/?page=0
             gtk_widget_destroy( file_browser->toolbar );  
-            printf("    DONE\n" );
+            //printf("    DONE\n" );
         }
         file_browser->toolbar = NULL;
         file_browser->path_bar = NULL;
