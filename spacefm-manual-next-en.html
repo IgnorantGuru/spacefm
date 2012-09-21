@@ -2044,9 +2044,11 @@ References:<br>
 
 <p>Task Manager <a href="#tasks-menu-col">columns</a> provide information on each task, and each column can be hidden or moved, allowing you to control what information is shown.  
 
-<p>A single left-click on a task in the list will open a popup dialog showing the task's stats, a progress bar, and an output monitor.  For internal tasks (copy, move, etc), the output monitor is used to show errors.  For exec tasks, the output monitor shows the combined stdout and stderr output of the command as its produced.
+<p><b>A single left-click on a task</b> in the list, <i>anywhere except in the Status column</i>, will open a popup dialog showing the task's stats, a progress bar, and an output monitor.  For internal tasks (copy, move, etc), the output monitor is used to show errors.  For exec tasks, the output monitor shows the combined stdout and stderr output of the command as its produced.
 
-<p>Right-clicking on a task in the list shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
+<p><b>A single left-click on the Status</b> of a task, or <b>a middle-click anywhere on a listed task</b> will change its <a href="#tasks-queue">state</a> (running, queued, or paused).  Click repeatedly to achieve the desired state.
+
+<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
 
 
 
@@ -2132,7 +2134,7 @@ References:<br>
 
 <!-- # Stop -->
 <p><a name="tasks-menu-stop"/><a href="#tasks-menu-stop"><b>Stop</b></a><br>
-Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task List.  Note that stopping an internal task may leave some files only partially copied.
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.  Note that stopping an internal task may leave some files only partially copied.
 
 <p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not always.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.  An exec task will not be removed from the Task Manager until its process terminates.  This means that if a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
 
@@ -2140,7 +2142,7 @@ Stop is used to stop the selected task.  If the task is internal (such as copyin
 
 <p>Paused and queued tasks may also be stopped.
 
-<p>You can also stop a task by clicking the Stop button in the task's popup dialog.
+<p>You can also stop a task by clicking the Stop button in the task's <a href="#tasks-dlg">popup dialog</a>.
 
 <!-- # Pause -->
 <p><a name="tasks-menu-pause"/><a href="#tasks-menu-pause"><b>Pause</b></a><br>
@@ -2148,17 +2150,19 @@ Pause temporarily halts a task, putting it into a <a href="#tasks-queue">paused 
 
 <p>If the task is internal (such as copying files), SpaceFM will suspend the task thread.  Any files currently being read or written will remain open as long as the task is paused.
 
-<p>If the task is an exec task, the process, <i>and all its child processes</i>, are sent a SIGSTOP signal.  This is similar to pressing Ctrl+S in a terminal while a command is running; it will often cause the process to temporarily halt execution.  In some cases, a process will not halt on a SIGSTOP signal, but Task Manager will still list it as being in a 'paused' state until you <a href="#tasks-menu-resume">Resume</a> the task.
+<p>If the task is an exec task, the process, <i>and all its child processes</i>, are sent a SIGSTOP signal.  This is similar to pressing Ctrl+S in a terminal while a command is running; it will often cause the process to temporarily halt execution.  In some cases, a process will not halt on a SIGSTOP signal, but the Task Manager will still list it as being in a 'paused' state until you <a href="#tasks-menu-resume">Resume</a> the task.
 
 <p>If the command was run as another user, such as root, selecting Pause will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGSTOP signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
 
-<p>You can also pause a task by clicking the Pause button in the task's popup dialog.
+<p>You can also pause a task by clicking the Pause button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
 <!-- # Queue -->
 <p><a name="tasks-menu-queue"/><a href="#tasks-menu-queue"><b>Queue</b></a><br>
 Selecting Queue will change the selected task's state to <a href="#tasks-queue">queued</a>.  In this state, the task is halted, but will resume automatically when other tasks complete.
 
 <p>Note that selecting Queue on a running task may seem to have no effect.  This is because the task may be queued, but then may automatically be removed from the queue and resumed by the Task Manager.  There is no way to force a task to stay in the queue (but you can <a href="#tasks-menu-pause">Pause</a> it).
+
+<p>You can also queue a task by clicking the Queue button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
 <!-- # Resume -->
 <p><a name="tasks-menu-resume"/><a href="#tasks-menu-resume"><b>Resume</b></a><br>
@@ -2168,7 +2172,7 @@ Resume starts the selected task, changing its state to <a href="#tasks-queue">ru
 
 <p>If the command was run as another user, such as root, selecting Resume will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGCONT signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
 
-<p>You can also resume a task by clicking the Resume button in the task's popup dialog.  Tasks may also be resumed automatically by the Task Manager if they are queued.
+<p>You can also resume a task by clicking the Resume button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.  Tasks may also be resumed automatically by the Task Manager if they are queued.
 
 <!-- # All Tasks #all -->
 <p><a name="tasks-menu-all"/><a href="#tasks-menu-all"><b>All Tasks</b></a><br>
@@ -2178,15 +2182,15 @@ The All Tasks submenu is used to place all listed tasks into the selected state.
 
 <!-- # Show Manager #show -->
 <p><a name="tasks-menu-show"/><a href="#tasks-menu-show"><b>Show Manager</b></a><br>
-The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task List is always visible, even when no tasks are running.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
+The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task Manager is always visible, even when no tasks are running.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
 
 <p>This option is also available via the main menu bar's View|Tasks submenu.  You may also associate a key shortcut with it.
 
 <!-- # Auto-Hide Manager #auto -->
 <p><a name="tasks-menu-auto"/><a href="#tasks-menu-auto"><b>Auto-Hide Manager</b></a><br>
-If option Auto-Hide Manager is selected (the default), the Task List will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
+If option Auto-Hide Manager is selected (the default), the Task Manager will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
 
-<p>Although there is no option to hide the Task List while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option View|Tasks|Popups|Popup All Tasks, so that you are aware that tasks are running.  This combination of a zero-height Task List and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than a Task List.  You can also enable option View|Tasks|Popups|Stay On Top if desired.
+<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a> if desired.
 
 <!-- # Columns #col -->
 <p><a name="tasks-menu-col"/><a href="#tasks-menu-col"><b>Columns</b></a><br>
@@ -2237,7 +2241,7 @@ The Columns submenu is used to select which columns are visible in the Task Mana
 
 <!-- # Popups|Popup All Tasks #popall -->
 <p><a name="tasks-menu-popall"/><a href="#tasks-menu-popall"><b>Popups|Popup All Tasks</b></a><br>
-The Popups submenu is used to configure the Task Manager's behavior for opening popup dialogs.  If option Popup All Tasks is checked, a popup progress dialog will automatically open for any task which runs for longer than about one half second.  If the task finishes successfully, the popup will automatically close.  If errors occur, it will remain open for you to view the error messages.
+The Popups submenu is used to configure the Task Manager's behavior for opening <a href="#tasks-dlg">popup dialogs</a>.  If option Popup All Tasks is checked, a popup dialog will automatically open for any task which runs for longer than about one half second.  If the task finishes successfully, the popup will automatically close.  If errors occur, it will remain open for you to view the error messages.
 
 <p>If option Popup All Tasks is unchecked, a popup dialog will open for an internal task only if an error occurs.  For custom commands, the popup behavior will depend on the command's <a href="#designmode-command-popup">popup settings</a>.  Note that if Popup All Tasks is checked, this overrides the command's popup settings.
 
@@ -2245,13 +2249,13 @@ The Popups submenu is used to configure the Task Manager's behavior for opening 
 
 <!-- # Popups|Stay On Top #poptop -->
 <p><a name="tasks-menu-poptop"/><a href="#tasks-menu-poptop"><b>Popups|Stay On Top</b></a><br>
-If option Stay On Top is checked, any task popup dialog, whether opened automatically or manually, will stay on top of the SpaceFM window.  However, you can still click on visible portions of the main window.
+If option Stay On Top is checked, any task's <a href="#tasks-dlg">popup dialog</a>, whether opened automatically or manually, will stay on top of the SpaceFM window.  However, you can still click on visible portions of the main window.
 
 <p>If unchecked, popup dialogs may be placed beneath the main window.
 
 <!-- # Popups|Detailed Status #popdet -->
 <p><a name="tasks-menu-popdet"/><a href="#tasks-menu-popdet"><b>Popups|Detailed Status</b></a><br>
-Detailed Status affects how task stats are displayed in the 'Progress:' line of popup dialogs (seen in internal task dialogs only).
+Detailed Status affects how task stats are displayed in the 'Progress:' line of <a href="#tasks-dlg">popup dialogs</a> (seen in internal task dialogs only).
 
 <p>If unchecked, a brief stats line is shown.  For example:
 <blockquote>Progress: 204 M / 350 M  (26 M/s)  :05 remaining</blockquote>
@@ -2265,11 +2269,11 @@ The additional stats include the item count (#1), the elapsed running time of th
 
 The <i>current speed</i> is measured based on the speed over the previous two second interval, whereas the average speed is based on the entire time the task has been running.  The current speed is a more accurate measure of what is happening right now, and will fluctuate more, while the average speed is a better measure of the overall performance.  The time remaining estimate based on the current speed shows how long the task will continue <i>if it continues at the current speed</i>.  The time remaining estimate based on the average speed tends to be a more accurate estimate in general.
 
-<p>The information shown in the 'Progress:' line will match the information shown in the corresponding Task Manager columns.
+<p>The information shown in the 'Progress:' line will match the information shown in the corresponding <a href="#tasks-menu-col">Task Manager columns</a>.
 
 <!-- # Popups|Font #popfont -->
 <p><a name="tasks-menu-popfont"/><a href="#tasks-menu-popfont"><b>Popups|Font</b></a><br>
-The Font menu item allows you to set a font to be used in the output monitor of popup dialogs.  For example, you might choose a fixed width font to make the monitor look more like a terminal.
+The Font menu item allows you to set a font to be used in the output monitor of <a href="#tasks-dlg">popup dialogs</a>.  For example, you might choose a fixed width font to make the monitor look more like a terminal.
 
 <p>This font may also be set by right-clicking on the output monitor of any task's popup dialog and selecting Font from the context menu.
 
@@ -2277,9 +2281,9 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 
 <!-- # Errors #poperr -->
 <p><a name="tasks-menu-poperr"/><a href="#tasks-menu-poperr"><b>Errors</b></a><br>
-The Errors submenu contain a set of radio options which control how errors in internal tasks (such as copy and move) are handled.  (These options have no effect on exec tasks such as custom commands.)
+The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a popup dialog to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
 
 <p>Note that the first action may or may not be the first file of the task; it may be the action of creating a directory to hold the first file.  Thus if the directory creation is successful, and then an error occurs on the first file being copied, Stop If First will <i>not</i> stop the task since the error did not occur on the first action (directory creation).
 
@@ -2321,7 +2325,10 @@ Often while copying a set of large files, you may want to perform a quick operat
 Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
 
 <br>
-<p>Also note that you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task, regardless of Task Manager's queue settings.  For example, if you want a task to run immediately even though the Task Manager made no exception for it, you can <a href="#tasks-menu-resume">Resume</a> it yourself.
+<p>Also note that you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task, regardless of the Task Manager's queue settings.  For example, if you want a task to run immediately even though the Task Manager made no exception for it, you can <a href="#tasks-menu-resume">Resume</a> it yourself.
+
+<p><b>HAL NOTE:</b>:  If you are using a copy of SpaceFM built with configure option --enable-hal, or a HAL-based SpaceFM package, option Smart Queue will be unavailable.
+
 
 <!-- # Custom Commands #cust -->
 <p><a name="tasks-menu-cust"/><a href="#tasks-menu-cust"><b>Custom Commands</b></a><br>
@@ -2339,7 +2346,7 @@ As with most menus, it is also possible to add your own custom commands to the T
 Note that the PID of the task refers to the initial process started by SpaceFM.  The actual process you want to control may be a child of this PID.
 
 <p>For example, to add a custom command which opens the working directory of the currently selected task, use this command line:
-<pre>    spacefm "fm_task_pwd"</pre>
+<pre>    spacefm "$fm_task_pwd"</pre>
 
 
 <!-- @end tasks-menu-->
@@ -5618,7 +5625,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-09-20&nbsp;&nbsp;(SpaceFM version 0.8.0+)
+<p>Updated 2012-09-21&nbsp;&nbsp;(SpaceFM version 0.8.0+)
 <br><br>
 </center>
 </td></tr></table>
