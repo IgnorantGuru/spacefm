@@ -838,9 +838,11 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
-        else if ( mime_type && ( 
+        else if ( file_path && mime_type && ( 
                 !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
+                g_str_has_suffix( file_path, ".iso" ) ||
+                g_str_has_suffix( file_path, ".img" ) ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
