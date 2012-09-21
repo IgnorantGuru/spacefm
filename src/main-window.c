@@ -2686,6 +2686,9 @@ void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
     else if ( browser && browser->side_dev && gtk_widget_has_focus( 
                                                 GTK_WIDGET( browser->side_dev ) ) )
         help = "#devices";
+    else if ( main_window->task_view && 
+                    gtk_widget_has_focus( GTK_WIDGET( main_window->task_view ) ) )
+        help = "#tasks-man";
     else
         help = NULL;
     xset_show_help( GTK_WIDGET( main_window ), NULL, help );
@@ -3587,8 +3590,8 @@ const char* task_titles[] =
     {
         N_( "Status" ), N_( "#" ), N_( "Folder" ), N_( "Item" ),
         N_( "To" ), N_( "Progress" ), N_( "Total" ),
-        N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "Estimate" ),
-        N_( "Speed" ), N_( "Remain" ), "StartTime"
+        N_( "Started" ), N_( "Elapsed" ), N_( "Current" ), N_( "CRemain" ),
+        N_( "Average" ), N_( "Remain" ), "StartTime"
     };
 const char* task_names[] =
     {

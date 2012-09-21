@@ -2049,7 +2049,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                                 task->type == VFS_FILE_TASK_TRASH )            
                 exlimit = 104857600;    // 100M
             else
-                exlimit = 0;            // always exception
+                exlimit = 0;            // always exception for other types
             if ( !exlimit || task->total_size < exlimit )
                 task->state_pause = VFS_FILE_TASK_RUNNING;
         }

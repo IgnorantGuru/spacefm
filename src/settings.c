@@ -880,7 +880,7 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( _("_FAQ") );
         }
     }
-    if ( ver < 12 ) // < 0.8.1
+    if ( ver < 13 ) // < 0.8.1
     {
         set = xset_get( "task_stop" );
         if ( set->menu_label && !strcmp( set->menu_label, "_Stop Task" ) )
@@ -910,6 +910,24 @@ void load_settings( char* config_dir )
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("Err_ors") );
         }
+        set = xset_get( "task_col_curest" );
+        if ( set->menu_label && !strcmp( set->menu_label, "Current Esti_mate" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Current Re_main") );
+        }
+        set = xset_get( "task_col_avgest" );
+        if ( set->menu_label && !strcmp( set->menu_label, "A_verage Estimate" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("A_verage Remain") );
+        }
+        set = xset_get( "task_col_path" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Path" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Folder") );
+        }
     }
 }
 
@@ -927,7 +945,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "12" );  // 0.8.1
+    xset_set( "config_version", "s", "13" );  // 0.8.1
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -9332,7 +9350,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 1 );
     
-    set = xset_set( "task_col_path", "label", _("_Path") );
+    set = xset_set( "task_col_path", "label", _("_Folder") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 2 );
@@ -9373,7 +9391,7 @@ void xset_defaults()
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 9 );
     
-    set = xset_set( "task_col_curest", "label", _("Current Esti_mate") );
+    set = xset_set( "task_col_curest", "label", _("Current Re_main") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 10 );
 
@@ -9383,7 +9401,7 @@ void xset_defaults()
     set->x = g_strdup_printf( "%d", 11 );
     set->y = g_strdup( "60" );
     
-    set = xset_set( "task_col_avgest", "label", _("A_verage Estimate") );
+    set = xset_set( "task_col_avgest", "label", _("A_verage Remain") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 12 );

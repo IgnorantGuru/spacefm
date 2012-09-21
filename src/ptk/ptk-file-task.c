@@ -97,7 +97,9 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
 
     // queue task
     if ( ptask->task->exec_sync && ptask->task->type != VFS_FILE_TASK_EXEC &&
-                                                xset_get_b( "task_q_new" ) )
+                                   ptask->task->type != VFS_FILE_TASK_LINK &&
+                                   ptask->task->type != VFS_FILE_TASK_CHMOD_CHOWN &&
+                                   xset_get_b( "task_q_new" ) )
         ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
     
     /*  this method doesn't work because sig handler runs in task thread
@@ -596,6 +598,9 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
         task_start_queued( ptask->task_view, NULL );
         break;
 */
+    case GTK_RESPONSE_HELP:
+        xset_show_help( GTK_WIDGET( ptask->parent_window ), NULL, "#tasks-dlg" );
+        break;
     case GTK_RESPONSE_OK:
     case GTK_RESPONSE_NONE:
         ptask->keep_dlg = FALSE;
@@ -724,13 +729,24 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
                                                     ptask->progress_btn_stop,
                                                     GTK_RESPONSE_CANCEL);
+    gtk_button_set_focus_on_click( GTK_BUTTON( ptask->progress_btn_stop ),
+                                            FALSE );
     // Close
     ptask->progress_btn_close = gtk_button_new_from_stock( GTK_STOCK_CLOSE );
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
                                                     ptask->progress_btn_close,
                                                     GTK_RESPONSE_OK);
+    // Help
+    GtkWidget* help_btn = gtk_button_new_from_stock( GTK_STOCK_HELP );
+    gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
+                                                    help_btn,
+                                                    GTK_RESPONSE_HELP);
+    gtk_button_set_focus_on_click( GTK_BUTTON( help_btn ),
+                                            FALSE );
+                                            
     set_button_states( ptask );
 
+    // table
     if ( task->type != VFS_FILE_TASK_EXEC )
         table = GTK_TABLE(gtk_table_new( 5, 2, FALSE ));
     else
