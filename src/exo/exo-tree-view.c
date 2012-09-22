@@ -654,7 +654,7 @@ exo_tree_view_leave_notify_event (GtkWidget        *widget,
     }
 
   /* reset the cursor for the tree view internal window */
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (tree_view))
     gdk_window_set_cursor (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (tree_view)), NULL);
 
   /* the next button-release-event should not activate */
@@ -700,7 +700,7 @@ exo_tree_view_move_cursor (GtkTreeView    *view,
     }
 
   /* reset the cursor for the tree view internal window */
-  if (GTK_WIDGET_REALIZED (tree_view))
+  if (gtk_widget_get_realized (tree_view))
     gdk_window_set_cursor (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (tree_view)), NULL);
 
   /* call the parent's handler */

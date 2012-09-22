@@ -1607,7 +1607,7 @@ exo_icon_view_size_allocate (GtkWidget     *widget,
   /* move/resize the clipping window, the icons window
    * will be handled by exo_icon_view_layout().
    */
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gdk_window_move_resize (widget->window, allocation->x, allocation->y, allocation->width, allocation->height);
 
   /* layout the items */
@@ -1653,7 +1653,7 @@ exo_icon_view_style_set (GtkWidget *widget,
   (*GTK_WIDGET_CLASS (exo_icon_view_parent_class)->style_set) (widget, previous_style);
 
   /* apply the new style for the bin_window if we're realized */
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gdk_window_set_background (icon_view->priv->bin_window, &widget->style->base[widget->state]);
 }
 
@@ -2055,7 +2055,7 @@ exo_icon_view_put (ExoIconView     *icon_view,
   icon_view->priv->children = g_list_append (icon_view->priv->children, child);
 
   /* setup the parent for the child */
-  if (GTK_WIDGET_REALIZED (icon_view))
+  if (gtk_widget_get_realized (icon_view))
     gtk_widget_set_parent_window (child->widget, icon_view->priv->bin_window);
   gtk_widget_set_parent (widget, GTK_WIDGET (icon_view));
 }
@@ -2544,7 +2544,7 @@ exo_icon_view_leave_notify_event (GtkWidget        *widget,
                                   GdkEventCrossing *event)
 {
   /* reset cursor to default */
-  if (GTK_WIDGET_REALIZED (widget))
+  if (gtk_widget_get_realized (widget))
     gdk_window_set_cursor (widget->window, NULL);
 
   /* call the parent's leave_notify_event (if any) */
@@ -2992,7 +2992,7 @@ static void
 exo_icon_view_adjustment_changed (GtkAdjustment *adjustment,
                                   ExoIconView   *icon_view)
 {
-  if (GTK_WIDGET_REALIZED (icon_view))
+  if (gtk_widget_get_realized (icon_view))
     {
       gdk_window_move (icon_view->priv->bin_window, -icon_view->priv->hadjustment->value, -icon_view->priv->vadjustment->value);
 
@@ -3383,7 +3383,7 @@ exo_icon_view_layout (ExoIconView *icon_view)
   exo_icon_view_set_adjustment_upper (priv->hadjustment, priv->width);
   exo_icon_view_set_adjustment_upper (priv->vadjustment, priv->height);
 
-  if (GTK_WIDGET_REALIZED (icon_view))
+  if (gtk_widget_get_realized (icon_view))
     {
       gdk_window_resize (priv->bin_window,
                          MAX (priv->width, GTK_WIDGET (icon_view)->allocation.width),
@@ -3934,7 +3934,7 @@ exo_icon_view_row_deleted (GtkTreeModel *model,
         g_source_remove (icon_view->priv->single_click_timeout_id);
 
       /* in single click mode, we also reset the cursor when realized */
-      if (G_UNLIKELY (icon_view->priv->single_click && GTK_WIDGET_REALIZED (icon_view)))
+      if (G_UNLIKELY (icon_view->priv->single_click && gtk_widget_get_realized (icon_view)))
         gdk_window_set_cursor (icon_view->priv->bin_window, NULL);
     }
 
@@ -5295,7 +5295,7 @@ exo_icon_view_set_model (ExoIconView  *icon_view,
         g_source_remove (icon_view->priv->single_click_timeout_id);
 
       /* reset cursor when in single click mode and realized */
-      if (G_UNLIKELY (icon_view->priv->single_click && GTK_WIDGET_REALIZED (icon_view)))
+      if (G_UNLIKELY (icon_view->priv->single_click && gtk_widget_get_realized (icon_view)))
         gdk_window_set_cursor (icon_view->priv->bin_window, NULL);
     }
 
@@ -5366,7 +5366,7 @@ exo_icon_view_set_model (ExoIconView  *icon_view,
   /* notify listeners */
   g_object_notify (G_OBJECT (icon_view), "model");
 
-  if (GTK_WIDGET_REALIZED (icon_view))
+  if (gtk_widget_get_realized (icon_view))
     gtk_widget_queue_resize (GTK_WIDGET (icon_view));
 }
 
@@ -6012,7 +6012,7 @@ exo_icon_view_scroll_to_path (ExoIconView *icon_view,
   g_return_if_fail (col_align >= 0.0 && col_align <= 1.0);
 
   /* Delay scrolling if either not realized or pending layout() */
-  if (!GTK_WIDGET_REALIZED (icon_view) || icon_view->priv->layout_idle_id != 0)
+  if (!gtk_widget_get_realized (icon_view) || icon_view->priv->layout_idle_id != 0)
     {
       /* release the previous scroll_to_path reference */
       if (G_UNLIKELY (icon_view->priv->scroll_to_path != NULL))
@@ -7522,7 +7522,7 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
   g_return_val_if_fail (gtk_tree_path_get_depth (path) > 0, NULL);
 
   /* verify that the widget is realized */
-  if (G_UNLIKELY (!GTK_WIDGET_REALIZED (icon_view)))
+  if (G_UNLIKELY (!gtk_widget_get_realized (icon_view)))
     return NULL;
 
   index = gtk_tree_path_get_indices (path)[0];

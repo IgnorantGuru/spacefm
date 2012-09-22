@@ -6097,7 +6097,7 @@ void fm_main_window_start_busy_task( FMMainWindow* main_window )
     {
         // Create busy cursor
         cursor = gdk_cursor_new_for_display( gtk_widget_get_display( GTK_WIDGET(main_window) ), GDK_WATCH );
-        if ( ! GTK_WIDGET_REALIZED( GTK_WIDGET( main_window ) ) )
+        if ( ! gtk_widget_get_realized( GTK_WIDGET( main_window ) ) )
             gtk_widget_realize( GTK_WIDGET( main_window ) );
         gdk_window_set_cursor ( GTK_WIDGET( main_window ) ->window, cursor );
         gdk_cursor_unref( cursor );

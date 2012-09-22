@@ -463,7 +463,7 @@ void desktop_window_set_pixmap( DesktopWindow* win, GdkPixmap* pix )
         g_object_unref( win->background );
     win->background = pix ? g_object_ref( pix ) : NULL;
 
-    if( GTK_WIDGET_REALIZED( win ) )
+    if( gtk_widget_get_realized( win ) )
         gdk_window_set_back_pixmap( ((GtkWidget*)win)->window, win->background, FALSE );
 }
 
@@ -2654,7 +2654,7 @@ void desktop_window_set_single_click( DesktopWindow* win, gboolean single_click 
     {
         gdk_cursor_unref( win->hand_cursor );
         win->hand_cursor = NULL;
-        if( GTK_WIDGET_REALIZED(win) )
+        if( gtk_widget_get_realized(win) )
             gdk_window_set_cursor( ((GtkWidget*)win)->window, NULL );
     }
 }
