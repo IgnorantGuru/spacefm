@@ -416,7 +416,7 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
     GList* l;
     GdkRectangle intersect;
 
-    if( G_UNLIKELY( ! gtk_widget_get_visible (w) || ! GTK_WIDGET_MAPPED (w) ) )
+    if( G_UNLIKELY( ! gtk_widget_get_visible (w) || ! gtk_widget_get_mapped (w) ) )
         return TRUE;
 /*
     gdk_draw_drawable( w->window, self->gc,
