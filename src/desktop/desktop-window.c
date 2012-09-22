@@ -296,7 +296,7 @@ static void desktop_window_init(DesktopWindow *self)
     g_object_ref_sink(self->icon_render);
 #else
     g_object_ref( self->icon_render );
-    gtk_object_sink(self->icon_render);
+    g_object_ref_sink(self->icon_render);
 #endif
     pc = gtk_widget_get_pango_context( (GtkWidget*)self );
     self->pl = gtk_widget_create_pango_layout( (GtkWidget*)self, NULL );
