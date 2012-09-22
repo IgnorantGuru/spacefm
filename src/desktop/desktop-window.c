@@ -416,7 +416,7 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
     GList* l;
     GdkRectangle intersect;
 
-    if( G_UNLIKELY( ! GTK_WIDGET_VISIBLE (w) || ! GTK_WIDGET_MAPPED (w) ) )
+    if( G_UNLIKELY( ! gtk_widget_get_visible (w) || ! GTK_WIDGET_MAPPED (w) ) )
         return TRUE;
 /*
     gdk_draw_drawable( w->window, self->gc,
@@ -474,7 +474,7 @@ void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr )
         win->bg = *clr;
         gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
                             &win->bg );
-        if( GTK_WIDGET_VISIBLE(win) )
+        if( gtk_widget_get_visible(win) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
 }
@@ -495,7 +495,7 @@ void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor*
             gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
                                 &win->shadow );
         }
-        if( GTK_WIDGET_VISIBLE(win) )
+        if( gtk_widget_get_visible(win) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
 }
@@ -2165,7 +2165,7 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
         	g_object_unref( item->icon );
 		item->icon = vfs_file_info_get_big_icon( file );
 		*/
-        if( GTK_WIDGET_VISIBLE( w ) )
+        if( gtk_widget_get_visible( w ) )
         {
             /* redraw the item */
             redraw_item( self, item );

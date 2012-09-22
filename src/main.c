@@ -707,7 +707,7 @@ static void open_in_tab( FMMainWindow** main_window, const char* real_path )
                 set->b = XSET_B_TRUE;
                 show_panels_all_windows( NULL, *main_window );
             }
-            else if ( !GTK_WIDGET_VISIBLE( (*main_window)->panel[panel-1] ) )
+            else if ( !gtk_widget_get_visible( (*main_window)->panel[panel-1] ) )
             {
                 // show panel
                 set = xset_get_panel( panel, "show" );
@@ -876,7 +876,7 @@ gboolean handle_parsed_commandline_args()
             if ( panel > 0 && panel < 5 )
             {
                 // user specified a panel with no file, let's show the panel
-                if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel-1] ) )
+                if ( !gtk_widget_get_visible( main_window->panel[panel-1] ) )
                 {
                     // show panel
                     set = xset_get_panel( panel, "show" );

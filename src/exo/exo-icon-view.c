@@ -1552,7 +1552,7 @@ exo_icon_view_size_request (GtkWidget      *widget,
   for (lp = priv->children; lp != NULL; lp = lp->next)
     {
       child = lp->data;
-      if (GTK_WIDGET_VISIBLE (child->widget))
+      if (gtk_widget_get_visible (child->widget))
         gtk_widget_size_request (child->widget, &child_requisition);
     }
 }
@@ -8342,7 +8342,7 @@ exo_icon_view_search_start (ExoIconView *icon_view,
     return FALSE;
 
   /* check if we already display the search window */
-  if (icon_view->priv->search_window != NULL && GTK_WIDGET_VISIBLE (icon_view->priv->search_window))
+  if (icon_view->priv->search_window != NULL && gtk_widget_get_visible (icon_view->priv->search_window))
     return TRUE;
 
   /* we only start interactive search if we have focus,

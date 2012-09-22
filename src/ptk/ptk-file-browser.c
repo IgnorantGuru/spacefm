@@ -6310,7 +6310,7 @@ void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, in
         default:
             return;
     }
-    if ( GTK_WIDGET_VISIBLE( widget ) )
+    if ( gtk_widget_get_visible( widget ) )
         gtk_widget_grab_focus( GTK_WIDGET( widget ) );
 }
 

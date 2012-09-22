@@ -1161,7 +1161,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     for ( l = all_windows; l; l = l->next )
     {
         a_window = (FMMainWindow*)l->data;
-        if ( GTK_WIDGET_VISIBLE( a_window->panel[p-1] ) )
+        if ( gtk_widget_get_visible( a_window->panel[p-1] ) )
         {
             notebook = a_window->panel[p-1];
             cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK( notebook ) );
@@ -1237,7 +1237,7 @@ void focus_panel( GtkMenuItem* item, gpointer mw, int p )
         
     if ( panel > 0 && panel < 5 )
     {
-        if ( GTK_WIDGET_VISIBLE( main_window->panel[panel-1] ) )
+        if ( gtk_widget_get_visible( main_window->panel[panel-1] ) )
         {
             gtk_widget_grab_focus( GTK_WIDGET( main_window->panel[panel-1] ) );
             main_window->curpanel = panel;
@@ -1307,7 +1307,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     PtkFileBrowser* file_browser;
 
     // show panelbar
-    if ( !!GTK_WIDGET_VISIBLE( main_window->panelbar ) != !!xset_get_b( "main_pbar" ) )
+    if ( !!gtk_widget_get_visible( main_window->panelbar ) != !!xset_get_b( "main_pbar" ) )
     {
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( GTK_WIDGET( main_window->panelbar ) );
@@ -2137,7 +2137,7 @@ char* main_window_get_panel_cwd( PtkFileBrowser* file_browser, int panel_num )
                 panel_x = 4;
             if ( panel_x == file_browser->mypanel )
                 return NULL;
-        } while ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) );
+        } while ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) );
     }
     else if ( panel_num == -2 ) // next
     {
@@ -2147,12 +2147,12 @@ char* main_window_get_panel_cwd( PtkFileBrowser* file_browser, int panel_num )
                 panel_x = 1;
             if ( panel_x == file_browser->mypanel )
                 return NULL;
-        } while ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) );
+        } while ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) );
     }
     else
     {
         panel_x = panel_num;
-        if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) )
+        if ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) )
             return NULL;
     }
     
@@ -2178,7 +2178,7 @@ void main_window_open_in_panel( PtkFileBrowser* file_browser, int panel_num,
                 panel_x = 4;
             if ( panel_x == file_browser->mypanel )
                 return;
-        } while ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) );
+        } while ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) );
     }
     else if ( panel_num == -2 ) // next
     {
@@ -2188,7 +2188,7 @@ void main_window_open_in_panel( PtkFileBrowser* file_browser, int panel_num,
                 panel_x = 1;
             if ( panel_x == file_browser->mypanel )
                 return;
-        } while ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) );
+        } while ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) );
     }
     else
     {
@@ -2199,7 +2199,7 @@ void main_window_open_in_panel( PtkFileBrowser* file_browser, int panel_num,
         return;
 
     // show panel
-    if ( !GTK_WIDGET_VISIBLE( main_window->panel[panel_x - 1] ) )
+    if ( !gtk_widget_get_visible( main_window->panel[panel_x - 1] ) )
     {
         xset_set_b_panel( panel_x, "show", TRUE );
         show_panels_all_windows( NULL, main_window );
@@ -2229,7 +2229,7 @@ gboolean main_window_panel_is_visible( PtkFileBrowser* file_browser, int panel )
     if ( panel < 1 || panel > 4 )
         return FALSE;
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
-    return GTK_WIDGET_VISIBLE( main_window->panel[panel - 1] );
+    return gtk_widget_get_visible( main_window->panel[panel - 1] );
 }
 
 void main_window_get_counts( PtkFileBrowser* file_browser, int* panel_count,
@@ -2247,7 +2247,7 @@ void main_window_get_counts( PtkFileBrowser* file_browser, int* panel_count,
     int i;
     for ( i = 0; i < 4; i++ )
     {
-        if ( GTK_WIDGET_VISIBLE( main_window->panel[i] ) )
+        if ( gtk_widget_get_visible( main_window->panel[i] ) )
             count++;
     }
     *panel_count = count;
@@ -3814,7 +3814,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
         }
         else
             continue;
-        if ( !a_browser || !GTK_WIDGET_VISIBLE( a_browser ) )
+        if ( !a_browser || !gtk_widget_get_visible( a_browser ) )
             continue;
 
         panel_count++;
@@ -3969,7 +3969,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
         }
         else
             continue;
-        if ( !a_browser || !GTK_WIDGET_VISIBLE( a_browser ) )
+        if ( !a_browser || !gtk_widget_get_visible( a_browser ) )
             continue;
 
         // cwd
@@ -5485,7 +5485,7 @@ static void on_show_history_menu( GtkMenuToolButton* btn, FMMainWindow* main_win
 static gboolean
 fm_main_window_edit_address ( FMMainWindow* main_window )
 {
-    if ( GTK_WIDGET_VISIBLE( main_window->toolbar ) )
+    if ( gtk_widget_get_visible( main_window->toolbar ) )
         gtk_widget_grab_focus( GTK_WIDGET( main_window->address_bar ) );
     else
         fm_go( main_window );

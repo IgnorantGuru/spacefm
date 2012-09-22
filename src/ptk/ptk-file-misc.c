@@ -756,7 +756,7 @@ void select_input( GtkWidget* widget, MoveSet* mset )
         GtkTextIter iter, siter;
         GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( widget ) );
         if ( widget == GTK_WIDGET( mset->input_full_name )
-                && !GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_name ) ) )
+                && !gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
         {
             // name is not visible so select name in filename
             gtk_text_buffer_get_start_iter( mset->buf_full_name, &siter );
@@ -801,21 +801,21 @@ static gboolean on_button_focus( GtkWidget* widget, GtkDirectionType direction,
                                                     widget == mset->opt_new_file )
         {
             GtkWidget* input = NULL;
-            if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_name ) ) )
+            if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
                 input = mset->input_name;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_name ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
                 input = mset->input_full_name;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_path ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
                 input = mset->input_path;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_path ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
                 input = mset->input_full_path;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET(
                                                         mset->entry_target ) ) ) )
                 input = GTK_WIDGET( mset->entry_target );
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET(
                                                         mset->combo_template ) ) ) )
                 input = GTK_WIDGET( mset->combo_template );
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( GTK_WIDGET(
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET(
                                                         mset->combo_template_dir ) ) ) )
                 input = GTK_WIDGET( mset->combo_template_dir );
             if ( input )
@@ -827,13 +827,13 @@ static gboolean on_button_focus( GtkWidget* widget, GtkDirectionType direction,
         else
         {
             GtkWidget* input = NULL;
-            if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_path ) ) )
+            if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
                 input = mset->input_full_path;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_path ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
                 input = mset->input_path;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_name ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
                 input = mset->input_full_name;
-            else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_name ) ) )
+            else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
                 input = mset->input_name;
             if ( input )
             {
@@ -1259,13 +1259,13 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
         gtk_widget_hide( mset->opt_as_root );
     }
     
-    if ( !GTK_WIDGET_VISIBLE( mset->opt_copy )
-            && !GTK_WIDGET_VISIBLE( mset->opt_link )
-            && !GTK_WIDGET_VISIBLE( mset->opt_copy_target )
-            && !GTK_WIDGET_VISIBLE( mset->opt_link_target ) )
+    if ( !gtk_widget_get_visible( mset->opt_copy )
+            && !gtk_widget_get_visible( mset->opt_link )
+            && !gtk_widget_get_visible( mset->opt_copy_target )
+            && !gtk_widget_get_visible( mset->opt_link_target ) )
     {
         gtk_widget_hide( mset->opt_move );
-        opts_visible = GTK_WIDGET_VISIBLE( mset->opt_as_root );
+        opts_visible = gtk_widget_get_visible( mset->opt_as_root );
     }
     else
     {
@@ -1374,15 +1374,15 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     
     if ( opts_visible )
     {
-        if ( GTK_WIDGET_VISIBLE( mset->hbox_type ) )
+        if ( gtk_widget_get_visible( mset->hbox_type ) )
         {}
-        else if ( GTK_WIDGET_VISIBLE( mset->label_full_path ) )
+        else if ( gtk_widget_get_visible( mset->label_full_path ) )
         {}
-        else if ( GTK_WIDGET_VISIBLE( mset->blank_path ) )
+        else if ( gtk_widget_get_visible( mset->blank_path ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_path ) );
-        else if ( GTK_WIDGET_VISIBLE( mset->blank_full_name ) )
+        else if ( gtk_widget_get_visible( mset->blank_full_name ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_full_name ) );
-        else if ( GTK_WIDGET_VISIBLE( mset->blank_name ) )
+        else if ( gtk_widget_get_visible( mset->blank_name ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_name ) );
     }
 }
@@ -1498,7 +1498,7 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
             input = mset->input_name;
         else if ( widget == GTK_WIDGET( mset->label_full_name ) )
         {
-            if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( 
+            if ( gtk_widget_get_visible( gtk_widget_get_parent( 
                                 GTK_WIDGET( mset->entry_ext ) ) ) 
                                 && gtk_widget_get_sensitive(
                                 GTK_WIDGET( mset->entry_ext ) ) )
@@ -1514,7 +1514,7 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
             input = mset->input_full_path;
         
         first_input = input;
-        while ( input && !GTK_WIDGET_VISIBLE( gtk_widget_get_parent( input ) ) )
+        while ( input && !gtk_widget_get_visible( gtk_widget_get_parent( input ) ) )
         {
             input2 = NULL;
             if ( input == GTK_WIDGET( mset->combo_template_dir ) )
@@ -1541,7 +1541,7 @@ static gboolean on_label_focus( GtkWidget* widget, GtkDirectionType direction, M
                 input2 = mset->input_full_name;
             else if ( input == mset->input_full_name )
             {
-                if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( 
+                if ( gtk_widget_get_visible( gtk_widget_get_parent( 
                             GTK_WIDGET( mset->entry_ext ) ) ) 
                             && gtk_widget_get_sensitive( 
                             GTK_WIDGET( mset->entry_ext ) ) )
@@ -2532,15 +2532,15 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     else
         mset->last_widget = mset->input_full_name;
 
-    if ( !GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->last_widget ) ) )
+    if ( !gtk_widget_get_visible( gtk_widget_get_parent( mset->last_widget ) ) )
     {
-        if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_name ) ) )
+        if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
             mset->last_widget = mset->input_name;
-        else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_name ) ) )
+        else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
             mset->last_widget = mset->input_full_name;
-        else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_path ) ) )
+        else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
             mset->last_widget = mset->input_path;
-        else if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent( mset->input_full_path ) ) )
+        else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
             mset->last_widget = mset->input_full_path;
     }
     
@@ -2714,7 +2714,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             else if ( create_new && new_file )
             {
                 // new file task
-                if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent(
+                if ( gtk_widget_get_visible( gtk_widget_get_parent(
                                         GTK_WIDGET( mset->combo_template ) ) ) )
                 {
                     str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
@@ -2791,7 +2791,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 // new folder task
                 if ( !new_folder )
                     goto _continue_free;  // failsafe
-                if ( GTK_WIDGET_VISIBLE( gtk_widget_get_parent(
+                if ( gtk_widget_get_visible( gtk_widget_get_parent(
                                         GTK_WIDGET( mset->combo_template_dir ) ) ) )
                 {
                     str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
