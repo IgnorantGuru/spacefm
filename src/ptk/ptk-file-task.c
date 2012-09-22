@@ -1198,7 +1198,7 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
             string_copy_free( &task->current_file, NULL );
         ptask->progress_count = 50;  // trigger fast display
         g_mutex_unlock( task->mutex );
-        //gtk_signal_emit_by_name( GTK_OBJECT( ptask->signal_widget ), "task-notify",
+        //gtk_signal_emit_by_name( G_OBJECT( ptask->signal_widget ), "task-notify",
         //                                                                 ptask );
         break;
     case VFS_FILE_TASK_QUERY_OVERWRITE:

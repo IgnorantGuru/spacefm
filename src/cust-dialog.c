@@ -481,7 +481,7 @@ static void fill_tree_view( CustomElement* el, GList* arglist )
                     gtk_tree_view_column_pack_start( col, renderer, TRUE );
                     gtk_tree_view_column_set_attributes( col, renderer,
                                          "text", colcount - 1, NULL );
-                    g_object_set( GTK_OBJECT( renderer ),
+                    g_object_set( G_OBJECT( renderer ),
                                 /*"editable", TRUE,*/
                                 "ellipsize", PANGO_ELLIPSIZE_END, NULL );
                     break;

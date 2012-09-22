@@ -3913,7 +3913,7 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
 
         if ( cols[j] == COL_FILE_NAME )
         {
-            g_object_set( GTK_OBJECT( renderer ),
+            g_object_set( G_OBJECT( renderer ),
                             /* "editable", TRUE, */
                             "ellipsize", PANGO_ELLIPSIZE_END, NULL );
             /*
