@@ -5007,7 +5007,7 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
         {
             // Icon and Text
             renderer = gtk_cell_renderer_text_new();
-            //gtk_object_set( GTK_OBJECT( renderer ),
+            //g_object_set( GTK_OBJECT( renderer ),
                                 /* "editable", TRUE, */
             //                    "ellipsize", PANGO_ELLIPSIZE_END, NULL );
             pix_renderer = gtk_cell_renderer_pixbuf_new();
