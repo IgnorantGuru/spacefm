@@ -430,7 +430,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
 
     if ( PTK_FILE_ICON_RENDERER( cell ) ->follow_state )
     {
-        if ( GTK_WIDGET_STATE ( widget ) == GTK_STATE_INSENSITIVE || !cell->sensitive )
+        if ( gtk_widget_get_state ( widget ) == GTK_STATE_INSENSITIVE || !cell->sensitive )
         {
             GtkIconSource * source;
 

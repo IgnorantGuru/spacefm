@@ -1772,7 +1772,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
         {
         case EXO_ICON_VIEW_DROP_INTO:
           gtk_paint_focus (widget->style, priv->bin_window,
-                           GTK_WIDGET_STATE (widget), NULL, widget,
+                           gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y,
                            dest_item->area.width, dest_item->area.height);
@@ -1780,7 +1780,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
 
         case EXO_ICON_VIEW_DROP_ABOVE:
           gtk_paint_focus (widget->style, priv->bin_window,
-                           GTK_WIDGET_STATE (widget), NULL, widget,
+                           gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y - 1,
                            dest_item->area.width, 2);
@@ -1788,7 +1788,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
 
         case EXO_ICON_VIEW_DROP_LEFT:
           gtk_paint_focus (widget->style, priv->bin_window,
-                           GTK_WIDGET_STATE (widget), NULL, widget,
+                           gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x - 1, dest_item->area.y,
                            2, dest_item->area.height);
@@ -1796,7 +1796,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
 
         case EXO_ICON_VIEW_DROP_BELOW:
           gtk_paint_focus (widget->style, priv->bin_window,
-                           GTK_WIDGET_STATE (widget), NULL, widget,
+                           gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y + dest_item->area.height - 1,
                            dest_item->area.width, 2);
@@ -1804,7 +1804,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
 
         case EXO_ICON_VIEW_DROP_RIGHT:
           gtk_paint_focus (widget->style, priv->bin_window,
-                           GTK_WIDGET_STATE (widget), NULL, widget,
+                           gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x + dest_item->area.width - 1, dest_item->area.y,
                            2, dest_item->area.height);
@@ -7538,7 +7538,7 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
                                      -1);
 
           gc = gdk_gc_new (drawable);
-          gdk_gc_set_rgb_fg_color (gc, &widget->style->base[GTK_WIDGET_STATE (widget)]);
+          gdk_gc_set_rgb_fg_color (gc, &widget->style->base[gtk_widget_get_state (widget)]);
           gdk_draw_rectangle (drawable, gc, TRUE, 0, 0, item->area.width + 2, item->area.height + 2);
 
           area.x = 0;

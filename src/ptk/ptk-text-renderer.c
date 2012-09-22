@@ -946,13 +946,13 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
             state = GTK_STATE_ACTIVE;
     }
     else if ( ( flags & GTK_CELL_RENDERER_PRELIT ) == GTK_CELL_RENDERER_PRELIT &&
-              GTK_WIDGET_STATE ( widget ) == GTK_STATE_PRELIGHT )
+              gtk_widget_get_state ( widget ) == GTK_STATE_PRELIGHT )
     {
         state = GTK_STATE_PRELIGHT;
     }
     else
     {
-        if ( GTK_WIDGET_STATE ( widget ) == GTK_STATE_INSENSITIVE )
+        if ( gtk_widget_get_state ( widget ) == GTK_STATE_INSENSITIVE )
             state = GTK_STATE_INSENSITIVE;
         else
             state = GTK_STATE_NORMAL;
@@ -972,7 +972,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         /* draw the focus */
         if(flags & GTK_CELL_RENDERER_FOCUSED)
         {
-            gtk_paint_focus( widget->style, window, GTK_WIDGET_STATE (widget),
+            gtk_paint_focus( widget->style, window, gtk_widget_get_state (widget),
                            NULL, widget, "icon_view",
                            cell_area->x + x_offset - focus_width,
                            cell_area->y + y_offset - focus_width,
