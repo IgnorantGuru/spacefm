@@ -1167,7 +1167,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     forward_event_to_rootwin( gtk_widget_get_screen(w), (GdkEvent*)evt );
 
 out:
-    if( ! GTK_WIDGET_HAS_FOCUS(w) )
+    if( ! gtk_widget_has_focus(w) )
     {
         /* g_debug( "we don't have the focus, grab it!" ); */
         gtk_widget_grab_focus( w );
@@ -2241,7 +2241,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         --text_rect.y;
     }
 
-    if( self->focus == item && GTK_WIDGET_HAS_FOCUS(widget) )
+    if( self->focus == item && gtk_widget_has_focus(widget) )
     {
         gtk_paint_focus( widget->style, widget->window,
                         GTK_STATE_NORMAL,/*item->is_selected ? GTK_STATE_SELECTED : GTK_STATE_NORMAL,*/

@@ -2078,7 +2078,7 @@ exo_icon_view_remove_widget (GtkCellEditable *editable,
       for (lp = icon_view->priv->cell_list; lp != NULL; lp = lp->next)
         ((ExoIconViewCellInfo *) lp->data)->editing = FALSE;
 
-      if (GTK_WIDGET_HAS_FOCUS (editable))
+      if (gtk_widget_has_focus (editable))
         gtk_widget_grab_focus (GTK_WIDGET (icon_view));
 
       g_signal_handlers_disconnect_by_func (editable, exo_icon_view_remove_widget, icon_view);
@@ -2214,7 +2214,7 @@ exo_icon_view_button_press_event (GtkWidget      *widget,
   if (G_UNLIKELY (icon_view->priv->single_click_timeout_id != 0))
     g_source_remove (icon_view->priv->single_click_timeout_id);
 
-  if (G_UNLIKELY (!GTK_WIDGET_HAS_FOCUS (widget)))
+  if (G_UNLIKELY (!gtk_widget_has_focus (widget)))
     gtk_widget_grab_focus (widget);
 
   if (event->button == 1 && event->type == GDK_BUTTON_PRESS)
@@ -2339,7 +2339,7 @@ exo_icon_view_button_press_event (GtkWidget      *widget,
   /* grab focus and stop drawing the keyboard focus indicator on single clicks */
   if (G_LIKELY (event->type != GDK_2BUTTON_PRESS && event->type != GDK_3BUTTON_PRESS))
     {
-      if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+      if (!gtk_widget_has_focus (icon_view))
         gtk_widget_grab_focus (GTK_WIDGET (icon_view));
       EXO_ICON_VIEW_UNSET_FLAG (icon_view, EXO_ICON_VIEW_DRAW_KEYFOCUS);
     }
@@ -3617,7 +3617,7 @@ exo_icon_view_paint_item (ExoIconView     *icon_view,
   if (item->selected)
     {
       flags = GTK_CELL_RENDERER_SELECTED;
-      state = GTK_WIDGET_HAS_FOCUS (icon_view) ? GTK_STATE_SELECTED : GTK_STATE_ACTIVE;
+      state = gtk_widget_has_focus (icon_view) ? GTK_STATE_SELECTED : GTK_STATE_ACTIVE;
     }
   else
     {
@@ -4046,7 +4046,7 @@ exo_icon_view_real_move_cursor (ExoIconView     *icon_view,
                            step == GTK_MOVEMENT_PAGES ||
                            step == GTK_MOVEMENT_BUFFER_ENDS, FALSE);
 
-  if (!GTK_WIDGET_HAS_FOCUS (GTK_WIDGET (icon_view)))
+  if (!gtk_widget_has_focus (GTK_WIDGET (icon_view)))
     return FALSE;
 
   exo_icon_view_stop_editing (icon_view, FALSE);
@@ -4266,7 +4266,7 @@ exo_icon_view_move_cursor_up_down (ExoIconView *icon_view,
   gint             cell = -1;
   gint             step;
 
-  if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+  if (!gtk_widget_has_focus (icon_view))
     return;
 
   if (!icon_view->priv->cursor_item)
@@ -4359,7 +4359,7 @@ exo_icon_view_move_cursor_page_up_down (ExoIconView *icon_view,
   ExoIconViewItem *item;
   gboolean dirty = FALSE;
 
-  if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+  if (!gtk_widget_has_focus (icon_view))
     return;
 
   if (!icon_view->priv->cursor_item)
@@ -4416,7 +4416,7 @@ exo_icon_view_move_cursor_left_right (ExoIconView *icon_view,
   gint             cell = -1;
   gint             step;
 
-  if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+  if (!gtk_widget_has_focus (icon_view))
     return;
 
   if (!icon_view->priv->cursor_item)
@@ -4514,7 +4514,7 @@ exo_icon_view_move_cursor_start_end (ExoIconView *icon_view,
   gboolean         dirty = FALSE;
   GList           *lp;
 
-  if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+  if (!gtk_widget_has_focus (icon_view))
     return;
 
   lp = (count < 0) ? icon_view->priv->items : g_list_last (icon_view->priv->items);
@@ -7760,7 +7760,7 @@ exo_icon_view_single_click_timeout (gpointer user_data)
   GDK_THREADS_ENTER ();
 
   /* verify that we are in single-click mode, have focus and a prelit item */
-  if (GTK_WIDGET_HAS_FOCUS (icon_view) && icon_view->priv->single_click && icon_view->priv->prelit_item != NULL)
+  if (gtk_widget_has_focus (icon_view) && icon_view->priv->single_click && icon_view->priv->prelit_item != NULL)
     {
       /* work on the prelit item */
       item = icon_view->priv->prelit_item;
@@ -8349,7 +8349,7 @@ exo_icon_view_search_start (ExoIconView *icon_view,
    * we don't want to start interactive search if one of
    * our children has the focus.
    */
-  if (!GTK_WIDGET_HAS_FOCUS (icon_view))
+  if (!gtk_widget_has_focus (icon_view))
     return FALSE;
 
   /* verify that we have a search column */

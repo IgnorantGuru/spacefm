@@ -725,7 +725,7 @@ exo_tree_view_single_click_timeout (gpointer user_data)
   //GDK_THREADS_ENTER ();  //sfm not needed because called from g_idle?
 
   /* verify that we are in single-click mode, have focus and a hover path */
-  if (GTK_WIDGET_HAS_FOCUS (tree_view) && tree_view->priv->single_click && tree_view->priv->hover_path != NULL)
+  if (gtk_widget_has_focus (tree_view) && tree_view->priv->single_click && tree_view->priv->hover_path != NULL)
     {
       /* transform the hover_path to a tree iterator */
       model = gtk_tree_view_get_model (GTK_TREE_VIEW (tree_view));
