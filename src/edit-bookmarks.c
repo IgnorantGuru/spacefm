@@ -219,16 +219,16 @@ gboolean edit_bookmarks( GtkWindow* parent )
     gtk_button_box_set_layout ( GTK_BUTTON_BOX(btn_box), GTK_BUTTONBOX_START );
     add_btn = gtk_button_new_from_stock ( GTK_STOCK_ADD );
     g_signal_connect( add_btn, "clicked", G_CALLBACK(on_add), dlg );
-    gtk_box_pack_start_defaults ( GTK_BOX(btn_box), add_btn );
+    gtk_box_pack_start ( GTK_BOX(btn_box), add_btn, TRUE, TRUE, 0 );
 
     delete_btn = gtk_button_new_from_stock ( GTK_STOCK_DELETE );
     g_signal_connect( delete_btn, "clicked", G_CALLBACK(on_delete), dlg );
-    gtk_box_pack_start_defaults ( GTK_BOX(btn_box), delete_btn );
+    gtk_box_pack_start ( GTK_BOX(btn_box), delete_btn, TRUE, TRUE, 0 );
 
-    gtk_box_pack_start( GTK_BOX(GTK_DIALOG(dlg)->vbox), btn_box,
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg)->vbox )), btn_box,
                         FALSE, FALSE, 4 );
-    gtk_box_pack_start_defaults( GTK_BOX(GTK_DIALOG(dlg)->vbox), scroll );
-    gtk_box_pack_start( GTK_BOX(GTK_DIALOG(dlg)->vbox),
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg) )), scroll, TRUE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg) )),
                         gtk_label_new(_("Use drag & drop to sort the items")),
                         FALSE, FALSE, 4 );
 
