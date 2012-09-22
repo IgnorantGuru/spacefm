@@ -343,7 +343,7 @@ static void desktop_window_init(DesktopWindow *self)
         g_signal_connect( self->dir, "file-changed", G_CALLBACK( on_file_changed ), self );
         g_signal_connect( self->dir, "thumbnail-loaded", G_CALLBACK( on_thumbnail_loaded ), self );
     }
-    GTK_WIDGET_SET_FLAGS( (GtkWidget*)self, GTK_CAN_FOCUS );
+    gtk_widget_set_can_focus ( (GtkWidget*)self, TRUE );
 
     gtk_widget_set_app_paintable(  (GtkWidget*)self, TRUE );
 /*    gtk_widget_set_double_buffered(  (GtkWidget*)self, FALSE ); */
@@ -1818,7 +1818,7 @@ void on_realize( GtkWidget* w )
 gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt )
 {
     DesktopWindow* self = (DesktopWindow*) w;
-    GTK_WIDGET_SET_FLAGS( w, GTK_HAS_FOCUS );
+    gtk_widget_grab_focus( w );
     if( self->focus )
         redraw_item( self, self->focus );
     return FALSE;
@@ -1829,7 +1829,6 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     DesktopWindow* self = (DesktopWindow*) w;
     if( self->focus )
     {
-        GTK_WIDGET_UNSET_FLAGS( w, GTK_HAS_FOCUS );
         redraw_item( self, self->focus );
     }
     return FALSE;
