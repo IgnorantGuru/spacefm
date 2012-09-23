@@ -1666,9 +1666,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     char* icon_name;
     XSet* set;
 
-    /* Initialize parent class */
-    GTK_WINDOW( main_window )->type = GTK_WINDOW_TOPLEVEL;
-
     main_window->autosave_timer = 0;
     
     /* this is used to limit the scope of gtk_grab and modal dialogs */
@@ -1959,12 +1956,15 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
     // store width/height + sliders
     int pos;
     char* posa;
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
     
     // fullscreen?
     if ( !xset_get_b( "main_full" ) )
     {
-        app_settings.width = GTK_WIDGET( main_window ) ->allocation.width;
-        app_settings.height = GTK_WIDGET( main_window ) ->allocation.height;
+        app_settings.width = allocation.width;
+        app_settings.height = allocation.height;
         if ( GTK_IS_PANED( main_window->hpane_top ) )
         {
             pos = gtk_paned_get_position( GTK_PANED( main_window->hpane_top ) );
@@ -2719,7 +2719,6 @@ on_about_activate ( GtkMenuItem *menuitem,
     if( ! about_dlg )
     {
         GtkBuilder* builder;
-        gtk_about_dialog_set_url_hook( open_url, NULL, NULL);
 
         pcmanfm_ref();
         builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/about-dlg.ui", NULL );
@@ -2740,6 +2739,7 @@ on_about_activate ( GtkMenuItem *menuitem,
         g_object_add_weak_pointer( G_OBJECT(about_dlg), (gpointer)&about_dlg );
         g_signal_connect( about_dlg, "response", G_CALLBACK(gtk_widget_destroy), NULL );
         g_signal_connect( about_dlg, "destroy", G_CALLBACK(pcmanfm_unref), NULL );
+        g_signal_connect( about_dlg, "activate-link", G_CALLBACK(open_url), NULL );
     }
     gtk_window_set_transient_for( GTK_WINDOW( about_dlg ), GTK_WINDOW( user_data ) );
     gtk_window_present( (GtkWindow*)about_dlg );
@@ -2774,9 +2774,12 @@ on_forward_btn_popup_menu ( GtkWidget *widget,
 void fm_main_window_add_new_window( FMMainWindow* main_window )
 {
     GtkWidget * new_win = fm_main_window_new();
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation ( GTK_WIDGET( main_window ), &allocation);
     gtk_window_set_default_size( GTK_WINDOW( new_win ),
-                                 GTK_WIDGET( main_window ) ->allocation.width,
-                                 GTK_WIDGET( main_window ) ->allocation.height );
+                                 allocation.width,
+                                 allocation.height );
     gtk_widget_show( new_win );
 }
 

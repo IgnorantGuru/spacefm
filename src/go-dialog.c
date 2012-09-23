@@ -25,8 +25,8 @@ static gboolean show_go_dialog( GtkWindow* parent, char * initial_path )
     gtk_entry_set_activates_default( path_entry, TRUE );
     gtk_entry_set_text( path_entry, initial_path );
 
-    gtk_container_add( GTK_CONTAINER( dlg->vbox ), GTK_WIDGET( path_entry ) );
-    gtk_widget_show_all( dlg->vbox );
+    gtk_container_add( GTK_CONTAINER( gtk_dialog_get_content_area( dlg ) ), GTK_WIDGET( path_entry ) );
+    gtk_widget_show_all( gtk_dialog_get_content_area( dlg ) );
     gtk_widget_grab_focus( GTK_WIDGET( path_entry ) );
 
     gboolean ret = ( gtk_dialog_run( GTK_DIALOG( dlg ) ) == GTK_RESPONSE_OK );

@@ -376,10 +376,9 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
 void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
 void xset_open_url( GtkWidget* parent, const char* url );
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
-            GtkWidget* toolbar, GtkTooltips* tooltips, const char* elements );
+            GtkWidget* toolbar, const char* elements );
 GtkWidget* xset_add_toolitem( GtkWidget* parent, PtkFileBrowser* file_browser,
-                        GtkWidget* toolbar, GtkTooltips* tooltips,
-                        int icon_size, XSet* set );
+                        GtkWidget* toolbar, int icon_size, XSet* set );
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
                     int buttons, const char* msg1, const char* msg2, const char* help );
 GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,

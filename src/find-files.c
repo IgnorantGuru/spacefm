@@ -531,7 +531,7 @@ static void finish_search( FindFile* data )
         g_object_unref( data->task );
         data->task = NULL;
     }
-    gdk_window_set_cursor( data->search_result->window, NULL );
+    gdk_window_set_cursor( gtk_widget_get_window( data->search_result ), NULL );
     gtk_widget_hide( data->stop_btn );
     gtk_widget_show( data->again_btn );
 }
@@ -654,9 +654,11 @@ static void on_start_search( GtkWidget* btn, FindFile* data )
     GError* err = NULL;
     int stdo, stde;
     char* cmd_line;
+    GtkAllocation allocation;
 
-    int width = GTK_WIDGET( data->win ) ->allocation.width;
-    int height = GTK_WIDGET( data->win ) ->allocation.height;
+    gtk_widget_get_allocation ( GTK_WIDGET( data->win ), &allocation );
+    int width =  allocation.width;
+    int height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );
@@ -689,7 +691,7 @@ static void on_start_search( GtkWidget* btn, FindFile* data )
         vfs_async_task_execute( data->task );
 
         busy_cursor = gdk_cursor_new( GDK_WATCH );
-        gdk_window_set_cursor( data->search_result->window, busy_cursor );
+        gdk_window_set_cursor( gtk_widget_get_window (data->search_result), busy_cursor );
         gdk_cursor_unref( busy_cursor );
     }
     else
@@ -713,8 +715,11 @@ static void on_stop_search( GtkWidget* btn, FindFile* data )
 
 static void on_search_again( GtkWidget* btn, FindFile* data )
 {
-    int width = GTK_WIDGET( data->win ) ->allocation.width;
-    int height = GTK_WIDGET( data->win ) ->allocation.height;
+    GtkAllocation allocation;
+
+    gtk_widget_get_allocation ( GTK_WIDGET( data->win ), &allocation );
+    int width =  allocation.width;
+    int height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );
@@ -740,11 +745,14 @@ static void on_search_again( GtkWidget* btn, FindFile* data )
 
 static void menu_pos( GtkMenu* menu, int* x, int* y, gboolean *push_in, GtkWidget* btn )
 {
+    GtkAllocation allocation;
+
     /* FIXME: I'm not sure if this work well in different WMs */
-    gdk_window_get_position( btn->window, x, y);
+    gdk_window_get_position( gtk_widget_get_window( btn ), x, y);
 /*    gdk_window_get_root_origin( btn->window, x, y); */
-    *x += btn->allocation.x;
-    *y += btn->allocation.y + btn->allocation.height;
+    gtk_widget_get_allocation ( GTK_WIDGET( btn ), &allocation );
+    *x += allocation.x;
+    *y += allocation.y + allocation.height;
     *push_in = FALSE;
 }
 

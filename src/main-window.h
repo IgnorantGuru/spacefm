@@ -83,7 +83,6 @@ GtkCheckMenuItem* open_side_pane_menu;
 */
 
   GtkAccelGroup *accel_group;
-  GtkTooltips *tooltips;
 
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
