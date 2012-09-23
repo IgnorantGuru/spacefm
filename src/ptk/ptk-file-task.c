@@ -654,10 +654,10 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( ptask->scroll ) );
 
     // Pack
-    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( task->progress_dlg ) ),
+    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ),
                         GTK_WIDGET( table ),
                         FALSE, TRUE, 0 );
-    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( task->progress_dlg ) ),
+    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ),
                         GTK_WIDGET( align ),
                         TRUE, TRUE, 0 );
 
@@ -676,7 +676,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     if ( !win_height ) win_height = -1;
     gtk_window_set_default_size( GTK_WINDOW( ptask->progress_dlg ),
                                  win_width, win_height );
-    gtk_button_box_set_layout ( GTK_BUTTON_BOX ( gtk_dialog_get_action_area ( GTK_DIALOG( task->progress_dlg ) ) ),
+    gtk_button_box_set_layout ( GTK_BUTTON_BOX ( gtk_dialog_get_action_area ( GTK_DIALOG( ptask->progress_dlg ) ) ),
                                 GTK_BUTTONBOX_END );
     if ( xset_get_b( "task_pop_top" ) )
         gtk_window_set_type_hint ( GTK_WINDOW ( ptask->progress_dlg ),

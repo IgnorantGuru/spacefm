@@ -1626,7 +1626,7 @@ exo_icon_view_size_allocate (GtkWidget     *widget,
   gtk_adjustment_set_lower (hadjustment, 0);
   gtk_adjustment_set_upper (hadjustment, MAX (allocation->width, icon_view->priv->width));
   if (gtk_adjustment_get_value (hadjustment) > gtk_adjustment_get_upper(hadjustment) - gtk_adjustment_get_page_size(hadjustment))
-    gtk_adjustment_set_value (hadjustment, MAX (0, gtk_adjustment_get_upper(hadjustment) - gtk_adjustment_get_page_size(hadjustment)))
+    gtk_adjustment_set_value (hadjustment, MAX (0, gtk_adjustment_get_upper(hadjustment) - gtk_adjustment_get_page_size(hadjustment)));
 
   /* update the vertical scroll adjustment accordingly */
   vadjustment = icon_view->priv->vadjustment;
@@ -3386,7 +3386,6 @@ exo_icon_view_layout (ExoIconView *icon_view)
        */
       if (rows == priv->rows + 1 && x > allocation.width &&
           priv->width <= allocation.width)
-          priv->width <= GTK_WIDGET (icon_view)->allocation.width)
         {
           rows = exo_icon_view_layout_cols (icon_view, item_height, &x, &maximum_height, priv->rows);
         }
@@ -6640,7 +6639,7 @@ exo_icon_view_autoscroll (ExoIconView *icon_view)
   gfloat value;
 
   gdk_window_get_pointer (gtk_widget_get_window (GTK_WIDGET (icon_view)), &px, &py, NULL);
-  gdk_window_get_geometry (gtk_widget_get_window (GTK_WIDGET (icon_view)), &x, &y, &width, &height);
+  gdk_window_get_geometry (gtk_widget_get_window (GTK_WIDGET (icon_view)), &x, &y, &width, &height, NULL);
 
   /* see if we are near the edge. */
   voffset = py - (y + 2 * SCROLL_EDGE_SIZE);

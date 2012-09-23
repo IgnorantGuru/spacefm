@@ -2430,7 +2430,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                         GTK_WIDGET( mset->label_type ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_type ),
                         GTK_WIDGET( mset->label_mime ), TRUE, TRUE, 5 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) )
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->hbox_type ), FALSE, TRUE, 5 );
 
     mset->hbox_target = gtk_hbox_new( FALSE, 0 );
