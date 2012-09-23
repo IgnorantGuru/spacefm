@@ -1264,12 +1264,16 @@ Pause temporarily halts a task, putting it into a <a href="#tasks-queue">paused 
 
 <p>If the command was run as another user, such as root, selecting Pause will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGSTOP signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
 
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Pause, the new icon will also be used as the 'paused' icon in the task list.
+
 <p>You can also pause a task by clicking the Pause button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
 <!-- # Queue -->
 Selecting Queue will change the selected task's state to <a href="#tasks-queue">queued</a>.  In this state, the task is halted, but will resume automatically when other tasks complete.
 
 <p>Note that selecting Queue on a running task may seem to have no effect.  This is because the task may be queued, but then may automatically be removed from the queue and resumed by the Task Manager.  There is no way to force a task to stay in the queue (but you can <a href="#tasks-menu-pause">Pause</a> it).
+
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Queue, the new icon will also be used as the 'queued' icon in the task list.
 
 <p>You can also queue a task by clicking the Queue button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
