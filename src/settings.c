@@ -6118,7 +6118,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
 {
     int job = -1;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->active_menu_item;
+    GtkWidget* item = gtk_menu_get_active( GTK_MENU( widget ) );
     if ( !item )
         return FALSE;
     
@@ -6929,7 +6929,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     int job = -1;
     XSet* set;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->active_menu_item;
+    GtkWidget* item = gtk_menu_get_active( GTK_MENU( widget ) );
     if ( item )
     {
         set = g_object_get_data( G_OBJECT( item ), "set" );
@@ -7844,11 +7844,12 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
     GtkWidget* dlgparent = gtk_widget_get_toplevel( parent );
     GtkWidget* dlg = gtk_color_selection_dialog_new( title );
     GtkWidget* color_sel;
+    GtkWidget* help_button;
 
-    gtk_button_set_label( GTK_BUTTON( ((GtkColorSelectionDialog*)dlg)->help_button ),
-                                                                    _("_Unset") );
-    gtk_button_set_image( GTK_BUTTON( ((GtkColorSelectionDialog*)dlg)->help_button ),
-                    xset_get_image( "GTK_STOCK_REMOVE", GTK_ICON_SIZE_BUTTON ) );
+    g_object_get ( G_OBJECT ( dlg ), "help-button", &help_button, NULL);
+
+    gtk_button_set_label( GTK_BUTTON( help_button ), _("_Unset") );
+    gtk_button_set_image( GTK_BUTTON( help_button ), xset_get_image( "GTK_STOCK_REMOVE", GTK_ICON_SIZE_BUTTON ) );
 
     if ( defcolor && defcolor[0] != '\0' )
     {

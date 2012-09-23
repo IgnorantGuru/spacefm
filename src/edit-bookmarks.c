@@ -225,7 +225,7 @@ gboolean edit_bookmarks( GtkWindow* parent )
     g_signal_connect( delete_btn, "clicked", G_CALLBACK(on_delete), dlg );
     gtk_box_pack_start ( GTK_BOX(btn_box), delete_btn, TRUE, TRUE, 0 );
 
-    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg)->vbox )), btn_box,
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg) )), btn_box,
                         FALSE, FALSE, 4 );
     gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg) )), scroll, TRUE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area ( GTK_DIALOG(dlg) )),

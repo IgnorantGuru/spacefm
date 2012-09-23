@@ -67,8 +67,10 @@ static void dlg_warn( const char* msg, const char* a, const char* b )
 
 static void get_window_size( GtkWidget* dlg, int* width, int* height )
 {
-    *width = dlg->allocation.width;
-    *height = dlg->allocation.height;
+    GtkAllocation allocation;
+    gtk_widget_get_allocation( dlg, &allocation );
+    *width = allocation.width;
+    *height = allocation.height;
 }
 
 static void get_width_height_pad( char* val, int* width, int* height, int* pad )
@@ -869,7 +871,7 @@ static void set_element_value( CustomElement* el, const char* name,
                 //scroll to end if scrollbar is mostly down or new
                 GtkAdjustment* adj = gtk_scrolled_window_get_vadjustment( 
                         GTK_SCROLLED_WINDOW( el_name->widgets->next->next->data ) );
-                if ( adj->upper - adj->value < adj->page_size + 40 )
+                if ( gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_value( adj ) < gtk_adjustment_get_page_size( adj ) + 40 )
                     gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( 
                                                 el_name->widgets->next->data ),
                                           gtk_text_buffer_get_mark( buf, "end" ),
@@ -1745,7 +1747,7 @@ if ( !( cond & G_IO_NVAL ) )
             {
                 GtkAdjustment* adj = gtk_scrolled_window_get_vadjustment( 
                         GTK_SCROLLED_WINDOW( el->widgets->next->next->data ) );
-                if ( adj->upper - adj->value < adj->page_size + 40 )
+                if ( gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_value( adj ) < gtk_adjustment_get_page_size( adj ) + 40 )
                     gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( el->widgets->next->data ),
                                           gtk_text_buffer_get_mark( buf, "end" ),
                                           0.0, FALSE, 0, 0 );
@@ -2671,7 +2673,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             el->widgets = g_list_append( el->widgets, w );
             if ( el->type == CDLG_BUTTON )
             {
-                gtk_box_pack_start( GTK_BOX( GTK_DIALOG( dlg )->action_area ),
+                gtk_box_pack_start( GTK_BOX( gtk_dialog_get_action_area( GTK_DIALOG( dlg ) ) ),
                                             GTK_WIDGET( w ), FALSE, FALSE, pad );
                 gtk_widget_grab_focus( w );
             }
@@ -2919,7 +2921,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 //scroll to end if scrollbar is mostly down or new
                 GtkAdjustment* adj = gtk_scrolled_window_get_vadjustment( 
                         GTK_SCROLLED_WINDOW( el->widgets->next->next->data ) );
-                if ( selstart || adj->upper - adj->value < adj->page_size + 40 )
+                if ( selstart || gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_value( adj ) < gtk_adjustment_get_page_size( adj ) + 40 )
                     gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( el->widgets->next->data ),
                                           gtk_text_buffer_get_mark( buf, "end" ),
                                           0.0, FALSE, 0, 0 );
@@ -3473,14 +3475,14 @@ static void build_dialog( GList* elements )
 
     // pack some boxes to create horizonal padding at edges of window
     GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( dlg )->vbox ), hbox, TRUE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dlg ) ) ), hbox, TRUE, TRUE, 0 );
     box = gtk_vbox_new( FALSE, 0 );
     gtk_box_pack_start( GTK_BOX( hbox ), box, TRUE, TRUE, 8 );  // <- hpad 
     GList* boxes = g_list_append( NULL, box );
 
     // pack timeout button first
     GtkWidget* timeout_toggle = gtk_toggle_button_new_with_label( _("Pause") );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( dlg )->action_area ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_action_area( GTK_DIALOG( dlg ) ) ),
                                             timeout_toggle, FALSE, FALSE, pad );
     gtk_button_set_image( GTK_BUTTON( timeout_toggle ),
                                             xset_get_image( "GTK_STOCK_MEDIA_PAUSE",
