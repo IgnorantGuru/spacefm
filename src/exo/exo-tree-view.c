@@ -431,12 +431,12 @@ exo_tree_view_button_press_event (GtkWidget      *widget,
       && path != NULL && gtk_tree_selection_path_is_selected (selection, path))
     {
       /* check if we have to restore paths */
-      if (G_LIKELY (selection->user_func == (GtkTreeSelectionFunc) exo_noop_false))
+      if (G_LIKELY (gtk_tree_selection_get_select_function (selection) == (GtkTreeSelectionFunc) exo_noop_false))
         {
           /* just reset the select function (previously set to exo_noop_false),
            * there's no clean way to do this, so what the heck.
            */
-          selection->user_func = NULL;
+          gtk_tree_selection_set_select_function (selection, NULL, NULL, NULL);
         }
       else
         {
