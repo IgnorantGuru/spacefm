@@ -211,7 +211,7 @@ static void on_load_all_apps_finish( VFSAsyncTask* task, gboolean is_cancelled, 
     gtk_tree_view_set_model( view, model );
     g_object_unref( model );
 
-    gdk_window_set_cursor( dlg->window, NULL );
+    gdk_window_set_cursor( gtk_widget_get_window ( dlg ), NULL );
 }
 
 void
@@ -237,7 +237,7 @@ on_notebook_switch_page ( GtkNotebook *notebook,
             init_list_view( view );
             gtk_widget_grab_focus( GTK_WIDGET( view ) );
             busy = gdk_cursor_new_for_display( gtk_widget_get_display(GTK_WIDGET( view )), GDK_WATCH );
-            gdk_window_set_cursor( GTK_WIDGET( gtk_widget_get_toplevel(GTK_WIDGET(view)) )->window, busy );
+            gdk_window_set_cursor( gtk_widget_get_window( GTK_WIDGET( gtk_widget_get_toplevel(GTK_WIDGET(view)) ) ), busy );
             gdk_cursor_unref( busy );
 
             list = gtk_list_store_new( N_COLS, GDK_TYPE_PIXBUF,
@@ -355,9 +355,11 @@ on_browse_btn_clicked ( GtkButton *button,
 static void on_dlg_response( GtkDialog* dlg, int id, gpointer user_data )
 {
     VFSAsyncTask* task;
-    
-    int width = GTK_WIDGET( dlg ) ->allocation.width;
-    int height = GTK_WIDGET( dlg ) ->allocation.height;
+    GtkAllocation allocation;
+
+    gtk_widget_get_allocation ( GTK_WIDGET( dlg ), &allocation );
+    int width = allocation.width;
+    int height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );
