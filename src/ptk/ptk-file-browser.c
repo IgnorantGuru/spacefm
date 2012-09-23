@@ -607,7 +607,6 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
 
     // new
     file_browser->side_toolbar = gtk_toolbar_new();
-    GtkTooltips* tooltips = gtk_tooltips_new();
     gtk_box_pack_start( GTK_BOX( file_browser->side_toolbox ),
                                     file_browser->side_toolbar, TRUE, TRUE, 0 );
     gtk_toolbar_set_style( GTK_TOOLBAR( file_browser->side_toolbar ), GTK_TOOLBAR_ICONS );
@@ -621,7 +620,7 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
                                                     file_browser->side_toolbar ) );
     set = xset_set_cb( "toolbar_config", on_toolbar_config, file_browser );
     xset_add_toolitem( GTK_WIDGET( file_browser ), file_browser, file_browser->side_toolbar,
-                                                    tooltips, icon_size, set );
+                                                    icon_size, set );
 
     // callbacks    
     set = xset_set_cb( "stool_dirtree", on_toggle_sideview, file_browser );
@@ -658,7 +657,7 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     // side
     set = xset_get( "toolbar_side" );
     xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser, file_browser->side_toolbar,
-                                                            tooltips, set->desc );
+                                                            set->desc );
 
     // get side buttons
     set = xset_get( "stool_dirtree" );
@@ -942,7 +941,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         else if ( g_file_test( final_path, G_FILE_TEST_EXISTS ) )
         {
             // open dir and select file
-            dir_path = g_dirname( final_path );
+            dir_path = g_path_get_dirname( final_path );
             if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
             {
                 file_browser->select_path = strdup( final_path );
@@ -992,7 +991,6 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     
     // new
     file_browser->toolbar = gtk_toolbar_new();
-    GtkTooltips* tooltips = gtk_tooltips_new();
     gtk_box_pack_start( GTK_BOX( file_browser->toolbox ), file_browser->toolbar,
                                                                 TRUE, TRUE, 0 );
     gtk_toolbar_set_style( GTK_TOOLBAR( file_browser->toolbar ), GTK_TOOLBAR_ICONS );
@@ -1006,7 +1004,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
                                                             file_browser->toolbar ) );
     set = xset_set_cb( "toolbar_config", on_toolbar_config, file_browser );
     xset_add_toolitem( GTK_WIDGET( file_browser ), file_browser,
-                                file_browser->toolbar, tooltips, icon_size, set );
+                                file_browser->toolbar, icon_size, set );
 
     // callbacks    
     set = xset_set_cb( "tool_dirtree", on_toggle_sideview, file_browser );
@@ -1043,7 +1041,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     // left
     set = xset_get( "toolbar_left" );
     xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser,
-                                        file_browser->toolbar, tooltips, set->desc );
+                                        file_browser->toolbar, set->desc );
 
     // get left buttons
     set = xset_get( "tool_dirtree" );
@@ -1115,8 +1113,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
         set->ob2_data = NULL;
         
     set = xset_get( "toolbar_right" );
-    xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser, file_browser->toolbar, tooltips,
-                                                                    set->desc );
+    xset_add_toolbar( GTK_WIDGET( file_browser ), file_browser, file_browser->toolbar, set->desc );
 
     // get right buttons
     set = xset_get( "rtool_dirtree" );
@@ -1358,8 +1355,6 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
 
     // status bar
     file_browser->status_bar = gtk_statusbar_new();
-    gtk_statusbar_set_has_resize_grip( GTK_STATUSBAR( file_browser->status_bar ),
-                                                    FALSE );
  
     GList* children = gtk_container_get_children( GTK_CONTAINER( file_browser->status_bar ) );
     file_browser->status_frame = GTK_FRAME( children->data );
@@ -4120,7 +4115,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-received" );
 
-    if ( ( sel_data->length >= 0 ) && ( sel_data->format == 8 ) )
+    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) && ( gtk_selection_data_get_format(sel_data) == 8 ) )
     {
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
             dest_dir = folder_view_get_drop_dir( file_browser, x, y );
@@ -4158,13 +4153,13 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                     }
                     if( file_browser->drag_source_dev != dest_dev )
                         // src and dest are on different devices */
-                        drag_context->suggested_action = GDK_ACTION_COPY;
+                        gdk_drag_status (drag_context, GDK_ACTION_COPY, time);
                     else
-                        drag_context->suggested_action = GDK_ACTION_MOVE;
+                        gdk_drag_status (drag_context, GDK_ACTION_MOVE, time);
                 }
                 else
                     // stat failed
-                    drag_context->suggested_action = GDK_ACTION_COPY;
+                    gdk_drag_status (drag_context, GDK_ACTION_COPY, time);
 
                 g_free( dest_dir );
                 g_strfreev( list );
@@ -4173,10 +4168,10 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             }
             if ( puri )
             {
-                if ( 0 == ( drag_context->action &
+            if ( 0 == ( gdk_drag_context_get_selected_action(drag_context) &
                             ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
-                    drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
+                    gdk_drag_status (drag_context, GDK_ACTION_COPY, time); //sfm correct?  was MOVE
                 }
                 gtk_drag_finish ( drag_context, TRUE, FALSE, time );
 
@@ -4193,7 +4188,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                 }
                 g_strfreev( list );
 
-                switch ( drag_context->action )
+            switch ( gdk_drag_context_get_selected_action(drag_context) )
                 {
                 case GDK_ACTION_COPY:
                     file_action = VFS_FILE_TASK_COPY;
@@ -4271,7 +4266,6 @@ void on_folder_view_drag_data_get ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-get" );
 
-    drag_context->actions = GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK;
     // drag_context->suggested_action = GDK_ACTION_MOVE;
 
     for ( sel = sels; sel; sel = g_list_next( sel ) )
@@ -4333,19 +4327,19 @@ gboolean on_folder_view_auto_scroll( GtkScrolledWindow* scroll )
 
     if ( folder_view_auto_scroll_direction == GTK_DIR_UP )
     {
-        vpos -= vadj->step_increment;
-        if ( vpos > vadj->lower )
+        vpos -= gtk_adjustment_get_step_increment ( vadj );
+        if ( vpos > gtk_adjustment_get_lower ( vadj ) )
             gtk_adjustment_set_value ( vadj, vpos );
         else
-            gtk_adjustment_set_value ( vadj, vadj->lower );
+            gtk_adjustment_set_value ( vadj, gtk_adjustment_get_lower ( vadj ) );
     }
     else
     {
-        vpos += vadj->step_increment;
-        if ( ( vpos + vadj->page_size ) < vadj->upper )
+        vpos += gtk_adjustment_get_step_increment ( vadj );
+        if ( ( vpos + gtk_adjustment_get_page_size ( vadj ) ) < gtk_adjustment_get_upper ( vadj ) )
             gtk_adjustment_set_value ( vadj, vpos );
         else
-            gtk_adjustment_set_value ( vadj, ( vadj->upper - vadj->page_size ) );
+            gtk_adjustment_set_value ( vadj, ( gtk_adjustment_get_upper ( vadj ) - gtk_adjustment_get_page_size ( vadj ) ) );
     }
 
     //gdk_threads_leave();
@@ -4370,6 +4364,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     GdkDragAction suggested_action;
     GdkAtom target;
     GtkTargetList* target_list;
+    GtkAllocation allocation;
 
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name ( widget, "drag-motion" );
@@ -4378,6 +4373,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
 
     vadj = gtk_scrolled_window_get_vadjustment( scroll ) ;
     vpos = gtk_adjustment_get_value( vadj );
+    gtk_widget_get_allocation( widget, &allocation );
 
     if ( y < 32 )
     {
@@ -4391,7 +4387,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
                                                 scroll );
         }
     }
-    else if ( y > ( widget->allocation.height - 32 ) )
+    else if ( y > ( allocation.height - 32 ) )
     {
         if ( ! folder_view_auto_scroll_timer )
         {
@@ -4473,13 +4469,13 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     else
     {
         /* Only 'move' is available. The user force move action by pressing Shift key */
-        if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
+        if( ( gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
             suggested_action = GDK_ACTION_MOVE;
         /* Only 'copy' is available. The user force copy action by pressing Ctrl key */
-        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_COPY )
+        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_COPY )
             suggested_action = GDK_ACTION_COPY;
         /* Only 'link' is available. The user force link action by pressing Shift+Ctrl key */
-        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_LINK )
+        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_LINK )
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
@@ -4496,7 +4492,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
                 // automatic
                 file_browser->pending_drag_status = 1;
                 gtk_drag_get_data (widget, drag_context, target, time);
-                suggested_action = drag_context->suggested_action;
+                suggested_action = gdk_drag_context_get_suggested_action ( drag_context );
             }
         }
         gdk_drag_status( drag_context, suggested_action, time );
@@ -4888,11 +4884,11 @@ void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser 
     sel_data = gtk_clipboard_wait_for_contents( clip, gnome_target );
     if ( sel_data )
     {
-        if ( sel_data->length <= 0 || sel_data->format != 8 )
+        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
             return ;
 
-        uri_list_str = ( char* ) sel_data->data;
-        is_cut = ( 0 == strncmp( ( char* ) sel_data->data, "cut", 3 ) );
+        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
+        is_cut = ( 0 == strncmp( ( char* ) gtk_selection_data_get_data ( sel_data ), "cut", 3 ) );
 
         if ( uri_list_str )
         {
@@ -4906,9 +4902,9 @@ void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser 
         sel_data = gtk_clipboard_wait_for_contents( clip, uri_list_target );
         if ( ! sel_data )
             return ;
-        if ( sel_data->length <= 0 || sel_data->format != 8 )
+        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
             return ;
-        uri_list_str = ( char* ) sel_data->data;
+        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
     }
 
     if ( !uri_list_str )

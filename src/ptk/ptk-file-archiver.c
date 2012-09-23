@@ -164,14 +164,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                         gtk_label_new( _("Archive Format:") ),
                         FALSE, FALSE, 2 );
 
-    combo = gtk_combo_box_new_text();
+    combo = gtk_combo_box_text_new();
 
     for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
     {
         if( handlers[i].compress_cmd )
         {
             gtk_file_filter_add_mime_type( filter, handlers[i].mime_type );
-            gtk_combo_box_append_text( GTK_COMBO_BOX(combo), handlers[i].file_ext );
+            gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT(combo), handlers[i].file_ext );
         }
     }
     gtk_file_chooser_set_filter( GTK_FILE_CHOOSER(dlg), filter );
@@ -271,8 +271,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     if ( res == GTK_RESPONSE_OK )
     {
         char* str;
-        width = GTK_WIDGET( dlg ) ->allocation.width;
-        height = GTK_WIDGET( dlg ) ->allocation.height;
+        GtkAllocation allocation;
+        gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+        width = allocation.width;
+        height = allocation.height;
         if ( width && height )
         {
             str = g_strdup_printf( "%d", width );
@@ -509,8 +511,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
         if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
         {
-            width = GTK_WIDGET( dlg ) ->allocation.width;
-            height = GTK_WIDGET( dlg ) ->allocation.height;
+            GtkAllocation allocation;
+            gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+            width = allocation.width;
+            height = allocation.height;
             if ( width && height )
             {
                 str = g_strdup_printf( "%d", width );
