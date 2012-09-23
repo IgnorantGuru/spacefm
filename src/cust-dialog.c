@@ -992,7 +992,7 @@ static void set_element_value( CustomElement* el, const char* name,
         {
             gtk_window_resize( GTK_WINDOW( dlg ), width, height );
             gtk_window_set_position( GTK_WINDOW( dlg ),
-                                                    GTK_WIN_POS_CENTER_ALWAYS );
+                                                    GTK_WIN_POS_CENTER );
         }
         else
             dlg_warn( _("Dynamic resize requires width and height > 0"), NULL, NULL );
@@ -1317,7 +1317,7 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             {
                 gtk_window_resize( GTK_WINDOW( el->widgets->data ), width, height );
                 gtk_window_set_position( GTK_WINDOW( el->widgets->data ),
-                                                    GTK_WIN_POS_CENTER_ALWAYS );
+                                                    GTK_WIN_POS_CENTER );
             }
             else
                 dlg_warn( _("Dynamic resize requires width and height > 0"),
@@ -3319,7 +3319,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             {
                 gtk_window_resize( GTK_WINDOW( el->widgets->data ), width, height );
                 gtk_window_set_position( GTK_WINDOW( el->widgets->data ),
-                                                    GTK_WIN_POS_CENTER_ALWAYS );
+                                                    GTK_WIN_POS_CENTER );
             }
             else
                 dlg_warn( _("Dynamic resize requires width and height > 0"),
@@ -3463,7 +3463,7 @@ static void build_dialog( GList* elements )
     dlg = gtk_dialog_new();
     gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
     gtk_window_set_title( GTK_WINDOW( dlg ), DEFAULT_TITLE );
-    gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
+    gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
     GdkPixbuf* pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                     DEFAULT_ICON, 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     if ( pixbuf )

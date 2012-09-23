@@ -935,6 +935,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                                    GDK_WINDOW_TYPE_HINT_NORMAL );
     gtk_window_set_gravity ( GTK_WINDOW ( ptask->progress_dlg ),
                              GDK_GRAVITY_NORTH_EAST );
+    gtk_window_set_position( GTK_WINDOW( ptask->progress_dlg ), GTK_WIN_POS_CENTER );
 
 //    gtk_dialog_set_default_response( ptask->progress_dlg, GTK_RESPONSE_OK );
     g_signal_connect( ptask->progress_dlg, "response",
