@@ -880,7 +880,7 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( _("_FAQ") );
         }
     }
-    if ( ver < 14 ) // < 0.8.1
+    if ( ver < 15 ) // < 0.8.1
     {
         set = xset_get( "task_stop" );
         if ( set->menu_label && !strcmp( set->menu_label, "_Stop Task" ) )
@@ -940,6 +940,10 @@ void load_settings( char* config_dir )
         set = xset_get( "dev_menu_mount" );
         if ( !g_strcmp0( set->icon, "gtk-add" ) )
             string_copy_free( &set->icon, "drive-removable-media" );
+        set = xset_get( "task_pop_detail" );
+        if ( !g_strcmp0( set->menu_label, "_Detailed Status" ) )
+            string_copy_free( &set->menu_label, _("_Detailed Stats") );
+
         if ( app_settings.small_icon_size == 20 )
             app_settings.small_icon_size = 22;
         if ( app_settings.big_icon_size == 20 )
@@ -961,7 +965,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "14" );  // 0.8.1
+    xset_set( "config_version", "s", "15" );  // 0.8.1
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -9507,7 +9511,7 @@ void xset_defaults()
         set->b = XSET_B_TRUE;
         set->line = g_strdup( "#tasks-menu-poptop" );
 
-        set = xset_set( "task_pop_detail", "label", _("_Detailed Status") );
+        set = xset_set( "task_pop_detail", "label", _("_Detailed Stats") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_FALSE;
         set->line = g_strdup( "#tasks-menu-popdet" );
