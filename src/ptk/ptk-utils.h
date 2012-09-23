@@ -82,8 +82,7 @@ void ptk_menu_add_items_from_data( GtkWidget* menu,
 
 GtkWidget* ptk_toolbar_add_items_from_data( GtkWidget* toolbar,
                                             PtkToolItemEntry* entries,
-                                            gpointer cb_data,
-                                            GtkTooltips* tooltips );
+                                            gpointer cb_data )
 
 /* The string 'message' can contain pango markups.
   * If special characters like < and > are used in the string,

@@ -116,10 +116,8 @@ ptk_text_renderer_get_type ( void )
 static void
 ptk_text_renderer_init ( PtkTextRenderer *celltext )
 {
-    GTK_CELL_RENDERER ( celltext ) ->xalign = 0.0;
-    GTK_CELL_RENDERER ( celltext ) ->yalign = 0.5;
-    GTK_CELL_RENDERER ( celltext ) ->xpad = 2;
-    GTK_CELL_RENDERER ( celltext ) ->ypad = 2;
+    gtk_cell_renderer_set_alignment ( GTK_CELL_RENDERER ( celltext ), 0.0, 0.5 );
+    gtk_cell_renderer_set_padding ( GTK_CELL_RENDERER ( celltext ), 2, 2 );
     celltext->font = pango_font_description_new ();
 
     celltext->wrap_width = -1;
@@ -832,6 +830,11 @@ get_size ( GtkCellRenderer *cell,
 {
     PtkTextRenderer * celltext = ( PtkTextRenderer * ) cell;
     PangoRectangle rect;
+    gint xpad, ypad;
+    gfloat xalign, yalign;
+   
+    gtk_cell_renderer_get_padding ( cell, &xpad, &ypad );
+    gtk_cell_renderer_get_alignment ( cell, &xalign, &yalign );
 
     if ( layout )
     {
@@ -844,7 +847,7 @@ get_size ( GtkCellRenderer *cell,
     pango_layout_get_pixel_extents ( layout, NULL, &rect );
 
     if ( height )
-        * height = cell->ypad * 2 + rect.height;
+        * height = ypad * 2 + rect.height;
 
     /* The minimum size for ellipsized labels is ~ 3 chars */
     if ( width )
@@ -861,11 +864,11 @@ get_size ( GtkCellRenderer *cell,
             char_width = pango_font_metrics_get_approximate_char_width ( metrics );
             pango_font_metrics_unref ( metrics );
 
-            *width = cell->xpad * 2 + ( PANGO_PIXELS ( char_width ) * 3 );
+            *width = xpad * 2 + ( PANGO_PIXELS ( char_width ) * 3 );
         }
         else
         {
-            *width = cell->xpad * 2 + rect.x + rect.width;
+            *width = xpad * 2 + rect.x + rect.width;
         }
     }
 
@@ -874,16 +877,16 @@ get_size ( GtkCellRenderer *cell,
         if ( x_offset )
         {
             if ( gtk_widget_get_direction ( widget ) == GTK_TEXT_DIR_RTL )
-                * x_offset = ( 1.0 - cell->xalign ) * ( cell_area->width - ( rect.x + rect.width + ( 2 * cell->xpad ) ) );
+                * x_offset = ( 1.0 - xalign ) * ( cell_area->width - ( rect.x + rect.width + ( 2 * xpad ) ) );
             else
-                *x_offset = cell->xalign * ( cell_area->width - ( rect.x + rect.width + ( 2 * cell->xpad ) ) );
+                *x_offset = xalign * ( cell_area->width - ( rect.x + rect.width + ( 2 * xpad ) ) );
 
             if ( celltext->ellipsize_set || celltext->wrap_width != -1 )
                 * x_offset = MAX( *x_offset, 0 );
         }
         if ( y_offset )
         {
-            *y_offset = cell->yalign * ( cell_area->height - ( rect.height + ( 2 * cell->ypad ) ) );
+            *y_offset = yalign * ( cell_area->height - ( rect.height + ( 2 * ypad ) ) );
             *y_offset = MAX ( *y_offset, 0 );
         }
     }
@@ -923,6 +926,9 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     gint width, height;
     gint focus_pad, focus_width;
     gint x, y;
+    gint xpad, ypad;
+    
+    gtk_cell_renderer_get_padding ( cell, &xpad, &ypad );
 
     /* get focus width and padding */
     gtk_widget_style_get ( widget,
@@ -934,7 +940,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     layout = get_layout ( celltext, widget, TRUE, flags );
     get_size ( cell, widget, cell_area, layout, &x_offset, &y_offset, &width, &height );
 
-    if ( !cell->sensitive )
+    if ( !gtk_widget_is_sensitive ( cell ) )
     {
         state = GTK_STATE_INSENSITIVE;
     }
@@ -983,7 +989,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
 
     if ( celltext->ellipsize_set )
         pango_layout_set_width ( layout,
-                                 ( cell_area->width - x_offset - 2 * cell->xpad ) * PANGO_SCALE );
+                                 ( cell_area->width - x_offset - 2 * xpad ) * PANGO_SCALE );
     else if ( celltext->wrap_width == -1 )
         pango_layout_set_width ( layout, -1 );
 
@@ -994,8 +1000,8 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                        expose_area,
                        widget,
                        "cellrenderertext",
-                       cell_area->x + x_offset + cell->xpad,
-                       cell_area->y + y_offset + cell->ypad,
+                       cell_area->x + x_offset + xpad,
+                       cell_area->y + y_offset + ypad,
                        layout );
 
     g_object_unref ( layout );

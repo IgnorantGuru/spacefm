@@ -114,7 +114,7 @@ static void show_busy( GtkWidget* view )
 
     toplevel = gtk_widget_get_toplevel( GTK_WIDGET(view) );
     cursor = gdk_cursor_new_for_display( gtk_widget_get_display(GTK_WIDGET( view )), GDK_WATCH );
-    gdk_window_set_cursor( toplevel->window, cursor );
+    gdk_window_set_cursor( gtk_widget_get_window ( toplevel ), cursor );
     gdk_cursor_unref( cursor );
 
     /* update the  GUI */
@@ -126,7 +126,7 @@ static void show_ready( GtkWidget* view )
 {
     GtkWidget* toplevel;
     toplevel = gtk_widget_get_toplevel( GTK_WIDGET(view) );
-    gdk_window_set_cursor( toplevel->window, NULL );
+    gdk_window_set_cursor( gtk_widget_get_window ( toplevel ), NULL );
 }
 
 static void on_bookmark_changed( gpointer bookmarks_, gpointer data )

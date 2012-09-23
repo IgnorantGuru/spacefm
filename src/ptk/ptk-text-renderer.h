@@ -27,7 +27,7 @@
 #define __PTK_TEXT_RENDERER_H__
 
 #include <pango/pango.h>
-#include <gtk/gtkcellrenderertext.h>
+#include <gtk/gtk.h>
 
 
 G_BEGIN_DECLS

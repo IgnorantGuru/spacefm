@@ -713,9 +713,12 @@ on_dlg_response ( GtkDialog *dialog,
     char* file_path;
     GtkWidget* ask_recursive;
     VFSFileInfo* file;
+    GtkAllocation allocation;
+
+    gtk_widget_get_allocation ( GTK_WIDGET( dialog ), &allocation );
     
-    int width = GTK_WIDGET( dialog ) ->allocation.width;
-    int height = GTK_WIDGET( dialog ) ->allocation.height;
+    int width = allocation.width;
+    int height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );

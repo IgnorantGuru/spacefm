@@ -282,6 +282,7 @@ void ptk_dialog_fit_small_screen( GtkDialog* dlg )
 {
     GtkRequisition req;
     GdkRectangle wa;
+    GtkAllocation allocation;
     int dw, dh, i;
 
     get_working_area( gtk_widget_get_screen((GtkWidget*)dlg), &wa );
@@ -300,13 +301,14 @@ void ptk_dialog_fit_small_screen( GtkDialog* dlg )
 
     if( gtk_widget_get_realized( dlg ) )
     {
+        gtk_widget_get_allocation ( (GtkWidget*)dlg, &allocation);
         gboolean changed = FALSE;
-        if( ((GtkWidget*)dlg)->allocation.width > wa.width )
+        if( allocation.width > wa.width )
         {
             dw = wa.width;
             changed = TRUE;
         }
-        if( ((GtkWidget*)dlg)->allocation.height > wa.width )
+        if( allocation.height > wa.width )
         {
             dh = wa.height;
             changed = TRUE;

@@ -976,8 +976,10 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
         g_free( new_path );
     }
     
-    width = GTK_WIDGET( dlg ) ->allocation.width;
-    height = GTK_WIDGET( dlg ) ->allocation.height;
+    GtkAllocation allocation;
+    gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+    width = allocation.width;
+    height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );
@@ -2387,9 +2389,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     // Pack
     gtk_container_set_border_width( GTK_CONTAINER ( mset->dlg ), 10 );
 
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->label_name ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->scroll_name ), TRUE, TRUE, 0 );
 
     mset->hbox_ext = gtk_hbox_new( FALSE, 0 );
@@ -2399,28 +2401,28 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( gtk_label_new( " " ) ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_ext ),
                         GTK_WIDGET( mset->entry_ext ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->hbox_ext ), FALSE, TRUE, 5 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->blank_name ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->label_full_name ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->scroll_full_name ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->blank_full_name ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->label_path ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->scroll_path ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->blank_path ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->label_full_path ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( mset->scroll_full_path ), TRUE, TRUE, 0 );
 
     mset->hbox_type = gtk_hbox_new( FALSE, 0 );
@@ -2428,7 +2430,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                         GTK_WIDGET( mset->label_type ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_type ),
                         GTK_WIDGET( mset->label_mime ), TRUE, TRUE, 5 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) )
                         GTK_WIDGET( mset->hbox_type ), FALSE, TRUE, 5 );
 
     mset->hbox_target = gtk_hbox_new( FALSE, 0 );
@@ -2445,7 +2447,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         if ( mset->browse_target )
             gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
                             GTK_WIDGET( mset->browse_target ), FALSE, TRUE, 0 );
-        gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+            gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                             GTK_WIDGET( mset->hbox_target ), FALSE, TRUE, 5 );
     }
 
@@ -2460,7 +2462,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( mset->combo_template_dir ), TRUE, TRUE, 3 );
         gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
                             GTK_WIDGET( mset->browse_template ), FALSE, TRUE, 0 );
-        gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+        gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                             GTK_WIDGET( mset->hbox_template ), FALSE, TRUE, 5 );
     }
 
@@ -2493,7 +2495,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( gtk_label_new( "  " ) ), FALSE, TRUE, 3 );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( mset->opt_as_root ), FALSE, TRUE, 6 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( mset->dlg )->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
                         GTK_WIDGET( hbox ), FALSE, TRUE, 10 );
     
     // show
@@ -2502,18 +2504,18 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     on_toggled( NULL, mset );
     if ( mset->clip_copy )
     {
-        GTK_TOGGLE_BUTTON( mset->opt_copy ) ->active = TRUE;
-        GTK_TOGGLE_BUTTON( mset->opt_move ) ->active = FALSE;
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_copy ), TRUE );
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_move ), FALSE );
     }
     else if ( create_new == 2 )
     {
-        GTK_TOGGLE_BUTTON( mset->opt_new_folder ) ->active = TRUE;
-        GTK_TOGGLE_BUTTON( mset->opt_new_file ) ->active = FALSE;
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_folder ), TRUE );
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_file ), FALSE );
     }
     else if ( create_new == 3 )
     {
-        GTK_TOGGLE_BUTTON( mset->opt_new_link ) ->active = TRUE;
-        GTK_TOGGLE_BUTTON( mset->opt_new_file ) ->active = FALSE;
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_link ), TRUE );
+        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_file ), FALSE );
     }
     
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
@@ -3013,8 +3015,10 @@ _continue_free:
         ret = 0;
         
     // save size
-    width = GTK_WIDGET( mset->dlg ) ->allocation.width;
-    height = GTK_WIDGET( mset->dlg ) ->allocation.height;
+    GtkAllocation allocation;
+    gtk_widget_get_allocation ( GTK_WIDGET( mset->dlg ), &allocation );
+    width = allocation.width;
+    height = allocation.height;
     if ( width && height )
     {
         str = g_strdup_printf( "%d", width );

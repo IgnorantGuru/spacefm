@@ -436,15 +436,17 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
 void on_progress_dlg_destroy( GtkDialog* dlg, PtkFileTask* ptask )
 {
     char* s;
+    GtkAllocation allocation;
     
-    s = g_strdup_printf( "%d", GTK_WIDGET( dlg ) ->allocation.width );
+    gtk_widget_get_allocation ( GTK_WIDGET(dlg), &allocation );    
+    s = g_strdup_printf( "%d", allocation.width );
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
         xset_set( "task_pop_top", "s", s );
     else
         xset_set( "task_pop_top", "x", s );
     g_free( s );
 
-    s = g_strdup_printf( "%d", GTK_WIDGET( dlg ) ->allocation.height );
+    s = g_strdup_printf( "%d", allocation.height );
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
         xset_set( "task_pop_top", "z", s );
     else
@@ -652,10 +654,10 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( ptask->scroll ) );
 
     // Pack
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( ptask->progress_dlg ) ->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( task->progress_dlg ) ),
                         GTK_WIDGET( table ),
                         FALSE, TRUE, 0 );
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( ptask->progress_dlg ) ->vbox ),
+    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( task->progress_dlg ) ),
                         GTK_WIDGET( align ),
                         TRUE, TRUE, 0 );
 
@@ -674,7 +676,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     if ( !win_height ) win_height = -1;
     gtk_window_set_default_size( GTK_WINDOW( ptask->progress_dlg ),
                                  win_width, win_height );
-    gtk_button_box_set_layout ( GTK_BUTTON_BOX ( GTK_DIALOG( ptask->progress_dlg ) ->action_area ),
+    gtk_button_box_set_layout ( GTK_BUTTON_BOX ( gtk_dialog_get_action_area ( GTK_DIALOG( task->progress_dlg ) ) ),
                                 GTK_BUTTONBOX_END );
     if ( xset_get_b( "task_pop_top" ) )
         gtk_window_set_type_hint ( GTK_WINDOW ( ptask->progress_dlg ),
@@ -856,7 +858,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         {
             //scroll to end if scrollbar is mostly down
             GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment( ptask->scroll );
-            if (  adj->upper - adj->value < adj->page_size + 40 )
+            if (  gtk_adjustment_get_upper ( adj ) - gtk_adjustment_get_value ( adj ) < gtk_adjustment_get_page_size ( adj ) + 40 )
                 gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
                                                             ptask->log_end,
                                                             0.0, FALSE, 0, 0 );
@@ -1509,7 +1511,7 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
 	g_signal_connect (G_OBJECT (ptask->query_entry), "activate",
                       G_CALLBACK( enter_callback ), dlg );
 
-    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( dlg ) ->vbox ), GTK_WIDGET( ptask->query_entry ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dlg ) ) ), GTK_WIDGET( ptask->query_entry ),
                         FALSE, TRUE, 4 );
 
     g_signal_connect( G_OBJECT( dlg ), "response",
