@@ -26,7 +26,7 @@ static gboolean on_complete( gpointer user_data )
 {
     GtkAdjustment* adj = GTK_ADJUSTMENT( user_data );
     gdk_threads_enter();
-    gtk_adjustment_set_value( adj, adj->upper-adj->page_size );
+    gtk_adjustment_set_value( adj, gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_page_size( adj ) );
     gdk_threads_leave();
     return FALSE;
 }
@@ -56,7 +56,7 @@ static gboolean on_output( GIOChannel* ch, GIOCondition cond, gpointer user_data
         gtk_text_buffer_get_end_iter( data->buf, &it );
         gtk_text_buffer_insert( data->buf, &it, buffer, rlen );
         adj = gtk_scrolled_window_get_vadjustment( GTK_SCROLLED_WINDOW(data->scroll) );
-        gtk_adjustment_set_value( adj, adj->upper-adj->page_size );
+        gtk_adjustment_set_value( adj, gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_page_size( adj ) );
         /*gdk_window_thaw_updates( GTK_WIDGET(data->view)->window );*/
         GDK_THREADS_LEAVE();
     }
@@ -87,7 +87,7 @@ static gboolean on_output( GIOChannel* ch, GIOCondition cond, gpointer user_data
                     return FALSE;
                 }
                 adj = gtk_scrolled_window_get_vadjustment( GTK_SCROLLED_WINDOW(data->scroll) );
-                gtk_adjustment_set_value( adj, adj->upper-adj->page_size );
+                gtk_adjustment_set_value( adj, gtk_adjustment_get_upper( adj ) - gtk_adjustment_get_page_size( adj ) );
                 g_idle_add( on_complete, adj );
             }
             GDK_THREADS_LEAVE();
@@ -163,7 +163,7 @@ int ptk_console_output_run( GtkWindow* parent_win,
 
     desc_label = gtk_label_new( desc );
     gtk_label_set_line_wrap( GTK_LABEL(desc_label), TRUE );
-    gtk_box_pack_start( GTK_BOX(GTK_DIALOG(main_dlg)->vbox),
+    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)),
                         desc_label, FALSE, TRUE, 2 );
 
     hbox = gtk_hbox_new( FALSE, 2 );
@@ -179,7 +179,7 @@ int ptk_console_output_run( GtkWindow* parent_win,
     g_free( cmd );
     gtk_box_pack_start( GTK_BOX(hbox), entry, TRUE, TRUE, 2 );
 
-    gtk_box_pack_start( GTK_BOX(GTK_DIALOG(main_dlg)->vbox),
+    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)),
                         hbox, FALSE, TRUE, 2 );
 
     data->buf = GTK_TEXT_BUFFER(gtk_text_buffer_new(NULL));
@@ -191,8 +191,8 @@ int ptk_console_output_run( GtkWindow* parent_win,
                                     GTK_POLICY_AUTOMATIC,
                                     GTK_POLICY_ALWAYS );
     gtk_container_add( GTK_CONTAINER(data->scroll), GTK_WIDGET(data->view) );
-    gtk_box_pack_start( GTK_BOX(GTK_DIALOG(main_dlg)->vbox), data->scroll, TRUE, TRUE, 2 );
-    gtk_widget_show_all( GTK_DIALOG(main_dlg)->vbox );
+    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)), data->scroll, TRUE, TRUE, 2 );
+    gtk_widget_show_all( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)) );
     gtk_window_set_default_size( GTK_WINDOW(main_dlg), 480, 240 );
 
     gtk_widget_show( main_dlg );

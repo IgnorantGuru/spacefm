@@ -590,7 +590,7 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-received" );
 
-    if ( ( sel_data->length >= 0 ) && ( sel_data->format == 8 ) )
+    if ( ( gtk_selection_data_get_length( sel_data ) >= 0 ) && ( gtk_selection_data_get_format( sel_data ) == 8 ) )
     {
         dest_dir = dir_tree_view_get_drop_dir( widget, x, y );
         if ( dest_dir )
@@ -621,13 +621,13 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
                     }
                     if( file_browser->drag_source_dev_tree != dest_dev )
                         // src and dest are on different devices */
-                        drag_context->suggested_action = GDK_ACTION_COPY;
+                        gdk_drag_status( drag_context, GDK_ACTION_COPY, time);
                     else
-                        drag_context->suggested_action = GDK_ACTION_MOVE;
+                        gdk_drag_status( drag_context, GDK_ACTION_MOVE, time);
                 }
                 else
                     // stat failed
-                    drag_context->suggested_action = GDK_ACTION_COPY;
+                    gdk_drag_status( drag_context, GDK_ACTION_COPY, time);
 
                 g_free( dest_dir );
                 g_strfreev( list );
@@ -637,10 +637,10 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
 
             if ( puri )
             {
-                if ( 0 == ( drag_context->action &
+                if ( 0 == ( gdk_drag_context_get_selected_action ( drag_context ) &
                             ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
-                    drag_context->action = GDK_ACTION_MOVE;
+                    gdk_drag_status( drag_context, GDK_ACTION_MOVE, time);
                 }
                 gtk_drag_finish ( drag_context, TRUE, FALSE, time );
 
@@ -657,7 +657,7 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
                 }
                 g_strfreev( list );
 
-                switch ( drag_context->action )
+                switch ( gdk_drag_context_get_selected_action ( drag_context ) )
                 {
                 case GDK_ACTION_COPY:
                     file_action = VFS_FILE_TASK_COPY;
@@ -695,7 +695,7 @@ void on_dir_tree_view_drag_data_received ( GtkWidget *widget,
     /* If we are only getting drag status, not finished. */
     if( file_browser->pending_drag_status_tree )
     {
-        drag_context->suggested_action = GDK_ACTION_COPY;
+        gdk_drag_status ( drag_context, GDK_ACTION_COPY, time );
         file_browser->pending_drag_status_tree = 0;
         return;
     }
@@ -740,13 +740,13 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
     {
         // Need to set suggested_action because default handler assumes copy
         /* Only 'move' is available. The user force move action by pressing Shift key */
-        if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
+        if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
             suggested_action = GDK_ACTION_MOVE;
         /* Only 'copy' is available. The user force copy action by pressing Ctrl key */
-        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_COPY )
+        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_COPY )
             suggested_action = GDK_ACTION_COPY;
         /* Only 'link' is available. The user force link action by pressing Shift+Ctrl key */
-        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_LINK )
+        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_LINK )
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
@@ -763,10 +763,9 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
                 // automatic
                 file_browser->pending_drag_status_tree = 1;
                 gtk_drag_get_data (widget, drag_context, target, time);
-                suggested_action = drag_context->suggested_action;
+                suggested_action = gdk_drag_context_get_suggested_action( drag_context );
             }
         }
-        drag_context->suggested_action = suggested_action; // needed for default handler
         gdk_drag_status( drag_context, suggested_action, gtk_get_current_event_time() );
     }
     return FALSE;
