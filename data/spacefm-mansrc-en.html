@@ -45,7 +45,7 @@
 
     <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by <a href="http://ignorantguru.github.com/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1/v2, or any program you specify.
 
-    <p><li>Provide a <b>Task Manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the Task Manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the Task Manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
+    <p><li>Provide a <b>Task Manager</b> which controls the optional appearance of pop-up dialogs, and handles queuing of tasks.  Running tasks are organized in the Task Manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the Task Manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
 
     <p><li>Provide a <b>plugin capability</b> which extends the base capabilities.  Plugins can be copied into most menus as custom commands, or can be installed as root for added protection and multi-user access.  In addition, <b>any custom command you create can easily be saved as a plugin</b> and shared with other users.
 
@@ -108,7 +108,7 @@
 
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
+<p>SpaceFM is distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -1390,7 +1390,7 @@ The Errors submenu contains a set of radio options which control how errors in i
 
 <p>If option <b>Stop On Any</b> is instead selected, the Task Manager will stop if any error is encountered in the task, regardless of whether the error occurs on the first or later actions.
 
-<p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files are being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
+<p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files is being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
 
 <p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
 

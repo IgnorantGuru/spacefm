@@ -571,7 +571,7 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
 
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
 {
-    if ( ptask->complete && !ptask->complete_notify )
+    if ( response != GTK_RESPONSE_HELP && ptask->complete && !ptask->complete_notify )
     {
         ptk_file_task_destroy( ptask );
         return;
