@@ -5053,110 +5053,126 @@ void main_task_view_update_task( PtkFileTask* ptask )
         g_free( started );
     }
 
-    // update row
-    int percent = ptask->task->percent;
-    if ( percent < 0 )
-        percent = 0;
-    else if ( percent > 100 )
-        percent = 100;
-    if ( ptask->task->type != 6 )
+    if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING || ptask->pause_change_view )
     {
-        if ( ptask->task->current_file )
+        ptask->pause_change_view = FALSE;
+        // update row
+        int percent = ptask->task->percent;
+        if ( percent < 0 )
+            percent = 0;
+        else if ( percent > 100 )
+            percent = 100;
+        if ( ptask->task->type != 6 )
         {
-            path = g_path_get_dirname( ptask->task->current_file );
-            file = g_path_get_basename( ptask->task->current_file );
+            if ( ptask->task->current_file )
+            {
+                path = g_path_get_dirname( ptask->task->current_file );
+                file = g_path_get_basename( ptask->task->current_file );
+            }
         }
-    }
-    else
-    {
-        path = g_strdup( ptask->task->dest_dir ); //cwd
-        file = g_strdup_printf( "( %s )", ptask->task->current_file );
-        //percent = ptask->complete ? 100 : 50;
-    }
-    
-    // icon
-    char* iname;
-    if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-    {
-        set = xset_get( "task_pause" );
-        iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
-    }
-    else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-    {
-        set = xset_get( "task_que" );
-        iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
-    }
-    else if ( ptask->err_count && ptask->task->type != 6 )
-        iname = g_strdup_printf( "error" );
-    else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
-        iname = g_strdup_printf( "stock_copy" );
-    else if ( ptask->task->type == 2 || ptask->task->type == 3 )
-        iname = g_strdup_printf( "stock_delete" );
-    else if ( ptask->task->type == 6 && ptask->task->exec_icon )
-        iname = g_strdup( ptask->task->exec_icon );
-    else
-        iname = g_strdup_printf( "gtk-execute" );
-
-    pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
-                app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-    g_free( iname );
-    if ( !pixbuf )
-        pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
-                app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-    
-    // status
-    char* status;
-    char* status2 = NULL;
-    char* status3;
-    if ( ptask->task->type != 6 )
-    {
-        if ( !ptask->err_count )
-            status = _(job_titles[ ptask->task->type ]);
         else
         {
-            status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
-                   ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
-            status = status2;
+            path = g_strdup( ptask->task->dest_dir ); //cwd
+            file = g_strdup_printf( "( %s )", ptask->task->current_file );
+            //percent = ptask->complete ? 100 : 50;
         }
+        
+        // icon
+        char* iname;
+        if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+        {
+            set = xset_get( "task_pause" );
+            iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
+        }
+        else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+        {
+            set = xset_get( "task_que" );
+            iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
+        }
+        else if ( ptask->err_count && ptask->task->type != 6 )
+            iname = g_strdup_printf( "error" );
+        else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
+            iname = g_strdup_printf( "stock_copy" );
+        else if ( ptask->task->type == 2 || ptask->task->type == 3 )
+            iname = g_strdup_printf( "stock_delete" );
+        else if ( ptask->task->type == 6 && ptask->task->exec_icon )
+            iname = g_strdup( ptask->task->exec_icon );
+        else
+            iname = g_strdup_printf( "gtk-execute" );
+
+        pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
+                    app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+        g_free( iname );
+        if ( !pixbuf )
+            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
+                    app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
+        
+        // status
+        char* status;
+        char* status2 = NULL;
+        char* status3;
+        if ( ptask->task->type != 6 )
+        {
+            if ( !ptask->err_count )
+                status = _(job_titles[ ptask->task->type ]);
+            else
+            {
+                status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
+                       ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
+                status = status2;
+            }
+        }
+        else
+        {
+            // exec task
+            if ( ptask->task->exec_action )
+                status = ptask->task->exec_action;
+            else
+                status = _(job_titles[ ptask->task->type ]);
+        }
+        if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+            status3 = g_strdup_printf( "%s %s", _("paused"), status );
+        else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+            status3 = g_strdup_printf( "%s %s", _("queued"), status );
+        else
+            status3 = g_strdup( status );
+        
+        gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                            TASK_COL_ICON, pixbuf,
+                            TASK_COL_STATUS, status3,
+                            TASK_COL_COUNT, ptask->dsp_file_count,
+                            TASK_COL_PATH, path,
+                            TASK_COL_FILE, file,
+                            TASK_COL_PROGRESS, percent,
+                            TASK_COL_TOTAL, ptask->dsp_size_tally,
+                            TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                            TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                            TASK_COL_CUREST, ptask->dsp_curest,
+                            TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                            TASK_COL_AVGEST, ptask->dsp_avgest,
+                            -1 );
+        g_free( file );
+        g_free( path );
+        g_free( status2 );
+        g_free( status3 );
+
+        if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
+            gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
+
+        update_window_title( NULL, main_window );
     }
     else
     {
-        // exec task
-        if ( ptask->task->exec_action )
-            status = ptask->task->exec_action;
-        else
-            status = _(job_titles[ ptask->task->type ]);
+        // task is paused
+        gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                            TASK_COL_TOTAL, ptask->dsp_size_tally,
+                            TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                            TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                            TASK_COL_CUREST, ptask->dsp_curest,
+                            TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                            TASK_COL_AVGEST, ptask->dsp_avgest,
+                            -1 );        
     }
-    if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-        status3 = g_strdup_printf( "%s %s", _("paused"), status );
-    else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-        status3 = g_strdup_printf( "%s %s", _("queued"), status );
-    else
-        status3 = g_strdup( status );
-    
-    gtk_list_store_set( GTK_LIST_STORE( model ), &it,
-                        TASK_COL_ICON, pixbuf,
-                        TASK_COL_STATUS, status3,
-                        TASK_COL_COUNT, ptask->dsp_file_count,
-                        TASK_COL_PATH, path,
-                        TASK_COL_FILE, file,
-                        TASK_COL_PROGRESS, percent,
-                        TASK_COL_TOTAL, ptask->dsp_size_tally,
-                        TASK_COL_ELAPSED, ptask->dsp_elapsed,
-                        TASK_COL_CURSPEED, ptask->dsp_curspeed,
-                        TASK_COL_CUREST, ptask->dsp_curest,
-                        TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
-                        TASK_COL_AVGEST, ptask->dsp_avgest,
-                        -1 );
-    g_free( file );
-    g_free( path );
-    g_free( status2 );
-    g_free( status3 );
-
-    if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
-        gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
-
-    update_window_title( NULL, main_window );
 //printf("DONE main_task_view_update_task\n");
 }
 

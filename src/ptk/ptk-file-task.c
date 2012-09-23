@@ -70,6 +70,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
     ptask->complete = FALSE;
     ptask->aborted = FALSE;
     ptask->pause_change = FALSE;
+    ptask->pause_change_view = TRUE;
     ptask->keep_dlg = FALSE;
     ptask->err_count = 0;
     
@@ -307,7 +308,7 @@ gboolean ptk_file_task_add_main( PtkFileTask* ptask )
         ptk_file_task_progress_open( ptask );
 
     if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING && !ptask->pause_change )
-        ptask->pause_change = TRUE;
+        ptask->pause_change = ptask->pause_change_view = TRUE;
         
     on_progress_timer( ptask );
     
@@ -565,7 +566,7 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
         ptask->task->state_pause = VFS_FILE_TASK_RUNNING;
     }    
     set_button_states( ptask );
-    ptask->pause_change = TRUE;
+    ptask->pause_change = ptask->pause_change_view = TRUE;
     ptask->progress_count = 50;  // trigger fast display
 }
 
