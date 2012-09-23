@@ -859,7 +859,7 @@ get_size ( GtkCellRenderer *cell,
             gint char_width;
 
             context = pango_layout_get_context ( layout );
-            metrics = pango_context_get_metrics ( context, widget->style->font_desc, pango_context_get_language ( context ) );
+            metrics = pango_context_get_metrics ( context, gtk_widget_get_style ( widget ) ->font_desc, pango_context_get_language ( context ) );
 
             char_width = pango_font_metrics_get_approximate_char_width ( metrics );
             pango_font_metrics_unref ( metrics );
@@ -970,7 +970,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         if( flags & GTK_CELL_RENDERER_SELECTED )
         {
             gdk_draw_rectangle ( window,
-                                 widget->style->base_gc[ state ], TRUE,
+                                 gtk_widget_get_style ( widget )->base_gc[ state ], TRUE,
                                  cell_area->x + x_offset, cell_area->y + y_offset,
                                  width, height );
         }
@@ -978,7 +978,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         /* draw the focus */
         if(flags & GTK_CELL_RENDERER_FOCUSED)
         {
-            gtk_paint_focus( widget->style, window, gtk_widget_get_state (widget),
+            gtk_paint_focus( gtk_widget_get_style ( widget ), window, gtk_widget_get_state (widget),
                            NULL, widget, "icon_view",
                            cell_area->x + x_offset - focus_width,
                            cell_area->y + y_offset - focus_width,
@@ -993,7 +993,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     else if ( celltext->wrap_width == -1 )
         pango_layout_set_width ( layout, -1 );
 
-    gtk_paint_layout ( widget->style,
+    gtk_paint_layout ( gtk_widget_get_style ( widget ),
                        window,
                        state,
                        TRUE,

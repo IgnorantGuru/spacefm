@@ -81,7 +81,7 @@ static void fm_main_window_prev_tab ( FMMainWindow* widget );
 
 
 static void on_folder_notebook_switch_pape ( GtkNotebook *notebook,
-                                             GtkNotebookPage *page,
+                                             GtkWidget *page,
                                              guint page_num,
                                              gpointer user_data );
 static void on_close_tab_activate ( GtkMenuItem *menuitem,
@@ -3019,7 +3019,7 @@ void update_window_title( GtkMenuItem* item, FMMainWindow* main_window )
 
 void
 on_folder_notebook_switch_pape ( GtkNotebook *notebook,
-                                 GtkNotebookPage *page,
+                                 GtkWidget *page,
                                  guint page_num,
                                  gpointer user_data )
 {

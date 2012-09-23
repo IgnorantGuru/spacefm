@@ -383,11 +383,15 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
     GtkCellRendererPixbuf * cellpixbuf = ( GtkCellRendererPixbuf * ) cell;
 
     GdkPixbuf *pixbuf;
+    GdkPixbuf *pixbuf_expander_open;
+    GdkPixbuf *pixbuf_expander_closed;
     GdkPixbuf *invisible = NULL;
     GdkPixbuf *colorized = NULL;
     GdkRectangle pix_rect;
     GdkRectangle draw_rect;
     VFSFileInfo* file;
+    gint xpad, ypad;
+    gboolean is_expander, is_expanded;
 
 #if GTK_CHECK_VERSION( 2, 8, 0 )
 
@@ -406,23 +410,46 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
 
     pix_rect.x += cell_area->x;
     pix_rect.y += cell_area->y;
-    pix_rect.width -= cell->xpad * 2;
-    pix_rect.height -= cell->ypad * 2;
+    gtk_cell_renderer_get_padding (cell, &xpad, &ypad);
+    pix_rect.width -= xpad * 2;
+    pix_rect.height -= ypad * 2;
 
     if ( !gdk_rectangle_intersect ( cell_area, &pix_rect, &draw_rect ) ||
             !gdk_rectangle_intersect ( expose_area, &draw_rect, &draw_rect ) )
         return ;
 
-    pixbuf = cellpixbuf->pixbuf;
+    g_object_get ( G_OBJECT ( cellpixbuf ), "pixbuf", &pixbuf, NULL);
+    g_object_get ( G_OBJECT ( cellpixbuf ), "is-expander", &is_expander, NULL);
+    g_object_get ( G_OBJECT ( cellpixbuf ), "is-expanded", &is_expanded, NULL);
+    g_object_get ( G_OBJECT ( cellpixbuf ), "pixbuf-expander-open", &pixbuf_expander_open, NULL);
+    g_object_get ( G_OBJECT ( cellpixbuf ), "pixbuf-expander-closed", &pixbuf_expander_closed, NULL);
 
-    if ( cell->is_expander )
+    if ( is_expander )
     {
-        if ( cell->is_expanded &&
-                cellpixbuf->pixbuf_expander_open != NULL )
-            pixbuf = cellpixbuf->pixbuf_expander_open;
-        else if ( !cell->is_expanded &&
-                  cellpixbuf->pixbuf_expander_closed != NULL )
-            pixbuf = cellpixbuf->pixbuf_expander_closed;
+        g_object_get ( G_OBJECT ( cellpixbuf ), "is-expanded", &is_expanded, NULL);
+        if ( is_expanded &&
+                pixbuf_expander_open != NULL )
+        {
+            g_object_unref ( pixbuf );
+            pixbuf = pixbuf_expander_open;
+            if ( pixbuf_expander_closed )
+                g_object_unref ( pixbuf_expander_closed );
+        }
+        else if ( !is_expanded &&
+                  pixbuf_expander_closed != NULL )
+        {
+            g_object_unref ( pixbuf );
+            pixbuf = pixbuf_expander_closed;
+            if ( pixbuf_expander_open )
+                g_object_unref ( pixbuf_expander_open );
+        }
+    }
+    else
+    {
+        if ( pixbuf_expander_open )
+            g_object_unref ( pixbuf_expander_open );
+        if ( pixbuf_expander_closed )
+            g_object_unref ( pixbuf_expander_closed );
     }
 
     if ( !pixbuf )
@@ -443,7 +470,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
             gtk_icon_source_set_size ( source, GTK_ICON_SIZE_SMALL_TOOLBAR );
             gtk_icon_source_set_size_wildcarded ( source, FALSE );
 
-            invisible = gtk_style_render_icon ( widget->style,
+            invisible = gtk_style_render_icon ( gtk_widget_get_style (widget),
                                                 source,
                                                 gtk_widget_get_direction ( widget ),
                                                 GTK_STATE_INSENSITIVE,
@@ -466,7 +493,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                     state = GTK_STATE_SELECTED;
                 else
                     state = GTK_STATE_ACTIVE;
-                color = &widget->style->base[ state ];
+                color = &gtk_widget_get_style(widget)->base[ state ];
             }
             else
             {

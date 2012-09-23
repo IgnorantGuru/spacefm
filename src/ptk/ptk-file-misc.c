@@ -1049,8 +1049,10 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
         g_free( path );
     }
     
-    width = GTK_WIDGET( dlg ) ->allocation.width;
-    height = GTK_WIDGET( dlg ) ->allocation.height;
+    GtkAllocation allocation;
+    gtk_widget_get_allocation( GTK_WIDGET(dlg), &allocation );
+    width = allocation.width;
+    height = allocation.height;
     if ( width && height )
     {
         char* str = g_strdup_printf( "%d", width );
@@ -2115,7 +2117,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         else
         {
             gtk_entry_set_text( GTK_ENTRY( mset->entry_target ), mset->mime_type );
-            gtk_entry_set_editable( GTK_ENTRY( mset->entry_target ), FALSE );
+            gtk_editable_set_editable( GTK_EDITABLE( mset->entry_target ), FALSE );
             mset->browse_target = NULL;
         }
         g_signal_connect( G_OBJECT( mset->entry_target ), "changed",

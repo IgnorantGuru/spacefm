@@ -41,7 +41,7 @@ gboolean app_chooser_dialog_get_set_default( GtkWidget* dlg );
 
 void
 on_notebook_switch_page                (GtkNotebook     *notebook,
-                                        GtkNotebookPage *page,
+                                        GtkWidget       *page,
                                         guint            page_num,
                                         gpointer         user_data);
 

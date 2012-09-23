@@ -216,7 +216,7 @@ static void on_load_all_apps_finish( VFSAsyncTask* task, gboolean is_cancelled, 
 
 void
 on_notebook_switch_page ( GtkNotebook *notebook,
-                          GtkNotebookPage *page,
+                          GtkWidget *page,
                           guint page_num,
                           gpointer user_data )
 {

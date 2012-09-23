@@ -1685,7 +1685,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     PtkFileMenu* app_data = NULL;
     VFSAppDesktop* desktop_file = NULL;
     
-    GtkWidget* item = GTK_MENU_SHELL( menu )->active_menu_item;
+    GtkWidget* item = gtk_menu_get_active (GTK_MENU( menu ));
     if ( item )
     {
         // if original menu, desktop_file will be set

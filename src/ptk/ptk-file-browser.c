@@ -315,6 +315,79 @@ GType ptk_file_browser_get_type()
     return type;
 }
 
+static void
+g_cclosure_marshal_VOID__POINTER_POINTER (GClosure     *closure,
+                                          GValue       *return_value G_GNUC_UNUSED,
+                                          guint         n_param_values,
+                                          const GValue *param_values,
+                                          gpointer      invocation_hint G_GNUC_UNUSED,
+                                          gpointer      marshal_data)
+{
+    register GCClosure *cc = (GCClosure *) closure;
+    register gpointer data1, data2;
+
+    g_return_if_fail (n_param_values == 3);
+
+    if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+        data1 = closure->data;
+        data2 = g_value_peek_pointer (param_values + 0);
+    }
+    else
+    {
+        data1 = g_value_peek_pointer (param_values + 0);
+        data2 = closure->data;
+    }
+
+    typedef void (*GMarshalFunc_VOID__POINTER_POINTER) (gpointer data1,
+                                                        gpointer arg_1,
+                                                        gpointer arg_2,
+                                                        gpointer data2);
+
+    register GMarshalFunc_VOID__POINTER_POINTER callback = (GMarshalFunc_VOID__POINTER_POINTER) (marshal_data ? marshal_data : cc->callback);
+
+    callback (data1,
+              g_value_get_pointer (param_values + 1),
+              g_value_get_pointer (param_values + 2),
+              data2);
+}
+
+static void
+g_cclosure_marshal_VOID__POINTER_INT (GClosure     *closure,
+                                      GValue       *return_value,
+                                      guint         n_param_values,
+                                      const GValue *param_values,
+                                      gpointer      invocation_hint,
+                                      gpointer      marshal_data)
+{
+  typedef void (*GMarshalFunc_VOID__POINTER_INT) (gpointer     data1,
+                                                  gpointer     arg_1,
+                                                  gint         arg_2,
+                                                  gpointer     data2);
+  register GMarshalFunc_VOID__POINTER_INT callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+
+  g_return_if_fail (n_param_values == 3);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_VOID__POINTER_INT) (marshal_data ? marshal_data : cc->callback);
+
+  callback (data1,
+            g_value_get_pointer (param_values + 1),
+            g_value_get_int (param_values + 2),
+            data2);
+}
+
 void ptk_file_browser_class_init( PtkFileBrowserClass* klass )
 {
     GObjectClass * object_class;
@@ -349,7 +422,7 @@ void ptk_file_browser_class_init( PtkFileBrowserClass* klass )
                        G_SIGNAL_RUN_LAST,
                        G_STRUCT_OFFSET ( PtkFileBrowserClass, before_chdir ),
                        NULL, NULL,
-                       gtk_marshal_VOID__POINTER_POINTER,
+                       g_cclosure_marshal_VOID__POINTER_POINTER,
                        G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER );
 
     signals[ BEGIN_CHDIR_SIGNAL ] =
@@ -379,7 +452,7 @@ void ptk_file_browser_class_init( PtkFileBrowserClass* klass )
                        G_SIGNAL_RUN_LAST,
                        G_STRUCT_OFFSET ( PtkFileBrowserClass, open_item ),
                        NULL, NULL,
-                       gtk_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT );
+                       g_cclosure_marshal_VOID__POINTER_INT, G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT );
 
     signals[ CONTENT_CHANGE_SIGNAL ] =
         g_signal_new ( "content-change",
@@ -2495,7 +2568,7 @@ void ptk_file_browser_canon( PtkFileBrowser* file_browser, const char* path )
     else if ( g_file_test( canon, G_FILE_TEST_EXISTS ) )
     {
         // open dir and select file
-        char* dir_path = g_dirname( canon );
+        char* dir_path = g_path_get_dirname( canon );
         if ( dir_path && strcmp( dir_path, cwd ) )
         {
             file_browser->select_path = strdup( canon );

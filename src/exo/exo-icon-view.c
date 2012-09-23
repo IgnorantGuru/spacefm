@@ -401,7 +401,7 @@ static gboolean exo_icon_view_search_iter               (ExoIconView    *icon_vi
 static void     exo_icon_view_search_move               (GtkWidget      *widget,
                                                          ExoIconView    *icon_view,
                                                          gboolean        move_up);
-static void     exo_icon_view_search_preedit_changed    (GtkIMContext   *im_context,
+static void     exo_icon_view_search_preedit_changed    (GtkEntry       *entry,
                                                          ExoIconView    *icon_view);
 static gboolean exo_icon_view_search_start              (ExoIconView    *icon_view,
                                                          gboolean        keybinding);
@@ -1510,7 +1510,7 @@ exo_icon_view_realize (GtkWidget *widget)
   gdk_window_set_user_data (priv->bin_window, widget);
 
   /* Attach style/background */
-  gtk_widget_set_style (widget, gtk_style_attach (gtk_widget_get_style (widget), widget->window));
+  gtk_widget_set_style (widget, gtk_style_attach (gtk_widget_get_style (widget), gtk_widget_get_window(widget)));
   gdk_window_set_background (priv->bin_window, &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
   gdk_window_set_background (gtk_widget_get_window (widget), &gtk_widget_get_style (widget)->base[gtk_widget_get_state (widget)]);
 
@@ -1657,7 +1657,7 @@ exo_icon_view_style_set (GtkWidget *widget,
 
   /* apply the new style for the bin_window if we're realized */
   if (gtk_widget_get_realized (widget))
-    gdk_window_set_background (icon_view->priv->bin_window, &widget->style->base[widget->state]);
+    gdk_window_set_background (icon_view->priv->bin_window, &gtk_widget_get_style(widget)->base[gtk_widget_get_state(widget)]);
 }
 
 
@@ -1774,7 +1774,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
       switch (dest_pos)
         {
         case EXO_ICON_VIEW_DROP_INTO:
-          gtk_paint_focus (widget->style, priv->bin_window,
+          gtk_paint_focus (gtk_widget_get_style(widget), priv->bin_window,
                            gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y,
@@ -1782,7 +1782,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
           break;
 
         case EXO_ICON_VIEW_DROP_ABOVE:
-          gtk_paint_focus (widget->style, priv->bin_window,
+          gtk_paint_focus (gtk_widget_get_style(widget), priv->bin_window,
                            gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y - 1,
@@ -1790,7 +1790,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
           break;
 
         case EXO_ICON_VIEW_DROP_LEFT:
-          gtk_paint_focus (widget->style, priv->bin_window,
+          gtk_paint_focus (gtk_widget_get_style(widget), priv->bin_window,
                            gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x - 1, dest_item->area.y,
@@ -1798,7 +1798,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
           break;
 
         case EXO_ICON_VIEW_DROP_BELOW:
-          gtk_paint_focus (widget->style, priv->bin_window,
+          gtk_paint_focus (gtk_widget_get_style(widget), priv->bin_window,
                            gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x, dest_item->area.y + dest_item->area.height - 1,
@@ -1806,7 +1806,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
           break;
 
         case EXO_ICON_VIEW_DROP_RIGHT:
-          gtk_paint_focus (widget->style, priv->bin_window,
+          gtk_paint_focus (gtk_widget_get_style(widget), priv->bin_window,
                            gtk_widget_get_state (widget), NULL, widget,
                            "iconview-drop-indicator",
                            dest_item->area.x + dest_item->area.width - 1, dest_item->area.y,
@@ -2656,7 +2656,7 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
   /* determine the border color */
   gtk_widget_style_get (GTK_WIDGET (icon_view), "selection-box-color", &color, NULL);
   if (G_LIKELY (color == NULL))
-    color = gdk_color_copy (&GTK_WIDGET (icon_view)->style->base[GTK_STATE_SELECTED]);
+    color = gdk_color_copy (&gtk_widget_get_style(GTK_WIDGET (icon_view))->base[GTK_STATE_SELECTED]);
 
   /* allocate the border GC */
   icon_view->priv->rubberband_border_gc = gdk_gc_new (icon_view->priv->bin_window);
@@ -2666,10 +2666,10 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
   /* determine the fill color and alpha setting */
   gtk_widget_style_get (GTK_WIDGET (icon_view), "selection-box-color", &color, "selection-box-alpha", &alpha, NULL);
   if (G_LIKELY (color == NULL))
-    color = gdk_color_copy (&GTK_WIDGET (icon_view)->style->base[GTK_STATE_SELECTED]);
+    color = gdk_color_copy (&gtk_widget_get_style(GTK_WIDGET (icon_view))->base[GTK_STATE_SELECTED]);
 
   /* calculate the fill color (based on the fill color, the alpha setting and the background color) */
-  background_color = &GTK_WIDGET (icon_view)->style->base[GTK_STATE_NORMAL];
+  background_color = &gtk_widget_get_style(GTK_WIDGET (icon_view))->base[GTK_STATE_NORMAL];
   color->red = ((color->red * (alpha / 255.0)) + (background_color->red * (255.0 - alpha / 255.0)));
   color->green = ((color->green * (alpha / 255.0)) + (background_color->green * (255.0 - alpha / 255.0)));
   color->blue = ((color->blue * (alpha / 255.0)) + (background_color->blue * (255.0 - alpha / 255.0)));
@@ -7565,7 +7565,7 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
                                      -1);
 
           gc = gdk_gc_new (drawable);
-          gdk_gc_set_rgb_fg_color (gc, &widget->style->base[gtk_widget_get_state (widget)]);
+          gdk_gc_set_rgb_fg_color (gc, &gtk_widget_get_style(widget)->base[gtk_widget_get_state (widget)]);
           gdk_draw_rectangle (drawable, gc, TRUE, 0, 0, item->area.width + 2, item->area.height + 2);
 
           area.x = 0;
@@ -7575,7 +7575,7 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
 
           exo_icon_view_paint_item (icon_view, item, &area, drawable, 1, 1, FALSE);
 
-          gdk_gc_set_rgb_fg_color (gc, &widget->style->black);
+          gdk_gc_set_rgb_fg_color (gc, &gtk_widget_get_style(widget)->black);
           gdk_draw_rectangle (drawable, gc, FALSE, 1, 1, item->area.width + 1, item->area.height + 1);
 
           g_object_unref (G_OBJECT (gc));
@@ -8175,7 +8175,7 @@ exo_icon_view_search_ensure_directory (ExoIconView *icon_view)
   /* allocate the search entry widget */
   icon_view->priv->search_entry = gtk_entry_new ();
   g_signal_connect (G_OBJECT (icon_view->priv->search_entry), "activate", G_CALLBACK (exo_icon_view_search_activate), icon_view);
-  g_signal_connect (G_OBJECT (GTK_ENTRY (icon_view->priv->search_entry)->im_context), "preedit-changed",
+  g_signal_connect (G_OBJECT (GTK_ENTRY (icon_view->priv->search_entry)), "preedit-changed",
                     G_CALLBACK (exo_icon_view_search_preedit_changed), icon_view);
   gtk_box_pack_start (GTK_BOX (vbox), icon_view->priv->search_entry, TRUE, TRUE, 0);
   gtk_widget_realize (icon_view->priv->search_entry);
@@ -8341,7 +8341,7 @@ exo_icon_view_search_move (GtkWidget   *widget,
 
 
 static void
-exo_icon_view_search_preedit_changed (GtkIMContext *im_context,
+exo_icon_view_search_preedit_changed (GtkEntry *entry,
                                       ExoIconView  *icon_view)
 {
   icon_view->priv->search_imcontext_changed = TRUE;
