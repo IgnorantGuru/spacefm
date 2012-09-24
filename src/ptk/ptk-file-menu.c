@@ -15,6 +15,9 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+
+#undef GSEAL_ENABLE
+
 #include <unistd.h> /* for access */
 
 #include "ptk-file-menu.h"
@@ -1685,7 +1688,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     PtkFileMenu* app_data = NULL;
     VFSAppDesktop* desktop_file = NULL;
     
-    GtkWidget* item = gtk_menu_get_active (GTK_MENU( menu ));
+    GtkWidget* item = GTK_MENU_SHELL( menu )->active_menu_item; //GTK3 version: gtk_menu_shell_get_selected_item (GTK_MENU_SHELL( menu ));
     if ( item )
     {
         // if original menu, desktop_file will be set

@@ -940,7 +940,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     layout = get_layout ( celltext, widget, TRUE, flags );
     get_size ( cell, widget, cell_area, layout, &x_offset, &y_offset, &width, &height );
 
-    if ( !gtk_widget_is_sensitive ( cell ) )
+    if ( !gtk_cell_renderer_get_sensitive ( cell ) )
     {
         state = GTK_STATE_INSENSITIVE;
     }
