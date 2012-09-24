@@ -305,7 +305,7 @@ static void desktop_window_init(DesktopWindow *self)
     pango_layout_set_width( self->pl, 100 * PANGO_SCALE );
 
     metrics = pango_context_get_metrics(
-                            pc, ((GtkWidget*)self)->style->font_desc,
+                            pc, gtk_widget_get_style( ((GtkWidget*)self) )->font_desc,
                             pango_context_get_language(pc));
 
     font_h = pango_font_metrics_get_ascent(metrics) + pango_font_metrics_get_descent (metrics);
@@ -370,7 +370,6 @@ static void desktop_window_init(DesktopWindow *self)
 GtkWidget* desktop_window_new(void)
 {
     GtkWindow* w = (GtkWindow*)g_object_new(DESKTOP_WINDOW_TYPE, NULL);
-    w->type = GTK_WINDOW_TOPLEVEL;
     return (GtkWidget*)w;
 }
 
@@ -464,7 +463,7 @@ void desktop_window_set_pixmap( DesktopWindow* win, GdkPixmap* pix )
     win->background = pix ? g_object_ref( pix ) : NULL;
 
     if( gtk_widget_get_realized( win ) )
-        gdk_window_set_back_pixmap( ((GtkWidget*)win)->window, win->background, FALSE );
+        gdk_window_set_back_pixmap( gtk_widget_get_window( ((GtkWidget*)win) ), win->background, FALSE );
 }
 
 void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr )
@@ -525,7 +524,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
 
         if( type == DW_BG_TILE )
         {
-            pixmap = gdk_pixmap_new( ((GtkWidget*)win)->window, src_w, src_h, -1 );
+            pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), src_w, src_h, -1 );
             gdk_draw_pixbuf( pixmap, NULL, src_pix, 0, 0, 0, 0, src_w, src_h, GDK_RGB_DITHER_NORMAL, 0, 0 );
         }
         else
@@ -534,7 +533,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             int dest_x = 0, dest_y = 0;
             int w = 0, h = 0;
 
-            pixmap = gdk_pixmap_new( ((GtkWidget*)win)->window, dest_w, dest_h, -1 );
+            pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), dest_w, dest_h, -1 );
             switch( type )
             {
             case DW_BG_STRETCH:
@@ -601,7 +600,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             {
                 if( w != dest_w || h != dest_h )
                 {
-                    GdkGC *gc = gdk_gc_new( ((GtkWidget*)win)->window );
+                    GdkGC *gc = gdk_gc_new( gtk_widget_get_window( ((GtkWidget*)win) ) );
                     gdk_gc_set_fill(gc, GDK_SOLID);
                     gdk_gc_set_foreground( gc, &win->bg);
                     gdk_draw_rectangle( pixmap, gc, TRUE, 0, 0, dest_w, dest_h );
@@ -624,11 +623,11 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
     win->background = pixmap;
 
     if( pixmap )
-        gdk_window_set_back_pixmap( ((GtkWidget*)win)->window, pixmap, FALSE );
+        gdk_window_set_back_pixmap( gtk_widget_get_window( ((GtkWidget*)win) ), pixmap, FALSE );
     else
-        gdk_window_set_background( ((GtkWidget*)win)->window, &win->bg );
+        gdk_window_set_background( gtk_widget_get_window( ((GtkWidget*)win) ), &win->bg );
 
-    gdk_window_clear( ((GtkWidget*)win)->window );
+    gdk_window_clear( gtk_widget_get_window( ((GtkWidget*)win) ) );
     gtk_widget_queue_draw( (GtkWidget*)win );
 
     /* set root map here */
@@ -814,8 +813,8 @@ void paint_rubber_banding_rect( DesktopWindow* self )
                         NULL);
 */
 
-    gc = gdk_gc_new( ((GtkWidget*)self)->window);
-    clr = gdk_color_copy (&GTK_WIDGET (self)->style->base[GTK_STATE_SELECTED]);
+    gc = gdk_gc_new( gtk_widget_get_window( ((GtkWidget*)self) ));
+    clr = gdk_color_copy (&gtk_widget_get_style( GTK_WIDGET (self) )->base[GTK_STATE_SELECTED]);
     alpha = 64;  /* FIXME: should be themable in the future */
 
     pix = NULL;
@@ -842,14 +841,14 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         {
             GdkPixmap* pattern;
             /* FIXME: This is damn slow!! */
-            pattern = gdk_pixmap_new( ((GtkWidget*)self)->window, pattern_w, pattern_h, -1 );
+            pattern = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)self) ), pattern_w, pattern_h, -1 );
             if( pattern )
             {
                 gdk_draw_pixbuf( pattern, gc, pix, 0, 0,
                                  0, 0, pattern_w, pattern_h, GDK_RGB_DITHER_NONE, 0, 0 );
                 gdk_gc_set_tile( gc, pattern );
                 gdk_gc_set_fill( gc, GDK_TILED );
-        gdk_draw_rectangle( ((GtkWidget*)self)->window, gc, TRUE,
+        gdk_draw_rectangle( gtk_widget_get_window( ((GtkWidget*)self) ), gc, TRUE,
                             rect.x, rect.y, rect.width-1, rect.height-1 );
                 g_object_unref( pattern );
                 gdk_gc_set_fill( gc, GDK_SOLID );
@@ -857,7 +856,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         }
         else
         {
-            gdk_draw_pixbuf( ((GtkWidget*)self)->window, gc, pix, 0, 0,
+            gdk_draw_pixbuf( gtk_widget_get_window( ((GtkWidget*)self) ), gc, pix, 0, 0,
                             rect.x, rect.y, rect.width, rect.height, GDK_RGB_DITHER_NONE, 0, 0 );
         }
         g_object_unref( pix );
@@ -871,13 +870,13 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         clr2.blue = clr2.blue * clr->blue / 65535;
         gdk_gc_set_rgb_fg_color( gc, &clr2 );
         gdk_gc_set_fill( gc, GDK_SOLID );
-        gdk_draw_rectangle( ((GtkWidget*)self)->window, gc, TRUE,
+        gdk_draw_rectangle( gtk_widget_get_window( ((GtkWidget*)self) ), gc, TRUE,
                             rect.x, rect.y, rect.width-1, rect.height-1 );
     }
 
     /* draw the border */
     gdk_gc_set_foreground( gc, clr );
-    gdk_draw_rectangle( ((GtkWidget*)self)->window, gc, FALSE,
+    gdk_draw_rectangle( gtk_widget_get_window( ((GtkWidget*)self) ), gc, FALSE,
                         rect.x, rect.y, rect.width-1, rect.height-1 );
 
     gdk_color_free (clr);
@@ -893,8 +892,8 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
     calc_rubber_banding_rect(self, self->rubber_bending_x, self->rubber_bending_y, &old_rect );
     calc_rubber_banding_rect(self, newx, newy, &new_rect );
 
-    gdk_window_invalidate_rect(((GtkWidget*)self)->window, &old_rect, FALSE );
-    gdk_window_invalidate_rect(((GtkWidget*)self)->window, &new_rect, FALSE );
+    gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &old_rect, FALSE );
+    gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &new_rect, FALSE );
 //    gdk_window_clear_area(((GtkWidget*)self)->window, new_rect.x, new_rect.y, new_rect.width, new_rect.height );
 /*
     region = gdk_region_rectangle( &old_rect );
@@ -1217,8 +1216,8 @@ static gboolean on_single_click_timeout( DesktopWindow* self )
     /* generate a fake button press */
     /* FIXME: will this cause any problem? */
     evt.type = GDK_BUTTON_PRESS;
-    evt.window = w->window;
-    gdk_window_get_pointer( w->window, &x, &y, &evt.state );
+    evt.window = gtk_widget_get_window(w);
+    gdk_window_get_pointer( gtk_widget_get_window(w), &x, &y, &evt.state );
     evt.x = x;
     evt.y = y;
     evt.state |= GDK_BUTTON_PRESS_MASK;
@@ -1247,7 +1246,7 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
             }
             if( item )
             {
-                gdk_window_set_cursor( w->window, self->hand_cursor );
+                gdk_window_set_cursor( gtk_widget_get_window(w), self->hand_cursor );
                 /* FIXME: timeout should be customizable */
                 if( 0 == self->single_click_timeout_handler )
                     self->single_click_timeout_handler = g_timeout_add( 400,
@@ -1255,7 +1254,7 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
             }
             else
             {
-                gdk_window_set_cursor( w->window, NULL );
+                gdk_window_set_cursor( gtk_widget_get_window(w), NULL );
             }
             self->hover_item = item;
         }
@@ -1313,9 +1312,9 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
     DesktopItem* item;
     GdkAtom expected_target = 0;
 
-    if( G_LIKELY(ctx->targets) )
+    if( G_LIKELY(gdk_drag_context_list_targets( ctx ) ) )
     {
-        if( ctx->action != GDK_ACTION_MOVE )
+        if( gdk_drag_context_get_selected_action( ctx ) != GDK_ACTION_MOVE )
             expected_target = text_uri_list_atom;
         else
         {
@@ -1333,12 +1332,12 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
             }
             else    /* drag over blank area, check if it's a desktop icon first. */
             {
-                if( g_list_find( ctx->targets, GUINT_TO_POINTER(desktop_icon_atom) ) )
+                if( g_list_find( gdk_drag_context_list_targets( ctx ), GUINT_TO_POINTER(desktop_icon_atom) ) )
                     return desktop_icon_atom;
                 expected_target = text_uri_list_atom;
             }
         }
-        if( g_list_find( ctx->targets, GUINT_TO_POINTER(expected_target) ) )
+        if( g_list_find( gdk_drag_context_list_targets( ctx ), GUINT_TO_POINTER(expected_target) ) )
             return expected_target;
     }
     return GDK_NONE;
@@ -1365,17 +1364,17 @@ gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guin
 
     /* g_debug( "suggest: %d, action = %d", ctx->suggested_action, ctx->action ); */
 
-    if( g_list_find( ctx->targets, GUINT_TO_POINTER(text_uri_list_atom) ) )
+    if( g_list_find( gdk_drag_context_list_targets( ctx ), GUINT_TO_POINTER(text_uri_list_atom) ) )
     {
         GdkDragAction suggested_action = 0;
         /* Only 'move' is available. The user force move action by pressing Shift key */
-        if( (ctx->actions & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
+        if( (gdk_drag_context_get_actions( ctx ) & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
             suggested_action = GDK_ACTION_MOVE;
         /* Only 'copy' is available. The user force copy action by pressing Ctrl key */
-        else if( (ctx->actions & GDK_ACTION_ALL) == GDK_ACTION_COPY )
+        else if( (gdk_drag_context_get_actions( ctx ) & GDK_ACTION_ALL) == GDK_ACTION_COPY )
             suggested_action = GDK_ACTION_COPY;
         /* Only 'link' is available. The user force link action by pressing Shift+Ctrl key */
-        else if( (ctx->actions & GDK_ACTION_ALL) == GDK_ACTION_LINK )
+        else if( (gdk_drag_context_get_actions( ctx ) & GDK_ACTION_ALL) == GDK_ACTION_LINK )
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
@@ -1392,12 +1391,10 @@ gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guin
                 suggested_action = GDK_ACTION_MOVE;
             }
         }
-        ctx->action = suggested_action;
         gdk_drag_status( ctx, suggested_action, time );
     }
-    else if( g_list_find( ctx->targets, GUINT_TO_POINTER(desktop_icon_atom) ) ) /* moving desktop icon */
+    else if( g_list_find( gdk_drag_context_list_targets( ctx ), GUINT_TO_POINTER(desktop_icon_atom) ) ) /* moving desktop icon */
     {
-        ctx->action = GDK_ACTION_MOVE;
         gdk_drag_status( ctx, GDK_ACTION_MOVE, time );
     }
     else
@@ -1508,7 +1505,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
 {
     DesktopWindow* self = (DesktopWindow*)w;
 
-    if( data->target == text_uri_list_atom )
+    if( gtk_selection_data_get_target( data ) == text_uri_list_atom )
     {
         DesktopItem* item = hit_test( self, x, y );
         char* dest_dir = NULL;
@@ -1518,7 +1515,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
         int n, i;
         GList* file_list;
 
-        if( (data->length < 0) || (data->format != 8) )
+        if( (gtk_selection_data_get_length( data ) < 0) || (gtk_selection_data_get_format( data ) != 8) )
         {
             gtk_drag_finish( ctx, FALSE, FALSE, time );
             return;
@@ -1570,7 +1567,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
             return;
         }
 
-        switch ( ctx->action )
+        switch ( gdk_drag_context_get_selected_action( ctx ) )
         {
         case GDK_ACTION_COPY:
             file_action = VFS_FILE_TASK_COPY;
@@ -1604,7 +1601,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
 
         gtk_drag_finish( ctx, files != NULL, FALSE, time );
     }
-    else if( data->target == desktop_icon_atom ) /* moving desktop icon */
+    else if( gtk_selection_data_get_target( data ) == desktop_icon_atom ) /* moving desktop icon */
     {
         GList* sels = desktop_window_get_selected_items(self), *l;
         int x_off = x - self->drag_start_x;
@@ -1781,7 +1778,7 @@ void on_style_set( GtkWidget* w, GtkStyle* prev )
     pc = gtk_widget_get_pango_context( (GtkWidget*)self );
 
     metrics = pango_context_get_metrics(
-                            pc, ((GtkWidget*)self)->style->font_desc,
+                            pc, gtk_widget_get_style((GtkWidget*)self)->font_desc,
                             pango_context_get_language(pc));
 
     font_h = pango_font_metrics_get_ascent(metrics) + pango_font_metrics_get_descent (metrics);
@@ -1794,7 +1791,7 @@ void on_realize( GtkWidget* w )
     DesktopWindow* self = (DesktopWindow*)w;
 
     GTK_WIDGET_CLASS(parent_class)->realize( w );
-    gdk_window_set_type_hint( w->window,
+    gdk_window_set_type_hint( gtk_widget_get_window(w),
                               GDK_WINDOW_TYPE_HINT_DESKTOP );
 
     gtk_window_set_skip_pager_hint( GTK_WINDOW(w), TRUE );
@@ -1804,12 +1801,12 @@ void on_realize( GtkWidget* w )
     /* This is borrowed from fbpanel */
 #define WIN_HINTS_SKIP_FOCUS      (1<<0)    /* skip "alt-tab" */
     val = WIN_HINTS_SKIP_FOCUS;
-    XChangeProperty(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(w->window),
+    XChangeProperty(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(gtk_widget_get_window(w)),
           XInternAtom(GDK_DISPLAY(), "_WIN_HINTS", False), XA_CARDINAL, 32,
           PropModeReplace, (unsigned char *) &val, 1);
 
     if( ! self->gc )
-        self->gc = gdk_gc_new( w->window );
+        self->gc = gdk_gc_new( gtk_widget_get_window(w) );
 
 //    if( self->background )
 //        gdk_window_set_back_pixmap( w->window, self->background, FALSE );
@@ -2181,7 +2178,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     GdkPixbuf* icon;
     const char* text = item->fi->disp_name;
     GtkWidget* widget = (GtkWidget*)self;
-    GdkDrawable* drawable = widget->window;
+    GdkDrawable* drawable = gtk_widget_get_window(widget);
     GdkGC* tmp;
     GtkCellRendererState state = 0;
     GdkRectangle text_rect;
@@ -2202,7 +2199,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 	if( icon )
 		g_object_unref( icon );
 
-    tmp = widget->style->fg_gc[0];
+    tmp = gtk_widget_get_style(widget)->fg_gc[0];
 
     text_rect = item->text_rect;
 
@@ -2213,8 +2210,8 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         GdkRectangle intersect={0};
 
         if( gdk_rectangle_intersect( expose_area, &item->text_rect, &intersect ) )
-            gdk_draw_rectangle( widget->window,
-                        widget->style->bg_gc[GTK_STATE_SELECTED],
+            gdk_draw_rectangle( gtk_widget_get_window(widget),
+                        gtk_widget_get_style(widget)->bg_gc[GTK_STATE_SELECTED],
                         TRUE, intersect.x, intersect.y, intersect.width, intersect.height );
     }
     else
@@ -2229,12 +2226,12 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         {
             pango_layout_set_text( self->pl, text, item->len1 );
             pango_layout_get_pixel_size( self->pl, &w, &h );
-            gdk_draw_layout( widget->window, self->gc, text_rect.x, text_rect.y, self->pl );
+            gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
             text_rect.y += h;
         }
         pango_layout_set_text( self->pl, text + item->len1, -1 );
         pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_END );
-        gdk_draw_layout( widget->window, self->gc, text_rect.x, text_rect.y, self->pl );
+        gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
 
         --text_rect.x;
         --text_rect.y;
@@ -2242,7 +2239,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 
     if( self->focus == item && gtk_widget_has_focus(widget) )
     {
-        gtk_paint_focus( widget->style, widget->window,
+        gtk_paint_focus( gtk_widget_get_style(widget), gtk_widget_get_window(widget),
                         GTK_STATE_NORMAL,/*item->is_selected ? GTK_STATE_SELECTED : GTK_STATE_NORMAL,*/
                         &item->text_rect, widget, "icon_view",
                         item->text_rect.x, item->text_rect.y,
@@ -2257,14 +2254,14 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     {
         pango_layout_set_text( self->pl, text, item->len1 );
         pango_layout_get_pixel_size( self->pl, &w, &h );
-        gdk_draw_layout( widget->window, self->gc, text_rect.x, text_rect.y, self->pl );
+        gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
         text_rect.y += h;
     }
     pango_layout_set_text( self->pl, text + item->len1, -1 );
     pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_END );
-    gdk_draw_layout( widget->window, self->gc, text_rect.x, text_rect.y, self->pl );
+    gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
 
-    widget->style->fg_gc[0] = tmp;
+    gtk_widget_get_style(widget)->fg_gc[0] = tmp;
 }
 
 void move_item( DesktopWindow* self, DesktopItem* item, int x, int y, gboolean is_offset )
@@ -2442,7 +2439,7 @@ void redraw_item( DesktopWindow* win, DesktopItem* item )
     --rect.y;
     rect.width += 2;
     rect.height += 2;
-    gdk_window_invalidate_rect( ((GtkWidget*)win)->window, &rect, FALSE );
+    gdk_window_invalidate_rect( gtk_widget_get_window((GtkWidget*)win), &rect, FALSE );
 }
 
 
@@ -2654,7 +2651,7 @@ void desktop_window_set_single_click( DesktopWindow* win, gboolean single_click 
         gdk_cursor_unref( win->hand_cursor );
         win->hand_cursor = NULL;
         if( gtk_widget_get_realized(win) )
-            gdk_window_set_cursor( ((GtkWidget*)win)->window, NULL );
+            gdk_window_set_cursor( gtk_widget_get_window((GtkWidget*)win), NULL );
     }
 }
 
