@@ -181,14 +181,14 @@ void ptk_clipboard_cut_or_copy_files( const char* working_dir,
     new_target = g_new0( GtkTargetEntry, 1 );
     new_target->target = "x-special/gnome-copied-files";
     #endif
-    g_memmove( &(targets[ n_targets ]), new_target, sizeof (GtkTargetEntry));
+    g_memmove( &(targets[ n_targets - 2 ]), new_target, sizeof (GtkTargetEntry));
     #if 0
     new_target = gtk_target_entry_new( "text/uri-list", 0, 0 );
     #else
     new_target = g_new0( GtkTargetEntry, 1 );
     new_target->target = "text/uri-list";
     #endif
-    g_memmove( &(targets[ n_targets + 1 ]), new_target, sizeof (GtkTargetEntry));
+    g_memmove( &(targets[ n_targets - 1 ]), new_target, sizeof (GtkTargetEntry));
 
     gtk_target_list_unref ( target_list );
 
@@ -205,7 +205,7 @@ void ptk_clipboard_cut_or_copy_files( const char* working_dir,
                                   clipboard_clean_data,
                                   NULL );
 
-    gtk_target_table_free( targets, n_targets );
+    g_free( targets );
 
     clipboard_file_list = file_list;
     clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;
