@@ -54,6 +54,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include "gtk2-compat.h"
+
 struct _DesktopItem
 {
     VFSFileInfo* fi;
@@ -292,12 +294,7 @@ static void desktop_window_init(DesktopWindow *self)
 
     self->icon_render = gtk_cell_renderer_pixbuf_new();
     g_object_set( self->icon_render, "follow-state", TRUE, NULL);
-#if GTK_CHECK_VERSION( 2, 10, 0 )
     g_object_ref_sink(self->icon_render);
-#else
-    g_object_ref( self->icon_render );
-    g_object_ref_sink(self->icon_render);
-#endif
     pc = gtk_widget_get_pango_context( (GtkWidget*)self );
     self->pl = gtk_widget_create_pango_layout( (GtkWidget*)self, NULL );
     pango_layout_set_alignment( self->pl, PANGO_ALIGN_CENTER );

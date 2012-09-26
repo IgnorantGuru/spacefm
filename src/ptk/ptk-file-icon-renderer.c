@@ -393,10 +393,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
     gint xpad, ypad;
     gboolean is_expander, is_expanded;
 
-#if GTK_CHECK_VERSION( 2, 8, 0 )
-
     cairo_t *cr;
-#endif
 
     GtkCellRendererClass* parent_renderer_class;
 
@@ -506,23 +503,16 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
             pixbuf = colorized;
         }
     }
-#if GTK_CHECK_VERSION(2, 8, 0)
     cr = gdk_cairo_create ( window );
     gdk_cairo_set_source_pixbuf ( cr, pixbuf, pix_rect.x, pix_rect.y );
     gdk_cairo_rectangle ( cr, &draw_rect );
     cairo_fill ( cr );
-#else
-    gdk_draw_pixbuf ( GDK_DRAWABLE ( window ), NULL, pixbuf, 0, 0,
-                      pix_rect.x, pix_rect.y, pix_rect.width, pix_rect.height,
-                      GDK_RGB_DITHER_NORMAL, 0, 0 );
-#endif
 
     file = PTK_FILE_ICON_RENDERER( cell )->info;
     if ( file )
     {
         if ( vfs_file_info_is_symlink( file ) )
         {
-#if GTK_CHECK_VERSION(2, 8, 0)
             gdk_cairo_set_source_pixbuf ( cr, link_icon,
                                           pix_rect.x - 2,
                                           pix_rect.y - 2 );
@@ -530,19 +520,10 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
             draw_rect.y -= 2;
             gdk_cairo_rectangle ( cr, &draw_rect );
             cairo_fill ( cr );
-#else
-
-            gdk_draw_pixbuf ( GDK_DRAWABLE ( window ), NULL, link_icon, 0, 0,
-                              pix_rect.x - 2, pix_rect.y - 2,
-                              -1, -1, GDK_RGB_DITHER_NORMAL,
-                              0, 0 );
-#endif
         }
     }
 
-#if GTK_CHECK_VERSION(2, 8, 0)
     cairo_destroy ( cr );
-#endif
 
     if ( invisible )
         g_object_unref ( invisible );

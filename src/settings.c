@@ -33,6 +33,8 @@
 #include "exo-tree-view.h"
 #include <glib/gi18n.h>
 
+#include "gtk2-compat.h"
+
 /* Dirty hack: check whether we are under LXDE or not */
 #define is_under_LXDE()     (g_getenv( "_LXSESSION_PID" ) != NULL)
 
@@ -7768,9 +7770,7 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
     //gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
-#if GTK_CHECK_VERSION(2, 8, 0)
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
-#endif
 
     if ( deffolder )
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), deffolder );

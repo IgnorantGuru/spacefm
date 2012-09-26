@@ -27,6 +27,8 @@
 #include "vfs-file-info.h"
 #include "vfs-file-monitor.h"
 
+#include "gtk2-compat.h"
+
 static GQuark dir_tree_view_data = 0;
 
 static GtkTreeModel* get_dir_tree_model();
@@ -155,9 +157,7 @@ GtkWidget* ptk_dir_tree_view_new( PtkFileBrowser* browser,
 
     dir_tree_view = GTK_TREE_VIEW( gtk_tree_view_new () );
     gtk_tree_view_set_headers_visible( dir_tree_view, FALSE );
-#if GTK_CHECK_VERSION(2, 10, 0)
     gtk_tree_view_set_enable_tree_lines(dir_tree_view, TRUE);
-#endif
     
 //MOD enabled DND   FIXME: Temporarily disable drag & drop since it doesn't work right now.
 /*    exo_icon_view_enable_model_drag_dest (

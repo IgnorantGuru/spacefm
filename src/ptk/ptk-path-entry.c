@@ -144,13 +144,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
                  
     if( evt->keyval == GDK_Tab && !keymod )
     {
-#if GTK_CHECK_VERSION(2, 8, 0)
-        /* This API exists since gtk+ 2.6, but gtk+ 2.6.x seems to have bugs
-           related to this API which cause crash.
-           Reported in bug #1570063 by Orlando Fiol <fiolorlando@gmail.com>
-        */
         gtk_entry_completion_insert_prefix( gtk_entry_get_completion(GTK_ENTRY(entry)) );
-#endif
         gtk_editable_set_position( (GtkEditable*)entry, -1 );
         return TRUE;
     }
@@ -310,10 +304,7 @@ on_focus_in( GtkWidget *entry, GdkEventFocus* evt, gpointer user_data )
     gtk_cell_layout_add_attribute( (GtkCellLayout*)completion, render, "text", COL_NAME );
 
     gtk_entry_completion_set_inline_completion( completion, TRUE );
-#if GTK_CHECK_VERSION( 2, 8, 0)
-    /* gtk+ prior to 2.8.0 doesn't have this API */
     gtk_entry_completion_set_popup_set_width( completion, TRUE );
-#endif
     gtk_entry_set_completion( GTK_ENTRY(entry), completion );
     g_signal_connect( G_OBJECT(entry), "changed", G_CALLBACK(on_changed), NULL );
     g_object_unref( completion );

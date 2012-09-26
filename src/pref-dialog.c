@@ -32,6 +32,8 @@
 #include "desktop.h"
 #include "ptk-location-view.h"
 
+#include "gtk2-compat.h"
+
 typedef struct _FMPrefDlg FMPrefDlg;
 struct _FMPrefDlg
 {

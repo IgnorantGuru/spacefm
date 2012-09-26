@@ -35,6 +35,8 @@
 
 #include "settings.h"
 
+#include "gtk2-compat.h"
+
 typedef struct
 {
     char* full_path;
@@ -1023,9 +1025,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), path );
     g_free( path );
 
-#if GTK_CHECK_VERSION(2, 8, 0)
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), FALSE );
-#endif
 
     int width = xset_get_int( "move_dlg_help", "x" );
     int height = xset_get_int( "move_dlg_help", "y" );

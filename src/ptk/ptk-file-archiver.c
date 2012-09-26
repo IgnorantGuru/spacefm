@@ -19,6 +19,8 @@
 #include "vfs-mime-type.h"
 #include "settings.h"
 
+#include "gtk2-compat.h"
+
 typedef struct _ArchiveHandler
 {
     const char* mime_type;

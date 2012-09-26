@@ -848,10 +848,8 @@ void main_window_rubberband_all()
                                          GTK_NOTEBOOK( notebook ), i ) );
                 if ( a_browser->view_mode == PTK_FB_LIST_VIEW )
                 {
-    #if GTK_CHECK_VERSION(2, 10, 0)
                     gtk_tree_view_set_rubber_banding( (GtkTreeView*)a_browser->folder_view,
                                                         xset_get_b( "rubberband" ) );
-    #endif
                 }
             }
         }
@@ -2586,9 +2584,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
     tab_label = fm_main_window_create_tab_label( main_window, file_browser );
     idx = gtk_notebook_append_page( GTK_NOTEBOOK( notebook ),
                                         GTK_WIDGET( file_browser ), tab_label );
-#if GTK_CHECK_VERSION( 2, 10, 0 )
     gtk_notebook_set_tab_reorderable( GTK_NOTEBOOK( notebook ), GTK_WIDGET( file_browser ), TRUE );
-#endif
     gtk_notebook_set_current_page ( GTK_NOTEBOOK( notebook ), idx );
 
     if (app_settings.always_show_tabs)

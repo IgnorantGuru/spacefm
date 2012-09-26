@@ -15,6 +15,8 @@
 #include <glib/gi18n.h>
 #include "working-area.h"
 
+#include "gtk2-compat.h"
+
 GtkWidget* ptk_menu_new_from_data( PtkMenuItemEntry* entries,
                                    gpointer cb_data,
                                    GtkAccelGroup* accel_group )

@@ -384,4 +384,4 @@ md5_finish(md5_state_t *pms, md5_byte_t digest[16])
 	digest[i] = (md5_byte_t)(pms->abcd[i >> 2] >> ((i & 3) << 3));
 }
 
-#endif /* GTK_CHECK_VERSION(2, 16, 0) */
+#endif /* GLIB_CHECK_VERSION(2, 16, 0) */

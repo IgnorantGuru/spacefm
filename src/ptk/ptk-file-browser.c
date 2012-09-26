@@ -63,6 +63,8 @@
 #include "find-files.h"  //MOD
 #include "main-window.h"
 
+#include "gtk2-compat.h"
+
 //extern gboolean startup_mode; //MOD
 
 extern char* run_cmd;  //MOD
@@ -3792,10 +3794,8 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
         tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( folder_view ) );
         gtk_tree_selection_set_mode( tree_sel, GTK_SELECTION_MULTIPLE );
 
-#if GTK_CHECK_VERSION(2, 10, 0)
         if ( xset_get_b( "rubberband" ) )
             gtk_tree_view_set_rubber_banding( (GtkTreeView*)folder_view, TRUE );
-#endif
 
         // Search
         gtk_tree_view_set_enable_search( (GtkTreeView*)folder_view, TRUE );
