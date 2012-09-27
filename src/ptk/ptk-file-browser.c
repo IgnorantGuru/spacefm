@@ -317,6 +317,9 @@ GType ptk_file_browser_get_type()
     return type;
 }
 
+/* These g_cclosure_marshal functions are from gtkmarshal.c, the deprecated
+ * functions renamed from gtk_* to g_cclosure_*, to match the naming convention
+ * of the non-deprecated glib functions.   Added for gtk3 port. */
 static void
 g_cclosure_marshal_VOID__POINTER_POINTER (GClosure     *closure,
                                           GValue       *return_value G_GNUC_UNUSED,

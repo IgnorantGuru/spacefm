@@ -2554,13 +2554,15 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
             if ( set->menu_style == XSET_MENU_CHECK )
             {
                 item = gtk_check_menu_item_new_with_mnemonic( set->menu_label );
-                GTK_CHECK_MENU_ITEM (item)->GSEAL(active) = ( mset->b == XSET_B_TRUE );
+                gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
+                                                        mset->b == XSET_B_TRUE );
             }
             else if ( set->menu_style == XSET_MENU_RADIO )
             {
                 item = gtk_radio_menu_item_new_with_mnemonic( set->ob2_data,
                                                                     set->menu_label );
-                GTK_CHECK_MENU_ITEM (item)->GSEAL(active) = ( mset->b == XSET_B_TRUE );
+                gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
+                                                        mset->b == XSET_B_TRUE );
             }
             else if ( set->menu_style == XSET_MENU_SUBMENU )
             {
@@ -6028,6 +6030,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
         main_window_autosave( set->browser );
 }
 
+void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
+{
+     if ( gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( item ) ) )
+        xset_design_job( GTK_WIDGET( item ), set );
+}
+
 gboolean xset_job_is_valid( XSet* set, int job )
 {
     gboolean no_remove = FALSE;
@@ -6319,6 +6327,15 @@ void on_menu_hide(GtkWidget *widget, GtkWidget* design_menu )
     gtk_menu_shell_deactivate( GTK_MENU_SHELL( design_menu ) );
 }
 
+static void set_check_menu_item_block( GtkWidget* item )
+{
+    g_signal_handlers_block_matched( item, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                                xset_design_job, NULL );
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ), TRUE );
+    g_signal_handlers_unblock_matched( item, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                                xset_design_job, NULL );
+}
+
 GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
                                                             int job, XSet* set )
 {
@@ -6346,6 +6363,9 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
 static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, guint32 time )
 {
     GtkWidget* newitem;
+    GtkWidget* newitem2;
+    GtkWidget* newitem3;
+    GtkWidget* newitem4;
     GtkWidget* submenu;
     GtkWidget* submenu2;
     GSList* radio_group;
@@ -6439,7 +6459,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
         newitem = gtk_check_menu_item_new_with_mnemonic( _("S_how") );
         gtk_container_add ( GTK_CONTAINER ( design_menu ), newitem );
         g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_SHOW ) );
-        GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( set->tool == XSET_B_TRUE );
+        gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem ),
+                                                ( set->tool == XSET_B_TRUE ) );
         g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
 
         // Separator
@@ -6488,39 +6509,48 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // Normal
     radio_group = NULL;
     newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Normal") );
+    radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem ) );
     gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
     g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_NORMAL ) );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( set->menu_style == XSET_MENU_NORMAL );
-    g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem ),
+                                    ( set->menu_style == XSET_MENU_NORMAL ) );
     gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
                                     set->menu_style < XSET_MENU_SUBMENU );
     
     // Check
-    newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Checkbox") );
-    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-    g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_CHECK ) );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( set->menu_style == XSET_MENU_CHECK );
-    g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
-    gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
+    newitem2 = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Checkbox") );
+    radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem2 ) );
+    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem2 );
+    g_object_set_data( G_OBJECT(newitem2), "job", GINT_TO_POINTER( XSET_JOB_CHECK ) );
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem2 ),
+                                        ( set->menu_style == XSET_MENU_CHECK ) );
+    gtk_widget_set_sensitive( newitem2, !set->plugin && !set->lock &&
                                     set->menu_style < XSET_MENU_SUBMENU );
 
     // Confirmation
-    newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("Con_firmation") );
-    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-    g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_CONFIRM ) );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( set->menu_style == XSET_MENU_CONFIRM );
-    g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
-    gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
+    newitem3 = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("Con_firmation") );
+    radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem3 ) );
+    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem3 );
+    g_object_set_data( G_OBJECT(newitem3), "job", GINT_TO_POINTER( XSET_JOB_CONFIRM ) );
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem3 ),
+                                    ( set->menu_style == XSET_MENU_CONFIRM ) );
+    gtk_widget_set_sensitive( newitem3, !set->plugin && !set->lock &&
                                     set->menu_style < XSET_MENU_SUBMENU );
 
     // Dialog
-    newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Input") );
-    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-    g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_DIALOG ) );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( set->menu_style == XSET_MENU_STRING );
-    g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
-    gtk_widget_set_sensitive( newitem, !set->plugin && !set->lock &&
+    newitem4 = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Input") );
+    radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem4 ) );
+    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem4 );
+    g_object_set_data( G_OBJECT(newitem4), "job", GINT_TO_POINTER( XSET_JOB_DIALOG ) );
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem4 ),
+                                        ( set->menu_style == XSET_MENU_STRING ) );
+    gtk_widget_set_sensitive( newitem4, !set->plugin && !set->lock &&
                                     set->menu_style < XSET_MENU_SUBMENU );
+
+    g_signal_connect( newitem, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
+    g_signal_connect( newitem2, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
+    g_signal_connect( newitem3, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
+    g_signal_connect( newitem4, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
 
     // Description
     newitem = xset_design_additem( submenu, _("_Message"),
@@ -6542,7 +6572,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
 
     newitem = xset_design_additem( submenu, _("Ign_ore Context (global)"),
                                 "@check", XSET_JOB_IGNORE_CONTEXT, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = xset_get_b( "context_dlg" );
+    if ( xset_get_b( "context_dlg" ) )
+        set_check_menu_item_block( newitem );
 
     //// Command submenu
     newitem = gtk_image_menu_item_new_with_mnemonic( _("C_ommand") );
@@ -6642,19 +6673,21 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     {
         // Line
         newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Line") );
+        radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem ) );
         gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
         g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_LINE ) );
-        GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( atoi( set->x ) == 0 );
-        g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
+        gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem ),
+                                                        ( atoi( set->x ) == 0 ) );
         gtk_widget_set_sensitive( newitem, !set->plugin );
 
         // Script
-        newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Script") );
-        gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-        g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_SCRIPT ) );
-        GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( atoi( set->x ) == 1 );
-        g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
-        gtk_widget_set_sensitive( newitem, !set->plugin );
+        newitem2 = gtk_radio_menu_item_new_with_mnemonic( radio_group, _("_Script") );
+        radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem2 ) );
+        gtk_container_add ( GTK_CONTAINER ( submenu ), newitem2 );
+        g_object_set_data( G_OBJECT(newitem2), "job", GINT_TO_POINTER( XSET_JOB_SCRIPT ) );
+        gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem2 ),
+                                                        ( atoi( set->x ) == 1 ) );
+        gtk_widget_set_sensitive( newitem2, !set->plugin );
 
         // Custom
         if ( ( atoi( set->x ) == 2 ) && ( set->z && set->z[0] != '\0' ) )
@@ -6668,13 +6701,18 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
         }
         else
             label = g_strdup_printf( _("Custo_m") );
-        newitem = gtk_radio_menu_item_new_with_mnemonic( radio_group, label );
+        newitem3 = gtk_radio_menu_item_new_with_mnemonic( radio_group, label );
+        radio_group = gtk_radio_menu_item_get_group( GTK_RADIO_MENU_ITEM( newitem3 ) );
         g_free( label );
-        gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
-        g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_CUSTOM ) );
-        GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( atoi( set->x ) == 2 );
-        g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
-        gtk_widget_set_sensitive( newitem, !set->plugin );
+        gtk_container_add ( GTK_CONTAINER ( submenu ), newitem3 );
+        g_object_set_data( G_OBJECT(newitem3), "job", GINT_TO_POINTER( XSET_JOB_CUSTOM ) );
+        gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem3 ),
+                                                        ( atoi( set->x ) == 2 ) );
+        gtk_widget_set_sensitive( newitem3, !set->plugin );
+
+        g_signal_connect( newitem, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
+        g_signal_connect( newitem2, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
+        g_signal_connect( newitem3, "toggled", G_CALLBACK( on_design_radio_toggled ), set );
     }
     
     // Separator
@@ -6683,12 +6721,14 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // Run In Terminal
     newitem = xset_design_additem( submenu, _("Run _In Terminal"),
                                                     "@check", XSET_JOB_TERM, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->in_terminal == XSET_B_TRUE );
+    if ( mset->in_terminal == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
 
     // Keep Terminal
     newitem = xset_design_additem( submenu, _("_Keep Terminal"),
                                                     "@check", XSET_JOB_KEEP, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->keep_terminal == XSET_B_TRUE );
+    if ( mset->keep_terminal == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
     gtk_widget_set_sensitive( newitem, ( mset->in_terminal == XSET_B_TRUE ) );
 
     // Separator
@@ -6713,30 +6753,35 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // Run As Task
     newitem = xset_design_additem( submenu, _("Run As _Task"),
                                                     "@check", XSET_JOB_TASK, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->task == XSET_B_TRUE );
+    if ( mset->task == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
 
     // Popup Task
     newitem = xset_design_additem( submenu, _("_Popup Task"),
                                                     "@check", XSET_JOB_POP, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->task_pop == XSET_B_TRUE );
+    if ( mset->task_pop == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
     gtk_widget_set_sensitive( newitem, ( mset->task == XSET_B_TRUE ) );
 
     // Popup Error
     newitem = xset_design_additem( submenu, _("Popup E_rror"),
                                                     "@check", XSET_JOB_ERR, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->task_err == XSET_B_TRUE );
+    if ( mset->task_err == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
     gtk_widget_set_sensitive( newitem, ( mset->task == XSET_B_TRUE ) );
 
     // Popup Output
     newitem = xset_design_additem( submenu, _("Popup _Output"),
                                                     "@check", XSET_JOB_OUT, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->task_out == XSET_B_TRUE );
+    if ( mset->task_out == XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
     gtk_widget_set_sensitive( newitem, ( mset->task == XSET_B_TRUE ) );
 
     // Scroll
     newitem = xset_design_additem( submenu, _("_Scroll"),
                                                     "@check", XSET_JOB_SCROLL, set );
-    GTK_CHECK_MENU_ITEM (newitem)->GSEAL(active) = ( mset->scroll_lock != XSET_B_TRUE );
+    if ( mset->scroll_lock != XSET_B_TRUE )
+        set_check_menu_item_block( newitem );
     gtk_widget_set_sensitive( newitem, ( mset->task == XSET_B_TRUE ) );
 
 

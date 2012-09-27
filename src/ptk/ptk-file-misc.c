@@ -2369,24 +2369,6 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     gtk_button_set_focus_on_click( GTK_BUTTON( mset->opt_new_link ), FALSE );
     gtk_widget_set_sensitive( mset->opt_copy_target, mset->is_link && !target_missing );
     gtk_widget_set_sensitive( mset->opt_link_target, mset->is_link );
-    g_signal_connect( G_OBJECT( mset->opt_move ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_copy ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_link ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_copy_target ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_link_target ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_as_root ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_new_file ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_new_folder ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
-    g_signal_connect( G_OBJECT( mset->opt_new_link ), "toggled",
-                                        G_CALLBACK( on_opt_toggled ), mset );
 
     // Pack
     gtk_container_set_border_width( GTK_CONTAINER ( mset->dlg ), 10 );
@@ -2520,6 +2502,27 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_file ), FALSE );
     }
     
+    // signals
+    g_signal_connect( G_OBJECT( mset->opt_move ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_copy ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_link ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_copy_target ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_link_target ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_as_root ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_file ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_folder ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+    g_signal_connect( G_OBJECT( mset->opt_new_link ), "toggled",
+                                        G_CALLBACK( on_opt_toggled ), mset );
+
+    // init
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     on_opt_toggled( NULL, mset );
 
