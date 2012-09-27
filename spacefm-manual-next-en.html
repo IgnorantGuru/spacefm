@@ -161,7 +161,7 @@
 
     <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by <a href="http://ignorantguru.github.com/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1/v2, or any program you specify.
 
-    <p><li>Provide a <b>Task Manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the Task Manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the Task Manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
+    <p><li>Provide a <b>Task Manager</b> which controls the optional appearance of pop-up dialogs, and handles queuing of tasks.  Running tasks are organized in the Task Manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the Task Manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
 
     <p><li>Provide a <b>plugin capability</b> which extends the base capabilities.  Plugins can be copied into most menus as custom commands, or can be installed as root for added protection and multi-user access.  In addition, <b>any custom command you create can easily be saved as a plugin</b> and shared with other users.
 
@@ -315,7 +315,7 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
+<p>SpaceFM is distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -2154,6 +2154,8 @@ Pause temporarily halts a task, putting it into a <a href="#tasks-queue">paused 
 
 <p>If the command was run as another user, such as root, selecting Pause will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGSTOP signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
 
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Pause, the new icon will also be used as the 'paused' icon in the task list.
+
 <p>You can also pause a task by clicking the Pause button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
 <!-- # Queue -->
@@ -2161,6 +2163,8 @@ Pause temporarily halts a task, putting it into a <a href="#tasks-queue">paused 
 Selecting Queue will change the selected task's state to <a href="#tasks-queue">queued</a>.  In this state, the task is halted, but will resume automatically when other tasks complete.
 
 <p>Note that selecting Queue on a running task may seem to have no effect.  This is because the task may be queued, but then may automatically be removed from the queue and resumed by the Task Manager.  There is no way to force a task to stay in the queue (but you can <a href="#tasks-menu-pause">Pause</a> it).
+
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Queue, the new icon will also be used as the 'queued' icon in the task list.
 
 <p>You can also queue a task by clicking the Queue button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
 
@@ -2253,16 +2257,16 @@ If option Stay On Top is checked, any task's <a href="#tasks-dlg">popup dialog</
 
 <p>If unchecked, popup dialogs may be placed beneath the main window.
 
-<!-- # Popups|Detailed Status #popdet -->
-<p><a name="tasks-menu-popdet"/><a href="#tasks-menu-popdet"><b>Popups|Detailed Status</b></a><br>
-Detailed Status affects how task stats are displayed in the 'Progress:' line of <a href="#tasks-dlg">popup dialogs</a> (seen in internal task dialogs only).
+<!-- # Popups|Detailed Stats #popdet -->
+<p><a name="tasks-menu-popdet"/><a href="#tasks-menu-popdet"><b>Popups|Detailed Stats</b></a><br>
+Detailed Stats affects how task stats are displayed in the 'Progress:' line of <a href="#tasks-dlg">popup dialogs</a> (seen in internal task dialogs only).
 
 <p>If unchecked, a brief stats line is shown.  For example:
 <blockquote>Progress: 204 M / 350 M  (26 M/s)  :05 remaining</blockquote>
 
 In the above example, 204 MB of 350 MB has been processed at an average speed of 26 MB/s.  The estimated time remaining until the task finishes is 5 seconds.
 
-<p>If option Detailed Status is checked, more detailed stats are shown.  For example:
+<p>If option Detailed Stats is checked, more detailed stats are shown.  For example:
 <blockquote>Progress: #1 (204 M / 350 M) [:08] @cur 31 M/s (:06) @avg 26 M/s (:05)</blockquote>
 
 The additional stats include the item count (#1), the elapsed running time of the task (8 seconds), the current speed of the task (31 M/s), and the estimated time remaining at the current speed (6 seconds).
@@ -2291,7 +2295,7 @@ The Errors submenu contains a set of radio options which control how errors in i
 
 <p>If option <b>Stop On Any</b> is instead selected, the Task Manager will stop if any error is encountered in the task, regardless of whether the error occurs on the first or later actions.
 
-<p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files are being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
+<p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files is being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
 
 <p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
 
@@ -5625,7 +5629,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-09-21&nbsp;&nbsp;(SpaceFM version 0.8.0+)
+<p>Updated 2012-09-23&nbsp;&nbsp;(SpaceFM version 0.8.0+)
 <br><br>
 </center>
 </td></tr></table>
