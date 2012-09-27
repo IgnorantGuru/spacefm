@@ -6461,7 +6461,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
         g_object_set_data( G_OBJECT(newitem), "job", GINT_TO_POINTER( XSET_JOB_SHOW ) );
         gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( newitem ),
                                                 ( set->tool == XSET_B_TRUE ) );
-        //g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
+        g_signal_connect( newitem, "activate", G_CALLBACK( xset_design_job ), set );
 
         // Separator
         gtk_container_add ( GTK_CONTAINER (design_menu ), gtk_separator_menu_item_new() );
