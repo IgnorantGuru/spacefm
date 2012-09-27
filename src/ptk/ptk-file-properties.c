@@ -12,6 +12,8 @@
 #  include <config.h>
 #endif
 
+#include <libintl.h>
+
 #include "private.h"
 
 #include <gtk/gtk.h>

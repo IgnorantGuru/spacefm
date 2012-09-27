@@ -1380,13 +1380,13 @@ void on_toggled( GtkMenuItem* item, MoveSet* mset )
     {
         if ( gtk_widget_get_visible( mset->hbox_type ) )
         {}
-        else if ( gtk_widget_get_visible( mset->label_full_path ) )
+        else if ( gtk_widget_get_visible( GTK_WIDGET( mset->label_full_path ) ) )
         {}
-        else if ( gtk_widget_get_visible( mset->blank_path ) )
+        else if ( gtk_widget_get_visible( GTK_WIDGET( mset->blank_path ) ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_path ) );
-        else if ( gtk_widget_get_visible( mset->blank_full_name ) )
+        else if ( gtk_widget_get_visible( GTK_WIDGET( mset->blank_full_name ) ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_full_name ) );
-        else if ( gtk_widget_get_visible( mset->blank_name ) )
+        else if ( gtk_widget_get_visible( GTK_WIDGET( mset->blank_name ) ) )
             gtk_widget_hide( GTK_WIDGET( mset->blank_name ) );
     }
 }
@@ -2373,9 +2373,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     // Pack
     gtk_container_set_border_width( GTK_CONTAINER ( mset->dlg ), 10 );
 
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->label_name ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->scroll_name ), TRUE, TRUE, 0 );
 
     mset->hbox_ext = gtk_hbox_new( FALSE, 0 );
@@ -2385,28 +2385,28 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( gtk_label_new( " " ) ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_ext ),
                         GTK_WIDGET( mset->entry_ext ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->hbox_ext ), FALSE, TRUE, 5 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->blank_name ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->label_full_name ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->scroll_full_name ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->blank_full_name ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->label_path ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->scroll_path ), TRUE, TRUE, 0 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->blank_path ), FALSE, TRUE, 0 );
 
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->label_full_path ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->scroll_full_path ), TRUE, TRUE, 0 );
 
     mset->hbox_type = gtk_hbox_new( FALSE, 0 );
@@ -2414,7 +2414,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                         GTK_WIDGET( mset->label_type ), FALSE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( mset->hbox_type ),
                         GTK_WIDGET( mset->label_mime ), TRUE, TRUE, 5 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( mset->hbox_type ), FALSE, TRUE, 5 );
 
     mset->hbox_target = gtk_hbox_new( FALSE, 0 );
@@ -2431,7 +2431,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         if ( mset->browse_target )
             gtk_box_pack_start( GTK_BOX( mset->hbox_target ),
                             GTK_WIDGET( mset->browse_target ), FALSE, TRUE, 0 );
-            gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+            gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                             GTK_WIDGET( mset->hbox_target ), FALSE, TRUE, 5 );
     }
 
@@ -2446,7 +2446,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( mset->combo_template_dir ), TRUE, TRUE, 3 );
         gtk_box_pack_start( GTK_BOX( mset->hbox_template ),
                             GTK_WIDGET( mset->browse_template ), FALSE, TRUE, 0 );
-        gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+        gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                             GTK_WIDGET( mset->hbox_template ), FALSE, TRUE, 5 );
     }
 
@@ -2479,7 +2479,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             GTK_WIDGET( gtk_label_new( "  " ) ), FALSE, TRUE, 3 );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( mset->opt_as_root ), FALSE, TRUE, 6 );
-    gtk_box_pack_start( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( mset->dlg ) ) ),
                         GTK_WIDGET( hbox ), FALSE, TRUE, 10 );
     
     // show

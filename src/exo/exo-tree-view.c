@@ -650,7 +650,7 @@ exo_tree_view_leave_notify_event (GtkWidget        *widget,
     }
 
   /* reset the cursor for the tree view internal window */
-  if (gtk_widget_get_realized (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     gdk_window_set_cursor (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (tree_view)), NULL);
 
   /* the next button-release-event should not activate */
@@ -696,7 +696,7 @@ exo_tree_view_move_cursor (GtkTreeView    *view,
     }
 
   /* reset the cursor for the tree view internal window */
-  if (gtk_widget_get_realized (tree_view))
+  if (gtk_widget_get_realized (GTK_WIDGET (tree_view)))
     gdk_window_set_cursor (gtk_tree_view_get_bin_window (GTK_TREE_VIEW (tree_view)), NULL);
 
   /* call the parent's handler */
@@ -721,7 +721,7 @@ exo_tree_view_single_click_timeout (gpointer user_data)
   //GDK_THREADS_ENTER ();  //sfm not needed because called from g_idle?
 
   /* verify that we are in single-click mode, have focus and a hover path */
-  if (gtk_widget_has_focus (tree_view) && tree_view->priv->single_click && tree_view->priv->hover_path != NULL)
+  if (gtk_widget_has_focus (GTK_WIDGET (tree_view)) && tree_view->priv->single_click && tree_view->priv->hover_path != NULL)
     {
       /* transform the hover_path to a tree iterator */
       model = gtk_tree_view_get_model (GTK_TREE_VIEW (tree_view));

@@ -86,12 +86,12 @@ static void ptk_file_list_set_sort_func( GtkTreeSortable *sortable,
                                          gint sort_column_id,
                                          GtkTreeIterCompareFunc sort_func,
                                          gpointer user_data,
-                                         GSourceFunc destroy );
+                                         GDestroyNotify destroy );
 
 static void ptk_file_list_set_default_sort_func( GtkTreeSortable *sortable,
                                                  GtkTreeIterCompareFunc sort_func,
                                                  gpointer user_data,
-                                                 GSourceFunc destroy );
+                                                 GDestroyNotify destroy );
 
 //static void ptk_file_list_sort ( PtkFileList* list );  //sfm made non-static
 
@@ -633,7 +633,7 @@ void ptk_file_list_set_sort_func( GtkTreeSortable *sortable,
                                   gint sort_column_id,
                                   GtkTreeIterCompareFunc sort_func,
                                   gpointer user_data,
-                                  GSourceFunc destroy )
+                                  GDestroyNotify destroy )
 {
     g_warning( "ptk_file_list_set_sort_func: Not supported\n" );
 }
@@ -641,7 +641,7 @@ void ptk_file_list_set_sort_func( GtkTreeSortable *sortable,
 void ptk_file_list_set_default_sort_func( GtkTreeSortable *sortable,
                                           GtkTreeIterCompareFunc sort_func,
                                           gpointer user_data,
-                                          GSourceFunc destroy )
+                                          GDestroyNotify destroy )
 {
     g_warning( "ptk_file_list_set_default_sort_func: Not supported\n" );
 }

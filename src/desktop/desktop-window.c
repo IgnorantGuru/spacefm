@@ -459,7 +459,7 @@ void desktop_window_set_pixmap( DesktopWindow* win, GdkPixmap* pix )
         g_object_unref( win->background );
     win->background = pix ? g_object_ref( pix ) : NULL;
 
-    if( gtk_widget_get_realized( win ) )
+    if( gtk_widget_get_realized( (GtkWidget*)win ) )
         gdk_window_set_back_pixmap( gtk_widget_get_window( ((GtkWidget*)win) ), win->background, FALSE );
 }
 
@@ -470,7 +470,7 @@ void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr )
         win->bg = *clr;
         gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
                             &win->bg );
-        if( gtk_widget_get_visible(win) )
+        if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
 }
@@ -491,7 +491,7 @@ void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor*
             gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
                                 &win->shadow );
         }
-        if( gtk_widget_get_visible(win) )
+        if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
 }
@@ -2647,7 +2647,7 @@ void desktop_window_set_single_click( DesktopWindow* win, gboolean single_click 
     {
         gdk_cursor_unref( win->hand_cursor );
         win->hand_cursor = NULL;
-        if( gtk_widget_get_realized(win) )
+        if( gtk_widget_get_realized( (GtkWidget*)win ) )
             gdk_window_set_cursor( gtk_widget_get_window((GtkWidget*)win), NULL );
     }
 }

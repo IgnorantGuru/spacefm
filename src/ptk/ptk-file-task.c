@@ -654,10 +654,10 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( ptask->scroll ) );
 
     // Pack
-    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ) ),
                         GTK_WIDGET( table ),
                         FALSE, TRUE, 0 );
-    gtk_box_pack_start( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ),
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area ( GTK_DIALOG( ptask->progress_dlg ) ) ),
                         GTK_WIDGET( align ),
                         TRUE, TRUE, 0 );
 

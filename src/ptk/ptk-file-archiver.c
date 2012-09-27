@@ -105,7 +105,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     path = gtk_file_chooser_get_filename( dlg );
     if( !path )
         return;
-    ext = gtk_combo_box_text_get_active_text(combo);
+    ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT( combo ) );
     name = g_path_get_basename( path );
     g_free( path );
     n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(combo),
@@ -215,7 +215,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 //                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ) );
 
 
-        ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX(combo) );
+        ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT(combo) );
         dest_file = g_strjoin( NULL, 
                         vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
                         ext, NULL );

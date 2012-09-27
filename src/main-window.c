@@ -8,6 +8,8 @@
 #  include <config.h>
 #endif
 
+#include <libintl.h>
+
 #include "pcmanfm.h"
 #include "private.h"
 
@@ -3813,7 +3815,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
         }
         else
             continue;
-        if ( !a_browser || !gtk_widget_get_visible( a_browser ) )
+        if ( !a_browser || !gtk_widget_get_visible( GTK_WIDGET( a_browser ) ) )
             continue;
 
         panel_count++;
@@ -3968,7 +3970,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
         }
         else
             continue;
-        if ( !a_browser || !gtk_widget_get_visible( a_browser ) )
+        if ( !a_browser || !gtk_widget_get_visible( GTK_WIDGET( a_browser ) ) )
             continue;
 
         // cwd
@@ -4788,7 +4790,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
     GtkTreeModel* model;
     GtkTreeIter it;
     GdkPixbuf* pixbuf;
-    char* status;
+    const char* status;
     char* status2 = NULL;
     char* dest_dir;
     char* path = NULL;

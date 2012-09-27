@@ -301,7 +301,7 @@ void ptk_dialog_fit_small_screen( GtkDialog* dlg )
         /* g_debug("%d, %d", req.width, req.height ); */
     }
 
-    if( gtk_widget_get_realized( dlg ) )
+    if( gtk_widget_get_realized( GTK_WIDGET(dlg) ) )
     {
         gtk_widget_get_allocation ( (GtkWidget*)dlg, &allocation);
         gboolean changed = FALSE;

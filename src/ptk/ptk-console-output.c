@@ -163,7 +163,7 @@ int ptk_console_output_run( GtkWindow* parent_win,
 
     desc_label = gtk_label_new( desc );
     gtk_label_set_line_wrap( GTK_LABEL(desc_label), TRUE );
-    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)),
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(main_dlg))),
                         desc_label, FALSE, TRUE, 2 );
 
     hbox = gtk_hbox_new( FALSE, 2 );
@@ -179,7 +179,7 @@ int ptk_console_output_run( GtkWindow* parent_win,
     g_free( cmd );
     gtk_box_pack_start( GTK_BOX(hbox), entry, TRUE, TRUE, 2 );
 
-    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)),
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(main_dlg))),
                         hbox, FALSE, TRUE, 2 );
 
     data->buf = GTK_TEXT_BUFFER(gtk_text_buffer_new(NULL));
@@ -191,7 +191,7 @@ int ptk_console_output_run( GtkWindow* parent_win,
                                     GTK_POLICY_AUTOMATIC,
                                     GTK_POLICY_ALWAYS );
     gtk_container_add( GTK_CONTAINER(data->scroll), GTK_WIDGET(data->view) );
-    gtk_box_pack_start( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)), data->scroll, TRUE, TRUE, 2 );
+    gtk_box_pack_start( GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(main_dlg))), data->scroll, TRUE, TRUE, 2 );
     gtk_widget_show_all( gtk_dialog_get_content_area(GTK_DIALOG(main_dlg)) );
     gtk_window_set_default_size( GTK_WINDOW(main_dlg), 480, 240 );
 
