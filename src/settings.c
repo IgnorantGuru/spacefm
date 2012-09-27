@@ -6366,7 +6366,6 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     GtkWidget* newitem2;
     GtkWidget* newitem3;
     GtkWidget* newitem4;
-    GtkWidget* newitem5;
     GtkWidget* submenu;
     GtkWidget* submenu2;
     GSList* radio_group;
