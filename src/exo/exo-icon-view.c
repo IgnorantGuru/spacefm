@@ -503,8 +503,8 @@ struct _ExoIconViewPrivate
   gboolean doing_rubberband;
   gint rubberband_x1, rubberband_y1;
   gint rubberband_x2, rubberband_y2;
-  GdkGC *rubberband_border_gc;
-  GdkGC *rubberband_fill_gc;
+  GdkColor *rubberband_border_color;
+  GdkColor *rubberband_fill_color;
 
   gint scroll_timeout_id;
   gint scroll_value_diff;
@@ -1677,6 +1677,7 @@ exo_icon_view_expose_event (GtkWidget      *widget,
   GtkTreePath            *path;
   GdkRectangle            rubber_rect;
   const GList            *lp;
+  cairo_t                *cr;
   gint                    event_area_last;
   gint                    dest_index = -1;
 
@@ -1689,6 +1690,10 @@ exo_icon_view_expose_event (GtkWidget      *widget,
    */
   if (G_UNLIKELY (priv->layout_idle_id != 0))
     return FALSE;
+
+  cr = gdk_cairo_create (priv->bin_window);
+  cairo_set_line_width (cr, 1);
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 
   /* scroll to the previously remembered path (if any) */
   if (G_UNLIKELY (priv->scroll_to_path != NULL))
@@ -1732,8 +1737,9 @@ exo_icon_view_expose_event (GtkWidget      *widget,
       /* we take advantage of double-buffering here and use only a single
        * draw_rectangle() operation w/o having to take care of clipping.
        */
-      gdk_draw_rectangle (event->window, priv->rubberband_fill_gc, TRUE,
-                          rubber_rect.x, rubber_rect.y, rubber_rect.width, rubber_rect.height);
+      gdk_cairo_set_source_color (cr, &priv->rubberband_fill_color);
+      cairo_rectangle (cr, rubber_rect.x + 0.5, rubber_rect.y + 0.5, rubber_rect.width + 1, rubber_rect.height + 1);
+      cairo_fill (cr);
     }
 
   /* determine the last interesting coordinate (depending on the layout mode) */
@@ -1826,9 +1832,13 @@ exo_icon_view_expose_event (GtkWidget      *widget,
   if (G_UNLIKELY (priv->doing_rubberband))
     {
       /* draw the border */
-      gdk_draw_rectangle (event->window, priv->rubberband_border_gc, FALSE,
-                          rubber_rect.x, rubber_rect.y, rubber_rect.width - 1, rubber_rect.height - 1);
+      gdk_cairo_set_source_color (cr, &priv->rubberband_border_color);
+      cairo_set_line_width (cr, 1);
+      cairo_rectangle (cr, rubber_rect.x + 0.5, rubber_rect.y + 0.5, rubber_rect.width - 1, rubber_rect.height - 1);
+      cairo_stroke (cr);
     }
+
+  cairo_destroy (cr);
 
   /* let the GtkContainer forward the expose event to all children */
   (*GTK_WIDGET_CLASS (exo_icon_view_parent_class)->expose_event) (widget, event);
@@ -2660,10 +2670,8 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
   if (G_LIKELY (color == NULL))
     color = gdk_color_copy (&gtk_widget_get_style(GTK_WIDGET (icon_view))->base[GTK_STATE_SELECTED]);
 
-  /* allocate the border GC */
-  icon_view->priv->rubberband_border_gc = gdk_gc_new (icon_view->priv->bin_window);
-  gdk_gc_set_rgb_fg_color (icon_view->priv->rubberband_border_gc, color);
-  gdk_color_free (color);
+  /* set the rubberband border color */
+  icon_view->priv->rubberband_border_color = color;
 
   /* determine the fill color and alpha setting */
   gtk_widget_style_get (GTK_WIDGET (icon_view), "selection-box-color", &color, "selection-box-alpha", &alpha, NULL);
@@ -2676,10 +2684,8 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
   color->green = ((color->green * (alpha / 255.0)) + (background_color->green * (255.0 - alpha / 255.0)));
   color->blue = ((color->blue * (alpha / 255.0)) + (background_color->blue * (255.0 - alpha / 255.0)));
 
-  /* allocate the GC to draw the rubberband background */
-  icon_view->priv->rubberband_fill_gc = gdk_gc_new (icon_view->priv->bin_window);
-  gdk_gc_set_rgb_fg_color (icon_view->priv->rubberband_fill_gc, color);
-  gdk_color_free (color);
+  /* set the rubberband background color */
+  icon_view->priv->rubberband_fill_color = color;
 
   gtk_grab_add (GTK_WIDGET (icon_view));
 
@@ -2708,10 +2714,10 @@ exo_icon_view_stop_rubberbanding (ExoIconView *icon_view)
       gtk_widget_queue_draw (GTK_WIDGET (icon_view));
 
       /* drop the GCs for drawing the rubberband */
-      g_object_unref (G_OBJECT (icon_view->priv->rubberband_border_gc));
-      g_object_unref (G_OBJECT (icon_view->priv->rubberband_fill_gc));
-      icon_view->priv->rubberband_border_gc = NULL;
-      icon_view->priv->rubberband_fill_gc = NULL;
+      gdk_color_free (icon_view->priv->rubberband_border_color);
+      gdk_color_free (icon_view->priv->rubberband_fill_color);
+      icon_view->priv->rubberband_border_color = NULL;
+      icon_view->priv->rubberband_fill_color = NULL;
 
       /* re-enable Gtk+ DnD callbacks again */
       drag_data = g_object_get_data (G_OBJECT (icon_view), I_("gtk-site-data"));
@@ -7546,6 +7552,7 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
   GdkGC       *gc;
   GList       *lp;
   gint         index;
+  cairo_t     *cr;
 
   g_return_val_if_fail (EXO_IS_ICON_VIEW (icon_view), NULL);
   g_return_val_if_fail (gtk_tree_path_get_depth (path) > 0, NULL);
@@ -7566,9 +7573,11 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
                                      item->area.height + 2,
                                      -1);
 
-          gc = gdk_gc_new (drawable);
-          gdk_gc_set_rgb_fg_color (gc, &gtk_widget_get_style(widget)->base[gtk_widget_get_state (widget)]);
-          gdk_draw_rectangle (drawable, gc, TRUE, 0, 0, item->area.width + 2, item->area.height + 2);
+          cr = gdk_cairo_create (drawable);
+          cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
+          gdk_cairo_set_source_color (cr, &gtk_widget_get_style(widget)->base[gtk_widget_get_state (widget)]);
+          cairo_rectangle (cr, 0, 0, item->area.width + 2, item->area.height + 2);
+          cairo_fill (cr);
 
           area.x = 0;
           area.y = 0;
@@ -7577,10 +7586,11 @@ exo_icon_view_create_drag_icon (ExoIconView *icon_view,
 
           exo_icon_view_paint_item (icon_view, item, &area, drawable, 1, 1, FALSE);
 
-          gdk_gc_set_rgb_fg_color (gc, &gtk_widget_get_style(widget)->black);
-          gdk_draw_rectangle (drawable, gc, FALSE, 1, 1, item->area.width + 1, item->area.height + 1);
+          gdk_cairo_set_source_color (cr, &gtk_widget_get_style(widget)->black);
+          cairo_rectangle (cr, 1, 1, item->area.width + 1, item->area.height + 1);
+          cairo_stroke (cr);
 
-          g_object_unref (G_OBJECT (gc));
+          cairo_destroy (cr);
 
           return drawable;
         }

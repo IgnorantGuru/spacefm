@@ -927,6 +927,9 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     gint focus_pad, focus_width;
     gint x, y;
     gint xpad, ypad;
+    cairo_t *cr;
+
+    cr = gdk_cairo_create ( window );
     
     gtk_cell_renderer_get_padding ( cell, &xpad, &ypad );
 
@@ -969,10 +972,9 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         /* draw background color for selected state if needed */
         if( flags & GTK_CELL_RENDERER_SELECTED )
         {
-            gdk_draw_rectangle ( window,
-                                 gtk_widget_get_style ( widget )->base_gc[ state ], TRUE,
-                                 cell_area->x + x_offset, cell_area->y + y_offset,
-                                 width, height );
+            gdk_cairo_set_source_color ( cr, &gtk_widget_get_style ( widget )->base[ state ] );
+            cairo_rectangle ( cr, cell_area->x + x_offset, cell_area->y + y_offset, width, height );
+            cairo_fill ( cr );
         }
 
         /* draw the focus */
@@ -1005,5 +1007,6 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                        layout );
 
     g_object_unref ( layout );
+    cairo_destroy ( cr );
 }
 
