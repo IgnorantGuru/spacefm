@@ -4645,7 +4645,7 @@ PtkFileTask* get_selected_task( GtkWidget* view )
         return NULL;
     FMMainWindow* main_window = get_task_view_window( view );
     if ( !main_window )
-        return;
+        return NULL;
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( view ) );
