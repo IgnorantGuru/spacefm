@@ -192,8 +192,10 @@ static void on_open_files( GtkAction* action, FindFile* data )
     VFSFileInfo* fi;
     gboolean open_files_has_dir = FALSE;  //sfm
     PtkFileBrowser* file_browser = NULL;  //sfm
-
-    gboolean open_files = (0 == strcmp( gtk_action_get_name(action), "OpenAction") );
+    gboolean open_files = TRUE;
+    
+    if ( action )
+        open_files = (0 == strcmp( gtk_action_get_name(action), "OpenAction") );
 
     sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( data->result_view ) );
     rows = gtk_tree_selection_get_selected_rows( sel, &model );
@@ -972,6 +974,7 @@ static gboolean on_view_button_press( GtkTreeView* view, GdkEventButton* evt, Fi
     {
         if( evt->button == 1 )  /* left double click */
         {
+            on_open_files( NULL, data );
             return TRUE;
         }
     }
