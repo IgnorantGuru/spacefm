@@ -3365,7 +3365,6 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
 
     if ( !file_browser->side_dir )
         return FALSE;
-    //gdk_threads_enter();   //sfm not needed because g_idle_add runs in main loop thread
     dir_path = ptk_dir_tree_view_get_selected_dir( GTK_TREE_VIEW(
                                                     file_browser->side_dir ) );
         
@@ -3373,16 +3372,12 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
     {
         if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
         {
-            //if ( startup_mode == FALSE ) //MOD
-            //{
-                ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY);
-                //dir_path = g_strdup_printf( _( "change path:\nX\%sX" ), dir_path );
-                //ptk_show_error( NULL, _("Path"), dir_path );
-            //}
+            gdk_threads_enter(); // needed for gtk_dialog_run in ptk_show_error
+            ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY);
+            gdk_threads_leave();
         }
         g_free( dir_path );
     }
-    //gdk_threads_leave();
     return FALSE;
 }
 
