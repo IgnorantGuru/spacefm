@@ -675,7 +675,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
     g_free(file_name );
 
     if ( lstat64( src_file, &src_stat ) == 0
-            && lstat64( task->dest_dir, &dest_stat ) == 0 )
+            && stat64( task->dest_dir, &dest_stat ) == 0 )
     {
         /* Not on the same device */
         if ( src_stat.st_dev != dest_stat.st_dev )
@@ -1977,8 +1977,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                        ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
-            if ( task->dest_dir &&
-                    lstat64( task->dest_dir, &file_stat ) < 0 )
+            if ( task->dest_dir && stat64( task->dest_dir, &file_stat ) < 0 )
             {
                 vfs_file_task_error( task, errno, _("Accessing"), task->dest_dir );
                 task->error = errno;
