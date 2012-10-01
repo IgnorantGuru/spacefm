@@ -3005,12 +3005,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     printf( "    button=%#x\n", l->data );
                 */
                 w = gtk_radio_button_new_with_mnemonic( *radio, str );
+                *radio = gtk_radio_button_get_group( GTK_RADIO_BUTTON( w ) );
                 //printf("BUTTON=%#x\n", w );
-                if ( *radio == NULL )
-                    *radio = gtk_radio_button_get_group( GTK_RADIO_BUTTON( w ) );
-                else if ( !g_slist_find( *radio, w ) )
-                    // add to group manually if not added - gtk bug?
-                    *radio = g_slist_append( *radio, w );
                 /*
                 printf("LIST-AFTER %#x\n", *radio );
                 for ( l = *radio; l; l = l->next )
