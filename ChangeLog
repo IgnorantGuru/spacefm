@@ -8,6 +8,7 @@
     fix file search find within symlink dir #122
     add double-click opens file search result #109
     fix vfs move dest symlink device determination
+    abort copy/move remove incomplete file
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

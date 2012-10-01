@@ -491,8 +491,11 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                 {
                     if ( should_abort( task ) )
+                    {
+                        copy_fail = TRUE;
                         break;
-
+                    }
+                    
                     if ( write( wfd, buffer, rsize ) > 0 )
                     {
                         g_mutex_lock( task->mutex );
@@ -509,26 +512,35 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     //call_progress_callback( task );
                 }
                 close( wfd );
-                //MOD don't chmod link
-                if ( ! g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
+                if ( copy_fail )
                 {
-                    chmod( dest_file, file_stat.st_mode );
-                    times.actime = file_stat.st_atime;
-                    times.modtime = file_stat.st_mtime;
-                    utime( dest_file, &times );
+                    unlink( dest_file );
+                    if ( task->avoid_changes )
+                        update_file_display( dest_file );
                 }
-                if ( task->avoid_changes )
-                    update_file_display( dest_file );
-        
-                /* Move files to different device: Need to delete source files */
-                if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
-                     && !should_abort( task ) && !copy_fail )
+                else
                 {
-                    result = unlink( src_file );
-                    if ( result )
+                    //MOD don't chmod link
+                    if ( ! g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
                     {
-                        vfs_file_task_error( task, errno, _("Removing"), src_file );
-                        task->error = errno;
+                        chmod( dest_file, file_stat.st_mode );
+                        times.actime = file_stat.st_atime;
+                        times.modtime = file_stat.st_mtime;
+                        utime( dest_file, &times );
+                    }
+                    if ( task->avoid_changes )
+                        update_file_display( dest_file );
+        
+                    /* Move files to different device: Need to delete source files */
+                    if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
+                         && !should_abort( task ) )
+                    {
+                        result = unlink( src_file );
+                        if ( result )
+                        {
+                            vfs_file_task_error( task, errno, _("Removing"), src_file );
+                            task->error = errno;
+                        }
                     }
                 }
             }
