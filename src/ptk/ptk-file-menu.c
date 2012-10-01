@@ -1222,7 +1222,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
-        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns view_sortby sep_v6 panel%d_font_file",
+        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns sep_v6 panel%d_font_file",
                                         p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
@@ -1232,7 +1232,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_set( set, "desc", desc );
         g_free( desc );
         set = xset_get( "con_view" );
-        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style sep_v8 view_refresh",
+        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style view_sortby sep_v8 view_refresh",
                                         p, p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
