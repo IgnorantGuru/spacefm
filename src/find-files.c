@@ -306,6 +306,8 @@ static char** compose_command( FindFile* data )
 
     arg = g_strdup( "find" );
     g_array_append_val( argv, arg );
+    arg = g_strdup("-H");
+    g_array_append_val( argv, arg );
 
     if( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( data->places_list ), &it ) )
     {
