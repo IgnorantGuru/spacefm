@@ -984,7 +984,9 @@ static void open_clicked_item( DesktopItem* clicked_item )
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
             if ( mime_type && ( 
                     !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
+                    g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
+                    g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
             {
                 char* str = g_find_program_in_path( "udevil" );
                 if ( str )

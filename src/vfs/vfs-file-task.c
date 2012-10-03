@@ -61,6 +61,7 @@ static void get_total_size_of_dir( VFSFileTask* task,
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action );
+void add_task_dev( VFSFileTask* task, dev_t dev );
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
@@ -119,6 +120,30 @@ static void call_state_callback( VFSFileTask* task,
 }
 
 static gboolean should_abort( VFSFileTask* task )
+{
+    if ( task->state_pause != VFS_FILE_TASK_RUNNING )
+    {
+        g_mutex_lock( task->mutex );
+        time_t pause_start = time( NULL );
+        task->pause_cond = g_cond_new();
+        g_cond_wait( task->pause_cond, task->mutex );
+        g_cond_free( task->pause_cond );
+        task->pause_cond = NULL;
+        task->last_time = time( NULL );
+        task->pause_time += task->last_time - pause_start;
+        task->state_pause = VFS_FILE_TASK_RUNNING;
+        g_mutex_unlock( task->mutex );
+    }
+    if ( task->state == VFS_FILE_TASK_QUERY_ABORT )
+    {
+        call_state_callback( task, VFS_FILE_TASK_QUERY_ABORT );
+        if ( task->state == VFS_FILE_TASK_ABORTED )
+            return TRUE;
+    }
+    return ( task->state == VFS_FILE_TASK_ABORTED );
+}
+
+static gboolean should_only_abort( VFSFileTask* task )
 {
     if ( task->state == VFS_FILE_TASK_QUERY_ABORT )
     {
@@ -466,8 +491,11 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 while ( ( rsize = read( rfd, buffer, sizeof( buffer ) ) ) > 0 )
                 {
                     if ( should_abort( task ) )
+                    {
+                        copy_fail = TRUE;
                         break;
-
+                    }
+                    
                     if ( write( wfd, buffer, rsize ) > 0 )
                     {
                         g_mutex_lock( task->mutex );
@@ -484,26 +512,35 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     //call_progress_callback( task );
                 }
                 close( wfd );
-                //MOD don't chmod link
-                if ( ! g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
+                if ( copy_fail )
                 {
-                    chmod( dest_file, file_stat.st_mode );
-                    times.actime = file_stat.st_atime;
-                    times.modtime = file_stat.st_mtime;
-                    utime( dest_file, &times );
+                    unlink( dest_file );
+                    if ( task->avoid_changes )
+                        update_file_display( dest_file );
                 }
-                if ( task->avoid_changes )
-                    update_file_display( dest_file );
-        
-                /* Move files to different device: Need to delete source files */
-                if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
-                     && !should_abort( task ) && !copy_fail )
+                else
                 {
-                    result = unlink( src_file );
-                    if ( result )
+                    //MOD don't chmod link
+                    if ( ! g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
                     {
-                        vfs_file_task_error( task, errno, _("Removing"), src_file );
-                        task->error = errno;
+                        chmod( dest_file, file_stat.st_mode );
+                        times.actime = file_stat.st_atime;
+                        times.modtime = file_stat.st_mtime;
+                        utime( dest_file, &times );
+                    }
+                    if ( task->avoid_changes )
+                        update_file_display( dest_file );
+        
+                    /* Move files to different device: Need to delete source files */
+                    if ( (task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH)
+                         && !should_abort( task ) )
+                    {
+                        result = unlink( src_file );
+                        if ( result )
+                        {
+                            vfs_file_task_error( task, errno, _("Removing"), src_file );
+                            task->error = errno;
+                        }
                     }
                 }
             }
@@ -650,7 +687,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
     g_free(file_name );
 
     if ( lstat64( src_file, &src_stat ) == 0
-            && lstat64( task->dest_dir, &dest_stat ) == 0 )
+            && stat64( task->dest_dir, &dest_stat ) == 0 )
     {
         /* Not on the same device */
         if ( src_stat.st_dev != dest_stat.st_dev )
@@ -1868,7 +1905,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         goto _exit_thread;
 
     g_mutex_lock( task->mutex );
-    task->state = VFS_FILE_TASK_RUNNING;
+    task->state = VFS_FILE_TASK_SIZING;
     string_copy_free( &task->current_file,
                         task->src_paths ? (char*)task->src_paths->data : NULL );
     task->total_size = 0;
@@ -1882,7 +1919,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
     }
     g_mutex_unlock( task->mutex );
 
-    if ( should_abort( task ) )
+    if ( should_only_abort( task ) )
         goto _exit_thread;
     //call_progress_callback( task );
 
@@ -1922,28 +1959,29 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                         // conditionally abort
                          if ( task->state_cb( task, VFS_FILE_TASK_ERROR,
                                                     NULL, task->state_cb_data ) )
-                            task->state = VFS_FILE_TASK_RUNNING;
+                            task->state = VFS_FILE_TASK_SIZING;
                         else
                             task->state = VFS_FILE_TASK_ABORTED;
                     }
                     else
                         task->state = VFS_FILE_TASK_ABORTED;
-                    if ( should_abort( task ) )
+                    if ( should_only_abort( task ) )
                         goto _exit_thread;
                 }
             }
             size = 0;
             get_total_size_of_dir( task, ( char* ) l->data, &size );
-            if ( should_abort( task ) )
+            if ( should_only_abort( task ) )
                 goto _exit_thread;
             if ( task->state == VFS_FILE_TASK_TIMEOUT )
                 break;
+
             g_mutex_lock( task->mutex );
             task->total_size += size;
             g_mutex_unlock( task->mutex );
         }
     }
-    else if ( task->type != VFS_FILE_TASK_EXEC && task->type != VFS_FILE_TASK_DELETE )
+    else if ( task->type != VFS_FILE_TASK_EXEC ) //&& task->type != VFS_FILE_TASK_DELETE )
     {
         // start timer to limit the amount of time to spend on this - can be 
         // VERY slow for network filesystems
@@ -1951,14 +1989,11 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                        ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
-            if ( task->dest_dir &&
-                    lstat64( task->dest_dir, &file_stat ) < 0 )
+            if ( task->dest_dir && stat64( task->dest_dir, &file_stat ) < 0 )
             {
                 vfs_file_task_error( task, errno, _("Accessing"), task->dest_dir );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
-                //if ( should_abort( task ) )
-                    goto _exit_thread;
+                goto _exit_thread;
             }
             dest_dev = file_stat.st_dev;
         }
@@ -1969,7 +2004,6 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             {
                 vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
                 task->error = errno;
-                //call_state_callback( task, VFS_FILE_TASK_ERROR );
             }
             if ( S_ISLNK( file_stat.st_mode ) )      /* Don't do deep copy for symlinks */
                 task->recursive = FALSE;
@@ -1989,26 +2023,60 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                 g_mutex_lock( task->mutex );
                 task->total_size += file_stat.st_size;
                 g_mutex_unlock( task->mutex );
+
+                // remember device for smart queue
+                if ( !task->devs )
+                    add_task_dev( task, file_stat.st_dev );
+                else if ( (uint)file_stat.st_dev != GPOINTER_TO_UINT( task->devs->data ) )
+                    add_task_dev( task, file_stat.st_dev );
             }
-            if ( should_abort( task ) )
+            if ( should_only_abort( task ) )
                 goto _exit_thread;
             if ( task->state == VFS_FILE_TASK_TIMEOUT )
                 break;
         }
     }
-    // cancel the timer
-    if ( should_abort( task ) )
+
+    if ( task->dest_dir && stat64( task->dest_dir, &file_stat ) != -1 )
+        add_task_dev( task, file_stat.st_dev );
+
+    if ( should_only_abort( task ) )
         goto _exit_thread;
 
+    // cancel the timer
     if ( size_timeout )
         g_source_remove_by_user_data( task );
 
+    if ( task->state_pause == VFS_FILE_TASK_QUEUE )
+    {
+        if ( task->state != VFS_FILE_TASK_TIMEOUT && xset_get_b( "task_q_smart" ) )
+        {
+            // make queue exception for smaller tasks
+            uint exlimit;
+            if ( task->type == VFS_FILE_TASK_MOVE || 
+                                                task->type == VFS_FILE_TASK_COPY )
+                exlimit = 10485760;     // 10M
+            else if ( task->type == VFS_FILE_TASK_DELETE || 
+                                                task->type == VFS_FILE_TASK_TRASH )            
+                exlimit = 104857600;    // 100M
+            else
+                exlimit = 0;            // always exception for other types
+            if ( !exlimit || task->total_size < exlimit )
+                task->state_pause = VFS_FILE_TASK_RUNNING;
+        }
+        // device list is populated so start queued
+        task->queue_start = TRUE;
+    }
+    
     if ( task->state == VFS_FILE_TASK_TIMEOUT )
     {
-        task->state = VFS_FILE_TASK_RUNNING; 
         append_add_log( task, _("Timed out calculating total size\n"), -1 );
         task->total_size = 0;
     }
+    task->state = VFS_FILE_TASK_RUNNING;
+
+    if ( should_abort( task ) )
+        goto _exit_thread;
 
     g_list_foreach( task->src_paths,
                     funcs[ task->type ],
@@ -2079,6 +2147,11 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_set = NULL;
     task->exec_cond = NULL;
     
+    task->pause_cond = NULL;
+    task->state_pause = VFS_FILE_TASK_RUNNING;
+    task->queue_start = FALSE;
+    task->devs = NULL;
+    
     //task->progress_cb_timer = 0;
     task->mutex = g_mutex_new();
     
@@ -2093,6 +2166,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->last_speed = 0;
     task->last_progress = 0;
     task->current_item = 0;
+    task->pause_time = 0;
     return task;
 }
 
@@ -2148,6 +2222,13 @@ void vfs_file_task_run ( VFSFileTask* task )
 void vfs_file_task_try_abort ( VFSFileTask* task )
 {
     task->state = VFS_FILE_TASK_QUERY_ABORT;
+    if ( task->pause_cond )
+    {
+        g_mutex_lock( task->mutex );
+        g_cond_broadcast( task->pause_cond );
+        g_mutex_unlock( task->mutex );
+    }
+    task->state_pause = VFS_FILE_TASK_RUNNING;
 }
 
 void vfs_file_task_abort ( VFSFileTask* task )
@@ -2172,6 +2253,7 @@ void vfs_file_task_free ( VFSFileTask* task )
     g_free( task->dest_dir );
     g_free( task->current_file );
     g_free( task->current_dest );
+    g_slist_free( task->devs );
 
     if ( task->chmod_actions )
         g_slice_free1( sizeof( guchar ) * N_CHMOD_ACTIONS,
@@ -2187,11 +2269,31 @@ void vfs_file_task_free ( VFSFileTask* task )
         g_free(task->exec_script );
 
     g_mutex_free( task->mutex );
-
+    
     gtk_text_buffer_set_text( task->add_log_buf, "", -1 );
     g_object_unref( task->add_log_buf );
 
     g_slice_free( VFSFileTask, task );
+}
+
+void add_task_dev( VFSFileTask* task, dev_t dev )
+{
+    dev_t parent = 0;
+    if ( !g_slist_find( task->devs, GUINT_TO_POINTER( dev ) ) )
+    {
+#ifndef HAVE_HAL
+        parent = get_device_parent( dev );
+#endif
+//printf("add_task_dev %d:%d\n", major(dev), minor(dev) );
+        g_mutex_lock( task->mutex );
+        task->devs = g_slist_append( task->devs, GUINT_TO_POINTER( dev ) );
+        if ( parent && !g_slist_find( task->devs, GUINT_TO_POINTER( parent ) ) )
+        {
+//printf("add_task_dev PARENT %d:%d\n", major(parent), minor(parent) );
+            task->devs = g_slist_append( task->devs, GUINT_TO_POINTER( parent ) );
+        }
+        g_mutex_unlock( task->mutex );
+    }
 }
 
 /*
@@ -2212,31 +2314,38 @@ void get_total_size_of_dir( VFSFileTask* task,
     char* full_path;
     struct stat64 file_stat;
 
-    if ( should_abort( task ) )
+    if ( should_only_abort( task ) )
         return;
 
-    lstat64( path, &file_stat );
+    if ( lstat64( path, &file_stat ) == -1 )
+        return;
 
     *size += file_stat.st_size;
-    if ( S_ISLNK( file_stat.st_mode ) )             /* Don't follow symlinks */
-        return ;
+
+    // remember device for smart queue
+    if ( !task->devs )
+        add_task_dev( task, file_stat.st_dev );
+    else if ( (uint)file_stat.st_dev != GPOINTER_TO_UINT( task->devs->data ) )
+        add_task_dev( task, file_stat.st_dev );
+
+    // Don't follow symlinks
+    if ( S_ISLNK( file_stat.st_mode ) || !S_ISDIR( file_stat.st_mode ) )
+        return;
 
     dir = g_dir_open( path, 0, NULL );
     if ( dir )
     {
         while ( (name = g_dir_read_name( dir )) )
         {
-            if ( task->state == VFS_FILE_TASK_TIMEOUT || should_abort( task ) )
+            if ( task->state == VFS_FILE_TASK_TIMEOUT || should_only_abort( task ) )
                 break;
             full_path = g_build_filename( path, name, NULL );
-            lstat64( full_path, &file_stat );
-            if ( S_ISDIR( file_stat.st_mode ) )
+            if ( lstat64( full_path, &file_stat ) != -1 )
             {
-                get_total_size_of_dir( task, full_path, size );
-            }
-            else
-            {
-                *size += file_stat.st_size;
+                if ( S_ISDIR( file_stat.st_mode ) )
+                    get_total_size_of_dir( task, full_path, size );
+                else
+                    *size += file_stat.st_size;
             }
             g_free(full_path );
         }

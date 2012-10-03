@@ -45,11 +45,11 @@
 
     <p><li>Provide an <b>automated, programmable device manager</b> which monitors what devices are added to and removed from your system, and allows you to define what action is performed automatically on various events and media types.  <b>Perform-as-root functions</b> allow you to easily check filesystems, change volume labels, and format/backup/restore device partitions using a variety of pre-configured methods or your own.  Mounting can be performed by <a href="http://ignorantguru.github.com/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1/v2, or any program you specify.
 
-    <p><li>Provide a <b>task manager</b> which controls the optional appearance of pop-up dialogs.  Running tasks are organized in the task manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the task manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
+    <p><li>Provide a <b>Task Manager</b> which controls the optional appearance of pop-up dialogs, and handles queuing of tasks.  Running tasks are organized in the Task Manager, freeing you to continue working in any folder or panel.  Custom commands can also be run as tasks in the Task Manager, allowing you to monitor their progress and errors.  Optional output dialogs monitor stdout/stderr output of built-in and custom commands, with error detection and popup control, or you can run your custom commands in a terminal or as an independent process.
 
     <p><li>Provide a <b>plugin capability</b> which extends the base capabilities.  Plugins can be copied into most menus as custom commands, or can be installed as root for added protection and multi-user access.  In addition, <b>any custom command you create can easily be saved as a plugin</b> and shared with other users.
 
-    <p><li>Provide <b>a common interface to multiple su and graphical su programs, terminals, and editors</b>.  You simply select which utilities you want to use for these functions, and SpaceFM's task manager handles the details of running your commands as other users, in a terminal, etc.
+    <p><li>Provide <b>a common interface to multiple su and graphical su programs, terminals, and editors</b>.  You simply select which utilities you want to use for these functions, and SpaceFM's Task Manager handles the details of running your commands as other users, in a terminal, etc.
 
     <p><li>Provide extensive <b>system maintenance capabilities</b>.  Perform-as-root functions allow you to edit, copy, move, and delete files and folders as root, change permissions, and create links.  SpaceFM can also be run as root for full system maintenance needs.
 
@@ -75,7 +75,7 @@
     <li>Responsive - Built-in vfs runs fast with low resource usage (no gvfs, etc)
     <li>Flexible - Can appear very simple or very complex depending on configuration
     <li>Multiple Windows - A single instance opens multiple windows
-    <li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a task manager pane
+    <li>Multiple Panels - Each window contains up to four independently configured and interactive browser panels plus a Task Manager pane
     <li>Tabbed - Each browser panel supports multiple folder tabs
     <li>Side Panes - Any browser panel can show Devices, Bookmarks, and Directory Tree side panes
     <li>Desktop Manager - Includes a built-in, lightweight DM mode with custom commands - works great with Openbox
@@ -108,7 +108,7 @@
 
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is distributed from <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
+<p>SpaceFM is distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
@@ -199,6 +199,13 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <td valign="top"><b>Sabayon</b></td>
 <td>
 	Includes spacefm in its repositories
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b>Slackware</b></td>
+<td>
+	SlackBuilds.org includes <a href="http://slackbuilds.org/system/spacefm/">spacefm</a>
 </td>
 </tr>
 
@@ -484,6 +491,8 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
     <a href="#designmode-designmenu-copy">How do I copy a plugin to another menu?</a><br>
     How do I create a new tab in the current folder?<br>
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
+    How do I make archives (tar.gz etc) open with an application?<br>
+	<blockquote>Right-click on any archive file and select Open|Archive Default|Open With App.</blockquote>
 </ul>
 
 
@@ -611,7 +620,7 @@ In addition, a bash command line can be entered in the Path Bar.  This is a conv
 <p>A Path Bar entry is interpreted as a command only if at least one of the above prefixes preceeds the command.  A space after the prefix(es) is optional.  For example, enter in the Path Bar:
 <pre>    $ ls</pre>
 
-When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the task manager if it takes longer than a half second to run), and an output dialog will open only if the command produces output or an error.
+When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and an <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
 
 <p>In addition, the substitution variables defined in <a href="#designmode-command-line">Command|Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command|Script</a> may also be used in Path Bar command lines.
 
@@ -678,7 +687,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 <p>The Devices context menu includes:
 
 <!-- #Remove -->
-The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the task manager will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the task manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
+The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
@@ -693,15 +702,15 @@ Reload is used to unmount, eject if necessary, and reload a device's media tray 
 
 
 <!-- #Unmount -->
-Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.com/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the task manager will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.com/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.
 
 <!-- #Sync -->
-Sync merely runs a sync command to commit all data to all devices.  If the command takes longer than about one half second, the task manager will auto-show and the Sync command will be listed until finished.
+Sync merely runs a sync command to commit all data to all devices.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Sync command will be listed until finished.
 
 <p>It is valuable to sync before removing or unmounting devices.  If you use the Remove or Reload menu items, a sync is performed automatically.
 
 <!-- #Open -->
-Selecting Open will cause the selected device to be mounted if it is not already mounted, and then the mount point directory of the device will be opened in the current tab.  If an error occurs, the error will be shown.  If the command takes longer than about one half second, the task manager will auto-show and the Open command will be listed until finished.
+Selecting Open will cause the selected device to be mounted if it is not already mounted, and then the mount point directory of the device will be opened in the current tab.  If an error occurs, the error will be shown.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Open command will be listed until finished.
 
 <p>You can also open a device by simply left-clicking on it.  The behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
 
@@ -717,7 +726,7 @@ Selecting Open will cause the selected device to be mounted if it is not already
 Tab works similarly to open, except that the device's mount point directory will be opened in a new tab, instead of reusing the current tab.  This is also the default behavior of a left-click on a device if option <a href="#devices-settings-newtab">New Tab</a> is checked.  Again, a left-click will not display an error, while selecting Tab will.
 
 <!-- #Mount -->
-Mount will simply run a mount command on the selected device.  By default, <a href="http://ignorantguru.github.com/udevil/">udevil</a>, pmount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media/$USER.  If the command takes longer than about one half second, the task manager will auto-show and the Mount command will be listed until finished.
+Mount will simply run a mount command on the selected device.  By default, <a href="http://ignorantguru.github.com/udevil/">udevil</a>, pmount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-mcmd">Settings|Mount Command</a>.  The mount point will be determined automatically by the mount program, usually an automatically created subfolder in /media or /run/media/$USER.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Mount command will be listed until finished.
 
 <p>The device will be mounted using SpaceFM's <a href="#devices-settings-opts">Mount Options</a>.  If the device has an fstab entry, options specified there may take precedence.  The mount program may also automatically add or change some mount options.
 
@@ -759,6 +768,39 @@ The Properties item will gather and show information about the currently selecte
 <p>In the INFO section, the device's UUID will be listed if known, as well as detailed information from udev on the device's properties.
 
 <p>The PROCESSES section, shown for mounted devices, uses lsof to display any processes which are using the device.  Sometimes when unmounting a device, you will receive an error that the device is in use.  You can check this processes list to see what is holding the device open.
+
+<!-- # Custom Commands #cust -->
+As with most menus, it is also possible to add your own custom commands to the Devices menu.  This allows you to add commands which can take actions based on the currently selected device in one or more panels.
+
+<p>There are several <a href="#exvar">provided bash variables</a> which your commands can use to get information about the currently selected device:
+<pre>
+    "$fm_device"              selected device (eg /dev/sr0)  ( same as %v )
+    "$fm_device_udi"          device ID
+    "$fm_device_mount_point"  device mount point if mounted (eg /media/dvd) (%m)
+    "$fm_device_label"        device volume label            ( same as %l )
+    "$fm_device_fstype"       device fs_type (eg vfat)
+    "$fm_device_size"         device volume size in bytes
+    "$fm_device_display_name" device display name
+    "$fm_device_icon"         icon currently shown for this device
+    $fm_device_is_mounted     device is mounted (0=no or 1=yes)
+    $fm_device_is_optical     device is an optical drive (0 or 1)
+    $fm_device_is_table       a partition table (usually a whole device)
+    $fm_device_is_floppy      device is a floppy drive (0 or 1)
+    $fm_device_is_removable   device appears to be removable (0 or 1)
+    $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)
+    $fm_device_is_dvd         optical device contains a DVD (0 or 1)
+    $fm_device_is_blank       device contains blank media (0 or 1)
+    $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)
+    $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)
+
+    "$fm_panel3_device"       panel 3 selected device (eg /dev/sdd1)
+    "$fm_panel3_device_udi"   panel 3 device ID
+    ...                       (all these are the same as above for each panel)
+</pre>
+
+For example, to add a custom command which shows the size of the currently selected device in bytes, use this command line:
+<pre>    echo "$fm_device_size"</pre>
+
 
 
 <!-- @Devices @Root -->
@@ -1167,6 +1209,267 @@ References:<br>
 <a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org/msg15714.html</a><br>
 <a href="http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/">uam-can-now-mount-cds-and-dvds</a><br>
 <a href="https://bugs.archlinux.org/task/25609">bugs.archlinux.org</a><br>
+
+
+
+<!-- @Tasks @Task Manager #man -->
+<p>Each SpaceFM window includes a single Task Manager which centrally manages the tasks of all panels in the window.  The Task Manager is designed to eliminate annoying popup dialogs which interfere with user multi-tasking, and allows you to continue working while large files are being copied, etc.  The Task Manager lists running tasks, automatically manages the <a href="#tasks-queue">task queue</a>, allows you to stop, pause, queue, or resume tasks manually, and opens <a href="#tasks-dlg">popup dialogs</a>.  Like most parts of SpaceFM, the Task Manager can also be <a href="#tasks-menu-cust">customized</a> with your own commands to control or interact with running tasks.
+
+<p>A <i>task</i> is a job initiated by the user, such as copying a file.  Tasks come in two varieties: <i>internal</i> and <i>exec</i>.  SpaceFM's internal functions handle tasks such as a copying, moving, and deleting files, while an exec task runs an executable or script, either initiated from within SpaceFM's functions or from a custom command.  The output of exec tasks is also collected and shown in the popup dialog's output monitor.  exec tasks include custom commands as well as external commands run by SpaceFM, such as running udevil to unmount a device.
+
+<p>The Task Manager is located at the bottom of the SpaceFM window, below all panels.  It has two display modes: <i>Show</i> and <i>Auto-Hide</i>.  If option <a href="#tasks-menu-show">View|Tasks|Show Manager</a> is selected, the Task Manager is always visible, even when no tasks are running.  Or, if option <a href="#tasks-menu-auto">View|Tasks|Auto-Hide Manager</a> is selected (the default), the Task Manager will become visible when tasks are running, and will be automatically hidden from view when the last task completes.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
+
+<p>When a task is initiated in any panel and runs for longer than about one half second, it will be listed in the Task Manager, and the Task Manager will be shown if in Auto-Hide mode.  If a task finishes in less than about one half second, the task will not be listed.  New tasks are added to the end of the task list.  When a task completes (successfully or with errors), it is immediately removed from the list.
+
+<p>Task Manager <a href="#tasks-menu-col">columns</a> provide information on each task, and each column can be hidden or moved, allowing you to control what information is shown.  
+
+<p><b>A single left-click on a task</b> in the list, <i>anywhere except in the Status column</i>, will open a popup dialog showing the task's stats, a progress bar, and an output monitor.  For internal tasks (copy, move, etc), the output monitor is used to show errors.  For exec tasks, the output monitor shows the combined stdout and stderr output of the command as its produced.
+
+<p><b>A single left-click on the Status</b> of a task, or <b>a middle-click anywhere on a listed task</b> will change its <a href="#tasks-queue">state</a> (running, queued, or paused).  Click repeatedly to achieve the desired state.
+
+<p><b>A right-click on a task</b> shows the Task Manager's <a href="#tasks-menu">menu</a>, which allows you to stop, pause, queue, and resume tasks, and also contains <a href="#tasks-menu-col">options</a> for the Task Manager.  (These same options may also be accessed via the main menu bar's View|Tasks submenu.)
+
+
+
+<!-- @Tasks @Queue -->
+<p>Each task listed in the Task Manager may be in one of three states: <i>running</i>, <i>paused</i>, or <i>queued</i>.
+
+<p>A running task is currently executing - files are being copied, or an executable is running, etc.
+
+<p>A paused task has been halted.  For internal tasks such as copy and move, the task thread is halted until you resume the task.  For exec tasks (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process has been sent a SIGSTOP signal as described in <a href="#tasks-menu-pause">Pause</a>.
+
+<p>A queued task is also halted.  The only difference is that the Task Manager will automatically resume running a queued task when other tasks complete, whereas a paused task will never resume automatically.
+
+<p>A task's state (running, paused, or queued) can be changed by the user, and in some cases may be changed automatically.
+
+<p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
+
+<p>Tasks may be queued automatically when added.  If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked, new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+
+
+
+<!-- @Tasks @Menu -->
+<p>The Task Manager's context menu allows you to control tasks and set Task Manager options.  The menu is opened by right-clicking on the list.  The options found on this menu are also available in the main menu bar's View|Tasks submenu (convenient if the Task Manager is hidden).
+
+<p>The context menu contains the following items:
+
+<!-- # Stop -->
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.  Note that stopping an internal task may leave some files only partially copied.
+
+<p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not always.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.  An exec task will not be removed from the Task Manager until its process terminates.  This means that if a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
+
+<p>If the command was run as another user, such as root, selecting Stop will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGTERM and SIGKILL signals to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>Paused and queued tasks may also be stopped.
+
+<p>You can also stop a task by clicking the Stop button in the task's <a href="#tasks-dlg">popup dialog</a>.
+
+<!-- # Pause -->
+Pause temporarily halts a task, putting it into a <a href="#tasks-queue">paused state</a>.  It will remain in the paused state until you <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-queue">Queue</a> or <a href="#tasks-menu-stop">Stop</a> it, and will never be automatically resumed or queued while paused.
+
+<p>If the task is internal (such as copying files), SpaceFM will suspend the task thread.  Any files currently being read or written will remain open as long as the task is paused.
+
+<p>If the task is an exec task, the process, <i>and all its child processes</i>, are sent a SIGSTOP signal.  This is similar to pressing Ctrl+S in a terminal while a command is running; it will often cause the process to temporarily halt execution.  In some cases, a process will not halt on a SIGSTOP signal, but the Task Manager will still list it as being in a 'paused' state until you <a href="#tasks-menu-resume">Resume</a> the task.
+
+<p>If the command was run as another user, such as root, selecting Pause will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGSTOP signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Pause, the new icon will also be used as the 'paused' icon in the task list.
+
+<p>You can also pause a task by clicking the Pause button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
+
+<!-- # Queue -->
+Selecting Queue will change the selected task's state to <a href="#tasks-queue">queued</a>.  In this state, the task is halted, but will resume automatically when other tasks complete.
+
+<p>Note that selecting Queue on a running task may seem to have no effect.  This is because the task may be queued, but then may automatically be removed from the queue and resumed by the Task Manager.  There is no way to force a task to stay in the queue (but you can <a href="#tasks-menu-pause">Pause</a> it).
+
+<p>If you <a href="#designmode-designmenu-icon">change the menu icon</a> for Queue, the new icon will also be used as the 'queued' icon in the task list.
+
+<p>You can also queue a task by clicking the Queue button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.
+
+<!-- # Resume -->
+Resume starts the selected task, changing its state to <a href="#tasks-queue">running</a>.  If it was in the queue it will be removed from the queue and resumed, regardless of how it conflicts with other running tasks.
+
+<p>If the task is an exec task, the process, <i>and all its child processes</i>, are sent a SIGCONT signal.  This is similar to pressing Ctrl+Q in a terminal after a command has been halted with Ctrl+S.  If the original SIGSTOP halted the execution, SIGCONT should resume it.  If SIGSTOP did not halt execution, SIGCONT will generally have no effect, except that the Task Manager will now list the task as 'running'.
+
+<p>If the command was run as another user, such as root, selecting Resume will cause a prompt for the user's password (or root's password depending on your configured su program) to open.  This password is required to send the SIGCONT signal to the process running as another user.  (You can see the exact commands being issued by running SpaceFM from a terminal and observing its stdout output.)
+
+<p>You can also resume a task by clicking the Resume button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.  Tasks may also be resumed automatically by the Task Manager if they are queued.
+
+<!-- # All Tasks #all -->
+The All Tasks submenu is used to place all listed tasks into the selected state.  The Stop, Pause, Queue, and Resume menu items in this submenu have the same effect as detailed above, except that all tasks are affected.
+
+<p>Selecting All Tasks|Queue will place all tasks in the 'queued' state momentarily, but note that one or more of the tasks may then be automatically removed from the queue and resumed.
+
+<!-- # Show Manager #show -->
+The Task Manager has two display modes: Show and Auto-Hide.  If option Show Manager is selected, the Task Manager is always visible, even when no tasks are running.  The size of the Task Manager may be adjusted by dragging the pane separator above it.
+
+<p>This option is also available via the main menu bar's View|Tasks submenu.  You may also associate a key shortcut with it.
+
+<!-- # Auto-Hide Manager #auto -->
+If option Auto-Hide Manager is selected (the default), the Task Manager will become visible at the bottom of the window when any tasks are running, and will be hidden when the last task completes.  This is a window space-saving feature.
+
+<p>Although there is no option to hide the Task Manager while tasks are listed, you can effectively hide it if desired by dragging the pane separator to the very bottom of the window.  However, if you do so you should enable option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a>, so that you are aware that tasks are running.  This combination of a zero-height Task Manager and Popup All Tasks makes SpaceFM behave like a conventional file manager, showing a popup dialog when performing a task, rather than showing a list of tasks.  You can also enable option <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a> if desired.
+
+<!-- # Columns #col -->
+The Columns submenu is used to select which columns are visible in the Task Manager, and to select a font for the Task Manager.  Each column provides information about the listed tasks.  The following columns are available:
+<br><br>
+<center><table width="95%" border=1 >
+<tr>
+	<th>Column</th>
+	<th>Information</th>
+</tr>
+	<tr>
+		<td>Count</td> <td>The number of items processed thus far</td>
+	</tr><tr>
+		<td>Folder</td>	<td>Directory containing current item</td>
+	</tr><tr>
+		<td>Item</td> <td>Filename of current item, or command name</td>
+	</tr><tr>
+		<td>To</td>	<td>The task's destination directory, eg where files are being copied <i>to</i></td>
+	</tr><tr>
+		<td>Progress</td> <td>A progress bar with percentage label</td>
+	</tr><tr>
+		<td>Total</td>	<td>The task's processed and total sizes</td>
+	</tr><tr>
+		<td>Started</td> <td>Time task was started</td>
+	</tr><tr>
+		<td>Elapsed</td>	<td>Elapsed running time of task</td>
+	</tr><tr>
+		<td>Current Speed</td>	<td>The current speed of the task (based on previous 2 second interval)</td>
+	</tr><tr>
+		<td>Current Remain</td> <td>Estimated time remaining based on Current Speed</td>
+	</tr><tr>
+		<td>Average Speed</td>	<td>The average speed of the task</td>
+	</tr><tr>
+		<td>Average Remain</td>	<td>Estimated time remaining based on Average Speed</td>
+	</tr>
+</table></center>
+
+<p>The <i>current item</i> refers to the file currently being processed in the task (copied, etc).  For exec tasks, the Item column shows the name of the command in parentheses.
+
+<p>The Status column, which shows the task icon, current state (queued or paused) and task action (copying, moving, etc.), is not included in the Columns submenu because its visibility not optional.
+
+<p>The Reorder menu item shows a reminder: "To change the order of the columns, drag the column header to the desired location."
+
+<p>The Font menu item allows you to set a font for the Task Manager's list columns.  Narrow fonts work well.
+
+<p>Note:  The Columns submenu, and other Task Manager options, can also be found in the main menu bar's View|Tasks submenu.
+
+
+<!-- # Popups|Popup All Tasks #popall -->
+The Popups submenu is used to configure the Task Manager's behavior for opening <a href="#tasks-dlg">popup dialogs</a>.  If option Popup All Tasks is checked, a popup dialog will automatically open for any task which runs for longer than about one half second.  If the task finishes successfully, the popup will automatically close.  If errors occur, it will remain open for you to view the error messages.
+
+<p>If option Popup All Tasks is unchecked, a popup dialog will open for an internal task only if an error occurs.  For custom commands, the popup behavior will depend on the command's <a href="#designmode-command-popup">popup settings</a>.  Note that if Popup All Tasks is checked, this overrides the command's popup settings.
+
+<p>Popup All Tasks makes SpaceFM behave like a conventional file manager with regard to progress dialogs.  If the option is enabled, it is also feasible to effectively hide the Task Manager by dragging the pane separator to the very bottom of the window when unneeded.  You will still be aware of tasks running due to the popups.  Option <a href="#tasks-menu-poptop">Stay On Top</a> also works well with this approach.
+
+<!-- # Popups|Stay On Top #poptop -->
+If option Stay On Top is checked, any task's <a href="#tasks-dlg">popup dialog</a>, whether opened automatically or manually, will stay on top of the SpaceFM window.  However, you can still click on visible portions of the main window.
+
+<p>If unchecked, popup dialogs may be placed beneath the main window.
+
+<!-- # Popups|Detailed Stats #popdet -->
+Detailed Stats affects how task stats are displayed in the 'Progress:' line of <a href="#tasks-dlg">popup dialogs</a> (seen in internal task dialogs only).
+
+<p>If unchecked, a brief stats line is shown.  For example:
+<blockquote>Progress: 204 M / 350 M  (26 M/s)  :05 remaining</blockquote>
+
+In the above example, 204 MB of 350 MB has been processed at an average speed of 26 MB/s.  The estimated time remaining until the task finishes is 5 seconds.
+
+<p>If option Detailed Stats is checked, more detailed stats are shown.  For example:
+<blockquote>Progress: #1 (204 M / 350 M) [:08] @cur 31 M/s (:06) @avg 26 M/s (:05)</blockquote>
+
+The additional stats include the item count (#1), the elapsed running time of the task (8 seconds), the current speed of the task (31 M/s), and the estimated time remaining at the current speed (6 seconds).
+
+The <i>current speed</i> is measured based on the speed over the previous two second interval, whereas the average speed is based on the entire time the task has been running.  The current speed is a more accurate measure of what is happening right now, and will fluctuate more, while the average speed is a better measure of the overall performance.  The time remaining estimate based on the current speed shows how long the task will continue <i>if it continues at the current speed</i>.  The time remaining estimate based on the average speed tends to be a more accurate estimate in general.
+
+<p>The information shown in the 'Progress:' line will match the information shown in the corresponding <a href="#tasks-menu-col">Task Manager columns</a>.
+
+<!-- # Popups|Font #popfont -->
+The Font menu item allows you to set a font to be used in the output monitor of <a href="#tasks-dlg">popup dialogs</a>.  For example, you might choose a fixed width font to make the monitor look more like a terminal.
+
+<p>This font may also be set by right-clicking on the output monitor of any task's popup dialog and selecting Font from the context menu.
+
+<p>The dialog font you select will be used for new dialogs only; currently open dialogs will not be affected.  (You can close a dialog and re-open it to see the change.)
+
+<!-- # Errors #poperr -->
+The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled.  (These options have no effect on exec tasks such as custom commands.)
+
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
+
+<p>Note that the first action may or may not be the first file of the task; it may be the action of creating a directory to hold the first file.  Thus if the directory creation is successful, and then an error occurs on the first file being copied, Stop If First will <i>not</i> stop the task since the error did not occur on the first action (directory creation).
+
+<p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
+
+<p>If option <b>Stop On Any</b> is instead selected, the Task Manager will stop if any error is encountered in the task, regardless of whether the error occurs on the first or later actions.
+
+<p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files is being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
+
+<p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
+
+<!-- # Queue|Queue New Tasks #new -->
+If option Queue New Tasks is checked (the default), new internal tasks are queued instead of being run immediately.  (exec tasks such as custom commands are never queued automatically.)  The Task Manager will then automatically resume the task when other tasks finish.  When you start new tasks while other tasks are still running, Queue New Tasks improves performance by not running all the tasks simultaneously (though some tasks may be run concurrently, depending on option <a href="#tasks-menu-smart">Smart Queue</a>).
+
+<p>If unchecked, new tasks are always run immediately, even if other tasks are already running, and the Task Manager will never automatically queue any task.
+
+<p>Regardless of how Queue New Tasks is set, you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task.
+
+<!-- # Queue|Smart Queue #smart -->
+The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to only do one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
+
+<p>If option Smart Queue is checked (the default), the Task Manager is more sophisticated in its handling of the queue to improve both performance and convenience.  In general, tasks will <i>not</i> be run concurrently, but the following exceptions may be made if Smart Queue is checked:
+
+<p><b>Different Disks Exception</b><br>
+If two or more tasks involve files on mutually exclusive disks (parent devices), the Task Manager will run them concurrently.
+
+<p>To determine what devices a task involves, SpaceFM makes a list of all devices (and their parent devices, if the device is a partition) holding every file in the task, as well as the device of the destination directory, if applicable.  If any devices in this list are the same as the devices in another task's devices list, the two tasks conflict and will not be run concurrently.  Note that if the files of two tasks are located on different partitions on the same disk, they will conflict, and only one of the tasks will run.  Note that <i>all</i> of the devices of the task are examined when a queue decision is made, not just the device of the file currently in use by the task.
+
+<p>The reason for this exception is that if two tasks involve mutually exclusive disks, there is usually much less of a performance loss by running them together.  On the other hand, if two tasks share files on the same disk, running them together may cause excessive drive seeking as different files are concurrently read and written.  Thus no exception is made for such tasks, and only one is resumed at a time.
+
+<p><b>Size Exceptions</b><br>
+Often while copying a set of large files, you may want to perform a quick operation on a set of small files.  Because the latter task is brief, it is reasonably efficient to allow it to run concurrently.  This way you don't have to wait for the longer task to finish before your quick task is run.
+
+<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 100 MB in total size.  This allows small tasks to run immediately.
+
+<p><b>Functional Exceptions</b><br>
+Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
+
+<br>
+<p>Also note that you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task, regardless of the Task Manager's queue settings.  For example, if you want a task to run immediately even though the Task Manager made no exception for it, you can <a href="#tasks-menu-resume">Resume</a> it yourself.
+
+<p><b>HAL NOTE:</b>:  If you are using a copy of SpaceFM built with configure option --enable-hal, or a HAL-based SpaceFM package, option Smart Queue will be unavailable.
+
+
+<!-- # Custom Commands #cust -->
+As with most menus, it is also possible to add your own custom commands to the Task Manager's context menu.  This allows you to add commands which can control or interact with running tasks, particularly running custom commands.
+
+<p>There are several <a href="#exvar">provided bash variables</a> which your commands can use to get information about the currently selected task:
+<pre>
+    "fm_task_type"            currently SELECTED task type (eg 'run','copy')
+    "fm_task_name"            selected task name (custom menu item name)
+    "fm_task_pwd"             selected task working directory ( same as %t )
+    "fm_task_pid"             selected task pid               ( same as %p )
+    "fm_task_command"         selected task command
+</pre>
+
+Note that the PID of the task refers to the initial process started by SpaceFM.  The actual process you want to control may be a child of this PID.
+
+<p>For example, to add a custom command which opens the working directory of the currently selected task, use this command line:
+<pre>    spacefm "$fm_task_pwd"</pre>
+
+
+<!-- @Tasks @Popup Dialog #dlg -->
+<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.
+
+<p>For internal tasks, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, and an output monitor used to show the details of any errors which have occured.
+
+<p>For exec tasks, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.
+
+<p>To close the dialog, press the Close button or close the window.  You can always re-open the dialog by clicking on the task in the Task Manager.
+
+<p>To permanently stop a task, click the Stop button.  This is equivalent to selecting <a href="#tasks-menu-stop">Stop</a> in the Task Manager menu.
+
+<p>The third button in the dialog will change depending on the <a href="#tasks-menu-queue">state</a> of the task.  If the task is running, the button will be a Pause button; if the task is paused, the button will become a Queue button; and if the task is queued, the button will become a Resume button.  Pressing this button is equivalent to selecting <a href="#tasks-menu-pause">Pause</a>, <a href="#tasks-menu-queue">Queue</a>, or <a href="#tasks-menu-resume">Resume</a> in the Task Manager's context menu.
 
 
 
@@ -1665,7 +1968,7 @@ exit $?
 <br>If your script requires additional files to work, they should be placed in the <a href="#designmode-command-browse-files">command directory</a>.  You can refer to this directory in your script as "$fm_cmd_dir".  Files in this directory should not be modified by the script.
 
 <p>If your script needs to save changing, persistent data to the user's home folder (to keep track of user preferences, for example), the <a href="#designmode-command-browse-data">data directory</a> should be used ("$fm_cmd_data").  Because this directory may not already exist, always run this command before using it:
-<pre>    mkdir -p "$fm_cmd_dir"</pre>
+<pre>    mkdir -p "$fm_cmd_data"</pre>
 
 <p>If your script needs a temporary directory to work in, you can create one automatically using this convenience function:
 <pre>    tmp="$(fm_new_tmp)"</pre>
@@ -1719,29 +2022,29 @@ Run As User opens a dialog which allows you to enter a username.  When the comma
 <!-- # Run As Task #task -->
 Run As Task, which is enabled by default for new commands, changes several aspects of how your command is run.  If Run As Task is UNchecked, the command is run <i>asynchronously</i> - it is run and forgotten by SpaceFM.  This is useful for running a program such as Firefox, for example.  SpaceFM doesn't need to wait for Firefox to finish or monitor its output - it can be run and forgotten.  For commands which simply start applications or produce no output, you may want to uncheck Run As Task.
 
-<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's task manager will monitor the task, and if the task runs for longer than about one half second, the task manager will auto-show and will add the task to the running tasks list.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
+<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's <a href="#tasks-man">Task Manager</a> will monitor the task, and if the task runs for longer than about one half second, the Task Manager will auto-show and the task will be listed.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
 
-<p>In addition, any output from the task (stdout and stderr), will be collected in an output monitor.  To raise this monitor, click the task in the task manager's task list.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)
+<p>In addition, any output from the task (stdout and stderr), will be collected in an <a href="#tasks-dlg">output monitor</a>.  To raise this monitor, click on the task in the Task Manager.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)
 
-<p>SpaceFM's output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to use Run In Terminal instead.
+<p>SpaceFM's output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to use <a href="#designmode-command-terminal">Run In Terminal</a> instead.
 
-<p>To stop a task prematurely, raise the output monitor and click the Stop button, or right-click on the task in the tasks list and select 'Stop Task'.  When SpaceFM stops a task, it sends the process and all its child processes a QUIT signal, followed several seconds later by KILL signals.  If the process was run as another user, you will be prompted to enter the user's password (or root's password) again to stop the task.
+<p>To stop a task prematurely, raise the output monitor and click the Stop button, or right-click on the task in the Task Manager and select <a href="#tasks-menu-stop">Stop</a>.  When SpaceFM stops a task, it sends the process and all its child processes a SIGTERM signal, followed several seconds later by SIGKILL signals.  If the process was run as another user, you will be prompted to enter the user's password (or root's password) again to stop the task.
 
-<p>When the <a href="#designmode-command-terminal">Run In Terminal</a> option is checked, the Run As Task option will be unchecked automatically as a convenience.  Although not normally useful, it is possible to use these options together (just check Run As Task again after checking Run In Terminal).  When both are checked, the terminal window itself is run as a task, the output monitor will generally be empty, and errors may not be detected.  Mostly this is useful only for monitoring when the command has finished (when the terminal window closes, it will be removed from the tasks list).
+<p>When the <a href="#designmode-command-terminal">Run In Terminal</a> option is checked, the Run As Task option will be unchecked automatically as a convenience.  Although not normally useful, it is possible to use these options together (just check Run As Task again after checking Run In Terminal).  When both are checked, the terminal window itself is run as a task, the output monitor will generally be empty, and errors may not be detected.  Mostly this is useful only for monitoring when the command has finished (when the terminal window closes, it will be removed from the Task Manager).
 
 <!-- # Popup Task #popup -->
-The Popup Task/Error/Output and Scroll options are only enabled if Run As Task is checked.  If Popup Task is checked, the output monitor dialog for the task will be raised as soon as the task is added to the tasks list, even if no output has occured.  The output monitor will not be shown if the task completes in less than about one half second.
+The Popup Task/Error/Output and Scroll options are only enabled if <a href="#designmode-command-task">Run As Task</a> is checked.  If Popup Task is checked, the <a href="#tasks-dlg">popup dialog</a> for the task will be raised as soon as the task is added to the Task Manager, even if no output has occured.  The output monitor will not be shown if the task completes in less than about one half second.
 
-<p>Use Popup Task if you want a popup anytime the task runs for more than a moment.  When the task finishes, the popup will remain, allowing you to review any output.  You can also close the monitor prematurely while the task is still running by clicking the Close button - the task will continue running in the tasks list.
+<p>Use Popup Task if you want a popup anytime the task runs for more than a moment.  When the task finishes, the popup will remain, allowing you to review any output.  You can also close the monitor prematurely while the task is still running by clicking the Close button - the task will continue running in the <a href="#tasks-man">Task Manager</a>.
 
-<p>Note that the global task manager settings found in View|Tasks|Popups take precedence.  If Popup All Tasks is checked, the task will popup even if the command's Popup Task option is unchecked.
+<p>Note that the global Task Manager setting <a href="#tasks-menu-popall">Popup All Tasks</a>, if checked, takes predecence - the task will popup even if the command's Popup Task option is unchecked.
 
 <p>By default, Popup Task is unchecked in new commands.
 
 <!-- # Popup Error #poperr -->
-If Popup Error is checked and the exit status of your command is not zero, the output monitor dialog will be raised to show the error.  Popup Error only has an effect at the moment the command finishes.  If unchecked, the exit status is ignored.
+If Popup Error is checked and the exit status of your command is not zero, a <a href="#tasks-dlg">popup dialog</a> will be raised to show the error.  Popup Error only has an effect at the moment the command finishes.  If unchecked, the exit status is ignored.
 
-<p>Popup Error provides a convenient way to get feedback on the success of your command.  When the command finishes successfully it will simply be removed from the tasks list.  However, if an error occurs then the popup will be raised.
+<p>Popup Error provides a convenient way to get feedback on the success of your command.  When the command finishes successfully it will simply be removed from the Task Manager.  However, if an error occurs then the popup will be raised.
 
 <p>Even if your command does not produce a usuable exit status, you can terminate your command line or script with a non-zero exit status to trigger the error popup.  For example:
 <pre>    if [ ! -e file.output ]; then exit 1; fi</pre>
@@ -1766,12 +2069,12 @@ If Popup Error is checked and the exit status of your command is not zero, the o
 <p>By default, Popup Error is checked in new commands.
 
 <!-- # Popup Output #popout -->
-If Popup Output is checked, the output monitor will be shown the first time the command produces output (even if the task runs so quickly that it is not shown in the tasks list).
+If Popup Output is checked, a <a href="#tasks-dlg">popup dialog</a> will be shown the first time the command produces output (even if the task runs so quickly that it is not shown in the <a href="#tasks-man">Task Manager</a>).
 
 <p>Popup Output can be used to alert you when your task has produced output.  By default, it is checked in new commands.
 
 <!-- # Scroll -->
-The Scroll option, which is checked by default for new commands, determines the auto-scroll behavior of the output monitor.  If checked, the monitor will automatically scroll down to the end of the output (unless the user has moved the scrollbar up from the bottom position).  If unchecked, the output will not automatically scroll to the end.
+The Scroll option, which is checked by default for new commands, determines the auto-scroll behavior of the <a href="#tasks-dlg">output monitor</a>.  If checked, the monitor will automatically scroll down to the end of the output (unless the user has moved the scrollbar up from the bottom position).  If unchecked, the output will not automatically scroll to the end.
 
 <p>With some commands, it's useful to read the output from the top and scroll down manually.  For example, if you right-click on a device in the Devices list and select Properties, you will see a non-auto-scrolling output monitor - the cursor stays at the very beginning of the output so you can read it.
 
@@ -2249,7 +2552,7 @@ The above commands place spacefm's output into the variable 'out', then pass tha
     cat /tmp/outputfile     # display
     rm /tmp/outputfile      # cleanup</pre>
 
-<p>In general, anytime you need to use the dialog's variables in your script, you will want to <b>use one of the above methods</b> to evaluate spacefm's output.  Or, if your shell doesn't support eval, you can parse the output manually.
+<p>In general, anytime you need to use the dialog's variables in your script, you will want to <b>use one of the above methods</b> to evaluate the dialog's output.  Or, if your shell doesn't support eval, you can parse the output manually.
 
 
 
@@ -2622,7 +2925,7 @@ and the icon will change to reflect the value in the file.
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the icon is clicked.  For example:
 <pre>    spacefm -g --icon gtk-open <b>echo '# %n clicked %v'</b></pre>
 
-When you run the above command and click the icon in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the icon, not necessarily the corner of the icon itself (pack the icon into a compact --vbox for the latter).
+When you run the above command and click the icon in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the icon, not necessarily the corner of the icon itself (pack the icon into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
 <p>In commands, the value of an --icon element (eg %icon1) when referenced from another element will equal the icon name, while the current --icon element's value (%v) will equal the mouse button and click location.  If internal command <a href="#dialog-int-set">set</a> is used on an --icon, the icon name is changed.
 <br><br>
@@ -2992,7 +3295,7 @@ Note that depending on the other elements added, <b>the window may grow larger</
 <p><b>A padding amount can also be included.</b>.  This sets the amount of empty space around widgets (0-20 is a reasonable range of values for PAD, 4 is the default).  For example:
 <pre>    spacefm -g --window-size "800x600 <b>10</b>"</pre>
 
-<b>IMPORTANT:</b>  The --window-size element must be come before other elements on the command line for the padding value to have an effect.
+<b>IMPORTANT:</b>  The --window-size element must come before other elements on the command line for the padding value to have an effect.
 
 <p><b>The minimum window size and padding can also be read from a file:</b>
 <pre>    spacefm -g --window-size <b>@</b>/tmp/dialog-wsize</pre>

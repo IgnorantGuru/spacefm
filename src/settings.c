@@ -861,13 +861,13 @@ void load_settings( char* config_dir )
     if ( ver < 10 ) // < 0.7.5
     {
         set = xset_get( "dev_ignore_udisks_hide" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _Hide") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "Ignore Udisks _Hide" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("Ignore _Hide Policy") );
         }
         set = xset_get( "dev_ignore_udisks_nopolicy" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("Ignore Udisks _No Policy") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "Ignore Udisks _No Policy" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("Ignore _No Policy") );
@@ -876,11 +876,80 @@ void load_settings( char* config_dir )
     if ( ver < 11 ) // < 0.7.7+
     {
         set = xset_get( "main_faq" );
-        if ( set->menu_label && !strcmp( set->menu_label, _("How do I... (_FAQ)") ) )
+        if ( set->menu_label && !strcmp( set->menu_label, "How do I... (_FAQ)" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("_FAQ") );
         }
+    }
+    if ( ver < 15 ) // < 0.8.1
+    {
+        set = xset_get( "task_stop" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Stop Task" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Stop") );
+        }
+        set = xset_get( "task_stop_all" );
+        g_free( set->menu_label );
+        set->menu_label = g_strdup( _("_Stop") );
+
+        set = xset_get( "task_show_manager" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Show Manager" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Show _Manager") );
+        }
+        set = xset_get( "task_hide_manager" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Auto-Hide Manager" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Auto-_Hide Manager") );
+        }
+        set = xset_get( "task_errors" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Errors" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Err_ors") );
+        }
+        set = xset_get( "task_col_curest" );
+        if ( set->menu_label && !strcmp( set->menu_label, "Current Esti_mate" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Current Re_main") );
+        }
+        set = xset_get( "task_col_avgest" );
+        if ( set->menu_label && !strcmp( set->menu_label, "A_verage Estimate" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("A_verage Remain") );
+        }
+        set = xset_get( "task_col_path" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Path" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Folder") );
+        }
+        set = xset_get( "dev_root_mount" );
+        if ( !g_strcmp0( set->icon, "gtk-add" ) )
+            string_copy_free( &set->icon, "drive-removable-media" );
+        set = xset_get( "iso_mount" );
+        if ( !g_strcmp0( set->icon, "gtk-cdrom" ) )
+            string_copy_free( &set->icon, "drive-removable-media" );
+        set = xset_get( "stool_mount" );
+        if ( !g_strcmp0( set->icon, "gtk-add" ) )
+            string_copy_free( &set->icon, "drive-removable-media" );
+        set = xset_get( "dev_menu_mount" );
+        if ( !g_strcmp0( set->icon, "gtk-add" ) )
+            string_copy_free( &set->icon, "drive-removable-media" );
+        set = xset_get( "task_pop_detail" );
+        if ( !g_strcmp0( set->menu_label, "_Detailed Status" ) )
+            string_copy_free( &set->menu_label, _("_Detailed Stats") );
+
+        if ( app_settings.small_icon_size == 20 )
+            app_settings.small_icon_size = 22;
+        if ( app_settings.big_icon_size == 20 )
+            app_settings.big_icon_size = 22;
     }
 }
 
@@ -898,7 +967,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "11" );  // 0.7.7+
+    xset_set( "config_version", "s", "15" );  // 0.8.1
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -3469,9 +3538,11 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                     else
                         msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
                     g_free( label );
+                    GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
                     xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
                                                         0, "Copy Plugin",
                                                         NULL, 0, msg, NULL, NULL );
+                    GDK_THREADS_LEAVE();
                     g_free( msg );
                 }
             }
@@ -7434,6 +7505,10 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scrolled ),
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     GtkTextView* input = GTK_TEXT_VIEW( gtk_text_view_new() );
+    // ubuntu shows input too small so use mininum height
+    gtk_widget_set_size_request( GTK_WIDGET( input ), -1, 50 );
+    gtk_widget_set_size_request( GTK_WIDGET( scrolled ), -1, 50 );
+
     gtk_container_add ( GTK_CONTAINER ( scrolled ), GTK_WIDGET( input ) );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( input );
 	gtk_text_view_set_wrap_mode( input, GTK_WRAP_CHAR );  //GTK_WRAP_WORD_CHAR
@@ -7491,7 +7566,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         if ( width && height )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
         else
-            gtk_widget_set_size_request( GTK_WIDGET( dlg ), 600, -1 );
+            gtk_window_set_default_size( GTK_WINDOW( dlg ), 600, 400 );
+            //gtk_widget_set_size_request( GTK_WIDGET( dlg ), 600, 400 );
     }
     else
     {
@@ -7499,6 +7575,9 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
         height = xset_get_int( "text_dlg", "y" );
         if ( width && height )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, -1 );
+        else
+            gtk_window_set_default_size( GTK_WINDOW( dlg ), 500, -1 );
+            //gtk_widget_set_size_request( GTK_WIDGET( dlg ), 500, 300 );
     }
     
     gtk_window_set_resizable( GTK_WINDOW( dlg ), TRUE );
@@ -8481,7 +8560,7 @@ void xset_defaults()
     xset_set_set( set, "shared_key", "go_default" );
 
     set = xset_set( "stool_mount", "label", _("Mount") );//not added
-    xset_set_set( set, "icon", "gtk-add" );
+    xset_set_set( set, "icon", "drive-removable-media" );
     set->tool = XSET_B_FALSE;
 
     set = xset_set( "stool_mountopen", "label", _("Mount & Open") );//not added
@@ -8533,7 +8612,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-tab" );
    
     set = xset_set( "dev_menu_mount", "label", _("_Mount") );
-    xset_set_set( set, "icon", "gtk-add" );
+    xset_set_set( set, "icon", "drive-removable-media" );
     set->line = g_strdup( "#devices-menu-mount" );
    
     set = xset_set( "dev_menu_remount", "label", _("Re_/mount") );
@@ -8560,7 +8639,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-root" );
     
     set = xset_set( "dev_root_mount", "label", _("_Mount") );
-    xset_set_set( set, "icon", "gtk-add" );
+    xset_set_set( set, "icon", "drive-removable-media" );
     xset_set_set( set, "z", "/usr/bin/udisks --mount %v --mount-options %o" );
     set->line = g_strdup( "#devices-root-mount" );
    
@@ -9331,7 +9410,8 @@ void xset_defaults()
 
     set = xset_set( "main_tasks", "label", _("_Tasks") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors" );
+    xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors task_queue" );
+    set->line = g_strdup( "#tasks" );
     
     set = xset_set( "task_col_status", "label", _("_Status") );
     set->menu_style = XSET_MENU_CHECK;
@@ -9342,125 +9422,193 @@ void xset_defaults()
     set = xset_set( "task_col_count", "label", _("_Count") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 1 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
-    set = xset_set( "task_col_path", "label", _("_Path") );
+    set = xset_set( "task_col_path", "label", _("_Folder") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 2 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_file", "label", _("_Item") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 3 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_to", "label", _("_To") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 4 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_progress", "label", _("_Progress") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 5 );
     set->y = g_strdup( "100" );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_total", "label", _("T_otal") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 6 );
     set->y = g_strdup( "120" );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_started", "label", _("Sta_rted") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 7 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_elapsed", "label", _("_Elapsed") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 8 );
     set->y = g_strdup( "70" );
+    set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_curspeed", "label", _("C_urrent Speed") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 9 );
+    set->line = g_strdup( "#tasks-menu-col" );
     
-    set = xset_set( "task_col_curest", "label", _("Current Esti_mate") );
+    set = xset_set( "task_col_curest", "label", _("Current Re_main") );
     set->menu_style = XSET_MENU_CHECK;
     set->x = g_strdup_printf( "%d", 10 );
+    set->line = g_strdup( "#tasks-menu-col" );
 
     set = xset_set( "task_col_avgspeed", "label", _("_Average Speed") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 11 );
     set->y = g_strdup( "60" );
+    set->line = g_strdup( "#tasks-menu-col" );
     
-    set = xset_set( "task_col_avgest", "label", _("A_verage Estimate") );
+    set = xset_set( "task_col_avgest", "label", _("A_verage Remain") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 12 );
     set->y = g_strdup( "65" );
+    set->line = g_strdup( "#tasks-menu-col" );
 
-    xset_set( "task_col_reorder", "label", _("Reor_der") );
+    set = xset_set( "task_col_reorder", "label", _("Reor_der") );
+    set->line = g_strdup( "#tasks-menu-col" );
 
-    xset_set( "task_stop", "label", _("_Stop Task") );
+    set = xset_set( "task_stop", "label", _("_Stop") );
+    xset_set_set( set, "icon", "gtk-stop" );
+    set->line = g_strdup( "#tasks-menu-stop" );
+    set = xset_set( "task_pause", "label", _("Pa_use") );
+    xset_set_set( set, "icon", "gtk-media-pause" );
+    set->line = g_strdup( "#tasks-menu-pause" );
+    set = xset_set( "task_que", "label", _("_Queue") );
+    xset_set_set( set, "icon", "gtk-media-next" );
+    set->line = g_strdup( "#tasks-menu-queue" );
+    set = xset_set( "task_resume", "label", _("_Resume") );
+    xset_set_set( set, "icon", "gtk-media-play" );
+    set->line = g_strdup( "#tasks-menu-resume" );
 
-    xset_set( "task_stop_all", "label", _("Stop _All Tasks") );
+    set = xset_set( "task_all", "label", _("_All Tasks") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "task_stop_all task_pause_all task_que_all task_resume_all" );
+    set->line = g_strdup( "#tasks-menu-all" );
 
-    set = xset_set( "task_show_manager", "label", _("_Show Manager") );
+        set = xset_set( "task_stop_all", "label", _("_Stop") );
+        xset_set_set( set, "icon", "gtk-stop" );
+        set->line = g_strdup( "#tasks-menu-all" );
+        set = xset_set( "task_pause_all", "label", _("Pa_use") );
+        xset_set_set( set, "icon", "gtk-media-pause" );
+        set->line = g_strdup( "#tasks-menu-all" );
+        set = xset_set( "task_que_all", "label", _("_Queue") );
+        xset_set_set( set, "icon", "gtk-add" );
+        set->line = g_strdup( "#tasks-menu-all" );
+        set = xset_set( "task_resume_all", "label", _("_Resume") );
+        xset_set_set( set, "icon", "gtk-media-play" );
+        set->line = g_strdup( "#tasks-menu-all" );
+
+    set = xset_set( "task_show_manager", "label", _("Show _Manager") );
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_FALSE;
+    set->line = g_strdup( "#tasks-menu-show" );
 
-    set = xset_set( "task_hide_manager", "label", _("_Auto-Hide Manager") );
+    set = xset_set( "task_hide_manager", "label", _("Auto-_Hide Manager") );
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#tasks-menu-auto" );
 
     set = xset_set( "font_task", "label", _("_Font") );
     set->menu_style = XSET_MENU_FONTDLG;
     xset_set_set( set, "icon", "gtk-select-font" );
     xset_set_set( set, "title", _("Task Manager Font") );
     xset_set_set( set, "desc", _("copying  File  1:15  65.2 M  30.2 M/s") );
+    set->line = g_strdup( "#tasks-menu-col" );
 
     set = xset_set( "task_columns", "label", _("_Columns") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_col_count task_col_path task_col_file task_col_to task_col_progress task_col_total task_col_started task_col_elapsed task_col_curspeed task_col_curest task_col_avgspeed task_col_avgest sep_t2 task_col_reorder font_task" );
+    set->line = g_strdup( "#tasks-menu-col" );
 
     set = xset_set( "task_popups", "label", _("_Popups") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_pop_all task_pop_top task_pop_detail task_pop_font" );
+    set->line = g_strdup( "#tasks-menu-popall" );
 
         set = xset_set( "task_pop_all", "label", _("Popup _All Tasks") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-popall" );
 
         set = xset_set( "task_pop_top", "label", _("Stay On _Top") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-poptop" );
 
-        set = xset_set( "task_pop_detail", "label", _("_Detailed Status") );
+        set = xset_set( "task_pop_detail", "label", _("_Detailed Stats") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-popdet" );
 
         set = xset_set( "task_pop_font", "label", _("_Font") );
         set->menu_style = XSET_MENU_FONTDLG;
         xset_set_set( set, "icon", "gtk-select-font" );
         xset_set_set( set, "title", _("Task Popup Font (affects new tasks)") );
         xset_set_set( set, "desc", _("Example Output 0123456789") );
+        set->line = g_strdup( "#tasks-menu-popfont" );
 
-    set = xset_set( "task_errors", "label", _("_Errors") );
+    set = xset_set( "task_errors", "label", _("Err_ors") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_err_first task_err_any task_err_cont" );
+    set->line = g_strdup( "#tasks-menu-poperr" );
 
         set = xset_set( "task_err_first", "label", _("Stop If _First") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-poperr" );
 
         set = xset_set( "task_err_any", "label", _("Stop On _Any") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-poperr" );
 
         set = xset_set( "task_err_cont", "label", _("_Continue") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-poperr" );
+
+    set = xset_set( "task_queue", "label", _("Qu_eue") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "task_q_new task_q_smart" );
+    set->line = g_strdup( "#tasks-menu-new" );
+
+        set = xset_set( "task_q_new", "label", _("_Queue New Tasks") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-new" );
+
+        set = xset_set( "task_q_smart", "label", _("_Smart Queue") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-smart" );
 
     // PANELS COMMON
     set = xset_get( "sep_new" );
@@ -9573,7 +9721,7 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
 
     set = xset_set( "iso_mount", "label", _("_Mount ISO") );
-    xset_set_set( set, "icon", "gtk-add" );
+    xset_set_set( set, "icon", "gtk-cdrom" );
 
     set = xset_set( "iso_auto", "label", _("_Auto-Mount ISO") );
     set->menu_style = XSET_MENU_CHECK;

@@ -128,6 +128,7 @@ void fm_main_window_open_terminal( GtkWindow* parent,
                                    const char* path );
 void main_task_view_update_task( PtkFileTask* task );
 void main_task_view_remove_task( PtkFileTask* task );
+void task_start_queued( GtkWidget* view, PtkFileTask* new_task );
 void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser );
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );

@@ -1,3 +1,16 @@
+0.8.0+
+    added task manager queue/pause #147
+    disable task manager find
+    set minimum dialog and task pane sizes #56
+    added Tasks user manual section
+    fix clang compile error #162
+    fix hang on dir tree sel access error #164
+    fix file search find within symlink dir #122
+    add double-click opens file search result #109
+    fix vfs move dest symlink device determination
+    abort copy/move remove incomplete file
+    move Sort submenu from Style to View submenu
+    gtk 2.18 compatibility #146
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

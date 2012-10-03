@@ -1048,11 +1048,11 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     {
         if ( GTK_IS_WIDGET( file_browser->toolbar ) )
         {
-            printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n",
-                                                        file_browser->toolbar );
+            //printf("gtk_widget_destroy( file_browser->toolbar = %#x )\n",
+            //                                            file_browser->toolbar );
             // crashing here? http://sourceforge.net/p/spacefm/tickets/88000/?page=0
             gtk_widget_destroy( file_browser->toolbar );  
-            printf("    DONE\n" );
+            //printf("    DONE\n" );
         }
         file_browser->toolbar = NULL;
         file_browser->path_bar = NULL;
@@ -3438,7 +3438,6 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
 
     if ( !file_browser->side_dir )
         return FALSE;
-    //gdk_threads_enter();   //sfm not needed because g_idle_add runs in main loop thread
     dir_path = ptk_dir_tree_view_get_selected_dir( GTK_TREE_VIEW(
                                                     file_browser->side_dir ) );
         
@@ -3446,16 +3445,12 @@ static gboolean on_dir_tree_update_sel ( PtkFileBrowser* file_browser )
     {
         if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
         {
-            //if ( startup_mode == FALSE ) //MOD
-            //{
-                ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY);
-                //dir_path = g_strdup_printf( _( "change path:\nX\%sX" ), dir_path );
-                //ptk_show_error( NULL, _("Path"), dir_path );
-            //}
+            gdk_threads_enter(); // needed for gtk_dialog_run in ptk_show_error
+            ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY);
+            gdk_threads_leave();
         }
         g_free( dir_path );
     }
-    //gdk_threads_leave();
     return FALSE;
 }
 
@@ -4911,7 +4906,9 @@ int no_write_access = 0;
         mime_type = vfs_file_info_get_mime_type( file );
         if ( mime_type && ( 
                 !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ) )
+                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
+                g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
+                g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
         {
             char* str = g_find_program_in_path( "udevil" );
             if ( str )

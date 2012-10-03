@@ -20,6 +20,10 @@ The 'exo' libraries and source code used by this software are licensed under the
 You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.</property>
     <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@gmx.com&gt;
 
+Contributors:
+   BwackNinja (gtk2.18 compatibility)
+
+
 Source code taken from other projects:
  * pcmanfm-mod: IgnorantGuru &lt;ignorantguru@gmx.com&gt;
  * pcmanfm v0.5.2: Hon Jen Yee (PCMan)

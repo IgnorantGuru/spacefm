@@ -22,7 +22,7 @@ typedef enum
     VFS_FILE_TASK_COPY,
     VFS_FILE_TASK_TRASH,
     VFS_FILE_TASK_DELETE,
-    VFS_FILE_TASK_LINK,             /* will be supported in the future */
+    VFS_FILE_TASK_LINK,
     VFS_FILE_TASK_CHMOD_CHOWN,         /* These two kinds of operation have lots in common,
                                         * so put them together to reduce duplicated disk I/O */
     VFS_FILE_TASK_EXEC,             //MOD
@@ -52,11 +52,14 @@ struct _VFSFileTask;
 typedef enum
 {
     VFS_FILE_TASK_RUNNING,
+    VFS_FILE_TASK_SIZING,
     VFS_FILE_TASK_QUERY_ABORT,
     VFS_FILE_TASK_QUERY_OVERWRITE,
     VFS_FILE_TASK_ERROR,
     VFS_FILE_TASK_ABORTED,
     VFS_FILE_TASK_TIMEOUT,
+    VFS_FILE_TASK_PAUSE,
+    VFS_FILE_TASK_QUEUE,
     VFS_FILE_TASK_FINISH
 }VFSFileTaskState;
 
@@ -93,7 +96,8 @@ struct _VFSFileTask
                                  after file operation is completed. */
     char* dest_dir; /* Destinaton directory */
     gboolean avoid_changes;
-
+    GSList* devs;
+    
     VFSFileTaskOverwriteMode overwrite_mode ;
     gboolean recursive; /* Apply operation to all files under folders
         * recursively. This is default to copy/delete,
@@ -111,6 +115,7 @@ struct _VFSFileTask
     int percent; /* progress (percentage) */
     time_t start_time;
     time_t last_time;
+    time_t pause_time;
     off64_t last_speed;
     off64_t last_progress;
     guint current_item;
@@ -123,6 +128,9 @@ struct _VFSFileTask
 
     GThread* thread;
     VFSFileTaskState state;
+    VFSFileTaskState state_pause;
+    GCond* pause_cond;
+    gboolean queue_start;
 
     VFSFileTaskProgressCallback progress_cb;
     gpointer progress_cb_data;
