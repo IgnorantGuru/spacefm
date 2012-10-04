@@ -1343,7 +1343,7 @@ void on_status_middle_click_config( GtkMenuItem *menuitem, XSet* set )
 void on_status_bar_popup( GtkWidget *widget, GtkWidget *menu,
                                                 PtkFileBrowser* file_browser )
 {
-    GSList* radio_group = NULL;
+    XSet* set_radio;
     XSetContext* context = xset_context_new();
     main_context_fill( file_browser, context );
     GtkAccelGroup* accel_group = gtk_accel_group_new();
@@ -1357,16 +1357,17 @@ void on_status_bar_popup( GtkWidget *widget, GtkWidget *menu,
                                         on_status_effect_change, file_browser );
     XSet* set = xset_get( "status_name" );
     xset_set_cb( "status_name", on_status_middle_click_config, set );
-    xset_set_ob2( set, NULL, radio_group );
+    xset_set_ob2( set, NULL, NULL );
+    set_radio = set;
     set = xset_get( "status_path" );
     xset_set_cb( "status_path", on_status_middle_click_config, set );
-    xset_set_ob2( set, NULL, radio_group );
+    xset_set_ob2( set, NULL, set_radio );
     set = xset_get( "status_info" );
     xset_set_cb( "status_info", on_status_middle_click_config, set );
-    xset_set_ob2( set, NULL, radio_group );
+    xset_set_ob2( set, NULL, set_radio );
     set = xset_get( "status_hide" );
     xset_set_cb( "status_hide", on_status_middle_click_config, set );
-    xset_set_ob2( set, NULL, radio_group );
+    xset_set_ob2( set, NULL, set_radio );
 
     xset_add_menu( NULL, file_browser, menu, accel_group, desc );
     g_free( desc );

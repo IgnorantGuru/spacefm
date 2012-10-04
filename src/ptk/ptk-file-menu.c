@@ -483,7 +483,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     char* name;
     char* desc;
     char* str;
-    GSList* radio_group;    
+    XSet* set_radio;
     GdkPixbuf* app_icon;
     int icon_w, icon_h;
     GtkWidget* app_img;
@@ -812,22 +812,22 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_ob1( set, "set", set );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
-            radio_group = NULL;
-            set = xset_get( "arc_def_ex" );
-            xset_set_cb( "arc_def_ex", on_archive_default, set );
-            xset_set_ob2( set, NULL, radio_group );
-
-            set = xset_get( "arc_def_exto" );
-            xset_set_cb( "arc_def_exto", on_archive_default, set );
-            xset_set_ob2( set, NULL, radio_group );
-
             set = xset_get( "arc_def_open" );
             xset_set_cb( "arc_def_open", on_archive_default, set );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
+            set_radio = set;
+
+            set = xset_get( "arc_def_ex" );
+            xset_set_cb( "arc_def_ex", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
+            
+            set = xset_get( "arc_def_exto" );
+            xset_set_cb( "arc_def_exto", on_archive_default, set );
+            xset_set_ob2( set, NULL, set_radio );
 
             set = xset_get( "arc_def_list" );
             xset_set_cb( "arc_def_list", on_archive_default, set );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
 
             set = xset_get( "arc_def_write" );
             if ( geteuid() == 0 )
@@ -1145,48 +1145,48 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         else
             xset_set( "view_columns", "disable", "1" );
         
-        radio_group = NULL;
         set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
+            set_radio = set;
         set = xset_set_cb_panel( p, "list_icons", on_popup_list_icons, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
         set = xset_set_cb_panel( p, "list_compact", on_popup_list_compact, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
 
-        radio_group = NULL;
         set = xset_set_cb( "sortby_name", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_NAME );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
             set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ? XSET_B_TRUE : XSET_B_FALSE;
+            set_radio = set;
         set = xset_set_cb( "sortby_size", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_SIZE );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_type", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_TYPE );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_perm", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_PERM );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_owner", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_OWNER );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_date", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_MTIME );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ? XSET_B_TRUE : XSET_B_FALSE;
 
-        radio_group = NULL;
         set = xset_set_cb( "sortby_ascend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -1 );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
             set->b = browser->sort_type == GTK_SORT_ASCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+            set_radio = set;
         set = xset_set_cb( "sortby_descend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -2 );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = browser->sort_type == GTK_SORT_DESCENDING ? XSET_B_TRUE : XSET_B_FALSE;
 
         set = xset_set_cb( "sortx_natural", on_popup_sort_extra, browser );
@@ -1197,27 +1197,27 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                     XSET_B_TRUE : XSET_B_FALSE;
             set->disable = !PTK_FILE_LIST( browser->file_list )->sort_natural;
 
-        radio_group = NULL;
         set = xset_set_cb( "sortx_folders", on_popup_sort_extra, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
                             PTK_LIST_SORT_DIR_FIRST ? XSET_B_TRUE : XSET_B_FALSE;
+            set_radio = set;
         set = xset_set_cb( "sortx_files", on_popup_sort_extra, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
                             PTK_LIST_SORT_DIR_LAST ? XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortx_mix", on_popup_sort_extra, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_dir == 
                             PTK_LIST_SORT_DIR_MIXED ? XSET_B_TRUE : XSET_B_FALSE;
 
-        radio_group = NULL;
         set = xset_set_cb( "sortx_hidfirst", on_popup_sort_extra, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, NULL );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_hidden_first ?
                                                     XSET_B_TRUE : XSET_B_FALSE;
+            set_radio = set;
         set = xset_set_cb( "sortx_hidlast", on_popup_sort_extra, browser );
-            xset_set_ob2( set, NULL, radio_group );
+            xset_set_ob2( set, NULL, set_radio );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_hidden_first ? 
                                                     XSET_B_FALSE : XSET_B_TRUE;
 

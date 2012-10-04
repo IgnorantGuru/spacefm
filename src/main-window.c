@@ -4739,17 +4739,17 @@ void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* n
 void main_task_prepare_menu( FMMainWindow* main_window, GtkWidget* menu,
                                                 GtkAccelGroup* accel_group )
 {
-    GSList *radio_group;
     XSet* set;
+    XSet* set_radio;
     
     GtkWidget* parent = main_window->task_view;
-    radio_group = NULL;
     set = xset_set_cb( "task_show_manager", on_task_popup_show, main_window );
         xset_set_ob1( set, "name", set->name );
-        xset_set_ob2( set, NULL, radio_group );
+        xset_set_ob2( set, NULL, NULL );
+        set_radio = set;
     set = xset_set_cb( "task_hide_manager", on_task_popup_show, main_window );
         xset_set_ob1( set, "name", set->name );
-        xset_set_ob2( set, NULL, radio_group );
+        xset_set_ob2( set, NULL, set_radio );
 
     xset_set_cb( "task_col_count", on_task_column_selected, parent );
     xset_set_cb( "task_col_path", on_task_column_selected, parent );
@@ -4765,16 +4765,16 @@ void main_task_prepare_menu( FMMainWindow* main_window, GtkWidget* menu,
     xset_set_cb( "task_col_avgest", on_task_column_selected, parent );
     xset_set_cb( "task_col_reorder", on_reorder, parent );
 
-    radio_group = NULL;
     set = xset_set_cb( "task_err_first", on_task_popup_errset, main_window );
         xset_set_ob1( set, "name", set->name );
-        xset_set_ob2( set, NULL, radio_group );
+        xset_set_ob2( set, NULL, NULL );
+        set_radio = set;
     set = xset_set_cb( "task_err_any", on_task_popup_errset, main_window );
         xset_set_ob1( set, "name", set->name );
-        xset_set_ob2( set, NULL, radio_group );
+        xset_set_ob2( set, NULL, set_radio );
     set = xset_set_cb( "task_err_cont", on_task_popup_errset, main_window );
         xset_set_ob1( set, "name", set->name );
-        xset_set_ob2( set, NULL, radio_group );
+        xset_set_ob2( set, NULL, set_radio );
 }
 
 PtkFileTask* get_selected_task( GtkWidget* view )

@@ -2628,8 +2628,16 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
             }
             else if ( set->menu_style == XSET_MENU_RADIO )
             {
-                item = gtk_radio_menu_item_new_with_mnemonic( set->ob2_data,
-                                                                    set->menu_label );
+                XSet* set_radio;
+                if ( set->ob2_data )
+                    set_radio = (XSet*)set->ob2_data;
+                else
+                    set_radio = set;
+                item = gtk_radio_menu_item_new_with_mnemonic( 
+                                                    (GSList*)set_radio->ob2_data,
+                                                    set->menu_label );
+                set_radio->ob2_data = (gpointer)gtk_radio_menu_item_get_group(
+                                                    GTK_RADIO_MENU_ITEM( item ) );
                 gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
                                                         mset->b == XSET_B_TRUE );
             }
@@ -7126,9 +7134,12 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
     char* title;
     XSet* mset;  // mirror set or set
     XSet* rset;  // real set
-    
+
     if ( item )
     {
+        if ( set->lock && set->menu_style == XSET_MENU_RADIO &&
+                    !gtk_check_menu_item_get_active( GTK_CHECK_MENU_ITEM( item ) ) )
+            return;
         cb_func = (void *)g_object_get_data( G_OBJECT(item), "cb_func" );
         cb_data = g_object_get_data( G_OBJECT(item), "cb_data" );
     }
