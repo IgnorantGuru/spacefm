@@ -4187,7 +4187,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-received" );
 
-    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) && ( gtk_selection_data_get_format(sel_data) == 8 ) )
+    if ( ( sel_data->length >= 0 ) && ( sel_data->format == 8 ) )
     {
         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
             dest_dir = folder_view_get_drop_dir( file_browser, x, y );
@@ -4225,13 +4225,13 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                     }
                     if( file_browser->drag_source_dev != dest_dev )
                         // src and dest are on different devices */
-                        gdk_drag_status (drag_context, GDK_ACTION_COPY, time);
+                        drag_context->suggested_action = GDK_ACTION_COPY;
                     else
-                        gdk_drag_status (drag_context, GDK_ACTION_MOVE, time);
+                        drag_context->suggested_action = GDK_ACTION_MOVE;
                 }
                 else
                     // stat failed
-                    gdk_drag_status (drag_context, GDK_ACTION_COPY, time);
+                    drag_context->suggested_action = GDK_ACTION_COPY;
 
                 g_free( dest_dir );
                 g_strfreev( list );
@@ -4240,10 +4240,10 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             }
             if ( puri )
             {
-            if ( 0 == ( gdk_drag_context_get_selected_action(drag_context) &
+                if ( 0 == ( drag_context->action &
                             ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
-                    gdk_drag_status (drag_context, GDK_ACTION_COPY, time); //sfm correct?  was MOVE
+                    drag_context->action = GDK_ACTION_COPY;  //sfm correct?  was MOVE
                 }
                 gtk_drag_finish ( drag_context, TRUE, FALSE, time );
 
@@ -4260,7 +4260,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                 }
                 g_strfreev( list );
 
-            switch ( gdk_drag_context_get_selected_action(drag_context) )
+                switch ( drag_context->action )
                 {
                 case GDK_ACTION_COPY:
                     file_action = VFS_FILE_TASK_COPY;
@@ -4338,6 +4338,7 @@ void on_folder_view_drag_data_get ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-get" );
 
+    drag_context->actions = GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK;
     // drag_context->suggested_action = GDK_ACTION_MOVE;
 
     for ( sel = sels; sel; sel = g_list_next( sel ) )
@@ -4436,7 +4437,6 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     GdkDragAction suggested_action;
     GdkAtom target;
     GtkTargetList* target_list;
-    GtkAllocation allocation;
 
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name ( widget, "drag-motion" );
@@ -4445,7 +4445,6 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
 
     vadj = gtk_scrolled_window_get_vadjustment( scroll ) ;
     vpos = gtk_adjustment_get_value( vadj );
-    gtk_widget_get_allocation( widget, &allocation );
 
     if ( y < 32 )
     {
@@ -4459,7 +4458,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
                                                 scroll );
         }
     }
-    else if ( y > ( allocation.height - 32 ) )
+    else if ( y > ( widget->allocation.height - 32 ) )
     {
         if ( ! folder_view_auto_scroll_timer )
         {
@@ -4541,13 +4540,13 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     else
     {
         /* Only 'move' is available. The user force move action by pressing Shift key */
-        if( ( gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
+        if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_MOVE )
             suggested_action = GDK_ACTION_MOVE;
         /* Only 'copy' is available. The user force copy action by pressing Ctrl key */
-        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_COPY )
+        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_COPY )
             suggested_action = GDK_ACTION_COPY;
         /* Only 'link' is available. The user force link action by pressing Shift+Ctrl key */
-        else if( (gdk_drag_context_get_actions ( drag_context ) & GDK_ACTION_ALL) == GDK_ACTION_LINK )
+        else if( (drag_context->actions & GDK_ACTION_ALL) == GDK_ACTION_LINK )
             suggested_action = GDK_ACTION_LINK;
         /* Several different actions are available. We have to figure out a good default action. */
         else
@@ -4564,7 +4563,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
                 // automatic
                 file_browser->pending_drag_status = 1;
                 gtk_drag_get_data (widget, drag_context, target, time);
-                suggested_action = gdk_drag_context_get_suggested_action ( drag_context );
+                suggested_action = drag_context->suggested_action;
             }
         }
         gdk_drag_status( drag_context, suggested_action, time );
