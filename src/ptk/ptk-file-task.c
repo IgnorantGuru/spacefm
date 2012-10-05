@@ -1223,28 +1223,28 @@ void ptk_file_task_update( PtkFileTask* ptask )
     }
 
     VFSFileTask* task = ptask->task;
-    time_t cur_speed;
-
+    off64_t cur_speed;
+    gdouble timer_elapsed = g_timer_elapsed( task->timer, NULL );
+    
     if ( task->type != VFS_FILE_TASK_EXEC )
     {
-        //cur speed (based on at least 2 sec interval)
-        if ( task->state_pause != VFS_FILE_TASK_RUNNING )
+        //cur speed
+        if ( task->state_pause == VFS_FILE_TASK_RUNNING )
         {
-            cur_speed = task->last_speed;
-            task->last_time = time( NULL );
-            task->last_progress = task->progress;
-        }
-        else
-        {
-            cur_speed = time( NULL ) - task->last_time;
-            if ( cur_speed > 1 )
+            gdouble since_last = timer_elapsed - task->last_elapsed;
+            if ( since_last >= 2.0 )
             {
-                //g_warning ("timediff=%f  %f", (float) cur_speed, (float) time( NULL ));
-                cur_speed = ( task->progress - task->last_progress ) / cur_speed;
-                task->last_time = time( NULL );
+                cur_speed = ( task->progress - task->last_progress ) / since_last;
+                //printf( "( %lld - %lld ) / %lf = %lld\n", task->progress,
+                //                task->last_progress, since_last, cur_speed );
+                task->last_elapsed = timer_elapsed;
                 task->last_speed = cur_speed;
                 task->last_progress = task->progress;
             }
+            else if ( since_last > 0.1 )
+                cur_speed = ( task->progress - task->last_progress ) / since_last;
+            else
+                cur_speed = 0;
         }
         // calc percent
         int ipercent;
@@ -1260,8 +1260,7 @@ void ptk_file_task_update( PtkFileTask* ptask )
     }
 
     //elapsed
-    time_t etime = time( NULL ) - task->start_time - task->pause_time ;
-    guint hours = etime / 3600;
+    guint hours = timer_elapsed / 3600.0;
     char* elapsed;
     char* elapsed2;
     char* elapsed3;
@@ -1269,28 +1268,28 @@ void ptk_file_task_update( PtkFileTask* ptask )
         elapsed = g_strdup( "" );
     else
         elapsed = g_strdup_printf( "%d", hours );
-    guint mins = ( etime - ( hours * 3600 ) ) / 60;
+    guint mins = ( timer_elapsed - ( hours * 3600 ) ) / 60;
     if ( hours > 0 )
         elapsed2 = g_strdup_printf( "%s:%02d", elapsed, mins );
     else if ( mins > 0 )
         elapsed2 = g_strdup_printf( "%d", mins );    
     else
         elapsed2 = g_strdup( elapsed );
-    guint secs = ( etime - ( hours * 3600 ) - ( mins * 60 ) );
+    guint secs = ( timer_elapsed - ( hours * 3600 ) - ( mins * 60 ) );
     elapsed3 = g_strdup_printf( "%s:%02d", elapsed2, secs );
     g_free( elapsed );
     g_free( elapsed2 );
     g_free( ptask->dsp_elapsed );
     ptask->dsp_elapsed = elapsed3;
 
-    char* file_count;
-    char* size_tally;
-    char* speed1;
-    char* speed2;
-    char* remain1;
-    char* remain2;
     if ( task->type != VFS_FILE_TASK_EXEC )
     {
+        char* file_count;
+        char* size_tally;
+        char* speed1;
+        char* speed2;
+        char* remain1;
+        char* remain2;
         char buf1[ 64 ];
         char buf2[ 64 ];
         //count
@@ -1302,19 +1301,10 @@ void ptk_file_task_update( PtkFileTask* ptask )
         else
             sprintf( buf2, "??" );  // total_size calculation timed out
         size_tally = g_strdup_printf( "%s / %s", buf1, buf2 );
-        //avg speed
-        time_t cur_speed;
-        time_t avg_speed = etime;
-        if ( avg_speed > 0 )
-            avg_speed = task->progress / avg_speed;
-        else
-            avg_speed = 0;
-        vfs_file_size_to_string_format( buf2, avg_speed, NULL );
-        if ( task->last_speed == 0 && task->progress == 0 )
-            cur_speed = avg_speed;
-        else
+        // cur speed display
+        if ( task->last_speed != 0 )
+            // use speed of last 2 sec interval if available
             cur_speed = task->last_speed;
-        vfs_file_size_to_string_format( buf1, cur_speed, NULL );
         if ( cur_speed == 0 || task->state_pause != VFS_FILE_TASK_RUNNING )
         {
             if ( task->state_pause == VFS_FILE_TASK_PAUSE )
@@ -1325,7 +1315,17 @@ void ptk_file_task_update( PtkFileTask* ptask )
                 speed1 = g_strdup_printf( _("stalled") );
         }
         else
+        {
+            vfs_file_size_to_string_format( buf1, cur_speed, NULL );
             speed1 = g_strdup_printf( "%s/s", buf1 );
+        }
+        // avg speed
+        time_t avg_speed;
+        if ( timer_elapsed > 0 )
+            avg_speed = task->progress / timer_elapsed;
+        else
+            avg_speed = 0;
+        vfs_file_size_to_string_format( buf2, avg_speed, NULL );
         speed2 = g_strdup_printf( "%s/s", buf2 );
         //remain cur
         off64_t remain;
@@ -1343,7 +1343,8 @@ void ptk_file_task_update( PtkFileTask* ptask )
             remain1 = g_strdup_printf( "%dh", hours );
         }
         else if ( remain > 59 )
-            remain1 = g_strdup_printf( "%d:%02d", remain / 60, remain - ( (guint)( remain / 60 ) * 60 ) );
+            remain1 = g_strdup_printf( "%d:%02d", remain / 60, remain -
+                                            ( (guint)( remain / 60 ) * 60 ) );
         else
             remain1 = g_strdup_printf( ":%02d", remain );
         //remain avg
@@ -1361,7 +1362,8 @@ void ptk_file_task_update( PtkFileTask* ptask )
             remain2 = g_strdup_printf( "%dh", hours );
         }
         else if ( remain > 59 )
-            remain2 = g_strdup_printf( "%d:%02d", remain / 60, remain - ( (guint)( remain / 60 ) * 60 ) );
+            remain2 = g_strdup_printf( "%d:%02d", remain / 60, remain - 
+                                            ( (guint)( remain / 60 ) * 60 ) );
         else
             remain2 = g_strdup_printf( ":%02d", remain );
 

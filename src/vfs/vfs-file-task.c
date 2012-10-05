@@ -124,13 +124,15 @@ static gboolean should_abort( VFSFileTask* task )
     if ( task->state_pause != VFS_FILE_TASK_RUNNING )
     {
         g_mutex_lock( task->mutex );
-        time_t pause_start = time( NULL );
+        g_timer_stop( task->timer );
         task->pause_cond = g_cond_new();
         g_cond_wait( task->pause_cond, task->mutex );
         g_cond_free( task->pause_cond );
         task->pause_cond = NULL;
-        task->last_time = time( NULL );
-        task->pause_time += task->last_time - pause_start;
+        task->last_elapsed = g_timer_elapsed( task->timer, NULL );
+        task->last_progress = task->progress;
+        task->last_speed = 0;
+        g_timer_continue( task->timer );
         task->state_pause = VFS_FILE_TASK_RUNNING;
         g_mutex_unlock( task->mutex );
     }
@@ -2169,11 +2171,11 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     gtk_text_buffer_add_mark( task->add_log_buf, task->add_log_end, &iter );
     
     task->start_time = time( NULL );
-    task->last_time = task->start_time;
     task->last_speed = 0;
     task->last_progress = 0;
     task->current_item = 0;
-    task->pause_time = 0;
+    task->timer = g_timer_new();
+    task->last_elapsed = 0;
     return task;
 }
 
@@ -2233,6 +2235,17 @@ void vfs_file_task_try_abort ( VFSFileTask* task )
     {
         g_mutex_lock( task->mutex );
         g_cond_broadcast( task->pause_cond );
+        task->last_elapsed = g_timer_elapsed( task->timer, NULL );
+        task->last_progress = task->progress;
+        task->last_speed = 0;
+        g_mutex_unlock( task->mutex );
+    }
+    else
+    {
+        g_mutex_lock( task->mutex );
+        task->last_elapsed = g_timer_elapsed( task->timer, NULL );
+        task->last_progress = task->progress;
+        task->last_speed = 0;
         g_mutex_unlock( task->mutex );
     }
     task->state_pause = VFS_FILE_TASK_RUNNING;
@@ -2280,6 +2293,8 @@ void vfs_file_task_free ( VFSFileTask* task )
     gtk_text_buffer_set_text( task->add_log_buf, "", -1 );
     g_object_unref( task->add_log_buf );
 
+    g_timer_destroy( task->timer );
+    
     g_slice_free( VFSFileTask, task );
 }
 

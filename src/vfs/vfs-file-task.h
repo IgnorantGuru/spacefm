@@ -114,10 +114,10 @@ struct _VFSFileTask
     off64_t progress; /* Total size of current processed files, in btytes */
     int percent; /* progress (percentage) */
     time_t start_time;
-    time_t last_time;
-    time_t pause_time;
     off64_t last_speed;
     off64_t last_progress;
+    GTimer* timer;
+    gdouble last_elapsed;
     guint current_item;
     int err_count;
     

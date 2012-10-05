@@ -12,6 +12,7 @@
     move Sort submenu from Style to View submenu
     gtk 2.18 compatibility #146
     remove explicit libgdk-pixbuf2.0-0 dependency #146
+    added precision timer for more accurate/smooth copy speeds
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136
