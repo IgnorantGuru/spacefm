@@ -1981,7 +1981,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
             g_mutex_unlock( task->mutex );
         }
     }
-    else if ( task->type != VFS_FILE_TASK_EXEC ) //&& task->type != VFS_FILE_TASK_DELETE )
+    else if ( task->type != VFS_FILE_TASK_EXEC )
     {
         // start timer to limit the amount of time to spend on this - can be 
         // VERY slow for network filesystems
@@ -1989,7 +1989,8 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                        ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
-            if ( task->dest_dir && stat64( task->dest_dir, &file_stat ) < 0 )
+            if ( !task->dest_dir || 
+                    ( task->dest_dir && stat64( task->dest_dir, &file_stat ) < 0 ) )
             {
                 vfs_file_task_error( task, errno, _("Accessing"), task->dest_dir );
                 task->error = errno;
@@ -2005,13 +2006,21 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                 vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
                 task->error = errno;
             }
-            if ( S_ISLNK( file_stat.st_mode ) )      /* Don't do deep copy for symlinks */
+            /*
+            // sfm why does this code change task->recursive back and forth?
+            if ( S_ISLNK( file_stat.st_mode ) )      // Don't do deep copy for symlinks
                 task->recursive = FALSE;
             else if ( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH )
                 task->recursive = ( file_stat.st_dev != dest_dev );
-
+            else
+                task->recursive = FALSE;
             if ( task->recursive )
+            */
+            if ( ( task->type == VFS_FILE_TASK_MOVE ||
+                                            task->type == VFS_FILE_TASK_TRASH )
+                                            && file_stat.st_dev != dest_dev )
             {
+                // recursive size
                 size = 0;
                 get_total_size_of_dir( task, ( char* ) l->data, &size );
                 g_mutex_lock( task->mutex );
@@ -2116,10 +2125,8 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->current_file = NULL;
     task->current_dest = NULL;
     
-    if ( task->type == VFS_FILE_TASK_COPY ) //sfm || task->type == VFS_FILE_TASK_DELETE )
-        task->recursive = TRUE;
-    else
-        task->recursive = FALSE;
+    task->recursive = ( task->type == VFS_FILE_TASK_COPY || 
+                        task->type == VFS_FILE_TASK_DELETE );
 
     task->err_count = 0;
     
