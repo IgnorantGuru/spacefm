@@ -4484,7 +4484,6 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
     if ( !main_window )
         return;
 
-//printf("task_start_queued\n");
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
@@ -4513,9 +4512,7 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
     
     if ( !smart )
     {
-//printf("    start1\n");
         ptk_file_task_pause( (PtkFileTask*)queued->data, VFS_FILE_TASK_RUNNING );
-//printf("    start1 DONE\n");
         goto _done;
     }
 
@@ -4549,16 +4546,13 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
         {
             // qtask has no running devices so run it
             running = g_slist_append( running, qtask );
-//printf("    start2\n");
             ptk_file_task_pause( qtask, VFS_FILE_TASK_RUNNING );
-//printf("    start2 DONE\n");
             continue;
         }
     }
 _done:
     g_slist_free( queued );
     g_slist_free( running );
-//printf("task_start_queued DONE\n");
 }
 
 void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
@@ -4820,11 +4814,13 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
         if ( is_tasks = gtk_tree_model_get_iter_first( model, &it ) )
         {
-            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
-                                        event->y, &tree_path, &col, NULL, NULL );
-            //tree_sel = gtk_tree_view_get_selection( view );
-            if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+            if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
+                                        event->y, &tree_path, &col, NULL, NULL ) )
+            {
+                if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
+                    gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+                gtk_tree_path_free( tree_path );
+            }
         }
 
         // build popup
@@ -4888,14 +4884,19 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     {    
         // get selected task
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
-        if ( is_tasks = gtk_tree_model_get_iter_first( model, &it ) )
-        {
-            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
-                                        event->y, &tree_path, &col, NULL, NULL );
-            //tree_sel = gtk_tree_view_get_selection( view );
-            if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );            
-        }
+        //printf("x = %lf  y = %lf  \n", event->x, event->y );
+        // due to bug in gtk_tree_view_get_path_at_pos (gtk 2.24), a click
+        // on the column header resize divider registers as a click on the
+        // first row first column.  So if event->x < 7 ignore
+        if ( event->x < 7 )
+            return FALSE;
+        if ( !gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
+                                    event->y, &tree_path, &col, NULL, NULL ) )
+            return FALSE;
+        if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 ); 
+        gtk_tree_path_free( tree_path );
+
         if ( !ptask )
             return FALSE;
         if ( event->button == 1 && g_strcmp0( gtk_tree_view_column_get_title( col ),
@@ -5226,7 +5227,7 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     for ( i = 0; i < 13; i++ )
     {
         col = gtk_tree_view_column_new();
-        gtk_tree_view_column_set_resizable ( col, TRUE );
+        gtk_tree_view_column_set_resizable( col, TRUE );
         
         // column order
         for ( j = 0; j < 13; j++ )
