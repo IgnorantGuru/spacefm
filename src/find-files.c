@@ -955,7 +955,7 @@ static gboolean on_view_button_press( GtkTreeView* view, GdkEventButton* evt, Fi
                 gtk_tree_selection_unselect_all( tree_sel );
                 gtk_tree_selection_select_path( tree_sel, tree_path );
             }
-
+            gtk_tree_path_free( tree_path );
             
             GtkWidget* popup;
             GtkUIManager* menu_mgr;

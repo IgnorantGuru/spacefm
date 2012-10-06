@@ -3408,6 +3408,7 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     {
         if ( !gtk_tree_selection_path_is_selected( tree_sel, tree_path ) )
             gtk_tree_selection_select_path( tree_sel, tree_path );
+        gtk_tree_path_free( tree_path );
     }
     else
         gtk_tree_selection_unselect_all( tree_sel );
