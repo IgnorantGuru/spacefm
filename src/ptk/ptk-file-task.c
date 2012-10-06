@@ -500,54 +500,69 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
             return;
         //ptask->keep_dlg = TRUE;
         int sig;
-        if ( state == VFS_FILE_TASK_PAUSE || state == VFS_FILE_TASK_QUEUE )
+        if ( state == VFS_FILE_TASK_PAUSE || 
+                        ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING && 
+                          state == VFS_FILE_TASK_QUEUE ) )
         {
             sig = SIGSTOP;
+            ptask->task->state_pause = state;
+            g_timer_stop( ptask->task->timer );
+        }
+        else if ( state == VFS_FILE_TASK_QUEUE )
+        {
+            sig = 0;
             ptask->task->state_pause = state;
         }
         else
         {
             sig = SIGCONT;
             ptask->task->state_pause = VFS_FILE_TASK_RUNNING;
+            g_timer_continue( ptask->task->timer );
         }
-        char* cpids = vfs_file_task_get_cpids( ptask->task->exec_pid );
- 
-        char* gsu;
-        if ( ptask->task->exec_as_user && geteuid() != 0 && ( gsu = get_valid_gsu() ) )
+        
+        if ( sig )
         {
-            // other user run - need to signal as other
-            char* cmd;
-            if ( cpids )
+            // send signal
+            char* cpids = vfs_file_task_get_cpids( ptask->task->exec_pid );
+     
+            char* gsu;
+            if ( ptask->task->exec_as_user && geteuid() != 0 &&
+                                                    ( gsu = get_valid_gsu() ) )
             {
-                // convert linefeeds to spaces
-                char* scpids = g_strdup( cpids );
-                char* lf;
-                while ( lf = strchr( scpids, '\n' ) )
-                    lf[0] = ' ';
-                cmd = g_strdup_printf( "/bin/kill -s %d %d %s", sig,
-                                                ptask->task->exec_pid, scpids );
-                g_free( scpids );
+                // other user run - need to signal as other
+                char* cmd;
+                if ( cpids )
+                {
+                    // convert linefeeds to spaces
+                    char* scpids = g_strdup( cpids );
+                    char* lf;
+                    while ( lf = strchr( scpids, '\n' ) )
+                        lf[0] = ' ';
+                    cmd = g_strdup_printf( "/bin/kill -s %d %d %s", sig,
+                                                    ptask->task->exec_pid, scpids );
+                    g_free( scpids );
+                }
+                else
+                    cmd = g_strdup_printf( "/bin/kill -s %d %d", sig,
+                                                    ptask->task->exec_pid );
+
+                PtkFileTask* ptask2 = ptk_file_exec_new( sig == SIGSTOP ?
+                                        _("Stop As Other") : _("Cont As Other"),
+                                        NULL,
+                                        GTK_WIDGET( ptask->parent_window ),
+                                        ptask->task_view );
+                ptask2->task->exec_command = cmd;
+                ptask2->task->exec_as_user = g_strdup( ptask->task->exec_as_user );
+                ptask2->task->exec_sync = FALSE;
+                ptask2->task->exec_browser = ptask->task->exec_browser;
+                ptk_file_task_run( ptask2 );                
             }
             else
-                cmd = g_strdup_printf( "/bin/kill -s %d %d", sig,
-                                                ptask->task->exec_pid );
-
-            PtkFileTask* ptask2 = ptk_file_exec_new( sig == SIGSTOP ?
-                                    _("Stop As Other") : _("Cont As Other"),
-                                    NULL,
-                                    GTK_WIDGET( ptask->parent_window ),
-                                    ptask->task_view );
-            ptask2->task->exec_command = cmd;
-            ptask2->task->exec_as_user = g_strdup( ptask->task->exec_as_user );
-            ptask2->task->exec_sync = FALSE;
-            ptask2->task->exec_browser = ptask->task->exec_browser;
-            ptk_file_task_run( ptask2 );                
-        }
-        else
-        {
-            kill( ptask->task->exec_pid, sig );
-            if ( cpids )
-                vfs_file_task_kill_cpids( cpids, sig );
+            {
+                kill( ptask->task->exec_pid, sig );
+                if ( cpids )
+                    vfs_file_task_kill_cpids( cpids, sig );
+            }
         }
     }
     else if ( state == VFS_FILE_TASK_PAUSE )
