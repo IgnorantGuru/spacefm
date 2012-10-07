@@ -240,6 +240,7 @@ static const char* terminal_programs[] =  //for pref-dialog.c
     "lxterminal",
     "mlterm",
     "mrxvt",
+    "rxvt",
     "sakura",
     "terminator",
     "urxvt",
