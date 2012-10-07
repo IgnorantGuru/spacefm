@@ -14,6 +14,7 @@
     remove explicit libgdk-pixbuf2.0-0 dependency #146
     added precision timer for more accurate/smooth copy speeds
     btrfs moint point detection workaround #165
+    fix segfault on blank Preferences Terminal setting #166
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

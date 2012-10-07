@@ -597,16 +597,12 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         char* old_terminal = xset_get_s( "main_terminal" );
         char* terminal = gtk_combo_box_get_active_text( GTK_COMBO_BOX( data->terminal ) );
         g_strstrip( terminal );
-        if ( !old_terminal && terminal[0] != '\0' )
+        if ( g_strcmp0( terminal, old_terminal ) )
         {
-            xset_set( "main_terminal", "s", terminal );
+            xset_set( "main_terminal", "s", terminal[0] == '\0' ? NULL : terminal );
             root_set_change = TRUE;
         }
-        else if ( strcmp( terminal, old_terminal ) )
-        {
-            xset_set( "main_terminal", "s", terminal );
-            root_set_change = TRUE;
-        }
+        // report missing terminal
         if ( str = strchr( terminal, ' ' ) )
             str[0] = '\0';
         str = g_find_program_in_path( terminal );
