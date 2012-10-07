@@ -1058,27 +1058,68 @@ gchar* info_mount_points( device_t *device )
           continue;
         }
 
+        /* ignore mounts where only a subtree of a filesystem is mounted */
+        if (g_strcmp0 (encoded_root, "/") != 0)
+        continue;
+
+        /* Temporary work-around for btrfs, see
+        *
+        *  https://github.com/IgnorantGuru/spacefm/issues/165
+        *  http://article.gmane.org/gmane.comp.file-systems.btrfs/2851
+        *  https://bugzilla.redhat.com/show_bug.cgi?id=495152#c31
+        */
+        if ( major == 0 )
+        {
+            const gchar *sep;
+            sep = strstr( lines[n], " - " );
+            if ( sep != NULL )
+            {
+                gchar typebuf[PATH_MAX];
+                gchar mount_source[PATH_MAX];
+                struct stat statbuf;
+
+                if (sscanf (sep + 3, "%s %s", typebuf, mount_source) != 2)
+                {
+                    g_warning ("Error parsing things past - for '%s'", lines[n]);
+                    continue;
+                }
+                if (g_strcmp0 (typebuf, "btrfs") != 0)
+                    continue;
+                if (!g_str_has_prefix (mount_source, "/dev/"))
+                    continue;
+                if (stat (mount_source, &statbuf) != 0)
+                {
+                    g_warning ("Error statting %s: %m", mount_source);
+                    continue;
+                }
+                if (!S_ISBLK (statbuf.st_mode))
+                {
+                    g_warning ("%s is not a block device", mount_source);
+                    continue;
+                }
+                major = major( statbuf.st_rdev );
+                minor = minor( statbuf.st_rdev );
+            }
+            else
+                continue;
+        }
+
         if ( major != dmajor || minor != dminor )
             continue;
             
-      /* ignore mounts where only a subtree of a filesystem is mounted */
-      if (g_strcmp0 (encoded_root, "/") != 0)
-        continue;
-
-      mount_point = g_strcompress (encoded_mount_point);
-      if ( mount_point && mount_point[0] != '\0' )
-      {
-        if ( !g_list_find( mounts, mount_point ) )
+        mount_point = g_strcompress (encoded_mount_point);
+        if ( mount_point && mount_point[0] != '\0' )
         {
-            mounts = g_list_prepend( mounts, mount_point );
+            if ( !g_list_find( mounts, mount_point ) )
+            {
+                mounts = g_list_prepend( mounts, mount_point );
+            }
+            else
+                g_free (mount_point);
         }
-        else
-            g_free (mount_point);
-      }
-      
     }
-  g_free (contents);
-  g_strfreev (lines);
+    g_free (contents);
+    g_strfreev (lines);
 
     if ( mounts )
     {
@@ -1662,6 +1703,48 @@ void parse_mounts( gboolean report )
             continue;
         }
 
+        /* Temporary work-around for btrfs, see
+        *
+        *  https://github.com/IgnorantGuru/spacefm/issues/165
+        *  http://article.gmane.org/gmane.comp.file-systems.btrfs/2851
+        *  https://bugzilla.redhat.com/show_bug.cgi?id=495152#c31
+        */
+        if ( major == 0 )
+        {
+            const gchar *sep;
+            sep = strstr( lines[n], " - " );
+            if ( sep != NULL )
+            {
+                gchar typebuf[PATH_MAX];
+                gchar mount_source[PATH_MAX];
+                struct stat statbuf;
+
+                if (sscanf (sep + 3, "%s %s", typebuf, mount_source) != 2)
+                {
+                    g_warning ("Error parsing things past - for '%s'", lines[n]);
+                    continue;
+                }
+                if (g_strcmp0 (typebuf, "btrfs") != 0)
+                    continue;
+                if (!g_str_has_prefix (mount_source, "/dev/"))
+                    continue;
+                if (stat (mount_source, &statbuf) != 0)
+                {
+                    g_warning ("Error statting %s: %m", mount_source);
+                    continue;
+                }
+                if (!S_ISBLK (statbuf.st_mode))
+                {
+                    g_warning ("%s is not a block device", mount_source);
+                    continue;
+                }
+                major = major( statbuf.st_rdev );
+                minor = minor( statbuf.st_rdev );
+            }
+            else
+                continue;
+        }
+
         // fstype
         fstype = strstr( lines[n], " - " );
         if ( fstype )
@@ -1671,7 +1754,7 @@ void parse_mounts( gboolean report )
             if ( str = strchr( fstype, ' ' ) )
                 str[0] = '\0';
         }
-            
+
 //printf("mount_point(%d:%d)=%s\n", major, minor, mount_point );
         devmount = NULL;
         for ( l = newmounts; l; l = l->next )
