@@ -828,6 +828,7 @@ with_gnu_ld
 with_sysroot
 enable_libtool_lock
 enable_nls
+enable_startup_notification
 enable_cast_checks
 enable_hal
 enable_inotify
@@ -1485,6 +1486,9 @@ Optional Features:
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-nls           do not use Native Language Support
+  --disable-startup-notification
+                          disable use of libstartup-notification (default:
+                          enable if installed)
   --enable-cast-checks    enable Glib casting checks (default: disable)
   --enable-hal            build with Linux HAL support (disables udisks)
                           (default: no)
@@ -14012,7 +14016,77 @@ fi
 
 
 
-sn_modules="libstartup-notification-1.0"
+# start-notification is optional - will be used if installed and no --disable
+# Check whether --enable-startup-notification was given.
+if test "${enable_startup_notification+set}" = set; then :
+  enableval=$enable_startup_notification; use_sn=$enableval
+else
+  use_sn="yes"
+fi
+
+if test x"$use_sn" = x"yes"; then
+    sn_modules_old="libstartup-notification-0.9"
+    sn_modules="libstartup-notification-1.0"
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SN" >&5
+$as_echo_n "checking for SN... " >&6; }
+
+if test -n "$SN_CFLAGS"; then
+    pkg_cv_SN_CFLAGS="$SN_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$sn_modules_old\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$sn_modules_old") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SN_CFLAGS=`$PKG_CONFIG --cflags "$sn_modules_old" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$SN_LIBS"; then
+    pkg_cv_SN_LIBS="$SN_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$sn_modules_old\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$sn_modules_old") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SN_LIBS=`$PKG_CONFIG --libs "$sn_modules_old" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        SN_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$sn_modules_old" 2>&1`
+        else
+	        SN_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$sn_modules_old" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$SN_PKG_ERRORS" >&5
+
+
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SN" >&5
@@ -14072,40 +14146,110 @@ fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$SN_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements ($sn_modules) were not met:
-
-$SN_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables SN_CFLAGS
-and SN_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+	use_sn="no (not installed)"
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables SN_CFLAGS
-and SN_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5; }
+	use_sn="no (not installed)"
 else
 	SN_CFLAGS=$pkg_cv_SN_CFLAGS
 	SN_LIBS=$pkg_cv_SN_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
+	use_sn="yes"
+fi
 
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for SN" >&5
+$as_echo_n "checking for SN... " >&6; }
+
+if test -n "$SN_CFLAGS"; then
+    pkg_cv_SN_CFLAGS="$SN_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$sn_modules\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$sn_modules") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SN_CFLAGS=`$PKG_CONFIG --cflags "$sn_modules" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$SN_LIBS"; then
+    pkg_cv_SN_LIBS="$SN_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$sn_modules\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$sn_modules") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_SN_LIBS=`$PKG_CONFIG --libs "$sn_modules" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
 fi
 
 
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        SN_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$sn_modules" 2>&1`
+        else
+	        SN_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$sn_modules" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$SN_PKG_ERRORS" >&5
+
+	use_sn="no (not installed)"
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	use_sn="no (not installed)"
+else
+	SN_CFLAGS=$pkg_cv_SN_CFLAGS
+	SN_LIBS=$pkg_cv_SN_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	use_sn="yes"
+fi
+
+else
+	SN_CFLAGS=$pkg_cv_SN_CFLAGS
+	SN_LIBS=$pkg_cv_SN_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	use_sn="yes"
+fi
+    if test x"$use_sn" = x"yes"; then
+
+
+
+$as_echo "#define HAVE_SN 1" >>confdefs.h
+
+    fi
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $LD accepts --as-needed" >&5
 $as_echo_n "checking whether $LD accepts --as-needed... " >&6; }
@@ -17587,6 +17731,7 @@ if test ! -z "$preferable_sudo"; then
 echo Additional program to switch to super user... : $preferable_sudo
 fi
 echo Desktop icon integration..................... : $desktop_integration
+echo Startup notification......................... : $use_sn
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo

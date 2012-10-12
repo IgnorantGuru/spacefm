@@ -943,6 +943,12 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 font_desc = pango_font_description_from_string( fontname );
                 gtk_widget_modify_font( GTK_WIDGET( a_browser->folder_view ),
                                                                     font_desc );
+                /*
+                if ( a_browser->view_mode != PTK_FB_LIST_VIEW )
+                {
+                    // need to triger redraw of exo icon views
+                }
+                */
                 if ( a_browser->side_dir )
                     gtk_widget_modify_font( GTK_WIDGET( a_browser->side_dir ),
                                                                     font_desc );
