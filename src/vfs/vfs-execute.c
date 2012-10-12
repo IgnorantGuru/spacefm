@@ -20,8 +20,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 #include <time.h>
-#else
-#include <gdk/gdk.h>
 #endif
 
 #include <string.h>
