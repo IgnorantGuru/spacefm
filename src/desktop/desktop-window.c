@@ -1347,8 +1347,8 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
 gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint time )
 {
     DesktopWindow* self = (DesktopWindow*)w;
-    DesktopItem* item;
-    GdkAtom target;
+    //DesktopItem* item;
+    //GdkAtom target;
 
     if( ! self->drag_entered )
     {
@@ -1520,11 +1520,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
             return;
         }
 
-        if( item )
-        {
-            if( (item->fi->flags & VFS_FILE_INFO_VIRTUAL) && vfs_file_info_is_dir( item->fi ) )
-                dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
-        }
+        if ( item && vfs_file_info_is_dir( item->fi ) )
+            dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
 
         /* We are just checking the suggested actions for the drop site, not really drop */
         if( self->pending_drop_action )
