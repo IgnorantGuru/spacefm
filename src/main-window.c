@@ -1346,7 +1346,12 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                     while ( tabs && !strncmp( tabs, "///", 3 ) )
                     {
                         tabs += 3;
-                        if ( end = strstr( tabs, "///" ) )
+                        if ( !strncmp( tabs, "////", 4 ) )
+                        {
+                            tab_dir = g_strdup( "/" );
+                            tabs++;
+                        }
+                        else if ( end = strstr( tabs, "///" ) )
                         {
                             end[0] = '\0';
                             tab_dir = g_strdup( tabs );
