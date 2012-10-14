@@ -746,7 +746,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     char* pause_icon = set->icon;
     if ( !pause_icon )
         pause_icon = GTK_STOCK_MEDIA_PAUSE;
-    ptask->progress_btn_pause = gtk_button_new_with_mnemonic( _("_Pause") );
+    ptask->progress_btn_pause = gtk_button_new_with_mnemonic( _("Pa_use") );
     gtk_button_set_image( GTK_BUTTON( ptask->progress_btn_pause ),
                             xset_get_image( pause_icon,
                                             GTK_ICON_SIZE_BUTTON ) );
