@@ -20,6 +20,7 @@
     fix new tab path merged if the last dir spec is / #167
     libstartup-notification-0.9 or -1.0 optional #19 #146
     adjustment for build on debian squeeze (gtk 2.20 glib 2.24)
+    ctrl-Q as default Exit key
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

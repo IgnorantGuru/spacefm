@@ -10742,7 +10742,8 @@ void xset_default_keys()
     def_key( "panel3_show", 0x33, 4 );
     def_key( "panel4_show", 0x34, 4 );
     def_key( "main_help", 0xffbe, 0 );      //F1
-    
+    def_key( "main_exit", 0x71, 4 );        // Ctrl-Q
+
     if ( keysets )
         g_list_free( keysets );
 }
