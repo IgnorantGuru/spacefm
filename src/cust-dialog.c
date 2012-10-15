@@ -3595,7 +3595,7 @@ static void show_help()
         for ( j = 1; j <= 13 - strlen( cdlg_option[i*3] ); j++ )
             fprintf( f, " " );
         fprintf( f, "%s\n", cdlg_option[i*3 + 1] );
-        fprintf( f, "               %s\n", cdlg_option[i*3 + 2] );
+        fprintf( f, "               %s\n", _( cdlg_option[i*3 + 2] ) );
     }
 
     fprintf( f, _("\nThe following arguments may be used as shown above:\n") );
@@ -3616,7 +3616,7 @@ static void show_help()
         for ( j = 1; j <= 11 - strlen( cdlg_cmd[i*3] ); j++ )
             fprintf( f, " " );
         fprintf( f, "%s\n", cdlg_cmd[i*3 + 1] );
-        fprintf( f, "               %s\n", cdlg_cmd[i*3 + 2] );
+        fprintf( f, "               %s\n", _( cdlg_cmd[i*3 + 2] ) );
     }
 
     fprintf( f, _("\nEXAMPLE WITH COMMANDS:\n") );
