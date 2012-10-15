@@ -62,6 +62,7 @@ void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action );
 void add_task_dev( VFSFileTask* task, dev_t dev );
+static gboolean should_abort( VFSFileTask* task );
 
 void gx_free( gpointer x ) {}  // dummy free - test only
 
@@ -1088,7 +1089,10 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
         if ( WIFEXITED( status ) )
             task->exec_exit_status = WEXITSTATUS( status );
         else
+        {
             bad_status = TRUE;
+            task->exec_exit_status = -1;
+        }
     }
     else
         task->exec_exit_status = 0;
@@ -1104,7 +1108,7 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
         task->percent = 100;
     else
         call_state_callback( task, VFS_FILE_TASK_ERROR );
-
+    
     if ( task->state_cb && !task->exec_channel_out && !task->exec_channel_err )
         call_state_callback( task, VFS_FILE_TASK_FINISH );
 }

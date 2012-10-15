@@ -4618,7 +4618,9 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
         {
             if ( model )
                 gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
-            if ( ptask && ptask->task && !ptask->complete )
+            if ( ptask && ptask->task && !ptask->complete &&
+                        ( ptask->task->type != VFS_FILE_TASK_EXEC
+                                || ptask->task->exec_pid || job == JOB_STOP ) )
             {
                 switch ( job )
                 {
@@ -4862,7 +4864,9 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
 
         set = xset_set_cb( "task_resume", on_task_stop, view );
         xset_set_ob1( set, "task", ptask );
-        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_RUNNING );
+        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_RUNNING
+                        || ( ptask->task->type == VFS_FILE_TASK_EXEC && 
+                                                    !ptask->task->exec_pid ) );
 
         xset_set_cb( "task_stop_all", on_task_stop, view );
         xset_set_cb( "task_pause_all", on_task_stop, view );

@@ -434,6 +434,14 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                 ptk_file_task_run( ptask2 );                
             }
         }
+        else
+        {
+            // no pid (exited)
+            // user pressed Stop, remove task
+            // this is needed because if process is killed, channels may not
+            // receive HUP and may remain open, leaving the task listed
+            ptask->complete = TRUE;
+        }
 
         if ( ptask->task->exec_cond )
         {
@@ -476,9 +484,9 @@ void set_button_states( PtkFileTask* ptask )
         label = _("Pa_use");
         iconset = "task_pause";
         icon = GTK_STOCK_MEDIA_PAUSE;
-        sens = sens && !( ptask->task->type == VFS_FILE_TASK_EXEC && 
-                                                    !ptask->task->exec_pid );
     }
+    sens = sens && !( ptask->task->type == VFS_FILE_TASK_EXEC && 
+                                                !ptask->task->exec_pid );
 
     XSet* set = xset_get( iconset );
     if ( set->icon )
@@ -496,8 +504,6 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
     if ( ptask->task->type == VFS_FILE_TASK_EXEC )
     {
         // exec task
-        if ( !ptask->task->exec_pid )
-            return;
         //ptask->keep_dlg = TRUE;
         int sig;
         if ( state == VFS_FILE_TASK_PAUSE || 
@@ -520,7 +526,7 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
             g_timer_continue( ptask->task->timer );
         }
         
-        if ( sig )
+        if ( sig && ptask->task->exec_pid )
         {
             // send signal
             char* cpids = vfs_file_task_get_cpids( ptask->task->exec_pid );
@@ -1177,17 +1183,35 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     }
     else if ( task->state_pause == VFS_FILE_TASK_PAUSE )
     {
-        if ( task->type != VFS_FILE_TASK_EXEC || !task->exec_pid )
+        if ( task->type != VFS_FILE_TASK_EXEC )
             errs = g_strdup_printf( _("Paused") );
         else
-            errs = g_strdup_printf( _("Paused  ( pid %d )"), task->exec_pid );
+        {
+            if ( task->exec_pid )
+                errs = g_strdup_printf( _("Paused  ( pid %d )"), task->exec_pid );
+            else
+            {
+                errs = g_strdup_printf( _("Paused  ( exit status %d )"),
+                                                    task->exec_exit_status );
+                set_button_states( ptask );
+            }
+        }
     }
     else if ( task->state_pause == VFS_FILE_TASK_QUEUE )
     {
-        if ( task->type != VFS_FILE_TASK_EXEC  || !task->exec_pid )
+        if ( task->type != VFS_FILE_TASK_EXEC )
             errs = g_strdup_printf( _("Queued") );
         else
-            errs = g_strdup_printf( _("Queued  ( pid %d )"), task->exec_pid );
+        {
+            if ( task->exec_pid )
+                errs = g_strdup_printf( _("Queued  ( pid %d )"), task->exec_pid );
+            else
+            {
+                errs = g_strdup_printf( _("Queued  ( exit status %d )"),
+                                                    task->exec_exit_status );
+                set_button_states( ptask );
+            }
+        }
     }
     else
     {
@@ -1202,7 +1226,16 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
                 errs = g_strdup_printf( _("Running...") );
         }
         else
-            errs = g_strdup_printf( _("Running...  ( pid %d )"), task->exec_pid );
+        {
+            if ( task->exec_pid )
+                errs = g_strdup_printf( _("Running...  ( pid %d )"), task->exec_pid );
+            else
+            {
+                errs = g_strdup_printf( _("Running...  ( exit status %d )"),
+                                                    task->exec_exit_status );
+                set_button_states( ptask );
+            }
+        }
     }
     gtk_label_set_text( ptask->errors, errs );
     g_free( errs );
