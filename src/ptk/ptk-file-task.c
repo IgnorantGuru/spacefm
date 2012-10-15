@@ -437,8 +437,8 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
         else
         {
             // no pid (exited)
-            // user pressed Stop, remove task
-            // this is needed because if process is killed, channels may not
+            // user pressed Stop on an exited process, remove task
+            // this may be needed because if process is killed, channels may not
             // receive HUP and may remain open, leaving the task listed
             ptask->complete = TRUE;
         }

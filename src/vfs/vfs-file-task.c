@@ -1109,7 +1109,8 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
     else
         call_state_callback( task, VFS_FILE_TASK_ERROR );
     
-    if ( task->state_cb && !task->exec_channel_out && !task->exec_channel_err )
+    if ( task->state_cb && ( bad_status ||
+                        ( !task->exec_channel_out && !task->exec_channel_err ) ) )
         call_state_callback( task, VFS_FILE_TASK_FINISH );
 }
 
