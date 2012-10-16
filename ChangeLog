@@ -21,6 +21,9 @@
     libstartup-notification-0.9 or -1.0 optional #19 #146
     adjustment for build on debian squeeze (gtk 2.20 glib 2.24)
     ctrl-Q as default Exit key
+    allow stop of exited task #168
+    auto stop on bad exit status #168
+    updated Russian translation
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136
