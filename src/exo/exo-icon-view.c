@@ -1636,7 +1636,7 @@ exo_icon_view_size_allocate (GtkWidget     *widget,
   gtk_adjustment_set_page_increment (vadjustment, allocation->height * 0.9);
   gtk_adjustment_set_step_increment (vadjustment, allocation->height * 0.1);
   gtk_adjustment_set_lower (vadjustment, 0);
-  gtk_adjustment_set_upper (vadjustment, MAX (allocation->width, icon_view->priv->height));
+  gtk_adjustment_set_upper (vadjustment, MAX (allocation->height, icon_view->priv->height));
   if (gtk_adjustment_get_value (vadjustment) > gtk_adjustment_get_upper(vadjustment) - gtk_adjustment_get_page_size(vadjustment))
     gtk_adjustment_set_value (vadjustment, MAX (0, gtk_adjustment_get_upper(vadjustment) - gtk_adjustment_get_page_size(vadjustment)));
 
