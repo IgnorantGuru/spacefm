@@ -1811,7 +1811,9 @@ void on_realize( GtkWidget* w )
 gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt )
 {
     DesktopWindow* self = (DesktopWindow*) w;
-    gtk_widget_grab_focus( w );
+    //sfm gtk3 gtk_widget_grab_focus( w ) not equivalent
+    //gtk_widget_grab_focus( w );
+    GTK_WIDGET_SET_FLAGS( w, GTK_HAS_FOCUS );
     if( self->focus )
         redraw_item( self, self->focus );
     return FALSE;
@@ -1822,6 +1824,8 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     DesktopWindow* self = (DesktopWindow*) w;
     if( self->focus )
     {
+        //sfm gtk3 restored - can GTK_WIDGET_UNSET_FLAGS be removed without changes?
+        GTK_WIDGET_UNSET_FLAGS( w, GTK_HAS_FOCUS );
         redraw_item( self, self->focus );
     }
     return FALSE;
