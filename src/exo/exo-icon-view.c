@@ -8419,6 +8419,10 @@ exo_icon_view_search_start (ExoIconView *icon_view,
   /* send focus-in event */
   _exo_gtk_widget_send_focus_change (icon_view->priv->search_entry, TRUE);
 
+  //sfm unselect text required due to exo-private gtk3-prep changes
+  //gtk_editable_select_region( GTK_EDITABLE( icon_view->priv->search_entry ), 0, 0 );
+  //gtk_editable_set_position( GTK_EDITABLE( icon_view->priv->search_entry ), -1 );
+  
   /* search first matching iter */
   exo_icon_view_search_init (icon_view->priv->search_entry, icon_view);
 
@@ -8498,7 +8502,7 @@ exo_icon_view_search_position_func (ExoIconView *icon_view,
   GtkRequisition requisition;
   GdkRectangle   monitor;
   GdkWindow     *view_window = gtk_widget_get_window (GTK_WIDGET (icon_view));
-  GdkScreen     *screen = gtk_window_get_screen (GTK_WINDOW (view_window));
+  GdkScreen     *screen = gtk_widget_get_screen(GTK_WIDGET(icon_view));
   gint           view_width, view_height;
   gint           view_x, view_y;
   gint           monitor_num;
