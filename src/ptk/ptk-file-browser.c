@@ -1838,7 +1838,12 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     else if ( xset_get_b_panel( curpanel, "list_icons" ) )
         view_mode = PTK_FB_ICON_VIEW;
     else if ( xset_get_b_panel( curpanel, "list_compact" ) )
+    {
         view_mode = PTK_FB_COMPACT_VIEW;
+        gtk_scrolled_window_set_policy( 
+                            GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                            GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER );
+    }
     else
     {
         xset_set_panel( curpanel, "list_detailed", "b", "1" );
@@ -5810,6 +5815,9 @@ void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_ICON_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 }
@@ -5828,6 +5836,9 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_COMPACT_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 }
@@ -5845,6 +5856,9 @@ void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_LIST_VIEW );
     gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 
