@@ -20,6 +20,12 @@
 
 typedef struct _PtkFileTask PtkFileTask;
 
+enum {
+    PTASK_ERROR_FIRST,
+    PTASK_ERROR_ANY,
+    PTASK_ERROR_CONT
+};
+    
 struct _PtkFileTask
 {
     VFSFileTask* task;
@@ -37,11 +43,15 @@ struct _PtkFileTask
     GtkLabel* errors;
     GtkWidget* error_view;
     GtkScrolledWindow* scroll;
+    GtkWidget* overwrite_combo;
+    GtkWidget* error_combo;
 
     GtkTextBuffer* log_buf;
     GtkTextMark* log_end;
     gboolean log_appended;
     guint err_count;
+    char err_mode;
+    
 /*
     int percent;
     off64_t total_size;     // Total size of the files to be processed, in bytes

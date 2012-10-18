@@ -65,11 +65,13 @@ typedef enum
 
 typedef enum
 {
-    VFS_FILE_TASK_OVERWRITE, /* Overwrite current dest file */
-    VFS_FILE_TASK_OVERWRITE_ALL, /* Overwrite all existing files without prompt */
-    VFS_FILE_TASK_SKIP, /* Don't overwrite current file */
-    VFS_FILE_TASK_SKIP_ALL, /* Don't try to overwrite any files */
-    VFS_FILE_TASK_RENAME /* Rename file */
+    // do not reposition first four values
+    VFS_FILE_TASK_OVERWRITE,        /* Overwrite current dest file / Ask */
+    VFS_FILE_TASK_OVERWRITE_ALL,    /* Overwrite all existing files without prompt */
+    VFS_FILE_TASK_SKIP_ALL,         /* Don't try to overwrite any files */
+    VFS_FILE_TASK_AUTO_RENAME,      /* Assign a new unique name */
+    VFS_FILE_TASK_SKIP,             /* Don't overwrite current file */
+    VFS_FILE_TASK_RENAME            /* Rename file */
 }VFSFileTaskOverwriteMode;
 
 typedef enum
@@ -219,5 +221,7 @@ void vfs_file_task_free ( VFSFileTask* task );
 
 char* vfs_file_task_get_cpids( GPid pid );
 void vfs_file_task_kill_cpids( char* cpids, int signal );
+char* vfs_file_task_get_unique_name( const char* dest_dir, const char* base_name,
+                                                           const char* ext );
 
 #endif

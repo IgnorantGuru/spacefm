@@ -158,6 +158,35 @@ static gboolean should_only_abort( VFSFileTask* task )
 }
 
 
+char* vfs_file_task_get_unique_name( const char* dest_dir, const char* base_name,
+                                                           const char* ext )
+{   // returns NULL if all names used; otherwise newly allocated string
+    struct stat64 dest_stat;
+    char* new_name = g_strdup_printf( "%s%s%s", base_name,
+                                      ext && ext[0] ? "." : "",
+                                      ext ? ext : "" );
+    char* new_dest_file = g_build_filename( dest_dir, new_name, NULL );
+    g_free( new_name );
+    uint n = 1;
+    while ( n && lstat64( new_dest_file, &dest_stat ) == 0 )
+    {
+        g_free( new_dest_file );
+        new_name = g_strdup_printf( "%s-%s%d%s%s", base_name,
+                                      _("copy"),
+                                      ++n,
+                                      ext && ext[0] ? "." : "",
+                                      ext ? ext : "" );
+        new_dest_file = g_build_filename( dest_dir, new_name, NULL );
+        g_free( new_name );
+    }
+    if ( n == 0 )
+    {
+        g_free( new_dest_file );
+        return NULL;
+    }
+    return new_dest_file;
+}
+
 /*
 * Check if the destination file exists.
 * If the dest_file exists, let the user choose a new destination,
@@ -183,6 +212,30 @@ gboolean check_overwrite( VFSFileTask* task,
     {
         *dest_exists = !lstat64( dest_file, &dest_stat );
         return !*dest_exists;
+    }
+_auto_rename:
+    if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
+    {
+        *dest_exists = !lstat64( dest_file, &dest_stat );
+        if ( !*dest_exists )
+            return !should_abort( task );
+        *dest_exists = FALSE;
+        
+        // auto-rename
+        char* ext;
+        char* old_name = g_path_get_basename( dest_file );
+        char* dest_dir = g_path_get_dirname( dest_file );
+        char* base_name = get_name_extension( old_name, 
+                                              S_ISDIR( dest_stat.st_mode ),
+                                              &ext );
+        g_free( old_name );
+        *new_dest_file = vfs_file_task_get_unique_name( dest_dir, base_name, ext );
+        g_free( dest_dir );
+        g_free( base_name );
+        g_free( ext );
+        if ( *new_dest_file )
+            return !should_abort( task );
+        // else ran out of names - fall through to query user
     }
 
     *dest_exists = FALSE;
@@ -212,9 +265,9 @@ gboolean check_overwrite( VFSFileTask* task,
                 *new_dest_file = NULL;
                 if( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE ||
                     task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
-                {
                     return TRUE;
-                }
+                else if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
+                    goto _auto_rename;
                 else
                     return FALSE;
             }

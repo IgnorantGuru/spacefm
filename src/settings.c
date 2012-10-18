@@ -1462,6 +1462,92 @@ char* replace_desktop_subs( const char* line )
     return s;
 }
 
+gboolean is_alphanum( char* str )
+{
+    char* ptr = str;
+    while ( ptr[0] != '\0' )
+    {
+        if ( !g_ascii_isalnum( ptr[0] ) )
+            return FALSE;
+        ptr++;
+    }
+    return TRUE;
+}
+
+char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
+{
+    char* dot = strchr( full_name, '.' );
+    if ( !dot || is_dir )
+    {
+        *ext = NULL;
+        return g_strdup( full_name );
+    }
+    char* name = NULL;
+    char* old_name;
+    char* old_extension;
+    char* segment;
+    char* extension = NULL;
+    char* seg_start = full_name;
+    while ( seg_start )
+    {
+        if ( dot )
+            segment = g_strndup( seg_start, dot - seg_start );
+        else
+            segment = g_strdup( seg_start );
+        if ( ( seg_start == full_name || g_utf8_strlen( segment, -1 ) > 5
+                                            || !is_alphanum( segment ) )
+                        && !( seg_start != full_name && !strcmp( segment, "desktop" ) ) )
+        {
+            // segment and thus all prior segments are part of name
+            old_name = name;
+            //printf("part of name\n");
+            if ( !extension )
+            {
+                if ( !old_name )
+                    name = g_strdup( segment );
+                else
+                    name = g_strdup_printf( "%s.%s", old_name, segment );
+                //printf("\told_name=%s\n\tsegment=%s\n\tname=%s\n", old_name, segment, name );
+            }
+            else
+            {
+                name = g_strdup_printf( "%s.%s.%s", old_name, extension, segment );
+                //printf("\told_name=%s\n\text=%s\n\tsegment=%s\n\tname=%s\n", old_name, extension, segment, name );
+                g_free( extension );
+                extension = NULL;
+            }
+            g_free( old_name );
+        }
+        else
+        {
+            // segment is part of extension
+            //printf("part of extension\n");
+            if ( !extension )
+            {
+                extension = g_strdup( segment );
+                //printf ("\tsegment=%s\n\text=%s\n", segment, extension );
+            }
+            else
+            {
+                old_extension = extension;
+                extension = g_strdup_printf( "%s.%s", old_extension, segment );
+                //printf ("\told_extension=%s\n\tsegment=%s\n\text=%s\n", old_extension, segment, extension );
+                g_free( old_extension );
+            }
+        }
+        g_free( segment );
+        if ( dot )
+        {
+            seg_start = ++dot;
+            dot = strchr( seg_start, '.' );
+        }
+        else
+            seg_start = NULL;
+    }
+    *ext = extension;
+    return name;
+}
+
 void xset_free_all()
 {
     XSet* set;
@@ -9561,7 +9647,7 @@ void xset_defaults()
 
     set = xset_set( "task_popups", "label", _("_Popups") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "task_pop_all task_pop_top task_pop_detail task_pop_font" );
+    xset_set_set( set, "desc", "task_pop_all task_pop_top task_pop_detail task_pop_over task_pop_err task_pop_font" );
     set->line = g_strdup( "#tasks-menu-popall" );
 
         set = xset_set( "task_pop_all", "label", _("Popup _All Tasks") );
@@ -9578,6 +9664,16 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_FALSE;
         set->line = g_strdup( "#tasks-menu-popdet" );
+
+        set = xset_set( "task_pop_over", "label", _("_Overwrite Option") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-popover" );
+
+        set = xset_set( "task_pop_err", "label", _("_Error Option") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        set->line = g_strdup( "#tasks-menu-poperr" );
 
         set = xset_set( "task_pop_font", "label", _("_Font") );
         set->menu_style = XSET_MENU_FONTDLG;
