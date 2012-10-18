@@ -27,6 +27,7 @@
     added partial Dutch translation by tct1501
     remove vert scrollbar compact mode
     per task error and overwrite options; auto rename
+    added View|Tasks|Queue|Pause On Error
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

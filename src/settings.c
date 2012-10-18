@@ -9673,7 +9673,7 @@ void xset_defaults()
         set = xset_set( "task_pop_err", "label", _("_Error Option") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
-        set->line = g_strdup( "#tasks-menu-poperr" );
+        set->line = g_strdup( "#tasks-menu-poperropt" );
 
         set = xset_set( "task_pop_font", "label", _("_Font") );
         set->menu_style = XSET_MENU_FONTDLG;
@@ -9704,7 +9704,7 @@ void xset_defaults()
 
     set = xset_set( "task_queue", "label", _("Qu_eue") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "task_q_new task_q_smart" );
+    xset_set_set( set, "desc", "task_q_new task_q_smart task_q_pause" );
     set->line = g_strdup( "#tasks-menu-new" );
 
         set = xset_set( "task_q_new", "label", _("_Queue New Tasks") );
@@ -9716,6 +9716,10 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
         set->line = g_strdup( "#tasks-menu-smart" );
+
+        set = xset_set( "task_q_pause", "label", _("_Pause On Error") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->line = g_strdup( "#tasks-menu-qpause" );
 
     // PANELS COMMON
     set = xset_get( "sep_new" );

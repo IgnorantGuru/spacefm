@@ -163,7 +163,7 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
         ptask->progress_timer = 0;
     }
     main_task_view_remove_task( ptask );
-    task_start_queued( ptask->task_view, NULL );
+    main_task_start_queued( ptask->task_view, NULL );
     
     if ( ptask->progress_dlg )
     {
@@ -255,7 +255,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
         if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING )
             ptk_file_task_pause( ptask, VFS_FILE_TASK_RUNNING );
         else
-            task_start_queued( ptask->task_view, ptask );
+            main_task_start_queued( ptask->task_view, ptask );
         if ( ptask->timeout && ptask->task->state_pause != VFS_FILE_TASK_RUNNING && 
                                     ptask->task->state == VFS_FILE_TASK_RUNNING )
         {
@@ -284,7 +284,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
             ptask->complete_notify = NULL;
         }
         main_task_view_remove_task( ptask );
-        task_start_queued( ptask->task_view, NULL );
+        main_task_start_queued( ptask->task_view, NULL );
     }
     else if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING
                                     && !ptask->pause_change 
@@ -634,14 +634,14 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
         {
             ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
         }
-        task_start_queued( ptask->task_view, NULL );
+        main_task_start_queued( ptask->task_view, NULL );
         break;
 /*
     case GTK_RESPONSE_YES:      // Queue btn
         ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
-        task_start_queued( ptask->task_view, NULL );
+        main_task_start_queued( ptask->task_view, NULL );
         ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
-        task_start_queued( ptask->task_view, NULL );
+        main_task_start_queued( ptask->task_view, NULL );
         break;
 */
     case GTK_RESPONSE_HELP:
@@ -1697,6 +1697,14 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         ptask->progress_count = 50;  // trigger fast display
 
         g_mutex_unlock( task->mutex );
+        
+        if ( xset_get_b( "task_q_pause" ) )
+        {
+            // pause all queued
+            gdk_threads_enter();
+            main_task_pause_all_queued( ptask );
+            gdk_threads_leave();
+        }
         break;
     default:
         break;

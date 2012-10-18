@@ -4475,7 +4475,28 @@ gboolean main_tasks_running( FMMainWindow* main_window )
     return ret;
 }
 
-void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
+void main_task_pause_all_queued( PtkFileTask* ptask )
+{
+    PtkFileTask* qtask;
+    GtkTreeIter it;
+    
+    if ( !ptask->task_view )
+        return;
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ptask->task_view ) );
+    if ( gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &qtask, -1 );
+            if ( qtask && qtask != ptask && qtask->task && !qtask->complete &&
+                            qtask->task->state_pause == VFS_FILE_TASK_QUEUE )
+                ptk_file_task_pause( qtask, VFS_FILE_TASK_PAUSE );
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
+}
+
+void main_task_start_queued( GtkWidget* view, PtkFileTask* new_task )
 {
     GtkTreeModel* model;
     GtkTreeIter it;
@@ -4490,9 +4511,6 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
     smart = xset_get_b( "task_q_smart" );
 #endif
     if ( !view )
-        return;
-    FMMainWindow* main_window = get_task_view_window( view );
-    if ( !main_window )
         return;
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
@@ -4641,7 +4659,7 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
         }
         while ( model && gtk_tree_model_iter_next( model, &it ) );
     }
-    task_start_queued( view, NULL );
+    main_task_start_queued( view, NULL );
 }
 
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
