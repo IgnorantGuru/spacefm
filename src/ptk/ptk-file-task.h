@@ -72,6 +72,7 @@ struct _PtkFileTask
     GFunc complete_notify;
     gpointer user_data;
     gboolean keep_dlg;
+    gboolean pop_detail;
     
     GCond* query_cond;
     GCond* query_cond_last;

@@ -782,6 +782,9 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                              NULL /*was task->parent_window*/ , 0,
                              NULL );
 
+    // cache this value for speed
+    ptask->pop_detail = xset_get_b( "task_pop_detail" );
+
     // Buttons
     // Pause
     XSet* set = xset_get( "task_pause" );
@@ -1182,7 +1185,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     {
         if ( ptask->complete )
         {
-            if ( xset_get_b( "task_pop_detail" ) )
+            if ( ptask->pop_detail )
                 stats = g_strdup_printf( "#%s (%s) [%s] @avg %s",
                                     ptask->dsp_file_count, ptask->dsp_size_tally,
                                     ptask->dsp_elapsed, ptask->dsp_avgspeed );
@@ -1192,7 +1195,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         }
         else
         {
-            if ( xset_get_b( "task_pop_detail" ) )
+            if ( ptask->pop_detail )
                 stats = g_strdup_printf( "#%s (%s) [%s] @cur %s (%s) @avg %s (%s)",
                                     ptask->dsp_file_count, ptask->dsp_size_tally,
                                     ptask->dsp_elapsed, ptask->dsp_curspeed,

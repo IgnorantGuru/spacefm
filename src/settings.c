@@ -2969,6 +2969,7 @@ char* xset_custom_get_help( XSet* set )
     g_free( dir );
     if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         return path;
+    g_free( path );
     return NULL;
 }
 
