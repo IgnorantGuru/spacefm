@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-30 12:50+0200\n"
-"PO-Revision-Date: 2012-10-14 13:23+0100\n"
+"PO-Revision-Date: 2012-10-17 20:25+0100\n"
 "Last-Translator: tct1501 <cyclonus@lavabit.com>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -125,8 +125,12 @@ msgstr ""
 " * Bureaubladiconen gebruiken code from Brian Tarricone\n"
 " * HAL-support (verouderd): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
-# 1 oktober 2012
-# De huidige vertaling is compleet herschreven. De eerdere vertaling was zeer gedateerd. Veel tekst was komen te vervallen en er waren te veel (kleine) vertaal- en spellingsfouten om gerieflijk te kunnen bewerken.
+# 1 oktober 2012, notitie van de vertaler: 
+#
+# De eerdere (Vlaamse) vertaling was 
+# van een gedateerde pcmanfm-vertaling. Veel tekst was komen te vervallen of bevatte
+# foutjes. Derhalve is de huidige vertaling van de grond af opgebouwd.
+
 #: ../data/ui/about-dlg.ui.h:23
 msgid "translator-credits"
 msgstr "Vertalers"
@@ -920,7 +924,7 @@ msgstr "bestand '%s' is geen pipe of normaal bestand"
 
 # Parsable?
 #: ../src/cust-dialog.c:3584
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
 "specify on the command line, features run-time internal/external commands "
@@ -930,7 +934,7 @@ msgstr ""
 "SpaceFM Dialog creëert een GTK-dialoogvenster aan de hand van GUI-elementen\n"
 "die je met de opdrachtregel specificeert. Je kunt met in- en externe "
 "commando's\n"
-"elementen wijzigen en er wordt evalueerbare/parsable output gegeven."
+"elementen wijzigen en er wordt evalueerbare/analyseerbare uitvoer gegeven.\n"
 
 #: ../src/cust-dialog.c:3585
 #, c-format
@@ -1044,6 +1048,17 @@ msgid ""
 "             tilde (~), pango markup may be used.  For example:\n"
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
 msgstr ""
+"    LABEL    De volgende escape sequences in LABEL worden letterlijk "
+"genomen:\n"
+"                 \\n   newline\n"
+"                 \\t   tab\n"
+"                 \\\"   \"\n"
+"                 \\\\   \\\n"
+"             Pango-opmaak mag alleen gebruikt worden in elementen van --"
+"label, \n"
+"             als het eerste teken in LABEL een tilde (~) is.\n"
+"             Bijvoorbeeld:\n"
+"                 --label '~Dit is normale tekst. <b>Dit vetgedrukt.</b>'\n"
 
 #: ../src/cust-dialog.c:3609
 #, c-format
@@ -1054,6 +1069,11 @@ msgid ""
 "element types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
 msgstr ""
+"\n"
+"Aanvullend op bovenstaande OPTIES, mag de optie --font worden gebruikt\n"
+"met de meeste elementtypes om lettertype en -grootte te veranderen "
+"Bijvoorbeeld:\n"
+"    --input --font \"Times New Roman 16\" \"Standaardtekst\"\n"
 
 #: ../src/cust-dialog.c:3611
 #, c-format
@@ -1061,6 +1081,8 @@ msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
 msgstr ""
+"\n"
+"INTERNE COMMANDO'S:\n"
 
 #: ../src/cust-dialog.c:3622
 #, c-format
@@ -1068,6 +1090,8 @@ msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
 msgstr ""
+"\n"
+"VOORBEELD MET COMMANDO'S:\n"
 
 #: ../src/cust-dialog.c:3623
 #, c-format
@@ -1077,6 +1101,10 @@ msgid ""
 "               --label \\\n"
 "               --button ok\n"
 msgstr ""
+"    spacefm -g --label \"Schrijf een tekst en druk op enter:\" \\\n"
+"               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
+"               --label \\\n"
+"               --button ok\n"
 
 #: ../src/cust-dialog.c:3625
 #, c-format
@@ -1102,8 +1130,9 @@ msgid ""
 "    fi\n"
 msgstr ""
 "    #!/bin/bash\n"
-"    # This script shows a Yes/No dialog\n"
-"    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
+"    # Dit venster laat een ja/nee dialoog zien\n"
+"    # Gebruik QUOTED eval om variabelen te lezen afkomstig van SpaceFM "
+"Dialog:\n"
 "    eval \"`spacefm -g --label \"Weet je dat zeker?\" --button ja --button "
 "nee`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
@@ -1119,7 +1148,7 @@ msgid ""
 "For full documentation and examples see the SpaceFM User's Manual:\n"
 msgstr ""
 "\n"
-"Voor de volledige handleiding en voorbeelden zie SpaceFM's "
+"Voor de volledige documentatie en voorbeelden zie SpaceFM's "
 "gebruikshandleiding:\n"
 
 #: ../src/cust-dialog.c:3654
@@ -1357,7 +1386,7 @@ msgstr "Stel BESTAND in als bureaubladachtergrond"
 
 #: ../src/main.c:137
 msgid "Show a custom dialog (See -g help)"
-msgstr "Geef op maat gemaakte dialoog weer (Zie -g voor meer)"
+msgstr "Geef aangepaste dialoog weer (Zie -g voor meer)"
 
 #: ../src/main.c:138 ../src/main.c:139
 msgid "No function - for compatibility only"
@@ -1564,7 +1593,7 @@ msgid ""
 "menu and select Help."
 msgstr ""
 "Ontwerpmodus stelt je in staat namen, sneltoetsen en menupictogrammen te "
-"veranderen. Ook kun je op maat gemaakte commando's toevoegen aan de meeste "
+"veranderen. Ook kun je aangepaste commando's toevoegen aan de meeste "
 "menu's.\n"
 "\n"
 "Om de ontwerpmodus te openen, rechtsklik op een menuonderdeel.\n"
@@ -1846,13 +1875,31 @@ msgid ""
 "\t%%a\tmenu item value\n"
 "\t$fm_panel, $fm_tab, $fm_command, etc"
 msgstr ""
+"Geef programma of Bash-commandoregel op:\n"
+"\n"
+"Gebruik:\n"
+"\t%%F\tgeselecteerde bestanden of  %%f het eerste geselecteerde bestand\n"
+"\t%%N\tgeselecteerde bestandsnamen of  %%n de eerst geselecteerde "
+"bestandsnaam\n"
+"\t%%d\thuidige map\n"
+"\t%%v\tsgeselecteerde apparaat (bijv. /dev/sda1)\n"
+"\t%%m\taankoppelingspunt van apparaat (bijv. /media/dvd);  %%l "
+"apparaatlabel\n"
+"\t%%b\tgeselecteerde bladwijzer\n"
+"\t%%t\tgeselecteerde takenmap;  %%p taak pid\n"
+"\t%%a\twaarde menuitem\n"
+"\t$fm_panel, $fm_tab, $fm_command, etc."
 
 #: ../src/settings.c:113
+#, fuzzy
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
 "Not all icons may work due to various issues."
 msgstr ""
+"Voer naam of bestandspad van pictogram in, of de naam van een stockitem:\n"
+"\n"
+"Door uiteenlopende redenen is het mogelijk dat niet alle pictogrammen werken."
 
 #: ../src/settings.c:115
 msgid ""
@@ -1861,6 +1908,10 @@ msgid ""
 "Precede a character with an underscore (_) to underline that character as a "
 "shortcut key if desired."
 msgstr ""
+"Geef naam op voor menuitem:\n"
+"\n"
+"Laat een leesteken voorafgaan door een laag streepje (_) om dat teken te "
+"onderstrepen en als sneltoets te definiëren."
 
 #: ../src/settings.c:116
 msgid ""
@@ -1872,6 +1923,13 @@ msgid ""
 "TIP: To change this menu item later, right-click on the menu item to open "
 "the design menu."
 msgstr ""
+"Geef naam op voor menuitem:\n"
+"\n"
+"Laat een leesteken voorafgaan door een laag streepje (_) om dat teken te "
+"onderstrepen en als sneltoets te definiëren.\n"
+"\n"
+"TIP: Om het menuitem later te veranderen, rechtsklik op het menuitem om het "
+"ontwerpmenu te openen."
 
 #: ../src/settings.c:120
 msgid "MIME Type"
@@ -1886,8 +1944,9 @@ msgid "Directory"
 msgstr "Pad"
 
 #: ../src/settings.c:123
+#, fuzzy
 msgid "Dir Write Access"
-msgstr ""
+msgstr "Schrijfbaarheid map"
 
 #: ../src/settings.c:124
 msgid "File Is Text"
@@ -2103,12 +2162,13 @@ msgid "Err_ors"
 msgstr "F_outen"
 
 #: ../src/settings.c:917 ../src/settings.c:9424
+#, fuzzy
 msgid "Current Re_main"
-msgstr ""
+msgstr "Over_blijvend"
 
 #: ../src/settings.c:923 ../src/settings.c:9436
 msgid "A_verage Remain"
-msgstr ""
+msgstr "Restge_middelde"
 
 #: ../src/settings.c:929 ../src/settings.c:9375
 #: ../src/desktop/desktop-window.c:188
@@ -2117,7 +2177,7 @@ msgstr "_Map"
 
 #: ../src/settings.c:945 ../src/settings.c:9514
 msgid "_Detailed Stats"
-msgstr ""
+msgstr "_Gedetailleerde statistieken"
 
 #. General
 #: ../src/settings.c:1042
@@ -2175,15 +2235,18 @@ msgstr ""
 
 #: ../src/settings.c:3035 ../src/settings.c:3070
 msgid "Copy Command Error"
-msgstr ""
+msgstr "Kopieercommandofout"
 
 #: ../src/settings.c:3068
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "An error occured copying command data files\n"
 "\n"
 "%s"
 msgstr ""
+"Een fout deed zich voor tijdens het kopiëren van commandodatabestanden\n"
+"\n"
+"%s"
 
 #: ../src/settings.c:3440
 #, c-format
@@ -2254,80 +2317,80 @@ msgstr ""
 
 #: ../src/settings.c:3568 ../src/settings.c:3576
 msgid "Uninstall Plugin"
-msgstr ""
+msgstr "Installatie plugin ongedaan maken"
 
 #. task
 #: ../src/settings.c:3613
 msgid "Install Plugin"
-msgstr ""
+msgstr "Plugin installeren"
 
 #: ../src/settings.c:3815
 msgid "Save As Plugin File"
-msgstr ""
+msgstr "Opslaan als pluginbestand"
 
 #. tar and delete tmp files
 #. task
 #: ../src/settings.c:3883
 msgid "Export Plugin"
-msgstr ""
+msgstr "Exporteer plugin"
 
 #: ../src/settings.c:3917
 msgid "Export Error"
-msgstr ""
+msgstr "Exportfout"
 
 #: ../src/settings.c:3918
 msgid "Unable to create temporary files"
-msgstr ""
+msgstr "Kan tijdelijke bestanden niet aanmaken"
 
 #: ../src/settings.c:3952 ../src/settings.c:5570
 msgid "Change Menu Name"
-msgstr ""
+msgstr "Verander menunaam"
 
 #: ../src/settings.c:3977 ../src/settings.c:5708
 msgid "Set Command Line"
-msgstr ""
+msgstr "Stel commandoregel in"
 
 #: ../src/settings.c:4014 ../src/settings.c:5672
 msgid "Choose Custom Executable"
-msgstr ""
+msgstr "Kies aangepaste toepassing"
 
 #: ../src/settings.c:4313
 msgid "Editor Not Set"
-msgstr ""
+msgstr "Editor niet opgegeven"
 
 #: ../src/settings.c:4314
 msgid "Please set your editor in View|Preferences|Advanced"
-msgstr ""
+msgstr "Geef de editor op in Weergave|Voorkeuren|Geavanceerd"
 
 #: ../src/settings.c:4324
 msgid "Root Editor Not Set"
-msgstr ""
+msgstr "Rooteditor niet opgegeven"
 
 #: ../src/settings.c:4325
 msgid "Please set root's editor in View|Preferences|Advanced"
-msgstr ""
+msgstr "Geef de editor van root op in Weergave|Voorkeuren|Geavanceerd"
 
 #. task
 #: ../src/settings.c:4350
 #, c-format
 msgid "Edit %s"
-msgstr ""
+msgstr "Bewerken %s"
 
 #: ../src/settings.c:4808
 msgid "Current: Show"
-msgstr ""
+msgstr "Huidige: Weergeven"
 
 #: ../src/settings.c:4813
 msgid "Current: Hide"
-msgstr ""
+msgstr "Huidige: Weglaten"
 
 #: ../src/settings.c:4815
 msgid "Current: Disable"
-msgstr ""
+msgstr "Huidige: Uitschakelen"
 
 #: ../src/settings.c:4999
 msgid "Context Rules"
-msgstr ""
+msgstr "Contextvoorwaardes"
 
 #. list buttons
 #. Remove
@@ -2337,59 +2400,62 @@ msgstr ""
 #: ../src/settings.c:5048 ../src/settings.c:6845
 #: ../src/ptk/ptk-file-menu.c:1851
 msgid "_Remove"
-msgstr ""
+msgstr "_Verwijderen"
 
 #: ../src/settings.c:5062
 msgid "A_pply"
-msgstr ""
+msgstr "Toe_passen"
 
 #: ../src/settings.c:5089
 msgid "matches any rule:"
-msgstr ""
+msgstr "komt overeen met welke voorwaarde dan ook"
 
 #: ../src/settings.c:5091
 msgid "matches all rules:"
-msgstr ""
+msgstr "komt overeen met alle voorwaardes"
 
 #: ../src/settings.c:5093
 msgid "doesn't match any rule:"
-msgstr ""
+msgstr "komt niet overeen met welke voorwaarde dan ook"
 
 #: ../src/settings.c:5095
 msgid "doesn't match all rules:"
-msgstr ""
+msgstr "komt niet overeen met alle voorwaardes"
 
 #: ../src/settings.c:5102
 msgid "Show"
-msgstr ""
+msgstr "Weergeven"
 
 #: ../src/settings.c:5104
+#, fuzzy
 msgid "Enable"
-msgstr ""
+msgstr "Toepassen"
 
 #: ../src/settings.c:5106
 msgid "Hide"
-msgstr ""
+msgstr "Weglaten"
 
 #: ../src/settings.c:5108
+#, fuzzy
 msgid "Disable"
-msgstr ""
+msgstr "Uitzetten"
 
 #: ../src/settings.c:5137
+#, fuzzy
 msgid "item if context"
-msgstr ""
+msgstr "item als context"
 
 #: ../src/settings.c:5165
 msgid "Edit Rule"
-msgstr ""
+msgstr "Bewerk voorwaarde"
 
 #: ../src/settings.c:5182
 msgid "Value:"
-msgstr ""
+msgstr "Waarde:"
 
 #: ../src/settings.c:5311
 msgid "User's Manual Not Found"
-msgstr ""
+msgstr "Gebruiksaanwijzing niet gevonden"
 
 #: ../src/settings.c:5313
 msgid ""
@@ -2399,26 +2465,33 @@ msgid ""
 "read it online, or click No and then set the correct location in Help|"
 "Options|Manual Location."
 msgstr ""
+"Gebruiksaanwijzing online lezen?\n"
+"\n"
+"De SpaceFM-handleiding kon niet op de computer gevonden worden. Kies \"ja\" "
+"om het online te lezen, of kies \"nee\" en stel de juiste locatie in op Help|"
+"Opties|Locatie handleiding"
 
 #: ../src/settings.c:5344
 msgid "Help Not Available"
-msgstr ""
+msgstr "Hulp niet beschikbaar"
 
 #: ../src/settings.c:5344
 msgid "This plugin does not include a README file."
-msgstr ""
+msgstr "Deze plugin heeft geen README-bestand."
 
 #: ../src/settings.c:5346
 msgid "Creation Failed"
-msgstr ""
+msgstr "Aanmaken mislukt."
 
 #: ../src/settings.c:5346
 msgid "An error occured creating a README file for this command."
 msgstr ""
+"Een fout deed zich voor tijdens het aanmaken van een README-bestand voor dit "
+"commando."
 
 #: ../src/settings.c:5368
 msgid "Manual Opened ?"
-msgstr ""
+msgstr "Gebruiksaanwijzing geopend?"
 
 #: ../src/settings.c:5368
 msgid ""
@@ -2428,6 +2501,11 @@ msgid ""
 "\n"
 "This message will not repeat."
 msgstr ""
+"De SpaceFM-handleiding zou geopend moeten zijn in je browser. Als het niet "
+"geopend is, of als je een andere browser wilt instellen, geef deze dan op in "
+"Help|Opties|Browser.\n"
+"\n"
+"Deze boodschap is eenmalig."
 
 #: ../src/settings.c:5421
 #, c-format
@@ -2438,11 +2516,17 @@ msgid ""
 "\n"
 "Press a different key or click Set to replace the current key assignment."
 msgstr ""
+"    Toetscode: %#4x  Shifttoets: %#x\n"
+"\n"
+"Deze toetsencombinatie wordt al gebruikt voor '%s'.\n"
+"\n"
+"Druk een andere toets of kies \"instellen\" om de huidige combinatie te "
+"vervangen."
 
 #: ../src/settings.c:5428
 #, c-format
 msgid "    Keycode: %#4x  Modifier: %#x"
-msgstr ""
+msgstr "    Toetscode: %#4x  Shifttoets: %#x"
 
 #: ../src/settings.c:5482
 #, c-format
@@ -2450,35 +2534,37 @@ msgid ""
 "Press your key combination for menu item '%s' then click Set.  To remove the "
 "current key assignment, click Unset."
 msgstr ""
+"Druk je toetscombinatie voor menuitem '%s' in en kies \"instellen\". Kies "
+"\"Afschaffen\" om de huidige toetscombinatie te verwijderen, "
 
 #: ../src/settings.c:5493
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #: ../src/settings.c:5499
 msgid "Unset"
-msgstr ""
+msgstr "Afschaffen"
 
 #: ../src/settings.c:5507
 msgid "Set"
-msgstr ""
+msgstr "Instellen"
 
 #: ../src/settings.c:5520
 msgid "Set Key"
-msgstr ""
+msgstr "Stel toets in"
 
 #: ../src/settings.c:5561
 msgid "Change Icon"
-msgstr ""
+msgstr "Verander pictogram"
 
 #. line
 #: ../src/settings.c:5578 ../src/settings.c:5646
 msgid "Edit Command Line"
-msgstr ""
+msgstr "Bewerk commandoregel"
 
 #: ../src/settings.c:5683
 msgid "Run As User"
-msgstr ""
+msgstr "Uitvoeren als gebruiker"
 
 #: ../src/settings.c:5683
 msgid ""
@@ -2486,6 +2572,9 @@ msgid ""
 "\n"
 "( Leave blank for current user )"
 msgstr ""
+"Voer dit commando uit als gebruiker:\n"
+"\n"
+"(Niets invullen voor huidige gebruiker)"
 
 #: ../src/settings.c:5689
 #, c-format
@@ -2497,14 +2586,20 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME "
 "type."
 msgstr ""
+"Je voegt een aangepast commando toe aan het standaardmenuitem. Dit item "
+"heeft automatisch een pre-context: het verschijnt alleen als het MIME-type "
+"van het eerste geselecteerde bestand overeenkomt met het huidige type '%s'.\n"
+"\n"
+"Voeg hier commando's of menu's toe die alleen voor dit specifieke MIME-type "
+"moeten verschijnen."
 
 #: ../src/settings.c:5690
 msgid "New Context Command"
-msgstr ""
+msgstr "Nieuw contextcommando"
 
 #: ../src/settings.c:5699
 msgid "Set Menu Name"
-msgstr ""
+msgstr "Stel menunaam in"
 
 #: ../src/settings.c:5738
 #, c-format
@@ -2516,14 +2611,20 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME "
 "type."
 msgstr ""
+"Je voegt een aangepast submenu toe aan het standaardmenuitem. Dit item heeft "
+"automatisch een pre-context: het verschijnt alleen als het MIME-type van het "
+"eerste geselecteerde bestand overeenkomt met het huidige type '%s'.\n"
+"\n"
+"Voeg hier commando's of menu's toe die alleen voor dit specifieke MIME-type "
+"moeten verschijnen."
 
 #: ../src/settings.c:5738
 msgid "(none)"
-msgstr ""
+msgstr "(geen)"
 
 #: ../src/settings.c:5747
 msgid "Set Submenu Name"
-msgstr ""
+msgstr "Stel submenunaam in"
 
 #: ../src/settings.c:5747
 msgid ""
@@ -2532,14 +2633,18 @@ msgid ""
 "Precede a character with an underscore (_) to underline that character as a "
 "shortcut key if desired."
 msgstr ""
+"Geef submenu een naam:\n"
+"\n"
+"Laat een leesteken voorafgaan door een laag streepje (_) om dat teken te "
+"onderstrepen en als sneltoets te definiëren."
 
 #: ../src/settings.c:5747
 msgid "New _Submenu"
-msgstr ""
+msgstr "Nieuw _submenu"
 
 #: ../src/settings.c:5863
 msgid "( no name )"
-msgstr ""
+msgstr "(naamloos)"
 
 #: ../src/settings.c:5866
 #, c-format
@@ -2548,6 +2653,10 @@ msgid ""
 "\n"
 "This action will delete all settings and files associated with these items."
 msgstr ""
+"'%s'SUBMENU EN ZIJN COMMANDO'S definitief verwijderen?\n"
+"\n"
+"Dit verwijdert alle instellingen en bestanden die zijn gemoeid met deze "
+"items."
 
 #: ../src/settings.c:5871
 #, c-format
@@ -2556,18 +2665,22 @@ msgid ""
 "\n"
 "This action will delete all settings and files associated with this command."
 msgstr ""
+"'%s' command definitef verwijderen?\n"
+"\n"
+"Dit verwijdert alle instellingen en bestanden die zijn gemoeid met deze "
+"items."
 
 #: ../src/settings.c:5884
 msgid "Confirm Remove"
-msgstr ""
+msgstr "Bevestig verwijderen"
 
 #: ../src/settings.c:5908
 msgid "Are you sure?"
-msgstr ""
+msgstr "Weet u dit zeker?"
 
 #: ../src/settings.c:5909 ../src/settings.c:5913 ../src/settings.c:5917
 msgid "Dialog Message"
-msgstr ""
+msgstr "Dialoogtekst"
 
 #: ../src/settings.c:5909 ../src/settings.c:5913 ../src/settings.c:5917
 msgid ""
@@ -2577,12 +2690,17 @@ msgid ""
 "\t\\n\tnewline\n"
 "\t\\t\ttab"
 msgstr ""
+"Geef de tekst op die in het dialoogvenster moet worden weergegeven:\n"
+"\n"
+"Gebruik:\n"
+"\t\\n\twitregel\n"
+"\t\\t\ttabblad"
 
 #. Show Tool
 #. dev settings
 #: ../src/settings.c:6506 ../src/settings.c:8765
 msgid "S_how"
-msgstr ""
+msgstr "W_eergeven"
 
 #. Name
 #. do not set a default icon for book_icon
@@ -2591,12 +2709,12 @@ msgstr ""
 #: ../src/settings.c:10168 ../src/settings.c:10290 ../src/settings.c:10418
 #: ../src/settings.c:10545
 msgid "_Name"
-msgstr ""
+msgstr "_Naam"
 
 #. Key
 #: ../src/settings.c:6522
 msgid "_Key"
-msgstr ""
+msgstr "_Toets"
 
 #. Icon
 #: ../src/settings.c:6530 ../src/settings.c:8934 ../src/settings.c:9029
@@ -2604,221 +2722,221 @@ msgstr ""
 #: ../src/settings.c:10285 ../src/settings.c:10402 ../src/settings.c:10413
 #: ../src/settings.c:10529 ../src/settings.c:10540
 msgid "_Icon"
-msgstr ""
+msgstr "Pictogram"
 
 #. // Style submenu
 #: ../src/settings.c:6542
 msgid "_Style"
-msgstr ""
+msgstr "_Stijl"
 
 #: ../src/settings.c:6557
 msgid "_Normal"
-msgstr ""
+msgstr "_Normaal"
 
 #. Check
 #: ../src/settings.c:6566
 msgid "_Checkbox"
-msgstr ""
+msgstr "_Keuzevakje"
 
 #. Confirmation
 #: ../src/settings.c:6575
 msgid "Con_firmation"
-msgstr ""
+msgstr "Be_vestiging"
 
 #. Dialog
 #: ../src/settings.c:6584
 msgid "_Input"
-msgstr ""
+msgstr "_Input"
 
 #. Description
 #: ../src/settings.c:6593
 msgid "_Message"
-msgstr ""
+msgstr "_Bericht"
 
 #. Context
 #: ../src/settings.c:6603
 msgid "Con_text"
-msgstr ""
+msgstr "Con_text"
 
 #: ../src/settings.c:6610
 msgid "Ign_ore Context (global)"
-msgstr ""
+msgstr "Ne_geer context (globaal)"
 
 #. // Command submenu
 #: ../src/settings.c:6615
 msgid "C_ommand"
-msgstr ""
+msgstr "C_ommando"
 
 #. Edit
 #: ../src/settings.c:6628 ../src/settings.c:7569 ../src/settings.c:9013
 #: ../src/settings.c:9863
 msgid "_Edit"
-msgstr ""
+msgstr "_Bewerken"
 
 #: ../src/settings.c:6646
 msgid "E_dit As Root"
-msgstr ""
+msgstr "B_ewerken als root"
 
 #. Copy (Script)
 #. Copy
 #: ../src/settings.c:6651 ../src/settings.c:6828 ../src/settings.c:9064
 #: ../src/settings.c:9275 ../src/settings.c:9842
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopiëren"
 
 #: ../src/settings.c:6674
 msgid "_Files"
-msgstr ""
+msgstr "_Bestanden"
 
 #: ../src/settings.c:6677
 msgid "_Files (none)"
-msgstr ""
+msgstr "_Bestanden (geen)"
 
 #: ../src/settings.c:6691
 msgid "_Data"
-msgstr ""
+msgstr "_Gegevens"
 
 #: ../src/settings.c:6694
 msgid "_Data (none)"
-msgstr ""
+msgstr "_Gegevens (geen)"
 
 #: ../src/settings.c:6698
 msgid "_Plugin"
-msgstr ""
+msgstr "_Plugin"
 
 #. Line
 #: ../src/settings.c:6711
 msgid "_Line"
-msgstr ""
+msgstr "_Regel"
 
 #. Script
 #: ../src/settings.c:6719
 msgid "_Script"
-msgstr ""
+msgstr "_Script"
 
 #: ../src/settings.c:6731
 #, c-format
 msgid "Custo_m (%s)"
-msgstr ""
+msgstr "Aangepas_t (%s)"
 
 #: ../src/settings.c:6733
 #, c-format
 msgid "Custo_m (...)"
-msgstr ""
+msgstr "Aangepas_t (...)"
 
 #: ../src/settings.c:6737
 #, c-format
 msgid "Custo_m"
-msgstr ""
+msgstr "Aangepas_t"
 
 #. Run In Terminal
 #: ../src/settings.c:6751
 msgid "Run _In Terminal"
-msgstr ""
+msgstr "Uitvoeren _in terminal"
 
 #. Keep Terminal
 #: ../src/settings.c:6756
 msgid "_Keep Terminal"
-msgstr ""
+msgstr "_Behoud terminal"
 
 #: ../src/settings.c:6767
 #, c-format
 msgid "Run As _User... (%s)"
-msgstr ""
+msgstr "Uitvoeren als _gebruiker... (%s)"
 
 #: ../src/settings.c:6773
 msgid "Run As _User..."
-msgstr ""
+msgstr "Uitvoeren als _gebruiker..."
 
 #. Run As Task
 #: ../src/settings.c:6781
 msgid "Run As _Task"
-msgstr ""
+msgstr "Uitvoeren als _taak"
 
 #. Popup Task
 #: ../src/settings.c:6786
 msgid "_Popup Task"
-msgstr ""
+msgstr "_Popup Taak"
 
 #. Popup Error
 #: ../src/settings.c:6792
 msgid "Popup E_rror"
-msgstr ""
+msgstr "Popup _fout"
 
 #. Popup Output
 #: ../src/settings.c:6798
 msgid "Popup _Output"
-msgstr ""
+msgstr "Popup _uitvoer"
 
 #. Scroll
 #: ../src/settings.c:6804
 msgid "_Scroll"
-msgstr ""
+msgstr "_Schuiven"
 
 #. Cut
 #. EDIT
 #: ../src/settings.c:6821 ../src/settings.c:9839
 msgid "Cu_t"
-msgstr ""
+msgstr "Knippe_n"
 
 #. Paste
 #: ../src/settings.c:6835 ../src/settings.c:9845
 msgid "_Paste"
-msgstr ""
+msgstr "_Plakken"
 
 #. Export
 #: ../src/settings.c:6852
 msgid "E_xport"
-msgstr ""
+msgstr "E_xporteren"
 
 #. New > Command
 #: ../src/settings.c:6862
 msgid "Ne_w"
-msgstr ""
+msgstr "Nieu_w"
 
 #. New > Submenu
 #: ../src/settings.c:6869
 msgid "Sub_menu"
-msgstr ""
+msgstr "Sub_menu"
 
 #. New > Separator
 #: ../src/settings.c:6874
 msgid "S_eparator"
-msgstr ""
+msgstr "S_cheidingslijn"
 
 #: ../src/settings.c:7218
 msgid "Set Icon"
-msgstr ""
+msgstr "Stel pictogram in"
 
 #: ../src/settings.c:7579 ../src/settings.c:7787 ../src/settings.c:9604
 #: ../src/settings.c:9726
 msgid "_Default"
-msgstr ""
+msgstr "_Standaard"
 
 #: ../src/settings.c:7619
 msgid "Your input is invalid because it contains linefeeds"
-msgstr ""
+msgstr "De invoer is ongeldig omdat het regelopschuivingen (line feeds) bevat"
 
 #: ../src/settings.c:7790
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: ../src/settings.c:7920
 msgid "_Unset"
-msgstr ""
+msgstr "_Afschaffen"
 
 #: ../src/settings.c:8278
 msgid "_Left Toolbar"
-msgstr ""
+msgstr "_Linkergereedschapsbalk"
 
 #: ../src/settings.c:8282
 msgid "_Right Toolbar"
-msgstr ""
+msgstr "_Rechtergereedschapsbalk"
 
 #: ../src/settings.c:8286 ../src/settings.c:10107 ../src/settings.c:10222
 #: ../src/settings.c:10349 ../src/settings.c:10477
 msgid "_Side Toolbar"
-msgstr ""
+msgstr "_Zijkantgereedschapsbalk"
 
 #.
 #. xset_set( "panel_left", "label", _("_Left") );
@@ -2829,193 +2947,193 @@ msgstr ""
 #: ../src/settings.c:8290 ../src/settings.c:8293 ../src/settings.c:9222
 #: ../src/settings.c:9963
 msgid "_Hide"
-msgstr ""
+msgstr "_Verbergen"
 
 #: ../src/settings.c:8296
 msgid "Configure Toolbar"
-msgstr ""
+msgstr "Configureer gereedschapsbalk"
 
 #: ../src/settings.c:8300
 msgid "H_elp"
-msgstr ""
+msgstr "H_elp"
 
 #. toolitems left
 #. toolitems right
 #. toolitems side
 #: ../src/settings.c:8304 ../src/settings.c:8374 ../src/settings.c:8443
 msgid "Tree"
-msgstr ""
+msgstr "Boom"
 
 #: ../src/settings.c:8310 ../src/settings.c:8380 ../src/settings.c:8449
 msgid "Bookmarks"
-msgstr ""
+msgstr "Bladwijzers"
 
 #: ../src/settings.c:8316 ../src/settings.c:8386 ../src/settings.c:8455
 msgid "Devices"
-msgstr ""
+msgstr "Apparaten"
 
 #: ../src/settings.c:8322 ../src/settings.c:8392 ../src/settings.c:8461
 msgid "New Tab"
-msgstr ""
+msgstr "Nieuw tabblad"
 
 #: ../src/settings.c:8327 ../src/settings.c:8397 ../src/settings.c:8466
 msgid "New Tab Here"
-msgstr ""
+msgstr "Hier nieuw tabblad"
 
 #: ../src/settings.c:8332 ../src/settings.c:8402 ../src/settings.c:8471
 msgid "Back"
-msgstr ""
+msgstr "Terug"
 
 #: ../src/settings.c:8337 ../src/settings.c:8407 ../src/settings.c:8476
 msgid "Back Menu"
-msgstr ""
+msgstr "Terugmenu"
 
 #: ../src/settings.c:8342 ../src/settings.c:8412 ../src/settings.c:8481
 msgid "Forward"
-msgstr ""
+msgstr "Vooruit"
 
 #: ../src/settings.c:8347 ../src/settings.c:8417 ../src/settings.c:8486
 msgid "Forward Menu"
-msgstr ""
+msgstr "Vooruitmenu"
 
 #: ../src/settings.c:8352 ../src/settings.c:8422 ../src/settings.c:8491
 msgid "Up"
-msgstr ""
+msgstr "Naar boven"
 
 #: ../src/settings.c:8357 ../src/settings.c:8427 ../src/settings.c:8496
 msgid "Refresh"
-msgstr ""
+msgstr "Vernieuwen"
 
 #: ../src/settings.c:8362 ../src/settings.c:8432 ../src/settings.c:8501
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: ../src/settings.c:8367 ../src/settings.c:8437 ../src/settings.c:8505
 msgid "Default"
-msgstr ""
+msgstr "Standaard"
 
 #: ../src/settings.c:8510
 msgid "Mount"
-msgstr ""
+msgstr "Aankoppelen"
 
 #: ../src/settings.c:8514
 msgid "Mount & Open"
-msgstr ""
+msgstr "Aankoppelen en openen"
 
 #: ../src/settings.c:8518
 msgid "Remove"
-msgstr ""
+msgstr "Verwijderen"
 
 #: ../src/settings.c:8538
 msgid "Remo_ve"
-msgstr ""
+msgstr "Verwijde_ren"
 
 #: ../src/settings.c:8542 ../src/settings.c:8594
 #: ../src/ptk/ptk-location-view.c:2915
 msgid "_Unmount"
-msgstr ""
+msgstr "_Ontkoppelen"
 
 #: ../src/settings.c:8546
 msgid "Re_load"
-msgstr ""
+msgstr "Her_laden"
 
 #: ../src/settings.c:8550
 msgid "_Sync"
-msgstr ""
+msgstr "_Synchroniseren"
 
 #: ../src/settings.c:8558 ../src/settings.c:9022 ../src/settings.c:9705
 #: ../src/settings.c:9749 ../src/settings.c:9897 ../src/settings.c:9935
 msgid "_Tab"
-msgstr ""
+msgstr "_Tabblad"
 
 #: ../src/settings.c:8562 ../src/settings.c:8589
 #: ../src/ptk/ptk-location-view.c:2899
 msgid "_Mount"
-msgstr ""
+msgstr "_Aankoppelen"
 
 #: ../src/settings.c:8566
 msgid "Re_/mount"
-msgstr ""
+msgstr "(Opnie_w) aankoppelen"
 
 #: ../src/settings.c:8570 ../src/settings.c:9694
 msgid "_Bookmark"
-msgstr ""
+msgstr "_Bladwijzer"
 
 #: ../src/settings.c:8583 ../src/settings.c:10028
 msgid "_Root"
-msgstr ""
+msgstr "_Root"
 
 #: ../src/settings.c:8599
 msgid "_Label"
-msgstr ""
+msgstr "_Label"
 
 #: ../src/settings.c:8649
 msgid "_Check"
-msgstr ""
+msgstr "_Controleren"
 
 #: ../src/settings.c:8653
 msgid "_Edit fstab"
-msgstr ""
+msgstr "_Bewerk fstab"
 
 #: ../src/settings.c:8657
 msgid "Edit u_devil.conf"
-msgstr ""
+msgstr "Bewerk u_devil.conf"
 
 #: ../src/settings.c:8661
 msgid "_Format"
-msgstr ""
+msgstr "_Formatteren"
 
 #: ../src/settings.c:8721
 msgid "_Backup"
-msgstr ""
+msgstr "_Backup"
 
 #: ../src/settings.c:8743
 msgid "_Restore"
-msgstr ""
+msgstr "_Herstellen"
 
 #: ../src/settings.c:8748
 msgid "_From File"
-msgstr ""
+msgstr "_Van bestand"
 
 #: ../src/settings.c:8753 ../src/settings.c:9119
 msgid "File _Info"
-msgstr ""
+msgstr "_Bestandsinformatie"
 
 #: ../src/settings.c:8756
 msgid "_Properties"
-msgstr ""
+msgstr "_Eigenschappen"
 
 #: ../src/settings.c:8759
 msgid "Setti_ngs"
-msgstr ""
+msgstr "Instelli_ngen"
 
 #: ../src/settings.c:8770
 msgid "_Internal Drives"
-msgstr ""
+msgstr "_Interne apparaten"
 
 #: ../src/settings.c:8775
 msgid "_Empty Drives"
-msgstr ""
+msgstr "_Lege stations"
 
 #: ../src/settings.c:8780
 msgid "_Partition Tables"
-msgstr ""
+msgstr "_Partitietabellen"
 
 #: ../src/settings.c:8784
 msgid "Mounted _Networks"
-msgstr ""
+msgstr "Aangekoppelde _Netwerken"
 
 #: ../src/settings.c:8789
 msgid "Mounted _Files"
-msgstr ""
+msgstr "Aangekoppelde _Bestanden"
 
 #: ../src/settings.c:8794
 msgid "_Volumes..."
-msgstr ""
+msgstr "Volume"
 
 #: ../src/settings.c:8795
 msgid "Show/Hide Volumes"
-msgstr ""
+msgstr "Weergeven/verbergen gegevensdragers"
 
 #: ../src/settings.c:8796
 msgid ""
@@ -3034,7 +3152,7 @@ msgstr ""
 
 #: ../src/settings.c:8803
 msgid "_Display Name"
-msgstr ""
+msgstr "_Weergavenaam"
 
 #: ../src/settings.c:8805
 msgid "Set Display Name Format"
@@ -3291,11 +3409,11 @@ msgstr ""
 
 #: ../src/settings.c:8910
 msgid "Mount Command"
-msgstr ""
+msgstr "Aankoppelingscommando"
 
 #: ../src/settings.c:8914
 msgid "_Unmount Command"
-msgstr ""
+msgstr "_Ontkoppelingscommando"
 
 #: ../src/settings.c:8915
 #, c-format
@@ -3312,123 +3430,134 @@ msgid ""
 "\n"
 "Leave blank for auto-detection."
 msgstr ""
+"Geef het commando om een apparaat te ontkoppelen:\n"
+"\n"
+"Gebruik:\n"
+"\t%%v\tbestandslocatie apparaat (bijv. /dev/sda5)\n"
+"\n"
+"udevil:\t/usr/bin/udevil umount %%v\n"
+"pmount:\t/usr/bin/pumount %%v\n"
+"Udisks1:\t/usr/bin/udisks --unmount %%v\n"
+"Udisks2:\t/usr/bin/udisksctl unmount -b %%v\n"
+"\n"
+"Niets invullen voor automatische detectie."
 
 #: ../src/settings.c:8917
 msgid "Unmount Command"
-msgstr ""
+msgstr "Ontkoppelingscommando"
 
 #: ../src/settings.c:8939
 msgid "Audio CD"
-msgstr ""
+msgstr "Audio-cd"
 
 #: ../src/settings.c:8945
 msgid "Optical Mounted"
-msgstr ""
+msgstr "Optisch apparaat aangekoppeld"
 
 #: ../src/settings.c:8950
 msgid "Optical Has Media"
-msgstr ""
+msgstr "Optisch apparaat bevat media"
 
 #: ../src/settings.c:8955
 msgid "Optical No Media"
-msgstr ""
+msgstr "Optisch apparaat bevat geen media"
 
 #: ../src/settings.c:8960
 msgid "Floppy Mounted"
-msgstr ""
+msgstr "Floppy aangekoppeld"
 
 #: ../src/settings.c:8965
 msgid "Floppy Unmounted"
-msgstr ""
+msgstr "Floppy ontkoppeld"
 
 #: ../src/settings.c:8970
 msgid "Removable Mounted"
-msgstr ""
+msgstr "Verwijderbare media aangekoppeld"
 
 #: ../src/settings.c:8975
 msgid "Removable Unmounted"
-msgstr ""
+msgstr "Verwijderbare media ontkoppeld"
 
 #: ../src/settings.c:8980
 msgid "Internal Mounted"
-msgstr ""
+msgstr "Intern apparaat aangekoppeld"
 
 #: ../src/settings.c:8985
 msgid "Internal Unmounted"
-msgstr ""
+msgstr "Intern apparaat ontkoppeld"
 
 #: ../src/settings.c:8990
 msgid "Mounted Network"
-msgstr ""
+msgstr "Netwerk aangekoppeld"
 
 #: ../src/settings.c:8995
 msgid "Mounted File"
-msgstr ""
+msgstr "Bestand aangekoppeld"
 
 #: ../src/settings.c:9007 ../src/settings.c:9680
 msgid "_New"
-msgstr ""
+msgstr "_Nieuw"
 
 #: ../src/settings.c:9010 ../src/settings.c:9848
 #: ../src/ptk/ptk-file-task.c:1766 ../src/ptk/ptk-file-misc.c:720
 #: ../src/ptk/ptk-file-misc.c:1149 ../src/ptk/ptk-file-misc.c:1995
 msgid "_Rename"
-msgstr ""
+msgstr "_Hernoemen"
 
 #: ../src/settings.c:9016
 msgid "Re_move"
-msgstr ""
+msgstr "Ver_wijderen"
 
 #: ../src/settings.c:9025
 msgid "_Settings"
-msgstr ""
+msgstr "_Instellingen"
 
 #: ../src/settings.c:9037
 msgid "_Filename"
-msgstr ""
+msgstr "_Bestandsnaam"
 
 #: ../src/settings.c:9041
 msgid "_Parent"
-msgstr ""
+msgstr "_Ouder"
 
 #: ../src/settings.c:9044
 msgid "P_ath"
-msgstr ""
+msgstr "P_ad"
 
 #: ../src/settings.c:9048 ../src/settings.c:9797 ../src/settings.c:10178
 #: ../src/settings.c:10301 ../src/settings.c:10429 ../src/settings.c:10556
 msgid "_Type"
-msgstr ""
+msgstr "_Type"
 
 #: ../src/settings.c:9052
 msgid "_Target"
-msgstr ""
+msgstr "_Doel"
 
 #: ../src/settings.c:9056
 msgid "_Template"
-msgstr ""
+msgstr "_Sjabloon"
 
 #: ../src/settings.c:9060
 msgid "_Option"
-msgstr ""
+msgstr "_Optie"
 
 #: ../src/settings.c:9068 ../src/settings.c:9691
 #: ../src/ptk/ptk-file-misc.c:1159 ../src/ptk/ptk-file-misc.c:1170
 #: ../src/ptk/ptk-file-misc.c:2351
 msgid "_Link"
-msgstr ""
+msgstr "_Link"
 
 #: ../src/settings.c:9072 ../src/ptk/ptk-file-misc.c:2342
 msgid "Copy _Target"
-msgstr ""
+msgstr "Kopieer _doel"
 
 #: ../src/settings.c:9075
 msgid "Lin_k Target"
-msgstr ""
+msgstr "Lin_k doel"
 
 #: ../src/settings.c:9078
 msgid "_As Root"
-msgstr ""
+msgstr "_Als root"
 
 #: ../src/settings.c:9082 ../src/settings.c:9487 ../src/settings.c:9519
 #: ../src/settings.c:9582 ../src/settings.c:10122 ../src/settings.c:10128
@@ -3441,23 +3570,23 @@ msgstr ""
 #: ../src/settings.c:10510 ../src/settings.c:10516 ../src/settings.c:10523
 #: ../src/settings.c:10533
 msgid "_Font"
-msgstr ""
+msgstr "_Lettertype"
 
 #: ../src/settings.c:9085
 msgid "Move Dialog Font"
-msgstr ""
+msgstr "Lettertype verplaatsenvenster"
 
 #: ../src/settings.c:9086
 msgid "/home/user/Example Filename.ext"
-msgstr ""
+msgstr "/home/gebruiker/Voorbeeldbestandsnaam.ext"
 
 #: ../src/settings.c:9088
 msgid "T_ips"
-msgstr ""
+msgstr "T_ips"
 
 #: ../src/settings.c:9091
 msgid "_Confirm Create"
-msgstr ""
+msgstr "_Bevestig aanmaken"
 
 #: ../src/settings.c:9099
 msgid "Highlight _Bar"
@@ -3477,100 +3606,100 @@ msgstr ""
 
 #: ../src/settings.c:9109
 msgid "_Middle Click"
-msgstr ""
+msgstr "_Middelste muisknop"
 
 #: ../src/settings.c:9113 ../src/settings.c:9868
 msgid "Copy _Name"
-msgstr ""
+msgstr "Kopieer _naam"
 
 #: ../src/settings.c:9116 ../src/settings.c:9871
 msgid "Copy _Path"
-msgstr ""
+msgstr "Kopieer _pad"
 
 #: ../src/settings.c:9123
 msgid "_Hide Panel"
-msgstr ""
+msgstr "_Verberg paneel"
 
 #: ../src/settings.c:9139
 msgid "New _Window"
-msgstr ""
+msgstr "Nieuw _venster"
 
 #: ../src/settings.c:9142
 msgid "R_oot Window"
-msgstr ""
+msgstr "R_ootvenster"
 
 #: ../src/settings.c:9145
 msgid "_File Search"
-msgstr ""
+msgstr "_Bestanden zoeken"
 
 #: ../src/settings.c:9148
 msgid "_Terminal"
-msgstr ""
+msgstr "_Terminal"
 
 #. discovery notification
 #: ../src/settings.c:9151
 msgid "_Root Terminal"
-msgstr ""
+msgstr "_Rootterminal"
 
 #: ../src/settings.c:9154
 msgid "_Save Session"
-msgstr ""
+msgstr "_Sessie opslaan"
 
 #: ../src/settings.c:9157
 msgid "Save Ta_bs"
-msgstr ""
+msgstr "Tabbladen opslaan"
 
 #: ../src/settings.c:9161
 msgid "E_xit"
-msgstr ""
+msgstr "A_fsluiten"
 
 #: ../src/settings.c:9192 ../src/settings.c:9223 ../src/settings.c:9630
 #: ../src/settings.c:9920 ../src/settings.c:9958
 msgid "Panel _1"
-msgstr ""
+msgstr "Paneel _1"
 
 #: ../src/settings.c:9196 ../src/settings.c:9224 ../src/settings.c:9631
 #: ../src/settings.c:9921 ../src/settings.c:9959
 msgid "Panel _2"
-msgstr ""
+msgstr "Paneel _2"
 
 #: ../src/settings.c:9199 ../src/settings.c:9225 ../src/settings.c:9632
 #: ../src/settings.c:9922 ../src/settings.c:9960
 msgid "Panel _3"
-msgstr ""
+msgstr "Paneel _3"
 
 #: ../src/settings.c:9202 ../src/settings.c:9226 ../src/settings.c:9633
 #: ../src/settings.c:9923 ../src/settings.c:9961
 msgid "Panel _4"
-msgstr ""
+msgstr "Paneel _4"
 
 #: ../src/settings.c:9205
 msgid "Panel _Bar"
-msgstr ""
+msgstr "Paneelgereedschapsbalk"
 
 #: ../src/settings.c:9209 ../src/settings.c:9713
 msgid "_Go"
-msgstr ""
+msgstr "_Ga"
 
 #: ../src/settings.c:9214 ../src/settings.c:9611 ../src/settings.c:9628
 #: ../src/settings.c:9753 ../src/settings.c:9901 ../src/settings.c:9918
 #: ../src/settings.c:9939 ../src/settings.c:9956
 msgid "_Prev"
-msgstr ""
+msgstr "_Vorige"
 
 #: ../src/settings.c:9215 ../src/settings.c:9612 ../src/settings.c:9629
 #: ../src/settings.c:9754 ../src/settings.c:9902 ../src/settings.c:9919
 #: ../src/settings.c:9940 ../src/settings.c:9957
 msgid "_Next"
-msgstr ""
+msgstr "_Volgende"
 
 #: ../src/settings.c:9228
 msgid "Wi_ndow Title"
-msgstr ""
+msgstr "Ve_nstertitel"
 
 #: ../src/settings.c:9230
 msgid "Set Window Title Format"
-msgstr ""
+msgstr "Stel opmaak venstertitel in"
 
 #: ../src/settings.c:9231
 #, c-format
@@ -3586,14 +3715,24 @@ msgid ""
 "\t%%T\ttotal number of tabs in current panel\n"
 "\t*\tasterisk shown if tasks running in window"
 msgstr ""
+"Stel opmaak venstertitel in:\n"
+"\n"
+"Gebruik:\n"
+"\t%%n\thuidige mapnaam (bijv. bin)\n"
+"\t%%d\thuidige maplocatie (bijv. /usr/bin)\n"
+"\t%%p\thuidig paneelnummer (1-4)\n"
+"\t%%t\thuidige tabbladnummer\n"
+"\t%%P\ttotaal aantal panelen zichtbaar\n"
+"\t%%T\ttotaal aantal tabbladen in huidige paneel\n"
+"\t*\tasteriskweergave wanneer taken in venster worden uitgevoerd"
 
 #: ../src/settings.c:9235
 msgid "_Window Icon"
-msgstr ""
+msgstr "_Vensterpictogram"
 
 #: ../src/settings.c:9237
 msgid "Set Window Icon"
-msgstr ""
+msgstr "Stel vensterpictogram in"
 
 #: ../src/settings.c:9238
 msgid ""
@@ -3607,47 +3746,56 @@ msgid ""
 "\n"
 "For example: spacefm-48-pyramid-green"
 msgstr ""
+"Geef pictogramnaam, -pad of stockitemnaam op:\n"
+"\n"
+"Om verschillende redenen kunnen sommige niet werken.\n"
+"\n"
+"Meegeleverde alternatieve SpaceFM-pictogrammen:\n"
+"\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n"
+"\tspacefm-48-folder-[blue|red]\n"
+"\n"
+"Bijvoorbeeld: spacefm-48-pyramid-green"
 
 #: ../src/settings.c:9240
 msgid "_Fullscreen"
-msgstr ""
+msgstr "_Schermvullend"
 
 #: ../src/settings.c:9243
 msgid "_Design Mode"
-msgstr ""
+msgstr "_Ontwerpmodus"
 
 #: ../src/settings.c:9246
 msgid "_Preferences"
-msgstr ""
+msgstr "_Voorkeuren"
 
 #: ../src/settings.c:9249
 msgid "_Tool"
-msgstr ""
+msgstr "_Gereedschap"
 
 #. Plugins
 #: ../src/settings.c:9259
 msgid "_Install"
-msgstr ""
+msgstr "_Installeren"
 
 #: ../src/settings.c:9268 ../src/settings.c:9284
 msgid "_URL"
-msgstr ""
+msgstr "_URL"
 
 #: ../src/settings.c:9287
 msgid "_Verbose"
-msgstr ""
+msgstr "_Uitgebreid"
 
 #: ../src/settings.c:9294
 msgid "In_cluded"
-msgstr ""
+msgstr "Geïn_cludeerd"
 
 #: ../src/settings.c:9308
 msgid "_User's Manual"
-msgstr ""
+msgstr "_Handleiding"
 
 #: ../src/settings.c:9314
 msgid "_Homepage"
-msgstr ""
+msgstr "_Homepage"
 
 #: ../src/settings.c:9317
 msgid "SpaceFM _News"
@@ -3655,19 +3803,19 @@ msgstr "SpaceFM_nieuws"
 
 #: ../src/settings.c:9320
 msgid "_Get Plugins"
-msgstr ""
+msgstr "_Plugins verkrijgen"
 
 #: ../src/settings.c:9323
 msgid "_Options"
-msgstr ""
+msgstr "_Opties"
 
 #: ../src/settings.c:9328
 msgid "_Browser"
-msgstr ""
+msgstr "_Browser"
 
 #: ../src/settings.c:9330
 msgid "Choose HTML Browser"
-msgstr ""
+msgstr "Kies HTML-browser"
 
 #: ../src/settings.c:9331
 #, c-format
@@ -3680,14 +3828,20 @@ msgid ""
 "\n"
 "(Leave blank for automatic browser detection)"
 msgstr ""
+"Geef browser of commando om html-bestanden en URL's weer te geven:\n"
+"\n"
+"Gebruik:\n"
+"\t%%u\turl\n"
+"\n"
+"(Niets invullen voor automatisch detectie van browser)"
 
 #: ../src/settings.c:9334
 msgid "_Manual Location"
-msgstr ""
+msgstr "_Locatie handleiding"
 
 #: ../src/settings.c:9336
 msgid "Choose User's Manual Location"
-msgstr ""
+msgstr "Kies locatie handleiding"
 
 #: ../src/settings.c:9337
 msgid ""
@@ -3695,14 +3849,17 @@ msgid ""
 "\n"
 "(Leave blank for default)\n"
 msgstr ""
+"Geef bestandspad of URL op voor de SpaceFM-handleiding:\n"
+"\n"
+"(Niets invullen voor standaardpad)\n"
 
 #: ../src/settings.c:9340
 msgid "_About"
-msgstr ""
+msgstr "_Over"
 
 #: ../src/settings.c:9359
 msgid "_Tasks"
-msgstr ""
+msgstr "_Taken"
 
 #: ../src/settings.c:9364
 msgid "_Status"
@@ -3712,23 +3869,23 @@ msgstr "_Status"
 #. column width
 #: ../src/settings.c:9370
 msgid "_Count"
-msgstr ""
+msgstr "_Hoeveelheid"
 
 #: ../src/settings.c:9381
 msgid "_Item"
-msgstr ""
+msgstr "_Item"
 
 #: ../src/settings.c:9387
 msgid "_To"
-msgstr ""
+msgstr "_Naar"
 
 #: ../src/settings.c:9393
 msgid "_Progress"
-msgstr ""
+msgstr "_Voortgang"
 
 #: ../src/settings.c:9400
 msgid "T_otal"
-msgstr ""
+msgstr "T_otaal"
 
 #: ../src/settings.c:9407
 msgid "Sta_rted"
@@ -3736,56 +3893,56 @@ msgstr "Gesta_rt"
 
 #: ../src/settings.c:9412
 msgid "_Elapsed"
-msgstr ""
+msgstr "_Verstreken"
 
 #: ../src/settings.c:9419
 msgid "C_urrent Speed"
-msgstr ""
+msgstr "H_uidige snelheid"
 
 #: ../src/settings.c:9429
 msgid "_Average Speed"
-msgstr ""
+msgstr "_Gemiddelde snelheid"
 
 #: ../src/settings.c:9443
 msgid "Reor_der"
-msgstr ""
+msgstr "Opnieuw or_denen"
 
 #: ../src/settings.c:9449 ../src/settings.c:9467
 #: ../src/ptk/ptk-file-task.c:476
 msgid "Pa_use"
-msgstr ""
+msgstr "Pa_uze"
 
 #: ../src/settings.c:9452 ../src/settings.c:9470
 msgid "_Queue"
-msgstr ""
+msgstr "_Wachtrij"
 
 #: ../src/settings.c:9455 ../src/settings.c:9473
 msgid "_Resume"
-msgstr ""
+msgstr "_Hervatten"
 
 #: ../src/settings.c:9459
 msgid "_All Tasks"
-msgstr ""
+msgstr "_Alle taken"
 
 #: ../src/settings.c:9490
 msgid "Task Manager Font"
-msgstr ""
+msgstr "Lettertype taakbeheer"
 
 #: ../src/settings.c:9491
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
-msgstr ""
+msgstr "kopiëren Bestand  1:15  65.2 M  30.2 M/s"
 
 #: ../src/settings.c:9494 ../src/settings.c:9775
 msgid "_Columns"
-msgstr ""
+msgstr "_Kolommen"
 
 #: ../src/settings.c:9499
 msgid "_Popups"
-msgstr ""
+msgstr "_Popups"
 
 #: ../src/settings.c:9504
 msgid "Popup _All Tasks"
-msgstr ""
+msgstr "Popup _Alle taken"
 
 #: ../src/settings.c:9509
 msgid "Stay On _Top"
@@ -3793,226 +3950,226 @@ msgstr ""
 
 #: ../src/settings.c:9522
 msgid "Task Popup Font (affects new tasks)"
-msgstr ""
+msgstr "Lettertype popupvenster taken (geldt voor nieuwe taken)"
 
 #: ../src/settings.c:9523
 msgid "Example Output 0123456789"
-msgstr ""
+msgstr "Voorbeelduitvoer 0123456789"
 
 #: ../src/settings.c:9531
 msgid "Stop If _First"
-msgstr ""
+msgstr "Stoppen als _eerst"
 
 #: ../src/settings.c:9536
 msgid "Stop On _Any"
-msgstr ""
+msgstr "Stoppen bij _elke"
 
 #: ../src/settings.c:9541
 msgid "_Continue"
-msgstr ""
+msgstr "_Doorgaan"
 
 #: ../src/settings.c:9546
 msgid "Qu_eue"
-msgstr ""
+msgstr "Wacht_rij"
 
 #: ../src/settings.c:9551
 msgid "_Queue New Tasks"
-msgstr ""
+msgstr "_Wachtrij nieuwe taken"
 
 #: ../src/settings.c:9556
 msgid "_Smart Queue"
-msgstr ""
+msgstr "_Slimme wachtrij"
 
 #: ../src/settings.c:9585
 msgid "Input Font"
-msgstr ""
+msgstr "Lettertype input"
 
 #: ../src/settings.c:9586
 msgid "Example Input 0123456789"
-msgstr ""
+msgstr "Voorbeeldinvoer 0123456789"
 
 #: ../src/settings.c:9592
 msgid "E_xecute"
-msgstr ""
+msgstr "U_itvoeren"
 
 #: ../src/settings.c:9595
 msgid "Edi_t"
-msgstr ""
+msgstr "Be_werken"
 
 #: ../src/settings.c:9598
 msgid "Edit As _Root"
-msgstr ""
+msgstr "Bewerken als _root"
 
 #: ../src/settings.c:9601
 msgid "_Choose..."
-msgstr ""
+msgstr "_Kiezen..."
 
 #. virtual
 #: ../src/settings.c:9606
 msgid "In _Tab"
-msgstr ""
+msgstr "In _tabblad"
 
 #: ../src/settings.c:9610
 msgid "N_ew"
-msgstr ""
+msgstr "Ni_euw"
 
 #: ../src/settings.c:9613 ../src/settings.c:9757 ../src/settings.c:9903
 #: ../src/settings.c:9941
 msgid "Tab _1"
-msgstr ""
+msgstr "Tabblad _1"
 
 #: ../src/settings.c:9614 ../src/settings.c:9758 ../src/settings.c:9904
 #: ../src/settings.c:9942
 msgid "Tab _2"
-msgstr ""
+msgstr "Tabblad _2"
 
 #: ../src/settings.c:9615 ../src/settings.c:9759 ../src/settings.c:9905
 #: ../src/settings.c:9943
 msgid "Tab _3"
-msgstr ""
+msgstr "Tabblad _3"
 
 #: ../src/settings.c:9616 ../src/settings.c:9760 ../src/settings.c:9906
 #: ../src/settings.c:9944
 msgid "Tab _4"
-msgstr ""
+msgstr "Tabblad _4"
 
 #: ../src/settings.c:9617 ../src/settings.c:9761 ../src/settings.c:9907
 #: ../src/settings.c:9945
 msgid "Tab _5"
-msgstr ""
+msgstr "Tabblad _5"
 
 #: ../src/settings.c:9618 ../src/settings.c:9762 ../src/settings.c:9908
 #: ../src/settings.c:9946
 msgid "Tab _6"
-msgstr ""
+msgstr "Tabblad _6"
 
 #: ../src/settings.c:9619 ../src/settings.c:9763 ../src/settings.c:9909
 #: ../src/settings.c:9947
 msgid "Tab _7"
-msgstr ""
+msgstr "Tabblad _7"
 
 #: ../src/settings.c:9620 ../src/settings.c:9764 ../src/settings.c:9910
 #: ../src/settings.c:9948
 msgid "Tab _8"
-msgstr ""
+msgstr "Tabblad _8"
 
 #: ../src/settings.c:9621 ../src/settings.c:9765 ../src/settings.c:9911
 #: ../src/settings.c:9949
 msgid "Tab _9"
-msgstr ""
+msgstr "Tabblad _9"
 
 #: ../src/settings.c:9622 ../src/settings.c:9766 ../src/settings.c:9912
 #: ../src/settings.c:9950
 msgid "Tab 1_0"
-msgstr ""
+msgstr "Tabblad 1_0"
 
 #: ../src/settings.c:9624
 msgid "In _Panel"
-msgstr ""
+msgstr "In _Paneel"
 
 #: ../src/settings.c:9635 ../src/settings.c:9654
 msgid "_Extract"
-msgstr ""
+msgstr "_Uitpakken"
 
 #: ../src/settings.c:9638 ../src/settings.c:9658
 msgid "Extract _To"
-msgstr ""
+msgstr "Uitpakken _naar"
 
 #: ../src/settings.c:9641 ../src/settings.c:9661
 msgid "_List Contents"
-msgstr ""
+msgstr "_Inhoud weergeven"
 
 #: ../src/settings.c:9647
 msgid "_Archive Default"
-msgstr ""
+msgstr "_Standaardarchief"
 
 #: ../src/settings.c:9651
 msgid "_Open With App"
-msgstr ""
+msgstr "_Openen met programma"
 
 #: ../src/settings.c:9664
 msgid "_Create Subfolder"
-msgstr ""
+msgstr "_Submap aanmaken"
 
 #: ../src/settings.c:9668
 msgid "_Write Access"
-msgstr ""
+msgstr "_Schrijftoegang"
 
 #: ../src/settings.c:9671
 msgid "_Mount ISO"
-msgstr ""
+msgstr "_Aankoppelen ISO"
 
 #: ../src/settings.c:9674
 msgid "_Auto-Mount ISO"
-msgstr ""
+msgstr "Auto-aa_nkoppelen ISO"
 
 #: ../src/settings.c:9688 ../src/ptk/ptk-file-misc.c:2349
 msgid "Fol_der"
-msgstr ""
+msgstr "Map"
 
 #: ../src/settings.c:9698
 msgid "_Archive"
-msgstr ""
+msgstr "_Archief"
 
 #: ../src/settings.c:9707
 msgid "Tab _Here"
-msgstr ""
+msgstr "Tabblad _hier"
 
 #: ../src/settings.c:9718
 msgid "_Back"
-msgstr ""
+msgstr "_Terug"
 
 #: ../src/settings.c:9720
 msgid "_Forward"
-msgstr ""
+msgstr "_Vooruit"
 
 #: ../src/settings.c:9722
 msgid "_Up"
-msgstr ""
+msgstr "_Omhoog"
 
 #: ../src/settings.c:9724
 msgid "_Home"
-msgstr ""
+msgstr "_Home"
 
 #: ../src/settings.c:9729
 msgid "_Set Default"
-msgstr ""
+msgstr "_Stel in als standaard"
 
 #: ../src/settings.c:9732
 msgid "Re_al Path"
-msgstr ""
+msgstr "W_erkelijke pad"
 
 #: ../src/settings.c:9734
 msgid "Fo_cus"
-msgstr ""
+msgstr "Fo_cus"
 
 #: ../src/settings.c:9738
 msgid "_Path Bar"
-msgstr ""
+msgstr "_Locatiebalk"
 
 #: ../src/settings.c:9740
 msgid "_File List"
-msgstr ""
+msgstr "_Bestandslijst"
 
 #: ../src/settings.c:9742
 msgid "_Tree"
-msgstr ""
+msgstr "_Boom"
 
 #: ../src/settings.c:9746
 msgid "De_vices"
-msgstr ""
+msgstr "A_pparaten"
 
 #: ../src/settings.c:9755
 msgid "_Close"
-msgstr ""
+msgstr "_Sluiten"
 
 #: ../src/settings.c:9772
 msgid "Styl_e"
-msgstr ""
+msgstr "St_ijl"
 
 #: ../src/settings.c:9778
 msgid "_Reorder"
-msgstr ""
+msgstr "_Opnieuw orderen"
 
 #: ../src/settings.c:9789
 msgid "_Sort"
@@ -4023,70 +4180,70 @@ msgstr "Sorteren"
 #: ../src/settings.c:9795 ../src/settings.c:10173 ../src/settings.c:10295
 #: ../src/settings.c:10423 ../src/settings.c:10550
 msgid "_Size"
-msgstr ""
+msgstr "_Grootte"
 
 #: ../src/settings.c:9799 ../src/settings.c:10183 ../src/settings.c:10307
 #: ../src/settings.c:10435 ../src/settings.c:10562
 msgid "_Permission"
-msgstr ""
+msgstr "_Permissie"
 
 #: ../src/settings.c:9801 ../src/settings.c:10058 ../src/settings.c:10188
 #: ../src/settings.c:10313 ../src/settings.c:10441 ../src/settings.c:10568
 msgid "_Owner"
-msgstr ""
+msgstr "_Eigenaar"
 
 #: ../src/settings.c:9803 ../src/settings.c:10193 ../src/settings.c:10319
 #: ../src/settings.c:10447 ../src/settings.c:10574
 msgid "_Modified"
-msgstr ""
+msgstr "_Gewijzigd"
 
 #: ../src/settings.c:9805
 msgid "_Ascending"
-msgstr ""
+msgstr "_Oplopend"
 
 #: ../src/settings.c:9807
 msgid "_Descending"
-msgstr ""
+msgstr "_Aflopend"
 
 #: ../src/settings.c:9810
 msgid "Nat_ural"
-msgstr ""
+msgstr "Nat_uurlijk"
 
 #: ../src/settings.c:9812
 msgid "_Case Sensitive"
-msgstr ""
+msgstr "_Hoofdlettergevoelig"
 
 #: ../src/settings.c:9814
 msgid "Folders Fi_rst"
-msgstr ""
+msgstr "Mappen ee_rst"
 
 #: ../src/settings.c:9816
 msgid "F_iles First"
-msgstr ""
+msgstr "Bestan_den eerst"
 
 #: ../src/settings.c:9818
 msgid "Mi_xed"
-msgstr ""
+msgstr "Gemixt"
 
 #: ../src/settings.c:9820
 msgid "_Hidden First"
-msgstr ""
+msgstr "_Verborgen eerst"
 
 #: ../src/settings.c:9822
 msgid "Hidden _Last"
-msgstr ""
+msgstr "Verborgen _laatst"
 
 #: ../src/settings.c:9825
 msgid "Re_fresh"
-msgstr ""
+msgstr "Ver_versen"
 
 #: ../src/settings.c:9828
 msgid "P_rotocol Handler..."
-msgstr ""
+msgstr "P_rotocolbehandelaar..."
 
 #: ../src/settings.c:9830
 msgid "Set Protocol Handler"
-msgstr ""
+msgstr "Stel protocolbehandelaar in"
 
 #: ../src/settings.c:9831
 msgid ""
