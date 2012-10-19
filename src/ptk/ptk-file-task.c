@@ -109,7 +109,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
                                    ptask->task->type != VFS_FILE_TASK_CHMOD_CHOWN &&
                                    xset_get_b( "task_q_new" ) )
         ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
-    
+
     /*  this method doesn't work because sig handler runs in task thread
     // setup signal
     ptask->signal_widget = gtk_label_new( NULL );  // dummy object for signal

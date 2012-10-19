@@ -207,6 +207,12 @@ _redo:
     if ( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
     {
         *dest_exists = !lstat64( dest_file, &dest_stat );
+        if ( !g_strcmp0( task->current_file, task->current_dest ) )
+        {
+            // src and dest are same file - don't overwrite (truncates)
+            // occurs if user pauses task and changes overwrite mode
+            return FALSE;
+        }
         return TRUE;
     }
     if ( task->overwrite_mode == VFS_FILE_TASK_SKIP_ALL )
