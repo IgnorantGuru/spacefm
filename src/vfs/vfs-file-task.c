@@ -202,7 +202,8 @@ gboolean check_overwrite( VFSFileTask* task,
     char * new_dest;
     new_dest = *new_dest_file = NULL;
     struct stat64 dest_stat;
-
+    
+_redo:
     if ( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
     {
         *dest_exists = !lstat64( dest_file, &dest_stat );
@@ -213,7 +214,6 @@ gboolean check_overwrite( VFSFileTask* task,
         *dest_exists = !lstat64( dest_file, &dest_stat );
         return !*dest_exists;
     }
-_auto_rename:
     if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
     {
         *dest_exists = !lstat64( dest_file, &dest_stat );
@@ -256,9 +256,19 @@ _auto_rename:
             {
                 task->state = VFS_FILE_TASK_RUNNING;
             }
-
-            if ( should_abort( task ) )
+            
+            if ( task->overwrite_mode == VFS_FILE_TASK_REDO )
+            {
+                // user paused task in overwrite query
+                task->overwrite_mode = VFS_FILE_TASK_OVERWRITE;  // Ask
+                if ( should_abort( task ) )  // pauses here
+                    return FALSE;
+                goto _redo;
+            }
+            
+            if ( should_abort( task ) )  // pauses here
                 return FALSE;
+            
             if( task->overwrite_mode != VFS_FILE_TASK_RENAME )
             {
                 g_free(new_dest );
@@ -267,7 +277,7 @@ _auto_rename:
                     task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
                     return TRUE;
                 else if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
-                    goto _auto_rename;
+                    goto _redo;
                 else
                     return FALSE;
             }

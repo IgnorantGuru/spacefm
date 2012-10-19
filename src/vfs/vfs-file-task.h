@@ -71,7 +71,8 @@ typedef enum
     VFS_FILE_TASK_SKIP_ALL,         /* Don't try to overwrite any files */
     VFS_FILE_TASK_AUTO_RENAME,      /* Assign a new unique name */
     VFS_FILE_TASK_SKIP,             /* Don't overwrite current file */
-    VFS_FILE_TASK_RENAME            /* Rename file */
+    VFS_FILE_TASK_RENAME,           /* Rename file */
+    VFS_FILE_TASK_REDO              /* Pause selected */
 }VFSFileTaskOverwriteMode;
 
 typedef enum

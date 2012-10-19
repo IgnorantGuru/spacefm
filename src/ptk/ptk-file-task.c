@@ -1723,7 +1723,8 @@ enum{
     RESPONSE_RENAME = 1 << 2,
     RESPONSE_SKIP = 1 << 3,
     RESPONSE_SKIPALL = 1 << 4,
-    RESPONSE_AUTO_RENAME = 1 << 5
+    RESPONSE_AUTO_RENAME = 1 << 5,
+    RESPONSE_PAUSE = 1 << 6
 };
 
 static gboolean on_query_input_keypress ( GtkWidget *widget, GdkEventKey *event,
@@ -1813,6 +1814,12 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
             g_free( dir_name );
         }
         g_free( str );
+        break;
+    case RESPONSE_PAUSE:
+        ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
+        vfs_file_task_set_overwrite_mode( ptask->task, 
+                                                    VFS_FILE_TASK_REDO );
+        ptask->restart_timeout = FALSE;
         break;
     case GTK_RESPONSE_DELETE_EVENT: // escape was pressed 
     case GTK_RESPONSE_CANCEL:
@@ -2022,12 +2029,22 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     }
 
     gtk_dialog_add_buttons ( GTK_DIALOG( dlg ),
-                             //_( "_Rename" ), RESPONSE_RENAME,
+                             _( "_Pause" ), RESPONSE_PAUSE,
                              _( "_Skip" ), RESPONSE_SKIP,
                              _( "S_kip All" ), RESPONSE_SKIPALL,
                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                              NULL );
 
+    XSet* set = xset_get( "task_pause" );
+    char* pause_icon = set->icon;
+    if ( !pause_icon )
+        pause_icon = GTK_STOCK_MEDIA_PAUSE;
+    gtk_button_set_image( GTK_BUTTON( gtk_dialog_get_widget_for_response( 
+                                            GTK_DIALOG( dlg ), RESPONSE_PAUSE ) ),
+                            xset_get_image( pause_icon,
+                                            GTK_ICON_SIZE_BUTTON ) );
+
+    // file name
     file_name = g_path_get_basename( ptask->task->current_dest );
     ufile_name = g_filename_display_name( file_name );
     g_free( file_name );
@@ -2104,7 +2121,9 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
 
     // update displays (mutex is already locked)
     ptk_file_task_progress_update( ptask );
-    main_task_view_update_task( ptask );
+    if ( ptask->task_view && gtk_widget_get_visible( gtk_widget_get_parent( 
+                                            GTK_WIDGET( ptask->task_view ) ) ) )
+        main_task_view_update_task( ptask );
 
     // show dialog
     g_object_set_data( G_OBJECT( dlg ), "rename_button", rename_button );
