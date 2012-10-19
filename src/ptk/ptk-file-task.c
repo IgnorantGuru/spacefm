@@ -2102,8 +2102,9 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dlg ) ) ), 
                         GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 
-    // update dialog display
+    // update displays (mutex is already locked)
     ptk_file_task_progress_update( ptask );
+    main_task_view_update_task( ptask );
 
     // show dialog
     g_object_set_data( G_OBJECT( dlg ), "rename_button", rename_button );
