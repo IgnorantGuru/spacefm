@@ -3307,8 +3307,7 @@ on_folder_view_button_press_event ( GtkWidget *widget,
                                                        event->x, event->y );
             model = exo_icon_view_get_model( EXO_ICON_VIEW( widget ) );
 
-            if ( tree_path && app_settings.single_click && !event->state
-                                                    && event->button == 1 ) //sfm
+            if ( tree_path && !event->state && event->button == 1 ) //sfm
             {
                 // unselect all but one file
                 exo_icon_view_unselect_all( EXO_ICON_VIEW( widget ) );
