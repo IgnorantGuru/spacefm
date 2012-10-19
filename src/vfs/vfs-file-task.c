@@ -570,9 +570,12 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 close( wfd );
                 if ( copy_fail )
                 {
-                    unlink( dest_file );
-                    if ( task->avoid_changes )
-                        update_file_display( dest_file );
+                    result = unlink( dest_file );
+                    if ( result )
+                    {
+                        vfs_file_task_error( task, errno, _("Removing"), dest_file );
+                        task->error = errno;
+                    }
                 }
                 else
                 {
