@@ -2102,6 +2102,9 @@ static void query_overwrite( PtkFileTask* ptask, char** new_dest )
     gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area( GTK_DIALOG( dlg ) ) ), 
                         GTK_WIDGET( vbox ), TRUE, TRUE, 0 );
 
+    // update dialog display
+    ptk_file_task_progress_update( ptask );
+
     // show dialog
     g_object_set_data( G_OBJECT( dlg ), "rename_button", rename_button );
     g_object_set_data( G_OBJECT( dlg ), "query_input", query_input );
