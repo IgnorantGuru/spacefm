@@ -190,8 +190,8 @@ char* vfs_file_task_get_unique_name( const char* dest_dir, const char* base_name
 /*
 * Check if the destination file exists.
 * If the dest_file exists, let the user choose a new destination,
-* skip this file, overwrite existing file, or cancel all file operation.
-* The returned string is the new destination file choosed by the user
+* skip/overwrite/auto-rename/all, pause, or cancel.
+* The returned string is the new destination file chosen by the user
 */
 static
 gboolean check_overwrite( VFSFileTask* task,
@@ -199,101 +199,117 @@ gboolean check_overwrite( VFSFileTask* task,
                           gboolean* dest_exists,
                           char** new_dest_file )
 {
-    char * new_dest;
-    new_dest = *new_dest_file = NULL;
     struct stat64 dest_stat;
-    
-_redo:
-    if ( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
-    {
-        *dest_exists = !lstat64( dest_file, &dest_stat );
-        if ( !g_strcmp0( task->current_file, task->current_dest ) )
-        {
-            // src and dest are same file - don't overwrite (truncates)
-            // occurs if user pauses task and changes overwrite mode
-            return FALSE;
-        }
-        return TRUE;
-    }
-    if ( task->overwrite_mode == VFS_FILE_TASK_SKIP_ALL )
-    {
-        *dest_exists = !lstat64( dest_file, &dest_stat );
-        return !*dest_exists;
-    }
-    if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
-    {
-        *dest_exists = !lstat64( dest_file, &dest_stat );
-        if ( !*dest_exists )
-            return !should_abort( task );
-        *dest_exists = FALSE;
-        
-        // auto-rename
-        char* ext;
-        char* old_name = g_path_get_basename( dest_file );
-        char* dest_dir = g_path_get_dirname( dest_file );
-        char* base_name = get_name_extension( old_name, 
-                                              S_ISDIR( dest_stat.st_mode ),
-                                              &ext );
-        g_free( old_name );
-        *new_dest_file = vfs_file_task_get_unique_name( dest_dir, base_name, ext );
-        g_free( dest_dir );
-        g_free( base_name );
-        g_free( ext );
-        if ( *new_dest_file )
-            return !should_abort( task );
-        // else ran out of names - fall through to query user
-    }
+    const char* use_dest_file;
+    char* new_dest;
 
-    *dest_exists = FALSE;
-    if ( task->state_cb )
+    while ( 1 )
     {
-        while ( lstat64( dest_file, &dest_stat ) != -1 )
+        *new_dest_file = NULL;
+        if ( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
         {
-            *dest_exists = TRUE;
-            /* destination file exists */
-            task->state = VFS_FILE_TASK_QUERY_OVERWRITE;
-
-            if ( ! task->state_cb( task, VFS_FILE_TASK_QUERY_OVERWRITE,
-                                   &new_dest, task->state_cb_data ) )
+            *dest_exists = !lstat64( dest_file, &dest_stat );
+            if ( !g_strcmp0( task->current_file, task->current_dest ) )
             {
-                task->state = VFS_FILE_TASK_ABORTED;
-            }
-            else
-            {
-                task->state = VFS_FILE_TASK_RUNNING;
-            }
-            
-            if ( task->overwrite_mode == VFS_FILE_TASK_REDO )
-            {
-                // user paused task in overwrite query
-                task->overwrite_mode = VFS_FILE_TASK_OVERWRITE;  // Ask
-                if ( should_abort( task ) )  // pauses here
-                    return FALSE;
-                goto _redo;
-            }
-            
-            if ( should_abort( task ) )  // pauses here
+                // src and dest are same file - don't overwrite (truncates)
+                // occurs if user pauses task and changes overwrite mode
                 return FALSE;
+            }
+            return TRUE;
+        }
+        if ( task->overwrite_mode == VFS_FILE_TASK_SKIP_ALL )
+        {
+            *dest_exists = !lstat64( dest_file, &dest_stat );
+            return !*dest_exists;
+        }
+        if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
+        {
+            *dest_exists = !lstat64( dest_file, &dest_stat );
+            if ( !*dest_exists )
+                return !should_only_abort( task );
             
-            if( task->overwrite_mode != VFS_FILE_TASK_RENAME )
+            // auto-rename
+            char* ext;
+            char* old_name = g_path_get_basename( dest_file );
+            char* dest_dir = g_path_get_dirname( dest_file );
+            char* base_name = get_name_extension( old_name, 
+                                                  S_ISDIR( dest_stat.st_mode ),
+                                                  &ext );
+            g_free( old_name );
+            *new_dest_file = vfs_file_task_get_unique_name( dest_dir, base_name, ext );
+            *dest_exists = FALSE;
+            g_free( dest_dir );
+            g_free( base_name );
+            g_free( ext );
+            if ( *new_dest_file )
+                return !should_only_abort( task );
+            // else ran out of names - fall through to query user
+        }
+
+        *dest_exists = !lstat64( dest_file, &dest_stat );
+        if ( !*dest_exists || !task->state_cb )
+        {
+            // original dest_file doesn't exist (or no query state_cb available?)
+            return !should_only_abort( task );
+        }
+
+        // dest exists - query user
+        use_dest_file = dest_file;
+        do
+        {
+            // destination file exists
+            *dest_exists = TRUE;
+            task->state = VFS_FILE_TASK_QUERY_OVERWRITE;
+            new_dest = NULL;
+            
+            // query user
+            if ( !task->state_cb( task, VFS_FILE_TASK_QUERY_OVERWRITE,
+                                   &new_dest, task->state_cb_data ) )
+                task->state = VFS_FILE_TASK_ABORTED;
+            else
+                task->state = VFS_FILE_TASK_RUNNING;
+
+            // may pause here - user may change overwrite mode
+            if ( should_abort( task ) )
             {
-                g_free(new_dest );
-                *new_dest_file = NULL;
+                g_free( new_dest );
+                return FALSE;
+            }
+            
+            if ( task->overwrite_mode != VFS_FILE_TASK_RENAME )
+            {
+                g_free( new_dest );
+                new_dest = NULL;
                 if( task->overwrite_mode == VFS_FILE_TASK_OVERWRITE ||
-                    task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
+                            task->overwrite_mode == VFS_FILE_TASK_OVERWRITE_ALL )
+                {
+                    *dest_exists = !lstat64( dest_file, &dest_stat );
+                    if ( !g_strcmp0( task->current_file, task->current_dest ) )
+                    {
+                        // src and dest are same file - don't overwrite (truncates)
+                        // occurs if user pauses task and changes overwrite mode
+                        return FALSE;
+                    }
                     return TRUE;
+                }
                 else if ( task->overwrite_mode == VFS_FILE_TASK_AUTO_RENAME )
-                    goto _redo;
+                    break;
                 else
                     return FALSE;
             }
+            // user renamed file or pressed Pause btn
             if ( new_dest )
-                dest_file = new_dest;
+                // user renamed file - test if new name exists
+                use_dest_file = new_dest;
+        } while ( lstat64( use_dest_file, &dest_stat ) != -1 );
+        if ( new_dest )
+        {
+            // user renamed file to unique name
+            *dest_exists = FALSE;
+            *new_dest_file = new_dest;
+            return !should_only_abort( task );
         }
-        *dest_exists = FALSE;
-        *new_dest_file = new_dest;
     }
-    return ! should_abort( task );
 }
 
 void update_file_display( const char* path )
@@ -925,7 +941,7 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
     }
     
     //MOD if dest exists, delete it first to prevent exists error
-    if ( g_file_test( dest_file, G_FILE_TEST_EXISTS ) )
+    if ( dest_exists )
     {
         result = unlink( dest_file );
         if ( result )

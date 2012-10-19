@@ -30,7 +30,7 @@ static gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
                                            gpointer state_data,
                                            gpointer user_data );
 
-static void query_overwrite( PtkFileTask* ptask, char** new_dest );
+static void query_overwrite( PtkFileTask* ptask );
 
 static void enter_callback( GtkEntry* entry, GtkDialog* dlg );   //MOD
 void ptk_file_task_update( PtkFileTask* ptask );
@@ -243,7 +243,7 @@ gboolean on_progress_timer( PtkFileTask* ptask )
         }
 
         g_mutex_lock( ptask->task->mutex );
-        query_overwrite( ptask, ptask->query_new_dest );
+        query_overwrite( ptask );
         g_mutex_unlock( ptask->task->mutex );
         return FALSE;
     }
@@ -1650,6 +1650,7 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         //printf("TASK_THREAD = %#x\n", self );
         g_mutex_lock( task->mutex );
         ptask->query_new_dest = ( char** ) state_data;
+        *ptask->query_new_dest = NULL;
         ptask->query_cond = g_cond_new();
         g_cond_wait( ptask->query_cond, task->mutex );
         g_cond_free( ptask->query_cond );
@@ -1817,8 +1818,7 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
         break;
     case RESPONSE_PAUSE:
         ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
-        vfs_file_task_set_overwrite_mode( ptask->task, 
-                                                    VFS_FILE_TASK_REDO );
+        vfs_file_task_set_overwrite_mode( ptask->task, VFS_FILE_TASK_RENAME );
         ptask->restart_timeout = FALSE;
         break;
     case GTK_RESPONSE_DELETE_EVENT: // escape was pressed 
@@ -1878,7 +1878,7 @@ void on_query_button_press( GtkWidget* widget, PtkFileTask* ptask )
                               RESPONSE_RENAME : RESPONSE_AUTO_RENAME, ptask );
 }
 
-static void query_overwrite( PtkFileTask* ptask, char** new_dest )
+static void query_overwrite( PtkFileTask* ptask )
 {
 //printf("query_overwrite ptask=%#x\n", ptask);
     const char* message = NULL;
