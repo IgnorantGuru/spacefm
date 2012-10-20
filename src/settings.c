@@ -1476,6 +1476,51 @@ gboolean is_alphanum( char* str )
 
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
 {
+    char* dot;
+
+    char* full = g_strdup( full_name );
+    // get last dot
+    if ( is_dir || !( dot = strrchr( full, '.' ) ) || dot == full )
+    {
+        // dir or no dots or one dot first
+        *ext = NULL;
+        return full;
+    }
+    dot[0] = '\0';
+    char* final_ext = dot + 1;
+    // get previous dot
+    dot = strrchr( full, '.' );
+    uint final_ext_len = strlen( final_ext );
+    if ( dot && !strcmp( dot + 1, "tar" ) && final_ext_len < 11 && final_ext_len )
+    {
+        // double extension
+        final_ext[-1] = '.';
+        *ext = g_strdup( dot + 1 );
+        dot[0] = '\0';
+        char* str = g_strdup( full );
+        g_free( full );
+        return str;
+    }
+    // single extension, one or more dots
+    if ( final_ext_len < 11 && final_ext[0] )
+    {
+        *ext = g_strdup( final_ext );
+        char* str = g_strdup( full );
+        g_free( full );
+        return str;
+    }
+    else
+    {
+        // extension too long, probably part of name
+        final_ext[-1] = '.';
+        *ext = NULL;
+        return full;
+    }
+}
+
+/*
+char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
+{
     char* dot = strchr( full_name, '.' );
     if ( !dot || is_dir )
     {
@@ -1547,6 +1592,7 @@ char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
     *ext = extension;
     return name;
 }
+*/
 
 void xset_free_all()
 {
