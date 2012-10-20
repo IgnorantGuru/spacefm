@@ -4150,7 +4150,7 @@ find_cell (ExoIconView     *icon_view,
         if (GTK_IS_CELL_RENDERER_TEXT (info->cell))
           first_text = i;
 
-        g_object_get (G_OBJECT (info->cell), "mode", &mode);
+        g_object_get (G_OBJECT (info->cell), "mode", &mode, NULL);
         if (mode != GTK_CELL_RENDERER_MODE_INERT)
           {
             if (cell == i)
