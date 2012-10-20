@@ -2101,7 +2101,7 @@ References:<br>
 
 <p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
 
-<p>Tasks may be queued automatically when added.  If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked, new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+<p>If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
 
 
 
@@ -2341,7 +2341,7 @@ If two or more tasks involve files on mutually exclusive disks (parent devices),
 <p><b>Size Exceptions</b><br>
 Often while copying a set of large files, you may want to perform a quick operation on a set of small files.  Because the latter task is brief, it is reasonably efficient to allow it to run concurrently.  This way you don't have to wait for the longer task to finish before your quick task is run.
 
-<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 100 MB in total size.  This allows small tasks to run immediately.
+<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 5 GB in total size.  This allows small tasks to run immediately.
 
 <p><b>Functional Exceptions</b><br>
 Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
@@ -5656,7 +5656,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-10-18&nbsp;&nbsp;(SpaceFM version 0.8.0+)
+<p>Updated 2012-10-20&nbsp;&nbsp;(SpaceFM version 0.8.0+)
 <br><br>
 </center>
 </td></tr></table>

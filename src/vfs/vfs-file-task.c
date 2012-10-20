@@ -2037,13 +2037,13 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         if ( task->state != VFS_FILE_TASK_SIZE_TIMEOUT && xset_get_b( "task_q_smart" ) )
         {
             // make queue exception for smaller tasks
-            uint exlimit;
+            off64_t exlimit;
             if ( task->type == VFS_FILE_TASK_MOVE || 
                                                 task->type == VFS_FILE_TASK_COPY )
                 exlimit = 10485760;     // 10M
             else if ( task->type == VFS_FILE_TASK_DELETE || 
                                                 task->type == VFS_FILE_TASK_TRASH )            
-                exlimit = 104857600;    // 100M
+                exlimit = 5368709120;   // 5G
             else
                 exlimit = 0;            // always exception for other types
             if ( !exlimit || task->total_size < exlimit )
