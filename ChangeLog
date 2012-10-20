@@ -31,6 +31,8 @@
     click in icon/compact unselects others
     rewrite vfs abort handling
     emit created on netfs rename
+    rework overwrite dialog
+    allow overwrite file with link
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

@@ -445,14 +445,15 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 g_mutex_unlock( task->mutex );
             }
 
-            //MOD if dest is a symlink, delete it first to prevent exists error
-            if ( g_file_test( dest_file, G_FILE_TEST_IS_SYMLINK ) )
+            //MOD delete it first to prevent exists error
+            if ( dest_exists )
             {
                 result = unlink( dest_file );
-                if ( result )
+                if ( result && errno != 2 /* no such file */ )
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
                     copy_fail = TRUE;
+                    goto _return_;
                 }                
             }
 
