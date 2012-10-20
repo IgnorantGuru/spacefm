@@ -1399,9 +1399,7 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <!-- # Errors #poperr -->
 The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
-
-<p>Note that the first action may or may not be the first file of the task; it may be the action of creating a directory to hold the first file.  Thus if the directory creation is successful, and then an error occurs on the first file being copied, Stop If First will <i>not</i> stop the task since the error did not occur on the first action (directory creation).
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on the first file.
 
 <p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 

@@ -124,7 +124,8 @@ struct _VFSFileTask
     char* current_dest; /* copy of Current destination file */
 
     int error;
-
+    gboolean error_first;
+    
     GThread* thread;
     VFSFileTaskState state;
     VFSFileTaskState state_pause;

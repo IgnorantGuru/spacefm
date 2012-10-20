@@ -577,6 +577,8 @@ vfs_file_task_do_copy( VFSFileTask* task,
         else
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
     }
+    if ( !copy_fail && task->error_first )
+        task->error_first = FALSE;
     return !copy_fail;
 _return_:
 
@@ -658,6 +660,8 @@ vfs_file_task_do_move ( VFSFileTask* task,
     
     g_mutex_lock( task->mutex );
     task->progress += file_stat.st_size;
+    if ( task->error_first )
+        task->error_first = FALSE;
     g_mutex_unlock( task->mutex );
 
     if ( new_dest_file )
@@ -799,6 +803,8 @@ vfs_file_task_delete( char* src_file, VFSFileTask* task )
     }
     g_mutex_lock( task->mutex );
     task->progress += file_stat.st_size;
+    if ( task->error_first )
+        task->error_first = FALSE;
     g_mutex_unlock( task->mutex );
 }
 
@@ -874,6 +880,8 @@ vfs_file_task_link( char* src_file, VFSFileTask* task )
 
     g_mutex_lock( task->mutex );
     task->progress += src_stat.st_size;
+    if ( task->error_first )
+        task->error_first = FALSE;
     g_mutex_unlock( task->mutex );
 
     if ( new_dest_file )
@@ -980,6 +988,8 @@ vfs_file_task_chown_chmod( char* src_file, VFSFileTask* task )
             }
         }
     }
+    if ( task->error_first )
+        task->error_first = FALSE;
 }
 
 char* vfs_file_task_get_cpids( GPid pid )
@@ -2106,6 +2116,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
 
     task->err_count = 0;
     task->abort = FALSE;
+    task->error_first = TRUE;
     
     task->exec_type = VFS_EXEC_NORMAL;
     task->exec_action = NULL;

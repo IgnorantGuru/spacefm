@@ -1662,7 +1662,7 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
             ret = FALSE;
         }
         else if ( ptask->err_mode == PTASK_ERROR_ANY ||
-                    ( task->current_item < 2 && ptask->err_mode == PTASK_ERROR_FIRST ) )
+                    ( task->error_first && ptask->err_mode == PTASK_ERROR_FIRST ) )
         {
             ret = FALSE;
             ptask->aborted = TRUE;
