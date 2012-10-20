@@ -2396,7 +2396,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             file = vfs_file_info_new();
             vfs_file_info_get( file, ao->path, NULL );
             vfs_dir_emit_file_created( ao->file_browser->dir,
-                                    vfs_file_info_get_name( file ), file, TRUE );
+                                    vfs_file_info_get_name( file ), TRUE );
             vfs_file_info_unref( file );
             vfs_dir_flush_notify_cache();
             ptk_file_browser_select_file( ao->file_browser, ao->path );

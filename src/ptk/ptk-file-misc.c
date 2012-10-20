@@ -1766,6 +1766,34 @@ void on_template_changed( GtkWidget* widget, MoveSet* mset )
     g_free( text );
 }
 
+gboolean update_new_display_delayed( char* path )
+{
+    char* dir_path = g_path_get_dirname( path );
+    VFSDir* vdir = vfs_dir_get_by_path_soft( dir_path );
+    g_free( dir_path );
+    if ( vdir && vdir->avoid_changes )
+    {
+        VFSFileInfo* file = vfs_file_info_new();
+        vfs_file_info_get( file, path, NULL );
+        vfs_dir_emit_file_created( vdir, vfs_file_info_get_name( file ), TRUE );
+        vfs_file_info_unref( file );
+        vfs_dir_flush_notify_cache();
+    }
+    if ( vdir )
+        g_object_unref( vdir );
+    g_free( path );
+    return FALSE;
+}
+
+void update_new_display( const char* path )
+{
+    // for devices like nfs, emit created so the new file is shown
+    // update now
+    update_new_display_delayed( g_strdup( path ) );
+    // update a little later for exec tasks
+    g_timeout_add( 1500, (GSourceFunc)update_new_display_delayed, g_strdup( path ) );
+}
+
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
@@ -2574,6 +2602,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     g_free( msg );
                     goto _continue_free;
                 }
+                else
+                    update_new_display( path );
             }
             else if ( lstat64( full_path, &statbuf ) == 0 )
             {
@@ -2630,7 +2660,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     task->complete_notify = auto_open->callback;
                     task->user_data = auto_open;
                 }
-                ptk_file_task_run( task );                
+                ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             else if ( create_new && new_file )
             {
@@ -2705,7 +2736,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     task->complete_notify = auto_open->callback;
                     task->user_data = auto_open;
                 }
-                ptk_file_task_run( task );                
+                ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             else if ( create_new )
             {
@@ -2776,7 +2808,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     task->complete_notify = auto_open->callback;
                     task->user_data = auto_open;
                 }
-                ptk_file_task_run( task );                
+                ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             else if ( copy || copy_target )
             {
@@ -2825,7 +2858,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_show_error = TRUE;
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
-                ptk_file_task_run( task );                
+                ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             else if ( link || link_target )
             {
@@ -2867,7 +2901,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_show_error = TRUE;
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
-                ptk_file_task_run( task );                
+                ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             // need move?  (do move as task in case it takes a long time)
             else if ( as_root || strcmp( old_path, path ) )
@@ -2898,6 +2933,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 task->task->exec_export = FALSE;
                 task->task->exec_as_user = as_root ? g_strdup( "root" ) : NULL;
                 ptk_file_task_run( task );
+                update_new_display( full_path );
             }
             else
             {
@@ -2911,6 +2947,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     g_free( msg );
                     goto _continue_free;
                 }
+                else
+                    update_new_display( full_path );
             }
             g_free( full_path );
             g_free( full_name );

@@ -636,14 +636,6 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
         }
         main_task_start_queued( ptask->task_view, NULL );
         break;
-/*
-    case GTK_RESPONSE_YES:      // Queue btn
-        ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
-        main_task_start_queued( ptask->task_view, NULL );
-        ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
-        main_task_start_queued( ptask->task_view, NULL );
-        break;
-*/
     case GTK_RESPONSE_HELP:
         xset_show_help( GTK_WIDGET( ptask->parent_window ), NULL, "#tasks-dlg" );
         break;
@@ -1658,28 +1650,6 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         ret = ptask->query_ret;
         g_mutex_unlock( task->mutex );
         break;
-    case VFS_FILE_TASK_QUERY_ABORT:
-        //printf("VFS_FILE_TASK_QUERY_ABORT\n");
-        /*
-        dlg = gtk_message_dialog_new( GTK_WINDOW( ptask->progress_dlg ),
-                                      GTK_DIALOG_MODAL,
-                                      GTK_MESSAGE_QUESTION,
-                                      GTK_BUTTONS_YES_NO,
-                                      _( "Cancel the operation?" ) );
-        response = gtk_dialog_run( GTK_DIALOG( dlg ) );
-        gtk_widget_destroy( dlg );
-        ret = ( response != GTK_RESPONSE_YES );
-        */
-        /* exec task never has query abort ?
-        if ( task->type == VFS_FILE_TASK_EXEC )
-        {
-            GThread *self = g_thread_self ();
-            printf("VFS_FILE_TASK_QUERY_ABORT-THREAD = %#x\n", self );
-            g_idle_add( ( GSourceFunc ) ptk_file_task_cancel, ptask );
-        }
-        */
-        ret = FALSE;
-        break;
     case VFS_FILE_TASK_ERROR:
         //printf("VFS_FILE_TASK_ERROR\n");
         g_mutex_lock( task->mutex );
@@ -1694,14 +1664,13 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         else if ( ptask->err_mode == PTASK_ERROR_ANY ||
                     ( task->current_item < 2 && ptask->err_mode == PTASK_ERROR_FIRST ) )
         {
-//printf("    ABORT ON ERROR\n");
             ret = FALSE;
             ptask->aborted = TRUE;
         }
         ptask->progress_count = 50;  // trigger fast display
 
         g_mutex_unlock( task->mutex );
-        
+
         if ( xset_get_b( "task_q_pause" ) )
         {
             // pause all queued
@@ -1709,8 +1678,6 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
             main_task_pause_all_queued( ptask );
             gdk_threads_leave();
         }
-        break;
-    default:
         break;
     }
     
@@ -1821,10 +1788,9 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
         vfs_file_task_set_overwrite_mode( ptask->task, VFS_FILE_TASK_RENAME );
         ptask->restart_timeout = FALSE;
         break;
-    case GTK_RESPONSE_DELETE_EVENT: // escape was pressed 
+    case GTK_RESPONSE_DELETE_EVENT: // escape was pressed or window closed
     case GTK_RESPONSE_CANCEL:
-        ptask->task->state = VFS_FILE_TASK_ABORTED;
-        //vfs_file_task_abort( ptask->task );
+        ptask->task->abort = TRUE;
         break;
     }
     

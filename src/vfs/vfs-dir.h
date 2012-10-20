@@ -98,8 +98,7 @@ gboolean vfs_dir_is_file_listed( VFSDir* dir );
 void vfs_dir_unload_thumbnails( VFSDir* dir, gboolean is_big );
 
 /* emit signals */
-void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo* file,
-                                                                gboolean force );
+void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, gboolean force );
 void vfs_dir_emit_file_deleted( VFSDir* dir, const char* file_name, VFSFileInfo* file );
 void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
                                         VFSFileInfo* file, gboolean force );

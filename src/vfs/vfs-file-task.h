@@ -52,12 +52,9 @@ struct _VFSFileTask;
 typedef enum
 {
     VFS_FILE_TASK_RUNNING,
-    VFS_FILE_TASK_SIZING,
-    VFS_FILE_TASK_QUERY_ABORT,
+    VFS_FILE_TASK_SIZE_TIMEOUT,
     VFS_FILE_TASK_QUERY_OVERWRITE,
     VFS_FILE_TASK_ERROR,
-    VFS_FILE_TASK_ABORTED,
-    VFS_FILE_TASK_TIMEOUT,
     VFS_FILE_TASK_PAUSE,
     VFS_FILE_TASK_QUEUE,
     VFS_FILE_TASK_FINISH
@@ -131,6 +128,7 @@ struct _VFSFileTask
     GThread* thread;
     VFSFileTaskState state;
     VFSFileTaskState state_pause;
+    gboolean abort;
     GCond* pause_cond;
     gboolean queue_start;
 
@@ -140,10 +138,9 @@ struct _VFSFileTask
     VFSFileTaskStateCallback state_cb;
     gpointer state_cb_data;
     
-    //guint progress_cb_timer;
-    
     GMutex* mutex;
 
+    //sfm write directly to gtk buffer for speed
     GtkTextBuffer* add_log_buf;
     GtkTextMark* add_log_end;
     
@@ -173,8 +170,8 @@ struct _VFSFileTask
     gboolean exec_is_error;
     GIOChannel* exec_channel_out;
     GIOChannel* exec_channel_err;
-    GtkTextBuffer* exec_err_buf;  //copy from ptk task
-    GtkTextMark* exec_mark_end;  //copy from ptk task
+    //GtkTextBuffer* exec_err_buf;  //copy from ptk task
+    //GtkTextMark* exec_mark_end;  //copy from ptk task
     gboolean exec_scroll_lock;
     gboolean exec_write_root;
     gpointer exec_set;
