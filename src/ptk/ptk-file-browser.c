@@ -1847,7 +1847,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
         view_mode = PTK_FB_COMPACT_VIEW;
         gtk_scrolled_window_set_policy( 
                             GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
-                            GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER );
+                            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     }
     else
     {
@@ -5842,7 +5842,7 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
                              file_browser->file_list );
     gtk_scrolled_window_set_policy( 
                         GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
-                        GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER );
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 }
