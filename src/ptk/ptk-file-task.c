@@ -2113,6 +2113,10 @@ static void query_overwrite( PtkFileTask* ptask )
         gtk_widget_modify_font( GTK_WIDGET( from_dir ), font_desc );
         pango_font_description_free( font_desc );
     }
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( from_dir ) );
+    gtk_text_buffer_set_text( buf, src_dir_disp, -1 );
+    GtkTextMark* mark = gtk_text_buffer_get_insert( buf );
+    gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( from_dir ), mark, 0, TRUE, 0, 0 );
     gtk_container_add ( GTK_CONTAINER( scroll ), from_dir );
     gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 0 );
 
@@ -2148,6 +2152,10 @@ static void query_overwrite( PtkFileTask* ptask )
             gtk_widget_modify_font( GTK_WIDGET( to_dir ), font_desc );
             pango_font_description_free( font_desc );
         }
+        buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( to_dir ) );
+        gtk_text_buffer_set_text( buf, dest_dir_disp, -1 );
+        mark = gtk_text_buffer_get_insert( buf );
+        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( to_dir ), mark, 0, TRUE, 0, 0 );
         gtk_container_add ( GTK_CONTAINER( scroll ), to_dir );
         gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 0 );
 
@@ -2183,6 +2191,9 @@ static void query_overwrite( PtkFileTask* ptask )
                             base_name_disp, g_free );
     gtk_widget_set_size_request( GTK_WIDGET( query_input ), -1, 60 );
     gtk_widget_set_size_request( GTK_WIDGET( scroll ), -1, 60 );
+    buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( query_input ) );
+    mark = gtk_text_buffer_get_insert( buf );
+    gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( query_input ), mark, 0, TRUE, 0, 0 );
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         GTK_WIDGET( scroll ), TRUE, TRUE, 4 );
 
@@ -2210,6 +2221,12 @@ static void query_overwrite( PtkFileTask* ptask )
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         GTK_WIDGET( align ), FALSE, TRUE, 0 );
     
+    g_free( src_dir_disp );
+    g_free( dest_dir_disp );
+    g_free( new_name );
+    g_free( from_size_str );
+    g_free( to_size_str );
+
     // update displays (mutex is already locked)
     ptk_file_task_progress_update( ptask );
     if ( ptask->task_view && gtk_widget_get_visible( gtk_widget_get_parent( 
@@ -2221,28 +2238,9 @@ static void query_overwrite( PtkFileTask* ptask )
     g_object_set_data( G_OBJECT( dlg ), "auto_button", auto_button );
     g_object_set_data( G_OBJECT( dlg ), "query_input", query_input );
     gtk_widget_show_all( GTK_WIDGET( dlg ) );
-    
-    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( from_dir ) );
-    gtk_text_buffer_set_text( buf, src_dir_disp, -1 );
-    gtk_text_buffer_get_end_iter( buf, &iter);
-    gtk_text_view_scroll_to_iter( GTK_TEXT_VIEW( from_dir ), &iter, 0, FALSE, 0, 0 );
-
-    if ( to_dir )
-    {
-        buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( to_dir ) );
-        gtk_text_buffer_set_text( buf, dest_dir_disp, -1 );
-        gtk_text_buffer_get_end_iter( buf, &iter);
-        gtk_text_view_scroll_to_iter( GTK_TEXT_VIEW( to_dir ), &iter, 0, FALSE, 0, 0 );
-    }
 
     gtk_widget_grab_focus( query_input );
     
-    g_free( src_dir_disp );
-    g_free( dest_dir_disp );
-    g_free( new_name );
-    g_free( from_size_str );
-    g_free( to_size_str );
-
     // can't run gtk_dialog_run here because it doesn't unlock a low level
     // mutex when run from inside the timer handler
     return;
