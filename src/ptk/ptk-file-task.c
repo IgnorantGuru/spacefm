@@ -1701,7 +1701,7 @@ enum{
 static gboolean on_query_input_keypress ( GtkWidget *widget, GdkEventKey *event,
                                                             PtkFileTask* ptask )
 {
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         // User pressed enter in rename/overwrite dialog
         gboolean can_rename;
