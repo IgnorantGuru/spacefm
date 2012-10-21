@@ -1,4 +1,4 @@
-0.8.0+
+0.8.1   2012-10-21:
     added task manager queue/pause #147
     disable task manager find
     set minimum dialog and task pane sizes #56
@@ -38,6 +38,7 @@
     rework stop if error first
     focus file list on task man hide
     exit status zero on dialog help
+    popups|stay on top no longer default
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136
