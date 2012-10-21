@@ -6343,7 +6343,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
 {
     int job = -1;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->GSEAL(active_menu_item);
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( widget ) );
     if ( !item )
         return FALSE;
     
@@ -7191,7 +7191,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     int job = -1;
     XSet* set;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->GSEAL(active_menu_item);
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( widget ) );
     if ( item )
     {
         set = g_object_get_data( G_OBJECT( item ), "set" );

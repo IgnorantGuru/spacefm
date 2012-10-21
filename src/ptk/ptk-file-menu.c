@@ -39,6 +39,8 @@
 #include "ptk-file-list.h"  //sfm for sort extra
 //#include "ptk-bookmarks.h"
 
+#include "gtk2-compat.h"
+
 #define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
@@ -1688,7 +1690,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     PtkFileMenu* app_data = NULL;
     VFSAppDesktop* desktop_file = NULL;
     
-    GtkWidget* item = GTK_MENU_SHELL( menu )->GSEAL(active_menu_item); //GTK3 version: gtk_menu_shell_get_selected_item (GTK_MENU_SHELL( menu ));
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
     if ( item )
     {
         // if original menu, desktop_file will be set
