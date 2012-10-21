@@ -32,6 +32,8 @@
 #include "desktop.h"
 #include "ptk-location-view.h"
 
+#include "gtk2-compat.h"
+
 typedef struct _FMPrefDlg FMPrefDlg;
 struct _FMPrefDlg
 {
@@ -595,7 +597,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 
         //MOD terminal
         char* old_terminal = xset_get_s( "main_terminal" );
-        char* terminal = gtk_combo_box_get_active_text( GTK_COMBO_BOX( data->terminal ) );
+        char* terminal = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT( data->terminal ) );
         g_strstrip( terminal );
         if ( g_strcmp0( terminal, old_terminal ) )
         {
@@ -704,7 +706,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
     {
         GtkTreeModel* model;
         // this invokes GVFS-RemoteVolumeMonitor via IsSupported
+#if GTK_CHECK_VERSION(2, 24, 0)
+        GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg2.ui", NULL );
+#else
         GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg.ui", NULL );
+#endif
         if ( !builder )
             return FALSE;
         pcmanfm_ref();
@@ -737,7 +743,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
         gtk_combo_box_set_model( GTK_COMBO_BOX( data->terminal ), model );
-        gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( data->terminal ), 0 );
+        gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( data->terminal ), 0 );
         g_object_unref( model );
 
         //if ( '\0' == ( char ) app_settings.encoding[ 0 ] )
@@ -772,7 +778,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         for ( i = 0; i < G_N_ELEMENTS( terminal_programs ); ++i )
         {
-            gtk_combo_box_append_text ( GTK_COMBO_BOX( data->terminal ), terminal_programs[ i ] );
+            gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( data->terminal ), terminal_programs[ i ] );
         }
 
         char* terminal = xset_get_s( "main_terminal" );
@@ -785,7 +791,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
             }
             if ( i >= G_N_ELEMENTS( terminal_programs ) )
             { /* Found */
-                gtk_combo_box_prepend_text ( GTK_COMBO_BOX( data->terminal ), terminal );
+                gtk_combo_box_text_prepend_text ( GTK_COMBO_BOX_TEXT( data->terminal ), terminal );
                 i = 0;
             }
             gtk_combo_box_set_active( GTK_COMBO_BOX( data->terminal ), i );
@@ -993,11 +999,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                                                 "label_date_disp" );
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
         gtk_combo_box_set_model( GTK_COMBO_BOX( data->date_format ), model );
-        gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( data->date_format ), 0 );
+        gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( data->date_format ), 0 );
         g_object_unref( model );
         for ( i = 0; i < G_N_ELEMENTS( date_formats ); ++i )
         {
-            gtk_combo_box_append_text ( GTK_COMBO_BOX( data->date_format ), date_formats[ i ] );
+            gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( data->date_format ), date_formats[ i ] );
         }
         char* date_s = xset_get_s( "date_format" );
         if ( date_s )
@@ -1009,7 +1015,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
             }
             if ( i >= G_N_ELEMENTS( date_formats ) )
             {
-                gtk_combo_box_prepend_text ( GTK_COMBO_BOX( data->date_format ), date_s );
+                gtk_combo_box_text_prepend_text ( GTK_COMBO_BOX_TEXT( data->date_format ), date_s );
                 i = 0;
             }
             gtk_combo_box_set_active( GTK_COMBO_BOX( data->date_format ), i );

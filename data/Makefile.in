@@ -336,6 +336,7 @@ html_DATA = spacefm-manual-en.html
 # GtkBuilder UI definition files
 ui_in_files = \
 	ui/prefdlg.glade \
+	ui/prefdlg2.glade \
 	ui/appchooserdlg.glade \
 	ui/file_properties.glade \
 	ui/about-dlg.glade \
