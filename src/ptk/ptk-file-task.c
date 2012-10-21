@@ -21,6 +21,8 @@
 #include "vfs-file-info.h"  //MOD
 #include "main-window.h"
 
+#include "gtk2-compat.h"
+
 // waitpid
 #include <unistd.h>
 #include <sys/wait.h>
