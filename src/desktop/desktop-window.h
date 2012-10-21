@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 #include <sys/types.h>  /* for dev_t */
 #include <sys/stat.h>
+#include <X11/Xlib.h>
 
 #include "vfs-dir.h"
 #include "vfs-file-task.h"
@@ -127,15 +128,15 @@ struct _DesktopWindow
 
     GtkCellRenderer* icon_render;
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
     /* background image */
+#if GTK_CHECK_VERSION (3, 0, 0)
+    Pixmap background;
+    cairo_surface_t *surface;
+#else
     GdkPixmap* background;
 #endif
     DWBgType bg_type;
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
-    GdkGC* gc;
-#endif
     GdkColor fg;
     GdkColor bg;
     GdkColor shadow;
@@ -158,9 +159,6 @@ GtkWidget* desktop_window_new          (void);
  *  If type = DW_BG_COLOR and src_pix = NULL, the background color is used to fill the window.
  */
 void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBgType type );
-#if !GTK_CHECK_VERSION (3, 0, 0)
-void desktop_window_set_pixmap( DesktopWindow* win, GdkPixmap* pix );
-#endif
 void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr );
 void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor* shadow );
 
