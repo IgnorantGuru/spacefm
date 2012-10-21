@@ -3659,7 +3659,7 @@ int custom_dialog_init( int argc, char *argv[] )
                             || !strcmp( argv[ac], "help" ) ) )
         {
             show_help();
-            return 1;
+            return -1;
         }
         else if ( g_str_has_prefix( argv[ac], "--" ) )
         {

@@ -934,8 +934,11 @@ int main ( int argc, char *argv[] )
             }
             gtk_init (&argc, &argv);
             int ret = custom_dialog_init( argc, argv );
-            if ( ret )
-                return ret;
+            if ( ret != 0 )
+            {
+                vfs_file_monitor_clean();
+                return ret == -1 ? 0 : ret;
+            }
             gtk_main();
             vfs_file_monitor_clean();
             return 0;

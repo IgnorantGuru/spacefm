@@ -35,6 +35,9 @@
     allow overwrite file with link
     icon view mode automatic vertical scrollbar
     rewrite get_name_extension
+    rework stop if error first
+    focus file list on task man hide
+    exit status zero on dialog help
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136
