@@ -263,7 +263,7 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
     parent_class = (GtkWindowClass*)g_type_class_peek(GTK_TYPE_WINDOW);
 
     /* ATOM_XROOTMAP_ID = XInternAtom( GDK_DISPLAY(),"_XROOTMAP_ID", False ); */
-    ATOM_NET_WORKAREA = XInternAtom( GDK_DISPLAY(),"_NET_WORKAREA", False );
+    ATOM_NET_WORKAREA = XInternAtom( gdk_x11_get_default_xdisplay(),"_NET_WORKAREA", False );
 
     text_uri_list_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_URI_LIST].target );
     desktop_icon_atom = gdk_atom_intern_static_string( drag_targets[DRAG_TARGET_DESKTOP_ICON].target );
@@ -468,8 +468,8 @@ void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr )
     if( clr )
     {
         win->bg = *clr;
-        gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
-                            &win->bg );
+        gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
+                            &win->bg, FALSE, TRUE );
         if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
@@ -482,14 +482,14 @@ void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor*
         if( clr )
         {
             win->fg = *clr;
-            gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
-                                &win->fg );
+            gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
+                                &win->fg, FALSE, TRUE );
         }
         if( shadow )
         {
             win->shadow = *shadow;
-            gdk_rgb_find_color( gtk_widget_get_colormap( (GtkWidget*)win ),
-                                &win->shadow );
+            gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
+                                &win->shadow, FALSE, TRUE );
         }
         if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
@@ -508,6 +508,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
     Display* xdisplay;
     Pixmap xpixmap = 0;
     Window xroot;
+    cairo_t *cr;
 
     win->bg_type = type;
 
@@ -522,7 +523,9 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
         if( type == DW_BG_TILE )
         {
             pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), src_w, src_h, -1 );
-            gdk_draw_pixbuf( pixmap, NULL, src_pix, 0, 0, 0, 0, src_w, src_h, GDK_RGB_DITHER_NORMAL, 0, 0 );
+            cr = gdk_cairo_create ( pixmap );
+            gdk_cairo_set_source_pixbuf ( cr, src_pix, 0, 0 );
+            cairo_paint ( cr );
         }
         else
         {
@@ -531,6 +534,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             int w = 0, h = 0;
 
             pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), dest_w, dest_h, -1 );
+            cr = gdk_cairo_create ( pixmap );
             switch( type )
             {
             case DW_BG_STRETCH:
@@ -597,14 +601,13 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             {
                 if( w != dest_w || h != dest_h )
                 {
-                    GdkGC *gc = gdk_gc_new( gtk_widget_get_window( ((GtkWidget*)win) ) );
-                    gdk_gc_set_fill(gc, GDK_SOLID);
-                    gdk_gc_set_foreground( gc, &win->bg);
-                    gdk_draw_rectangle( pixmap, gc, TRUE, 0, 0, dest_w, dest_h );
-                    g_object_unref(gc);
+                    gdk_cairo_set_source_color ( cr, &win->bg );
+                    cairo_rectangle ( cr, 0, 0, dest_w, dest_h );
+                    cairo_fill ( cr );
                 }
-                gdk_draw_pixbuf( pixmap, NULL, scaled, src_x, src_y, dest_x, dest_y, w, h,
-                                                GDK_RGB_DITHER_NORMAL, 0, 0 );
+                gdk_cairo_set_source_pixbuf ( cr, scaled, src_x, src_y );
+                cairo_move_to ( cr, dest_x, dest_y );
+                cairo_paint ( cr );
                 g_object_unref( scaled );
             }
             else
@@ -614,6 +617,8 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             }
         }
     }
+
+    cairo_destroy ( cr );
 
     if( win->background )
         g_object_unref( win->background );
@@ -797,7 +802,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     GdkColor *clr;
     guchar alpha;
     GdkPixbuf* pix;
-    GdkGC* gc;
+    cairo_t *cr;
 
     calc_rubber_banding_rect( self, self->rubber_bending_x, self->rubber_bending_y, &rect );
 
@@ -810,7 +815,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
                         NULL);
 */
 
-    gc = gdk_gc_new( gtk_widget_get_window( ((GtkWidget*)self) ));
+    cr = gdk_cairo_create ( gtk_widget_get_window( ((GtkWidget*)self) ) );
     clr = gdk_color_copy (&gtk_widget_get_style( GTK_WIDGET (self) )->base[GTK_STATE_SELECTED]);
     alpha = 64;  /* FIXME: should be themable in the future */
 
@@ -834,11 +839,11 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     if( pix )
     {
         colorize_pixbuf( pix, clr, alpha );
-        if( self->bg_type == DW_BG_TILE )
+        if( self->bg_type == DW_BG_TILE ) /* this is currently unreachable */
         {
             GdkPixmap* pattern;
             /* FIXME: This is damn slow!! */
-            pattern = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)self) ), pattern_w, pattern_h, -1 );
+            /*pattern = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)self) ), pattern_w, pattern_h, -1 );
             if( pattern )
             {
                 gdk_draw_pixbuf( pattern, gc, pix, 0, 0,
@@ -849,12 +854,13 @@ void paint_rubber_banding_rect( DesktopWindow* self )
                             rect.x, rect.y, rect.width-1, rect.height-1 );
                 g_object_unref( pattern );
                 gdk_gc_set_fill( gc, GDK_SOLID );
-            }
+            } */
         }
         else
         {
-            gdk_draw_pixbuf( gtk_widget_get_window( ((GtkWidget*)self) ), gc, pix, 0, 0,
-                            rect.x, rect.y, rect.width, rect.height, GDK_RGB_DITHER_NONE, 0, 0 );
+            gdk_cairo_set_source_pixbuf( cr, pix, rect.x, rect.y );
+            cairo_rectangle( cr, 0, 0, rect.width, rect.height );
+            cairo_fill( cr );
         }
         g_object_unref( pix );
     }
@@ -865,19 +871,17 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         clr2.red = clr2.red * clr->red / 65535;
         clr2.green = clr2.green * clr->green / 65535;
         clr2.blue = clr2.blue * clr->blue / 65535;
-        gdk_gc_set_rgb_fg_color( gc, &clr2 );
-        gdk_gc_set_fill( gc, GDK_SOLID );
-        gdk_draw_rectangle( gtk_widget_get_window( ((GtkWidget*)self) ), gc, TRUE,
-                            rect.x, rect.y, rect.width-1, rect.height-1 );
+        gdk_cairo_set_source_color( cr, &clr2 );
+        cairo_rectangle( cr, rect.x, rect.y, rect.width - 1, rect.height - 1 );
+        cairo_fill( cr );
     }
 
     /* draw the border */
-    gdk_gc_set_foreground( gc, clr );
-    gdk_draw_rectangle( gtk_widget_get_window( ((GtkWidget*)self) ), gc, FALSE,
-                        rect.x, rect.y, rect.width-1, rect.height-1 );
+    gdk_cairo_set_source_color( cr, clr );
+    cairo_rectangle( cr, rect.x, rect.y, rect.width - 1, rect.height - 1 );
+    cairo_stroke( cr );
 
     gdk_color_free (clr);
-    gdk_gc_destroy( gc );
 }
 
 static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
@@ -1798,12 +1802,9 @@ void on_realize( GtkWidget* w )
     /* This is borrowed from fbpanel */
 #define WIN_HINTS_SKIP_FOCUS      (1<<0)    /* skip "alt-tab" */
     val = WIN_HINTS_SKIP_FOCUS;
-    XChangeProperty(GDK_DISPLAY(), GDK_WINDOW_XWINDOW(gtk_widget_get_window(w)),
-          XInternAtom(GDK_DISPLAY(), "_WIN_HINTS", False), XA_CARDINAL, 32,
+    XChangeProperty(gdk_x11_get_default_xdisplay(), GDK_WINDOW_XWINDOW(gtk_widget_get_window(w)),
+          XInternAtom(gdk_x11_get_default_xdisplay(), "_WIN_HINTS", False), XA_CARDINAL, 32,
           PropModeReplace, (unsigned char *) &val, 1);
-
-    if( ! self->gc )
-        self->gc = gdk_gc_new( gtk_widget_get_window(w) );
 
 //    if( self->background )
 //        gdk_window_set_back_pixmap( w->window, self->background, FALSE );
@@ -2184,6 +2185,9 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     GtkCellRendererState state = 0;
     GdkRectangle text_rect;
     int w, h;
+    cairo_t *cr;
+
+    cr = gdk_cairo_create( gtk_widget_get_window( widget ) );
 
     if( item->fi->big_thumbnail )
         icon = g_object_ref( item->fi->big_thumbnail );
@@ -2211,9 +2215,11 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         GdkRectangle intersect={0};
 
         if( gdk_rectangle_intersect( expose_area, &item->text_rect, &intersect ) )
-            gdk_draw_rectangle( gtk_widget_get_window(widget),
-                        gtk_widget_get_style(widget)->bg_gc[GTK_STATE_SELECTED],
-                        TRUE, intersect.x, intersect.y, intersect.width, intersect.height );
+        {
+            gdk_cairo_set_source_color( cr, &gtk_widget_get_style(widget)->bg[GTK_STATE_SELECTED] );
+            cairo_rectangle( cr, intersect.x, intersect.y, intersect.width, intersect.height );
+            cairo_fill( cr );
+        }
     }
     else
     {
@@ -2221,18 +2227,21 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         ++text_rect.x;
         ++text_rect.y;
 
-        gdk_gc_set_foreground( self->gc, &self->shadow );
+        gdk_cairo_set_source_color( cr, &self->shadow );
 
         if( item->len1 > 0 )
         {
             pango_layout_set_text( self->pl, text, item->len1 );
             pango_layout_get_pixel_size( self->pl, &w, &h );
-            gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
+            pango_cairo_update_layout( cr, self->pl );
+            cairo_move_to( cr, text_rect.x, text_rect.y );
+            pango_cairo_show_layout( cr, self->pl );
             text_rect.y += h;
         }
         pango_layout_set_text( self->pl, text + item->len1, -1 );
         pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_END );
-        gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
+        cairo_move_to( cr, text_rect.x, text_rect.y );
+        pango_cairo_show_layout( cr, self->pl );
 
         --text_rect.x;
         --text_rect.y;
@@ -2249,20 +2258,24 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 
     text_rect = item->text_rect;
 
-    gdk_gc_set_foreground( self->gc, &self->fg );
+    gdk_cairo_set_source_color( cr, &self->fg );
 
     if( item->len1 > 0 )
     {
         pango_layout_set_text( self->pl, text, item->len1 );
         pango_layout_get_pixel_size( self->pl, &w, &h );
-        gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
+        pango_cairo_update_layout( cr, self->pl );
+        cairo_move_to( cr, text_rect.x, text_rect.y );
+        pango_cairo_show_layout( cr, self->pl );
         text_rect.y += h;
     }
     pango_layout_set_text( self->pl, text + item->len1, -1 );
     pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_END );
-    gdk_draw_layout( gtk_widget_get_window(widget), self->gc, text_rect.x, text_rect.y, self->pl );
+    cairo_move_to( cr, text_rect.x, text_rect.y );
+    pango_cairo_show_layout( cr, self->pl );
 
     gtk_widget_get_style(widget)->fg_gc[0] = tmp;
+    cairo_destroy( cr );
 }
 
 void move_item( DesktopWindow* self, DesktopItem* item, int x, int y, gboolean is_offset )
