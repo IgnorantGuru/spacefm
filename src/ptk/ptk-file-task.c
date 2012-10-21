@@ -2027,8 +2027,9 @@ static void query_overwrite( PtkFileTask* ptask )
     g_free( new_name_plain );
 
     // create dialog
-    parent_win = ptask->progress_dlg ? ptask->progress_dlg :
-                                                GTK_WIDGET( ptask->parent_window );
+    //parent_win = ptask->progress_dlg ? ptask->progress_dlg :
+    //                                            GTK_WIDGET( ptask->parent_window );
+    parent_win = GTK_WIDGET( ptask->parent_window );
     dlg = gtk_dialog_new_with_buttons(
                              title,
                              GTK_WINDOW( parent_win ),
@@ -2040,6 +2041,9 @@ static void query_overwrite( PtkFileTask* ptask )
     gtk_window_set_resizable( GTK_WINDOW( dlg ), TRUE );
     gtk_window_set_title( GTK_WINDOW( dlg ), title );
     gtk_window_set_type_hint ( GTK_WINDOW ( dlg ), GDK_WINDOW_TYPE_HINT_DIALOG );
+    gtk_window_set_gravity ( GTK_WINDOW ( dlg ),
+                             GDK_GRAVITY_NORTH_EAST );
+    gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
 
     int width, height;
     if ( has_overwrite_btn )

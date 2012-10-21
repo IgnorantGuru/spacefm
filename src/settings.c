@@ -1477,8 +1477,11 @@ gboolean is_alphanum( char* str )
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
 {
     char* dot;
+    char* str;
+    char* final_ext;
+    char* full;
 
-    char* full = g_strdup( full_name );
+    full = g_strdup( full_name );
     // get last dot
     if ( is_dir || !( dot = strrchr( full, '.' ) ) || dot == full )
     {
@@ -1487,7 +1490,7 @@ char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
         return full;
     }
     dot[0] = '\0';
-    char* final_ext = dot + 1;
+    final_ext = dot + 1;
     // get previous dot
     dot = strrchr( full, '.' );
     uint final_ext_len = strlen( final_ext );
@@ -1497,7 +1500,7 @@ char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
         final_ext[-1] = '.';
         *ext = g_strdup( dot + 1 );
         dot[0] = '\0';
-        char* str = g_strdup( full );
+        str = g_strdup( full );
         g_free( full );
         return str;
     }
@@ -1505,7 +1508,7 @@ char* get_name_extension( char* full_name, gboolean is_dir, char** ext )
     if ( final_ext_len < 11 && final_ext[0] )
     {
         *ext = g_strdup( final_ext );
-        char* str = g_strdup( full );
+        str = g_strdup( full );
         g_free( full );
         return str;
     }

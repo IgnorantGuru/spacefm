@@ -4705,7 +4705,22 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
         if ( gtk_tree_model_get_iter_first( model, &it ) )
             gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
         else
-            gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+        {
+            if ( xset_get_b( "task_hide_manager" ) )
+            {
+                gboolean tasks_has_focus = gtk_widget_is_focus( 
+                                        GTK_WIDGET( main_window->task_view ) );
+                gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+                if ( tasks_has_focus )
+                {
+                    // focus the file list
+                    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                            fm_main_window_get_current_file_browser( main_window ) );   
+                    if ( file_browser )
+                        gtk_widget_grab_focus( file_browser->folder_view );
+                }
+            }
+        }
     }
 }
 
@@ -5017,7 +5032,18 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     if ( !gtk_tree_model_get_iter_first( model, &it ) )
     {
         if ( xset_get_b( "task_hide_manager" ) )
+        {
+            gboolean tasks_has_focus = gtk_widget_is_focus( GTK_WIDGET( view ) );
             gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
+            if ( tasks_has_focus )
+            {
+                // focus the file list
+                PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );   
+                if ( file_browser )
+                    gtk_widget_grab_focus( file_browser->folder_view );
+            }
+        }
     }
     
     update_window_title( NULL, main_window );
