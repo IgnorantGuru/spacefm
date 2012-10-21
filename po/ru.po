@@ -5744,6 +5744,10 @@ msgstr "П_ропустить все"
 msgid " _Rename "
 msgstr "_Переименовать"
 
+#: ../src/ptk/ptk-file-task.c:2209
+msgid " A_uto Rename "
+msgstr "Автопереименование"
+
 #: ../src/ptk/ptk-file-task.c:2106
 msgid " Auto Re_name All "
 msgstr "Автопереименование (все)"
