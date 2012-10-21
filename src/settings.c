@@ -9649,7 +9649,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-media-pause" );
     set->line = g_strdup( "#tasks-menu-pause" );
     set = xset_set( "task_que", "label", _("_Queue") );
-    xset_set_set( set, "icon", "gtk-media-next" );
+    xset_set_set( set, "icon", "gtk-add" );
     set->line = g_strdup( "#tasks-menu-queue" );
     set = xset_set( "task_resume", "label", _("_Resume") );
     xset_set_set( set, "icon", "gtk-media-play" );
@@ -9707,7 +9707,7 @@ void xset_defaults()
 
         set = xset_set( "task_pop_top", "label", _("Stay On _Top") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = XSET_B_TRUE;
+        set->b = XSET_B_FALSE;
         set->line = g_strdup( "#tasks-menu-poptop" );
 
         set = xset_set( "task_pop_detail", "label", _("_Detailed Stats") );

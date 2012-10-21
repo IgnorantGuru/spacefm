@@ -2029,8 +2029,6 @@ static void query_overwrite( PtkFileTask* ptask )
     g_free( new_name_plain );
 
     // create dialog
-    //parent_win = ptask->progress_dlg ? ptask->progress_dlg :
-    //                                            GTK_WIDGET( ptask->parent_window );
     parent_win = GTK_WIDGET( ptask->parent_window );
     dlg = gtk_dialog_new_with_buttons(
                              title,
