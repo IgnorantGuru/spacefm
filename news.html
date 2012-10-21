@@ -12,7 +12,7 @@
 		<div align="left"><a href="http://ignorantguru.github.com/spacefm/" border=0><img src="spacefm-logo.png" alt="SpaceFM Homepage" border=0></a></div>
 	</td>
 	<td>
-		<div align="right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FF9Y4Q845CBCN"><img style="border:0;" src="donate_button.gif" alt="Make A Donation" /></a> <a href="http://flattr.com/thing/898975/SpaceFM-Homepage" target="_blank"><img src="flattr-badge-large.png" alt="Flattr this" title="Flattr this" border="0" /></a><br><small><a href="http://igurublog.wordpress.com/donate/">Tips &amp; Donation Info</a></small></div>
+		<div align="right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FF9Y4Q845CBCN"><img style="border:0;" src="donate_button.gif" alt="Make A Donation" /></a><br><small><a href="http://igurublog.wordpress.com/donate/">Tips &amp; Donation Info</a></small></div>
 	</td>
 </tr></table>
 
@@ -28,11 +28,97 @@
 <br>
 <center><h2>SpaceFM News</h2></center>
 
+<br>
+To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.
+<br>
+
+<p><br><b><u>Release Versions:</u></b><br>
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.1"></a>
+<big><b><a href="#0.8.1">0.8.1 released</a></b></big><br>
+2012-Oct-21
+
+<ul>
+<li>SpaceFM 0.8.1 includes a <b>new task manager queue</b> designed to improve performance.  Some tasks on the same drives will no longer run simultaneously, and you can manually pause, resume, and queue tasks, including custom commands.  The task manager, including the new queueing abilities, is now fully documented in the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks">User's Manual - Tasks section</a>.  This is recommended reading so you can get the most out of the new features.  For example, did you know that <b>you can now simply left-click on the Status column</b> to pause, resume, or queue a task?  It's also possible to disable queuing of new tasks, which means SpaceFM will work like before, unless you manually queue a task.<br><br>
+
+<li>SpaceFM now <b>builds on older versions of GTK2 down to 2.18, including Debian stable ("squeeze")</b>.  Thanks to BwackNinja, a new contributor to SpaceFM, who completed most of this portability work as part of his preparation for porting SpaceFM to gtk3, which is well under way (see below).  In addition, SpaceFM no longer has a hard dependency on libgdk-pixbuf2.0-0 (because in earlier versions of gtk, this is not a separate library).  Also, <b>libstartup-notification is now optional</b>.  When building SpaceFM, if it is present it will be used; if not, ignored.  You can also include the configure option --disable-startup-notification to force a build without it even if installed.<br><br>
+
+<li>SpaceFM's overwrite query dialog (the one that asks you if you want to rename or overwrite a file) has been redesigned, with more space for long filenames and an auto-rename feature.  You can also now resize the dialog and the size will be remembered.<br><br>
+
+<li>The task popup dialogs can now show optional <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks-dlg">overwrite and error controls</a>.  This means you can queue tasks and set them to overwrite all or auto rename without waiting for the query dialog.  Error handling may now be set on a per task basis.<br><br>
+
+<li>A precision timer has been added to provide more smooth and accurate copy speeds in the task manager.<br><br>
+
+<li>A problem detecting mounted btrfs partitions has been corrected in SpaceFM 0.8.1 and <a href="http://ignorantguru.github.com/udevil/news.html#0.3.4">udevil 0.3.4</a>.<br><br>
+
+<li>Russian and French translations have been updated, and thanks to tct1501 for a new partial Dutch translation.<br><br>
+
+<li>The <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins">SpaceFM Wiki</a> has some <b>new plugins</b>, including a few by Keith that use the new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog">SpaceFM Dialog</a>.<br><br>
+
+<li><a href="http://slackbuilds.org/system/spacefm/">spacefm</a> and <a href="http://slackbuilds.org/system/udevil/">udevil</a> are now included at <b>SlackBuilds.org</b><br><br>
+
+<li>A <b>new custom distro</b> <a href="http://webpath.net/node/127">Spaceman</a> has been created by Todd Robinson.  This is a Lubuntu 12.04 release with all updates applied, and SpaceFM installed as the default file manager.<br><br>
+</ul>
+
+<b>What's Ahead?</b><br>
+A port of SpaceFM to <b>GTK version 3 has been started</b> by BwackNinja.  Rather than simply requiring gtk3, the plan is to make SpaceFM buildable with either gtk2 or gtk3 via a configure switch.  Thus support for gtk2 is planned to continue for some time, even after the port is complete.  If you're really eager to try gtk3, BwackNinja has an <a href="https://github.com/BwackNinja/spacefm/tree/next-gtk3">under-development gtk3 fork at github</a>.  He reports it does build with gtk3 but still has some unresolved issues to be addressed.  In the coming weeks, as this code matures, it will be reviewed, tested and merged into SpaceFM's gtk3 branch for beta testing, and from there into the next branch.  Thanks to BwackNinja for contributing this port!
+
+<p>
+<p><b>0.8.1 ChangeLog:</b>
+<ul>
+added task manager queue/pause #147<br>
+disable task manager find<br>
+set minimum dialog and task pane sizes #56<br>
+added Tasks user manual section<br>
+fix clang compile error #162<br>
+fix hang on dir tree sel access error #164<br>
+fix file search find within symlink dir #122<br>
+add double-click opens file search result #109<br>
+fix vfs move dest symlink device determination<br>
+abort copy/move remove incomplete file<br>
+move Sort submenu from Style to View submenu<br>
+gtk 2.18 compatibility #146<br>
+remove explicit libgdk-pixbuf2.0-0 dependency #146<br>
+added precision timer for more accurate/smooth copy speeds<br>
+btrfs moint point detection workaround #165<br>
+fix segfault on blank Preferences Terminal setting #166<br>
+add rxvt to terminal programs list #166<br>
+desktop drop onto folder #45<br>
+fix new tab path merged if the last dir spec is / #167<br>
+libstartup-notification-0.9 or -1.0 optional #19 #146<br>
+adjustment for build on debian squeeze (gtk 2.20 glib 2.24)<br>
+ctrl-Q as default Exit key<br>
+allow stop of exited task #168<br>
+auto stop on bad exit status #168<br>
+updated Russian translation<br>
+added partial Dutch translation by tct1501<br>
+remove vert scrollbar compact mode<br>
+per task error and overwrite options; auto rename<br>
+added View|Tasks|Queue|Pause On Error<br>
+click in icon/compact unselects others<br>
+rewrite vfs abort handling<br>
+emit created on netfs rename<br>
+rework overwrite dialog<br>
+allow overwrite file with link<br>
+icon view mode automatic vertical scrollbar<br>
+rewrite get_name_extension<br>
+rework stop if error first<br>
+focus file list on task man hide<br>
+exit status zero on dialog help<br>
+popups|stay on top no longer default<br>
+</ul>
+
+
+<br><br><hr>
+
+
 
 
 
 <!-- --------------------------------------------------------------------- -->
-<br><hr><a name="0.8.0"></a>
+<a name="0.8.0"></a>
 <big><b><a href="#0.8.0">0.8.0 released</a></b></big><br>
 2012-Sep-14
 

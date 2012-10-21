@@ -2101,7 +2101,7 @@ References:<br>
 
 <p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
 
-<p>Tasks may be queued automatically when added.  If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked, new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+<p>If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
 
 
 
@@ -2302,9 +2302,7 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <p><a name="tasks-menu-poperr"/><a href="#tasks-menu-poperr"><b>Errors</b></a><br>
 The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
-
-<p>Note that the first action may or may not be the first file of the task; it may be the action of creating a directory to hold the first file.  Thus if the directory creation is successful, and then an error occurs on the first file being copied, Stop If First will <i>not</i> stop the task since the error did not occur on the first action (directory creation).
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on the first file.
 
 <p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 
@@ -2341,7 +2339,7 @@ If two or more tasks involve files on mutually exclusive disks (parent devices),
 <p><b>Size Exceptions</b><br>
 Often while copying a set of large files, you may want to perform a quick operation on a set of small files.  Because the latter task is brief, it is reasonably efficient to allow it to run concurrently.  This way you don't have to wait for the longer task to finish before your quick task is run.
 
-<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 100 MB in total size.  This allows small tasks to run immediately.
+<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 5 GB in total size.  This allows small tasks to run immediately.
 
 <p><b>Functional Exceptions</b><br>
 Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
@@ -3453,6 +3451,8 @@ Selecting Set As Default will set the selected application as the default applic
 Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will no longer appear in the Open submenu for this file type.
 
 <p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Added Associations], and will add it to [Removed Associations] for the given MIME type.
+
+<p>To restore an association that you have removed, use <a href="#designmode-mime-add">Add...</a>
 
 <P>NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) <b>and</b> applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain.  Text files are the only files with this behavior.
 
@@ -5656,7 +5656,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-10-18&nbsp;&nbsp;(SpaceFM version 0.8.0+)
+<p>Updated 2012-10-21&nbsp;&nbsp;(SpaceFM version 0.8.0+)
 <br><br>
 </center>
 </td></tr></table>
