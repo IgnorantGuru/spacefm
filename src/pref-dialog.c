@@ -483,7 +483,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
                         ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
-                        /* ptk_file_browser_set_single_click_timeout( file_browser, 400 ); */
+                        /* ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT ); */
                     }
                 }
             }

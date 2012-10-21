@@ -8,6 +8,9 @@
 #include "ptk-file-browser.h"
 #include "desktop-window.h"
 
+// this determines time before item is selected by hover in single-click mode
+#define SINGLE_CLICK_TIMEOUT 150
+
 typedef enum {
     WPM_STRETCH,
     WPM_FULL,

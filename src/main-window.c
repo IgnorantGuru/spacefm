@@ -2567,7 +2567,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
-    ptk_file_browser_set_single_click_timeout( file_browser, 400 );
+    ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT );
     ptk_file_browser_show_thumbnails( file_browser,
                                       app_settings.show_thumbnail ? app_settings.max_thumb_size : 0 );
 
@@ -5280,7 +5280,7 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     gtk_tree_view_set_model( GTK_TREE_VIEW( view ), GTK_TREE_MODEL( list ) );
     exo_tree_view_set_single_click( (ExoTreeView*)view, TRUE );
     gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
-    //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, 400 );
+    //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, SINGLE_CLICK_TIMEOUT );
 
     // Columns
     for ( i = 0; i < 13; i++ )

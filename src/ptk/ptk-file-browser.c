@@ -34,6 +34,7 @@
 
 #include "mime-type/mime-type.h"
 
+#include "settings.h"    //MOD
 #include "ptk-app-chooser.h"
 
 #include "ptk-file-icon-renderer.h"
@@ -64,8 +65,6 @@
 #include "main-window.h"
 
 #include "gtk2-compat.h"
-
-//extern gboolean startup_mode; //MOD
 
 extern char* run_cmd;  //MOD
 
@@ -278,8 +277,6 @@ static char *replace_str(char *str, char *orig, char *rep); //MOD
 
 void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
 void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
-
-#include "settings.h"    //MOD
 
 static guint signals[ N_SIGNALS ] = { 0 };
 
@@ -3733,7 +3730,8 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
                                             folder_view_search_equal, NULL, NULL );
 
         exo_icon_view_set_single_click( (ExoIconView*)folder_view, file_browser->single_click );
-        exo_icon_view_set_single_click_timeout( (ExoIconView*)folder_view, 400 );
+        exo_icon_view_set_single_click_timeout( (ExoIconView*)folder_view,
+                                                        SINGLE_CLICK_TIMEOUT );
 
         gtk_cell_layout_clear ( GTK_CELL_LAYOUT ( folder_view ) );
 
@@ -3812,7 +3810,8 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
                                         folder_view_search_equal, NULL, NULL );
 
         exo_tree_view_set_single_click( (ExoTreeView*)folder_view, file_browser->single_click );
-        exo_tree_view_set_single_click_timeout( (ExoTreeView*)folder_view, 400 );
+        exo_tree_view_set_single_click_timeout( (ExoTreeView*)folder_view, 
+                                                        SINGLE_CLICK_TIMEOUT );
 
         icon_size = small_icon_size;
 

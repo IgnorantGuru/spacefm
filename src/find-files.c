@@ -1106,7 +1106,8 @@ void fm_find_files( const char** search_dirs )
     if( app_settings.single_click )
     {
         exo_tree_view_set_single_click( EXO_TREE_VIEW( data->result_view ), TRUE );
-        exo_tree_view_set_single_click_timeout( EXO_TREE_VIEW( data->result_view ), 400 );
+        exo_tree_view_set_single_click_timeout( EXO_TREE_VIEW( data->result_view ),
+                                                        SINGLE_CLICK_TIMEOUT );
     }
     gtk_widget_show( data->result_view );
     gtk_container_add( (GtkContainer*)gtk_builder_get_object(builder, "result_scroll"), data->result_view );
