@@ -2486,7 +2486,7 @@ static gboolean on_input_key_press( GtkWidget *entry, GdkEventKey* evt,
     int keymod = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if ( !( !keymod && ( evt->keyval == GDK_Return || evt->keyval == GDK_KP_Enter ) ) )
+    if ( !( !keymod && ( evt->keyval == GDK_KEY_Return || evt->keyval == GDK_KEY_KP_Enter ) ) )
         return FALSE;  // Enter key not pressed
 
     if ( ( el->type == CDLG_INPUT || el->type == CDLG_INPUT_LARGE )

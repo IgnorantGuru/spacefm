@@ -1710,7 +1710,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     
     if ( keymod == 0 )
     {        
-        if ( event->keyval == GDK_F1 )
+        if ( event->keyval == GDK_KEY_F1 )
         {
             char* help = NULL;
             if ( app_data )
@@ -1759,16 +1759,16 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
             xset_show_help( NULL, NULL, help );
             return TRUE;
         }
-        else if ( desktop_file && event->keyval == GDK_F2 )
+        else if ( desktop_file && event->keyval == GDK_KEY_F2 )
         {
             show_app_menu( menu, item, data, 0, event->time );
             return TRUE;
         }
-        else if ( event->keyval == GDK_F4 )
+        else if ( event->keyval == GDK_KEY_F4 )
             job = APP_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
+        else if ( event->keyval == GDK_KEY_Delete )
             job = APP_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
+        else if ( event->keyval == GDK_KEY_Insert )
             job = APP_JOB_ADD;
     }
     if ( desktop_file && job != -1 )

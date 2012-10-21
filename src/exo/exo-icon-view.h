@@ -326,7 +326,11 @@ gboolean              exo_icon_view_get_dest_item_at_pos      (ExoIconView      
                                                                gint                      drag_y,
                                                                GtkTreePath             **path,
                                                                ExoIconViewDropPosition  *pos);
+#if GTK_CHECK_VERSION (3, 0, 0)
+cairo_surface_t      *exo_icon_view_create_drag_icon          (ExoIconView              *icon_view,
+#else
 GdkPixmap            *exo_icon_view_create_drag_icon          (ExoIconView              *icon_view,
+#endif
                                                                GtkTreePath              *path);
 
 
