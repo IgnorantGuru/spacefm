@@ -2875,7 +2875,6 @@ gboolean vfs_volume_eject_by_udi( const char* udi, GError** err )
 gboolean vfs_volume_mount_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* cmd;
     char* argv[5];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
@@ -2885,40 +2884,47 @@ gboolean vfs_volume_mount_by_udi_as_root( const char* udi )
     //cmd = g_strdup_printf( "%s --mount '%s'", g_get_prgname(), udi );
     argv[1] = g_get_prgname();
     argv[2] = g_strdup_printf ( "--mount" );
-    argv[3] = udi;
+    argv[3] = g_strdup( udi );
     argv[4] = NULL;
 
 
     vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );  //MOD
-    g_free( cmd );
     return (ret == 0);
 }
 
 gboolean vfs_volume_umount_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* cmd;
+    char* argv[5];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
         return FALSE;
 
-    cmd = g_strdup_printf( "%s --umount '%s'", g_get_prgname(), udi );
-    vfs_sudo_cmd_sync( NULL, cmd, &ret, NULL,NULL, NULL );
-    g_free( cmd );
+    //MOD separate arguments for ktsuss compatibility
+    //cmd = g_strdup_printf( "%s --umount '%s'", g_get_prgname(), udi );
+    argv[1] = g_get_prgname();
+    argv[2] = g_strdup_printf ( "--umount" );
+    argv[3] = g_strdup( udi );
+    argv[4] = NULL;
+    vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );
     return (ret == 0);
 }
 
 gboolean vfs_volume_eject_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* cmd;
+    char* argv[5];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
         return FALSE;
 
-    cmd = g_strdup_printf( "%s --eject '%s'", g_get_prgname(), udi );
-    vfs_sudo_cmd_sync( NULL, cmd, &ret, NULL,NULL, NULL );
-    g_free( cmd );
+    //MOD separate arguments for ktsuss compatibility
+    //cmd = g_strdup_printf( "%s --eject '%s'", g_get_prgname(), udi );
+    argv[1] = g_get_prgname();
+    argv[2] = g_strdup_printf ( "--eject" );
+    argv[3] = g_strdup( udi );
+    argv[4] = NULL;
+    vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );
     return (ret == 0);
 }
 

@@ -72,23 +72,26 @@ GdkPixbuf* vfs_load_icon( GtkIconTheme* theme, const char* icon_name, int size )
     }
     return icon;
 }
-/*
+
+#ifdef HAVE_HAL
 static char* find_su_program( GError** err )
 {
-    char* su;
+    char* su = NULL;
 
 #ifdef PREFERABLE_SUDO_PROG
     su = g_find_program_in_path( PREFERABLE_SUDO_PROG );
-#else
+#endif
     // Use default search rules
-    su = g_find_program_in_path( "ktsuss" );
+    if ( ! su )
+        su = get_valid_gsu();
+    if ( ! su )
+        su = g_find_program_in_path( "ktsuss" );
     if ( ! su )
         su = g_find_program_in_path( "gksudo" );
     if ( ! su )
         su = g_find_program_in_path( "gksu" );
     if ( ! su )
         su = g_find_program_in_path( "kdesu" );
-#endif
         
     if ( ! su )
         g_set_error( err, G_SPAWN_ERROR, G_SPAWN_ERROR_FAILED, _( "su command not found" ) ); //MOD
@@ -96,33 +99,9 @@ static char* find_su_program( GError** err )
     return su;
 }
 
-gboolean vfs_sudo_cmd_async( const char* cwd, char* argv[], GError** err )  //MOD
-{
-    char *su;  //MOD
-    gboolean ret;
-
-    if ( ! ( su = find_su_program( err ) ) )
-        return FALSE;
-
-    argv[0] = su;
-    if ( ! strstr( su, "ktsuss" ) )  //MOD
-    {
-        // Combine arguments for gksu, kdesu, etc but not for ktsuss
-        argv[1] = g_strdup_printf( "%s %s '%s'", argv[1], argv[2], argv[3] );
-        argv[2] = NULL;
-    }
-
-    ret = g_spawn_async( cwd, argv, NULL,
-                   G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
-                   NULL, NULL, NULL, err );
-
-    g_free( su );
-    return ret;
-}
-
 gboolean vfs_sudo_cmd_sync( const char* cwd, char* argv[],
-                                               int* exit_status,
-                                               char** pstdout, char** pstderr, GError** err )  //MOD
+                            int* exit_status,
+                            char** pstdout, char** pstderr, GError** err )  //MOD
 {
     char *su;  //MOD
     gboolean ret;
@@ -142,13 +121,31 @@ gboolean vfs_sudo_cmd_sync( const char* cwd, char* argv[],
                    G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
                    NULL, NULL,
                    pstdout, pstderr, exit_status, err );
-
-    g_free( su );
     return ret;
 }
-*/
+#endif
 
 /*
+
+gboolean vfs_sudo_cmd_async( const char* cwd, const char* cmd, GError** err )
+{
+    char *su, *argv[3];
+    gboolean ret;
+
+    if ( ! ( su = find_su_program( err ) ) )
+        return FALSE;
+
+    argv[0] = su;
+    argv[1] = g_strdup( cmd );
+    argv[2] = NULL;
+
+    ret = g_spawn_async( cwd, argv, NULL,
+                   G_SPAWN_STDOUT_TO_DEV_NULL | G_SPAWN_STDERR_TO_DEV_NULL,
+                   NULL, NULL, NULL, err );
+
+    return ret;
+}
+
 static char* argv_to_cmdline( char** argv )
 {
     GString* cmd;
