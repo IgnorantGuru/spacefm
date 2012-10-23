@@ -40,6 +40,9 @@ To see the work being done on the upcoming release of SpaceFM, see <a href="http
 <big><b><a href="#0.8.1">0.8.1 released</a></b></big><br>
 2012-Oct-21
 
+<p><b>UPDATE 2012-10-23:</b>:  The deprecated hal build (configure --enable-hal) is broken in 0.8.1 (and prior).  Until 0.8.2 is released, hal users can use <a href="https://github.com/IgnorantGuru/spacefm/tarball/069be5e37ccc32fb8f1fe06649d667793421b463">this modified tarball</a> to correct the hal issues in 0.8.1.  spacefm-hal in the PPA has been temporarily reverted to 0.7.5.  Although hal support is deprecated (no longer actively developed), all SpaceFM releases should still build with hal, so users should continue to report issues if it doesn't.
+
+<p>Changes in 0.8.1:
 <ul>
 <li>SpaceFM 0.8.1 includes a <b>new task manager queue</b> designed to improve performance.  Some tasks on the same drives will no longer run simultaneously, and you can manually pause, resume, and queue tasks, including custom commands.  The task manager, including the new queueing abilities, is now fully documented in the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks">User's Manual - Tasks section</a>.  This is recommended reading so you can get the most out of the new features.  For example, did you know that <b>you can now simply left-click on the Status column</b> to pause, resume, or queue a task?  It's also possible to disable queuing of new tasks, which means SpaceFM will work like before, unless you manually queue a task.<br><br>
 
