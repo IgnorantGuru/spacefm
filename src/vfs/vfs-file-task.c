@@ -750,6 +750,12 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
             /* g_print("not on the same dev: %s\n", src_file); */
             vfs_file_task_do_copy( task, src_file, dest_file );
         }
+        else if ( S_ISDIR( src_stat.st_mode ) && 
+                                    g_file_test( dest_file, G_FILE_TEST_IS_DIR) )
+        {
+            // moving a directory onto a directory that exists - overwrite
+            vfs_file_task_do_copy( task, src_file, dest_file );
+        }
         else
         {
             /* g_print("on the same dev: %s\n", src_file); */
