@@ -38,6 +38,7 @@ struct _PtkFileTask
     GtkWidget* task_view;
     GtkLabel* from;
     GtkLabel* to;
+    GtkLabel* src_dir;
     GtkLabel* current;
     GtkProgressBar* progress_bar;
     GtkLabel* errors;
