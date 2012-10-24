@@ -274,7 +274,7 @@ gboolean check_overwrite( VFSFileTask* task,
     }
 }
 
-gboolean check_source_in_dest( VFSFileTask* task, const char* src_dir )
+gboolean check_dest_in_src( VFSFileTask* task, const char* src_dir )
 {
     char real_src_path[PATH_MAX];
     char real_dest_path[PATH_MAX];
@@ -386,7 +386,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     result = 0;
     if ( S_ISDIR( file_stat.st_mode ) )
     {
-        if ( check_source_in_dest( task, src_file ) )
+        if ( check_dest_in_src( task, src_file ) )
             goto _return_;
 
         if ( ! check_overwrite( task, dest_file,
@@ -664,7 +664,7 @@ vfs_file_task_do_move ( VFSFileTask* task,
     if ( should_abort( task ) )
         return 0;
 
-    if ( S_ISDIR( file_stat.st_mode ) && check_source_in_dest( task, src_file ) )
+    if ( S_ISDIR( file_stat.st_mode ) && check_dest_in_src( task, src_file ) )
         return 0;
 
     if ( ! check_overwrite( task, dest_file,
