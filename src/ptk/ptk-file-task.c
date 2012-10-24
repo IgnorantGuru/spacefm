@@ -826,7 +826,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_table_set_col_spacings( table, 4 );
     int row = 0;
 
-    /* From: */
+    /* Copy/Move/Link: */
     label = GTK_LABEL(gtk_label_new( _( actions[ task->type ] ) ));
     gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
     gtk_table_attach( table,
@@ -843,6 +843,20 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     if ( task->type != VFS_FILE_TASK_EXEC )
     {
+        // From: <src folder>
+        row++;
+        label = GTK_LABEL(gtk_label_new( _( "From:" ) ));
+        gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
+        gtk_table_attach( table,
+                          GTK_WIDGET(label),
+                          0, 1, row, row+1, GTK_FILL, 0, 0, 0 );
+        ptask->src_dir = GTK_LABEL( gtk_label_new( NULL ) );
+        gtk_misc_set_alignment( GTK_MISC ( ptask->src_dir ), 0, 0.5 );
+        gtk_label_set_ellipsize( ptask->src_dir, PANGO_ELLIPSIZE_MIDDLE );
+        gtk_label_set_selectable( ptask->src_dir, TRUE );
+        gtk_table_attach( table,
+                          GTK_WIDGET( ptask->src_dir ),
+                          1, 2, row, row+1, GTK_FILL, 0, 0, 0 );
         if ( task->dest_dir )
         {
             /* To: <Destination folder>
@@ -877,6 +891,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                           GTK_WIDGET( ptask->current ),
                           1, 2, row, row+1, GTK_FILL, 0, 0, 0 );
     }
+    else
+        ptask->src_dir = NULL;
 
     /* Processing: */
     /* Processing: <Name of currently proccesed file> */
@@ -1085,6 +1101,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 void ptk_file_task_progress_update( PtkFileTask* ptask )
 {
     char* ufile_path;
+    char* usrc_dir;
+    char* str;
     char percent_str[ 16 ];
     char* stats;
     char* errs;
@@ -1103,6 +1121,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     VFSFileTask* task = ptask->task;
 
     // current file
+    usrc_dir = NULL;
     if ( ptask->complete )
     {
         gtk_widget_set_sensitive( ptask->progress_btn_stop, FALSE );
@@ -1130,15 +1149,22 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     else if ( task->current_file )
     {
         if ( task->type != VFS_FILE_TASK_EXEC )
+        {
             ufile_path = g_filename_display_basename( task->current_file );
+            str = g_path_get_dirname( task->current_file );
+            usrc_dir = g_filename_display_name( str );
+            g_free( str );
+        }
         else
             ufile_path = g_strdup( task->current_file );
     }
     else
         ufile_path = NULL;
     gtk_label_set_text( ptask->from, ufile_path );
-    if ( ufile_path )
-        g_free( ufile_path );
+    if ( ptask->src_dir )
+        gtk_label_set_text( ptask->src_dir, usrc_dir );
+    g_free( ufile_path );
+    g_free( usrc_dir );
 
 /*
     // current dest
