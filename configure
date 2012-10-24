@@ -13799,7 +13799,7 @@ _ACEOF
 fi
 
 
-gtk_modules="gtk+-2.0 >= 2.18.0 \
+gtk_modules="gtk+-3.0 >= 3.4.0 \
              gthread-2.0 \
              gobject-2.0"
 
