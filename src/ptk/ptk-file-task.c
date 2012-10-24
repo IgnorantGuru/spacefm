@@ -1180,10 +1180,28 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
                 str = g_path_get_basename( task->current_file );
                 str2 = g_path_get_basename( task->current_dest );
                 if ( strcmp( str, str2 ) )
+                {
                     // source and dest filenames differ, user renamed - show all
+                    g_free( str );
+                    g_free( str2 );
                     udest = g_filename_display_name( task->current_dest );
-                g_free( str );
-                g_free( str2 );
+                }
+                else
+                {
+                    // source and dest filenames same - show dest dir only
+                    g_free( str );
+                    g_free( str2 );
+                    str = g_path_get_dirname( task->current_dest );
+                    if ( str[0] == '/' && str[1] == '\0' )
+                        udest = g_filename_display_name( str );
+                    else
+                    {
+                        str2 = g_filename_display_name( str );
+                        udest = g_strdup_printf( "%s/", str2 );
+                        g_free( str2 );
+                    }
+                    g_free( str );
+                }
             }
         }
         else
@@ -2106,7 +2124,7 @@ static void query_overwrite( PtkFileTask* ptask )
     g_free( new_name_plain );
 
     // create dialog
-    if ( xset_get_b( "task_pop_top" ) && ptask->progress_dlg )
+    if ( ptask->progress_dlg )
         parent_win = GTK_WIDGET( ptask->progress_dlg );        
     else
         parent_win = GTK_WIDGET( ptask->parent_window );
