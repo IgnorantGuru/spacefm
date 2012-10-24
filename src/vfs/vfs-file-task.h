@@ -52,12 +52,9 @@ struct _VFSFileTask;
 typedef enum
 {
     VFS_FILE_TASK_RUNNING,
-    VFS_FILE_TASK_SIZING,
-    VFS_FILE_TASK_QUERY_ABORT,
+    VFS_FILE_TASK_SIZE_TIMEOUT,
     VFS_FILE_TASK_QUERY_OVERWRITE,
     VFS_FILE_TASK_ERROR,
-    VFS_FILE_TASK_ABORTED,
-    VFS_FILE_TASK_TIMEOUT,
     VFS_FILE_TASK_PAUSE,
     VFS_FILE_TASK_QUEUE,
     VFS_FILE_TASK_FINISH
@@ -65,11 +62,13 @@ typedef enum
 
 typedef enum
 {
-    VFS_FILE_TASK_OVERWRITE, /* Overwrite current dest file */
-    VFS_FILE_TASK_OVERWRITE_ALL, /* Overwrite all existing files without prompt */
-    VFS_FILE_TASK_SKIP, /* Don't overwrite current file */
-    VFS_FILE_TASK_SKIP_ALL, /* Don't try to overwrite any files */
-    VFS_FILE_TASK_RENAME /* Rename file */
+    // do not reposition first four values
+    VFS_FILE_TASK_OVERWRITE,        /* Overwrite current dest file / Ask */
+    VFS_FILE_TASK_OVERWRITE_ALL,    /* Overwrite all existing files without prompt */
+    VFS_FILE_TASK_SKIP_ALL,         /* Don't try to overwrite any files */
+    VFS_FILE_TASK_AUTO_RENAME,      /* Assign a new unique name */
+    VFS_FILE_TASK_SKIP,             /* Don't overwrite current file */
+    VFS_FILE_TASK_RENAME            /* Rename file */
 }VFSFileTaskOverwriteMode;
 
 typedef enum
@@ -114,10 +113,10 @@ struct _VFSFileTask
     off64_t progress; /* Total size of current processed files, in btytes */
     int percent; /* progress (percentage) */
     time_t start_time;
-    time_t last_time;
-    time_t pause_time;
     off64_t last_speed;
     off64_t last_progress;
+    GTimer* timer;
+    gdouble last_elapsed;
     guint current_item;
     int err_count;
     
@@ -125,10 +124,12 @@ struct _VFSFileTask
     char* current_dest; /* copy of Current destination file */
 
     int error;
-
+    gboolean error_first;
+    
     GThread* thread;
     VFSFileTaskState state;
     VFSFileTaskState state_pause;
+    gboolean abort;
     GCond* pause_cond;
     gboolean queue_start;
 
@@ -138,10 +139,9 @@ struct _VFSFileTask
     VFSFileTaskStateCallback state_cb;
     gpointer state_cb_data;
     
-    //guint progress_cb_timer;
-    
     GMutex* mutex;
 
+    //sfm write directly to gtk buffer for speed
     GtkTextBuffer* add_log_buf;
     GtkTextMark* add_log_end;
     
@@ -171,8 +171,8 @@ struct _VFSFileTask
     gboolean exec_is_error;
     GIOChannel* exec_channel_out;
     GIOChannel* exec_channel_err;
-    GtkTextBuffer* exec_err_buf;  //copy from ptk task
-    GtkTextMark* exec_mark_end;  //copy from ptk task
+    //GtkTextBuffer* exec_err_buf;  //copy from ptk task
+    //GtkTextMark* exec_mark_end;  //copy from ptk task
     gboolean exec_scroll_lock;
     gboolean exec_write_root;
     gpointer exec_set;
@@ -219,5 +219,7 @@ void vfs_file_task_free ( VFSFileTask* task );
 
 char* vfs_file_task_get_cpids( GPid pid );
 void vfs_file_task_kill_cpids( char* cpids, int signal );
+char* vfs_file_task_get_unique_name( const char* dest_dir, const char* base_name,
+                                                           const char* ext );
 
 #endif

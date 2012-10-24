@@ -23,6 +23,10 @@ You should have received a copy of the GNU General Public License and the GNU Le
 Contributors:
    BwackNinja &lt;BwackNinja@gmail.com&gt;  (gtk2.18 compatibility)
 
+Thanks to SpaceFM users for valuable feedback!
+
+SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
+
 
 Source code taken from other projects:
  * pcmanfm-mod: IgnorantGuru &lt;ignorantguru@gmx.com&gt;

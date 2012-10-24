@@ -483,8 +483,8 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
                                      gpointer user_data )
 {
     switch(evt->keyval) {
-    case GDK_Left:
-    case GDK_Right:
+    case GDK_KEY_Left:
+    case GDK_KEY_Right:
         break;
     default:
         return FALSE;
@@ -500,7 +500,7 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
     GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
 
     switch( evt->keyval ) {
-    case GDK_Left:
+    case GDK_KEY_Left:
         if(gtk_tree_view_row_expanded(GTK_TREE_VIEW(view), path)) {
             gtk_tree_view_collapse_row(GTK_TREE_VIEW(view), path);
         } else if(gtk_tree_path_up(path)) {
@@ -510,7 +510,7 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
             return FALSE;
         }
         break;
-    case GDK_Right:
+    case GDK_KEY_Right:
         if(!gtk_tree_view_row_expanded(GTK_TREE_VIEW(view), path)) {
             gtk_tree_view_expand_row(GTK_TREE_VIEW(view), path, FALSE);
         } else {
@@ -763,9 +763,34 @@ gboolean on_dir_tree_view_drag_motion ( GtkWidget *widget,
                 // automatic
                 file_browser->pending_drag_status_tree = 1;
                 gtk_drag_get_data (widget, drag_context, target, time);
-                suggested_action = gdk_drag_context_get_suggested_action( drag_context );
+                suggested_action = gdk_drag_context_get_selected_action( drag_context );
             }
         }
+#if GTK_CHECK_VERSION (3, 0, 0)
+        /* hack to be able to call the default handler with the correct suggested_action */
+        struct _GdkDragContext {
+          GObject parent_instance;
+
+          /*< private >*/
+          GdkDragProtocol protocol;
+
+          gboolean is_source;
+          GdkWindow *source_window;
+          GdkWindow *dest_window;
+
+          GList *targets;
+          GdkDragAction actions;
+          GdkDragAction suggested_action;
+          GdkDragAction action;
+
+          guint32 start_time;
+
+          GdkDevice *device;
+        };
+        ((struct _GdkDragContext *)drag_context)->suggested_action = suggested_action;
+#else
+        drag_context->suggested_action = suggested_action; // needed for default handler
+#endif
         gdk_drag_status( drag_context, suggested_action, gtk_get_current_event_time() );
     }
     return FALSE;

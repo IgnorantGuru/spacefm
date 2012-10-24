@@ -1,4 +1,6 @@
-0.8.0+
+0.8.1+
+
+0.8.1   2012-10-21:
     added task manager queue/pause #147
     disable task manager find
     set minimum dialog and task pane sizes #56
@@ -12,6 +14,33 @@
     move Sort submenu from Style to View submenu
     gtk 2.18 compatibility #146
     remove explicit libgdk-pixbuf2.0-0 dependency #146
+    added precision timer for more accurate/smooth copy speeds
+    btrfs moint point detection workaround #165
+    fix segfault on blank Preferences Terminal setting #166
+    add rxvt to terminal programs list #166
+    desktop drop onto folder #45
+    fix new tab path merged if the last dir spec is / #167
+    libstartup-notification-0.9 or -1.0 optional #19 #146
+    adjustment for build on debian squeeze (gtk 2.20 glib 2.24)
+    ctrl-Q as default Exit key
+    allow stop of exited task #168
+    auto stop on bad exit status #168
+    updated Russian translation
+    added partial Dutch translation by tct1501
+    remove vert scrollbar compact mode
+    per task error and overwrite options; auto rename
+    added View|Tasks|Queue|Pause On Error
+    click in icon/compact unselects others
+    rewrite vfs abort handling
+    emit created on netfs rename
+    rework overwrite dialog
+    allow overwrite file with link
+    icon view mode automatic vertical scrollbar
+    rewrite get_name_extension
+    rework stop if error first
+    focus file list on task man hide
+    exit status zero on dialog help
+    popups|stay on top no longer default
 0.8.0   2012-09-14:
     fix horiz scroll on single-click mode auto-select #137
     deprecated keys in spacefm desktop files #136

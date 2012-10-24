@@ -1,6 +1,11 @@
 #ifndef __GTK2_COMPAT_H
 #define __GTK2_COMPAT_H
 
+#if GTK_CHECK_VERSION(3, 0, 0)
+#else
+#define gtk_menu_shell_get_selected_item(mc) mc->active_menu_item
+#endif
+
 #if GTK_CHECK_VERSION(2, 24, 0)
 #else
 #define gtk_combo_box_text_new_with_entry gtk_combo_box_new_text
@@ -21,6 +26,49 @@ static inline gint gdk_window_get_height (GdkWindow *window) { gint height; gdk_
 #define gdk_drag_context_get_actions(dc) dc->actions
 #define gdk_drag_context_list_targets(dc) dc->targets
 #define gtk_window_has_group(window) (window->group != NULL)
+
+#define GDK_KEY_a GDK_a
+#define GDK_KEY_space GDK_space
+#define GDK_KEY_Return GDK_Return
+#define GDK_KEY_ISO_Enter GDK_ISO_Enter
+#define GDK_KEY_KP_Enter GDK_KP_Enter
+#define GDK_KEY_F GDK_F
+#define GDK_KEY_Up GDK_Up
+#define GDK_KEY_KP_Up GDK_KP_Up
+#define GDK_KEY_Down GDK_Down
+#define GDK_KEY_KP_Down GDK_KP_Down
+#define GDK_KEY_p GDK_p
+#define GDK_KEY_n GDK_n
+#define GDK_KEY_Home GDK_Home
+#define GDK_KEY_KP_Home GDK_KP_Home
+#define GDK_KEY_End GDK_End
+#define GDK_KEY_KP_End GDK_KP_End
+#define GDK_KEY_Page_Up GDK_Page_Up
+#define GDK_KEY_KP_Page_Up GDK_KP_Page_Up
+#define GDK_KEY_Page_Down GDK_Page_Down
+#define GDK_KEY_KP_Page_Down GDK_KP_Page_Down
+#define GDK_KEY_Right GDK_Right
+#define GDK_KEY_KP_Right GDK_KP_Right
+#define GDK_KEY_Left GDK_Left
+#define GDK_KEY_KP_Left GDK_KP_Left
+#define GDK_KEY_Escape GDK_Escape
+#define GDK_KEY_Delete GDK_Delete
+#define GDK_KEY_BackSpace GDK_BackSpace
+#define GDK_KEY_Tab GDK_Tab
+#define GDK_KEY_F1 GDK_F1
+#define GDK_KEY_F2 GDK_F2
+#define GDK_KEY_F3 GDK_F3
+#define GDK_KEY_F4 GDK_F4
+#define GDK_KEY_Insert GDK_Insert
+#define GDK_KEY_c GDK_c
+#define GDK_KEY_x GDK_x
+#define GDK_KEY_v GDK_v
+#define GDK_KEY_e GDK_e
+#define GDK_KEY_k GDK_k
+#define GDK_KEY_i GDK_i
+#define GDK_KEY_g GDK_g
+#define GDK_KEY_G GDK_G
+
 #endif
 
 #if GTK_CHECK_VERSION(2, 20, 0)

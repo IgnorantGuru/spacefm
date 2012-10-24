@@ -12,18 +12,19 @@
 
 #include "vfs-execute.h"
 
+#ifdef HAVE_SN
 /* FIXME: Startup notification may cause problems */
 #define SN_API_NOT_YET_FROZEN
 #include <libsn/sn-launcher.h>
-
+#include <X11/Xatom.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#include <X11/Xatom.h>
+#include <time.h>
+#endif
 
 #include <string.h>
 #include <stdlib.h>
 
-#include <time.h>
 
 
 gboolean vfs_exec( const char* work_dir,
@@ -36,6 +37,7 @@ gboolean vfs_exec( const char* work_dir,
                                argv, envp, disp_name, flags, err );
 }
 
+#ifdef HAVE_SN
 static gboolean sn_timeout( gpointer user_data )
 {
     SnLauncherContext * ctx = ( SnLauncherContext* ) user_data;
@@ -69,12 +71,12 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
     _NET_CURRENT_DESKTOP = XInternAtom ( GDK_WINDOW_XDISPLAY ( root ), "_NET_CURRENT_DESKTOP", False );
     _WIN_WORKSPACE = XInternAtom ( GDK_WINDOW_XDISPLAY ( root ), "_WIN_WORKSPACE", False );
 
-    if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XWINDOW ( root ),
+    if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XID ( root ),
                               _NET_CURRENT_DESKTOP, 0, 32, False, XA_CARDINAL,
                               &type_ret, &format_ret, &nitems_ret, &bytes_after_ret,
                               ( gpointer ) & prop_ret ) != Success )
     {
-        if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XWINDOW ( root ),
+        if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XID ( root ),
                                   _WIN_WORKSPACE, 0, 32, False, XA_CARDINAL,
                                   &type_ret, &format_ret, &nitems_ret, &bytes_after_ret,
                                   ( gpointer ) & prop_ret ) != Success )
@@ -98,6 +100,7 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
 
     return ws_num;
 }
+#endif
 
 gboolean vfs_exec_on_screen( GdkScreen* screen,
                              const char* work_dir,
@@ -106,8 +109,10 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
                              GSpawnFlags flags,
                              GError **err )
 {
+#ifdef HAVE_SN
     SnLauncherContext * ctx = NULL;
     SnDisplay* display;
+#endif
     gboolean ret;
     GSpawnChildSetupFunc setup_func = NULL;
     extern char **environ;
@@ -135,6 +140,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
         }
     }
 
+#ifdef HAVE_SN
     display = sn_display_new ( GDK_SCREEN_XDISPLAY ( screen ),
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_push,
                                ( SnDisplayErrorTrapPush ) gdk_error_trap_pop );
@@ -167,6 +173,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
         new_env[ startup_id_index ] = g_strconcat( "DESKTOP_STARTUP_ID=",
                                       sn_launcher_context_get_startup_id ( ctx ), NULL );
     }
+#endif
 
     /* This is taken from gdk_spawn_on_screen */
     display_name = gdk_screen_make_display_name ( screen );
@@ -201,6 +208,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
 
     g_strfreev( new_env );
 
+#ifdef HAVE_SN
     if ( G_LIKELY ( ctx ) )
     {
         if ( G_LIKELY ( ret ) )
@@ -214,6 +222,7 @@ gboolean vfs_exec_on_screen( GdkScreen* screen,
 
     if ( G_LIKELY ( display ) )
         sn_display_unref ( display );
+#endif
 
     return ret;
 }

@@ -55,7 +55,7 @@ struct _VFSFileInfo
     off64_t size;           //sfm was off_t
     time_t mtime;
     time_t atime;
-    blksize_t blksize;      //sfm was long
+    long blksize;  //sfm was long then blksize_t but blksize_t not defined for squeeze gcc
     blkcnt64_t blocks;      //sfm was blkcnt_t
 
     char* name; /* real name on file system */

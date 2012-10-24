@@ -214,7 +214,7 @@ void vfs_dir_finalize( GObject *obj )
     {
         g_signal_handlers_disconnect_by_func( dir->task, on_list_task_finished, dir );
         /* FIXME: should we generate a "file-list" signal to indicate the dir loading was cancelled? */
-printf("spacefm: vfs_dir_finalize -> vfs_async_task_cancel\n");
+//printf("spacefm: vfs_dir_finalize -> vfs_async_task_cancel\n");
         vfs_async_task_cancel( dir->task );
         g_object_unref( dir->task );
         dir->task = NULL;
@@ -319,8 +319,7 @@ static GList* vfs_dir_find_file( VFSDir* dir, const char* file_name, VFSFileInfo
 }
 
 /* signal handlers */
-void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, VFSFileInfo* file,
-                                                                gboolean force )
+void vfs_dir_emit_file_created( VFSDir* dir, const char* file_name, gboolean force )
 {
     GList* l;
 
@@ -848,7 +847,7 @@ void update_created_files( gpointer key, gpointer data, gpointer user_data )
     char* full_path;
     VFSFileInfo* file;
     GList* ll;
-    
+
     if ( dir->created_files )
     {
         g_mutex_lock( dir->mutex );
@@ -923,7 +922,7 @@ void vfs_dir_monitor_callback( VFSFileMonitor* fm,
     switch ( event )
     {
     case VFS_FILE_MONITOR_CREATE:
-        vfs_dir_emit_file_created( dir, file_name, NULL, FALSE );
+        vfs_dir_emit_file_created( dir, file_name, FALSE );
         break;
     case VFS_FILE_MONITOR_DELETE:
         vfs_dir_emit_file_deleted( dir, file_name, NULL );
@@ -973,6 +972,7 @@ VFSDir* vfs_dir_get_by_path_soft( const char* path )
 {
     if ( G_UNLIKELY( !dir_hash || !path ) )
         return NULL;
+
     VFSDir * dir = g_hash_table_lookup( dir_hash, path );
     if ( dir )
         g_object_ref( dir );

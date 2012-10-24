@@ -8,6 +8,9 @@
 #include "ptk-file-browser.h"
 #include "desktop-window.h"
 
+// this determines time before item is selected by hover in single-click mode
+#define SINGLE_CLICK_TIMEOUT 150
+
 typedef enum {
     WPM_STRETCH,
     WPM_FULL,
@@ -240,6 +243,7 @@ static const char* terminal_programs[] =  //for pref-dialog.c
     "lxterminal",
     "mlterm",
     "mrxvt",
+    "rxvt",
     "sakura",
     "terminator",
     "urxvt",
@@ -327,6 +331,9 @@ char* replace_string( const char* orig, const char* str, const char* replace,
 char* replace_line_subs( const char* line );
 char* bash_quote( const char* str );
 void string_copy_free( char** s, const char* src );
+gboolean is_alphanum( char* str );
+char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
+
 char* get_valid_su();
 char* get_valid_gsu();
 gboolean xset_copy_file( char* src, char* dest );

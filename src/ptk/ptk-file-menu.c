@@ -39,6 +39,8 @@
 #include "ptk-file-list.h"  //sfm for sort extra
 //#include "ptk-bookmarks.h"
 
+#include "gtk2-compat.h"
+
 #define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
@@ -1688,7 +1690,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     PtkFileMenu* app_data = NULL;
     VFSAppDesktop* desktop_file = NULL;
     
-    GtkWidget* item = GTK_MENU_SHELL( menu )->GSEAL(active_menu_item); //GTK3 version: gtk_menu_shell_get_selected_item (GTK_MENU_SHELL( menu ));
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
     if ( item )
     {
         // if original menu, desktop_file will be set
@@ -1708,7 +1710,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     
     if ( keymod == 0 )
     {        
-        if ( event->keyval == GDK_F1 )
+        if ( event->keyval == GDK_KEY_F1 )
         {
             char* help = NULL;
             if ( app_data )
@@ -1757,16 +1759,16 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
             xset_show_help( NULL, NULL, help );
             return TRUE;
         }
-        else if ( desktop_file && event->keyval == GDK_F2 )
+        else if ( desktop_file && event->keyval == GDK_KEY_F2 )
         {
             show_app_menu( menu, item, data, 0, event->time );
             return TRUE;
         }
-        else if ( event->keyval == GDK_F4 )
+        else if ( event->keyval == GDK_KEY_F4 )
             job = APP_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
+        else if ( event->keyval == GDK_KEY_Delete )
             job = APP_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
+        else if ( event->keyval == GDK_KEY_Insert )
             job = APP_JOB_ADD;
     }
     if ( desktop_file && job != -1 )
@@ -2396,7 +2398,7 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
             file = vfs_file_info_new();
             vfs_file_info_get( file, ao->path, NULL );
             vfs_dir_emit_file_created( ao->file_browser->dir,
-                                    vfs_file_info_get_name( file ), file, TRUE );
+                                    vfs_file_info_get_name( file ), TRUE );
             vfs_file_info_unref( file );
             vfs_dir_flush_notify_cache();
             ptk_file_browser_select_file( ao->file_browser, ao->path );

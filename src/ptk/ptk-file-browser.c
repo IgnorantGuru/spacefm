@@ -34,6 +34,7 @@
 
 #include "mime-type/mime-type.h"
 
+#include "settings.h"    //MOD
 #include "ptk-app-chooser.h"
 
 #include "ptk-file-icon-renderer.h"
@@ -64,8 +65,6 @@
 #include "main-window.h"
 
 #include "gtk2-compat.h"
-
-//extern gboolean startup_mode; //MOD
 
 extern char* run_cmd;  //MOD
 
@@ -278,8 +277,6 @@ static char *replace_str(char *str, char *orig, char *rep); //MOD
 
 void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
 void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget, PtkFileBrowser* file_browser );
-
-#include "settings.h"    //MOD
 
 static guint signals[ N_SIGNALS ] = { 0 };
 
@@ -1836,9 +1833,19 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     if ( xset_get_b_panel( curpanel, "list_detailed" ) )
         view_mode = PTK_FB_LIST_VIEW;
     else if ( xset_get_b_panel( curpanel, "list_icons" ) )
+    {
         view_mode = PTK_FB_ICON_VIEW;
+        gtk_scrolled_window_set_policy( 
+                            GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    }
     else if ( xset_get_b_panel( curpanel, "list_compact" ) )
+    {
         view_mode = PTK_FB_COMPACT_VIEW;
+        gtk_scrolled_window_set_policy( 
+                            GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    }
     else
     {
         xset_set_panel( curpanel, "list_detailed", "b", "1" );
@@ -3302,8 +3309,7 @@ on_folder_view_button_press_event ( GtkWidget *widget,
                                                        event->x, event->y );
             model = exo_icon_view_get_model( EXO_ICON_VIEW( widget ) );
 
-            if ( tree_path && app_settings.single_click && !event->state
-                                                    && event->button == 1 ) //sfm
+            if ( tree_path && !event->state && event->button == 1 ) //sfm
             {
                 // unselect all but one file
                 exo_icon_view_unselect_all( EXO_ICON_VIEW( widget ) );
@@ -3724,7 +3730,8 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
                                             folder_view_search_equal, NULL, NULL );
 
         exo_icon_view_set_single_click( (ExoIconView*)folder_view, file_browser->single_click );
-        exo_icon_view_set_single_click_timeout( (ExoIconView*)folder_view, 400 );
+        exo_icon_view_set_single_click_timeout( (ExoIconView*)folder_view,
+                                                        SINGLE_CLICK_TIMEOUT );
 
         gtk_cell_layout_clear ( GTK_CELL_LAYOUT ( folder_view ) );
 
@@ -3803,7 +3810,8 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
                                         folder_view_search_equal, NULL, NULL );
 
         exo_tree_view_set_single_click( (ExoTreeView*)folder_view, file_browser->single_click );
-        exo_tree_view_set_single_click_timeout( (ExoTreeView*)folder_view, 400 );
+        exo_tree_view_set_single_click_timeout( (ExoTreeView*)folder_view, 
+                                                        SINGLE_CLICK_TIMEOUT );
 
         icon_size = small_icon_size;
 
@@ -4240,7 +4248,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             }
             if ( puri )
             {
-            if ( 0 == ( gdk_drag_context_get_selected_action(drag_context) &
+                if ( 0 == ( gdk_drag_context_get_selected_action(drag_context) &
                             ( GDK_ACTION_MOVE | GDK_ACTION_COPY | GDK_ACTION_LINK ) ) )
                 {
                     gdk_drag_status (drag_context, GDK_ACTION_COPY, time); //sfm correct?  was MOVE
@@ -4260,7 +4268,7 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
                 }
                 g_strfreev( list );
 
-            switch ( gdk_drag_context_get_selected_action(drag_context) )
+                switch ( gdk_drag_context_get_selected_action(drag_context) )
                 {
                 case GDK_ACTION_COPY:
                     file_action = VFS_FILE_TASK_COPY;
@@ -4564,7 +4572,7 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
                 // automatic
                 file_browser->pending_drag_status = 1;
                 gtk_drag_get_data (widget, drag_context, target, time);
-                suggested_action = gdk_drag_context_get_suggested_action ( drag_context );
+                suggested_action = gdk_drag_context_get_selected_action ( drag_context );
             }
         }
         gdk_drag_status( drag_context, suggested_action, time );
@@ -5811,6 +5819,9 @@ void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_ICON_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 }
@@ -5829,6 +5840,9 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_COMPACT_VIEW );
     exo_icon_view_set_model( EXO_ICON_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 }
@@ -5846,6 +5860,9 @@ void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser )
     file_browser->folder_view = create_folder_view( file_browser, PTK_FB_LIST_VIEW );
     gtk_tree_view_set_model( GTK_TREE_VIEW( file_browser->folder_view ),
                              file_browser->file_list );
+    gtk_scrolled_window_set_policy( 
+                        GTK_SCROLLED_WINDOW( file_browser->folder_view_scroll ),
+                        GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS );
     gtk_widget_show( file_browser->folder_view );
     gtk_container_add( GTK_CONTAINER( file_browser->folder_view_scroll ), file_browser->folder_view );
 
@@ -5862,7 +5879,7 @@ void ptk_file_browser_create_new_file( PtkFileBrowser* file_browser,
         GtkTreeIter it;
         /* generate created event before FAM to enhance responsiveness. */
         vfs_dir_emit_file_created( file_browser->dir, vfs_file_info_get_name(file),
-                                                                    file, TRUE );
+                                                                    TRUE );
 
         /* select the created file */
         if( ptk_file_list_find_iter( list, &it, file ) )

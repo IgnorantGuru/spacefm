@@ -47,6 +47,10 @@
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+#include <cairo-xlib.h>
+#endif
+
 #include <string.h>
 
 /* for stat */
@@ -78,7 +82,13 @@ static void desktop_window_class_init           (DesktopWindowClass *klass);
 static void desktop_window_init             (DesktopWindow *self);
 static void desktop_window_finalize         (GObject *object);
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static gboolean on_draw( GtkWidget* w, cairo_t* cr );
+static void desktop_window_get_preferred_width (GtkWidget *widget, gint *minimal_width, gint *natural_width);
+static void desktop_window_get_preferred_height (GtkWidget *widget, gint *minimal_height, gint *natural_height);
+#else
 static gboolean on_expose( GtkWidget* w, GdkEventExpose* evt );
+#endif
 static void on_size_allocate( GtkWidget* w, GtkAllocation* alloc );
 static void on_size_request( GtkWidget* w, GtkRequisition* req );
 static gboolean on_button_press( GtkWidget* w, GdkEventButton* evt );
@@ -156,7 +166,7 @@ static Atom ATOM_NET_WORKAREA = 0;
 /* Local data */
 static GtkWindowClass *parent_class = NULL;
 
-static GdkPixmap* pix = NULL;
+/*static GdkPixmap* pix = NULL;*/
 
 enum {
     DRAG_TARGET_URI_LIST,
@@ -199,7 +209,7 @@ static PtkMenuItemEntry desktop_menu[] =
     PTK_SEPARATOR_MENU_ITEM,
     PTK_POPUP_IMG_MENU( N_( "_Create New" ), "gtk-new", create_new_menu ),
     PTK_SEPARATOR_MENU_ITEM,
-    PTK_IMG_MENU_ITEM( N_( "_Desktop Settings" ), GTK_STOCK_PREFERENCES, on_settings, GDK_Return, GDK_MOD1_MASK ),
+    PTK_IMG_MENU_ITEM( N_( "_Desktop Settings" ), GTK_STOCK_PREFERENCES, on_settings, GDK_KEY_Return, GDK_MOD1_MASK ),
     PTK_MENU_END
 };
 
@@ -238,9 +248,15 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
 
     g_object_class->finalize = desktop_window_finalize;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    wc->draw = on_draw;
+    wc->get_preferred_width = desktop_window_get_preferred_width;
+    wc->get_preferred_height = desktop_window_get_preferred_height;
+#else
     wc->expose_event = on_expose;
-    wc->size_allocate = on_size_allocate;
     wc->size_request = on_size_request;
+#endif
+    wc->size_allocate = on_size_allocate;
     wc->button_press_event = on_button_press;
     wc->button_release_event = on_button_release;
     wc->motion_notify_event = on_mouse_move;
@@ -379,6 +395,7 @@ void desktop_item_free( DesktopItem* item )
 void desktop_window_finalize(GObject *object)
 {
     DesktopWindow *self = (DesktopWindow*)object;
+    Display *xdisplay = GDK_DISPLAY_XDISPLAY( gtk_widget_get_display( (GtkWidget*)object) );
 
     g_return_if_fail(object != NULL);
     g_return_if_fail(IS_DESKTOP_WINDOW(object));
@@ -387,8 +404,16 @@ void desktop_window_finalize(GObject *object)
                     gdk_screen_get_root_window( gtk_widget_get_screen( (GtkWidget*)object) ),
                     on_rootwin_event, self );
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if( self->background )
+        XFreePixmap ( xdisplay, self->background );
+
+    if( self->surface )
+        cairo_surface_destroy ( self->surface );
+#else
     if( self->background )
         g_object_unref( self->background );
+#endif
 
     if( self->hand_cursor )
         gdk_cursor_unref( self->hand_cursor );
@@ -406,11 +431,19 @@ void desktop_window_finalize(GObject *object)
 
 /*--------------- Signal handlers --------------*/
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+gboolean on_draw( GtkWidget* w, cairo_t* cr)
+#else
 gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
+#endif
 {
     DesktopWindow* self = (DesktopWindow*)w;
     GList* l;
     GdkRectangle intersect;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    GtkAllocation allocation;
+    gtk_widget_get_allocation (w, &allocation);
+#endif
 
     if( G_UNLIKELY( ! gtk_widget_get_visible (w) || ! gtk_widget_get_mapped (w) ) )
         return TRUE;
@@ -435,8 +468,13 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
     for( l = self->items; l; l = l->next )
     {
         DesktopItem* item = (DesktopItem*)l->data;
+#if GTK_CHECK_VERSION (3, 0, 0)
+        if( gdk_rectangle_intersect( &allocation, &item->box, &intersect ) )
+            paint_item( self, item, &intersect );
+#else
         if( gdk_rectangle_intersect( &evt->area, &item->box, &intersect ) )
             paint_item( self, item, &intersect );
+#endif
     }
     return TRUE;
 }
@@ -453,23 +491,16 @@ void on_size_allocate( GtkWidget* w, GtkAllocation* alloc )
     GTK_WIDGET_CLASS(parent_class)->size_allocate( w, alloc );
 }
 
-void desktop_window_set_pixmap( DesktopWindow* win, GdkPixmap* pix )
-{
-    if( win->background )
-        g_object_unref( win->background );
-    win->background = pix ? g_object_ref( pix ) : NULL;
-
-    if( gtk_widget_get_realized( (GtkWidget*)win ) )
-        gdk_window_set_back_pixmap( gtk_widget_get_window( ((GtkWidget*)win) ), win->background, FALSE );
-}
-
 void desktop_window_set_bg_color( DesktopWindow* win, GdkColor* clr )
 {
     if( clr )
     {
         win->bg = *clr;
+// Allocating colors is unnecessary with gtk3
+#if !GTK_CHECK_VERSION (3, 0, 0)
         gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
                             &win->bg, FALSE, TRUE );
+#endif
         if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
     }
@@ -482,14 +513,20 @@ void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor*
         if( clr )
         {
             win->fg = *clr;
+// Allocating colors is unnecessary with gtk3
+#if !GTK_CHECK_VERSION (3, 0, 0)
             gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
                                 &win->fg, FALSE, TRUE );
+#endif
         }
         if( shadow )
         {
             win->shadow = *shadow;
+// Allocating colors is unnecessary with gtk3
+#if !GTK_CHECK_VERSION (3, 0, 0)
             gdk_colormap_alloc_color ( gtk_widget_get_colormap( (GtkWidget*)win ),
                                 &win->shadow, FALSE, TRUE );
+#endif
         }
         if( gtk_widget_get_visible( (GtkWidget*)win ) )
             gtk_widget_queue_draw(  (GtkWidget*)win );
@@ -504,11 +541,26 @@ void desktop_window_set_text_color( DesktopWindow* win, GdkColor* clr, GdkColor*
  */
 void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBgType type )
 {
+#if GTK_CHECK_VERSION (3, 0, 0)
+    Pixmap pixmap = 0;
+    cairo_surface_t *surface = NULL;
+    cairo_pattern_t *pattern = NULL;
+#else
     GdkPixmap* pixmap = NULL;
+#endif
     Display* xdisplay;
     Pixmap xpixmap = 0;
+    Visual *xvisual;
     Window xroot;
     cairo_t *cr;
+    int dummy;
+    unsigned int udummy, depth;
+
+    /* set root map here */
+    xdisplay = GDK_DISPLAY_XDISPLAY( gtk_widget_get_display( (GtkWidget*)win) );
+    XGetGeometry (xdisplay, GDK_WINDOW_XID( gtk_widget_get_window( (GtkWidget*)win ) ),
+                  &xroot, &dummy, &dummy, &dummy, &dummy, &udummy, &depth);
+    xvisual = GDK_VISUAL_XVISUAL (gdk_screen_get_system_visual ( gtk_widget_get_screen ( (GtkWidget*)win) ) );
 
     win->bg_type = type;
 
@@ -522,8 +574,15 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
 
         if( type == DW_BG_TILE )
         {
+#if GTK_CHECK_VERSION (3, 0, 0)
+            pixmap = XCreatePixmap(xdisplay, xroot, src_w, src_h, depth);
+            surface = cairo_xlib_surface_create (xdisplay, pixmap, xvisual,
+                                                 src_w, src_h);
+            cr = cairo_create ( surface );
+#else
             pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), src_w, src_h, -1 );
             cr = gdk_cairo_create ( pixmap );
+#endif
             gdk_cairo_set_source_pixbuf ( cr, src_pix, 0, 0 );
             cairo_paint ( cr );
         }
@@ -533,8 +592,15 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
             int dest_x = 0, dest_y = 0;
             int w = 0, h = 0;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+            pixmap = XCreatePixmap(xdisplay, xroot, dest_w, dest_h, depth);
+            surface = cairo_xlib_surface_create (xdisplay, pixmap, xvisual,
+                                                 dest_w, dest_h);
+            cr = cairo_create ( surface );
+#else
             pixmap = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)win) ), dest_w, dest_h, -1 );
             cr = gdk_cairo_create ( pixmap );
+#endif
             switch( type )
             {
             case DW_BG_STRETCH:
@@ -603,44 +669,80 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
                 {
                     gdk_cairo_set_source_color ( cr, &win->bg );
                     cairo_rectangle ( cr, 0, 0, dest_w, dest_h );
-                    cairo_fill ( cr );
+                    cairo_paint ( cr );
                 }
-                gdk_cairo_set_source_pixbuf ( cr, scaled, src_x, src_y );
-                cairo_move_to ( cr, dest_x, dest_y );
+                gdk_cairo_set_source_pixbuf ( cr, scaled, dest_x, dest_y );
+                cairo_move_to ( cr, src_x, src_y );
                 cairo_paint ( cr );
                 g_object_unref( scaled );
             }
             else
             {
+#if GTK_CHECK_VERSION (3, 0, 0)
+                XFreePixmap ( xdisplay, pixmap );
+                pixmap = 0;
+#else
                 g_object_unref( pixmap );
                 pixmap = NULL;
+#endif
             }
         }
+        cairo_destroy ( cr );
     }
 
-    cairo_destroy ( cr );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if( win->background )
+        XFreePixmap ( xdisplay, win->background );
 
+    if( win->surface )
+        cairo_surface_destroy ( win->surface );
+
+    win->surface = surface;        
+#else
     if( win->background )
         g_object_unref( win->background );
+#endif
     win->background = pixmap;
 
+
     if( pixmap )
+    {
+#if GTK_CHECK_VERSION (3, 0, 0)
+        pattern = cairo_pattern_create_for_surface( surface );
+        cairo_pattern_set_extend( pattern, CAIRO_EXTEND_REPEAT );
+        gdk_window_set_background_pattern( gtk_widget_get_window( ((GtkWidget*)win) ), pattern );
+        cairo_pattern_destroy( pattern );
+#else
         gdk_window_set_back_pixmap( gtk_widget_get_window( ((GtkWidget*)win) ), pixmap, FALSE );
+#endif
+    }
     else
         gdk_window_set_background( gtk_widget_get_window( ((GtkWidget*)win) ), &win->bg );
 
+#if !GTK_CHECK_VERSION (3, 0, 0)
     gdk_window_clear( gtk_widget_get_window( ((GtkWidget*)win) ) );
+#else
+/*    cairo_t *cr2 = gdk_cairo_create( gtk_widget_get_window ((GtkWidget*)win) );
+    gdk_cairo_set_source_color( cr2, &win->bg );
+    cairo_paint( cr2 );
+    if ( surface )
+    {
+        cairo_set_source_surface( cr2, surface, 0, 0 );
+        cairo_paint( cr2 );
+    }
+    cairo_destroy(cr2);*/
+#endif
     gtk_widget_queue_draw( (GtkWidget*)win );
-
-    /* set root map here */
-    xdisplay = GDK_DISPLAY_XDISPLAY( gtk_widget_get_display( (GtkWidget*)win) );
-    xroot = GDK_WINDOW_XID( gtk_widget_get_root_window( (GtkWidget*)win ) );
 
     XGrabServer (xdisplay);
 
     if( pixmap )
     {
-        xpixmap = GDK_WINDOW_XWINDOW(pixmap);
+#if GTK_CHECK_VERSION (3, 0, 0)
+        xpixmap = pixmap;
+#else
+        xpixmap = GDK_WINDOW_XID(pixmap);
+#endif
 
         XChangeProperty( xdisplay,
                     xroot,
@@ -720,6 +822,32 @@ void on_size_request( GtkWidget* w, GtkRequisition* req )
     req->width = gdk_screen_get_width( scr );
     req->height = gdk_screen_get_height( scr );
 }
+
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void
+desktop_window_get_preferred_width (GtkWidget *widget,
+                                    gint      *minimal_width,
+                                    gint      *natural_width)
+{
+  GtkRequisition requisition;
+
+  on_size_request (widget, &requisition);
+
+  *minimal_width = *natural_width = requisition.width;
+}
+
+static void
+desktop_window_get_preferred_height (GtkWidget *widget,
+                                     gint      *minimal_height,
+                                     gint      *natural_height)
+{
+  GtkRequisition requisition;
+
+  on_size_request (widget, &requisition);
+
+  *minimal_height = *natural_height = requisition.height;
+}
+#endif
 
 static void calc_rubber_banding_rect( DesktopWindow* self, int x, int y, GdkRectangle* rect )
 {
@@ -832,8 +960,13 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     else if( self->bg_type != DW_BG_COLOR )
     {
         if( self->background )
+#if GTK_CHECK_VERSION (3, 0, 0)
+            pix = gdk_pixbuf_get_from_surface( self->surface,
+                                                rect.x, rect.y, rect.width, rect.height );
+#else
             pix = gdk_pixbuf_get_from_drawable( NULL, self->background, gdk_drawable_get_colormap(self->background),
                                                 rect.x, rect.y, 0, 0, rect.width, rect.height );
+#endif
     }
 
     if( pix )
@@ -841,7 +974,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         colorize_pixbuf( pix, clr, alpha );
         if( self->bg_type == DW_BG_TILE ) /* this is currently unreachable */
         {
-            GdkPixmap* pattern;
+            /*GdkPixmap* pattern;*/
             /* FIXME: This is damn slow!! */
             /*pattern = gdk_pixmap_new( gtk_widget_get_window( ((GtkWidget*)self) ), pattern_w, pattern_h, -1 );
             if( pattern )
@@ -888,7 +1021,11 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
 {
     GList* l;
     GdkRectangle old_rect, new_rect;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_region_t *region;
+#else
     GdkRegion *region;
+#endif
 
     calc_rubber_banding_rect(self, self->rubber_bending_x, self->rubber_bending_y, &old_rect );
     calc_rubber_banding_rect(self, newx, newy, &new_rect );
@@ -1252,8 +1389,9 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
                 gdk_window_set_cursor( gtk_widget_get_window(w), self->hand_cursor );
                 /* FIXME: timeout should be customizable */
                 if( 0 == self->single_click_timeout_handler )
-                    self->single_click_timeout_handler = g_timeout_add( 400,
-                                        (GSourceFunc)on_single_click_timeout, self );
+                    self->single_click_timeout_handler = 
+                                    g_timeout_add( SINGLE_CLICK_TIMEOUT,
+                                    (GSourceFunc)on_single_click_timeout, self );
             }
             else
             {
@@ -1351,8 +1489,8 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
 gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint time )
 {
     DesktopWindow* self = (DesktopWindow*)w;
-    DesktopItem* item;
-    GdkAtom target;
+    //DesktopItem* item;
+    //GdkAtom target;
 
     if( ! self->drag_entered )
     {
@@ -1524,11 +1662,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
             return;
         }
 
-        if( item )
-        {
-            if( (item->fi->flags & VFS_FILE_INFO_VIRTUAL) && vfs_file_info_is_dir( item->fi ) )
-                dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
-        }
+        if ( item && vfs_file_info_is_dir( item->fi ) )
+            dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
 
         /* We are just checking the suggested actions for the drop site, not really drop */
         if( self->pending_drop_action )
@@ -1708,15 +1843,15 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
     {
         switch ( evt->keyval )
         {
-        case GDK_x:
+        case GDK_KEY_x:
             if( sels )
                 ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, FALSE );
             break;
-        case GDK_c:
+        case GDK_KEY_c:
             if( sels )
                 ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, TRUE );
             break;
-        case GDK_v:
+        case GDK_KEY_v:
             on_paste( NULL, self );
             break;
 /*
@@ -1733,7 +1868,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
     {
         switch ( evt->keyval )
         {
-        case GDK_Return:
+        case GDK_KEY_Return:
             if( sels )
                 ptk_show_file_properties( NULL, vfs_get_desktop_dir(), sels, 0 );
             break;
@@ -1743,7 +1878,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
     {
         switch ( evt->keyval )
         {
-        case GDK_Delete:
+        case GDK_KEY_Delete:
             if( sels )
                 ptk_delete_files( NULL, vfs_get_desktop_dir(), sels, NULL );
             break;
@@ -1753,12 +1888,12 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
     {
         switch ( evt->keyval )
         {
-        case GDK_F2:
+        case GDK_KEY_F2:
             if ( sels )
                 desktop_window_rename_selected_files( self, sels, vfs_get_desktop_dir() );
                 //ptk_rename_file( NULL, vfs_get_desktop_dir(), (VFSFileInfo*)sels->data );
             break;
-        case GDK_Delete:
+        case GDK_KEY_Delete:
             if( sels )
                 ptk_delete_files( NULL, vfs_get_desktop_dir(), sels, NULL );
             break;
@@ -1804,7 +1939,7 @@ void on_realize( GtkWidget* w )
     /* This is borrowed from fbpanel */
 #define WIN_HINTS_SKIP_FOCUS      (1<<0)    /* skip "alt-tab" */
     val = WIN_HINTS_SKIP_FOCUS;
-    XChangeProperty(gdk_x11_get_default_xdisplay(), GDK_WINDOW_XWINDOW(gtk_widget_get_window(w)),
+    XChangeProperty(gdk_x11_get_default_xdisplay(), GDK_WINDOW_XID(gtk_widget_get_window(w)),
           XInternAtom(gdk_x11_get_default_xdisplay(), "_WIN_HINTS", False), XA_CARDINAL, 32,
           PropModeReplace, (unsigned char *) &val, 1);
 
@@ -1815,7 +1950,13 @@ void on_realize( GtkWidget* w )
 gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt )
 {
     DesktopWindow* self = (DesktopWindow*) w;
-    gtk_widget_grab_focus( w );
+    //sfm gtk3 gtk_widget_grab_focus( w ) not equivalent
+    //gtk_widget_grab_focus( w );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    // TODO
+#else
+    GTK_WIDGET_SET_FLAGS( w, GTK_HAS_FOCUS );
+#endif
     if( self->focus )
         redraw_item( self, self->focus );
     return FALSE;
@@ -1826,6 +1967,12 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     DesktopWindow* self = (DesktopWindow*) w;
     if( self->focus )
     {
+        //sfm gtk3 restored - can GTK_WIDGET_UNSET_FLAGS be removed without changes?
+#if GTK_CHECK_VERSION (3, 0, 0)
+    // TODO
+#else
+        GTK_WIDGET_UNSET_FLAGS( w, GTK_HAS_FOCUS );
+#endif
         redraw_item( self, self->focus );
     }
     return FALSE;
@@ -2178,8 +2325,9 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     GdkPixbuf* icon;
     const char* text = item->fi->disp_name;
     GtkWidget* widget = (GtkWidget*)self;
+#if !GTK_CHECK_VERSION (3, 0, 0)
     GdkDrawable* drawable = gtk_widget_get_window(widget);
-    GdkGC* tmp;
+#endif
     GtkCellRendererState state = 0;
     GdkRectangle text_rect;
     int w, h;
@@ -2196,13 +2344,16 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         state = GTK_CELL_RENDERER_SELECTED;
 
     g_object_set( self->icon_render, "pixbuf", icon, NULL );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_cell_renderer_render( self->icon_render, cr, widget,
+                                                       &item->icon_rect, &item->icon_rect, state );
+#else
     gtk_cell_renderer_render( self->icon_render, drawable, widget,
                                                        &item->icon_rect, &item->icon_rect, expose_area, state );
+#endif
 
 	if( icon )
 		g_object_unref( icon );
-
-    tmp = gtk_widget_get_style(widget)->fg_gc[0];
 
     text_rect = item->text_rect;
 
@@ -2247,11 +2398,19 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 
     if( self->focus == item && gtk_widget_has_focus(widget) )
     {
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_paint_focus( gtk_widget_get_style(widget), cr,
+                        GTK_STATE_NORMAL,/*item->is_selected ? GTK_STATE_SELECTED : GTK_STATE_NORMAL,*/
+                        widget, "icon_view",
+                        item->text_rect.x, item->text_rect.y,
+                        item->text_rect.width, item->text_rect.height);
+#else
         gtk_paint_focus( gtk_widget_get_style(widget), gtk_widget_get_window(widget),
                         GTK_STATE_NORMAL,/*item->is_selected ? GTK_STATE_SELECTED : GTK_STATE_NORMAL,*/
                         &item->text_rect, widget, "icon_view",
                         item->text_rect.x, item->text_rect.y,
                         item->text_rect.width, item->text_rect.height);
+#endif
     }
 
     text_rect = item->text_rect;
@@ -2272,7 +2431,6 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
     cairo_move_to( cr, text_rect.x, text_rect.y );
     pango_cairo_show_layout( cr, self->pl );
 
-    gtk_widget_get_style(widget)->fg_gc[0] = tmp;
     cairo_destroy( cr );
 }
 
@@ -2621,7 +2779,7 @@ void forward_event_to_rootwin( GdkScreen *gscreen, GdkEvent *event )
     }
     else
         return ;
-    xev.window = GDK_WINDOW_XWINDOW( gdk_screen_get_root_window( gscreen ) );
+    xev.window = GDK_WINDOW_XID( gdk_screen_get_root_window( gscreen ) );
     xev.root = xev.window;
     xev.subwindow = None;
     xev.time = event->button.time;

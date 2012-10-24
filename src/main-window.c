@@ -54,6 +54,8 @@
 #include "vfs-file-task.h"
 #include "ptk-location-view.h"
 
+#include "gtk2-compat.h"
+
 void rebuild_menus( FMMainWindow* main_window );
 
 static void fm_main_window_class_init( FMMainWindowClass* klass );
@@ -943,6 +945,12 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 font_desc = pango_font_description_from_string( fontname );
                 gtk_widget_modify_font( GTK_WIDGET( a_browser->folder_view ),
                                                                     font_desc );
+                /*
+                if ( a_browser->view_mode != PTK_FB_LIST_VIEW )
+                {
+                    // need to triger redraw of exo icon views
+                }
+                */
                 if ( a_browser->side_dir )
                     gtk_widget_modify_font( GTK_WIDGET( a_browser->side_dir ),
                                                                     font_desc );
@@ -1346,7 +1354,12 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                     while ( tabs && !strncmp( tabs, "///", 3 ) )
                     {
                         tabs += 3;
-                        if ( end = strstr( tabs, "///" ) )
+                        if ( !strncmp( tabs, "////", 4 ) )
+                        {
+                            tab_dir = g_strdup( "/" );
+                            tabs++;
+                        }
+                        else if ( end = strstr( tabs, "///" ) )
                         {
                             end[0] = '\0';
                             tab_dir = g_strdup( tabs );
@@ -2448,6 +2461,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
     }
 
     gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_MIDDLE );
+    gtk_label_set_width_chars( GTK_LABEL( tab_text ), 15 );
     gtk_label_set_max_width_chars( GTK_LABEL( tab_text ), 30 );
     gtk_box_pack_start( GTK_BOX( tab_label ),
                         tab_text, FALSE, FALSE, 4 );
@@ -2469,7 +2483,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             close_icon = gtk_image_new_from_stock( GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU );
         }
         gtk_container_add ( GTK_CONTAINER ( close_btn ), close_icon );
-        gtk_box_pack_start ( GTK_BOX( tab_label ),
+        gtk_box_pack_end ( GTK_BOX( tab_label ),
                              close_btn, FALSE, FALSE, 0 );
         g_signal_connect( G_OBJECT( close_btn ), "clicked",
                           G_CALLBACK( on_close_notebook_page ), file_browser );
@@ -2556,7 +2570,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
-    ptk_file_browser_set_single_click_timeout( file_browser, 400 );
+    ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT );
     ptk_file_browser_show_thumbnails( file_browser,
                                       app_settings.show_thumbnail ? app_settings.max_thumb_size : 0 );
 
@@ -3377,11 +3391,11 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if ( event->keyval == GDK_Escape 
-            || event->keyval == GDK_Home
-            || event->keyval == GDK_End
-            || event->keyval == GDK_Delete
-            || event->keyval == GDK_BackSpace )
+    if ( event->keyval == GDK_KEY_Escape 
+            || event->keyval == GDK_KEY_Home
+            || event->keyval == GDK_KEY_End
+            || event->keyval == GDK_KEY_Delete
+            || event->keyval == GDK_KEY_BackSpace )
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
         if ( browser && browser->path_bar && gtk_widget_has_focus( 
@@ -4464,7 +4478,28 @@ gboolean main_tasks_running( FMMainWindow* main_window )
     return ret;
 }
 
-void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
+void main_task_pause_all_queued( PtkFileTask* ptask )
+{
+    PtkFileTask* qtask;
+    GtkTreeIter it;
+    
+    if ( !ptask->task_view )
+        return;
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ptask->task_view ) );
+    if ( gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &qtask, -1 );
+            if ( qtask && qtask != ptask && qtask->task && !qtask->complete &&
+                            qtask->task->state_pause == VFS_FILE_TASK_QUEUE )
+                ptk_file_task_pause( qtask, VFS_FILE_TASK_PAUSE );
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
+}
+
+void main_task_start_queued( GtkWidget* view, PtkFileTask* new_task )
 {
     GtkTreeModel* model;
     GtkTreeIter it;
@@ -4480,11 +4515,7 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
 #endif
     if ( !view )
         return;
-    FMMainWindow* main_window = get_task_view_window( view );
-    if ( !main_window )
-        return;
 
-//printf("task_start_queued\n");
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
@@ -4513,9 +4544,7 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
     
     if ( !smart )
     {
-//printf("    start1\n");
         ptk_file_task_pause( (PtkFileTask*)queued->data, VFS_FILE_TASK_RUNNING );
-//printf("    start1 DONE\n");
         goto _done;
     }
 
@@ -4549,16 +4578,13 @@ void task_start_queued( GtkWidget* view, PtkFileTask* new_task )
         {
             // qtask has no running devices so run it
             running = g_slist_append( running, qtask );
-//printf("    start2\n");
             ptk_file_task_pause( qtask, VFS_FILE_TASK_RUNNING );
-//printf("    start2 DONE\n");
             continue;
         }
     }
 _done:
     g_slist_free( queued );
     g_slist_free( running );
-//printf("task_start_queued DONE\n");
 }
 
 void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
@@ -4613,7 +4639,9 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
         {
             if ( model )
                 gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
-            if ( ptask && ptask->task && !ptask->complete )
+            if ( ptask && ptask->task && !ptask->complete &&
+                        ( ptask->task->type != VFS_FILE_TASK_EXEC
+                                || ptask->task->exec_pid || job == JOB_STOP ) )
             {
                 switch ( job )
                 {
@@ -4634,7 +4662,7 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
         }
         while ( model && gtk_tree_model_iter_next( model, &it ) );
     }
-    task_start_queued( view, NULL );
+    main_task_start_queued( view, NULL );
 }
 
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
@@ -4680,7 +4708,22 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
         if ( gtk_tree_model_get_iter_first( model, &it ) )
             gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
         else
-            gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+        {
+            if ( xset_get_b( "task_hide_manager" ) )
+            {
+                gboolean tasks_has_focus = gtk_widget_is_focus( 
+                                        GTK_WIDGET( main_window->task_view ) );
+                gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+                if ( tasks_has_focus )
+                {
+                    // focus the file list
+                    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                            fm_main_window_get_current_file_browser( main_window ) );   
+                    if ( file_browser )
+                        gtk_widget_grab_focus( file_browser->folder_view );
+                }
+            }
+        }
     }
 }
 
@@ -4820,11 +4863,13 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
         if ( is_tasks = gtk_tree_model_get_iter_first( model, &it ) )
         {
-            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
-                                        event->y, &tree_path, &col, NULL, NULL );
-            //tree_sel = gtk_tree_view_get_selection( view );
-            if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+            if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
+                                        event->y, &tree_path, &col, NULL, NULL ) )
+            {
+                if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
+                    gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+                gtk_tree_path_free( tree_path );
+            }
         }
 
         // build popup
@@ -4855,7 +4900,9 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
 
         set = xset_set_cb( "task_resume", on_task_stop, view );
         xset_set_ob1( set, "task", ptask );
-        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_RUNNING );
+        set->disable = ( !ptask || ptask->task->state_pause == VFS_FILE_TASK_RUNNING
+                        || ( ptask->task->type == VFS_FILE_TASK_EXEC && 
+                                                    !ptask->task->exec_pid ) );
 
         xset_set_cb( "task_stop_all", on_task_stop, view );
         xset_set_cb( "task_pause_all", on_task_stop, view );
@@ -4888,14 +4935,19 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     {    
         // get selected task
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
-        if ( is_tasks = gtk_tree_model_get_iter_first( model, &it ) )
-        {
-            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
-                                        event->y, &tree_path, &col, NULL, NULL );
-            //tree_sel = gtk_tree_view_get_selection( view );
-            if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );            
-        }
+        //printf("x = %lf  y = %lf  \n", event->x, event->y );
+        // due to bug in gtk_tree_view_get_path_at_pos (gtk 2.24), a click
+        // on the column header resize divider registers as a click on the
+        // first row first column.  So if event->x < 7 ignore
+        if ( event->x < 7 )
+            return FALSE;
+        if ( !gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( view ), event->x,
+                                    event->y, &tree_path, &col, NULL, NULL ) )
+            return FALSE;
+        if ( tree_path && gtk_tree_model_get_iter( model, &it, tree_path ) )
+            gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 ); 
+        gtk_tree_path_free( tree_path );
+
         if ( !ptask )
             return FALSE;
         if ( event->button == 1 && g_strcmp0( gtk_tree_view_column_get_title( col ),
@@ -4983,7 +5035,18 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     if ( !gtk_tree_model_get_iter_first( model, &it ) )
     {
         if ( xset_get_b( "task_hide_manager" ) )
+        {
+            gboolean tasks_has_focus = gtk_widget_is_focus( GTK_WIDGET( view ) );
             gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
+            if ( tasks_has_focus )
+            {
+                // focus the file list
+                PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );   
+                if ( file_browser )
+                    gtk_widget_grab_focus( file_browser->folder_view );
+            }
+        }
     }
     
     update_window_title( NULL, main_window );
@@ -5220,13 +5283,13 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     gtk_tree_view_set_model( GTK_TREE_VIEW( view ), GTK_TREE_MODEL( list ) );
     exo_tree_view_set_single_click( (ExoTreeView*)view, TRUE );
     gtk_tree_view_set_enable_search( GTK_TREE_VIEW( view ), FALSE );
-    //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, 400 );
+    //exo_tree_view_set_single_click_timeout( (ExoTreeView*)view, SINGLE_CLICK_TIMEOUT );
 
     // Columns
     for ( i = 0; i < 13; i++ )
     {
         col = gtk_tree_view_column_new();
-        gtk_tree_view_column_set_resizable ( col, TRUE );
+        gtk_tree_view_column_set_resizable( col, TRUE );
         
         // column order
         for ( j = 0; j < 13; j++ )

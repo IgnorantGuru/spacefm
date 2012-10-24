@@ -1058,27 +1058,54 @@ gchar* info_mount_points( device_t *device )
           continue;
         }
 
+        /* ignore mounts where only a subtree of a filesystem is mounted */
+        if (g_strcmp0 (encoded_root, "/") != 0)
+            continue;
+
+        /* Temporary work-around for btrfs, see
+        *
+        *  https://github.com/IgnorantGuru/spacefm/issues/165
+        *  http://article.gmane.org/gmane.comp.file-systems.btrfs/2851
+        *  https://bugzilla.redhat.com/show_bug.cgi?id=495152#c31
+        */
+        if ( major == 0 )
+        {
+            const gchar *sep;
+            sep = strstr( lines[n], " - " );
+            if ( sep != NULL )
+            {
+                gchar typebuf[PATH_MAX];
+                gchar mount_source[PATH_MAX];
+                struct stat statbuf;
+
+                if ( sscanf( sep + 3, "%s %s", typebuf, mount_source ) == 2 &&
+                                !g_strcmp0( typebuf, "btrfs" ) &&
+                                g_str_has_prefix( mount_source, "/dev/" ) &&
+                                stat( mount_source, &statbuf ) == 0 &&
+                                S_ISBLK( statbuf.st_mode ) )
+                {
+                    major = major( statbuf.st_rdev );
+                    minor = minor( statbuf.st_rdev );
+                }
+            }
+        }
+
         if ( major != dmajor || minor != dminor )
             continue;
             
-      /* ignore mounts where only a subtree of a filesystem is mounted */
-      if (g_strcmp0 (encoded_root, "/") != 0)
-        continue;
-
-      mount_point = g_strcompress (encoded_mount_point);
-      if ( mount_point && mount_point[0] != '\0' )
-      {
-        if ( !g_list_find( mounts, mount_point ) )
+        mount_point = g_strcompress (encoded_mount_point);
+        if ( mount_point && mount_point[0] != '\0' )
         {
-            mounts = g_list_prepend( mounts, mount_point );
+            if ( !g_list_find( mounts, mount_point ) )
+            {
+                mounts = g_list_prepend( mounts, mount_point );
+            }
+            else
+                g_free (mount_point);
         }
-        else
-            g_free (mount_point);
-      }
-      
     }
-  g_free (contents);
-  g_strfreev (lines);
+    g_free (contents);
+    g_strfreev (lines);
 
     if ( mounts )
     {
@@ -1655,6 +1682,34 @@ void parse_mounts( gboolean report )
         if ( g_strcmp0( encoded_root, "/" ) != 0 )
             continue;
 
+        /* Temporary work-around for btrfs, see
+        *
+        *  https://github.com/IgnorantGuru/spacefm/issues/165
+        *  http://article.gmane.org/gmane.comp.file-systems.btrfs/2851
+        *  https://bugzilla.redhat.com/show_bug.cgi?id=495152#c31
+        */
+        if ( major == 0 )
+        {
+            const gchar *sep;
+            sep = strstr( lines[n], " - " );
+            if ( sep != NULL )
+            {
+                gchar typebuf[PATH_MAX];
+                gchar mount_source[PATH_MAX];
+                struct stat statbuf;
+
+                if ( sscanf( sep + 3, "%s %s", typebuf, mount_source ) == 2 &&
+                                !g_strcmp0( typebuf, "btrfs" ) &&
+                                g_str_has_prefix( mount_source, "/dev/" ) &&
+                                stat( mount_source, &statbuf ) == 0 &&
+                                S_ISBLK( statbuf.st_mode ) )
+                {
+                    major = major( statbuf.st_rdev );
+                    minor = minor( statbuf.st_rdev );
+                }
+            }
+        }
+
         mount_point = g_strcompress( encoded_mount_point );
         if ( !mount_point || ( mount_point && mount_point[0] == '\0' ) )
         {
@@ -1671,7 +1726,7 @@ void parse_mounts( gboolean report )
             if ( str = strchr( fstype, ' ' ) )
                 str[0] = '\0';
         }
-            
+
 //printf("mount_point(%d:%d)=%s\n", major, minor, mount_point );
         devmount = NULL;
         for ( l = newmounts; l; l = l->next )

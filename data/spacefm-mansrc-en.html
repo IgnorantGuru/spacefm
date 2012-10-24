@@ -252,10 +252,10 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
-<blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
+<blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
 <p><b>Also</b> Recommended:
-<blockquote><i><a href="http://ignorantguru.github.com/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu</i></blockquote>
+<blockquote><i><a href="http://ignorantguru.github.com/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu, libstartup-notification0, libstartup-notification0-dev</i></blockquote>
 
 <p><b>IF</b> building with HAL support (device manager functions are very limited), you also need:
 <blockquote><i>hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1 libhal1 libdbus-glib-1-2</i><br>
@@ -1242,7 +1242,7 @@ References:<br>
 
 <p>Simply, the queue is used to prevent all tasks from running simultaneously, which can impact performance.  For example, copying two sets of files to the same drive simultaneously is often slower than first copying one set, then the other (due to drive seeking and other issues).  Thus it may be desirable to queue the second task, so it will remain halted until the first task is completed.
 
-<p>Tasks may be queued automatically when added.  If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked, new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
+<p>If option <a href="#tasks-menu-new">View|Tasks|Queue|Queue New Tasks</a> is checked (the default), new tasks are automatically queued when initiated, rather than run immediately.  SpaceFM will automatically determine when to resume the queued tasks, depending on option <a href="#tasks-menu-smart">View|Tasks|Queue|Smart Queue</a>.  Or, you can always manually <a href="#tasks-menu-resume">Resume</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-stop">Stop</a> a task to remove it from the queue.
 
 
 
@@ -1383,6 +1383,12 @@ The <i>current speed</i> is measured based on the speed over the previous two se
 
 <p>The information shown in the 'Progress:' line will match the information shown in the corresponding <a href="#tasks-menu-col">Task Manager columns</a>.
 
+<!-- # Popups|Overwrite Option #popover -->
+If Overwrite Option is checked, the popup dialogs for internal tasks will show a drop-down list which displays and allows you to change the overwrite mode of the task.  The list is not shown for exec tasks.  For more information see <a href="#tasks-dlg">Popup Dialog</a>.
+
+<!-- # Popups|Error Option #poperropt -->
+If Error Option is checked, the popup dialogs for internal tasks will show a drop-down list which displays and allows you to change the error handling mode of the task.  The list is not shown for exec tasks.  For more information see <a href="#tasks-dlg">Popup Dialog</a>.
+
 <!-- # Popups|Font #popfont -->
 The Font menu item allows you to set a font to be used in the output monitor of <a href="#tasks-dlg">popup dialogs</a>.  For example, you might choose a fixed width font to make the monitor look more like a terminal.
 
@@ -1391,11 +1397,9 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <p>The dialog font you select will be used for new dialogs only; currently open dialogs will not be affected.  (You can close a dialog and re-open it to see the change.)
 
 <!-- # Errors #poperr -->
-The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled.  (These options have no effect on exec tasks such as custom commands.)
+The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered on the first action performed by the task.  If an error occurs on later actions in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on one file.
-
-<p>Note that the first action may or may not be the first file of the task; it may be the action of creating a directory to hold the first file.  Thus if the directory creation is successful, and then an error occurs on the first file being copied, Stop If First will <i>not</i> stop the task since the error did not occur on the first action (directory creation).
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on the first file.
 
 <p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 
@@ -1404,6 +1408,9 @@ The Errors submenu contains a set of radio options which control how errors in i
 <p>If option <b>Continue</b> is selected, the Task Manager will never stop an internal task due to errors.  It will present the popup dialog on each error, and will list the errors in the output monitor, but subsequent actions in the task will continue.  For example, if a set of files is being copied, and only one file in the middle produces a copy error, all the other files will still be copied.  The popup dialog will show the error(s) for the file(s) which failed.
 
 <p>Continue is especially useful when copying large sets of files.  If the task stops on errors, you might start the task and leave the computer, only to return to find that only a few files were copied before a single error stopped the entire task.  If the task continues on errors, you'll return to find all the files copied except those with errors.  You can then correct the problem files without having to restart and wait for the entire task again.
+
+<p>You can also change the error mode on a per task basis if <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked.
+
 
 <!-- # Queue|Queue New Tasks #new -->
 If option Queue New Tasks is checked (the default), new internal tasks are queued instead of being run immediately.  (exec tasks such as custom commands are never queued automatically.)  The Task Manager will then automatically resume the task when other tasks finish.  When you start new tasks while other tasks are still running, Queue New Tasks improves performance by not running all the tasks simultaneously (though some tasks may be run concurrently, depending on option <a href="#tasks-menu-smart">Smart Queue</a>).
@@ -1427,7 +1434,7 @@ If two or more tasks involve files on mutually exclusive disks (parent devices),
 <p><b>Size Exceptions</b><br>
 Often while copying a set of large files, you may want to perform a quick operation on a set of small files.  Because the latter task is brief, it is reasonably efficient to allow it to run concurrently.  This way you don't have to wait for the longer task to finish before your quick task is run.
 
-<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 100 MB in total size.  This allows small tasks to run immediately.
+<p>When a task involves copying or moving a set of files less than 10 MB in total size, an exception is made which allows the task to run immediately, even if other tasks are running on the same devices.  An exception is also made when a task involves deleting a set of files less than 5 GB in total size.  This allows small tasks to run immediately.
 
 <p><b>Functional Exceptions</b><br>
 Internal tasks involving creating links, and changing file permissions or ownership are typically very fast as little data is written to disk.  Thus an exception is always made for these task types - they are run immediately. 
@@ -1437,6 +1444,12 @@ Internal tasks involving creating links, and changing file permissions or owners
 
 <p><b>HAL NOTE:</b>:  If you are using a copy of SpaceFM built with configure option --enable-hal, or a HAL-based SpaceFM package, option Smart Queue will be unavailable.
 
+<!-- # Queue|Pause On Error #qpause -->
+If option Pause On Error is checked, when an error occurs in any running task, all queued tasks will be paused.  Tasks which are already running will not be paused.  The task in which the error occurs may continue running as well, depending on its <a href="#tasks-menu-poperr">error mode</a>.
+
+<p>The paused tasks will not resume until you manually resume them.
+
+<p>Pause On Error is something of a paranoia setting - it ensures that if an error occurs, later tasks (which may depend on files in the task with errors) are suspended until you can examine the problem.
 
 <!-- # Custom Commands #cust -->
 As with most menus, it is also possible to add your own custom commands to the Task Manager's context menu.  This allows you to add commands which can control or interact with running tasks, particularly running custom commands.
@@ -1459,17 +1472,19 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 <!-- @Tasks @Popup Dialog #dlg -->
 <p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.
 
-<p>For internal tasks, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, and an output monitor used to show the details of any errors which have occured.
+<p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occured, and overwrite and error mode controls.
 
-<p>For exec tasks, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.
+<p>If <a href="#tasks-menu-popover">View|Tasks|Popups|Overwrite Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the overwrite mode of the task (what happens when a file being copied already exists):  <b>Ask</b> (prompt to rename, overwrite, or skip each file), <b>Overwrite All</b> (overwrite all files), <b>Skip All</b> (never overwrite files), or <b>Auto Rename</b> (assign a unique filename).  Clicking the Overwrite All, Skip All, or Auto Rename All button in an overwrite query dialog will also change the overwrite mode.  Note that the overwrite mode you set only applies to future file conflicts in the current task.
+
+<p>If <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Tasks|Errors</a>.  If you then change the error mode, it will apply to the current task only.
+
+<p><b>For exec tasks</b>, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.
 
 <p>To close the dialog, press the Close button or close the window.  You can always re-open the dialog by clicking on the task in the Task Manager.
 
 <p>To permanently stop a task, click the Stop button.  This is equivalent to selecting <a href="#tasks-menu-stop">Stop</a> in the Task Manager menu.
 
 <p>The third button in the dialog will change depending on the <a href="#tasks-menu-queue">state</a> of the task.  If the task is running, the button will be a Pause button; if the task is paused, the button will become a Queue button; and if the task is queued, the button will become a Resume button.  Pressing this button is equivalent to selecting <a href="#tasks-menu-pause">Pause</a>, <a href="#tasks-menu-queue">Queue</a>, or <a href="#tasks-menu-resume">Resume</a> in the Task Manager's context menu.
-
-
 
 <!-- @Design Mode @Introduction -->
 
@@ -2229,6 +2244,8 @@ Selecting Set As Default will set the selected application as the default applic
 Selecting Remove will remove the selected application's association with the selected file's MIME type <i>for the current user</i>.  It will no longer appear in the Open submenu for this file type.
 
 <p>Specifically, SpaceFM will edit your <a href="#mimeappslist">~/.local/share/applications/mimeapps.list</a> file, removing the application's .desktop file for the given MIME type in [Added Associations], and will add it to [Removed Associations] for the given MIME type.
+
+<p>To restore an association that you have removed, use <a href="#designmode-mime-add">Add...</a>
 
 <P>NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) <b>and</b> applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain.  Text files are the only files with this behavior.
 

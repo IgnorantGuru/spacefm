@@ -46,6 +46,15 @@ ptk_file_icon_renderer_get_size ( GtkCellRenderer *cell,
                                   gint *width,
                                   gint *height );
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void
+ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
+                                cairo_t *cr,
+                                GtkWidget *widget,
+                                const GdkRectangle *background_area,
+                                const GdkRectangle *cell_area,
+                                GtkCellRendererState flags );
+#else
 static void
 ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                                 GdkWindow *window,
@@ -54,6 +63,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                                 GdkRectangle *cell_area,
                                 GdkRectangle *expose_area,
                                 guint flags );
+#endif
 
 enum
 {
@@ -371,6 +381,15 @@ create_colorized_pixbuf ( GdkPixbuf *src,
     *
  ***************************************************************************/
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void
+ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
+                                cairo_t *cr,
+                                GtkWidget *widget,
+                                const GdkRectangle *background_area,
+                                const GdkRectangle *cell_area,
+                                GtkCellRendererState flags )
+#else
 static void
 ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                                 GdkWindow *window,
@@ -379,6 +398,7 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                                 GdkRectangle *cell_area,
                                 GdkRectangle *expose_area,
                                 guint flags )
+#endif
 {
     GtkCellRendererPixbuf * cellpixbuf = ( GtkCellRendererPixbuf * ) cell;
 
@@ -392,8 +412,6 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
     VFSFileInfo* file;
     gint xpad, ypad;
     gboolean is_expander, is_expanded;
-
-    cairo_t *cr;
 
     GtkCellRendererClass* parent_renderer_class;
 
@@ -411,9 +429,14 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
     pix_rect.width -= xpad * 2;
     pix_rect.height -= ypad * 2;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    if ( !gdk_rectangle_intersect ( cell_area, &pix_rect, &draw_rect ) )
+        return ;
+#else
     if ( !gdk_rectangle_intersect ( cell_area, &pix_rect, &draw_rect ) ||
             !gdk_rectangle_intersect ( expose_area, &draw_rect, &draw_rect ) )
         return ;
+#endif
 
     g_object_get ( G_OBJECT ( cellpixbuf ), "pixbuf", &pixbuf, NULL);
     g_object_get ( G_OBJECT ( cellpixbuf ), "is-expander", &is_expander, NULL);
@@ -503,7 +526,12 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
             pixbuf = colorized;
         }
     }
-    cr = gdk_cairo_create ( window );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_save ( cr );
+#else
+    cairo_t *cr = gdk_cairo_create ( window );
+#endif
+    cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
     gdk_cairo_set_source_pixbuf ( cr, pixbuf, pix_rect.x, pix_rect.y );
     gdk_cairo_rectangle ( cr, &draw_rect );
     cairo_fill ( cr );
@@ -513,9 +541,10 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
     {
         if ( vfs_file_info_is_symlink( file ) )
         {
+            cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
             gdk_cairo_set_source_pixbuf ( cr, link_icon,
-                                          pix_rect.x - 2,
-                                          pix_rect.y - 2 );
+                                          pix_rect.x,
+                                          pix_rect.y );
             draw_rect.x -= 2;
             draw_rect.y -= 2;
             gdk_cairo_rectangle ( cr, &draw_rect );
@@ -523,7 +552,11 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
         }
     }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_restore ( cr );
+#else
     cairo_destroy ( cr );
+#endif
 
     if ( invisible )
         g_object_unref ( invisible );

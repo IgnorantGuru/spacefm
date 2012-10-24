@@ -48,6 +48,14 @@ static void ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                                          gint *y_offset,
                                          gint *width,
                                          gint *height );
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void ptk_text_renderer_render ( GtkCellRenderer *cell,
+                                       cairo_t *cr,
+                                       GtkWidget *widget,
+                                       const GdkRectangle *background_area,
+                                       const GdkRectangle *cell_area,
+                                       GtkCellRendererState flags );
+#else
 static void ptk_text_renderer_render ( GtkCellRenderer *cell,
                                        GdkWindow *window,
                                        GtkWidget *widget,
@@ -55,6 +63,7 @@ static void ptk_text_renderer_render ( GtkCellRenderer *cell,
                                        GdkRectangle *cell_area,
                                        GdkRectangle *expose_area,
                                        GtkCellRendererState flags );
+#endif
 
 
 enum {
@@ -908,6 +917,15 @@ ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                x_offset, y_offset, width, height );
 }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void
+ptk_text_renderer_render ( GtkCellRenderer *cell,
+                           cairo_t *cr,
+                           GtkWidget *widget,
+                           const GdkRectangle *background_area,
+                           const GdkRectangle *cell_area,
+                           GtkCellRendererState flags )
+#else
 static void
 ptk_text_renderer_render ( GtkCellRenderer *cell,
                            GdkDrawable *window,
@@ -916,6 +934,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                            GdkRectangle *cell_area,
                            GdkRectangle *expose_area,
                            GtkCellRendererState flags )
+#endif
 
 {
     PtkTextRenderer * celltext = ( PtkTextRenderer * ) cell;
@@ -927,9 +946,13 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     gint focus_pad, focus_width;
     gint x, y;
     gint xpad, ypad;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_save ( cr );
+#else
     cairo_t *cr;
 
     cr = gdk_cairo_create ( window );
+#endif
     
     gtk_cell_renderer_get_padding ( cell, &xpad, &ypad );
 
@@ -980,8 +1003,16 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         /* draw the focus */
         if(flags & GTK_CELL_RENDERER_FOCUSED)
         {
-            gtk_paint_focus( gtk_widget_get_style ( widget ), window, gtk_widget_get_state (widget),
+            gtk_paint_focus( gtk_widget_get_style ( widget ),
+#if GTK_CHECK_VERSION (3, 0, 0)
+                           cr,
+                           gtk_widget_get_state (widget),
+                           widget, "icon_view",
+#else
+                           window,
+                           gtk_widget_get_state (widget),
                            NULL, widget, "icon_view",
+#endif
                            cell_area->x + x_offset - focus_width,
                            cell_area->y + y_offset - focus_width,
                            width + focus_width * 2, height + focus_width * 2);
@@ -996,10 +1027,16 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         pango_layout_set_width ( layout, -1 );
 
     gtk_paint_layout ( gtk_widget_get_style ( widget ),
+#if GTK_CHECK_VERSION (3, 0, 0)
+                       cr,
+                       state,
+                       TRUE,
+#else
                        window,
                        state,
                        TRUE,
                        expose_area,
+#endif
                        widget,
                        "cellrenderertext",
                        cell_area->x + x_offset + xpad,
@@ -1007,6 +1044,10 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                        layout );
 
     g_object_unref ( layout );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_restore ( cr );
+#else
     cairo_destroy ( cr );
+#endif
 }
 

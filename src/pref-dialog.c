@@ -485,7 +485,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
                         ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
-                        /* ptk_file_browser_set_single_click_timeout( file_browser, 400 ); */
+                        /* ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT ); */
                     }
                 }
             }
@@ -599,16 +599,12 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         char* old_terminal = xset_get_s( "main_terminal" );
         char* terminal = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT( data->terminal ) );
         g_strstrip( terminal );
-        if ( !old_terminal && terminal[0] != '\0' )
+        if ( g_strcmp0( terminal, old_terminal ) )
         {
-            xset_set( "main_terminal", "s", terminal );
+            xset_set( "main_terminal", "s", terminal[0] == '\0' ? NULL : terminal );
             root_set_change = TRUE;
         }
-        else if ( strcmp( terminal, old_terminal ) )
-        {
-            xset_set( "main_terminal", "s", terminal );
-            root_set_change = TRUE;
-        }
+        // report missing terminal
         if ( str = strchr( terminal, ' ' ) )
             str[0] = '\0';
         str = g_find_program_in_path( terminal );
@@ -710,7 +706,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
     {
         GtkTreeModel* model;
         // this invokes GVFS-RemoteVolumeMonitor via IsSupported
+#if GTK_CHECK_VERSION(2, 24, 0)
+        GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg2.ui", NULL );
+#else
         GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg.ui", NULL );
+#endif
         if ( !builder )
             return FALSE;
         pcmanfm_ref();

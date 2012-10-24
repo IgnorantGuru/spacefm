@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([spacefm], [0.8.0+])
+AC_INIT([spacefm], [0.8.1+])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
@@ -32,10 +32,24 @@ PKG_CHECK_MODULES(GTK, [$gtk_modules])
 AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
-sn_modules="libstartup-notification-1.0"
-PKG_CHECK_MODULES(SN, [$sn_modules])
-AC_SUBST(SN_CFLAGS)
-AC_SUBST(SN_LIBS)
+# start-notification is optional - will be used if installed and no --disable
+AC_ARG_ENABLE(
+    [startup-notification],
+    AS_HELP_STRING([--disable-startup-notification],
+                   [disable use of libstartup-notification (default: enable if installed)]),
+    use_sn=$enableval, use_sn="yes")
+if test x"$use_sn" = x"yes"; then
+    sn_modules_old="libstartup-notification-0.9"
+    sn_modules="libstartup-notification-1.0"
+    PKG_CHECK_MODULES(SN, [$sn_modules_old], use_sn="yes", [
+       PKG_CHECK_MODULES(SN, [$sn_modules], use_sn="yes", use_sn="no (not installed)")
+    ])
+    if test x"$use_sn" = x"yes"; then
+        AC_SUBST(SN_CFLAGS)
+        AC_SUBST(SN_LIBS)
+        AC_DEFINE([HAVE_SN], [1], [Use SN])
+    fi
+fi
 
 dnl linker optimizations
 AC_MSG_CHECKING([whether $LD accepts --as-needed])
@@ -261,6 +275,7 @@ if test ! -z "$preferable_sudo"; then
 echo Additional program to switch to super user... : $preferable_sudo
 fi
 echo Desktop icon integration..................... : $desktop_integration
+echo Startup notification......................... : $use_sn
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo
