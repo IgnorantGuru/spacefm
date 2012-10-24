@@ -1142,7 +1142,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         if ( task->type != VFS_FILE_TASK_EXEC )
             ufile_path = NULL;
         else
-            ufile_path = g_strdup( task->current_file );
+            ufile_path = g_markup_printf_escaped ("<b>%s</b>", task->current_file );
 
         if ( ptask->aborted )
             gtk_window_set_title( GTK_WINDOW( ptask->progress_dlg ), _("Stopped") );                
@@ -1159,7 +1159,9 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         if ( task->type != VFS_FILE_TASK_EXEC )
         {
             // Copy: <src basename>
-            ufile_path = g_filename_display_basename( task->current_file );
+            str = g_filename_display_basename( task->current_file );
+            ufile_path = g_markup_printf_escaped ("<b>%s</b>", str);
+            g_free( str );
 
             // From: <src_dir>
             str = g_path_get_dirname( task->current_file );
@@ -1185,7 +1187,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
             }
         }
         else
-            ufile_path = g_strdup( task->current_file );
+            ufile_path = g_markup_printf_escaped ("<b>%s</b>", task->current_file );
     }
     else
         ufile_path = NULL;
@@ -1199,7 +1201,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
             g_free( str );
         }
     }
-    gtk_label_set_text( ptask->from, ufile_path );
+    gtk_label_set_markup( ptask->from, ufile_path );
     if ( ptask->src_dir )
         gtk_label_set_text( ptask->src_dir, usrc_dir );
     if ( ptask->to )
