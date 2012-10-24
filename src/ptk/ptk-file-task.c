@@ -1181,6 +1181,8 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     {
         if ( task->percent >= 0 )
         {
+            if ( task->percent > 100 )
+                task->percent = 100;
             gtk_progress_bar_set_fraction( ptask->progress_bar,
                                            ( ( gdouble ) task->percent ) / 100 );
             g_snprintf( percent_str, 16, "%d %%", task->percent );

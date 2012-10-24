@@ -57,7 +57,8 @@ const mode_t chmod_flags[] =
 */
 static void get_total_size_of_dir( VFSFileTask* task,
                                    const char* path,
-                                   off_t* size );
+                                   off_t* size,
+                                   struct stat64* have_stat );
 void vfs_file_task_error( VFSFileTask* task, int errnox, const char* action,
                                                             const char* target );
 void vfs_file_task_exec_error( VFSFileTask* task, int errnox, char* action );
@@ -273,6 +274,37 @@ gboolean check_overwrite( VFSFileTask* task,
     }
 }
 
+gboolean check_source_in_dest( VFSFileTask* task, const char* src_dir )
+{
+    char real_src_path[PATH_MAX];
+    char real_dest_path[PATH_MAX];
+    int len;
+
+    if ( !( task->dest_dir && realpath( task->dest_dir, real_dest_path ) ) )
+        return FALSE;
+    if ( realpath( src_dir, real_src_path ) &&
+                          g_str_has_prefix( real_dest_path, real_src_path ) &&
+                          ( len = strlen( real_src_path ) ) &&
+                          ( real_dest_path[len] == '/' || 
+                            real_dest_path[len] == '\0' ) )
+    {
+        // source is contained in destination dir
+        char* disp_src = g_filename_display_name( src_dir );
+        char* disp_dest = g_filename_display_name( task->dest_dir );
+        char* err = g_strdup_printf( _("Destination directory \"%1$s\" is contained in source \"%2$s\""), disp_dest, disp_src );
+        append_add_log( task, err, -1 );
+        g_free( err );
+        g_free( disp_src );
+        g_free( disp_dest );
+        if ( task->state_cb )
+            task->state_cb( task, VFS_FILE_TASK_ERROR,
+                                        NULL, task->state_cb_data );
+        task->state = VFS_FILE_TASK_RUNNING;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void update_file_display( const char* path )
 {
     // for devices like nfs, emit created and flush to avoid a
@@ -354,6 +386,9 @@ vfs_file_task_do_copy( VFSFileTask* task,
     result = 0;
     if ( S_ISDIR( file_stat.st_mode ) )
     {
+        if ( check_source_in_dest( task, src_file ) )
+            goto _return_;
+
         if ( ! check_overwrite( task, dest_file,
                                 &dest_exists, &new_dest_file ) )
             goto _return_;
@@ -627,6 +662,9 @@ vfs_file_task_do_move ( VFSFileTask* task,
     }
 
     if ( should_abort( task ) )
+        return 0;
+
+    if ( S_ISDIR( file_stat.st_mode ) && check_source_in_dest( task, src_file ) )
         return 0;
 
     if ( ! check_overwrite( task, dest_file,
@@ -1883,7 +1921,7 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
     GList * l;
     struct stat64 file_stat;
     dev_t dest_dev = 0;
-    off64_t size;    
+    off64_t size;
     GFunc funcs[] = {( GFunc ) vfs_file_task_move,
                      ( GFunc ) vfs_file_task_copy,
                      ( GFunc ) vfs_file_task_move,  /* trash */
@@ -1924,51 +1962,20 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                        ( GSourceFunc ) on_size_timeout, task );
         for ( l = task->src_paths; l; l = l->next )
         {
-            if( task->dest_dir && g_str_has_prefix( task->dest_dir, (char*)l->data ) )
+            if ( lstat64( (char*)l->data, &file_stat ) == -1 )
+                vfs_file_task_error( task, errno, _("Accessing"), (char*)l->data );
+            else
             {
-                /* FIXME: This has serious problems */
-                /* Check if source file is contained in destination dir */
-                /* The src file is already in dest dir */
-                if( lstat64( (char*)l->data, &file_stat ) == 0
-                    && S_ISDIR(file_stat.st_mode) )
-                {
-                    /* It's a dir */
-                    if ( task->state_cb )
-                    {
-                        // show error
-                        char* err;
-                        char* disp_src;
-                        char* disp_dest;
-                        disp_src = g_filename_display_name( (char*)l->data );
-                        disp_dest = g_filename_display_name( task->dest_dir );
-                        err = g_strdup_printf( _("Destination directory \"%1$s\" is contained in source \"%2$s\""), disp_dest, disp_src );
-                        append_add_log( task, err, -1 );
-                        g_free(disp_src );
-                        g_free(disp_dest );
-                        g_free(err );
-
-                        // conditionally abort
-                        if ( !task->state_cb( task, VFS_FILE_TASK_ERROR,
-                                                    NULL, task->state_cb_data ) )
-                            task->abort = TRUE;
-                        task->state = VFS_FILE_TASK_RUNNING;
-                    }
-                    else
-                        task->abort = TRUE;
-                    if ( task->abort )
-                        goto _exit_thread;
-                }
+                size = 0;
+                get_total_size_of_dir( task, ( char* ) l->data, &size, &file_stat );
+                g_mutex_lock( task->mutex );
+                task->total_size += size;
+                g_mutex_unlock( task->mutex );
             }
-            size = 0;
-            get_total_size_of_dir( task, ( char* ) l->data, &size );
             if ( task->abort )
                 goto _exit_thread;
             if ( task->state == VFS_FILE_TASK_SIZE_TIMEOUT )
                 break;
-
-            g_mutex_lock( task->mutex );
-            task->total_size += size;
-            g_mutex_unlock( task->mutex );
         }
     }
     else if ( task->type != VFS_FILE_TASK_EXEC )
@@ -1979,10 +1986,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
                                        ( GSourceFunc ) on_size_timeout, task );
         if ( task->type != VFS_FILE_TASK_CHMOD_CHOWN )
         {
-            if ( !task->dest_dir || 
-                    ( task->dest_dir && stat64( task->dest_dir, &file_stat ) < 0 ) )
+            if ( !( task->dest_dir && stat64( task->dest_dir, &file_stat ) == 0 ) )
             {
                 vfs_file_task_error( task, errno, _("Accessing"), task->dest_dir );
+                task->abort = TRUE;
                 goto _exit_thread;
             }
             dest_dev = file_stat.st_dev;
@@ -1992,38 +1999,35 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         {
             if ( lstat64( ( char* ) l->data, &file_stat ) == -1 )
                 vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
-            /*
-            // sfm why does this code change task->recursive back and forth?
-            if ( S_ISLNK( file_stat.st_mode ) )      // Don't do deep copy for symlinks
-                task->recursive = FALSE;
-            else if ( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH )
-                task->recursive = ( file_stat.st_dev != dest_dev );
-            else
-                task->recursive = FALSE;
-            if ( task->recursive )
-            */
-            if ( ( task->type == VFS_FILE_TASK_MOVE ||
-                                            task->type == VFS_FILE_TASK_TRASH )
-                                            && file_stat.st_dev != dest_dev )
-            {
-                // recursive size
-                size = 0;
-                get_total_size_of_dir( task, ( char* ) l->data, &size );
-                g_mutex_lock( task->mutex );
-                task->total_size += size;
-                g_mutex_unlock( task->mutex );
-            }
             else
             {
-                g_mutex_lock( task->mutex );
-                task->total_size += file_stat.st_size;
-                g_mutex_unlock( task->mutex );
-
-                // remember device for smart queue
-                if ( !task->devs )
-                    add_task_dev( task, file_stat.st_dev );
-                else if ( (uint)file_stat.st_dev != GPOINTER_TO_UINT( task->devs->data ) )
-                    add_task_dev( task, file_stat.st_dev );
+                /*
+                // sfm why does this code change task->recursive back and forth?
+                if ( S_ISLNK( file_stat.st_mode ) )      // Don't do deep copy for symlinks
+                    task->recursive = FALSE;
+                else if ( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_TRASH )
+                    task->recursive = ( file_stat.st_dev != dest_dev );
+                else
+                    task->recursive = FALSE;
+                if ( task->recursive )
+                */
+                if ( ( task->type == VFS_FILE_TASK_MOVE ||
+                                                task->type == VFS_FILE_TASK_TRASH )
+                                                && file_stat.st_dev != dest_dev )
+                {
+                    // recursive size
+                    size = 0;
+                    get_total_size_of_dir( task, ( char* ) l->data, &size, &file_stat );
+                    g_mutex_lock( task->mutex );
+                    task->total_size += size;
+                    g_mutex_unlock( task->mutex );
+                }
+                else
+                {
+                    g_mutex_lock( task->mutex );
+                    task->total_size += file_stat.st_size;
+                    g_mutex_unlock( task->mutex );
+                }
             }
             if ( task->abort )
                 goto _exit_thread;
@@ -2314,7 +2318,8 @@ void add_task_dev( VFSFileTask* task, dev_t dev )
 */
 void get_total_size_of_dir( VFSFileTask* task,
                             const char* path,
-                            off64_t* size )
+                            off64_t* size,
+                            struct stat64* have_stat )
 {
     GDir * dir;
     const char* name;
@@ -2324,7 +2329,9 @@ void get_total_size_of_dir( VFSFileTask* task,
     if ( task->abort )
         return;
 
-    if ( lstat64( path, &file_stat ) == -1 )
+    if ( have_stat )
+        file_stat = *have_stat;
+    else if ( lstat64( path, &file_stat ) == -1 )
         return;
 
     *size += file_stat.st_size;
@@ -2350,7 +2357,7 @@ void get_total_size_of_dir( VFSFileTask* task,
             if ( lstat64( full_path, &file_stat ) != -1 )
             {
                 if ( S_ISDIR( file_stat.st_mode ) )
-                    get_total_size_of_dir( task, full_path, size );
+                    get_total_size_of_dir( task, full_path, size, &file_stat );
                 else
                     *size += file_stat.st_size;
             }
