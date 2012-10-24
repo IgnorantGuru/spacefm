@@ -2461,6 +2461,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
     }
 
     gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_MIDDLE );
+    gtk_label_set_width_chars( GTK_LABEL( tab_text ), 15 );
     gtk_label_set_max_width_chars( GTK_LABEL( tab_text ), 30 );
     gtk_box_pack_start( GTK_BOX( tab_label ),
                         tab_text, FALSE, FALSE, 4 );
@@ -2482,7 +2483,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             close_icon = gtk_image_new_from_stock( GTK_STOCK_CLOSE, GTK_ICON_SIZE_MENU );
         }
         gtk_container_add ( GTK_CONTAINER ( close_btn ), close_icon );
-        gtk_box_pack_start ( GTK_BOX( tab_label ),
+        gtk_box_pack_end ( GTK_BOX( tab_label ),
                              close_btn, FALSE, FALSE, 0 );
         g_signal_connect( G_OBJECT( close_btn ), "clicked",
                           G_CALLBACK( on_close_notebook_page ), file_browser );
