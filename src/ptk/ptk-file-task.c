@@ -875,6 +875,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                               GTK_WIDGET( ptask->to ),
                               1, 2, row, row+1, GTK_FILL, 0, 0, 0 );
         }
+        else
+            ptask->to = NULL;
         
         // Stats
         row++;
@@ -892,8 +894,11 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                           1, 2, row, row+1, GTK_FILL, 0, 0, 0 );
     }
     else
+    {
         ptask->src_dir = NULL;
-
+        ptask->to = NULL;
+    }
+    
     /* Processing: */
     /* Processing: <Name of currently proccesed file> */
 /*    label = GTK_LABEL(gtk_label_new( _( "Processing:" ) ));
@@ -1102,7 +1107,9 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
 {
     char* ufile_path;
     char* usrc_dir;
+    char* udest;
     char* str;
+    char* str2;
     char percent_str[ 16 ];
     char* stats;
     char* errs;
@@ -1122,6 +1129,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
 
     // current file
     usrc_dir = NULL;
+    udest = NULL;
     if ( ptask->complete )
     {
         gtk_widget_set_sensitive( ptask->progress_btn_stop, FALSE );
@@ -1150,21 +1158,55 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     {
         if ( task->type != VFS_FILE_TASK_EXEC )
         {
+            // Copy: <src basename>
             ufile_path = g_filename_display_basename( task->current_file );
+
+            // From: <src_dir>
             str = g_path_get_dirname( task->current_file );
             usrc_dir = g_filename_display_name( str );
             g_free( str );
+            if ( !( usrc_dir[0] == '/' && usrc_dir[1] == '\0' ) )
+            {
+                str = usrc_dir;
+                usrc_dir = g_strdup_printf( "%s/", str );
+                g_free( str );
+            }
+
+            // To: <dest_dir> OR <dest_file>
+            if ( task->current_dest )
+            {
+                str = g_path_get_basename( task->current_file );
+                str2 = g_path_get_basename( task->current_dest );
+                if ( strcmp( str, str2 ) )
+                    // source and dest filenames differ, user renamed - show all
+                    udest = g_filename_display_name( task->current_dest );
+                g_free( str );
+                g_free( str2 );
+            }
         }
         else
             ufile_path = g_strdup( task->current_file );
     }
     else
         ufile_path = NULL;
+    if ( !udest && task->dest_dir )
+    {
+        udest = g_filename_display_name( task->dest_dir );
+        if ( !( udest[0] == '/' && udest[1] == '\0' ) )
+        {
+            str = udest;
+            udest = g_strdup_printf( "%s/", str );
+            g_free( str );
+        }
+    }
     gtk_label_set_text( ptask->from, ufile_path );
     if ( ptask->src_dir )
         gtk_label_set_text( ptask->src_dir, usrc_dir );
+    if ( ptask->to )
+        gtk_label_set_text( ptask->to, udest );
     g_free( ufile_path );
     g_free( usrc_dir );
+    g_free( udest );
 
 /*
     // current dest
@@ -2062,7 +2104,10 @@ static void query_overwrite( PtkFileTask* ptask )
     g_free( new_name_plain );
 
     // create dialog
-    parent_win = GTK_WIDGET( ptask->parent_window );
+    if ( xset_get_b( "task_pop_top" ) && ptask->progress_dlg )
+        parent_win = GTK_WIDGET( ptask->progress_dlg );        
+    else
+        parent_win = GTK_WIDGET( ptask->parent_window );
     dlg = gtk_dialog_new_with_buttons(
                              title,
                              GTK_WINDOW( parent_win ),

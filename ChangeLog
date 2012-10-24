@@ -4,6 +4,7 @@
     add From: to task popup
     fix destination contained in source error
     fix cut paste directory replace error #174
+    task popup From/To adjustments
 0.8.1   2012-10-21:
     added task manager queue/pause #147
     disable task manager find
