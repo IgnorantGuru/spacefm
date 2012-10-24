@@ -1885,13 +1885,14 @@ static void query_overwrite( PtkFileTask* ptask )
     char* from_size_str = NULL;
     char* to_size_str = NULL;
     char* from_disp;
+    char* message;
     
     if ( ptask->task->type == VFS_FILE_TASK_MOVE )
-        from_disp = _("Move From Folder:");
+        from_disp = _("Moving from folder:");
     else if ( ptask->task->type == VFS_FILE_TASK_LINK )
-        from_disp = _("Link From Folder:");
+        from_disp = _("Linking from folder:");
     else
-        from_disp = _("Copy From Folder:");
+        from_disp = _("Copying from folder:");
     
     different_files = ( 0 != g_strcmp0( ptask->task->current_file,
                                      ptask->task->current_dest ) );
@@ -1908,6 +1909,7 @@ static void query_overwrite( PtkFileTask* ptask )
         {
             /* Ask the user whether to overwrite dir content or not */
             title = _("Folder Exists");
+            message = _("<b>Folder already exists.</b>  Please rename or select an action.");
         }
         else
         {
@@ -1984,7 +1986,8 @@ static void query_overwrite( PtkFileTask* ptask )
             to_size_str = g_strdup_printf( "\t%s\t%s%s", dest_time, dest_size,
                                         dest_link[0] ? dest_link : link_warn );
             
-            title = _("File Exists");
+            title = _("Filename Exists");
+            message = _("<b>Filename already exists.</b>  Please rename or select an action.");
 
             g_free( dest_size );
             g_free( dest_time );
@@ -1997,7 +2000,9 @@ static void query_overwrite( PtkFileTask* ptask )
     { /* Rename is required */
         has_overwrite_btn = FALSE;
         title = _("Rename Required");
-        from_disp = _("Folder:");
+        if ( !different_files )
+            from_disp = _("In folder:");
+        message = _("<b>Filename already exists.</b>  Please rename or select an action.");
     }
 
     // filenames
@@ -2095,6 +2100,14 @@ static void query_overwrite( PtkFileTask* ptask )
     // labels
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         gtk_label_new( NULL ), FALSE, TRUE, 0 );
+    GtkWidget* msg = gtk_label_new( NULL );
+    gtk_label_set_markup( GTK_LABEL( msg ), message );
+    gtk_misc_set_alignment( GTK_MISC ( msg ), 0, 0 );
+    gtk_widget_set_can_focus( msg, FALSE );
+    gtk_box_pack_start( GTK_BOX( vbox ), 
+                        msg, FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( vbox ), 
+                        gtk_label_new( NULL ), FALSE, TRUE, 0 );
     GtkWidget* from_label = gtk_label_new( NULL );
     gtk_label_set_markup( GTK_LABEL( from_label ), from_disp );
     gtk_misc_set_alignment( GTK_MISC ( from_label ), 0, 0 );
@@ -2102,85 +2115,63 @@ static void query_overwrite( PtkFileTask* ptask )
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         from_label, FALSE, TRUE, 0 );
 
-    GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
-    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
-                                GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-    GtkWidget* from_dir = gtk_text_view_new();
-    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( from_dir ), GTK_WRAP_CHAR );
-    gtk_text_view_set_editable( GTK_TEXT_VIEW( from_dir ), FALSE );
-    gtk_widget_set_size_request( GTK_WIDGET( scroll ), -1, 60 );
-    gtk_widget_set_size_request( GTK_WIDGET( from_dir ), -1, 60 );
-    char* fontname = xset_get_s( "input_font" );
-    if ( fontname )
-    {
-        PangoFontDescription* font_desc = pango_font_description_from_string( fontname );
-        gtk_widget_modify_font( GTK_WIDGET( from_dir ), font_desc );
-        pango_font_description_free( font_desc );
-    }
-    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( from_dir ) );
-    gtk_text_buffer_set_text( buf, src_dir_disp, -1 );
-    GtkTextMark* mark = gtk_text_buffer_get_insert( buf );
-    gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( from_dir ), mark, 0, TRUE, 0, 0 );
-    gtk_container_add ( GTK_CONTAINER( scroll ), from_dir );
-    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 0 );
-
-    GtkWidget* from_size = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( from_size ), from_size_str );
-    gtk_misc_set_alignment( GTK_MISC ( from_size ), 0, 1.0 );
-    gtk_label_set_selectable( GTK_LABEL( from_size ), TRUE );
+    GtkWidget* from_dir = gtk_label_new( src_dir_disp );
+    gtk_misc_set_alignment( GTK_MISC ( from_dir ), 0, 0 );
+    gtk_label_set_ellipsize( GTK_LABEL( from_dir ), PANGO_ELLIPSIZE_MIDDLE );
+    gtk_label_set_selectable( GTK_LABEL( from_dir ), TRUE );
     gtk_box_pack_start( GTK_BOX( vbox ), 
-                        from_size, FALSE, TRUE, 0 );
+                        from_dir, FALSE, TRUE, 0 );
+
+    if ( from_size_str )
+    {
+        GtkWidget* from_size = gtk_label_new( NULL );
+        gtk_label_set_markup( GTK_LABEL( from_size ), from_size_str );
+        gtk_misc_set_alignment( GTK_MISC ( from_size ), 0, 1.0 );
+        gtk_label_set_selectable( GTK_LABEL( from_size ), TRUE );
+        gtk_box_pack_start( GTK_BOX( vbox ), 
+                            from_size, FALSE, TRUE, 0 );
+    }
 
     GtkWidget* to_dir = NULL;
-    if ( has_overwrite_btn )
+    if ( has_overwrite_btn || different_files )
     {
         gtk_box_pack_start( GTK_BOX( vbox ), 
                             gtk_label_new( NULL ), FALSE, TRUE, 0 );
         GtkWidget* to_label = gtk_label_new( NULL );
-        gtk_label_set_markup( GTK_LABEL( to_label ), _( "To Folder:" ) );
+        gtk_label_set_markup( GTK_LABEL( to_label ), _( "To folder:" ) );
         gtk_misc_set_alignment( GTK_MISC ( to_label ), 0, 0 );
         gtk_box_pack_start( GTK_BOX( vbox ), 
                             to_label, FALSE, TRUE, 0 );
 
-        scroll = gtk_scrolled_window_new( NULL, NULL );
-        gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
-                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
-        to_dir = gtk_text_view_new();
-        gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( to_dir ), GTK_WRAP_CHAR );
-        gtk_text_view_set_editable( GTK_TEXT_VIEW( to_dir ), FALSE );
-        gtk_widget_set_size_request( GTK_WIDGET( scroll ), -1, 60 );
-        gtk_widget_set_size_request( GTK_WIDGET( to_dir ), -1, 60 );
-        if ( fontname )
-        {
-            PangoFontDescription* font_desc = pango_font_description_from_string( fontname );
-            gtk_widget_modify_font( GTK_WIDGET( to_dir ), font_desc );
-            pango_font_description_free( font_desc );
-        }
-        buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( to_dir ) );
-        gtk_text_buffer_set_text( buf, dest_dir_disp, -1 );
-        mark = gtk_text_buffer_get_insert( buf );
-        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( to_dir ), mark, 0, TRUE, 0, 0 );
-        gtk_container_add ( GTK_CONTAINER( scroll ), to_dir );
-        gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( scroll ), TRUE, TRUE, 0 );
-
-        GtkWidget* to_size = gtk_label_new( NULL );
-        gtk_label_set_markup( GTK_LABEL( to_size ), to_size_str );
-        gtk_misc_set_alignment( GTK_MISC ( to_size ), 0, 1.0 );
-        gtk_label_set_selectable( GTK_LABEL( to_size ), TRUE );
+        GtkWidget* to_dir = gtk_label_new( dest_dir_disp );
+        gtk_misc_set_alignment( GTK_MISC ( to_dir ), 0, 0 );
+        gtk_label_set_ellipsize( GTK_LABEL( to_dir ), PANGO_ELLIPSIZE_MIDDLE );
+        gtk_label_set_selectable( GTK_LABEL( to_dir ), TRUE );
         gtk_box_pack_start( GTK_BOX( vbox ), 
-                            to_size, FALSE, TRUE, 0 );
+                            to_dir, FALSE, TRUE, 0 );
+
+        if ( to_size_str )
+        {
+            GtkWidget* to_size = gtk_label_new( NULL );
+            gtk_label_set_markup( GTK_LABEL( to_size ), to_size_str );
+            gtk_misc_set_alignment( GTK_MISC ( to_size ), 0, 1.0 );
+            gtk_label_set_selectable( GTK_LABEL( to_size ), TRUE );
+            gtk_box_pack_start( GTK_BOX( vbox ), 
+                                to_size, FALSE, TRUE, 0 );
+        }
     }
 
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         gtk_label_new( NULL ), FALSE, TRUE, 0 );
     GtkWidget* name_label = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( name_label ), _( "<b>Name:</b>" ) );
+    gtk_label_set_markup( GTK_LABEL( name_label ), 
+                    is_dest_dir ? _( "<b>Folder Name:</b>" ) : _( "<b>Filename:</b>" ) );
     gtk_misc_set_alignment( GTK_MISC ( name_label ), 0, 0 );
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         name_label, FALSE, TRUE, 0 );
 
     // name input
-    scroll = gtk_scrolled_window_new( NULL, NULL );
+    GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
     GtkWidget* query_input = GTK_WIDGET( multi_input_new( 
                                 GTK_SCROLLED_WINDOW( scroll ), base_name_disp, TRUE ) );
     g_signal_connect( G_OBJECT( query_input ), "key-press-event",
@@ -2195,8 +2186,8 @@ static void query_overwrite( PtkFileTask* ptask )
                             base_name_disp, g_free );
     gtk_widget_set_size_request( GTK_WIDGET( query_input ), -1, 60 );
     gtk_widget_set_size_request( GTK_WIDGET( scroll ), -1, 60 );
-    buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( query_input ) );
-    mark = gtk_text_buffer_get_insert( buf );
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( query_input ) );
+    GtkTextMark* mark = gtk_text_buffer_get_insert( buf );
     gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( query_input ), mark, 0, TRUE, 0, 0 );
     gtk_box_pack_start( GTK_BOX( vbox ), 
                         GTK_WIDGET( scroll ), TRUE, TRUE, 4 );
