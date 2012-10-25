@@ -1004,6 +1004,8 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
     How do I make archives (tar.gz etc) open with an application?<br>
 	<blockquote>Right-click on any archive file and select Open|Archive Default|Open With App.</blockquote>
+    Why aren't all my thumbnails displayed?<br>
+	<blockquote>View|Preferences|Max Pic Size To Thumbnail may limit what pics are thumbnailed.</blockquote>
 </ul>
 
 
@@ -2141,7 +2143,7 @@ References:<br>
 
 <!-- # Stop -->
 <p><a name="tasks-menu-stop"/><a href="#tasks-menu-stop"><b>Stop</b></a><br>
-Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.  Note that stopping an internal task may leave some files only partially copied.
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.
 
 <p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not always.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.  An exec task will not be removed from the Task Manager until its process terminates.  This means that if a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
 
@@ -2302,7 +2304,7 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <p><a name="tasks-menu-poperr"/><a href="#tasks-menu-poperr"><b>Errors</b></a><br>
 The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on the first file.
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite any errors on previous files.
 
 <p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 
@@ -5656,7 +5658,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-10-21&nbsp;&nbsp;(SpaceFM version 0.8.0+)
+<p>Updated 2012-10-25&nbsp;&nbsp;(SpaceFM version 0.8.1+)
 <br><br>
 </center>
 </td></tr></table>

@@ -36,6 +36,40 @@ To see the work being done on the upcoming release of SpaceFM, see <a href="http
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.2"></a>
+<big><b><a href="#0.8.2">0.8.2 released and GTK3 Alpha Testing</a></b></big><br>
+2012-Oct-25
+
+<p>This maintenance release is primarily to correct problems building with hal.  0.8.2 corrects several issues present in 0.8.1:
+
+<ul>
+<li>Problems building with the --enable-hal configure option have been corrected.<br><br>
+<li>The way information is displayed in the overwrite dialog and task popups has been modified.<br><br>
+<li>An old bug which sometimes produced an erroneous 'destination is contained in source' error has been corrected.<br><br>
+<li>An old bug which prevented cutting a directory and pasting it, overwriting a directory with the same name, has been corrected (#174)<br><br>
+</ul>
+
+<b>SpaceFM GTK3 Now Available For Alpha Testing</b><br>
+BwackNinja's current work porting SpaceFM to GTK3 has gone through an initial review and has been added to the alpha test <a href="https://github.com/IgnorantGuru/spacefm/tree/gtk3">gtk3 branch</a> of SpaceFM.  This branch can be built for either GTK2 (the default) or for GTK3 using configure option <b>--with-gtk3</b> (GTK3 will be used automatically if GTK2 is not installed).  Distros should not package this branch except for testing.
+
+<p>When built with GTK2, this branch should run exactly like 0.8.2.  When built with GTK3, this branch may have some remaining GUI issues, but the file operations should not be affected.  The GTK3 build can use some thorough testing.  <b>Please report any issues encountered with GTK3 to <a href="https://github.com/BwackNinja/spacefm/issues?state=open">BwackNinja</a></b>.
+
+<p>To build from the gtk3 branch, please follow the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a>.  If you would like your build to include <a href="https://github.com/BwackNinja/spacefm/commits/next">BwackNinja's most recent changes</a> (which is slightly ahead of SpaceFM's gtk3 branch), you can use <a href="https://github.com/BwackNinja/spacefm/tarball/next">this tarball</a> instead.  When <a href="https://github.com/BwackNinja/spacefm/issues?state=open">reporting issues</a>, please be sure to specify your build method and branch.
+
+<p>It's also possible to easily build a binary <b>debian package for spacefm-gtk3</b> - see the CREATE DEB PACKAGE section in the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a>.  
+
+<p>For Arch Linux, you can install the gtk3 build using <a href="https://aur.archlinux.org/packages.php?ID=63929">AUR spacefm-gtk3</a>.
+
+<p><b>Thanks for testing!</b>  The more feedback we receive on GTK3, the faster it can evolve and move toward inclusion in the stable release version.
+
+
+<br><br><br><hr>
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.8.1"></a>
 <big><b><a href="#0.8.1">0.8.1 released</a></b></big><br>
 2012-Oct-21
