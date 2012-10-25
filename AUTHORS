@@ -2,15 +2,16 @@ SpaceFM Contributors
 
 Developer:      IgnorantGuru <ignorantguru@gmx.com>
 
-Contributors:   BwackNinja <BwackNinja@gmail.com>  (gtk2.18 compatibility)
+Contributors:   BwackNinja <BwackNinja@gmail.com>  (gtk2.18 + gtk3 port)
 
 Icons:          SpaceFM icons and logo by Goran Simovic
                 Additional icons from the Tango Desktop Project icon set
 
 Translators:    ( in alphabetical order )
-                Jean-Philippe Fleury <contact@jpfleury.net> (fr)
-                Tomas Forsman <tforsman@foresightlinux.se> (sv)
-                Vladimir Kudrya <vladimir-csp@yandex.ru> (ru)
+                Jean-Philippe Fleury <contact@jpfleury.net>  (fr)
+                tct1501 <cyclonus@lavabit.com>               (nl)
+                Tomas Forsman <tforsman@foresightlinux.se>   (sv)
+                Vladimir Kudrya <vladimir-csp@yandex.ru>     (ru)
 
 Thanks to SpaceFM users for valuable feedback!
 
