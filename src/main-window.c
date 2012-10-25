@@ -5172,7 +5172,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
                     app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
         
         // status
-        char* status;
+        const char* status;
         char* status2 = NULL;
         char* status3;
         if ( ptask->task->type != 6 )

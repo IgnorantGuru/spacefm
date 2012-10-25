@@ -40,7 +40,11 @@ ptk_file_icon_renderer_finalize ( GObject *gobject );
 static void
 ptk_file_icon_renderer_get_size ( GtkCellRenderer *cell,
                                   GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                  const GdkRectangle *cell_area,
+#else
                                   GdkRectangle *cell_area,
+#endif
                                   gint *x_offset,
                                   gint *y_offset,
                                   gint *width,
@@ -568,7 +572,11 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
 
 void ptk_file_icon_renderer_get_size ( GtkCellRenderer *cell,
                                        GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                       const GdkRectangle *cell_area,
+#else
                                        GdkRectangle *cell_area,
+#endif
                                        gint *x_offset,
                                        gint *y_offset,
                                        gint *width,

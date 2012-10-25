@@ -43,7 +43,11 @@ static void ptk_text_renderer_set_property ( GObject *object,
                                              GParamSpec *pspec );
 static void ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                                          GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                         const GdkRectangle *cell_area,
+#else
                                          GdkRectangle *cell_area,
+#endif
                                          gint *x_offset,
                                          gint *y_offset,
                                          gint *width,
@@ -830,7 +834,11 @@ get_layout ( PtkTextRenderer *celltext,
 static void
 get_size ( GtkCellRenderer *cell,
            GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+           const GdkRectangle *cell_area,
+#else
            GdkRectangle *cell_area,
+#endif
            PangoLayout *layout,
            gint *x_offset,
            gint *y_offset,
@@ -907,7 +915,11 @@ get_size ( GtkCellRenderer *cell,
 static void
 ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                              GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                             const GdkRectangle *cell_area,
+#else
                              GdkRectangle *cell_area,
+#endif
                              gint *x_offset,
                              gint *y_offset,
                              gint *width,
