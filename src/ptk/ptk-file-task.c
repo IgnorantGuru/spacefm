@@ -1108,6 +1108,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     char* ufile_path;
     char* usrc_dir;
     char* udest;
+    char* window_title;
     char* str;
     char* str2;
     char percent_str[ 16 ];
@@ -1145,14 +1146,17 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
             ufile_path = g_markup_printf_escaped ("<b>%s</b>", task->current_file );
 
         if ( ptask->aborted )
-            gtk_window_set_title( GTK_WINDOW( ptask->progress_dlg ), _("Stopped") );                
+            window_title = _("Stopped");                
         else
         {
             if ( task->err_count )
-                gtk_window_set_title( GTK_WINDOW( ptask->progress_dlg ), _("Errors") );
+                window_title= _("Errors");
             else
-                gtk_window_set_title( GTK_WINDOW( ptask->progress_dlg ), _("Done") );
+                window_title= _("Done");
         }
+        gtk_window_set_title( GTK_WINDOW( ptask->progress_dlg ), window_title );
+        if ( !ufile_path )
+            ufile_path = g_markup_printf_escaped ("<b>( %s )</b>", window_title );
     }
     else if ( task->current_file )
     {
@@ -1209,7 +1213,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     }
     else
         ufile_path = NULL;
-    if ( !udest && task->dest_dir )
+    if ( !udest && !ptask->complete && task->dest_dir )
     {
         udest = g_filename_display_name( task->dest_dir );
         if ( !( udest[0] == '/' && udest[1] == '\0' ) )
