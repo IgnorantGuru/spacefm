@@ -1725,13 +1725,11 @@ exo_icon_view_size_allocate (GtkWidget     *widget,
   /* apply the new size allocation */
   gtk_widget_set_allocation (widget, allocation);
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
   /* move/resize the clipping window, the icons window
    * will be handled by exo_icon_view_layout().
    */
   if (gtk_widget_get_realized (widget))
-    gdk_window_move_resize (gtk_widget_get_window (widget), allocation->x, allocation->y, allocation->width, allocation->height);
-#endif
+    gdk_window_move_resize (gtk_widget_get_window (widget), MAX(0, allocation->x), MAX(0, allocation->y), allocation->width, allocation->height);
 
   /* layout the items */
   exo_icon_view_layout (icon_view);
