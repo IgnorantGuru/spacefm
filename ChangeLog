@@ -1,4 +1,4 @@
-0.8.1+
+0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
     add From: to task popup

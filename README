@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.1+
+README for SpaceFM v0.8.2
 
 
 For updates and instructions visit:
@@ -15,6 +15,7 @@ CONTENTS
     BUILD
     BUILD DEBUG
     BUILD NEXT
+    BUILD GTK3
     CREATE DEB PACKAGE
     UNINSTALL
     TRANSLATIONS
@@ -267,6 +268,13 @@ build dependencies listed above in BUILD plus libtool, then:
 
     # Remove Temporary Files
     cd / && rm -rf /tmp/spacefm-next
+
+
+BUILD GTK3
+
+The git gtk3 branch of SpaceFM is available for alpha testing.  Please see
+
+    https://github.com/IgnorantGuru/spacefm/blob/gtk3/README
 
 
 CREATE DEB PACKAGE
