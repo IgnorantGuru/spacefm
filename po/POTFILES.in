@@ -9,6 +9,7 @@ data/spacefm.desktop.in
 [type: gettext/glade]data/ui/find-files.ui
 [type: gettext/glade]data/ui/godlg.ui
 [type: gettext/glade]data/ui/prefdlg.ui
+[type: gettext/glade]data/ui/prefdlg2.ui
 src/exo/exo-icon-view.c
 src/exo/exo-tree-view.c
 src/cust-dialog.c

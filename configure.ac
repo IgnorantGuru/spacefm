@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([spacefm], [0.8.1+])
+AC_INIT([spacefm], [0.8.1+gtk3])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
@@ -25,12 +25,38 @@ AC_FUNC_MMAP
 AC_CHECK_LIB(m, pow)
 AC_CHECK_LIB(X11, XClearWindow)
 
-gtk_modules="gtk+-2.0 >= 2.18.0 \
-             gthread-2.0 \
-             gobject-2.0"
-PKG_CHECK_MODULES(GTK, [$gtk_modules])
-AC_SUBST(GTK_CFLAGS)
-AC_SUBST(GTK_LIBS)
+# gtk2 or gtk3
+PKG_PROG_PKG_CONFIG
+gtk2_modules="gtk+-2.0 >= 2.18.0 \
+              gthread-2.0 \
+              gobject-2.0"
+gtk3_modules="gtk+-3.0 >= 3.0.0 \
+              gthread-2.0 \
+              gobject-2.0"
+              
+AC_ARG_WITH([gtk3], AS_HELP_STRING([--with-gtk3], [Build with GTK3 interface instead of GTK2 (default: with GTK2 unless GTK2 not installed)]), with_gtk3=$withval, with_gtk3="no")
+
+if test x"$with_gtk3" = x"yes"; then
+    # user enabled - gtk3 required
+    PKG_CHECK_MODULES(GTK, [$gtk3_modules])
+    AC_DEFINE([HAVE_GTK3], [1], [Use GTK3])
+else
+    # disabled - use gtk3 only if gtk2 not installed
+    PKG_CHECK_MODULES(GTK, [$gtk2_modules], with_gtk3="no", [
+       PKG_CHECK_MODULES(GTK, [$gtk3_modules], with_gtk3="yes", with_gtk3="no")
+    ])
+    if test x"$with_gtk3" = x"yes"; then
+        AC_DEFINE([HAVE_GTK3], [1], [Use GTK3])
+    else
+        PKG_CHECK_MODULES(GTK, [$gtk2_modules])
+    fi
+fi
+AC_SUBST([GTK_CFLAGS])
+AC_SUBST([GTK_LIBS])
+if test x"$with_gtk3" = x"yes"; then
+    # disabled deprecated warnings for retained GTK2 functions
+    CPPFLAGS="$CPPFLAGS -Wno-deprecated-declarations"
+fi
 
 # start-notification is optional - will be used if installed and no --disable
 AC_ARG_ENABLE(
@@ -274,6 +300,11 @@ echo 64-bit Large file support.................... : $largefile
 if test ! -z "$preferable_sudo"; then
 echo Additional program to switch to super user... : $preferable_sudo
 fi
+if test x"$with_gtk3" = x"yes"; then
+echo 'GTK+ Version................................. : GTK3 (for ALPHA testing)'
+else
+echo 'GTK+ Version................................. : GTK2'
+fi
 echo Desktop icon integration..................... : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo
@@ -281,6 +312,10 @@ echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo
 echo Please read README carefully if you are packaging SpaceFM.
 echo
+if test x"$with_gtk3" = x"yes"; then
+echo
+echo NOTE: GTK3 support is currently provided FOR ALPHA TESTING
+fi
 echo
 if test ! x"$use_pixmaps" = x"yes"; then
 echo 'IMPORTANT: After make and install, run:'
