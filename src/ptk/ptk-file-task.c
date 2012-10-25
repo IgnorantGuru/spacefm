@@ -1896,6 +1896,7 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
         break;
     case RESPONSE_PAUSE:
         ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
+        main_task_start_queued( ptask->task_view, ptask );
         vfs_file_task_set_overwrite_mode( ptask->task, VFS_FILE_TASK_RENAME );
         ptask->restart_timeout = FALSE;
         break;

@@ -1254,7 +1254,7 @@ References:<br>
 <p>The context menu contains the following items:
 
 <!-- # Stop -->
-Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.  Note that stopping an internal task may leave some files only partially copied.
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.
 
 <p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not always.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.  An exec task will not be removed from the Task Manager until its process terminates.  This means that if a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
 
