@@ -47,7 +47,7 @@ BUILD
     Also Recommended: udevil|pmount|udisks, eject, lsof, wget, ktsuss|gksu,
                       libstartup-notification0, libstartup-notification0-dev
 
-    IF building with GTK3, substitute libgtk+-3.0 and libgtk-3-bin for 
+    IF building with GTK3, substitute libgtk-3-0 and libgtk-3-bin for 
         libgtk2.0-0 and libgtk2.0-bin
 
     IF building with HAL support, you also need:
@@ -204,7 +204,7 @@ To build a deb file of SpaceFM gtk3 branch on your Debian-based distro:
 UNINSTALL
 
 If you installed from a package, use your package manager to remove SpaceFM.
-Otherwise, run these command AS ROOT:
+Otherwise, run these commands AS ROOT:
 
     rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
     rm -r /usr/local/share/spacefm
