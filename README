@@ -310,7 +310,7 @@ To build a deb file of SpaceFM on your Debian-based distro:
 UNINSTALL
 
 If you installed from a package, use your package manager to remove SpaceFM.
-Otherwise, run these command AS ROOT:
+Otherwise, run these commands AS ROOT:
 
     rm /usr/local/bin/spacefm /usr/local/bin/spacefm-auth
     rm -r /usr/local/share/spacefm
