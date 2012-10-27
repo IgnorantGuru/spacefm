@@ -8451,6 +8451,49 @@ void string_copy_free( char** s, const char* src )
     g_free( discard );
 }
 
+char* unescape( const char* t )
+{
+    if ( !t )
+        return NULL;
+    
+    char* s = g_strdup( t );
+
+    int i = 0, j = 0;    
+    while ( t[i] )
+    {
+        switch ( t[i] )
+        {
+        case '\\':
+            switch( t[++i] )
+            {
+            case 'n':
+                s[j] = '\n';
+                break;
+            case 't':
+                s[j] = '\t';
+                break;                
+            case '\\':
+                s[j] = '\\';
+                break;
+            case '\"':
+                s[j] = '\"';
+                break;
+            default:
+                // copy
+                s[j++] = '\\';
+                s[j] = t[i];
+            }
+            break;            
+        default:
+            s[j] = t[i];
+        }
+        ++i;
+        ++j;
+    }
+    s[j] = t[i];  // null char
+    return s;
+}
+
 void xset_defaults()
 {
     XSet* set;
