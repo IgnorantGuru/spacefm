@@ -491,6 +491,8 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
     How do I make archives (tar.gz etc) open with an application?<br>
 	<blockquote>Right-click on any archive file and select Open|Archive Default|Open With App.</blockquote>
+    Why aren't all my thumbnails displayed?<br>
+	<blockquote>View|Preferences|Max Pic Size To Thumbnail may limit what pics are thumbnailed.</blockquote>
 </ul>
 
 
@@ -1399,7 +1401,7 @@ The Font menu item allows you to set a font to be used in the output monitor of 
 <!-- # Errors #poperr -->
 The Errors submenu contains a set of radio options which control how errors in internal tasks (such as copy and move) are handled by default.  (These options have no effect on exec tasks such as custom commands.)
 
-<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite the error on the first file.
+<p>If option <b>Stop If First</b> is selected (the default), the task will be stopped by the Task Manager if an error occurs AND that error is encountered before the task has successfully processed one file.  If an error occurs on later files in the task, the Task Manager will open a <a href="#tasks-dlg">popup dialog</a> to show the error, but subsequent actions in the task will continue to run.  For example, if there are more files to be copied, SpaceFM will attempt to copy them despite any errors on previous files.
 
 <p>Stop If First is provided as a convenience option.  Usually if the first action of a task fails, the rest of the task will fail as well, so it might as well be stopped rather than producing a long list of errors for every file in the task.
 

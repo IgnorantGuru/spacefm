@@ -365,7 +365,11 @@ void on_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
     if ( !vol )
         return;
 
+#ifndef HAVE_HAL
     if ( !vfs_volume_is_mounted( vol ) && vol->device_type == DEVICE_TYPE_BLOCK )
+#else
+    if ( !vfs_volume_is_mounted( vol ) )
+#endif
     {
         try_mount( view, vol );
         if ( vfs_volume_is_mounted( vol ) )
@@ -703,6 +707,13 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     return ret;
 }
 
+void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
+{
+    xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                _("udev Not Configured"), NULL, 0,
+                _("Mounting a network share requires a udev (--disable-hal) build of SpaceFM."),
+                NULL, NULL );
+}
 
 #else
 
@@ -874,92 +885,6 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     task->complete_notify = is_sync ? (GFunc)on_autoopen_net_cb : NULL;
     task->user_data = ao;
     ptk_file_task_run( task );
-    return;
-}
-
-void open_external_tab( const char* path )
-{
-    char* prog = g_find_program_in_path( g_get_prgname() );
-    if ( !prog )
-        prog = g_strdup( g_get_prgname() );
-    if ( !prog )
-        prog = g_strdup( "spacefm" );
-    char* quote_path = bash_quote( path );
-    char* line = g_strdup_printf( "%s -t %s", prog, quote_path );
-    g_spawn_command_line_async( line, NULL );
-    g_free( prog );
-    g_free( quote_path );
-    g_free( line );    
-}
-
-void mount_iso( PtkFileBrowser* file_browser, const char* path )
-{
-    char* udevil = g_find_program_in_path( "udevil" );
-    if ( !udevil )
-    {
-        g_free( udevil );
-        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
-                        GTK_MESSAGE_ERROR,
-                        _("udevil Not Installed"), NULL, 0,
-                        _("Mounting a disc image file requires udevil to be installed."),
-                        NULL, NULL );
-        return;
-    }
-    
-    char* stdout = NULL;
-    char* stderr = NULL;
-    char* command;
-    gboolean ret;
-    gint exit_status;
-    
-    char* str = bash_quote( path );
-    command = g_strdup_printf( "%s mount %s", udevil, str );
-    g_free( str );
-    g_free( udevil );
-    ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status, NULL );
-    g_free( command );
-    if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
-    {
-        if ( stderr && ( str = strstr( stderr, " is already mounted at " ) ) )
-        {
-            char* str2;
-            if ( str2 = strstr( str, " (or specify mount point" ) )
-            {
-                str2[0] = '\0';
-                if ( file_browser )
-                    ptk_file_browser_emit_open( file_browser, g_strdup( str + 23 ),
-                                                                PTK_OPEN_NEW_TAB );
-                else
-                    open_external_tab( str + 23 );
-                goto _exit_mount_iso;
-            }
-        }
-        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
-                            GTK_MESSAGE_ERROR, _("Mount Disc Image Failed"), NULL,
-                            0, stderr, NULL, NULL );
-    }
-    else
-    {
-        if ( stdout && g_str_has_prefix( stdout, "Mounted " ) &&
-                                                ( str = strstr( stdout, " at " ) ) )
-        {
-            while ( g_str_has_suffix( stdout, "\n" ) )
-                stdout[ strlen( stdout ) - 1 ] = '\0';
-            if ( file_browser )
-                ptk_file_browser_emit_open( file_browser, g_strdup( str + 4 ),
-                                                        PTK_OPEN_NEW_TAB );
-            else
-                open_external_tab( str + 4 );
-
-            // let mount be detected
-            while (gtk_events_pending ())
-                gtk_main_iteration ();            
-            vfs_volume_special_mounted( str + 4 );
-        }
-    }
-_exit_mount_iso:
-    g_free( stderr );
-    g_free( stdout );
     return;
 }
 
@@ -2616,6 +2541,94 @@ static void on_automountlist( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view
 
 #endif
 
+void open_external_tab( const char* path )
+{
+    char* prog = g_find_program_in_path( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( "spacefm" );
+    char* quote_path = bash_quote( path );
+    char* line = g_strdup_printf( "%s -t %s", prog, quote_path );
+    g_spawn_command_line_async( line, NULL );
+    g_free( prog );
+    g_free( quote_path );
+    g_free( line );    
+}
+
+void mount_iso( PtkFileBrowser* file_browser, const char* path )
+{
+    char* udevil = g_find_program_in_path( "udevil" );
+    if ( !udevil )
+    {
+        g_free( udevil );
+        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                        GTK_MESSAGE_ERROR,
+                        _("udevil Not Installed"), NULL, 0,
+                        _("Mounting a disc image file requires udevil to be installed."),
+                        NULL, NULL );
+        return;
+    }
+    
+    char* stdout = NULL;
+    char* stderr = NULL;
+    char* command;
+    gboolean ret;
+    gint exit_status;
+    
+    char* str = bash_quote( path );
+    command = g_strdup_printf( "%s mount %s", udevil, str );
+    g_free( str );
+    g_free( udevil );
+    ret = g_spawn_command_line_sync( command, &stdout, &stderr, &exit_status, NULL );
+    g_free( command );
+    if ( !ret || ( exit_status && WIFEXITED( exit_status ) ) )
+    {
+        if ( stderr && ( str = strstr( stderr, " is already mounted at " ) ) )
+        {
+            char* str2;
+            if ( str2 = strstr( str, " (or specify mount point" ) )
+            {
+                str2[0] = '\0';
+                if ( file_browser )
+                    ptk_file_browser_emit_open( file_browser, g_strdup( str + 23 ),
+                                                                PTK_OPEN_NEW_TAB );
+                else
+                    open_external_tab( str + 23 );
+                goto _exit_mount_iso;
+            }
+        }
+        xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                            GTK_MESSAGE_ERROR, _("Mount Disc Image Failed"), NULL,
+                            0, stderr, NULL, NULL );
+    }
+    else
+    {
+        if ( stdout && g_str_has_prefix( stdout, "Mounted " ) &&
+                                                ( str = strstr( stdout, " at " ) ) )
+        {
+            while ( g_str_has_suffix( stdout, "\n" ) )
+                stdout[ strlen( stdout ) - 1 ] = '\0';
+            if ( file_browser )
+                ptk_file_browser_emit_open( file_browser, g_strdup( str + 4 ),
+                                                        PTK_OPEN_NEW_TAB );
+            else
+                open_external_tab( str + 4 );
+
+            // let mount be detected
+            while (gtk_events_pending ())
+                gtk_main_iteration ();    
+#ifndef HAVE_HAL
+            vfs_volume_special_mounted( str + 4 );
+#endif
+        }
+    }
+_exit_mount_iso:
+    g_free( stderr );
+    g_free( stdout );
+    return;
+}
+
 gboolean volume_is_visible( VFSVolume* vol )
 {
 #ifndef HAVE_HAL
@@ -3233,17 +3246,22 @@ int book_item_comp( const char* item, const char* path )
 
 void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
 {
-    char* url;
+    const char* url;
     GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
     if ( !view || !file_browser )
         return;
 
+#ifndef HAVE_HAL
     if ( g_str_has_prefix( vol->device_file, "curlftpfs#" ) )
         url = vol->device_file + 10;
     else
         url = vol->device_file;
+#else
+    url = vfs_volume_get_device( vol );
+#endif
+
     if ( ! g_list_find_custom( app_settings.bookmarks->list,
                                url,
                                ( GCompareFunc ) book_item_comp ) )

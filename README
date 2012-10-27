@@ -1,4 +1,8 @@
-README for SpaceFM v0.8.1+
+README for SpaceFM v0.8.1+gtk3
+
+
+IMPORTANT: This ALPHA TEST branch of SpaceFM can be built with either a GTK2
+           (default) or GTK3 interface.  See BUILD section below for details.
 
 
 For updates and instructions visit:
@@ -132,6 +136,9 @@ BUILD
     Also Recommended: udevil|pmount|udisks, eject, lsof, wget, ktsuss|gksu,
                       libstartup-notification0, libstartup-notification0-dev
 
+    IF building with GTK3, substitute libgtk+-3.0 and libgtk-3-bin for 
+        libgtk2.0-0 and libgtk2.0-bin
+
     IF building with HAL support, you also need:
         hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1
         libhal1 libdbus-glib-1-2
@@ -169,20 +176,23 @@ BUILD
     b) Enabling kernel polling is recommended after installing SpaceFM:
        http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
-    c) If hal support is desired (this will disable udev support and will
+    c) If GTK3 interface is desired, add --with-gtk3 to the configure command
+       above.  (--with-gtk3 is default if GTK2 is not installed.)
+       
+    d) If hal support is desired (this will disable udev support and will
        seriously limit device manager capabilities), add --enable-hal to the
        configure command above.
 
-    d) If you don't want to use the inotify kernel support and instead
+    e) If you don't want to use the inotify kernel support and instead
        want fam or gamin to detect directory changes, add to configure:
           --disable-inotify
 
-    e) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
+    f) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
        To build with an additional custom su program ('/usr/bin/mysu' in this
        example), add:
           --with-preferable-sudo=/usr/bin/mysu  # to the configure command
 
-    f) --disable-pixmaps causes icons to be installed to share/icons instead of
+    g) --disable-pixmaps causes icons to be installed to share/icons instead of
        share/pixmaps for GTK caching.  If you use this option, be sure to
        run sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
        (or /usr/share/icons/hicolor depending on prefix)
@@ -279,22 +289,30 @@ To build a deb file of SpaceFM on your Debian-based distro:
     USE A TMP BUILD PATH THAT DOES NOT CONTAIN SPACES):
 
         mkdir /tmp/spacefm-build && cd /tmp/spacefm-build   # no spaces in path
-        # Note: you can change "master" to "next" if you want the next branch:
+        # Note: you can change "master" to "gtk3" if you want the gtk3 branch:
         wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF hal support IS desired:
+3)  IF GTK3 support IS desired:
+
+        # USE https://github.com/IgnorantGuru/spacefm/tarball/gtk3 in step 2
+        cp debian/control-gtk3 debian/control
+        cp debian/rules-gtk3 debian/rules
+        sed -i 's/^spacefm \(.*\)/spacefm-gtk3 \1/' debian/changelog
+
+4)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
 
         cp debian/control-hal debian/control
         cp debian/rules-hal debian/rules
+        sed -i 's/^spacefm \(.*\)/spacefm-hal \1/' debian/changelog
 
-4)  Build package:  (the package files will appear in the parent directory)
+5)  Build package:  (the package files will appear in the parent directory)
 
         dpkg-buildpackage -b -uc
         cd .. && rm -rf IgnorantGuru-spacefm-* spacefm.tar.gz
 
-5)  To install the package you built:
+6)  To install the package you built:
 
         dpkg -i spacefm*.deb
 
