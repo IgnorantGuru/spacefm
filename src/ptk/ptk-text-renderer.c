@@ -987,7 +987,11 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         if ( gtk_widget_has_focus ( widget ) )
             state = GTK_STATE_SELECTED;
         else
+#if GTK_CHECK_VERSION (3, 0, 0)
+            state = GTK_STATE_SELECTED;
+#else
             state = GTK_STATE_ACTIVE;
+#endif
     }
     else if ( ( flags & GTK_CELL_RENDERER_PRELIT ) == GTK_CELL_RENDERER_PRELIT &&
               gtk_widget_get_state ( widget ) == GTK_STATE_PRELIGHT )

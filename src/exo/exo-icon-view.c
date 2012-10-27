@@ -531,8 +531,13 @@ struct _ExoIconViewPrivate
   gboolean doing_rubberband;
   gint rubberband_x1, rubberband_y1;
   gint rubberband_x2, rubberband_y2;
+#if GTK_CHECK_VERSION (3, 0, 0)
+  GdkRGBA rubberband_border_color;
+  GdkRGBA rubberband_fill_color;
+#else
   GdkColor *rubberband_border_color;
   GdkColor *rubberband_fill_color;
+#endif
 
   gint scroll_timeout_id;
   gint scroll_value_diff;
@@ -1824,11 +1829,11 @@ exo_icon_view_expose_event (GtkWidget      *widget,
 #if !GTK_CHECK_VERSION (3, 0, 0)
   cairo_t                *cr;
   cr = gdk_cairo_create (priv->bin_window);
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 #else
   gtk_cairo_transform_to_window (cr, widget, priv->bin_window);
 #endif
   cairo_set_line_width (cr, 1);
-  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
 
   /* scroll to the previously remembered path (if any) */
   if (G_UNLIKELY (priv->scroll_to_path != NULL))
@@ -1872,7 +1877,11 @@ exo_icon_view_expose_event (GtkWidget      *widget,
       /* we take advantage of double-buffering here and use only a single
        * draw_rectangle() operation w/o having to take care of clipping.
        */
+#if GTK_CHECK_VERSION (3, 0, 0)
+      gdk_cairo_set_source_rgba (cr, &priv->rubberband_fill_color);
+#else
       gdk_cairo_set_source_color (cr, priv->rubberband_fill_color);
+#endif
       cairo_rectangle (cr, rubber_rect.x + 0.5, rubber_rect.y + 0.5, rubber_rect.width - 1, rubber_rect.height - 1);
       cairo_fill (cr);
     }
@@ -2005,7 +2014,11 @@ exo_icon_view_expose_event (GtkWidget      *widget,
   if (G_UNLIKELY (priv->doing_rubberband))
     {
       /* draw the border */
+#if GTK_CHECK_VERSION (3, 0, 0)
+      gdk_cairo_set_source_rgba (cr, &priv->rubberband_border_color);
+#else
       gdk_cairo_set_source_color (cr, priv->rubberband_border_color);
+#endif
       cairo_set_line_width (cr, 1);
       cairo_rectangle (cr, rubber_rect.x + 0.5, rubber_rect.y + 0.5, rubber_rect.width - 1, rubber_rect.height - 1);
       cairo_stroke (cr);
@@ -2864,6 +2877,19 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
 
   icon_view->priv->doing_rubberband = TRUE;
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+  GtkStyleContext *style_ctx = gtk_widget_get_style_context (GTK_WIDGET (icon_view));
+  gtk_style_context_save (style_ctx);
+  gtk_style_context_add_class (style_ctx, GTK_STYLE_CLASS_RUBBERBAND);
+
+  /* set the rubberband border color */
+  gtk_style_context_get_border_color (style_ctx, GTK_STATE_FLAG_NORMAL, &icon_view->priv->rubberband_border_color);
+
+  /* set the rubberband fill color */
+  gtk_style_context_get_background_color (style_ctx, GTK_STATE_FLAG_NORMAL, &icon_view->priv->rubberband_fill_color);
+
+  gtk_style_context_restore (style_ctx);
+#else
   /* determine the border color */
   gtk_widget_style_get (GTK_WIDGET (icon_view), "selection-box-color", &color, NULL);
   if (G_LIKELY (color == NULL))
@@ -2885,6 +2911,7 @@ exo_icon_view_start_rubberbanding (ExoIconView  *icon_view,
 
   /* set the rubberband background color */
   icon_view->priv->rubberband_fill_color = color;
+#endif
 
   gtk_grab_add (GTK_WIDGET (icon_view));
 
@@ -2912,11 +2939,13 @@ exo_icon_view_stop_rubberbanding (ExoIconView *icon_view)
       gtk_grab_remove (GTK_WIDGET (icon_view));
       gtk_widget_queue_draw (GTK_WIDGET (icon_view));
 
-      /* drop the GCs for drawing the rubberband */
+#if !GTK_CHECK_VERSION (3, 0, 0)
+      /* Free the colors for drawing the rubberband */
       gdk_color_free (icon_view->priv->rubberband_border_color);
       gdk_color_free (icon_view->priv->rubberband_fill_color);
       icon_view->priv->rubberband_border_color = NULL;
       icon_view->priv->rubberband_fill_color = NULL;
+#endif
 
       /* re-enable Gtk+ DnD callbacks again */
       drag_data = g_object_get_data (G_OBJECT (icon_view), I_("gtk-site-data"));
