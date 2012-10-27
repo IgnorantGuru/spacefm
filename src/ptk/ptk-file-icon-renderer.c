@@ -516,7 +516,11 @@ ptk_file_icon_renderer_render ( GtkCellRenderer *cell,
                 if ( gtk_widget_has_focus ( widget ) )
                     state = GTK_STATE_SELECTED;
                 else
+#if GTK_CHECK_VERSION (3, 0, 0)
+                    state = GTK_STATE_SELECTED;
+#else
                     state = GTK_STATE_ACTIVE;
+#endif
                 color = &gtk_widget_get_style(widget)->base[ state ];
             }
             else
