@@ -2460,6 +2460,10 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
         pango_font_description_free( font_desc );
     }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_NONE );
+    gtk_label_set_width_chars( GTK_LABEL( tab_text ), MIN( 30, strlen( gtk_label_get_text( GTK_LABEL( tab_text ) ) ) + 2 ) );
+#endif
     gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_MIDDLE );
     gtk_label_set_max_width_chars( GTK_LABEL( tab_text ), 30 );
     gtk_box_pack_start( GTK_BOX( tab_label ),
@@ -2534,6 +2538,11 @@ void fm_main_window_update_tab_label( FMMainWindow* main_window,
 
         name = g_path_get_basename( path );
         gtk_label_set_text( text, name );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_NONE );
+        gtk_label_set_width_chars( text, MIN( 30, strlen( name ) + 2 ) );
+        gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_MIDDLE );
+#endif
         g_free( name );
 
         g_list_free( children );  //sfm 0.6.0 enabled
