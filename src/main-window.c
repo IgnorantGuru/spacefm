@@ -1720,6 +1720,10 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     // panelbar
     main_window->panelbar = gtk_toolbar_new();
+#if GTK_CHECK_VERSION (3, 0, 0)
+    GtkStyleContext *style_ctx = gtk_widget_get_style_context( main_window->panelbar );
+    gtk_style_context_add_class (style_ctx, GTK_STYLE_CLASS_MENUBAR);
+#endif
     gtk_toolbar_set_show_arrow( GTK_TOOLBAR( main_window->panelbar ), FALSE );
     gtk_toolbar_set_style( GTK_TOOLBAR( main_window->panelbar ), GTK_TOOLBAR_ICONS );
     gtk_toolbar_set_icon_size( GTK_TOOLBAR( main_window->panelbar ), GTK_ICON_SIZE_MENU );
