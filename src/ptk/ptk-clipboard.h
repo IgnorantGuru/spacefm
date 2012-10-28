@@ -42,6 +42,8 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
 
 void ptk_clipboard_copy_text( const char* text );  //MOD added
 
+void ptk_clipboard_copy_file_list( char** path, gboolean copy ); //sfm
+
 G_END_DECLS
 
 #endif

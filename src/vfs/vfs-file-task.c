@@ -1152,7 +1152,10 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
     printf("child finished  pid=%d exit_status=%d\n", pid,
                                     bad_status ? -1 : task->exec_exit_status );
     if ( !task->exec_exit_status && !bad_status )
-        task->percent = 100;
+    {
+        if ( !task->custom_percent )
+            task->percent = 100;
+    }
     else
         call_state_callback( task, VFS_FILE_TASK_ERROR );
     
@@ -2127,6 +2130,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->err_count = 0;
     task->abort = FALSE;
     task->error_first = TRUE;
+    task->custom_percent = FALSE;
     
     task->exec_type = VFS_EXEC_NORMAL;
     task->exec_action = NULL;
@@ -2151,6 +2155,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_write_root = FALSE;
     task->exec_set = NULL;
     task->exec_cond = NULL;
+    task->exec_ptask = NULL;
     
     task->pause_cond = NULL;
     task->state_pause = VFS_FILE_TASK_RUNNING;

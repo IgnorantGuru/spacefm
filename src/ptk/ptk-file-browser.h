@@ -136,6 +136,7 @@ struct _PtkFileBrowser
     gboolean button_press : 1;
     gboolean bookmark_button_press : 1;
     char* select_path;
+    char* status_bar_custom;
 };
 
 typedef enum{
@@ -340,7 +341,9 @@ GList* folder_view_get_selected_items( PtkFileBrowser* file_browser,
                                               GtkTreeModel** model );
 void ptk_file_browser_status_change( PtkFileBrowser* file_browser, gboolean panel_focus );
 void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path );
-
+void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
+                                                        char** filename,
+                                                        gboolean do_select );
 
 
 G_END_DECLS

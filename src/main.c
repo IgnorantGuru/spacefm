@@ -72,7 +72,11 @@ typedef enum{
     CMD_PANEL3,
     CMD_PANEL4,
     CMD_DESKTOP,
-    CMD_NO_TABS
+    CMD_NO_TABS,
+    CMD_SOCKET_CMD,
+    SOCKET_RESPONSE_OK,
+    SOCKET_RESPONSE_ERROR,
+    SOCKET_RESPONSE_DATA
 }SocketEvent;
 
 static gboolean folder_initialized = FALSE;
@@ -96,6 +100,7 @@ static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
 static gboolean profile = FALSE;  //MOD
 static gboolean custom_dialog = FALSE;  //sfm
+static gboolean socket_cmd = FALSE;     //sfm
 static gboolean sdebug = FALSE;
 
 static int show_pref = 0;
@@ -135,6 +140,7 @@ static GOptionEntry opt_entries[] =
     { "set-wallpaper", '\0', 0, G_OPTION_ARG_NONE, &set_wallpaper, N_("Set desktop wallpaper to FILE"), NULL },
 #endif
     { "dialog", 'g', 0, G_OPTION_ARG_NONE, &custom_dialog, N_("Show a custom dialog (See -g help)"), NULL },
+    { "socket-cmd", 's', 0, G_OPTION_ARG_NONE, &socket_cmd, N_("Send a socket command (See -s help)"), NULL },
     { "profile", '\0', 0, G_OPTION_ARG_STRING, &profile, N_("No function - for compatibility only"), "PROFILE" },
     { "no-desktop", '\0', 0, G_OPTION_ARG_NONE, &no_desktop, N_("No function - for compatibility only"), NULL },
 
@@ -166,6 +172,7 @@ static void open_file( const char* path );
 
 static GList* get_file_info_list( char** files );
 static char* dup_to_absolute_file_path( char** file );
+void receive_socket_command( int client, GString* args );  //sfm
 
 gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 {
@@ -184,7 +191,17 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
         {
             args = g_string_new_len( NULL, 2048 );
             while( (r = read( client, buf, sizeof(buf) )) > 0 )
+            {
                 g_string_append_len( args, buf, r);
+                if ( args->str[0] == CMD_SOCKET_CMD && args->len > 1 && 
+                                            args->str[args->len - 2] == '\n' &&
+                                            args->str[args->len - 1] == '\n' )
+                    // because CMD_SOCKET_CMD doesn't immediately close the socket
+                    // data is terminated by two linefeeds to prevent read blocking
+                    break;
+            }
+            if ( args->str[0] == CMD_SOCKET_CMD )
+                receive_socket_command( client, args );
             shutdown( client, 2 );
             close( client );
 
@@ -251,12 +268,17 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 GDK_THREADS_ENTER();
                 fm_edit_preference( NULL, (unsigned char)args->str[1] - 1 );
                 GDK_THREADS_LEAVE();
+                g_string_free( args, TRUE );
                 return TRUE;
             case CMD_WALLPAPER:
                 set_wallpaper = TRUE;
                 break;
             case CMD_FIND_FILES:
                 find_files = TRUE;
+                break;
+            case CMD_SOCKET_CMD:
+                g_string_free( args, TRUE );
+                return TRUE;
                 break;
             }
 
@@ -284,6 +306,19 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
     }
 
     return TRUE;
+}
+
+void get_socket_name_nogdk( char* buf, int len )
+{
+    char* dpy = g_strdup( g_getenv( "DISPLAY" ) );
+    if ( dpy && !strcmp( dpy, ":0.0" ) )
+    {
+        // treat :0.0 as :0 to prevent multiple instances on screen 0
+        g_free( dpy );
+        dpy = g_strdup( ":0" );
+    }
+    g_snprintf( buf, len, "/tmp/.spacefm-socket%s-%s", dpy, g_get_user_name() );
+    g_free( dpy );
 }
 
 void get_socket_name( char* buf, int len )
@@ -457,6 +492,129 @@ void single_instance_finalize()
 
     get_socket_name( lock_file, sizeof( lock_file ) );
     unlink( lock_file );
+}
+
+void receive_socket_command( int client, GString* args )  //sfm
+{
+    char** argv;
+    char** arg;
+    char cmd;
+    
+    if ( args->str[1] )
+    {
+        if ( g_str_has_suffix( args->str, "\n\n" ) )
+        {
+            // remove empty strings at tail
+            args->str[args->len - 1] = '\0';
+            args->str[args->len - 2] = '\0';
+        }
+        argv = g_strsplit( args->str + 1, "\n", 0 );
+    }
+    else
+        argv = NULL;
+
+/*
+    if ( argv )
+    {
+        printf( "receive:\n");
+        for ( arg = argv; *arg; ++arg )
+        {
+            if ( ! **arg )  // skip empty string
+            {
+                printf( "    (skipped empty)\n");
+                continue;
+            }
+            printf( "    %s\n", *arg );
+        }
+    }
+*/
+    // process command and get reply
+    char* reply = NULL;
+    gdk_threads_enter();
+    cmd = main_window_socket_command( argv, &reply );
+    gdk_threads_leave();
+    g_strfreev( argv );
+    
+    // send response
+    write( client, &cmd, sizeof(char) );  // send exit status
+    if ( reply && reply[0] )
+        write( client, reply, strlen( reply ) ); // send reply or error msg
+    g_free( reply );
+}
+
+int send_socket_command( int argc, char* argv[], char** reply )   //sfm
+{
+    struct sockaddr_un addr;
+    int addr_len;
+    int ret;
+
+    *reply = NULL;
+    if ( argc < 3 )
+    {
+        fprintf( stderr, _("spacefm: --socket-cmd requires an argument\n") );
+        return 1;
+    }
+
+    // create socket
+    if ( ( sock = socket( AF_UNIX, SOCK_STREAM, 0 ) ) == -1 )
+    {
+        fprintf( stderr, _("spacefm: could not create socket\n") );
+        return 1;
+    }
+
+    // open socket
+    addr.sun_family = AF_UNIX;
+    get_socket_name_nogdk( addr.sun_path, sizeof( addr.sun_path ) );
+#ifdef SUN_LEN
+    addr_len = SUN_LEN( &addr );
+#else
+    addr_len = strlen( addr.sun_path ) + sizeof( addr.sun_family );
+#endif
+
+    if ( connect( sock, ( struct sockaddr* ) & addr, addr_len ) != 0 )
+    {
+        fprintf( stderr, _("spacefm: could not connect to socket (not running? or DISPLAY not set?)\n") );
+        return 1;
+    }
+
+    // send command
+    char cmd = CMD_SOCKET_CMD;
+    write( sock, &cmd, sizeof(char) );
+
+    // send arguments
+    int i;
+    for ( i = 2; i < argc; i++ )
+    {
+        write( sock, argv[i], strlen( argv[i] ) );
+        write( sock, "\n", 1 );
+    }
+    write( sock, "\n", 1 );
+    
+    // get response
+    GString* sock_reply = g_string_new_len( NULL, 2048 );
+    int r;
+    static char buf[ 1024 ];
+    
+    while( ( r = read( sock, buf, sizeof( buf ) ) ) > 0 )
+        g_string_append_len( sock_reply, buf, r);
+
+    // close socket
+    shutdown( sock, 2 );
+    close( sock );
+
+    // set reply
+    if ( sock_reply->len != 0 )
+    {
+        *reply = g_strdup( sock_reply->str + 1 );
+        ret = sock_reply->str[0];
+    }
+    else
+    {
+        fprintf( stderr, _("spacefm: invalid response from socket\n") );
+        ret = 1;
+    }
+    g_string_free( sock_reply, TRUE );
+    return ret;
 }
 
 FMMainWindow* create_main_window()
@@ -914,9 +1072,10 @@ int main ( int argc, char *argv[] )
     textdomain ( GETTEXT_PACKAGE );
 #endif
 
-    // dialog mode?
+    // separate instance options
     if ( argc > 1 )
     {
+        // dialog mode?
         if ( !strcmp( argv[1], "-g" ) || !strcmp( argv[1], "--dialog" ) )
         {
             g_thread_init( NULL );
@@ -943,6 +1102,17 @@ int main ( int argc, char *argv[] )
             vfs_file_monitor_clean();
             return 0;
         }
+
+        // socket_command?
+        if ( !strcmp( argv[1], "-s" ) || !strcmp( argv[1], "--socket-cmd" ) )
+        {
+            char* reply = NULL;
+            int ret = send_socket_command( argc, argv, &reply );
+            if ( reply && reply[0] )
+                fprintf( ret ? stderr : stdout, "%s", reply );
+            g_free( reply );
+            return ret;
+        }
     }
 
     /* initialize GTK+ and parse the command line arguments */
@@ -957,6 +1127,13 @@ int main ( int argc, char *argv[] )
     if ( custom_dialog )
     {
         fprintf( stderr, "spacefm: %s\n", _("--dialog must be first option") );
+        return 1;
+    }
+    
+    // socket command with other options?
+    if ( socket_cmd )
+    {
+        fprintf( stderr, "spacefm: %s\n", _("--socket-cmd must be first option") );
         return 1;
     }
     

@@ -284,6 +284,7 @@ Or, to see the help for alternate build options, run:
     <li>BUILD - build SpaceFM from source
     <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
     <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
+    <li>BUILD GTK3 - The git gtk3 branch of SpaceFM is available for alpha testing.  Please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a> for details.
     <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
 </ul>
 
@@ -1254,7 +1255,7 @@ References:<br>
 <p>The context menu contains the following items:
 
 <!-- # Stop -->
-Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.  Note that stopping an internal task may leave some files only partially copied.
+Stop is used to stop the selected task.  If the task is internal (such as copying files), SpaceFM will terminate the task thread, and the task will be removed from the Task Manager.
 
 <p>If the task is an exec task (eg a custom command running an executable, or SpaceFM running udevil to unmount a device), the process, <i>and all its child processes</i>, are sent a SIGTERM signal.  This will usually cause the processes to terminate, but not always.  So SpaceFM will also send a SIGKILL signal to all the processes several seconds later.  An exec task will not be removed from the Task Manager until its process terminates.  This means that if a process is hung and cannot be stopped with SIGKILL, selecting Stop may have no effect.
 
