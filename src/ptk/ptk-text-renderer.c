@@ -1042,6 +1042,9 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     else if ( celltext->wrap_width == -1 )
         pango_layout_set_width ( layout, -1 );
 
+    if ( pango_layout_is_wrapped ( layout ) )
+        x_offset = -xpad / 2;
+
     gtk_paint_layout ( gtk_widget_get_style ( widget ),
 #if GTK_CHECK_VERSION (3, 0, 0)
                        cr,
