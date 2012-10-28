@@ -1720,6 +1720,7 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     // panelbar
     main_window->panelbar = gtk_toolbar_new();
+    gtk_toolbar_set_show_arrow( GTK_TOOLBAR( main_window->panelbar ), FALSE );
     gtk_toolbar_set_style( GTK_TOOLBAR( main_window->panelbar ), GTK_TOOLBAR_ICONS );
     gtk_toolbar_set_icon_size( GTK_TOOLBAR( main_window->panelbar ), GTK_ICON_SIZE_MENU );
     // set pbar background to menu bar background
@@ -1753,7 +1754,7 @@ void fm_main_window_init( FMMainWindow* main_window )
         }
     }
     gtk_box_pack_start ( GTK_BOX ( menu_hbox ),
-                         main_window->panelbar, TRUE, TRUE, 0 );
+                         main_window->panelbar, FALSE, FALSE, 0 );
     gtk_box_pack_start ( GTK_BOX ( main_window->main_vbox ),
                          menu_hbox, FALSE, FALSE, 0 );
 
