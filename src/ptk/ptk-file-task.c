@@ -1746,10 +1746,15 @@ gboolean on_vfs_file_task_state_cb( VFSFileTask* task,
         ptask->query_new_dest = ( char** ) state_data;
         *ptask->query_new_dest = NULL;
         ptask->query_cond = g_cond_new();
+        g_timer_stop( task->timer );
         g_cond_wait( ptask->query_cond, task->mutex );
         g_cond_free( ptask->query_cond );
         ptask->query_cond = NULL;
         ret = ptask->query_ret;
+        task->last_elapsed = g_timer_elapsed( task->timer, NULL );
+        task->last_progress = task->progress;
+        task->last_speed = 0;
+        g_timer_continue( task->timer );
         g_mutex_unlock( task->mutex );
         break;
     case VFS_FILE_TASK_ERROR:
@@ -2327,6 +2332,8 @@ static void query_overwrite( PtkFileTask* ptask )
     g_free( to_size_str );
 
     // update displays (mutex is already locked)
+    g_free( ptask->dsp_curspeed );
+    ptask->dsp_curspeed = g_strdup_printf( _("stalled") );
     ptk_file_task_progress_update( ptask );
     if ( ptask->task_view && gtk_widget_get_visible( gtk_widget_get_parent( 
                                             GTK_WIDGET( ptask->task_view ) ) ) )

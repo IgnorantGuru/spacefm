@@ -1043,7 +1043,6 @@ gboolean handle_parsed_commandline_args()
                 }
                 focus_panel( NULL, (gpointer)main_window, 2 );
             }
-printf("main_window = %#x\n", main_window );
         }
     }
 
