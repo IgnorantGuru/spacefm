@@ -1759,7 +1759,7 @@ void fm_main_window_init( FMMainWindow* main_window )
         }
     }
     gtk_box_pack_start ( GTK_BOX ( menu_hbox ),
-                         main_window->panelbar, FALSE, FALSE, 0 );
+                         main_window->panelbar, TRUE, TRUE, 0 );
     gtk_box_pack_start ( GTK_BOX ( main_window->main_vbox ),
                          menu_hbox, FALSE, FALSE, 0 );
 
