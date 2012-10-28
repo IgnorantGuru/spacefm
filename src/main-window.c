@@ -3956,6 +3956,18 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
     c->valid = TRUE;
 }
 
+FMMainWindow* get_task_view_window( GtkWidget* view )
+{
+    FMMainWindow* a_window;
+    GList* l;
+    for ( l = all_windows; l; l = l->next )
+    {
+        if ( ((FMMainWindow*)l->data)->task_view == view )
+            return (FMMainWindow*)l->data;
+    }
+    return NULL;
+}
+
 gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
 {
     int result, p, num_pages, i;
@@ -3966,7 +3978,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
     GList* l;
     PtkFileBrowser* a_browser;
     VFSVolume* vol;
-    PtkFileTask* task;
+    PtkFileTask* ptask;
 
     if ( !vtask->exec_browser )
         return FALSE;
@@ -4280,6 +4292,13 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
         fprintf( file, "fm_value=%s\n", esc_path );
         g_free( esc_path );
     }
+    if ( vtask->exec_ptask )
+    {
+        fprintf( file, "fm_my_task=%#x\n", vtask->exec_ptask );
+        fprintf( file, "fm_my_task_id=%#x\n", vtask->exec_ptask );
+    }
+    fprintf( file, "fm_my_window=%#x\n", main_window );
+    fprintf( file, "fm_my_window_id=%#x\n", main_window );
     
     // set
     if ( set )
@@ -4354,55 +4373,50 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
          "change",
          "run"
     };
-    if ( task = get_selected_task( file_browser->task_view ) )
+    if ( ptask = get_selected_task( file_browser->task_view ) )
     {
-        fprintf( file, "\nfm_task_type='%s'\n", job_titles[task->task->type] );
-        if ( task->task->type == VFS_FILE_TASK_EXEC )
+        fprintf( file, "\nfm_task_type='%s'\n", job_titles[ptask->task->type] );
+        if ( ptask->task->type == VFS_FILE_TASK_EXEC )
         {
-            esc_path = bash_quote( task->task->dest_dir );
+            esc_path = bash_quote( ptask->task->dest_dir );
             fprintf( file, "fm_task_pwd=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->current_file );
+            esc_path = bash_quote( ptask->task->current_file );
             fprintf( file, "fm_task_name=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->exec_command );
+            esc_path = bash_quote( ptask->task->exec_command );
             fprintf( file, "fm_task_command=%s\n", esc_path );
             g_free( esc_path );
-            if ( task->task->exec_as_user )
-                fprintf( file, "fm_task_user='%s'\n", task->task->exec_as_user );
-            if ( task->task->exec_icon )
-                fprintf( file, "fm_task_icon='%s'\n", task->task->exec_icon );
-            if ( task->task->exec_pid )
-                fprintf( file, "fm_task_pid=%d\n", task->task->exec_pid );
+            if ( ptask->task->exec_as_user )
+                fprintf( file, "fm_task_user='%s'\n", ptask->task->exec_as_user );
+            if ( ptask->task->exec_icon )
+                fprintf( file, "fm_task_icon='%s'\n", ptask->task->exec_icon );
+            if ( ptask->task->exec_pid )
+                fprintf( file, "fm_task_pid=%d\n", ptask->task->exec_pid );
         }
         else
         {
-            esc_path = bash_quote( task->task->dest_dir );
+            esc_path = bash_quote( ptask->task->dest_dir );
             fprintf( file, "fm_task_dest_dir=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->current_file );
+            esc_path = bash_quote( ptask->task->current_file );
             fprintf( file, "fm_task_current_src_file=%s\n", esc_path );
             g_free( esc_path );
-            esc_path = bash_quote( task->task->current_dest );
+            esc_path = bash_quote( ptask->task->current_dest );
             fprintf( file, "fm_task_current_dest_file=%s\n", esc_path );
             g_free( esc_path );
+        }
+        fprintf( file, "fm_task_id=%#x\n", ptask );
+        if ( ptask->task_view &&
+                    ( main_window = get_task_view_window( ptask->task_view ) ) )
+        {
+            fprintf( file, "fm_task_window=%#x\n", main_window );
+            fprintf( file, "fm_task_window_id=%#x\n", main_window );
         }
     }
 
     result = fputs( "\n", file );
     return result >= 0;
-}
-
-FMMainWindow* get_task_view_window( GtkWidget* view )
-{
-    FMMainWindow* a_window;
-    GList* l;
-    for ( l = all_windows; l; l = l->next )
-    {
-        if ( ((FMMainWindow*)l->data)->task_view == view )
-            return (FMMainWindow*)l->data;
-    }
-    return NULL;
 }
 
 void on_task_columns_changed( GtkWidget *view, gpointer user_data )
@@ -5093,7 +5107,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
     if ( !main_window )
         return;
 
-    if ( ptask->task->type != 6 )
+    if ( ptask->task->type != VFS_FILE_TASK_EXEC )
         dest_dir = ptask->task->dest_dir;
     else
         dest_dir = NULL;
@@ -5131,7 +5145,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
             percent = 0;
         else if ( percent > 100 )
             percent = 100;
-        if ( ptask->task->type != 6 )
+        if ( ptask->task->type != VFS_FILE_TASK_EXEC )
         {
             if ( ptask->task->current_file )
             {
@@ -5143,7 +5157,6 @@ void main_task_view_update_task( PtkFileTask* ptask )
         {
             path = g_strdup( ptask->task->dest_dir ); //cwd
             file = g_strdup_printf( "( %s )", ptask->task->current_file );
-            //percent = ptask->complete ? 100 : 50;
         }
         
         // icon
@@ -5158,13 +5171,13 @@ void main_task_view_update_task( PtkFileTask* ptask )
             set = xset_get( "task_que" );
             iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
         }
-        else if ( ptask->err_count && ptask->task->type != 6 )
+        else if ( ptask->err_count && ptask->task->type != VFS_FILE_TASK_EXEC )
             iname = g_strdup_printf( "error" );
         else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
             iname = g_strdup_printf( "stock_copy" );
         else if ( ptask->task->type == 2 || ptask->task->type == 3 )
             iname = g_strdup_printf( "stock_delete" );
-        else if ( ptask->task->type == 6 && ptask->task->exec_icon )
+        else if ( ptask->task->type == VFS_FILE_TASK_EXEC && ptask->task->exec_icon )
             iname = g_strdup( ptask->task->exec_icon );
         else
             iname = g_strdup_printf( "gtk-execute" );
@@ -5180,7 +5193,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
         char* status;
         char* status2 = NULL;
         char* status3;
-        if ( ptask->task->type != 6 )
+        if ( ptask->task->type != VFS_FILE_TASK_EXEC )
         {
             if ( !ptask->err_count )
                 status = _(job_titles[ ptask->task->type ]);
@@ -5206,20 +5219,31 @@ void main_task_view_update_task( PtkFileTask* ptask )
         else
             status3 = g_strdup( status );
         
-        gtk_list_store_set( GTK_LIST_STORE( model ), &it,
-                            TASK_COL_ICON, pixbuf,
-                            TASK_COL_STATUS, status3,
-                            TASK_COL_COUNT, ptask->dsp_file_count,
-                            TASK_COL_PATH, path,
-                            TASK_COL_FILE, file,
-                            TASK_COL_PROGRESS, percent,
-                            TASK_COL_TOTAL, ptask->dsp_size_tally,
-                            TASK_COL_ELAPSED, ptask->dsp_elapsed,
-                            TASK_COL_CURSPEED, ptask->dsp_curspeed,
-                            TASK_COL_CUREST, ptask->dsp_curest,
-                            TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
-                            TASK_COL_AVGEST, ptask->dsp_avgest,
-                            -1 );
+        if ( ptask->task->type != VFS_FILE_TASK_EXEC || ptaskt != ptask /* new task */ )
+        {
+            gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                                TASK_COL_ICON, pixbuf,
+                                TASK_COL_STATUS, status3,
+                                TASK_COL_COUNT, ptask->dsp_file_count,
+                                TASK_COL_PATH, path,
+                                TASK_COL_FILE, file,
+                                TASK_COL_PROGRESS, percent,
+                                TASK_COL_TOTAL, ptask->dsp_size_tally,
+                                TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                                TASK_COL_CURSPEED, ptask->dsp_curspeed,
+                                TASK_COL_CUREST, ptask->dsp_curest,
+                                TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
+                                TASK_COL_AVGEST, ptask->dsp_avgest,
+                                -1 );
+        }
+        else
+            gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                                TASK_COL_ICON, pixbuf,
+                                TASK_COL_STATUS, status3,
+                                TASK_COL_PROGRESS, percent,
+                                TASK_COL_ELAPSED, ptask->dsp_elapsed,
+                                -1 );
+
         g_free( file );
         g_free( path );
         g_free( status2 );
@@ -5429,6 +5453,21 @@ gboolean bool( const char* value )
                     !strcmp( value, "YES") );
 }
 
+static gboolean delayed_show_menu( GtkWidget* menu )
+{
+    FMMainWindow* main_window = fm_main_window_get_last_active();
+    if ( main_window )
+        gtk_window_present( GTK_WINDOW( main_window ) );        
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
+    gtk_menu_popup( GTK_MENU( menu ), NULL, NULL, NULL, NULL, 0,
+                                                gtk_get_current_event_time() );
+    g_signal_connect( G_OBJECT( menu ), "key-press-event",
+                  G_CALLBACK( xset_menu_keypress ), NULL );
+    g_signal_connect( menu, "selection-done",
+                      G_CALLBACK( gtk_widget_destroy ), NULL );
+    return FALSE;
+}
+
 char main_window_socket_command( char* argv[], char** reply )
 {
     int i, j;
@@ -5440,6 +5479,12 @@ char main_window_socket_command( char* argv[], char** reply )
     GList* l;
     int height, width;
     GtkWidget* widget;
+    // from ptk-file-browser.c on_folder_view_columns_changed titles[]
+    const char* col_titles[] =
+    {
+        N_( "Name" ), N_( "Size" ), N_( "Type" ),
+        N_( "Permission" ), N_( "Owner" ), N_( "Modified" )
+    };
 
     *reply = NULL;
     if ( !( argv && argv[0] ) )
@@ -5517,6 +5562,13 @@ _missing_arg:
     if ( panel < 1 || panel > 4 )
     {
         *reply = g_strdup_printf( _("spacefm: invalid panel %d\n"), panel );
+        return 2;
+    }
+    if ( !xset_get_b_panel( panel, "show" ) || 
+                        gtk_notebook_get_current_page( 
+                            GTK_NOTEBOOK( main_window->panel[panel-1] ) ) == -1 )
+    {
+        *reply = g_strdup_printf( _("spacefm: panel %d is not visible\n"), panel );
         return 2;
     }
 
@@ -5686,6 +5738,19 @@ _missing_arg:
                 str = "show_sidebar";
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
+            else if ( g_str_has_prefix( argv[i], "panel" ) )
+            {
+                j = argv[i][5] - 48;
+                if ( j < 1 || j > 4 )
+                {
+                    *reply = g_strdup_printf( _("spacefm: invalid property %s\n"), 
+                                                                    argv[i] );
+                    return 2;
+                }
+                xset_set_b_panel( j, "show", bool( argv[i+1] ) );
+                show_panels_all_windows( NULL, main_window );
+                return 0;
+            }
             else
                 str = NULL;
             if ( !str )
@@ -5734,8 +5799,26 @@ _missing_arg:
                                                 file_browser->folder_view ), j );
                     if ( !col )
                         continue;
-                    if ( !g_strcmp0( argv[i+1], 
-                                        gtk_tree_view_column_get_title( col ) ) )
+                    str = (char*)gtk_tree_view_column_get_title( col );
+                    if ( !g_strcmp0( argv[i+1], str ) )
+                        break;
+                    if ( !g_strcmp0( argv[i+1], "name" ) && 
+                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "size" ) && 
+                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "type" ) && 
+                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "permission" ) && 
+                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "owner" ) && 
+                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "modified" ) && 
+                                                !g_strcmp0( str, _(col_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
@@ -5854,7 +5937,8 @@ _invalid_set:
         // get
         if ( !argv[i] )
         {
-            *reply = g_strdup( _("spacefm: command get requires an argument\n") );
+            *reply = g_strdup_printf( _("spacefm: command %s requires an argument\n"),
+                                                                    argv[0] );
             return 1;
         }
         if ( !strcmp( argv[i], "window_size" ) || !strcmp( argv[i], "window_position" ) )
@@ -5935,6 +6019,18 @@ _invalid_set:
                 str = "show_sidebar";
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
+            else if ( g_str_has_prefix( argv[i], "panel" ) )
+            {
+                j = argv[i][5] - 48;
+                if ( j < 1 || j > 4 )
+                {
+                    *reply = g_strdup_printf( _("spacefm: invalid property %s\n"), 
+                                                                    argv[i] );
+                    return 2;
+                }
+                *reply = g_strdup_printf( "%d\n", xset_get_b_panel( j, "show" ) );
+                return 0;
+            }
             else
                 str = NULL;
             if ( !str )
@@ -5965,8 +6061,26 @@ _invalid_set:
                                                 file_browser->folder_view ), j );
                     if ( !col )
                         continue;
-                    if ( !g_strcmp0( argv[i+1], 
-                                        gtk_tree_view_column_get_title( col ) ) )
+                    str = (char*)gtk_tree_view_column_get_title( col );
+                    if ( !g_strcmp0( argv[i+1], str ) )
+                        break;
+                    if ( !g_strcmp0( argv[i+1], "name" ) && 
+                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "size" ) && 
+                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "type" ) && 
+                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "permission" ) && 
+                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "owner" ) && 
+                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                        break;
+                    else if ( !g_strcmp0( argv[i+1], "modified" ) && 
+                                                !g_strcmp0( str, _(col_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
@@ -6041,7 +6155,7 @@ _invalid_get:
         }        
     }
     else if ( !strcmp( argv[0], "set-task" ) )
-    {
+    {   // TASKNUM PROPERTY [VALUE]
         if ( !( argv[i] && argv[i+1] ) )
         {
             *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
@@ -6049,149 +6163,182 @@ _invalid_get:
             return 1;        
         }
         
-/*
-        GtkIter it;
+        // find task
+        GtkTreeIter it;
+        PtkFileTask* ptask = NULL;
         GtkTreeModel* model = gtk_tree_view_get_model( 
                                         GTK_TREE_VIEW( main_window->task_view ) );
         if ( gtk_tree_model_get_iter_first( model, &it ) )
         {
             do
             {
-                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptaskt, -1 );
-            }
-            while ( ptaskt != ptask && gtk_tree_model_iter_next( model, &it ) );
-        }
-        if ( ptaskt != ptask )
-        {
-            // new row
-            char buf[ 64 ];
-            strftime( buf, sizeof( buf ), "%H:%M", localtime( &ptask->task->start_time ) );
-            char* started = g_strdup( buf );
-            gtk_list_store_insert_with_values( GTK_LIST_STORE( model ), &it, 0,
-                                        TASK_COL_TO, dest_dir,
-                                        TASK_COL_STARTED, started,
-                                        TASK_COL_STARTTIME, (gint64)ptask->task->start_time,
-                                        TASK_COL_DATA, ptask,
-                                        -1 );        
-            g_free( started );
-        }
-
-        if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING || ptask->pause_change_view )
-        {
-            // update row
-            int percent = ptask->task->percent;
-            if ( percent < 0 )
-                percent = 0;
-            else if ( percent > 100 )
-                percent = 100;
-            if ( ptask->task->type != 6 )
-            {
-                if ( ptask->task->current_file )
+                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+                str = g_strdup_printf( "%#x", ptask );
+                if ( !strcmp( str, argv[i] ) )
                 {
-                    path = g_path_get_dirname( ptask->task->current_file );
-                    file = g_path_get_basename( ptask->task->current_file );
+                    g_free( str );
+                    break;
                 }
+                g_free( str );
+                ptask=  NULL;
             }
+            while ( gtk_tree_model_iter_next( model, &it ) );
+        }
+        if ( !ptask )
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid task '%s'\n"), argv[i] );
+            return 2;
+        }
+        if ( ptask->task->type != VFS_FILE_TASK_EXEC )
+        {
+            *reply = g_strdup_printf( _("spacefm: internal task %s is read-only\n"),
+                                                                        argv[i] );
+            return 2;
+        }
+        
+        // set model value
+        if ( !strcmp( argv[i+1], "icon" ) )
+        {
+            g_mutex_lock( ptask->task->mutex );
+            g_free( ptask->task->exec_icon );
+            ptask->task->exec_icon = g_strdup( argv[i+2] );
+            ptask->pause_change_view = ptask->pause_change = TRUE;
+            g_mutex_unlock( ptask->task->mutex );
+            return 0;
+        }
+        else if ( !strcmp( argv[i+1], "count" ) )
+            j = TASK_COL_COUNT;
+        else if ( !strcmp( argv[i+1], "folder" ) || !strcmp( argv[i+1], "from" ) )
+            j = TASK_COL_PATH;
+        else if ( !strcmp( argv[i+1], "item" ) )
+            j = TASK_COL_FILE;
+        else if ( !strcmp( argv[i+1], "to" ) )
+            j = TASK_COL_TO;
+        else if ( !strcmp( argv[i+1], "progress" ) )
+        {
+            if ( !argv[i+2] )
+                ptask->task->percent = 50;
             else
             {
-                path = g_strdup( ptask->task->dest_dir ); //cwd
-                file = g_strdup_printf( "( %s )", ptask->task->current_file );
-                //percent = ptask->complete ? 100 : 50;
+                j = atoi( argv[i+2] );
+                if ( j < 0 ) j = 0;
+                if ( j > 100 ) j = 100;
+                ptask->task->percent = j;
             }
-            
-            // icon
-            char* iname;
-            if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-            {
-                set = xset_get( "task_pause" );
-                iname = g_strdup( set->icon ? set->icon : GTK_STOCK_MEDIA_PAUSE );
-            }
-            else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-            {
-                set = xset_get( "task_que" );
-                iname = g_strdup( set->icon ? set->icon : GTK_STOCK_ADD );
-            }
-            else if ( ptask->err_count && ptask->task->type != 6 )
-                iname = g_strdup_printf( "error" );
-            else if ( ptask->task->type == 0 || ptask->task->type == 1 || ptask->task->type == 4 )
-                iname = g_strdup_printf( "stock_copy" );
-            else if ( ptask->task->type == 2 || ptask->task->type == 3 )
-                iname = g_strdup_printf( "stock_delete" );
-            else if ( ptask->task->type == 6 && ptask->task->exec_icon )
-                iname = g_strdup( ptask->task->exec_icon );
-            else
-                iname = g_strdup_printf( "gtk-execute" );
-
-            pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), iname,
-                        app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-            g_free( iname );
-            if ( !pixbuf )
-                pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(), "gtk-execute",
-                        app_settings.small_icon_size, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-            
-            // status
-            char* status;
-            char* status2 = NULL;
-            char* status3;
-            if ( ptask->task->type != 6 )
-            {
-                if ( !ptask->err_count )
-                    status = _(job_titles[ ptask->task->type ]);
-                else
-                {
-                    status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
-                           ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
-                    status = status2;
-                }
-            }
-            else
-            {
-                // exec task
-                if ( ptask->task->exec_action )
-                    status = ptask->task->exec_action;
-                else
-                    status = _(job_titles[ ptask->task->type ]);
-            }
-            if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
-                status3 = g_strdup_printf( "%s %s", _("paused"), status );
-            else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
-                status3 = g_strdup_printf( "%s %s", _("queued"), status );
-            else
-                status3 = g_strdup( status );
-            
-            gtk_list_store_set( GTK_LIST_STORE( model ), &it,
-                                TASK_COL_ICON, pixbuf,
-                                TASK_COL_STATUS, status3,
-                                TASK_COL_COUNT, ptask->dsp_file_count,
-                                TASK_COL_PATH, path,
-                                TASK_COL_FILE, file,
-                                TASK_COL_PROGRESS, percent,
-                                TASK_COL_TOTAL, ptask->dsp_size_tally,
-                                TASK_COL_ELAPSED, ptask->dsp_elapsed,
-                                TASK_COL_CURSPEED, ptask->dsp_curspeed,
-                                TASK_COL_CUREST, ptask->dsp_curest,
-                                TASK_COL_AVGSPEED, ptask->dsp_avgspeed,
-                                TASK_COL_AVGEST, ptask->dsp_avgest,
-                                -1 );
-            g_free( file );
-            g_free( path );
-            g_free( status2 );
-            g_free( status3 );
-
-            if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
-                gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
-
-            update_window_title( NULL, main_window );
-*/
-        
-        
-        
-        
-        
+            ptask->task->custom_percent = !!argv[i+2];
+            ptask->pause_change_view = ptask->pause_change = TRUE;
+            return 0;
+        }
+        else if ( !strcmp( argv[i+1], "total" ) )
+            j = TASK_COL_TOTAL;
+        else if ( !strcmp( argv[i+1], "curspeed" ) )
+            j = TASK_COL_CURSPEED;
+        else if ( !strcmp( argv[i+1], "curremain" ) )
+            j = TASK_COL_CUREST;
+        else if ( !strcmp( argv[i+1], "avgspeed" ) )
+            j = TASK_COL_AVGSPEED;
+        else if ( !strcmp( argv[i+1], "avgremain" ) )
+            j = TASK_COL_AVGEST;
+        else if ( !strcmp( argv[i+1], "elapsed" ) || 
+                  !strcmp( argv[i+1], "started" ) || 
+                  !strcmp( argv[i+1], "status" ) )
+        {
+            *reply = g_strdup_printf( _("spacefm: task property '%s' is read-only\n"),
+                                                                    argv[i+1] );
+            return 2;
+        }
+        else
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
+                                                                    argv[i+1] );
+            return 2;
+        }
+        gtk_list_store_set( GTK_LIST_STORE( model ), &it, j, argv[i+2], -1 );
     }
     else if ( !strcmp( argv[0], "get-task" ) )
-    {
+    {   // TASKNUM PROPERTY
+        if ( !( argv[i] && argv[i+1] ) )
+        {
+            *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
+                                                                        argv[0] );
+            return 1;        
+        }
         
+        // find task
+        GtkTreeIter it;
+        PtkFileTask* ptask = NULL;
+        GtkTreeModel* model = gtk_tree_view_get_model( 
+                                        GTK_TREE_VIEW( main_window->task_view ) );
+        if ( gtk_tree_model_get_iter_first( model, &it ) )
+        {
+            do
+            {
+                gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
+                str = g_strdup_printf( "%#x", ptask );
+                if ( !strcmp( str, argv[i] ) )
+                {
+                    g_free( str );
+                    break;
+                }
+                g_free( str );
+                ptask=  NULL;
+            }
+            while ( gtk_tree_model_iter_next( model, &it ) );
+        }
+        if ( !ptask )
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid task '%s'\n"), argv[i] );
+            return 2;
+        }
+
+        // get model value
+        if ( !strcmp( argv[i+1], "icon" ) )
+        {
+            g_mutex_lock( ptask->task->mutex );
+            if ( ptask->task->exec_icon )
+                *reply = g_strdup_printf( "%s\n", ptask->task->exec_icon );
+            g_mutex_unlock( ptask->task->mutex );
+            return 0;
+        }
+        else if ( !strcmp( argv[i+1], "count" ) )
+            j = TASK_COL_COUNT;
+        else if ( !strcmp( argv[i+1], "folder" ) || !strcmp( argv[i+1], "from" ) )
+            j = TASK_COL_PATH;
+        else if ( !strcmp( argv[i+1], "item" ) )
+            j = TASK_COL_FILE;
+        else if ( !strcmp( argv[i+1], "to" ) )
+            j = TASK_COL_TO;
+        else if ( !strcmp( argv[i+1], "progress" ) )
+        {
+            *reply = g_strdup_printf( "%d\n", ptask->task->percent );
+            return 0;
+        }
+        else if ( !strcmp( argv[i+1], "total" ) )
+            j = TASK_COL_TOTAL;
+        else if ( !strcmp( argv[i+1], "curspeed" ) )
+            j = TASK_COL_CURSPEED;
+        else if ( !strcmp( argv[i+1], "curremain" ) )
+            j = TASK_COL_CUREST;
+        else if ( !strcmp( argv[i+1], "avgspeed" ) )
+            j = TASK_COL_AVGSPEED;
+        else if ( !strcmp( argv[i+1], "avgremain" ) )
+            j = TASK_COL_AVGEST;
+        else if ( !strcmp( argv[i+1], "elapsed" ) )
+            j = TASK_COL_ELAPSED;
+        else if ( !strcmp( argv[i+1], "started" ) )
+            j = TASK_COL_STARTED;
+        else if ( !strcmp( argv[i+1], "status" ) )
+            j = TASK_COL_STATUS;
+        else
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
+                                                                    argv[i+1] );
+            return 2;
+        }
+        gtk_tree_model_get( model, &it, j, &str, -1 );
+        if ( str )
+            *reply = g_strdup_printf( "%s\n", str );
+        g_free( str );
     }
     else if ( !strcmp( argv[0], "select" ) )
     {
@@ -6202,20 +6349,171 @@ _invalid_get:
         ptk_file_browser_select_file_list( file_browser, argv + i, FALSE );
     }
     else if ( !strcmp( argv[0], "emit-key" ) )
-    {
-        
+    {   // KEYCODE [KEYMOD]
+        if ( !argv[i] )
+        {
+            *reply = g_strdup_printf( _("spacefm: command %s requires an argument\n"),
+                                                                    argv[0] );
+            return 1;
+        }        
+        // this only handles keys assigned to menu items
+        GdkEventKey* event = (GdkEventKey*)gdk_event_new(GDK_KEY_PRESS);
+        event->keyval = (guint)strtol( argv[i], NULL, 0 );
+        event->state = argv[i+1] ? (guint)strtol( argv[i+1], NULL, 0 ) : 0;
+        if ( event->keyval )
+            on_main_window_keypress( main_window, event, NULL );
+        else
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid keycode '%s'\n"),
+                                                                    argv[i] );
+            gdk_event_free( (GdkEvent*)event );     
+            return 2;
+        }
+        gdk_event_free( (GdkEvent*)event );     
     }
     else if ( !strcmp( argv[0], "show-menu" ) )
     {
-        
+        if ( !argv[i] )
+        {
+            *reply = g_strdup_printf( _("spacefm: command %s requires an argument\n"),
+                                                                    argv[0] );
+            return 1;
+        }        
+        XSet* set = xset_find_menu( argv[i] );
+        if ( !set )
+        {
+            *reply = g_strdup_printf( _("spacefm: custom submenu '%s' not found\n"),
+                                                                    argv[i] );
+            return 2;
+        }
+        XSetContext* context = xset_context_new();
+        main_context_fill( file_browser, context );
+        if ( context && context->valid )
+        {
+            if ( !xset_get_b( "context_dlg" ) && 
+                        xset_context_test( set->context, FALSE ) != CONTEXT_SHOW )
+            {
+                *reply = g_strdup_printf( _("spacefm: menu '%s' context hidden or disabled\n"),
+                                                                        argv[i] );
+                return 2;        
+            }
+        }
+        set = xset_get( set->child );
+        widget = gtk_menu_new();
+        GtkAccelGroup* accel_group = gtk_accel_group_new();
+ 
+         xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
+                                                                set );
+        g_idle_add( (GSourceFunc)delayed_show_menu, widget );
+    }
+    else if ( !strcmp( argv[0], "help" ) || !strcmp( argv[0], "--help" ) )
+    {
+        GString* gstr = g_string_new( NULL );
+        g_string_append_printf( gstr, "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
+        g_string_append_printf( gstr, "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
+        g_string_append_printf( gstr, "%s\n", _("windows.  This gives custom commands and plugins limited access to the GUI.") );
+
+        g_string_append_printf( gstr, "\n%s\n", _("Usage:") );
+        g_string_append_printf( gstr, "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
+        g_string_append_printf( gstr, "%s\n", _("Example:") );
+        g_string_append_printf( gstr, "    spacefm -s set window_size 800x600\n" );
+
+        g_string_append_printf( gstr, "\n%s\n", _("METHODS\n-------") );
+        g_string_append_printf( gstr, "spacefm -s set PROPERTY [VALUE...]\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Sets a property") );
+
+        g_string_append_printf( gstr, "\nspacefm -s get PROPERTY\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Gets a property") );
+
+        g_string_append_printf( gstr, "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Sets a task property") );
+
+        g_string_append_printf( gstr, "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Gets a task property") );
+
+        g_string_append_printf( gstr, "\nspacefm -s select [FILENAME|DIRNAME...]\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Selects specified filenames and unselects others; or select all if no spec") );
+
+        g_string_append_printf( gstr, "\nspacefm -s unselect [FILENAME|DIRNAME...]\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Unselects specified filenames; or unselect all if no spec") );
+
+        g_string_append_printf( gstr, "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Activates a menu item by emitting its shortcut key") );
+
+        g_string_append_printf( gstr, "\nspacefm -s show-menu MENUNAME\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
+
+        g_string_append_printf( gstr, "\nspacefm -s help|--help\n" );
+        g_string_append_printf( gstr, "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
+
+        g_string_append_printf( gstr, "\n%s\n", _("OPTIONS\n-------") );
+        g_string_append_printf( gstr, "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
+
+        g_string_append_printf( gstr, "\n--window WINDOWID\n" );
+        g_string_append_printf( gstr, "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
+        g_string_append_printf( gstr, "--panel PANEL\n" );
+        g_string_append_printf( gstr, "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
+        g_string_append_printf( gstr, "--tab TAB\n" );
+        g_string_append_printf( gstr, "    %s spacefm -s select --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
+
+        g_string_append_printf( gstr, "\n%s\n", _("PROPERTIES\n----------") );
+        g_string_append_printf( gstr, "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
+
+        g_string_append_printf( gstr, "\nwindow_size                     eg '800x600'\n" );
+        g_string_append_printf( gstr, "window_position                 eg '100x50'\n" );
+        g_string_append_printf( gstr, "window_maximized                1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "window_fullscreen               1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "window_vslider_top              eg '100'\n" );
+        g_string_append_printf( gstr, "window_vslider_bottom           eg '100'\n" );
+        g_string_append_printf( gstr, "window_hslider                  eg '100'\n" );
+        g_string_append_printf( gstr, "window_tslider                  eg '100'\n" );
+        g_string_append_printf( gstr, "focused_panel                   1|2|3|4|prev|next|hide\n" );
+        g_string_append_printf( gstr, "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
+        g_string_append_printf( gstr, "current_tab                     1|2|...|prev|next|close\n" );
+        g_string_append_printf( gstr, "bookmarks_visible               1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "dirtree_visible                 1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "toolbar_visible                 1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "sidetoolbar_visible             1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "hidden_files_visible            1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "panel1_visible                  1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "panel2_visible                  1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "panel3_visible                  1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "panel4_visible                  1|true|yes|0|false|no\n" );
+        g_string_append_printf( gstr, "panel_hslider_top               eg '100'\n" );
+        g_string_append_printf( gstr, "panel_hslider_bottom            eg '100'\n" );
+        g_string_append_printf( gstr, "panel_vslider                   eg '100'\n" );
+        g_string_append_printf( gstr, "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
+        g_string_append_printf( gstr, "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
+        g_string_append_printf( gstr, "pathbar_text                    %s\n", _("eg '/usr/bin' or 'ftp://server' or '$ ls'") );
+        g_string_append_printf( gstr, "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
+        g_string_append_printf( gstr, "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
+        g_string_append_printf( gstr, "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+        g_string_append_printf( gstr, "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+
+        g_string_append_printf( gstr, "\n%s\n", _("TASK PROPERTIES\n---------------") );
+        g_string_append_printf( gstr, "status                          %s\n", _("contents of Status task column  (read-only)") );
+        g_string_append_printf( gstr, "icon                            %s\n", _("eg 'gtk-open'") );
+        g_string_append_printf( gstr, "count                           %s\n", _("text to show in Count task column") );
+        g_string_append_printf( gstr, "folder                          %s\n", _("text to show in Folder task column") );
+        g_string_append_printf( gstr, "item                            %s\n", _("text to show in Item task column") );
+        g_string_append_printf( gstr, "to                              %s\n", _("text to show in To task column") );
+        g_string_append_printf( gstr, "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
+        g_string_append_printf( gstr, "total                           %s\n", _("text to show in Total task column") );
+        g_string_append_printf( gstr, "curspeed                        %s\n", _("text to show in Current task column") );
+        g_string_append_printf( gstr, "curremain                       %s\n", _("text to show in CRemain task column") );
+        g_string_append_printf( gstr, "avgspeed                        %s\n", _("text to show in Average task column") );
+        g_string_append_printf( gstr, "avgremain                       %s\n", _("text to show in Remain task column") );
+        g_string_append_printf( gstr, "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
+        g_string_append_printf( gstr, "started                         %s\n", _("contents of Started task column (read-only)") );
+        g_string_append_printf( gstr, "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
+        *reply = g_string_free( gstr, FALSE );
     }
     else
     {
-        *reply = g_strdup_printf( _("spacefm: invalid socket command '%s'\n"),
+        *reply = g_strdup_printf( _("spacefm: invalid socket method '%s'\n"),
                                                                     argv[0] );
         return 1;        
     }
-    
     return 0;
 }
 

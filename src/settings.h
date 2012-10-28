@@ -371,6 +371,8 @@ XSet* xset_set_ob1_int( XSet* set, const char* ob1, int ob1_int );
 XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );
 XSet* xset_is( const char* name );
+XSet* xset_find_menu( const char* menu_name );
+int xset_context_test( char* rules, gboolean def_disable );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,

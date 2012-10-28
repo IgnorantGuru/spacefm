@@ -69,6 +69,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
                                       on_vfs_file_task_state_cb, ptask );
     ptask->parent_window = parent_window;
     ptask->task_view = task_view;
+    ptask->task->exec_ptask = (gpointer)ptask;
     ptask->progress_dlg = NULL;
     ptask->complete = FALSE;
     ptask->aborted = FALSE;
@@ -706,10 +707,11 @@ void set_progress_icon( PtkFileTask* ptask )
     else if ( task->err_count )
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                             "error", 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-    else if ( task->type == 0 || task->type == 1 || task->type == 4 )
+    else if ( task->type == VFS_FILE_TASK_MOVE || task->type == VFS_FILE_TASK_COPY || 
+                                                task->type == VFS_FILE_TASK_LINK )
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                             "stock_copy", 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
-    else if ( task->type == 2 || task->type == 3 )
+    else if ( task->type == VFS_FILE_TASK_TRASH || task->type == VFS_FILE_TASK_DELETE )
         pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
                             "stock_delete", 16, GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     else if ( task->type == VFS_FILE_TASK_EXEC && task->exec_icon )
@@ -1099,7 +1101,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     // icon
     set_progress_icon( ptask );
-
+    
+    ptask->progress_count = 50;  // trigger fast display
 //printf("ptk_file_task_progress_open DONE\n");
 }
 
@@ -1243,7 +1246,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
 */
 
     // progress bar
-    if ( task->type != VFS_FILE_TASK_EXEC )
+    if ( task->type != VFS_FILE_TASK_EXEC || ptask->task->custom_percent )
     {
         if ( task->percent >= 0 )
         {
@@ -1259,15 +1262,18 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     }
     else if ( ptask->complete )
     {
-        if ( task->exec_is_error || ptask->aborted )
-            gtk_progress_bar_set_fraction( ptask->progress_bar, 0 );
-        else
-            gtk_progress_bar_set_fraction( ptask->progress_bar, 1 );
+        if ( !ptask->task->custom_percent )
+        {
+            if ( task->exec_is_error || ptask->aborted )
+                gtk_progress_bar_set_fraction( ptask->progress_bar, 0 );
+            else
+                gtk_progress_bar_set_fraction( ptask->progress_bar, 1 );
+        }
     }
     else if ( task->type == VFS_FILE_TASK_EXEC
                                 && task->state_pause == VFS_FILE_TASK_RUNNING )
         gtk_progress_bar_pulse( ptask->progress_bar );
-
+    
     // progress
     if ( task->type != VFS_FILE_TASK_EXEC )
     {

@@ -3723,7 +3723,7 @@ void on_folder_view_columns_changed( GtkTreeView *view,
         return;
     gboolean fullscreen = xset_get_b( "main_full" );
 
-    const char* titles[] =
+    const char* titles[] =  // also change main_window_socket_command col_titles[]
         {
             N_( "Name" ), N_( "Size" ), N_( "Type" ),
             N_( "Permission" ), N_( "Owner" ), N_( "Modified" )
