@@ -6270,6 +6270,26 @@ _invalid_get:
                                                                     argv[i+1] );
             return 2;
         }
+        else if ( !strcmp( argv[i+1], "queue_state" ) )
+        {
+            if ( !argv[i+2] || !g_strcmp0( argv[i+2], "run" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_RUNNING );
+            else if ( !strcmp( argv[i+2], "pause" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
+            else if ( !strcmp( argv[i+2], "queue" ) || !strcmp( argv[i+2], "queued" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
+            else if ( !strcmp( argv[i+2], "stop" ) )
+                on_task_stop( NULL, main_window->task_view, 
+                                            xset_get( "task_stop_all" ), NULL );
+            else
+            {
+                *reply = g_strdup_printf( _("spacefm: invalid queue_state '%s'\n"),
+                                                                        argv[i+2] );
+                return 2;
+            }
+            main_task_start_queued( main_window->task_view, NULL );
+            return 0;
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
@@ -6352,6 +6372,19 @@ _invalid_get:
             j = TASK_COL_STARTED;
         else if ( !strcmp( argv[i+1], "status" ) )
             j = TASK_COL_STATUS;
+        else if ( !strcmp( argv[i+1], "queue_state" ) )
+        {
+            if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING )
+                str = "run";
+            else if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+                str = "pause";
+            else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+                str = "queue";
+            else
+                str = "stop";    // failsafe
+            *reply = g_strdup_printf( "%s\n", str );
+            return 0;
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),

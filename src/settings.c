@@ -2295,6 +2295,7 @@ XSet* xset_find_menu( const char* menu_name )
             g_free( str );
         }
     }
+    g_free( name );
     return NULL;
 }
 

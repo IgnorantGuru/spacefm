@@ -694,7 +694,7 @@ void show_socket_help()
     printf( "panel_vslider                   eg '100'\n" );
     printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
-    printf( "pathbar_text                    %s\n", _("eg '/usr/bin' or 'ftp://server' or '$ ls'") );
+    printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
     printf( "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
@@ -717,6 +717,7 @@ void show_socket_help()
     printf( "avgremain                       %s\n", _("text to show in Remain task column") );
     printf( "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
     printf( "started                         %s\n", _("contents of Started task column (read-only)") );
+    printf( "queue_state                     run|pause|queue|stop\n" );
 
     printf( "\n%s:\n\n", _("Examples") );
 
