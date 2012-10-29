@@ -126,6 +126,9 @@
       <row>
         <col id="0" translatable="yes">Tile</col>
       </row>
+      <row>
+        <col id="0" translatable="yes">Zoom</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="modelsu">

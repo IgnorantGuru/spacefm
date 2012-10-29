@@ -15,7 +15,8 @@ typedef enum {
     WPM_STRETCH,
     WPM_FULL,
     WPM_CENTER,
-    WPM_TILE
+    WPM_TILE,
+    WPM_ZOOM
 }WallpaperMode;
 
 typedef struct
@@ -333,7 +334,6 @@ char* bash_quote( const char* str );
 void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
-char* unescape( const char* t );
 
 char* get_valid_su();
 char* get_valid_gsu();
@@ -371,8 +371,6 @@ XSet* xset_set_ob1_int( XSet* set, const char* ob1, int ob1_int );
 XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );
 XSet* xset_is( const char* name );
-XSet* xset_find_menu( const char* menu_name );
-int xset_context_test( char* rules, gboolean def_disable );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,

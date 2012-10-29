@@ -612,13 +612,20 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
                 h = dest_h;
                 break;
             case DW_BG_FULL:
+            case DW_BG_ZOOM:
                 if( src_w == dest_w && src_h == dest_h )
                     scaled = (GdkPixbuf*)g_object_ref( src_pix );
                 else
                 {
                     gdouble w_ratio = (float)dest_w / src_w;
                     gdouble h_ratio = (float)dest_h / src_h;
-                    gdouble ratio = MIN( w_ratio, h_ratio );
+
+                    gdouble ratio;
+                    if (type == DW_BG_FULL)
+                        ratio = MIN( w_ratio, h_ratio );
+                    else
+                        ratio = MAX( w_ratio, h_ratio );
+
                     if( ratio == 1.0 )
                         scaled = (GdkPixbuf*)g_object_ref( src_pix );
                     else
@@ -627,15 +634,8 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
                 w = gdk_pixbuf_get_width( scaled );
                 h = gdk_pixbuf_get_height( scaled );
 
-                if( w > dest_w )
-                    src_x = (w - dest_w) / 2;
-                else if( w < dest_w )
-                    dest_x = (dest_w - w) / 2;
-
-                if( h > dest_h )
-                    src_y = (h - dest_h) / 2;
-                else if( h < dest_h )
-                    dest_y = (dest_h - h) / 2;
+                dest_x = (dest_w - w) / 2;
+                dest_y = (dest_h - h) / 2;
                 break;
             case DW_BG_CENTER:  /* no scale is needed */
                 scaled = (GdkPixbuf*)g_object_ref( src_pix );
