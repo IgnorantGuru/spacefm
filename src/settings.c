@@ -9492,6 +9492,97 @@ void xset_defaults()
         xset_set( "panel_3", "label", _("Panel _3") );
         xset_set( "panel_4", "label", _("Panel _4") );
 
+    set = xset_set( "main_auto", "label", _("_Auto Run") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab" );
+    xset_set_set( set, "icon", "gtk-execute" );
+    
+        set = xset_set( "auto_inst", "label", _("_Instance") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_start evt_exit" );
+
+            set = xset_set( "evt_start", "label", _("_Startup") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Startup Command") );
+            xset_set_set( set, "desc", _("Enter command line to be run automatically when a SpaceFM instance starts:\n\nUse:\n	%%e	 event type (evt_start)\n\nNote: This setting accepts only an executable name and arguments, not a full bash command line.\n") );
+
+            set = xset_set( "evt_exit", "label", _("_Exit") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Exit Command") );
+            xset_set_set( set, "desc", _("Enter command line to be run automatically when a SpaceFM instance exits:\n\nUse:\n	%%e	 event type (evt_start)\n\nNote: This setting accepts only an executable name and arguments, not a full bash command line.\n") );
+
+        set = xset_set( "auto_win", "label", _("_Window") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_click evt_win_key evt_win_close" );
+
+            set = xset_set( "evt_win_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Window Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_move", "label", _("_Move/Resize") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Move/Resize Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
+
+            set = xset_set( "evt_click", "label", _("_Click") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Click Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel   \t(1-4)\n	%%t	 tab     \t(1-...)\n	%%b	 button \t(mouse button pressed)\n	%%m	 modifier\t(modifier keys)\n	%%f	 focus   \t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_key", "label", _("_Keypress") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Keypress Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a key is pressed:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel   \t(1-4)\n	%%t	 tab     \t(1-...)\n	%%k	 key code\t(key pressed)\n	%%m	 modifier\t(modifier keys)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_close", "label", _("Cl_ose") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+        set = xset_set( "auto_pnl", "label", _("_Panel") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_pnl_focus evt_pnl_show evt_sel" );
+
+            set = xset_set( "evt_pnl_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_pnl_show", "label", _("_Show") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Show Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel element is shown or hidden:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%f	 focus  \t\t(element shown or hidden)\n	%%v	 visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_sel", "label", _("_Select") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Select Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+        set = xset_set( "auto_tab", "label", _("_Tab") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_tab_new evt_tab_focus evt_tab_close" );
+
+            set = xset_set( "evt_tab_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Tab Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_tab_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_tab_close", "label", _("_Close") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
     set = xset_set( "main_title", "label", _("Wi_ndow Title") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Set Window Title Format") );

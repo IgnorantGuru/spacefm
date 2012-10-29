@@ -1332,9 +1332,13 @@ int main ( int argc, char *argv[] )
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
+
+    main_window_event( NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
  
     if( run )   /* run the main loop */
         gtk_main();
+
+    main_window_event( NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
     single_instance_finalize();
 
