@@ -1445,6 +1445,11 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
                                                                 FALSE, FALSE, 0 );
     gtk_label_set_selectable( file_browser->status_label, TRUE ); // required for button event
     gtk_widget_set_can_focus( GTK_WIDGET( file_browser->status_label ), FALSE );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_widget_set_hexpand( GTK_WIDGET( file_browser->status_label ), TRUE );
+    gtk_widget_set_halign( GTK_WIDGET( file_browser->status_label ), GTK_ALIGN_FILL );
+    gtk_misc_set_alignment( GTK_MISC( file_browser->status_label ), 0, 0.5 );
+#endif
     g_signal_connect( G_OBJECT( file_browser->status_label ), "button-press-event",
                       G_CALLBACK( on_status_bar_button_press ), file_browser );
     g_signal_connect( G_OBJECT( file_browser->status_label ), "populate-popup",
