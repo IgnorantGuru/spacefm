@@ -6509,6 +6509,8 @@ _invalid_get:
         g_string_append_printf( gstr, "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
         g_string_append_printf( gstr, "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
         g_string_append_printf( gstr, "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+        g_string_append_printf( gstr, "clipboard_cut_files             %s\n", _("FILE ...  Files cut to clipboard") );
+        g_string_append_printf( gstr, "clipboard_copy_files            %s\n", _("FILE ...  Files copied to clipboard") );
 
         g_string_append_printf( gstr, "\n%s\n", _("TASK PROPERTIES\n---------------") );
         g_string_append_printf( gstr, "status                          %s\n", _("contents of Status task column  (read-only)") );
