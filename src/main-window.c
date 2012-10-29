@@ -2488,6 +2488,22 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             g_object_unref( pixbuf );
             //shorten tab since we have a 16 icon
             gtk_widget_set_size_request ( close_btn, 24, 20 );
+#if GTK_CHECK_VERSION (3, 0, 0)
+            /* Code modified from gedit: gedit-close-button.c */
+            static const gchar button_style[] =
+                  "* {\n"
+                  "-GtkButton-default-border : 0;\n"
+                  "-GtkButton-default-outside-border : 0;\n"
+                  "-GtkButton-inner-border: 0;\n"
+                  "-GtkWidget-focus-line-width : 0;\n"
+                  "-GtkWidget-focus-padding : 0;\n"
+                  "padding: 0;\n"
+                "}"; 
+            GtkCssProvider *css_prov = gtk_css_provider_new ();
+            gtk_css_provider_load_from_data(css_prov, button_style, -1, NULL);
+            GtkStyleContext *ctx = gtk_widget_get_style_context( close_btn );
+            gtk_style_context_add_provider( ctx, css_prov, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
+#endif
         }
         else
         {
