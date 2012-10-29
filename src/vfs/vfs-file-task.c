@@ -379,8 +379,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
-        if ( should_abort( task ) )
-            return FALSE;
+        return FALSE;
     }
 
     result = 0;
@@ -435,6 +434,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 g_error_free( error );
                 vfs_file_task_exec_error( task, 0, msg );
                 g_free( msg );
+                copy_fail = TRUE;
                 if ( should_abort( task ) )
                     goto _return_;
             }
@@ -455,13 +455,17 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 if ( (result = rmdir( src_file )) )
                 {
                     vfs_file_task_error( task, errno, _("Removing"), src_file );
+                    copy_fail = TRUE;
                     if ( should_abort( task ) )
                         goto _return_;
                 }
             }
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Creating Dir"), dest_file );
+            copy_fail = TRUE;
+        }
     }
     else if ( S_ISLNK( file_stat.st_mode ) )
     {
@@ -487,7 +491,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 if ( result && errno != 2 /* no such file */ )
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
-                    copy_fail = TRUE;
                     goto _return_;
                 }                
             }
@@ -504,17 +507,26 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     result = unlink( src_file );
                     if ( result )
+                    {
                         vfs_file_task_error( task, errno, _("Removing"), src_file );
+                        copy_fail = TRUE;
+                    }
                 }
                 g_mutex_lock( task->mutex );
                 task->progress += file_stat.st_size;
                 g_mutex_unlock( task->mutex );
             }
             else
+            {
                 vfs_file_task_error( task, errno, _("Creating Link"), dest_file );
+                copy_fail = TRUE;
+            }
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
+            copy_fail = TRUE;
+        }
     }
     else
     {
@@ -580,7 +592,10 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     result = unlink( dest_file );
                     if ( result && errno != 2 /* no such file */ )
+                    {
                         vfs_file_task_error( task, errno, _("Removing"), dest_file );
+                        copy_fail = TRUE;
+                    }
                 }
                 else
                 {
@@ -601,17 +616,28 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     {
                         result = unlink( src_file );
                         if ( result )
+                        {
                             vfs_file_task_error( task, errno, _("Removing"), src_file );
+                            copy_fail = TRUE;
+                        }
                     }
                 }
             }
             else
+            {
                 vfs_file_task_error( task, errno, _("Creating"), dest_file );
+                copy_fail = TRUE;
+            }
             close( rfd );
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
+            copy_fail = TRUE;
+        }
     }
+    if ( new_dest_file )
+        g_free( new_dest_file );
     if ( !copy_fail && task->error_first )
         task->error_first = FALSE;
     return !copy_fail;
@@ -1972,7 +1998,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         for ( l = task->src_paths; l; l = l->next )
         {
             if ( lstat64( (char*)l->data, &file_stat ) == -1 )
-                vfs_file_task_error( task, errno, _("Accessing"), (char*)l->data );
+            {
+                // don't report error here since its reported later
+                //vfs_file_task_error( task, errno, _("Accessing"), (char*)l->data );
+            }
             else
             {
                 size = 0;
@@ -2007,7 +2036,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         for ( l = task->src_paths; l; l = l->next )
         {
             if ( lstat64( ( char* ) l->data, &file_stat ) == -1 )
-                vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
+            {
+                // don't report error here since it's reported later
+                //vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
+            }
             else
             {
                 /*

@@ -2802,10 +2802,14 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
     
     if( evt->type != GDK_BUTTON_PRESS )
         return FALSE;
+
 //printf("on_button_press_event   view = %d\n", view );
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     ptk_file_browser_focus_me( file_browser );
+
+    main_window_event( file_browser->main_window, "evt_click", 0, 0, "devices", 0,
+                                                evt->button, evt->state, TRUE );
 
     // get selected vol
     if ( gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL, NULL, NULL ) )
@@ -3410,6 +3414,9 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         return FALSE;
     
     ptk_file_browser_focus_me( file_browser );
+
+    main_window_event( file_browser->main_window, "evt_click", 0, 0,
+                                "bookmarks", 0, evt->button, evt->state, TRUE );
 
     if ( evt->button == 1 )  // left
     {
