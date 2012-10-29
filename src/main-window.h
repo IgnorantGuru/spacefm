@@ -156,6 +156,7 @@ void focus_panel( GtkMenuItem* item, gpointer mw, int p );
 void main_window_open_path_in_current_tab( FMMainWindow* main_window, const char* path );
 void main_window_open_network( FMMainWindow* main_window, const char* path,
                                                             gboolean new_tab );
+char main_window_socket_command( char* argv[], char** reply );
 
 
 G_END_DECLS

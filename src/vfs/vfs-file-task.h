@@ -112,6 +112,7 @@ struct _VFSFileTask
     off64_t total_size; /* Total size of the files to be processed, in bytes */
     off64_t progress; /* Total size of current processed files, in btytes */
     int percent; /* progress (percentage) */
+    gboolean custom_percent;
     time_t start_time;
     off64_t last_speed;
     off64_t last_progress;
@@ -177,6 +178,7 @@ struct _VFSFileTask
     gboolean exec_write_root;
     gpointer exec_set;
     GCond* exec_cond;
+    gpointer exec_ptask;
 };
 
 /*

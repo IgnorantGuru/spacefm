@@ -96,7 +96,7 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
         XFree ( prop_ret );
     }
 
-    gdk_error_trap_pop ();
+    gint err = gdk_error_trap_pop ();
 
     return ws_num;
 }
