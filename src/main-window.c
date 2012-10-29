@@ -6145,7 +6145,30 @@ _invalid_set:
             }
             else if ( !strcmp( argv[i], "clipboard_cut_files" ) )
                 return 0;
-            *reply = gtk_clipboard_wait_for_text( clip );            
+            str = gtk_clipboard_wait_for_text( clip );
+            if ( !( str && str[0] ) )
+            {
+                g_free( str );
+                return 0;
+            }
+            // build bash array
+            char** pathv = g_strsplit( str, "\n", 0 );
+            g_free( str );
+            GString* gstr = g_string_new( "(" );
+            j = 0;
+            while ( pathv[j] )
+            {
+                if ( pathv[j][0] )
+                {
+                    str = bash_quote( pathv[j] );
+                    g_string_append_printf( gstr, "%s ", str );
+                    g_free( str );
+                }
+                j++;
+            }
+            g_strfreev( pathv );
+            g_string_append_printf( gstr, ")\n" );
+            *reply = g_string_free( gstr, FALSE );
         }
         else
         {
@@ -6361,7 +6384,10 @@ _invalid_get:
         event->keyval = (guint)strtol( argv[i], NULL, 0 );
         event->state = argv[i+1] ? (guint)strtol( argv[i+1], NULL, 0 ) : 0;
         if ( event->keyval )
+        {
+            gtk_window_present( GTK_WINDOW( main_window ) );        
             on_main_window_keypress( main_window, event, NULL );
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid keycode '%s'\n"),
@@ -6405,108 +6431,6 @@ _invalid_get:
          xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
                                                                 set );
         g_idle_add( (GSourceFunc)delayed_show_menu, widget );
-    }
-    else if ( !strcmp( argv[0], "help" ) || !strcmp( argv[0], "--help" ) )
-    {
-        GString* gstr = g_string_new( NULL );
-        g_string_append_printf( gstr, "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
-        g_string_append_printf( gstr, "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-        g_string_append_printf( gstr, "%s\n", _("windows.  This gives custom commands and plugins limited access to the GUI.") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("Usage:") );
-        g_string_append_printf( gstr, "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
-        g_string_append_printf( gstr, "%s\n", _("Example:") );
-        g_string_append_printf( gstr, "    spacefm -s set window_size 800x600\n" );
-
-        g_string_append_printf( gstr, "\n%s\n", _("METHODS\n-------") );
-        g_string_append_printf( gstr, "spacefm -s set PROPERTY [VALUE...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Sets a property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s get PROPERTY\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Gets a property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Sets a task property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Gets a task property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s select [FILENAME|DIRNAME...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Selects specified filenames and unselects others; or select all if no spec") );
-
-        g_string_append_printf( gstr, "\nspacefm -s unselect [FILENAME|DIRNAME...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Unselects specified filenames; or unselect all if no spec") );
-
-        g_string_append_printf( gstr, "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Activates a menu item by emitting its shortcut key") );
-
-        g_string_append_printf( gstr, "\nspacefm -s show-menu MENUNAME\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
-
-        g_string_append_printf( gstr, "\nspacefm -s help|--help\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("OPTIONS\n-------") );
-        g_string_append_printf( gstr, "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
-
-        g_string_append_printf( gstr, "\n--window WINDOWID\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
-        g_string_append_printf( gstr, "--panel PANEL\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
-        g_string_append_printf( gstr, "--tab TAB\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s select --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("PROPERTIES\n----------") );
-        g_string_append_printf( gstr, "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
-
-        g_string_append_printf( gstr, "\nwindow_size                     eg '800x600'\n" );
-        g_string_append_printf( gstr, "window_position                 eg '100x50'\n" );
-        g_string_append_printf( gstr, "window_maximized                1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "window_fullscreen               1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "window_vslider_top              eg '100'\n" );
-        g_string_append_printf( gstr, "window_vslider_bottom           eg '100'\n" );
-        g_string_append_printf( gstr, "window_hslider                  eg '100'\n" );
-        g_string_append_printf( gstr, "window_tslider                  eg '100'\n" );
-        g_string_append_printf( gstr, "focused_panel                   1|2|3|4|prev|next|hide\n" );
-        g_string_append_printf( gstr, "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
-        g_string_append_printf( gstr, "current_tab                     1|2|...|prev|next|close\n" );
-        g_string_append_printf( gstr, "bookmarks_visible               1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "dirtree_visible                 1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "toolbar_visible                 1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "sidetoolbar_visible             1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "hidden_files_visible            1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel1_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel2_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel3_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel4_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel_hslider_top               eg '100'\n" );
-        g_string_append_printf( gstr, "panel_hslider_bottom            eg '100'\n" );
-        g_string_append_printf( gstr, "panel_vslider                   eg '100'\n" );
-        g_string_append_printf( gstr, "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
-        g_string_append_printf( gstr, "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
-        g_string_append_printf( gstr, "pathbar_text                    %s\n", _("eg '/usr/bin' or 'ftp://server' or '$ ls'") );
-        g_string_append_printf( gstr, "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
-        g_string_append_printf( gstr, "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
-        g_string_append_printf( gstr, "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
-        g_string_append_printf( gstr, "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("TASK PROPERTIES\n---------------") );
-        g_string_append_printf( gstr, "status                          %s\n", _("contents of Status task column  (read-only)") );
-        g_string_append_printf( gstr, "icon                            %s\n", _("eg 'gtk-open'") );
-        g_string_append_printf( gstr, "count                           %s\n", _("text to show in Count task column") );
-        g_string_append_printf( gstr, "folder                          %s\n", _("text to show in Folder task column") );
-        g_string_append_printf( gstr, "item                            %s\n", _("text to show in Item task column") );
-        g_string_append_printf( gstr, "to                              %s\n", _("text to show in To task column") );
-        g_string_append_printf( gstr, "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
-        g_string_append_printf( gstr, "total                           %s\n", _("text to show in Total task column") );
-        g_string_append_printf( gstr, "curspeed                        %s\n", _("text to show in Current task column") );
-        g_string_append_printf( gstr, "curremain                       %s\n", _("text to show in CRemain task column") );
-        g_string_append_printf( gstr, "avgspeed                        %s\n", _("text to show in Average task column") );
-        g_string_append_printf( gstr, "avgremain                       %s\n", _("text to show in Remain task column") );
-        g_string_append_printf( gstr, "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
-        g_string_append_printf( gstr, "started                         %s\n", _("contents of Started task column (read-only)") );
-        g_string_append_printf( gstr, "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
-        *reply = g_string_free( gstr, FALSE );
     }
     else
     {
