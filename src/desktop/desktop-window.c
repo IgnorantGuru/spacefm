@@ -1017,7 +1017,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     gdk_color_free (clr);
 }
 
-static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
+static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gboolean add )
 {
     GList* l;
     GdkRectangle old_rect, new_rect;
@@ -1055,7 +1055,7 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
         else
             selected = FALSE;
 
-        if( item->is_selected != selected )
+        if( ( item->is_selected != selected ) && ( !add || !item->is_selected ) )
         {
             item->is_selected = selected;
             redraw_item( self, item );
@@ -1323,7 +1323,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
 
     if( self->rubber_bending )
     {
-        update_rubberbanding( self, evt->x, evt->y );
+        update_rubberbanding( self, evt->x, evt->y, !!(evt->state & GDK_CONTROL_MASK) );
         gtk_grab_remove( w );
         self->rubber_bending = FALSE;
     }
@@ -1408,7 +1408,7 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
     }
     else if( self->rubber_bending )
     {
-        update_rubberbanding( self, evt->x, evt->y );
+        update_rubberbanding( self, evt->x, evt->y, !!(evt->state & GDK_CONTROL_MASK) );
     }
     else
     {
