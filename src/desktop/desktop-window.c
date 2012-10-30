@@ -992,7 +992,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         else
         {
             gdk_cairo_set_source_pixbuf( cr, pix, rect.x, rect.y );
-            cairo_rectangle( cr, 0, 0, rect.width, rect.height );
+            cairo_rectangle( cr, rect.x, rect.y, rect.width, rect.height );
             cairo_fill( cr );
         }
         g_object_unref( pix );
@@ -1011,7 +1011,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
 
     /* draw the border */
     gdk_cairo_set_source_color( cr, clr );
-    cairo_rectangle( cr, rect.x, rect.y, rect.width - 1, rect.height - 1 );
+    cairo_rectangle( cr, rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2 );
     cairo_stroke( cr );
 
     gdk_color_free (clr);
