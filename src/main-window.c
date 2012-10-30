@@ -2502,7 +2502,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             GtkCssProvider *css_prov = gtk_css_provider_new ();
             gtk_css_provider_load_from_data(css_prov, button_style, -1, NULL);
             GtkStyleContext *ctx = gtk_widget_get_style_context( close_btn );
-            gtk_style_context_add_provider( ctx, css_prov, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
+            gtk_style_context_add_provider( ctx, GTK_STYLE_PROVIDER( css_prov ), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
 #endif
         }
         else
