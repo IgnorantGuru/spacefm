@@ -134,6 +134,9 @@ void fm_desktop_update_wallpaper()
         case WPM_FULL:
             type = DW_BG_FULL;
             break;
+        case WPM_ZOOM:
+            type = DW_BG_ZOOM;
+            break;
         case WPM_CENTER:
             type = DW_BG_CENTER;
             break;

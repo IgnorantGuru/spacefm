@@ -61,6 +61,7 @@ typedef enum {
     DW_BG_FULL,
     DW_BG_STRETCH,
     DW_BG_CENTER,
+    DW_BG_ZOOM,
 }DWBgType;
 
 struct _DesktopWindow

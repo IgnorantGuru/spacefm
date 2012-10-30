@@ -15,7 +15,8 @@ typedef enum {
     WPM_STRETCH,
     WPM_FULL,
     WPM_CENTER,
-    WPM_TILE
+    WPM_TILE,
+    WPM_ZOOM
 }WallpaperMode;
 
 typedef struct
