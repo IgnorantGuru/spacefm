@@ -226,7 +226,9 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
 gboolean on_window_configure_event( GtkWindow *window, 
                                     GdkEvent *event, FMMainWindow* main_window )
 {
-    main_window_event( main_window, "evt_win_move", 0, 0, NULL, 0, 0, 0, TRUE );
+    if ( evt_win_move->s )
+        main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
+                                                    NULL, 0, 0, 0, TRUE );
     return FALSE;
 }
 
@@ -1430,9 +1432,10 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                     fm_main_window_add_new_tab( main_window, folder_path );
                 }
             }
-            if ( !gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
-                main_window_event( main_window, "evt_pnl_show", p, 0, NULL, 0,
-                                                                0, 0, TRUE );
+            if ( evt_pnl_show->s && !gtk_widget_get_visible( GTK_WIDGET( 
+                                                    main_window->panel[p-1] ) ) )
+                main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
+                                                    0, NULL, 0, 0, 0, TRUE );
             gtk_widget_show( GTK_WIDGET( main_window->panel[p-1] ) );
             if ( !gtk_toggle_tool_button_get_active( 
                                 GTK_TOGGLE_TOOL_BUTTON( main_window->panel_btn[p-1] ) ) )
@@ -1449,9 +1452,10 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
         else
         {
-            if ( gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
-                main_window_event( main_window, "evt_pnl_show", p, 0, NULL, 0,
-                                                                0, 0, FALSE );
+            if ( evt_pnl_show->s && gtk_widget_get_visible( GTK_WIDGET( 
+                                                    main_window->panel[p-1] ) ) )
+                main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
+                                                    0, NULL, 0, 0, 0, FALSE );
             gtk_widget_hide( GTK_WIDGET( main_window->panel[p-1] ) );
             if ( gtk_toggle_tool_button_get_active( 
                                 GTK_TOGGLE_TOOL_BUTTON( main_window->panel_btn[p-1] ) ) )
@@ -1925,7 +1929,7 @@ void fm_main_window_init( FMMainWindow* main_window )
     on_task_popup_show( NULL, main_window, NULL );
     show_panels( NULL, main_window );
     main_window_root_bar_all();
-    main_window_event( main_window, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
+    main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
 
 void fm_main_window_finalize( GObject *obj )
@@ -1967,7 +1971,9 @@ static void fm_main_window_close( FMMainWindow* main_window )
                             G_OBJECT( main_window ),
                             G_CALLBACK( ptk_file_task_notify_handler ), NULL ) );
     */
-    main_window_event( main_window, "evt_win_close", 0, 0, NULL, 0, 0, 0, FALSE );
+    if ( evt_win_close->s )
+        main_window_event( main_window, evt_win_close, "evt_win_close", 0, 0,
+                                                        NULL, 0, 0, 0, FALSE );
     gtk_widget_destroy( GTK_WIDGET( main_window ) );
 }
 
@@ -2297,8 +2303,9 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
-    main_window_event( main_window, "evt_tab_close", main_window->curpanel, 0,
-                                                        NULL, 0, 0, 0, FALSE );
+    if ( evt_tab_close->s )
+        main_window_event( main_window, evt_tab_close, "evt_tab_close",
+                            main_window->curpanel, 0, NULL, 0, 0, 0, FALSE );
 
     // save slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
@@ -2346,7 +2353,9 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
             fm_main_window_update_status_bar( main_window, a_browser );
             g_idle_add( ( GSourceFunc ) delayed_focus, a_browser->folder_view );
         }
-        main_window_event( main_window, "evt_tab_focus", main_window->curpanel,
+        if ( evt_tab_focus->s )
+            main_window_event( main_window, evt_tab_focus, "evt_tab_focus",
+                                        main_window->curpanel,
                                         cur_tabx + 1, NULL, 0, 0, 0, FALSE );
     }
 
@@ -2360,8 +2369,9 @@ _done_close:
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
                            PtkFileBrowser* file_browser)  //MOD added
 {
-    main_window_event( file_browser->main_window, "evt_click", 0, 0, "tabbar",
-                                            0, event->button, event->state, TRUE );
+    if ( evt_click->s )
+        main_window_event( file_browser->main_window, evt_click, "evt_click",
+                            0, 0, "tabbar", 0, event->button, event->state, TRUE );
     on_file_browser_panel_change( file_browser,
                                         (FMMainWindow*)file_browser->main_window );
     // middle-click on tab closes
@@ -2638,7 +2648,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
     if ( !ptk_file_browser_chdir( file_browser, folder_path, PTK_FB_CHDIR_ADD_HISTORY ) )
         ptk_file_browser_chdir( file_browser, "/", PTK_FB_CHDIR_ADD_HISTORY );
 
-    main_window_event( main_window, "evt_tab_new", 0, 0, NULL, 0, 0, 0, TRUE );
+    if ( evt_tab_new->s )
+        main_window_event( main_window, evt_tab_new, "evt_tab_new", 0, 0, NULL,
+                                                                0, 0, 0, TRUE );
 //    while( gtk_events_pending() )  // wait for chdir to grab focus
 //        gtk_main_iteration();
     //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
@@ -2919,8 +2931,9 @@ void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser )
     }
     
     update_window_title( NULL, mw );
-    
-    main_window_event( main_window, "evt_pnl_focus", mw->curpanel, 0, NULL, 0, 0, 0, TRUE );        
+    if ( evt_pnl_focus->s )
+        main_window_event( main_window, evt_pnl_focus, "evt_pnl_focus",
+                                        mw->curpanel, 0, NULL, 0, 0, 0, TRUE );        
 }
 
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
@@ -3085,7 +3098,9 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
 
     set_window_title( main_window, file_browser );
 
-    main_window_event( main_window, "evt_tab_focus", main_window->curpanel,
+    if ( evt_tab_focus->s )
+        main_window_event( main_window, evt_tab_focus, "evt_tab_focus",
+                                        main_window->curpanel,
                                         page_num + 1, NULL, 0, 0, 0, TRUE );
 
     // block signal in case tab is being closed due to main iteration in update views
@@ -3345,7 +3360,9 @@ void on_file_browser_sel_change( PtkFileBrowser* file_browser,
 {
 //printf("sel_change  panel %d\n", file_browser->mypanel );
     fm_main_window_update_status_bar( main_window, file_browser );
-    main_window_event( main_window, "evt_sel", 0, 0, NULL, 0, 0, 0, TRUE );
+    if ( evt_sel->s )
+        main_window_event( main_window, evt_sel, "evt_sel", 0, 0, NULL,
+                                                            0, 0, 0, TRUE );
 /*
     int i = gtk_notebook_get_current_page( main_window->panel[ 
                                                     file_browser->mypanel - 1 ] );
@@ -3407,8 +3424,9 @@ gboolean on_main_window_focus( GtkWidget* main_window,
             all_windows = active;
         }
     }
-    main_window_event( (FMMainWindow*)main_window, "evt_win_focus", 0, 0, NULL,
-                                                                0, 0, 0, TRUE );    
+    if ( evt_win_focus->s )
+        main_window_event( (FMMainWindow*)main_window, evt_win_focus,
+                                    "evt_win_focus", 0, 0, NULL, 0, 0, 0, TRUE );    
     return FALSE;
 }
 
@@ -3440,8 +3458,9 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
             return FALSE;  // send to pathbar
     }
 
-    main_window_event( main_window, "evt_win_key", 0, 0, NULL, event->keyval, 0,
-                                                                keymod, TRUE );    
+    if ( evt_win_key->s )
+        main_window_event( main_window, evt_win_key, "evt_win_key", 0, 0, NULL,
+                                            event->keyval, 0, keymod, TRUE );    
 
     for ( l = xsets; l; l = l->next )
     {
@@ -4912,7 +4931,8 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
         
-    main_window_event( main_window, "evt_click", 0, 0, "tasklist", 0,
+    if ( evt_click->s )
+        main_window_event( main_window, evt_click, "evt_click", 0, 0, "tasklist", 0,
                                         event->button, event->state, TRUE );
     
     if ( event->button == 3 ) // right click
@@ -6513,24 +6533,30 @@ _invalid_get:
     return 0;
 }
 
-void main_window_event( gpointer mw, const char* event,
+void main_window_event( gpointer mw, XSet* preset, const char* event,
                         int panel, int tab, const char* focus, 
                         int keyval, int button, int state,
                         gboolean visible )
 {
     char* cmd;
-    XSet* set = xset_get( event );
-    if ( !set->s )
-        return;
-
-    if ( !strcmp( event, "evt_start" ) || !strcmp( event, "evt_exit" ) )
+    XSet* set;
+    if ( preset )
+        set = preset;
+    else
     {
-        cmd = replace_string( set->s, "%e", event, FALSE );
-        printf( "EVENT %s >>> %s\n", event, cmd );
-        g_spawn_command_line_async( cmd, NULL );
-        g_free( cmd );
-        return;
+        set = xset_get( event );
+        if ( !set->s )
+            return;
+        if ( !strcmp( event, "evt_start" ) || !strcmp( event, "evt_exit" ) )
+        {
+            cmd = replace_string( set->s, "%e", event, FALSE );
+            printf( "EVENT %s >>> %s\n", event, cmd );
+            g_spawn_command_line_async( cmd, NULL );
+            g_free( cmd );
+            return;
+        }
     }
+    
     // get main_window, panel, and tab
     if ( !mw )
         return;
@@ -6550,15 +6576,15 @@ void main_window_event( gpointer mw, const char* event,
 
     // replace vars
     char* replace = "ewpt";
-    if ( !strcmp( event, "evt_click" ) )
+    if ( set == evt_click )
     {
         replace = "ewptfbm";
         state = ( state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                   GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
     }
-    else if ( !strcmp( event, "evt_win_key" ) )
+    else if ( set == evt_win_key )
         replace = "ewptkm";
-    else if ( !strcmp( event, "evt_pnl_show" ) )
+    else if ( set == evt_pnl_show )
         replace = "ewptfv";
 
     char* str;
@@ -6585,63 +6611,66 @@ void main_window_event( gpointer mw, const char* event,
         str = cmd;
         if ( var[1] == 'e' )
             cmd = replace_string( set->s, var, event, FALSE );
-        else if ( var[1] == 'f' )
+        else if ( strstr( str, var ) )
         {
-            if ( !focus )
+            if ( var[1] == 'f' )
             {
-                rep = g_strdup_printf( "panel%d", panel );
+                if ( !focus )
+                {
+                    rep = g_strdup_printf( "panel%d", panel );
+                    cmd = replace_string( str, var, rep, FALSE );
+                    g_free( rep );
+                }
+                else
+                    cmd = replace_string( str, var, focus, FALSE );
+            }
+            else if ( var[1] == 'w' )
+            {
+                rep = g_strdup_printf( "%#x", main_window );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'p' )
+            {
+                rep = g_strdup_printf( "%d", panel );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 't' )
+            {
+                rep = g_strdup_printf( "%d", tab );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'v' )
+                cmd = replace_string( str, var, visible ? "1" : "0", FALSE );
+            else if ( var[1] == 'k' )
+            {
+                rep = g_strdup_printf( "%#x", keyval );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'b' )
+            {
+                rep = g_strdup_printf( "%d", button );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'm' )
+            {
+                rep = g_strdup_printf( "%#x", state );
                 cmd = replace_string( str, var, rep, FALSE );
                 g_free( rep );
             }
             else
-                cmd = replace_string( str, var, focus, FALSE );
-        }
-        else if ( var[1] == 'w' )
-        {
-            rep = g_strdup_printf( "%#x", main_window );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else if ( var[1] == 'p' )
-        {
-            rep = g_strdup_printf( "%d", panel );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else if ( var[1] == 't' )
-        {
-            rep = g_strdup_printf( "%d", tab );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else if ( var[1] == 'v' )
-            cmd = replace_string( str, var, visible ? "1" : "0", FALSE );
-        else if ( var[1] == 'k' )
-        {
-            rep = g_strdup_printf( "%#x", keyval );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else if ( var[1] == 'b' )
-        {
-            rep = g_strdup_printf( "%d", button );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else if ( var[1] == 'm' )
-        {
-            rep = g_strdup_printf( "%#x", state );
-            cmd = replace_string( str, var, rep, FALSE );
-            g_free( rep );
-        }
-        else
-        {
-            // failsafe
+            {
+                // failsafe
+                g_free( str );
+                g_free( cmd );
+                return;
+            }
             g_free( str );
-            g_free( cmd );
-            return;
         }
-        g_free( str );
         i++;
     }
 
@@ -6657,17 +6686,6 @@ void main_window_event( gpointer mw, const char* event,
     task->task->exec_sync = FALSE;
     task->task->exec_export = TRUE;
     ptk_file_task_run( task );
-
-    return;
-        printf( "\nmain_window_event\n");
-        printf( "    event:  %s\n", event );
-        printf( "    focus:  %s\n", focus );
-        printf( "    panel:  %d\n", panel );
-        printf( "    tab:    %d\n", tab );
-        printf( "    keyval: %d\n", keyval );
-        printf( "    button: %d\n", button );
-        printf( "    mod:    %d\n", state );
-        printf( "    vis:    %s\n", visible ? "TRUE" : "FALSE" );
 }
 
 //================================================================================
