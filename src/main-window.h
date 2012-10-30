@@ -157,7 +157,7 @@ void main_window_open_path_in_current_tab( FMMainWindow* main_window, const char
 void main_window_open_network( FMMainWindow* main_window, const char* path,
                                                             gboolean new_tab );
 char main_window_socket_command( char* argv[], char** reply );
-void main_window_event( gpointer mw, const char* event,
+void main_window_event( gpointer mw, XSet* preset, const char* event,
                         int panel, int tab, const char* focus, 
                         int keyval, int button, int state,
                         gboolean visible );

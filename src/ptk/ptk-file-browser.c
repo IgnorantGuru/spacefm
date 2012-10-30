@@ -1271,8 +1271,10 @@ gboolean on_status_bar_button_press( GtkWidget *widget,
     focus_folder_view( file_browser );
     if ( event->type == GDK_BUTTON_PRESS )
     {
-        main_window_event( file_browser->main_window, "evt_click", 0, 0,
-                            "statusbar", 0, event->button, event->state, TRUE );
+        if ( evt_click->s )
+            main_window_event( file_browser->main_window, evt_click, "evt_click",
+                                0, 0, "statusbar", 0, event->button, event->state,
+                                TRUE );
         if ( event->button == 2 )
         {
             const char* setname[] =
@@ -1610,39 +1612,40 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
     if ( xset_get_b_panel( p, "show_toolbox" ) )
     {
-        if ( !file_browser->toolbox || 
-                            !gtk_widget_get_visible( file_browser->toolbox ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "toolbar", 0,
-                                                                0, 0, TRUE );
+        if ( evt_pnl_show->s && ( !file_browser->toolbox || 
+                            !gtk_widget_get_visible( file_browser->toolbox ) ) )
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "toolbar", 0, 0, 0, TRUE );
         if ( !file_browser->toolbox )
             ptk_file_browser_rebuild_toolbox( NULL, file_browser );
         gtk_widget_show_all( file_browser->toolbox );
     }
     else
     {
-        if ( file_browser->toolbox && 
+        if ( evt_pnl_show->s && file_browser->toolbox && 
                             gtk_widget_get_visible( file_browser->toolbox ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "toolbar", 0,
-                                                                0, 0, FALSE );
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "toolbar", 0, 0, 0, FALSE );
         gtk_widget_hide( file_browser->toolbox );
     }
     
     if ( xset_get_b_panel( p, "show_sidebar" ) )
     {
-        if ( !file_browser->side_toolbox || 
-                            !gtk_widget_get_visible( file_browser->side_toolbox ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "sidetoolbar", 0,
-                                                                0, 0, TRUE );
+        if ( evt_pnl_show->s && ( !file_browser->side_toolbox || 
+                            !gtk_widget_get_visible( file_browser->side_toolbox ) ) )
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "sidetoolbar", 0, 0, 0, TRUE );
         if ( !file_browser->side_toolbar )
             ptk_file_browser_rebuild_side_toolbox( NULL, file_browser );
         gtk_widget_show_all( file_browser->side_toolbox );
     }
     else
     {
-        if ( file_browser->side_toolbar && file_browser->side_toolbox && 
+        if ( evt_pnl_show->s && file_browser->side_toolbar && 
+                            file_browser->side_toolbox && 
                             gtk_widget_get_visible( file_browser->side_toolbox ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "sidetoolbar", 0,
-                                                                0, 0, FALSE );
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "sidetoolbar", 0, 0, 0, FALSE );
         if ( file_browser->side_toolbar )
         {
             gtk_widget_destroy( file_browser->side_toolbar );
@@ -1655,10 +1658,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     
     if ( xset_get_b_panel( p, "show_dirtree" ) )
     {
-        if ( !file_browser->side_dir_scroll || 
-                            !gtk_widget_get_visible( file_browser->side_dir_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "dirtree", 0,
-                                                                0, 0, TRUE );
+        if ( evt_pnl_show->s && ( !file_browser->side_dir_scroll || 
+                        !gtk_widget_get_visible( file_browser->side_dir_scroll ) ) )
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "dirtree", 0, 0, 0, TRUE );
         if ( !file_browser->side_dir )
         {
             file_browser->side_dir = ptk_file_browser_create_dir_tree( file_browser );
@@ -1672,10 +1675,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     }
     else
     {
-        if ( file_browser->side_dir_scroll && 
+        if ( evt_pnl_show->s && file_browser->side_dir_scroll && 
                             gtk_widget_get_visible( file_browser->side_dir_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "dirtree", 0,
-                                                                0, 0, FALSE );
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "dirtree", 0, 0, 0, FALSE );
         gtk_widget_hide( file_browser->side_dir_scroll );
         if ( file_browser->side_dir )
             gtk_widget_destroy( file_browser->side_dir );
@@ -1684,10 +1687,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     
     if ( xset_get_b_panel( p, "show_book" ) )
     {
-        if ( !file_browser->side_book_scroll || 
-                            !gtk_widget_get_visible( file_browser->side_book_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "bookmarks", 0,
-                                                                0, 0, TRUE );
+        if ( evt_pnl_show->s && ( !file_browser->side_book_scroll || 
+                        !gtk_widget_get_visible( file_browser->side_book_scroll ) ) )
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "bookmarks", 0, 0, 0, TRUE );
         if ( !file_browser->side_book )
         {
             file_browser->side_book = ptk_bookmark_view_new( file_browser );
@@ -1698,10 +1701,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     }
     else
     {
-        if ( file_browser->side_book_scroll && 
+        if ( evt_pnl_show->s && file_browser->side_book_scroll && 
                             gtk_widget_get_visible( file_browser->side_book_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "bookmarks", 0,
-                                                                0, 0, FALSE );
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0, 
+                                                "bookmarks", 0, 0, 0, FALSE );
         gtk_widget_hide( file_browser->side_book_scroll );
         if ( file_browser->side_book )
             gtk_widget_destroy( file_browser->side_book );
@@ -1710,10 +1713,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
     if ( xset_get_b_panel( p, "show_devmon" ) )
     {
-        if ( !file_browser->side_dev_scroll || 
-                            !gtk_widget_get_visible( file_browser->side_dev_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "devices", 0,
-                                                                0, 0, TRUE );
+        if ( evt_pnl_show->s && ( !file_browser->side_dev_scroll || 
+                        !gtk_widget_get_visible( file_browser->side_dev_scroll ) ) )
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0,
+                                                "devices", 0, 0, 0, TRUE );
         if ( !file_browser->side_dev )
         {
             file_browser->side_dev = ptk_location_view_new( file_browser );
@@ -1724,10 +1727,10 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     }
     else
     {
-        if ( file_browser->side_dev_scroll && 
+        if ( evt_pnl_show->s && file_browser->side_dev_scroll && 
                             gtk_widget_get_visible( file_browser->side_dev_scroll ) )
-            main_window_event( main_window, "evt_pnl_show", 0, 0, "devices", 0,
-                                                                0, 0, FALSE );
+            main_window_event( main_window, evt_pnl_show, "evt_pnl_show", 0, 0, 
+                                                "devices", 0, 0, 0, FALSE );
         gtk_widget_hide( file_browser->side_dev_scroll );
         if ( file_browser->side_dev )
             gtk_widget_destroy( file_browser->side_dev );
@@ -3485,8 +3488,10 @@ on_folder_view_button_press_event ( GtkWidget *widget,
         focus_folder_view( file_browser );
         file_browser->button_press = TRUE;
 
-        main_window_event( file_browser->main_window, "evt_click", 0, 0,
-                            "filelist", 0, event->button, event->state, TRUE );
+        if ( evt_click->s )
+            main_window_event( file_browser->main_window, evt_click, "evt_click",
+                                    0, 0, "filelist", 0, event->button,
+                                    event->state, TRUE );
         
         if ( event->button == 4 || event->button == 5
                         || event->button == 8 || event->button == 9 )     //sfm
@@ -5787,8 +5792,9 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
 {
     ptk_file_browser_focus_me( file_browser );
 
-    main_window_event( file_browser->main_window, "evt_click", 0, 0, "dirtree",
-                                            0, evt->button, evt->state, TRUE );
+    if ( evt_click->s )
+        main_window_event( file_browser->main_window, evt_click, "evt_click", 0, 0,
+                                "dirtree", 0, evt->button, evt->state, TRUE );
 
     //MOD Added left click
 /*    if ( evt->type == GDK_BUTTON_PRESS && evt->button == 1 )    // left click

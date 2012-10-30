@@ -377,7 +377,8 @@ static gboolean on_button_press(GtkWidget      *entry,
                                                                  GdkEventButton *evt,
                                                                  gpointer        user_data)
 {
-    main_window_event( NULL, "evt_click", 0, 0, "pathbar", 0,
+    if ( evt_click->s )
+        main_window_event( NULL, evt_click, "evt_click", 0, 0, "pathbar", 0,
                                             evt->button, evt->state, TRUE );
     return FALSE;
 }

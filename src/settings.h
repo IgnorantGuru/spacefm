@@ -84,7 +84,6 @@ typedef struct
 AppSettings;
 
 extern AppSettings app_settings;
-//extern gboolean design_mode;
 
 void load_settings( char* config_dir );
 char* save_settings( gpointer main_window_ptr );
@@ -230,6 +229,20 @@ typedef struct
     GtkMenuItem* item;
     char* name;
 } XMenuItem;
+
+// cache these for speed in event handlers
+XSet* evt_win_focus;
+XSet* evt_win_move;
+XSet* evt_click;
+XSet* evt_win_key;
+XSet* evt_win_close;
+XSet* evt_pnl_show;
+XSet* evt_pnl_focus;
+XSet* evt_sel;
+XSet* evt_tab_new;
+XSet* evt_tab_focus;
+XSet* evt_tab_close;
+
 
 static const char* terminal_programs[] =  //for pref-dialog.c
 {

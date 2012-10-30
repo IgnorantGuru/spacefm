@@ -621,7 +621,7 @@ void show_socket_help()
 {
     printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
     printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  This gives custom commands and plugins limited access to the GUI.") );
+    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
@@ -658,6 +658,7 @@ void show_socket_help()
 
     printf( "\n%s\n", _("OPTIONS\n-------") );
     printf( "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
+    printf( "%s\n", _("Otherwise the current tab of the current panel in the last window is used.") );
 
     printf( "\n--window WINDOWID\n" );
     printf( "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
@@ -1333,12 +1334,12 @@ int main ( int argc, char *argv[] )
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
 
-    main_window_event( NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
+    main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
  
     if( run )   /* run the main loop */
         gtk_main();
 
-    main_window_event( NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
+    main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
     single_instance_finalize();
 
