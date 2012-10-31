@@ -1741,6 +1741,7 @@ void fm_main_window_init( FMMainWindow* main_window )
 #if GTK_CHECK_VERSION (3, 0, 0)
     GtkStyleContext *style_ctx = gtk_widget_get_style_context( main_window->panelbar );
     gtk_style_context_add_class (style_ctx, GTK_STYLE_CLASS_MENUBAR);
+    gtk_style_context_remove_class (style_ctx, GTK_STYLE_CLASS_TOOLBAR);
 #endif
     gtk_toolbar_set_show_arrow( GTK_TOOLBAR( main_window->panelbar ), FALSE );
     gtk_toolbar_set_style( GTK_TOOLBAR( main_window->panelbar ), GTK_TOOLBAR_ICONS );
@@ -2537,7 +2538,7 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
             GtkCssProvider *css_prov = gtk_css_provider_new ();
             gtk_css_provider_load_from_data(css_prov, button_style, -1, NULL);
             GtkStyleContext *ctx = gtk_widget_get_style_context( close_btn );
-            gtk_style_context_add_provider( ctx, css_prov, GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
+            gtk_style_context_add_provider( ctx, GTK_STYLE_PROVIDER( css_prov ), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION );
 #endif
         }
         else

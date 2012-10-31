@@ -992,7 +992,7 @@ void paint_rubber_banding_rect( DesktopWindow* self )
         else
         {
             gdk_cairo_set_source_pixbuf( cr, pix, rect.x, rect.y );
-            cairo_rectangle( cr, 0, 0, rect.width, rect.height );
+            cairo_rectangle( cr, rect.x, rect.y, rect.width, rect.height );
             cairo_fill( cr );
         }
         g_object_unref( pix );
@@ -1011,13 +1011,13 @@ void paint_rubber_banding_rect( DesktopWindow* self )
 
     /* draw the border */
     gdk_cairo_set_source_color( cr, clr );
-    cairo_rectangle( cr, rect.x, rect.y, rect.width - 1, rect.height - 1 );
+    cairo_rectangle( cr, rect.x + 1, rect.y + 1, rect.width - 2, rect.height - 2 );
     cairo_stroke( cr );
 
     gdk_color_free (clr);
 }
 
-static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
+static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gboolean add )
 {
     GList* l;
     GdkRectangle old_rect, new_rect;
@@ -1055,7 +1055,7 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy )
         else
             selected = FALSE;
 
-        if( item->is_selected != selected )
+        if( ( item->is_selected != selected ) && ( !add || !item->is_selected ) )
         {
             item->is_selected = selected;
             redraw_item( self, item );
@@ -1323,7 +1323,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
 
     if( self->rubber_bending )
     {
-        update_rubberbanding( self, evt->x, evt->y );
+        update_rubberbanding( self, evt->x, evt->y, !!(evt->state & GDK_CONTROL_MASK) );
         gtk_grab_remove( w );
         self->rubber_bending = FALSE;
     }
@@ -1408,7 +1408,7 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
     }
     else if( self->rubber_bending )
     {
-        update_rubberbanding( self, evt->x, evt->y );
+        update_rubberbanding( self, evt->x, evt->y, !!(evt->state & GDK_CONTROL_MASK) );
     }
     else
     {
