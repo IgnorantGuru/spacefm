@@ -1951,7 +1951,10 @@ void ptk_file_browser_update_tab_label( PtkFileBrowser* file_browser )
 #if GTK_CHECK_VERSION (3, 0, 0)
     gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_MIDDLE );
     if (strlen( name ) < 30)
+    {
         gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_NONE );
+        gtk_label_set_width_chars( text, -1 );
+    }
     else
         gtk_label_set_width_chars( text, 30 );
 #endif

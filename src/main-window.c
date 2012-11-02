@@ -2470,7 +2470,10 @@ GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
     gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_MIDDLE );
 #if GTK_CHECK_VERSION (3, 0, 0)
     if (strlen( gtk_label_get_text( GTK_LABEL( tab_text ) ) ) < 30)
+    {
         gtk_label_set_ellipsize( GTK_LABEL( tab_text ), PANGO_ELLIPSIZE_NONE );
+        gtk_label_set_width_chars( GTK_LABEL( tab_text ), -1 );
+    }
     else
         gtk_label_set_width_chars( GTK_LABEL( tab_text ), 30 );
 #endif
@@ -2566,7 +2569,10 @@ void fm_main_window_update_tab_label( FMMainWindow* main_window,
 #if GTK_CHECK_VERSION (3, 0, 0)
     gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_MIDDLE );
     if (strlen( name ) < 30)
+    {
         gtk_label_set_ellipsize( text, PANGO_ELLIPSIZE_NONE );
+        gtk_label_set_width_chars( text, -1 );
+    }
     else
         gtk_label_set_width_chars( text, 30 );
 #endif
