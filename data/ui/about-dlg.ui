@@ -21,7 +21,7 @@ You should have received a copy of the GNU General Public License and the GNU Le
     <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@gmx.com&gt;
 
 Contributors:
-   BwackNinja &lt;BwackNinja@gmail.com&gt;  (gtk2.18 + gtk3 port)
+   BwackNinja &lt;BwackNinja@gmail.com&gt;  (gtk misc, gtk3 port)
 
 Thanks to SpaceFM users for valuable feedback!
 

@@ -730,6 +730,19 @@ void load_settings( char* config_dir )
     /* Don't load bookmarks here since we won't use it in some cases */
     /* app_settings.bookmarks = ptk_bookmarks_get(); */
     
+    // cache event handlers
+    evt_win_focus = xset_get( "evt_win_focus" );
+    evt_win_move = xset_get( "evt_win_move" );
+    evt_click = xset_get( "evt_click" );
+    evt_win_key = xset_get( "evt_win_key" );
+    evt_win_close = xset_get( "evt_win_close" );
+    evt_pnl_show = xset_get( "evt_pnl_show" );
+    evt_pnl_focus = xset_get( "evt_pnl_focus" );
+    evt_sel = xset_get( "evt_sel" );
+    evt_tab_new = xset_get( "evt_tab_new" );
+    evt_tab_focus = xset_get( "evt_tab_focus" );
+    evt_tab_close = xset_get( "evt_tab_close" );
+
     // config conversions
     int ver = xset_get_int( "config_version", "s" );
     if ( ver == 0 )
@@ -2295,6 +2308,7 @@ XSet* xset_find_menu( const char* menu_name )
             g_free( str );
         }
     }
+    g_free( name );
     return NULL;
 }
 
@@ -2969,8 +2983,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
             FILE* file;
             int i;
             const char* script_default_head = "#!/bin/bash\n$fm_import    # import file manager variables (scroll down for info)\n#\n# Enter your commands here:     ( then save this file )\n";
-            const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n# \"fm_task_id\"              selected task id\n# \"fm_task_window\"          selected task window id\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_my_task\"             current task's id  (see 'spacefm -s help')\n# \"$fm_my_window\"           current task's window id\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Show a confirmation dialog using SpaceFM Dialog:\n#   # http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog\n#   # Use QUOTED eval to read variables output by SpaceFM Dialog:\n#   eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n#   if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n#       echo \"User pressed Yes - take some action\"\n#   else\n#       echo \"User did NOT press Yes - abort\"\n#   fi\n\n\n# Script Example 3:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 4:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Script Example 5:\n\n#   # Keep current time in task manager list Item column\n#   # See http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n#   while (( 1 )); do\n#       spacefm -s set-task $fm_my_task_id item \"$(date)\"\n#       sleep 0.7\n#   done\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       To see the latest list, create a new command script or see:\n#       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#exvar\n\n";
-
+            const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n# \"fm_task_id\"              selected task id\n# \"fm_task_window\"          selected task window id\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_my_task\"             current task's id  (see 'spacefm -s help')\n# \"$fm_my_window\"           current task's window id\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Show a confirmation dialog using SpaceFM Dialog:\n#   # http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog\n#   # Use QUOTED eval to read variables output by SpaceFM Dialog:\n#   eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n#   if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n#       echo \"User pressed Yes - take some action\"\n#   else\n#       echo \"User did NOT press Yes - abort\"\n#   fi\n\n\n# Script Example 3:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 4:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Script Example 5:\n\n#   # Keep current time in task manager list Item column\n#   # See http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n#   while (( 1 )); do\n#       sleep 0.7\n#       spacefm -s set-task $fm_my_task item \"$(date)\"\n#   done\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       To see the latest list, create a new command script or see:\n#       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#exvar\n\n";
             file = fopen( path, "w" );
 
             if ( file )
@@ -9491,6 +9504,97 @@ void xset_defaults()
         xset_set( "panel_2", "label", _("Panel _2") );
         xset_set( "panel_3", "label", _("Panel _3") );
         xset_set( "panel_4", "label", _("Panel _4") );
+
+    set = xset_set( "main_auto", "label", _("_Auto Run") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab" );
+    xset_set_set( set, "icon", "gtk-execute" );
+    
+        set = xset_set( "auto_inst", "label", _("_Instance") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_start evt_exit" );
+
+            set = xset_set( "evt_start", "label", _("_Startup") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Startup Command") );
+            xset_set_set( set, "desc", _("Enter command line to be run automatically when a SpaceFM instance starts:\n\nUse:\n	%%e	 event type (evt_start)\n\nNote: This setting accepts only an executable name and arguments, not a full bash command line.\n") );
+
+            set = xset_set( "evt_exit", "label", _("_Exit") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Exit Command") );
+            xset_set_set( set, "desc", _("Enter command line to be run automatically when a SpaceFM instance exits:\n\nUse:\n	%%e	 event type (evt_exit)\n\nNote: This setting accepts only an executable name and arguments, not a full bash command line.\n") );
+
+        set = xset_set( "auto_win", "label", _("_Window") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_click evt_win_key evt_win_close" );
+
+            set = xset_set( "evt_win_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Window Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_move", "label", _("_Move/Resize") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Move/Resize Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n	%%e	 event type\t(evt_win_move)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
+
+            set = xset_set( "evt_click", "label", _("_Click") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Click Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_click)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%b	 button\t\t(mouse button pressed)\n	%%m	 modifier\t\t(modifier keys)\n	%%f	 focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_key", "label", _("_Keypress") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Keypress Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a key is pressed:\n\nUse:\n	%%e	 event type\t(evt_win_key)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%k	 key code\t(key pressed)\n	%%m	 modifier\t(modifier keys)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_win_close", "label", _("Cl_ose") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n\nUse:\n	%%e	 event type\t(evt_win_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+        set = xset_set( "auto_pnl", "label", _("_Panel") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_pnl_focus evt_pnl_show evt_sel" );
+
+            set = xset_set( "evt_pnl_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n	%%e	 event type\t(evt_pnl_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_pnl_show", "label", _("_Show") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Show Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n	%%e	 event type\t(evt_pnl_show)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%f	 focus  \t\t(element shown or hidden)\n	%%v	 visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_sel", "label", _("S_elect") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Select Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+        set = xset_set( "auto_tab", "label", _("_Tab") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_tab_new evt_tab_focus evt_tab_close" );
+
+            set = xset_set( "evt_tab_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Tab Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n	%%e	 event type\t(evt_tab_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_tab_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n	%%e	 event type\t(evt_tab_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
+
+            set = xset_set( "evt_tab_close", "label", _("_Close") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_tab_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n") );
 
     set = xset_set( "main_title", "label", _("Wi_ndow Title") );
     set->menu_style = XSET_MENU_STRING;

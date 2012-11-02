@@ -89,8 +89,8 @@ static void on_folder_notebook_switch_pape ( GtkNotebook *notebook,
                                              GtkWidget *page,
                                              guint page_num,
                                              gpointer user_data );
-static void on_close_tab_activate ( GtkMenuItem *menuitem,
-                                    gpointer user_data );
+//static void on_close_tab_activate ( GtkMenuItem *menuitem,
+//                                    gpointer user_data );
 
 static void on_file_browser_before_chdir( PtkFileBrowser* file_browser,
                                           const char* path, gboolean* cancel,
@@ -223,6 +223,15 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
                        g_cclosure_marshal_VOID__POINTER,
                        G_TYPE_NONE, 1, G_TYPE_POINTER );
     */
+}
+
+gboolean on_window_configure_event( GtkWindow *window, 
+                                    GdkEvent *event, FMMainWindow* main_window )
+{
+    if ( evt_win_move->s )
+        main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
+                                                    NULL, 0, 0, 0, TRUE );
+    return FALSE;
 }
 
 void on_bookmark_item_activate ( GtkMenuItem* menu, gpointer user_data )
@@ -1425,6 +1434,10 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                     fm_main_window_add_new_tab( main_window, folder_path );
                 }
             }
+            if ( evt_pnl_show->s && !gtk_widget_get_visible( GTK_WIDGET( 
+                                                    main_window->panel[p-1] ) ) )
+                main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
+                                                    0, NULL, 0, 0, 0, TRUE );
             gtk_widget_show( GTK_WIDGET( main_window->panel[p-1] ) );
             if ( !gtk_toggle_tool_button_get_active( 
                                 GTK_TOGGLE_TOOL_BUTTON( main_window->panel_btn[p-1] ) ) )
@@ -1441,6 +1454,10 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
         else
         {
+            if ( evt_pnl_show->s && gtk_widget_get_visible( GTK_WIDGET( 
+                                                    main_window->panel[p-1] ) ) )
+                main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
+                                                    0, NULL, 0, 0, 0, FALSE );
             gtk_widget_hide( GTK_WIDGET( main_window->panel[p-1] ) );
             if ( gtk_toggle_tool_button_get_active( 
                                 GTK_TOGGLE_TOOL_BUTTON( main_window->panel_btn[p-1] ) ) )
@@ -1559,7 +1576,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks sep_v2 main_title main_icon sep_v3 main_full main_design_mode main_prefs" );
+    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks main_auto sep_v2 main_title main_icon sep_v3 main_full main_design_mode main_prefs" );
     
     int p;
     int vis_count = 0;
@@ -1913,10 +1930,14 @@ void fm_main_window_init( FMMainWindow* main_window )
     g_signal_connect ( main_window, "focus-in-event",
                        G_CALLBACK ( on_main_window_focus ), NULL );
 
+    g_signal_connect( G_OBJECT(main_window), "configure-event",
+                      G_CALLBACK(on_window_configure_event), main_window );
+
     import_all_plugins( main_window );
     on_task_popup_show( NULL, main_window, NULL );
     show_panels( NULL, main_window );
     main_window_root_bar_all();
+    main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
 
 void fm_main_window_finalize( GObject *obj )
@@ -1958,6 +1979,9 @@ static void fm_main_window_close( FMMainWindow* main_window )
                             G_OBJECT( main_window ),
                             G_CALLBACK( ptk_file_task_notify_handler ), NULL ) );
     */
+    if ( evt_win_close->s )
+        main_window_event( main_window, evt_win_close, "evt_win_close", 0, 0,
+                                                        NULL, 0, 0, 0, FALSE );
     gtk_widget_destroy( GTK_WIDGET( main_window ) );
 }
 
@@ -2287,6 +2311,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     main_window->curpanel = file_browser->mypanel;
     main_window->notebook = main_window->panel[main_window->curpanel - 1];
 
+    if ( evt_tab_close->s )
+        main_window_event( main_window, evt_tab_close, "evt_tab_close",
+                            main_window->curpanel, 0, NULL, 0, 0, 0, FALSE );
+
     // save slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
 
@@ -2333,6 +2361,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
             fm_main_window_update_status_bar( main_window, a_browser );
             g_idle_add( ( GSourceFunc ) delayed_focus, a_browser->folder_view );
         }
+        if ( evt_tab_focus->s )
+            main_window_event( main_window, evt_tab_focus, "evt_tab_focus",
+                                        main_window->curpanel,
+                                        cur_tabx + 1, NULL, 0, 0, 0, FALSE );
     }
 
 _done_close:
@@ -2345,6 +2377,9 @@ _done_close:
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
                            PtkFileBrowser* file_browser)  //MOD added
 {
+    if ( evt_click->s )
+        main_window_event( file_browser->main_window, evt_click, "evt_click",
+                            0, 0, "tabbar", 0, event->button, event->state, TRUE );
     on_file_browser_panel_change( file_browser,
                                         (FMMainWindow*)file_browser->main_window );
     // middle-click on tab closes
@@ -2656,6 +2691,9 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
     if ( !ptk_file_browser_chdir( file_browser, folder_path, PTK_FB_CHDIR_ADD_HISTORY ) )
         ptk_file_browser_chdir( file_browser, "/", PTK_FB_CHDIR_ADD_HISTORY );
 
+    if ( evt_tab_new->s )
+        main_window_event( main_window, evt_tab_new, "evt_tab_new", 0, 0, NULL,
+                                                                0, 0, 0, TRUE );
 //    while( gtk_events_pending() )  // wait for chdir to grab focus
 //        gtk_main_iteration();
     //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
@@ -2936,6 +2974,9 @@ void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser )
     }
     
     update_window_title( NULL, mw );
+    if ( evt_pnl_focus->s )
+        main_window_event( main_window, evt_pnl_focus, "evt_pnl_focus",
+                                        mw->curpanel, 0, NULL, 0, 0, 0, TRUE );        
 }
 
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
@@ -3099,6 +3140,11 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
     fm_main_window_update_status_bar( main_window, file_browser );
 
     set_window_title( main_window, file_browser );
+
+    if ( evt_tab_focus->s )
+        main_window_event( main_window, evt_tab_focus, "evt_tab_focus",
+                                        main_window->curpanel,
+                                        page_num + 1, NULL, 0, 0, 0, TRUE );
 
     // block signal in case tab is being closed due to main iteration in update views
 //    g_signal_handlers_block_matched( main_window->panel[file_browser->mypanel - 1],
@@ -3357,7 +3403,9 @@ void on_file_browser_sel_change( PtkFileBrowser* file_browser,
 {
 //printf("sel_change  panel %d\n", file_browser->mypanel );
     fm_main_window_update_status_bar( main_window, file_browser );
-
+    if ( evt_sel->s )
+        main_window_event( main_window, evt_sel, "evt_sel", 0, 0, NULL,
+                                                            0, 0, 0, TRUE );
 /*
     int i = gtk_notebook_get_current_page( main_window->panel[ 
                                                     file_browser->mypanel - 1 ] );
@@ -3408,18 +3456,20 @@ gboolean on_main_window_focus( GtkWidget* main_window,
     //rebuild_menus( main_window );  // xset may change in another window
 
     GList * active;
-    if ( all_windows->data == ( gpointer ) main_window )
+    if ( all_windows->data != ( gpointer ) main_window )
     {
-        return FALSE;
+        active = g_list_find( all_windows, main_window );
+        if ( active )
+        {
+            all_windows = g_list_remove_link( all_windows, active );
+            all_windows->prev = active;
+            active->next = all_windows;
+            all_windows = active;
+        }
     }
-    active = g_list_find( all_windows, main_window );
-    if ( active )
-    {
-        all_windows = g_list_remove_link( all_windows, active );
-        all_windows->prev = active;
-        active->next = all_windows;
-        all_windows = active;
-    }
+    if ( evt_win_focus->s )
+        main_window_event( (FMMainWindow*)main_window, evt_win_focus,
+                                    "evt_win_focus", 0, 0, NULL, 0, 0, 0, TRUE );    
     return FALSE;
 }
 
@@ -3450,6 +3500,10 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
                                                 GTK_WIDGET( browser->path_bar ) ) )
             return FALSE;  // send to pathbar
     }
+
+    if ( evt_win_key->s )
+        main_window_event( main_window, evt_win_key, "evt_win_key", 0, 0, NULL,
+                                            event->keyval, 0, keymod, TRUE );    
 
     for ( l = xsets; l; l = l->next )
     {
@@ -4575,7 +4629,7 @@ void main_task_start_queued( GtkWidget* view, PtkFileTask* new_task )
 #else
     smart = xset_get_b( "task_q_smart" );
 #endif
-    if ( !view )
+    if ( !GTK_IS_TREE_VIEW( view ) )
         return;
 
     model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
@@ -4919,6 +4973,11 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
+        
+    if ( evt_click->s )
+        main_window_event( main_window, evt_click, "evt_click", 0, 0, "tasklist", 0,
+                                        event->button, event->state, TRUE );
+    
     if ( event->button == 3 ) // right click
     {    
         // get selected task
@@ -6188,7 +6247,30 @@ _invalid_set:
             }
             else if ( !strcmp( argv[i], "clipboard_cut_files" ) )
                 return 0;
-            *reply = gtk_clipboard_wait_for_text( clip );            
+            str = gtk_clipboard_wait_for_text( clip );
+            if ( !( str && str[0] ) )
+            {
+                g_free( str );
+                return 0;
+            }
+            // build bash array
+            char** pathv = g_strsplit( str, "\n", 0 );
+            g_free( str );
+            GString* gstr = g_string_new( "(" );
+            j = 0;
+            while ( pathv[j] )
+            {
+                if ( pathv[j][0] )
+                {
+                    str = bash_quote( pathv[j] );
+                    g_string_append_printf( gstr, "%s ", str );
+                    g_free( str );
+                }
+                j++;
+            }
+            g_strfreev( pathv );
+            g_string_append_printf( gstr, ")\n" );
+            *reply = g_string_free( gstr, FALSE );
         }
         else
         {
@@ -6290,6 +6372,26 @@ _invalid_get:
                                                                     argv[i+1] );
             return 2;
         }
+        else if ( !strcmp( argv[i+1], "queue_state" ) )
+        {
+            if ( !argv[i+2] || !g_strcmp0( argv[i+2], "run" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_RUNNING );
+            else if ( !strcmp( argv[i+2], "pause" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_PAUSE );
+            else if ( !strcmp( argv[i+2], "queue" ) || !strcmp( argv[i+2], "queued" ) )
+                ptk_file_task_pause( ptask, VFS_FILE_TASK_QUEUE );
+            else if ( !strcmp( argv[i+2], "stop" ) )
+                on_task_stop( NULL, main_window->task_view, 
+                                            xset_get( "task_stop_all" ), NULL );
+            else
+            {
+                *reply = g_strdup_printf( _("spacefm: invalid queue_state '%s'\n"),
+                                                                        argv[i+2] );
+                return 2;
+            }
+            main_task_start_queued( main_window->task_view, NULL );
+            return 0;
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
@@ -6372,6 +6474,19 @@ _invalid_get:
             j = TASK_COL_STARTED;
         else if ( !strcmp( argv[i+1], "status" ) )
             j = TASK_COL_STATUS;
+        else if ( !strcmp( argv[i+1], "queue_state" ) )
+        {
+            if ( ptask->task->state_pause == VFS_FILE_TASK_RUNNING )
+                str = "run";
+            else if ( ptask->task->state_pause == VFS_FILE_TASK_PAUSE )
+                str = "pause";
+            else if ( ptask->task->state_pause == VFS_FILE_TASK_QUEUE )
+                str = "queue";
+            else
+                str = "stop";    // failsafe
+            *reply = g_strdup_printf( "%s\n", str );
+            return 0;
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
@@ -6404,7 +6519,10 @@ _invalid_get:
         event->keyval = (guint)strtol( argv[i], NULL, 0 );
         event->state = argv[i+1] ? (guint)strtol( argv[i+1], NULL, 0 ) : 0;
         if ( event->keyval )
+        {
+            gtk_window_present( GTK_WINDOW( main_window ) );        
             on_main_window_keypress( main_window, event, NULL );
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid keycode '%s'\n"),
@@ -6449,108 +6567,6 @@ _invalid_get:
                                                                 set );
         g_idle_add( (GSourceFunc)delayed_show_menu, widget );
     }
-    else if ( !strcmp( argv[0], "help" ) || !strcmp( argv[0], "--help" ) )
-    {
-        GString* gstr = g_string_new( NULL );
-        g_string_append_printf( gstr, "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
-        g_string_append_printf( gstr, "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-        g_string_append_printf( gstr, "%s\n", _("windows.  This gives custom commands and plugins limited access to the GUI.") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("Usage:") );
-        g_string_append_printf( gstr, "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
-        g_string_append_printf( gstr, "%s\n", _("Example:") );
-        g_string_append_printf( gstr, "    spacefm -s set window_size 800x600\n" );
-
-        g_string_append_printf( gstr, "\n%s\n", _("METHODS\n-------") );
-        g_string_append_printf( gstr, "spacefm -s set PROPERTY [VALUE...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Sets a property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s get PROPERTY\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Gets a property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Sets a task property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Gets a task property") );
-
-        g_string_append_printf( gstr, "\nspacefm -s select [FILENAME|DIRNAME...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Selects specified filenames and unselects others; or select all if no spec") );
-
-        g_string_append_printf( gstr, "\nspacefm -s unselect [FILENAME|DIRNAME...]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Unselects specified filenames; or unselect all if no spec") );
-
-        g_string_append_printf( gstr, "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Activates a menu item by emitting its shortcut key") );
-
-        g_string_append_printf( gstr, "\nspacefm -s show-menu MENUNAME\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
-
-        g_string_append_printf( gstr, "\nspacefm -s help|--help\n" );
-        g_string_append_printf( gstr, "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("OPTIONS\n-------") );
-        g_string_append_printf( gstr, "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
-
-        g_string_append_printf( gstr, "\n--window WINDOWID\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
-        g_string_append_printf( gstr, "--panel PANEL\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
-        g_string_append_printf( gstr, "--tab TAB\n" );
-        g_string_append_printf( gstr, "    %s spacefm -s select --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("PROPERTIES\n----------") );
-        g_string_append_printf( gstr, "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
-
-        g_string_append_printf( gstr, "\nwindow_size                     eg '800x600'\n" );
-        g_string_append_printf( gstr, "window_position                 eg '100x50'\n" );
-        g_string_append_printf( gstr, "window_maximized                1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "window_fullscreen               1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "window_vslider_top              eg '100'\n" );
-        g_string_append_printf( gstr, "window_vslider_bottom           eg '100'\n" );
-        g_string_append_printf( gstr, "window_hslider                  eg '100'\n" );
-        g_string_append_printf( gstr, "window_tslider                  eg '100'\n" );
-        g_string_append_printf( gstr, "focused_panel                   1|2|3|4|prev|next|hide\n" );
-        g_string_append_printf( gstr, "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
-        g_string_append_printf( gstr, "current_tab                     1|2|...|prev|next|close\n" );
-        g_string_append_printf( gstr, "bookmarks_visible               1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "dirtree_visible                 1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "toolbar_visible                 1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "sidetoolbar_visible             1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "hidden_files_visible            1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel1_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel2_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel3_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel4_visible                  1|true|yes|0|false|no\n" );
-        g_string_append_printf( gstr, "panel_hslider_top               eg '100'\n" );
-        g_string_append_printf( gstr, "panel_hslider_bottom            eg '100'\n" );
-        g_string_append_printf( gstr, "panel_vslider                   eg '100'\n" );
-        g_string_append_printf( gstr, "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
-        g_string_append_printf( gstr, "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
-        g_string_append_printf( gstr, "pathbar_text                    %s\n", _("eg '/usr/bin' or 'ftp://server' or '$ ls'") );
-        g_string_append_printf( gstr, "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
-        g_string_append_printf( gstr, "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
-        g_string_append_printf( gstr, "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
-        g_string_append_printf( gstr, "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
-
-        g_string_append_printf( gstr, "\n%s\n", _("TASK PROPERTIES\n---------------") );
-        g_string_append_printf( gstr, "status                          %s\n", _("contents of Status task column  (read-only)") );
-        g_string_append_printf( gstr, "icon                            %s\n", _("eg 'gtk-open'") );
-        g_string_append_printf( gstr, "count                           %s\n", _("text to show in Count task column") );
-        g_string_append_printf( gstr, "folder                          %s\n", _("text to show in Folder task column") );
-        g_string_append_printf( gstr, "item                            %s\n", _("text to show in Item task column") );
-        g_string_append_printf( gstr, "to                              %s\n", _("text to show in To task column") );
-        g_string_append_printf( gstr, "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
-        g_string_append_printf( gstr, "total                           %s\n", _("text to show in Total task column") );
-        g_string_append_printf( gstr, "curspeed                        %s\n", _("text to show in Current task column") );
-        g_string_append_printf( gstr, "curremain                       %s\n", _("text to show in CRemain task column") );
-        g_string_append_printf( gstr, "avgspeed                        %s\n", _("text to show in Average task column") );
-        g_string_append_printf( gstr, "avgremain                       %s\n", _("text to show in Remain task column") );
-        g_string_append_printf( gstr, "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
-        g_string_append_printf( gstr, "started                         %s\n", _("contents of Started task column (read-only)") );
-        g_string_append_printf( gstr, "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
-        *reply = g_string_free( gstr, FALSE );
-    }
     else
     {
         *reply = g_strdup_printf( _("spacefm: invalid socket method '%s'\n"),
@@ -6558,6 +6574,161 @@ _invalid_get:
         return 1;        
     }
     return 0;
+}
+
+void main_window_event( gpointer mw, XSet* preset, const char* event,
+                        int panel, int tab, const char* focus, 
+                        int keyval, int button, int state,
+                        gboolean visible )
+{
+    char* cmd;
+    XSet* set;
+    if ( preset )
+        set = preset;
+    else
+    {
+        set = xset_get( event );
+        if ( !set->s )
+            return;
+        if ( !strcmp( event, "evt_start" ) || !strcmp( event, "evt_exit" ) )
+        {
+            cmd = replace_string( set->s, "%e", event, FALSE );
+            printf( "EVENT %s >>> %s\n", event, cmd );
+            g_spawn_command_line_async( cmd, NULL );
+            g_free( cmd );
+            return;
+        }
+    }
+    
+    // get main_window, panel, and tab
+    if ( !mw )
+        return;
+    FMMainWindow* main_window = (FMMainWindow*)mw;
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
+    if ( !file_browser )
+        return;
+    if ( !panel )
+        panel = main_window->curpanel;
+    if ( !tab )
+    {
+        tab = gtk_notebook_page_num( 
+                    GTK_NOTEBOOK( main_window->panel[file_browser->mypanel - 1] ),
+                    GTK_WIDGET( file_browser ) ) + 1;
+    }
+
+    // replace vars
+    char* replace = "ewpt";
+    if ( set == evt_click )
+    {
+        replace = "ewptfbm";
+        state = ( state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+    }
+    else if ( set == evt_win_key )
+        replace = "ewptkm";
+    else if ( set == evt_pnl_show )
+        replace = "ewptfv";
+
+    char* str;
+    char* rep;
+    char var[3];
+    var[0] = '%';
+    var[2] = '\0';
+    int i = 0;
+    cmd = NULL;
+    while ( replace[i] )
+    {
+        /*
+        %w  windowid
+        %p  panel
+        %t  tab
+        %f  focus
+        %e  event
+        %k  keycode
+        %m  modifier
+        %b  button
+        %v  visible
+        */
+        var[1] = replace[i];
+        str = cmd;
+        if ( var[1] == 'e' )
+            cmd = replace_string( set->s, var, event, FALSE );
+        else if ( strstr( str, var ) )
+        {
+            if ( var[1] == 'f' )
+            {
+                if ( !focus )
+                {
+                    rep = g_strdup_printf( "panel%d", panel );
+                    cmd = replace_string( str, var, rep, FALSE );
+                    g_free( rep );
+                }
+                else
+                    cmd = replace_string( str, var, focus, FALSE );
+            }
+            else if ( var[1] == 'w' )
+            {
+                rep = g_strdup_printf( "%#x", main_window );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'p' )
+            {
+                rep = g_strdup_printf( "%d", panel );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 't' )
+            {
+                rep = g_strdup_printf( "%d", tab );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'v' )
+                cmd = replace_string( str, var, visible ? "1" : "0", FALSE );
+            else if ( var[1] == 'k' )
+            {
+                rep = g_strdup_printf( "%#x", keyval );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'b' )
+            {
+                rep = g_strdup_printf( "%d", button );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else if ( var[1] == 'm' )
+            {
+                rep = g_strdup_printf( "%#x", state );
+                cmd = replace_string( str, var, rep, FALSE );
+                g_free( rep );
+            }
+            else
+            {
+                // failsafe
+                g_free( str );
+                g_free( cmd );
+                return;
+            }
+            g_free( str );
+        }
+        i++;
+    }
+
+    // task
+    printf( "EVENT %s >>> %s\n", event, cmd );
+    PtkFileTask* task = ptk_file_exec_new( event, 
+                                           ptk_file_browser_get_cwd( file_browser ),
+                                           GTK_WIDGET( file_browser ),
+                                           main_window->task_view );
+    task->task->exec_browser = file_browser;
+    task->task->exec_command = cmd;
+    task->task->exec_icon = g_strdup( set->icon );
+    task->task->exec_sync = FALSE;
+    task->task->exec_export = TRUE;
+    ptk_file_task_run( task );
 }
 
 //================================================================================

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([spacefm], [0.8.2+gtk3])
+AC_INIT([spacefm], [0.8.2+])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
@@ -226,9 +226,9 @@ AM_CONDITIONAL(DESKTOP_INTEGRATION, test "$desktop_integration" = "yes")
 
 AC_ARG_ENABLE(
     [pixmaps],
-    AS_HELP_STRING([--disable-pixmaps],
-        [disable use of share/pixmaps dir and use share/icons dir to store icons (default: enable)]),
-    use_pixmaps=$enableval, use_pixmaps="yes")
+    AS_HELP_STRING([--enable-pixmaps],
+        [use share/pixmaps dir instead of share/icons dir to store icons (default: disable)]),
+    use_pixmaps=$enableval, use_pixmaps="no")
 AM_CONDITIONAL(NO_PIXMAPS, test ! x"$use_pixmaps" = x"yes")
 
 dnl advanced compiler tweaking
@@ -301,9 +301,9 @@ if test ! -z "$preferable_sudo"; then
 echo Additional program to switch to super user... : $preferable_sudo
 fi
 if test x"$with_gtk3" = x"yes"; then
-echo 'GTK+ Version................................. : GTK3 (for ALPHA testing)'
+echo 'GTK+ Version................................. : GTK 3 (for BETA testing)'
 else
-echo 'GTK+ Version................................. : GTK2'
+echo 'GTK+ Version................................. : GTK 2'
 fi
 echo Desktop icon integration..................... : $desktop_integration
 echo Startup notification......................... : $use_sn
@@ -312,14 +312,16 @@ echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo
 echo Please read README carefully if you are packaging SpaceFM.
 echo
-if test x"$with_gtk3" = x"yes"; then
-echo
-echo NOTE: GTK3 support is currently provided FOR ALPHA TESTING
-fi
-echo
 if test ! x"$use_pixmaps" = x"yes"; then
+echo
 echo 'IMPORTANT: After make and install, run:'
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/hicolor"
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/Faenza"
 echo
 fi
+if test x"$with_gtk3" = x"yes"; then
+echo
+echo NOTE: GTK3 build is currently provided FOR BETA TESTING
+echo
+fi
+echo

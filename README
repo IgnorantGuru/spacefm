@@ -1,12 +1,7 @@
-README for SpaceFM v0.8.2+gtk3
-
-
-IMPORTANT: This ALPHA TEST branch of SpaceFM can be built with either a GTK2
-           (default) or GTK3 interface.  See BUILD section below for details.
+README for SpaceFM v0.8.2+
 
 
 For updates and instructions visit:
-    https://github.com/IgnorantGuru/spacefm/commits/gtk3
     http://ignorantguru.github.com/spacefm/
     http://ignorantguru.github.com/spacefm/news.html
     http://ignorantguru.github.com/spacefm/spacefm-manual-en.html
@@ -16,7 +11,11 @@ CONTENTS
 
     DESCRIPTION
     PACKAGES
-    BUILD
+    INSTALLER
+    BUILD GTK2
+    BUILD GTK3 BETA
+    BUILD HAL
+    BUILD NEXT
     BUILD DEBUG
     CREATE DEB PACKAGE
     UNINSTALL
@@ -29,11 +28,99 @@ DESCRIPTION
     SpaceFM is a multi-panel tabbed file manager with built-in VFS, udev-based
     device manager, customizable menu system, and bash integration.
 
-    This ALPHA TEST branch of SpaceFM can be built with either a GTK2
-    (default) or GTK3 interface.  See BUILD section below for details.
+
+PACKAGES
+
+    antiX-12 includes spacefm and udevil:
+        http://sourceforge.net/projects/antix-linux/
+
+    Arch Linux's [community] repository includes spacefm:
+        http://www.archlinux.org/packages/community/i686/spacefm/
+        http://www.archlinux.org/packages/community/x86_64/spacefm/
+    and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
+        http://aur.archlinux.org/packages.php?ID=58247
+
+    Debian-based deb packages are available in Downloads:
+        (to save a file, click on its filename and click 'View Raw'):
+        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+
+        and are also available in the author's PPA:
+            http://igurublog.wordpress.com/downloads/ppa/
+
+        These convenience deb packages contain the source code and will build
+        and install SpaceFM automatically on most Debian-based distros.
+        $TMPDIR (usually /tmp) must NOT be mounted noexec. Or see CREATE DEB
+        PACKAGE below.
+
+        For signatures and SHA256 sums see
+            http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
+
+    Foresight Lxde uses SpaceFM as its default file manager; Foresight includes
+    spacefm in its repositories:
+        http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
+
+    Gentoo's portage tree includes spacefm:
+        http://packages.gentoo.org/package/x11-misc/spacefm
+
+    openSUSE 12.1 repo (add the following repo to Yast software manager):
+        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1
+
+    openSUSE Tumbleweed repo:
+        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/
+
+    openSUSE rpm packages:
+        http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true
+
+    Parted Magic includes SpaceFM with udevil as its default file manager:
+        http://partedmagic.com/doku.php
+
+    PCLinuxOS has spacefm test packages available (see forum):
+        http://www.pclinuxos.com/
+
+    Sabayon includes spacefm in its repositories:
+        http://www.sabayon.org/
+
+    SliTaz includes spacefm in its repositories:
+        http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search"
+
+    Ubuntu: see 'Debian-based' above
+
+    VectorLinux has spacefm test packages available:
+        http://vectorlinux.com/
+
+    Other:
+        See INSTALLER below
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
-BUILD
+INSTALLER
+
+    A self-extracting installer is available (spacefm-x.x.x-installer.sh):
+        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+            (To save a file, click on its filename and click 'View Raw')
+
+    The installer requires the build dependencies listed below in BUILD.  If
+    any dependencies are missing, examine the error, install missing packages,
+    and try again.
+
+    The installer MUST be run in a terminal.  It automatically builds and
+    installs.  Run it like this:
+
+        bash spacefm-x.x.x-installer.sh
+
+    or to see options:
+
+        bash spacefm-x.x.x-installer.sh --help
+
+    To reinstall or upgrade, just run the latest installer again.
+
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+
+
+BUILD GTK2
 
 1)  Install required build dependencies (below are Debian package names -
     packages names on your distro may vary but should be similar):
@@ -44,32 +131,21 @@ BUILD
         libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143)
         libudev-dev
 
-    Also Recommended: udevil|pmount|udisks, eject, lsof, wget, ktsuss|gksu,
-                      libstartup-notification0, libstartup-notification0-dev
-
-    IF building with GTK3, substitute libgtk-3-0 and libgtk-3-bin for 
-        libgtk2.0-0 and libgtk2.0-bin
-
-    IF building with HAL support, you also need:
-        hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1
-        libhal1 libdbus-glib-1-2
-    and with HAL you do NOT need: libudev0 libudev-dev
-
-    IF disabling inotify support, you also need fam or gamin:
-        fam|gamin libfam0|libgamin0 libfam-dev|libgamin-dev
+    Also Recommended: udevil|pmount|udisks eject lsof wget ktsuss|gksu|kdesu
+                      libstartup-notification0 libstartup-notification0-dev
 
     configure will report anything missing when you run it as shown below.
 
-2)  Use these commands to download the SpaceFM tarball and build (gtk3 branch):
+2)  Use these commands to download the SpaceFM tarball and build:
 
         # Download & Extract
         mkdir /tmp/spacefm-build && cd /tmp/spacefm-build
-        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/gtk3
+        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        ./configure --disable-pixmaps
+        ./configure
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -87,41 +163,155 @@ BUILD
     b) Enabling kernel polling is recommended after installing SpaceFM:
        http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
-    c) If GTK3 interface is desired, add --with-gtk3 to the configure command
-       above.  (--with-gtk3 is default if GTK2 is not installed.)
-       
-    d) If hal support is desired (this will disable udev support and will
-       seriously limit device manager capabilities), add --enable-hal to the
-       configure command above.
-
-    e) If you don't want to use the inotify kernel support and instead
-       want fam or gamin to detect directory changes, add to configure:
-          --disable-inotify
-
-    f) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
+    c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
        To build with an additional custom su program ('/usr/bin/mysu' in this
        example), add:
-          --with-preferable-sudo=/usr/bin/mysu  # to the configure command
+          --with-preferable-sudo=/usr/bin/mysu   # to the configure command
 
-    g) --disable-pixmaps causes icons to be installed to share/icons instead of
-       share/pixmaps for GTK caching.  If you use this option, be sure to
-       run sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
-       (or /usr/share/icons/hicolor depending on prefix)
 
-    For general build information consult the INSTALL file.
+BUILD GTK3 BETA
+
+The GTK3 build for this version of SpaceFM is provided FOR BETA TESTING.  Be
+sure to use a GTK3 theme which supports your current version of GTK3 (no theme
+warnings should appear when spacefm is run in a terminal).
+
+1)  Install required build dependencies (below are Debian package names -
+    packages names on your distro may vary but should be similar):
+
+        autotools-dev bash build-essential dbus desktop-file-utils libc6
+        libcairo2 libdbus-1-3 libglib2.0-0 libgtk-3-0 libgtk-3-bin
+        libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config
+        libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev libudev0 (>=143)
+        libudev-dev
+
+    Also Recommended: udevil|pmount|udisks eject lsof wget ktsuss|gksu|kdesu
+                      libstartup-notification0 libstartup-notification0-dev
+
+    configure will report anything missing when you run it as shown below.
+
+2)  Use these commands to download the SpaceFM tarball and build:
+
+        # Download & Extract
+        mkdir /tmp/spacefm-build && cd /tmp/spacefm-build
+        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
+        tar xzf spacefm.tar.gz
+        cd IgnorantGuru-spacefm-*
+
+        # Build & Install
+        ./configure --with-gtk3
+        make -s
+        sudo make install
+        sudo update-mime-database /usr/local/share/mime > /dev/null
+        sudo update-desktop-database -q
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
+
+        # Remove Temporary Files
+        cd / && rm -rf /tmp/spacefm-build
+
+    NOTES:
+    a) If configure reports missing dependencies, install them and run
+       configure again before proceeding to make.
+
+    b) Enabling kernel polling is recommended after installing SpaceFM:
+       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+
+    c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
+       To build with an additional custom su program ('/usr/bin/mysu' in this
+       example), add:
+          --with-preferable-sudo=/usr/bin/mysu   # to the configure command
+
+
+BUILD HAL
+
+Device features are extremely limited with HAL.  Use of this build is only
+recommended if udev is not installed.  SpaceFM HAL support is no longer
+actively developed, yet please report any build problems.
+
+1)  Install required build dependencies (below are Debian package names -
+    packages names on your distro may vary but should be similar):
+
+        autotools-dev bash build-essential dbus desktop-file-utils libc6
+        libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin
+        libpango1.0-0 libx11-6 shared-mime-info intltool pkg-config
+        libgtk2.0-dev libglib2.0-dev fakeroot libdbus-1-dev
+        hal libhal-dev libhal-storage-dev libdbus-glib-1-dev libhal-storage1
+        libhal1 libdbus-glib-1-2
+
+    Also Recommended: wget ktsuss|gksu libstartup-notification0
+                      libstartup-notification0-dev
+
+    configure will report anything missing when you run it as shown below.
+
+2)  Use these commands to download the SpaceFM tarball and build:
+
+        # Download & Extract
+        mkdir /tmp/spacefm-build && cd /tmp/spacefm-build
+        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
+        tar xzf spacefm.tar.gz
+        cd IgnorantGuru-spacefm-*
+
+        # Build & Install
+        ./configure --enable-hal
+        make -s
+        sudo make install
+        sudo update-mime-database /usr/local/share/mime > /dev/null
+        sudo update-desktop-database -q
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+        sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
+
+        # Remove Temporary Files
+        cd / && rm -rf /tmp/spacefm-build
+
+    NOTES:
+    a) If configure reports missing dependencies, install them and run
+       configure again before proceeding to make.
+
+    b) Enabling kernel polling is recommended after installing SpaceFM:
+       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+
+    c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
+       To build with an additional custom su program ('/usr/bin/mysu' in this
+       example), add:
+          --with-preferable-sudo=/usr/bin/mysu   # to the configure command
+
+
+BUILD NEXT
+
+The git 'next' branch of SpaceFM is a work in progress which eventually becomes
+the next release version.  To build from this branch, install the required
+build dependencies listed above for your build, plus libtool.  Then:
+
+    # Download & Extract
+    mkdir /tmp/spacefm-next && cd /tmp/spacefm-next
+    wget -O spacefm-next.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/next
+    tar xzf spacefm-next.tar.gz
+    cd IgnorantGuru-spacefm-*
+
+    # Build, & Install
+    ./autogen.sh     # pass any desired configure options here for your build
+    make -s
+    sudo make install
+    sudo update-mime-database /usr/local/share/mime > /dev/null
+    sudo update-desktop-database -q
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
+
+    # Remove Temporary Files
+    cd / && rm -rf /tmp/spacefm-next
 
 
 BUILD DEBUG
 
-If SpaceFM crashes on your system, you can help to correct this problem by
-reporting it, including a full backtrace.
+If SpaceFM crashes or hangs on your system, you can help to correct this
+problem by reporting it, including a full backtrace.
 
-IF you are using Arch Linux, you can perform step 2 below, then use the AUR
-spacefm-git package.
+IF you are using Arch Linux, you can perform step 2 below, then install the AUR
+spacefm-git package, which enables debugging.
 
 For other distros:
 
-1)  Install build dependencies (see BUILD step 1 above).
+1)  Install build dependencies for your build (see BUILD sections above).
 
 2)  Install the 'gdb' GNU Debugger, and debugging symbols for gtk.  For example
     on Debian, this is done like this (packages on other distros should have
@@ -133,12 +323,13 @@ For other distros:
 
         # Download & Extract
         mkdir /tmp/spacefm-build && cd /tmp/spacefm-build
-        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/gtk3
+        # substitute 'next' for 'master' below if next branch is desired
+        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure --disable-pixmaps
+        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure  # pass any options here
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -167,19 +358,20 @@ For other distros:
 
 CREATE DEB PACKAGE
 
-To build a deb file of SpaceFM gtk3 branch on your Debian-based distro:
+To build a deb file of SpaceFM on your Debian-based distro:
 
-1)  Install build dependencies (see BUILD section above) plus 'debhelper'.
+1)  Install build dependencies for your build (see above), plus debhelper.
 
 2)  Use these commands to download and extract the SpaceFM tarball (be sure to
     USE A TMP BUILD PATH THAT DOES NOT CONTAIN SPACES):
 
         mkdir /tmp/spacefm-build && cd /tmp/spacefm-build   # no spaces in path
-        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/gtk3
+        # Note: you can change "master" to "next" if you want the next branch:
+        wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/master
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF GTK3 support IS desired:
+3)  IF GTK3 BETA support IS desired:
 
         cp debian/control-gtk3 debian/control
         cp debian/rules-gtk3 debian/rules
@@ -224,8 +416,7 @@ Otherwise, run these commands AS ROOT:
 
 TRANSLATIONS
 
-Adding or updating a translation of SpaceFM doesn't require any special tools,
-just a text editor.  For instructions, see the TRANSLATE file.
+For instructions on providing a translation of SpaceFM, see the TRANSLATE file.
 
 
 LICENSE

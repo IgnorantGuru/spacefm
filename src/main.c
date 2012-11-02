@@ -617,6 +617,136 @@ int send_socket_command( int argc, char* argv[], char** reply )   //sfm
     return ret;
 }
 
+void show_socket_help()
+{
+    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
+    printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
+    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
+
+    printf( "\n%s\n", _("Usage:") );
+    printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
+    printf( "%s\n", _("Example:") );
+    printf( "    spacefm -s set window_size 800x600\n" );
+
+    printf( "\n%s\n", _("METHODS\n-------") );
+    printf( "spacefm -s set PROPERTY [VALUE...]\n" );
+    printf( "    %s\n", _("Sets a property") );
+
+    printf( "\nspacefm -s get PROPERTY\n" );
+    printf( "    %s\n", _("Gets a property") );
+
+    printf( "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
+    printf( "    %s\n", _("Sets a task property") );
+
+    printf( "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
+    printf( "    %s\n", _("Gets a task property") );
+
+    printf( "\nspacefm -s select [FILENAME|DIRNAME...]\n" );
+    printf( "    %s\n", _("Selects specified filenames and unselects others; or select all if no spec") );
+
+    printf( "\nspacefm -s unselect [FILENAME|DIRNAME...]\n" );
+    printf( "    %s\n", _("Unselects specified filenames; or unselect all if no spec") );
+
+    printf( "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
+    printf( "    %s\n", _("Activates a menu item by emitting its shortcut key") );
+
+    printf( "\nspacefm -s show-menu MENUNAME\n" );
+    printf( "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
+
+    printf( "\nspacefm -s help|--help\n" );
+    printf( "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
+
+    printf( "\n%s\n", _("OPTIONS\n-------") );
+    printf( "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
+    printf( "%s\n", _("Otherwise the current tab of the current panel in the last window is used.") );
+
+    printf( "\n--window WINDOWID\n" );
+    printf( "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
+    printf( "--panel PANEL\n" );
+    printf( "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
+    printf( "--tab TAB\n" );
+    printf( "    %s spacefm -s select --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
+
+    printf( "\n%s\n", _("PROPERTIES\n----------") );
+    printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
+
+    printf( "\nwindow_size                     eg '800x600'\n" );
+    printf( "window_position                 eg '100x50'\n" );
+    printf( "window_maximized                1|true|yes|0|false|no\n" );
+    printf( "window_fullscreen               1|true|yes|0|false|no\n" );
+    printf( "window_vslider_top              eg '100'\n" );
+    printf( "window_vslider_bottom           eg '100'\n" );
+    printf( "window_hslider                  eg '100'\n" );
+    printf( "window_tslider                  eg '100'\n" );
+    printf( "focused_panel                   1|2|3|4|prev|next|hide\n" );
+    printf( "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
+    printf( "current_tab                     1|2|...|prev|next|close\n" );
+    printf( "bookmarks_visible               1|true|yes|0|false|no\n" );
+    printf( "dirtree_visible                 1|true|yes|0|false|no\n" );
+    printf( "toolbar_visible                 1|true|yes|0|false|no\n" );
+    printf( "sidetoolbar_visible             1|true|yes|0|false|no\n" );
+    printf( "hidden_files_visible            1|true|yes|0|false|no\n" );
+    printf( "panel1_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel2_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel3_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel4_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel_hslider_top               eg '100'\n" );
+    printf( "panel_hslider_bottom            eg '100'\n" );
+    printf( "panel_vslider                   eg '100'\n" );
+    printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
+    printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
+    printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
+    printf( "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
+    printf( "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
+    printf( "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+    printf( "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+    printf( "clipboard_copy_files            %s\n", _("FILE ...  Files copied to clipboard") );
+    printf( "clipboard_cut_files             %s\n", _("FILE ...  Files cut to clipboard") );
+
+    printf( "\n%s\n", _("TASK PROPERTIES\n---------------") );
+    printf( "status                          %s\n", _("contents of Status task column  (read-only)") );
+    printf( "icon                            %s\n", _("eg 'gtk-open'") );
+    printf( "count                           %s\n", _("text to show in Count task column") );
+    printf( "folder                          %s\n", _("text to show in Folder task column") );
+    printf( "item                            %s\n", _("text to show in Item task column") );
+    printf( "to                              %s\n", _("text to show in To task column") );
+    printf( "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
+    printf( "total                           %s\n", _("text to show in Total task column") );
+    printf( "curspeed                        %s\n", _("text to show in Current task column") );
+    printf( "curremain                       %s\n", _("text to show in CRemain task column") );
+    printf( "avgspeed                        %s\n", _("text to show in Average task column") );
+    printf( "avgremain                       %s\n", _("text to show in Remain task column") );
+    printf( "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
+    printf( "started                         %s\n", _("contents of Started task column (read-only)") );
+    printf( "queue_state                     run|pause|queue|stop\n" );
+
+    printf( "\n%s:\n\n", _("Examples") );
+
+    printf( "    window_size=\"$(spacefm -s get window_size)\"\n" );
+    printf( "    spacefm -s set window_size 1024x768\n" );
+    printf( "    spacefm -s set column_width name 100\n" );
+    printf( "    spacefm -s set-task $fm_my_task progress 25\n" );
+    printf( "    spacefm -r /etc; sleep 0.3; spacefm -s select fstab hosts\n" );
+    printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
+    printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
+    printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n\n" );
+    
+    printf( "    #!/bin/bash\n" );
+    printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );
+    printf( "    echo \"%s:\"\n", _("These files have been copied to the clipboard") );
+    printf( "    i=0\n" );
+    printf( "    while [ \"${copied_files[i]}\" != \"\" ]; do\n" );
+    printf( "        echo \"    ${copied_files[i]}\"\n" );
+    printf( "        (( i++ ))\n" );
+    printf( "    done\n" );
+    printf( "    if (( i != 0 )); then\n" );
+    printf( "        echo \"MD5SUMS:\"\n" );
+    printf( "        md5sum \"${copied_files[@]}\"\n" );
+    printf( "    fi\n" );
+
+    printf( "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
+}
+
 FMMainWindow* create_main_window()
 {
     FMMainWindow * main_window = FM_MAIN_WINDOW(fm_main_window_new ());
@@ -1106,6 +1236,12 @@ int main ( int argc, char *argv[] )
         // socket_command?
         if ( !strcmp( argv[1], "-s" ) || !strcmp( argv[1], "--socket-cmd" ) )
         {
+            if ( argv[2] && ( !strcmp( argv[2], "help" ) || 
+                                                !strcmp( argv[2], "--help" ) ) )
+            {
+                show_socket_help();
+                return 0;
+            }
             char* reply = NULL;
             int ret = send_socket_command( argc, argv, &reply );
             if ( reply && reply[0] )
@@ -1197,9 +1333,13 @@ int main ( int argc, char *argv[] )
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
+
+    main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
  
     if( run )   /* run the main loop */
         gtk_main();
+
+    main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
     single_instance_finalize();
 
