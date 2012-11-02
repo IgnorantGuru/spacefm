@@ -29,10 +29,53 @@
 <center><h2>SpaceFM News</h2></center>
 
 <br>
-To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.
+TIP: To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.
 <br>
 
-<p><br><b><u>Release Versions:</u></b><br>
+<p><br>
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="newgtk3alpha"></a>
+<big><b><a href="#newgtk3alpha">GTK3 Alpha Testing Moved To Next</a></b></big><br>
+2012-Nov-02
+
+<p>Alpha testing in the gtk3 branch of SpaceFM has been merged into the next branch.  This means gtk3 support is planned to be available in the next release as an optional beta test build.
+
+<p>Because the gtk3 branch no longer exists, if you want to alpha test gtk3 before the next release, please use these instructions:
+
+<p>1) Install spacefm build dependencies (see <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>), adding <b>libgtk-3-0</b> and <b>libgtk-3-bin</b>.
+
+<p>2) Run these commands:
+<pre>
+    # Download &amp; Extract
+    mkdir /tmp/spacefm-build &amp;&amp; cd /tmp/spacefm-build
+    wget -O spacefm.tar.gz https://github.com/IgnorantGuru/spacefm/tarball/next
+    tar xzf spacefm.tar.gz
+    cd IgnorantGuru-spacefm-*
+
+    # Build &amp; Install
+    ./configure --with-gtk3
+    make -s
+    sudo make install
+    sudo update-mime-database /usr/local/share/mime > /dev/null
+    sudo update-desktop-database -q
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
+    sudo gtk-update-icon-cache -q -t -f /usr/local/share/icons/Faenza
+
+    # Remove Temporary Files
+    cd / &amp;&amp; rm -rf /tmp/spacefm-build
+</pre>
+    
+<p>Or if using Arch Linux, you can install the gtk3 build using <a href="https://aur.archlinux.org/packages.php?ID=63929">AUR spacefm-gtk3</a>.
+
+<p><b>Be sure to use a gtk3 theme that is compatible</b> with your version of gtk3.  If spacefm is run in a terminal, you should see no theme warnings.  Beware - broken themes can cause malfunctions in the GUI, and many gtk3 themes are broken.  Also note that some themes will make spacefm run more slowly.  <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> is a well-maintained theme for gtk 3.4 (although on some systems Clearlooks themes in general tend to run more slowly).  For a dark theme, <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> runs fast and is well-maintained for gtk 3.4.
+
+
+<br><br><br><hr>
+
+
+
 
 
 <!-- --------------------------------------------------------------------- -->
@@ -51,13 +94,13 @@ To see the work being done on the upcoming release of SpaceFM, see <a href="http
 </ul>
 
 <b>SpaceFM GTK3 Now Available For Alpha Testing</b><br>
-BwackNinja's current work porting SpaceFM to GTK3 has gone through an initial review and has been added to the alpha test <a href="https://github.com/IgnorantGuru/spacefm/tree/gtk3">gtk3 branch</a> of SpaceFM.  This branch can be built for either GTK2 (the default) or for GTK3 using configure option <b>--with-gtk3</b> (GTK3 will be used automatically if GTK2 is not installed).  Distros should not package this branch except for testing.
+BwackNinja's current work porting SpaceFM to GTK3 has gone through an initial review and has been added to the alpha test gtk3 branch of SpaceFM.  This branch can be built for either GTK2 (the default) or for GTK3 using configure option <b>--with-gtk3</b> (GTK3 will be used automatically if GTK2 is not installed).  Distros should not package this branch except for testing.
 
-<p>When built with GTK2, this branch should run exactly like 0.8.2.  When built with GTK3, this branch may have some remaining GUI issues, but the file operations should not be affected.  The GTK3 build can use some thorough testing.  <b>Please report any issues encountered with GTK3 to <a href="https://github.com/BwackNinja/spacefm/issues?state=open">BwackNinja</a></b>.
+<p>When built with GTK2, this branch should run exactly like 0.8.2.  When built with GTK3, this branch may have some remaining GUI issues, but the file operations should not be affected.  The GTK3 build can use some thorough testing.
 
-<p>To build from the gtk3 branch, please follow the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a>.  If you would like your build to include <a href="https://github.com/BwackNinja/spacefm/commits/next">BwackNinja's most recent changes</a> (which is slightly ahead of SpaceFM's gtk3 branch), you can use <a href="https://github.com/BwackNinja/spacefm/tarball/next">this tarball</a> instead.  When <a href="https://github.com/BwackNinja/spacefm/issues?state=open">reporting issues</a>, please be sure to specify your build method and branch.
+<p>To build from the gtk3 branch, please follow <del>the instructions in the gtk3 README</del> <a href="#newgtk3alpha">these updated instructions</a>.  When reporting issues, please be sure to specify your build method and branch.
 
-<p>It's also possible to easily build a binary <b>debian package for spacefm-gtk3</b> - see the CREATE DEB PACKAGE section in the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a>.  
+<p>It's also possible to easily build a binary <b>debian package for spacefm-gtk3</b> - see the CREATE DEB PACKAGE section in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">next README</a> (until the next release, you must change "master" to "next" in the wget command).  
 
 <p>For Arch Linux, you can install the gtk3 build using <a href="https://aur.archlinux.org/packages.php?ID=63929">AUR spacefm-gtk3</a>.
 
