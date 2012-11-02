@@ -2,6 +2,15 @@
     added --socket-cmd #142
     stop elapsed timer during overwrite query
     vfs no report access errors during total size
+    added View|Auto Run menu
+    configure --disable-pixmaps is now the default
+    added beta test --with-gtk3 build option (merge gtk3 branch)
+    updated README with BUILD GTK3 BETA instructions
+    allow ctrl-rubberband add to selection #46 [BWackNinja]
+    reduce spacing of icon and compact modes #188 [BWackNinja]
+    automatic orient thumbnails #183 [BWackNinja]
+    add wallpaper Zoom mode #4 [BWackNinja]
+    fix icon label centering #51 [BWackNinja]
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
