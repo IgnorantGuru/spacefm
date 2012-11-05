@@ -299,8 +299,8 @@ static void parse_general_settings( char* line )
             xset_set( "main_terminal", "s", value );
             //app_settings.terminal = strdup( value );
     }
-    //else if ( 0 == strcmp( name, "use_si_prefix" ) )
-    //    app_settings.use_si_prefix = atoi( value );
+    else if ( 0 == strcmp( name, "use_si_prefix" ) )
+        app_settings.use_si_prefix = atoi( value );
     else if ( 0 == strcmp( name, "no_execute" ) )
         app_settings.no_execute = atoi( value );  //MOD
     else if ( 0 == strcmp( name, "home_folder" ) )
@@ -1101,8 +1101,8 @@ char* save_settings( gpointer main_window_ptr )
         */
         //if ( app_settings.terminal )
         //    fprintf( file, "terminal=%s\n", app_settings.terminal );
-        //if ( app_settings.use_si_prefix != use_si_prefix_default )
-        //    fprintf( file, "use_si_prefix=%d\n", !!app_settings.use_si_prefix );
+        if ( app_settings.use_si_prefix != use_si_prefix_default )
+            fprintf( file, "use_si_prefix=%d\n", !!app_settings.use_si_prefix );
 //        if ( app_settings.show_location_bar != show_location_bar_default )
 //            fprintf( file, "show_location_bar=%d\n", app_settings.show_location_bar );
 /*        if ( app_settings.home_folder )
@@ -9620,9 +9620,6 @@ void xset_defaults()
     set = xset_set( "main_tool", "label", _("_Tool") );
     set->menu_style = XSET_MENU_SUBMENU;
 
-    set = xset_get( "rubberband" );  // in Preferences
-    set->b = XSET_B_TRUE;
-
     set = xset_get( "root_bar" );  // in Preferences
     set->b = XSET_B_TRUE;
 
@@ -10157,10 +10154,14 @@ void xset_defaults()
     set = xset_set( "view_list_style", "label", _("Styl_e") );
     set->menu_style = XSET_MENU_SUBMENU;
 
-    set = xset_set( "view_columns", "label", _("_Columns") );
+    set = xset_set( "view_columns", "label", _("C_olumns") );
     set->menu_style = XSET_MENU_SUBMENU;
 
     set = xset_set( "view_reorder_col", "label", _("_Reorder") );
+
+    set = xset_set( "rubberband", "label", _("_Rubberband Select") );
+    set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
 
     set = xset_get( "sep_s1" );
     set->menu_style = XSET_MENU_SEP;

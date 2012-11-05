@@ -550,10 +550,10 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="rubberband">
+                  <object class="GtkCheckButton" id="use_si_prefix">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Rubberband Select</property>
+                    <property name="label" translatable="yes">SI File Sizes (1K = 1000) (requires restart)</property>
                     <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
                   </object>

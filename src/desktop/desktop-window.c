@@ -2569,7 +2569,10 @@ int comp_item_by_size( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
     ret =item1->fi->size - item2->fi->size;
-    if( win->sort_type == GTK_SORT_DESCENDING )
+
+    if ( ret == 0 )  //sfm
+        ret = g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
+    else if( win->sort_type == GTK_SORT_DESCENDING )
         ret = -ret;
     return ret;
 }
@@ -2580,7 +2583,10 @@ int comp_item_by_mtime( DesktopItem* item1, DesktopItem* item2, DesktopWindow* w
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
     ret =item1->fi->mtime - item2->fi->mtime;
-    if( win->sort_type == GTK_SORT_DESCENDING )
+
+    if ( ret == 0 )  //sfm
+        ret = g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
+    else if( win->sort_type == GTK_SORT_DESCENDING )
         ret = -ret;
     return ret;
 }
@@ -2592,7 +2598,9 @@ int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
         return ret;
     ret = strcmp( item1->fi->mime_type->type, item2->fi->mime_type->type );
 
-    if( win->sort_type == GTK_SORT_DESCENDING )
+    if ( ret == 0 )  //sfm
+        ret = g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
+    else if( win->sort_type == GTK_SORT_DESCENDING )
         ret = -ret;
     return ret;
 }

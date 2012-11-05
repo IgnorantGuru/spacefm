@@ -84,6 +84,7 @@ struct _PtkFileBrowser
     int drag_y;
     gboolean pending_drag_status_tree : 1;
     dev_t drag_source_dev_tree;
+    gboolean is_drag : 1;
 
     /* folder view */
     GtkWidget* folder_view;
@@ -133,7 +134,7 @@ struct _PtkFileBrowser
     GtkToolButton* back_btn[3]; 
     GtkToolButton* forward_btn[3]; 
     GtkToolButton* up_btn[3]; 
-    gboolean button_press : 1;
+    //gboolean button_press : 1;
     gboolean bookmark_button_press : 1;
     char* select_path;
     char* status_bar_custom;

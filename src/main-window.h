@@ -149,6 +149,7 @@ void main_window_autosave( PtkFileBrowser* file_browser );
 void main_window_on_plugins_change( FMMainWindow* main_window );
 void main_window_root_bar_all();
 void main_window_rubberband_all();
+void main_window_refresh_all();
 void main_window_update_bookmarks();
 void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c );
 void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser );
