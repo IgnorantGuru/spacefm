@@ -341,6 +341,7 @@ ui_in_files = \
 	ui/file_properties.glade \
 	ui/about-dlg.glade \
 	ui/find-files.glade \
+	ui/find-files2.glade \
 	ui/godlg.glade
 
 ui_DATA = $(ui_in_files:.glade=.ui)

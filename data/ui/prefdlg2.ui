@@ -741,6 +741,7 @@
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
+                                <property name="y_options">GTK_SHRINK</property>
                               </packing>
                             </child>
                             <child>
@@ -751,6 +752,7 @@
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="y_options">GTK_SHRINK</property>
                               </packing>
                             </child>
                             <child>
