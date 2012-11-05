@@ -486,19 +486,18 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
                                       GdkEventButton *event,
                                       PtkFileBrowser* file_browser )
 {
-    int pos;
-    char* posa;
 //printf("ptk_file_browser_slider_release fb=%#x\n", file_browser );
+    int pos;
     gboolean fullscreen = xset_get_b( "main_full" );
-
+    XSet* set = xset_get_panel( file_browser->mypanel, "slider_positions" );
+    
     if ( widget == file_browser->hpane )
     {
         pos = gtk_paned_get_position( GTK_PANED( file_browser->hpane ) );
         if ( !fullscreen )
         {
-            posa = g_strdup_printf( "%d", pos );
-            xset_set_panel( file_browser->mypanel, "slider_positions", "x", posa );
-            g_free( posa );
+            g_free( set->x );
+            set->x = g_strdup_printf( "%d", pos );
         }
         *file_browser->slide_x = pos;
     }
@@ -507,24 +506,21 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_top ) );
         if ( !fullscreen )
         {
-            posa = g_strdup_printf( "%d", pos );
-            xset_set_panel( file_browser->mypanel, "slider_positions", "y", posa );
-            g_free( posa );
+            g_free( set->y );
+            set->y = g_strdup_printf( "%d", pos );
         }
         *file_browser->slide_y = pos;
 
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_bottom ) );
         if ( !fullscreen )
         {
-            posa = g_strdup_printf( "%d", pos );
-            xset_set_panel( file_browser->mypanel, "slider_positions", "s", posa );
-            g_free( posa );
+            g_free( set->s );
+            set->s = g_strdup_printf( "%d", pos );
         }
         *file_browser->slide_s = pos;
     }
 //printf("SAVEPOS %d %d\n", xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" ),
 //          xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" )  );
-
     return FALSE;
 }
 
