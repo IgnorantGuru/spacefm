@@ -2493,7 +2493,7 @@ exo_icon_view_button_press_event (GtkWidget      *widget,
               icon_view->priv->press_start_y = event->y;
             }
 
-          if (G_LIKELY (icon_view->priv->last_single_clicked == NULL))
+          //if (G_LIKELY (icon_view->priv->last_single_clicked == NULL))   //sfm disabled
             icon_view->priv->last_single_clicked = item;
 
           /* cancel the current editing, if it exists */
@@ -9023,3 +9023,9 @@ exo_icon_view_search_timeout_destroy (gpointer user_data)
 {
   EXO_ICON_VIEW (user_data)->priv->search_timeout_id = 0;
 }
+
+gboolean exo_icon_view_is_rubber_banding_active( ExoIconView* icon_view )  //sfm
+{
+    return icon_view->priv->doing_rubberband;
+}
+

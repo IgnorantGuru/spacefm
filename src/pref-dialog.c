@@ -50,8 +50,8 @@ struct _FMPrefDlg
     GtkWidget* small_icon_size;
     GtkWidget* tool_icon_size;
     GtkWidget* single_click;
-    //GtkWidget* use_si_prefix;
-    GtkWidget* rubberband;
+    GtkWidget* use_si_prefix;
+    //GtkWidget* rubberband;
     GtkWidget* root_bar;
     GtkWidget* drag_action;
 
@@ -160,7 +160,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     //gboolean show_desktop;
     gboolean show_wallpaper;
     gboolean single_click;
-    gboolean rubberband;
+    //gboolean rubberband;
     gboolean root_bar;
     gboolean root_set_change = FALSE;
     WallpaperMode wallpaper_mode;
@@ -171,7 +171,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     char* wallpaper;
     const GList* l;
     PtkFileBrowser* file_browser;
-    //gboolean use_si_prefix;
+    gboolean use_si_prefix;
     GtkNotebook* notebook;
     int cur_tabx, p;
     FMMainWindow* a_window;
@@ -463,10 +463,32 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         }
 
 	    /* unit settings changed? */
-	    //use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
-        //if( use_si_prefix != app_settings.use_si_prefix )
-        //    app_settings.use_si_prefix = use_si_prefix;
+        gboolean need_refresh = FALSE;
+	    use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
+        if( use_si_prefix != app_settings.use_si_prefix )
+        {
+            app_settings.use_si_prefix = use_si_prefix;
+            need_refresh = TRUE;
+        }
 
+        // date format
+        char* etext = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                            GTK_BIN( data->date_format ) ) ) ) );
+        if ( g_strcmp0( etext, xset_get_s( "date_format" ) ) )
+        {
+            if ( etext[0] == '\0' )
+                xset_set( "date_format", "s", "%Y-%m-%d %H:%M" );
+            else
+                xset_set( "date_format", "s", etext );
+            g_free( etext );
+            if ( app_settings.date_format )
+                g_free( app_settings.date_format );
+            app_settings.date_format = g_strdup( xset_get_s( "date_format" ) );
+            need_refresh = TRUE;
+        }
+        if ( need_refresh )
+            main_window_refresh_all();
+        
         /* single click changed? */
         single_click = gtk_toggle_button_get_active( (GtkToggleButton*)data->single_click );
         if( single_click != app_settings.single_click )
@@ -498,6 +520,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         app_settings.no_confirm = !gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->confirm_delete );
 
+        /*
         rubberband = gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->rubberband );
         if ( !!rubberband != !!xset_get_b( "rubberband" ) )
@@ -505,7 +528,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             xset_set_b( "rubberband", rubberband );
             main_window_rubberband_all();
         }
-            
+        */
+        
         root_bar = gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->root_bar );
         if ( !!root_bar != !!xset_get_b( "root_bar" ) )
@@ -518,17 +542,6 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     gtk_combo_box_get_active( GTK_COMBO_BOX( data->drag_action ) ) );
         xset_set( "drag_action", "x", s );
         g_free( s );
-
-        char* etext = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                            GTK_BIN( data->date_format ) ) ) ) );
-        if ( etext[0] == '\0' )
-            xset_set( "date_format", "s", "%Y-%m-%d %H:%M" );
-        else
-            xset_set( "date_format", "s", etext );
-        g_free( etext );
-        if ( app_settings.date_format )
-            g_free( app_settings.date_format );
-        app_settings.date_format = g_strdup( xset_get_s( "date_format" ) );
 
         //MOD su command
         char* custom_su = NULL;
@@ -736,8 +749,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->small_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "small_icon_size" );
         data->tool_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "tool_icon_size" );
         data->single_click = (GtkWidget*)gtk_builder_get_object( builder, "single_click" );
-	    //data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
-        data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
+	    data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
+        //data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
 	    data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
         data->drag_action = (GtkWidget*)gtk_builder_get_object( builder, "drag_action" );
 
@@ -860,8 +873,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->click_exec ),
                                                         !app_settings.no_execute );
 
-        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->rubberband ),
-                                                        xset_get_b( "rubberband" ) );
+        //gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->rubberband ),
+        //                                                xset_get_b( "rubberband" ) );
 
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->root_bar ),
                                                         xset_get_b( "root_bar" ) );
@@ -882,7 +895,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         /* Setup 'Desktop' tab */
 
-    	//gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
+    	gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 /*
         data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
         g_signal_connect( data->show_desktop, "toggled",

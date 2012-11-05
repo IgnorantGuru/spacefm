@@ -870,6 +870,31 @@ void main_window_rubberband_all()
     }
 }
 
+void main_window_refresh_all()
+{
+    GList* l;
+    FMMainWindow* main_window;
+    PtkFileBrowser* a_browser;
+    int num_pages, i, p;
+    GtkWidget* notebook;
+    
+    for ( l = all_windows; l; l = l->next )
+    {
+        main_window = (FMMainWindow*)l->data;
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = main_window->panel[p-1];
+            num_pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( notebook ) );
+            for ( i = 0; i < num_pages; i++ )
+            {
+                a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                         GTK_NOTEBOOK( notebook ), i ) );
+                ptk_file_browser_refresh( NULL, a_browser );
+            }
+        }
+    }
+}
+
 void main_window_root_bar_all()
 {
     if ( geteuid() != 0 )
@@ -3662,6 +3687,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
             }
             else if ( !strcmp( set->name, "font_task" ) )
                 main_update_fonts( NULL, browser );
+            else if ( !strcmp( set->name, "rubberband" ) )
+                main_window_rubberband_all();
             else
                 ptk_file_browser_on_action( browser, set->name );
             

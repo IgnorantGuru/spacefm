@@ -11,6 +11,9 @@
     automatic orient thumbnails #183 [BWackNinja]
     add wallpaper Zoom mode #4 [BWackNinja]
     fix icon label centering #51 [BWackNinja]
+    fix icon/compact cannot drag multiple #194
+    restore Prefs SI File Sizes #117
+    move Prefs Rubberband Select to context View|Style as detailed only
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels

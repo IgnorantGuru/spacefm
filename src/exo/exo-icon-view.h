@@ -352,6 +352,9 @@ void                          exo_icon_view_set_search_position_func  (ExoIconVi
                                                                        gpointer                      search_position_data,
                                                                        GDestroyNotify                search_position_destroy);
 
+gboolean exo_icon_view_is_rubber_banding_active( ExoIconView* icon_view );  //sfm
+
+
 G_END_DECLS;
 
 #endif /* __EXO_ICON_VIEW_H__ */
