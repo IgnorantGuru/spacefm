@@ -3014,7 +3014,7 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
     char* name;
     char** test_name;
     
-    if ( ! *filename )
+    if ( !filename || ! *filename )
     {
         if ( do_select )
             ptk_file_browser_select_all( NULL, file_browser );

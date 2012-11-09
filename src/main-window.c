@@ -6054,6 +6054,41 @@ _missing_arg:
             ptk_clipboard_copy_file_list( argv + i + 1,
                                     !strcmp( argv[i], "clipboard_copy_files" ) );
         }
+        else if ( !strcmp( argv[i], "selected_filenames" ) ||
+                  !strcmp( argv[i], "selected_files" ) )
+        {
+            if ( !argv[i+1] || argv[i+1][0] == '\0' )
+                // unselect all
+                ptk_file_browser_select_file_list( file_browser, NULL, FALSE );
+            else
+                ptk_file_browser_select_file_list( file_browser, argv + i + 1,
+                                                                        TRUE );
+        }
+        else if ( !strcmp( argv[i], "selected_pattern" ) )
+        {
+            if ( !argv[i+1] )
+                // unselect all
+                ptk_file_browser_select_file_list( file_browser, NULL, FALSE );
+            else
+                ptk_file_browser_select_pattern( NULL, file_browser, argv[i+1] );
+        }
+        else if ( !strcmp( argv[i], "current_dir" ) )
+        {
+            if ( !argv[i+1] )
+            {
+                *reply = g_strdup_printf( 
+                        _("spacefm: %s requires a directory path\n"), argv[i] );
+                return 1;
+            }
+            if ( !g_file_test( argv[i+1], G_FILE_TEST_IS_DIR ) )
+            {
+                *reply = g_strdup_printf( 
+                        _("spacefm: directory '%s' does not exist\n"), argv[i+1] );
+                return 1;
+            }
+            ptk_file_browser_chdir( file_browser, argv[i+1],
+                                                    PTK_FB_CHDIR_ADD_HISTORY );      
+        }
         else
         {
 _invalid_set:
@@ -6299,6 +6334,41 @@ _invalid_set:
             g_string_append_printf( gstr, ")\n" );
             *reply = g_string_free( gstr, FALSE );
         }
+        else if ( !strcmp( argv[i], "selected_filenames" ) ||
+                  !strcmp( argv[i], "selected_files" ) )
+        {
+            GList* sel_files;
+            VFSFileInfo* file;
+            
+            sel_files = ptk_file_browser_get_selected_files( file_browser );
+            if ( !sel_files )
+                return 0;
+            
+            // build bash array
+            GString* gstr = g_string_new( "(" );
+            for ( l = sel_files; l; l = l->next )
+            {
+                file = vfs_file_info_ref( (VFSFileInfo*)l->data );
+                if ( file )
+                {
+                    str = bash_quote( vfs_file_info_get_name( file ) );
+                    g_string_append_printf( gstr, "%s ", str );
+                    g_free( str );
+                    vfs_file_info_unref( file );
+                }
+            }
+            vfs_file_info_list_free( sel_files );
+            g_string_append_printf( gstr, ")\n" );
+            *reply = g_string_free( gstr, FALSE );
+        }
+        else if ( !strcmp( argv[i], "selected_pattern" ) )
+        {
+        }
+        else if ( !strcmp( argv[i], "current_dir" ) )
+        {
+            *reply = g_strdup_printf( "%s\n", 
+                                    ptk_file_browser_get_cwd( file_browser ) );
+        }
         else
         {
 _invalid_get:
@@ -6524,14 +6594,6 @@ _invalid_get:
         if ( str )
             *reply = g_strdup_printf( "%s\n", str );
         g_free( str );
-    }
-    else if ( !strcmp( argv[0], "select" ) )
-    {
-        ptk_file_browser_select_file_list( file_browser, argv + i, TRUE );
-    }
-    else if ( !strcmp( argv[0], "unselect" ) )
-    {
-        ptk_file_browser_select_file_list( file_browser, argv + i, FALSE );
     }
     else if ( !strcmp( argv[0], "emit-key" ) )
     {   // KEYCODE [KEYMOD]

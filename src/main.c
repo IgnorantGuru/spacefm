@@ -641,12 +641,6 @@ void show_socket_help()
     printf( "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
     printf( "    %s\n", _("Gets a task property") );
 
-    printf( "\nspacefm -s select [FILENAME|DIRNAME...]\n" );
-    printf( "    %s\n", _("Selects specified filenames and unselects others; or select all if no spec") );
-
-    printf( "\nspacefm -s unselect [FILENAME|DIRNAME...]\n" );
-    printf( "    %s\n", _("Unselects specified filenames; or unselect all if no spec") );
-
     printf( "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
     printf( "    %s\n", _("Activates a menu item by emitting its shortcut key") );
 
@@ -696,6 +690,9 @@ void show_socket_help()
     printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
     printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
+    printf( "current_dir                     %s\n", _("DIR            eg '/etc'") );
+    printf( "selected_filenames              %s\n", _("[FILENAME ...]") );
+    printf( "selected_pattern                %s\n", _("[PATTERN]      eg '*.jpg'") );
     printf( "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
@@ -726,7 +723,7 @@ void show_socket_help()
     printf( "    spacefm -s set window_size 1024x768\n" );
     printf( "    spacefm -s set column_width name 100\n" );
     printf( "    spacefm -s set-task $fm_my_task progress 25\n" );
-    printf( "    spacefm -r /etc; sleep 0.3; spacefm -s select fstab hosts\n" );
+    printf( "    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts\n" );
     printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
     printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
     printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n\n" );
@@ -744,7 +741,7 @@ void show_socket_help()
     printf( "        md5sum \"${copied_files[@]}\"\n" );
     printf( "    fi\n" );
 
-    printf( "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
+    printf( "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
 }
 
 FMMainWindow* create_main_window()
