@@ -2687,6 +2687,12 @@ gboolean volume_is_visible( VFSVolume* vol )
         // fall through
     }
         
+    // ramfs CONFIG_BLK_DEV_RAM causes multiple entries of /dev/ram*
+    if ( !vol->is_mounted && g_str_has_prefix( vol->device_file, "/dev/ram" ) && 
+                                        vol->device_file[8] &&
+                                        g_ascii_isdigit( vol->device_file[8] ) )
+        return FALSE;
+        
     // internal?
     if ( !vol->is_removable && !xset_get_b( "dev_show_internal_drives" ) )
         return FALSE;
