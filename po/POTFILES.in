@@ -7,6 +7,7 @@ data/spacefm.desktop.in
 [type: gettext/glade]data/ui/appchooserdlg.ui
 [type: gettext/glade]data/ui/file_properties.ui
 [type: gettext/glade]data/ui/find-files.ui
+[type: gettext/glade]data/ui/find-files2.ui
 [type: gettext/glade]data/ui/godlg.ui
 [type: gettext/glade]data/ui/prefdlg.ui
 [type: gettext/glade]data/ui/prefdlg2.ui
