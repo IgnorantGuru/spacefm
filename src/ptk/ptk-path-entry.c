@@ -373,13 +373,13 @@ void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
     gtk_widget_destroy( dlg );
 }
 
-static gboolean on_button_press(GtkWidget      *entry,
-                                                                 GdkEventButton *evt,
-                                                                 gpointer        user_data)
+static gboolean on_button_press( GtkWidget* entry, GdkEventButton *evt,
+                                                        gpointer user_data )
 {
-    if ( evt_click->s )
-        main_window_event( NULL, evt_click, "evt_click", 0, 0, "pathbar", 0,
-                                            evt->button, evt->state, TRUE );
+    if ( ( evt_click->s || evt_click->ob2_data ) && 
+            main_window_event( NULL, evt_click, "evt_click", 0, 0, "pathbar", 0,
+                                            evt->button, evt->state, TRUE ) )
+        return TRUE;
     return FALSE;
 }
 
@@ -502,7 +502,8 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
 /*
     g_signal_connect( entry, "motion-notify-event", G_CALLBACK(on_mouse_move), NULL );
 */
-    g_signal_connect( entry, "button-press-event", G_CALLBACK(on_button_press), NULL );
+    g_signal_connect( entry, "button-press-event", G_CALLBACK(on_button_press),
+                                                                    NULL );
     g_signal_connect( entry, "button-release-event", G_CALLBACK(on_button_release), NULL );
     g_signal_connect( entry, "populate-popup", G_CALLBACK(on_populate_popup), file_browser );
 

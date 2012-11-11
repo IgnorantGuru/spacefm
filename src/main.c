@@ -647,6 +647,15 @@ void show_socket_help()
     printf( "\nspacefm -s show-menu MENUNAME\n" );
     printf( "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
 
+    printf( "\nspacefm -s add-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Add asynchronous handler COMMAND to EVENT") );
+
+    printf( "\nspacefm -s replace-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Add synchronous handler COMMAND to EVENT, replacing default handler") );
+
+    printf( "\nspacefm -s remove-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Remove handler COMMAND from EVENT") );
+
     printf( "\nspacefm -s help|--help\n" );
     printf( "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
 
@@ -659,7 +668,7 @@ void show_socket_help()
     printf( "--panel PANEL\n" );
     printf( "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
     printf( "--tab TAB\n" );
-    printf( "    %s spacefm -s select --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
+    printf( "    %s spacefm -s set selected_filenames --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
 
     printf( "\n%s\n", _("PROPERTIES\n----------") );
     printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
@@ -717,6 +726,33 @@ void show_socket_help()
     printf( "started                         %s\n", _("contents of Started task column (read-only)") );
     printf( "queue_state                     run|pause|queue|stop\n" );
 
+    printf( "\n%s\n", _("EVENTS\n------") );
+    printf( "evt_start                       %s\n", _("Instance start        %e") );
+    printf( "evt_exit                        %s\n", _("Instance exit         %e") );
+    printf( "evt_win_new                     %s\n", _("Window new            %e %w %p %t") );
+    printf( "evt_win_focus                   %s\n", _("Window focus          %e %w %p %t") );
+    printf( "evt_win_move                    %s\n", _("Window move/resize    %e %w %p %t") );
+    printf( "evt_click                       %s\n", _("Mouse click           %e %w %p %t %b %m %f") );
+    printf( "evt_win_key                     %s\n", _("Window keypress       %e %w %p %t %k %m") );
+    printf( "evt_win_close                   %s\n", _("Window close          %e %w %p %t") );
+    printf( "evt_pnl_focus                   %s\n", _("Panel focus           %e %w %p %t") );
+    printf( "evt_pnl_show                    %s\n", _("Panel show/hide       %e %w %p %t %f %v") );
+    printf( "evt_sel                         %s\n", _("Selection changed     %e %w %p %t") );
+    printf( "evt_tab_new                     %s\n", _("Tab new               %e %w %p %t") );
+    printf( "evt_tab_focus                   %s\n", _("Tab focus             %e %w %p %t") );
+    printf( "evt_tab_close                   %s\n", _("Tab close             %e %w %p %t") );
+
+    printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
+    printf( "    %%e   %s\n", _("event name (evt_start|evt_exit|...)") );
+    printf( "    %%w   %s\n", _("window ID") );
+    printf( "    %%p   %s\n", _("panel number (1-4)") );
+    printf( "    %%t   %s\n", _("tab number (1-...)") );
+    printf( "    %%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
+    printf( "    %%k   %s\n", _("key code  (eg 0x63)") );
+    printf( "    %%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
+    printf( "    %%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
+    printf( "    %%v   %s\n", _("focus element is visible (0 or 1)") );
+
     printf( "\n%s:\n\n", _("Examples") );
 
     printf( "    window_size=\"$(spacefm -s get window_size)\"\n" );
@@ -726,7 +762,8 @@ void show_socket_help()
     printf( "    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts\n" );
     printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
     printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
-    printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n\n" );
+    printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
+    printf( "    spacefm -s add-event evt_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
     
     printf( "    #!/bin/bash\n" );
     printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );
@@ -1327,11 +1364,11 @@ int main ( int argc, char *argv[] )
      * Subsequent processes will exit() inside single_instance_check and won't reach here.
      */
 
+    main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
+
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
-
-    main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
  
     if( run )   /* run the main loop */
         gtk_main();

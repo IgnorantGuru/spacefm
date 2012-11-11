@@ -683,16 +683,6 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
 
 
-<!-- @GUI @Events Menu -->
-<p>The Events submenu, located in the main menu bar's View menu, is used to configure commands to be run when specific events occur.
-
-<p>The two events in the Instance submenu, Startup and Exit, occur when an instance of SpaceFM starts or exits.  These settings accept only an executable name and arguments, not a full bash command line.
-
-<p>The other events in the Events menu accept a full bash command line, and exported bash variables may be used within them.  Substitution variables, displayed in each command line dialog, may also be used in these command lines.
-
-<p><a href="#sockets">Socket commands</a> are of particular use in these command lines.  For example, to alter the default text in the status bar so that it shows only the filename of the first selected file, set Events|Panel|Select (an event which occurs when the file selection in a panel changes) to:
-<pre>    spacefm -s set statusbar_text "$fm_filename"</pre>
-
 
 
 
@@ -3782,11 +3772,11 @@ Usage: <b>source FILE</b>
 
 <!-- @Sockets @Introduction #intro -->
 
-<p>SpaceFM socket commands allow external processes (including <a href="#designmode-designmenu-new">custom commands</a>) to easily communicate with a running instance of SpaceFM.  They can be used to gather information about the state of the GUI and to make changes to the GUI.
+<p>SpaceFM socket commands allow external processes (including <a href="#designmode-designmenu-new">custom commands</a>) to easily communicate with a running instance of SpaceFM.  They can be used to gather information about the state of the GUI and to make changes to the GUI.  When used in <a href="#sockets-events">event handlers</a>, socket commands can respond to various events in the SpaceFM window.
 
-<p>When a user's first instance of SpaceFM is started, either by the user opening a window, starting a daemon instance, or starting a desktop manager daemon instance, a <a href="#programfiles-tmp-socket">socket</a> is created for the instance in /tmp.  This socket is used by SpaceFM to open additional windows or tabs, and is also used to process socket commands.  This allows other processes owned by the same user to communicate with the running instance.
+<p>When a user's first instance of SpaceFM is started, either by the user opening a window, starting a daemon instance, or starting a desktop manager daemon instance, a <a href="#programfiles-tmp-socket">socket</a> is created in /tmp for this instance.  This socket is used by SpaceFM to open additional windows or tabs, and is also used to process socket commands.  This allows other processes owned by the same user to communicate with the running instance.
 
-<p>For example, socket commands can be used to record or change the size of a SpaceFM window; show or hide panels or side panes; resize panels, panes, and columns; select files in a given window, panel, or tab; place text or files on the clipboard; read text or files from the clipboard; place text in a panel's status bar; update the progress bar and other information displayed about running tasks, etc.
+<p>For example, socket commands can be used to record or change the size of a SpaceFM window; show or hide panels or side panes; resize panels, panes, and columns; select files in a given window, panel, or tab; place text or files on the clipboard; read text or files from the clipboard; place text in a panel's status bar; update the progress bar and other information displayed about running tasks, and much more.
 
 
 
@@ -3826,6 +3816,15 @@ spacefm -s <a href="#sockets-methods-emit-key">emit-key</a> KEYCODE [MODIFIER]
 spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> MENUNAME
     Shows custom submenu named MENUNAME as a popup menu
 
+spacefm -s <a href="#sockets-methods-add-event">add-event</a> EVENT COMMAND ...
+    Add asynchronous handler COMMAND to EVENT
+
+spacefm -s <a href="#sockets-methods-replace-event">replace-event</a> EVENT COMMAND ...
+    Add synchronous handler COMMAND to EVENT, replacing default handler
+
+spacefm -s <a href="#sockets-methods-remove-event">remove-event</a> EVENT COMMAND ...
+    Remove handler COMMAND from EVENT
+
 spacefm -s help|--help
     Shows this help reference.
 
@@ -3839,7 +3838,7 @@ Otherwise the current tab of the current panel in the last window is used.
 --panel PANEL
     Specify panel 1-4.  eg: spacefm -s set --panel 2 bookmarks_visible true
 --tab TAB
-    Specify tab 1-...  eg: spacefm -s select --tab 3 fstab
+    Specify tab 1-...  eg: spacefm -s set selected_filenames --tab 3 fstab
 
 <a name="socket-props"><a href="#socket-props">PROPERTIES</a></a>
 ----------
@@ -3898,6 +3897,34 @@ avgremain                       text to show in Remain task column
 elapsed                         contents of Elapsed task column (read-only)
 started                         contents of Started task column (read-only)
 queue_state                     run|pause|queue|stop
+
+<a href="#sockets-events">EVENTS</a>
+------
+<a href="#sockets-events-start">evt_start</a>                       Instance start        %e
+<a href="#sockets-events-exit">evt_exit</a>                        Instance exit         %e
+<a href="#sockets-events-winnew">evt_win_new</a>                     Window new            %e %w %p %t
+<a href="#sockets-events-winfoc">evt_win_focus</a>                   Window focus          %e %w %p %t
+<a href="#sockets-events-winmov">evt_win_move</a>                    Window move/resize    %e %w %p %t
+<a href="#sockets-events-click">evt_click</a>                       Mouse click           %e %w %p %t %b %m %f
+<a href="#sockets-events-winkey">evt_win_key</a>                     Window keypress       %e %w %p %t %k %m
+<a href="#sockets-events-wincls">evt_win_close</a>                   Window close          %e %w %p %t
+<a href="#sockets-events-pnlfoc">evt_pnl_focus</a>                   Panel focus           %e %w %p %t
+<a href="#sockets-events-pnlshw">evt_pnl_show</a>                    Panel show/hide       %e %w %p %t %f %v
+<a href="#sockets-events-sel">evt_sel</a>                         Selection changed     %e %w %p %t
+<a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
+<a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
+<a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t
+
+<a name="evtsub"><a href="#evtsub">Event COMMAND Substitution Variables:</a></a>
+    %e   event name (evt_start|evt_exit|...)
+    %w   window ID
+    %p   panel number (1-4)
+    %t   tab number (1-...)
+    %b   mouse button (0=double 1=left 2=middle 3=right ...
+    %k   key code  (eg 0x63)
+    %m   modifier key (eg 0x4  used with clicks and keypresses)
+    %f   focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)
+    %v   focus element is visible (0 or 1)
 </pre>
 
 <!-- @Sockets @Methods -->
@@ -4168,6 +4195,131 @@ Usage: <b>spacefm -s show-menu MENUNAME</b>
 
 <p>For example, add a submenu anywhere named "Gizmos", and add one or more commands inside the submenu.  To make it popup:
 <pre>    spacefm -s show-menu 'Gizmos'</pre>
+
+
+<!-- # add-event -->
+Usage: <b>spacefm -s add-event EVENT COMMAND ...</b>
+
+<p>The add-event method is used to dynamically add an asynchronous handler command to an event, such that when <a href="#sockets-events">EVENT</a> occurs, COMMAND will be run asynchronously (SpaceFM won't wait for it to finish).
+
+<p>COMMAND is a bash command line.  If any arguments follow it, they are added to the command before it is passed to bash.  For all events except evt_start and evt_exit, the <a href="#exvar">exported bash variables</a> can be used in the command.  COMMAND also accepts <a href="#evtsub">event substitution variables</a>, which will vary with the event type.
+
+<p>add-event may be used any number of times to add additional event handler commands to the same or different event types.
+
+<p>Note that COMMAND will continue to run anytime EVENT occurs during the lifetime of the current SpaceFM instance, so be sure to <a href="#sockets-methods-remove-event">remove the handler</a> when your script is finished using it.
+
+<p>In addition to adding dynamic event hanlders, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
+
+<p>Note that a single SpaceFM instance may open multiple windows, so your handler will run when events occur in any window.  The handler can test for a specific window using the %w (window ID) substitution variable in the command (which will correspond to a task's $fm_my_window <a href="#exvar">bash variable</a>).
+
+<p>For example, the following command will add a handler to the <a href="#sockets-events-sel">evt_sel</a> (selection has changed) event, such that anytime the user changes the selection of files in the file list, the status bar will be set to display the first selected file's path:
+<pre>    spacefm -s add-event evt_sel 'spacefm -s set statusbar_text "$fm_file"'</pre>
+
+Note that to preserve the quotes and dollar sign for bash to evaluate, the entire command is single-quoted and passed as a single argument.  Alternatively, escaping those characters yields the same result:
+<pre>    spacefm -s add-event evt_sel spacefm -s set statusbar_text \"\$fm_file\"</pre>
+
+
+<!-- # replace-event -->
+Usage: <b>spacefm -s replace-event EVENT COMMAND ...</b>
+
+<p>The replace-event method is used to dynamically add a synchronous handler command to an event, such that when <a href="#sockets-events">EVENT</a> occurs, COMMAND will be run synchronously (SpaceFM will wait for it to finish, and will examine the exit status).
+
+<p>Because the command is run synchronously, SpaceFM's GUI will freeze while the command is being run.  Your command should return a quick exit status to make this freeze minimal, then spawn a process to continue to perform whatever actions are desired.
+
+<p>For event types <a href="#sockets-events-click">evt_click</a> (a mouse click), <a href="#sockets-events-winkey">evt_win_key</a> (a keypress), and <a href="#sockets-events-sel">evt_sel</a> (file selection changed), SpaceFM will use the exit status of your command to determine whether SpaceFM's built-in handler for the event type should run after your command.  If the exit status is zero, this will inhibit the built-in handler.  For example, if the user clicks the right mouse button, and your command returns zero exit status, SpaceFM will not show the right-click context menu normally shown by the built-in handler.
+
+<p>If more than one replace-event is set for a evt_click, evt_win_key, or evt_sel event type (including one set in the <a href="#sockets-menu">Events Menu</a>), any zero exit status will inhibit the built-in handler.
+
+<p>Using replace-event to set a handler for an event type <i>other than</i> evt_click, evt_win_key or evt_sel will cause the command to run synchronously (SpaceFM will wait for it and it will freeze the GUI until it exits) but the exit status will have no effect.  (These events are notification only, so there is no built-in handler to inhibit.)
+
+<p>COMMAND is a bash command line.  If any arguments follow it, they are added to the command before it is passed to bash.  <a href="#exvar">Exported bash variables</a> may NOT be used in COMMAND.  COMMAND also accepts <a href="#evtsub">event substitution variables</a>, which will vary with the event type.
+
+<p>replace-event may be used any number of times to add additional synchronous event handler commands to the same or different event types.
+
+<p>Note that COMMAND will continue to run anytime EVENT occurs during the lifetime of the current SpaceFM instance, so be sure to <a href="#sockets-methods-remove-event">remove the handler</a> when your script is finished using it.
+
+<p>For example, the following command will add a handler to the <a href="#sockets-events-click">evt_click</a> event.  If the user clicks a button other than the middle mouse button (%b = 2), the command returns exit status 1, so the built-in handler is used.  But if the user clicks the middle mouse button, then a dialog message is displayed, and the command returns 0 (the default status on success), inhibiting the built-in handler.
+<pre>    spacefm -s replace-event evt_click 'if [ "%b" != "2" ]; then exit 1; fi; \
+        spacefm -g --label "\nMiddle button was clicked" --button ok &amp;'</pre>
+
+Note the ampersand (&amp;) after the 'spacefm -g' command.  This runs the command asynchronously (run and forget) so the exit status is returned immediately and it doesn't cause a lag in the GUI.
+
+
+<!-- # remove-event -->
+Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
+
+<p>The remove-event method removes an event handler previously set with the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> methods.  You must pass remove-event the exact same EVENT and COMMAND that you passed when adding the handler.
+
+<p>Because all handlers continue to run for the lifetime of the current SpaceFM instance, your scripts should remove all handlers they have added before finishing.  When the SpaceFM instance exits, all dynamic event handlers are automatically removed.  (If you want dynamic handlers to always be present, use the <a href="#sockets-events-start">evt_start</a> event to add them.)
+
+<p>remove-event cannot remove static handlers set in the <a href="#sockets-menu">Events Menu</a>.
+
+<!-- @Sockets @Events -->
+<p>Events represent actions or changes in the GUI, such as the user closing a tab, selecting a file, or opening a new window.  SpaceFM has built-in handlers for these events, which update the GUI, open menus, or take other actions.  You can also add your own handlers for events, commands which are run to take a custom action after the event occurs.  In some cases your custom handler can replace the action normally taken by SpaceFM's built-in handler, allowing you to modify the default behavior in the GUI.
+
+<p>Event handlers can be added in the <a href="#sockets-menu">Events Menu</a>.  Those handler commands always run until you remove them.  Dynamic event handlers can also be added using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-remove-event">remove-event</a> socket methods.  These handlers will remain in effect until you remove them with the remove-event method, or until the SpaceFM instance exits.
+
+<p>The following events are available.  The name in parentheses is the event name as found in the <a href="#sockets-menu">Events Menu</a>.  Any <a href="#evtsub">event substitution variables</a> available with the event are shown after it (eg %e).
+
+<!-- # evt_start (Instance|Start) %e # start -->
+Occurs only once per instance when the SpaceFM instance first starts.  Note that a single SpaceFM instance may open multiple windows.  This is a good event to use to add any dynamic event handlers which you always want running.
+
+<!-- # evt_exit (Instance|Exit) %e # exit -->
+Occurs only once per instance when the SpaceFM instance exits.  If a daemon or desktop manager instance is running, this event will occur when the user logs out.  Otherwise, the instance will exit when the last SpaceFM window is closed.
+
+<!-- # evt_win_new (Window|New) %e %w %p %t # winnew -->
+Occurs whenever a new SpaceFM window is opened, including the initial window.
+
+<!-- # evt_win_focus (Window|Focus) %e %w %p %t # winfoc -->
+Occurs whenever a SpaceFM window receives focus.  For example, if you switch to another window in your window manager, then switch back to a SpaceFM window, this event will occur.
+
+<!-- # evt_win_move (Window|Move) %e %w %p %t # winmov -->
+Occurs whenever a SpaceFM window is moved or resized.  Note that during resizing, any handler for this event may be run multiple times, so the handler command should handle this gracefully.
+
+<!-- # evt_click (Window|Click) %e %w %p %t %b %m %f # click -->
+Occurs when the user clicks the mouse in most areas of a SpaceFM window.  The mouse button pressed is available via the substitution variable %b, any key modifier (eg Ctrl+Click) via %m, and the window element which received the click via %f.
+
+<p>If a handler set for the evt_click event is synchronous (has an asterisk prefix or is added with the <a href="#sockets-methods-replace-event">replace-event</a> method), and it returns a zero exit status, the built-in handler for the event will be inhibited.
+
+<!-- # evt_win_key (Window|Keypress) %e %w %p %t %k %m # winkey -->
+Occurs when the user presses a key in most areas of a SpaceFM window.  The key code pressed is available via the substitution variable %k, and any key modifier (eg Ctrl+C) via %m.
+
+<p>If a handler set for the evt_win_key event is synchronous (has an asterisk prefix or is added with the <a href="#sockets-methods-replace-event">replace-event</a> method), and it returns a zero exit status, the built-in handler for the event will be inhibited (SpaceFM will not react to the keypress in most cases, even if it's assigned to a menu item).
+
+<!-- # evt_win_close (Window|Close) %e %w %p %t # wincls -->
+Occurs whenever a SpaceFM window is closed, including the last window of the instance.
+
+<!-- # evt_pnl_focus (Panel|Focus) %e %w %p %t # pnlfoc -->
+Occurs whenever a panel gets focus.  Any handler command for this event will be run whenever a user clicks in the panel, even if the panel is not changed.  The command will also be run if the user switches focus to another panel.
+
+<!-- # evt_pnl_show (Panel|Show) %e %w %p %t %f %v # pnlshw -->
+Occurs whenever a panel or panel element is shown or hidden.  The element shown or hidden is available via the substitution variable %f (panelN|filelist|devices|bookmarks|dirtree|pathbar), and the element's visibility (shown or hidden) is available via %v (1=shown or 0=hidden).
+
+<!-- # evt_sel (Panel|Select) %e %w %p %t # sel -->
+Occurs whenever the file selection in a panel changes.  
+
+<p>If a handler set for the evt_sel event is synchronous (has an asterisk prefix or is added with the <a href="#sockets-methods-replace-event">replace-event</a> method), and it returns a zero exit status, the built-in handler for the event will be inhibited.  (The built-in handler for evt_sel updates the contents of the panel's status bar, so if you want to handle this yourself, you can inhibit it.)
+
+<!-- # evt_tab_new (Tab|New) %e %w %p %t # tabnew -->
+Occurs whenever a new tab is added to a panel, including initial tabs when the window is opened or the panel is first shown.
+
+<!-- # evt_tab_focus (Tab|Focus) %e %w %p %t # tabfoc -->
+Occurs whenever a tab gets focus within a panel.  For example, changing tabs will trigger this event.  However, merely switching panels will trigger the <a href="#sockets-events-pnlfoc">evt_pnl_focus</a> event, but not evt_tab_focus.
+
+<!-- # evt_tab_close (Tab|Close) %e %w %p %t # tabcls -->
+Occurs whenever a tab is closed.  The tab number which was closed is available via the substitution variable %t, and its panel via %p.  (Note that closing a tab changes panel focus to the panel containing the tab being closed.)
+
+
+<!-- @Sockets @Events Menu #menu -->
+<p>The Events submenu, located in the main menu bar's View menu, is used to configure static event handler commands to be run when <a href="#sockets-events">events</a> occur.  Each item in this menu opens a dialog in which a program name or bash command line can be entered.  The dialog for each event type also explains when the event occurs and what <a href="#evtsub">event substitution variables</a> are available for use in the command for that event.
+
+<p><a href="#sockets">Socket commands</a> are of particular use in these command lines.  For example, to alter the default text in the status bar so that it shows only the filename of the first selected file, set <a href="#sockets-events-sel">Events|Panel|Select</a> (an event which occurs when the file selection in a panel changes) to:
+<pre>    spacefm -s set statusbar_text "$fm_filename"</pre>
+
+<p>Any command line set in the Events Menu which is prefixed with an asterisk (*) as the first character, will be run synchronously, as if it was added with the <a href="#sockets-methods-replace-event">replace-event</a> method.  (The asterisk is removed before the command is run.)  This means the GUI will freeze while SpaceFM waits for the command to exit.  For <a href="#sockets-events-click">evt_click</a>, <a href="#sockets-events-winkey">evt_win_key</a>, and <a href="#sockets-events-sel">evt_sel</a> event types, a zero exit status will also inhibit the built-in handler.
+
+<p>In addition to setting commands in the Events Menu, you can also add event handler commands dynamically using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket command methods.  
+
 
 
 
