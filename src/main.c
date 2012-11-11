@@ -1270,6 +1270,12 @@ int main ( int argc, char *argv[] )
         // socket_command?
         if ( !strcmp( argv[1], "-s" ) || !strcmp( argv[1], "--socket-cmd" ) )
         {
+#ifdef ENABLE_NLS
+            // initialize gettext since gtk_init is not run here
+            setlocale( LC_ALL, "" );
+            bindtextdomain( GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR );
+            textdomain( GETTEXT_PACKAGE );
+#endif
             if ( argv[2] && ( !strcmp( argv[2], "help" ) || 
                                                 !strcmp( argv[2], "--help" ) ) )
             {
