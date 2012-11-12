@@ -8353,13 +8353,17 @@ exo_icon_view_set_search_equal_func (ExoIconView               *icon_view,
                                      GDestroyNotify             search_equal_destroy)
 {
   g_return_if_fail (EXO_IS_ICON_VIEW (icon_view));
-  g_return_if_fail (search_equal_func != NULL || (search_equal_data == NULL && search_equal_destroy == NULL));
+  g_return_if_fail (search_equal_func != NULL || 
+                    (search_equal_data == NULL && search_equal_destroy == NULL));
 
   /* destroy the previous data (if any) */
-  if (G_UNLIKELY (icon_view->priv->search_equal_destroy != NULL))
+  if (G_UNLIKELY (icon_view->priv->search_equal_destroy != NULL
+                                && icon_view->priv->search_equal_data != NULL)) //sfm
     (*icon_view->priv->search_equal_destroy) (icon_view->priv->search_equal_data);
 
-  icon_view->priv->search_equal_func = (search_equal_func != NULL) ? search_equal_func : exo_icon_view_search_equal_func;
+  icon_view->priv->search_equal_func = (search_equal_func != NULL) ? 
+                                                    search_equal_func : 
+                                                    exo_icon_view_search_equal_func;
   icon_view->priv->search_equal_data = search_equal_data;
   icon_view->priv->search_equal_destroy = search_equal_destroy;
 }
