@@ -6727,6 +6727,14 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
     if ( !ucmd )
         return FALSE;
 
+    if ( ucmd[0] == '*' )
+    {
+        ucmd++;
+        inhibit = TRUE;
+    }
+    else
+        inhibit = FALSE;
+
     if ( !preset && ( !strcmp( event, "evt_start" ) || 
                       !strcmp( event, "evt_exit" ) ) )
     {
@@ -6744,14 +6752,6 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
 
     if ( !main_window )
         return FALSE;
-
-    if ( ucmd[0] == '*' )
-    {
-        ucmd++;
-        inhibit = TRUE;
-    }
-    else
-        inhibit = FALSE;
 
     // replace vars
     char* replace = "ewpt";
