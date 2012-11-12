@@ -1922,13 +1922,13 @@ void query_overwrite_response( GtkDialog *dlg, gint response, PtkFileTask* ptask
     gtk_widget_get_allocation ( GTK_WIDGET( dlg ), &allocation );
     if ( allocation.width && allocation.height )
     {
-        GtkWidget* overmode = gtk_dialog_get_widget_for_response( GTK_DIALOG( dlg ),
-                                                        RESPONSE_OVERWRITE );
+        gint has_overwrite_btn = GPOINTER_TO_INT( (gpointer)g_object_get_data( 
+                                        G_OBJECT( dlg ), "has_overwrite_btn" ) );
         str = g_strdup_printf( "%d", allocation.width );
-        xset_set( "task_popups", overmode ? "x" : "s", str );
+        xset_set( "task_popups", has_overwrite_btn ? "x" : "s", str );
         g_free( str );
         str = g_strdup_printf( "%d", allocation.height );
-        xset_set( "task_popups", overmode ? "y" : "z", str );
+        xset_set( "task_popups", has_overwrite_btn ? "y" : "z", str );
         g_free( str );
     }
 
@@ -2191,8 +2191,9 @@ static void query_overwrite( PtkFileTask* ptask )
                                  NULL );
     }
 
+    GtkWidget* btn_pause = gtk_dialog_add_button ( GTK_DIALOG( dlg ),
+                                            _( "_Pause" ), RESPONSE_PAUSE );
     gtk_dialog_add_buttons( GTK_DIALOG( dlg ),
-                            _( "_Pause" ), RESPONSE_PAUSE,
                             _( "_Skip" ), RESPONSE_SKIP,
                             _( "S_kip All" ), RESPONSE_SKIPALL,
                             GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -2202,8 +2203,7 @@ static void query_overwrite( PtkFileTask* ptask )
     char* pause_icon = set->icon;
     if ( !pause_icon )
         pause_icon = GTK_STOCK_MEDIA_PAUSE;
-    gtk_button_set_image( GTK_BUTTON( gtk_dialog_get_widget_for_response( 
-                                            GTK_DIALOG( dlg ), RESPONSE_PAUSE ) ),
+    gtk_button_set_image( GTK_BUTTON( btn_pause ),
                             xset_get_image( pause_icon, GTK_ICON_SIZE_BUTTON ) );
 
     // labels
@@ -2343,6 +2343,8 @@ static void query_overwrite( PtkFileTask* ptask )
     g_object_set_data( G_OBJECT( dlg ), "rename_button", rename_button );
     g_object_set_data( G_OBJECT( dlg ), "auto_button", auto_button );
     g_object_set_data( G_OBJECT( dlg ), "query_input", query_input );
+    g_object_set_data( G_OBJECT( dlg ), "has_overwrite_btn",
+                                        GINT_TO_POINTER( has_overwrite_btn ) );
     gtk_widget_show_all( GTK_WIDGET( dlg ) );
 
     gtk_widget_grab_focus( query_input );
