@@ -2501,9 +2501,7 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     {
         // Note: on_close_notebook_page calls ptk_file_browser_update_views
         // which may destroy fb here
-printf("11111111111111111111111111111\n");
         on_close_notebook_page( NULL, file_browser );
-printf("22222222222222222222222222222\n");
         //ptk_file_browser_chdir( file_browser, g_get_home_dir(), PTK_FB_CHDIR_ADD_HISTORY);
     }
     else
