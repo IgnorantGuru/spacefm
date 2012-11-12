@@ -28,6 +28,8 @@
 
 #include <unistd.h> /* for getcwd */
 
+#include <locale.h>
+
 #include "main-window.h"
 
 #include "vfs-file-info.h"
