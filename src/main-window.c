@@ -6893,14 +6893,14 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
 {
     XSet* set;
     
-printf("main_window_event %s\n", event );
+//printf("main_window_event %s\n", event );
     // get set
     if ( preset )
         set = preset;
     else
     {
         set = xset_get( event );
-        if ( !set->s )
+        if ( !set->s && !set->ob2_data )
             return FALSE;
     }
 
