@@ -3914,6 +3914,7 @@ queue_state                     run|pause|queue|stop
 <a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
 <a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
 <a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t
+<a href="#sockets-events-device">evt_device</a>                      Device change         %e %f %v
 
 <a name="evtsub"><a href="#evtsub">Event COMMAND Substitution Variables:</a></a>
     %e   event name (evt_start|evt_exit|...)
@@ -3924,7 +3925,7 @@ queue_state                     run|pause|queue|stop
     %k   key code  (eg 0x63)
     %m   modifier key (eg 0x4  used with clicks and keypresses)
     %f   focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)
-    %v   focus element is visible (0 or 1)
+    %v   focus element is visible (0 or 1, or device state change)
 </pre>
 
 <!-- @Sockets @Methods -->
@@ -4208,7 +4209,7 @@ Usage: <b>spacefm -s add-event EVENT COMMAND ...</b>
 
 <p>The add-event method is used to dynamically add an asynchronous handler command to an event, such that when <a href="#sockets-events">EVENT</a> occurs, COMMAND will be run asynchronously (SpaceFM won't wait for it to finish).
 
-<p>COMMAND is a bash command line.  If any arguments follow it, they are added to the command before it is passed to bash.  For all events except evt_start and evt_exit, the <a href="#exvar">exported bash variables</a> can be used in the command.  COMMAND also accepts <a href="#evtsub">event substitution variables</a>, which will vary with the event type.
+<p>COMMAND is a bash command line.  If any arguments follow it, they are added to the command before it is passed to bash.  For all events <i>except</i> <a href="#sockets-events-start">evt_start</a>, <a href="#sockets-events-exit">evt_exit</a>, <a href="#sockets-events-tabcls">evt_tab_close</a>, and <a href="#sockets-events-device">evt_device</a>, the <a href="#exvar">exported bash variables</a> can be used in the command.  COMMAND also accepts <a href="#evtsub">event substitution variables</a>, which will vary with the event type.
 
 <p>add-event may be used any number of times to add additional event handler commands to the same or different event types.
 
@@ -4319,6 +4320,13 @@ Occurs whenever a tab gets focus within a panel.  For example, changing tabs wil
 
 <!-- # evt_tab_close (Tab|Close) %e %w %p %t # tabcls -->
 Occurs whenever a tab is closed.  The tab number which was closed is available via the substitution variable %t, and its panel via %p.  (Note that closing a tab changes panel focus to the panel containing the tab being closed.)
+
+<p>Note that <a href="#exvar">exported bash variables</a> <i>cannot</i> be used in the handler commands for evt_tab_close.
+
+<!-- # evt_device (Device) %e %f %v # device -->
+Occurs whenever a device is added, removed, or otherwise changes state (mounted, unmounted, media inserted, etc).  The device file is available via the substitution variable %f, and the change via %v (added|removed|changed).
+
+<p>Note that <a href="#exvar">exported bash variables</a> <i>cannot</i> be used in the handler commands for evt_device.
 
 
 <!-- @Sockets @Events Menu #menu -->

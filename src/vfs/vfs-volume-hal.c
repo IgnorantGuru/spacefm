@@ -76,6 +76,7 @@
 #include "vfs-file-info.h"
 #include "vfs-volume-hal-options.h"
 #include "vfs-utils.h"  /* for vfs_sudo_cmd() */
+#include "main-window.h" //sfm for main_window_event
 
 #include <glib/gi18n.h>
 #include <errno.h>
@@ -321,6 +322,9 @@ static void call_callbacks( VFSVolume* vol, VFSVolumeState state )
     {
         ( *e[ i ].cb ) ( vol, state, e[ i ].user_data );
     }
+    if ( evt_device->s || evt_device->ob2_data )
+        main_window_event( NULL, NULL, "evt_device", 0, 0, vol->device_file, 0,
+                                                        0, state, FALSE );
 }
 /* END: Added by Hong Jen Yee on 2008-02-02 */
 

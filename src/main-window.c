@@ -6678,7 +6678,7 @@ _invalid_get:
         }
         if ( !( set = xset_is( argv[i] ) ) )
         {
-            *reply = g_strdup_printf( _("spacefm: invalid event name 's'\n"),
+            *reply = g_strdup_printf( _("spacefm: invalid event name '%s'\n"),
                                                                         argv[i] );
             return 2;
         }
@@ -6745,11 +6745,31 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
         inhibit = FALSE;
 
     if ( !preset && ( !strcmp( event, "evt_start" ) || 
-                      !strcmp( event, "evt_exit" ) ) )
+                      !strcmp( event, "evt_exit" ) ||
+                      !strcmp( event, "evt_device" ) ) )
     {
+        cmd = replace_string( ucmd, "%e", event, FALSE );
+        if ( !strcmp( event, "evt_device" ) )
+        {
+            if ( !focus )
+                return FALSE;
+            char* str = cmd;
+            cmd = replace_string( str, "%f", focus, FALSE );
+            g_free( str );
+            char* change;
+            if ( state == VFS_VOLUME_ADDED )
+                change = "added";
+            else if ( state == VFS_VOLUME_REMOVED )
+                change = "removed";
+            else
+                change = "changed";
+            str = cmd;
+            cmd = replace_string( str, "%v", change, FALSE );
+            g_free( str );            
+        }
         argv[0] = g_strdup( "bash" );
         argv[1] = g_strdup( "-c" );
-        argv[2] = replace_string( ucmd, "%e", event, FALSE );
+        argv[2] = cmd;
         argv[3] = NULL;
         printf( "EVENT %s >>> %s\n", event, argv[2] );
         //g_spawn_command_line_async( cmd, NULL );
@@ -6864,18 +6884,31 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
 
     if ( !inhibit )
     {
-        // task
         printf( "\nEVENT %s >>> %s\n", event, cmd );
-        PtkFileTask* task = ptk_file_exec_new( event, 
-                                               ptk_file_browser_get_cwd( file_browser ),
-                                               GTK_WIDGET( file_browser ),
-                                               main_window->task_view );
-        task->task->exec_browser = file_browser;
-        task->task->exec_command = cmd;
-        task->task->exec_icon = g_strdup( set->icon );
-        task->task->exec_sync = FALSE;
-        task->task->exec_export = TRUE;
-        ptk_file_task_run( task );
+        if ( !strcmp( event, "evt_tab_close" ) )
+        {
+            // file_browser becomes invalid so spawn
+            argv[0] = g_strdup( "bash" );
+            argv[1] = g_strdup( "-c" );
+            argv[2] = cmd;
+            argv[3] = NULL;
+            g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                                                    NULL, NULL );
+        }
+        else
+        {
+            // task
+            PtkFileTask* task = ptk_file_exec_new( event, 
+                                                   ptk_file_browser_get_cwd( file_browser ),
+                                                   GTK_WIDGET( file_browser ),
+                                                   main_window->task_view );
+            task->task->exec_browser = file_browser;
+            task->task->exec_command = cmd;
+            task->task->exec_icon = g_strdup( set->icon );
+            task->task->exec_sync = FALSE;
+            task->task->exec_export = TRUE;
+            ptk_file_task_run( task );
+        }
         return FALSE;
     }
 
@@ -6920,8 +6953,9 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
     if ( !mw )
         main_window = fm_main_window_get_last_active();
     else
-    {
         main_window = (FMMainWindow*)mw;
+    if ( main_window )
+    {
         file_browser = PTK_FILE_BROWSER( 
                         fm_main_window_get_current_file_browser( main_window ) );
         if ( !file_browser )
@@ -6935,7 +6969,9 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
                         GTK_WIDGET( file_browser ) ) + 1;
         }
     }
-
+    else
+        file_browser = NULL;
+    
     // dynamic handlers
     if ( set->ob2_data )
     {

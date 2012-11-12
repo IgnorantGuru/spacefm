@@ -743,6 +743,7 @@ void show_socket_help()
     printf( "evt_tab_new                     %s\n", _("Tab new               %e %w %p %t") );
     printf( "evt_tab_focus                   %s\n", _("Tab focus             %e %w %p %t") );
     printf( "evt_tab_close                   %s\n", _("Tab close             %e %w %p %t") );
+    printf( "evt_device                      %s\n", _("Device change         %e %f %v") );
 
     printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
     printf( "    %%e   %s\n", _("event name (evt_start|evt_exit|...)") );
@@ -753,7 +754,7 @@ void show_socket_help()
     printf( "    %%k   %s\n", _("key code  (eg 0x63)") );
     printf( "    %%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
     printf( "    %%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
-    printf( "    %%v   %s\n", _("focus element is visible (0 or 1)") );
+    printf( "    %%v   %s\n", _("focus element is visible (0 or 1, or device state change)") );
 
     printf( "\n%s:\n\n", _("Examples") );
 

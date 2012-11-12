@@ -742,6 +742,7 @@ void load_settings( char* config_dir )
     evt_tab_new = xset_get( "evt_tab_new" );
     evt_tab_focus = xset_get( "evt_tab_focus" );
     evt_tab_close = xset_get( "evt_tab_close" );
+    evt_device = xset_get( "evt_device" );
 
     // config conversions
     int ver = xset_get_int( "config_version", "s" );
@@ -9512,7 +9513,7 @@ void xset_defaults()
 
     set = xset_set( "main_auto", "label", _("_Events") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab" );
+    xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab evt_device" );
     xset_set_set( set, "icon", "gtk-execute" );
     set->line = g_strdup( "#sockets-menu" );
     
@@ -9617,8 +9618,14 @@ void xset_defaults()
             set = xset_set( "evt_tab_close", "label", _("_Close") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Tab Close Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_tab_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_tab_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 closed tab") );
             set->line = g_strdup( "#sockets-events-tabcls" );
+
+        set = xset_set( "evt_device", "label", _("_Device") );
+        set->menu_style = XSET_MENU_STRING;
+        xset_set_set( set, "title", _("Set Device Command") );
+        xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a device state changes:\n\nUse:\n	%%e	 event type\t(evt_device)\n	%%f	 device file\n	%%v	 change \t\t(added|removed|changed)\n") );
+        set->line = g_strdup( "#sockets-events-device" );
 
     set = xset_set( "main_title", "label", _("Wi_ndow Title") );
     set->menu_style = XSET_MENU_STRING;

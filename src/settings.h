@@ -243,6 +243,7 @@ XSet* evt_pnl_sel;
 XSet* evt_tab_new;
 XSet* evt_tab_focus;
 XSet* evt_tab_close;
+XSet* evt_device;
 
 
 static const char* terminal_programs[] =  //for pref-dialog.c
