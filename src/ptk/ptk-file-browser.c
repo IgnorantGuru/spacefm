@@ -1267,8 +1267,8 @@ gboolean on_status_bar_button_press( GtkWidget *widget,
     focus_folder_view( file_browser );
     if ( event->type == GDK_BUTTON_PRESS )
     {
-        if ( ( evt_click->s || evt_click->ob2_data ) &&
-                main_window_event( file_browser->main_window, evt_click, "evt_click",
+        if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+                main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
                                 0, 0, "statusbar", 0, event->button, event->state,
                                 TRUE ) )
             return TRUE;
@@ -3485,8 +3485,8 @@ on_folder_view_button_press_event ( GtkWidget *widget,
         focus_folder_view( file_browser );
         //file_browser->button_press = TRUE;
 
-        if ( ( evt_click->s || evt_click->ob2_data ) && 
-                main_window_event( file_browser->main_window, evt_click, "evt_click",
+        if ( ( evt_win_click->s || evt_win_click->ob2_data ) && 
+                main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
                                     0, 0, "filelist", 0, event->button,
                                     event->state, TRUE ) )
         {
@@ -3612,8 +3612,8 @@ on_folder_view_button_press_event ( GtkWidget *widget,
     else if ( event->type == GDK_2BUTTON_PRESS && event->button == 1 )
     {
         // double click event -  button = 0
-        if ( ( evt_click->s || evt_click->ob2_data ) && 
-                main_window_event( file_browser->main_window, evt_click, "evt_click",
+        if ( ( evt_win_click->s || evt_win_click->ob2_data ) && 
+                main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
                                 0, 0, "filelist", 0, 0,
                                 event->state, TRUE ) )
             return TRUE;
@@ -5843,8 +5843,8 @@ static gboolean on_dir_tree_button_press( GtkWidget* view,
 {
     ptk_file_browser_focus_me( file_browser );
 
-    if ( ( evt_click->s || evt_click->ob2_data ) &&
-            main_window_event( file_browser->main_window, evt_click, "evt_click", 0, 0,
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click", 0, 0,
                                 "dirtree", 0, evt->button, evt->state, TRUE ) )
         return FALSE;
 

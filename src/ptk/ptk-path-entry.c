@@ -376,8 +376,8 @@ void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
 static gboolean on_button_press( GtkWidget* entry, GdkEventButton *evt,
                                                         gpointer user_data )
 {
-    if ( ( evt_click->s || evt_click->ob2_data ) && 
-            main_window_event( NULL, evt_click, "evt_click", 0, 0, "pathbar", 0,
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) && 
+            main_window_event( NULL, evt_win_click, "evt_win_click", 0, 0, "pathbar", 0,
                                             evt->button, evt->state, TRUE ) )
         return TRUE;
     return FALSE;

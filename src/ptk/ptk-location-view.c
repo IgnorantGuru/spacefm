@@ -2814,8 +2814,8 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
                                                                 "file_browser" );
     ptk_file_browser_focus_me( file_browser );
 
-    if ( ( evt_click->s || evt_click->ob2_data ) &&
-            main_window_event( file_browser->main_window, evt_click, "evt_click",
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
                             0, 0, "devices", 0, evt->button, evt->state, TRUE ) )
         return FALSE;
 
@@ -3423,8 +3423,8 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     
     ptk_file_browser_focus_me( file_browser );
 
-    if ( ( evt_click->s || evt_click->ob2_data ) &&
-            main_window_event( file_browser->main_window, evt_click, "evt_click", 0, 0,
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click", 0, 0,
                                 "bookmarks", 0, evt->button, evt->state, TRUE ) )
         return FALSE;
 

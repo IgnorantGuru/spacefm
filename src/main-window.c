@@ -2408,8 +2408,8 @@ gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
 {
     on_file_browser_panel_change( file_browser,
                                         (FMMainWindow*)file_browser->main_window );
-    if ( ( evt_click->s || evt_click->ob2_data ) && 
-            main_window_event( file_browser->main_window, evt_click, "evt_click",
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) && 
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
                             0, 0, "tabbar", 0, event->button, event->state, TRUE ) )
         return TRUE;
     // middle-click on tab closes
@@ -3432,8 +3432,8 @@ void on_file_browser_sel_change( PtkFileBrowser* file_browser,
                                  FMMainWindow* main_window )
 {
 //printf("sel_change  panel %d\n", file_browser->mypanel );
-    if ( ( evt_sel->ob2_data || evt_sel->s ) &&
-            main_window_event( main_window, evt_sel, "evt_sel", 0, 0, NULL,
+    if ( ( evt_pnl_sel->ob2_data || evt_pnl_sel->s ) &&
+            main_window_event( main_window, evt_pnl_sel, "evt_pnl_sel", 0, 0, NULL,
                                                             0, 0, 0, TRUE ) )
         return;
     fm_main_window_update_status_bar( main_window, file_browser );
@@ -5008,8 +5008,8 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
     if ( event->type != GDK_BUTTON_PRESS )
         return FALSE;
         
-    if ( ( evt_click->s || evt_click->ob2_data ) &&
-            main_window_event( main_window, evt_click, "evt_click", 0, 0,
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( main_window, evt_win_click, "evt_win_click", 0, 0,
                             "tasklist", 0, event->button, event->state, TRUE ) )
         return FALSE;
     
@@ -6660,7 +6660,7 @@ _invalid_get:
         widget = gtk_menu_new();
         GtkAccelGroup* accel_group = gtk_accel_group_new();
  
-         xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
+        xset_add_menuitem( NULL, file_browser, GTK_WIDGET( widget ), accel_group,
                                                                 set );
         g_idle_add( (GSourceFunc)delayed_show_menu, widget );
     }
@@ -6692,6 +6692,15 @@ _invalid_get:
         {
             l = g_list_find_custom( (GList*)set->ob2_data, str,
                                                     (GCompareFunc)g_strcmp0 );
+            if ( !l )
+            {
+                // remove replace event
+                char* str2 = str;
+                str = g_strdup_printf( "*%s", str2 );
+                g_free( str2 );
+                l = g_list_find_custom( (GList*)set->ob2_data, str,
+                                                    (GCompareFunc)g_strcmp0 );
+            }
             g_free( str );
             if ( !l )
             {
@@ -6755,7 +6764,7 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
 
     // replace vars
     char* replace = "ewpt";
-    if ( set == evt_click )
+    if ( set == evt_win_click )
     {
         replace = "ewptfbm";
         state = ( state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
@@ -6892,6 +6901,7 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
                             gboolean visible )
 {
     XSet* set;
+    gboolean inhibit = FALSE;
     
 //printf("main_window_event %s\n", event );
     // get set
@@ -6926,10 +6936,9 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
         }
     }
 
-    // handlers
+    // dynamic handlers
     if ( set->ob2_data )
     {
-        gboolean inhibit = FALSE;
         GList* l;
         for ( l = (GList*)set->ob2_data; l; l = l->next )
         {
@@ -6938,13 +6947,12 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
                                     visible, set, (char*)l->data ) )
                 inhibit = TRUE;
         }
-        if ( inhibit )
-            return TRUE;  // inhibit built-in event handler
     }
 
-    return run_event( main_window, file_browser, preset, event, panel,
+    // Events menu handler
+    return ( run_event( main_window, file_browser, preset, event, panel,
                                     tab, focus, keyval, button, state,
-                                    visible, set, set->s );
+                                    visible, set, set->s ) || inhibit );
 }
 
 //================================================================================

@@ -734,12 +734,12 @@ void show_socket_help()
     printf( "evt_win_new                     %s\n", _("Window new            %e %w %p %t") );
     printf( "evt_win_focus                   %s\n", _("Window focus          %e %w %p %t") );
     printf( "evt_win_move                    %s\n", _("Window move/resize    %e %w %p %t") );
-    printf( "evt_click                       %s\n", _("Mouse click           %e %w %p %t %b %m %f") );
+    printf( "evt_win_click                   %s\n", _("Mouse click           %e %w %p %t %b %m %f") );
     printf( "evt_win_key                     %s\n", _("Window keypress       %e %w %p %t %k %m") );
     printf( "evt_win_close                   %s\n", _("Window close          %e %w %p %t") );
     printf( "evt_pnl_focus                   %s\n", _("Panel focus           %e %w %p %t") );
     printf( "evt_pnl_show                    %s\n", _("Panel show/hide       %e %w %p %t %f %v") );
-    printf( "evt_sel                         %s\n", _("Selection changed     %e %w %p %t") );
+    printf( "evt_pnl_sel                     %s\n", _("Selection changed     %e %w %p %t") );
     printf( "evt_tab_new                     %s\n", _("Tab new               %e %w %p %t") );
     printf( "evt_tab_focus                   %s\n", _("Tab focus             %e %w %p %t") );
     printf( "evt_tab_close                   %s\n", _("Tab close             %e %w %p %t") );
@@ -765,7 +765,7 @@ void show_socket_help()
     printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
     printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
     printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
-    printf( "    spacefm -s add-event evt_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
+    printf( "    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
     
     printf( "    #!/bin/bash\n" );
     printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );

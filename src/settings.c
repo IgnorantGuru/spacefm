@@ -733,12 +733,12 @@ void load_settings( char* config_dir )
     // cache event handlers
     evt_win_focus = xset_get( "evt_win_focus" );
     evt_win_move = xset_get( "evt_win_move" );
-    evt_click = xset_get( "evt_click" );
+    evt_win_click = xset_get( "evt_win_click" );
     evt_win_key = xset_get( "evt_win_key" );
     evt_win_close = xset_get( "evt_win_close" );
     evt_pnl_show = xset_get( "evt_pnl_show" );
     evt_pnl_focus = xset_get( "evt_pnl_focus" );
-    evt_sel = xset_get( "evt_sel" );
+    evt_pnl_sel = xset_get( "evt_pnl_sel" );
     evt_tab_new = xset_get( "evt_tab_new" );
     evt_tab_focus = xset_get( "evt_tab_focus" );
     evt_tab_close = xset_get( "evt_tab_close" );
@@ -9535,7 +9535,7 @@ void xset_defaults()
 
         set = xset_set( "auto_win", "label", _("_Window") );
         set->menu_style = XSET_MENU_SUBMENU;
-        xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_click evt_win_key evt_win_close" );
+        xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_win_click evt_win_key evt_win_close" );
         set->line = g_strdup( "#sockets-menu" );
 
             set = xset_set( "evt_win_new", "label", _("_New") );
@@ -9556,11 +9556,11 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n	%%e	 event type\t(evt_win_move)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
             set->line = g_strdup( "#sockets-events-winmov" );
 
-            set = xset_set( "evt_click", "label", _("_Click") );
+            set = xset_set( "evt_win_click", "label", _("_Click") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Click Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_click)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%b	 button\t\t(mouse button pressed)\n	%%m	 modifier\t\t(modifier keys)\n	%%f	 focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked\" --button ok &") );
-            set->line = g_strdup( "#sockets-events-click" );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_win_click)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%b	 button\t\t(mouse button pressed)\n	%%m	 modifier\t\t(modifier keys)\n	%%f	 focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &") );
+            set->line = g_strdup( "#sockets-events-winclk" );
 
             set = xset_set( "evt_win_key", "label", _("_Keypress") );
             set->menu_style = XSET_MENU_STRING;
@@ -9576,7 +9576,7 @@ void xset_defaults()
 
         set = xset_set( "auto_pnl", "label", _("_Panel") );
         set->menu_style = XSET_MENU_SUBMENU;
-        xset_set_set( set, "desc", "evt_pnl_focus evt_pnl_show evt_sel" );
+        xset_set_set( set, "desc", "evt_pnl_focus evt_pnl_show evt_pnl_sel" );
         set->line = g_strdup( "#sockets-menu" );
 
             set = xset_set( "evt_pnl_focus", "label", _("_Focus") );
@@ -9591,11 +9591,11 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n	%%e	 event type\t(evt_pnl_show)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%f	 focus  \t\t(element shown or hidden)\n	%%v	 visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-pnlshw" );
 
-            set = xset_set( "evt_sel", "label", _("S_elect") );
+            set = xset_set( "evt_pnl_sel", "label", _("S_elect") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Select Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
-            set->line = g_strdup( "#sockets-events-sel" );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_pnl_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
+            set->line = g_strdup( "#sockets-events-pnlsel" );
 
         set = xset_set( "auto_tab", "label", _("_Tab") );
         set->menu_style = XSET_MENU_SUBMENU;

@@ -234,12 +234,12 @@ typedef struct
 // cache these for speed in event handlers
 XSet* evt_win_focus;
 XSet* evt_win_move;
-XSet* evt_click;
+XSet* evt_win_click;
 XSet* evt_win_key;
 XSet* evt_win_close;
 XSet* evt_pnl_show;
 XSet* evt_pnl_focus;
-XSet* evt_sel;
+XSet* evt_pnl_sel;
 XSet* evt_tab_new;
 XSet* evt_tab_focus;
 XSet* evt_tab_close;
