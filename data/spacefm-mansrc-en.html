@@ -2526,7 +2526,7 @@ The following arguments may be used as shown above:
                  %n           Name of the current element
                  %v           Value of the current element
                  %NAME        Value of element named NAME (eg: %input1)
-                 %(command)   stdout from a command
+                 %(command)   stdout from a bash command line
                  %%           %
     LABEL    The following escape sequences in LABEL are unescaped:
                  \n   newline
@@ -3626,7 +3626,7 @@ The value of the current element, or "my value" from the element's perspective, 
 %NAME is used to get the value of any other element in the dialog.  For example, the text in the first --input element of a dialog is always "%input1".  If element NAME does not exist, %NAME has value "".  Note that the value read from an element may differ from the value used to set an element.  For example, using <a href="#dialog-int-set">set</a> on a --list element sets the file path for the list.  But "%list1" will contain the selected items in the list.
 
 <p><a name="dlgsubcmd"><b>%(command)</b></a><br>
-%(command) executes an external command line <i>synchronously</i>, and is substituted with the stdout output of the command.  For example:
+%(command) executes an external bash command line <i>synchronously</i>, and is substituted with the stdout output of the command.  For example:
 <pre>
     spacefm -g --label \
 	       --button 'Get Date' set label1 '<b>%(date +%%D)</b>'</pre>
@@ -3637,11 +3637,11 @@ Generally, you will need to quote the '%(command)' argument as shown above when 
 
 <p>Also, if you want to run an external command synchronously, you can run it inside an internal command with %(command).  The <a href="#dialog-int-noop">noop</a> command, which does nothing except evaluate arguments, is good for this, eg noop '%(command)'.  In this case, the stdout output will be discarded, but the command will be run synchronously.
 
-<p>Note that a small bash script can be run directly inside a %(command) substitution by using bash -c.  For example:
+<p>Note that a small bash script can be run directly inside a %(command) substitution.  For example:
 <pre>
 spacefm -g --check Option 0                                                      \
-		   set label1 '<b>%( bash -c "echo -n Option is\ ;</b>                  \
-				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked" )</b>' \
+		   set label1 '<b>%( echo -n Option is\ ;</b>                  \
+				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked )</b>' \
 	   --label "Option is unchecked"
 </pre>
 

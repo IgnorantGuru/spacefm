@@ -1131,21 +1131,25 @@ static char* get_command_value( CustomElement* el, char* cmdline, char* xvalue )
     gboolean ret;
     gint exit_status;
     GError* error = NULL;
-
+    char* argv[4];
+    
     char* line = replace_vars( el, cmdline, xvalue );
     if ( line[0] == '\0' )
         return line;
     
     //fprintf( stderr, "spacefm-dialog: SYNC=%s\n", line );
-    ret = g_spawn_command_line_sync( line, &stdout, NULL, NULL, &error );
-    g_free( line );
-
-    if ( !ret )
+    argv[0] = g_strdup( "bash" );
+    argv[1] = g_strdup( "-c" );
+    argv[2] = line;
+    argv[3] = NULL;
+    ret = g_spawn_sync( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                       &stdout, NULL, NULL, &error );
+    if ( !ret && error )
     {
         dlg_warn( "%s", error->message, NULL );
         g_error_free( error );
     }
-    return ret ? stdout : g_strdup( "" );    
+    return ret && stdout ? stdout : g_strdup( "" );    
 }
 
 static char* replace_vars( CustomElement* el, char* value, char* xvalue )
@@ -3042,7 +3046,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             }
             gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( w ), FALSE );
             set_font( w, font );
-            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, TRUE, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
@@ -3586,7 +3590,7 @@ static void show_help()
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
-    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n                 %%%%           %%\n") );
+    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a bash command line\n                 %%%%           %%\n") );
     fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
     fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
