@@ -4535,16 +4535,25 @@ Usage: <code><b>--progress [VALUE|pulse|@FILE]</b></code>
 <p>A --progress element adds a progress bar to the dialog.  For example:
 <pre>    spacefm -g --progress</pre>
 
-By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (0-100 or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
+By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (eg "100 %" or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
 <pre>    spacefm -g --progress <b>@</b>/tmp/dialog-progress</pre>
 
 The file is watched for changes.  To later update the value of the progress bar:
-<pre>    echo 50 > /tmp/dialog-progress</pre>
+<pre>    echo "50 %" > /tmp/dialog-progress</pre>
 
 Or, the progress bar will advance one pulse step each time you run:
 <pre>    echo pulse > /tmp/dialog-progress</pre>
 
-<p>In <a href="#dialog-cmd">commands</a>, the value of a --progress element can be set using the internal <a href="#dialog-int-set">set</a> command (eg 'set progress1 35' or 'set progress1 pulse').
+Or, you can set additional text to appear in the progress bar:
+<pre>    echo "25 % copying" > /tmp/dialog-progress</pre>
+
+Or, you can set just the progress bar length with no text in the bar:
+<pre>    echo "75" > /tmp/dialog-progress</pre>
+
+Or, you can set just the progress bar text, which will not change the bar length:
+<pre>    echo "text" > /tmp/dialog-progress</pre>
+
+<p>In <a href="#dialog-cmd">commands</a>, the value of a --progress element can be set using the internal <a href="#dialog-int-set">set</a> command (eg 'set progress1 "35 %"' or 'set progress1 pulse').
 <br><br>
 
 
@@ -6494,7 +6503,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-11-12&nbsp;&nbsp;(SpaceFM version 0.8.2+)
+<p>Updated 2012-11-14&nbsp;&nbsp;(SpaceFM version 0.8.2+)
 <br><br>
 </center>
 </td></tr></table>
