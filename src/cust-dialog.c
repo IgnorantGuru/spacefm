@@ -917,7 +917,7 @@ static void set_element_value( CustomElement* el, const char* name,
     case CDLG_PROGRESS:
         if ( el_name->widgets->next )
         {
-            if ( !g_strcmp0( value, "pulse" ) || value[0] == '\0' )
+            if ( !g_strcmp0( value, "pulse" ) )
             {
                 gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el_name->widgets->next->data ) );
                 gtk_progress_bar_set_text( 
@@ -934,14 +934,26 @@ static void set_element_value( CustomElement* el, const char* name,
                 i = value ? atoi( value ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
-                str = g_strdup_printf( "%d %%", i );
-                gtk_progress_bar_set_fraction( 
+                if ( i != 0 || ( value && value[0] == '0' ) )
+                    gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el_name->widgets->next->data ),
                                     (gdouble)i / 100 );
-                gtk_progress_bar_set_text( 
+                str = value;
+                while ( str && str[0] )
+                {
+                    if ( !g_ascii_isdigit( str[0] ) )
+                    {
+                        gtk_progress_bar_set_text( 
                                     GTK_PROGRESS_BAR( el_name->widgets->next->data ),
-                                    str );
-                g_free( str );
+                                    value );
+                        break;
+                    }
+                    str++;
+                }
+                if ( !( str && str[0] ) )
+                    gtk_progress_bar_set_text( 
+                                    GTK_PROGRESS_BAR( el_name->widgets->next->data ),
+                                    " " );
             }
         }
         break;
@@ -1616,6 +1628,8 @@ static char* read_file_value( const char* path, gboolean multi )
         }
         fclose( file );
         strtok( line, "\r\n" );
+        if ( line[0] == '\n' )
+            line[0] = '\0';
     }
     if ( !g_utf8_validate( line, -1, &end ) )
     {
@@ -3221,14 +3235,26 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 i = el->val ? atoi( el->val ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
-                g_free( el->val );
-                el->val = g_strdup_printf( "%d %%", i );
-                gtk_progress_bar_set_fraction( 
+                if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                    gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el->widgets->next->data ),
                                     (gdouble)i / 100 );
-                gtk_progress_bar_set_text( 
+                str = el->val;
+                while ( str && str[0] )
+                {
+                    if ( !g_ascii_isdigit( str[0] ) )
+                    {
+                        gtk_progress_bar_set_text( 
                                     GTK_PROGRESS_BAR( el->widgets->next->data ),
                                     el->val );
+                        break;
+                    }
+                    str++;
+                }
+                if ( !( str && str[0] ) )
+                    gtk_progress_bar_set_text( 
+                                    GTK_PROGRESS_BAR( el->widgets->next->data ),
+                                    " " );
             }
         }
         break;

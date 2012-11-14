@@ -18,6 +18,7 @@
     updated russian translation
     hide unmounted /dev/ramN closes #202
     fix make fail gtk2.18 replace gtk_dialog_get_widget_for_response
+    dialog allow arbitrary text in progress bar
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
