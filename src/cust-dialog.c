@@ -3212,6 +3212,9 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         {
             w = gtk_progress_bar_new();
             gtk_progress_bar_set_pulse_step( GTK_PROGRESS_BAR( w ), 0.08 );
+#if GTK_CHECK_VERSION (3, 0, 0)
+            gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( w ), TRUE );
+#endif
             set_font( w, font );
             gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
             el->widgets = g_list_append( el->widgets, w );

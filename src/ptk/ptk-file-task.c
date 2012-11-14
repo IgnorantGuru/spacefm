@@ -948,6 +948,9 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     //                  GTK_WIDGET(label),
     //                  0, 1, 3, 4, GTK_FILL, 0, 0, 0 );
     ptask->progress_bar = GTK_PROGRESS_BAR(gtk_progress_bar_new());
+#if GTK_CHECK_VERSION (3, 0, 0)
+    gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( ptask->progress_bar ), TRUE );
+#endif
     gtk_progress_bar_set_pulse_step( ptask->progress_bar, 0.08 );
     gtk_table_attach( table,
                       GTK_WIDGET( ptask->progress_bar ),
