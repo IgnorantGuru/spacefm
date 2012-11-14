@@ -3046,7 +3046,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             }
             gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( w ), FALSE );
             set_font( w, font );
-            gtk_box_pack_start( GTK_BOX( box ), w, TRUE, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
