@@ -2777,7 +2777,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     else
                         gtk_editable_select_region( GTK_EDITABLE( w ), 0, -1 );                    
                 }
-                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), FALSE, TRUE, pad );
+                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), TRUE, TRUE, pad );
             }
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "key-press-event",
