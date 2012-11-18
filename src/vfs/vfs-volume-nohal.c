@@ -3748,7 +3748,7 @@ void unmount_if_mounted( const char* device_file )
     char* mtab = "/etc/mtab";
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
         mtab = "/proc/mounts";
-    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s &>/dev/null && %s &>/dev/null\"",
+    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s 2>/dev/null && %s 2>/dev/null\"",
                                                         device_file, mtab, str );
     g_free( str );
     printf( _("Unmount-If-Mounted: %s\n"), line );
