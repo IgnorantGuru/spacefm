@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.14), libcairo2 (>= 1.2.4), libgdk-pixbuf2.0-0 (>= 2.22.0), libglib2.0-0 (>= 2.31.8), libgtk2.0-0 (>= 2.24.0), libpango1.0-0 (>= 1.18.0), libstartup-notification0 (>= 0.4), libudev0 (>= 147), libx11-6
+misc:Depends=
