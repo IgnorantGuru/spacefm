@@ -1,0 +1,13 @@
+Package: spacefm
+Version: 0.8.2-1
+Architecture: amd64
+Maintainer: IgnorantGuru <ignorantguru@gmx.com>
+Installed-Size: 3396
+Depends: dbus, desktop-file-utils, bash (>= 3.0), libc6, libcairo2, libdbus-1-3, libglib2.0-0, libgtk2.0-0 (>= 2.18), libgtk2.0-bin, libpango1.0-0, libstartup-notification0, libx11-6, shared-mime-info, libudev0 (>= 143)
+Suggests: udevil, pmount, eject, lsof, wget, ktsuss, gksu
+Conflicts: spacefm-hal
+Section: utils
+Priority: optional
+Homepage: http://ignorantguru.github.com/spacefm/
+Description: SpaceFM is a multi-panel tabbed file manager with built-in VFS,
+ udev-based device manager, customizable menu system, and bash integration.
