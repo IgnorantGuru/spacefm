@@ -8841,7 +8841,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-open" );
     set->line = g_strdup( "#devices-menu-open" );
    
-    set = xset_set( "dev_menu_tab", "label", _("_In tab") );
+    set = xset_set( "dev_menu_tab", "label", _("_In Tab") );
     xset_set_set( set, "icon", "gtk-add" );
     set->line = g_strdup( "#devices-menu-tab" );
    
@@ -9305,7 +9305,7 @@ void xset_defaults()
     set = xset_set( "book_open", "label", _("_Open") );
     xset_set_set( set, "icon", "gtk-open" );
 
-    set = xset_set( "book_tab", "label", _("_In tab") );
+    set = xset_set( "book_tab", "label", _("_In Tab") );
     xset_set_set( set, "icon", "gtk-add" );
 
     set = xset_set( "book_settings", "label", _("_Settings") );
@@ -10159,7 +10159,7 @@ void xset_defaults()
         set = xset_set( "focus_device", "label", _("De_vices") );
             xset_set_set( set, "icon", "gtk-harddisk" );
 
-    set = xset_set( "go_tab", "label", _("_To tab") );
+    set = xset_set( "go_tab", "label", _("_To Tab") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "tab_prev tab_next tab_close tab_1 tab_2 tab_3 tab_4 tab_5 tab_6 tab_7 tab_8 tab_9 tab_10" );
 
