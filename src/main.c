@@ -623,7 +623,7 @@ void show_socket_help()
 {
     printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
     printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
+    printf( "%s\n", _("windows.  To handle events see Tools|Events in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
