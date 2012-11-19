@@ -211,6 +211,58 @@ void ptk_clipboard_cut_or_copy_files( const char* working_dir,
     clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;
 }
 
+void ptk_clipboard_copy_file_list( char** path, gboolean copy )
+{
+    GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
+    GtkTargetList* target_list = gtk_target_list_new( NULL, 0 );
+    GList* target;
+    gint n_targets;
+    GtkTargetEntry* new_target;
+    GtkTargetEntry* targets;
+    GList *l;
+    VFSFileInfo* file;
+    char** file_path;
+    GList* file_list = NULL;
+    
+    gtk_target_list_add_text_targets( target_list, 0 );
+    targets = gtk_target_table_new_from_list( target_list, &n_targets );
+    n_targets += 2;
+    targets = g_renew( GtkTargetEntry, targets, n_targets );
+    #if 0
+    new_target = gtk_target_entry_new( "x-special/gnome-copied-files", 0, 0 );
+    #else
+    new_target = g_new0( GtkTargetEntry, 1 );
+    new_target->target = "x-special/gnome-copied-files";
+    #endif
+    g_memmove( &(targets[ n_targets - 2 ]), new_target, sizeof (GtkTargetEntry));
+    #if 0
+    new_target = gtk_target_entry_new( "text/uri-list", 0, 0 );
+    #else
+    new_target = g_new0( GtkTargetEntry, 1 );
+    new_target->target = "text/uri-list";
+    #endif
+    g_memmove( &(targets[ n_targets - 1 ]), new_target, sizeof (GtkTargetEntry));
+
+    gtk_target_list_unref ( target_list );
+
+    file_path = path;
+    while ( *file_path )
+    {
+        if ( *file_path[0] == '/' )
+            file_list = g_list_append( file_list, g_strdup( *file_path ) );
+        file_path++;
+    }
+
+    gtk_clipboard_set_with_data ( clip, targets, n_targets,
+                                  clipboard_get_data,
+                                  clipboard_clean_data,
+                                  NULL );
+    g_free( targets );
+
+    clipboard_file_list = file_list;
+    clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;
+}
+
 void ptk_clipboard_paste_files( GtkWindow* parent_win,
                                 const char* dest_dir, GtkTreeView* task_view )
 {
@@ -456,3 +508,4 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
                             g_strdup_printf ( " is" ) ) );
     }
 }
+

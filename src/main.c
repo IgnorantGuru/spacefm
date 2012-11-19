@@ -28,6 +28,8 @@
 
 #include <unistd.h> /* for getcwd */
 
+#include <locale.h>
+
 #include "main-window.h"
 
 #include "vfs-file-info.h"
@@ -72,7 +74,11 @@ typedef enum{
     CMD_PANEL3,
     CMD_PANEL4,
     CMD_DESKTOP,
-    CMD_NO_TABS
+    CMD_NO_TABS,
+    CMD_SOCKET_CMD,
+    SOCKET_RESPONSE_OK,
+    SOCKET_RESPONSE_ERROR,
+    SOCKET_RESPONSE_DATA
 }SocketEvent;
 
 static gboolean folder_initialized = FALSE;
@@ -96,6 +102,7 @@ static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
 static gboolean profile = FALSE;  //MOD
 static gboolean custom_dialog = FALSE;  //sfm
+static gboolean socket_cmd = FALSE;     //sfm
 static gboolean sdebug = FALSE;
 
 static int show_pref = 0;
@@ -135,6 +142,7 @@ static GOptionEntry opt_entries[] =
     { "set-wallpaper", '\0', 0, G_OPTION_ARG_NONE, &set_wallpaper, N_("Set desktop wallpaper to FILE"), NULL },
 #endif
     { "dialog", 'g', 0, G_OPTION_ARG_NONE, &custom_dialog, N_("Show a custom dialog (See -g help)"), NULL },
+    { "socket-cmd", 's', 0, G_OPTION_ARG_NONE, &socket_cmd, N_("Send a socket command (See -s help)"), NULL },
     { "profile", '\0', 0, G_OPTION_ARG_STRING, &profile, N_("No function - for compatibility only"), "PROFILE" },
     { "no-desktop", '\0', 0, G_OPTION_ARG_NONE, &no_desktop, N_("No function - for compatibility only"), NULL },
 
@@ -166,6 +174,7 @@ static void open_file( const char* path );
 
 static GList* get_file_info_list( char** files );
 static char* dup_to_absolute_file_path( char** file );
+void receive_socket_command( int client, GString* args );  //sfm
 
 gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 {
@@ -184,7 +193,17 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
         {
             args = g_string_new_len( NULL, 2048 );
             while( (r = read( client, buf, sizeof(buf) )) > 0 )
+            {
                 g_string_append_len( args, buf, r);
+                if ( args->str[0] == CMD_SOCKET_CMD && args->len > 1 && 
+                                            args->str[args->len - 2] == '\n' &&
+                                            args->str[args->len - 1] == '\n' )
+                    // because CMD_SOCKET_CMD doesn't immediately close the socket
+                    // data is terminated by two linefeeds to prevent read blocking
+                    break;
+            }
+            if ( args->str[0] == CMD_SOCKET_CMD )
+                receive_socket_command( client, args );
             shutdown( client, 2 );
             close( client );
 
@@ -251,12 +270,17 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 GDK_THREADS_ENTER();
                 fm_edit_preference( NULL, (unsigned char)args->str[1] - 1 );
                 GDK_THREADS_LEAVE();
+                g_string_free( args, TRUE );
                 return TRUE;
             case CMD_WALLPAPER:
                 set_wallpaper = TRUE;
                 break;
             case CMD_FIND_FILES:
                 find_files = TRUE;
+                break;
+            case CMD_SOCKET_CMD:
+                g_string_free( args, TRUE );
+                return TRUE;
                 break;
             }
 
@@ -284,6 +308,19 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
     }
 
     return TRUE;
+}
+
+void get_socket_name_nogdk( char* buf, int len )
+{
+    char* dpy = g_strdup( g_getenv( "DISPLAY" ) );
+    if ( dpy && !strcmp( dpy, ":0.0" ) )
+    {
+        // treat :0.0 as :0 to prevent multiple instances on screen 0
+        g_free( dpy );
+        dpy = g_strdup( ":0" );
+    }
+    g_snprintf( buf, len, "/tmp/.spacefm-socket%s-%s", dpy, g_get_user_name() );
+    g_free( dpy );
 }
 
 void get_socket_name( char* buf, int len )
@@ -457,6 +494,294 @@ void single_instance_finalize()
 
     get_socket_name( lock_file, sizeof( lock_file ) );
     unlink( lock_file );
+}
+
+void receive_socket_command( int client, GString* args )  //sfm
+{
+    char** argv;
+    char** arg;
+    char cmd;
+    
+    if ( args->str[1] )
+    {
+        if ( g_str_has_suffix( args->str, "\n\n" ) )
+        {
+            // remove empty strings at tail
+            args->str[args->len - 1] = '\0';
+            args->str[args->len - 2] = '\0';
+        }
+        argv = g_strsplit( args->str + 1, "\n", 0 );
+    }
+    else
+        argv = NULL;
+
+/*
+    if ( argv )
+    {
+        printf( "receive:\n");
+        for ( arg = argv; *arg; ++arg )
+        {
+            if ( ! **arg )  // skip empty string
+            {
+                printf( "    (skipped empty)\n");
+                continue;
+            }
+            printf( "    %s\n", *arg );
+        }
+    }
+*/
+    // process command and get reply
+    char* reply = NULL;
+    gdk_threads_enter();
+    cmd = main_window_socket_command( argv, &reply );
+    gdk_threads_leave();
+    g_strfreev( argv );
+    
+    // send response
+    write( client, &cmd, sizeof(char) );  // send exit status
+    if ( reply && reply[0] )
+        write( client, reply, strlen( reply ) ); // send reply or error msg
+    g_free( reply );
+}
+
+int send_socket_command( int argc, char* argv[], char** reply )   //sfm
+{
+    struct sockaddr_un addr;
+    int addr_len;
+    int ret;
+
+    *reply = NULL;
+    if ( argc < 3 )
+    {
+        fprintf( stderr, _("spacefm: --socket-cmd requires an argument\n") );
+        return 1;
+    }
+
+    // create socket
+    if ( ( sock = socket( AF_UNIX, SOCK_STREAM, 0 ) ) == -1 )
+    {
+        fprintf( stderr, _("spacefm: could not create socket\n") );
+        return 1;
+    }
+
+    // open socket
+    addr.sun_family = AF_UNIX;
+    get_socket_name_nogdk( addr.sun_path, sizeof( addr.sun_path ) );
+#ifdef SUN_LEN
+    addr_len = SUN_LEN( &addr );
+#else
+    addr_len = strlen( addr.sun_path ) + sizeof( addr.sun_family );
+#endif
+
+    if ( connect( sock, ( struct sockaddr* ) & addr, addr_len ) != 0 )
+    {
+        fprintf( stderr, _("spacefm: could not connect to socket (not running? or DISPLAY not set?)\n") );
+        return 1;
+    }
+
+    // send command
+    char cmd = CMD_SOCKET_CMD;
+    write( sock, &cmd, sizeof(char) );
+
+    // send arguments
+    int i;
+    for ( i = 2; i < argc; i++ )
+    {
+        write( sock, argv[i], strlen( argv[i] ) );
+        write( sock, "\n", 1 );
+    }
+    write( sock, "\n", 1 );
+    
+    // get response
+    GString* sock_reply = g_string_new_len( NULL, 2048 );
+    int r;
+    static char buf[ 1024 ];
+    
+    while( ( r = read( sock, buf, sizeof( buf ) ) ) > 0 )
+        g_string_append_len( sock_reply, buf, r);
+
+    // close socket
+    shutdown( sock, 2 );
+    close( sock );
+
+    // set reply
+    if ( sock_reply->len != 0 )
+    {
+        *reply = g_strdup( sock_reply->str + 1 );
+        ret = sock_reply->str[0];
+    }
+    else
+    {
+        fprintf( stderr, _("spacefm: invalid response from socket\n") );
+        ret = 1;
+    }
+    g_string_free( sock_reply, TRUE );
+    return ret;
+}
+
+void show_socket_help()
+{
+    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
+    printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
+    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
+
+    printf( "\n%s\n", _("Usage:") );
+    printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
+    printf( "%s\n", _("Example:") );
+    printf( "    spacefm -s set window_size 800x600\n" );
+
+    printf( "\n%s\n", _("METHODS\n-------") );
+    printf( "spacefm -s set PROPERTY [VALUE...]\n" );
+    printf( "    %s\n", _("Sets a property") );
+
+    printf( "\nspacefm -s get PROPERTY\n" );
+    printf( "    %s\n", _("Gets a property") );
+
+    printf( "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
+    printf( "    %s\n", _("Sets a task property") );
+
+    printf( "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
+    printf( "    %s\n", _("Gets a task property") );
+
+    printf( "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
+    printf( "    %s\n", _("Activates a menu item by emitting its shortcut key") );
+
+    printf( "\nspacefm -s show-menu MENUNAME\n" );
+    printf( "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
+
+    printf( "\nspacefm -s add-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Add asynchronous handler COMMAND to EVENT") );
+
+    printf( "\nspacefm -s replace-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Add synchronous handler COMMAND to EVENT, replacing default handler") );
+
+    printf( "\nspacefm -s remove-event EVENT COMMAND ...\n" );
+    printf( "    %s\n", _("Remove handler COMMAND from EVENT") );
+
+    printf( "\nspacefm -s help|--help\n" );
+    printf( "    %s\n", _("Shows this help reference.  (Also see manual link below.)") );
+
+    printf( "\n%s\n", _("OPTIONS\n-------") );
+    printf( "%s\n", _("Add options after METHOD to specify a specific window, panel, and/or tab.") );
+    printf( "%s\n", _("Otherwise the current tab of the current panel in the last window is used.") );
+
+    printf( "\n--window WINDOWID\n" );
+    printf( "    %s spacefm -s set --window 0x104ca80 window_size 800x600\n", _("Specify window.  eg:") );
+    printf( "--panel PANEL\n" );
+    printf( "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
+    printf( "--tab TAB\n" );
+    printf( "    %s spacefm -s set selected_filenames --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
+
+    printf( "\n%s\n", _("PROPERTIES\n----------") );
+    printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
+
+    printf( "\nwindow_size                     eg '800x600'\n" );
+    printf( "window_position                 eg '100x50'\n" );
+    printf( "window_maximized                1|true|yes|0|false|no\n" );
+    printf( "window_fullscreen               1|true|yes|0|false|no\n" );
+    printf( "window_vslider_top              eg '100'\n" );
+    printf( "window_vslider_bottom           eg '100'\n" );
+    printf( "window_hslider                  eg '100'\n" );
+    printf( "window_tslider                  eg '100'\n" );
+    printf( "focused_panel                   1|2|3|4|prev|next|hide\n" );
+    printf( "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
+    printf( "current_tab                     1|2|...|prev|next|close\n" );
+    printf( "bookmarks_visible               1|true|yes|0|false|no\n" );
+    printf( "dirtree_visible                 1|true|yes|0|false|no\n" );
+    printf( "toolbar_visible                 1|true|yes|0|false|no\n" );
+    printf( "sidetoolbar_visible             1|true|yes|0|false|no\n" );
+    printf( "hidden_files_visible            1|true|yes|0|false|no\n" );
+    printf( "panel1_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel2_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel3_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel4_visible                  1|true|yes|0|false|no\n" );
+    printf( "panel_hslider_top               eg '100'\n" );
+    printf( "panel_hslider_bottom            eg '100'\n" );
+    printf( "panel_vslider                   eg '100'\n" );
+    printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
+    printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
+    printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
+    printf( "current_dir                     %s\n", _("DIR            eg '/etc'") );
+    printf( "selected_filenames              %s\n", _("[FILENAME ...]") );
+    printf( "selected_pattern                %s\n", _("[PATTERN]      eg '*.jpg'") );
+    printf( "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
+    printf( "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
+    printf( "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+    printf( "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
+    printf( "clipboard_copy_files            %s\n", _("FILE ...  Files copied to clipboard") );
+    printf( "clipboard_cut_files             %s\n", _("FILE ...  Files cut to clipboard") );
+
+    printf( "\n%s\n", _("TASK PROPERTIES\n---------------") );
+    printf( "status                          %s\n", _("contents of Status task column  (read-only)") );
+    printf( "icon                            %s\n", _("eg 'gtk-open'") );
+    printf( "count                           %s\n", _("text to show in Count task column") );
+    printf( "folder                          %s\n", _("text to show in Folder task column") );
+    printf( "item                            %s\n", _("text to show in Item task column") );
+    printf( "to                              %s\n", _("text to show in To task column") );
+    printf( "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
+    printf( "total                           %s\n", _("text to show in Total task column") );
+    printf( "curspeed                        %s\n", _("text to show in Current task column") );
+    printf( "curremain                       %s\n", _("text to show in CRemain task column") );
+    printf( "avgspeed                        %s\n", _("text to show in Average task column") );
+    printf( "avgremain                       %s\n", _("text to show in Remain task column") );
+    printf( "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
+    printf( "started                         %s\n", _("contents of Started task column (read-only)") );
+    printf( "queue_state                     run|pause|queue|stop\n" );
+
+    printf( "\n%s\n", _("EVENTS\n------") );
+    printf( "evt_start                       %s\n", _("Instance start        %e") );
+    printf( "evt_exit                        %s\n", _("Instance exit         %e") );
+    printf( "evt_win_new                     %s\n", _("Window new            %e %w %p %t") );
+    printf( "evt_win_focus                   %s\n", _("Window focus          %e %w %p %t") );
+    printf( "evt_win_move                    %s\n", _("Window move/resize    %e %w %p %t") );
+    printf( "evt_win_click                   %s\n", _("Mouse click           %e %w %p %t %b %m %f") );
+    printf( "evt_win_key                     %s\n", _("Window keypress       %e %w %p %t %k %m") );
+    printf( "evt_win_close                   %s\n", _("Window close          %e %w %p %t") );
+    printf( "evt_pnl_focus                   %s\n", _("Panel focus           %e %w %p %t") );
+    printf( "evt_pnl_show                    %s\n", _("Panel show/hide       %e %w %p %t %f %v") );
+    printf( "evt_pnl_sel                     %s\n", _("Selection changed     %e %w %p %t") );
+    printf( "evt_tab_new                     %s\n", _("Tab new               %e %w %p %t") );
+    printf( "evt_tab_focus                   %s\n", _("Tab focus             %e %w %p %t") );
+    printf( "evt_tab_close                   %s\n", _("Tab close             %e %w %p %t") );
+    printf( "evt_device                      %s\n", _("Device change         %e %f %v") );
+
+    printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
+    printf( "    %%e   %s\n", _("event name (evt_start|evt_exit|...)") );
+    printf( "    %%w   %s\n", _("window ID") );
+    printf( "    %%p   %s\n", _("panel number (1-4)") );
+    printf( "    %%t   %s\n", _("tab number (1-...)") );
+    printf( "    %%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
+    printf( "    %%k   %s\n", _("key code  (eg 0x63)") );
+    printf( "    %%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
+    printf( "    %%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
+    printf( "    %%v   %s\n", _("focus element is visible (0 or 1, or device state change)") );
+
+    printf( "\n%s:\n\n", _("Examples") );
+
+    printf( "    window_size=\"$(spacefm -s get window_size)\"\n" );
+    printf( "    spacefm -s set window_size 1024x768\n" );
+    printf( "    spacefm -s set column_width name 100\n" );
+    printf( "    spacefm -s set-task $fm_my_task progress 25\n" );
+    printf( "    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts\n" );
+    printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
+    printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
+    printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
+    printf( "    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
+    
+    printf( "    #!/bin/bash\n" );
+    printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );
+    printf( "    echo \"%s:\"\n", _("These files have been copied to the clipboard") );
+    printf( "    i=0\n" );
+    printf( "    while [ \"${copied_files[i]}\" != \"\" ]; do\n" );
+    printf( "        echo \"    ${copied_files[i]}\"\n" );
+    printf( "        (( i++ ))\n" );
+    printf( "    done\n" );
+    printf( "    if (( i != 0 )); then\n" );
+    printf( "        echo \"MD5SUMS:\"\n" );
+    printf( "        md5sum \"${copied_files[@]}\"\n" );
+    printf( "    fi\n" );
+
+    printf( "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
 }
 
 FMMainWindow* create_main_window()
@@ -914,9 +1239,10 @@ int main ( int argc, char *argv[] )
     textdomain ( GETTEXT_PACKAGE );
 #endif
 
-    // dialog mode?
+    // separate instance options
     if ( argc > 1 )
     {
+        // dialog mode?
         if ( !strcmp( argv[1], "-g" ) || !strcmp( argv[1], "--dialog" ) )
         {
             g_thread_init( NULL );
@@ -943,6 +1269,29 @@ int main ( int argc, char *argv[] )
             vfs_file_monitor_clean();
             return 0;
         }
+
+        // socket_command?
+        if ( !strcmp( argv[1], "-s" ) || !strcmp( argv[1], "--socket-cmd" ) )
+        {
+#ifdef ENABLE_NLS
+            // initialize gettext since gtk_init is not run here
+            setlocale( LC_ALL, "" );
+            bindtextdomain( GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR );
+            textdomain( GETTEXT_PACKAGE );
+#endif
+            if ( argv[2] && ( !strcmp( argv[2], "help" ) || 
+                                                !strcmp( argv[2], "--help" ) ) )
+            {
+                show_socket_help();
+                return 0;
+            }
+            char* reply = NULL;
+            int ret = send_socket_command( argc, argv, &reply );
+            if ( reply && reply[0] )
+                fprintf( ret ? stderr : stdout, "%s", reply );
+            g_free( reply );
+            return ret;
+        }
     }
 
     /* initialize GTK+ and parse the command line arguments */
@@ -957,6 +1306,13 @@ int main ( int argc, char *argv[] )
     if ( custom_dialog )
     {
         fprintf( stderr, "spacefm: %s\n", _("--dialog must be first option") );
+        return 1;
+    }
+    
+    // socket command with other options?
+    if ( socket_cmd )
+    {
+        fprintf( stderr, "spacefm: %s\n", _("--socket-cmd must be first option") );
         return 1;
     }
     
@@ -1017,12 +1373,16 @@ int main ( int argc, char *argv[] )
      * Subsequent processes will exit() inside single_instance_check and won't reach here.
      */
 
+    main_window_event( NULL, NULL, "evt_start", 0, 0, NULL, 0, 0, 0, FALSE );
+
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
  
     if( run )   /* run the main loop */
         gtk_main();
+
+    main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
     single_instance_finalize();
 

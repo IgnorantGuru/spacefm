@@ -43,11 +43,23 @@ static void ptk_text_renderer_set_property ( GObject *object,
                                              GParamSpec *pspec );
 static void ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                                          GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                                         const GdkRectangle *cell_area,
+#else
                                          GdkRectangle *cell_area,
+#endif
                                          gint *x_offset,
                                          gint *y_offset,
                                          gint *width,
                                          gint *height );
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void ptk_text_renderer_render ( GtkCellRenderer *cell,
+                                       cairo_t *cr,
+                                       GtkWidget *widget,
+                                       const GdkRectangle *background_area,
+                                       const GdkRectangle *cell_area,
+                                       GtkCellRendererState flags );
+#else
 static void ptk_text_renderer_render ( GtkCellRenderer *cell,
                                        GdkWindow *window,
                                        GtkWidget *widget,
@@ -55,6 +67,7 @@ static void ptk_text_renderer_render ( GtkCellRenderer *cell,
                                        GdkRectangle *cell_area,
                                        GdkRectangle *expose_area,
                                        GtkCellRendererState flags );
+#endif
 
 
 enum {
@@ -821,7 +834,11 @@ get_layout ( PtkTextRenderer *celltext,
 static void
 get_size ( GtkCellRenderer *cell,
            GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+           const GdkRectangle *cell_area,
+#else
            GdkRectangle *cell_area,
+#endif
            PangoLayout *layout,
            gint *x_offset,
            gint *y_offset,
@@ -898,7 +915,11 @@ get_size ( GtkCellRenderer *cell,
 static void
 ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                              GtkWidget *widget,
+#if GTK_CHECK_VERSION (3, 0, 0)
+                             const GdkRectangle *cell_area,
+#else
                              GdkRectangle *cell_area,
+#endif
                              gint *x_offset,
                              gint *y_offset,
                              gint *width,
@@ -908,6 +929,15 @@ ptk_text_renderer_get_size ( GtkCellRenderer *cell,
                x_offset, y_offset, width, height );
 }
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+static void
+ptk_text_renderer_render ( GtkCellRenderer *cell,
+                           cairo_t *cr,
+                           GtkWidget *widget,
+                           const GdkRectangle *background_area,
+                           const GdkRectangle *cell_area,
+                           GtkCellRendererState flags )
+#else
 static void
 ptk_text_renderer_render ( GtkCellRenderer *cell,
                            GdkDrawable *window,
@@ -916,6 +946,7 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                            GdkRectangle *cell_area,
                            GdkRectangle *expose_area,
                            GtkCellRendererState flags )
+#endif
 
 {
     PtkTextRenderer * celltext = ( PtkTextRenderer * ) cell;
@@ -927,6 +958,13 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     gint focus_pad, focus_width;
     gint x, y;
     gint xpad, ypad;
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_save ( cr );
+#else
+    cairo_t *cr;
+
+    cr = gdk_cairo_create ( window );
+#endif
     
     gtk_cell_renderer_get_padding ( cell, &xpad, &ypad );
 
@@ -949,7 +987,11 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         if ( gtk_widget_has_focus ( widget ) )
             state = GTK_STATE_SELECTED;
         else
+#if GTK_CHECK_VERSION (3, 0, 0)
+            state = GTK_STATE_SELECTED;
+#else
             state = GTK_STATE_ACTIVE;
+#endif
     }
     else if ( ( flags & GTK_CELL_RENDERER_PRELIT ) == GTK_CELL_RENDERER_PRELIT &&
               gtk_widget_get_state ( widget ) == GTK_STATE_PRELIGHT )
@@ -969,17 +1011,24 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
         /* draw background color for selected state if needed */
         if( flags & GTK_CELL_RENDERER_SELECTED )
         {
-            gdk_draw_rectangle ( window,
-                                 gtk_widget_get_style ( widget )->base_gc[ state ], TRUE,
-                                 cell_area->x + x_offset, cell_area->y + y_offset,
-                                 width, height );
+            gdk_cairo_set_source_color ( cr, &gtk_widget_get_style ( widget )->base[ state ] );
+            cairo_rectangle ( cr, cell_area->x + x_offset, cell_area->y + y_offset, width, height );
+            cairo_fill ( cr );
         }
 
         /* draw the focus */
         if(flags & GTK_CELL_RENDERER_FOCUSED)
         {
-            gtk_paint_focus( gtk_widget_get_style ( widget ), window, gtk_widget_get_state (widget),
+            gtk_paint_focus( gtk_widget_get_style ( widget ),
+#if GTK_CHECK_VERSION (3, 0, 0)
+                           cr,
+                           gtk_widget_get_state (widget),
+                           widget, "icon_view",
+#else
+                           window,
+                           gtk_widget_get_state (widget),
                            NULL, widget, "icon_view",
+#endif
                            cell_area->x + x_offset - focus_width,
                            cell_area->y + y_offset - focus_width,
                            width + focus_width * 2, height + focus_width * 2);
@@ -993,11 +1042,20 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
     else if ( celltext->wrap_width == -1 )
         pango_layout_set_width ( layout, -1 );
 
+    if ( pango_layout_is_wrapped ( layout ) )
+        x_offset = -xpad / 2;
+
     gtk_paint_layout ( gtk_widget_get_style ( widget ),
+#if GTK_CHECK_VERSION (3, 0, 0)
+                       cr,
+                       state,
+                       TRUE,
+#else
                        window,
                        state,
                        TRUE,
                        expose_area,
+#endif
                        widget,
                        "cellrenderertext",
                        cell_area->x + x_offset + xpad,
@@ -1005,5 +1063,10 @@ ptk_text_renderer_render ( GtkCellRenderer *cell,
                        layout );
 
     g_object_unref ( layout );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    cairo_restore ( cr );
+#else
+    cairo_destroy ( cr );
+#endif
 }
 

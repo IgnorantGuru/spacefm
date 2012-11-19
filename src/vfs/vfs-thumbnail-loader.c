@@ -378,6 +378,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
         thumbnail = gdk_pixbuf_new_from_file_at_size( file_path, 128, 128, NULL );
         if ( thumbnail )
         {
+            thumbnail = gdk_pixbuf_apply_embedded_orientation( thumbnail );
             sprintf( mtime_str, "%lu", mtime );
             gdk_pixbuf_save( thumbnail, thumbnail_file, "png", NULL,
                              "tEXt::Thumb::URI", uri, "tEXt::Thumb::MTime", mtime_str, NULL );

@@ -102,7 +102,7 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_default_keys();
 int xset_context_test( char* rules, gboolean def_disable );
-char* clean_label( char* menu_label, gboolean kill_special, gboolean convert_amp );
+char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
 char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor );
 GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
                                                             int job, XSet* set );
@@ -299,8 +299,8 @@ static void parse_general_settings( char* line )
             xset_set( "main_terminal", "s", value );
             //app_settings.terminal = strdup( value );
     }
-    //else if ( 0 == strcmp( name, "use_si_prefix" ) )
-    //    app_settings.use_si_prefix = atoi( value );
+    else if ( 0 == strcmp( name, "use_si_prefix" ) )
+        app_settings.use_si_prefix = atoi( value );
     else if ( 0 == strcmp( name, "no_execute" ) )
         app_settings.no_execute = atoi( value );  //MOD
     else if ( 0 == strcmp( name, "home_folder" ) )
@@ -730,6 +730,20 @@ void load_settings( char* config_dir )
     /* Don't load bookmarks here since we won't use it in some cases */
     /* app_settings.bookmarks = ptk_bookmarks_get(); */
     
+    // cache event handlers
+    evt_win_focus = xset_get( "evt_win_focus" );
+    evt_win_move = xset_get( "evt_win_move" );
+    evt_win_click = xset_get( "evt_win_click" );
+    evt_win_key = xset_get( "evt_win_key" );
+    evt_win_close = xset_get( "evt_win_close" );
+    evt_pnl_show = xset_get( "evt_pnl_show" );
+    evt_pnl_focus = xset_get( "evt_pnl_focus" );
+    evt_pnl_sel = xset_get( "evt_pnl_sel" );
+    evt_tab_new = xset_get( "evt_tab_new" );
+    evt_tab_focus = xset_get( "evt_tab_focus" );
+    evt_tab_close = xset_get( "evt_tab_close" );
+    evt_device = xset_get( "evt_device" );
+
     // config conversions
     int ver = xset_get_int( "config_version", "s" );
     if ( ver == 0 )
@@ -1088,8 +1102,8 @@ char* save_settings( gpointer main_window_ptr )
         */
         //if ( app_settings.terminal )
         //    fprintf( file, "terminal=%s\n", app_settings.terminal );
-        //if ( app_settings.use_si_prefix != use_si_prefix_default )
-        //    fprintf( file, "use_si_prefix=%d\n", !!app_settings.use_si_prefix );
+        if ( app_settings.use_si_prefix != use_si_prefix_default )
+            fprintf( file, "use_si_prefix=%d\n", !!app_settings.use_si_prefix );
 //        if ( app_settings.show_location_bar != show_location_bar_default )
 //            fprintf( file, "show_location_bar=%d\n", app_settings.show_location_bar );
 /*        if ( app_settings.home_folder )
@@ -1605,6 +1619,11 @@ void xset_free_all()
     for ( l = xsets; l; l = l->next )
     {
         set = l->data;
+        if ( set->ob2_data && g_str_has_prefix( set->name, "evt_" ) )
+        {
+            g_list_foreach( (GList*)set->ob2_data, (GFunc)g_free, NULL );
+            g_list_free( (GList*)set->ob2_data );
+        }
         if ( set->name )
             g_free( set->name );
         if ( set->s )
@@ -2271,6 +2290,32 @@ XSet* xset_set_panel( int panel, const char* name, const char* var, const char* 
     set = xset_set( fullname, var, value );
     g_free( fullname );
     return set;
+}
+
+XSet* xset_find_menu( const char* menu_name )
+{
+    XSet* set;
+    GList* l;
+    char* str;
+    
+    char* name = clean_label( menu_name, TRUE, FALSE );
+    for ( l = xsets; l; l = l->next )
+    {
+        set = l->data;
+        if ( !set->lock && set->menu_style == XSET_MENU_SUBMENU && set->child )
+        {
+            str = clean_label( set->menu_label, TRUE, FALSE );
+            if ( !g_strcmp0( str, name ) )
+            {
+                g_free( str );
+                g_free( name );
+                return set;
+            }
+            g_free( str );
+        }
+    }
+    g_free( name );
+    return NULL;
 }
 
 void write_root_saver( FILE* file, const char* path, const char* name,
@@ -2944,8 +2989,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
             FILE* file;
             int i;
             const char* script_default_head = "#!/bin/bash\n$fm_import    # import file manager variables (scroll down for info)\n#\n# Enter your commands here:     ( then save this file )\n";
-            const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Show a confirmation dialog using SpaceFM Dialog:\n#   # http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog\n#   # Use QUOTED eval to read variables output by SpaceFM Dialog:\n#   eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n#   if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n#       echo \"User pressed Yes - take some action\"\n#   else\n#       echo \"User did NOT press Yes - abort\"\n#   fi\n\n\n# Script Example 3:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 4:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       To see the latest list, create a new command script or see:\n#       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#exvar\n\n";
-
+            const char* script_default_tail = "exit $?\n# Example variables available for use: (imported by $fm_import)\n# These variables represent the state of the file manager when command is run.\n# These variables can also be used in command lines and in the Path Bar.\n\n# \"${fm_files[@]}\"          selected files              ( same as %F )\n# \"$fm_file\"                first selected file         ( same as %f )\n# \"${fm_files[2]}\"          third selected file\n\n# \"${fm_filenames[@]}\"      selected filenames          ( same as %N )\n# \"$fm_filename\"            first selected filename     ( same as %n )\n\n# \"$fm_pwd\"                 current directory           ( same as %d )\n# \"${fm_pwd_tab[4]}\"        current directory of tab 4\n# $fm_panel                 current panel number (1-4)\n# $fm_tab                   current tab number\n\n# \"${fm_panel3_files[@]}\"   selected files in panel 3\n# \"${fm_pwd_panel[3]}\"      current directory in panel 3\n# \"${fm_pwd_panel3_tab[2]}\" current directory in panel 3 tab 2\n# ${fm_tab_panel[3]}        current tab number in panel 3\n\n# \"${fm_desktop_files[@]}\"  selected files on desktop (when run from desktop)\n# \"$fm_desktop_pwd\"         desktop directory (eg '/home/user/Desktop')\n\n# \"$fm_device\"              selected device (eg /dev/sr0)  ( same as %v )\n# \"$fm_device_udi\"          device ID\n# \"$fm_device_mount_point\"  device mount point if mounted (eg /media/dvd) (%m)\n# \"$fm_device_label\"        device volume label            ( same as %l )\n# \"$fm_device_fstype\"       device fs_type (eg vfat)\n# \"$fm_device_size\"         device volume size in bytes\n# \"$fm_device_display_name\" device display name\n# \"$fm_device_icon\"         icon currently shown for this device\n# $fm_device_is_mounted     device is mounted (0=no or 1=yes)\n# $fm_device_is_optical     device is an optical drive (0 or 1)\n# $fm_device_is_table       a partition table (usually a whole device)\n# $fm_device_is_floppy      device is a floppy drive (0 or 1)\n# $fm_device_is_removable   device appears to be removable (0 or 1)\n# $fm_device_is_audiocd     optical device contains an audio CD (0 or 1)\n# $fm_device_is_dvd         optical device contains a DVD (0 or 1)\n# $fm_device_is_blank       device contains blank media (0 or 1)\n# $fm_device_is_mountable   device APPEARS to be mountable (0 or 1)\n# $fm_device_nopolicy       policy_noauto set (no automount) (0 or 1)\n\n# \"$fm_panel3_device\"       panel 3 selected device (eg /dev/sdd1)\n# \"$fm_panel3_device_udi\"   panel 3 device ID\n# ...                       (all these are the same as above for each panel)\n\n# \"fm_bookmark\"             selected bookmark directory     ( same as %b )\n# \"fm_panel3_bookmark\"      panel 3 selected bookmark directory\n\n# \"fm_task_type\"            currently SELECTED task type (eg 'run','copy')\n# \"fm_task_name\"            selected task name (custom menu item name)\n# \"fm_task_pwd\"             selected task working directory ( same as %t )\n# \"fm_task_pid\"             selected task pid               ( same as %p )\n# \"fm_task_command\"         selected task command\n# \"fm_task_id\"              selected task id\n# \"fm_task_window\"          selected task window id\n\n# \"$fm_command\"             current command\n# \"$fm_value\"               menu item value             ( same as %a )\n# \"$fm_user\"                original user who ran this command\n# \"$fm_my_task\"             current task's id  (see 'spacefm -s help')\n# \"$fm_my_window\"           current task's window id\n# \"$fm_cmd_name\"            menu name of current command\n# \"$fm_cmd_dir\"             command files directory (for read only)\n# \"$fm_cmd_data\"            command data directory (must create)\n#                                 To create:   mkdir -p \"$fm_cmd_data\"\n# \"$fm_plugin_dir\"          top plugin directory\n# tmp=\"$(fm_new_tmp)\"       makes new temp directory (destroy when done)\n#                                 To destroy:  rm -rf \"$tmp\"\n\n# $fm_import                command to import above variables (this\n#                           variable is exported so you can use it in any\n#                           script run from this script)\n\n\n# Script Example 1:\n\n#   # show MD5 sums of selected files\n#   md5sum \"${fm_files[@]}\"\n\n\n# Script Example 2:\n\n#   # Show a confirmation dialog using SpaceFM Dialog:\n#   # http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog\n#   # Use QUOTED eval to read variables output by SpaceFM Dialog:\n#   eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n#   if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n#       echo \"User pressed Yes - take some action\"\n#   else\n#       echo \"User did NOT press Yes - abort\"\n#   fi\n\n\n# Script Example 3:\n\n#   # Build list of filenames in panel 4:\n#   i=0\n#   for f in \"${fm_panel4_files[@]}\"; do\n#       panel4_names[$i]=\"$(basename \"$f\")\"\n#       (( i++ ))\n#   done\n#   echo \"${panel4_names[@]}\"\n\n\n# Script Example 4:\n\n#   # Copy selected files to panel 2\n#      # make sure panel 2 is visible ?\n#      # and files are selected ?\n#      # and current panel isn't 2 ?\n#   if [ \"${fm_pwd_panel[2]}\" != \"\" ] \\\n#               && [ \"${fm_files[0]}\" != \"\" ] \\\n#               && [ \"$fm_panel\" != 2 ]; then\n#       cp \"${fm_files[@]}\" \"${fm_pwd_panel[2]}\"\n#   else\n#       echo \"Can't copy to panel 2\"\n#       exit 1    # shows error if 'Popup Error' enabled\n#   fi\n\n\n# Script Example 5:\n\n#   # Keep current time in task manager list Item column\n#   # See http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets\n#   while (( 1 )); do\n#       sleep 0.7\n#       spacefm -s set-task $fm_my_task item \"$(date)\"\n#   done\n\n\n# Bash Scripting Guide:  http://www.tldp.org/LDP/abs/html/index.html\n\n# NOTE: Additional variables or examples may be available in future versions.\n#       To see the latest list, create a new command script or see:\n#       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#exvar\n\n";
             file = fopen( path, "w" );
 
             if ( file )
@@ -5120,7 +5164,7 @@ gboolean on_context_selection_change( GtkTreeSelection* tree_sel,
 static gboolean on_context_entry_keypress( GtkWidget *entry, GdkEventKey* event,
                                                             ContextData* ctxt )
 {    
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         if ( gtk_widget_get_sensitive( GTK_WIDGET( ctxt->btn_apply ) ) )
             on_context_button_press( GTK_WIDGET( ctxt->btn_apply ), ctxt );
@@ -6343,7 +6387,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
 {
     int job = -1;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->GSEAL(active_menu_item);
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( widget ) );
     if ( !item )
         return FALSE;
     
@@ -6352,7 +6396,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     
     if ( keymod == 0 )
     {        
-        if ( event->keyval == GDK_F1 )
+        if ( event->keyval == GDK_KEY_F1 )
         {
             char* help = NULL;
             job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
@@ -6484,24 +6528,24 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             xset_show_help( NULL, NULL, help );
             return TRUE;
         }
-        else if ( event->keyval == GDK_F3 )
+        else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_CONTEXT;
-        else if ( event->keyval == GDK_F4 )
+        else if ( event->keyval == GDK_KEY_F4 )
             job = XSET_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
+        else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
+        else if ( event->keyval == GDK_KEY_Insert )
             job = XSET_JOB_COMMAND;
     }
     else if ( keymod == GDK_CONTROL_MASK )
     {
-        if ( event->keyval == GDK_c )
+        if ( event->keyval == GDK_KEY_c )
             job = XSET_JOB_COPY;
-        else if ( event->keyval == GDK_x )
+        else if ( event->keyval == GDK_KEY_x )
             job = XSET_JOB_CUT;
-        else if ( event->keyval == GDK_v )
+        else if ( event->keyval == GDK_KEY_v )
             job = XSET_JOB_PASTE;
-        else if ( event->keyval == GDK_e )
+        else if ( event->keyval == GDK_KEY_e )
         {
             if ( set->lock )
             {
@@ -6510,9 +6554,9 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             else
                 job = XSET_JOB_EDIT;
         }
-        else if ( event->keyval == GDK_k )
+        else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
-        else if ( event->keyval == GDK_i )
+        else if ( event->keyval == GDK_KEY_i )
             job = XSET_JOB_ICON;
     }
     if ( job != -1 )
@@ -6693,7 +6737,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_set_sensitive( newitem, ( set->menu_style < XSET_MENU_SUBMENU
                                         || toolexecsub ) );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Icon
     newitem = xset_design_additem( design_menu, _("_Icon"),
@@ -6705,7 +6749,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                                         || set->menu_style == XSET_MENU_SUBMENU
                                         || set->tool ) && !open_all );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_i, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     //// Style submenu
     newitem = gtk_image_menu_item_new_with_mnemonic( _("_Style") );
@@ -6783,7 +6827,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_set_sensitive( newitem, xset_context && xset_context->valid
                                                             && !open_all );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_F3, 0, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_F3, 0, GTK_ACCEL_VISIBLE);
 
     newitem = xset_design_additem( submenu, _("Ign_ore Context (global)"),
                                 "@check", XSET_JOB_IGNORE_CONTEXT, set );
@@ -6807,7 +6851,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     newitem = xset_design_additem( submenu, _("_Edit"),
                                 GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_F4, 0, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
     if ( !set->lock && geteuid() != 0 && atoi( set->x ) != 0 )
     {
         gboolean edit_as_root = TRUE;
@@ -7005,7 +7049,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                                 GTK_STOCK_HELP, XSET_JOB_HELP, set );
     gtk_widget_set_sensitive( newitem, !set->lock || ( set->lock && set->line ) );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_F1, 0, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_F1, 0, GTK_ACCEL_VISIBLE);
 
     // Separator
     gtk_container_add ( GTK_CONTAINER ( design_menu ), gtk_separator_menu_item_new() );
@@ -7015,14 +7059,14 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                                 GTK_STOCK_CUT, XSET_JOB_CUT, set );
     gtk_widget_set_sensitive( newitem, !set->lock && !set->plugin );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_x, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_x, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Copy
     newitem = xset_design_additem( design_menu, _("_Copy"),
                                 GTK_STOCK_COPY, XSET_JOB_COPY, set );
     gtk_widget_set_sensitive( newitem, !set->lock );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_c, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_c, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Paste
     newitem = xset_design_additem( design_menu, _("_Paste"),
@@ -7032,14 +7076,14 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                         && !( set->tool && set_clipboard->menu_style ==
                                                     XSET_MENU_SUBMENU ) );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_v, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_v, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
     // Remove
     newitem = xset_design_additem( design_menu, _("_Remove"),
                                 GTK_STOCK_REMOVE, XSET_JOB_REMOVE, set );
     gtk_widget_set_sensitive( newitem, !set->lock && !no_remove );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_Delete, 0, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_Delete, 0, GTK_ACCEL_VISIBLE);
 
     // Export
     newitem = xset_design_additem( design_menu, _("E_xport"),
@@ -7056,7 +7100,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
                                 GTK_STOCK_ADD, XSET_JOB_COMMAND, set );
     gtk_widget_set_sensitive( newitem, !set->plugin );
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
-                            GDK_Insert, 0, GTK_ACCEL_VISIBLE);
+                            GDK_KEY_Insert, 0, GTK_ACCEL_VISIBLE);
 
     // New > Submenu
     newitem = xset_design_additem( design_menu, _("Sub_menu"),
@@ -7191,7 +7235,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     int job = -1;
     XSet* set;
 
-    GtkWidget* item = GTK_MENU_SHELL( widget )->GSEAL(active_menu_item);
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( widget ) );
     if ( item )
     {
         set = g_object_get_data( G_OBJECT( item ), "set" );
@@ -7206,33 +7250,33 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
     
     if ( keymod == 0 )
     {        
-        if ( event->keyval == GDK_F1 )
+        if ( event->keyval == GDK_KEY_F1 )
         {
             job = XSET_JOB_HELP;
         }
-        else if ( event->keyval == GDK_F2 )
+        else if ( event->keyval == GDK_KEY_F2 )
         {
             xset_design_show_menu( widget, set, 0, event->time );
             return TRUE;
         }
-        else if ( event->keyval == GDK_F3 )
+        else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_CONTEXT;
-        else if ( event->keyval == GDK_F4 )
+        else if ( event->keyval == GDK_KEY_F4 )
             job = XSET_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
+        else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
+        else if ( event->keyval == GDK_KEY_Insert )
             job = XSET_JOB_COMMAND;
     }
     else if ( keymod == GDK_CONTROL_MASK )
     {
-        if ( event->keyval == GDK_c )
+        if ( event->keyval == GDK_KEY_c )
             job = XSET_JOB_COPY;
-        else if ( event->keyval == GDK_x )
+        else if ( event->keyval == GDK_KEY_x )
             job = XSET_JOB_CUT;
-        else if ( event->keyval == GDK_v )
+        else if ( event->keyval == GDK_KEY_v )
             job = XSET_JOB_PASTE;
-        else if ( event->keyval == GDK_e )
+        else if ( event->keyval == GDK_KEY_e )
         {
             if ( set->lock )
             {
@@ -7242,9 +7286,9 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             else
                 job = XSET_JOB_EDIT;
         }
-        else if ( event->keyval == GDK_k )
+        else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
-        else if ( event->keyval == GDK_i )
+        else if ( event->keyval == GDK_KEY_i )
             job = XSET_JOB_ICON;
     }
     if ( job != -1 )
@@ -7681,7 +7725,7 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
 
 static gboolean on_input_keypress ( GtkWidget *widget, GdkEventKey *event, GtkWidget* dlg )
 {
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_OK );
         return TRUE;
@@ -7945,7 +7989,7 @@ void xset_text_dialog_activate( GtkEntry* entry, GtkDialog* dlg )
 static gboolean on_fontdlg_keypress ( GtkWidget *widget, GdkEventKey *event,
                                                                 GtkWidget* dlg )
 {
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         gtk_dialog_response( GTK_DIALOG( dlg ), GTK_RESPONSE_YES );
         return TRUE;
@@ -8423,7 +8467,7 @@ char* plain_ascii_name( const char* orig_name )
     return s;
 }
 
-char* clean_label( char* menu_label, gboolean kill_special, gboolean convert_amp )
+char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp )
 {
     char* s1;
     char* s2;
@@ -8449,6 +8493,49 @@ void string_copy_free( char** s, const char* src )
     char* discard = *s;
     *s = g_strdup( src );
     g_free( discard );
+}
+
+char* unescape( const char* t )
+{
+    if ( !t )
+        return NULL;
+    
+    char* s = g_strdup( t );
+
+    int i = 0, j = 0;    
+    while ( t[i] )
+    {
+        switch ( t[i] )
+        {
+        case '\\':
+            switch( t[++i] )
+            {
+            case 'n':
+                s[j] = '\n';
+                break;
+            case 't':
+                s[j] = '\t';
+                break;                
+            case '\\':
+                s[j] = '\\';
+                break;
+            case '\"':
+                s[j] = '\"';
+                break;
+            default:
+                // copy
+                s[j++] = '\\';
+                s[j] = t[i];
+            }
+            break;            
+        default:
+            s[j] = t[i];
+        }
+        ++i;
+        ++j;
+    }
+    s[j] = t[i];  // null char
+    return s;
 }
 
 void xset_defaults()
@@ -8754,7 +8841,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-open" );
     set->line = g_strdup( "#devices-menu-open" );
    
-    set = xset_set( "dev_menu_tab", "label", _("_Tab") );
+    set = xset_set( "dev_menu_tab", "label", _("_In Tab") );
     xset_set_set( set, "icon", "gtk-add" );
     set->line = g_strdup( "#devices-menu-tab" );
    
@@ -9218,7 +9305,7 @@ void xset_defaults()
     set = xset_set( "book_open", "label", _("_Open") );
     xset_set_set( set, "icon", "gtk-open" );
 
-    set = xset_set( "book_tab", "label", _("_Tab") );
+    set = xset_set( "book_tab", "label", _("_In Tab") );
     xset_set_set( set, "icon", "gtk-add" );
 
     set = xset_set( "book_settings", "label", _("_Settings") );
@@ -9424,6 +9511,122 @@ void xset_defaults()
         xset_set( "panel_3", "label", _("Panel _3") );
         xset_set( "panel_4", "label", _("Panel _4") );
 
+    set = xset_set( "main_auto", "label", _("_Events") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "desc", "auto_inst auto_win auto_pnl auto_tab evt_device" );
+    xset_set_set( set, "icon", "gtk-execute" );
+    set->line = g_strdup( "#sockets-menu" );
+    
+        set = xset_set( "auto_inst", "label", _("_Instance") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_start evt_exit" );
+        set->line = g_strdup( "#sockets-menu" );
+
+            set = xset_set( "evt_start", "label", _("_Startup") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Startup Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n\nUse:\n	%%e	 event type (evt_start)\n") );
+            set->line = g_strdup( "#sockets-events-start" );
+
+            set = xset_set( "evt_exit", "label", _("_Exit") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Instance Exit Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n\nUse:\n	%%e	 event type (evt_exit)\n") );
+            set->line = g_strdup( "#sockets-events-exit" );
+
+        set = xset_set( "auto_win", "label", _("_Window") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_win_click evt_win_key evt_win_close" );
+        set->line = g_strdup( "#sockets-menu" );
+
+            set = xset_set( "evt_win_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Window Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-winnew" );
+
+            set = xset_set( "evt_win_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-winfoc" );
+
+            set = xset_set( "evt_win_move", "label", _("_Move/Resize") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Move/Resize Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n	%%e	 event type\t(evt_win_move)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
+            set->line = g_strdup( "#sockets-events-winmov" );
+
+            set = xset_set( "evt_win_click", "label", _("_Click") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Click Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_win_click)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%b	 button\t\t(mouse button pressed)\n	%%m	 modifier\t\t(modifier keys)\n	%%f	 focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &") );
+            set->line = g_strdup( "#sockets-events-winclk" );
+
+            set = xset_set( "evt_win_key", "label", _("_Keypress") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Keypress Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a key is pressed:\n\nUse:\n	%%e	 event type\t(evt_win_key)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%k	 key code\t(key pressed)\n	%%m	 modifier\t(modifier keys)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &") );
+            set->line = g_strdup( "#sockets-events-winkey" );
+
+            set = xset_set( "evt_win_close", "label", _("Cl_ose") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Window Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n\nUse:\n	%%e	 event type\t(evt_win_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-wincls" );
+
+        set = xset_set( "auto_pnl", "label", _("_Panel") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_pnl_focus evt_pnl_show evt_pnl_sel" );
+        set->line = g_strdup( "#sockets-menu" );
+
+            set = xset_set( "evt_pnl_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n	%%e	 event type\t(evt_pnl_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-pnlfoc" );
+
+            set = xset_set( "evt_pnl_show", "label", _("_Show") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Show Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n	%%e	 event type\t(evt_pnl_show)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%f	 focus  \t\t(element shown or hidden)\n	%%v	 visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-pnlshw" );
+
+            set = xset_set( "evt_pnl_sel", "label", _("S_elect") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Panel Select Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_pnl_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
+            set->line = g_strdup( "#sockets-events-pnlsel" );
+
+        set = xset_set( "auto_tab", "label", _("T_ab") );
+        set->menu_style = XSET_MENU_SUBMENU;
+        xset_set_set( set, "desc", "evt_tab_new evt_tab_focus evt_tab_close" );
+        set->line = g_strdup( "#sockets-menu" );
+
+            set = xset_set( "evt_tab_new", "label", _("_New") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set New Tab Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n	%%e	 event type\t(evt_tab_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-tabnew" );
+
+            set = xset_set( "evt_tab_focus", "label", _("_Focus") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Focus Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n	%%e	 event type\t(evt_tab_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            set->line = g_strdup( "#sockets-events-tabfoc" );
+
+            set = xset_set( "evt_tab_close", "label", _("_Close") );
+            set->menu_style = XSET_MENU_STRING;
+            xset_set_set( set, "title", _("Set Tab Close Command") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_tab_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 closed tab") );
+            set->line = g_strdup( "#sockets-events-tabcls" );
+
+        set = xset_set( "evt_device", "label", _("_Device") );
+        set->menu_style = XSET_MENU_STRING;
+        xset_set_set( set, "title", _("Set Device Command") );
+        xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a device state changes:\n\nUse:\n	%%e	 event type\t(evt_device)\n	%%f	 device file\n	%%v	 change \t\t(added|removed|changed)\n") );
+        set->line = g_strdup( "#sockets-events-device" );
+
     set = xset_set( "main_title", "label", _("Wi_ndow Title") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Set Window Title Format") );
@@ -9447,9 +9650,6 @@ void xset_defaults()
 
     set = xset_set( "main_tool", "label", _("_Tool") );
     set->menu_style = XSET_MENU_SUBMENU;
-
-    set = xset_get( "rubberband" );  // in Preferences
-    set->b = XSET_B_TRUE;
 
     set = xset_get( "root_bar" );  // in Preferences
     set->b = XSET_B_TRUE;
@@ -9959,7 +10159,7 @@ void xset_defaults()
         set = xset_set( "focus_device", "label", _("De_vices") );
             xset_set_set( set, "icon", "gtk-harddisk" );
 
-    set = xset_set( "go_tab", "label", _("_Tab") );
+    set = xset_set( "go_tab", "label", _("_To Tab") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "tab_prev tab_next tab_close tab_1 tab_2 tab_3 tab_4 tab_5 tab_6 tab_7 tab_8 tab_9 tab_10" );
 
@@ -9985,10 +10185,14 @@ void xset_defaults()
     set = xset_set( "view_list_style", "label", _("Styl_e") );
     set->menu_style = XSET_MENU_SUBMENU;
 
-    set = xset_set( "view_columns", "label", _("_Columns") );
+    set = xset_set( "view_columns", "label", _("C_olumns") );
     set->menu_style = XSET_MENU_SUBMENU;
 
     set = xset_set( "view_reorder_col", "label", _("_Reorder") );
+
+    set = xset_set( "rubberband", "label", _("_Rubberband Select") );
+    set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
 
     set = xset_get( "sep_s1" );
     set->menu_style = XSET_MENU_SEP;

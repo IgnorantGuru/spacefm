@@ -39,6 +39,8 @@
 #include "ptk-file-list.h"  //sfm for sort extra
 //#include "ptk-bookmarks.h"
 
+#include "gtk2-compat.h"
+
 #define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
@@ -1141,9 +1143,14 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col", p, p, p, p, p );
             xset_set_set( set, "desc", desc );
             g_free( desc );
+            set = xset_set_cb( "rubberband", main_window_rubberband_all, NULL );
+            set->disable = FALSE;
         }
         else
+        {
             xset_set( "view_columns", "disable", "1" );
+            xset_set( "rubberband", "disable", "1" );
+        }
         
         set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed, browser );
             xset_set_ob2( set, NULL, NULL );
@@ -1223,7 +1230,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
-        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns sep_v6 panel%d_font_file",
+        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns rubberband sep_v6 panel%d_font_file",
                                         p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
@@ -1688,7 +1695,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     PtkFileMenu* app_data = NULL;
     VFSAppDesktop* desktop_file = NULL;
     
-    GtkWidget* item = GTK_MENU_SHELL( menu )->GSEAL(active_menu_item); //GTK3 version: gtk_menu_shell_get_selected_item (GTK_MENU_SHELL( menu ));
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
     if ( item )
     {
         // if original menu, desktop_file will be set
@@ -1708,7 +1715,7 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
     
     if ( keymod == 0 )
     {        
-        if ( event->keyval == GDK_F1 )
+        if ( event->keyval == GDK_KEY_F1 )
         {
             char* help = NULL;
             if ( app_data )
@@ -1757,16 +1764,16 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
             xset_show_help( NULL, NULL, help );
             return TRUE;
         }
-        else if ( desktop_file && event->keyval == GDK_F2 )
+        else if ( desktop_file && event->keyval == GDK_KEY_F2 )
         {
             show_app_menu( menu, item, data, 0, event->time );
             return TRUE;
         }
-        else if ( event->keyval == GDK_F4 )
+        else if ( event->keyval == GDK_KEY_F4 )
             job = APP_JOB_EDIT;
-        else if ( event->keyval == GDK_Delete )
+        else if ( event->keyval == GDK_KEY_Delete )
             job = APP_JOB_REMOVE;
-        else if ( event->keyval == GDK_Insert )
+        else if ( event->keyval == GDK_KEY_Insert )
             job = APP_JOB_ADD;
     }
     if ( desktop_file && job != -1 )

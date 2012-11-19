@@ -181,8 +181,10 @@ gboolean on_update_labels( FilePropertiesDialogData* data )
         g_free( count_dir );
     }
     else
-        count = g_strdup_printf( _("%d files"), data->total_count );
-    gtk_label_set_text( data->count_label, count );
+        count = g_strdup_printf( ngettext( "%d files", "%d files", 
+                                 data->total_count), data->total_count );
+ 
+     gtk_label_set_text( data->count_label, count );
     g_free( count );
 
     gdk_threads_leave();

@@ -1,3 +1,25 @@
+0.8.2+
+    added --socket-cmd #142
+    added View|Events menu
+    stop elapsed timer during overwrite query
+    vfs no report access errors during total size
+    configure --disable-pixmaps is now the default
+    added beta test --with-gtk3 build option (merge gtk3 branch)
+    updated README with BUILD GTK3 BETA instructions
+    allow ctrl-rubberband add to selection #46 [BWackNinja]
+    reduce spacing of icon and compact modes #188 [BWackNinja]
+    automatic orient thumbnails #183 [BWackNinja]
+    add wallpaper Zoom mode #4 [BWackNinja]
+    fix icon label centering #51 [BWackNinja]
+    fix icon/compact cannot drag multiple #194
+    restore Prefs SI File Sizes #117
+    move Prefs Rubberband Select to context View|Style as detailed only
+    add secondary sort by name to desktop-window #196
+    updated russian translation
+    hide unmounted /dev/ramN closes #202
+    fix make fail gtk2.18 replace gtk_dialog_get_widget_for_response
+    dialog allow arbitrary text in progress bar
+    dialog %(command) accepts bash command line
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
