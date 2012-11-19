@@ -1599,7 +1599,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_full", on_fullscreen_activate, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks sep_v2 main_title main_icon sep_v3 main_full" );
+    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_title main_icon sep_v2 main_full" );
     
     int p;
     int vis_count = 0;
@@ -1685,7 +1685,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_prefs", on_preference_activate, main_window );
     xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_add_menuitem( NULL, file_browser, newmenu, accel_group, child_set );
-    menu_elements = g_strdup_printf( "sep_v1 main_auto sep_v2 main_design_mode main_prefs" );
+    menu_elements = g_strdup_printf( "sep_v1 main_tasks main_auto sep_v2 main_design_mode main_prefs" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
