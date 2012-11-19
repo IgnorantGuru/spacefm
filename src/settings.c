@@ -4503,7 +4503,7 @@ void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboole
         if ( !editor || editor[0] == '\0' )
         {
             ptk_show_error( GTK_WINDOW( dlgparent ), _("Editor Not Set"),
-                            _("Please set your editor in View|Preferences|Advanced") );
+                            _("Please set your editor in Tools|Preferences|Advanced") );
             return;
         }
         terminal = xset_get_b( "editor" );
@@ -4514,7 +4514,7 @@ void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboole
         if ( !editor || editor[0] == '\0' )
         {
             ptk_show_error( GTK_WINDOW( dlgparent ), _("Root Editor Not Set"),
-                            _("Please set root's editor in View|Preferences|Advanced") );
+                            _("Please set root's editor in Tools|Preferences|Advanced") );
             return;
         }
         as_root = TRUE;
