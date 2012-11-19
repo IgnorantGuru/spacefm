@@ -115,49 +115,6 @@ static void get_width_height_pad( char* val, int* width, int* height, int* pad )
     if ( *height <= 0 ) *height = -1;
 }
 
-static char* unescape( const char* t )
-{
-    if ( !t )
-        return NULL;
-    
-    char* s = g_strdup( t );
-
-    int i = 0, j = 0;    
-    while ( t[i] )
-    {
-        switch ( t[i] )
-        {
-        case '\\':
-            switch( t[++i] )
-            {
-            case 'n':
-                s[j] = '\n';
-                break;
-            case 't':
-                s[j] = '\t';
-                break;                
-            case '\\':
-                s[j] = '\\';
-                break;
-            case '\"':
-                s[j] = '\"';
-                break;
-            default:
-                // copy
-                s[j++] = '\\';
-                s[j] = t[i];
-            }
-            break;            
-        default:
-            s[j] = t[i];
-        }
-        ++i;
-        ++j;
-    }
-    s[j] = t[i];  // null char
-    return s;
-}
-
 static void fill_combo_box( CustomElement* el, GList* arglist )
 {
     GList* l;
@@ -960,7 +917,7 @@ static void set_element_value( CustomElement* el, const char* name,
     case CDLG_PROGRESS:
         if ( el_name->widgets->next )
         {
-            if ( !g_strcmp0( value, "pulse" ) || value[0] == '\0' )
+            if ( !g_strcmp0( value, "pulse" ) )
             {
                 gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el_name->widgets->next->data ) );
                 gtk_progress_bar_set_text( 
@@ -977,14 +934,26 @@ static void set_element_value( CustomElement* el, const char* name,
                 i = value ? atoi( value ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
-                str = g_strdup_printf( "%d %%", i );
-                gtk_progress_bar_set_fraction( 
+                if ( i != 0 || ( value && value[0] == '0' ) )
+                    gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el_name->widgets->next->data ),
                                     (gdouble)i / 100 );
-                gtk_progress_bar_set_text( 
+                str = value;
+                while ( str && str[0] )
+                {
+                    if ( !g_ascii_isdigit( str[0] ) )
+                    {
+                        gtk_progress_bar_set_text( 
                                     GTK_PROGRESS_BAR( el_name->widgets->next->data ),
-                                    str );
-                g_free( str );
+                                    value );
+                        break;
+                    }
+                    str++;
+                }
+                if ( !( str && str[0] ) )
+                    gtk_progress_bar_set_text( 
+                                    GTK_PROGRESS_BAR( el_name->widgets->next->data ),
+                                    " " );
             }
         }
         break;
@@ -1162,21 +1131,25 @@ static char* get_command_value( CustomElement* el, char* cmdline, char* xvalue )
     gboolean ret;
     gint exit_status;
     GError* error = NULL;
-
+    char* argv[4];
+    
     char* line = replace_vars( el, cmdline, xvalue );
     if ( line[0] == '\0' )
         return line;
     
     //fprintf( stderr, "spacefm-dialog: SYNC=%s\n", line );
-    ret = g_spawn_command_line_sync( line, &stdout, NULL, NULL, &error );
-    g_free( line );
-
-    if ( !ret )
+    argv[0] = g_strdup( "bash" );
+    argv[1] = g_strdup( "-c" );
+    argv[2] = line;
+    argv[3] = NULL;
+    ret = g_spawn_sync( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                       &stdout, NULL, NULL, &error );
+    if ( !ret && error )
     {
         dlg_warn( "%s", error->message, NULL );
         g_error_free( error );
     }
-    return ret ? stdout : g_strdup( "" );    
+    return ret && stdout ? stdout : g_strdup( "" );    
 }
 
 static char* replace_vars( CustomElement* el, char* value, char* xvalue )
@@ -1659,6 +1632,8 @@ static char* read_file_value( const char* path, gboolean multi )
         }
         fclose( file );
         strtok( line, "\r\n" );
+        if ( line[0] == '\n' )
+            line[0] = '\0';
     }
     if ( !g_utf8_validate( line, -1, &end ) )
     {
@@ -2486,7 +2461,7 @@ static gboolean on_input_key_press( GtkWidget *entry, GdkEventKey* evt,
     int keymod = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if ( !( !keymod && ( evt->keyval == GDK_Return || evt->keyval == GDK_KP_Enter ) ) )
+    if ( !( !keymod && ( evt->keyval == GDK_KEY_Return || evt->keyval == GDK_KEY_KP_Enter ) ) )
         return FALSE;  // Enter key not pressed
 
     if ( ( el->type == CDLG_INPUT || el->type == CDLG_INPUT_LARGE )
@@ -2820,7 +2795,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     else
                         gtk_editable_select_region( GTK_EDITABLE( w ), 0, -1 );                    
                 }
-                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), FALSE, TRUE, pad );
+                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), TRUE, TRUE, pad );
             }
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "key-press-event",
@@ -3071,7 +3046,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             }
             gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( w ), FALSE );
             set_font( w, font );
-            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
@@ -3237,6 +3212,9 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         {
             w = gtk_progress_bar_new();
             gtk_progress_bar_set_pulse_step( GTK_PROGRESS_BAR( w ), 0.08 );
+#if GTK_CHECK_VERSION (3, 0, 0)
+            gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( w ), TRUE );
+#endif
             set_font( w, font );
             gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
             el->widgets = g_list_append( el->widgets, w );
@@ -3264,14 +3242,26 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 i = el->val ? atoi( el->val ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
-                g_free( el->val );
-                el->val = g_strdup_printf( "%d %%", i );
-                gtk_progress_bar_set_fraction( 
+                if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                    gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el->widgets->next->data ),
                                     (gdouble)i / 100 );
-                gtk_progress_bar_set_text( 
+                str = el->val;
+                while ( str && str[0] )
+                {
+                    if ( !g_ascii_isdigit( str[0] ) )
+                    {
+                        gtk_progress_bar_set_text( 
                                     GTK_PROGRESS_BAR( el->widgets->next->data ),
                                     el->val );
+                        break;
+                    }
+                    str++;
+                }
+                if ( !( str && str[0] ) )
+                    gtk_progress_bar_set_text( 
+                                    GTK_PROGRESS_BAR( el->widgets->next->data ),
+                                    " " );
             }
         }
         break;
@@ -3603,7 +3593,7 @@ static void show_help()
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
-    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a command\n                 %%%%           %%\n") );
+    fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a bash command line\n                 %%%%           %%\n") );
     fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
     fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );

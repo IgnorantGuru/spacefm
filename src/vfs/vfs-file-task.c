@@ -379,8 +379,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
     if ( lstat64( src_file, &file_stat ) == -1 )
     {
         vfs_file_task_error( task, errno, _("Accessing"), src_file );
-        if ( should_abort( task ) )
-            return FALSE;
+        return FALSE;
     }
 
     result = 0;
@@ -435,6 +434,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 g_error_free( error );
                 vfs_file_task_exec_error( task, 0, msg );
                 g_free( msg );
+                copy_fail = TRUE;
                 if ( should_abort( task ) )
                     goto _return_;
             }
@@ -455,13 +455,17 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 if ( (result = rmdir( src_file )) )
                 {
                     vfs_file_task_error( task, errno, _("Removing"), src_file );
+                    copy_fail = TRUE;
                     if ( should_abort( task ) )
                         goto _return_;
                 }
             }
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Creating Dir"), dest_file );
+            copy_fail = TRUE;
+        }
     }
     else if ( S_ISLNK( file_stat.st_mode ) )
     {
@@ -487,7 +491,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 if ( result && errno != 2 /* no such file */ )
                 {
                     vfs_file_task_error( task, errno, _("Removing"), dest_file );
-                    copy_fail = TRUE;
                     goto _return_;
                 }                
             }
@@ -504,17 +507,26 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     result = unlink( src_file );
                     if ( result )
+                    {
                         vfs_file_task_error( task, errno, _("Removing"), src_file );
+                        copy_fail = TRUE;
+                    }
                 }
                 g_mutex_lock( task->mutex );
                 task->progress += file_stat.st_size;
                 g_mutex_unlock( task->mutex );
             }
             else
+            {
                 vfs_file_task_error( task, errno, _("Creating Link"), dest_file );
+                copy_fail = TRUE;
+            }
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
+            copy_fail = TRUE;
+        }
     }
     else
     {
@@ -580,7 +592,10 @@ vfs_file_task_do_copy( VFSFileTask* task,
                 {
                     result = unlink( dest_file );
                     if ( result && errno != 2 /* no such file */ )
+                    {
                         vfs_file_task_error( task, errno, _("Removing"), dest_file );
+                        copy_fail = TRUE;
+                    }
                 }
                 else
                 {
@@ -601,17 +616,28 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     {
                         result = unlink( src_file );
                         if ( result )
+                        {
                             vfs_file_task_error( task, errno, _("Removing"), src_file );
+                            copy_fail = TRUE;
+                        }
                     }
                 }
             }
             else
+            {
                 vfs_file_task_error( task, errno, _("Creating"), dest_file );
+                copy_fail = TRUE;
+            }
             close( rfd );
         }
         else
+        {
             vfs_file_task_error( task, errno, _("Accessing"), src_file );
+            copy_fail = TRUE;
+        }
     }
+    if ( new_dest_file )
+        g_free( new_dest_file );
     if ( !copy_fail && task->error_first )
         task->error_first = FALSE;
     return !copy_fail;
@@ -1152,7 +1178,10 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
     printf("child finished  pid=%d exit_status=%d\n", pid,
                                     bad_status ? -1 : task->exec_exit_status );
     if ( !task->exec_exit_status && !bad_status )
-        task->percent = 100;
+    {
+        if ( !task->custom_percent )
+            task->percent = 100;
+    }
     else
         call_state_callback( task, VFS_FILE_TASK_ERROR );
     
@@ -1405,7 +1434,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             su = get_valid_su();
             if ( !su )
             {
-                str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
+                str = _("Please configure a valid Terminal SU command in Tools|Preferences|Advanced");
                 g_warning ( str );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
@@ -1416,7 +1445,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             gsu = get_valid_gsu();
             if ( !gsu )
             {
-                str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
+                str = _("Please configure a valid Graphical SU command in Tools|Preferences|Advanced");
                 g_warning ( str );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
@@ -1467,7 +1496,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             terminal = g_find_program_in_path( terminalv[0] );
         if ( !( terminal && terminal[0] == '/' ) )
         {
-            str = _("Please set a valid terminal program in View|Preferences|Advanced");
+            str = _("Please set a valid terminal program in Tools|Preferences|Advanced");
             g_warning ( str );
             // do not use xset_msg_dialog if non-main thread
             //vfs_file_task_exec_error( task, 0, str );
@@ -1969,7 +1998,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         for ( l = task->src_paths; l; l = l->next )
         {
             if ( lstat64( (char*)l->data, &file_stat ) == -1 )
-                vfs_file_task_error( task, errno, _("Accessing"), (char*)l->data );
+            {
+                // don't report error here since its reported later
+                //vfs_file_task_error( task, errno, _("Accessing"), (char*)l->data );
+            }
             else
             {
                 size = 0;
@@ -2004,7 +2036,10 @@ static gpointer vfs_file_task_thread ( VFSFileTask* task )
         for ( l = task->src_paths; l; l = l->next )
         {
             if ( lstat64( ( char* ) l->data, &file_stat ) == -1 )
-                vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
+            {
+                // don't report error here since it's reported later
+                //vfs_file_task_error( task, errno, _("Accessing"), ( char* ) l->data );
+            }
             else
             {
                 /*
@@ -2127,6 +2162,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->err_count = 0;
     task->abort = FALSE;
     task->error_first = TRUE;
+    task->custom_percent = FALSE;
     
     task->exec_type = VFS_EXEC_NORMAL;
     task->exec_action = NULL;
@@ -2151,6 +2187,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_write_root = FALSE;
     task->exec_set = NULL;
     task->exec_cond = NULL;
+    task->exec_ptask = NULL;
     
     task->pause_cond = NULL;
     task->state_pause = VFS_FILE_TASK_RUNNING;

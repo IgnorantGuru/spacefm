@@ -79,10 +79,12 @@ html_DATA = spacefm-manual-en.html
 # GtkBuilder UI definition files
 ui_in_files= \
 	ui/prefdlg.glade \
+	ui/prefdlg2.glade \
 	ui/appchooserdlg.glade \
 	ui/file_properties.glade \
 	ui/about-dlg.glade \
 	ui/find-files.glade \
+	ui/find-files2.glade \
 	ui/godlg.glade
 ui_DATA = $(ui_in_files:.glade=.ui)
 

@@ -481,9 +481,11 @@ GtkWidget* ptk_location_view_new( PtkFileBrowser* file_browser )
                                          "text", COL_NAME, NULL );
     gtk_tree_view_column_set_min_width( col, 10 );
 
+#if !GTK_CHECK_VERSION (3, 0, 0)
     if ( GTK_IS_TREE_SORTABLE( model ) )  // why is this needed to stop error on new tab?
         gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), COL_NAME,
                                               GTK_SORT_ASCENDING );  //MOD
+#endif
     //gtk_tree_view_column_set_sort_indicator( col, TRUE );  //MOD
     //gtk_tree_view_column_set_sort_column_id( col, COL_NAME );   //MOD
     //gtk_tree_view_column_set_sort_order( col, GTK_SORT_ASCENDING );  //MOD
@@ -2685,6 +2687,12 @@ gboolean volume_is_visible( VFSVolume* vol )
         // fall through
     }
         
+    // ramfs CONFIG_BLK_DEV_RAM causes multiple entries of /dev/ram*
+    if ( !vol->is_mounted && g_str_has_prefix( vol->device_file, "/dev/ram" ) && 
+                                        vol->device_file[8] &&
+                                        g_ascii_isdigit( vol->device_file[8] ) )
+        return FALSE;
+        
     // internal?
     if ( !vol->is_removable && !xset_get_b( "dev_show_internal_drives" ) )
         return FALSE;
@@ -2800,10 +2808,16 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
     
     if( evt->type != GDK_BUTTON_PRESS )
         return FALSE;
+
 //printf("on_button_press_event   view = %d\n", view );
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     ptk_file_browser_focus_me( file_browser );
+
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click",
+                            0, 0, "devices", 0, evt->button, evt->state, TRUE ) )
+        return FALSE;
 
     // get selected vol
     if ( gtk_tree_view_get_path_at_pos( view, evt->x, evt->y, &tree_path, NULL, NULL, NULL ) )
@@ -3408,6 +3422,11 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
         return FALSE;
     
     ptk_file_browser_focus_me( file_browser );
+
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
+            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click", 0, 0,
+                                "bookmarks", 0, evt->button, evt->state, TRUE ) )
+        return FALSE;
 
     if ( evt->button == 1 )  // left
     {

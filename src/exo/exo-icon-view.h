@@ -326,7 +326,11 @@ gboolean              exo_icon_view_get_dest_item_at_pos      (ExoIconView      
                                                                gint                      drag_y,
                                                                GtkTreePath             **path,
                                                                ExoIconViewDropPosition  *pos);
+#if GTK_CHECK_VERSION (3, 0, 0)
+cairo_surface_t      *exo_icon_view_create_drag_icon          (ExoIconView              *icon_view,
+#else
 GdkPixmap            *exo_icon_view_create_drag_icon          (ExoIconView              *icon_view,
+#endif
                                                                GtkTreePath              *path);
 
 
@@ -347,6 +351,9 @@ void                          exo_icon_view_set_search_position_func  (ExoIconVi
                                                                        ExoIconViewSearchPositionFunc search_position_func,
                                                                        gpointer                      search_position_data,
                                                                        GDestroyNotify                search_position_destroy);
+
+gboolean exo_icon_view_is_rubber_banding_active( ExoIconView* icon_view );  //sfm
+
 
 G_END_DECLS;
 

@@ -71,12 +71,12 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
     _NET_CURRENT_DESKTOP = XInternAtom ( GDK_WINDOW_XDISPLAY ( root ), "_NET_CURRENT_DESKTOP", False );
     _WIN_WORKSPACE = XInternAtom ( GDK_WINDOW_XDISPLAY ( root ), "_WIN_WORKSPACE", False );
 
-    if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XWINDOW ( root ),
+    if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XID ( root ),
                               _NET_CURRENT_DESKTOP, 0, 32, False, XA_CARDINAL,
                               &type_ret, &format_ret, &nitems_ret, &bytes_after_ret,
                               ( gpointer ) & prop_ret ) != Success )
     {
-        if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XWINDOW ( root ),
+        if ( XGetWindowProperty ( GDK_WINDOW_XDISPLAY ( root ), GDK_WINDOW_XID ( root ),
                                   _WIN_WORKSPACE, 0, 32, False, XA_CARDINAL,
                                   &type_ret, &format_ret, &nitems_ret, &bytes_after_ret,
                                   ( gpointer ) & prop_ret ) != Success )
@@ -96,7 +96,7 @@ tvsn_get_active_workspace_number ( GdkScreen *screen )
         XFree ( prop_ret );
     }
 
-    gdk_error_trap_pop ();
+    gint err = gdk_error_trap_pop ();
 
     return ws_num;
 }

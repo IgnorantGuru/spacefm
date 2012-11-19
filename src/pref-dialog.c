@@ -32,6 +32,8 @@
 #include "desktop.h"
 #include "ptk-location-view.h"
 
+#include "gtk2-compat.h"
+
 typedef struct _FMPrefDlg FMPrefDlg;
 struct _FMPrefDlg
 {
@@ -48,8 +50,8 @@ struct _FMPrefDlg
     GtkWidget* small_icon_size;
     GtkWidget* tool_icon_size;
     GtkWidget* single_click;
-    //GtkWidget* use_si_prefix;
-    GtkWidget* rubberband;
+    GtkWidget* use_si_prefix;
+    //GtkWidget* rubberband;
     GtkWidget* root_bar;
     GtkWidget* drag_action;
 
@@ -158,7 +160,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     //gboolean show_desktop;
     gboolean show_wallpaper;
     gboolean single_click;
-    gboolean rubberband;
+    //gboolean rubberband;
     gboolean root_bar;
     gboolean root_set_change = FALSE;
     WallpaperMode wallpaper_mode;
@@ -169,7 +171,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     char* wallpaper;
     const GList* l;
     PtkFileBrowser* file_browser;
-    //gboolean use_si_prefix;
+    gboolean use_si_prefix;
     GtkNotebook* notebook;
     int cur_tabx, p;
     FMMainWindow* a_window;
@@ -461,10 +463,32 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         }
 
 	    /* unit settings changed? */
-	    //use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
-        //if( use_si_prefix != app_settings.use_si_prefix )
-        //    app_settings.use_si_prefix = use_si_prefix;
+        gboolean need_refresh = FALSE;
+	    use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
+        if( use_si_prefix != app_settings.use_si_prefix )
+        {
+            app_settings.use_si_prefix = use_si_prefix;
+            need_refresh = TRUE;
+        }
 
+        // date format
+        char* etext = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
+                                            GTK_BIN( data->date_format ) ) ) ) );
+        if ( g_strcmp0( etext, xset_get_s( "date_format" ) ) )
+        {
+            if ( etext[0] == '\0' )
+                xset_set( "date_format", "s", "%Y-%m-%d %H:%M" );
+            else
+                xset_set( "date_format", "s", etext );
+            g_free( etext );
+            if ( app_settings.date_format )
+                g_free( app_settings.date_format );
+            app_settings.date_format = g_strdup( xset_get_s( "date_format" ) );
+            need_refresh = TRUE;
+        }
+        if ( need_refresh )
+            main_window_refresh_all();
+        
         /* single click changed? */
         single_click = gtk_toggle_button_get_active( (GtkToggleButton*)data->single_click );
         if( single_click != app_settings.single_click )
@@ -496,6 +520,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         app_settings.no_confirm = !gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->confirm_delete );
 
+        /*
         rubberband = gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->rubberband );
         if ( !!rubberband != !!xset_get_b( "rubberband" ) )
@@ -503,7 +528,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             xset_set_b( "rubberband", rubberband );
             main_window_rubberband_all();
         }
-            
+        */
+        
         root_bar = gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->root_bar );
         if ( !!root_bar != !!xset_get_b( "root_bar" ) )
@@ -516,17 +542,6 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     gtk_combo_box_get_active( GTK_COMBO_BOX( data->drag_action ) ) );
         xset_set( "drag_action", "x", s );
         g_free( s );
-
-        char* etext = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                            GTK_BIN( data->date_format ) ) ) ) );
-        if ( etext[0] == '\0' )
-            xset_set( "date_format", "s", "%Y-%m-%d %H:%M" );
-        else
-            xset_set( "date_format", "s", etext );
-        g_free( etext );
-        if ( app_settings.date_format )
-            g_free( app_settings.date_format );
-        app_settings.date_format = g_strdup( xset_get_s( "date_format" ) );
 
         //MOD su command
         char* custom_su = NULL;
@@ -595,7 +610,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
 
         //MOD terminal
         char* old_terminal = xset_get_s( "main_terminal" );
-        char* terminal = gtk_combo_box_get_active_text( GTK_COMBO_BOX( data->terminal ) );
+        char* terminal = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT( data->terminal ) );
         g_strstrip( terminal );
         if ( g_strcmp0( terminal, old_terminal ) )
         {
@@ -704,7 +719,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
     {
         GtkTreeModel* model;
         // this invokes GVFS-RemoteVolumeMonitor via IsSupported
+#if GTK_CHECK_VERSION(2, 24, 0)
+        GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg2.ui", NULL );
+#else
         GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/prefdlg.ui", NULL );
+#endif
         if ( !builder )
             return FALSE;
         pcmanfm_ref();
@@ -730,14 +749,14 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->small_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "small_icon_size" );
         data->tool_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "tool_icon_size" );
         data->single_click = (GtkWidget*)gtk_builder_get_object( builder, "single_click" );
-	    //data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
-        data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
+	    data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
+        //data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
 	    data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
         data->drag_action = (GtkWidget*)gtk_builder_get_object( builder, "drag_action" );
 
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
         gtk_combo_box_set_model( GTK_COMBO_BOX( data->terminal ), model );
-        gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( data->terminal ), 0 );
+        gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( data->terminal ), 0 );
         g_object_unref( model );
 
         //if ( '\0' == ( char ) app_settings.encoding[ 0 ] )
@@ -772,7 +791,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         for ( i = 0; i < G_N_ELEMENTS( terminal_programs ); ++i )
         {
-            gtk_combo_box_append_text ( GTK_COMBO_BOX( data->terminal ), terminal_programs[ i ] );
+            gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( data->terminal ), terminal_programs[ i ] );
         }
 
         char* terminal = xset_get_s( "main_terminal" );
@@ -785,7 +804,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
             }
             if ( i >= G_N_ELEMENTS( terminal_programs ) )
             { /* Found */
-                gtk_combo_box_prepend_text ( GTK_COMBO_BOX( data->terminal ), terminal );
+                gtk_combo_box_text_prepend_text ( GTK_COMBO_BOX_TEXT( data->terminal ), terminal );
                 i = 0;
             }
             gtk_combo_box_set_active( GTK_COMBO_BOX( data->terminal ), i );
@@ -854,8 +873,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->click_exec ),
                                                         !app_settings.no_execute );
 
-        gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->rubberband ),
-                                                        xset_get_b( "rubberband" ) );
+        //gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->rubberband ),
+        //                                                xset_get_b( "rubberband" ) );
 
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( data->root_bar ),
                                                         xset_get_b( "root_bar" ) );
@@ -876,7 +895,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         /* Setup 'Desktop' tab */
 
-    	//gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
+    	gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 /*
         data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
         g_signal_connect( data->show_desktop, "toggled",
@@ -993,11 +1012,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                                                 "label_date_disp" );
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
         gtk_combo_box_set_model( GTK_COMBO_BOX( data->date_format ), model );
-        gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( data->date_format ), 0 );
+        gtk_combo_box_set_entry_text_column( GTK_COMBO_BOX( data->date_format ), 0 );
         g_object_unref( model );
         for ( i = 0; i < G_N_ELEMENTS( date_formats ); ++i )
         {
-            gtk_combo_box_append_text ( GTK_COMBO_BOX( data->date_format ), date_formats[ i ] );
+            gtk_combo_box_text_append_text ( GTK_COMBO_BOX_TEXT( data->date_format ), date_formats[ i ] );
         }
         char* date_s = xset_get_s( "date_format" );
         if ( date_s )
@@ -1009,7 +1028,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
             }
             if ( i >= G_N_ELEMENTS( date_formats ) )
             {
-                gtk_combo_box_prepend_text ( GTK_COMBO_BOX( data->date_format ), date_s );
+                gtk_combo_box_text_prepend_text ( GTK_COMBO_BOX_TEXT( data->date_format ), date_s );
                 i = 0;
             }
             gtk_combo_box_set_active( GTK_COMBO_BOX( data->date_format ), i );

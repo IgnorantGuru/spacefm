@@ -16,6 +16,8 @@
 #include "main-window.h"
 #include <glib/gi18n.h>
 
+#include "gtk2-compat.h"
+
 enum
 {
     COL_NAME,
@@ -142,13 +144,13 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
     int keymod = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
                  
-    if( evt->keyval == GDK_Tab && !keymod )
+    if( evt->keyval == GDK_KEY_Tab && !keymod )
     {
         gtk_entry_completion_insert_prefix( gtk_entry_get_completion(GTK_ENTRY(entry)) );
         gtk_editable_set_position( (GtkEditable*)entry, -1 );
         return TRUE;
     }
-    else if ( ( evt->keyval == GDK_Up || evt->keyval == GDK_Down ) && !keymod )
+    else if ( ( evt->keyval == GDK_KEY_Up || evt->keyval == GDK_KEY_Down ) && !keymod )
     {
         const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         if ( text[0] != '$' && text[0] != '+' && text[0] != '&' && text[0] != '!' 
@@ -157,7 +159,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
         
         char* line = NULL;
         GList* l;
-        if ( evt->keyval == GDK_Up )
+        if ( evt->keyval == GDK_KEY_Up )
         {
             if ( edata->current )
             {
@@ -245,7 +247,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
         }
         return TRUE;
     }
-    else if ( evt->keyval == GDK_Escape && !keymod )
+    else if ( evt->keyval == GDK_KEY_Escape && !keymod )
     {
         const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         if ( text[0] == '$' || text[0] == '+' || text[0] == '&'
@@ -278,7 +280,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
             return TRUE;   
         }
     }
-    else if ( evt->keyval == GDK_BackSpace && keymod == 1 ) // shift
+    else if ( evt->keyval == GDK_KEY_BackSpace && keymod == 1 ) // shift
     {
         gtk_entry_set_text( GTK_ENTRY( entry ), "" );
         return TRUE;
@@ -351,12 +353,6 @@ static gboolean on_mouse_move(GtkWidget      *entry,
     return FALSE;
 }
 
-static gboolean on_button_press(GtkWidget      *entry,
-                                                                 GdkEventButton *evt,
-                                                                 gpointer        user_data)
-{
-    return FALSE;
-}
 #endif
 
 void ptk_path_entry_man( GtkWidget* widget, GtkWidget* parent )
@@ -377,12 +373,23 @@ void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
     gtk_widget_destroy( dlg );
 }
 
+static gboolean on_button_press( GtkWidget* entry, GdkEventButton *evt,
+                                                        gpointer user_data )
+{
+    if ( ( evt_win_click->s || evt_win_click->ob2_data ) && 
+            main_window_event( NULL, evt_win_click, "evt_win_click", 0, 0, "pathbar", 0,
+                                            evt->button, evt->state, TRUE ) )
+        return TRUE;
+    return FALSE;
+}
+
 static gboolean on_button_release(GtkEntry      *entry,
                                                                     GdkEventButton *evt,
                                                                     gpointer        user_data)
 {
     if ( GDK_BUTTON_RELEASE != evt->type )
         return FALSE;
+
     if ( ( ( evt->state & GDK_CONTROL_MASK ) && 1 == evt->button ) )
     {
         int pos;
@@ -494,8 +501,9 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
 
 /*
     g_signal_connect( entry, "motion-notify-event", G_CALLBACK(on_mouse_move), NULL );
-    g_signal_connect( entry, "button-press-event", G_CALLBACK(on_button_press), NULL );
 */
+    g_signal_connect( entry, "button-press-event", G_CALLBACK(on_button_press),
+                                                                    NULL );
     g_signal_connect( entry, "button-release-event", G_CALLBACK(on_button_release), NULL );
     g_signal_connect( entry, "populate-popup", G_CALLBACK(on_populate_popup), file_browser );
 

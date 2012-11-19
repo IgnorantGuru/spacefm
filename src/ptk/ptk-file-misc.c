@@ -201,7 +201,7 @@ static void select_file_name_part( GtkEntry* entry )
 
 static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
 {
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
             gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
@@ -212,7 +212,7 @@ static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSe
 
 static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
 {
-    if ( event->keyval == GDK_Return || event->keyval == GDK_KP_Enter )
+    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
             gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
