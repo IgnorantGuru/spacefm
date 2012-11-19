@@ -3722,9 +3722,9 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
                 {
                     char* label = clean_label( set->menu_label, FALSE, FALSE );
                     if ( geteuid() == 0 )
-                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu."), label );
+                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use Tools|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu."), label );
                     else
-                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
+                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use Tools|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
                     g_free( label );
                     GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
                     xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
