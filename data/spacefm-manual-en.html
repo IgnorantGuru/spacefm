@@ -1830,9 +1830,9 @@ If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new t
 
 <!-- #Auto Mount|Unmount On Exit #exit -->
 <p><a name="devices-settings-exit"/><a href="#devices-settings-exit"><b>Auto Mount|Unmount On Exit</b></a><br>
-If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  Exit occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
+If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  Exit occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running.  Note that if SpaceFM is killed with SIGKILL (such as when you logout of your X session), the automatic unmount will NOT occur.  (To unmount all devices before or just after X logoff, consider running <code>devmon --unmount-all</code> (devmon is distributed with udevil).
 
-<p>If there is no fstab entry for a device, your mount program may create a subfolder for the device mount point in /media or /run/media/$USER.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
+<p>When mounting a device, if there is no fstab entry for the device, your mount program may create a subfolder for the device mount point in /media or /run/media/$USER.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
 
 <p>If you don't check option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
 
@@ -6503,7 +6503,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-11-14&nbsp;&nbsp;(SpaceFM version 0.8.2+)
+<p>Updated 2012-11-22&nbsp;&nbsp;(SpaceFM version 0.8.2+)
 <br><br>
 </center>
 </td></tr></table>
