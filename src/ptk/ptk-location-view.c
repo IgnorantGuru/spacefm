@@ -2805,6 +2805,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
     VFSVolume* vol = NULL;
     XSet* set;
     char* str;
+    gboolean ret = FALSE;
     
     if( evt->type != GDK_BUTTON_PRESS )
         return FALSE;
@@ -2835,18 +2836,22 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         if ( vol )
         {
             if ( xset_get_b( "dev_single" ) )
+            {
                 gtk_tree_view_row_activated( view, tree_path, NULL );
+                ret = TRUE;
+            }        
         }
         else
         {
             gtk_tree_selection_unselect_all( gtk_tree_view_get_selection( view ) );
-            return TRUE;
+            ret = TRUE;
         }
     }
 #ifndef HAVE_HAL
     else if ( vol && evt->button == 2 ) /* middle button */
     {
         on_eject( NULL, vol, GTK_WIDGET( view ) );
+        ret = TRUE;
     }
 #endif
     else if ( evt->button == 3 )    /* right button */
@@ -3068,12 +3073,12 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
 
         gtk_menu_popup( GTK_MENU( popup ), NULL, NULL, NULL, NULL,
                                                     evt->button, evt->time );
+        ret = TRUE;
     }
-    else
-        return TRUE;
+
     if ( tree_path )
         gtk_tree_path_free( tree_path );
-    return FALSE;
+    return ret;
 }
 
 /*
@@ -3373,6 +3378,8 @@ void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
         
     dir_path = ptk_bookmark_view_get_selected_dir( 
                                         GTK_TREE_VIEW( file_browser->side_book ) );
+    if ( !dir_path )
+        return;
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
     {
         mount_network( file_browser, dir_path, TRUE );

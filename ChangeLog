@@ -22,6 +22,7 @@
     dialog %(command) accepts bash command line
     document Unmount On Exit ignored on X logout kill #204
     address debian packaging warnings #209
+    fix segfault on middle-click bookmarks empty #208
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
