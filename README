@@ -171,8 +171,8 @@ BUILD GTK2
 
 BUILD GTK3 BETA
 
-The GTK3 build for this version of SpaceFM is provided FOR BETA TESTING.  Be
-sure to use a GTK3 theme which supports your current version of GTK3 (no theme
+The GTK3 build for this version of SpaceFM is provided FOR BETA TESTING.  BE
+SURE to use a GTK3 theme which supports your CURRENT version of GTK3 (no theme
 warnings should appear when spacefm is run in a terminal).
 
 1)  Install required build dependencies (below are Debian package names -

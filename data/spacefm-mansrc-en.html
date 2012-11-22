@@ -307,10 +307,11 @@ Or, to see the help for alternate build options, run:
 <p>For easy-to-follow manual build instructions, please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Sections there include:
 
 <ul>
-    <li>BUILD - build SpaceFM from source
-    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
+    <li>BUILD GTK2 - build from source with default GTK2 support
+    <li>BUILD GTK3 - build with GTK3 support
+    <li>BUILD HAL - build with HAL support instead of udev (this severely limits the <a href="#devices">device manager</a> and other capabilities)
     <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
-    <li>BUILD GTK3 - The git gtk3 branch of SpaceFM is available for alpha testing.  Please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a> for details.
+    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
     <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
 </ul>
 
@@ -447,15 +448,16 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 
 <!-- @Invocation @GTK Themes -->
 
-<p>Because multiple panels in SpaceFM use many GUI elements, the GTK2 theme you're using may have a significant impact on performance.  Some themes are 'heavier' than others.  For example, the Clearlooks theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
+<p>The GTK theme you're using may have a significant impact on SpaceFM's performance, and a non-working theme may create dysfunctional behavior.  Because multiple panels in SpaceFM use many GUI elements, some themes cause SpaceFM to run more slowly.  For example, the Clearlooks GTK2 theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
 
-<p>It is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
+<!-- #GTK 2 #gtk2 --> 
+<b>When using GTK2</b>, it is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
 <pre>    GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</pre>
 
 <p>You can also test SpaceFM's speed with no theme, which should be faster than any theme:
 <pre>    GTK2_RC_FILES="" spacefm</pre>
 
-<p>To specify a theme within a desktop file, copy SpaceFM's desktop file to your home folder:
+<p>To specify a GTK2 theme within a desktop file, copy SpaceFM's desktop file to your home folder:
 <pre>    mkdir -p ~/.local/share/applications
     cp <a href="#programfiles-usr-spac-dt">/usr/local/share/applications/spacefm.desktop</a> ~/.local/share/applications/
     # OR
@@ -464,7 +466,11 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 Then open ~/.local/share/applications/spacefm.desktop in your editor and set the Exec= line using env.  For example:
 <blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
 
-<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK themes</a>
+<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK2 themes</a>
+
+<!-- #GTK 3 #gtk3 --> 
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes (but always check GTK version compatibility).
+
 
 
 <!-- @Invocation @Desktop Manager -->
