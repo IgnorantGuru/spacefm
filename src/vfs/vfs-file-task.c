@@ -1434,7 +1434,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             su = get_valid_su();
             if ( !su )
             {
-                str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
+                str = _("Please configure a valid Terminal SU command in Tools|Preferences|Advanced");
                 g_warning ( str );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
@@ -1445,7 +1445,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             gsu = get_valid_gsu();
             if ( !gsu )
             {
-                str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
+                str = _("Please configure a valid Graphical SU command in Tools|Preferences|Advanced");
                 g_warning ( str );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
@@ -1496,7 +1496,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             terminal = g_find_program_in_path( terminalv[0] );
         if ( !( terminal && terminal[0] == '/' ) )
         {
-            str = _("Please set a valid terminal program in View|Preferences|Advanced");
+            str = _("Please set a valid terminal program in Tools|Preferences|Advanced");
             g_warning ( str );
             // do not use xset_msg_dialog if non-main thread
             //vfs_file_task_exec_error( task, 0, str );
