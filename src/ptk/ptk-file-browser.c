@@ -1417,6 +1417,21 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     gtk_box_pack_start ( GTK_BOX( file_browser->side_vbox ), 
                                                     file_browser->side_vpane_top, 
                                                     TRUE, TRUE, 0 );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    // see https://github.com/BwackNinja/spacefm/issues/21
+    gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_top ), 
+                                                    file_browser->side_dev_scroll, 
+                                                    TRUE, FALSE );
+    gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_top ),
+                                                    file_browser->side_vpane_bottom, 
+                                                    TRUE, FALSE );
+    gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_bottom ),
+                                                    file_browser->side_book_scroll,
+                                                    TRUE, FALSE );
+    gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_bottom ),
+                                                    file_browser->side_dir_scroll, 
+                                                    TRUE, FALSE );
+#else
     gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_top ), 
                                                     file_browser->side_dev_scroll, 
                                                     TRUE, TRUE );
@@ -1429,6 +1444,7 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_bottom ),
                                                     file_browser->side_dir_scroll, 
                                                     TRUE, TRUE );
+#endif
 
     // status bar
     file_browser->status_bar = gtk_statusbar_new();
