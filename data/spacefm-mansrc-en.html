@@ -2462,7 +2462,7 @@ Example:
                Set window title
 <a href="#dialog-simple-wicon">--window-icon</a>  ICON|@FILE
                Set window icon
-<a href="#dialog-simple-label">--label</a>        LABEL|@FILE
+<a href="#dialog-simple-label">--label</a>        [--wrap|--nowrap] LABEL|@FILE
                Add a text label
 <a href="#dialog-simple-button">--button</a>       LABEL[:ICON]|STOCK|@FILE [COMMAND...]
                Add STOCK dialog button, or LABEL button with ICON
@@ -2543,8 +2543,9 @@ The following arguments may be used as shown above:
              tilde (~), pango markup may be used.  For example:
                  --label '~This is plain. &lt;b&gt;This is bold.&lt;/b&gt;'
 
-In addition to the OPTIONS listed above, a --font option may be used with most
-element types to change the element's font and font size.  For example:
+In addition to the OPTIONS listed above, --compact or --expand options may be
+added to any element.  Also, a --font option may be used with most element
+types to change the element's font and font size.  For example:
     --input --font "Times New Roman 16" "Default Text"
 
 <a href="#dialog-int">INTERNAL COMMANDS</a>:
@@ -2583,11 +2584,14 @@ The command line accepts any number of elements:
 	       ...</pre>
 where each ELEMENT has its own options and arguments.  An element represents one piece of the dialog.  It may be a widget, such as a label or button, or it may be an invisible element which controls how the dialog looks or behaves.
 
-For example, to show a dialog with a message label and an OK button, run this command:
+<p>For example, to show a dialog with a message label and an OK button, run this command:
 <pre>    spacefm -g --label "This is a message." \
 	       --button ok</pre>
 
 Note: The forward slash (\) at the end of a line tells the terminal that the command is continued on the next line.  You can select both lines above, copy them, and paste them into a terminal to run the above example;  it is not necessary to copy and paste each line individually.  In this manual, SpaceFM Dialog commands are always shown with at most one element on each line for clarity.  These multi-line commands can also be pasted directly into scripts.
+
+<p>OPTIONS may include options specific to the element type.  In addition, most elements accept a --font FONTNAME option to specify a font for the widget's text.  Also, all elements accept --compact or --expand options to force how an element is packed into the current box.
+
 
 <!-- # Evaluating The Output #eval -->
 When the above command is run, a message dialog will be shown.  When the OK button is pressed, the dialog will close and the following output will be written to the terminal:
@@ -2681,7 +2685,7 @@ and the dialog window's icon will change to reflect the new value.
 <br><br>
 
 <!-- # --label #label -->
-Usage: <code><b>--label LABEL|@FILE</b></code>
+Usage: <code><b>--label [--wrap|--nowrap] LABEL|@FILE</b></code>
 
 <p>The --label element adds a GTK label widget to the dialog, which is used to display one or more lines of text, such as a message for the user or a label for an input box.  For example:
 <pre>    spacefm -g --label "The process is complete."</pre>
@@ -2716,6 +2720,8 @@ and the text in the dialog window will change to reflect the new value in the fi
 
 <p><b>Labels can also include Pango markup text</b>, which can be used to italicize, bold, and otherwise stylize portions of text.  The --label element (only) recognizes the prefix character tilde (~) to indicate that your text is Pango markup.  For example:
 <pre>    spacefm -g --label "<b>~</b>This is plain.  &lt;b&gt;This is bold.&lt;/b&gt;"</pre>
+
+<p><b>Labels accept a --wrap or --nowrap option</b> to specify if the text in the label is to be wrapped to multiple lines.  If neither option is specified, the GTK2 default is to always wrap, and the GTK3 default is to wrap unless the label is packed into an <a href="#dialog-nonvis-hbox">--hbox</a> element.
 
 <p>Like most elements, <b>--label also accepts a --font option</b> to change the font and font size of the text:
 <pre>    spacefm -g --label <b>--font "Times New Roman 16"</b> "The process is complete."</pre>
@@ -3437,7 +3443,7 @@ You will notice that if you resize the above window, the row of buttons expand v
                --free-button "Button4" \
                --free-button "Button5"</pre>
 
-The --compact option tells the box not to expand in the <i>other</i> dimension.  For an hbox, --compact will affect the vertical dimension (height), and for a vbox, --compact will affect the horizontal dimension (width).  With --compact, the box will not consume extra window space beyond what its children require as a minimum, so the children will in turn not expand.  The extra space in the window will be divided among other boxes (if they can expand), or will remain empty (as in the above example).  Also, whether children expand in the <i>same</i> dimension (horizontally in an hbox or vertically in a vbox) depends on the type of elements in the box.  The box itself will expand in the same dimension, but its children may not (as seen in the above example).
+As with all elements, the --compact option determines how much window space a box will absorb.  --compact tells the box not to expand in the <i>other</i> dimension.  For an hbox, --compact will affect the vertical dimension (height), and for a vbox, --compact will affect the horizontal dimension (width).  With --compact, the box will not consume extra window space beyond what its children require as a minimum, so the children will in turn not expand.  The extra space in the window will be divided among other boxes (if they can expand), or will remain empty (as in the above example).  Also, whether children expand in the <i>same</i> dimension (horizontally in an hbox or vertically in a vbox) depends on the type of elements in the box, and whether you have included --compact or --expand options for them.  The box itself will expand in the same dimension, but its children may not (as seen in the above example).
 
 <p>Note: A box with no children in it will take no space - it is effectively hidden.
 

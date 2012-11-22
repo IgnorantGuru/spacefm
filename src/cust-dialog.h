@@ -12,7 +12,7 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Set window title"),
     "window-icon",  "ICON|@FILE",
                     N_("Set window icon"),
-    "label",        "LABEL|@FILE",
+    "label",        "[--wrap|--nowrap] LABEL|@FILE",
                     N_("Add a text label"),
     "button",       "LABEL[:ICON]|STOCK|@FILE [COMMAND...]",
                     N_("Add STOCK dialog button, or LABEL button with ICON"),

@@ -2512,7 +2512,10 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
     gboolean chooser_dir = FALSE;
     gboolean chooser_multi = FALSE;
     GList* chooser_filters = NULL;
-    gboolean box_compact = FALSE;
+    gboolean compact = FALSE;
+    gboolean expand = FALSE;
+    gboolean wrap = FALSE;
+    gboolean nowrap = FALSE;
     int selstart = -1;
     int selend = -1;
     
@@ -2529,6 +2532,10 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 font = (char*)args->data;
             }
         }
+        else if ( !strcmp( (char*)args->data, "--compact" ) )
+            compact = TRUE;
+        else if ( !strcmp( (char*)args->data, "--expand" ) )
+            expand = TRUE;
         else if ( ( el->type == CDLG_INPUT || el->type == CDLG_INPUT_LARGE )
                                     && !strcmp( (char*)args->data, "--select" )
                                     && args->next )
@@ -2550,9 +2557,12 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         else if ( el->type == CDLG_VIEWER
                                     && !strcmp( (char*)args->data, "--scroll" ) )
             viewer_scroll = TRUE;
-        else if ( ( el->type == CDLG_HBOX || el->type == CDLG_VBOX ) 
-                                    && !strcmp( (char*)args->data, "--compact" ) )
-            box_compact = TRUE;
+        else if ( el->type == CDLG_LABEL
+                                    && !strcmp( (char*)args->data, "--wrap" ) )
+            wrap = TRUE;
+        else if ( el->type == CDLG_LABEL
+                                    && !strcmp( (char*)args->data, "--nowrap" ) )
+            nowrap = TRUE;
         else if ( el->type == CDLG_CHOOSER )
         {
             if ( !strcmp( (char*)args->data, "--save" ) )
@@ -2612,13 +2622,24 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
         if ( !el->widgets->next && box )
         {
             w = gtk_label_new( NULL );
-            gtk_label_set_line_wrap( GTK_LABEL( w ), TRUE );
+            if ( wrap || nowrap )
+                gtk_label_set_line_wrap( GTK_LABEL( w ), wrap );
+            else
+            {
+#if GTK_CHECK_VERSION (3, 0, 0)
+                // gtk3 wraps labels at one char and doesn't allocate a usable width
+                // if in an hbox
+                gtk_label_set_line_wrap( GTK_LABEL( w ), !GTK_IS_HBOX( box ) );
+#else
+                gtk_label_set_line_wrap( GTK_LABEL( w ), TRUE );
+#endif
+            }
             gtk_label_set_line_wrap_mode( GTK_LABEL( w ), PANGO_WRAP_WORD_CHAR );
             gtk_misc_set_alignment( GTK_MISC ( w ), 0.0, 0.5 );
             gtk_label_set_selectable( GTK_LABEL( w ), TRUE );
             set_font( w, font );
             el->widgets = g_list_append( el->widgets, w );
-            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), expand, TRUE, pad );
             if ( radio ) *radio = NULL;
             //if ( args )
             //    el->cmd_args = el->args->next; 
@@ -2630,6 +2651,13 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 gtk_label_set_markup_with_mnemonic( GTK_LABEL( w ), el->val + 1 );
             else
                 gtk_label_set_text( GTK_LABEL( w ), el->val );
+            /*  just an experiment
+            if ( el->val && g_utf8_strlen( el->val, -1 ) > 20 )
+                gtk_label_set_line_wrap( GTK_LABEL( w ), TRUE );
+            else
+                gtk_label_set_line_wrap( GTK_LABEL( w ),
+                                    !GTK_IS_HBOX( gtk_widget_get_parent( w ) ) );
+            */
         }
         break;
     case CDLG_BUTTON:
@@ -2651,12 +2679,12 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             if ( el->type == CDLG_BUTTON )
             {
                 gtk_box_pack_start( GTK_BOX( gtk_dialog_get_action_area( GTK_DIALOG( dlg ) ) ),
-                                            GTK_WIDGET( w ), FALSE, FALSE, pad );
+                                            GTK_WIDGET( w ), expand, TRUE, pad );
                 gtk_widget_grab_focus( w );
             }
             else
                 gtk_box_pack_start( GTK_BOX( box ),
-                                            GTK_WIDGET( w ), FALSE, FALSE, pad );
+                                            GTK_WIDGET( w ), expand, TRUE, pad );
             g_signal_connect( G_OBJECT( w ), "clicked",
                                         G_CALLBACK( on_button_clicked ), el );
             if ( radio ) *radio = NULL;
@@ -2724,7 +2752,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             image_box = gtk_event_box_new();
             el->widgets = g_list_append( el->widgets, image_box );
             gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( image_box ),
-                                                            FALSE, FALSE, pad );
+                                                            expand, TRUE, pad );
             g_signal_connect ( G_OBJECT( image_box ), "button-press-event",
                                    G_CALLBACK ( on_widget_button_press_event ),
                                    el );
@@ -2775,7 +2803,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 if ( selstart >= 0 )
                     multi_input_select_region( w, selstart, selend );
                 gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( scroll ),
-                                                            TRUE, TRUE, pad );
+                                                            !compact, TRUE, pad );
             }
             else
             {
@@ -2795,7 +2823,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     else
                         gtk_editable_select_region( GTK_EDITABLE( w ), 0, -1 );                    
                 }
-                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), TRUE, TRUE, pad );
+                gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), !compact, TRUE, pad );
             }
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "key-press-event",
@@ -2844,7 +2872,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             gtk_container_add ( GTK_CONTAINER ( scroll ), w );
             el->widgets = g_list_append( el->widgets, w );
             el->widgets = g_list_append( el->widgets, scroll );
-            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( scroll ), TRUE, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( scroll ), !compact, TRUE, pad );
             // place mark at end
             buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( w ) );
             gtk_text_buffer_get_end_iter( buf, &iter);
@@ -3002,7 +3030,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             g_list_free( l );
             
             el->widgets = g_list_append( el->widgets, w );
-            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( w ), expand, TRUE, pad );
             // default value
             if ( args && args->next )
             {
@@ -3046,7 +3074,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             }
             gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( w ), FALSE );
             set_font( w, font );
-            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, expand, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
@@ -3134,7 +3162,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
                                         GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
             gtk_container_add ( GTK_CONTAINER ( scroll ), w );
-            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( scroll ), TRUE, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), GTK_WIDGET( scroll ), !compact, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             el->widgets = g_list_append( el->widgets, scroll );
             g_signal_connect ( G_OBJECT( w ), "row-activated",
@@ -3216,7 +3244,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             gtk_progress_bar_set_show_text( GTK_PROGRESS_BAR( w ), TRUE );
 #endif
             set_font( w, font );
-            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, expand, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( !args || ( args && !strcmp( (char*)args->data, "pulse" ) ) )
                 el->timeout = g_timeout_add( 200, (GSourceFunc)on_progress_timer, el );
@@ -3273,7 +3301,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 w = gtk_hseparator_new();
             else
                 w = gtk_vseparator_new();
-            gtk_box_pack_start( GTK_BOX( box ), w, FALSE, FALSE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, expand, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
@@ -3294,7 +3322,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 w =   gtk_hbox_new( FALSE, i );
             else
                 w =   gtk_vbox_new( FALSE, i );
-            gtk_box_pack_start( GTK_BOX( box ), w, !box_compact, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, !compact, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             if ( radio ) *radio = NULL;
         }
@@ -3340,7 +3368,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             if ( chooser_multi )
                 gtk_file_chooser_set_select_multiple( GTK_FILE_CHOOSER( w ),
                                                                         TRUE );
-            gtk_box_pack_start( GTK_BOX( box ), w, TRUE, TRUE, pad );
+            gtk_box_pack_start( GTK_BOX( box ), w, !compact, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
             g_signal_connect( G_OBJECT( w ), "file-activated",
                                     G_CALLBACK( on_chooser_activated ), el );
@@ -3596,7 +3624,7 @@ static void show_help()
     fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a bash command line\n                 %%%%           %%\n") );
     fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
-    fprintf( f, _("\nIn addition to the OPTIONS listed above, a --font option may be used with most\nelement types to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
+    fprintf( f, _("\nIn addition to the OPTIONS listed above, --compact or --expand options may be\nadded to any element.  Also, a --font option may be used with most element\ntypes to change the element's font and font size.  For example:\n    --input --font \"Times New Roman 16\" \"Default Text\"\n") );
     
     fprintf( f, _("\nINTERNAL COMMANDS:\n") );
 
