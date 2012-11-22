@@ -481,11 +481,9 @@ GtkWidget* ptk_location_view_new( PtkFileBrowser* file_browser )
                                          "text", COL_NAME, NULL );
     gtk_tree_view_column_set_min_width( col, 10 );
 
-#if !GTK_CHECK_VERSION (3, 0, 0)
     if ( GTK_IS_TREE_SORTABLE( model ) )  // why is this needed to stop error on new tab?
         gtk_tree_sortable_set_sort_column_id( GTK_TREE_SORTABLE( model ), COL_NAME,
                                               GTK_SORT_ASCENDING );  //MOD
-#endif
     //gtk_tree_view_column_set_sort_indicator( col, TRUE );  //MOD
     //gtk_tree_view_column_set_sort_column_id( col, COL_NAME );   //MOD
     //gtk_tree_view_column_set_sort_order( col, GTK_SORT_ASCENDING );  //MOD
