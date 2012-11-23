@@ -951,9 +951,16 @@ static void set_element_value( CustomElement* el, const char* name,
                     str++;
                 }
                 if ( !( str && str[0] ) )
+                {
+                    if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                        str = g_strdup_printf( "%d %%", i );
+                    else
+                        str = g_strdup( " " );
                     gtk_progress_bar_set_text( 
-                                    GTK_PROGRESS_BAR( el_name->widgets->next->data ),
-                                    " " );
+                                GTK_PROGRESS_BAR( el_name->widgets->next->data ),
+                                str );
+                    g_free( str );
+                }
             }
         }
         break;
@@ -1270,8 +1277,8 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             if ( args->next->next && strcmp( (char*)args->next->next->data, "--" ) )
                 cvalue = replace_vars( el, (char*)args->next->next->data, xvalue );
         }
-        if ( cvalue[0] == '\0' || !strcmp( cvalue, "0" )
-                                            || !strcmp( cvalue, "false" ) )
+        if ( cvalue && ( cvalue[0] == '\0' || !strcmp( cvalue, "0" )
+                                            || !strcmp( cvalue, "false" ) ) )
             reverse = TRUE;
     }
     if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && icmd != CMD_SOURCE && !cname )
@@ -3304,9 +3311,16 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                     str++;
                 }
                 if ( !( str && str[0] ) )
+                {
+                    if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                        str = g_strdup_printf( "%d %%", i );
+                    else
+                        str = g_strdup( " " );
                     gtk_progress_bar_set_text( 
-                                    GTK_PROGRESS_BAR( el->widgets->next->data ),
-                                    " " );
+                                GTK_PROGRESS_BAR( el->widgets->next->data ),
+                                str );
+                    g_free( str );
+                }
             }
         }
         break;
