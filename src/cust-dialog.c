@@ -1259,14 +1259,20 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
     
     if ( args->next )
     {
-        cname = replace_vars( el, (char*)args->next->data, xvalue );
-        if ( args->next->next && strcmp( (char*)args->next->next->data, "--" ) )
+        if ( icmd == CMD_CLOSE )
         {
-            cvalue = replace_vars( el, (char*)args->next->next->data, xvalue );
-            if ( cvalue[0] == '\0' || !strcmp( cvalue, "0" )
-                                                || !strcmp( cvalue, "false" ) )
-                reverse = TRUE;
+            if ( strcmp( (char*)args->next->data, "--" ) )
+                cvalue = replace_vars( el, (char*)args->next->data, xvalue );
         }
+        else
+        {
+            cname = replace_vars( el, (char*)args->next->data, xvalue );
+            if ( args->next->next && strcmp( (char*)args->next->next->data, "--" ) )
+                cvalue = replace_vars( el, (char*)args->next->next->data, xvalue );
+        }
+        if ( cvalue[0] == '\0' || !strcmp( cvalue, "0" )
+                                            || !strcmp( cvalue, "false" ) )
+            reverse = TRUE;
     }
     if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && icmd != CMD_SOURCE && !cname )
     {
@@ -1314,7 +1320,7 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
         g_free( cvalue );
         return;
     }
-    if ( icmd != CMD_NOOP && icmd != CMD_SOURCE && cname
+    if ( icmd != CMD_NOOP && icmd != CMD_SOURCE && icmd != CMD_CLOSE && cname
                                     && !( el_name = el_from_name( el, cname ) ) )
     {
         if ( cname[0] != '\0' )
@@ -1329,6 +1335,7 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
         switch ( icmd )
         {
         case CMD_FOCUS:
+        case CMD_CLOSE:
             icmd = -1;
             break;
         case CMD_HIDE:
@@ -2437,6 +2444,16 @@ void on_chooser_activated( GtkFileChooser* chooser, CustomElement* el )
         press_last_button( el->widgets->data );
 }
 
+gboolean on_window_delete( GtkWidget *widget, GdkEvent  *event, CustomElement* el )
+{
+    if ( el && el->cmd_args )
+    {
+        run_command( el, el->cmd_args, NULL );
+        return TRUE;
+    }
+    return FALSE;  // allow window close
+}
+
 static gboolean on_dlg_key_press( GtkWidget *entry, GdkEventKey* evt,
                                                       CustomElement* el )
 {
@@ -3537,6 +3554,12 @@ static void build_dialog( GList* elements )
             gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
             el->option = 1; // activates auto resize from @FILE
             is_sized = TRUE;
+        }
+        else if ( el->type == CDLG_WINDOW_CLOSE && el->args )
+        {
+            el->cmd_args = el->args;
+            g_signal_connect( G_OBJECT( dlg ), "delete-event",
+                                            G_CALLBACK( on_window_delete ), el );
         }
         else if ( el->type == CDLG_TIMEOUT && el->option && !el->widgets->next
                                                       && !timeout_added )

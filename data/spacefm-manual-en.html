@@ -3075,6 +3075,7 @@ exit $?
 # "$fm_plugin_dir"          top plugin directory
 # tmp="$(fm_new_tmp)"       makes new temp directory (destroy when done)
 #                                 To destroy:  rm -rf "$tmp"
+# fm_edit "FILE"            open FILE in user's configured editor
 
 # $fm_import                command to import above variables (this
 #                           variable is exported so you can use it in any
@@ -3974,6 +3975,8 @@ Example:
                Close the current box of widgets
 <a href="#dialog-nonvis-keypress">--keypress</a>     KEYCODE MODIFIER COMMAND...
                Run COMMAND when a key combination is pressed
+<a href="#dialog-nonvis-winclose">--window-close</a> COMMAND...
+               Run COMMAND on window close attempt
 <a href="#dialog-nonvis-command">--command</a>      FILE|PIPE [COMMAND...]
                Read commands from FILE or PIPE.  COMMAND for init.
 
@@ -4009,7 +4012,7 @@ types to change the element's font and font size.  For example:
 <a href="#dialog-int">INTERNAL COMMANDS</a>:
     <a href="#dialog-int-noop">noop</a>       ( any arguments )
                No operation - does nothing but evaluate arguments
-    <a href="#dialog-int-close">close</a>      ( no arguments )
+    <a href="#dialog-int-close">close</a>      [REVERSE]
                Close the dialog
     <a href="#dialog-int-press">press</a>      BUTTON-NAME
                Press button named BUTTON-NAME
@@ -5150,6 +5153,20 @@ In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MO
 <p>In <a href="#dialog-cmd">commands</a>, the value of a --keypress element (eg %v, %keypress1) will equal the keycode and modifier.
 <br><br>
 
+<!-- # --window-close #winclose -->
+<p><a name="dialog-nonvis-winclose"/><a href="#dialog-nonvis-winclose"><b>--window-close</b></a><br>
+Usage: <code><b>--window-close COMMAND...</b></code>
+
+<p>A --window-close element runs COMMAND when the user attempts to close the dialog (usually by clicking the 'X' button in the upper right corner or using Alt-F4, etc.)  The window will not be closed, but COMMAND can be used to close it conditionally.
+
+<p>For example:
+<pre>
+    spacefm -g --label "You can't close this window unless you enter text:" \
+               --input \
+	       --window-close close %input1</pre>
+
+In the above example, the internal <a href="#dialog-int-close">close</a> command is passed the contents of the --input element, which acts as a reversal to the close command.  If %input1 is empty, the close command does nothing, otherwise it closes the window.
+
 <!-- # --command #command -->
 <p><a name="dialog-nonvis-command"/><a href="#dialog-nonvis-command"><b>--command</b></a><br>
 Usage: <code><b>--command FILE|PIPE [COMMAND...]</b></code>
@@ -5335,9 +5352,16 @@ In the above example, when the OK button is pressed, first 'myscript' will be ru
 
 <!-- #close -->
 <p><a name="dialog-int-close"/><a href="#dialog-int-close"><b>close</b></a><br>
-Usage: <b>close</b>
+Usage: <b>close [REVERSE]</b>
 
 <p>The close command simply closes the dialog window, as if the user clicked the X in the top-right corner or used Alt+F4.  $dialog_pressed_index will equal -2.
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the close command to do nothing.  This can be used with the value from another element, for example, to make the close command conditional.  For example:
+<pre>
+    spacefm -g --label "You can't close this window unless you enter text:" \
+               --input \
+	       <a href="#dialog-nonvis-winclose">--window-close</a> <b>close %input1</b></pre>
+
 
 <!-- #press -->
 <p><a name="dialog-int-press"/><a href="#dialog-int-press"><b>press</b></a><br>
@@ -5546,7 +5570,7 @@ Usage: <b>source FILE</b>
 <pre><b>$ spacefm -s help</b>
 SpaceFM socket commands permit external processes (such as command scripts)
 to read and set GUI property values and execute methods inside running SpaceFM
-windows.  To handle events see View|Auto Run in the main menu bar.
+windows.  To handle events see <a href="#sockets-menu">View|Events</a> in the main menu bar.
 
 Usage:
     spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]
@@ -5993,7 +6017,7 @@ Usage: <b>spacefm -s show-menu MENUNAME</b>
 <p>For example, add a submenu anywhere named "Gizmos", and add one or more commands inside the submenu.  To make it popup:
 <pre>    spacefm -s show-menu 'Gizmos'</pre>
 
-<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
+<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler for the file list, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
 <pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s show-menu "A-C" ) &amp;</pre>
 
 Because the sleep and spacefm commands are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.

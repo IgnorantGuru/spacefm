@@ -72,6 +72,8 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Close the current box of widgets"),
     "keypress",     "KEYCODE MODIFIER COMMAND...",
                     N_("Run COMMAND when a key combination is pressed"),
+    "window-close", "COMMAND...",
+                    N_("Run COMMAND on window close attempt"),
     "command",      "FILE|PIPE [COMMAND...]",
                     N_("Read commands from FILE or PIPE.  COMMAND for init.")
 };
@@ -111,6 +113,7 @@ typedef enum {
     CDLG_VBOX,
     CDLG_CLOSE_BOX,
     CDLG_KEYPRESS,
+    CDLG_WINDOW_CLOSE,
     CDLG_COMMAND
 } ElementType;
 
@@ -135,7 +138,7 @@ static const char* cdlg_cmd[] =
 {
     "noop",         "( any arguments )",
                     N_("No operation - does nothing but evaluate arguments"),
-    "close",        "( no arguments )",  // exit status ?
+    "close",        "[REVERSE]",     // exit status ?
                     N_("Close the dialog"),
     "press",        "BUTTON-NAME",
                     N_("Press button named BUTTON-NAME"),
