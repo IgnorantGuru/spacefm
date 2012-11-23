@@ -744,6 +744,7 @@ static void set_element_value( CustomElement* el, const char* name,
                          || !g_strcmp0( el_name->val, "delete" )
                          || !g_strcmp0( el_name->val, "edit" )
                          || !g_strcmp0( el_name->val, "save" )
+                         || !g_strcmp0( el_name->val, "help" )
                          || !g_strcmp0( el_name->val, "stop" ) ) )
             {
                 // stock button
@@ -2733,6 +2734,7 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                          || !g_strcmp0( el->val, "delete" )
                          || !g_strcmp0( el->val, "edit" )
                          || !g_strcmp0( el->val, "save" )
+                         || !g_strcmp0( el->val, "help" )
                          || !g_strcmp0( el->val, "stop" ) ) )
             {
                 // stock button
@@ -3654,7 +3656,7 @@ static void show_help()
     }
 
     fprintf( f, _("\nThe following arguments may be used as shown above:\n") );
-    fprintf( f, _("    STOCK    One of: %s\n"), "ok cancel close open yes no apply delete edit save stop" );
+    fprintf( f, _("    STOCK    %s\n"), "ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop" );
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
     fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );

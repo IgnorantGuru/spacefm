@@ -2523,7 +2523,7 @@ Example:
                Read commands from FILE or PIPE.  COMMAND for init.
 
 The following arguments may be used as shown above:
-    STOCK    One of: ok cancel close open yes no apply delete edit save stop
+    STOCK    ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop
     ICON     An icon name, eg:  gtk-open
     @FILE    A text file from which to read a value.  In some cases this file
              is monitored, so writing a new value to the file will update the
@@ -2741,7 +2741,7 @@ Usage: <code><b>--button LABEL[:ICON]|STOCK|@FILE [COMMAND...]</b></code>
 <p>The --button element adds a button to the dialog.  All buttons are packed horizontally at the bottom of the dialog, in the order in which they are added (to add a button in the upper part of the dialog, use a <a href="#dialog-simple-freebutton">--free-button</a> instead).  Most dialogs should include at least an "OK" button.
 
 <p>The easiest way to add a complete button is to use a STOCK name, which may be any one of:<br>
-<b>&nbsp;&nbsp;&nbsp;ok cancel close open yes no apply delete edit save stop</b> <i>(in lowercase)</i>
+<b>&nbsp;&nbsp;&nbsp;ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop</b> <i>(in lowercase)</i>
 <p><b>For example, to add a stock OK button:</b>
 <pre>    spacefm -g --button ok</pre>
 The button will include the stock gtk-ok icon on it (taken from your icon theme), and an "OK" label.
