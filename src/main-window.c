@@ -2726,6 +2726,8 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
     if ( evt_tab_new->s || evt_tab_new->ob2_data )
         main_window_event( main_window, evt_tab_new, "evt_tab_new", 0, 0, NULL,
                                                                 0, 0, 0, TRUE );
+
+    set_panel_focus( main_window, file_browser );
 //    while( gtk_events_pending() )  // wait for chdir to grab focus
 //        gtk_main_iteration();
     //gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );

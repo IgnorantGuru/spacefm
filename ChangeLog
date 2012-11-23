@@ -27,6 +27,7 @@
     command line add --version option
     add fm_edit function
     Dialog add --window-close; add [REVERSE] to close
+    fix status bar text color not set on new tab
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels
