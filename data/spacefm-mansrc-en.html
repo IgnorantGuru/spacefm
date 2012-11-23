@@ -4160,6 +4160,8 @@ Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
 
 <p>The set-task method requires a TASKID, which indicates what task is being modified.  There are two ways to obtain the TASKID.  One is to use the <a href="#exvar">exported bash variable</a> $fm_my_task, which refers to the current command task.  The other is to use $fm_task_id, which refers to the task currently <i>selected</i> in the task list when the current task is run.  Note that a TASKID is only valid in the window in which the task is currently running, so it's generally appropriate to specify a WINDOWID ($fm_my_window) with the --window option to ensure the correct window is accessed.
 
+<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - it usually takes about a half second for a task to appear in the task manager.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown.
+
 <p>Examples using the set-task method:
 <pre>
     # Set my task's progress bar to 25%:
@@ -4218,7 +4220,7 @@ Usage: <b>spacefm -s show-menu MENUNAME</b>
 <p>For example, add a submenu anywhere named "Gizmos", and add one or more commands inside the submenu.  To make it popup:
 <pre>    spacefm -s show-menu 'Gizmos'</pre>
 
-<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
+<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler for the file list, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
 <pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s show-menu "A-C" ) &amp;</pre>
 
 Because the sleep and spacefm commands are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.

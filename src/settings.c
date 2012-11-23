@@ -965,6 +965,15 @@ void load_settings( char* config_dir )
         if ( app_settings.big_icon_size == 20 )
             app_settings.big_icon_size = 22;
     }
+    if ( ver < 16 ) // < 0.8.3
+    {
+        set = xset_get( "dev_menu_remove" );
+        if ( set->menu_label && !strcmp( set->menu_label, "Remo_ve" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("Remo_ve / Eject") );
+        }
+    }
 }
 
 
@@ -981,7 +990,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "15" );  // 0.8.1
+    xset_set( "config_version", "s", "16" );  // 0.8.3
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -8821,7 +8830,7 @@ void xset_defaults()
     set = xset_get( "sep_dm5" );
     set->menu_style = XSET_MENU_SEP;
         
-    set = xset_set( "dev_menu_remove", "label", _("Remo_ve") );
+    set = xset_set( "dev_menu_remove", "label", _("Remo_ve / Eject") );
     xset_set_set( set, "icon", "gtk-disconnect" );
     set->line = g_strdup( "#devices-menu-remove" );
     

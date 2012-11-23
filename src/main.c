@@ -103,7 +103,8 @@ static gboolean desktop = FALSE;  //MOD
 static gboolean profile = FALSE;  //MOD
 static gboolean custom_dialog = FALSE;  //sfm
 static gboolean socket_cmd = FALSE;     //sfm
-static gboolean sdebug = FALSE;
+static gboolean version_opt = FALSE;     //sfm
+static gboolean sdebug = FALSE;         //sfm
 
 static int show_pref = 0;
 static int panel = -1;
@@ -145,6 +146,7 @@ static GOptionEntry opt_entries[] =
     { "socket-cmd", 's', 0, G_OPTION_ARG_NONE, &socket_cmd, N_("Send a socket command (See -s help)"), NULL },
     { "profile", '\0', 0, G_OPTION_ARG_STRING, &profile, N_("No function - for compatibility only"), "PROFILE" },
     { "no-desktop", '\0', 0, G_OPTION_ARG_NONE, &no_desktop, N_("No function - for compatibility only"), NULL },
+    { "version", '\0', 0, G_OPTION_ARG_NONE, &version_opt, N_("Show version information"), NULL },
 
     { "sdebug", '\0', G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_NONE, &sdebug, NULL, NULL },
 
@@ -1314,6 +1316,13 @@ int main ( int argc, char *argv[] )
     {
         fprintf( stderr, "spacefm: %s\n", _("--socket-cmd must be first option") );
         return 1;
+    }
+    
+    // --version
+    if ( version_opt )
+    {
+        printf( "spacefm %s\n", VERSION );
+        return 0;
     }
     
     /* Initialize multithreading  //sfm moved below parse arguments

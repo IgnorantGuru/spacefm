@@ -5930,6 +5930,8 @@ Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
 
 <p>The set-task method requires a TASKID, which indicates what task is being modified.  There are two ways to obtain the TASKID.  One is to use the <a href="#exvar">exported bash variable</a> $fm_my_task, which refers to the current command task.  The other is to use $fm_task_id, which refers to the task currently <i>selected</i> in the task list when the current task is run.  Note that a TASKID is only valid in the window in which the task is currently running, so it's generally appropriate to specify a WINDOWID ($fm_my_window) with the --window option to ensure the correct window is accessed.
 
+<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - it usually takes about a half second for a task to appear in the task manager.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown.
+
 <p>Examples using the set-task method:
 <pre>
     # Set my task's progress bar to 25%:
@@ -6517,7 +6519,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-11-22&nbsp;&nbsp;(SpaceFM version 0.8.2+)
+<p>Updated 2012-11-23&nbsp;&nbsp;(SpaceFM version 0.8.2+)
 <br><br>
 </center>
 </td></tr></table>
