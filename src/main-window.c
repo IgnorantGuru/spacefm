@@ -983,7 +983,9 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
                 /*
                 if ( a_browser->view_mode != PTK_FB_LIST_VIEW )
                 {
-                    // need to triger redraw of exo icon views
+                    //FIXME: need to trigger update of exo icon view for gtk2 for current tab
+                    // or font is not updated for current tab
+                    gtk_widget_queue_draw( GTK_WIDGET( a_browser->folder_view ) );
                 }
                 */
                 if ( a_browser->side_dir )
