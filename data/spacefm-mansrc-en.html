@@ -3044,11 +3044,11 @@ Usage: <code><b>--progress [VALUE|pulse|@FILE]</b></code>
 <p>A --progress element adds a progress bar to the dialog.  For example:
 <pre>    spacefm -g --progress</pre>
 
-By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (eg "100 %" or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
+By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (eg '100' or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
 <pre>    spacefm -g --progress <b>@</b>/tmp/dialog-progress</pre>
 
 The file is watched for changes.  To later update the value of the progress bar:
-<pre>    echo "50 %" > /tmp/dialog-progress</pre>
+<pre>    echo 50 > /tmp/dialog-progress</pre>
 
 Or, the progress bar will advance one pulse step each time you run:
 <pre>    echo pulse > /tmp/dialog-progress</pre>
@@ -3056,8 +3056,8 @@ Or, the progress bar will advance one pulse step each time you run:
 Or, you can set additional text to appear in the progress bar:
 <pre>    echo "25 % copying" > /tmp/dialog-progress</pre>
 
-Or, you can set just the progress bar length with no text in the bar:
-<pre>    echo "75" > /tmp/dialog-progress</pre>
+Or, you can set just the progress bar length with no text in the bar (note the space):
+<pre>    echo "75 " > /tmp/dialog-progress</pre>
 
 Or, you can set just the progress bar text, which will not change the bar length:
 <pre>    echo "text" > /tmp/dialog-progress</pre>
@@ -3892,6 +3892,7 @@ window_size                     eg '800x600'
 window_position                 eg '100x50'
 window_maximized                1|true|yes|0|false|no
 window_fullscreen               1|true|yes|0|false|no
+screen_size                     eg '1024x768'  (read-only)
 window_vslider_top              eg '100'
 window_vslider_bottom           eg '100'
 window_hslider                  eg '100'

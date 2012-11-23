@@ -5782,6 +5782,9 @@ _missing_arg:
             xset_set_b( "main_full", bool( argv[i+1] ) );
             on_fullscreen_activate( NULL, main_window );
         }
+        else if ( !strcmp( argv[i], "screen_size" ) )
+        {
+        }
         else if ( !strcmp( argv[i], "window_vslider_top" ) ||
                   !strcmp( argv[i], "window_vslider_bottom" ) ||
                   !strcmp( argv[i], "window_hslider" ) ||
@@ -6134,6 +6137,14 @@ _invalid_set:
         else if ( !strcmp( argv[i], "window_fullscreen" ) )
         {
             *reply = g_strdup_printf( "%d\n", !!xset_get_b( "main_full" ) );
+        }
+        else if ( !strcmp( argv[i], "screen_size" ) )
+        {
+            width = gdk_screen_get_width( 
+                            gtk_widget_get_screen( (GtkWidget*)main_window ) );
+            height = gdk_screen_get_height( 
+                            gtk_widget_get_screen( (GtkWidget*)main_window ) );
+            *reply = g_strdup_printf( "%dx%d\n", width, height );
         }
         else if ( !strcmp( argv[i], "window_vslider_top" ) ||
                   !strcmp( argv[i], "window_vslider_bottom" ) ||

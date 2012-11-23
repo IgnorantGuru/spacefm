@@ -681,6 +681,7 @@ void show_socket_help()
     printf( "window_position                 eg '100x50'\n" );
     printf( "window_maximized                1|true|yes|0|false|no\n" );
     printf( "window_fullscreen               1|true|yes|0|false|no\n" );
+    printf( "screen_size                     eg '1024x768'  (read-only)\n" );
     printf( "window_vslider_top              eg '100'\n" );
     printf( "window_vslider_bottom           eg '100'\n" );
     printf( "window_hslider                  eg '100'\n" );
