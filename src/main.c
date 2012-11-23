@@ -1322,6 +1322,28 @@ int main ( int argc, char *argv[] )
     if ( version_opt )
     {
         printf( "spacefm %s\n", VERSION );
+#if GTK_CHECK_VERSION (3, 0, 0)
+        printf( "GTK3 " );
+#else
+        printf( "GTK2 " );
+#endif
+#ifdef HAVE_HAL
+        printf( "HAL " );
+#else
+        printf( "UDEV " );
+#endif
+#ifdef USE_INOTIFY
+        printf( "INOTIFY " );
+#else
+        printf( "FAM " );
+#endif
+#ifdef DESKTOP_INTEGRATION
+        printf( "DESKTOP " );
+#endif
+#ifdef HAVE_SN
+        printf( "SNOTIFY " );
+#endif
+        printf( "\n" );
         return 0;
     }
     

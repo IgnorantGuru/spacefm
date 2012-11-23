@@ -25,6 +25,7 @@
     fix segfault on middle-click bookmarks empty #208
     Dialog label --wrap|--nowrap, all --compact --expand
     command line add --version option
+    add fm_edit function
 0.8.2   2012-10-25:
     fix --enable-hal build issues (affected 0.7.6 thru 0.8.1)
     overwrite dialog replace text view with labels

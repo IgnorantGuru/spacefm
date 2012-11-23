@@ -3025,6 +3025,12 @@ gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* fil
         g_free( esc_path );
     }
 
+    // utils
+    esc_path = bash_quote( xset_get_s( "editor" ) );
+    fprintf( file, "fm_editor=%s\n", esc_path );
+    g_free( esc_path );
+    fprintf( file, "fm_editor_terminal=%d\n", xset_get_b( "editor" ) ? 1 : 0 );    
+
     // set
     if ( set )
     {

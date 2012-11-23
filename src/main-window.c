@@ -4431,6 +4431,12 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
     fprintf( file, "fm_my_window=%#x\n", main_window );
     fprintf( file, "fm_my_window_id=%#x\n", main_window );
     
+    // utils
+    esc_path = bash_quote( xset_get_s( "editor" ) );
+    fprintf( file, "fm_editor=%s\n", esc_path );
+    g_free( esc_path );
+    fprintf( file, "fm_editor_terminal=%d\n", xset_get_b( "editor" ) ? 1 : 0 );    
+    
     // set
     if ( set )
     {
