@@ -586,10 +586,11 @@ Or, to see the help for alternate build options, run:
 <p>For easy-to-follow manual build instructions, please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Sections there include:
 
 <ul>
-    <li>BUILD - build SpaceFM from source
-    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
+    <li>BUILD GTK2 - build from source with default GTK2 support
+    <li>BUILD GTK3 - build with GTK3 support
+    <li>BUILD HAL - build with HAL support instead of udev (this severely limits the <a href="#devices">device manager</a> and other capabilities)
     <li>BUILD NEXT - build the 'next' branch of SpaceFM.  This version is a work in progress which eventually becomes the next release version.
-    <li>BUILD GTK3 - The git gtk3 branch of SpaceFM is available for alpha testing.  Please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/gtk3/README">gtk3 README</a> for details.
+    <li>BUILD DEBUG - build SpaceFM with debug symbols for reporting crashes with a gdb backtrace
     <li>CREATE DEB PACKAGE - easily create a deb binary package file of SpaceFM for almost any Debian-based distro
 </ul>
 
@@ -855,15 +856,17 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 <a name="invocation-gtkthemes"/><a href="#invocation-gtkthemes"><font size=+2>GTK Themes</font></a>
 <!-- @Invocation @GTK Themes -->
 
-<p>Because multiple panels in SpaceFM use many GUI elements, the GTK2 theme you're using may have a significant impact on performance.  Some themes are 'heavier' than others.  For example, the Clearlooks theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
+<p>The GTK theme you're using may have a significant impact on SpaceFM's performance, and a non-working theme may create dysfunctional behavior.  Because multiple panels in SpaceFM use many GUI elements, some themes cause SpaceFM to run more slowly.  For example, the Clearlooks GTK2 theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
 
-<p>It is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
+<!-- #GTK 2 #gtk2 --> 
+<p><a name="invocation-gtkthemes-gtk2 -->"/><a href="#invocation-gtkthemes-gtk2 -->"><b>GTK 2</b></a><br>
+<b>When using GTK2</b>, it is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
 <pre>    GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</pre>
 
 <p>You can also test SpaceFM's speed with no theme, which should be faster than any theme:
 <pre>    GTK2_RC_FILES="" spacefm</pre>
 
-<p>To specify a theme within a desktop file, copy SpaceFM's desktop file to your home folder:
+<p>To specify a GTK2 theme within a desktop file, copy SpaceFM's desktop file to your home folder:
 <pre>    mkdir -p ~/.local/share/applications
     cp <a href="#programfiles-usr-spac-dt">/usr/local/share/applications/spacefm.desktop</a> ~/.local/share/applications/
     # OR
@@ -872,7 +875,12 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 Then open ~/.local/share/applications/spacefm.desktop in your editor and set the Exec= line using env.  For example:
 <blockquote>Exec=env GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</blockquote>
 
-<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK themes</a>
+<p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK2 themes</a>
+
+<!-- #GTK 3 #gtk3 --> 
+<p><a name="invocation-gtkthemes-gtk3 -->"/><a href="#invocation-gtkthemes-gtk3 -->"><b>GTK 3</b></a><br>
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes (but always check GTK version compatibility).
+
 
 
 <!-- @end invocation-gtkthemes-->
@@ -1830,9 +1838,9 @@ If option Open Tab is checked, when a device is auto-mounted by SpaceFM, a new t
 
 <!-- #Auto Mount|Unmount On Exit #exit -->
 <p><a name="devices-settings-exit"/><a href="#devices-settings-exit"><b>Auto Mount|Unmount On Exit</b></a><br>
-If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  Exit occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running, in which case it occurs when you logoff.
+If option Unmount On Exit is checked, any device which would normally be auto-mounted by SpaceFM (based on auto-mount settings) will be unmounted when SpaceFM exits.  Exit occurs when the last SpaceFM window is closed, unless a daemon or desktop manager daemon is running.  Note that if SpaceFM is killed with SIGKILL (such as when you logout of your X session), the automatic unmount will NOT occur.  (To unmount all devices before or just after X logoff, consider running <code>devmon --unmount-all</code> (devmon is distributed with udevil).
 
-<p>If there is no fstab entry for a device, your mount program may create a subfolder for the device mount point in /media or /run/media/$USER.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
+<p>When mounting a device, if there is no fstab entry for the device, your mount program may create a subfolder for the device mount point in /media or /run/media/$USER.  If you or SpaceFM unmounts the device, this subfolder will be removed.  However, if you logoff without unmounting the device, the subfolder may be left behind.  In order to avoid these subfolders accumulating in /media, SpaceFM can unmount devices on exit.
 
 <p>If you don't check option Unmount On Exit, you may need to unmount devices in some other way before logging off to avoid these /media subfolders accumulating.
 
@@ -3067,6 +3075,7 @@ exit $?
 # "$fm_plugin_dir"          top plugin directory
 # tmp="$(fm_new_tmp)"       makes new temp directory (destroy when done)
 #                                 To destroy:  rm -rf "$tmp"
+# fm_edit "FILE"            open FILE in user's configured editor
 
 # $fm_import                command to import above variables (this
 #                           variable is exported so you can use it in any
@@ -3912,7 +3921,7 @@ Example:
                Set window title
 <a href="#dialog-simple-wicon">--window-icon</a>  ICON|@FILE
                Set window icon
-<a href="#dialog-simple-label">--label</a>        LABEL|@FILE
+<a href="#dialog-simple-label">--label</a>        [--wrap|--nowrap] LABEL|@FILE
                Add a text label
 <a href="#dialog-simple-button">--button</a>       LABEL[:ICON]|STOCK|@FILE [COMMAND...]
                Add STOCK dialog button, or LABEL button with ICON
@@ -3966,11 +3975,13 @@ Example:
                Close the current box of widgets
 <a href="#dialog-nonvis-keypress">--keypress</a>     KEYCODE MODIFIER COMMAND...
                Run COMMAND when a key combination is pressed
+<a href="#dialog-nonvis-winclose">--window-close</a> COMMAND...
+               Run COMMAND on window close attempt
 <a href="#dialog-nonvis-command">--command</a>      FILE|PIPE [COMMAND...]
                Read commands from FILE or PIPE.  COMMAND for init.
 
 The following arguments may be used as shown above:
-    STOCK    One of: ok cancel close open yes no apply delete edit save stop
+    STOCK    ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop
     ICON     An icon name, eg:  gtk-open
     @FILE    A text file from which to read a value.  In some cases this file
              is monitored, so writing a new value to the file will update the
@@ -3982,7 +3993,7 @@ The following arguments may be used as shown above:
                  %n           Name of the current element
                  %v           Value of the current element
                  %NAME        Value of element named NAME (eg: %input1)
-                 %(command)   stdout from a command
+                 %(command)   stdout from a bash command line
                  %%           %
     LABEL    The following escape sequences in LABEL are unescaped:
                  \n   newline
@@ -3993,14 +4004,15 @@ The following arguments may be used as shown above:
              tilde (~), pango markup may be used.  For example:
                  --label '~This is plain. &lt;b&gt;This is bold.&lt;/b&gt;'
 
-In addition to the OPTIONS listed above, a --font option may be used with most
-element types to change the element's font and font size.  For example:
+In addition to the OPTIONS listed above, --compact or --expand options may be
+added to any element.  Also, a --font option may be used with most element
+types to change the element's font and font size.  For example:
     --input --font "Times New Roman 16" "Default Text"
 
 <a href="#dialog-int">INTERNAL COMMANDS</a>:
     <a href="#dialog-int-noop">noop</a>       ( any arguments )
                No operation - does nothing but evaluate arguments
-    <a href="#dialog-int-close">close</a>      ( no arguments )
+    <a href="#dialog-int-close">close</a>      [REVERSE]
                Close the dialog
     <a href="#dialog-int-press">press</a>      BUTTON-NAME
                Press button named BUTTON-NAME
@@ -4034,11 +4046,14 @@ The command line accepts any number of elements:
 	       ...</pre>
 where each ELEMENT has its own options and arguments.  An element represents one piece of the dialog.  It may be a widget, such as a label or button, or it may be an invisible element which controls how the dialog looks or behaves.
 
-For example, to show a dialog with a message label and an OK button, run this command:
+<p>For example, to show a dialog with a message label and an OK button, run this command:
 <pre>    spacefm -g --label "This is a message." \
 	       --button ok</pre>
 
 Note: The forward slash (\) at the end of a line tells the terminal that the command is continued on the next line.  You can select both lines above, copy them, and paste them into a terminal to run the above example;  it is not necessary to copy and paste each line individually.  In this manual, SpaceFM Dialog commands are always shown with at most one element on each line for clarity.  These multi-line commands can also be pasted directly into scripts.
+
+<p>OPTIONS may include options specific to the element type.  In addition, most elements accept a --font FONTNAME option to specify a font for the widget's text.  Also, all elements accept --compact or --expand options to force how an element is packed into the current box.
+
 
 <!-- # Evaluating The Output #eval -->
 <p><a name="dialog-invocation-eval"/><a href="#dialog-invocation-eval"><b>Evaluating The Output</b></a><br>
@@ -4169,7 +4184,7 @@ and the dialog window's icon will change to reflect the new value.
 
 <!-- # --label #label -->
 <p><a name="dialog-simple-label"/><a href="#dialog-simple-label"><b>--label</b></a><br>
-Usage: <code><b>--label LABEL|@FILE</b></code>
+Usage: <code><b>--label [--wrap|--nowrap] LABEL|@FILE</b></code>
 
 <p>The --label element adds a GTK label widget to the dialog, which is used to display one or more lines of text, such as a message for the user or a label for an input box.  For example:
 <pre>    spacefm -g --label "The process is complete."</pre>
@@ -4205,6 +4220,8 @@ and the text in the dialog window will change to reflect the new value in the fi
 <p><b>Labels can also include Pango markup text</b>, which can be used to italicize, bold, and otherwise stylize portions of text.  The --label element (only) recognizes the prefix character tilde (~) to indicate that your text is Pango markup.  For example:
 <pre>    spacefm -g --label "<b>~</b>This is plain.  &lt;b&gt;This is bold.&lt;/b&gt;"</pre>
 
+<p><b>Labels accept a --wrap or --nowrap option</b> to specify if the text in the label is to be wrapped to multiple lines.  If neither option is specified, the GTK2 default is to always wrap, and the GTK3 default is to wrap unless the label is packed into an <a href="#dialog-nonvis-hbox">--hbox</a> element.
+
 <p>Like most elements, <b>--label also accepts a --font option</b> to change the font and font size of the text:
 <pre>    spacefm -g --label <b>--font "Times New Roman 16"</b> "The process is complete."</pre>
 
@@ -4221,7 +4238,7 @@ Usage: <code><b>--button LABEL[:ICON]|STOCK|@FILE [COMMAND...]</b></code>
 <p>The --button element adds a button to the dialog.  All buttons are packed horizontally at the bottom of the dialog, in the order in which they are added (to add a button in the upper part of the dialog, use a <a href="#dialog-simple-freebutton">--free-button</a> instead).  Most dialogs should include at least an "OK" button.
 
 <p>The easiest way to add a complete button is to use a STOCK name, which may be any one of:<br>
-<b>&nbsp;&nbsp;&nbsp;ok cancel close open yes no apply delete edit save stop</b> <i>(in lowercase)</i>
+<b>&nbsp;&nbsp;&nbsp;ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop</b> <i>(in lowercase)</i>
 <p><b>For example, to add a stock OK button:</b>
 <pre>    spacefm -g --button ok</pre>
 The button will include the stock gtk-ok icon on it (taken from your icon theme), and an "OK" label.
@@ -4535,11 +4552,11 @@ Usage: <code><b>--progress [VALUE|pulse|@FILE]</b></code>
 <p>A --progress element adds a progress bar to the dialog.  For example:
 <pre>    spacefm -g --progress</pre>
 
-By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (eg "100 %" or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
+By default, the progress bar will pulse automatically.  You can also specify an initial VALUE (eg '100' or 'pulse').  To update the progress bar, it is most convenient to specify @FILE so the progress bar's value is read from FILE.  For example:
 <pre>    spacefm -g --progress <b>@</b>/tmp/dialog-progress</pre>
 
 The file is watched for changes.  To later update the value of the progress bar:
-<pre>    echo "50 %" > /tmp/dialog-progress</pre>
+<pre>    echo 50 > /tmp/dialog-progress</pre>
 
 Or, the progress bar will advance one pulse step each time you run:
 <pre>    echo pulse > /tmp/dialog-progress</pre>
@@ -4547,8 +4564,8 @@ Or, the progress bar will advance one pulse step each time you run:
 Or, you can set additional text to appear in the progress bar:
 <pre>    echo "25 % copying" > /tmp/dialog-progress</pre>
 
-Or, you can set just the progress bar length with no text in the bar:
-<pre>    echo "75" > /tmp/dialog-progress</pre>
+Or, you can set just the progress bar length with no text in the bar (note the space):
+<pre>    echo "75 " > /tmp/dialog-progress</pre>
 
 Or, you can set just the progress bar text, which will not change the bar length:
 <pre>    echo "text" > /tmp/dialog-progress</pre>
@@ -5014,7 +5031,7 @@ You will notice that if you resize the above window, the row of buttons expand v
                --free-button "Button4" \
                --free-button "Button5"</pre>
 
-The --compact option tells the box not to expand in the <i>other</i> dimension.  For an hbox, --compact will affect the vertical dimension (height), and for a vbox, --compact will affect the horizontal dimension (width).  With --compact, the box will not consume extra window space beyond what its children require as a minimum, so the children will in turn not expand.  The extra space in the window will be divided among other boxes (if they can expand), or will remain empty (as in the above example).  Also, whether children expand in the <i>same</i> dimension (horizontally in an hbox or vertically in a vbox) depends on the type of elements in the box.  The box itself will expand in the same dimension, but its children may not (as seen in the above example).
+As with all elements, the --compact option determines how much window space a box will absorb.  --compact tells the box not to expand in the <i>other</i> dimension.  For an hbox, --compact will affect the vertical dimension (height), and for a vbox, --compact will affect the horizontal dimension (width).  With --compact, the box will not consume extra window space beyond what its children require as a minimum, so the children will in turn not expand.  The extra space in the window will be divided among other boxes (if they can expand), or will remain empty (as in the above example).  Also, whether children expand in the <i>same</i> dimension (horizontally in an hbox or vertically in a vbox) depends on the type of elements in the box, and whether you have included --compact or --expand options for them.  The box itself will expand in the same dimension, but its children may not (as seen in the above example).
 
 <p>Note: A box with no children in it will take no space - it is effectively hidden.
 
@@ -5136,6 +5153,20 @@ In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MO
 <p>In <a href="#dialog-cmd">commands</a>, the value of a --keypress element (eg %v, %keypress1) will equal the keycode and modifier.
 <br><br>
 
+<!-- # --window-close #winclose -->
+<p><a name="dialog-nonvis-winclose"/><a href="#dialog-nonvis-winclose"><b>--window-close</b></a><br>
+Usage: <code><b>--window-close COMMAND...</b></code>
+
+<p>A --window-close element runs COMMAND when the user attempts to close the dialog (usually by clicking the 'X' button in the upper right corner or using Alt-F4, etc.)  The window closure will be inhibited, but COMMAND can be used to close it conditionally.
+
+<p>For example:
+<pre>
+    spacefm -g --label "You can't close this window unless you enter text:" \
+               --input \
+	       --window-close close %input1</pre>
+
+In the above example, the internal <a href="#dialog-int-close">close</a> command is passed the contents of the --input element, which acts as a reversal to the close command.  If %input1 is empty, the close command does nothing, otherwise it closes the window.
+
 <!-- # --command #command -->
 <p><a name="dialog-nonvis-command"/><a href="#dialog-nonvis-command"><b>--command</b></a><br>
 Usage: <code><b>--command FILE|PIPE [COMMAND...]</b></code>
@@ -5247,7 +5278,7 @@ The value of the current element, or "my value" from the element's perspective, 
 %NAME is used to get the value of any other element in the dialog.  For example, the text in the first --input element of a dialog is always "%input1".  If element NAME does not exist, %NAME has value "".  Note that the value read from an element may differ from the value used to set an element.  For example, using <a href="#dialog-int-set">set</a> on a --list element sets the file path for the list.  But "%list1" will contain the selected items in the list.
 
 <p><a name="dlgsubcmd"><b>%(command)</b></a><br>
-%(command) executes an external command line <i>synchronously</i>, and is substituted with the stdout output of the command.  For example:
+%(command) executes an external bash command line <i>synchronously</i>, and is substituted with the stdout output of the command.  For example:
 <pre>
     spacefm -g --label \
 	       --button 'Get Date' set label1 '<b>%(date +%%D)</b>'</pre>
@@ -5258,11 +5289,11 @@ Generally, you will need to quote the '%(command)' argument as shown above when 
 
 <p>Also, if you want to run an external command synchronously, you can run it inside an internal command with %(command).  The <a href="#dialog-int-noop">noop</a> command, which does nothing except evaluate arguments, is good for this, eg noop '%(command)'.  In this case, the stdout output will be discarded, but the command will be run synchronously.
 
-<p>Note that a small bash script can be run directly inside a %(command) substitution by using bash -c.  For example:
+<p>Note that a small bash script can be run directly inside a %(command) substitution.  For example:
 <pre>
 spacefm -g --check Option 0                                                      \
-		   set label1 '<b>%( bash -c "echo -n Option is\ ;</b>                  \
-				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked" )</b>' \
+		   set label1 '<b>%( echo -n Option is\ ;</b>                  \
+				  <b>(( %v )) &amp;&amp; echo checked || echo unchecked )</b>' \
 	   --label "Option is unchecked"
 </pre>
 
@@ -5321,9 +5352,16 @@ In the above example, when the OK button is pressed, first 'myscript' will be ru
 
 <!-- #close -->
 <p><a name="dialog-int-close"/><a href="#dialog-int-close"><b>close</b></a><br>
-Usage: <b>close</b>
+Usage: <b>close [REVERSE]</b>
 
 <p>The close command simply closes the dialog window, as if the user clicked the X in the top-right corner or used Alt+F4.  $dialog_pressed_index will equal -2.
+
+<p>REVERSE, if supplied and equal to "", "0", or "false", causes the close command to do nothing.  This can be used with the value from another element, for example, to make the close command conditional.  For example:
+<pre>
+    spacefm -g --label "You can't close this window unless you enter text:" \
+               --input \
+	       <a href="#dialog-nonvis-winclose">--window-close</a> <b>close %input1</b></pre>
+
 
 <!-- #press -->
 <p><a name="dialog-int-press"/><a href="#dialog-int-press"><b>press</b></a><br>
@@ -5532,7 +5570,7 @@ Usage: <b>source FILE</b>
 <pre><b>$ spacefm -s help</b>
 SpaceFM socket commands permit external processes (such as command scripts)
 to read and set GUI property values and execute methods inside running SpaceFM
-windows.  To handle events see View|Auto Run in the main menu bar.
+windows.  To handle events see <a href="#sockets-menu">View|Events</a> in the main menu bar.
 
 Usage:
     spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]
@@ -5591,6 +5629,7 @@ window_size                     eg '800x600'
 window_position                 eg '100x50'
 window_maximized                1|true|yes|0|false|no
 window_fullscreen               1|true|yes|0|false|no
+screen_size                     eg '1024x768'  (read-only)
 window_vslider_top              eg '100'
 window_vslider_bottom           eg '100'
 window_hslider                  eg '100'
@@ -5916,6 +5955,8 @@ Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
 
 <p>The set-task method requires a TASKID, which indicates what task is being modified.  There are two ways to obtain the TASKID.  One is to use the <a href="#exvar">exported bash variable</a> $fm_my_task, which refers to the current command task.  The other is to use $fm_task_id, which refers to the task currently <i>selected</i> in the task list when the current task is run.  Note that a TASKID is only valid in the window in which the task is currently running, so it's generally appropriate to specify a WINDOWID ($fm_my_window) with the --window option to ensure the correct window is accessed.
 
+<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - it usually takes about a half second for a task to appear in the task manager.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown.
+
 <p>Examples using the set-task method:
 <pre>
     # Set my task's progress bar to 25%:
@@ -5977,7 +6018,7 @@ Usage: <b>spacefm -s show-menu MENUNAME</b>
 <p>For example, add a submenu anywhere named "Gizmos", and add one or more commands inside the submenu.  To make it popup:
 <pre>    spacefm -s show-menu 'Gizmos'</pre>
 
-<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
+<p>When using show-menu from within an <a href="#sockets-events-winclk">evt_win_click</a> event handler for the file list, a small delay may be needed before the menu is shown to prevent it from closing immediately when the mouse button is released:
 <pre>    *if [ "%b" != "2" ]; then exit 1; fi; ( sleep .2; spacefm -s show-menu "A-C" ) &amp;</pre>
 
 Because the sleep and spacefm commands are within parentheses, they are both backgrounded by the ampersand (&amp;), preventing a lag in the GUI.
@@ -6503,7 +6544,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-11-14&nbsp;&nbsp;(SpaceFM version 0.8.2+)
+<p>Updated 2012-11-23&nbsp;&nbsp;(SpaceFM version 0.8.2+)
 <br><br>
 </center>
 </td></tr></table>

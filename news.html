@@ -35,6 +35,77 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 <p><br>
 
 
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.3"></a>
+<big><b><a href="#0.8.3">0.8.3 released</a></b></big><br>
+2012-Nov-24
+
+<ul>
+    <li>SpaceFM can now be built for <b>either GTK2 (the default) or GTK3 (beta test build)</b>.  Many thanks to BwackNinja for his continuing work on the GTK3 port and other areas of SpaceFM!  See the updated <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file for GTK3 build instructions.<br><br>
+    
+    <b>IMPORTANT:  The GTK3 build is currently provided for testing purposes.</b>  SpaceFM runs very well in GTK3 with a functional theme, but many themes are broken due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.<br><br>
+    
+    <b>Plugin authors</b> should note that their plugins may now be running on GTK3 as well as GTK2.  Most <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog">SpaceFM Dialog</a> functions work comparably in GTK3, but there are minor differences.  If you encounter a major difference or breakage in SpaceFM Dialog on GTK3, please report it.<br><br>
+    
+    <li>SpaceFM 0.8.3 introduces the <b>new socket commands</b>, which allow custom commands and plugins to easily interact with the GUI.  For example, socket commands can be used to record or change the size of a SpaceFM window; show or hide panels or side panes; resize panels, panes, and columns; select files in a given window, panel, or tab; place text or files on the clipboard; read text or files from the clipboard; place text in a panel's status bar; update the progress bar and other information displayed about running tasks, and much more.  The user's manual has been updated with a new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets">Sockets</a> section.<br><br>
+    
+    <li>A <b>new Events submenu</b> has been added to the main menu bar's View menu.  This menu allows custom event handlers to be set.  This allows you to write command lines or scripts which are run when certain events occur in SpaceFM windows.  In some cases these handlers can replace the default behavior.  For example, you might make a custom response for middle-clicking on the path bar.  <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets-menu">details</a><br><br>
+
+    <li><b><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog">SpaceFM Dialog</a> features have been extended:</b><br><br>
+    <ul>
+        <li>You can now place custom text or no text (no percentage) on a <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-simple-progress">progress bar</a><br><br>
+        <li>%(command) arguments in <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-cmd">commands</a> now accept a bash command line<br><br>
+        <li><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-simple-label">--label</a> elements now accept option --wrap or --nowrap to control whether text is wrapped.  If neither option is specified, the GTK2 default is to always wrap, and the GTK3 default is to wrap unless the label is packed into an <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-nonvis-hbox">--hbox</a> element.<br><br>
+        <li>Option --compact or --expand may now be included for any element to force how the element is packed into the current box, overriding the default behavior.<br><br>
+        <li>A <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-nonvis-winclose">--window-close</a> element has been added, which specifies a command to be run when the user attempts to close the window, allowing for an 'Are you sure?' message or other conditional closure.<br><br>
+        <li>Option [REVERSE] has been added to the internal <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-int-close">close</a> command to optionally inhibit its function.
+    </ul><br>
+    
+    <li>An <b>fm_edit function has been added</b> to the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#exvar">exported bash variables</a> available for use in commands.  <code>fm_edit FILE</code> opens a file using the user's configured editor.<br><br>
+    
+    <li><b>configure option --disable-pixmaps</b> is now the default, meaning by default icons will be installed to share/icons/ rather than share/pixmaps/.  If you prefer the latter, add configure option --enable-pixmaps when building.  Since --disable-pixmaps is now the default, be sure to run these additional commands after <code>make install</code>:
+    <pre>    sudo gtk-update-icon-cache -q -t -f /usr/<i>local/</i>share/icons/hicolor
+    sudo gtk-update-icon-cache -q -t -f /usr/<i>local/</i>share/icons/Faenza</pre><br>
+    
+    <li>SpaceFM <b>command line option --version</b> has been added to display version and build information.  Plugins can use this option to test for a particular SpaceFM version.<br><br>
+    
+    <li><b>Ctrl+rubberband</b> (drag cursor) may now be used to add to a selection on the desktop<br><br>
+    
+    <li><b>Spacing of items in icon and compact view modes</b> has been reduced for more efficient use of space<br><br>
+    
+    <li><b>Thumnbails are now automatically oriented</b> based on EXIF data.<br><br>
+    
+    <li><b>A wallpaper zoom mode</b> has been added to View|Preferences|Desktop.<br><br>
+    
+    <li>A setting for <b>alternate display of file sizes using SI decimal</b> (1K = 1000 bytes) has been restored to View|Preferences|Interface.  This option, disabled by default, will cause all file and device sizes and copy speeds displayed in SpaceFM to be decimal rather than binary.  (Some file managers use this irregular method for measuring file sizes, so this option is provided for compatibility.)<br><br>
+
+    <li>The <b>Rubberband Select option</b> formerly in View|Preferences|Interface has been moved to the file list's context menu in View|Style.  This option can be disabled only when view style is set to Detailed.<br><br>
+    
+    <li>A <b>secondary sort has been added</b> to icons on the desktop (applies to SpaceFM's Desktop Manager).  For example, when sorting icons by size, if two have the same size, they will be presented in alphabetical order based on their names.  This corrects a problem with the displayed order changing when the desktop is clicked.<br><br>
+    
+    <li>When using the CONFIG_BLK_DEV_RAM kernel config option, <b>multiple empty /dev/ramN entries</b> were shown in the Devices list when Show|Internal Drives was enabled.  These are now hidden by default if unmounted.  If you prefer they be displayed, you can add one or more to <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-settings-vol">Show|Volumes</a>.<br><br>
+    
+    <li>The <b><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-next-en.html#introduction-highlights">Highlights</a> and <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-next-en.html#introduction-history">History</a> sections</b> of the user's manual have been updated.<br><br>
+    
+    <li>Centering of icon labels has been corrected<br><br>
+    
+    <li>A problem introduced in 0.8.1-0.8.2 which made it impossible to click and drag a selection of multiple files in icon and compact view modes has been corrected<br><br>
+    
+    <li>A problem which caused make to fail on gtk 2.18 has been corrected<br><br>
+    
+    <li>SpaceFM's <b>Russian translation</b> has been updated - thanks to Vladimir Kudrya and new translator Vladimir Lomov<br><br>
+    
+    <li><b><a href="http://pibanglinux.org/">Pibang Linux</a> for the Raspberry Pi, built on the armhf architecture</b>, now includes SpaceFM, and SpaceFM may be selected as the default file manager during installation.    
+</ul>
+
+
+<br><br><hr>
+
+
+
+
+
 <!-- --------------------------------------------------------------------- -->
 <br><a name="newgtk3alpha"></a>
 <big><b><a href="#newgtk3alpha">GTK3 Alpha Testing Moved To Next</a></b></big><br>
