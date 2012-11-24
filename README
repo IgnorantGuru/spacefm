@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.2+
+README for SpaceFM v0.8.3
 
 
 For updates and instructions visit:
@@ -76,6 +76,10 @@ PACKAGES
 
     PCLinuxOS has spacefm test packages available (see forum):
         http://www.pclinuxos.com/
+
+    Pibang Linux includes SpaceFM built for the Raspberry Pi (armhf) - can be
+    installed as the default file manager via Pibang's welcome scripts
+        http://pibanglinux.org/
 
     Sabayon includes spacefm in its repositories:
         http://www.sabayon.org/

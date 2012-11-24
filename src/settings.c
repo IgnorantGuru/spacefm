@@ -8175,7 +8175,7 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
     {
         if ( gdk_color_parse( defcolor, &color ) )
         {
-            printf( "        gdk_color_to_string = %s\n", gdk_color_to_string( &color ) );
+            //printf( "        gdk_color_to_string = %s\n", gdk_color_to_string( &color ) );
             color_sel = gtk_color_selection_dialog_get_color_selection( 
                                             GTK_COLOR_SELECTION_DIALOG( dlg ) );
             gtk_color_selection_set_current_color( GTK_COLOR_SELECTION( color_sel ),

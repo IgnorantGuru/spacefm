@@ -1,4 +1,4 @@
-0.8.2+
+0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu
     stop elapsed timer during overwrite query
