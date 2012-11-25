@@ -1,5 +1,6 @@
 0.8.3+
-
+    fix detail dbl click selects next #218
+    fix dlg command pipe fast
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu

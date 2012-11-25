@@ -1767,9 +1767,16 @@ if ( !( cond & G_IO_NVAL ) )
         else if ( el->type == CDLG_COMMAND )
         {
             char* str = g_strndup( line, size );
-            while ( g_str_has_suffix( str, "\n" ) )
-                str[strlen( str )-1] = '\0';
-            run_command_line( el, str );
+            char* sep;
+            char* ptr = str;
+            while ( ptr && ptr[0] != '\0' )
+            {
+                sep = strchr( ptr, '\n' );
+                if ( sep )
+                    sep[0] = '\0';
+                run_command_line( el, ptr );
+                ptr = sep ? sep + 1 : NULL;
+            }
             g_free( str );
         }
     }
