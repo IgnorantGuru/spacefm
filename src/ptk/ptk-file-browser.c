@@ -3701,16 +3701,20 @@ on_folder_view_button_release_event ( GtkWidget *widget,
     {
         if ( gtk_tree_view_is_rubber_banding_active( GTK_TREE_VIEW( widget ) ) )
             return FALSE;
-        model = gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) );
-        gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( widget ),
-                                       event->x, event->y, &tree_path,
-                                       NULL, NULL, NULL );
-        tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
-        if ( tree_path && tree_sel )
+        if ( app_settings.single_click )
         {
-            // unselect all but one file
-            gtk_tree_selection_unselect_all( tree_sel );
-            gtk_tree_selection_select_path( tree_sel, tree_path );
+            model = gtk_tree_view_get_model( GTK_TREE_VIEW( widget ) );
+            gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( widget ),
+                                           event->x, event->y, &tree_path,
+                                           NULL, NULL, NULL );
+            tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( widget ) );
+            if ( tree_path && tree_sel && 
+                        gtk_tree_selection_count_selected_rows( tree_sel ) > 1 )
+            {
+                // unselect all but one file
+                gtk_tree_selection_unselect_all( tree_sel );
+                gtk_tree_selection_select_path( tree_sel, tree_path );
+            }
         }
     }
     gtk_tree_path_free( tree_path );
