@@ -5,6 +5,7 @@
 #  include <libintl.h>
 #  undef _
 #  define _(String) dgettext (GETTEXT_PACKAGE, String)
+#  define C_(CString, MString) dpgettext (GETTEXT_PACKAGE, CString, MString)
 #  define Q_(String) g_strip_context ((String), gettext (String))
 #  ifdef gettext_noop
 #    define N_(String) gettext_noop (String)
