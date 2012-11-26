@@ -5105,7 +5105,7 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
 #endif
 
         const char* showout = "";
-        if ( ptask->pop_handler )
+        if ( ptask && ptask->pop_handler )
         {
             xset_set_cb( "task_showout", show_task_dialog, view );
             showout = " task_showout";
