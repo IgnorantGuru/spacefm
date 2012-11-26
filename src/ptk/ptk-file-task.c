@@ -101,6 +101,7 @@ PtkFileTask* ptk_file_task_new( VFSFileTaskType type,
     ptask->dsp_avgest = g_strdup( "" );
 
     ptask->progress_count = 0;
+    ptask->pop_handler = NULL;
 
     ptask->query_cond = NULL;
     ptask->query_cond_last = NULL;
@@ -211,6 +212,7 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
     g_free( ptask->dsp_curest );
     g_free( ptask->dsp_avgspeed );
     g_free( ptask->dsp_avgest );
+    g_free( ptask->pop_handler );
 
     g_slice_free( PtkFileTask, ptask );
 //printf("ptk_file_task_destroy DONE ptask=%#x\n", ptask);

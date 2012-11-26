@@ -149,6 +149,7 @@ static void fm_main_window_update_status_bar( FMMainWindow* main_window,
 void set_window_title( FMMainWindow* main_window, PtkFileBrowser* file_browser );
 void on_task_column_selected( GtkMenuItem* item, GtkWidget* view );
 void on_task_popup_errset( GtkMenuItem* item, FMMainWindow* main_window, char* name2 );
+void show_task_dialog( GtkWidget* widget, GtkWidget* view );
 void on_about_activate ( GtkMenuItem *menuitem, gpointer user_data );
 void on_main_help_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 void on_main_faq ( GtkMenuItem *menuitem, FMMainWindow* main_window );
@@ -3693,6 +3694,8 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                     PtkFileTask* ptask = get_selected_task( browser->task_view );
                     on_task_stop( NULL, browser->task_view, set, ptask );
                 }
+                else if ( !strcmp( xname, "showout" ) )
+                    show_task_dialog( NULL, browser->task_view );
                 else if ( g_str_has_prefix( xname, "err_" ) )
                     on_task_popup_errset( NULL, main_window, set->name );
             }
@@ -5003,6 +5006,25 @@ PtkFileTask* get_selected_task( GtkWidget* view )
     return ptask;
 }
 
+void show_task_dialog( GtkWidget* widget, GtkWidget* view )
+{
+    PtkFileTask* ptask = get_selected_task( view );
+    if ( !ptask )
+        return;
+        
+    g_mutex_lock( ptask->task->mutex );
+    ptk_file_task_progress_open( ptask );
+    if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING )
+    {
+        // update dlg
+        ptask->pause_change = TRUE;
+        ptask->progress_count = 50;  // trigger fast display
+    }   
+    if ( ptask->progress_dlg )
+        gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
+    g_mutex_unlock( ptask->task->mutex );
+}
+
 gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
                                      FMMainWindow* main_window )
 {
@@ -5082,10 +5104,17 @@ gboolean on_task_button_press_event( GtkWidget* view, GdkEventButton *event,
         set->disable = TRUE;
 #endif
 
+        const char* showout = "";
+        if ( ptask->pop_handler )
+        {
+            xset_set_cb( "task_showout", show_task_dialog, view );
+            showout = " task_showout";
+        }
+
         main_task_prepare_menu( main_window, popup, accel_group );
 
         xset_set_cb( "font_task", main_update_fonts, file_browser );
-        char* menu_elements = g_strdup_printf( "task_stop sep_t3 task_pause task_que task_resume task_all sep_t4 task_show_manager task_hide_manager sep_t5 task_columns task_popups task_errors task_queue" );
+        char* menu_elements = g_strdup_printf( "task_stop sep_t3 task_pause task_que task_resume%s task_all sep_t4 task_show_manager task_hide_manager sep_t5 task_columns task_popups task_errors task_queue", showout );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
         
@@ -5156,17 +5185,23 @@ void on_task_row_activated( GtkWidget* view, GtkTreePath* tree_path,
     gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
     if ( ptask )
     {
-        g_mutex_lock( ptask->task->mutex );
-        ptk_file_task_progress_open( ptask );
-        if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING )
+        if ( ptask->pop_handler )
         {
-            // update dlg
-            ptask->pause_change = TRUE;
-            ptask->progress_count = 50;  // trigger fast display
-        }   
-        if ( ptask->progress_dlg )
-            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
-        g_mutex_unlock( ptask->task->mutex );
+            // show custom dialog
+            char* argv[4];
+            argv[0] = g_strdup( "bash" );
+            argv[1] = g_strdup( "-c" );
+            argv[2] = g_strdup( ptask->pop_handler );
+            argv[3] = NULL;
+            printf( "TASK_POPUP >>> %s\n", argv[2] );
+            g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL,
+                                                              NULL, NULL );
+        }
+        else
+        {
+            // show normal dialog
+            show_task_dialog( NULL, view );
+        }
     }
 }
 
@@ -6518,6 +6553,15 @@ _invalid_get:
             main_task_start_queued( main_window->task_view, NULL );
             return 0;
         }
+        else if ( !strcmp( argv[i+1], "popup_handler" ) )
+        {
+            g_free( ptask->pop_handler );
+            if ( argv[i+2] && argv[i+2][0] != '\0' )
+                ptask->pop_handler = g_strdup( argv[i+2] );
+            else
+                ptask->pop_handler = NULL;
+            return 0;
+        }
         else
         {
             *reply = g_strdup_printf( _("spacefm: invalid task property '%s'\n"),
@@ -6611,6 +6655,12 @@ _invalid_get:
             else
                 str = "stop";    // failsafe
             *reply = g_strdup_printf( "%s\n", str );
+            return 0;
+        }
+        else if ( !strcmp( argv[i+1], "popup_handler" ) )
+        {
+            if ( ptask->pop_handler )
+                *reply = g_strdup_printf( "%s\n", ptask->pop_handler );
             return 0;
         }
         else

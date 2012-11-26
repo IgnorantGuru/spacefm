@@ -9859,6 +9859,8 @@ void xset_defaults()
     set = xset_set( "task_resume", "label", _("_Resume") );
     xset_set_set( set, "icon", "gtk-media-play" );
     set->line = g_strdup( "#tasks-menu-resume" );
+    set = xset_set( "task_showout", "label", _("Sho_w Output") );
+    set->line = g_strdup( "#tasks-menu-showout" );
 
     set = xset_set( "task_all", "label", _("_All Tasks") );
     set->menu_style = XSET_MENU_SUBMENU;

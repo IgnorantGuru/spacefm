@@ -1264,7 +1264,7 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
     CustomElement* el_name = NULL;
     FILE* out;
     gboolean reverse = FALSE;
-    
+
     if ( args->next )
     {
         if ( icmd == CMD_CLOSE )
@@ -1282,7 +1282,8 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
                                             || !strcmp( cvalue, "false" ) ) )
             reverse = TRUE;
     }
-    if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && icmd != CMD_SOURCE && !cname )
+    if ( icmd != CMD_NOOP && icmd != CMD_CLOSE && icmd != CMD_SOURCE &&
+                                icmd != CMD_FOCUS && icmd != CMD_SHOW && !cname )
     {
         dlg_warn( _("internal command %s requires an argument"),
                                                             cdlg_cmd[icmd*3], NULL );
@@ -1418,12 +1419,16 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
             gtk_widget_hide( el_name->widgets->next->data );
         break;
     case CMD_SHOW:
-        if ( el_name->widgets->next )
+        if ( el_name && el_name->widgets->next )
             gtk_widget_show( el_name->widgets->next->data );
+        else
+            gtk_window_present( GTK_WINDOW( el->widgets->data ) );
         break;
     case CMD_FOCUS:
-        if ( el_name->widgets->next )
+        if ( el_name && el_name->widgets->next )
             gtk_widget_grab_focus( el_name->widgets->next->data );
+        else
+            gtk_window_present( GTK_WINDOW( el->widgets->data ) );
         break;
     case CMD_DISABLE:
         if ( el_name->widgets->next )
@@ -3610,7 +3615,7 @@ static void build_dialog( GList* elements )
     if ( is_large && !is_sized )
         gtk_window_set_default_size( GTK_WINDOW( dlg ), DEFAULT_LARGE_WIDTH,
                                                         DEFAULT_LARGE_HEIGHT );
-    
+
     // show dialog
     gtk_widget_show_all( dlg );
     if ( !timeout_added )

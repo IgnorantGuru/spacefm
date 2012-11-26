@@ -730,6 +730,7 @@ void show_socket_help()
     printf( "elapsed                         %s\n", _("contents of Elapsed task column (read-only)") );
     printf( "started                         %s\n", _("contents of Started task column (read-only)") );
     printf( "queue_state                     run|pause|queue|stop\n" );
+    printf( "popup_handler                   %s\n", _("COMMAND  command to show a custom task dialog\n") );
 
     printf( "\n%s\n", _("EVENTS\n------") );
     printf( "evt_start                       %s\n", _("Instance start        %e") );
