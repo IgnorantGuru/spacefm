@@ -24,7 +24,7 @@ static const char* cdlg_option[] =  // order must match ElementType order
                     N_("Add a large text entry"),
     "password",     "[TEXT|@FILE [COMMAND...]]",
                     N_("Add a password entry"),
-    "viewer",       "[--scroll] FILE|PIPE",
+    "viewer",       "[--scroll] FILE|PIPE [SAVEFILE]",
                     N_("Add a file or pipe viewer"),
     "editor",       "[FILE [SAVEFILE]]",
                     N_("Add multi-line text editor"),

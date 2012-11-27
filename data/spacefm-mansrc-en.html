@@ -2488,7 +2488,7 @@ Example:
                Add a large text entry
 <a href="#dialog-simple-password">--password</a>     [TEXT|@FILE [COMMAND...]]
                Add a password entry
-<a href="#dialog-simple-viewer">--viewer</a>       [--scroll] FILE|PIPE
+<a href="#dialog-simple-viewer">--viewer</a>       [--scroll] FILE|PIPE [SAVEFILE]
                Add a file or pipe viewer
 <a href="#dialog-simple-editor">--editor</a>       [FILE [SAVEFILE]]
                Add multi-line text editor
@@ -2541,7 +2541,7 @@ The following arguments may be used as shown above:
     @FILE    A text file from which to read a value.  In some cases this file
              is monitored, so writing a new value to the file will update the
              element.  In other cases, the file specifies an initial value.
-    SAVEFILE An <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file if specified.
+    SAVEFILE A <a href="#dialog-simple-viewer">viewer</a>'s or <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file.
     <a href="#dialog-cmd">COMMAND</a>  An <a href="#dialog-int">internal command</a> or executable followed by arguments. Separate
              multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'
              The following <a href="#dialog-cmd-sub">substitutions</a> may be used in COMMANDs:
@@ -2867,7 +2867,7 @@ Usage: <code><b>--password [TEXT|@FILE [COMMAND...]]</b></code>
 
 
 <!-- # --viewer #viewer -->
-Usage: <code><b>--viewer [--scroll] FILE|PIPE</b></code>
+Usage: <code><b>--viewer [--scroll] FILE|PIPE [SAVEFILE]</b></code>
 
 <p>A --viewer element adds a read-only multi-line text box to the dialog, and may be used to view the contents of a file or the data written to a pipe.  By writing text to a temporary file, a viewer can also be used to show the user larger amounts of text which won't fit in a --label.  A vertical scroll bar will automatically appear when the text exceeds the size of the box.
 
@@ -2891,7 +2891,10 @@ Or:
 <pre>    # Press Ctrl-C to cancel:
     while (( 1 )); do date > /tmp/dialog-pipe; sleep 1; done</pre>
 
-<p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').
+<b>When the dialog is closed, the contents of the viewer are lost unless a SAVEFILE is also specified:</b>
+<pre>    spacefm -g --viewer /tmp/dialog-pipe <b>/tmp/dialog-pipe-contents</b></pre>
+
+<p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').  Also note that the contents of the viewer are also saved to SAVEFILE whenever the internal command <a href="#dialog-int-source">source</a> is run.
 
 <p><b>The following example creates a dialog with a <a href="#dialog-lists-chooser">file chooser</a> and a viewer.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed.
 <pre>    spacefm -g --label "Double-click a file to view:" \
@@ -3823,7 +3826,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 

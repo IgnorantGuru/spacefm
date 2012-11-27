@@ -4,6 +4,7 @@
     added task property popup_handler; man update
     added task list Show Output
     internal socket cmds show and focus NAME optional to present dlg
+    Dialog add [SAVEFILE] argument to --viewer
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu

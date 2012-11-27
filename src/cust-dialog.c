@@ -2098,8 +2098,6 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                 g_free( str );
             break;
         case CDLG_VIEWER:
-            write_value( out, prefix, el->name, NULL, el->val );
-            break;
         case CDLG_EDITOR:
             write_value( out, prefix, el->name, NULL, el->val );
             if ( el->args && el->args->next )
@@ -3671,7 +3669,7 @@ static void show_help()
     fprintf( f, _("    STOCK    %s\n"), "ok|cancel|close|open|yes|no|apply|delete|edit|help|save|stop" );
     fprintf( f, _("    ICON     An icon name, eg:  gtk-open\n") );
     fprintf( f, _("    @FILE    A text file from which to read a value.  In some cases this file\n             is monitored, so writing a new value to the file will update the\n             element.  In other cases, the file specifies an initial value.\n") );
-    fprintf( f, _("    SAVEFILE An editor's contents are saved to this file if specified.\n") );
+    fprintf( f, _("    SAVEFILE A viewer's or editor's contents are saved to this file.\n") );
     fprintf( f, _("    COMMAND  An internal command or executable followed by arguments. Separate\n             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'\n             The following substitutions may be used in COMMANDs:\n                 %%n           Name of the current element\n                 %%v           Value of the current element\n                 %%NAME        Value of element named NAME (eg: %%input1)\n                 %%(command)   stdout from a bash command line\n                 %%%%           %%\n") );
     fprintf( f, _("    LABEL    The following escape sequences in LABEL are unescaped:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             In --label elements only, if the first character in LABEL is a\n             tilde (~), pango markup may be used.  For example:\n                 --label '~This is plain. <b>This is bold.</b>'\n") );
     
