@@ -8846,7 +8846,7 @@ void xset_defaults()
     xset_set_set( set, "icon", "gtk-open" );
     set->line = g_strdup( "#devices-menu-open" );
    
-    set = xset_set( "dev_menu_tab", "label", _("_Tab") );
+    set = xset_set( "dev_menu_tab", "label", C_("Devices|Open|", "_Tab") );
     xset_set_set( set, "icon", "gtk-add" );
     set->line = g_strdup( "#devices-menu-tab" );
    
@@ -9310,7 +9310,7 @@ void xset_defaults()
     set = xset_set( "book_open", "label", _("_Open") );
     xset_set_set( set, "icon", "gtk-open" );
 
-    set = xset_set( "book_tab", "label", _("_Tab") );
+    set = xset_set( "book_tab", "label", C_("Bookmarks|Open|", "_Tab") );
     xset_set_set( set, "icon", "gtk-add" );
 
     set = xset_set( "book_settings", "label", _("_Settings") );
@@ -9603,7 +9603,7 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_pnl_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
             set->line = g_strdup( "#sockets-events-pnlsel" );
 
-        set = xset_set( "auto_tab", "label", _("_Tab") );
+        set = xset_set( "auto_tab", "label", C_("View|Events|", "_Tab") );
         set->menu_style = XSET_MENU_SUBMENU;
         xset_set_set( set, "desc", "evt_tab_new evt_tab_focus evt_tab_close" );
         set->line = g_strdup( "#sockets-menu" );
@@ -10111,7 +10111,7 @@ void xset_defaults()
         set = xset_set( "new_link", "label", _("_Link") );
         xset_set_set( set, "icon", "gtk-file" );
 
-        set = xset_set( "new_bookmark", "label", _("_Bookmark") );
+        set = xset_set( "new_bookmark", "label", C_("New|", "_Bookmark") );
         xset_set_set( set, "shared_key", "book_new" );
         xset_set_set( set, "icon", "gtk-jump-to" );
         
@@ -10122,7 +10122,7 @@ void xset_defaults()
         set->b = XSET_B_TRUE;
         xset_set_set( set, "s", "1" );
         
-        set = xset_set( "tab_new", "label", _("_Tab") );
+        set = xset_set( "tab_new", "label", C_("New|", "_Tab") );
         xset_set_set( set, "icon", "gtk-add" );
         set = xset_set( "tab_new_here", "label", _("Tab _Here") );
         xset_set_set( set, "icon", "gtk-add" );
@@ -10166,7 +10166,7 @@ void xset_defaults()
         set = xset_set( "focus_device", "label", _("De_vices") );
             xset_set_set( set, "icon", "gtk-harddisk" );
 
-    set = xset_set( "go_tab", "label", _("_Tab") );
+    set = xset_set( "go_tab", "label", C_("Go|", "_Tab") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "tab_prev tab_next tab_close tab_1 tab_2 tab_3 tab_4 tab_5 tab_6 tab_7 tab_8 tab_9 tab_10" );
 
@@ -10318,7 +10318,7 @@ void xset_defaults()
         set = xset_set( "copy_loc_last", "label", _("L_ast Location") );
         xset_set_set( set, "icon", "gtk-redo" );
 
-        set = xset_set( "copy_tab", "label", _("_Tab") );
+        set = xset_set( "copy_tab", "label", C_("Edit|CopyTo|", "_Tab") );
         set->menu_style = XSET_MENU_SUBMENU;
         xset_set_set( set, "desc", "copy_tab_prev copy_tab_next copy_tab_1 copy_tab_2 copy_tab_3 copy_tab_4 copy_tab_5 copy_tab_6 copy_tab_7 copy_tab_8 copy_tab_9 copy_tab_10" );
 
@@ -10335,7 +10335,7 @@ void xset_defaults()
             xset_set( "copy_tab_9", "label", _("Tab _9") );
             xset_set( "copy_tab_10", "label", _("Tab 1_0") );
 
-        set = xset_set( "copy_panel", "label", _("_Panel") );
+        set = xset_set( "copy_panel", "label", C_("Edit|CopyTo|", "_Panel") );
         set->menu_style = XSET_MENU_SUBMENU;
         xset_set_set( set, "desc", "copy_panel_prev copy_panel_next copy_panel_1 copy_panel_2 copy_panel_3 copy_panel_4" );
 
@@ -10356,7 +10356,7 @@ void xset_defaults()
         set = xset_set( "move_loc", "label", _("_Location") );
         set = xset_set( "move_loc_last", "label", _("L_ast Location") );
         xset_set_set( set, "icon", "gtk-redo" );
-        set = xset_set( "move_tab", "label", _("_Tab") );
+        set = xset_set( "move_tab", "label", C_("Edit|MoveTo|", "_Tab") );
         set->menu_style = XSET_MENU_SUBMENU;
         xset_set_set( set, "desc", "move_tab_prev move_tab_next move_tab_1 move_tab_2 move_tab_3 move_tab_4 move_tab_5 move_tab_6 move_tab_7 move_tab_8 move_tab_9 move_tab_10" );
 
@@ -10373,7 +10373,7 @@ void xset_defaults()
             xset_set( "move_tab_9", "label", _("Tab _9") );
             xset_set( "move_tab_10", "label", _("Tab 1_0") );
 
-        set = xset_set( "move_panel", "label", _("_Panel") );
+        set = xset_set( "move_panel", "label", C_("Edit|MoveTo|", "_Panel") );
         set->menu_style = XSET_MENU_SUBMENU;
         xset_set_set( set, "desc", "move_panel_prev move_panel_next move_panel_1 move_panel_2 move_panel_3 move_panel_4" );
 
