@@ -4044,7 +4044,7 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
         {
             g_object_set ( G_OBJECT ( renderer ),
                            "wrap-mode", PANGO_WRAP_WORD_CHAR,
-                           "wrap-width", 110,
+                           "wrap-width", 109,
                            "xalign", 0.5,
                            "yalign", 0.0,
                            NULL );
