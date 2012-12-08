@@ -829,10 +829,12 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         set->context    List Command
 
     Configure menu item is used to store some dialog data:
-        set->x          dialog width
-        set->y          dialog height
+        get this set with:
+            set = xset_get( "arc_conf" );
+        set->x          dialog width  (string)
+        set->y          dialog height (string)
         set->s          space separated list of xset names (archive types)
-    
+
     Example to add a new custom archive type:
         XSet* newset = add_new_arctype();
         newset->b = XSET_TRUE;                              // enable
