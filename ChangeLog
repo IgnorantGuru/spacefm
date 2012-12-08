@@ -5,6 +5,8 @@
     added task list Show Output
     internal socket cmds show and focus NAME optional to present dlg
     Dialog add [SAVEFILE] argument to --viewer
+    fix text wrapping corner case #206 [BwackNinja]
+    Added context for several strings #220
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu
