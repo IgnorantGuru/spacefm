@@ -814,29 +814,27 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_ob1( set, "set", set );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
-            set = xset_get( "arc_def_open" );
-            xset_set_cb( "arc_def_open", on_archive_default, set );
+            set = xset_set_cb( "arc_def_open", on_archive_default, set );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
 
-            set = xset_get( "arc_def_ex" );
-            xset_set_cb( "arc_def_ex", on_archive_default, set );
+            set = xset_set_cb( "arc_def_ex", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
             
-            set = xset_get( "arc_def_exto" );
-            xset_set_cb( "arc_def_exto", on_archive_default, set );
+            set = xset_set_cb( "arc_def_exto", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_get( "arc_def_list" );
-            xset_set_cb( "arc_def_list", on_archive_default, set );
+            set = xset_set_cb( "arc_def_list", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_get( "arc_def_write" );
             if ( geteuid() == 0 )
             {
+                set = xset_get( "arc_def_write" );
                 set->b = XSET_B_FALSE;
                 set->disable = TRUE;
             }
+            
+            xset_set_cb( "arc_conf", ptk_file_archiver_config, browser );
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
