@@ -28,6 +28,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
                                             gboolean extract );
 
+void ptk_file_archiver_config( PtkFileBrowser* file_browser );
+
 G_END_DECLS
 #endif
 

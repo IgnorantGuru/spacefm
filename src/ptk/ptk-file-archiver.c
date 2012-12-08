@@ -792,3 +792,73 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
     }
     return FALSE;
 }
+
+XSet* add_new_arctype()
+{   // creates a new xset for a custom archive type
+    XSet* set;
+    char* rand;
+    char* name = NULL;
+    
+    // get a unique new xset name
+    do
+    {
+        g_free( name );
+        rand = randhex8();
+        name = g_strdup_printf( "arccust_%s", rand );
+        g_free( rand );
+    }
+    while ( xset_is( name ) );
+
+    // create and return the xset
+    set = xset_get( name );
+    g_free( name );
+    return set;
+}
+
+void ptk_file_archiver_config( PtkFileBrowser* file_browser )
+{
+    /*
+    Archives Types - 1 per xset as:
+        set->name       xset name
+        set->b          enabled  (XSET_UNSET|XSET_FALSE|XSET_TRUE)
+        set->menu_label Display Name
+        set->s          Mime Type(s)
+        set->x          Extension(s)
+        set->y          Compress Command
+        set->z          Extract Command
+        set->context    List Command
+
+    Configure menu item is used to store some dialog data:
+        get this set with:
+            set = xset_get( "arc_conf" );
+        set->x          dialog width  (string)
+        set->y          dialog height (string)
+        set->s          space separated list of xset names (archive types)
+
+    Example to add a new custom archive type:
+        XSet* newset = add_new_arctype();
+        newset->b = XSET_TRUE;                              // enable
+        xset_set_set( newset, "label", "Windows CAB" );        // set archive Name
+        xset_set_set( newset, "s", "application/winjunk" );    // set Mime Type(s)
+        xset_set_set( newset, "x", ".cab" );                   // set Extension(s)
+        xset_set_set( newset, "y", "createcab" );              // set Compress cmd
+        xset_set_set( newset, "z", "excab" );                  // set Extract cmd
+        xset_set_set( newset, "cxt", "listcab" );              // set List cmd
+    
+    Example to retrieve an xset for an archive type:
+        XSet* set = xset_is( "arctype_rar" );
+        if ( !set )
+            // there is no set named "arctype_rar" (remove it from the list)
+        else
+        {
+            const char* display_name = set->menu_label;
+            const char* compress_cmd = set->y;
+            gboolean enabled = xset_get_b_set( set );
+            // etc
+        }
+    */
+
+    xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Configure Unavailable"), NULL,
+                        0, "This feature is not yet available", NULL, NULL );
+}
+
