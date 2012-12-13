@@ -2901,9 +2901,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         }
         // design mode callback
         g_signal_connect( item, "button-press-event", G_CALLBACK( xset_design_cb ), set );
-        //if ( design_mode )
-        //    g_signal_connect( item, "activate", G_CALLBACK( xset_design_activate_item ),
-        //                                                                        set );
+        g_signal_connect( item, "button-release-event", G_CALLBACK( xset_design_cb ), set );
 
         gtk_widget_set_sensitive( item, context_action != CONTEXT_DISABLE &&
                                                                 !set->disable );
@@ -7136,12 +7134,29 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
     int job = -1;
         
 //printf("xset_design_cb\n");
-    if ( event->type != GDK_BUTTON_PRESS )
-        return FALSE;
         
     GtkWidget* menu = (GtkWidget*)g_object_get_data( G_OBJECT(item), "menu" );
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->type == GDK_BUTTON_RELEASE )
+    {
+        if ( event->button == 1 && keymod == 0 )
+        {
+            // user released left button - due to an apparent gtk bug, activate
+            // doesn't always fire on this event so handle it ourselves
+            // test: gtk2 Crux theme with touchpad on Edit|Copy To|Location
+            // https://github.com/IgnorantGuru/spacefm/issues/31
+            // https://github.com/IgnorantGuru/spacefm/issues/228
+            if ( menu )
+                gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+            gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    else if ( event->type != GDK_BUTTON_PRESS )
+        return FALSE;
 
     if ( event->button == 1 || event->button == 3 )
     {
@@ -7231,7 +7246,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             xset_design_show_menu( menu, set, event->button, event->time );
         return TRUE;
     }
-    return FALSE;  // this won't stop activate
+    return FALSE;  // TRUE won't stop activate on button-press (will on release)
 }
 
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
