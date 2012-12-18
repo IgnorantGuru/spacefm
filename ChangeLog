@@ -14,6 +14,7 @@
     Dialog send stdout of external commands to /dev/null
     socket add props edit_file and run_in_terminal
     [gtk3] create archive dlg expand options entry
+    dbus and libdbus dependency changed to optional
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu

@@ -134,7 +134,7 @@ dnl Check HAL support
     if test x"$have_hal" = x"yes"; then
         AC_DEFINE([HAVE_HAL], [1], [Define to 1 if you have HAL.])
     else
-        AC_MSG_ERROR([To use HAL support, you must have developing packages of dbus-glib-1 (>=0.31), hal(>=0.5.0), and hal-storage, or you can use --disable-hal to disable HAL support.])
+        AC_MSG_ERROR([To use HAL support, you must have development packages of dbus-glib-1 (>=0.31), hal(>=0.5.0), and hal-storage, or you can use --disable-hal to disable HAL support.])
     fi
 else
     PKG_CHECK_MODULES(LIBUDEV, [libudev >= 143])
