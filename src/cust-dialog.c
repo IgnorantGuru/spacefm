@@ -2668,6 +2668,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 gtk_label_set_line_wrap( GTK_LABEL( w ), !GTK_IS_HBOX( box ) );
                 if ( !GTK_IS_HBOX( box ) )
                     gtk_label_set_width_chars( GTK_LABEL( w ), 20 );
+                //else
+                //    gtk_label_set_ellipsize( GTK_LABEL( w ), PANGO_ELLIPSIZE_MIDDLE );
 #else
                 gtk_label_set_line_wrap( GTK_LABEL( w ), TRUE );
 #endif
