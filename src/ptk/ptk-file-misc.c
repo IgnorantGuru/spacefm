@@ -1018,7 +1018,7 @@ void on_font_change( GtkMenuItem* item, MoveSet* mset )
 
 void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
 {
-    char* action;
+    const char* action;
     char* btn_label = NULL;
     char* root_msg;
     char* title;
@@ -1038,7 +1038,7 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
     gboolean new_folder = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_folder ) );
     gboolean new_link = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_link ) );
 
-    char* desc = NULL;
+    const char* desc = NULL;
     if ( mset->create_new )
     {
         btn_label = _("C_reate");
