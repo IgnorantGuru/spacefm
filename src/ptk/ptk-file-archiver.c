@@ -654,7 +654,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 // zip 7z rar in terminal for password & output
                 in_term = TRUE;  // run in terminal
                 keep_term = FALSE;
-                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", _("[ Finished With Errors ]  Press Enter to close") );
+                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security*/
+                            "[ Finished With Errors ]  Press Enter to close" );
             }
             else
                 prompt = g_strdup_printf( "" );
