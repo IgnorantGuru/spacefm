@@ -164,7 +164,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     hbox = gtk_hbox_new( FALSE, 4 );
     gtk_box_pack_start( GTK_BOX(hbox),
                         gtk_label_new( _("Archive Format:") ),
-                        FALSE, FALSE, 2 );
+                        FALSE, TRUE, 2 );
 
     combo = gtk_combo_box_text_new();
 
@@ -188,23 +188,22 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                         combo,
                         FALSE, FALSE, 2 );
     gtk_box_pack_start( GTK_BOX(hbox),
-                        gtk_vseparator_new(),
-                        FALSE, FALSE, 2 );
-    gtk_box_pack_start( GTK_BOX(hbox),
                         gtk_label_new( _("Options:") ),
                         FALSE, FALSE, 2 );
+
     GtkEntry* entry = ( GtkEntry* ) gtk_entry_new();
     if ( xset_get_s( handlers[i].name ) )
         gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
-    //gtk_entry_set_width_chars( entry, 30 );
-    GtkWidget* align = gtk_alignment_new( 0, 0, .5, 1 );
-    gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 0, 0 );
-    gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( entry ) );
-    gtk_box_pack_start( GTK_BOX(hbox), align, TRUE, TRUE, 4 );
+    //GtkWidget* align = gtk_alignment_new( 0, 0, 1, 1 );
+    //gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 0, 0 );
+    //gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( entry ) );
+    gtk_box_pack_start( GTK_BOX(hbox), GTK_WIDGET( entry ), TRUE, TRUE, 4 );
     g_object_set_data( G_OBJECT( dlg ), "entry", entry );
 
     gtk_widget_show_all( hbox );
-    gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area ( 
+                                        GTK_DIALOG( dlg ) ) ),
+                                        hbox, FALSE, TRUE, 0 );
 
     gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
