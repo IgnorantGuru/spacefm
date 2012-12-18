@@ -11,6 +11,7 @@
     [gtk3] add expand property to app chooser dlg for gtk3 #223
     Dialog --chooser --save DIR opens in DIR
     [gtk3] Dialog label wrap min width closes BwackNinja issue #25
+    Dialog send stdout of external commands to /dev/null
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu
