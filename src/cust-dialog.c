@@ -3457,7 +3457,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             get_text_value( el, (char*)args->data, FALSE, TRUE );
             if ( el->val )
             {
-                if ( chooser_save )
+                if ( chooser_save && ( chooser_dir || 
+                                !g_file_test( el->val, G_FILE_TEST_IS_DIR ) ) )
                 {
                     if ( strchr( el->val, '/' ) )
                     {
