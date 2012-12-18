@@ -2665,6 +2665,8 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                 // gtk3 wraps labels at one char and doesn't allocate a usable width
                 // if in an hbox
                 gtk_label_set_line_wrap( GTK_LABEL( w ), !GTK_IS_HBOX( box ) );
+                if ( !GTK_IS_HBOX( box ) )
+                    gtk_label_set_width_chars( GTK_LABEL( w ), 20 );
 #else
                 gtk_label_set_line_wrap( GTK_LABEL( w ), TRUE );
 #endif

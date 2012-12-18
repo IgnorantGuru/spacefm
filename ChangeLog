@@ -8,8 +8,9 @@
     fix text wrapping corner case #206 [BwackNinja]
     Added context for several strings #220
     fix left-click ignored in context menu #31 #228
-    add expand property to app chooser dlg for gtk3 #223
+    [gtk3] add expand property to app chooser dlg for gtk3 #223
     Dialog --chooser --save DIR opens in DIR
+    [gtk3] Dialog label wrap min width closes BwackNinja issue #25
 0.8.3   2012-11-24:
     added --socket-cmd #142
     added View|Events menu
