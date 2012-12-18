@@ -443,10 +443,9 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
         g_free( name );
     }
     else
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
-                                                GTK_WIDGET( data->browser ) ) ),
-                                                _("Error"),
-                                                _("Bookmark already exists") );
+        xset_msg_dialog( GTK_WIDGET( data->browser ), GTK_MESSAGE_INFO,
+                        _("Bookmark Exists"), NULL, 0,
+                        _("Bookmark already exists"), NULL, NULL );
 }
 
 void on_popup_mount_iso( GtkMenuItem *menuitem, PtkFileMenu* data )
