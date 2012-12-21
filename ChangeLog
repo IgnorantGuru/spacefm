@@ -1,4 +1,4 @@
-0.8.3+
+0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast
     added task property popup_handler; man update
