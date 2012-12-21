@@ -37,6 +37,38 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.4"></a>
+<big><b><a href="#0.8.4">0.8.4 released</a></b></big><br>
+2012-Dec-21
+
+<p>SpaceFM 0.8.4, mostly a maintainance release, includes the following changes:
+
+<ul>
+    <li><b>dbus and libdbus runtime dependencies</b> in SpaceFM have been changed to optional in the README and provided debian packages.  While most users will have dbus installed already, SpaceFM should also be usable on systems without it.  If you do notice functional changes without dbus, please report them so they can be documented.  Note that the HAL build of SpaceFM still has build and runtime dependency on dbus, libdbus, and libdbus-glib.  See <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a> for updated details.<br><br>
+    <li>A bug introduced in 0.8.3 which caused a double-click on a folder in double-click mode to register a single click inside the new folder, losing history, has been corrected.<br><br>
+    <li>A bug which caused some clicks in context menus to be lost when using some themes or mouse types has been corrected (actually a workaround was provided for the bug in gtk which caused this).<br><br>
+    <li>A problem with SpaceFM Dialog commands sent to a command pipe too quickly has been corrected.<br><br>
+    <li>A problem with icons not being aligned properly in some cases has been corrected.<br><br>
+    <li>A socket task property popup_handler has been added to allow plugins to replace the default task popup dialog with a custom one.<br><br>
+    <li>Socket task properties edit_file and run_in_terminal have been added to allow a plugin to open a file using the user's configured editor, and to run a command in the user's configured terminal.<br><br>
+    <li>The NAME argument to internal SpaceFM Dialog commands 'show' and 'focus' is now optional to allow them to be used to present the dialog (bring the dialog to the top of other windows).<br><br>
+    <li>SpaceFM Dialog element --viewer now accepts an optional [SAVEFILE] argument to save the contents of the viewer (particularly useful if the viewer is reading from a pipe).<br><br>
+    <li>SpaceFM Dialog now sends stdout of external commands to /dev/null, to prevent the output being evaluated.<br><br>
+    <li>The user's manual has been updated for the above changes.<br><br>
+    <li>Some minor widget display issues with gtk3 beta build have been corrected.
+</ul>
+
+For a full list of changes see <a href="https://github.com/IgnorantGuru/spacefm/blob/master/ChangeLog">ChangeLog</a>.
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.8.3"></a>
 <big><b><a href="#0.8.3">0.8.3 released</a></b></big><br>
 2012-Nov-24

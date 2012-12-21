@@ -437,6 +437,13 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 </tr>
 
 <tr>
+<td valign="top"><b>Pibang Linux</b></td>
+<td>
+	<a href="http://pibanglinux.org/">Pibang Linux</a> includes SpaceFM built for the <a href="http://www.raspberrypi.org/">Raspberry Pi</a> (armhf) - can be installed as the default file manager via Pibang's welcome scripts
+</td>
+</tr>
+
+<tr>
 <td valign="top"><b>Sabayon</b></td>
 <td>
 	Includes spacefm in its repositories
@@ -2227,6 +2234,13 @@ Resume starts the selected task, changing its state to <a href="#tasks-queue">ru
 
 <p>You can also resume a task by clicking the Resume button in the task's <a href="#tasks-dlg">popup dialog</a>, left-clicking on the Status of a task in the Task Manager list, or by middle-clicking on a task in the list.  Tasks may also be resumed automatically by the Task Manager if they are queued.
 
+<!-- # Show Output #showout -->
+<p><a name="tasks-menu-showout"/><a href="#tasks-menu-showout"><b>Show Output</b></a><br>
+The Show Output menu item will only appear if a <a href="#pophandler">custom popup handler</a> has been set for the selected task.  Show Output will raise the normal popup dialog for the task, showing any stdout/stderr output.  This is particularly useful for debugging.
+
+<p>Note that any custom menu items added directly after Show Output will also only appear for tasks with a custom popup handler.
+
+
 <!-- # All Tasks #all -->
 <p><a name="tasks-menu-all"/><a href="#tasks-menu-all"><b>All Tasks</b></a><br>
 The All Tasks submenu is used to place all listed tasks into the selected state.  The Stop, Pause, Queue, and Resume menu items in this submenu have the same effect as detailed above, except that all tasks are affected.
@@ -2457,7 +2471,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>If <a href="#tasks-menu-poperropt">View|Tasks|Popups|Error Option</a> is checked and the task is internal, the popup dialog will show a drop-down list which displays and allows you to change the error mode of the task:  <b>Stop If Error First</b>,<b> Stop On Any Error</b>, or <b>Continue</b>.  When the task first starts, the error mode will match the default set in <a href="#tasks-menu-poperr">View|Tasks|Errors</a>.  If you then change the error mode, it will apply to the current task only.
 
-<p><b>For exec tasks</b>, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.
+<p><b>For exec tasks</b>, the popup dialog will show the title of the command being run, the task's status, a pulsing progress bar, and an output monitor showing any output from the command.  The output monitor is designed to display text output to be used for monitoring the output of commands as they run, or to display a final result.  However, the output monitor is not a terminal and does not allow you to enter input.  If your command requires interaction, you will need to enable <a href="#designmode-command-terminal">Run In Terminal</a> instead.  Custom commands can also set a <a href="#pophandler">custom popup handler</a> to replace the normal popup dialog.
 
 <p>To close the dialog, press the Close button or close the window.  You can always re-open the dialog by clicking on the task in the Task Manager.
 
@@ -2991,7 +3005,7 @@ Sometimes a single line isn't enough to do what you want, so SpaceFM provides a 
 
 <p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  For more information on writing scripts, see the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a>.
 
-<p>Command scripts can also evolve into small, full-featured applications using <a href="#dialog">SpaceFM Dialog</a> to show custom dialogs from within the script, and <a href="#sockets">socket commands</a> to manipulate elements of the SpaceFM window.
+<p>Command scripts can also evolve into small, full-featured applications using <a href="#dialog">SpaceFM Dialog</a> to show custom dialogs from within the script, and <a href="#sockets">socket commands</a> to manipulate elements of the SpaceFM window.  Your script can also replace the default task <a  href="#tasks-dlg">popup dialog</a> by setting a <a href="#pophandler">custom popup handler</a>.
 
 <p>The substitution variables used above in command lines may NOT be used in a command script.  Instead, bash variables are preloaded for your use.
 
@@ -3933,7 +3947,7 @@ Example:
                Add a large text entry
 <a href="#dialog-simple-password">--password</a>     [TEXT|@FILE [COMMAND...]]
                Add a password entry
-<a href="#dialog-simple-viewer">--viewer</a>       [--scroll] FILE|PIPE
+<a href="#dialog-simple-viewer">--viewer</a>       [--scroll] FILE|PIPE [SAVEFILE]
                Add a file or pipe viewer
 <a href="#dialog-simple-editor">--editor</a>       [FILE [SAVEFILE]]
                Add multi-line text editor
@@ -3986,9 +4000,9 @@ The following arguments may be used as shown above:
     @FILE    A text file from which to read a value.  In some cases this file
              is monitored, so writing a new value to the file will update the
              element.  In other cases, the file specifies an initial value.
-    SAVEFILE An <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file if specified.
+    SAVEFILE A <a href="#dialog-simple-viewer">viewer</a>'s or <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file.
     <a href="#dialog-cmd">COMMAND</a>  An <a href="#dialog-int">internal command</a> or executable followed by arguments. Separate
-             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'
+             multiple commands with a -- argument.
              The following <a href="#dialog-cmd-sub">substitutions</a> may be used in COMMANDs:
                  %n           Name of the current element
                  %v           Value of the current element
@@ -4022,11 +4036,11 @@ types to change the element's font and font size.  For example:
                Select item VALUE (or first/all) in element NAME
     <a href="#dialog-int-unselect">unselect</a>   NAME [VALUE]
                Unselect item VALUE (or all) in element NAME
-    <a href="#dialog-int-focus">focus</a>      NAME [REVERSE]
+    <a href="#dialog-int-focus">focus</a>      [NAME [REVERSE]]
                Focus element NAME
     <a href="#dialog-int-hide">hide</a>       NAME [REVERSE]
                Hide element NAME
-    <a href="#dialog-int-show">show</a>       NAME [REVERSE]
+    <a href="#dialog-int-show">show</a>       [NAME [REVERSE]]
                Show element NAME if previously hidden
     <a href="#dialog-int-disable">disable</a>    NAME [REVERSE]
                Disable element NAME
@@ -4356,7 +4370,7 @@ Usage: <code><b>--password [TEXT|@FILE [COMMAND...]]</b></code>
 
 <!-- # --viewer #viewer -->
 <p><a name="dialog-simple-viewer"/><a href="#dialog-simple-viewer"><b>--viewer</b></a><br>
-Usage: <code><b>--viewer [--scroll] FILE|PIPE</b></code>
+Usage: <code><b>--viewer [--scroll] FILE|PIPE [SAVEFILE]</b></code>
 
 <p>A --viewer element adds a read-only multi-line text box to the dialog, and may be used to view the contents of a file or the data written to a pipe.  By writing text to a temporary file, a viewer can also be used to show the user larger amounts of text which won't fit in a --label.  A vertical scroll bar will automatically appear when the text exceeds the size of the box.
 
@@ -4380,7 +4394,10 @@ Or:
 <pre>    # Press Ctrl-C to cancel:
     while (( 1 )); do date > /tmp/dialog-pipe; sleep 1; done</pre>
 
-<p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').
+<b>When the dialog is closed, the contents of the viewer are lost unless a SAVEFILE is also specified:</b>
+<pre>    spacefm -g --viewer /tmp/dialog-pipe <b>/tmp/dialog-pipe-contents</b></pre>
+
+<p>In <a href="#dialog-cmd">commands</a>, the value of a viewer (eg %viewer1) is the path of the file being viewed.  To change the file being viewed, use <a href="#dialog-int-set">set</a> (eg 'set viewer1 /etc/mtab').  Also note that the contents of the viewer are also saved to SAVEFILE whenever the internal command <a href="#dialog-int-source">source</a> is run.
 
 <p><b>The following example creates a dialog with a <a href="#dialog-lists-chooser">file chooser</a> and a viewer.</b>  When the user double-clicks a text file in the chooser, the file's contents are displayed.
 <pre>    spacefm -g --label "Double-click a file to view:" \
@@ -4513,7 +4530,7 @@ In this case, the icon name is read from the first line of the file /tmp/dialog-
 and the icon will change to reflect the value in the file.
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the icon is clicked.  For example:
-<pre>    spacefm -g --icon gtk-open <b>echo '# %n clicked %v'</b></pre>
+<pre>    spacefm -g --icon gtk-open <b>bash -c 'echo "# %n clicked %v" &gt;&amp;2'</b></pre>
 
 When you run the above command and click the icon in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the icon, not necessarily the corner of the icon itself (pack the icon into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
@@ -4538,9 +4555,9 @@ and the image will change to reflect the value in the file.
 <p><b>Images are not resized</b>.  They are displayed at their full size, so only small images can be comfortably packed into a dialog.  [Resizing options may be added soon - check this manual for updates.]
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the image is clicked.  For example:
-<pre>    spacefm -g --image ~/example-image.jpg <b>echo '# %n clicked %v'</b></pre>
+<pre>    spacefm -g --image ~/example-image.jpg <b>bash -c 'echo "# %n clicked %v" &gt;&amp;2'</b></pre>
 
-When you run the above command and click the image in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
+When you run the above command and click the image in the dialog, a message will be written to stderr of the terminal showing what mouse button was pressed and the location of the click (bash -c is required to send the output to stderr instead of stdout).  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
 <p>In commands, the value of an --image element (eg %image1) when referenced from another element will equal the image FILE path, while the current --image element's value (%v) will equal the mouse button and click location.  If internal command <a href="#dialog-int-set">set</a> is used on an --image, the image path is changed.
 <br><br>
@@ -4806,9 +4823,9 @@ C
 </i></pre>
 
 The above list still has only three visible columns.  The values in the "HIDE" column will be returned in the dialog's output, and in commands.  For example, save the above list as '/tmp/dialog-list' and run:
-<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list echo '# %n = %v'</pre>
+<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list bash -c 'echo "# %n = %v" &gt;&amp;2'</pre>
 
-When you double-click an item in the list, the return value will be printed to the terminal (eg "# list1 = return2").
+When you double-click an item in the list, the return value will be printed to the terminal (eg "# list1 = return2").  bash -c is required to send the output to stderr instead of stdout.
 <br><br>
 
 
@@ -5140,7 +5157,7 @@ Usage: <code><b>--keypress KEYCODE MODIFIER COMMAND...</b></code>
 
 <p>For example, to associate Ctrl+K with a command that prints a value to the terminal and updates a label:
 <pre>    spacefm -g --label "Press Ctrl+K" \
-               <b>--keypress 0x6b 0x4</b> echo '# %n %v' -- \
+               <b>--keypress 0x6b 0x4</b> bash -c 'echo "# %n %v" &gt;&amp;2' -- \
                                    set label1 "You pressed Ctrl+K"
 </pre>
 
@@ -5244,10 +5261,10 @@ Note that you may or may not need to add a small delay (eg sleep 0.1) for the so
 <pre>
     spacefm -g --label "Press Button" \
 	       --button "Button" <b>set label1 "Button was pressed" --</b> \
-				 <b>echo '# Button %n was pressed'</b>
+				 <b>bash -c 'echo "# Button %n was pressed" &gt;&amp;2'</b>
 </pre>
 
-The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (echo '# Button was pressed') is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to the terminal.
+The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (bash -c echo...) is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to stderr of the terminal.  (Note that any output to stdout will be discarded because this may interfere with <a href="#dialog-invocation-eval">evaluating the output</a>.)
 
 <p>Although commands are run in the order presented, note that <b>external commands are run asynchronously</b>.  SpaceFM Dialog runs and forgets the command, and doesn't wait for it to finish.  This means later commands may run before an earlier command has finished.  (To run an external command synchronously, run it inside an internal noop command's <a href="#dlgsubcmd">%(command) substitution</a>.)
 
@@ -5415,9 +5432,11 @@ Usage: <b>unselect NAME [VALUE]</b>
 
 <!-- #focus -->
 <p><a name="dialog-int-focus"/><a href="#dialog-int-focus"><b>focus</b></a><br>
-Usage: <b>focus NAME [REVERSE]</b>
+Usage: <b>focus [NAME [REVERSE]]</b>
 
 <p>The focus command gives the element NAME the focus in the dialog.  The focused element receives keyboard input.
+
+<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, dependending on window manager settings).
 
 <p>REVERSE, if supplied and equal to "", "0", or "false", causes the focus command to do nothing.  This can be used with the value from a --check element, for example, to make the focus command conditional.
 
@@ -5431,9 +5450,11 @@ Usage: <b>hide NAME [REVERSE]</b>
 
 <!-- #show -->
 <p><a name="dialog-int-show"/><a href="#dialog-int-show"><b>show</b></a><br>
-Usage: <b>show NAME [REVERSE]</b>
+Usage: <b>show [NAME [REVERSE]]</b>
 
 <p>The show command makes the element named NAME visible.  All elements are visible by default, so a show command only has an effect if an element was previously hidden with <A href="#dialog-int-hide">hide</a> (or a reversed show).
+
+<p>If no NAME argument is included, the dialog window is presented (this may mean raising the window in the stacking order, deiconifying it, and/or moving it to the current desktop, dependending on window manager settings).
 
 <p>REVERSE, if supplied and equal to "", "0", or "false", causes the show command to have the reversed effect (it becomes a <A href="#dialog-int-hide">hide</a> command).  This can be used with the value from a --check element, for example, to make the show command conditional.  For example:
 <pre>
@@ -5475,7 +5496,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 
@@ -5679,6 +5700,7 @@ avgremain                       text to show in Remain task column
 elapsed                         contents of Elapsed task column (read-only)
 started                         contents of Started task column (read-only)
 queue_state                     run|pause|queue|stop
+<a href="#pophandler">popup_handler</a>                   COMMAND  command to show a custom task dialog
 
 <a href="#sockets-events">EVENTS</a>
 ------
@@ -5972,6 +5994,39 @@ Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
     spacefm -s set-task --window $fm_my_window $fm_my_task queue_state pause
 </pre>
 
+<br>
+<a name="pophandler"><b>The task property 'popup_handler'</b></a>, which accepts a bash command line, allows you to set a command to be run when the user clicks on the task in the Task Manager.  Normally a click opens a task's <a  href="#tasks-dlg">popup dialog</a>, but if popup_handler is set, that command will be run instead.  This allows you to integrate your custom command's dialog into SpaceFM.  The following script, <i>to be run as a <a href="#designmode-command-script">custom command script</a> in SpaceFM</i>, demonstrates this property's use:
+<pre>
+    #!/bin/bash
+    # Set a custom task dialog in SpaceFM.
+    # Run this script as a SpaceFM custom command script.
+    $fm_import
+    
+    # make a command pipe to talk to the dialog
+    cmdpipe=/tmp/spacefm-task-dialog.pipe
+    rm -f "$cmdpipe"
+    mkfifo "$cmdpipe"
+    
+    # must wait for this task to be shown in manager before setting property
+    <b>( sleep .75; \
+      spacefm -s set-task $fm_my_task popup_handler "echo show > '$cmdpipe'" ) &amp;</b>
+    
+    # show dialog
+    spacefm -g --label "\nThis window will be shown when you click on this \
+    task in SpaceFM's Task Manager." \
+               --button close rm "$cmdpipe" -- close \
+               --command "$cmdpipe" \
+               --window-close rm "$cmdpipe" -- close > /dev/null
+    
+    # cleanup
+    <b>spacefm -s -set-task $fm_my_task popup_handler</b>
+    rm -f "$cmdpipe"
+    exit
+</pre>
+
+Running the above command script within SpaceFM will show the dialog.  Anytime you click on the task in the list, the dialog will be raised.  Note that the popup_handler command is only run when the user clicks on the task in the list.  It is not run when the normal task popup dialog is raised due to a task's <a href="#designmode-command-popup">Popup settings</a>.
+
+<p>When popup_handler is set, the additional <a href="#tasks-menu-showout">Show Output</a> menu item will appear in the right-click context menu for the task, which opens the normal popup dialog.
 
 
 <!-- # get-task -->
@@ -6544,7 +6599,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2012-11-23&nbsp;&nbsp;(SpaceFM version 0.8.2+)
+<p>Updated 2012-12-18&nbsp;&nbsp;(SpaceFM version 0.8.3+)
 <br><br>
 </center>
 </td></tr></table>
