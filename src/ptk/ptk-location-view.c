@@ -3284,10 +3284,11 @@ void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
         ptk_bookmarks_append( url, url );
     }
     else
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
-                                                GTK_WIDGET( file_browser ) ) ),
-                                                _("Error"),
-                                                _("Bookmark already exists") );
+    {
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_INFO,
+                        _("Bookmark Exists"), NULL, 0,
+                        _("Bookmark already exists"), NULL, NULL );
+    }
 }
 
 void on_bookmark_remove( GtkMenuItem* item, PtkFileBrowser* file_browser )

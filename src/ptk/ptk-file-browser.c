@@ -6591,11 +6591,9 @@ void ptk_file_browser_add_bookmark( GtkMenuItem *menuitem, PtkFileBrowser* file_
         g_free( name );
     }
     else
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
-                                                GTK_WIDGET( file_browser ) ) ),
-                                                _("Error"),
-                                                _("Bookmark already exists") );
-
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_INFO,
+                        _("Bookmark Exists"), NULL, 0,
+                        _("Bookmark already exists"), NULL, NULL );
 }
 
 void ptk_file_browser_find_file( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )

@@ -2458,7 +2458,7 @@ void read_root_settings()
 
 void write_src_functions( FILE* file )
 {
-    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n			unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\nfm_edit()\n{\n    [[ -z \"$fm_editor\" ]] && return 1\n    [[ -z \"$1\" ]] && return 1\n    fm_edit_cmd=\"$fm_editor\"\n    fm_a=\"'\"\n    fm_edit_arg=\"'${1//\\'/$fm_a\\\\$fm_a$fm_a}'\"\n    fm_edit_cmd=\"${fm_edit_cmd//%f/$fm_edit_arg}\"\n    [[ \"$fm_edit_cmd\" == \"$fm_editor\" ]] && fm_edit_cmd=\"${fm_edit_cmd//%F/$fm_edit_arg}\"\n    [[ \"$fm_edit_cmd\" == \"$fm_editor\" ]] && fm_edit_cmd=\"${fm_edit_cmd//%u/$fm_edit_arg}\"\n    [[ \"$fm_edit_cmd\" == \"$fm_editor\" ]] && fm_edit_cmd=\"${fm_edit_cmd//%U/$fm_edit_arg}\"\n    if [ \"$fm_edit_cmd\" == \"$fm_editor\" ]; then\n        $fm_editor \"$1\"\n    else\n        eval \"$fm_edit_cmd\"\n    fi\n    fm_edit_err=$?\n    unset fm_edit_cmd fm_a fm_edit_arg\n    return $fm_edit_err\n}\n\n", file );
+    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n			unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\nfm_edit()\n{\n    spacefm -s set edit_file \"$1\"\n}\n\n", file );
 }
 
 GtkWidget* xset_get_image( const char* icon, int icon_size )
@@ -2901,9 +2901,7 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         }
         // design mode callback
         g_signal_connect( item, "button-press-event", G_CALLBACK( xset_design_cb ), set );
-        //if ( design_mode )
-        //    g_signal_connect( item, "activate", G_CALLBACK( xset_design_activate_item ),
-        //                                                                        set );
+        g_signal_connect( item, "button-release-event", G_CALLBACK( xset_design_cb ), set );
 
         gtk_widget_set_sensitive( item, context_action != CONTEXT_DISABLE &&
                                                                 !set->disable );
@@ -7136,12 +7134,29 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
     int job = -1;
         
 //printf("xset_design_cb\n");
-    if ( event->type != GDK_BUTTON_PRESS )
-        return FALSE;
         
     GtkWidget* menu = (GtkWidget*)g_object_get_data( G_OBJECT(item), "menu" );
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->type == GDK_BUTTON_RELEASE )
+    {
+        if ( event->button == 1 && keymod == 0 )
+        {
+            // user released left button - due to an apparent gtk bug, activate
+            // doesn't always fire on this event so handle it ourselves
+            // test: gtk2 Crux theme with touchpad on Edit|Copy To|Location
+            // https://github.com/IgnorantGuru/spacefm/issues/31
+            // https://github.com/IgnorantGuru/spacefm/issues/228
+            if ( menu )
+                gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+            gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    else if ( event->type != GDK_BUTTON_PRESS )
+        return FALSE;
 
     if ( event->button == 1 || event->button == 3 )
     {
@@ -7231,7 +7246,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             xset_design_show_menu( menu, set, event->button, event->time );
         return TRUE;
     }
-    return FALSE;  // this won't stop activate
+    return FALSE;  // TRUE won't stop activate on button-press (will on release)
 }
 
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,

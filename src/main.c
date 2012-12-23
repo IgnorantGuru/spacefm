@@ -713,6 +713,8 @@ void show_socket_help()
     printf( "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
     printf( "clipboard_copy_files            %s\n", _("FILE ...  Files copied to clipboard") );
     printf( "clipboard_cut_files             %s\n", _("FILE ...  Files cut to clipboard") );
+    printf( "edit_file                       %s\n", _("FILE        Open FILE in user's text editor") );
+    printf( "run_in_terminal                 %s\n", _("COMMAND...  Run COMMAND in user's terminal") );
 
     printf( "\n%s\n", _("TASK PROPERTIES\n---------------") );
     printf( "status                          %s\n", _("contents of Status task column  (read-only)") );

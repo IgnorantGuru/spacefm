@@ -2543,7 +2543,7 @@ The following arguments may be used as shown above:
              element.  In other cases, the file specifies an initial value.
     SAVEFILE A <a href="#dialog-simple-viewer">viewer</a>'s or <a href="#dialog-simple-editor">editor</a>'s contents are saved to this file.
     <a href="#dialog-cmd">COMMAND</a>  An <a href="#dialog-int">internal command</a> or executable followed by arguments. Separate
-             multiple commands with a -- argument.  eg: echo '#1' -- echo '#2'
+             multiple commands with a -- argument.
              The following <a href="#dialog-cmd-sub">substitutions</a> may be used in COMMANDs:
                  %n           Name of the current element
                  %v           Value of the current element
@@ -3023,7 +3023,7 @@ In this case, the icon name is read from the first line of the file /tmp/dialog-
 and the icon will change to reflect the value in the file.
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the icon is clicked.  For example:
-<pre>    spacefm -g --icon gtk-open <b>echo '# %n clicked %v'</b></pre>
+<pre>    spacefm -g --icon gtk-open <b>bash -c 'echo "# %n clicked %v" &gt;&amp;2'</b></pre>
 
 When you run the above command and click the icon in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the icon, not necessarily the corner of the icon itself (pack the icon into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
@@ -3047,9 +3047,9 @@ and the image will change to reflect the value in the file.
 <p><b>Images are not resized</b>.  They are displayed at their full size, so only small images can be comfortably packed into a dialog.  [Resizing options may be added soon - check this manual for updates.]
 
 <p>If a <a href="#dialog-cmd">command</a> is included, the COMMAND(s) will be run whenever the image is clicked.  For example:
-<pre>    spacefm -g --image ~/example-image.jpg <b>echo '# %n clicked %v'</b></pre>
+<pre>    spacefm -g --image ~/example-image.jpg <b>bash -c 'echo "# %n clicked %v" &gt;&amp;2'</b></pre>
 
-When you run the above command and click the image in the dialog, a message will be written to the terminal showing what mouse button was pressed and the location of the click.  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
+When you run the above command and click the image in the dialog, a message will be written to stderr of the terminal showing what mouse button was pressed and the location of the click (bash -c is required to send the output to stderr instead of stdout).  Both values are in the element's value (%v).  Note that the location is relative to the upper-left corner of the event box holding the image, not necessarily the corner of the image itself (pack the image into a compact <a href="#dialog-nonvis-vbox">--vbox</a> for the latter).
 
 <p>In commands, the value of an --image element (eg %image1) when referenced from another element will equal the image FILE path, while the current --image element's value (%v) will equal the mouse button and click location.  If internal command <a href="#dialog-int-set">set</a> is used on an --image, the image path is changed.
 <br><br>
@@ -3275,9 +3275,9 @@ C
 </i></pre>
 
 The above list still has only three visible columns.  The values in the "HIDE" column will be returned in the dialog's output, and in commands.  For example, save the above list as '/tmp/dialog-list' and run:
-<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list echo '# %n = %v'</pre>
+<pre>	 spacefm -g --list <b>@</b>/tmp/dialog-list bash -c 'echo "# %n = %v" &gt;&amp;2'</pre>
 
-When you double-click an item in the list, the return value will be printed to the terminal (eg "# list1 = return2").
+When you double-click an item in the list, the return value will be printed to the terminal (eg "# list1 = return2").  bash -c is required to send the output to stderr instead of stdout.
 <br><br>
 
 
@@ -3568,7 +3568,7 @@ Usage: <code><b>--keypress KEYCODE MODIFIER COMMAND...</b></code>
 
 <p>For example, to associate Ctrl+K with a command that prints a value to the terminal and updates a label:
 <pre>    spacefm -g --label "Press Ctrl+K" \
-               <b>--keypress 0x6b 0x4</b> echo '# %n %v' -- \
+               <b>--keypress 0x6b 0x4</b> bash -c 'echo "# %n %v" &gt;&amp;2' -- \
                                    set label1 "You pressed Ctrl+K"
 </pre>
 
@@ -3637,10 +3637,10 @@ Note that you may or may not need to add a small delay (eg sleep 0.1) for the so
 <pre>
     spacefm -g --label "Press Button" \
 	       --button "Button" <b>set label1 "Button was pressed" --</b> \
-				 <b>echo '# Button %n was pressed'</b>
+				 <b>bash -c 'echo "# Button %n was pressed" &gt;&amp;2'</b>
 </pre>
 
-The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (echo '# Button was pressed') is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to the terminal.
+The --button element above includes two commands with arguments, separated by a "--" argument.  The first command (set label1 "Button was pressed") is an internal command.  The second command (bash -c echo...) is an external command.  When the button is pressed, both commands are run - the first changes the label internally, and the second runs the echo executable to write text to stderr of the terminal.  (Note that any output to stdout will be discarded because this may interfere with <a href="#dialog-invocation-eval">evaluating the output</a>.)
 
 <p>Although commands are run in the order presented, note that <b>external commands are run asynchronously</b>.  SpaceFM Dialog runs and forgets the command, and doesn't wait for it to finish.  This means later commands may run before an earlier command has finished.  (To run an external command synchronously, run it inside an internal noop command's <a href="#dlgsubcmd">%(command) substitution</a>.)
 
@@ -3944,6 +3944,8 @@ clipboard_from_file             eg '~/copy-file-contents-to-clipboard.txt'
 clipboard_primary_from_file     eg '~/copy-file-contents-to-clipboard.txt'
 clipboard_copy_files            FILE ...  Files copied to clipboard
 clipboard_cut_files             FILE ...  Files cut to clipboard
+edit_file                       FILE        Open FILE in user's text editor
+run_in_terminal                 COMMAND...  Run COMMAND in user's terminal
 
 <a name="socket-tprops"><a href="#socket-tprops">TASK PROPERTIES</a></a>
 ---------------
