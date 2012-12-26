@@ -2605,6 +2605,8 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
             on_popup_extract_to_activate( NULL, data );
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
+        else if ( !strcmp( xname, "conf" ) )
+            ptk_file_archiver_config( browser );
     }
     else if ( g_str_has_prefix( set->name, "iso_" ) )
     {
