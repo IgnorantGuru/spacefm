@@ -1,5 +1,5 @@
 0.8.4+
-
+    fix left-click ignored in Open context submenu #31 #228
 0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast

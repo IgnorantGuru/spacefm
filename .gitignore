@@ -8,6 +8,7 @@ po/.intltool-merge-cache
 po/POTFILES
 po/*.gmo
 po/stamp-it
+po/Makefile.in
 src/.deps/
 src/spacefm
 src/xml-purge

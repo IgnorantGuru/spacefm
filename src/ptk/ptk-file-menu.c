@@ -671,6 +671,9 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 g_signal_connect( G_OBJECT( app_menu_item ), "button-press-event",
                                             G_CALLBACK( on_app_button_press ),
                                             ( gpointer ) data );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-release-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
                 g_object_set_data_full( G_OBJECT( app_menu_item ), "desktop_file",
                                         desktop_file, vfs_app_desktop_unref );
                 gtk_icon_size_lookup_for_settings( gtk_settings_get_default(),
@@ -2028,12 +2031,29 @@ gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
 {
     int job = -1;
         
-    if ( event->type != GDK_BUTTON_PRESS )
-        return FALSE;
-        
     GtkWidget* menu = (GtkWidget*)g_object_get_data( G_OBJECT(item), "menu" );
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->type == GDK_BUTTON_RELEASE )
+    {
+        if ( event->button == 1 && keymod == 0 )
+        {
+            // user released left button - due to an apparent gtk bug, activate
+            // doesn't always fire on this event so handle it ourselves
+            // see also settings.c xset_design_cb()
+            // test: gtk2 Crux theme with touchpad on Edit|Copy To|Location
+            // https://github.com/IgnorantGuru/spacefm/issues/31
+            // https://github.com/IgnorantGuru/spacefm/issues/228
+            if ( menu )
+                gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+            gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
+            return TRUE;
+        }
+        return FALSE;
+    }
+    else if ( event->type != GDK_BUTTON_PRESS )
+        return FALSE;
 
     if ( event->button == 1 || event->button == 3 )
     {
@@ -2123,7 +2143,7 @@ gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
         return TRUE;
     }
 */
-    return FALSE;  // this won't stop activate
+    return FALSE;  // TRUE won't stop activate on button-press (will on release)
 }
 
 void on_popup_open_in_new_tab_activate( GtkMenuItem *menuitem,

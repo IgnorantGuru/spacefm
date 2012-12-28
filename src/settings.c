@@ -7145,6 +7145,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
         {
             // user released left button - due to an apparent gtk bug, activate
             // doesn't always fire on this event so handle it ourselves
+            // see also ptk-file-menu.c on_app_button_press()
             // test: gtk2 Crux theme with touchpad on Edit|Copy To|Location
             // https://github.com/IgnorantGuru/spacefm/issues/31
             // https://github.com/IgnorantGuru/spacefm/issues/228
