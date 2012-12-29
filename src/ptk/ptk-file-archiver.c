@@ -18,6 +18,7 @@
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "settings.h"
+#include "exo-tree-view.h"
 
 #include "gtk2-compat.h"
 
@@ -94,6 +95,89 @@ const ArchiveHandler handlers[]=
     };
 
 
+gboolean on_configure_selection_change( GtkTreeSelection* tree_sel,
+                                      GtkWidget* dlg )
+{
+	/* TODO
+    enable_context( ctxt );
+    return FALSE;*/
+}
+
+void on_configure_button_press( GtkWidget* widget, GtkWidget* dlg )
+{
+	/* TODO
+    GtkTreeIter it;
+    GtkTreeSelection* tree_sel;
+    GtkTreeModel* model;
+
+    if ( widget == GTK_WIDGET( ctxt->btn_add ) || 
+                                        widget == GTK_WIDGET( ctxt->btn_apply ) )
+    {
+        int sub = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_sub ) );
+        int comp = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_comp ) );
+        if ( sub < 0 || comp < 0 )
+            return;
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
+            gtk_list_store_append( GTK_LIST_STORE( model ), &it );
+        else
+        {
+            tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
+            if ( !gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
+                return;
+        }
+        char* value = gtk_combo_box_text_get_active_text( 
+                                        GTK_COMBO_BOX_TEXT( ctxt->box_value ) );
+        char* disp = context_display( sub, comp, value );
+        gtk_list_store_set( GTK_LIST_STORE( model ), &it,
+                                    CONTEXT_COL_DISP, disp,
+                                    CONTEXT_COL_SUB, sub,
+                                    CONTEXT_COL_COMP, comp,
+                                    CONTEXT_COL_VALUE, value,
+                                    -1 );
+        g_free( disp );
+        g_free( value );
+        gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), TRUE );
+        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
+            gtk_tree_selection_select_iter( gtk_tree_view_get_selection(
+                                        GTK_TREE_VIEW( ctxt->view ) ), &it );
+        enable_context( ctxt );
+        return;
+    }
+    
+    //remove
+    model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+    tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
+    if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
+        gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
+        
+    enable_context( ctxt );*/
+}
+
+void on_configure_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
+                                        GtkTreeViewColumn* col, GtkWidget* dlg )
+{
+    /* TODO
+    GtkTreeIter it;
+    char* value;
+    int sub, comp;
+
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+    if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
+        return;
+    gtk_tree_model_get( model, &it, 
+                                    CONTEXT_COL_VALUE, &value,
+                                    CONTEXT_COL_SUB, &sub,
+                                    CONTEXT_COL_COMP, &comp,
+                                    -1 );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), sub );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_comp ), comp );
+    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( ctxt->box_value ) ) ), value );
+    gtk_widget_grab_focus( ctxt->box_value );
+    //enable_context( ctxt );
+    */
+}
+
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
     GtkFileChooser* dlg = GTK_FILE_CHOOSER(user_data);
@@ -146,7 +230,6 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     char* str;
     char* cmd;
     int res;
-    //char **argv, **cmdv;
     int argc, cmdc, i, n;
     int format;
     GtkWidget* combo;
@@ -194,9 +277,6 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     GtkEntry* entry = ( GtkEntry* ) gtk_entry_new();
     if ( xset_get_s( handlers[i].name ) )
         gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
-    //GtkWidget* align = gtk_alignment_new( 0, 0, 1, 1 );
-    //gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 0, 0 );
-    //gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( entry ) );
     gtk_box_pack_start( GTK_BOX(hbox), GTK_WIDGET( entry ), TRUE, TRUE, 4 );
     g_object_set_data( G_OBJECT( dlg ), "entry", entry );
 
@@ -210,41 +290,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
     if( files )
     {
-//        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg),
-//                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ) );
-
-
         ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT(combo) );
         dest_file = g_strjoin( NULL, 
                         vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
                         ext, NULL );
         gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), dest_file );
         g_free( dest_file );
-
-/*
-        if ( !files->next )
-        {
-            dest_file = g_build_filename( cwd,
-                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ), NULL );
-            if ( g_file_test( dest_file, G_FILE_TEST_IS_DIR ) )
-            {
-                g_free( dest_file );
-                dest_file = g_strjoin( NULL,
-                                vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
-                                ext, NULL );
-            }
-            else
-            {
-                g_free( dest_file );
-                dest_file = g_strdup( vfs_file_info_get_disp_name(
-                                                    (VFSFileInfo*)files->data ) );
-            }
-            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), dest_file );
-            g_free( dest_file );
-        }
-        else
-            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), "new archive" );
-*/
         g_free( ext );
 
     }
@@ -324,37 +375,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     }
 
     udest_file = g_filename_display_name( dest_file );
-/*
-    if ( !g_str_has_suffix( udest_file, handlers[format].file_ext ) )
-    {
-        g_free( dest_file );
-        dest_file = udest_file;
-        udest_file = g_strdup_printf( "%s%s", dest_file, handlers[format].file_ext );
-    }
-*/
     g_free( dest_file );
     
-    // overwrite?
-/*
-    if ( g_file_test( udest_file, G_FILE_TEST_EXISTS ) )
-    {
-        char* afile = g_path_get_basename( udest_file );
-        char* msg = g_strdup_printf( _("Archive '%s' exists.\n\nOverwrite?"), afile );
-        g_free( afile );
-        if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_QUESTION,
-                                        _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL,
-                                        msg, NULL, NULL ) != GTK_RESPONSE_OK )
-        {
-            g_free( udest_file );
-            g_free( s1 );
-            g_free( msg );
-            return;
-        }
-        g_free( msg );
-    }
-*/    
     char* udest_quote = bash_quote( udest_file );
-    //char* cmd = g_strdup_printf( "%s %s \"${fm_filenames[@]}\"", s1, udest_quote );
     cmd = g_strdup_printf( "%s %s", s1, udest_quote );
     g_free( udest_file );
     g_free( udest_quote );
@@ -393,46 +416,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     task->task->exec_command = cmd;
     task->task->exec_show_error = TRUE;
     task->task->exec_export = TRUE;
-    //task->task->exec_keep_tmp = TRUE;
     XSet* set = xset_get( "new_archive" );
     if ( set->icon )
         task->task->exec_icon = g_strdup( set->icon );
     ptk_file_task_run( task );
-
-/*    
-    g_shell_parse_argv( handlers[format].compress_cmd,
-                        &cmdc, &cmdv, NULL );
-
-    n = g_list_length( files );
-    argc = cmdc + n + 1;
-    argv = g_new0( char*, argc + 1 );
-
-    for( i = 0; i < cmdc; ++i )
-        argv[i] = cmdv[i];
-
-    argv[i] = dest_file;
-    ++i;
-
-    for( l = files; l; l = l->next )
-    {
-        // FIXME: Maybe we should consider filename encoding here.
-        argv[i] = (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data );
-        ++i;
-    }
-    argv[i] = NULL;
-
-    udest_file = g_filename_display_name( dest_file );
-    desc = g_strdup_printf( _("Creating Compressed File: %s"), udest_file );
-    g_free( udest_file );
-
-    ptk_console_output_run( parent_win, _("Compress Files"),
-                            desc,
-                            working_dir,
-                            argc, argv );
-    g_free( dest_file );
-    g_strfreev( cmdv );
-    g_free( argv );
-*/
 }
 
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
@@ -699,67 +686,13 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         task->task->exec_terminal = in_term;
         task->task->exec_keep_terminal = keep_term;
         task->task->exec_export = FALSE;
-    //task->task->exec_keep_tmp = TRUE;
-        XSet* set = xset_get( "arc_extract" );
+		XSet* set = xset_get( "arc_extract" );
         if ( set->icon )
             task->task->exec_icon = g_strdup( set->icon );
         ptk_file_task_run( task );
     }
     if ( choose_dir )
         g_free( choose_dir );
-    
-
-/*
-    file = (VFSFileInfo*)files->data;
-    mime = vfs_file_info_get_mime_type( file );
-    type = vfs_mime_type_get_type( mime );
-
-    for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
-    {
-        if( 0 == strcmp( type, handlers[i].mime_type ) )
-            break;
-    }
-
-    if( i < G_N_ELEMENTS(handlers) )    // handler found
-    {
-        g_shell_parse_argv( handlers[i].extract_cmd,
-                            &cmdc, &cmdv, NULL );
-
-        n = g_list_length( files );
-        argc = cmdc + n;
-        argv = g_new0( char*, argc + 1 );
-
-        for( i = 0; i < cmdc; ++i )
-            argv[i] = cmdv[i];
-
-        for( l = files; l; l = l->next )
-        {
-            file = (VFSFileInfo*)l->data;
-            full_path = g_build_filename( working_dir,
-                                          vfs_file_info_get_name( file ),
-                                          NULL );
-            // FIXME: Maybe we should consider filename encoding here.
-            argv[i] = full_path;
-            ++i;
-        }
-        argv[i] = NULL;
-        argc = i;
-
-        udest_dir = g_filename_display_name( dest_dir );
-        desc = g_strdup_printf( _("Extracting Files to: %s"), udest_dir );
-        g_free( udest_dir );
-        ptk_console_output_run( parent_win, _("Extract Files"),
-                                desc,
-                                dest_dir,
-                                argc, argv );
-        g_strfreev( cmdv );
-        for( i = cmdc; i < argc; ++i )
-            g_free( argv[i] );
-        g_free( argv );
-    }
-
-    g_free( _dest_dir );
-*/
 }
 
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
@@ -771,8 +704,6 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
     if( !mime ) return FALSE;
     type = vfs_mime_type_get_type( mime );
     if(! type ) return FALSE;
-
-    /* alias = mime_type_get_alias( type ); */
 
     for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
     {
@@ -794,7 +725,8 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 }
 
 XSet* add_new_arctype()
-{   // creates a new xset for a custom archive type
+{   
+	// creates a new xset for a custom archive type
     XSet* set;
     char* rand;
     char* name = NULL;
@@ -858,7 +790,412 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         }
     */
 
-    xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Configure Unavailable"), NULL,
-                        0, "This feature is not yet available", NULL, NULL );
-}
+	// Archive handlers dialog, attaching to top-level window (in GTK,
+	// everything is a 'widget') - no buttons etc added as everything is
+	// custom...
+    GtkWidget* dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
+		GTK_WINDOW( 
+			gtk_widget_get_toplevel(
+				GTK_WIDGET( file_browser )
+			)
+		),
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		NULL );
+    gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );		
 
+	// Setting saved dialog size
+    int width = xset_get_int( "arc_conf", "x" );
+    int height = xset_get_int( "arc_conf", "y" );
+    if ( width && height )
+        gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
+	
+	// Adding the help button but preventing it from taking the focus on click
+    gtk_button_set_focus_on_click( 
+		GTK_BUTTON( 
+			gtk_dialog_add_button( 
+				GTK_DIALOG( dlg ),
+				GTK_STOCK_HELP,
+				GTK_RESPONSE_HELP
+			)
+		),
+        FALSE );
+        
+	// Adding standard buttons and saving references in the dialog
+	// (GTK doesnt provide a trivial way to reference child widgets from
+	// the window!!)
+    g_object_set_data( G_OBJECT( dlg ), "btnCancel", 
+		gtk_dialog_add_button( GTK_DIALOG( dlg ), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL ) );
+	g_object_set_data( G_OBJECT( dlg ), "btnOK", 
+		gtk_dialog_add_button( GTK_DIALOG( dlg ), GTK_STOCK_OK, GTK_RESPONSE_OK ) );
+    
+    // Generating left-hand side of dialog
+    GtkWidget* lblHandlers = gtk_label_new( NULL );
+    gtk_label_set_markup( GTK_LABEL( lblHandlers ), _("<b>Handlers</b>") );
+    gtk_misc_set_alignment( GTK_MISC( lblHandlers ), 0, 0 );
+    
+	// Generating the main manager list
+	// Creating model
+	// TODO: Need to understand the list model I am going to make. How is the data stored?
+	// These columns have an ordinal identifier that should be maintained in a suitably-named enum
+    GtkListStore* list = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_INT, 
+                                                G_TYPE_INT, G_TYPE_STRING );
+	g_object_set_data( G_OBJECT( dlg ), "list", list );
+
+    // Creating treeview - setting single-click mode (normally this 
+    // widget is used for file lists, where double-clicking is the norm
+    // for doing an action)
+    GtkWidget* viewHandlers = exo_tree_view_new();
+    gtk_tree_view_set_model( GTK_TREE_VIEW( viewHandlers ), GTK_TREE_MODEL( list ) );
+    exo_tree_view_set_single_click( (ExoTreeView*)viewHandlers, TRUE );
+    gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( viewHandlers ), FALSE );
+	g_object_set_data( G_OBJECT( dlg ), "viewHandlers", viewHandlers );
+
+	// Turning the treeview into a scrollable widget
+    GtkWidget* viewScroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( viewScroll ),
+                                 GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( viewScroll ), viewHandlers );
+    
+    // Connecting treeview callbacks
+    g_signal_connect( G_OBJECT( viewHandlers ), "row-activated",
+                          G_CALLBACK( on_configure_row_activated ), dlg );
+    g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( 
+                            GTK_TREE_VIEW( viewHandlers ) ) ),
+                            "changed",
+                            G_CALLBACK( on_configure_selection_change ), dlg );
+
+    // Adding column to the treeview
+    GtkTreeViewColumn* col = gtk_tree_view_column_new();
+    
+    // Change columns to optimal size whenever the model changes
+    gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_AUTOSIZE );
+    
+    GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
+    gtk_tree_view_column_pack_start( col, renderer, TRUE );
+    
+    // Tie model data to the column
+    // TODO: Hook up proper column with the relevant enum
+    gtk_tree_view_column_set_attributes( col, renderer,
+                                         "text", 0, NULL );
+                                         
+    gtk_tree_view_append_column ( GTK_TREE_VIEW( viewHandlers ), col );
+    
+    // Set column to take all available space - false by default
+    gtk_tree_view_column_set_expand ( col, TRUE );
+
+    // Treeview widgets
+    GtkButton* btnRemove = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Remove") ) );
+    gtk_button_set_image( btnRemove, xset_get_image( "GTK_STOCK_REMOVE",
+													GTK_ICON_SIZE_BUTTON ) );
+    gtk_button_set_focus_on_click( btnRemove, FALSE );
+    g_signal_connect( G_OBJECT( btnRemove ), "clicked",
+                    G_CALLBACK( on_configure_button_press ), dlg );
+	g_object_set_data( G_OBJECT( dlg ), "btnRemove", GTK_BUTTON( btnRemove ) );                          
+
+    GtkButton* btnAdd = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Add") ) );
+    gtk_button_set_image( btnAdd, xset_get_image( "GTK_STOCK_ADD",
+												GTK_ICON_SIZE_BUTTON ) );
+    gtk_button_set_focus_on_click( btnAdd, FALSE );
+    g_signal_connect( G_OBJECT( btnAdd ), "clicked",
+					G_CALLBACK( on_configure_button_press ), dlg );
+	g_object_set_data( G_OBJECT( dlg ), "btnAdd", GTK_BUTTON( btnAdd ) );					
+
+    GtkButton* btnApply = GTK_BUTTON( gtk_button_new_with_mnemonic( _("A_pply") ) );
+    gtk_button_set_image( btnApply, xset_get_image( "GTK_STOCK_APPLY",
+												GTK_ICON_SIZE_BUTTON ) );
+    gtk_button_set_focus_on_click( btnApply, FALSE );
+    g_signal_connect( G_OBJECT( btnApply ), "clicked",
+                    G_CALLBACK( on_configure_button_press ), dlg );
+	g_object_set_data( G_OBJECT( dlg ), "btnApply", GTK_BUTTON( btnApply ) );
+
+    // Generating right-hand side of dialog
+    GtkWidget* lblGeneral = gtk_label_new( NULL );
+    gtk_label_set_markup( GTK_LABEL( lblGeneral ), _("<b>General</b>") );
+    gtk_misc_set_alignment( GTK_MISC( lblGeneral ), 0, 0 );
+	GtkWidget* chkbtnHandlerEnabled = gtk_check_button_new_with_label( _("Enabled") );
+	GtkWidget* lblHandlerName = gtk_label_new( _("Name:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerName ), 0, 0.5 );
+	GtkWidget* lblHandlerMIME = gtk_label_new( _("MIME Type:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerMIME ), 0, 0.5 );
+	GtkWidget* lblHandlerExtension = gtk_label_new( _("Extension:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerExtension ), 0, 0.5 );
+	GtkWidget* lblCommands = gtk_label_new( NULL );
+	gtk_label_set_markup( GTK_LABEL( lblCommands ), _("<b>Commands</b>") );
+	gtk_misc_set_alignment( GTK_MISC( lblCommands ), 0, 0 );
+	GtkWidget* lblHandlerCompress = gtk_label_new( _("Compress:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerCompress ), 0, 0.5 );
+	GtkWidget* lblHandlerExtract = gtk_label_new( _("Extract:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerExtract ), 0, 0.5 );
+	GtkWidget* lblHandlerList = gtk_label_new( _("List:") );
+	gtk_misc_set_alignment( GTK_MISC( lblHandlerList ), 0, 0.5 );
+	GtkWidget* entryHandlerName = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerName",
+		GTK_ENTRY( entryHandlerName ) );
+	GtkWidget* entryHandlerMIME = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerMIME",
+		GTK_ENTRY( entryHandlerMIME ) );
+	GtkWidget* entryHandlerExtension = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerExtension",
+		GTK_ENTRY( entryHandlerExtension ) );
+	GtkWidget* entryHandlerCompress = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerCompress",
+		GTK_ENTRY( entryHandlerCompress ) );
+	GtkWidget* entryHandlerExtract = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerExtract",
+		GTK_ENTRY( entryHandlerExtension ) );
+	GtkWidget* entryHandlerList = gtk_entry_new();
+	g_object_set_data( G_OBJECT( dlg ), "entryHandlerList",
+		GTK_ENTRY( entryHandlerList ) );
+
+	// Creating container boxes - at this point the dialog already comes
+	// with one GtkVBox then inside that a GtkHButtonBox
+	// For the right side of the dialog, standard GtkBox approach fails
+	// to allow precise padding of labels to allow all entries to line up
+	// - so reimplementing with GtkTable. Would many GtkAlignments have
+	// worked?
+    GtkWidget* hboxMain = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* vboxHandlers = gtk_vbox_new( FALSE, 4 );
+    //GtkWidget* vboxGeneral = gtk_vbox_new( FALSE, 4 );
+    GtkWidget* hboxViewButtons = gtk_hbox_new( FALSE, 4 );
+    /*GtkWidget* hboxName = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hboxMIME = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hboxExtension = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hboxCompress = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hboxExtract = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hboxList = gtk_hbox_new( FALSE, 4 );*/
+    GtkWidget* tblGeneral = gtk_table_new( 9, 2 , FALSE );
+    
+    // Debug code
+    //g_print("Packing code start - left side...\n");
+    
+    // Packing widgets into boxes - note that viewHandlers isn't added
+    // but viewScroll is - viewHandlers is inside viewScroll
+    // Remember, start and end-ness is broken
+    gtk_box_pack_start( GTK_BOX( hboxMain ),
+                        GTK_WIDGET( vboxHandlers ), TRUE, TRUE, 4 );
+    /*gtk_box_pack_start( GTK_BOX( hboxMain ),
+                       GTK_WIDGET( vboxGeneral ), TRUE, TRUE, 4 );*/
+    gtk_box_pack_start( GTK_BOX( hboxMain ),
+                       GTK_WIDGET( tblGeneral ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vboxHandlers ),
+                        GTK_WIDGET( lblHandlers ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vboxHandlers ),
+                        GTK_WIDGET( viewScroll ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vboxHandlers ),
+                        GTK_WIDGET( hboxViewButtons ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
+                        GTK_WIDGET( btnRemove ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
+                        GTK_WIDGET( gtk_vseparator_new() ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
+                        GTK_WIDGET( btnAdd ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
+                        GTK_WIDGET( btnApply ), TRUE, TRUE, 4 );
+
+    // Debug code
+    //g_print("Right side...\n");
+
+	/*
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( lblGeneral ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( chkbtnHandlerEnabled ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxName ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxName ),
+                        GTK_WIDGET( lblHandlerName ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxName ),
+                        GTK_WIDGET( entryHandlerName ), TRUE, TRUE, 4 );
+                        
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxMIME ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxMIME ),
+                        GTK_WIDGET( lblHandlerMIME ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxMIME ),
+                        GTK_WIDGET( entryHandlerMIME ), TRUE, TRUE, 4 );
+                        
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxExtension ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxExtension ),
+                        GTK_WIDGET( lblHandlerExtension ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxExtension ),
+                        GTK_WIDGET( entryHandlerExtension ), TRUE, TRUE, 4 );
+
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( lblCommands ), TRUE, TRUE, 4 );
+
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxCompress ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxCompress ),
+                        GTK_WIDGET( lblHandlerCompress ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxCompress ),
+                        GTK_WIDGET( entryHandlerCompress ), TRUE, TRUE, 4 );
+                        
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxExtract ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxExtract ),
+                        GTK_WIDGET( lblHandlerExtract ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxExtract ),
+                        GTK_WIDGET( entryHandlerExtract ), TRUE, TRUE, 4 );
+                        
+    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
+                        GTK_WIDGET( hboxList ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxList ),
+                        GTK_WIDGET( lblHandlerList ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hboxList ),
+                        GTK_WIDGET( entryHandlerList ), TRUE, TRUE, 4 );
+	*/
+	
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblGeneral ), 0, 1, 0, 1, GTK_FILL,
+		GTK_FILL, 0, 4 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( chkbtnHandlerEnabled ), 0, 1, 1, 2, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerName ), 0, 1, 2, 3, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerName ), 1, 2, 2, 3, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerMIME ), 0, 1, 3, 4, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerMIME ), 1, 2, 3, 4, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerExtension ), 0, 1, 4, 5, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerExtension ), 1, 2, 4, 5, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+		
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblCommands ), 0, 1, 5, 6, GTK_FILL,
+		GTK_FILL, 0, 10 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerCompress ), 0, 1, 6, 7, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerCompress ), 1, 2, 6, 7, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerExtract ), 0, 1, 7, 8, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerExtract ), 1, 2, 7, 8, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( lblHandlerList ), 0, 1, 8, 9, GTK_FILL,
+		GTK_FILL, 0, 0 );
+	gtk_table_attach( GTK_TABLE( tblGeneral ),
+		GTK_WIDGET( entryHandlerList ), 1, 2, 8, 9, GTK_EXPAND | GTK_FILL,
+		GTK_FILL, 0, 0 );
+                        
+	// Packing boxes into dialog with padding to separate from dialog's
+	// standard buttons at the bottom
+    gtk_box_pack_start( 
+		GTK_BOX( 
+			gtk_dialog_get_content_area ( GTK_DIALOG( dlg ) )
+		),
+        GTK_WIDGET( hboxMain ), TRUE, TRUE, 4 );
+	
+	/*
+    // plugin?
+    XSet* mset = xset_get_plugin_mirror( set );
+
+    // set match / action
+    char* elements = mset->context;
+    char* action = get_element_next( &elements );
+    char* match = get_element_next( &elements );
+    if ( match && action )
+    {
+        i = atoi( match );
+        if ( i < 0 || i > 3 )
+            i = 0;
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), i );
+        i = atoi( action );
+        if ( i < 0 || i > 3 )
+            i = 0;
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), i );
+        g_free( match );
+        g_free( action );
+    }
+    else
+    {
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), 0 );
+        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), 0 );        
+        if ( match )
+            g_free( match );
+        if ( action )
+            g_free( action );
+    }
+    // set rules
+    int sub, comp;
+    char* value;
+    char* disp;
+    GtkTreeIter it;
+    gboolean is_rules = FALSE;
+    while ( get_rule_next( &elements, &sub, &comp, &value ) )
+    {
+        disp = context_display( sub, comp, value );
+        gtk_list_store_append( GTK_LIST_STORE( list ), &it );
+        gtk_list_store_set( GTK_LIST_STORE( list ), &it,
+                                            CONTEXT_COL_DISP, disp,
+                                            CONTEXT_COL_SUB, sub,
+                                            CONTEXT_COL_COMP, comp,
+                                            CONTEXT_COL_VALUE, value,
+                                            -1 );
+        g_free( disp );
+        if ( value )
+            g_free( value );
+        is_rules = TRUE;
+    }
+    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), 0 );
+    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), is_rules );
+    */
+
+    // Rendering dialog - while loop is done to allow user to launch
+    // help I think
+    gtk_widget_show_all( GTK_WIDGET( dlg ) );
+    int response;
+    while ( response = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
+    {
+        if ( response == GTK_RESPONSE_OK )
+        {
+			break;
+        }
+        else if ( response == GTK_RESPONSE_HELP )
+			// TODO: Sort out proper help
+            xset_show_help( dlg, NULL, "#designmode-style-context" );
+        else
+            break;
+    }
+
+	// Fetching dialog dimensions
+    GtkAllocation allocation;
+    gtk_widget_get_allocation ( GTK_WIDGET( dlg ), &allocation );
+    width = allocation.width;
+    height = allocation.height;
+    
+    // Checking if they are valid
+    if ( width && height )
+    {
+		// They are - saving
+        char* str = g_strdup_printf( "%d", width );
+        xset_set( "arc_conf", "x", str );
+        g_free( str );
+        str = g_strdup_printf( "%d", height );
+        xset_set( "arc_conf", "y", str );
+        g_free( str );
+    }
+	
+	// Clearing up dialog
+    gtk_widget_destroy( dlg );
+	
+	// Placeholder
+    /*xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Configure Unavailable"), NULL,
+                        0, "This feature is not yet available", NULL, NULL );
+	*/
+}
