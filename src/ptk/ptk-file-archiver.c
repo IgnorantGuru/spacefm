@@ -970,18 +970,8 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 	// worked?
     GtkWidget* hboxMain = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vboxHandlers = gtk_vbox_new( FALSE, 4 );
-    //GtkWidget* vboxGeneral = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hboxViewButtons = gtk_hbox_new( FALSE, 4 );
-    /*GtkWidget* hboxName = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* hboxMIME = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* hboxExtension = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* hboxCompress = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* hboxExtract = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* hboxList = gtk_hbox_new( FALSE, 4 );*/
     GtkWidget* tblGeneral = gtk_table_new( 9, 3 , FALSE );
-    
-    // Debug code
-    //g_print("Packing code start - left side...\n");
     
     // Packing widgets into boxes
     // Remember, start and end-ness is broken
@@ -989,8 +979,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // take the space
     gtk_box_pack_start( GTK_BOX( hboxMain ),
                         GTK_WIDGET( vboxHandlers ), FALSE, FALSE, 4 );
-    /*gtk_box_pack_start( GTK_BOX( hboxMain ),
-                       GTK_WIDGET( vboxGeneral ), TRUE, TRUE, 4 );*/
     gtk_box_pack_start( GTK_BOX( hboxMain ),
                        GTK_WIDGET( tblGeneral ), TRUE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( vboxHandlers ),
@@ -1012,60 +1000,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
                         GTK_WIDGET( btnApply ), TRUE, TRUE, 4 );
 
-    // Debug code
-    //g_print("Right side...\n");
-
-	/*
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( lblGeneral ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( chkbtnHandlerEnabled ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxName ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxName ),
-                        GTK_WIDGET( lblHandlerName ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxName ),
-                        GTK_WIDGET( entryHandlerName ), TRUE, TRUE, 4 );
-                        
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxMIME ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxMIME ),
-                        GTK_WIDGET( lblHandlerMIME ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxMIME ),
-                        GTK_WIDGET( entryHandlerMIME ), TRUE, TRUE, 4 );
-                        
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxExtension ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxExtension ),
-                        GTK_WIDGET( lblHandlerExtension ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxExtension ),
-                        GTK_WIDGET( entryHandlerExtension ), TRUE, TRUE, 4 );
-
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( lblCommands ), TRUE, TRUE, 4 );
-
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxCompress ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxCompress ),
-                        GTK_WIDGET( lblHandlerCompress ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxCompress ),
-                        GTK_WIDGET( entryHandlerCompress ), TRUE, TRUE, 4 );
-                        
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxExtract ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxExtract ),
-                        GTK_WIDGET( lblHandlerExtract ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxExtract ),
-                        GTK_WIDGET( entryHandlerExtract ), TRUE, TRUE, 4 );
-                        
-    gtk_box_pack_start( GTK_BOX( vboxGeneral ),
-                        GTK_WIDGET( hboxList ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxList ),
-                        GTK_WIDGET( lblHandlerList ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hboxList ),
-                        GTK_WIDGET( entryHandlerList ), TRUE, TRUE, 4 );
-	*/
-	
 	gtk_table_attach( GTK_TABLE( tblGeneral ),
 						GTK_WIDGET( lblGeneral ), 0, 1, 0, 1,
 						GTK_FILL, GTK_FILL, 0, 4 );
@@ -1136,9 +1070,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 
 	// TODO: Custom handlers are to be added to this - arctype rar and zip already exist??
 	// TODO: Commands prepended with + indicate terminal running
-
-	// Debug code
-	//g_print("archiveHandlers: %s", archiveHandlers);
 
 	/*
     // plugin?
