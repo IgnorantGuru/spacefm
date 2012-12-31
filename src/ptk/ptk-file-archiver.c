@@ -915,9 +915,9 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 	g_object_set_data( G_OBJECT( dlg ), "btnApply", GTK_BUTTON( btnApply ) );
 
     // Generating right-hand side of dialog
-    GtkWidget* lblGeneral = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lblGeneral ), _("<b>General</b>") );
-    gtk_misc_set_alignment( GTK_MISC( lblGeneral ), 0, 0 );
+    GtkWidget* lblSettings = gtk_label_new( NULL );
+    gtk_label_set_markup( GTK_LABEL( lblSettings ), _("<b>Handler Settings</b>") );
+    gtk_misc_set_alignment( GTK_MISC( lblSettings ), 0, 0 );
 	GtkWidget* chkbtnHandlerEnabled = gtk_check_button_new_with_label( _("Enabled") );
 	GtkWidget* lblHandlerName = gtk_label_new( _("Name:") );
 	gtk_misc_set_alignment( GTK_MISC( lblHandlerName ), 0, 0.5 );
@@ -971,7 +971,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     GtkWidget* hboxMain = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vboxHandlers = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hboxViewButtons = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* tblGeneral = gtk_table_new( 9, 3 , FALSE );
+    GtkWidget* tblSettings = gtk_table_new( 9, 3 , FALSE );
     
     // Packing widgets into boxes
     // Remember, start and end-ness is broken
@@ -980,7 +980,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( hboxMain ),
                         GTK_WIDGET( vboxHandlers ), FALSE, FALSE, 4 );
     gtk_box_pack_start( GTK_BOX( hboxMain ),
-                       GTK_WIDGET( tblGeneral ), TRUE, TRUE, 4 );
+                       GTK_WIDGET( tblSettings ), TRUE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( vboxHandlers ),
                         GTK_WIDGET( lblHandlers ), FALSE, FALSE, 4 );
 
@@ -1000,59 +1000,59 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( hboxViewButtons ),
                         GTK_WIDGET( btnApply ), TRUE, TRUE, 4 );
 
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
-						GTK_WIDGET( lblGeneral ), 0, 1, 0, 1,
+	gtk_table_attach( GTK_TABLE( tblSettings ),
+						GTK_WIDGET( lblSettings ), 0, 1, 0, 1,
 						GTK_FILL, GTK_FILL, 0, 4 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( chkbtnHandlerEnabled ), 0, 1, 1, 2,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerName ), 0, 1, 2, 3,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerName ), 1, 4, 2, 3,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerMIME ), 0, 1, 3, 4,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerMIME ), 1, 4, 3, 4,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerExtension ), 0, 1, 4, 5,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerExtension ), 1, 4, 4, 5,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 		
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblCommands ), 0, 1, 5, 6, GTK_FILL,
 						GTK_FILL, 0, 10 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerCompress ), 0, 1, 6, 7,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerCompress ), 1, 2, 6, 7,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( chkbtnHandlerCompressTerm ), 3, 4, 6, 7,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerExtract ), 0, 1, 7, 8,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerExtract ), 1, 2, 7, 8,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( chkbtnHandlerExtractTerm ), 3, 4, 7, 8,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( lblHandlerList ), 0, 1, 8, 9,
 						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( entryHandlerList ), 1, 2, 8, 9,
 						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tblGeneral ),
+	gtk_table_attach( GTK_TABLE( tblSettings ),
 						GTK_WIDGET( chkbtnHandlerListTerm ), 3, 4, 8, 9,
 						GTK_FILL, GTK_FILL, 0, 0 );
                         
