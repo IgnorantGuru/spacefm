@@ -2178,11 +2178,11 @@ The Scroll option, which is checked by default for new commands, determines the 
 
 <p>SpaceFM includes two primary toolbars: the main Toolbar (which is divided into a Left Toolbar, <a href="#gui-pathbar">Path Bar</a>, and Right Toolbar) and a Side Toolbar.  To show or hide the Toolbar or Side Toolbar, right-click on the file list and check or uncheck View|Toolbar or View|Side Toolbar.
 
-<p>Toolbars can also be customized using <a href="#designmode">Design Mode</a>.  Although you cannot right-click directly on a toolbar, each toolbar has a config menu for the purpose of customization.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
+<p>Toolbars can also be customized using <a href="#designmode">Design Mode</a>.  Although you cannot right-click directly on a toolbar icon, each toolbar has a config menu for the purpose of customization.  Making changes to a toolbar's config menu will automatically change the items in the toolbar.
 
 <p>To access a toolbar's config menu, click the leftmost icon on the toolbar (at the far left of the panel).  The 'Left Toolbar' config menu is used to customize the toolbar to the left of the <a href="#gui-pathbar">Path Bar</a>, and 'Right Toolbar' is used to customize the toolbar to the right.  The 'Side Toolbar' menu configures the Side Toolbar.
 
-<p>In these menus, Design Mode works as always - use right-click or F2 to open the Design Menu for any highlighted item.  But there are a few differences in these menus.
+<p>In these menus, Design Mode works as always - use right-click or F2 to open the Design Menu for any highlighted item, or simply left-click the item.  But there are a few differences in these menus.
 
 <p>Toolbar config menus show <i>all</i> available tool items, with an asterisk (*) next to the name of currently shown items, and no asterisk next to the name of hidden items.  When opening the Design Menu on a toolbar config menu item, the topmost item will be <a href="#designmode-designmenu-show">Show</a>.  If checked, the tool item will be shown in the toolbar.  If unchecked, the tool item will be hidden.
 
@@ -4374,7 +4374,7 @@ Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
 <!-- @Sockets @Events -->
 <p>Events represent actions or changes in the GUI, such as the user closing a tab, selecting a file, or opening a new window.  SpaceFM has built-in handlers for these events, which update the GUI, open menus, or take other actions.  You can also add your own handlers for events, commands which are run to take a custom action after the event occurs.  In some cases your custom handler can replace the action normally taken by SpaceFM's built-in handler, allowing you to modify the default behavior in the GUI.
 
-<p>Event handlers can be added in the <a href="#sockets-menu">Events Menu</a>.  Those handler commands always run until you remove them.  Dynamic event handlers can also be added using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-remove-event">remove-event</a> socket methods.  These handlers will remain in effect until you remove them with the remove-event method, or until the SpaceFM instance exits.
+<p>Event handlers can be added in the <a href="#sockets-menu">Events Menu</a>.  Those handler commands always run until you remove them.  Dynamic event handlers can also be added using the <a href="#sockets-methods-add-event">add-event</a> or <a href="#sockets-methods-replace-event">replace-event</a> socket methods.  These handlers will remain in effect until you remove them with the remove-event method, or until the SpaceFM instance exits.
 
 <p>The following events are available.  The name in parentheses is the event name as found in the <a href="#sockets-menu">Events Menu</a>.  Any <a href="#evtsub">event substitution variables</a> available with the event are shown after it (eg %e).
 

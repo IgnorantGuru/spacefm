@@ -4,6 +4,7 @@
     [gtk3] task progress pulse don't show percent
     debian package add XXXXXXXX to mktemp template [dist]
     add key shortcut labels to Prefs default drag action
+    left-click in toolbar config menu shows design menu
 0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast

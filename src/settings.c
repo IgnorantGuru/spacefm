@@ -7149,9 +7149,17 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
             // test: gtk2 Crux theme with touchpad on Edit|Copy To|Location
             // https://github.com/IgnorantGuru/spacefm/issues/31
             // https://github.com/IgnorantGuru/spacefm/issues/228
-            if ( menu )
-                gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
-            gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
+            if ( set && set->tool )
+            {
+                // is in a toolbar config menu - show the design menu
+                xset_design_show_menu( menu, set, event->button, event->time );
+            }
+            else
+            {
+                if ( menu )
+                    gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+                gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
+            }
             return TRUE;
         }
         return FALSE;
