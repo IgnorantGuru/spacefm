@@ -183,10 +183,10 @@ static const char* context_sub_list[] =
     "0%%%%%btrfs%%%%%ext2%%%%%ext3%%%%%ext4%%%%%ext2 || ext3 || ext4%%%%%ntfs%%%%%reiser4%%%%%reiserfs%%%%%swap%%%%%ufs%%%%%vfat%%%%%xfs",  //Device FSType",
     "0%%%%%",  //"Device UDI",
     "2%%%%%audiocd%%%%%blank%%%%%dvd%%%%%dvd && blank%%%%%ejectable%%%%%floppy%%%%%internal%%%%%mountable%%%%%mounted%%%%%no_media%%%%%optical%%%%%optical && blank%%%%%optical && mountable%%%%%optical && mounted%%%%%removable%%%%%removable && mountable%%%%%removable && mounted%%%%%removable || optical%%%%%table%%%%%policy_hide%%%%%policy_noauto",  //"Device Properties",
-	"8%%%%%0%%%%%1%%%%%2",  //"Task Count",
-	"0%%%%%",  //"Task Dir",
-	"0%%%%%change%%%%%copy%%%%%delete%%%%%link%%%%%move%%%%%run%%%%%trash",  //"Task Type",
-	"0%%%%%",  //"Task Name",
+    "8%%%%%0%%%%%1%%%%%2",  //"Task Count",
+    "0%%%%%",  //"Task Dir",
+    "0%%%%%change%%%%%copy%%%%%delete%%%%%link%%%%%move%%%%%run%%%%%trash",  //"Task Type",
+    "0%%%%%",  //"Task Name",
     "0%%%%%",  //"Panel 1 Dir",
     "0%%%%%",  //"Panel 2 Dir",
     "0%%%%%",  //"Panel 3 Dir",
@@ -2458,7 +2458,7 @@ void read_root_settings()
 
 void write_src_functions( FILE* file )
 {
-    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n			unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\nfm_edit()\n{\n    spacefm -s set edit_file \"$1\"\n}\n\n", file );
+    fputs( "\nfm_randhex4()  # generate a four digit random hex number\n{\n    fm_rand1=$RANDOM\n    fm_rand2=$RANDOM\n    (( fm_rand = fm_rand1 + fm_rand2 ))\n    let \"fm_rand \%= 65536\"\n    fm_randhex=`printf \"\%04X\" $fm_rand | tr A-Z a-z`\n    if [ \"$fm_randhex\" = \"\" ]; then\n        fm_randhex=$RANDOM  # failsafe\n    fi\n}\n\nfm_new_tmp()\n{\n    fm_randhex4\n    fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n    fm_count1=0\n    while ! mkdir \"$fm_tmp1\" 2>/dev/null; do\n        fm_randhex4\n        fm_tmp1=\"$fm_tmp_dir/$$-$fm_randhex.tmp\"\n        if (( fm_count1++ > 1000 )); then\n            echo 'spacefm: error creating temporary directory' 1>&2\n          unset fm_tmp1 fm_randhex fm_count1\n            echo \"\"\n            return 1\n        fi\n    done\n    echo \"$fm_tmp1\"\n    unset fm_tmp1 fm_randhex fm_count1\n}\n\nfm_edit()\n{\n    spacefm -s set edit_file \"$1\"\n}\n\n", file );
 }
 
 GtkWidget* xset_get_image( const char* icon, int icon_size )
@@ -3060,7 +3060,7 @@ char* xset_custom_get_help( XSet* set )
         if ( file )
         {
             // write default readme
-            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name: \n\nRelease Version and Date: \n\nPlugin Homepage or Download Link: \n\nAuthor's Contact Information or Feedback Instructions: \n\nDependencies or Requirements: \n\nDescription: \n\nInstructions For Use: \n\nCopyright and License Information:  (for example)\n\n	  Copyright (C) YEAR AUTHOR <EMAIL>\n\n	  This program is free software: you can redistribute it and/or modify\n	  it under the terms of the GNU General Public License as published by\n	  the Free Software Foundation, either version 2 of the License, or\n	  (at your option) any later version.\n\n	  This program is distributed in the hope that it will be useful,\n	  but WITHOUT ANY WARRANTY; without even the implied warranty of\n	  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n	  GNU General Public License for more details.\n\n	  You should have received a copy of the GNU General Public License\n	  along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
+            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name: \n\nRelease Version and Date: \n\nPlugin Homepage or Download Link: \n\nAuthor's Contact Information or Feedback Instructions: \n\nDependencies or Requirements: \n\nDescription: \n\nInstructions For Use: \n\nCopyright and License Information:  (for example)\n\n   Copyright (C) YEAR AUTHOR <EMAIL>\n\n   This program is free software: you can redistribute it and/or modify\n      it under the terms of the GNU General Public License as published by\n      the Free Software Foundation, either version 2 of the License, or\n     (at your option) any later version.\n\n     This program is distributed in the hope that it will be useful,\n   but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n     GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
             fclose( file );
         }
         chmod( path, S_IRUSR | S_IWUSR );
@@ -7723,7 +7723,7 @@ GtkTextView* multi_input_new( GtkScrolledWindow* scrolled, const char* text,
 
     gtk_container_add ( GTK_CONTAINER ( scrolled ), GTK_WIDGET( input ) );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( input );
-	gtk_text_view_set_wrap_mode( input, GTK_WRAP_CHAR );  //GTK_WRAP_WORD_CHAR
+    gtk_text_view_set_wrap_mode( input, GTK_WRAP_CHAR );  //GTK_WRAP_WORD_CHAR
 
     if ( text )
         gtk_text_buffer_set_text( buf, text, -1 );
@@ -9212,14 +9212,14 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_mount_cmd", "label", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\t%%o	volume-specific mount options\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v   device file ( eg /dev/sda5 )\n\t%%o volume-specific mount options\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-mcmd" );
 
     set = xset_set( "dev_unmount_cmd", "label", _("_Unmount Command") );
-    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v	device file ( eg /dev/sda5 )\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
+    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v device file ( eg /dev/sda5 )\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icon", "gtk-edit" );
@@ -9546,13 +9546,13 @@ void xset_defaults()
             set = xset_set( "evt_start", "label", _("_Startup") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Instance Startup Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n\nUse:\n	%%e	 event type (evt_start)\n") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n\nUse:\n  %%e  event type (evt_start)\n") );
             set->line = g_strdup( "#sockets-events-start" );
 
             set = xset_set( "evt_exit", "label", _("_Exit") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Instance Exit Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n\nUse:\n	%%e	 event type (evt_exit)\n") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n\nUse:\n   %%e  event type (evt_exit)\n") );
             set->line = g_strdup( "#sockets-events-exit" );
 
         set = xset_set( "auto_win", "label", _("_Window") );
@@ -9563,37 +9563,37 @@ void xset_defaults()
             set = xset_set( "evt_win_new", "label", _("_New") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set New Window Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n	%%e	 event type\t(evt_win_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n %%e  event type\t(evt_win_new)\n    %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-winnew" );
 
             set = xset_set( "evt_win_focus", "label", _("_Focus") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Window Focus Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n\nUse:\n	%%e	 event type\t(evt_win_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n\nUse:\n    %%e  event type\t(evt_win_focus)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-winfoc" );
 
             set = xset_set( "evt_win_move", "label", _("_Move/Resize") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Window Move/Resize Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n	%%e	 event type\t(evt_win_move)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n\nUse:\n   %%e  event type\t(evt_win_move)\n   %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nNote: This command may be run multiple times during resize.") );
             set->line = g_strdup( "#sockets-events-winmov" );
 
             set = xset_set( "evt_win_click", "label", _("_Click") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Click Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n	%%e	 event type\t(evt_win_click)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%b	 button\t\t(mouse button pressed)\n	%%m	 modifier\t\t(modifier keys)\n	%%f	 focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the mouse is clicked:\n\nUse:\n   %%e  event type\t(evt_win_click)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n  %%b  button\t\t(mouse button pressed)\n %%m  modifier\t\t(modifier keys)\n  %%f  focus   \t\t(element which received the click)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &") );
             set->line = g_strdup( "#sockets-events-winclk" );
 
             set = xset_set( "evt_win_key", "label", _("_Keypress") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Window Keypress Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a key is pressed:\n\nUse:\n	%%e	 event type\t(evt_win_key)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%k	 key code\t(key pressed)\n	%%m	 modifier\t(modifier keys)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a key is pressed:\n\nUse:\n   %%e  event type\t(evt_win_key)\n    %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n  %%k  key code\t(key pressed)\n  %%m  modifier\t(modifier keys)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &") );
             set->line = g_strdup( "#sockets-events-winkey" );
 
             set = xset_set( "evt_win_close", "label", _("Cl_ose") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Window Close Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n\nUse:\n	%%e	 event type\t(evt_win_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n\nUse:\n %%e  event type\t(evt_win_close)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-wincls" );
 
         set = xset_set( "auto_pnl", "label", _("_Panel") );
@@ -9604,19 +9604,19 @@ void xset_defaults()
             set = xset_set( "evt_pnl_focus", "label", _("_Focus") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Focus Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n	%%e	 event type\t(evt_pnl_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n %%e  event type\t(evt_pnl_focus)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-pnlfoc" );
 
             set = xset_set( "evt_pnl_show", "label", _("_Show") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Show Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n	%%e	 event type\t(evt_pnl_show)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n	%%f	 focus  \t\t(element shown or hidden)\n	%%v	 visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n    %%e  event type\t(evt_pnl_show)\n   %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n  %%f  focus  \t\t(element shown or hidden)\n %%v  visible \t\t(1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-pnlshw" );
 
             set = xset_set( "evt_pnl_sel", "label", _("S_elect") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Select Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n	%%e	 event type\t(evt_pnl_sel)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever the file selection changes:\n\nUse:\n %%e  event type\t(evt_pnl_sel)\n    %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.\n\nPrefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.") );
             set->line = g_strdup( "#sockets-events-pnlsel" );
 
         set = xset_set( "auto_tab", "label", C_("View|Events|", "_Tab") );
@@ -9627,25 +9627,25 @@ void xset_defaults()
             set = xset_set( "evt_tab_new", "label", _("_New") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set New Tab Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n	%%e	 event type\t(evt_tab_new)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new tab is opened:\n\nUse:\n    %%e  event type\t(evt_tab_new)\n    %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-tabnew" );
 
             set = xset_set( "evt_tab_focus", "label", _("_Focus") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Tab Focus Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n	%%e	 event type\t(evt_tab_focus)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n   %%e  event type\t(evt_tab_focus)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  tab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-tabfoc" );
 
             set = xset_set( "evt_tab_close", "label", _("_Close") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Tab Close Command") );
-            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n	%%e	 event type\t(evt_tab_close)\n	%%w	 window id\t(see spacefm -s help)\n	%%p	 panel\n	%%t	 closed tab") );
+            xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n    %%e  event type\t(evt_tab_close)\n  %%w  window id\t(see spacefm -s help)\n %%p  panel\n    %%t  closed tab") );
             set->line = g_strdup( "#sockets-events-tabcls" );
 
         set = xset_set( "evt_device", "label", _("_Device") );
         set->menu_style = XSET_MENU_STRING;
         xset_set_set( set, "title", _("Set Device Command") );
-        xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a device state changes:\n\nUse:\n	%%e	 event type\t(evt_device)\n	%%f	 device file\n	%%v	 change \t\t(added|removed|changed)\n") );
+        xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a device state changes:\n\nUse:\n %%e  event type\t(evt_device)\n %%f  device file\n  %%v  change \t\t(added|removed|changed)\n") );
         set->line = g_strdup( "#sockets-events-device" );
 
     set = xset_set( "main_title", "label", _("Wi_ndow Title") );
