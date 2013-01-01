@@ -965,7 +965,7 @@ static void set_element_value( CustomElement* el, const char* name,
                 }
                 if ( !( str && str[0] ) )
                 {
-                    if ( i != 0 || ( el_name->val && el_name->val[0] == '0' ) )
+                    if ( i != 0 || ( value && value[0] == '0' ) )
                         str = g_strdup_printf( "%d %%", i );
                     else
                         str = g_strdup( " " );
