@@ -47,6 +47,7 @@ void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
 static gboolean press_last_button( GtkWidget* dlg );
 static void on_dlg_close( GtkDialog* dlg );
+static gboolean on_progress_timer( CustomElement* el );
 
 GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
 
@@ -920,25 +921,36 @@ static void set_element_value( CustomElement* el, const char* name,
         {
             if ( !g_strcmp0( value, "pulse" ) )
             {
-                gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el_name->widgets->next->data ) );
-                gtk_progress_bar_set_text( 
-                                    GTK_PROGRESS_BAR( el_name->widgets->next->data ),
-                                    NULL );
-            }
-            else
-            {
                 if ( el_name->timeout )
                 {
                     g_source_remove( el_name->timeout );
                     el_name->timeout = 0;
                 }
+                gtk_progress_bar_pulse( GTK_PROGRESS_BAR( 
+                                                el_name->widgets->next->data ) );
+            }
+            else if ( !g_strcmp0( value, "auto-pulse" ) )
+            {
+                if ( !el_name->timeout )
+                    el_name->timeout = g_timeout_add( 200,
+                                    (GSourceFunc)on_progress_timer, el_name );            
+            }
+            else
+            {
                 i = value ? atoi( value ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
                 if ( i != 0 || ( value && value[0] == '0' ) )
+                {
+                    if ( el_name->timeout )
+                    {
+                        g_source_remove( el_name->timeout );
+                        el_name->timeout = 0;
+                    }
                     gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el_name->widgets->next->data ),
                                     (gdouble)i / 100 );
+                }
                 str = value;
                 while ( str && str[0] )
                 {
@@ -953,7 +965,7 @@ static void set_element_value( CustomElement* el, const char* name,
                 }
                 if ( !( str && str[0] ) )
                 {
-                    if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                    if ( i != 0 || ( el_name->val && el_name->val[0] == '0' ) )
                         str = g_strdup_printf( "%d %%", i );
                     else
                         str = g_strdup( " " );
@@ -1793,20 +1805,20 @@ if ( !( cond & G_IO_NVAL ) )
 
 static gboolean delayed_update_false( CustomElement* el )
 {
-    if ( el->timeout )
+    if ( el->update_timeout )
     {
-        g_source_remove( el->timeout );
-        el->timeout = 0;
+        g_source_remove( el->update_timeout );
+        el->update_timeout = 0;
     }
     return FALSE;
 }
 
 static gboolean delayed_update( CustomElement* el )
 {
-    if ( el->timeout )
+    if ( el->update_timeout )
     {
-        g_source_remove( el->timeout );
-        el->timeout = 0;
+        g_source_remove( el->update_timeout );
+        el->update_timeout = 0;
     }
     update_element( el, NULL, NULL, 0 );
     return FALSE;
@@ -1835,11 +1847,11 @@ static void cb_file_value_change( VFSFileMonitor* fm,
         //printf ("    CREATE/CHANGE\n");
         break;
     }
-    if ( !el->timeout )
+    if ( !el->update_timeout )
     {
         // don't update element more than once every 50ms - when a file is
         // changed multiple events are reported
-        el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+        el->update_timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
                                           50,
                                           (GSourceFunc)delayed_update,
                                           el, NULL );
@@ -2084,9 +2096,9 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
             {
                 // save file
                 // skip detection of updates while saving file
-                if ( el->timeout )
-                    g_source_remove( el->timeout );
-                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                if ( el->update_timeout )
+                    g_source_remove( el->update_timeout );
+                el->update_timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
                                           300,
                                           (GSourceFunc)delayed_update_false,
                                           el, NULL );
@@ -2183,9 +2195,9 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                 else
                     str = g_strdup_printf( "%dx%d %d", width, height, pad );
                 // skip detection of updates while saving file
-                if ( el->timeout )
-                    g_source_remove( el->timeout );
-                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                if ( el->update_timeout )
+                    g_source_remove( el->update_timeout );
+                el->update_timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
                                           300,
                                           (GSourceFunc)delayed_update_false,
                                           el, NULL );
@@ -2234,9 +2246,9 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                 write_value( out, prefix, el->name, "saved",
                                                 (char*)el->args->data + 1 );
                 // skip detection of updates while saving file
-                if ( el->timeout )
-                    g_source_remove( el->timeout );
-                el->timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
+                if ( el->update_timeout )
+                    g_source_remove( el->update_timeout );
+                el->update_timeout = g_timeout_add_full( G_PRIORITY_DEFAULT_IDLE,
                                           300,
                                           (GSourceFunc)delayed_update_false,
                                           el, NULL );
@@ -3287,34 +3299,52 @@ static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
             set_font( w, font );
             gtk_box_pack_start( GTK_BOX( box ), w, expand, TRUE, pad );
             el->widgets = g_list_append( el->widgets, w );
-            if ( !args || ( args && !strcmp( (char*)args->data, "pulse" ) ) )
+            if ( !args || ( args && ( !strcmp( (char*)args->data, "pulse" ) ||
+                                !strcmp( (char*)args->data, "auto-pulse" ) ) ) )
+            {
+                if ( !strcmp( (char*)args->data, "pulse" ) )
+                    args = NULL;  // treat pulse as auto-pulse
+                gtk_progress_bar_set_text( 
+                                    GTK_PROGRESS_BAR( el->widgets->next->data ),
+                                    " " );
                 el->timeout = g_timeout_add( 200, (GSourceFunc)on_progress_timer, el );
+            }
             if ( radio ) *radio = NULL;
-       }
+        }
         if ( el->widgets->next && args )
         {
             get_text_value( el, (char*)args->data, FALSE, TRUE );
             if ( !g_strcmp0( el->val, "pulse" ) )
-            {
-                gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el->widgets->next->data ) );
-                gtk_progress_bar_set_text( 
-                                    GTK_PROGRESS_BAR( el->widgets->next->data ),
-                                    NULL );
-            }
-            else
             {
                 if ( el->timeout )
                 {
                     g_source_remove( el->timeout );
                     el->timeout = 0;
                 }
+                gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el->widgets->next->data ) );
+            }
+            else if ( !g_strcmp0( el->val, "auto-pulse" ) )
+            {
+                if ( !el->timeout )
+                    el->timeout = g_timeout_add( 200, (GSourceFunc)on_progress_timer,
+                                                                        el );            
+            }
+            else
+            {
                 i = el->val ? atoi( el->val ) : 0;
                 if ( i < 0 ) i = 0;
                 if ( i > 100 ) i = 100;
                 if ( i != 0 || ( el->val && el->val[0] == '0' ) )
+                {
+                    if ( el->timeout )
+                    {
+                        g_source_remove( el->timeout );
+                        el->timeout = 0;
+                    }
                     gtk_progress_bar_set_fraction( 
                                     GTK_PROGRESS_BAR( el->widgets->next->data ),
                                     (gdouble)i / 100 );
+                }
                 str = el->val;
                 while ( str && str[0] )
                 {
@@ -3758,6 +3788,7 @@ int custom_dialog_init( int argc, char *argv[] )
                     el->monitor = NULL;
                     el->callback = NULL;
                     el->timeout = 0;
+                    el->update_timeout = 0;
                     el->watch_file = NULL;
                     el->option = 0;
                     elements = g_list_append( elements, el );

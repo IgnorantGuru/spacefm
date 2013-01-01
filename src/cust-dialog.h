@@ -129,6 +129,7 @@ typedef struct
     VFSFileMonitor* monitor;
     VFSFileMonitorCallback callback;
     guint timeout;
+    guint update_timeout;
     const char* watch_file;
     int option;
     int option2;
