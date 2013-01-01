@@ -860,10 +860,11 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
             ao->job = PTK_OPEN_DIR;
     }
 
+    str = "echo Connecting...;";  // do not translate
     if ( handler )
-        line = g_strdup_printf( "%s '%s'", handler, url );
+        line = g_strdup_printf( "%s %s '%s'", str, handler, url );
     else
-        line = g_strdup_printf( "udevil mount '%s'%s", url, keepterm );
+        line = g_strdup_printf( "%s udevil mount '%s'%s", str, url, keepterm );
     g_free( keepterm );
     g_free( fstype );
 
