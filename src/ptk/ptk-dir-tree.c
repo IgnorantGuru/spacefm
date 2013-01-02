@@ -556,6 +556,23 @@ gint ptk_dir_tree_node_compare( PtkDirTree* tree,
     return ret;
 }
 
+/* Checks if path has at least one subfolder */
+gboolean path_has_dirs(const char * path) {
+  gboolean ret = FALSE;
+  const char * name = NULL;
+  char * file_path = NULL;
+  GDir *dir = g_dir_open( path, 0, NULL );
+  if( dir ) {
+        while(!ret && (name = g_dir_read_name( dir )) ) {
+            file_path = g_build_filename( path, name, NULL );
+            if( g_file_test( file_path, G_FILE_TEST_IS_DIR )) ret = TRUE;
+            g_free(file_path);
+        }
+        g_dir_close( dir );
+  }
+  return ret;
+}
+
 PtkDirTreeNode* ptk_dir_tree_node_new( PtkDirTree* tree,
                                        PtkDirTreeNode* parent,
                                        const char* path,
@@ -569,9 +586,11 @@ PtkDirTreeNode* ptk_dir_tree_node_new( PtkDirTree* tree,
     {
         node->file = vfs_file_info_new();
         vfs_file_info_get( node->file, path, base_name );
-        node->n_children = 0;
-        node->children = ptk_dir_tree_node_new( tree, node, NULL, NULL );
-        node->last = node->children;
+        if (path_has_dirs(path)) { //Check if path has subfolders, only expandable nodes will have the little arrow :)
+            node->n_children = 1;
+            node->children = ptk_dir_tree_node_new( tree, node, NULL, NULL );
+            node->last = node->children;
+        }
     }
     return node;
 }
