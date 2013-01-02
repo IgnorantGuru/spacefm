@@ -301,7 +301,7 @@ if test ! -z "$preferable_sudo"; then
 echo Additional program to switch to super user... : $preferable_sudo
 fi
 if test x"$with_gtk3" = x"yes"; then
-echo 'GTK+ Version................................. : GTK 3 (for BETA testing)'
+echo 'GTK+ Version................................. : GTK 3'
 else
 echo 'GTK+ Version................................. : GTK 2'
 fi
@@ -317,11 +317,6 @@ echo
 echo 'IMPORTANT: After make and install, run:'
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/hicolor"
 echo "           sudo gtk-update-icon-cache -q -t -f $resolve_datadir/icons/Faenza"
-echo
-fi
-if test x"$with_gtk3" = x"yes"; then
-echo
-echo NOTE: GTK3 build is currently provided FOR BETA TESTING
 echo
 fi
 echo
