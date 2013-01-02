@@ -5,6 +5,7 @@
     debian package add XXXXXXXX to mktemp template [dist]
     add key shortcut labels to Prefs default drag action
     left-click in toolbar config menu shows design menu
+    fix Open|Default with multiple dirs selected
 0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast

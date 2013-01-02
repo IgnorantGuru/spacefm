@@ -3330,7 +3330,6 @@ void ptk_open_files_with_app( const char* cwd,
                             ptk_file_browser_emit_open( file_browser,
                                                         full_path, PTK_OPEN_NEW_TAB );
                         }
-                        g_free( full_path );
                     }
                     continue;
                 }
