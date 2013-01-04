@@ -10576,7 +10576,7 @@ void xset_defaults()
         set->s = g_strdup( "arctype_rar arctype_zip" );  // default list of archive types
 
     // Default Archive Types Defined Here
-    set = xset_set( "arctype_rar", "label", _("_RAR") );  // Name as it appears in list - translatable?
+    set = xset_set( "arctype_rar", "label", _("RAR") );  // Name as it appears in list - translatable?
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-rar" );
     set->x = g_strdup( ".rar" );
@@ -10584,7 +10584,7 @@ void xset_defaults()
     set->z = g_strdup( "unrar" );    // extract command
     set->context = g_strdup( "" );   // list command
 
-    set = xset_set( "arctype_zip", "label", _("_Zip") );  // Name as it appears in list - translatable?
+    set = xset_set( "arctype_zip", "label", ("Zip") );  // Name as it appears in list - translatable?
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-zip" );
     set->x = g_strdup( ".zip" );
