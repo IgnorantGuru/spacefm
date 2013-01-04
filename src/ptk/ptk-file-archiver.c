@@ -98,14 +98,14 @@ const ArchiveHandler handlers[]=
 gboolean on_configure_selection_change( GtkTreeSelection* tree_sel,
                                       GtkWidget* dlg )
 {
-	/* TODO
+    /* TODO
     enable_context( ctxt );
     return FALSE;*/
 }
 
 void on_configure_button_press( GtkWidget* widget, GtkWidget* dlg )
 {
-	/* TODO
+    /* TODO
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
     GtkTreeModel* model;
@@ -686,7 +686,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         task->task->exec_terminal = in_term;
         task->task->exec_keep_terminal = keep_term;
         task->task->exec_export = FALSE;
-		XSet* set = xset_get( "arc_extract" );
+        XSet* set = xset_get( "arc_extract" );
         if ( set->icon )
             task->task->exec_icon = g_strdup( set->icon );
         ptk_file_task_run( task );
@@ -726,7 +726,7 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 
 XSet* add_new_arctype()
 {   
-	// creates a new xset for a custom archive type
+    // creates a new xset for a custom archive type
     XSet* set;
     char* rand;
     char* name = NULL;
@@ -790,60 +790,59 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         }
     */
 
-	// Archive handlers dialog, attaching to top-level window (in GTK,
-	// everything is a 'widget') - no buttons etc added as everything is
-	// custom...
-    GtkWidget* dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
-					GTK_WINDOW(
-						gtk_widget_get_toplevel(
-							GTK_WIDGET( file_browser )
-						)
-					),
-					GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-					NULL );
-    gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );		
+    // TODO: Spaces or tabs?
 
-	// Setting saved dialog size
+    // Archive handlers dialog, attaching to top-level window (in GTK,
+    // everything is a 'widget') - no buttons etc added as everything is
+    // custom...
+    GtkWidget* dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
+                    GTK_WINDOW(
+                        gtk_widget_get_toplevel(
+                            GTK_WIDGET( file_browser )
+                        )
+                    ),
+                    GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                    NULL );
+    gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );
+
+    // Setting saved dialog size
     int width = xset_get_int( "arc_conf", "x" );
     int height = xset_get_int( "arc_conf", "y" );
     if ( width && height )
         gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
-	
-	// Adding the help button but preventing it from taking the focus on click
+
+    // Adding the help button but preventing it from taking the focus on click
     gtk_button_set_focus_on_click(
-									GTK_BUTTON(
-										gtk_dialog_add_button(
-											GTK_DIALOG( dlg ),
-											GTK_STOCK_HELP,
-											GTK_RESPONSE_HELP
-										)
-									),
-									FALSE );
+                                    GTK_BUTTON(
+                                        gtk_dialog_add_button(
+                                            GTK_DIALOG( dlg ),
+                                            GTK_STOCK_HELP,
+                                            GTK_RESPONSE_HELP
+                                        )
+                                    ),
+                                    FALSE );
         
-	// Adding standard buttons and saving references in the dialog
-	// (GTK doesnt provide a trivial way to reference child widgets from
-	// the window!!)
+    // Adding standard buttons and saving references in the dialog
+    // (GTK doesnt provide a trivial way to reference child widgets from
+    // the window!!)
     g_object_set_data( G_OBJECT( dlg ), "btn_cancel",
-						gtk_dialog_add_button( GTK_DIALOG( dlg ),
-												GTK_STOCK_CANCEL,
-												GTK_RESPONSE_CANCEL ) );
-	g_object_set_data( G_OBJECT( dlg ), "btn_ok",
-						gtk_dialog_add_button( GTK_DIALOG( dlg ),
-												GTK_STOCK_OK,
-												GTK_RESPONSE_OK ) );
-    
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_CANCEL,
+                                                GTK_RESPONSE_CANCEL ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_ok",
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_OK,
+                                                GTK_RESPONSE_OK ) );
+
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
     gtk_label_set_markup( GTK_LABEL( lbl_handlers ), _("<b>Handlers</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );
-    
-	// Generating the main manager list
-	// Creating model
-	// TODO: Need to understand the list model I am going to make. How is the data stored?
-	// These columns have an ordinal identifier that should be maintained in a suitably-named enum
-    GtkListStore* list = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_INT, 
-                                                G_TYPE_INT, G_TYPE_STRING );
-	g_object_set_data( G_OBJECT( dlg ), "list", list );
+
+    // Generating the main manager list
+    // Creating model - xset name then handler name
+    GtkListStore* list = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
+    g_object_set_data( G_OBJECT( dlg ), "list", list );
 
     // Creating treeview - setting single-click mode (normally this 
     // widget is used for file lists, where double-clicking is the norm
@@ -852,23 +851,23 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_tree_view_set_model( GTK_TREE_VIEW( view_handlers ), GTK_TREE_MODEL( list ) );
     exo_tree_view_set_single_click( (ExoTreeView*)view_handlers, TRUE );
     gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view_handlers ), FALSE );
-	g_object_set_data( G_OBJECT( dlg ), "view_handlers", view_handlers );
+    g_object_set_data( G_OBJECT( dlg ), "view_handlers", view_handlers );
 
-	// Turning the treeview into a scrollable widget
+    // Turning the treeview into a scrollable widget
     GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_scroll ),
-										GTK_POLICY_AUTOMATIC,
-										GTK_POLICY_AUTOMATIC );
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_scroll ), view_handlers );
     
     // Connecting treeview callbacks
     g_signal_connect( G_OBJECT( view_handlers ), "row-activated",
-						G_CALLBACK( on_configure_row_activated ), dlg );
+                        G_CALLBACK( on_configure_row_activated ), dlg );
     g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( 
-									GTK_TREE_VIEW( view_handlers ) ) ),
-								"changed",
-								G_CALLBACK( on_configure_selection_change ),
-								dlg );
+                                    GTK_TREE_VIEW( view_handlers ) ) ),
+                        "changed",
+                        G_CALLBACK( on_configure_selection_change ),
+                        dlg );
 
     // Adding column to the treeview
     GtkTreeViewColumn* col = gtk_tree_view_column_new();
@@ -892,82 +891,84 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Treeview widgets
     GtkButton* btn_remove = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Remove") ) );
     gtk_button_set_image( btn_remove, xset_get_image( "GTK_STOCK_REMOVE",
-													GTK_ICON_SIZE_BUTTON ) );
+                                                    GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( btn_remove, FALSE );
     g_signal_connect( G_OBJECT( btn_remove ), "clicked",
-						G_CALLBACK( on_configure_button_press ), dlg );
-	g_object_set_data( G_OBJECT( dlg ), "btn_remove", GTK_BUTTON( btn_remove ) );
+                        G_CALLBACK( on_configure_button_press ), dlg );
+    g_object_set_data( G_OBJECT( dlg ), "btn_remove", GTK_BUTTON( btn_remove ) );
 
     GtkButton* btn_add = GTK_BUTTON( gtk_button_new_with_mnemonic( _("_Add") ) );
     gtk_button_set_image( btn_add, xset_get_image( "GTK_STOCK_ADD",
-												GTK_ICON_SIZE_BUTTON ) );
+                                                GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( btn_add, FALSE );
     g_signal_connect( G_OBJECT( btn_add ), "clicked",
-						G_CALLBACK( on_configure_button_press ), dlg );
-	g_object_set_data( G_OBJECT( dlg ), "btn_add", GTK_BUTTON( btn_add ) );
+                        G_CALLBACK( on_configure_button_press ), dlg );
+    g_object_set_data( G_OBJECT( dlg ), "btn_add", GTK_BUTTON( btn_add ) );
 
     GtkButton* btn_apply = GTK_BUTTON( gtk_button_new_with_mnemonic( _("A_pply") ) );
     gtk_button_set_image( btn_apply, xset_get_image( "GTK_STOCK_APPLY",
-												GTK_ICON_SIZE_BUTTON ) );
+                                                GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( btn_apply, FALSE );
     g_signal_connect( G_OBJECT( btn_apply ), "clicked",
-						G_CALLBACK( on_configure_button_press ), dlg );
-	g_object_set_data( G_OBJECT( dlg ), "btn_apply", GTK_BUTTON( btn_apply ) );
+                        G_CALLBACK( on_configure_button_press ), dlg );
+    g_object_set_data( G_OBJECT( dlg ), "btn_apply", GTK_BUTTON( btn_apply ) );
 
     // Generating right-hand side of dialog
     GtkWidget* lbl_settings = gtk_label_new( NULL );
     gtk_label_set_markup( GTK_LABEL( lbl_settings ), _("<b>Handler Settings</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_settings ), 0, 0 );
-	GtkWidget* chkbtn_handler_enabled = gtk_check_button_new_with_label( _("Enabled") );
-	GtkWidget* lbl_handler_name = gtk_label_new( _("Name:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_name ), 0, 0.5 );
-	GtkWidget* lbl_handler_mime = gtk_label_new( _("MIME Type:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_mime ), 0, 0.5 );
-	GtkWidget* lbl_handler_extension = gtk_label_new( _("Extension:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_extension ), 0, 0.5 );
-	GtkWidget* lbl_commands = gtk_label_new( NULL );
-	gtk_label_set_markup( GTK_LABEL( lbl_commands ), _("<b>Commands</b>") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_commands ), 0, 0 );
-	GtkWidget* lbl_handler_compress = gtk_label_new( _("Compress:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_compress ), 0, 0.5 );
-	GtkWidget* lbl_handler_extract = gtk_label_new( _("Extract:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_extract ), 0, 0.5 );
-	GtkWidget* lbl_handler_list = gtk_label_new( _("List:") );
-	gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
-	GtkWidget* entry_handler_name = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",
-						GTK_ENTRY( entry_handler_name ) );
-	GtkWidget* entry_handler_mime = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_mime",
-						GTK_ENTRY( entry_handler_mime ) );
-	GtkWidget* entry_handler_extension = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_extension",
-						GTK_ENTRY( entry_handler_extension ) );
-	GtkWidget* entry_handler_compress = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_compress",
-						GTK_ENTRY( entry_handler_compress ) );
-	GtkWidget* entry_handler_extract = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_extract",
-						GTK_ENTRY( entry_handler_extension ) );
-	GtkWidget* entry_handler_list = gtk_entry_new();
-	g_object_set_data( G_OBJECT( dlg ), "entry_handler_list",
-						GTK_ENTRY( entry_handler_list ) );
-	GtkWidget* chkbtn_handler_compress_term = gtk_check_button_new();
-	gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_compress_term ),
-									"Run in terminal" );
-	GtkWidget* chkbtn_handler_extract_term = gtk_check_button_new();
-	gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_extract_term ),
-									"Run in terminal" );
-	GtkWidget* chkbtn_handler_list_term = gtk_check_button_new();
-	gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_list_term ),
-									"Run in terminal" );
+    GtkWidget* chkbtn_handler_enabled = gtk_check_button_new_with_label( _("Enabled") );
+    g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_enabled",
+                        GTK_CHECK_BUTTON( chkbtn_handler_enabled ) );
+    GtkWidget* lbl_handler_name = gtk_label_new( _("Name:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_name ), 0, 0.5 );
+    GtkWidget* lbl_handler_mime = gtk_label_new( _("MIME Type:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_mime ), 0, 0.5 );
+    GtkWidget* lbl_handler_extension = gtk_label_new( _("Extension:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_extension ), 0, 0.5 );
+    GtkWidget* lbl_commands = gtk_label_new( NULL );
+    gtk_label_set_markup( GTK_LABEL( lbl_commands ), _("<b>Commands</b>") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_commands ), 0, 0 );
+    GtkWidget* lbl_handler_compress = gtk_label_new( _("Compress:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_compress ), 0, 0.5 );
+    GtkWidget* lbl_handler_extract = gtk_label_new( _("Extract:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_extract ), 0, 0.5 );
+    GtkWidget* lbl_handler_list = gtk_label_new( _("List:") );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
+    GtkWidget* entry_handler_name = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",
+                        GTK_ENTRY( entry_handler_name ) );
+    GtkWidget* entry_handler_mime = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_mime",
+                        GTK_ENTRY( entry_handler_mime ) );
+    GtkWidget* entry_handler_extension = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_extension",
+                        GTK_ENTRY( entry_handler_extension ) );
+    GtkWidget* entry_handler_compress = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_compress",
+                        GTK_ENTRY( entry_handler_compress ) );
+    GtkWidget* entry_handler_extract = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_extract",
+                        GTK_ENTRY( entry_handler_extension ) );
+    GtkWidget* entry_handler_list = gtk_entry_new();
+    g_object_set_data( G_OBJECT( dlg ), "entry_handler_list",
+                        GTK_ENTRY( entry_handler_list ) );
+    GtkWidget* chkbtn_handler_compress_term = gtk_check_button_new();
+    gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_compress_term ),
+                                    "Run in terminal" );
+    GtkWidget* chkbtn_handler_extract_term = gtk_check_button_new();
+    gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_extract_term ),
+                                    "Run in terminal" );
+    GtkWidget* chkbtn_handler_list_term = gtk_check_button_new();
+    gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_list_term ),
+                                    "Run in terminal" );
 
-	// Creating container boxes - at this point the dialog already comes
-	// with one GtkVBox then inside that a GtkHButtonBox
-	// For the right side of the dialog, standard GtkBox approach fails
-	// to allow precise padding of labels to allow all entries to line up
-	// - so reimplementing with GtkTable. Would many GtkAlignments have
-	// worked?
+    // Creating container boxes - at this point the dialog already comes
+    // with one GtkVBox then inside that a GtkHButtonBox
+    // For the right side of the dialog, standard GtkBox approach fails
+    // to allow precise padding of labels to allow all entries to line up
+    // - so reimplementing with GtkTable. Would many GtkAlignments have
+    // worked?
     GtkWidget* hbox_main = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vbox_handlers = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hbox_view_buttons = gtk_hbox_new( FALSE, 4 );
@@ -984,9 +985,9 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
                         GTK_WIDGET( lbl_handlers ), FALSE, FALSE, 4 );
 
-	// view_handlers isn't added but view_scroll is - view_handlers is
-	// inside view_scroll. No padding added to get it to align with the
-	// enabled widget on the right side
+    // view_handlers isn't added but view_scroll is - view_handlers is
+    // inside view_scroll. No padding added to get it to align with the
+    // enabled widget on the right side
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
                         GTK_WIDGET( view_scroll ), TRUE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
@@ -1000,64 +1001,64 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( hbox_view_buttons ),
                         GTK_WIDGET( btn_apply ), TRUE, TRUE, 4 );
 
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_settings ), 0, 1, 0, 1,
-						GTK_FILL, GTK_FILL, 0, 4 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( chkbtn_handler_enabled ), 0, 1, 1, 2,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_name ), 0, 1, 2, 3,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_name ), 1, 4, 2, 3,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_mime ), 0, 1, 3, 4,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_mime ), 1, 4, 3, 4,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_extension ), 0, 1, 4, 5,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_extension ), 1, 4, 4, 5,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-		
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_commands ), 0, 1, 5, 6, GTK_FILL,
-						GTK_FILL, 0, 10 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_compress ), 0, 1, 6, 7,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_compress ), 1, 2, 6, 7,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( chkbtn_handler_compress_term ), 3, 4, 6, 7,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_extract ), 0, 1, 7, 8,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_extract ), 1, 2, 7, 8,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( chkbtn_handler_extract_term ), 3, 4, 7, 8,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( lbl_handler_list ), 0, 1, 8, 9,
-						GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( entry_handler_list ), 1, 2, 8, 9,
-						GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-	gtk_table_attach( GTK_TABLE( tbl_settings ),
-						GTK_WIDGET( chkbtn_handler_list_term ), 3, 4, 8, 9,
-						GTK_FILL, GTK_FILL, 0, 0 );
-                        
-	// Packing boxes into dialog with padding to separate from dialog's
-	// standard buttons at the bottom
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_settings ), 0, 1, 0, 1,
+                        GTK_FILL, GTK_FILL, 0, 4 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( chkbtn_handler_enabled ), 0, 1, 1, 2,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_name ), 0, 1, 2, 3,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_name ), 1, 4, 2, 3,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_mime ), 0, 1, 3, 4,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_mime ), 1, 4, 3, 4,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_extension ), 0, 1, 4, 5,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_extension ), 1, 4, 4, 5,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_commands ), 0, 1, 5, 6, GTK_FILL,
+                        GTK_FILL, 0, 10 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_compress ), 0, 1, 6, 7,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_compress ), 1, 2, 6, 7,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( chkbtn_handler_compress_term ), 3, 4, 6, 7,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_extract ), 0, 1, 7, 8,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_extract ), 1, 2, 7, 8,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( chkbtn_handler_extract_term ), 3, 4, 7, 8,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( lbl_handler_list ), 0, 1, 8, 9,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( entry_handler_list ), 1, 2, 8, 9,
+                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_table_attach( GTK_TABLE( tbl_settings ),
+                        GTK_WIDGET( chkbtn_handler_list_term ), 3, 4, 8, 9,
+                        GTK_FILL, GTK_FILL, 0, 0 );
+
+    // Packing boxes into dialog with padding to separate from dialog's
+    // standard buttons at the bottom
     gtk_box_pack_start( 
 				GTK_BOX(
 					gtk_dialog_get_content_area( GTK_DIALOG( dlg ) )
@@ -1134,16 +1135,16 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     {
         if ( response == GTK_RESPONSE_OK )
         {
-			break;
+            break;
         }
         else if ( response == GTK_RESPONSE_HELP )
-			// TODO: Sort out proper help
+            // TODO: Sort out proper help
             xset_show_help( dlg, NULL, "#designmode-style-context" );
         else
             break;
     }
 
-	// Fetching dialog dimensions
+    // Fetching dialog dimensions
     GtkAllocation allocation;
     gtk_widget_get_allocation ( GTK_WIDGET( dlg ), &allocation );
     width = allocation.width;
@@ -1152,7 +1153,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Checking if they are valid
     if ( width && height )
     {
-		// They are - saving
+        // They are - saving
         char* str = g_strdup_printf( "%d", width );
         xset_set( "arc_conf", "x", str );
         g_free( str );
@@ -1160,12 +1161,13 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         xset_set( "arc_conf", "y", str );
         g_free( str );
     }
-	
-	// Clearing up dialog
+
+    // Clearing up dialog
+    // TODO: Does this handle strdup'd strings saved as g_object data?
     gtk_widget_destroy( dlg );
-	
-	// Placeholder
+
+    // Placeholder
     /*xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Configure Unavailable"), NULL,
                         0, "This feature is not yet available", NULL, NULL );
-	*/
+    */
 }
