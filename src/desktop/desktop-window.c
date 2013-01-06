@@ -1831,102 +1831,134 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
  
 }
 
-DesktopItem* get_next_item(DesktopWindow*self, int direction) {
-  DesktopItem* item, *current_item, *next_item;
-  GList* l;
+DesktopItem* get_next_item( DesktopWindow* self, int direction )
+{
+    DesktopItem *item, *current_item;
+    DesktopItem* next_item = NULL;
+    GList* l;
 
-  if (self->focus) current_item = self->focus;
-  else if (self->items) {
-    current_item = (DesktopItem*) self->items->data;
-    self->focus = current_item;
-  } else return; //No items!
-
-  for( l = self->items; l; l = l->next ) {
-    item = (DesktopItem*) l->data;
-    if (item != current_item) { next_item = item; break; }
-  }
-
-  if (next_item) { //If there are other items
-    int sign = (direction==GDK_KEY_Down||direction==GDK_KEY_Right)? 1 : -1;
-    int keep_x = (direction==GDK_KEY_Down||direction==GDK_KEY_Up)? 1 : 0;
-    int test_x = 1 - keep_x;
-    int keep_y = (direction==GDK_KEY_Left||direction==GDK_KEY_Right)? 1 : 0;
-    int test_y = 1 - keep_y;
-
-    int diff = 32000;
-    int nearest_diff = diff;
-    int line_diff;
-
-    gboolean done = FALSE;
-
-    int myline_x = current_item->icon_rect.x;
-    int myline_y = current_item->icon_rect.y;
-
-    for( l = self->items; l; l = l->next ) {
-      item = (DesktopItem*) l->data;
-      if (item == current_item) continue;
-      diff = item->icon_rect.x*test_x + item->icon_rect.y*test_y;
-      diff -= current_item->icon_rect.x*test_x + current_item->icon_rect.y*test_y;
-      diff = diff*sign; //positive diff for the valid items;
-
-      //so we have icons with variable height, let's get dirty...
-      line_diff = item->icon_rect.x*keep_x + item->icon_rect.y*keep_y;
-      line_diff -= current_item->icon_rect.x*keep_x + current_item->icon_rect.y*keep_y;
-      if (line_diff<0) line_diff = -line_diff; //positive line diff for adding;
-      diff += 2*line_diff*(diff>0?1:-1); //line_diff is more important than diff
-
-      if ((!line_diff || test_x )&& diff > 0 && diff < nearest_diff) {
-        next_item = item;
-        nearest_diff = diff;
-        done = TRUE;
-      }
+    if ( self->focus )
+        current_item = self->focus;
+    else if ( self->items )
+    {
+        current_item = (DesktopItem*) self->items->data;
+        self->focus = current_item;
     }
+    else 
+        return NULL; //No items!
 
-    //Support for jumping through the borders to the next/prev row or column
-    /* self->items is sorted by columns by default, so for now let's just support up-down looping */
-
-    if (!done && test_y) {
-      GList*m;
-      for( l = self->items; l; l = l->next ) {
+    for ( l = self->items; l; l = l->next )
+    {
         item = (DesktopItem*) l->data;
-        if (item == current_item) {
-          m = sign==1?l->next:l->prev;
-          if (m) {
-            next_item = (DesktopItem*) m->data;
-            done = TRUE;
-          }
-          break;
+        if ( item != current_item )
+        {
+            next_item = item;
+            break;
         }
-      }
     }
 
-    if (!done) return current_item;
-    else return next_item;
-  }
-}
+    if ( next_item )  //If there are other items
+    {
+        int sign = ( direction==GDK_KEY_Down||direction==GDK_KEY_Right)? 1 : -1;
+        int keep_x = (direction==GDK_KEY_Down||direction==GDK_KEY_Up)? 1 : 0;
+        int test_x = 1 - keep_x;
+        int keep_y = (direction==GDK_KEY_Left||direction==GDK_KEY_Right)? 1 : 0;
+        int test_y = 1 - keep_y;
 
-void focus_item (DesktopWindow*self, DesktopItem* item) {
-  DesktopItem* current = self->focus;
-  if (current) redraw_item(self,current);
-  self->focus = item;
-  redraw_item(self,item);
-}
+        int diff = 32000;
+        int nearest_diff = diff;
+        int line_diff;
 
-void clear_selection (DesktopWindow*self) {
-  GList* l;
-  DesktopItem* item;
-  for( l = self->items; l; l = l->next ) {
-    item = (DesktopItem*) l->data;
-    if (item->is_selected) {
-      item->is_selected = FALSE;
-      redraw_item(self, item);
+        gboolean done = FALSE;
+
+        int myline_x = current_item->icon_rect.x;
+        int myline_y = current_item->icon_rect.y;
+
+        for ( l = self->items; l; l = l->next )
+        {
+            item = (DesktopItem*) l->data;
+            if ( item == current_item )
+                continue;
+            diff = item->icon_rect.x*test_x + item->icon_rect.y*test_y;
+            diff -= current_item->icon_rect.x*test_x + current_item->icon_rect.y*test_y;
+            diff = diff*sign; //positive diff for the valid items;
+
+            //so we have icons with variable height, let's get dirty...
+            line_diff = item->icon_rect.x*keep_x + item->icon_rect.y*keep_y;
+            line_diff -= current_item->icon_rect.x*keep_x + current_item->icon_rect.y*keep_y;
+            if ( line_diff < 0 )
+                line_diff = -line_diff; //positive line diff for adding;
+            diff += 2*line_diff*(diff>0?1:-1); //line_diff is more important than diff
+
+            if ( ( !line_diff || test_x ) && diff > 0 && diff < nearest_diff )
+            {
+                next_item = item;
+                nearest_diff = diff;
+                done = TRUE;
+            }
+        }
+
+        //Support for jumping through the borders to the next/prev row or column
+        /* self->items is sorted by columns by default, so for now let's just support up-down looping */
+        if ( !done && test_y )
+        {
+            GList* m;
+            for ( l = self->items; l; l = l->next )
+            {
+                item = (DesktopItem*) l->data;
+                if ( item == current_item )
+                {
+                    m = sign == 1 ? l->next : l->prev;
+                    if ( m )
+                    {
+                        next_item = (DesktopItem*) m->data;
+                        done = TRUE;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if ( !done )
+            return current_item;
+        else
+            return next_item;
     }
-  }
+    return current_item;
 }
 
-void select_item (DesktopWindow* self, DesktopItem*item, gboolean val) {
-  item->is_selected = val;
-  redraw_item(self,item);
+void focus_item( DesktopWindow* self, DesktopItem* item )
+{
+    if ( !item )
+        return;
+    DesktopItem* current = self->focus;
+    if ( current )
+        redraw_item( self, current );
+    self->focus = item;
+    redraw_item( self, item );
+}
+
+void clear_selection( DesktopWindow* self )
+{
+    GList* l;
+    DesktopItem* item;
+    for( l = self->items; l; l = l->next )
+    {
+        item = (DesktopItem*) l->data;
+        if ( item->is_selected )
+        {
+            item->is_selected = FALSE;
+            redraw_item( self, item );
+        }
+    }
+}
+
+void select_item( DesktopWindow* self, DesktopItem* item, gboolean val )
+{
+    if ( !item )
+        return;
+    item->is_selected = val;
+    redraw_item( self, item );
 }
 
 gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
@@ -1956,10 +1988,11 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            focus_item(self,get_next_item(self, evt->keyval));
+            focus_item( self, get_next_item( self, evt->keyval ) );
             break;
         case GDK_KEY_space:
-            if (self->focus) select_item(self,self->focus,!self->focus->is_selected);
+            if ( self->focus )
+                select_item( self, self->focus, !self->focus->is_selected );
             break;
 
 /*
@@ -1997,15 +2030,17 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         switch ( evt->keyval )
         {
         case GDK_KEY_Return:
-            if (self->focus) open_clicked_item(self->focus);
+            if ( self->focus )
+                open_clicked_item( self->focus );
             break;
         case GDK_KEY_Down:
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            clear_selection(self);
-            focus_item(self,get_next_item(self, evt->keyval));
-            select_item(self,self->focus,TRUE);
+            clear_selection( self );
+            focus_item( self, get_next_item( self, evt->keyval ) );
+            if ( self->focus )
+                select_item( self, self->focus, TRUE );
             break;        	
         case GDK_KEY_F2:
             if ( sels )
