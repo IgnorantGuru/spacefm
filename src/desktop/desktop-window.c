@@ -2030,6 +2030,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         switch ( evt->keyval )
         {
         case GDK_KEY_Return:
+        case GDK_KEY_space:
             if ( self->focus )
                 open_clicked_item( self->focus );
             break;
