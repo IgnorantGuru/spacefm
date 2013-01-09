@@ -11,6 +11,7 @@
     added Popups|Above Others and All Workspaces #226
     desktop dialogs on current workspace #246
     desktop Create New uses new creation dialog
+    fix View|Events dialog formatting
 0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast
