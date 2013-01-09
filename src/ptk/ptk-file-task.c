@@ -1084,6 +1084,10 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     else
         gtk_window_set_type_hint ( GTK_WINDOW ( ptask->progress_dlg ),
                                    GDK_WINDOW_TYPE_HINT_NORMAL );
+    if ( xset_get_b( "task_pop_above" ) )
+        gtk_window_set_keep_above( GTK_WINDOW ( ptask->progress_dlg ), TRUE );
+    if ( xset_get_b( "task_pop_stick" ) )
+        gtk_window_stick( GTK_WINDOW ( ptask->progress_dlg ) );
     gtk_window_set_gravity ( GTK_WINDOW ( ptask->progress_dlg ),
                              GDK_GRAVITY_NORTH_EAST );
     gtk_window_set_position( GTK_WINDOW( ptask->progress_dlg ), GTK_WIN_POS_CENTER );

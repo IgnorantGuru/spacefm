@@ -9784,6 +9784,9 @@ void xset_defaults()
     set = xset_get( "sep_t5" );
     set->menu_style = XSET_MENU_SEP;
 
+    set = xset_get( "sep_t6" );
+    set->menu_style = XSET_MENU_SEP;
+
     set = xset_set( "main_tasks", "label", _("_Tasks") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors task_queue" );
@@ -9928,7 +9931,7 @@ void xset_defaults()
 
     set = xset_set( "task_popups", "label", _("_Popups") );
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "task_pop_all task_pop_top task_pop_detail task_pop_over task_pop_err task_pop_font" );
+    xset_set_set( set, "desc", "task_pop_all task_pop_top task_pop_above task_pop_stick sep_t6 task_pop_detail task_pop_over task_pop_err task_pop_font" );
     set->line = g_strdup( "#tasks-menu-popall" );
 
         set = xset_set( "task_pop_all", "label", _("Popup _All Tasks") );
@@ -9940,6 +9943,16 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_FALSE;
         set->line = g_strdup( "#tasks-menu-poptop" );
+
+        set = xset_set( "task_pop_above", "label", _("A_bove Others") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-popabove" );
+
+        set = xset_set( "task_pop_stick", "label", _("All _Workspaces") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_FALSE;
+        set->line = g_strdup( "#tasks-menu-popstick" );
 
         set = xset_set( "task_pop_detail", "label", _("_Detailed Stats") );
         set->menu_style = XSET_MENU_CHECK;

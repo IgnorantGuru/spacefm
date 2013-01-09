@@ -1420,9 +1420,15 @@ The Popups submenu is used to configure the Task Manager's behavior for opening 
 <p>Popup All Tasks makes SpaceFM behave like a conventional file manager with regard to progress dialogs.  If the option is enabled, it is also feasible to effectively hide the Task Manager by dragging the pane separator to the very bottom of the window when unneeded.  You will still be aware of tasks running due to the popups.  Option <a href="#tasks-menu-poptop">Stay On Top</a> also works well with this approach.
 
 <!-- # Popups|Stay On Top #poptop -->
-If option Stay On Top is checked, any task's <a href="#tasks-dlg">popup dialog</a>, whether opened automatically or manually, will stay on top of the SpaceFM window.  However, you can still click on visible portions of the main window.
+If option Stay On Top is checked, any task's <a href="#tasks-dlg">popup dialog</a>, whether opened automatically or manually, will stay on top of the SpaceFM window.  However, you can still click on visible portions of the main window.  Changing this setting has no effect on dialogs which are already open.
 
 <p>If unchecked, popup dialogs may be placed beneath the main window.
+
+<!-- # Popups|Above Others #popabove -->
+If option Above Others is checked, any task's <a href="#tasks-dlg">popup dialog</a> will be kept above all other windows when initially shown.  Note that some window managers do not support keeping windows above others, and your window manager settings may override this behavior.
+
+<!-- # Popups|All Workspaces #popstick -->
+If option All Workspaces is checked, any task's <a href="#tasks-dlg">popup dialog</a> will appear on all workspaces/desktops (will be set as sticky) when initially shown.  Note that some window managers do not support sticking windows, and your window manager settings may override this behavior.
 
 <!-- # Popups|Detailed Stats #popdet -->
 Detailed Stats affects how task stats are displayed in the 'Progress:' line of <a href="#tasks-dlg">popup dialogs</a> (seen in internal task dialogs only).
@@ -1528,7 +1534,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 
 <!-- @Tasks @Popup Dialog #dlg -->
-<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.
+<p>A single left-click on a task listed in the <a href="#tasks-man">Task Manager</a> will open a popup dialog showing stats, a progress bar, and an output monitor.  Popup dialogs may also be automatically shown when errors occur, if option <a href="#tasks-menu-popall">View|Tasks|Popups|Popup All Tasks</a> is checked, or based on a custom command's <a href="#designmode-command-popup">popup settings</a>.  The popup dialog's relationship to other windows may be controlled with options <a href="#tasks-menu-poptop">View|Tasks|Popups|Stay On Top</a>, <a href="#tasks-menu-popabove">Above Others</a>, and <a href="#tasks-menu-popstick">All Workspaces</a>.
 
 <p><b>For internal tasks</b>, the popup dialog will show the task's job ("Copy", etc), the current file being processed, the destination directory, brief or detailed <a href="#tasks-menu-popdet">stats</a>, the status of the task ("Paused", etc), a progress bar, an output monitor used to show the details of any errors which have occured, and overwrite and error mode controls.
 
