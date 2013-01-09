@@ -2724,6 +2724,7 @@ DesktopItem* hit_test( DesktopWindow* self, int x, int y )
 void open_folders( GList* folders )
 {
     FMMainWindow* main_window;
+    gboolean new_window = FALSE;
     
     main_window = fm_main_window_get_last_active();
     
@@ -2735,6 +2736,7 @@ void open_folders( GList* folders )
                                      app_settings.width,
                                      app_settings.height );
         gtk_widget_show( GTK_WIDGET(main_window) );
+        new_window = !xset_get_b( "main_save_tabs" );
     }
     
     while( folders )
@@ -2759,7 +2761,13 @@ void open_folders( GList* folders )
         {
             path = g_build_filename( vfs_get_desktop_dir(), fi->name, NULL );
         }
-        fm_main_window_add_new_tab( FM_MAIN_WINDOW( main_window ), path );
+        if ( new_window )
+        {
+            main_window_open_path_in_current_tab( main_window, path );
+            new_window = FALSE;
+        }
+        else
+            fm_main_window_add_new_tab( FM_MAIN_WINDOW( main_window ), path );
 
         g_free( path );
         folders = folders->next;
