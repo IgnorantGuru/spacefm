@@ -1181,6 +1181,7 @@ gboolean handle_parsed_commandline_args()
                         main_window_open_network( main_window, *file, FALSE );
                     }
                     ret = TRUE;
+                    gtk_window_present( GTK_WINDOW( main_window ) );
                 }    
                 else
                 {

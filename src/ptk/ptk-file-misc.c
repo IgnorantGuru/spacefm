@@ -1897,7 +1897,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         task_view = file_browser->task_view;
     }
     else
-        mset->parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
+        mset->parent = GTK_WIDGET( desktop );
 
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
                                 GTK_WINDOW( mset->parent ),
@@ -1940,7 +1940,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                                         GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_label( GTK_BUTTON( mset->next ), _("_Rename") );
 
-    if ( create_new )
+    if ( create_new && auto_open )
     {
         mset->open = gtk_button_new_with_mnemonic( _("& _Open") );
         gtk_dialog_add_action_widget( GTK_DIALOG( mset->dlg ), mset->open, GTK_RESPONSE_APPLY);

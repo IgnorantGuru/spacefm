@@ -126,8 +126,9 @@ static void on_sort_descending( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_paste( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_settings( GtkMenuItem *menuitem, DesktopWindow* self );
 
-static void on_popup_new_folder_activate ( GtkMenuItem *menuitem, gpointer data );
-static void on_popup_new_text_file_activate ( GtkMenuItem *menuitem, gpointer data );
+static void on_popup_new_link_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
+static void on_popup_new_folder_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
+static void on_popup_new_text_file_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
 
 static GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent, GdkEvent *event, gpointer data );
 static void forward_event_to_rootwin( GdkScreen *gscreen, GdkEvent *event );
@@ -197,8 +198,9 @@ static PtkMenuItemEntry icon_menu[] =
 
 static PtkMenuItemEntry create_new_menu[] =
 {
-    PTK_IMG_MENU_ITEM( N_( "_Folder" ), "gtk-directory", on_popup_new_folder_activate, 0, 0 ),
-    PTK_IMG_MENU_ITEM( N_( "_Text File" ), "gtk-edit", on_popup_new_text_file_activate, 0, 0 ),
+    PTK_IMG_MENU_ITEM( N_( "_File" ), "gtk-file", on_popup_new_text_file_activate, 0, 0 ),
+    PTK_IMG_MENU_ITEM( N_( "Fol_der" ), "gtk-directory", on_popup_new_folder_activate, 0, 0 ),
+    PTK_IMG_MENU_ITEM( N_( "_Link" ), "gtk-file", on_popup_new_link_activate, 0, 0 ),
     PTK_MENU_END
 };
 
@@ -2011,7 +2013,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         {
         case GDK_KEY_Return:
             if( sels )
-                ptk_show_file_properties( NULL, vfs_get_desktop_dir(), sels, 0 );
+                ptk_show_file_properties( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, 0 );
             break;
         }
     }
@@ -2021,7 +2023,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         {
         case GDK_KEY_Delete:
             if( sels )
-                ptk_delete_files( NULL, vfs_get_desktop_dir(), sels, NULL );
+                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
             break;
         }
     }
@@ -2050,7 +2052,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
             break;
         case GDK_KEY_Delete:
             if( sels )
-                ptk_delete_files( NULL, vfs_get_desktop_dir(), sels, NULL );
+                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
             break;
         }
     }
@@ -2183,23 +2185,112 @@ void on_paste( GtkMenuItem *menuitem, DesktopWindow* self )
     ptk_clipboard_paste_files( NULL, dest_dir, NULL );
 }
 
-void
-on_popup_new_folder_activate ( GtkMenuItem *menuitem,
-                               gpointer data )
+void on_autoopen_desktop_cb( gpointer task, AutoOpenCreate* ao )
 {
-    ptk_create_new_file( NULL,  vfs_get_desktop_dir(), TRUE, NULL );
+    if ( !ao )
+        return;
+
+    DesktopWindow* self = (DesktopWindow*)ao->file_browser;
+    
+    if ( ao->path && g_file_test( ao->path, G_FILE_TEST_EXISTS ) )
+    {
+        char* cwd = g_path_get_dirname( ao->path );
+        VFSFileInfo* file;
+
+        // select item on desktop
+        if ( GTK_IS_WINDOW( self ) && self->dir && 
+                                    !g_strcmp0( cwd, vfs_get_desktop_dir() ) )
+        {
+            char* name = g_path_get_basename( ao->path );
+            
+            // force file created notify
+            vfs_dir_emit_file_created( self->dir, name, TRUE );
+            vfs_dir_flush_notify_cache();
+
+            // find item on desktop
+            GList* l;
+            DesktopItem* item;
+            for ( l = self->items; l; l = l->next )
+            {
+                item = (DesktopItem*)l->data;
+                if ( !g_strcmp0( vfs_file_info_get_name( item->fi ), name ) )
+                    break;
+            }
+
+            if ( l ) // found
+            {
+                clear_selection( self );
+                select_item( self, (DesktopItem*)l->data, TRUE );
+                focus_item( self, (DesktopItem*)l->data );
+            }
+            g_free( name );
+        }
+
+        // open file/folder
+        if ( ao->open_file )
+        {
+            file = vfs_file_info_new();
+            vfs_file_info_get( file, ao->path, NULL );
+            GList* sel_files = NULL;
+            sel_files = g_list_prepend( sel_files, file );
+            if ( g_file_test( ao->path, G_FILE_TEST_IS_DIR ) )
+            {
+                gdk_threads_enter();
+                open_folders( sel_files );
+                gdk_threads_leave();
+            }
+            else
+                ptk_open_files_with_app( cwd, sel_files,
+                                                    NULL, NULL, FALSE, TRUE );
+            vfs_file_info_unref( file );
+            g_list_free( sel_files );
+        }
+        g_free( cwd );
+    }
+    g_free( ao->path );
+    g_slice_free( AutoOpenCreate, ao );
 }
 
-void
-on_popup_new_text_file_activate ( GtkMenuItem *menuitem,
-                                  gpointer data )
+static void create_new_file( DesktopWindow* self, int create_new )
 {
-    ptk_create_new_file( NULL,  vfs_get_desktop_dir(), FALSE, NULL );
+    AutoOpenCreate* ao;    
+    ao = g_slice_new0( AutoOpenCreate );
+    ao->path = NULL;
+    ao->file_browser = (PtkFileBrowser*)self;
+    ao->callback = (GFunc)on_autoopen_desktop_cb;
+    ao->open_file = FALSE;
+    int result = ptk_rename_file( self, NULL, vfs_get_desktop_dir(),
+                                  NULL, NULL, FALSE, create_new, ao );
+    if ( result == 0 )
+    {
+        ao->file_browser = NULL;
+        g_free( ao->path );
+        ao->path = NULL;
+        g_slice_free( AutoOpenCreate, ao );
+        ao = NULL;
+    }
+}
+
+void on_popup_new_link_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
+{
+    create_new_file( self, 3 );
+}
+
+void on_popup_new_folder_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
+{
+    //ptk_create_new_file( GTK_WINDOW( self ), vfs_get_desktop_dir(), TRUE, NULL );
+    create_new_file( self, 2 );
+}
+
+void on_popup_new_text_file_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
+{
+    //ptk_create_new_file( GTK_WINDOW( self ), vfs_get_desktop_dir(), FALSE, NULL );
+    create_new_file( self, 1 );
 }
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
 {
-    fm_edit_preference( NULL, PREF_DESKTOP );
+    fm_edit_preference( GTK_WINDOW( self ), PREF_DESKTOP );
 }
 
 

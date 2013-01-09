@@ -41,7 +41,7 @@
 
 #include "gtk2-compat.h"
 
-#define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
+//#define get_toplevel_win(data)  ( (GtkWindow*) (data->browser ? ( gtk_widget_get_toplevel((GtkWidget*) data->browser) ) : NULL) )
 
 gboolean on_app_button_press( GtkWidget* item, GdkEventButton* event,
                                                             PtkFileMenu* data );
@@ -278,7 +278,8 @@ void on_popup_list_compact( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 
 void on_popup_show_hidden( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_show_hidden_files( data->browser,
+    if ( data->browser )
+        ptk_file_browser_show_hidden_files( data->browser,
                     xset_get_b_panel( data->browser->mypanel, "show_hidden" ) );
 }
 
@@ -290,7 +291,7 @@ void on_copycmd( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
     else
         set = set2;
     
-    if ( set )
+    if ( set && data->browser )
         ptk_file_browser_copycmd( data->browser, data->sel_files, data->cwd,
                                                                     set->name );
 }
@@ -302,38 +303,45 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
         set = (XSet*)g_object_get_data( G_OBJECT( menuitem ), "set" );
     else
         set = set2;
-    if ( set )
+    if ( set && data->browser )
         ptk_file_browser_rootcmd( data->browser, data->sel_files, data->cwd,
                                                                     set->name );
 }
 
 void on_popup_select_pattern( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_select_pattern( NULL, data->browser, NULL );
+    if ( data->browser )
+        ptk_file_browser_select_pattern( NULL, data->browser, NULL );
 }
 
 void on_open_in_tab( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     int tab_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( menuitem ),
                                                                 "tab_num" ) );
-    ptk_file_browser_open_in_tab( data->browser, tab_num, data->file_path );
+    if ( data->browser )
+        ptk_file_browser_open_in_tab( data->browser, tab_num, data->file_path );
 }
 
 void on_open_in_panel( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     int panel_num = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( menuitem ),
                                                                 "panel_num" ) );
-    main_window_open_in_panel( data->browser, panel_num, data->file_path );
+    if ( data->browser )
+        main_window_open_in_panel( data->browser, panel_num, data->file_path );
 }
 
 void on_file_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( GTK_WIDGET( data->browser ), data->file_path, FALSE, TRUE );
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
+                               GTK_WIDGET( data->desktop ),
+               data->file_path, FALSE, TRUE );
 }
 
 void on_file_root_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( GTK_WIDGET( data->browser ), data->file_path, TRUE, FALSE );
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
+                               GTK_WIDGET( data->desktop ),
+               data->file_path, TRUE, FALSE );
 }
 
 void on_popup_sort_extra( GtkMenuItem *menuitem, PtkFileBrowser* file_browser,
@@ -407,12 +415,14 @@ void on_archive_default( GtkMenuItem *menuitem, XSet* set )
 
 void on_hide_file( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_hide_selected( data->browser, data->sel_files, data->cwd );
+    if ( data->browser )
+        ptk_file_browser_hide_selected( data->browser, data->sel_files, data->cwd );
 }
 
 void on_permission( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_file_browser_on_permission( menuitem, data->browser, data->sel_files,
+    if ( data->browser )
+        ptk_file_browser_on_permission( menuitem, data->browser, data->sel_files,
                                                                     data->cwd );
 }
 
@@ -443,9 +453,11 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
         g_free( name );
     }
     else
-        xset_msg_dialog( GTK_WIDGET( data->browser ), GTK_MESSAGE_INFO,
-                        _("Bookmark Exists"), NULL, 0,
-                        _("Bookmark already exists"), NULL, NULL );
+        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : 
+                                         GTK_WIDGET( data->desktop ),
+                         GTK_MESSAGE_INFO,
+                         _("Bookmark Exists"), NULL, 0,
+                         _("Bookmark already exists"), NULL, NULL );
 }
 
 void on_popup_mount_iso( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -1375,7 +1387,6 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
     char * app = NULL;
-    PtkFileBrowser* browser = data->browser;
     VFSMimeType* mime_type;
 
     if ( data->info )
@@ -1391,7 +1402,13 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
     }
 
-    app = (char *) ptk_choose_app_for_mime_type( get_toplevel_win(data),  mime_type );
+    GtkWidget* parent_win;
+    if ( data->browser )
+        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+    else
+        parent_win = GTK_WIDGET( data->desktop );
+    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( parent_win ),
+                                                                mime_type );
     if ( app )
     {
         GList* sel_files = data->sel_files;
@@ -2160,14 +2177,14 @@ void on_popup_open_in_new_tab_activate( GtkMenuItem *menuitem,
             file = ( VFSFileInfo* ) sel->data;
             full_path = g_build_filename( data->cwd,
                                           vfs_file_info_get_name( file ), NULL );
-            if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+            if ( data->browser && g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
             {
                 ptk_file_browser_emit_open( data->browser, full_path, PTK_OPEN_NEW_TAB );
             }
             g_free( full_path );
         }
     }
-    else
+    else if ( data->browser )
     {
         ptk_file_browser_emit_open( data->browser, data->file_path, PTK_OPEN_NEW_TAB );
     }
@@ -2176,7 +2193,7 @@ void on_popup_open_in_new_tab_activate( GtkMenuItem *menuitem,
 void on_popup_open_in_new_tab_here( GtkMenuItem *menuitem,
                                         PtkFileMenu* data )
 {
-    if ( data->cwd && g_file_test( data->cwd, G_FILE_TEST_IS_DIR ) )
+    if ( data->browser && data->cwd && g_file_test( data->cwd, G_FILE_TEST_IS_DIR ) )
         ptk_file_browser_emit_open( data->browser, data->cwd, PTK_OPEN_NEW_TAB );
 }
 
@@ -2292,14 +2309,14 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
 */
     if ( data->browser )
     {
-        GtkWidget* parent;
-        parent = (GtkWidget*)get_toplevel_win( data );
-        ptk_clipboard_paste_files( GTK_WINDOW( parent ), data->cwd,
+        GtkWidget* parent_win = gtk_widget_get_toplevel( 
+                                            GTK_WIDGET( data->browser ) );
+        ptk_clipboard_paste_files( GTK_WINDOW( parent_win ), data->cwd,
                                         GTK_TREE_VIEW( data->browser->task_view ) );
     }
     else if ( data->desktop )
     {
-        ptk_clipboard_paste_files( NULL, data->cwd, NULL );        
+        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL );        
     }
 }
 
@@ -2308,14 +2325,16 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //MOD added
 {
     // ignore sel_files and use browser's sel files
-    ptk_file_browser_paste_link( data->browser );
+    if ( data->browser )
+        ptk_file_browser_paste_link( data->browser );
 }
 
 void
 on_popup_paste_target_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //MOD added
 {
-    ptk_file_browser_paste_target( data->browser );
+    if ( data->browser )
+        ptk_file_browser_paste_target( data->browser );
 }
 void
 on_popup_copy_text_activate ( GtkMenuItem *menuitem,
@@ -2345,18 +2364,18 @@ on_popup_delete_activate ( GtkMenuItem *menuitem,
 {
     if ( data->sel_files )
     {
-        GtkWidget* parent_win;
         if ( data->browser )
         {
-            parent_win = (GtkWidget*)get_toplevel_win( data );
-            ptk_delete_files( GTK_WINDOW(parent_win),
+            GtkWidget* parent_win = gtk_widget_get_toplevel( 
+                                                GTK_WIDGET( data->browser ) );
+            ptk_delete_files( GTK_WINDOW( parent_win ),
                               data->cwd,
                               data->sel_files, 
                               GTK_TREE_VIEW( data->browser->task_view ) );
         }
         else if ( data->desktop )
         {
-            ptk_delete_files( NULL,
+            ptk_delete_files( GTK_WINDOW( data->desktop ),
                               data->cwd,
                               data->sel_files, NULL );            
         }
@@ -2382,7 +2401,8 @@ on_popup_rename_activate ( GtkMenuItem *menuitem,
 void on_popup_compress_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
-    ptk_file_archiver_create( data->browser, data->sel_files, data->cwd );
+    if ( data->browser )
+        ptk_file_archiver_create( data->browser, data->sel_files, data->cwd );
 }
 
 void on_popup_extract_to_activate ( GtkMenuItem *menuitem,
@@ -2402,7 +2422,7 @@ void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
     ptk_file_archiver_extract( data->browser, data->sel_files,
-                                                        data->cwd, "////LIST" );
+                                                    data->cwd, "////LIST" );
 }
 
 void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
@@ -2511,9 +2531,12 @@ void
 on_popup_file_properties_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent;
-    parent = (GtkWidget*)get_toplevel_win( data );
-    ptk_show_file_properties( GTK_WINDOW( parent ),
+    GtkWidget* parent_win;
+    if ( data->browser )
+        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+    else
+        parent_win = GTK_WIDGET( data->desktop );
+    ptk_show_file_properties( GTK_WINDOW( parent_win ),
                               data->cwd,
                               data->sel_files, 0 );
 }
@@ -2522,9 +2545,12 @@ void
 on_popup_file_permissions_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent;
-    parent = (GtkWidget*)get_toplevel_win( data );
-    ptk_show_file_properties( GTK_WINDOW( parent ),
+    GtkWidget* parent_win;
+    if ( data->browser )
+        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+    else
+        parent_win = GTK_WIDGET( data->desktop );
+    ptk_show_file_properties( GTK_WINDOW( parent_win ),
                               data->cwd,
                               data->sel_files, 1 );
 }
