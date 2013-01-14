@@ -37,6 +37,50 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.5"></a>
+<big><b><a href="#0.8.5">0.8.5 released</a></b></big><br>
+2013-Jan-14
+
+<p>This mostly-maintainance release includes the following changes:
+
+<ul>
+    <li><b>SpaceFM's GTK3 build option has left beta testing</b>.  By default, SpaceFM builds with GTK2.  See the updated <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file for GTK3 build instructions.  A spacefm-gtk3 deb package is also now provided in the <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">release packages</a> and in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.<br><br>
+    
+    <b>If you are packaging SpaceFM</b>, due to the unfinished and changing nature of GTK3 please consider providing both spacefm-gtk2 and spacefm-gtk3 packages to provide users with flexibility.<br><br>
+    
+    <b>IMPORTANT:  Many GTK3 themes are broken</b> due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.<br><br>
+    
+    <li><b>Two new options have been added to View|Tasks|Popups</b>:  <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks-menu-popabove">Above Others</a> to keep SpaceFM task dialogs above all other windows, and <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks-menu-popstick">All Workspaces</a> (aka sticky) to show task dialogs on all workspaces.  How these perform will depend on the window manager in use - they are hints only.  These are disabled by default.<BR><BR>
+    
+    <li><b>Basic navigation and activation keys</b> (arrows, Delete, F2 to rename, and Space/Enter to activate item) are now enabled on the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#invocation-desktopmanager">SpaceFM desktop</a>.<br><br>
+    
+    <li><b>When creating a new file, folder or link from the SpaceFM desktop</b>, the newer file creation dialog is now used.<br><br>
+    
+    <li>A left-click in a <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-toolbars">toolbar config menu</a> now causes the design menu to be shown.<br><br>
+    
+    <li><b>SpaceFM Dialog's --progress element has been improved</b> with more versatile handling of percentages and text in the bar, and now accepts auto-pulse to return to that mode.  See the <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog-simple-progress">updated user's manual</a> for details.<br><br>
+    
+    <li>A problem with SpaceFM Desktop Manager which caused some dialogs to appear on the workspace containing the SpaceFM browser window rather than the current workspace has been corrected.<br><br>
+    
+    <li>A bug which caused some clicks in the Open context menu to be lost when using some themes or mouse types has been corrected (actually a workaround was provided for the bug in gtk which caused this).<br><br>
+
+    <li>A problem with mktemp on Ubuntu which caused the provided deb and PPA packages to not install has been corrected.<br><br>
+    
+    <li>Other minor corrections and adjustments - see <a href="https://github.com/IgnorantGuru/spacefm/blob/master/ChangeLog">ChangeLog</a>.
+</ul>
+
+<br>Also, <b>SpaceFM with udevil is slated to be the new default file manager</b> in the upcoming release of <a href="http://www.slitaz.org/en/">SliTaz</a> (SpaceFM is currently included in SliTaz repos).
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.8.4"></a>
 <big><b><a href="#0.8.4">0.8.4 released</a></b></big><br>
 2012-Dec-21
