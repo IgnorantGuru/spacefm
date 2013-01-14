@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.4+
+README for SpaceFM v0.8.5
 
 
 For updates and instructions visit:
@@ -180,8 +180,8 @@ GTK3 theme which supports your CURRENT version of GTK3 (no theme warnings
 should appear when spacefm is run in a terminal), or use adwaita.  Use of GTK3
 without any theme is NOT recommended.
 
-PACKAGERS:  Due to the unfinished and unstable nature of GTK3, many users 
-still prefer the GTK2 build.  Please consider providing both spacefm-gtk2 and 
+PACKAGERS:  Due to the unfinished and changing nature of GTK3, some users 
+may prefer the GTK2 build.  Please consider providing both spacefm-gtk2 and 
 spacefm-gtk3 packages for your users.
 
 1)  Install required build dependencies (below are Debian package names -
@@ -380,7 +380,7 @@ To build a deb file of SpaceFM on your Debian-based distro:
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF GTK3 BETA support IS desired:
+3)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
         cp debian/rules-gtk3 debian/rules
