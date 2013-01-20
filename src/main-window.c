@@ -1092,7 +1092,7 @@ void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser )
     }
 }
 
-static void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
+void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
 {
     GdkPixbuf* icon;
     char* name;

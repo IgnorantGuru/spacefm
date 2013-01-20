@@ -187,14 +187,14 @@
         <col id="0" translatable="yes">Automatic</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Copy</col>
+        <col id="0" translatable="yes">Copy (Ctrl+Drag)</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Move</col>
+        <col id="0" translatable="yes">Move (Shift+Drag)</col>
       </row>
       <row>
-        <col id="0" translatable="yes">Link</col>
-      </row>
+        <col id="0" translatable="yes">Link (Ctrl+Shift+Drag)</col>
+       </row>
     </data>
   </object>
   <object class="GtkDialog" id="dlg">

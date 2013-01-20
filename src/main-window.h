@@ -134,6 +134,7 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser );
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
+void update_window_icon( GtkWindow* window, GtkIconTheme* theme );
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser );
 gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );

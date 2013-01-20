@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.4+
+README for SpaceFM v0.8.5+
 
 
 For updates and instructions visit:
@@ -13,7 +13,7 @@ CONTENTS
     PACKAGES
     INSTALLER
     BUILD GTK2
-    BUILD GTK3 BETA
+    BUILD GTK3
     BUILD HAL
     BUILD NEXT
     BUILD DEBUG
@@ -40,9 +40,9 @@ PACKAGES
     and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
         http://aur.archlinux.org/packages.php?ID=58247
 
-    Debian-based deb packages are available in Downloads:
+    Debian-based spacefm, spacefm-gtk3, and spacefm-hal packages are available
         (to save a file, click on its filename and click 'View Raw'):
-        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+            https://github.com/IgnorantGuru/spacefm/tree/master/packages
 
         and are also available in the author's PPA:
             http://igurublog.wordpress.com/downloads/ppa/
@@ -173,11 +173,16 @@ BUILD GTK2
           --with-preferable-sudo=/usr/bin/mysu   # to the configure command
 
 
-BUILD GTK3 BETA
+BUILD GTK3
 
-The GTK3 build for this version of SpaceFM is provided FOR BETA TESTING.  BE
-SURE to use a GTK3 theme which supports your CURRENT version of GTK3 (no theme
-warnings should appear when spacefm is run in a terminal).
+The GTK3 build of SpaceFM uses the newer GTK libraries.  BE SURE to use a 
+GTK3 theme which supports your CURRENT version of GTK3 (no theme warnings 
+should appear when spacefm is run in a terminal), or use adwaita.  Use of GTK3
+without any theme is NOT recommended.
+
+PACKAGERS:  Due to the unfinished and changing nature of GTK3, some users 
+may prefer the GTK2 build.  Please consider providing both spacefm-gtk2 and 
+spacefm-gtk3 packages for your users.
 
 1)  Install required build dependencies (below are Debian package names -
     packages names on your distro may vary but should be similar):
@@ -375,7 +380,7 @@ To build a deb file of SpaceFM on your Debian-based distro:
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF GTK3 BETA support IS desired:
+3)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
         cp debian/rules-gtk3 debian/rules

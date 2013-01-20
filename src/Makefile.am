@@ -78,7 +78,6 @@ PTK_SOURCES = \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
-    ptk/ptk-console-output.c ptk/ptk-console-output.h \
     ptk/ptk-clipboard.c ptk/ptk-clipboard.h \
     ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
     ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
@@ -115,7 +114,6 @@ spacefm_SOURCES = \
     main-window.c main-window.h \
     settings.c settings.h \
     pref-dialog.c pref-dialog.h \
-    edit-bookmarks.c edit-bookmarks.h \
     find-files.c find-files.h \
     go-dialog.c go-dialog.h \
     cust-dialog.c cust-dialog.h

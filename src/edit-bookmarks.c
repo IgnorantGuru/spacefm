@@ -1,12 +1,8 @@
 /*
-*  C Implementation: editbookmark
-*
-* Description:
-*
-*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * 
+ * NOTE: This file is retained for reference purposes only - it is no longer
+ *       included in the build system.
+ * 
 */
 
 #ifdef HAVE_CONFIG_H

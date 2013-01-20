@@ -1,5 +1,19 @@
-0.8.4+
+0.8.5+
 
+0.8.5   2013-01-14:
+    fix left-click ignored in Open context submenu #31 #228
+    Dialog fix progress bar; add auto-pulse
+    [gtk3] task progress pulse don't show percent
+    debian package add XXXXXXXX to mktemp template [dist]
+    add key shortcut labels to Prefs default drag action
+    left-click in toolbar config menu shows design menu
+    fix Open|Default with multiple dirs selected
+    gtk3 leaving beta; gtk3 debian package; ppa add spacefm-gtk3
+    navigation/activation keys on desktop #247
+    added Popups|Above Others and All Workspaces #226
+    desktop dialogs on current workspace #246
+    desktop Create New uses new creation dialog
+    fix View|Events dialog formatting
 0.8.4   2012-12-21:
     fix detail dbl click selects next #218
     fix dlg command pipe fast

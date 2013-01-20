@@ -1,3 +1,10 @@
+/*
+ * 
+ * NOTE: This file is retained for reference purposes only - it is no longer
+ *       included in the build system.
+ * 
+*/
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include "glib-mem.h"

@@ -92,7 +92,6 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	ptk/ptk-bookmarks.c ptk/ptk-bookmarks.h ptk/ptk-input-dialog.c \
 	ptk/ptk-input-dialog.h ptk/ptk-file-task.c ptk/ptk-file-task.h \
 	ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
-	ptk/ptk-console-output.c ptk/ptk-console-output.h \
 	ptk/ptk-clipboard.c ptk/ptk-clipboard.h ptk/ptk-file-menu.c \
 	ptk/ptk-file-menu.h ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
 	ptk/ptk-file-properties.c ptk/ptk-file-properties.h \
@@ -103,9 +102,9 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	exo/exo-marshal.h desktop/desktop.c desktop/desktop.h \
 	desktop/desktop-window.c desktop/desktop-window.h private.h \
 	main.c pcmanfm.h main-window.c main-window.h settings.c \
-	settings.h pref-dialog.c pref-dialog.h edit-bookmarks.c \
-	edit-bookmarks.h find-files.c find-files.h go-dialog.c \
-	go-dialog.h cust-dialog.c cust-dialog.h
+	settings.h pref-dialog.c pref-dialog.h find-files.c \
+	find-files.h go-dialog.c go-dialog.h cust-dialog.c \
+	cust-dialog.h
 am__objects_1 = spacefm-mime-type.$(OBJEXT) \
 	spacefm-mime-action.$(OBJEXT) spacefm-mime-cache.$(OBJEXT)
 am__objects_2 =
@@ -137,7 +136,6 @@ am__objects_9 = spacefm-ptk-file-browser.$(OBJEXT) \
 	spacefm-ptk-input-dialog.$(OBJEXT) \
 	spacefm-ptk-file-task.$(OBJEXT) \
 	spacefm-ptk-file-archiver.$(OBJEXT) \
-	spacefm-ptk-console-output.$(OBJEXT) \
 	spacefm-ptk-clipboard.$(OBJEXT) \
 	spacefm-ptk-file-menu.$(OBJEXT) \
 	spacefm-ptk-file-misc.$(OBJEXT) \
@@ -155,8 +153,8 @@ am_spacefm_OBJECTS = $(am__objects_1) $(am__objects_2) \
 	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
 	spacefm-main.$(OBJEXT) spacefm-main-window.$(OBJEXT) \
 	spacefm-settings.$(OBJEXT) spacefm-pref-dialog.$(OBJEXT) \
-	spacefm-edit-bookmarks.$(OBJEXT) spacefm-find-files.$(OBJEXT) \
-	spacefm-go-dialog.$(OBJEXT) spacefm-cust-dialog.$(OBJEXT)
+	spacefm-find-files.$(OBJEXT) spacefm-go-dialog.$(OBJEXT) \
+	spacefm-cust-dialog.$(OBJEXT)
 spacefm_OBJECTS = $(am_spacefm_OBJECTS)
 am__DEPENDENCIES_1 =
 spacefm_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -449,7 +447,6 @@ PTK_SOURCES = \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
-    ptk/ptk-console-output.c ptk/ptk-console-output.h \
     ptk/ptk-clipboard.c ptk/ptk-clipboard.h \
     ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
     ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
@@ -486,7 +483,6 @@ spacefm_SOURCES = \
     main-window.c main-window.h \
     settings.c settings.h \
     pref-dialog.c pref-dialog.h \
-    edit-bookmarks.c edit-bookmarks.h \
     find-files.c find-files.h \
     go-dialog.c go-dialog.h \
     cust-dialog.c cust-dialog.h
@@ -650,7 +646,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-cust-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-desktop-window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-desktop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-edit-bookmarks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-icon-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-marshal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-private.Po@am__quote@
@@ -669,7 +664,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-app-chooser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-bookmarks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-clipboard.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-console-output.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-dir-tree-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-dir-tree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-archiver.Po@am__quote@
@@ -1171,20 +1165,6 @@ spacefm-ptk-file-archiver.obj: ptk/ptk-file-archiver.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
 
-spacefm-ptk-console-output.o: ptk/ptk-console-output.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-console-output.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-console-output.Tpo -c -o spacefm-ptk-console-output.o `test -f 'ptk/ptk-console-output.c' || echo '$(srcdir)/'`ptk/ptk-console-output.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-ptk-console-output.Tpo $(DEPDIR)/spacefm-ptk-console-output.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ptk/ptk-console-output.c' object='spacefm-ptk-console-output.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-console-output.o `test -f 'ptk/ptk-console-output.c' || echo '$(srcdir)/'`ptk/ptk-console-output.c
-
-spacefm-ptk-console-output.obj: ptk/ptk-console-output.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-console-output.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-console-output.Tpo -c -o spacefm-ptk-console-output.obj `if test -f 'ptk/ptk-console-output.c'; then $(CYGPATH_W) 'ptk/ptk-console-output.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-console-output.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-ptk-console-output.Tpo $(DEPDIR)/spacefm-ptk-console-output.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ptk/ptk-console-output.c' object='spacefm-ptk-console-output.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-console-output.obj `if test -f 'ptk/ptk-console-output.c'; then $(CYGPATH_W) 'ptk/ptk-console-output.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-console-output.c'; fi`
-
 spacefm-ptk-clipboard.o: ptk/ptk-clipboard.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-clipboard.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-ptk-clipboard.Tpo $(DEPDIR)/spacefm-ptk-clipboard.Po
@@ -1408,20 +1388,6 @@ spacefm-pref-dialog.obj: pref-dialog.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='pref-dialog.c' object='spacefm-pref-dialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-pref-dialog.obj `if test -f 'pref-dialog.c'; then $(CYGPATH_W) 'pref-dialog.c'; else $(CYGPATH_W) '$(srcdir)/pref-dialog.c'; fi`
-
-spacefm-edit-bookmarks.o: edit-bookmarks.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-edit-bookmarks.o -MD -MP -MF $(DEPDIR)/spacefm-edit-bookmarks.Tpo -c -o spacefm-edit-bookmarks.o `test -f 'edit-bookmarks.c' || echo '$(srcdir)/'`edit-bookmarks.c
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-edit-bookmarks.Tpo $(DEPDIR)/spacefm-edit-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='edit-bookmarks.c' object='spacefm-edit-bookmarks.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-edit-bookmarks.o `test -f 'edit-bookmarks.c' || echo '$(srcdir)/'`edit-bookmarks.c
-
-spacefm-edit-bookmarks.obj: edit-bookmarks.c
-@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-edit-bookmarks.obj -MD -MP -MF $(DEPDIR)/spacefm-edit-bookmarks.Tpo -c -o spacefm-edit-bookmarks.obj `if test -f 'edit-bookmarks.c'; then $(CYGPATH_W) 'edit-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/edit-bookmarks.c'; fi`
-@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-edit-bookmarks.Tpo $(DEPDIR)/spacefm-edit-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='edit-bookmarks.c' object='spacefm-edit-bookmarks.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-edit-bookmarks.obj `if test -f 'edit-bookmarks.c'; then $(CYGPATH_W) 'edit-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/edit-bookmarks.c'; fi`
 
 spacefm-find-files.o: find-files.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-find-files.o -MD -MP -MF $(DEPDIR)/spacefm-find-files.Tpo -c -o spacefm-find-files.o `test -f 'find-files.c' || echo '$(srcdir)/'`find-files.c
