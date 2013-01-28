@@ -318,14 +318,12 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         full_name = gtk_text_buffer_get_text( mset->buf_full_name, &siter, &iter, FALSE );
         name = get_name_extension( full_name, mset->is_dir, &ext );
         gtk_text_buffer_set_text( mset->buf_name, name, -1 );
-        if (ext )
+        if ( ext )
             gtk_entry_set_text( mset->entry_ext, ext );
         else
             gtk_entry_set_text( mset->entry_ext, "" );
-        if ( name )
-            g_free( name );
-        if ( ext )
-            g_free( ext );
+        g_free( name );
+        g_free( ext );
 
         // update full_path
         gtk_text_buffer_get_start_iter( mset->buf_path, &siter );
@@ -442,10 +440,8 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
             full_name = g_strdup( ext );
         else
             full_name = g_strdup_printf( "" );
-        if ( name )
-            g_free( name );
-        if ( ext )
-            g_free( ext );
+        g_free( name );
+        g_free( ext );
         gtk_text_buffer_set_text( mset->buf_full_name, full_name, -1 );
         
         // update path
@@ -802,7 +798,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
         text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
                                                     mset->combo_template ) ) ) );
-        if ( text[0] == '/' )
+        if ( text && text[0] == '/' )
         {
             dir = g_path_get_dirname( text );
             name = g_path_get_basename( text );
@@ -821,7 +817,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
         action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
         text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
                                                     mset->combo_template ) ) ) );
-        if ( text[0] == '/' )
+        if ( text && text[0] == '/' )
         {
             dir = g_path_get_dirname( text );
             name = g_path_get_basename( text );
@@ -1726,22 +1722,25 @@ GList* get_templates( const char* templates_dir, const char* subdir,
 
 void on_template_changed( GtkWidget* widget, MoveSet* mset )
 {
-    char* str, *str2;
+    char* str = NULL;
+    char* str2;
     if ( !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
         return;
     char* text = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
                                         GTK_BIN( mset->combo_template ) ) ) ) );
-    g_strstrip( text );
-    str = text;
-    while ( str2 = strchr( str, '/' ) )
-        str = str2 + 1;
-    if ( str[0] == '.' )
-        str++;
-    if ( str2 = strchr( str, '.' ) )
-        str = str2 + 1;
-    else
-        str = NULL;
-    
+    if ( text )
+    {
+        g_strstrip( text );
+        str = text;
+        while ( str2 = strchr( str, '/' ) )
+            str = str2 + 1;
+        if ( str[0] == '.' )
+            str++;
+        if ( str2 = strchr( str, '.' ) )
+            str = str2 + 1;
+        else
+            str = NULL;
+    }
     gtk_entry_set_text( mset->entry_ext, str ? str : "" );
 
     // need new name due to extension added?
@@ -2155,6 +2154,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     else
     {
         mset->label_template = NULL;
+        mset->combo_template = NULL;
+        mset->combo_template_dir = NULL;
     }
     
     // Name
@@ -2668,10 +2669,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             {
                 // new file task
                 if ( gtk_widget_get_visible( gtk_widget_get_parent(
-                                        GTK_WIDGET( mset->combo_template ) ) ) )
+                                        GTK_WIDGET( mset->combo_template ) ) ) &&
+                        ( str = gtk_combo_box_text_get_active_text( 
+                                GTK_COMBO_BOX_TEXT( mset->combo_template ) ) ) )
                 {
-                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                        GTK_BIN( mset->combo_template ) ) ) ) );
                     g_strstrip( str );
                     if ( str[0] == '/' )
                         from_path = bash_quote( str );
@@ -2746,10 +2747,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 if ( !new_folder )
                     goto _continue_free;  // failsafe
                 if ( gtk_widget_get_visible( gtk_widget_get_parent(
-                                        GTK_WIDGET( mset->combo_template_dir ) ) ) )
+                                        GTK_WIDGET( mset->combo_template_dir ) ) ) && 
+                        ( str = gtk_combo_box_text_get_active_text( 
+                                GTK_COMBO_BOX_TEXT( mset->combo_template_dir ) ) ) )
                 {
-                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                        GTK_BIN( mset->combo_template_dir ) ) ) ) );
                     g_strstrip( str );
                     if ( str[0] == '/' )
                         from_path = bash_quote( str );
