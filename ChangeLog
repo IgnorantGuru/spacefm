@@ -1,5 +1,6 @@
 0.8.5+
     fix cannot create directory or file on CentOS #253
+    update russian translation
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse
