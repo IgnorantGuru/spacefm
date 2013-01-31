@@ -5,6 +5,7 @@
     move debian/ to distros/debian/ and update README
     Enter clicks Set, Esc twice clicks Unset in Set Key dialog
     added manual GUI|Find-As-You-Type Search
+    New File/Folder/Link enabled if no write access for As Root
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse
