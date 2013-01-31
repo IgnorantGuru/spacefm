@@ -338,7 +338,7 @@ For other distros:
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure  # pass any options here
+        CFLAGS='-ggdb3 -O1' STRIP='!strip' ./configure  # pass any options here
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
