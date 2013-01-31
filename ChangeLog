@@ -2,6 +2,7 @@
     fix cannot create directory or file on CentOS #253
     update russian translation
     case insensitive sort on Type, Owner columns
+    move debian/ to distros/debian/ and update README
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse

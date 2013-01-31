@@ -380,24 +380,28 @@ To build a deb file of SpaceFM on your Debian-based distro:
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF GTK3 support IS desired:
+3)  Move the distros/debian directory into the source directory:
+
+        mv distros/debian .
+
+4)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
         cp debian/rules-gtk3 debian/rules
         sed -i 's/^spacefm \(.*\)/spacefm-gtk3 \1/' debian/changelog
 
-4)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
+5)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
 
         cp debian/control-hal debian/control
         cp debian/rules-hal debian/rules
         sed -i 's/^spacefm \(.*\)/spacefm-hal \1/' debian/changelog
 
-5)  Build package:  (the package files will appear in the parent directory)
+6)  Build package:  (the package files will appear in the parent directory)
 
         dpkg-buildpackage -b -uc
         cd .. && rm -rf IgnorantGuru-spacefm-* spacefm.tar.gz
 
-6)  To install the package you built:
+7)  To install the package you built:
 
         dpkg -i spacefm*.deb
 

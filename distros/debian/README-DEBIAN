@@ -1,0 +1,3 @@
+The files in distros/debian/ may be used to build a binary deb package of 
+SpaceFM for use on Debian-based distros.  See the CREATE DEB PACKAGE 
+section in ../../README for step-by-step instructions.
