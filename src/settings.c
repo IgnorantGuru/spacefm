@@ -5577,19 +5577,42 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
     XSet* set2;
     XSet* keyset = NULL;
     
-    gtk_widget_set_sensitive( btn, TRUE );
-
-    *newkey = 0;
-    *newkeymod = 0;
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
     
     if ( !event->keyval ) // || ( event->keyval < 1000 && !keymod ) )
     {
+        *newkey = 0;
+        *newkeymod = 0;
+        gtk_widget_set_sensitive( btn, FALSE );
         gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), NULL );
         return TRUE;
     }
+    
+    gtk_widget_set_sensitive( btn, TRUE );
+
+    if ( *newkey != 0 && keymod == 0 )
+    {
+        if ( event->keyval == GDK_KEY_Return || 
+                                          event->keyval == GDK_KEY_KP_Enter )
+        {
+            // user pressed Enter after selecting a key, so click Set
+            gtk_button_clicked( GTK_BUTTON( btn ) );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_Escape && *newkey == GDK_KEY_Escape )
+        {
+            // user pressed Escape twice so click Unset
+            GtkWidget* btn_unset = (GtkWidget*)g_object_get_data( G_OBJECT(dlg),
+                                                                "btn_unset" );
+            gtk_button_clicked( GTK_BUTTON( btn_unset ) );
+            return TRUE;
+        }
+    }
+
+    *newkey = 0;
+    *newkeymod = 0;
     if ( set->shared_key )
         keyset = xset_get( set->shared_key );
             
@@ -5711,6 +5734,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
         g_object_set_data( G_OBJECT(dlg), "newkey", &newkey );
         g_object_set_data( G_OBJECT(dlg), "newkeymod", &newkeymod );
         g_object_set_data( G_OBJECT(dlg), "btn", btn );
+        g_object_set_data( G_OBJECT(dlg), "btn_unset", btn_unset );
         g_signal_connect ( dlg, "key_press_event",
                                    G_CALLBACK ( xset_design_setkey ), dlg );
         gtk_widget_show_all( dlg );
