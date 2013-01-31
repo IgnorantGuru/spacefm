@@ -169,6 +169,13 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 </tr>
 
 <tr>
+<td valign="top"><b>ArchPup</b></td>
+<td>
+	<a href="http://sourceforge.net/projects/archpup/">ArchPup</a> includes SpaceFM as its default file manager [in next release].
+</td>
+</tr>
+
+<tr>
 <td valign="top"><b><a name="deb">Debian-based</a></b></td>
 <td>
 	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.  $TMPDIR (usually /tmp) must NOT be mounted noexec.
@@ -265,6 +272,13 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
 <td valign="top"><b>VectorLinux</b></td>
 <td>
 	spacefm test packages available
+</td>
+</tr>
+
+<tr>
+<td valign="top"><b>VSIDO</b></td>
+<td>
+	<a href="http://vsido.org/index.php">VSIDO</a> (Debian sid-based) includes SpaceFM with udevil as its <b>default file manager</b>
 </td>
 </tr>
 
@@ -1510,7 +1524,7 @@ If option Queue New Tasks is checked (the default), new internal tasks are queue
 <p>Regardless of how Queue New Tasks is set, you can always manually <a href="#tasks-menu-queue">Queue</a>, <a href="#tasks-menu-pause">Pause</a> or <a href="#tasks-menu-resume">Resume</a> any task.
 
 <!-- # Queue|Smart Queue #smart -->
-The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to only do one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
+The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
 
 <p>If option Smart Queue is checked (the default), the Task Manager is more sophisticated in its handling of the queue to improve both performance and convenience.  In general, tasks will <i>not</i> be run concurrently, but the following exceptions may be made if Smart Queue is checked:
 

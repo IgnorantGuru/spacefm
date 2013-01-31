@@ -34,11 +34,15 @@ PACKAGES
     antiX-12 includes spacefm and udevil:
         http://sourceforge.net/projects/antix-linux/
 
-    Arch Linux's [community] repository includes spacefm:
+    Arch Linux's [community] repository includes spacefm (GTK3 build):
         http://www.archlinux.org/packages/community/i686/spacefm/
         http://www.archlinux.org/packages/community/x86_64/spacefm/
-    and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
-        http://aur.archlinux.org/packages.php?ID=58247
+    and Arch's AUR includes spacefm-gtk2 and spacefm-git (BUILD NEXT):
+        https://aur.archlinux.org/packages/spacefm-gtk2/
+        https://aur.archlinux.org/packages/spacefm-git/
+
+    ArchPup includes SpaceFM as its default file manager [in next release]:
+        http://sourceforge.net/projects/archpup/
 
     Debian-based spacefm, spacefm-gtk3, and spacefm-hal packages are available
         (to save a file, click on its filename and click 'View Raw'):
@@ -59,7 +63,7 @@ PACKAGES
     spacefm in its repositories:
         http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
 
-    Gentoo's portage tree includes spacefm:
+    Gentoo's portage tree includes spacefm (GTK2) and a live ebuild (GTK3):
         http://packages.gentoo.org/package/x11-misc/spacefm
 
     openSUSE 12.1 repo (add the following repo to Yast software manager):
@@ -91,6 +95,9 @@ PACKAGES
 
     VectorLinux has spacefm test packages available:
         http://vectorlinux.com/
+
+    VSIDO includes spacefm with udevil as its default file manager:
+        http://vsido.org/index.php
 
     Other:
         See INSTALLER below
