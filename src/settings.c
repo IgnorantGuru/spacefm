@@ -5720,7 +5720,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
         gtk_button_set_image( GTK_BUTTON( btn_unset ), xset_get_image( "GTK_STOCK_REMOVE",
                                                         GTK_ICON_SIZE_BUTTON ) );
         gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_unset, GTK_RESPONSE_NO);
-        if ( set->key <= 0 )
+
+        if ( set->shared_key )
+            keyset = xset_get( set->shared_key );
+        else
+            keyset = set;
+        if ( keyset->key <= 0 )
             gtk_widget_set_sensitive( btn_unset, FALSE );
 
         GtkWidget* btn = gtk_button_new_from_stock( GTK_STOCK_APPLY );
