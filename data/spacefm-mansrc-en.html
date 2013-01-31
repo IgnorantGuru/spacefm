@@ -50,7 +50,7 @@
     <li><b>Feature-Rich</b> - <i>Subtle power features to improve efficiency and abilities</i><br>
     <ul>
 	<li>Extensive file management features to move, copy, link, plus configurable drag-n-drop and unique clipboard functions
-	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern
+	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
 	<li>File search - flexibly search for file names, sizes, content, etc. with no daemon required
@@ -692,12 +692,38 @@ When you press Enter, all filenames in the file list ending in ".avi" will be se
 
 If your pattern contains any uppercase characters, the matching will be case sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
 
+<p>See also: <a href="#gui-find">Find-As-You-Type Search</a>.
+
 <!-- # Font -->
 The font used in the Path Bar can be customized (this is a per panel setting).  Right-click on the Path Bar and select Font.
 
 <!-- # More To Come #more -->
 Additional functions are planned for SpaceFM's Path Bar - check this manual for updates or see <a href="http://ignorantguru.github.com/spacefm/news.html">SpaceFM News</a> for recent changes.
 
+
+
+
+<!-- @GUI @Find-As-You-Type Search #find -->
+
+<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  By default, SpaceFM conducts a case insensitive substring search.  This means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
+
+<p>In addition, Find-As-You-Type Search supports the following modes:
+
+<ul>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is now used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+
+    <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
+    <ul>
+        <li>If the search key begins with a caret (^), the search will match names <i>beginning</i> with your key.  
+        <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
+        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are not supported in this mode.)
+    </ul><br>
+    <li>Anytime you use an uppercase letter anywhere in your search key, the search mode becomes <b>case sensitive</b>.<br><br>
+
+    <li>Regardless of mode, you can press down or up arrow, or scroll wheel down/up, to go to the <b>next or previous matched filename</b>.<br><br>
+</ul>
+
+See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 
 
