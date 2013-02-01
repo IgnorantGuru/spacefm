@@ -134,162 +134,18 @@
 
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
-
-<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
-
-The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
-
-<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
+<p><a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Packages</a> <a name="installation-packages">are available<!-- backwards compat --></a> for many distros, and SpaceFM is already included in some distros and repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
 <p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
+<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.
 
-<!-- @Installation @Packages -->
+<p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
-<br><br><br>
-<table border=1 cellpadding="5" width="80%">
-<tr>
-	<th>Distro</th>
-	<th>Packages &amp; Repositories*</th>
-</tr>
+<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
 
-<tr>
-<td valign="top"><b>antiX<b></td>
-<td>
-	<a href="http://sourceforge.net/projects/antix-linux/">antiX-12</a> base and full includes spacefm
-</td>
-</tr>
+<p>The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
 
-<tr>
-<td valign="top"><b>Arch Linux</b></td>
-<td>
-	Arch Linux's [community] repository includes <b>spacefm</b> (GTK3, <a href="http://www.archlinux.org/packages/community/i686/spacefm/">i686</a> &amp; <a href="http://www.archlinux.org/packages/community/x86_64/spacefm/">amd64</a>), and the AUR provides <a href="https://aur.archlinux.org/packages/spacefm-gtk2/">spacefm-gtk2</a> and <a href="https://aur.archlinux.org/packages/spacefm-git/">spacefm-git</a> (next branch).
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>ArchPup</b></td>
-<td>
-	<a href="http://sourceforge.net/projects/archpup/">ArchPup</a> includes SpaceFM as its default file manager [in next release].
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b><a name="deb">Debian-based</a></b></td>
-<td>
-	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.  $TMPDIR (usually /tmp) must NOT be mounted noexec.
-
-	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
-</td>
-</tr>
-
-<tr>
-<td><b>Foresight</b></td>
-<td>
-	Foresight Lxde uses SpaceFM as its default file manager; Foresight includes <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm">spacefm</a> in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Gentoo</b></td>
-<td>
-	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
-</td>
-
-<tr>
-<td valign="top"><b>openSUSE</b></td>
-<td>
-	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
-	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
-
-	<p>openSUSE Tumbleweed repo:<br>
-	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/</a>
-
-	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
-
-	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Parted Magic</b></td>
-<td>
-	<a href="http://partedmagic.com/doku.php">Parted Magic</a> includes SpaceFM with udevil as its default file manager
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>PCLinuxOS</b></td>
-<td>
-	spacefm test packages available (see forum)
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Pibang Linux</b></td>
-<td>
-	<a href="http://pibanglinux.org/">Pibang Linux</a> includes SpaceFM built for the <a href="http://www.raspberrypi.org/">Raspberry Pi</a> (armhf) - can be installed as the default file manager via Pibang's welcome scripts
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Sabayon</b></td>
-<td>
-	Includes spacefm in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Slackware</b></td>
-<td>
-	SlackBuilds.org includes <a href="http://slackbuilds.org/system/spacefm/">spacefm</a>
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>SliTaz</b></td>
-<td>
-	Includes <a href="http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search">spacefm</a> in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>SystemRescueCD</b></td>
-<td>
-	SpaceFM is included by default in <a href="http://sysresccd.org/">SystemRescueCD</a> live distro
-</td>
-</tr>
-
-<tr>
-<td><b>Ubuntu</b></td>
-<td>
-	See <a href="#deb">Debian</a>
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>VectorLinux</b></td>
-<td>
-	spacefm test packages available
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>VSIDO</b></td>
-<td>
-	<a href="http://vsido.org/index.php">VSIDO</a> (Debian sid-based) includes SpaceFM with udevil as its <b>default file manager</b>
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b><i>Other</i></b></td>
-<td>
-	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use one of the <a href="#installation-manualbuild">manual build methods</a>
-</td>
-</tr>
-</table>
-<P><i>* For the most up to date table, please visit the <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a></i>
 
 
 
