@@ -19,6 +19,7 @@ CONTENTS
     BUILD DEBUG
     CREATE DEB PACKAGE
     UNINSTALL
+    ENABLE KERNEL POLLING
     TRANSLATIONS
     LICENSE
 
@@ -37,7 +38,8 @@ PACKAGES
     For other distros:
         See INSTALLER below
 
-    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM.  See
+          the ENABLE KERNEL POLLING section below or visit:
     http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
@@ -369,9 +371,68 @@ Otherwise, run these commands AS ROOT:
     gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
 
+ENABLE KERNEL POLLING
+
+    You may need to enable kernel polling for device media to be detected by 
+    SpaceFM, especially when used without udisks.  For example, if you 
+    insert a CD and the Devices list doesn't report a change to the device 
+    or doesn't see a filesystem on the device, this is a symptom that 
+    kernel polling is not enabled.
+
+    Kernel polling is a new feature of the Linux kernel and udev, so most
+    distros don't yet have it enabled. Even if you are using udisks, enabling
+    kernel polling is recommended to eliminate the need for udisks to do
+    userspace polling. Kernel polling also corrects a common issue where the
+    eject button on a drive won't respond with the newer udev.
+
+    To use kernel polling, your Linux kernel may need to be 2.6.38 or newer,
+    and udev may need to be version 173 or newer.
+
+    TO DETERIME IF KERNEL POLLING IS ENABLED, run these commands:
+
+        cat /sys/module/block/parameters/events_dfl_poll_msecs
+        cat /sys/block/sr0/events_poll_msecs
+
+    If you get 0 or -1 from those commands, then it's probably disabled.
+
+    TO ENABLE KERNEL POLLING PERMANENTLY (survives a reboot), add this command
+    to your /etc/rc.local file (anywhere before the 'exit' line in that file):
+
+        echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
+
+    Any number between 2000 and 5000 (milliseconds) should be reasonable - the
+    higher 5000 means poll every 5 seconds, which is less overhead but a little
+    slower.
+
+    OR you can pass this option to the kernel boot command line in grub:
+
+        block.events_dfl_poll_msecs=2000
+
+
+    TO ENABLE KERNEL POLLING TEMPORARILY, enable common polling for the block
+    module:
+
+        sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+
+    OR you can enable polling just for a single device like this (/dev/sr0 in
+    this example):
+
+        sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
+
+    The change should be immediate - media will be detected and the eject
+    button on the drive should work normally again. However, the above changes
+    will be lost when you reboot.
+
+    References:
+    http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html
+    http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/
+    https://bugs.archlinux.org/task/25609
+
+
 TRANSLATIONS
 
-For instructions on providing a translation of SpaceFM, see the TRANSLATE file.
+    For instructions on providing a translation of SpaceFM, see the 
+    TRANSLATE file.
 
 
 LICENSE
