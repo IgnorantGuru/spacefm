@@ -829,6 +829,7 @@ with_sysroot
 enable_libtool_lock
 enable_nls
 with_gtk3
+with_gtk2
 enable_startup_notification
 enable_cast_checks
 enable_hal
@@ -1515,6 +1516,8 @@ Optional Packages:
                         (or the compiler's sysroot if not specified).
   --with-gtk3             Build with GTK3 interface instead of GTK2 (default:
                           with GTK2 unless GTK2 not installed)
+  --with-gtk2             Build with GTK2 interface only (default: with GTK2
+                          unless GTK2 not installed)
   --with-preferable-sudo=PROG
                           Specify custom program to switch to super user
 
@@ -13939,6 +13942,15 @@ else
 fi
 
 
+
+# Check whether --with-gtk2 was given.
+if test "${with_gtk2+set}" = set; then :
+  withval=$with_gtk2; with_gtk2=$withval
+else
+  with_gtk2="no"
+fi
+
+
 if test x"$with_gtk3" = x"yes"; then
     # user enabled - gtk3 required
 
@@ -14035,6 +14047,99 @@ fi
 
 $as_echo "#define HAVE_GTK3 1" >>confdefs.h
 
+elif test x"$with_gtk2" = x"yes"; then
+    # user enabled - gtk2 required
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
+$as_echo_n "checking for GTK... " >&6; }
+
+if test -n "$GTK_CFLAGS"; then
+    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$gtk2_modules\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$gtk2_modules") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "$gtk2_modules" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GTK_LIBS"; then
+    pkg_cv_GTK_LIBS="$GTK_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"\$gtk2_modules\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "$gtk2_modules") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "$gtk2_modules" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$gtk2_modules" 2>&1`
+        else
+	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$gtk2_modules" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GTK_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements ($gtk2_modules) were not met:
+
+$GTK_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GTK_CFLAGS
+and GTK_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
+	GTK_LIBS=$pkg_cv_GTK_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
 else
     # disabled - use gtk3 only if gtk2 not installed
 

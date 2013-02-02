@@ -33,9 +33,9 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file manager for Linux which is lightweight and has minimal dependencies, yet is very capable, flexible, and extensible.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
 
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and other distros, SpaceFM is gaining popularity among novice and power users alike for its exceptional stability, speed, convenience and flexibility.
+<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is gaining popularity among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -348,8 +348,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK2 themes</a>
 
 <!-- #GTK 3 #gtk3 --> 
-<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes (but always check GTK version compatibility).
-
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
 <!-- @Invocation @Desktop Manager -->
@@ -3884,12 +3883,12 @@ queue_state                     run|pause|queue|stop
 <a href="#sockets-events-winnew">evt_win_new</a>                     Window new            %e %w %p %t
 <a href="#sockets-events-winfoc">evt_win_focus</a>                   Window focus          %e %w %p %t
 <a href="#sockets-events-winmov">evt_win_move</a>                    Window move/resize    %e %w %p %t
-<a href="#sockets-events-winclk">evt_win_click</a>                       Mouse click           %e %w %p %t %b %m %f
+<a href="#sockets-events-winclk">evt_win_click</a>                   Mouse click           %e %w %p %t %b %m %f
 <a href="#sockets-events-winkey">evt_win_key</a>                     Window keypress       %e %w %p %t %k %m
 <a href="#sockets-events-wincls">evt_win_close</a>                   Window close          %e %w %p %t
 <a href="#sockets-events-pnlfoc">evt_pnl_focus</a>                   Panel focus           %e %w %p %t
 <a href="#sockets-events-pnlshw">evt_pnl_show</a>                    Panel show/hide       %e %w %p %t %f %v
-<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                         Selection changed     %e %w %p %t
+<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                     Selection changed     %e %w %p %t
 <a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
 <a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
 <a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t

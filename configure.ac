@@ -36,10 +36,15 @@ gtk3_modules="gtk+-3.0 >= 3.0.0 \
               
 AC_ARG_WITH([gtk3], AS_HELP_STRING([--with-gtk3], [Build with GTK3 interface instead of GTK2 (default: with GTK2 unless GTK2 not installed)]), with_gtk3=$withval, with_gtk3="no")
 
+AC_ARG_WITH([gtk2], AS_HELP_STRING([--with-gtk2], [Build with GTK2 interface only (default: with GTK2 unless GTK2 not installed)]), with_gtk2=$withval, with_gtk2="no")
+
 if test x"$with_gtk3" = x"yes"; then
     # user enabled - gtk3 required
     PKG_CHECK_MODULES(GTK, [$gtk3_modules])
     AC_DEFINE([HAVE_GTK3], [1], [Use GTK3])
+elif test x"$with_gtk2" = x"yes"; then
+    # user enabled - gtk2 required
+    PKG_CHECK_MODULES(GTK, [$gtk2_modules])
 else
     # disabled - use gtk3 only if gtk2 not installed
     PKG_CHECK_MODULES(GTK, [$gtk2_modules], with_gtk3="no", [
