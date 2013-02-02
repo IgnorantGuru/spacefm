@@ -233,7 +233,7 @@ BUILD NEXT
 
 The git 'next' branch of SpaceFM is a work in progress which eventually becomes
 the next release version.  To build from this branch, install the required
-build dependencies listed above for your build, plus libtool.  Then:
+build dependencies listed above for your build, then:
 
     # Download & Extract
     mkdir /tmp/spacefm-next && cd /tmp/spacefm-next
@@ -241,8 +241,8 @@ build dependencies listed above for your build, plus libtool.  Then:
     tar xzf spacefm-next.tar.gz
     cd IgnorantGuru-spacefm-*
 
-    # Build, & Install
-    ./autogen.sh     # pass any desired configure options here for your build
+    # Build & Install
+    ./configure
     make -s
     sudo make install
     sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -437,7 +437,7 @@ TRANSLATIONS
 
 LICENSE
 
-    SpaceFM - Copyright (C) 2012   GPL3+
+    SpaceFM - Copyright (C) 2013   GPL3+
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the
