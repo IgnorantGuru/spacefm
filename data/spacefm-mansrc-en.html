@@ -53,7 +53,7 @@
 	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
-	<li>File search - flexibly search for file names, sizes, content, etc. with no daemon required
+	<li>File search - flexibly search system-wide for file names, sizes, content, etc. with no daemon required
 	<li>Extended Rename dialog allows not only renaming, but moving, copying, and creating links, with optional root priviledges, and allows creation of new files and folders from templates
 	<li>Roomy dialogs for easy editing and viewing of long filenames, paths, and commands
 	<li>Extended Path Bar uses tab completion and allows entry of full bash commands with substitution <a href="#gui-pathbar">*</a>
@@ -494,19 +494,19 @@ case "$protocol" in
         hostname="${hostname%/*}"
 
         # Run sshfs in user's terminal to mount hostname to mount point
-	# Note - If the terminal is closed, sshfs may unmount (sshfs bug)
+        # Note - If the terminal is closed, sshfs may unmount (sshfs bug)
         spacefm -s set run_in_terminal \
 		"sshfs $hostname: $mount_point; echo; echo Press Enter; read"
 
-	# Attempt to remove mount point in case of mount error
-	rmdir "$mount_point" 2>/dev/null
+        # Attempt to remove mount point in case of mount error
+        rmdir "$mount_point" 2>/dev/null
         ;;
     * )
         # For any other protocols, use udevil
-	# Run udevil in user's terminal in case password entry is required
-	# Prompt to close terminal if an error occurs so the error can be seen
+        # Run udevil in user's terminal in case password entry is required
+        # Prompt to close terminal if an error occurs so the error can be seen
         spacefm -s set run_in_terminal \
-		"udevil mount '$1' || ( echo; echo Press Enter; read )"
+	        "udevil mount '$1' || ( echo; echo Press Enter; read )"
         ;;
 esac
 </pre>

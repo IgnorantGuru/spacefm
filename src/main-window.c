@@ -128,6 +128,9 @@ static gboolean on_main_window_keypress( FMMainWindow* widget,
                                          GdkEventKey* event, gpointer data);
 //static gboolean on_main_window_keyrelease( FMMainWindow* widget,
 //                                        GdkEventKey* event, gpointer data);
+static gboolean on_window_button_press_event( GtkWidget* widget, 
+                                       GdkEventButton *event,
+                                       FMMainWindow* main_window );     //sfm
 static void on_new_window_activate ( GtkMenuItem *menuitem,
                                      gpointer user_data );
 GtkWidget* create_bookmarks_menu ( FMMainWindow* main_window );
@@ -1962,6 +1965,9 @@ void fm_main_window_init( FMMainWindow* main_window )
     g_signal_connect( G_OBJECT(main_window), "configure-event",
                       G_CALLBACK(on_window_configure_event), main_window );
 
+    g_signal_connect ( G_OBJECT(main_window), "button-press-event",
+                      G_CALLBACK ( on_window_button_press_event ), main_window );
+
     import_all_plugins( main_window );
     on_task_popup_show( NULL, main_window, NULL );
     show_panels( NULL, main_window );
@@ -3480,6 +3486,29 @@ gboolean on_tab_drag_motion ( GtkWidget *widget,
     // TODO: Add a timeout here and don't set current page immediately
     idx = gtk_notebook_page_num ( notebook, GTK_WIDGET( file_browser ) );
     gtk_notebook_set_current_page( notebook, idx );
+    return FALSE;
+}
+
+gboolean on_window_button_press_event( GtkWidget* widget, GdkEventButton *event,
+                                       FMMainWindow* main_window )     //sfm
+{
+    if ( event->type != GDK_BUTTON_PRESS )
+        return FALSE;
+    
+    // handle mouse back/forward buttons anywhere in the main window
+    if ( event->button == 4 || event->button == 5
+                    || event->button == 8 || event->button == 9 )
+    {
+        PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                    fm_main_window_get_current_file_browser( main_window ) );
+        if ( !file_browser )
+            return FALSE;
+        if ( event->button == 4 || event->button == 8 )
+            ptk_file_browser_go_back( NULL, file_browser );
+        else
+            ptk_file_browser_go_forward( NULL, file_browser );
+        return TRUE;
+    }
     return FALSE;
 }
 
