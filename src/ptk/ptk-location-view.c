@@ -839,8 +839,9 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         is_sync = FALSE;
         keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
     }
-    else if ( !handler &&
-                ( !g_strcmp0( fstype, "smbfs" ) || !g_strcmp0( fstype, "cifs" ) ) )
+    else if ( !handler && ( !g_strcmp0( fstype, "smbfs" ) || 
+                            !g_strcmp0( fstype, "cifs" ) ||
+                            !g_strcmp0( fstype, "curlftpfs" ) ) )
     {
         in_term = TRUE;
         keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );

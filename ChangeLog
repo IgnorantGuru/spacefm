@@ -8,6 +8,7 @@
     New File/Folder/Link enabled if no write access for As Root
     fix cannot unset plugin key combo assignment
     added configure option --with-gtk2 to force gtk2 only build
+    mount curlftpfs in terminal for password entry #251
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse

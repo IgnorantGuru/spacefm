@@ -444,7 +444,9 @@ If you would like to use a custom handler for URLs within SpaceFM, right-click o
 
 <p>Note that any Path Bar entry which looks like a protocol URL will be passed to your command, so this feature <b>can be used to create custom protocols</b> or to support ones not recognized by udevil.  For example, if your handler knows what to do with the URL <i>myproto://something-here</I>, then you will be able to enter this URL in SpaceFM's Path Bar to take a custom action.  Your handler doesn't necessarily have to mount anything - it can take any action on the URL passed to it.
 
-<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>)
+<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>).
+
+<p>Although SpaceFM will not run the custom handler in a terminal, you can run some commands in your script in a terminal (eg for password entry) using 'spacefm -s set run_in_terminal', as shown in the <a href="#gui-pathbar-protoscript">example script</a>.
 
 <p><a href="#devices-menu-bookmark">Bookmarked</a> protocol URLs are also opened by the Protocol Handler.
 
@@ -458,9 +460,6 @@ Finally, set <a href="#gui-pathbar-protohand">Protocol Handler</a> to 'protocol-
 
 <pre>#!/bin/bash
 # Example Protocol Handler script to open URLs entered in SpaceFM's Path Bar
-
-# Set prefered terminal
-terminal=xterm
 
 # Get just the protocol, eg "smb" from "smb://..."
 protocol="${1%%:*}"
@@ -494,15 +493,20 @@ case "$protocol" in
         hostname="${hostname%:*}"
         hostname="${hostname%/*}"
 
-        # Run sshfs in a terminal to mount hostname to mount point
-        $terminal -e "sshfs $hostname: $mount_point; echo; echo Press Enter; read"
+        # Run sshfs in user's terminal to mount hostname to mount point
+	# Note - If the terminal is closed, sshfs may unmount (sshfs bug)
+        spacefm -s set run_in_terminal \
+		"sshfs $hostname: $mount_point; echo; echo Press Enter; read"
 
 	# Attempt to remove mount point in case of mount error
 	rmdir "$mount_point" 2>/dev/null
         ;;
     * )
         # For any other protocols, use udevil
-        udevil mount "$1"
+	# Run udevil in user's terminal in case password entry is required
+	# Prompt to close terminal if an error occurs so the error can be seen
+        spacefm -s set run_in_terminal \
+		"udevil mount '$1' || ( echo; echo Press Enter; read )"
         ;;
 esac
 </pre>
