@@ -2843,6 +2843,16 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                 {
                     set_next = xset_get( set->child );
                     xset_add_menuitem( desktop, file_browser, submenu, accel_group, set_next );
+                    GList* l = gtk_container_get_children( GTK_CONTAINER( submenu ) );
+                    if ( l )
+                        g_list_free( l );
+                    else
+                    {
+                        // Nothing was added to the menu (all items likely have
+                        // invisible context) so destroy (hide) - issue #215
+                        gtk_widget_destroy( item );
+                        goto _next_item;
+                    }
                 }
             }
             else if ( set->menu_style == XSET_MENU_SEP )
@@ -2907,7 +2917,8 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
                                                                 !set->disable );
         gtk_menu_shell_append( GTK_MENU_SHELL(menu), item );
     }
-    
+
+_next_item:
     if ( icon_file )
         g_free( icon_file );
         
