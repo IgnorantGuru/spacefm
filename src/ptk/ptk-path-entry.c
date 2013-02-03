@@ -212,7 +212,6 @@ static void update_completion( GtkEntry* entry,
 static void
 on_changed( GtkEntry* entry, gpointer user_data )
 {
-printf("on_changed\n");
     GtkEntryCompletion* completion;
     completion = gtk_entry_get_completion( entry );
     update_completion( entry, completion );
@@ -467,6 +466,30 @@ gboolean on_insert_prefix( GtkEntryCompletion *completion,
     return TRUE;
 }
 
+gboolean on_match_selected( GtkEntryCompletion *completion,
+                               GtkTreeModel    *model,
+                               GtkTreeIter     *iter,
+                               GtkWidget       *entry )
+{
+    char* path = NULL;
+    gtk_tree_model_get( model, iter, COL_PATH, &path, -1 );
+    if ( path && path[0] )
+    {
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+
+        gtk_entry_set_text( GTK_ENTRY( entry ), path );
+        g_free( path );
+        gtk_editable_set_position( (GtkEditable*)entry, -1 );
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        on_changed( GTK_ENTRY( entry ), NULL );
+    }
+    return TRUE;
+}
+
 #if 0
 gboolean on_match_selected( GtkEntryCompletion *completion,
                                GtkTreeModel    *model,
@@ -509,7 +532,10 @@ on_focus_in( GtkWidget *entry, GdkEventFocus* evt, gpointer user_data )
     g_object_unref( list );
 
     /* gtk_entry_completion_set_text_column( completion, COL_PATH ); */
-    g_object_set( completion, "text-column", COL_PATH, NULL );
+    
+    // Following line causes GTK3 to show both columns, so skip this and use
+    // custom match-selected handler to insert COL_PATH
+    //g_object_set( completion, "text-column", COL_PATH, NULL );
     render = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start( (GtkCellLayout*)completion, render, TRUE );
     gtk_cell_layout_add_attribute( (GtkCellLayout*)completion, render, "text", COL_NAME );
@@ -518,8 +544,8 @@ on_focus_in( GtkWidget *entry, GdkEventFocus* evt, gpointer user_data )
     gtk_entry_completion_set_popup_set_width( completion, TRUE );
     gtk_entry_set_completion( GTK_ENTRY(entry), completion );
     g_signal_connect( G_OBJECT(entry), "changed", G_CALLBACK(on_changed), NULL );
-    //g_signal_connect( G_OBJECT( completion ), "match-selected",
-    //                                G_CALLBACK( on_match_selected ), entry );
+    g_signal_connect( G_OBJECT( completion ), "match-selected",
+                                    G_CALLBACK( on_match_selected ), entry );
     g_signal_connect( G_OBJECT( completion ), "insert-prefix",
                                     G_CALLBACK( on_insert_prefix ), entry );
     g_object_unref( completion );

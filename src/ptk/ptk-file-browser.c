@@ -2380,10 +2380,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
     if ( !inhibit_focus )
-    {
-printf("setpathbar %s\n", disp_path );
         gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
-    }
     EntryData* edata = (EntryData*)g_object_get_data(
                                     G_OBJECT( file_browser->path_bar ), "edata" );
     if ( edata )
@@ -3188,18 +3185,16 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
     // change to dir seek_dir if needed; select first dir or else file with
     // prefix seek_name
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
-printf("cwd %s -> seekdir %s\n", cwd, seek_dir );
+
     if ( seek_dir && g_strcmp0( cwd, seek_dir ) )
     {
         // change dir
         g_free( file_browser->seek_name );
         file_browser->seek_name = g_strdup( seek_name );
         file_browser->inhibit_focus = TRUE;
-printf("    chdir %s\n", seek_dir );
         if ( !ptk_file_browser_chdir( file_browser, seek_dir,
                                                     PTK_FB_CHDIR_ADD_HISTORY ) )
         {
-printf("    ! chdir failed\n" );
             file_browser->inhibit_focus = FALSE;
             g_free( file_browser->seek_name );
             file_browser->seek_name = NULL;
@@ -3211,7 +3206,6 @@ printf("    ! chdir failed\n" );
     
     // no change dir was needed or was called from on_file_browser_after_chdir()
     // select seek name
-printf( "    seek %s\n", seek_name );
     ptk_file_browser_unselect_all( NULL, file_browser );
 
     if ( !( seek_name && seek_name[0] ) )
@@ -3248,10 +3242,7 @@ printf( "    seek %s\n", seek_name );
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
     }
     if ( !GTK_IS_TREE_MODEL( model ) )
-    {
-printf( "    ! invalid model\n");
         goto _restore_sig;
-    }
     
     // test rows - give preference to matching dir, else match file
     if ( gtk_tree_model_get_iter_first( model, &it ) )
@@ -3292,7 +3283,7 @@ printf( "    ! invalid model\n");
         it = it_file;
     if ( !it.stamp )
         goto _restore_sig;
-printf( "    select\n");
+
     // do selection and scroll to selected
     path = gtk_tree_model_get_path( GTK_TREE_MODEL( PTK_FILE_LIST( 
                                     file_browser->file_list ) ), &it );

@@ -2482,7 +2482,7 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
     
     if ( file_browser->inhibit_focus )
     {
-printf("on_file_browser_after_chdir - inhibit seekname %s\n", file_browser->seek_name);
+        // complete ptk_file_browser.c ptk_file_browser_seek_path()
         file_browser->inhibit_focus = FALSE;
         if ( file_browser->seek_name )
         {
