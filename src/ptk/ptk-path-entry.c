@@ -83,6 +83,7 @@ static void update_completion( GtkEntry* entry,
     const char* old_dir;
     GtkListStore* list;
     const char *sep;
+    GtkTreeIter it;
 
     sep = strrchr( gtk_entry_get_text(entry), '/' );
     if( sep )
@@ -107,22 +108,32 @@ static void update_completion( GtkEntry* entry,
         GDir* dir;
         if( (dir = g_dir_open( new_dir, 0, NULL )) )
         {
+            // build list of dir names
             const char* name;
+            GSList* name_list = NULL;
             while( (name = g_dir_read_name( dir )) )
             {
                 char* full_path = g_build_filename( new_dir, name, NULL );
                 if( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
-                {
-                    GtkTreeIter it;
-                    char* disp_name = g_filename_display_basename( full_path );
-                    gtk_list_store_append( list, &it );
-                    gtk_list_store_set( list, &it, COL_NAME, disp_name, COL_PATH, full_path, -1 );
-                    g_free( disp_name );
-                }
-                g_free( full_path );
+                    name_list = g_slist_prepend( name_list, full_path );
             }
             g_dir_close( dir );
 
+            // add sorted list to liststore
+            GSList* l;
+            char* disp_name;
+            name_list = g_slist_sort( name_list, (GCompareFunc)g_strcmp0 );
+            for ( l = name_list; l; l = l->next )
+            {
+                disp_name = g_filename_display_basename( (char*)l->data );
+                gtk_list_store_append( list, &it );
+                gtk_list_store_set( list, &it, COL_NAME, disp_name,
+                                               COL_PATH, (char*)l->data, -1 );
+                g_free( disp_name );
+                g_free( (char*)l->data );
+            }
+            g_slist_free( name_list );
+            
             gtk_entry_completion_set_match_func( completion, match_func, new_dir, NULL );
         }
         else
@@ -138,6 +149,64 @@ on_changed( GtkEntry* entry, gpointer user_data )
     update_completion( entry, completion );
 }
 
+void insert_complete( GtkEntry* entry )
+{
+    // find a real completion
+    const char* prefix = gtk_entry_get_text( GTK_ENTRY( entry ) );
+    if ( !prefix )
+        return;
+
+    char* dir_path = get_cwd( entry );
+    if ( !( dir_path && g_file_test( dir_path, G_FILE_TEST_IS_DIR ) ) )
+    {
+        g_free( dir_path );
+        return;
+    }
+
+    // Is only dir with this prefix?
+    int count = 0;
+    GDir* dir;
+    if ( !( dir = g_dir_open( dir_path, 0, NULL ) ) )
+    {
+        g_free( dir_path );
+        return;
+    }
+    
+    const char* name;
+    char* last_name = NULL;
+    char* prefix_name;
+    char* full_path;
+    if ( g_str_has_suffix( prefix, "/" ) )
+        prefix_name = NULL;
+    else
+        prefix_name = g_path_get_basename( prefix );
+    while ( count < 2 && ( name = g_dir_read_name( dir ) ) )
+    {
+        full_path = g_build_filename( dir_path, name, NULL );        
+        if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) &&
+                ( !prefix_name || g_str_has_prefix( name, prefix_name ) ) )
+        {
+            g_free( last_name );
+            last_name = full_path;
+            count++;
+        }
+        else
+            g_free( full_path );
+    }
+    g_free( prefix_name );
+    if ( count == 1 )
+    {
+        // found a single completion
+        char* new_prefix_slash = g_strdup_printf( "%s/", last_name );
+        gtk_entry_set_text( GTK_ENTRY( entry ), new_prefix_slash );
+        gtk_editable_set_position( (GtkEditable*)entry, -1 );
+        g_free( new_prefix_slash );        
+        g_free( last_name );
+    }        
+    g_dir_close( dir );
+    g_free( dir_path );
+}
+
 static gboolean
 on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
 {    
@@ -146,8 +215,40 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
                  
     if( evt->keyval == GDK_KEY_Tab && !keymod )
     {
+        //gtk_entry_completion_insert_prefix( gtk_entry_get_completion(GTK_ENTRY(entry)) );
+        //gtk_editable_set_position( (GtkEditable*)entry, -1 );
+        
+        /*
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+                                                
         gtk_entry_completion_insert_prefix( gtk_entry_get_completion(GTK_ENTRY(entry)) );
+        const char* path = gtk_entry_get_text( GTK_ENTRY( entry ) );
+        if ( path && path[0] && !g_str_has_suffix( path, "/" ) &&
+                                    g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        {
+            char* new_path = g_strdup_printf( "%s/", path );
+            gtk_entry_set_text( GTK_ENTRY( entry ), new_path );
+            g_free( new_path );
+        }
         gtk_editable_set_position( (GtkEditable*)entry, -1 );
+        
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        on_changed( GTK_ENTRY( entry ), NULL );
+        */
+
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        insert_complete( GTK_ENTRY( entry ) );
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        on_changed( GTK_ENTRY( entry ), NULL );
+        gtk_entry_completion_complete( gtk_entry_get_completion(GTK_ENTRY(entry)) );
         return TRUE;
     }
     else if ( ( evt->keyval == GDK_KEY_Up || evt->keyval == GDK_KEY_Down ) && !keymod )
@@ -288,6 +389,44 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
     return FALSE;
 }
 
+gboolean on_insert_prefix( GtkEntryCompletion *completion,
+                           gchar              *prefix,
+                           GtkWidget          *entry )
+{
+    // don't use the default handler because it inserts partial names
+    return TRUE;
+}
+
+#if 0
+gboolean on_match_selected( GtkEntryCompletion *completion,
+                               GtkTreeModel    *model,
+                               GtkTreeIter     *iter,
+                               GtkWidget       *entry )
+{
+    char* path = NULL;
+    gtk_tree_model_get( model, iter, COL_PATH, &path, -1 );
+    if ( path && path[0] && !g_str_has_suffix( path, "/" ) )
+    {
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+
+        char* new_path = g_strdup_printf( "%s/", path );
+        gtk_entry_set_text( GTK_ENTRY( entry ), new_path );
+        g_free( new_path );
+        g_free( path );
+        gtk_editable_set_position( (GtkEditable*)entry, -1 );
+
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        on_changed( GTK_ENTRY( entry ), NULL );
+        return TRUE;
+    }
+    return FALSE;
+}
+#endif
+
 static gboolean
 on_focus_in( GtkWidget *entry, GdkEventFocus* evt, gpointer user_data )
 {
@@ -305,10 +444,14 @@ on_focus_in( GtkWidget *entry, GdkEventFocus* evt, gpointer user_data )
     gtk_cell_layout_pack_start( (GtkCellLayout*)completion, render, TRUE );
     gtk_cell_layout_add_attribute( (GtkCellLayout*)completion, render, "text", COL_NAME );
 
-    gtk_entry_completion_set_inline_completion( completion, TRUE );
+    //gtk_entry_completion_set_inline_completion( completion, TRUE );
     gtk_entry_completion_set_popup_set_width( completion, TRUE );
     gtk_entry_set_completion( GTK_ENTRY(entry), completion );
     g_signal_connect( G_OBJECT(entry), "changed", G_CALLBACK(on_changed), NULL );
+    //g_signal_connect( G_OBJECT( completion ), "match-selected",
+    //                                G_CALLBACK( on_match_selected ), entry );
+    g_signal_connect( G_OBJECT( completion ), "insert-prefix",
+                                    G_CALLBACK( on_insert_prefix ), entry );
     g_object_unref( completion );
 
     return FALSE;

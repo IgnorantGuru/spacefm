@@ -12,6 +12,7 @@
     update custom protocol handler script in manual to use run_in_terminal
     mouse back/fwd buttons work anywhere in window
     don't show empty (all items context hidden) custom submenus #215
+    path bar tab completion reworked, sorted
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse
