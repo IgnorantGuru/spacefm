@@ -692,13 +692,37 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
 
 void on_entry_insert( GtkEntryBuffer *buf, guint position, gchar *chars,
                                             guint n_chars, gpointer user_data )
-{   // remove linefeeds from pasted text
-    if ( !strchr( gtk_entry_buffer_get_text( buf ), '\n' ) )
+{
+    char* new_text = NULL;
+    const char* text = gtk_entry_buffer_get_text( buf );
+    if ( !text )
         return;
 
-    char* new_text = replace_string( gtk_entry_buffer_get_text( buf ), "\n", "", FALSE );
-    gtk_entry_buffer_set_text( buf, new_text, -1 );
-    g_free( new_text );
+    if ( strchr( text, '\n' ) )
+    {
+        // remove linefeeds from pasted text       
+        text = new_text = replace_string( text, "\n", "", FALSE );
+    }
+    
+    // remove leading spaces for test
+    while ( text[0] == ' ' )
+        text++;
+    
+    if ( text[0] == '\'' && g_str_has_suffix( text, "'" ) && text[1] != '\0' )
+    {
+        // path is quoted - assume bash quote
+        char* unquote = g_strdup( text + 1 );
+        unquote[strlen( unquote ) - 1] = '\0';
+        g_free( new_text );
+        new_text = replace_string( unquote, "'\\''", "'", FALSE );
+        g_free( unquote );
+    }
+
+    if ( new_text )
+    {
+        gtk_entry_buffer_set_text( buf, new_text, -1 );
+        g_free( new_text );
+    }
 }
 
 void entry_data_free( EntryData* edata )
