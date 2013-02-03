@@ -53,6 +53,63 @@ get_cwd( GtkEntry* entry )
     return NULL;
 }
 
+gboolean seek_path( GtkEntry* entry )
+{
+    if ( !GTK_IS_ENTRY( entry ) )
+        return FALSE;
+    EntryData* edata = (EntryData*)g_object_get_data(
+                                                G_OBJECT( entry ), "edata" );
+    if ( !( edata && edata->browser ) )
+        return FALSE;
+    if ( edata->seek_timer )
+    {
+        g_source_remove( edata->seek_timer );
+        edata->seek_timer = 0;
+    }
+    
+    char* seek_dir;
+    char* seek_name = NULL;
+    const char* path = gtk_entry_get_text( entry );
+    if ( !( path && path[0] ) )
+        return FALSE;
+    if ( g_str_has_suffix( path, "/" ) && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        // dir only
+        seek_dir = g_strdup( path );
+    else
+    {
+        // get dir and name prefix
+        seek_dir = get_cwd( entry );
+        if ( !( seek_dir && g_file_test( seek_dir, G_FILE_TEST_IS_DIR ) ) )
+        {
+            g_free( seek_dir );
+            return FALSE;
+        }
+        if ( !g_str_has_suffix( path, "/" ) )
+            seek_name = g_path_get_basename( path );
+    }
+    if ( strcmp( seek_dir, "/" ) && g_str_has_suffix( seek_dir, "/" ) )
+    {
+        // strip trialing slash
+        seek_dir[strlen( seek_dir ) - 1] = '\0';
+    }
+    ptk_file_browser_seek_path( edata->browser, seek_dir, seek_name );
+    g_free( seek_dir );
+    g_free( seek_name );
+    return FALSE;
+}
+
+void seek_path_delayed( GtkEntry* entry )
+{
+    EntryData* edata = (EntryData*)g_object_get_data(
+                                                G_OBJECT( entry ), "edata" );
+    if ( !( edata && edata->browser ) )
+        return;
+    // user is still typing - restart timer
+    if ( edata->seek_timer )
+        g_source_remove( edata->seek_timer );
+    edata->seek_timer = g_timeout_add( 250, ( GSourceFunc )seek_path, entry );
+}
+
 static gboolean match_func( GtkEntryCompletion *completion,
                                                      const gchar *key,
                                                      GtkTreeIter *it,
@@ -147,6 +204,7 @@ on_changed( GtkEntry* entry, gpointer user_data )
     GtkEntryCompletion* completion;
     completion = gtk_entry_get_completion( entry );
     update_completion( entry, completion );
+    seek_path_delayed( GTK_ENTRY( entry ) );
 }
 
 void insert_complete( GtkEntry* entry )
@@ -635,6 +693,7 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
     edata->current = NULL;
     edata->editing = NULL;
     edata->browser = file_browser;
+    edata->seek_timer = 0;
     
     g_signal_connect( entry, "focus-in-event", G_CALLBACK(on_focus_in), NULL );
     g_signal_connect( entry, "focus-out-event", G_CALLBACK(on_focus_out), NULL );

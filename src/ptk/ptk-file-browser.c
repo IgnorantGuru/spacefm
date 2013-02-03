@@ -1904,6 +1904,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
     file_browser->sel_change_idle = 0;
+    file_browser->inhibit_focus = FALSE;
     file_browser->slide_x = slide_x;
     file_browser->slide_y = slide_y;
     file_browser->slide_s = slide_s;
@@ -2372,7 +2373,8 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     ptk_file_browser_update_tab_label( file_browser );
 
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
-    gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
+    if ( !file_browser->inhibit_focus )
+        gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
     EntryData* edata = (EntryData*)g_object_get_data(
                                     G_OBJECT( file_browser->path_bar ), "edata" );
     if ( edata )
@@ -3168,6 +3170,156 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                                         file_browser );
     }
     focus_folder_view( file_browser );
+}
+
+void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
+                                                    const char* seek_dir,
+                                                    const char* seek_name )
+{
+    // change to dir seek_dir if needed; select first dir or else file with
+    // prefix seek_name
+    const char* cwd = ptk_file_browser_get_cwd( file_browser );
+printf("seekdir %s -> %s\n", cwd, seek_dir );
+    if ( g_strcmp0( cwd, seek_dir ) )
+    {
+        gdk_threads_enter();
+        file_browser->inhibit_focus = TRUE;
+printf("    chdir %s\n", seek_dir );
+        ptk_file_browser_chdir( file_browser, seek_dir, PTK_FB_CHDIR_ADD_HISTORY );
+        gdk_threads_leave();
+    }
+    else
+        ptk_file_browser_unselect_all( NULL, file_browser );
+    if ( !( seek_name && seek_name[0] ) )
+    {
+        return;
+    }
+
+    GtkTreeModel* model;
+    GtkTreePath* path;
+    GtkTreeIter it;
+    GtkTreeIter it_file;
+    GtkTreeIter it_dir;
+    it_file.stamp = 0;
+    it_dir.stamp = 0;
+    GtkTreeSelection* tree_sel;
+    VFSFileInfo* file;
+    gboolean select;
+    char* name;
+    // get model, treesel, and stop signals
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || 
+                                file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        model = exo_icon_view_get_model( EXO_ICON_VIEW( file_browser->folder_view ) );
+        g_signal_handlers_block_matched( file_browser->folder_view,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        tree_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW( file_browser->folder_view ));
+        g_signal_handlers_block_matched( tree_sel,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+    }
+    if ( !GTK_IS_TREE_MODEL( model ) )
+    {
+        printf( "invalid model\n");
+        return;
+    }
+    
+    // test rows
+    if ( gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            // get file
+            gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+            if ( !file )
+                continue;
+
+            // test name
+            name = (char*)vfs_file_info_get_disp_name( file );
+            if ( !g_strcmp0( name, seek_name ) )
+            {
+                // exact match (may be file or dir)
+                it_dir = it;
+                break;
+            }
+            if ( g_str_has_prefix( name, seek_name ) )
+            {
+                // prefix found
+                if ( vfs_file_info_is_dir( file ) )
+                {
+                    if ( !it_dir.stamp )
+                        it_dir = it;
+                }
+                else if ( !it_file.stamp )
+                    it_file = it;
+            }
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
+    
+    if ( it_dir.stamp )
+        it = it_dir;
+    else
+        it = it_file;
+    if ( !it.stamp )
+        return;
+
+    // do selection and scroll to selected
+    path = gtk_tree_model_get_path( GTK_TREE_MODEL( PTK_FILE_LIST( 
+                                    file_browser->file_list ) ), &it );
+    if ( !path )
+        return;
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW
+                            || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        // select
+        exo_icon_view_select_path( 
+                                EXO_ICON_VIEW( file_browser->folder_view ), path );
+        
+        // scroll and set cursor
+        exo_icon_view_set_cursor( EXO_ICON_VIEW( 
+                    file_browser->folder_view ), path, NULL, FALSE );
+        exo_icon_view_scroll_to_path( EXO_ICON_VIEW(
+                file_browser->folder_view ), path, TRUE, .25, 0 );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        // select
+        gtk_tree_selection_select_path( tree_sel, path );
+
+        // scroll and set cursor
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW( file_browser->folder_view ),
+                                                    path, NULL, FALSE);
+        gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
+                                        path, NULL, TRUE, .25, 0 );
+    }
+
+    // restore signals and trigger sel change
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        g_signal_handlers_unblock_matched( file_browser->folder_view,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( EXO_ICON_VIEW( file_browser->folder_view ),
+                                        file_browser );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        g_signal_handlers_unblock_matched( tree_sel,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( (ExoIconView*)tree_sel,
+                                        file_browser );
+    }
 }
 
 /* signal handlers */

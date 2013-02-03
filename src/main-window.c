@@ -93,11 +93,11 @@ static void on_folder_notebook_switch_pape ( GtkNotebook *notebook,
 //static void on_close_tab_activate ( GtkMenuItem *menuitem,
 //                                    gpointer user_data );
 
-static void on_file_browser_before_chdir( PtkFileBrowser* file_browser,
-                                          const char* path, gboolean* cancel,
-                                          FMMainWindow* main_window );
-static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
-                                         FMMainWindow* main_window );
+//static void on_file_browser_before_chdir( PtkFileBrowser* file_browser,
+//                                          const char* path, gboolean* cancel,
+//                                          FMMainWindow* main_window );
+//static void on_file_browser_begin_chdir( PtkFileBrowser* file_browser,
+//                                         FMMainWindow* main_window );
 static void on_file_browser_open_item( PtkFileBrowser* file_browser,
                                        const char* path, PtkOpenAction action,
                                        FMMainWindow* main_window );
@@ -2480,9 +2480,14 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
 
     //fm_main_window_update_tab_label( main_window, file_browser, file_browser->dir->disp_path );
     
-    ptk_file_browser_select_last( file_browser );  //MOD restore last selections
+    if ( !file_browser->inhibit_focus )
+    {
+        ptk_file_browser_select_last( file_browser );  //MOD restore last selections
 
-    gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
+    }
+    else
+        file_browser->inhibit_focus = FALSE;
 }
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
@@ -3559,6 +3564,7 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
             || event->keyval == GDK_KEY_Home
             || event->keyval == GDK_KEY_End
             || event->keyval == GDK_KEY_Delete
+            || event->keyval == GDK_KEY_Tab
             || event->keyval == GDK_KEY_BackSpace )
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );

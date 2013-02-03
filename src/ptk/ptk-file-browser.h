@@ -62,6 +62,7 @@ struct _PtkFileBrowser
     int n_sel_files;
     off_t sel_size;
     guint sel_change_idle;
+    gboolean inhibit_focus;
     
     /* side pane */
     GtkWidget* side_pane_buttons;
@@ -346,6 +347,9 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path );
 void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                                                         char** filename,
                                                         gboolean do_select );
+void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
+                                                    const char* seek_dir,
+                                                    const char* seek_name );
 
 
 G_END_DECLS

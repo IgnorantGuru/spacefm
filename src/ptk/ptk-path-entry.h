@@ -24,6 +24,7 @@ typedef struct
     GList* current;
     char* editing;
     PtkFileBrowser* browser;
+    guint seek_timer;
 } EntryData;
 
 GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser );
