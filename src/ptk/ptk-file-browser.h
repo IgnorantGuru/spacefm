@@ -62,7 +62,10 @@ struct _PtkFileBrowser
     int n_sel_files;
     off_t sel_size;
     guint sel_change_idle;
+    
+    // path bar auto seek
     gboolean inhibit_focus;
+    char* seek_name;
     
     /* side pane */
     GtkWidget* side_pane_buttons;

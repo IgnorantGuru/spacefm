@@ -10326,6 +10326,10 @@ void xset_defaults()
     set = xset_set( "view_refresh", "label", _("Re_fresh") );
     xset_set_set( set, "icon", "gtk-refresh" );
 
+    set = xset_set( "path_seek", "label", _("Auto See_k") );
+    set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
+
     set = xset_set( "path_hand", "label", _("P_rotocol Handler...") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Set Protocol Handler") );

@@ -1540,6 +1540,10 @@ void ptk_file_browser_finalize( GObject *obj )
     }
 
     g_free( file_browser->status_bar_custom );
+    g_free( file_browser->seek_name );
+    file_browser->seek_name = NULL;
+    g_free( file_browser->select_path );
+    file_browser->select_path = NULL;
     
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
@@ -1905,6 +1909,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->task_view = task_view;
     file_browser->sel_change_idle = 0;
     file_browser->inhibit_focus = FALSE;
+    file_browser->seek_name = NULL;
     file_browser->slide_x = slide_x;
     file_browser->slide_y = slide_y;
     file_browser->slide_s = slide_s;
@@ -2207,6 +2212,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     char* path;
     char* msg;
 
+    gboolean inhibit_focus = file_browser->inhibit_focus;
     //file_browser->button_press = FALSE;
     file_browser->is_drag = FALSE;
     file_browser->skip_release = FALSE;
@@ -2373,8 +2379,11 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     ptk_file_browser_update_tab_label( file_browser );
 
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
-    if ( !file_browser->inhibit_focus )
+    if ( !inhibit_focus )
+    {
+printf("setpathbar %s\n", disp_path );
         gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
+    }
     EntryData* edata = (EntryData*)g_object_get_data(
                                     G_OBJECT( file_browser->path_bar ), "edata" );
     if ( edata )
@@ -3179,22 +3188,36 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
     // change to dir seek_dir if needed; select first dir or else file with
     // prefix seek_name
     const char* cwd = ptk_file_browser_get_cwd( file_browser );
-printf("seekdir %s -> %s\n", cwd, seek_dir );
-    if ( g_strcmp0( cwd, seek_dir ) )
+printf("cwd %s -> seekdir %s\n", cwd, seek_dir );
+    if ( seek_dir && g_strcmp0( cwd, seek_dir ) )
     {
-        gdk_threads_enter();
+        // change dir
+        g_free( file_browser->seek_name );
+        file_browser->seek_name = g_strdup( seek_name );
         file_browser->inhibit_focus = TRUE;
 printf("    chdir %s\n", seek_dir );
-        ptk_file_browser_chdir( file_browser, seek_dir, PTK_FB_CHDIR_ADD_HISTORY );
-        gdk_threads_leave();
-    }
-    else
-        ptk_file_browser_unselect_all( NULL, file_browser );
-    if ( !( seek_name && seek_name[0] ) )
-    {
+        if ( !ptk_file_browser_chdir( file_browser, seek_dir,
+                                                    PTK_FB_CHDIR_ADD_HISTORY ) )
+        {
+printf("    ! chdir failed\n" );
+            file_browser->inhibit_focus = FALSE;
+            g_free( file_browser->seek_name );
+            file_browser->seek_name = NULL;
+        }
+        // return here to allow dir to load
+        // finishes seek in main-window.c on_file_browser_after_chdir()
         return;
     }
+    
+    // no change dir was needed or was called from on_file_browser_after_chdir()
+    // select seek name
+printf( "    seek %s\n", seek_name );
+    ptk_file_browser_unselect_all( NULL, file_browser );
 
+    if ( !( seek_name && seek_name[0] ) )
+        return;
+
+    // get model, treesel, and stop signals
     GtkTreeModel* model;
     GtkTreePath* path;
     GtkTreeIter it;
@@ -3206,7 +3229,6 @@ printf("    chdir %s\n", seek_dir );
     VFSFileInfo* file;
     gboolean select;
     char* name;
-    // get model, treesel, and stop signals
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || 
                                 file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {
@@ -3227,11 +3249,11 @@ printf("    chdir %s\n", seek_dir );
     }
     if ( !GTK_IS_TREE_MODEL( model ) )
     {
-        printf( "invalid model\n");
-        return;
+printf( "    ! invalid model\n");
+        goto _restore_sig;
     }
     
-    // test rows
+    // test rows - give preference to matching dir, else match file
     if ( gtk_tree_model_get_iter_first( model, &it ) )
     {
         do
@@ -3269,13 +3291,13 @@ printf("    chdir %s\n", seek_dir );
     else
         it = it_file;
     if ( !it.stamp )
-        return;
-
+        goto _restore_sig;
+printf( "    select\n");
     // do selection and scroll to selected
     path = gtk_tree_model_get_path( GTK_TREE_MODEL( PTK_FILE_LIST( 
                                     file_browser->file_list ) ), &it );
     if ( !path )
-        return;
+        goto _restore_sig;
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW
                             || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {
@@ -3301,6 +3323,7 @@ printf("    chdir %s\n", seek_dir );
                                         path, NULL, TRUE, .25, 0 );
     }
 
+_restore_sig:
     // restore signals and trigger sel change
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
     {

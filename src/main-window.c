@@ -2480,14 +2480,22 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
 
     //fm_main_window_update_tab_label( main_window, file_browser, file_browser->dir->disp_path );
     
-    if ( !file_browser->inhibit_focus )
+    if ( file_browser->inhibit_focus )
     {
-        ptk_file_browser_select_last( file_browser );  //MOD restore last selections
-
-        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
+printf("on_file_browser_after_chdir - inhibit seekname %s\n", file_browser->seek_name);
+        file_browser->inhibit_focus = FALSE;
+        if ( file_browser->seek_name )
+        {
+            ptk_file_browser_seek_path( file_browser, NULL, file_browser->seek_name );
+            g_free( file_browser->seek_name );
+            file_browser->seek_name = NULL;
+        }
     }
     else
-        file_browser->inhibit_focus = FALSE;
+    {
+        ptk_file_browser_select_last( file_browser );  //MOD restore last selections
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
+    }
 }
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
@@ -3564,7 +3572,7 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
             || event->keyval == GDK_KEY_Home
             || event->keyval == GDK_KEY_End
             || event->keyval == GDK_KEY_Delete
-            || event->keyval == GDK_KEY_Tab
+            || ( event->keyval == GDK_KEY_Tab && keymod == 0 )
             || event->keyval == GDK_KEY_BackSpace )
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );

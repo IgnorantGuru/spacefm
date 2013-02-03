@@ -67,12 +67,15 @@ gboolean seek_path( GtkEntry* entry )
         edata->seek_timer = 0;
     }
     
+    if ( !xset_get_b( "path_seek" ) )
+        return;
+    
     char* seek_dir;
     char* seek_name = NULL;
     const char* path = gtk_entry_get_text( entry );
     if ( !( path && path[0] ) )
         return FALSE;
-    if ( g_str_has_suffix( path, "/" ) && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+    if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
         // dir only
         seek_dir = g_strdup( path );
     else
@@ -107,7 +110,7 @@ void seek_path_delayed( GtkEntry* entry )
     // user is still typing - restart timer
     if ( edata->seek_timer )
         g_source_remove( edata->seek_timer );
-    edata->seek_timer = g_timeout_add( 250, ( GSourceFunc )seek_path, entry );
+    edata->seek_timer = g_timeout_add( 350, ( GSourceFunc )seek_path, entry );
 }
 
 static gboolean match_func( GtkEntryCompletion *completion,
@@ -125,8 +128,14 @@ static gboolean match_func( GtkEntryCompletion *completion,
     {
         if( *key == 0 || 0 == g_ascii_strncasecmp( name, key, strlen(key) ) )
         {
-            g_free( name );
-            return TRUE;
+            int auto_seek = GPOINTER_TO_INT( g_object_get_data( 
+                                    G_OBJECT( completion ), "auto_seek" ) );
+            // if auto-seek, don't show exact match in completion popup
+            if ( !auto_seek || g_strcmp0( name, key ) )
+            {
+                g_free( name );
+                return TRUE;
+            }
         }
         g_free( name );
     }
@@ -148,6 +157,8 @@ static void update_completion( GtkEntry* entry,
     else
         fn = (char*)gtk_entry_get_text(entry);
     g_object_set_data_full( G_OBJECT(completion), "fn", g_strdup(fn), (GDestroyNotify)g_free );
+    g_object_set_data( G_OBJECT( completion ), "auto_seek", 
+                                GINT_TO_POINTER( !!xset_get_b( "path_seek" ) ) );
 
     new_dir = get_cwd( entry );
     old_dir = (const char*)g_object_get_data( (GObject*)completion, "cwd" );
@@ -201,9 +212,11 @@ static void update_completion( GtkEntry* entry,
 static void
 on_changed( GtkEntry* entry, gpointer user_data )
 {
+printf("on_changed\n");
     GtkEntryCompletion* completion;
     completion = gtk_entry_get_completion( entry );
     update_completion( entry, completion );
+    gtk_entry_completion_complete( gtk_entry_get_completion(GTK_ENTRY(entry)) );
     seek_path_delayed( GTK_ENTRY( entry ) );
 }
 
@@ -255,11 +268,17 @@ void insert_complete( GtkEntry* entry )
     if ( count == 1 )
     {
         // found a single completion
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
         char* new_prefix_slash = g_strdup_printf( "%s/", last_name );
         gtk_entry_set_text( GTK_ENTRY( entry ), new_prefix_slash );
         gtk_editable_set_position( (GtkEditable*)entry, -1 );
         g_free( new_prefix_slash );        
         g_free( last_name );
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
     }        
     g_dir_close( dir );
     g_free( dir_path );
@@ -298,15 +317,8 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
         on_changed( GTK_ENTRY( entry ), NULL );
         */
 
-        g_signal_handlers_block_matched( G_OBJECT( entry ),
-                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                         on_changed, NULL );
         insert_complete( GTK_ENTRY( entry ) );
-        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
-                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                         on_changed, NULL );
         on_changed( GTK_ENTRY( entry ), NULL );
-        gtk_entry_completion_complete( gtk_entry_get_completion(GTK_ENTRY(entry)) );
         return TRUE;
     }
     else if ( ( evt->keyval == GDK_KEY_Up || evt->keyval == GDK_KEY_Down ) && !keymod )
@@ -638,6 +650,8 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
 
     GtkAccelGroup* accel_group = gtk_accel_group_new();
     XSet* set = xset_get( "sep_entry" );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+    set = xset_get( "path_seek" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_get( "path_hand" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
