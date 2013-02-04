@@ -2240,13 +2240,17 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     if ( ! path || ! g_file_test( path, ( G_FILE_TEST_IS_DIR ) ) )
     {
-        msg = g_strdup_printf( _("Directory doesn't exist\n\n%s"), path );
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
-                        _("Error"),
-                        msg );
-        if ( path )
-            g_free( path );
-        g_free( msg );
+        if ( !inhibit_focus )
+        {
+            msg = g_strdup_printf( _("Directory doesn't exist\n\n%s"), path );
+            ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
+                                                GTK_WIDGET( file_browser ) ) ),
+                            _("Error"),
+                            msg );
+            if ( path )
+                g_free( path );
+            g_free( msg );
+        }
         return FALSE;
     }
 
@@ -2261,18 +2265,22 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     if ( test_access == -1 )
     {
-        msg = g_strdup_printf( _("Unable to access %s\n\n%s"), path, 
-                                    g_markup_escape_text(g_strerror( errno ), -1) );
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
-                        _("Error"),
-                        msg );
-        g_free(msg);
+        if ( !inhibit_focus )
+        {
+            msg = g_strdup_printf( _("Unable to access %s\n\n%s"), path, 
+                                        g_markup_escape_text(g_strerror( errno ), -1) );
+            ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( 
+                                                            file_browser ) ) ),
+                            _("Error"),
+                            msg );
+            g_free(msg);
+        }
         return FALSE;
     }
 
     g_signal_emit( file_browser, signals[ BEFORE_CHDIR_SIGNAL ], 0, path, &cancel );
 
-    if( cancel )
+    if ( cancel )
         return FALSE;
 
     //MOD remember selected files
