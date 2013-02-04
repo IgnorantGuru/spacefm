@@ -21,8 +21,6 @@ G_BEGIN_DECLS
 typedef struct
 {
     GList* history;
-    GList* current;
-    char* editing;
     PtkFileBrowser* browser;
     guint seek_timer;
 } EntryData;

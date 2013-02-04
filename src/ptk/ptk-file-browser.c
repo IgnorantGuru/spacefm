@@ -828,6 +828,30 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
     g_free( name );
 }
 
+void save_command_history( GtkEntry* entry )
+{
+    GList* l;
+    
+    EntryData* edata = (EntryData*)g_object_get_data( G_OBJECT( entry ), "edata" );
+    if ( !edata )
+        return;
+    const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
+    // remove duplicates
+    while ( l = g_list_find_custom( edata->history, text, (GCompareFunc)g_strcmp0 ) )
+    {
+        g_free( (char*)l->data );
+        edata->history = g_list_delete_link( edata->history, l );
+    }
+    edata->history = g_list_prepend( edata->history, g_strdup( text ) );
+    // shorten to 200 entries
+    while ( g_list_length( edata->history ) > 200 )
+    {
+        l = g_list_last( edata->history );
+        g_free( (char*)l->data );
+        edata->history = g_list_delete_link( edata->history, l );
+    }
+}
+
 gboolean on_address_bar_focus_in( GtkWidget *entry, GdkEventFocus* evt,
                                                     PtkFileBrowser* file_browser )
 {
@@ -883,6 +907,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             g_free( str );
             text++;
         }
+        gboolean is_space = text[0] == ' ';
         command = g_strdup( text );
         trim_command = g_strstrip( command );
         if ( trim_command[0] == '\0' )
@@ -894,55 +919,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             return;
         }
 
-        // save history
-        EntryData* edata = (EntryData*)g_object_get_data( G_OBJECT( entry ), "edata" );
-        text = gtk_entry_get_text( GTK_ENTRY( entry ) );
-        if ( edata->current )
-        {
-            if ( !strcmp( edata->current->data, text ) )
-            {
-                // no change
-                //printf( "    same as current\n");
-            }
-            else
-            {
-                //printf( "    append (!= current)\n");
-                edata->history = g_list_append( edata->history, g_strdup( text ) );
-                edata->current = g_list_last( edata->history );
-            }
-        }
-        else //( !edata->current )
-        {
-            if ( edata->history )
-            {
-                l = g_list_last( edata->history );
-                if ( !strcmp( l->data, text ) )
-                {
-                    // same as last history
-                    //printf( "    same as history last  %s\n", l->data );
-                }
-                else
-                {
-                    //printf( "    append (!current history)\n");
-                    edata->history = g_list_append( edata->history, g_strdup( text ) );
-                    edata->current = g_list_last( edata->history );
-                }
-            }
-            else
-            {
-                //printf( "    append (!current !history)\n");
-                edata->history = g_list_append( edata->history, g_strdup( text ) );
-                edata->current = g_list_last( edata->history );
-            }
-        }
-        if ( edata->editing )
-        {
-            g_free( edata->editing );
-            edata->editing = NULL;
-        }
-        if ( edata->history && g_list_length( edata->history ) > 50 )
-            edata->history = g_list_delete_link( edata->history, edata->history );
-
+        save_command_history( GTK_ENTRY( entry ) );
+            
         // task
         char* task_name = g_strdup( gtk_entry_get_text( GTK_ENTRY( entry ) ) );
         const char* cwd = ptk_file_browser_get_cwd( file_browser );
@@ -970,23 +948,26 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
 
         // reset entry text
         str = prefix;
-        prefix = g_strdup_printf( "%s ", str );
+        prefix = g_strdup_printf( "%s%s", str, is_space ? " " : "" );
         g_free( str );
         gtk_entry_set_text( GTK_ENTRY( entry ), prefix );
         g_free( prefix );
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
-        edata->current = NULL;
     }
     else if ( !g_file_test( final_path, G_FILE_TEST_EXISTS ) && text[0] == '%' )
     {
         str = g_strdup( ++text );
         g_strstrip( str );
         if ( str && str[0] != '\0' )
+        {
+            save_command_history( GTK_ENTRY( entry ) );
             ptk_file_browser_select_pattern( NULL, file_browser, str );
+        }
         g_free( str );
     }
     else if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
     {
+        save_command_history( GTK_ENTRY( entry ) );
         str = g_strdup( text );
         mount_network( file_browser, str, FALSE );
         g_free( str );
@@ -2389,10 +2370,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
     if ( !inhibit_focus )
         gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
-    EntryData* edata = (EntryData*)g_object_get_data(
-                                    G_OBJECT( file_browser->path_bar ), "edata" );
-    if ( edata )
-        edata->current = NULL;
+
     g_free( disp_path );
 
     enable_toolbar( file_browser );

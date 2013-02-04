@@ -127,7 +127,7 @@ gboolean seek_path( GtkEntry* entry )
         else
             g_free( test_path );
     }
-
+/*  this interferes with entering URLs in path bar
     char* actual_path = g_build_filename( seek_dir, seek_name, NULL );
     if ( strcmp( actual_path, "/" ) && g_str_has_suffix( path, "/" ) )
     {
@@ -148,7 +148,7 @@ gboolean seek_path( GtkEntry* entry )
                                          on_changed, NULL );        
     }
     g_free( actual_path );
-
+*/
     if ( strcmp( seek_dir, "/" ) && g_str_has_suffix( seek_dir, "/" ) )
     {
         // strip trialing slash
@@ -170,6 +170,24 @@ void seek_path_delayed( GtkEntry* entry )
     if ( edata->seek_timer )
         g_source_remove( edata->seek_timer );
     edata->seek_timer = g_timeout_add( 350, ( GSourceFunc )seek_path, entry );
+}
+
+static gboolean match_func_cmd( GtkEntryCompletion *completion,
+                                                     const gchar *key,
+                                                     GtkTreeIter *it,
+                                                     gpointer user_data)
+{
+    char* name = NULL;
+    GtkTreeModel* model = gtk_entry_completion_get_model(completion);
+    gtk_tree_model_get( model, it, COL_NAME, &name, -1 );
+
+    if ( name && key && g_str_has_prefix( name, key ) )
+    {
+        g_free( name );
+        return TRUE;
+    }
+    g_free( name );
+    return FALSE;
 }
 
 static gboolean match_func( GtkEntryCompletion *completion,
@@ -198,65 +216,91 @@ static gboolean match_func( GtkEntryCompletion *completion,
 static void update_completion( GtkEntry* entry,
                                GtkEntryCompletion* completion )
 {
-    char* new_dir, *fn;
-    const char* old_dir;
     GtkListStore* list;
-    const char *sep;
     GtkTreeIter it;
 
-    sep = strrchr( gtk_entry_get_text(entry), '/' );
-    if( sep )
-        fn = (char*)sep + 1;
-    else
-        fn = (char*)gtk_entry_get_text(entry);
-    g_object_set_data_full( G_OBJECT(completion), "fn", g_strdup(fn), (GDestroyNotify)g_free );
-
-    new_dir = get_cwd( entry );
-    old_dir = (const char*)g_object_get_data( (GObject*)completion, "cwd" );
-    if( old_dir && new_dir && 0 == g_ascii_strcasecmp( old_dir, new_dir ) )
+    const char* text = gtk_entry_get_text( entry );
+    if ( text && ( text[0] == '$' || text[0] == '+' || text[0] == '&'
+                                    || text[0] == '!' || text[0] == '%' ||
+                   ( text[0] != '/' && strstr( text, ":/" ) ) ) )
     {
-        g_free( new_dir );
-        return;
-    }
-    g_object_set_data_full( (GObject*)completion, "cwd",
-                             new_dir, g_free );
-    list = (GtkListStore*)gtk_entry_completion_get_model( completion );
-    gtk_list_store_clear( list );
-    if( new_dir )
-    {
-        GDir* dir;
-        if( (dir = g_dir_open( new_dir, 0, NULL )) )
+        // command history
+        GList* l;
+        list = (GtkListStore*)gtk_entry_completion_get_model( completion );
+        gtk_list_store_clear( list );
+        EntryData* edata = (EntryData*)g_object_get_data(
+                                                    G_OBJECT( entry ), "edata" );
+        if ( !( edata && edata->history ) )
+            return;
+        for ( l = edata->history; l; l = l->next )
         {
-            // build list of dir names
-            const char* name;
-            GSList* name_list = NULL;
-            while( (name = g_dir_read_name( dir )) )
-            {
-                char* full_path = g_build_filename( new_dir, name, NULL );
-                if( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
-                    name_list = g_slist_prepend( name_list, full_path );
-            }
-            g_dir_close( dir );
-
-            // add sorted list to liststore
-            GSList* l;
-            char* disp_name;
-            name_list = g_slist_sort( name_list, (GCompareFunc)g_strcmp0 );
-            for ( l = name_list; l; l = l->next )
-            {
-                disp_name = g_filename_display_basename( (char*)l->data );
-                gtk_list_store_append( list, &it );
-                gtk_list_store_set( list, &it, COL_NAME, disp_name,
-                                               COL_PATH, (char*)l->data, -1 );
-                g_free( disp_name );
-                g_free( (char*)l->data );
-            }
-            g_slist_free( name_list );
-            
-            gtk_entry_completion_set_match_func( completion, match_func, new_dir, NULL );
+            gtk_list_store_append( list, &it );
+            gtk_list_store_set( list, &it, COL_NAME, (char*)l->data,
+                                           COL_PATH, (char*)l->data, -1 );
         }
+        gtk_entry_completion_set_match_func( completion, match_func_cmd, NULL, NULL );
+    }
+    else
+    {
+        // dir completion
+        char* new_dir, *fn;
+        const char* old_dir;
+        const char *sep;
+
+        sep = strrchr( text, '/' );
+        if( sep )
+            fn = (char*)sep + 1;
         else
-            gtk_entry_completion_set_match_func( completion, NULL, NULL, NULL );
+            fn = (char*)text;
+        g_object_set_data_full( G_OBJECT(completion), "fn", g_strdup(fn), (GDestroyNotify)g_free );
+
+        new_dir = get_cwd( entry );
+        old_dir = (const char*)g_object_get_data( (GObject*)completion, "cwd" );
+        if ( old_dir && new_dir && 0 == g_ascii_strcasecmp( old_dir, new_dir ) )
+        {
+            g_free( new_dir );
+            return;
+        }
+        g_object_set_data_full( (GObject*)completion, "cwd",
+                                 new_dir, g_free );
+        list = (GtkListStore*)gtk_entry_completion_get_model( completion );
+        gtk_list_store_clear( list );
+        if ( new_dir )
+        {
+            GDir* dir;
+            if( (dir = g_dir_open( new_dir, 0, NULL )) )
+            {
+                // build list of dir names
+                const char* name;
+                GSList* name_list = NULL;
+                while( (name = g_dir_read_name( dir )) )
+                {
+                    char* full_path = g_build_filename( new_dir, name, NULL );
+                    if( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                        name_list = g_slist_prepend( name_list, full_path );
+                }
+                g_dir_close( dir );
+
+                // add sorted list to liststore
+                GSList* l;
+                char* disp_name;
+                name_list = g_slist_sort( name_list, (GCompareFunc)g_strcmp0 );
+                for ( l = name_list; l; l = l->next )
+                {
+                    disp_name = g_filename_display_basename( (char*)l->data );
+                    gtk_list_store_append( list, &it );
+                    gtk_list_store_set( list, &it, COL_NAME, disp_name,
+                                                   COL_PATH, (char*)l->data, -1 );
+                    g_free( disp_name );
+                    g_free( (char*)l->data );
+                }
+                g_slist_free( name_list );
+                
+                gtk_entry_completion_set_match_func( completion, match_func, NULL, NULL );
+            }
+            else
+                gtk_entry_completion_set_match_func( completion, NULL, NULL, NULL );
+        }
     }
 }
 
@@ -412,136 +456,6 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
         insert_complete( GTK_ENTRY( entry ) );
         on_changed( GTK_ENTRY( entry ), NULL );
         return TRUE;
-    }
-    else if ( ( evt->keyval == GDK_KEY_Up || evt->keyval == GDK_KEY_Down ) && !keymod )
-    {
-        const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
-        if ( text[0] != '$' && text[0] != '+' && text[0] != '&' && text[0] != '!' 
-                                                            && text[0] != '\0' )
-            return FALSE;  // pass non-command arrows to completion
-        
-        char* line = NULL;
-        GList* l;
-        if ( evt->keyval == GDK_KEY_Up )
-        {
-            if ( edata->current )
-            {
-                if ( text[0] != '\0' && strcmp( edata->current->data, text ) )
-                {
-                    if ( edata->editing )
-                        g_free( edata->editing );
-                    edata->editing = g_strdup( text );
-                    l = g_list_last( edata->history );
-                    line = (char*)l->data;
-                    edata->current = l;
-                }
-                else if ( edata->current->prev )
-                {
-                    line = (char*)edata->current->prev->data;
-                    edata->current = edata->current->prev;
-                }
-            }
-            else if ( edata->history )
-            {
-                if ( edata->editing && ( text[0] == '\0' || !strcmp( text, "$ " ) ) )
-                    line = edata->editing;
-                else
-                {
-                    l = g_list_last( edata->history );
-                    line = (char*)l->data;
-                    edata->current = l;
-                    
-                    if ( text[0] != '\0' && strcmp( text, "$ " ) )
-                    {
-                        if ( edata->editing )
-                            g_free( edata->editing );
-                        edata->editing = g_strdup( text );
-                    }
-                }
-            }
-        }
-        else  // GDK_Down
-        {
-            if ( edata->current && edata->current->next )
-            {
-                if ( strcmp( edata->current->data, text ) )
-                {
-                    if ( text[0] != '\0' )
-                    {
-                        if ( edata->editing )
-                            g_free( edata->editing );
-                        edata->editing = strdup( text );
-                    }
-                    line = "$ ";
-                    edata->current = NULL;
-                }
-                else
-                {
-                    line = (char*)edata->current->next->data;
-                    edata->current = edata->current->next;
-                }
-            }
-            else if ( !strcmp( text, "$ " ) || text[0] == '\0' )
-            {
-                if ( edata->editing && strcmp( text, edata->editing ) )
-                    line = edata->editing;
-                else
-                    line = "$ ";
-                edata->current = NULL;
-            }
-            else
-            {
-                if ( edata->current && !strcmp( text, edata->current->data ) )
-                    line = edata->editing ? edata->editing : "$ ";
-                else
-                {
-                    if ( edata->editing )
-                        g_free( edata->editing );
-                    edata->editing = strdup( text );
-                    line = "$ ";
-                }
-                edata->current = NULL;
-            }
-        }
-        if ( line )
-        {
-            gtk_entry_set_text( GTK_ENTRY( entry ), line );
-            gtk_editable_set_position( (GtkEditable*)entry, -1 );
-        }
-        return TRUE;
-    }
-    else if ( evt->keyval == GDK_KEY_Escape && !keymod )
-    {
-        const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
-        if ( text[0] == '$' || text[0] == '+' || text[0] == '&'
-                    || text[0] == '!' || text[0] == '\0' || text[0] == ' ' )
-        {
-            const char* line;
-            const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
-            const char* cwd = ptk_file_browser_get_cwd( edata->browser );
-            if ( !strcmp( text, "$ " ) || text[0] == '\0' )
-                line = cwd;
-            /*
-            else if ( !strcmp( text, cwd ) )
-            {
-                if ( edata->editing && strcmp( text, edata->editing ) )
-                    line = edata->editing;
-                else
-                    line = "$ ";
-            }
-            */
-            else
-            {
-                if ( edata->editing )
-                    g_free( edata->editing );
-                edata->editing = strdup( text );
-                line = "$ ";
-            }
-            gtk_entry_set_text( GTK_ENTRY( entry ), line );
-            gtk_editable_set_position( (GtkEditable*)entry, -1 );
-            edata->current = NULL;
-            return TRUE;   
-        }
     }
     else if ( evt->keyval == GDK_KEY_BackSpace && keymod == 1 ) // shift
     {
@@ -730,7 +644,7 @@ static gboolean on_button_release(GtkEntry      *entry,
 
         text = gtk_entry_get_text( entry );
         if ( !( text[0] == '$' || text[0] == '+' || text[0] == '&'
-                  || text[0] == '!' || text[0] == '\0' ) )
+                  || text[0] == '!' || text[0] == '%' || text[0] == '\0' ) )
         {
             pos = gtk_editable_get_position( GTK_EDITABLE(entry) );
             if( G_LIKELY( text && *text ) )
@@ -825,8 +739,6 @@ void entry_data_free( EntryData* edata )
         g_list_foreach( edata->history, ( GFunc ) g_free, NULL );
         g_list_free( edata->history );
     }
-    if ( edata->editing )
-        g_free( edata->editing );
     g_slice_free( EntryData, edata );
 }
 
@@ -847,8 +759,6 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
 
     EntryData* edata = g_slice_new0( EntryData );
     edata->history = NULL;
-    edata->current = NULL;
-    edata->editing = NULL;
     edata->browser = file_browser;
     edata->seek_timer = 0;
     
