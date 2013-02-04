@@ -18,6 +18,8 @@
 
 #include "gtk2-compat.h"
 
+static void on_changed( GtkEntry* entry, gpointer user_data );
+
 enum
 {
     COL_NAME,
@@ -70,6 +72,7 @@ gboolean seek_path( GtkEntry* entry )
     if ( !xset_get_b( "path_seek" ) )
         return;
     
+    char* str;
     char* seek_dir;
     char* seek_name = NULL;
     const char* path = gtk_entry_get_text( entry );
@@ -77,21 +80,53 @@ gboolean seek_path( GtkEntry* entry )
                     || path[0] == '!' || path[0] == '\0' || path[0] == ' '
                     || path[0] == '%' )    
         return FALSE;
-    if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
-        // dir only
-        seek_dir = g_strdup( path );
-    else
+
+    // get dir and name prefix
+    seek_dir = get_cwd( entry );
+    if ( !( seek_dir && g_file_test( seek_dir, G_FILE_TEST_IS_DIR ) ) )
     {
-        // get dir and name prefix
-        seek_dir = get_cwd( entry );
-        if ( !( seek_dir && g_file_test( seek_dir, G_FILE_TEST_IS_DIR ) ) )
-        {
-            g_free( seek_dir );
-            return FALSE;
-        }
-        if ( !g_str_has_suffix( path, "/" ) )
-            seek_name = g_path_get_basename( path );
+        // entry does not contain a valid dir
+        g_free( seek_dir );
+        return FALSE;
     }
+    if ( !g_str_has_suffix( path, "/" ) )
+    {
+        // get name prefix
+        seek_name = g_path_get_basename( path );
+        char* test_path = g_build_filename( seek_dir, seek_name, NULL );
+        if ( g_file_test( test_path, G_FILE_TEST_IS_DIR ) )
+        {
+            // complete dir path is in entry
+            g_free( seek_dir );
+            seek_dir = test_path;
+            g_free( seek_name );
+            seek_name = NULL;
+        }
+        else
+            g_free( test_path );
+    }
+
+    char* actual_path = g_build_filename( seek_dir, seek_name, NULL );
+    if ( strcmp( actual_path, "/" ) && g_str_has_suffix( path, "/" ) )
+    {
+        str = actual_path;
+        actual_path = g_strdup_printf( "%s/", str );
+        g_free( str );
+    }
+    if ( strcmp( path, actual_path ) )
+    {
+        // actual dir differs from entry - update
+        g_signal_handlers_block_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );
+        gtk_entry_set_text( GTK_ENTRY( entry ), actual_path );
+        gtk_editable_set_position( (GtkEditable*)entry, -1 );
+        g_signal_handlers_unblock_matched( G_OBJECT( entry ),
+                                         G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
+                                         on_changed, NULL );        
+    }
+    g_free( actual_path );
+
     if ( strcmp( seek_dir, "/" ) && g_str_has_suffix( seek_dir, "/" ) )
     {
         // strip trialing slash

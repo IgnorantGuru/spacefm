@@ -409,17 +409,22 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <!-- @GUI @Path Bar -->
 
-<p>SpaceFM's Path Bar (address bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At it's simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
+<p>SpaceFM's Path Bar (location bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At its simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
 
 <p>TIP:  To place the cursor in the Path Bar, you can use Go|Focus|Path Bar, accessed from the right-click menu of the file list.  By default, this is assigned to key shortcut Ctrl+L.
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
-<!-- # File Path -->
-The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
+<!-- # Auto Seek #seek -->
+By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you must press the Enter key to change to the directory entered.
+
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
 
 <!-- # Tab Completion #tab -->
-As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr/").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+
+<!-- # File Path -->
+The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.  (If Auto Seek is enabled, you don't need to press Enter.)
 
 <!-- # Breadcrumbs #bread -->
 The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to change to that level directory.  For example, if this path is currently in the Path Bar:
