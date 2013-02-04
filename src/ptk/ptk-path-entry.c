@@ -75,6 +75,7 @@ gboolean seek_path( GtkEntry* entry )
     char* str;
     char* seek_dir;
     char* seek_name = NULL;
+    char* full_path;
     const char* path = gtk_entry_get_text( entry );
     if ( !path || path[0] == '$' || path[0] == '+' || path[0] == '&'
                     || path[0] == '!' || path[0] == '\0' || path[0] == ' '
@@ -96,11 +97,32 @@ gboolean seek_path( GtkEntry* entry )
         char* test_path = g_build_filename( seek_dir, seek_name, NULL );
         if ( g_file_test( test_path, G_FILE_TEST_IS_DIR ) )
         {
-            // complete dir path is in entry
-            g_free( seek_dir );
-            seek_dir = test_path;
-            g_free( seek_name );
-            seek_name = NULL;
+            // complete dir path is in entry - is it unique?
+            GDir* dir;
+            const char* name;
+            int count = 0;
+            if ( ( dir = g_dir_open( seek_dir, 0, NULL ) ) )
+            {
+                while ( count < 2 && ( name = g_dir_read_name( dir ) ) )
+                {
+                    if ( g_str_has_prefix( name, seek_name ) )
+                    {
+                        full_path = g_build_filename( seek_dir, name, NULL );
+                        if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                            count++;
+                        g_free( full_path );
+                    }
+                }
+                g_dir_close( dir );
+            }
+            if ( count == 1 )
+            {
+                // is unique - use as seek dir
+                g_free( seek_dir );
+                seek_dir = test_path;
+                g_free( seek_name );
+                seek_name = NULL;
+            }
         }
         else
             g_free( test_path );
@@ -165,14 +187,8 @@ static gboolean match_func( GtkEntryCompletion *completion,
     {
         if( *key == 0 || 0 == g_ascii_strncasecmp( name, key, strlen(key) ) )
         {
-            int auto_seek = GPOINTER_TO_INT( g_object_get_data( 
-                                    G_OBJECT( completion ), "auto_seek" ) );
-            // if auto-seek, don't show exact match in completion popup
-            if ( !auto_seek || g_strcmp0( name, key ) )
-            {
-                g_free( name );
-                return TRUE;
-            }
+            g_free( name );
+            return TRUE;
         }
         g_free( name );
     }
@@ -194,8 +210,6 @@ static void update_completion( GtkEntry* entry,
     else
         fn = (char*)gtk_entry_get_text(entry);
     g_object_set_data_full( G_OBJECT(completion), "fn", g_strdup(fn), (GDestroyNotify)g_free );
-    g_object_set_data( G_OBJECT( completion ), "auto_seek", 
-                                GINT_TO_POINTER( !!xset_get_b( "path_seek" ) ) );
 
     new_dir = get_cwd( entry );
     old_dir = (const char*)g_object_get_data( (GObject*)completion, "cwd" );
@@ -270,8 +284,7 @@ void insert_complete( GtkEntry* entry )
         return;
     }
 
-    // Is only dir with this prefix?
-    int count = 0;
+    // find longest common prefix
     GDir* dir;
     if ( !( dir = g_dir_open( dir_path, 0, NULL ) ) )
     {
@@ -279,44 +292,87 @@ void insert_complete( GtkEntry* entry )
         return;
     }
     
+    int count = 0;
+    int len;
+    int long_len = 0;
+    int i;
     const char* name;
-    char* last_name = NULL;
+    char* last_path = NULL;
     char* prefix_name;
     char* full_path;
+    char* str;
+    char* long_prefix = NULL;
     if ( g_str_has_suffix( prefix, "/" ) )
         prefix_name = NULL;
     else
         prefix_name = g_path_get_basename( prefix );
-    while ( count < 2 && ( name = g_dir_read_name( dir ) ) )
+    while ( name = g_dir_read_name( dir ) )
     {
-        full_path = g_build_filename( dir_path, name, NULL );        
-        if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) &&
-                ( !prefix_name || g_str_has_prefix( name, prefix_name ) ) )
+        full_path = g_build_filename( dir_path, name, NULL );
+        if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
         {
-            g_free( last_name );
-            last_name = full_path;
-            count++;
+            if ( !prefix_name )
+            {
+                // full match
+                g_free( last_path );
+                last_path = full_path;
+                full_path = NULL;
+                if ( ++count > 1 )
+                    break;
+            }
+            else if ( g_str_has_prefix( name, prefix_name ) )
+            {
+                // prefix matches
+                count++;
+                if ( !long_prefix )
+                    long_prefix = g_strdup( name );
+                else
+                {
+                    i = 0;
+                    while ( name[i] && name[i] == long_prefix[i] )
+                        i++;
+                    if ( i && long_prefix[i] )
+                    {
+                        // shorter prefix found
+                        g_free( long_prefix );
+                        long_prefix = g_strndup( name, i );
+                    }
+                }
+            }
+        }
+        g_free( full_path );
+    }
+
+    char* new_prefix = NULL;
+    if ( !prefix_name && count == 1 )
+        new_prefix = g_strdup_printf( "%s/", last_path );
+    else if ( long_prefix )
+    {
+        full_path = g_build_filename( dir_path, long_prefix, NULL );
+        if ( count == 1 && g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+        {
+            new_prefix = g_strdup_printf( "%s/", full_path );
+            g_free( full_path );
         }
         else
-            g_free( full_path );
+            new_prefix = full_path;
+        g_free( long_prefix );
     }
-    g_free( prefix_name );
-    if ( count == 1 )
+    if ( new_prefix )
     {
-        // found a single completion
         g_signal_handlers_block_matched( G_OBJECT( entry ),
                                          G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                          on_changed, NULL );
-        char* new_prefix_slash = g_strdup_printf( "%s/", last_name );
-        gtk_entry_set_text( GTK_ENTRY( entry ), new_prefix_slash );
+        gtk_entry_set_text( GTK_ENTRY( entry ), new_prefix );
         gtk_editable_set_position( (GtkEditable*)entry, -1 );
-        g_free( new_prefix_slash );        
-        g_free( last_name );
         g_signal_handlers_unblock_matched( G_OBJECT( entry ),
                                          G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                          on_changed, NULL );
+        g_free( new_prefix );
     }        
     g_dir_close( dir );
+    g_free( last_path );
+    g_free( prefix_name );
     g_free( dir_path );
 }
 
