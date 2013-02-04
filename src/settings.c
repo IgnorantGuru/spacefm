@@ -463,6 +463,7 @@ void load_settings( char* config_dir )
     XSet* set;
     char* str;
     
+    xset_cmd_history = NULL;
     app_settings.load_saved_tabs = TRUE;
     if ( config_dir )
         settings_config_dir = config_dir;
@@ -1226,6 +1227,13 @@ void free_settings()
     g_free( app_settings.wallpaper );
 
     ptk_bookmarks_unref();
+
+    if ( xset_cmd_history )
+    {
+        g_list_foreach( xset_cmd_history, (GFunc)g_free, NULL );
+        g_list_free( xset_cmd_history );
+        xset_cmd_history = NULL;
+    }
 
     xset_free_all();
 }

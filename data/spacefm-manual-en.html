@@ -917,15 +917,32 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
+<!-- Editing Keys -->
+When the cursor is in the Path Bar, the following editing key combinations can be used:
+
+<table border=1 cellpadding="5">
+<tr>
+	<th>Key Combo</th>
+	<th>Result</th>
+</tr>
+	<tr>
+		<td>Shift+Backspace</td> <td>Clear the entry</td>
+	</tr><tr>
+		<td>Ctrl+Backspace</td> <td>Backspace to the previous '/'</td>
+	</tr><tr>
+		<td>Tab</td> <td><a href="#gui-tab">Complete entry</a></td>
+	</tr>
+</table>
+
 <!-- # Auto Seek #seek -->
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
 By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you must press the Enter key to change to the directory entered.
 
 <p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
 
-<!-- # Tab Completion #tab -->
-<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Tab Completion</b></a><br>
-As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr/").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+<!-- # Completion #tab -->
+<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Completion</b></a><br>
+As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # File Path -->
 <p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
@@ -6517,7 +6534,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-02-03&nbsp;&nbsp;(SpaceFM version 0.8.5+)
+<p>Updated 2013-02-04&nbsp;&nbsp;(SpaceFM version 0.8.5+)
 <br><br>
 </center>
 </td></tr></table>

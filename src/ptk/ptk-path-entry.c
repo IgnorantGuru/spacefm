@@ -222,17 +222,14 @@ static void update_completion( GtkEntry* entry,
     const char* text = gtk_entry_get_text( entry );
     if ( text && ( text[0] == '$' || text[0] == '+' || text[0] == '&'
                                     || text[0] == '!' || text[0] == '%' ||
-                   ( text[0] != '/' && strstr( text, ":/" ) ) ) )
+                   ( text[0] != '/' && strstr( text, ":/" ) ) ||
+                   g_str_has_prefix( text, "//" ) ) )
     {
         // command history
         GList* l;
         list = (GtkListStore*)gtk_entry_completion_get_model( completion );
         gtk_list_store_clear( list );
-        EntryData* edata = (EntryData*)g_object_get_data(
-                                                    G_OBJECT( entry ), "edata" );
-        if ( !( edata && edata->history ) )
-            return;
-        for ( l = edata->history; l; l = l->next )
+        for ( l = xset_cmd_history; l; l = l->next )
         {
             gtk_list_store_append( list, &it );
             gtk_list_store_set( list, &it, COL_NAME, (char*)l->data,
@@ -734,11 +731,6 @@ void on_entry_insert( GtkEntryBuffer *buf, guint position, gchar *chars,
 
 void entry_data_free( EntryData* edata )
 {
-    if ( edata->history != NULL )
-    {
-        g_list_foreach( edata->history, ( GFunc ) g_free, NULL );
-        g_list_free( edata->history );
-    }
     g_slice_free( EntryData, edata );
 }
 
@@ -758,7 +750,6 @@ GtkWidget* ptk_path_entry_new( PtkFileBrowser* file_browser )
     }
 
     EntryData* edata = g_slice_new0( EntryData );
-    edata->history = NULL;
     edata->browser = file_browser;
     edata->seek_timer = 0;
     

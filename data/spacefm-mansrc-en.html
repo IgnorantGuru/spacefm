@@ -415,13 +415,30 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
+<!-- # Editing Keys #keys -->
+When the cursor is in the Path Bar, the following editing key combinations can be used:
+
+<table border=1 cellpadding="5">
+<tr>
+	<th>Key Combo</th>
+	<th>Result</th>
+</tr>
+	<tr>
+		<td>Shift+Backspace</td> <td>Clear the entry</td>
+	</tr><tr>
+		<td>Ctrl+Backspace</td> <td>Backspace to the previous '/'</td>
+	</tr><tr>
+		<td>Tab</td> <td><a href="#gui-pathbar-tab">Complete entry</a></td>
+	</tr>
+</table>
+
 <!-- # Auto Seek #seek -->
 By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you must press the Enter key to change to the directory entered.
 
 <p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
 
-<!-- # Tab Completion #tab -->
-As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr/").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+<!-- # Completion #tab -->
+As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # File Path -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.  (If Auto Seek is enabled, you don't need to press Enter.)
@@ -559,7 +576,8 @@ Or to run umount in a terminal (+) as root (!) passing it the currently selected
 
 For a reminder of prefixes and substitution variables, enter a lone dollar sign ($) in the Path Bar and press Enter.  Or press F1 while the Path Bar has focus to open this manual.
 
-<p>SpaceFM also keeps a command history, similar to terminals.  Enter a lone dollar sign ($) or other command prefix in the Path Bar and press the Up/Down Arrow keys repeatedly to access the history of commands.
+<!-- # Command History #hist -->
+SpaceFM also keeps a command history.  As you enter a command, any commands previously entered (in the current instance) will be shown in a popup.  Use Up/Down Arrow keys to select a previous command and press Enter, or click it.
 
 
 <!-- # Select By Pattern #pattern -->

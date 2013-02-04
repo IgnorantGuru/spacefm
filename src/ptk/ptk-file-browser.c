@@ -837,18 +837,18 @@ void save_command_history( GtkEntry* entry )
         return;
     const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
     // remove duplicates
-    while ( l = g_list_find_custom( edata->history, text, (GCompareFunc)g_strcmp0 ) )
+    while ( l = g_list_find_custom( xset_cmd_history, text, (GCompareFunc)g_strcmp0 ) )
     {
         g_free( (char*)l->data );
-        edata->history = g_list_delete_link( edata->history, l );
+        xset_cmd_history = g_list_delete_link( xset_cmd_history, l );
     }
-    edata->history = g_list_prepend( edata->history, g_strdup( text ) );
+    xset_cmd_history = g_list_prepend( xset_cmd_history, g_strdup( text ) );
     // shorten to 200 entries
-    while ( g_list_length( edata->history ) > 200 )
+    while ( g_list_length( xset_cmd_history ) > 200 )
     {
-        l = g_list_last( edata->history );
+        l = g_list_last( xset_cmd_history );
         g_free( (char*)l->data );
-        edata->history = g_list_delete_link( edata->history, l );
+        xset_cmd_history = g_list_delete_link( xset_cmd_history, l );
     }
 }
 

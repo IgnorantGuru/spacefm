@@ -245,6 +245,9 @@ XSet* evt_tab_focus;
 XSet* evt_tab_close;
 XSet* evt_device;
 
+// instance-wide command history
+GList* xset_cmd_history;
+
 
 static const char* terminal_programs[] =  //for pref-dialog.c
 {
