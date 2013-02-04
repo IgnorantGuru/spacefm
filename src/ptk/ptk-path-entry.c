@@ -73,7 +73,9 @@ gboolean seek_path( GtkEntry* entry )
     char* seek_dir;
     char* seek_name = NULL;
     const char* path = gtk_entry_get_text( entry );
-    if ( !( path && path[0] ) )
+    if ( !path || path[0] == '$' || path[0] == '+' || path[0] == '&'
+                    || path[0] == '!' || path[0] == '\0' || path[0] == ' '
+                    || path[0] == '%' )    
         return FALSE;
     if ( g_file_test( path, G_FILE_TEST_IS_DIR ) )
         // dir only
