@@ -3568,12 +3568,16 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if ( event->keyval == GDK_KEY_Escape 
-            || event->keyval == GDK_KEY_Home
-            || event->keyval == GDK_KEY_End
-            || event->keyval == GDK_KEY_Delete
-            || ( event->keyval == GDK_KEY_Tab && keymod == 0 )
-            || event->keyval == GDK_KEY_BackSpace )
+    if (       ( event->keyval == GDK_KEY_Escape && keymod == 0 )
+            || ( event->keyval == GDK_KEY_Home && ( keymod == 0 || 
+                                                    keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_End &&  ( keymod == 0 || 
+                                                    keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_Delete && keymod == 0 )
+            || ( event->keyval == GDK_KEY_Tab    && keymod == 0 )
+            || ( event->keyval == GDK_KEY_BackSpace && ( keymod == 0 || 
+                                                         keymod == GDK_SHIFT_MASK ||
+                                                         keymod == GDK_CONTROL_MASK ) ) )
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
         if ( browser && browser->path_bar && gtk_widget_has_focus( 
