@@ -70,7 +70,7 @@ gboolean seek_path( GtkEntry* entry )
     }
     
     if ( !xset_get_b( "path_seek" ) )
-        return;
+        return FALSE;
     
     char* str;
     char* seek_dir;
