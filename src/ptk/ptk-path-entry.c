@@ -160,7 +160,7 @@ gboolean seek_path( GtkEntry* entry )
     return FALSE;
 }
 
-void seek_path_delayed( GtkEntry* entry )
+void seek_path_delayed( GtkEntry* entry, guint delay )
 {
     EntryData* edata = (EntryData*)g_object_get_data(
                                                 G_OBJECT( entry ), "edata" );
@@ -169,7 +169,8 @@ void seek_path_delayed( GtkEntry* entry )
     // user is still typing - restart timer
     if ( edata->seek_timer )
         g_source_remove( edata->seek_timer );
-    edata->seek_timer = g_timeout_add( 350, ( GSourceFunc )seek_path, entry );
+    edata->seek_timer = g_timeout_add( delay ? delay : 250,
+                                       ( GSourceFunc )seek_path, entry );
 }
 
 static gboolean match_func_cmd( GtkEntryCompletion *completion,
@@ -308,7 +309,7 @@ on_changed( GtkEntry* entry, gpointer user_data )
     completion = gtk_entry_get_completion( entry );
     update_completion( entry, completion );
     gtk_entry_completion_complete( gtk_entry_get_completion(GTK_ENTRY(entry)) );
-    seek_path_delayed( GTK_ENTRY( entry ) );
+    seek_path_delayed( GTK_ENTRY( entry ), 0 );
 }
 
 void insert_complete( GtkEntry* entry )
@@ -452,6 +453,7 @@ on_key_press( GtkWidget *entry, GdkEventKey* evt, EntryData* edata )
 
         insert_complete( GTK_ENTRY( entry ) );
         on_changed( GTK_ENTRY( entry ), NULL );
+        seek_path_delayed( GTK_ENTRY( entry ), 10 );
         return TRUE;
     }
     else if ( evt->keyval == GDK_KEY_BackSpace && keymod == 1 ) // shift
@@ -490,6 +492,7 @@ gboolean on_match_selected( GtkEntryCompletion *completion,
                                          G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                          on_changed, NULL );
         on_changed( GTK_ENTRY( entry ), NULL );
+        seek_path_delayed( GTK_ENTRY( entry ), 10 );
     }
     return TRUE;
 }
