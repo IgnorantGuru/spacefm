@@ -17,6 +17,7 @@
     path bar unquote quoted paths
     path bar cmd history in completion popup
     path bar instance-wide cmd history
+    path bar breadcrumbs on click no ctrl
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse

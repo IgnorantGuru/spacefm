@@ -917,9 +917,11 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
-<!-- Editing Keys -->
+<!-- # Editing Keys #keys -->
+<p><a name="gui-pathbar-keys"/><a href="#gui-pathbar-keys"><b>Editing Keys</b></a><br>
 When the cursor is in the Path Bar, the following editing key combinations can be used:
 
+<br><br>
 <table border=1 cellpadding="5">
 <tr>
 	<th>Key Combo</th>
@@ -928,33 +930,29 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 	<tr>
 		<td>Shift+Backspace</td> <td>Clear the entry</td>
 	</tr><tr>
-		<td>Ctrl+Backspace</td> <td>Backspace to the previous '/'</td>
+		<td>Ctrl+Backspace</td> <td>Backspace to the previous separator</td>
 	</tr><tr>
-		<td>Tab</td> <td><a href="#gui-tab">Complete entry</a></td>
+		<td>Tab</td> <td><a href="#gui-pathbar-tab">Complete entry</a></td>
 	</tr>
 </table>
 
 <!-- # Auto Seek #seek -->
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
-By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you must press the Enter key to change to the directory entered.
+By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
 
-<p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.  See also <a href="#gui-pathbar-bread">Breadcrumbs</a>.
 
 <!-- # Completion #tab -->
 <p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Completion</b></a><br>
 As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
-<!-- # File Path -->
-<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
-The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.  (If Auto Seek is enabled, you don't need to press Enter.)
-
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
-The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to change to that level directory.  For example, if this path is currently in the Path Bar:
-<pre>    /usr/<b>share</b>/spacefm/plugins</pre>
+The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if this path is currently <i>/usr/<b>share</b>/spacefm/pluginsin</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
-and you Ctrl+Click on the name 'share', SpaceFM will change to directory /usr/share.  This provides a convenient way to go up to a specific directory.
-
+<!-- # File Path -->
+<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
+The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
 
 <!-- # Protocol URL #proto -->
 <p><a name="gui-pathbar-proto"/><a href="#gui-pathbar-proto"><b>Protocol URL</b></a><br>
@@ -1086,7 +1084,9 @@ Or to run umount in a terminal (+) as root (!) passing it the currently selected
 
 For a reminder of prefixes and substitution variables, enter a lone dollar sign ($) in the Path Bar and press Enter.  Or press F1 while the Path Bar has focus to open this manual.
 
-<p>SpaceFM also keeps a command history, similar to terminals.  Enter a lone dollar sign ($) or other command prefix in the Path Bar and press the Up/Down Arrow keys repeatedly to access the history of commands.
+<!-- # Command History #hist -->
+<p><a name="gui-pathbar-hist"/><a href="#gui-pathbar-hist"><b>Command History</b></a><br>
+SpaceFM also keeps a command history.  As you enter a command, any commands previously entered will be shown in a popup.  Use Up/Down Arrow keys to select a previous command and press Enter, or click it.
 
 
 <!-- # Select By Pattern #pattern -->
@@ -6534,7 +6534,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-02-04&nbsp;&nbsp;(SpaceFM version 0.8.5+)
+<p>Updated 2013-02-05&nbsp;&nbsp;(SpaceFM version 0.8.5+)
 <br><br>
 </center>
 </td></tr></table>
