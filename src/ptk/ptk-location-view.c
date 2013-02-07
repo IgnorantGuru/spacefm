@@ -389,6 +389,7 @@ void on_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
         {
             ptk_file_browser_emit_open( file_browser, vol->mount_point,
                                                             PTK_OPEN_NEW_TAB );
+            ptk_location_view_chdir( view, ptk_file_browser_get_cwd( file_browser ) );
         }
         else
         {
@@ -738,6 +739,17 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
             }
             break;
         }
+    }
+    if ( ao->job == PTK_OPEN_NEW_TAB && GTK_IS_WIDGET( ao->file_browser ) )
+    {
+        if ( ao->file_browser->side_dev )
+            ptk_location_view_chdir( 
+                        GTK_TREE_VIEW( ao->file_browser->side_dev ),
+                        ptk_file_browser_get_cwd( ao->file_browser ) );
+        if ( ao->file_browser->side_book )
+            ptk_bookmark_view_chdir( 
+                        GTK_TREE_VIEW( ao->file_browser->side_book ),
+                        ptk_file_browser_get_cwd( ao->file_browser ) );
     }
     g_free( ao->device_file );
     g_slice_free( AutoOpen, ao );
@@ -1393,6 +1405,11 @@ gboolean on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
             break;
         }
     }
+    if ( GTK_IS_WIDGET( ao->file_browser ) && ao->job == PTK_OPEN_NEW_TAB && 
+                                                    ao->file_browser->side_dev )
+        ptk_location_view_chdir( 
+                    GTK_TREE_VIEW( ao->file_browser->side_dev ),
+                    ptk_file_browser_get_cwd( ao->file_browser ) );
     g_free( ao->device_file );
     g_slice_free( AutoOpen, ao );
     return FALSE;
@@ -3417,7 +3434,9 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
         else
         {
             ptk_file_browser_emit_open( file_browser, dir_path, PTK_OPEN_NEW_TAB );
-            dir_path = NULL;
+            //dir_path = NULL;
+            ptk_bookmark_view_chdir( tree_view,
+                                    ptk_file_browser_get_cwd( file_browser ) );
         }
     }
     g_free( dir_path );
