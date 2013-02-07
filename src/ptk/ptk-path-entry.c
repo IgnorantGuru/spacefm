@@ -673,6 +673,9 @@ static gboolean on_button_release( GtkEntry       *entry,
 
                     if ( evt->state & GDK_CONTROL_MASK )
                         gtk_widget_activate( (GtkWidget*)entry );
+                    else
+                        // speed up auto seek chdir
+                        seek_path_delayed( GTK_ENTRY( entry ), 10 );
                 }
             }
         }

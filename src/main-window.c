@@ -3568,8 +3568,7 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if (       ( event->keyval == GDK_KEY_Escape && keymod == 0 )
-            || ( event->keyval == GDK_KEY_Home && ( keymod == 0 || 
+    if (       ( event->keyval == GDK_KEY_Home && ( keymod == 0 || 
                                                     keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_End &&  ( keymod == 0 || 
                                                     keymod == GDK_SHIFT_MASK ) )
