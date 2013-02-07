@@ -817,6 +817,7 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
                         gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
                                                         tree_path, NULL, TRUE, .25, 0 );
                     }
+                    gtk_tree_path_free( tree_path );
                     vfs_file_info_unref( file );
                     break;
                 }
@@ -2634,7 +2635,12 @@ void on_dir_file_listed( VFSDir* dir,
                          ptk_file_browser_get_cwd( file_browser ) );
     }
 */
-
+    if ( file_browser->side_dev )
+        ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
+                                ptk_file_browser_get_cwd( file_browser ) );
+    if ( file_browser->side_book )
+        ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
+                                ptk_file_browser_get_cwd( file_browser ) );
 
     //FIXME:  This is already done in update_model, but is there any better way to
     //            reduce unnecessary code?
@@ -2994,6 +3000,7 @@ void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_brow
                     first_select = FALSE;
                 }
             }
+            gtk_tree_path_free( path );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
@@ -3138,6 +3145,7 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                     first_select = FALSE;
                 }
             }
+            gtk_tree_path_free( path );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
@@ -3299,6 +3307,7 @@ void ptk_file_browser_seek_path( PtkFileBrowser* file_browser,
         gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
                                         path, NULL, TRUE, .25, 0 );
     }
+    gtk_tree_path_free( path );
 
 _restore_sig:
     // restore signals and trigger sel change

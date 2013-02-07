@@ -264,13 +264,14 @@ static void update_names()
 }
 #endif
 
-/*
-gboolean ptk_location_view_chdir( GtkTreeView* location_view, const char* path )
+gboolean ptk_location_view_chdir( GtkTreeView* location_view, const char* cur_dir )
 {
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
-    char* real_path;
-    if ( !path )
+    VFSVolume* vol;
+    const char* mount_point;
+
+    if ( !cur_dir || !GTK_IS_TREE_VIEW( location_view ) )
         return FALSE;
 
     tree_sel = gtk_tree_view_get_selection( location_view );
@@ -278,16 +279,19 @@ gboolean ptk_location_view_chdir( GtkTreeView* location_view, const char* path )
     {
         do
         {
-            gtk_tree_model_get( model, &it, COL_PATH, &real_path, -1 );
-            if ( real_path )
+            gtk_tree_model_get( model, &it, COL_DATA, &vol, -1 );
+            mount_point = vfs_volume_get_mount_point( vol );
+            if ( mount_point && !strcmp( cur_dir, mount_point ) )
             {
-                if ( 0 == strcmp( path, real_path ) )
+                gtk_tree_selection_select_iter( tree_sel, &it );
+                GtkTreePath* path = gtk_tree_model_get_path( model, &it );
+                if ( path )
                 {
-                    g_free( real_path );
-                    gtk_tree_selection_select_iter( tree_sel, &it );
-                    return TRUE;
+                    gtk_tree_view_scroll_to_cell( location_view,
+                                                    path, NULL, TRUE, .25, 0 );
+                    gtk_tree_path_free( path );
                 }
-                g_free( real_path );
+                return TRUE;
             }
         }
         while ( gtk_tree_model_iter_next ( model, &it ) );
@@ -295,7 +299,6 @@ gboolean ptk_location_view_chdir( GtkTreeView* location_view, const char* path )
     gtk_tree_selection_unselect_all ( tree_sel );
     return FALSE;
 }
-*/
 
 VFSVolume* ptk_location_view_get_selected_vol( GtkTreeView* location_view )
 {
@@ -319,7 +322,6 @@ char* ptk_location_view_get_selected_dir( GtkTreeView* location_view )
 {
     GtkTreeIter it;
     GtkTreeSelection* tree_sel;
-    GtkTreePath* tree_path;
     char* real_path = NULL;
     VFSVolume* vol;
 
@@ -330,8 +332,6 @@ char* ptk_location_view_get_selected_dir( GtkTreeView* location_view )
         if( ! real_path || real_path[0] == '\0' ||
                      ! g_file_test( real_path, G_FILE_TEST_EXISTS ) )
         {
-            tree_path = gtk_tree_model_get_path( model, &it );
-            gtk_tree_path_free( tree_path );
             gtk_tree_model_get( model, &it, COL_DATA, &vol, -1 );
             //if( ! vfs_volume_is_mounted( vol ) )
             //    try_mount( location_view, vol );
@@ -3717,6 +3717,42 @@ char* ptk_bookmark_view_get_selected_dir( GtkTreeView* bookmark_view )
         gtk_tree_model_get( bookmodel, &it, COL_PATH, &real_path, -1 );
     }
     return real_path;
+}
+
+gboolean ptk_bookmark_view_chdir( GtkTreeView* bookmark_view, const char* cur_dir )
+{
+    GtkTreeIter it;
+    GtkTreeSelection* tree_sel;
+    char* real_path;
+
+    if ( !cur_dir || !GTK_IS_TREE_VIEW( bookmark_view ) )
+        return FALSE;
+
+    tree_sel = gtk_tree_view_get_selection( bookmark_view );
+    if ( gtk_tree_model_get_iter_first( bookmodel, &it ) )
+    {
+        do
+        {
+            gtk_tree_model_get( bookmodel, &it, COL_PATH, &real_path, -1 );
+            if ( real_path && !strcmp( cur_dir, real_path ) )
+            {
+                gtk_tree_selection_select_iter( tree_sel, &it );
+                GtkTreePath* path = gtk_tree_model_get_path( bookmodel, &it );
+                if ( path )
+                {
+                    gtk_tree_view_scroll_to_cell( bookmark_view,
+                                                    path, NULL, TRUE, .25, 0 );
+                    gtk_tree_path_free( path );
+                }
+                g_free( real_path );
+                return TRUE;
+            }
+            g_free( real_path );
+        }
+        while ( gtk_tree_model_iter_next ( bookmodel, &it ) );
+    }
+    gtk_tree_selection_unselect_all( tree_sel );
+    return FALSE;
 }
 
 char* ptk_bookmark_view_get_selected_name( GtkTreeView* bookmark_view )
