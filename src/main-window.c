@@ -17,6 +17,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib-object.h>
+#include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 
 #include <string.h>
@@ -3571,15 +3572,18 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    if (       ( event->keyval == GDK_KEY_Home && ( keymod == 0 || 
-                                                    keymod == GDK_SHIFT_MASK ) )
-            || ( event->keyval == GDK_KEY_End &&  ( keymod == 0 || 
-                                                    keymod == GDK_SHIFT_MASK ) )
-            || ( event->keyval == GDK_KEY_Delete && keymod == 0 )
-            || ( event->keyval == GDK_KEY_Tab    && keymod == 0 )
-            || ( event->keyval == GDK_KEY_BackSpace && ( keymod == 0 || 
-                                                         keymod == GDK_SHIFT_MASK ||
-                                                         keymod == GDK_CONTROL_MASK ) ) )
+    if (       ( event->keyval == GDK_KEY_Home &&  ( keymod == 0 || 
+                                                     keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_End &&   ( keymod == 0 || 
+                                                     keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_Delete  && keymod == 0 )
+            || ( event->keyval == GDK_KEY_Tab     && keymod == 0 )
+            || ( keymod == 0 && gdk_keyval_to_unicode( event->keyval ) ) // visible char
+            || ( event->keyval == GDK_KEY_Left &&  ( keymod == 0 || 
+                                                     keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_Right && ( keymod == 0 || 
+                                                     keymod == GDK_SHIFT_MASK ) )
+            || ( event->keyval == GDK_KEY_BackSpace && keymod == 0 ) )
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
         if ( browser && browser->path_bar && gtk_widget_has_focus( 

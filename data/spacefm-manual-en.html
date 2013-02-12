@@ -932,9 +932,15 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 	</tr><tr>
 		<td>Ctrl+Backspace</td> <td>Backspace to the previous separator</td>
 	</tr><tr>
+		<td>Ctrl+Left</td> <td>Jump to previous separator</td>
+	</tr><tr>
+		<td>Ctrl+Right</td> <td>Jump to next separator</td>
+	</tr><tr>
 		<td>Tab</td> <td><a href="#gui-pathbar-tab">Complete entry</a></td>
 	</tr>
 </table>
+
+<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
 
 <!-- # Auto Seek #seek -->
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
@@ -948,7 +954,7 @@ As you're entering a directory path in the Path Bar, completion will be active. 
 
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
-The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if this path is currently <i>/usr/<b>share</b>/spacefm/pluginsin</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
+The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
 <!-- # File Path -->
 <p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
@@ -1146,7 +1152,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 <p>In addition, Find-As-You-Type Search supports the following modes:
 
 <ul>
-    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is now used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
@@ -6534,7 +6540,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-02-05&nbsp;&nbsp;(SpaceFM version 0.8.5+)
+<p>Updated 2013-02-12&nbsp;&nbsp;(SpaceFM version 0.8.5+)
 <br><br>
 </center>
 </td></tr></table>
