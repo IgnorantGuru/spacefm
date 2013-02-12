@@ -3272,7 +3272,7 @@ void on_file_browser_open_item( PtkFileBrowser* file_browser,
 void fm_main_window_update_status_bar( FMMainWindow* main_window,
                                        PtkFileBrowser* file_browser )
 {
-    int n, hn, hnx;
+    int num_sel, num_vis, num_hid, num_hidx;
     guint64 total_size;
     char *msg;
     char size_str[ 64 ];
@@ -3311,12 +3311,13 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 #endif
 
     // note: total size won't include content changes since last selection change
-    n = ptk_file_browser_get_n_sel( file_browser, &total_size );
+    num_sel = ptk_file_browser_get_n_sel( file_browser, &total_size );
+    num_vis = ptk_file_browser_get_n_visible_files( file_browser );
 
     char* link_info = NULL;  //MOD added
-    if ( n > 0 )
+    if ( num_sel > 0 )
     {
-        if ( n == 1 )  //MOD added
+        if ( num_sel == 1 )  //MOD added
         // display file name or symlink info in status bar if one file selected
         {
             GList* files;
@@ -3395,8 +3396,11 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             link_info = g_strdup_printf( "" );
             
         vfs_file_size_to_string( size_str, total_size );
-        msg = g_strdup_printf( ngettext( _("%s%d sel (%s)%s"),  //MOD
-                         _("%s%d sel (%s)"), n ), free_space, n, size_str, link_info );  //MOD
+        msg = g_strdup_printf( "%s%d / %d (%s)%s", free_space, num_sel, num_vis,
+                                                    size_str, link_info );
+        //msg = g_strdup_printf( ngettext( _("%s%d sel (%s)%s"),  //MOD
+        //                 _("%s%d sel (%s)"), num_sel ), free_space, num_sel,
+        //                                        size_str, link_info );  //MOD
     }
     else
     {
@@ -3412,31 +3416,30 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
 
         // MOD add count for .hidden files
         char* xhidden;
-        n = ptk_file_browser_get_n_visible_files( file_browser );
-        hn = ptk_file_browser_get_n_all_files( file_browser ) - n;
-        if ( hn < 0 ) hn = 0;  // needed due to bug in get_n_visible_files?
-        hnx = file_browser->dir ? file_browser->dir->xhidden_count : 0;
+        num_hid = ptk_file_browser_get_n_all_files( file_browser ) - num_vis;
+        if ( num_hid < 0 ) num_hid = 0;  // needed due to bug in get_n_visible_files?
+        num_hidx = file_browser->dir ? file_browser->dir->xhidden_count : 0;
         //VFSDir* xdir = file_browser->dir;
-        if ( hn || hnx )
+        if ( num_hid || num_hidx )
         {
-            if ( hnx )
-                xhidden = g_strdup_printf( "+%d", hnx );
+            if ( num_hidx )
+                xhidden = g_strdup_printf( "+%d", num_hidx );
             else
                 xhidden = g_strdup_printf( "" );
 
             char hidden[128];
             char *hnc = NULL;
-            char* hidtext = ngettext( "hidden", "hidden", hn);
-            g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", hn, xhidden, hidtext ), hn );
-            //msg = g_strdup_printf( ngettext( "%d visible item (%s)%s",
-            //                                 "%d visible items (%s)%s", n ), n, hidden, free_space );
+            char* hidtext = ngettext( "hidden", "hidden", num_hid);
+            g_snprintf( hidden, 127, g_strdup_printf( "%d%s %s", num_hid,
+                                                xhidden, hidtext ), num_hid );
             msg = g_strdup_printf( ngettext( "%s%d visible (%s)   %s",
-                                             "%s%d visible (%s)   %s", n ),
-                                             free_space, n, hidden, dirmsg );
+                                             "%s%d visible (%s)   %s", num_vis ),
+                                             free_space, num_vis, hidden, dirmsg );
         }
         else
             msg = g_strdup_printf( ngettext( "%s%d item   %s",
-                                             "%s%d items   %s", n ), free_space, n, dirmsg );
+                                             "%s%d items   %s", num_vis ),
+                                                  free_space, num_vis, dirmsg );
         g_free( dirmsg );
     }
     gtk_statusbar_push( GTK_STATUSBAR( file_browser->status_bar ), 0, msg );
