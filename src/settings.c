@@ -8729,7 +8729,7 @@ void xset_defaults()
 
     set = xset_set( "tool_default", "label", _("Default") );
     xset_set_set( set, "icon", "gtk-home" );
-    set->tool = XSET_B_FALSE;
+    set->tool = XSET_B_TRUE;
     xset_set_set( set, "shared_key", "go_default" );
 
 
@@ -8799,7 +8799,7 @@ void xset_defaults()
 
     set = xset_set( "rtool_default", "label", _("Default") );
     xset_set_set( set, "icon", "gtk-home" );
-    set->tool = XSET_B_TRUE;
+    set->tool = XSET_B_FALSE;
     xset_set_set( set, "shared_key", "go_default" );
 
     // toolitems side
@@ -10629,6 +10629,7 @@ void xset_defaults()
 
     set = xset_set( "panel1_list_compact", "label", _("_Compact") );
     set->menu_style = XSET_MENU_RADIO;
+    set->b = XSET_B_TRUE;
 
     set = xset_set( "panel1_show_hidden", "label", _("_Hidden Files") );
     set->menu_style = XSET_MENU_CHECK;
@@ -10748,6 +10749,7 @@ void xset_defaults()
     set = xset_set( "panel2_list_compact", "label", _("_Compact") );
     set->menu_style = XSET_MENU_RADIO;
     xset_set_set( set, "shared_key", "panel1_list_compact" );
+    set->b = XSET_B_TRUE;
 
     set = xset_set( "panel2_show_hidden", "label", _("_Hidden Files") );
     set->menu_style = XSET_MENU_CHECK;
@@ -10866,7 +10868,6 @@ void xset_defaults()
 
     set = xset_set( "panel3_list_detailed", "label", _("_Detailed") );
     set->menu_style = XSET_MENU_RADIO;
-    set->b = XSET_B_TRUE;
     xset_set_set( set, "shared_key", "panel1_list_detailed" );
 
     set = xset_set( "panel3_list_icons", "label", _("_Icons") );
@@ -10876,6 +10877,7 @@ void xset_defaults()
     set = xset_set( "panel3_list_compact", "label", _("_Compact") );
     set->menu_style = XSET_MENU_RADIO;
     xset_set_set( set, "shared_key", "panel1_list_compact" );
+    set->b = XSET_B_TRUE;
 
     set = xset_set( "panel3_show_hidden", "label", _("_Hidden Files") );
     set->menu_style = XSET_MENU_CHECK;
@@ -11003,6 +11005,7 @@ void xset_defaults()
     set = xset_set( "panel4_list_compact", "label", _("_Compact") );
     set->menu_style = XSET_MENU_RADIO;
     xset_set_set( set, "shared_key", "panel1_list_compact" );
+    set->b = XSET_B_TRUE;
 
     set = xset_set( "panel4_show_hidden", "label", _("_Hidden Files") );
     set->menu_style = XSET_MENU_CHECK;

@@ -442,7 +442,7 @@ By default, the Path Bar will auto seek, which means that as you type in the Pat
 As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # Breadcrumbs #bread -->
-The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if this path is currently <i>/usr/<b>share</b>/spacefm/pluginsin</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
+The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
 <!-- # File Path -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
@@ -603,7 +603,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 <p>In addition, Find-As-You-Type Search supports the following modes:
 
 <ul>
-    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is now used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
