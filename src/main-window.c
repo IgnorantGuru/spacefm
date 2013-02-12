@@ -3578,12 +3578,13 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Delete  && keymod == 0 )
             || ( event->keyval == GDK_KEY_Tab     && keymod == 0 )
-            || ( keymod == 0 && gdk_keyval_to_unicode( event->keyval ) ) // visible char
             || ( event->keyval == GDK_KEY_Left &&  ( keymod == 0 || 
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Right && ( keymod == 0 || 
                                                      keymod == GDK_SHIFT_MASK ) )
-            || ( event->keyval == GDK_KEY_BackSpace && keymod == 0 ) )
+            || ( event->keyval == GDK_KEY_BackSpace && keymod == 0 )
+            || ( keymod == 0 && event->keyval != GDK_KEY_Escape && 
+                            gdk_keyval_to_unicode( event->keyval ) ) ) // visible char
     {
         browser = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser( main_window ) );
         if ( browser && browser->path_bar && gtk_widget_has_focus( 
