@@ -1,5 +1,16 @@
 TRANSLATIONS
 
+TRANSIFEX METHOD
+
+    To help translate SpaceFM in your language, please visit:
+        https://www.transifex.com/projects/p/spacefm/
+
+    Just sign up for a free Transifex account.  For instructions visit:
+        http://help.transifex.com/intro/translating.html#translating
+
+
+MANUAL METHOD
+
 Translating SpaceFM doesn't require any special tools - just a text editor.
 To create a translation of SpaceFM for your language, follow these steps.
     
@@ -48,14 +59,17 @@ To create a translation of SpaceFM for your language, follow these steps.
 8)  Once translations in menus and dialogs are the way you want them, release
     your translated .po file:
 
-    If you are familiar with github, you can clone the spacefm repo and do a
-    pull request.
+    Upload the file to https://www.transifex.com/projects/p/udevil/
+
+    OR, if you are familiar with github, you can clone the spacefm repo and do
+    a pull request.
     
     OR, add the .po file to a public gist https://gist.github.com/ or host
     it elsewhere, then open a new issue asking for your file to be merged into
     the source:  https://github.com/IgnorantGuru/spacefm/issues/new
     
-    OR, email your .po file:  http://igurublog.wordpress.com/contact-ignorantguru/
+    OR, email your .po file:  
+        http://igurublog.wordpress.com/contact-ignorantguru/
     
 9)  Translated strings will change occassionally as new SpaceFM versions are
     released.  To update your translation:

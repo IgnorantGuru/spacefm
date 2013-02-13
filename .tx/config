@@ -1,0 +1,54 @@
+[main]
+host = https://www.transifex.com
+
+[spacefm.spacefmpot_1]
+file_filter = translations/spacefm.spacefmpot_1/<lang>.po
+source_file = po/spacefm.pot
+source_lang = en
+trans.af = po/af.po
+trans.ar = po/ar.po
+trans.bg = po/bg.po
+trans.bn_IN = po/bn_IN.po
+trans.ca = po/ca.po
+trans.cs = po/cs.po
+trans.da = po/da.po
+trans.de = po/de.po
+trans.el = po/el.po
+trans.es = po/es.po
+trans.et = po/et.po
+trans.eu = po/eu.po
+trans.fa = po/fa.po
+trans.fi = po/fi.po
+trans.fr = po/fr.po
+trans.gl = po/gl.po
+trans.he = po/he.po
+trans.hr = po/hr.po
+trans.hu = po/hu.po
+trans.id = po/id.po
+trans.it = po/it.po
+trans.ja = po/ja.po
+trans.km = po/km.po
+trans.ko = po/ko.po
+trans.lt = po/lt.po
+trans.ml = po/ml.po
+trans.ms = po/ms.po
+trans.nb = po/nb.po
+trans.nl = po/nl.po
+trans.nn = po/nn.po
+trans.pl = po/pl.po
+trans.ps = po/ps.po
+trans.pt = po/pt.po
+trans.pt_BR = po/pt_BR.po
+trans.ru = po/ru.po
+trans.sk = po/sk.po
+trans.sl = po/sl.po
+trans.sr = po/sr.po
+trans.sv = po/sv.po
+trans.tr = po/tr.po
+trans.uk = po/uk.po
+trans.ur = po/ur.po
+trans.ur_PK = po/ur_PK.po
+trans.vi = po/vi.po
+trans.zh_CN = po/zh_CN.po
+trans.zh_TW = po/zh_TW.po
+
