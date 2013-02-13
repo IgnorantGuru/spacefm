@@ -1,3 +1,5 @@
+0.8.6+
+
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation
