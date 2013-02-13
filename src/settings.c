@@ -5296,6 +5296,11 @@ void xset_context_dlg( XSet* set )
     
     ctxt->box_value = gtk_combo_box_text_new_with_entry();
     gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_value ), FALSE );
+#if GTK_CHECK_VERSION (3, 0, 0)
+    // see https://github.com/IgnorantGuru/spacefm/issues/43
+    // this seems to have no effect
+    gtk_combo_box_set_popup_fixed_width( GTK_COMBO_BOX( ctxt->box_value ), TRUE );
+#endif
 
     ctxt->box_match = gtk_combo_box_text_new();
     gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->box_match ), FALSE );
