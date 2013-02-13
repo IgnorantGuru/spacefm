@@ -1,67 +1,59 @@
-# SpaceFM es.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
 #
-# 2006 - Mario Izquierdo <mariodebian@gmail.com>
-# 2009 - Félix Medrano Sanz <xukosky@yahoo.es>
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 0.8.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 20:59+0000\n"
-"PO-Revision-Date: 2009-10-13 00:18+0200\n"
-"Last-Translator: Hugo Florentino <sysadmin@cips.cu>\n"
-"Language-Team: \n"
-"Language: es\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM Open Folder"
-msgstr "Carpeta superior"
+msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
-#, fuzzy
 msgid "Open folder"
-msgstr "Carpeta superior"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM File Search"
-msgstr "Habilitar búsqueda"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:2
-#, fuzzy
 msgid "Search for files and folders"
-msgstr "Todos los archivos y carpetas"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
 msgstr ""
 
 #: ../data/spacefm.desktop.in.h:2
-#, fuzzy
 msgid "File Manager"
-msgstr "_Gestión de volúmenes"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:3
-#, fuzzy
 msgid "Browse the file system"
-msgstr "_Montar sistema de archivos"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:1
 msgid "by IgnorantGuru"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "Copyright (C) 2005 - 2008"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
@@ -88,7 +80,6 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:12
-#, fuzzy
 msgid ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
@@ -110,26 +101,10 @@ msgid ""
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 msgstr ""
-"&#x6D2A;&#x4EFB;&#x8AED; Hong Jen Yee <pcman.tw@gmail.com>\n"
-"\n"
-"Código fuente tomado de otros proyectos:\n"
-" * libmd5-rfc: Aladdin Enterprises\n"
-" * Detección del área de trabajo: Gary Kramlich\n"
-" * ExoIconView: os-cillation e.K, Anders Carlsson y Benedikt Meurer\n"
-" * Código del renderizado de texto e iconos por Jonathan Blandford\n"
-" * Los iconos de escritorio usan código de Brian Tarricone\n"
-" * La gestión de volúmenes usa código de los siguientes proyectos/autores:\n"
-"     * gnome-vfs: David Zeuthen\n"
-"     * thunar-vfs y libexo: Benedikt Meurer\n"
-"     * gnome-mount: David Zeuthen"
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
 msgstr ""
-"Mario Izquierdo <mariodebian@gmail.com>, 2006\n"
-"Félix Medrano Sanz <xukosky@yahoo.es>, 2009\n"
-"Guillermo Iguarán <tronador@cuteam.org>, 2009\n"
-"Hugo Florentino <sysadmin@cips.cu>, 2009"
 
 #: ../data/ui/about-dlg.ui.h:32
 msgid ""
@@ -140,45 +115,38 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:1
-#, fuzzy
 msgid "Choose Application"
-msgstr "Seleccione una aplicación"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:2
-#, fuzzy
 msgid "Please choose an application or enter a command:"
 msgstr ""
-"Por favor, seleccione una aplicación de la lista o introduzca la línea de "
-"comando a mano:"
 
 #: ../data/ui/appchooserdlg.ui.h:3
-#, fuzzy
 msgid "File Type:"
-msgstr "<b>Tipo de archivo:</b>"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
-#, fuzzy
 msgid "A_ll Apps"
-msgstr "_Todas las aplicaciones"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:6
-#, fuzzy
 msgid "_Command:"
-msgstr "Comando:"
+msgstr ""
 
 #. // Browse submenu
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:6936
 #: ../src/settings.c:9773 ../src/ptk/ptk-file-misc.c:1928
 msgid "_Browse"
-msgstr "_Navegar"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:8
 msgid "Opened in Terminal"
-msgstr "Abrir en terminal"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:9
 msgid "_Set as default"
@@ -186,51 +154,43 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:1
 msgid "File Properties"
-msgstr "Propiedades del archivo"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:2
-#, fuzzy
 msgid "<b>File_name:</b>"
-msgstr "<b>_Nombre de archivo:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
-#, fuzzy
 msgid "<b>Type:</b>"
-msgstr "<b>Tipo de archivo:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:4
-#, fuzzy
 msgid "<b>Total Size:</b>"
-msgstr "<b>Tamaño total de los archivos:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:5
-#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "<b>Última modificación</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:6
-#, fuzzy
 msgid "<b>Accessed:</b>"
-msgstr "<b>Último acceso:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
-msgstr "<b>Localización:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:8
-#, fuzzy
 msgid "<b>Size On Disk:</b>"
-msgstr "<b>Tamaño en disco:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:9
-#, fuzzy
 msgid "<b>Count:</b>"
-msgstr "<b>Grupo:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:10
-#, fuzzy
 msgid "<b>Opens _With:</b>"
-msgstr "<b>Abrir _con:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
@@ -238,48 +198,47 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:12
 msgid "<b>_Owner:</b>"
-msgstr "<b>_Propietario:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:13
 msgid "<b>_Group:</b>"
-msgstr "<b>_Grupo:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:14
 msgid "<b>Owner:</b>"
-msgstr "<b>Propietario:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:15
 msgid "<b>Group:</b>"
-msgstr "<b>Grupo:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:16
-#, fuzzy
 msgid "<b>Other:</b>"
-msgstr "<b>Propietario:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
-msgstr "Lectura"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:18
 msgid "Write"
-msgstr "Escritura"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:19
 msgid "Execute"
-msgstr "Ejecución"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:20
 msgid "Set UID"
-msgstr "Establecer UID"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:21
 msgid "Set GID"
-msgstr "Establecer GID"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:22
 msgid "Sticky"
-msgstr "Pegajoso"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:23
 msgid "Recursive (apply changes to folder contents)"
@@ -287,162 +246,157 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:24 ../src/settings.c:10512
 msgid "_Permissions"
-msgstr "_Permisos"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
-msgstr "Bytes"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:2 ../data/ui/find-files2.ui.h:2
 #: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
 msgid "KB"
-msgstr "KB"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:3 ../data/ui/find-files2.ui.h:3
 msgid "MB"
-msgstr "MB"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:4 ../data/ui/find-files2.ui.h:4
 msgid "GB"
-msgstr "GB"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:5 ../data/ui/find-files2.ui.h:5
 msgid "Any"
-msgstr "Cualquiera"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:6 ../data/ui/find-files2.ui.h:6
 msgid "Within One Day"
-msgstr "En un día"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:7 ../data/ui/find-files2.ui.h:7
 msgid "Within One Week"
-msgstr "En una semana"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:8 ../data/ui/find-files2.ui.h:8
 msgid "Within One Month"
-msgstr "En un año"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:9 ../data/ui/find-files2.ui.h:9
 msgid "Within One Year"
-msgstr "En un año"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:10 ../data/ui/find-files2.ui.h:10
 msgid "Within Selected Date Range"
-msgstr "En el rango de fechas seleccionado"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:11 ../data/ui/find-files2.ui.h:11
 msgid "Find Files"
-msgstr "Buscar archivos"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Filename:</b>"
-msgstr "<b>_Nombre de archivo:</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
-msgstr "Distinguir mayúsculas / minúsculas"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:14 ../data/ui/find-files2.ui.h:14
 msgid "Video Files (avi, mpg,...)"
-msgstr "Archivos de video (avi, mpg,...)"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:15 ../data/ui/find-files2.ui.h:15
 msgid "Audio Files (mp3, ogg,...)"
-msgstr "Archivos de audio (mp3, ogg,...)"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:16 ../data/ui/find-files2.ui.h:16
 msgid "Image Files (jpg, png,...)"
-msgstr "Archivos de imagen (jpg, png,...)"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:17 ../data/ui/find-files2.ui.h:17
 msgid "Plain Text Files"
-msgstr "Archivos de texto plano"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:18 ../data/ui/find-files2.ui.h:18
 msgid "All Files and Folders"
-msgstr "Todos los archivos y carpetas"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:19 ../data/ui/find-files2.ui.h:19
 msgid "<b>File Types to Search</b>"
-msgstr "<b>Tipos de archivo a buscar</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
-#, fuzzy
 msgid "Search in subfolders"
-msgstr "Buscar en sub-directorios"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
-#, fuzzy
 msgid "Search hidden files"
-msgstr "Buscar archivos ocultos"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
-msgstr "<b>Lugares a buscar</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:23 ../data/ui/find-files2.ui.h:23
 msgid "General"
-msgstr "General"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:24 ../data/ui/find-files2.ui.h:24
 msgid "File Contains:"
-msgstr "El archivo contiene:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:25 ../data/ui/find-files2.ui.h:25
 msgid "Use Regular Expression"
-msgstr "Usar expresiones regulares"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:26 ../data/ui/find-files2.ui.h:26
 msgid "<b>File Content</b>"
-msgstr "<b>Contenido del archivo</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:27 ../data/ui/find-files2.ui.h:27
 msgid "Content"
-msgstr "Contenido"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:28 ../data/ui/find-files2.ui.h:28
 msgid "Greater Than:"
-msgstr "Mayor que:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:29 ../data/ui/find-files2.ui.h:29
 msgid "Smaller Than:"
-msgstr "Menor que:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:30 ../data/ui/find-files2.ui.h:30
 msgid "<b>File Size</b>"
-msgstr "<b>Tamaño de archivo</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:31 ../data/ui/find-files2.ui.h:31
 msgid "<b>Last Modified</b>"
-msgstr "<b>Última modificación</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:32 ../data/ui/find-files2.ui.h:32
 msgid "Size & Date"
-msgstr "Tamaño y fecha"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:33 ../data/ui/find-files2.ui.h:33
 msgid "<b>Search Result:</b>"
-msgstr "<b>Resultado de búsqueda:</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:34 ../data/ui/find-files2.ui.h:34
 msgid "Search Again"
-msgstr "Buscar de nuevo"
+msgstr ""
 
 #: ../data/ui/godlg.ui.h:1
 msgid "Go to folder"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
-#, fuzzy
 msgid "Open In Current Tab"
-msgstr "Abrir en la pestaña actual"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
-#, fuzzy
 msgid "Open In New Tab"
-msgstr "Abrir en nueva _pestaña"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
@@ -482,12 +436,11 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
 msgid "Preferences"
-msgstr "Preferencias"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
-#, fuzzy
 msgid "Small Icons:"
-msgstr "Tamaño de los iconos pequeños:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
@@ -499,16 +452,15 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Display</b>"
-msgstr "<b>Pantalla</b>"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
-#, fuzzy
 msgid "Single click opens files"
-msgstr "Tiempo de espera para el clic"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
-msgstr "Marcadores:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Show Thumbnails"
@@ -520,20 +472,19 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "<b>Behavior</b>"
-msgstr "<b>Comportamiento</b>"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "_General"
-msgstr "_General"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "Always show the tab bar"
-msgstr "Mostrar siempre la barra de pestañas"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
-#, fuzzy
 msgid "Hide 'Close Tab' buttons"
-msgstr "Ocultar botones 'Cerrar pestaña'"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
@@ -557,96 +508,91 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
 msgid "I_nterface"
-msgstr "I_nterfaz"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:32 ../data/ui/prefdlg2.ui.h:32
 msgid "Manage the desktop and show file icons"
-msgstr "Gestionar el escritorio y mostrar iconos"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
 msgid "Show \"My Documents\" icon on desktop"
-msgstr "Mostrar el icono \"Mis documentos\" en el escritorio"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
 msgid "Show icons of volumes on desktop"
-msgstr "Mostrar iconos de volúmenes en el escritorio"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
-#, fuzzy
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr "Mostrar menus del GV cuando se hace clic en el escritorio"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
-msgstr "<b>General</b>"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:37 ../data/ui/prefdlg2.ui.h:37
 msgid "Please select an image file"
-msgstr "Por favor, seleccione un archivo de imagen"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
 msgid "Mode:"
-msgstr "Modo:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Wallpaper:"
-msgstr "Imagen de fondo:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
 msgid "<b>Wallpaper</b>"
-msgstr "<b>Imagen de fondo</b>"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Background:"
-msgstr "Fondo de pantalla:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Text:"
-msgstr "Texto:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Shadow:"
-msgstr "Sombra:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
 msgid "<b>Colors</b>"
-msgstr "<b>Colores</b>"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
 msgid "_Desktop"
-msgstr "_Escritorio"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:46 ../data/ui/prefdlg2.ui.h:46
 msgid "_Volume Management"
-msgstr "_Gestión de volúmenes"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:47 ../data/ui/prefdlg2.ui.h:47
 msgid "Terminal:"
-msgstr "Terminal:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
-#, fuzzy
 msgid "Terminal SU:"
-msgstr "Terminal:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
-#, fuzzy
 msgid "Filename Encoding:"
-msgstr "Codificación del nombre de archivo en disco:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
-#, fuzzy
 msgid "Editor:"
-msgstr "_Editar"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
-#, fuzzy
 msgid "Run editor in terminal"
-msgstr "Abrir en terminal"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
@@ -670,175 +616,170 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:58 ../data/ui/prefdlg2.ui.h:58
 msgid "_Advanced"
-msgstr "_Avanzado"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:768
 msgid "Column Spacing"
-msgstr "Espaciado de columnas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:769
 msgid "Space which is inserted between grid column"
-msgstr "Espacio que se inserta entre columnas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:785
 msgid "Number of columns"
-msgstr "Número de columnas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:786
 msgid "Number of columns to display"
-msgstr "Número de columnas a mostrar"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:800
 msgid "Enable Search"
-msgstr "Habilitar búsqueda"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:801
 msgid "View allows user to search through columns interactively"
-msgstr "Permite que el usuario busque interactivamente entre las columnas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:818
 msgid "Width for each item"
-msgstr "Ancho de cada elemento"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:819
 msgid "The width used for each item"
-msgstr "El ancho que se utiliza para cada elemento"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:837
 msgid "Layout mode"
-msgstr "Modo de diseño"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:838
 msgid "The layout mode"
-msgstr "El modo de diseño"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:854
 msgid "Margin"
-msgstr "Margen"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:855
 msgid "Space which is inserted at the edges of the icon view"
-msgstr "Espacio que se inserta en los bordes del icono"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:871
 msgid "Markup column"
-msgstr "Columna de marcado"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:872
 msgid "Model column used to retrieve the text if using Pango markup"
 msgstr ""
-"Columna modelo utilizada para obtener el texto si se utiliza el marcado Pango"
 
 #: ../src/exo/exo-icon-view.c:886
 msgid "Icon View Model"
-msgstr "Modelo de vista de icono"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:887
 msgid "The model for the icon view"
-msgstr "El modelo para la vista de iconos"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:900
 msgid "Orientation"
-msgstr "Orientación"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:901
 msgid ""
 "How the text and icon of each item are positioned relative to each other"
 msgstr ""
-"Cómo se posicionan relativamente entre si el texto y el icono de cada "
-"elemento"
 
 #: ../src/exo/exo-icon-view.c:917
 msgid "Pixbuf column"
-msgstr "Columna de pixbuf"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:918
 msgid "Model column used to retrieve the icon pixbuf from"
-msgstr "Columna modelo de la cual se obtiene el pixbuf para el icono"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:933
 msgid "Reorderable"
-msgstr "Reordenable"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:934
 msgid "View is reorderable"
-msgstr "La vista se puede reordenar"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:949
 msgid "Row Spacing"
-msgstr "Espaciado de filas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:950
 msgid "Space which is inserted between grid rows"
-msgstr "Espacio que se inserta entre las filas"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:964
 msgid "Search Column"
-msgstr "Columna de búsqueda"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:965
 msgid "Model column to search through when searching through item"
-msgstr "Columna modelo para buscar entre elementos"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:979
 msgid "Selection mode"
-msgstr "Modo de selección"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:980
 msgid "The selection mode"
-msgstr "El modo de selección"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:995 ../src/exo/exo-tree-view.c:203
 msgid "Single Click"
-msgstr "Clic sencillo"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:996 ../src/exo/exo-tree-view.c:204
 msgid "Whether the items in the view can be activated with single clicks"
-msgstr "Si los elementos de la vista se pueden activar con un solo clic"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1012 ../src/exo/exo-tree-view.c:220
 msgid "Single Click Timeout"
-msgstr "Tiempo de espera para el clic"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1013 ../src/exo/exo-tree-view.c:221
 msgid ""
 "The amount of time after which the item under the mouse cursor will be "
 "selected automatically in single click mode"
 msgstr ""
-"El tiempo después del cual se seleccionará automáticamente el elemento bajo "
-"el cursor en el modo de clic sencillo"
 
 #: ../src/exo/exo-icon-view.c:1028
 msgid "Spacing"
-msgstr "Espaciado"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1029
 msgid "Space which is inserted between cells of an item"
-msgstr "Espacio que se inserta entre celdas de un elemento"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1044
 msgid "Text column"
-msgstr "Columna de texto"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1045
 msgid "Model column used to retrieve the text from"
-msgstr "Columna modelo que se utiliza para obtener el texto"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1052
 msgid "Selection Box Color"
-msgstr "Color del cuadro de selección"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1053
 msgid "Color of the selection box"
-msgstr "Color del cuadro de selección"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1059
 msgid "Selection Box Alpha"
-msgstr "Transparencia del cuadro de selección"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1060
 msgid "Opacity of the selection box"
-msgstr "Opacidad del cuadro de selección"
+msgstr ""
 
 #: ../src/cust-dialog.c:394
 #, c-format
@@ -878,9 +819,9 @@ msgid "internal command %s requires an argument"
 msgstr ""
 
 #: ../src/cust-dialog.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "element '%s' does not exist"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -904,9 +845,9 @@ msgid "'%s' is not an internal command"
 msgstr ""
 
 #: ../src/cust-dialog.c:1630
-#, fuzzy, c-format
+#, c-format
 msgid "error creating file %s: %s"
-msgstr "Extrayendo archivos a: %s"
+msgstr ""
 
 #: ../src/cust-dialog.c:1746
 #, c-format
@@ -1286,27 +1227,20 @@ msgid "Save files and write source output to FILE"
 msgstr ""
 
 #: ../src/main.c:126
-#, fuzzy
 msgid "Open folders in new tab of last window (default)"
 msgstr ""
-"Abrir carpetas en nuevas pestañas de la última ventana usada en lugar de "
-"crear nuevas ventanas"
 
 #: ../src/main.c:127
-#, fuzzy
 msgid "Open folder in current tab of last used window"
 msgstr ""
-"Abrir carpetas en nuevas pestañas de la última ventana usada en lugar de "
-"crear nuevas ventanas"
 
 #: ../src/main.c:128
 msgid "Don't load saved tabs"
 msgstr ""
 
 #: ../src/main.c:129
-#, fuzzy
 msgid "Open folders in new window"
-msgstr "Abrir en una nueva ventana"
+msgstr ""
 
 #: ../src/main.c:130
 msgid "Open folders in panel 'P' (1-4)"
@@ -1317,32 +1251,28 @@ msgid "Launch desktop manager daemon"
 msgstr ""
 
 #: ../src/main.c:132
-#, fuzzy
 msgid "Show desktop settings"
-msgstr "Opciones de _Escritorio"
+msgstr ""
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
 msgstr ""
 
 #: ../src/main.c:134
-#, fuzzy
 msgid "Run as a daemon"
-msgstr "Ejecutar PCManFM como demonio"
+msgstr ""
 
 #: ../src/main.c:135
 msgid "Use DIR as configuration directory"
 msgstr ""
 
 #: ../src/main.c:136
-#, fuzzy
 msgid "Show File Search"
-msgstr "Habilitar búsqueda"
+msgstr ""
 
 #: ../src/main.c:143
-#, fuzzy
 msgid "Set desktop wallpaper to FILE"
-msgstr "Establecer fondo del escritorio"
+msgstr ""
 
 #: ../src/main.c:145
 msgid "Show a custom dialog (See -g help)"
@@ -1409,9 +1339,8 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "mensaje"
+msgstr ""
 
 #: ../src/main.c:632
 msgid "Example:"
@@ -1510,9 +1439,8 @@ msgid "DIR            eg '/etc'"
 msgstr ""
 
 #: ../src/main.c:708
-#, fuzzy
 msgid "[FILENAME ...]"
-msgstr "[ARCHIVO1, ARCHIVO2,...]"
+msgstr ""
 
 #: ../src/main.c:709
 msgid "[PATTERN]      eg '*.jpg'"
@@ -1685,9 +1613,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1738,7 +1665,7 @@ msgstr ""
 
 #: ../src/main.c:1188
 msgid "File doesn't exist"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/main.c:1190 ../src/main.c:1261 ../src/main.c:1263 ../src/main.c:1378
 #: ../src/main.c:1380 ../src/main.c:1512 ../src/settings.c:7940
@@ -1751,7 +1678,7 @@ msgstr "El archivo no existe"
 #: ../src/vfs/vfs-file-task.c:1472
 #, c-format
 msgid "Error"
-msgstr "Error"
+msgstr ""
 
 #: ../src/main.c:1261 ../src/main.c:1378
 msgid ""
@@ -1766,9 +1693,6 @@ msgid ""
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr ""
-"Error: No se puede establecer una conexión con FAM.\n"
-"\n"
-"¿Tienes \"FAM\" o \"Gamin\" instalado y ejecutándose?"
 
 #: ../src/main.c:1315
 msgid "--dialog must be first option"
@@ -1780,7 +1704,7 @@ msgstr ""
 
 #: ../src/main.c:1508
 msgid "Don't know how to open the file"
-msgstr "No se sabe cómo abrir el archivo"
+msgstr ""
 
 #: ../src/main.c:1510
 #, c-format
@@ -1789,9 +1713,6 @@ msgid ""
 "\"%s\"\n"
 "%s"
 msgstr ""
-"No se puede abrir el archivo:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/main-window.c:366 ../src/settings.c:5269
 msgid "_Add"
@@ -1800,7 +1721,7 @@ msgstr ""
 #: ../src/main-window.c:367 ../src/settings.c:8922 ../src/settings.c:9387
 #: ../src/settings.c:10098 ../src/find-files.c:275
 msgid "_Open"
-msgstr "_Abrir"
+msgstr ""
 
 #: ../src/main-window.c:422
 msgid "Choose Plugin File"
@@ -1839,9 +1760,8 @@ msgid ""
 msgstr ""
 
 #: ../src/main-window.c:480
-#, fuzzy
 msgid "Overwrite Plugin ?"
-msgstr "Sobreescribir todo"
+msgstr ""
 
 #: ../src/main-window.c:501
 msgid "Error Creating Temp Directory"
@@ -1857,15 +1777,12 @@ msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr ""
 
 #: ../src/main-window.c:743
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Unable to save session file\n"
 "\n"
 "( %s )"
 msgstr ""
-"No se puede abrir el archivo:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/main-window.c:745
 msgid "Save Session Error"
@@ -1873,9 +1790,8 @@ msgstr ""
 
 #. root task
 #: ../src/main-window.c:776
-#, fuzzy
 msgid "Open Root Window"
-msgstr "Abrir en nueva _ventana"
+msgstr ""
 
 #: ../src/main-window.c:806 ../src/vfs/vfs-file-task.c:1504
 msgid "Terminal Not Available"
@@ -1886,9 +1802,8 @@ msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr ""
 
 #: ../src/main-window.c:818
-#, fuzzy
 msgid "Open Terminal"
-msgstr "Abrir _terminal"
+msgstr ""
 
 #: ../src/main-window.c:1138
 msgid "Design Mode Help"
@@ -1911,9 +1826,9 @@ msgstr ""
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
-#, fuzzy, c-format
+#, c-format
 msgid "New _Command"
-msgstr "Comando:"
+msgstr ""
 
 #: ../src/main-window.c:1789
 #, c-format
@@ -1923,32 +1838,30 @@ msgstr ""
 #: ../src/main-window.c:1817 ../src/settings.c:9746 ../src/settings.c:9762
 #: ../src/settings.c:10195 ../src/desktop/desktop-window.c:201
 msgid "_File"
-msgstr "_Archivo"
+msgstr ""
 
 #: ../src/main-window.c:1820 ../src/settings.c:10278
 msgid "_View"
-msgstr "_Ver"
+msgstr ""
 
 #: ../src/main-window.c:1823 ../src/settings.c:10254 ../src/settings.c:10623
 #: ../src/settings.c:10738 ../src/settings.c:10866 ../src/settings.c:10994
-#, fuzzy
 msgid "_Bookmarks"
-msgstr "_Marcadores"
+msgstr ""
 
 #: ../src/main-window.c:1829
 msgid "_Plugins"
 msgstr ""
 
 #: ../src/main-window.c:1833
-#, fuzzy
 msgid "_Tools"
-msgstr "_Herramientas"
+msgstr ""
 
 #. Help
 #: ../src/main-window.c:1836 ../src/settings.c:7104 ../src/settings.c:7603
 #: ../src/settings.c:7882
 msgid "_Help"
-msgstr "A_yuda"
+msgstr ""
 
 #: ../src/main-window.c:2113
 #, c-format
@@ -1967,9 +1880,8 @@ msgid "Stop all tasks running in this window?"
 msgstr ""
 
 #: ../src/main-window.c:2147
-#, fuzzy
 msgid "Aborting tasks..."
-msgstr "Moviendo a la papelera..."
+msgstr ""
 
 #: ../src/main-window.c:3310
 #, c-format
@@ -2007,18 +1919,17 @@ msgid "   !Link → ( error reading target )"
 msgstr ""
 
 #: ../src/main-window.c:3433
-#, fuzzy
 msgid "hidden"
 msgid_plural "hidden"
-msgstr[0] "%d oculto"
-msgstr[1] "%d ocultos"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3436
-#, fuzzy, c-format
+#, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
-msgstr[0] "%d elemento visible (%s)%s"
-msgstr[1] "%d elementos visibles (%s)%s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3441
 #, c-format
@@ -2043,22 +1954,19 @@ msgstr ""
 #: ../src/main-window.c:3805 ../src/ptk/ptk-file-misc.c:1884
 #: ../src/find-files.c:918
 msgid "Folder"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/main-window.c:3805
-#, fuzzy
 msgid "Item"
-msgstr "Nuevo elemento"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "To"
-msgstr "A:"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "Progress"
-msgstr "Progreso:"
+msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
@@ -2099,29 +2007,24 @@ msgid ""
 msgstr ""
 
 #: ../src/main-window.c:5327
-#, fuzzy
 msgid "moving"
-msgstr "Moviendo..."
+msgstr ""
 
 #: ../src/main-window.c:5328
-#, fuzzy
 msgid "copying"
-msgstr "Copiando..."
+msgstr ""
 
 #: ../src/main-window.c:5329
-#, fuzzy
 msgid "trashing"
-msgstr "Papelera"
+msgstr ""
 
 #: ../src/main-window.c:5330
-#, fuzzy
 msgid "deleting"
-msgstr "Borrando..."
+msgstr ""
 
 #: ../src/main-window.c:5331
-#, fuzzy
 msgid "linking"
-msgstr "Enlazando..."
+msgstr ""
 
 #: ../src/main-window.c:5332
 msgid "changing"
@@ -2145,34 +2048,32 @@ msgstr ""
 #: ../src/ptk/ptk-file-browser.c:4365 ../src/edit-bookmarks.c:196
 #: ../src/find-files.c:903
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #: ../src/main-window.c:5722 ../src/ptk/ptk-file-browser.c:4024
 #: ../src/ptk/ptk-file-browser.c:4365 ../src/find-files.c:924
 msgid "Size"
-msgstr "Tamaño"
+msgstr ""
 
 #: ../src/main-window.c:5722 ../src/ptk/ptk-file-browser.c:4024
 #: ../src/ptk/ptk-file-browser.c:4365 ../src/find-files.c:928
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
 msgid "Permission"
-msgstr "Permisos"
+msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Owner"
-msgstr "Propietario:Grupo"
+msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Modified"
-msgstr "Última modificación"
+msgstr ""
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
@@ -2273,9 +2174,9 @@ msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
 #: ../src/main-window.c:6197
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr "¡La carpeta no existe!"
+msgstr ""
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
@@ -2346,9 +2247,8 @@ msgstr ""
 
 #. task
 #: ../src/pref-dialog.c:668 ../src/pref-dialog.c:669
-#, fuzzy
 msgid "Save Root Settings"
-msgstr "Opciones de _Escritorio"
+msgstr ""
 
 #: ../src/pref-dialog.c:668
 msgid ""
@@ -2403,28 +2303,24 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:122
-#, fuzzy
 msgid "MIME Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../src/settings.c:123
-#, fuzzy
 msgid "Filename"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../src/settings.c:124
-#, fuzzy
 msgid "Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:125
 msgid "Dir Write Access"
 msgstr ""
 
 #: ../src/settings.c:126
-#, fuzzy
 msgid "File Is Text"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2439,14 +2335,12 @@ msgid "User Is Root"
 msgstr ""
 
 #: ../src/settings.c:130
-#, fuzzy
 msgid "Multiple Selected"
-msgstr "Se han seleccionado múltiples archivos"
+msgstr ""
 
 #: ../src/settings.c:131
-#, fuzzy
 msgid "Clipboard Has Files"
-msgstr "Comprimir archivos"
+msgstr ""
 
 #: ../src/settings.c:132
 msgid "Clipboard Has Text"
@@ -2461,18 +2355,16 @@ msgid "Panel Count"
 msgstr ""
 
 #: ../src/settings.c:135
-#, fuzzy
 msgid "Current Tab"
-msgstr "Abrir en la pestaña actual"
+msgstr ""
 
 #: ../src/settings.c:136
 msgid "Tab Count"
 msgstr ""
 
 #: ../src/settings.c:137
-#, fuzzy
 msgid "Bookmark"
-msgstr "_Marcadores"
+msgstr ""
 
 #: ../src/settings.c:138
 msgid "Device"
@@ -2495,48 +2387,40 @@ msgid "Device UDI"
 msgstr ""
 
 #: ../src/settings.c:143
-#, fuzzy
 msgid "Device Properties"
-msgstr "Propiedades del archivo"
+msgstr ""
 
 #: ../src/settings.c:144
 msgid "Task Count"
 msgstr ""
 
 #: ../src/settings.c:145
-#, fuzzy
 msgid "Task Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:146
-#, fuzzy
 msgid "Task Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../src/settings.c:147
-#, fuzzy
 msgid "Task Name"
-msgstr "Nombre"
+msgstr ""
 
 #: ../src/settings.c:148
-#, fuzzy
 msgid "Panel 1 Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:149
-#, fuzzy
 msgid "Panel 2 Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:150
-#, fuzzy
 msgid "Panel 3 Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:151
-#, fuzzy
 msgid "Panel 4 Directory"
-msgstr "Carpeta personal"
+msgstr ""
 
 #: ../src/settings.c:152
 msgid "Panel 1 Has Sel"
@@ -2579,9 +2463,8 @@ msgid "doesn't equal"
 msgstr ""
 
 #: ../src/settings.c:221
-#, fuzzy
 msgid "contains"
-msgstr "El archivo contiene:"
+msgstr ""
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
@@ -2592,28 +2475,24 @@ msgid "begins with"
 msgstr ""
 
 #: ../src/settings.c:224
-#, fuzzy
 msgid "doesn't begin with"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/settings.c:225
-#, fuzzy
 msgid "ends with"
-msgstr "Abrir _con..."
+msgstr ""
 
 #: ../src/settings.c:226
-#, fuzzy
 msgid "doesn't end with"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/settings.c:227
 msgid "is less than"
 msgstr ""
 
 #: ../src/settings.c:228
-#, fuzzy
 msgid "is greater than"
-msgstr "Mayor que:"
+msgstr ""
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
@@ -2641,9 +2520,8 @@ msgid "_Stop"
 msgstr ""
 
 #: ../src/settings.c:916 ../src/settings.c:9963
-#, fuzzy
 msgid "Show _Manager"
-msgstr "Mostrar barra de _localización"
+msgstr ""
 
 #: ../src/settings.c:922 ../src/settings.c:9968
 msgid "Auto-_Hide Manager"
@@ -2663,7 +2541,7 @@ msgstr ""
 
 #: ../src/settings.c:946 ../src/settings.c:9859
 msgid "_Folder"
-msgstr "_Carpeta"
+msgstr ""
 
 #: ../src/settings.c:962 ../src/settings.c:10010
 msgid "_Detailed Stats"
@@ -2801,9 +2679,8 @@ msgid "Change Menu Name"
 msgstr ""
 
 #: ../src/settings.c:4195 ../src/settings.c:5958
-#, fuzzy
 msgid "Set Command Line"
-msgstr "Línea de _comandos:"
+msgstr ""
 
 #: ../src/settings.c:4232 ../src/settings.c:5922
 msgid "Choose Custom Executable"
@@ -2827,9 +2704,9 @@ msgstr ""
 
 #. task
 #: ../src/settings.c:4564
-#, fuzzy, c-format
+#, c-format
 msgid "Edit %s"
-msgstr "_Editar"
+msgstr ""
 
 #: ../src/settings.c:5022
 msgid "Current: Show"
@@ -2844,9 +2721,8 @@ msgid "Current: Disable"
 msgstr ""
 
 #: ../src/settings.c:5213
-#, fuzzy
 msgid "Context Rules"
-msgstr "Contenido"
+msgstr ""
 
 #. list buttons
 #. Remove
@@ -2883,9 +2759,8 @@ msgid "Show"
 msgstr ""
 
 #: ../src/settings.c:5323
-#, fuzzy
 msgid "Enable"
-msgstr "Habilitar búsqueda"
+msgstr ""
 
 #: ../src/settings.c:5325
 msgid "Hide"
@@ -2980,9 +2855,8 @@ msgid "Unset"
 msgstr ""
 
 #: ../src/settings.c:5756
-#, fuzzy
 msgid "Set"
-msgstr "Establecer GID"
+msgstr ""
 
 #: ../src/settings.c:5770
 msgid "Set Key"
@@ -2994,9 +2868,8 @@ msgstr ""
 
 #. line
 #: ../src/settings.c:5828 ../src/settings.c:5896
-#, fuzzy
 msgid "Edit Command Line"
-msgstr "Línea de _comandos:"
+msgstr ""
 
 #: ../src/settings.c:5933
 msgid "Run As User"
@@ -3025,9 +2898,8 @@ msgid "New Context Command"
 msgstr ""
 
 #: ../src/settings.c:5949
-#, fuzzy
 msgid "Set Menu Name"
-msgstr "Ordenar por _nombre"
+msgstr ""
 
 #: ../src/settings.c:5988
 #, c-format
@@ -3045,9 +2917,8 @@ msgid "(none)"
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "Set Submenu Name"
-msgstr "Ordenar por _nombre"
+msgstr ""
 
 #: ../src/settings.c:5997
 msgid ""
@@ -3058,9 +2929,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "New _Submenu"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:6113
 msgid "( no name )"
@@ -3115,9 +2985,8 @@ msgstr ""
 #: ../src/settings.c:6786 ../src/settings.c:9402 ../src/settings.c:10307
 #: ../src/settings.c:10688 ../src/settings.c:10811 ../src/settings.c:10939
 #: ../src/settings.c:11067
-#, fuzzy
 msgid "_Name"
-msgstr "Nombre"
+msgstr ""
 
 #. Key
 #: ../src/settings.c:6791
@@ -3129,9 +2998,8 @@ msgstr ""
 #: ../src/settings.c:10674 ../src/settings.c:10684 ../src/settings.c:10795
 #: ../src/settings.c:10806 ../src/settings.c:10923 ../src/settings.c:10934
 #: ../src/settings.c:11051 ../src/settings.c:11062
-#, fuzzy
 msgid "_Icon"
-msgstr "_Iconos"
+msgstr ""
 
 #. // Style submenu
 #: ../src/settings.c:6811
@@ -3159,15 +3027,13 @@ msgstr ""
 
 #. Description
 #: ../src/settings.c:6871
-#, fuzzy
 msgid "_Message"
-msgstr "mensaje"
+msgstr ""
 
 #. Context
 #: ../src/settings.c:6881
-#, fuzzy
 msgid "Con_text"
-msgstr "texto"
+msgstr ""
 
 #: ../src/settings.c:6888
 msgid "Ign_ore Context (global)"
@@ -3175,15 +3041,14 @@ msgstr ""
 
 #. // Command submenu
 #: ../src/settings.c:6894
-#, fuzzy
 msgid "C_ommand"
-msgstr "Comando:"
+msgstr ""
 
 #. Edit
 #: ../src/settings.c:6907 ../src/settings.c:7891 ../src/settings.c:9381
 #: ../src/settings.c:10382
 msgid "_Edit"
-msgstr "_Editar"
+msgstr ""
 
 #: ../src/settings.c:6925
 msgid "E_dit As Root"
@@ -3193,14 +3058,12 @@ msgstr ""
 #. Copy
 #: ../src/settings.c:6930 ../src/settings.c:7121 ../src/settings.c:9432
 #: ../src/settings.c:9756 ../src/settings.c:10361
-#, fuzzy
 msgid "_Copy"
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/settings.c:6953
-#, fuzzy
 msgid "_Files"
-msgstr "_Archivo"
+msgstr ""
 
 #: ../src/settings.c:6956
 msgid "_Files (none)"
@@ -3245,15 +3108,13 @@ msgstr ""
 
 #. Run In Terminal
 #: ../src/settings.c:7037
-#, fuzzy
 msgid "Run _In Terminal"
-msgstr "Abrir en terminal"
+msgstr ""
 
 #. Keep Terminal
 #: ../src/settings.c:7043
-#, fuzzy
 msgid "_Keep Terminal"
-msgstr "Abrir _terminal"
+msgstr ""
 
 #: ../src/settings.c:7055
 #, c-format
@@ -3321,9 +3182,8 @@ msgid "S_eparator"
 msgstr ""
 
 #: ../src/settings.c:7540
-#, fuzzy
 msgid "Set Icon"
-msgstr "Establecer GID"
+msgstr ""
 
 #: ../src/settings.c:7901 ../src/settings.c:8111 ../src/settings.c:10114
 #: ../src/settings.c:10236
@@ -3382,9 +3242,8 @@ msgid "Tree"
 msgstr ""
 
 #: ../src/settings.c:8678 ../src/settings.c:8748 ../src/settings.c:8817
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Marcadores:"
+msgstr ""
 
 #: ../src/settings.c:8684 ../src/settings.c:8754 ../src/settings.c:8823
 msgid "Devices"
@@ -3392,30 +3251,27 @@ msgstr ""
 
 #: ../src/settings.c:8690 ../src/settings.c:8760 ../src/settings.c:8829
 msgid "New Tab"
-msgstr "Nueva pestaña"
+msgstr ""
 
 #: ../src/settings.c:8695 ../src/settings.c:8765 ../src/settings.c:8834
-#, fuzzy
 msgid "New Tab Here"
-msgstr "Nueva pestaña"
+msgstr ""
 
 #: ../src/settings.c:8700 ../src/settings.c:8770 ../src/settings.c:8839
 msgid "Back"
-msgstr "Atrás"
+msgstr ""
 
 #: ../src/settings.c:8705 ../src/settings.c:8775 ../src/settings.c:8844
-#, fuzzy
 msgid "Back Menu"
-msgstr "Atrás"
+msgstr ""
 
 #: ../src/settings.c:8710 ../src/settings.c:8780 ../src/settings.c:8849
 msgid "Forward"
-msgstr "Adelante"
+msgstr ""
 
 #: ../src/settings.c:8715 ../src/settings.c:8785 ../src/settings.c:8854
-#, fuzzy
 msgid "Forward Menu"
-msgstr "Adelante"
+msgstr ""
 
 #: ../src/settings.c:8720 ../src/settings.c:8790 ../src/settings.c:8859
 msgid "Up"
@@ -3423,12 +3279,11 @@ msgstr ""
 
 #: ../src/settings.c:8725 ../src/settings.c:8795 ../src/settings.c:8864
 msgid "Refresh"
-msgstr "Actualizar"
+msgstr ""
 
 #: ../src/settings.c:8730 ../src/settings.c:8800 ../src/settings.c:8869
-#, fuzzy
 msgid "Home"
-msgstr "Ir a la carpeta _personal"
+msgstr ""
 
 #: ../src/settings.c:8735 ../src/settings.c:8805 ../src/settings.c:8873
 msgid "Default"
@@ -3460,10 +3315,9 @@ msgid "_Sync"
 msgstr ""
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3476,7 +3330,7 @@ msgstr ""
 
 #: ../src/settings.c:8938
 msgid "_Bookmark"
-msgstr "_Marcadores"
+msgstr ""
 
 #: ../src/settings.c:8951 ../src/settings.c:10547
 msgid "_Root"
@@ -3491,9 +3345,8 @@ msgid "_Check"
 msgstr ""
 
 #: ../src/settings.c:9021
-#, fuzzy
 msgid "_Edit fstab"
-msgstr "_Editar"
+msgstr ""
 
 #: ../src/settings.c:9025
 msgid "Edit u_devil.conf"
@@ -3504,18 +3357,16 @@ msgid "_Format"
 msgstr ""
 
 #: ../src/settings.c:9089
-#, fuzzy
 msgid "_Backup"
-msgstr "Atrás"
+msgstr ""
 
 #: ../src/settings.c:9111
 msgid "_Restore"
 msgstr ""
 
 #: ../src/settings.c:9116
-#, fuzzy
 msgid "_From File"
-msgstr "_Buscar archivos"
+msgstr ""
 
 #: ../src/settings.c:9121 ../src/settings.c:9487
 msgid "File _Info"
@@ -3523,22 +3374,19 @@ msgstr ""
 
 #: ../src/settings.c:9124
 msgid "_Properties"
-msgstr "_Propiedades"
+msgstr ""
 
 #: ../src/settings.c:9127
-#, fuzzy
 msgid "Setti_ngs"
-msgstr "Opciones de _Escritorio"
+msgstr ""
 
 #: ../src/settings.c:9138
-#, fuzzy
 msgid "_Internal Drives"
-msgstr "Memoria USB"
+msgstr ""
 
 #: ../src/settings.c:9143
-#, fuzzy
 msgid "_Empty Drives"
-msgstr "Unidad de disquete"
+msgstr ""
 
 #: ../src/settings.c:9148
 msgid "_Partition Tables"
@@ -3549,19 +3397,16 @@ msgid "Mounted _Networks"
 msgstr ""
 
 #: ../src/settings.c:9157
-#, fuzzy
 msgid "Mounted _Files"
-msgstr "_Montar sistema de archivos"
+msgstr ""
 
 #: ../src/settings.c:9162
-#, fuzzy
 msgid "_Volumes..."
-msgstr "Volumen"
+msgstr ""
 
 #: ../src/settings.c:9163
-#, fuzzy
 msgid "Show/Hide Volumes"
-msgstr "_Mostrar archivos ocultos"
+msgstr ""
 
 #: ../src/settings.c:9164
 msgid ""
@@ -3613,14 +3458,12 @@ msgid "_Mount Removable"
 msgstr ""
 
 #: ../src/settings.c:9195
-#, fuzzy
 msgid "Open _Tab"
-msgstr "Abrir en nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:9200
-#, fuzzy
 msgid "_Unmount On Exit"
-msgstr "_Desmontar sistema de archivos"
+msgstr ""
 
 #: ../src/settings.c:9208
 msgid "Auto _Run"
@@ -3631,9 +3474,8 @@ msgid "On _Mount"
 msgstr ""
 
 #: ../src/settings.c:9216
-#, fuzzy
 msgid "Auto Run On Mount"
-msgstr "En un año"
+msgstr ""
 
 #: ../src/settings.c:9217
 #, c-format
@@ -3648,9 +3490,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9220
-#, fuzzy
 msgid "On _Audio CD"
-msgstr "Disco de audio"
+msgstr ""
 
 #: ../src/settings.c:9222
 msgid "Auto Run On Audio CD"
@@ -3819,9 +3660,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9275
-#, fuzzy
 msgid "Mount _Command"
-msgstr "Comando:"
+msgstr ""
 
 #: ../src/settings.c:9276
 #, c-format
@@ -3841,9 +3681,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9278
-#, fuzzy
 msgid "Mount Command"
-msgstr "Comando:"
+msgstr ""
 
 #: ../src/settings.c:9282
 msgid "_Unmount Command"
@@ -3866,14 +3705,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9285
-#, fuzzy
 msgid "Unmount Command"
-msgstr "Comando:"
+msgstr ""
 
 #: ../src/settings.c:9307
-#, fuzzy
 msgid "Audio CD"
-msgstr "Disco de audio"
+msgstr ""
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3888,23 +3725,20 @@ msgid "Optical No Media"
 msgstr ""
 
 #: ../src/settings.c:9328
-#, fuzzy
 msgid "Floppy Mounted"
-msgstr "Unidad de disquete"
+msgstr ""
 
 #: ../src/settings.c:9333
 msgid "Floppy Unmounted"
 msgstr ""
 
 #: ../src/settings.c:9338
-#, fuzzy
 msgid "Removable Mounted"
-msgstr "%s Volumen extraible"
+msgstr ""
 
 #: ../src/settings.c:9343
-#, fuzzy
 msgid "Removable Unmounted"
-msgstr "%s Volumen extraible"
+msgstr ""
 
 #: ../src/settings.c:9348
 msgid "Internal Mounted"
@@ -3919,9 +3753,8 @@ msgid "Mounted Network"
 msgstr ""
 
 #: ../src/settings.c:9363
-#, fuzzy
 msgid "Mounted File"
-msgstr "_Montar sistema de archivos"
+msgstr ""
 
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
@@ -3932,32 +3765,28 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
 #: ../src/ptk/ptk-file-misc.c:1952
 msgid "_Rename"
-msgstr "_Renombrar"
+msgstr ""
 
 #: ../src/settings.c:9384
 msgid "Re_move"
 msgstr ""
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:9393
-#, fuzzy
 msgid "_Settings"
-msgstr "Opciones de _Escritorio"
+msgstr ""
 
 #: ../src/settings.c:9405
-#, fuzzy
 msgid "_Filename"
-msgstr "_Renombrar"
+msgstr ""
 
 #: ../src/settings.c:9409
-#, fuzzy
 msgid "_Parent"
-msgstr "Carpeta superior"
+msgstr ""
 
 #: ../src/settings.c:9412
 msgid "P_ath"
@@ -3965,9 +3794,8 @@ msgstr ""
 
 #: ../src/settings.c:9416 ../src/settings.c:10311 ../src/settings.c:10698
 #: ../src/settings.c:10822 ../src/settings.c:10950 ../src/settings.c:11078
-#, fuzzy
 msgid "_Type"
-msgstr "Tipo"
+msgstr ""
 
 #: ../src/settings.c:9420
 msgid "_Target"
@@ -3984,9 +3812,8 @@ msgstr ""
 #: ../src/settings.c:9436 ../src/settings.c:10201
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
-#, fuzzy
 msgid "_Link"
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -4014,9 +3841,8 @@ msgid "_Font"
 msgstr ""
 
 #: ../src/settings.c:9453
-#, fuzzy
 msgid "Move Dialog Font"
-msgstr "_Bajar"
+msgstr ""
 
 #: ../src/settings.c:9454
 msgid "/home/user/Example Filename.ext"
@@ -4047,49 +3873,41 @@ msgid "Status Bar Text Highlight Color"
 msgstr ""
 
 #: ../src/settings.c:9477
-#, fuzzy
 msgid "_Middle Click"
-msgstr "Clic sencillo"
+msgstr ""
 
 #: ../src/settings.c:9481 ../src/settings.c:10387
-#, fuzzy
 msgid "Copy _Name"
-msgstr "Ordenar por _nombre"
+msgstr ""
 
 #: ../src/settings.c:9484 ../src/settings.c:10390
-#, fuzzy
 msgid "Copy _Path"
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/settings.c:9491
-#, fuzzy
 msgid "_Hide Panel"
-msgstr "Panel _lateral"
+msgstr ""
 
 #: ../src/settings.c:9507
 msgid "New _Window"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/settings.c:9510
-#, fuzzy
 msgid "R_oot Window"
-msgstr "_Cerrar ventana"
+msgstr ""
 
 #: ../src/settings.c:9513
-#, fuzzy
 msgid "_File Search"
-msgstr "Habilitar búsqueda"
+msgstr ""
 
 #: ../src/settings.c:9516
-#, fuzzy
 msgid "_Terminal"
-msgstr "Terminal:"
+msgstr ""
 
 #. discovery notification
 #: ../src/settings.c:9519
-#, fuzzy
 msgid "_Root Terminal"
-msgstr "Terminal:"
+msgstr ""
 
 #: ../src/settings.c:9522
 msgid "_Save Session"
@@ -4129,7 +3947,7 @@ msgstr ""
 
 #: ../src/settings.c:9577 ../src/settings.c:10223
 msgid "_Go"
-msgstr "_Ir"
+msgstr ""
 
 #: ../src/settings.c:9582 ../src/settings.c:10121 ../src/settings.c:10138
 #: ../src/settings.c:10263 ../src/settings.c:10420 ../src/settings.c:10437
@@ -4188,14 +4006,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
@@ -4347,9 +4163,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9660
-#, fuzzy
 msgid "_Panel"
-msgstr "Panel _lateral"
+msgstr ""
 
 #: ../src/settings.c:9667
 msgid "Set Panel Focus Command"
@@ -4396,9 +4211,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9677
-#, fuzzy
 msgid "S_elect"
-msgstr "Seleccionar _todo"
+msgstr ""
 
 #: ../src/settings.c:9679
 msgid "Set Panel Select Command"
@@ -4423,10 +4237,9 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4467,9 +4280,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9700 ../src/settings.c:10265
-#, fuzzy
 msgid "_Close"
-msgstr "Cerrar pestaña"
+msgstr ""
 
 #: ../src/settings.c:9702
 msgid "Set Tab Close Command"
@@ -4532,14 +4344,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9719
-#, fuzzy
 msgid "_Window Icon"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/settings.c:9721
-#, fuzzy
 msgid "Set Window Icon"
-msgstr "Nueva _ventana"
+msgstr ""
 
 #: ../src/settings.c:9722
 msgid ""
@@ -4563,13 +4373,12 @@ msgid "_Design Mode"
 msgstr ""
 
 #: ../src/settings.c:9730
-#, fuzzy
 msgid "_Preferences"
-msgstr "Preferencias"
+msgstr ""
 
 #: ../src/settings.c:9733
 msgid "_Tool"
-msgstr "_Herramientas"
+msgstr ""
 
 #. Plugins
 #: ../src/settings.c:9740
@@ -4609,9 +4418,8 @@ msgid "_Options"
 msgstr ""
 
 #: ../src/settings.c:9809
-#, fuzzy
 msgid "_Browser"
-msgstr "_Navegar"
+msgstr ""
 
 #: ../src/settings.c:9811
 msgid "Choose HTML Browser"
@@ -4630,14 +4438,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9815
-#, fuzzy
 msgid "_Manual Location"
-msgstr "Localización"
+msgstr ""
 
 #: ../src/settings.c:9817
-#, fuzzy
 msgid "Choose User's Manual Location"
-msgstr "Seleccione una aplicación"
+msgstr ""
 
 #: ../src/settings.c:9818
 msgid ""
@@ -4665,19 +4471,16 @@ msgid "_Count"
 msgstr ""
 
 #: ../src/settings.c:9865
-#, fuzzy
 msgid "_Item"
-msgstr "Nuevo elemento"
+msgstr ""
 
 #: ../src/settings.c:9871
-#, fuzzy
 msgid "_To"
-msgstr "_Herramientas"
+msgstr ""
 
 #: ../src/settings.c:9877
-#, fuzzy
 msgid "_Progress"
-msgstr "Progreso:"
+msgstr ""
 
 #: ../src/settings.c:9884
 msgid "T_otal"
@@ -4700,9 +4503,8 @@ msgid "_Average Speed"
 msgstr ""
 
 #: ../src/settings.c:9927
-#, fuzzy
 msgid "Reor_der"
-msgstr "Reordenable"
+msgstr ""
 
 #: ../src/settings.c:9933 ../src/settings.c:9953
 #: ../src/ptk/ptk-file-task.c:500 ../src/ptk/ptk-file-task.c:792
@@ -4758,9 +4560,8 @@ msgid "All _Workspaces"
 msgstr ""
 
 #: ../src/settings.c:10015
-#, fuzzy
 msgid "_Overwrite Option"
-msgstr "Sobreescribir"
+msgstr ""
 
 #: ../src/settings.c:10020
 msgid "_Error Option"
@@ -4783,9 +4584,8 @@ msgid "Stop On _Any"
 msgstr ""
 
 #: ../src/settings.c:10047
-#, fuzzy
 msgid "_Continue"
-msgstr "Contenido"
+msgstr ""
 
 #: ../src/settings.c:10052
 msgid "Qu_eue"
@@ -4813,7 +4613,7 @@ msgstr ""
 
 #: ../src/settings.c:10102
 msgid "E_xecute"
-msgstr "E_jecutar"
+msgstr ""
 
 #: ../src/settings.c:10105
 msgid "Edi_t"
@@ -4824,15 +4624,13 @@ msgid "Edit As _Root"
 msgstr ""
 
 #: ../src/settings.c:10111
-#, fuzzy
 msgid "_Choose..."
-msgstr "Navegar..."
+msgstr ""
 
 #. virtual
 #: ../src/settings.c:10116
-#, fuzzy
 msgid "In _Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:10120
 msgid "N_ew"
@@ -4889,37 +4687,32 @@ msgid "Tab 1_0"
 msgstr ""
 
 #: ../src/settings.c:10134
-#, fuzzy
 msgid "In _Panel"
-msgstr "Panel _lateral"
+msgstr ""
 
 #: ../src/settings.c:10145 ../src/settings.c:10164
-#, fuzzy
 msgid "_Extract"
-msgstr "E_xtraer"
+msgstr ""
 
 #: ../src/settings.c:10148 ../src/settings.c:10168
 msgid "Extract _To"
-msgstr "Extraer _a"
+msgstr ""
 
 #: ../src/settings.c:10151 ../src/settings.c:10171
-#, fuzzy
 msgid "_List Contents"
-msgstr "Contenido"
+msgstr ""
 
 #: ../src/settings.c:10157
 msgid "_Archive Default"
 msgstr ""
 
 #: ../src/settings.c:10161
-#, fuzzy
 msgid "_Open With App"
-msgstr "Abrir _con \"%s\""
+msgstr ""
 
 #: ../src/settings.c:10174
-#, fuzzy
 msgid "_Create Subfolder"
-msgstr "_Crear nuevo"
+msgstr ""
 
 #: ../src/settings.c:10178
 msgid "_Write Access"
@@ -4938,43 +4731,38 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
-msgstr "_Marcadores"
+msgstr ""
 
 #: ../src/settings.c:10208
 msgid "_Archive"
 msgstr ""
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
 msgstr ""
 
 #: ../src/settings.c:10228
-#, fuzzy
 msgid "_Back"
-msgstr "Atrás"
+msgstr ""
 
 #: ../src/settings.c:10230
-#, fuzzy
 msgid "_Forward"
-msgstr "Adelante"
+msgstr ""
 
 #: ../src/settings.c:10232
 msgid "_Up"
 msgstr ""
 
 #: ../src/settings.c:10234
-#, fuzzy
 msgid "_Home"
-msgstr "Ir a la carpeta _personal"
+msgstr ""
 
 #: ../src/settings.c:10239
 msgid "_Set Default"
@@ -4989,14 +4777,12 @@ msgid "Fo_cus"
 msgstr ""
 
 #: ../src/settings.c:10248
-#, fuzzy
 msgid "_Path Bar"
-msgstr "Barra de dirección"
+msgstr ""
 
 #: ../src/settings.c:10250
-#, fuzzy
 msgid "_File List"
-msgstr "_Archivo"
+msgstr ""
 
 #: ../src/settings.c:10252
 msgid "_Tree"
@@ -5007,10 +4793,9 @@ msgid "De_vices"
 msgstr ""
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -5021,68 +4806,58 @@ msgid "C_olumns"
 msgstr ""
 
 #: ../src/settings.c:10288
-#, fuzzy
 msgid "_Reorder"
-msgstr "Reordenable"
+msgstr ""
 
 #: ../src/settings.c:10290
 msgid "_Rubberband Select"
 msgstr ""
 
 #: ../src/settings.c:10303
-#, fuzzy
 msgid "_Sort"
-msgstr "_Ordenar..."
+msgstr ""
 
 #. visible
 #. position
 #: ../src/settings.c:10309 ../src/settings.c:10693 ../src/settings.c:10816
 #: ../src/settings.c:10944 ../src/settings.c:11072
-#, fuzzy
 msgid "_Size"
-msgstr "Tamaño"
+msgstr ""
 
 #: ../src/settings.c:10313 ../src/settings.c:10703 ../src/settings.c:10828
 #: ../src/settings.c:10956 ../src/settings.c:11084
-#, fuzzy
 msgid "_Permission"
-msgstr "_Permisos"
+msgstr ""
 
 #: ../src/settings.c:10315 ../src/settings.c:10577 ../src/settings.c:10708
 #: ../src/settings.c:10834 ../src/settings.c:10962 ../src/settings.c:11090
-#, fuzzy
 msgid "_Owner"
-msgstr "<b>_Propietario:</b>"
+msgstr ""
 
 #: ../src/settings.c:10317 ../src/settings.c:10713 ../src/settings.c:10840
 #: ../src/settings.c:10968 ../src/settings.c:11096
-#, fuzzy
 msgid "_Modified"
-msgstr "Última modificación"
+msgstr ""
 
 #: ../src/settings.c:10319
-#, fuzzy
 msgid "_Ascending"
-msgstr "Ascendente"
+msgstr ""
 
 #: ../src/settings.c:10321
-#, fuzzy
 msgid "_Descending"
-msgstr "Descendente"
+msgstr ""
 
 #: ../src/settings.c:10324
 msgid "Nat_ural"
 msgstr ""
 
 #: ../src/settings.c:10326
-#, fuzzy
 msgid "_Case Sensitive"
-msgstr "Distinguir mayúsculas / minúsculas"
+msgstr ""
 
 #: ../src/settings.c:10328
-#, fuzzy
 msgid "Folders Fi_rst"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/settings.c:10330
 msgid "F_iles First"
@@ -5093,18 +4868,16 @@ msgid "Mi_xed"
 msgstr ""
 
 #: ../src/settings.c:10334
-#, fuzzy
 msgid "_Hidden First"
-msgstr "_Mostrar archivos ocultos"
+msgstr ""
 
 #: ../src/settings.c:10336
 msgid "Hidden _Last"
 msgstr ""
 
 #: ../src/settings.c:10339
-#, fuzzy
 msgid "Re_fresh"
-msgstr "Actualizar"
+msgstr ""
 
 #: ../src/settings.c:10342
 msgid "Auto See_k"
@@ -5135,7 +4908,7 @@ msgstr ""
 
 #: ../src/settings.c:10370 ../src/settings.c:10500
 msgid "_Delete"
-msgstr "_Borrar"
+msgstr ""
 
 #: ../src/settings.c:10393
 msgid "Copy Pa_rent"
@@ -5154,87 +4927,73 @@ msgid "Paste _As"
 msgstr ""
 
 #: ../src/settings.c:10408 ../src/settings.c:10498
-#, fuzzy
 msgid "_Copy To"
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/settings.c:10412
-#, fuzzy
 msgid "L_ocation"
-msgstr "Localización"
+msgstr ""
 
 #: ../src/settings.c:10413 ../src/settings.c:10452
-#, fuzzy
 msgid "L_ast Location"
-msgstr "Última modificación"
+msgstr ""
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:10433
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
-msgstr "Panel _lateral"
+msgstr ""
 
 #: ../src/settings.c:10447
-#, fuzzy
 msgid "_Move To"
-msgstr "Mover: "
+msgstr ""
 
 #: ../src/settings.c:10451
-#, fuzzy
 msgid "_Location"
-msgstr "Localización"
+msgstr ""
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "Nueva _pestaña"
+msgstr ""
 
 #: ../src/settings.c:10471
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
-msgstr "Panel _lateral"
+msgstr ""
 
 #: ../src/settings.c:10484
-#, fuzzy
 msgid "_Select All"
-msgstr "Seleccionar _todo"
+msgstr ""
 
 #: ../src/settings.c:10487
-#, fuzzy
 msgid "_Unselect All"
-msgstr "Seleccionar _todo"
+msgstr ""
 
 #: ../src/settings.c:10489
 msgid "_Invert Selection"
-msgstr "_Invertir selección"
+msgstr ""
 
 #: ../src/settings.c:10491
-#, fuzzy
 msgid "S_elect By Pattern"
-msgstr "Seleccione una carpeta"
+msgstr ""
 
 #: ../src/settings.c:10493
 msgid "R_oot"
 msgstr ""
 
 #: ../src/settings.c:10499
-#, fuzzy
 msgid "Move _To"
-msgstr "_Bajar"
+msgstr ""
 
 #. Properties
 #: ../src/settings.c:10504
-#, fuzzy
 msgid "Propert_ies"
-msgstr "_Propiedades"
+msgstr ""
 
 #: ../src/settings.c:10515
 msgid "_Quick"
@@ -5262,9 +5021,8 @@ msgstr ""
 #. PANEL FOUR
 #: ../src/settings.c:10612 ../src/settings.c:10725 ../src/settings.c:10853
 #: ../src/settings.c:10981
-#, fuzzy
 msgid "_Toolbar"
-msgstr "_Herramientas"
+msgstr ""
 
 #: ../src/settings.c:10616 ../src/settings.c:10730 ../src/settings.c:10858
 #: ../src/settings.c:10986
@@ -5284,7 +5042,7 @@ msgstr ""
 #: ../src/settings.c:10632 ../src/settings.c:10750 ../src/settings.c:10878
 #: ../src/settings.c:11006 ../src/desktop/desktop-window.c:209
 msgid "_Icons"
-msgstr "_Iconos"
+msgstr ""
 
 #: ../src/settings.c:10635 ../src/settings.c:10754 ../src/settings.c:10882
 #: ../src/settings.c:11010
@@ -5293,9 +5051,8 @@ msgstr ""
 
 #: ../src/settings.c:10639 ../src/settings.c:10759 ../src/settings.c:10887
 #: ../src/settings.c:11015
-#, fuzzy
 msgid "_Hidden Files"
-msgstr "_Mostrar archivos ocultos"
+msgstr ""
 
 #: ../src/settings.c:10645
 msgid "File List Font (Panel 1)"
@@ -5435,14 +5192,12 @@ msgstr ""
 #. sort_hidden_first
 #. speed
 #: ../src/settings.c:11109 ../src/settings.c:11116
-#, fuzzy
 msgid "_New Tab"
-msgstr "Nueva pestaña"
+msgstr ""
 
 #: ../src/settings.c:11112 ../src/settings.c:11121
-#, fuzzy
 msgid "_Single Click"
-msgstr "Clic sencillo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:551
 msgid "Toolbar Config Menu Help"
@@ -5460,28 +5215,24 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr "¡La carpeta no existe!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
 msgstr ""
-"No se puede abrir el archivo:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/ptk/ptk-file-browser.c:2897
-#, fuzzy
 msgid "Select By Pattern"
-msgstr "Seleccione una carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
 #, c-format
@@ -5497,9 +5248,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
-#, fuzzy
 msgid "Choose Location"
-msgstr "Seleccione una aplicación"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5751 ../src/ptk/ptk-file-browser.c:5783
 msgid "Invalid Destination"
@@ -5514,11 +5264,11 @@ msgid "Invalid destination"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5826
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
-msgstr[0] "¿Borrar los archivos seleccionados?"
-msgstr[1] "¿Borrar los archivos seleccionados?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-browser.c:5830
 msgid "Confirm Delete As Root"
@@ -5529,9 +5279,8 @@ msgid "DELETE AS ROOT"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5839
-#, fuzzy
 msgid "Delete As Root"
-msgstr "Borrar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5858
 msgid "Move As Root"
@@ -5542,9 +5291,8 @@ msgid "Copy As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
-#, fuzzy
 msgid "Hide File"
-msgstr "Buscar archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
@@ -5561,24 +5309,18 @@ msgid "Error hiding files"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5954
-#, fuzzy
 msgid "No files are selected"
-msgstr "Se han seleccionado múltiples archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "Marcadores:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
-#, fuzzy
 msgid "Bookmark already exists"
 msgstr ""
-"\"%s\" ya existe.\n"
-"\n"
-"%s"
 
 #: ../src/ptk/ptk-location-view.c:103
 msgid "DATA LOSS WARNING - overwriting"
@@ -5594,15 +5336,15 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:637 ../src/ptk/ptk-location-view.c:694
 msgid "Unable to mount device"
-msgstr "No se puede montar el dispositivo"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:654
 msgid "Unable to unmount device"
-msgstr "No se puede desmontar el dispositivo"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:673
 msgid "Unable to eject device"
-msgstr "No se puede expulsar el dispositivo"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:712
 msgid "udev Not Configured"
@@ -5776,9 +5518,9 @@ msgid "Label As Root %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1280
-#, fuzzy, c-format
+#, c-format
 msgid "Unmount %s"
-msgstr "_Desmontar sistema de archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1360 ../src/ptk/ptk-location-view.c:1372
 #, c-format
@@ -5878,9 +5620,8 @@ msgid "Restore MBR"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
-#, fuzzy
 msgid "Unknown Type"
-msgstr "Tipos de archivo conocidos:"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
 msgid ""
@@ -5920,9 +5661,8 @@ msgid "DATA LOSS WARNING - overwriting MBR boot code of"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2013
-#, fuzzy
 msgid "Directory Missing"
-msgstr "Árbol de directorios"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2014
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
@@ -5933,9 +5673,8 @@ msgid "Choose Backup For Info"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
-#, fuzzy
 msgid "MBR File"
-msgstr "Renombrar archivo"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5970,9 +5709,8 @@ msgid "Save %s Backup"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
-#, fuzzy
 msgid "Overwrite?"
-msgstr "Sobreescribir"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
 msgid "The selected backup already exists.  Overwrite?"
@@ -5991,9 +5729,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2229
-#, fuzzy
 msgid "Backup"
-msgstr "Atrás"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2257
 #, c-format
@@ -6001,9 +5738,9 @@ msgid "%s Backup %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Properties %s"
-msgstr "_Propiedades"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2519 ../src/ptk/ptk-location-view.c:2546
 #, c-format
@@ -6023,12 +5760,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2958
 msgid "_Eject"
-msgstr "_Expulsar"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3337
-#, fuzzy
 msgid "Rename Bookmark"
-msgstr "_Marcadores"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3339
 msgid "Enter new bookmark name:"
@@ -6040,9 +5776,8 @@ msgid "Enter new folder for bookmark '%s':"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3361
-#, fuzzy
 msgid "Edit Bookmark Location"
-msgstr "Editar marcadores"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:444
 msgid "Kill As Other"
@@ -6066,24 +5801,23 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:752
 msgid "Move: "
-msgstr "Mover: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:753
 msgid "Copy: "
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:754
-#, fuzzy
 msgid "Trash: "
-msgstr "Papelera"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:755
 msgid "Delete: "
-msgstr "Borrar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:756
 msgid "Link: "
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:757
 msgid "Change: "
@@ -6095,35 +5829,33 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:762
 msgid "Moving..."
-msgstr "Moviendo..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:763
 msgid "Copying..."
-msgstr "Copiando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:764
-#, fuzzy
 msgid "Trashing..."
-msgstr "Preparando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:765
 msgid "Deleting..."
-msgstr "Borrando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:766
 msgid "Linking..."
-msgstr "Enlazando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:767
-#, fuzzy
 msgid "Changing..."
-msgstr "Cargando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:768 ../src/ptk/ptk-file-task.c:936
 #: ../src/ptk/ptk-file-task.c:1462
-#, fuzzy, c-format
+#, c-format
 msgid "Running..."
-msgstr "Enlazando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "From:"
@@ -6131,12 +5863,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:869
 msgid "To:"
-msgstr "A:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:887
-#, fuzzy
 msgid "Progress:  "
-msgstr "Progreso:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:925
 msgid "Status:  "
@@ -6158,16 +5889,15 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:996
 msgid "Overwrite All"
-msgstr "Sobreescribir todo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:997
 msgid "Skip All"
-msgstr "Omitir todo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:998
-#, fuzzy
 msgid "Auto Rename"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1002
 msgid "Stop If Error First"
@@ -6178,9 +5908,8 @@ msgid "Stop On Any Error"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1004
-#, fuzzy
 msgid "Continue"
-msgstr "Contenido"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1161 ../src/ptk/ptk-file-task.c:1394
 #, c-format
@@ -6188,9 +5917,8 @@ msgid "Stopped"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1165
-#, fuzzy
 msgid "Errors"
-msgstr "Error"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1167 ../src/ptk/ptk-file-task.c:1406
 #: ../src/ptk/ptk-file-task.c:1416
@@ -6284,24 +6012,21 @@ msgid "stalled"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2020
-#, fuzzy
 msgid "Moving from folder:"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2022
 msgid "Linking from folder:"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2024
-#, fuzzy
 msgid "Copying from folder:"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2040
-#, fuzzy
 msgid "Folder Exists"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -6316,9 +6041,8 @@ msgid "\t<b>! overwrite file with link !</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2071
-#, fuzzy
 msgid "<b>( same size )</b>"
-msgstr "<b>Tamaño de archivo</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2077 ../src/ptk/ptk-file-task.c:2100
 #, c-format
@@ -6330,9 +6054,8 @@ msgid "larger"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2081
-#, fuzzy
 msgid "smaller"
-msgstr "Menor que:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2085
 msgid "<b>( same time )</b>\t"
@@ -6343,73 +6066,61 @@ msgid "newer"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2097
-#, fuzzy
 msgid "older"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2118
-#, fuzzy
 msgid "Filename Exists"
-msgstr "El archivo no existe"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
-#, fuzzy
 msgid "Rename Required"
-msgstr "Renombrar archivo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2133
-#, fuzzy
 msgid "In folder:"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2212
-#, fuzzy
 msgid "_Overwrite"
-msgstr "Sobreescribir"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2213
-#, fuzzy
 msgid "Overwrite _All"
-msgstr "Sobreescribir todo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2218
 msgid "_Pause"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2220
-#, fuzzy
 msgid "_Skip"
-msgstr "Omitir"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2221
-#, fuzzy
 msgid "S_kip All"
-msgstr "Omitir todo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2273
-#, fuzzy
 msgid "To folder:"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Folder Name:</b>"
-msgstr "<b>_Nombre de archivo:</b>"
+msgstr ""
 
 #. extra buttons
 #: ../src/ptk/ptk-file-task.c:2328
-#, fuzzy
 msgid " _Rename "
-msgstr "_Renombrar"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2332
-#, fuzzy
 msgid " A_uto Rename "
-msgstr "_Renombrar"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2336
 msgid " Auto Re_name All "
@@ -6438,9 +6149,8 @@ msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
-#, fuzzy
 msgid "Extract To"
-msgstr "Extraer _a"
+msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:485
 msgid "Cre_ate subfolder(s)"
@@ -6457,30 +6167,27 @@ msgstr ""
 
 #. task
 #: ../src/ptk/ptk-file-archiver.c:689
-#, fuzzy, c-format
+#, c-format
 msgid "Extract %s"
-msgstr "Extraer archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-console-output.c:74
 msgid ""
 "\n"
 "Complete!"
 msgstr ""
-"\n"
-"¡Completado!"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
-msgstr "Comando:"
+msgstr ""
 
 #: ../src/ptk/ptk-dir-tree.c:174
 msgid "File System"
-msgstr "Sistema de archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-dir-tree.c:396
-#, fuzzy
 msgid "( no subfolder )"
-msgstr "Ir a la carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid "Remove Text Type Association"
@@ -6513,11 +6220,11 @@ msgid "new"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
-msgstr[0] "¿Borrar los archivos seleccionados?"
-msgstr[1] "¿Borrar los archivos seleccionados?"
+msgstr[0] ""
+msgstr[1] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:159
@@ -6555,9 +6262,8 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:561 ../src/ptk/ptk-file-misc.c:575
 #: ../src/ptk/ptk-file-misc.c:586 ../src/ptk/ptk-file-misc.c:623
 #: ../src/ptk/ptk-file-misc.c:2248
-#, fuzzy
 msgid "<b>_Parent:</b>"
-msgstr "<b>_Grupo:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:570
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
@@ -6589,15 +6295,13 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:595 ../src/ptk/ptk-file-misc.c:607
 #: ../src/ptk/ptk-file-misc.c:619 ../src/ptk/ptk-file-misc.c:2177
-#, fuzzy
 msgid "<b>_Name:</b>"
-msgstr "<b>_Nombre de archivo:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:597 ../src/ptk/ptk-file-misc.c:609
 #: ../src/ptk/ptk-file-misc.c:621 ../src/ptk/ptk-file-misc.c:2224
-#, fuzzy
 msgid "<b>_Filename:</b>"
-msgstr "<b>_Nombre de archivo:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:599
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
@@ -6612,29 +6316,24 @@ msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:617 ../src/ptk/ptk-file-misc.c:2272
-#, fuzzy
 msgid "<b>P_ath:</b>"
-msgstr "<b>Abrir _con:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
-#, fuzzy
 msgid "_Move"
-msgstr "Mover: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:783
-#, fuzzy
 msgid "Select Link Target"
-msgstr "Modo de selección"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:799
-#, fuzzy
 msgid "Select Template File"
-msgstr "Seleccione una carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:818
-#, fuzzy
 msgid "Select Template Folder"
-msgstr "Seleccione una carpeta"
+msgstr ""
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -6660,47 +6359,40 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1042
-#, fuzzy
 msgid "C_reate"
-msgstr "_Crear nuevo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1043
-#, fuzzy
 msgctxt "Title|"
 msgid "Create New"
-msgstr "_Crear nuevo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr "_Archivo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
-#, fuzzy
 msgid "Move"
-msgstr "Mover: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1070 ../src/ptk/ptk-file-misc.c:1080
 msgid "C_opy"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1071 ../src/ptk/ptk-file-misc.c:1081
-#, fuzzy
 msgid "Copy"
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1076 ../src/ptk/ptk-file-misc.c:1087
 msgid "Create Link To"
@@ -6719,14 +6411,12 @@ msgid " As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
-#, fuzzy
 msgid "Link"
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1886
-#, fuzzy
 msgid "File"
-msgstr "_Archivo"
+msgstr ""
 
 #. g_free( title );
 #. Buttons
@@ -6739,14 +6429,13 @@ msgid "Re_vert"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1956
-#, fuzzy
 msgid "& _Open"
-msgstr "_Abrir"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1990
-#, fuzzy, c-format
+#, c-format
 msgid "Link-> %s"
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1993
 #, c-format
@@ -6754,29 +6443,24 @@ msgid "!Link-> %s (missing)"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2042
-#, fuzzy
 msgid "<b>_Target:</b>"
-msgstr "<b>_Grupo:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2088
-#, fuzzy
 msgid "<b>_Template:</b>"
-msgstr "<b>Tipo de archivo:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2104 ../src/ptk/ptk-file-misc.c:2693
-#, fuzzy
 msgid "Empty File"
-msgstr "Extraer archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2134 ../src/ptk/ptk-file-misc.c:2771
-#, fuzzy
 msgid "Empty Folder"
-msgstr "Carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2202
-#, fuzzy
 msgid "<b>E_xtension:</b>"
-msgstr "<b>Localización:</b>"
+msgstr ""
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2297
@@ -6810,24 +6494,21 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr "Enlazar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2415
-#, fuzzy
 msgid "New"
-msgstr "Nueva pestaña"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2544
 msgid "Path contains linefeeds"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2599
-#, fuzzy
 msgid "Create Parent Folder"
-msgstr "Carpeta superior"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2601
 msgid "The parent folder does not exist.  Create it?"
@@ -6842,14 +6523,12 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2617
-#, fuzzy
 msgid "Mkdir Error"
-msgstr "Error"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2630
-#, fuzzy
 msgid "Overwrite Existing File"
-msgstr "Sobreescribir todo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2632
 msgid "OVERWRITE WARNING"
@@ -6875,20 +6554,20 @@ msgid "The specified template does not exist"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "Create New File%s"
-msgstr "_Crear nuevo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2802
-#, fuzzy, c-format
+#, c-format
 msgid "Create New Folder%s"
-msgstr "Nueva carpeta"
+msgstr ""
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2833
-#, fuzzy, c-format
+#, c-format
 msgid "Copy%s"
-msgstr "Copiar: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2846
 msgid "Copy Target Error"
@@ -6904,9 +6583,9 @@ msgstr ""
 
 #. move task
 #: ../src/ptk/ptk-file-misc.c:2927
-#, fuzzy, c-format
+#, c-format
 msgid "Move%s"
-msgstr "Mover: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2959
 #, c-format
@@ -6917,42 +6596,35 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
-#, fuzzy
 msgid "Rename Error"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3132 ../src/ptk/ptk-file-misc.c:3134
 msgid "New Folder"
-msgstr "Nueva carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3133
-#, fuzzy
 msgid "New folder name:"
-msgstr "Nueva carpeta"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3139 ../src/ptk/ptk-file-misc.c:3141
 msgid "New File"
-msgstr "Nuevo archivo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3140
-#, fuzzy
 msgid "New filename:"
-msgstr "Nuevo archivo"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3163
-#, fuzzy
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr ""
-"El nombre de archivo introducido ya existe.\n"
-"Por favor, introduzca uno nuevo:"
 
 #: ../src/ptk/ptk-file-misc.c:3196
-#, fuzzy
 msgid "The new file cannot be created"
-msgstr "¡El archivo no pudo ser creado!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
@@ -6974,11 +6646,11 @@ msgid "%s ( %llu bytes )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "%d folder"
 msgid_plural "%d folders"
-msgstr[0] "Ir a la carpeta"
-msgstr[1] "Ir a la carpeta"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:177
 #, c-format
@@ -6988,25 +6660,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "Buscar archivos"
-msgstr[1] "Buscar archivos"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
-#, fuzzy
 msgid "( multiple files )"
-msgstr "Se han seleccionado múltiples archivos"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:443
 msgid "( multiple types )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:512
-#, fuzzy
 msgid "Choose..."
-msgstr "Navegar..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:568 ../src/ptk/ptk-file-properties.c:575
 #, c-format
@@ -7021,15 +6691,15 @@ msgstr ""
 #. completely calculated yet. So "Calculating..." is displayed.
 #: ../src/ptk/ptk-file-properties.c:609
 msgid "Calculating..."
-msgstr "Calculando..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:780
 msgid "Invalid User"
-msgstr "Usuario no válido"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:791
 msgid "Invalid Group"
-msgstr "Grupo no válido"
+msgstr ""
 
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
@@ -7057,24 +6727,24 @@ msgstr ""
 
 #: ../src/edit-bookmarks.c:74
 msgid "New Item"
-msgstr "Nuevo elemento"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:148
 msgid "Edit Bookmarks"
-msgstr "Editar marcadores"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:205
 msgid "Path"
-msgstr "Ruta"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:228
 msgid "Use drag & drop to sort the items"
-msgstr "Usar arrastrar y soltar para ordenar los elementos"
+msgstr ""
 
 #: ../src/vfs/vfs-app-desktop.c:509
 #, c-format
 msgid "Command not found"
-msgstr "Comando no encontrado"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:465 ../src/vfs/vfs-file-info.c:470
 #: ../src/vfs/vfs-file-info.c:564 ../src/vfs/vfs-file-info.c:569
@@ -7083,41 +6753,36 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:483 ../src/vfs/vfs-file-info.c:488
 #: ../src/vfs/vfs-file-info.c:582 ../src/vfs/vfs-file-info.c:587
-#, fuzzy
 msgid "G"
-msgstr "Ir"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:502 ../src/vfs/vfs-file-info.c:507
 #: ../src/vfs/vfs-file-info.c:601 ../src/vfs/vfs-file-info.c:606
-#, fuzzy
 msgid "M"
-msgstr "MB"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:520 ../src/vfs/vfs-file-info.c:525
 #: ../src/vfs/vfs-file-info.c:619 ../src/vfs/vfs-file-info.c:624
-#, fuzzy
 msgid "K"
-msgstr "KB"
+msgstr ""
 
 #. unit = size > 1 ? "Bytes" : "Byte";
 #: ../src/vfs/vfs-file-info.c:530 ../src/vfs/vfs-file-info.c:630
-#, fuzzy
 msgid "B"
-msgstr "GB"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:294
 #, c-format
 msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
-msgstr "El directorio de destino \"%1$s\" está contenido en el origen \"%2$s\""
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:381 ../src/vfs/vfs-file-task.c:527
 #: ../src/vfs/vfs-file-task.c:635 ../src/vfs/vfs-file-task.c:686
 #: ../src/vfs/vfs-file-task.c:797 ../src/vfs/vfs-file-task.c:828
 #: ../src/vfs/vfs-file-task.c:913 ../src/vfs/vfs-file-task.c:1055
 #: ../src/vfs/vfs-file-task.c:2029
-#, fuzzy
 msgid "Accessing"
-msgstr "Procesando:"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:457 ../src/vfs/vfs-file-task.c:493
 #: ../src/vfs/vfs-file-task.c:511 ../src/vfs/vfs-file-task.c:556
@@ -7136,18 +6801,16 @@ msgid "Creating Link"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:585
-#, fuzzy
 msgid "Writing"
-msgstr "Escritura"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:628
 msgid "Creating"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:714
-#, fuzzy
 msgid "Renaming"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1346
 msgid ""
@@ -7219,220 +6882,219 @@ msgstr ""
 #: ../src/vfs/vfs-volume-hal.c:479 ../src/vfs/vfs-volume-hal.c:702
 #, c-format
 msgid "%s Volume"
-msgstr "%s Volumen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:494
 msgid "CD-ROM"
-msgstr "CD-ROM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:496
 msgid "CD-R"
-msgstr "CD-R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:498
 msgid "CD-RW"
-msgstr "CD-RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:502
 msgid "DVD-ROM"
-msgstr "DVD-ROM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:504
 msgid "DVD+R"
-msgstr "DVD+R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:506
 msgid "DVD+RW"
-msgstr "DVD+RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:508
 msgid "DVD-R"
-msgstr "DVD-R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:510
 msgid "DVD-RW"
-msgstr "DVD-RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:512
 msgid "DVD-RAM"
-msgstr "DVD-RAM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:521
 #, c-format
 msgid "%s/%s Drive"
-msgstr "%s/%s Unidad"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:523
 #, c-format
 msgid "%s Drive"
-msgstr "%s Unidad"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:528
 msgid "Floppy Drive"
-msgstr "Unidad de disquete"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:531
 msgid "Compact Flash Drive"
-msgstr "Unidad de Compact Flash"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:533
 msgid "Memory Stick Drive"
-msgstr "Unidad de Memory Stick"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:535
 msgid "Smart Media Drive"
-msgstr "Unidad de Smart Media"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:537
 msgid "SD/MMC Drive"
-msgstr "Unidad de SD/MMC"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:539
 msgid "Zip Drive"
-msgstr "Unidad Zip"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:542
 msgid "Jaz Drive"
-msgstr "Unidad Jaz"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:545
 msgid "Pen Drive"
-msgstr "Memoria USB"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:551
 #, c-format
 msgid "%s %s Music Player"
-msgstr "%s %s Reproductor de música"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:559
 #, c-format
 msgid "%s %s Digital Camera"
-msgstr "%s %s Cámara digital"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:590
 msgid "Drive"
-msgstr "Unidad"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:595
 #, c-format
 msgid "External %s"
-msgstr "Externo %s"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:629
 msgid "CD-ROM Disc"
-msgstr "Disco CD-ROM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:634
 msgid "Blank CD-R Disc"
-msgstr "Disco CD-R virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:636
 msgid "CD-R Disc"
-msgstr "Disco CD-R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:641
 msgid "Blank CD-RW Disc"
-msgstr "Disco CD-RW virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:643
 msgid "CD-RW Disc"
-msgstr "Disco CD-RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:647
 msgid "DVD-ROM Disc"
-msgstr "Disco DVD-ROM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:652
 msgid "Blank DVD-RAM Disc"
-msgstr "Disco DVD-RAM virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:654
 msgid "DVD-RAM Disc"
-msgstr "Disco DVD-RAM"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:659
 msgid "Blank DVD-R Disc"
-msgstr "Disco DVD-R virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:661
 msgid "DVD-R Disc"
-msgstr "Disco DVD-R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:666
 msgid "Blank DVD-RW Disc"
-msgstr "Disco DVD-RW virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:668
 msgid "DVD-RW Disc"
-msgstr "Disco DVD-RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:674
 msgid "Blank DVD+R Disc"
-msgstr "Disco DVD+R virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:676
 msgid "DVD+R Disc"
-msgstr "Disco DVD+R"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:681
 msgid "Blank DVD+RW Disc"
-msgstr "Disco DVD+RW virgen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:683
 msgid "DVD+RW Disc"
-msgstr "Disco DVD+RW"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:690
 msgid "Audio Disc"
-msgstr "Disco de audio"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:700
 #, c-format
 msgid "%s Removable Volume"
-msgstr "%s Volumen extraible"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:708
 msgid "Volume"
-msgstr "Volumen"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:1104
 #, c-format
 msgid "Failed to connect to the HAL daemon: %s"
-msgstr "No se pudo conectar al demonio HAL: %s"
+msgstr ""
 
 #. definitely not a device that we're able to mount, eject or unmount
 #: ../src/vfs/vfs-volume-hal.c:1945 ../src/vfs/vfs-volume-hal.c:2001
 #, c-format
 msgid "Given device \"%s\" is not a volume or drive"
-msgstr "El dispositivo indicado \"%s\" no es un volumen o unidad"
+msgstr ""
 
 #. tell the caller that no matching device was found
 #: ../src/vfs/vfs-volume-hal.c:2077
 #, c-format
 msgid "Device \"%s\" not found in file system device table"
 msgstr ""
-"El dispositivo \"%s\" no se encontró en la tabla de dispositivos del sistema"
 
 #: ../src/vfs/vfs-volume-hal.c:2260
 #, c-format
 msgid "You are not privileged to mount the volume \"%s\""
-msgstr "No tiene permiso para montar el volumen \"%s\""
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2261
 #, c-format
 msgid "You are not privileged to unmount the volume \"%s\""
-msgstr "No tiene permiso para desmontar el volumen \"%s\""
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2262
 #, c-format
 msgid "You are not privileged to eject the volume \"%s\""
-msgstr "No tiene permiso para expulsar el volumen \"%s\""
+msgstr ""
 
 #. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
-msgstr "Opción de montaje no válida al tratar de montar el volumen \"%s\""
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2276
 #, c-format
@@ -7440,31 +7102,27 @@ msgid ""
 "The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
 "your system"
 msgstr ""
-"El volumen \"%s\" usa el sistema de archivos <i>%s</i>, que su sistema no "
-"admite"
 
 #: ../src/vfs/vfs-volume-hal.c:2278
 #, c-format
 msgid "An application is preventing the volume \"%s\" from being unmounted"
-msgstr "Una aplicación está evitando que el volumen \"%s\" se desmonte"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2280
 #, c-format
 msgid "The volume \"%s\" is not mounted"
-msgstr "El volumen \"%s\" no está montado"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2282
 #, c-format
 msgid "Error <i>%s</i>"
-msgstr "Error <i>%s</i>"
+msgstr ""
 
 #. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
 #: ../src/vfs/vfs-volume-hal.c:2285
 #, c-format
 msgid "The volume \"%s\" was probably mounted manually on the command line"
 msgstr ""
-"El volumen \"%s\" se montó probablemente de forma manual por línea de "
-"comandos"
 
 #: ../src/vfs/vfs-volume-hal.c:2293
 #, c-format
@@ -7472,15 +7130,11 @@ msgid ""
 "Blank discs cannot be mounted, use a CD recording application to record "
 "audio or data on the disc"
 msgstr ""
-"Los discos vírgenes no se pueden montar, utilice una aplicación de grabación "
-"de discos para grabar audio o datos en el disco"
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
 msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
 msgstr ""
-"Los CDs de audio no se puden montar, utilice un reproductor de música para "
-"escucharlos"
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
 #, c-format
@@ -7498,9 +7152,9 @@ msgid "[blank]"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2383
-#, fuzzy, c-format
+#, c-format
 msgid "[audio]"
-msgstr "audio"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2397
 #, c-format
@@ -7576,35 +7230,35 @@ msgstr ""
 
 #: ../src/desktop/desktop-window.c:188
 msgid "Sort by _Name"
-msgstr "Ordenar por _nombre"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:189
 msgid "Sort by _Size"
-msgstr "Ordenar por _tamaño"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:190
 msgid "Sort by _Type"
-msgstr "Ordenar por t_ipo"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:191
 msgid "Sort by _Modification Time"
-msgstr "Ordenar por fecha de _modificación"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:194
 msgid "Ascending"
-msgstr "Ascendente"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:195
 msgid "Descending"
-msgstr "Descendente"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:212
 msgid "_Create New"
-msgstr "_Crear nuevo"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:214
 msgid "_Desktop Settings"
-msgstr "Opciones de _Escritorio"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:1793
 #, c-format
@@ -7625,388 +7279,20 @@ msgstr ""
 
 #: ../src/find-files.c:276
 msgid "Open Containing _Folder"
-msgstr "Abrir _carpeta contenedora"
+msgstr ""
 
 #: ../src/find-files.c:773
 msgid "Select a folder"
-msgstr "Seleccione una carpeta"
+msgstr ""
 
 #: ../src/find-files.c:822
 msgid "Browse..."
-msgstr "Navegar..."
+msgstr ""
 
 #: ../src/find-files.c:846
-#, fuzzy
 msgid "Local Volumes"
-msgstr "%s Volumen"
+msgstr ""
 
 #: ../src/find-files.c:934
 msgid "Last Modified"
-msgstr "Última modificación"
-
-#~ msgid ""
-#~ "Lightweight file manager\n"
-#~ "\n"
-#~ "Developed by Hon Jen Yee (PCMan)"
-#~ msgstr ""
-#~ "Gestor de archivos ligero\n"
-#~ "\n"
-#~ "Desarrollado por Hon Jen Yee (PCMan)"
-
-#~ msgid ""
-#~ "The icon was taken from \"nuoveXT 2\" icon theme\n"
-#~ "created by Alexandre Moore (saki).\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-#~ msgstr ""
-#~ "El icono se ha tomado del tema de iconos \"nuoveXT 2\"\n"
-#~ "creado por Alexandre Moore (saki).\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-
-#~ msgid "File Type To be Opened:"
-#~ msgstr "Tipo de archivo a abrir:"
-
-#~ msgid "Set selected application to default action"
-#~ msgstr "Establecer la acción predeterminada para la aplicación seleccionada"
-
-#~ msgid "_Recommended Applications"
-#~ msgstr "Aplicaciones _recomendadas"
-
-#~ msgid "Actions Showed in Popup Menus"
-#~ msgstr "Acciones mostradas en los menús contextuales"
-
-#~ msgid "Add _Application"
-#~ msgstr "Agregar _aplicación"
-
-#~ msgid "Add _Custom Action"
-#~ msgstr "Añadir una a_cción personalizada"
-
-#~ msgid "File Associations"
-#~ msgstr "Asociaciones de archivos"
-
-#~ msgid "Move _Up"
-#~ msgstr "S_ubir"
-
-#~ msgid "<b>Last Modification:</b>"
-#~ msgstr "<b>Última modificación:</b>"
-
-#~ msgid "<b>Other Users:</b>"
-#~ msgstr "<b>Otros usuarios:</b>"
-
-#~ msgid "<b>File Name Contains:</b>"
-#~ msgstr "<b>El nombre de archivo contiene:</b>"
-
-#~ msgid ""
-#~ "Any\n"
-#~ "Within One Day\n"
-#~ "Within One Week\n"
-#~ "Within One Month\n"
-#~ "Within One Year\n"
-#~ "Within Selected Date Range"
-#~ msgstr ""
-#~ "Cualquiera\n"
-#~ "En un día\n"
-#~ "En una semana\n"
-#~ "En un mes\n"
-#~ "En un año\n"
-#~ "En el rango de fechas seleccionado"
-
-#~ msgid ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-#~ msgstr ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-
-#~ msgid "Disable \"Trash Can\" and delete files from disk directly"
-#~ msgstr "Deshabilitar \"Papelera\" y borrar los archivos directamente"
-
-#~ msgid "Display image files with supported format as thumbnails"
-#~ msgstr "Mostrar archivos de imagen con formatos admitidos como miniaturas"
-
-#~ msgid "Hide folder content border"
-#~ msgstr "Ocultar borde del contenido de la carpeta"
-
-#~ msgid "Hide side pane buttons"
-#~ msgstr "Ocultar los botones del panel lateral"
-
-#~ msgid "Max size of files displayed as thumbnails:"
-#~ msgstr "Tamaño máximo para los archivos mostrados como miniaturas:"
-
-#~ msgid "Open files with single click"
-#~ msgstr "Abrir archivos con un solo clic"
-
-#~ msgid ""
-#~ "Opened in Current Tab\n"
-#~ "Opened in New Tab\n"
-#~ "Opened in New Window"
-#~ msgstr ""
-#~ "Abrir en la pestaña actual\n"
-#~ "Abrir en una nueva pestaña\n"
-#~ "Abrir en una nueva ventana"
-
-#~ msgid "Size of Big Icons:"
-#~ msgstr "Tamaño de los iconos grandes:"
-
-#~ msgid ""
-#~ "Stretch to fill the entire screen\n"
-#~ "Stretch to fit the screen\n"
-#~ "Center on the screen\n"
-#~ "Tile the image to fill the entire screen"
-#~ msgstr ""
-#~ "Estirar para llenar toda la pantalla\n"
-#~ "Estirar para encajar en la pantalla\n"
-#~ "Centrar en la pantalla\n"
-#~ "Colocar la imagen en mosaico para llenar toda la pantalla"
-
-#~ msgid "Use SI decimal prefixes instead of IEC binary prefixes"
-#~ msgstr "Utilizar prefijos decimales SI en lugar de prefijos binarios IEC"
-
-#~ msgid "application"
-#~ msgstr "aplicación"
-
-#~ msgid "video"
-#~ msgstr "video"
-
-#~ msgid "multipart"
-#~ msgstr "multiparte"
-
-#~ msgid "image"
-#~ msgstr "imagen"
-
-#~ msgid "model"
-#~ msgstr "modelo"
-
-#~ msgid "inode"
-#~ msgstr "inodo"
-
-#~ msgid "packages"
-#~ msgstr "paquetes"
-
-#~ msgid "Don't show desktop icons."
-#~ msgstr "No mostrar iconos de escritorio."
-
-#~ msgid ""
-#~ "Open preference dialog. 'n' is the number of page you want to show (1, 2, "
-#~ "3...)."
-#~ msgstr ""
-#~ "Abrir diálogo de preferencias. 'n' es el número de página que quieres "
-#~ "mostrar (1, 2, 3...)."
-
-#~ msgid "Find Files with PCManFM"
-#~ msgstr "Buscar archivos con PCManFM"
-
-#~ msgid "GTK+ icon theme is not properly set"
-#~ msgstr "El tema de iconos GTK+ no se ha establecido correctamente"
-
-#~ msgid ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "This usually means you don't have an XSETTINGS manager running.  Desktop "
-#~ "environment like GNOME or XFCE automatically execute their XSETTING "
-#~ "managers like gnome-settings-daemon or xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>If you don't use these desktop environments, you have two choices:\n"
-#~ "1. run an XSETTINGS manager, or\n"
-#~ "2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
-#~ "For example to use the Tango icon theme add a line:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create "
-#~ "it if no such file)\n"
-#~ "\n"
-#~ "<b>NOTICE: The icon theme you choose should be compatible with GNOME, or "
-#~ "the file icons cannot be displayed correctly.</b>  Due to the differences "
-#~ "in icon naming of GNOME and KDE, KDE themes cannot be used.  Currently "
-#~ "there is no standard for this, but it will be solved by freedesktop.org "
-#~ "in the future."
-#~ msgstr ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "Esto normalmente significa que no tienes un gestor XSETTINGS en "
-#~ "ejecución.  Los entornos de escritorio como GNOME o XFCE ejecutan "
-#~ "automáticamente sus gestores XSETTING como el gnome-settings-daemon o el "
-#~ "xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>Si no usas estos entornos de escritorio, tienes dos opciones:\n"
-#~ "1. ejecutar un gestor XSETTINGS, o\n"
-#~ "2. simplemente indicar un tema de iconos en ~/.gtkrc-2.0.</b>\n"
-#~ "Por ejemplo, para utilizar el tema de iconos Tango añade una línea:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> en tu ~/.gtkrc-2.0. (crea el "
-#~ "archivo si no existe)\n"
-#~ "\n"
-#~ "<b>AVISO: El tema de iconos que elijas debe ser compatible con GNOME, o "
-#~ "los iconos de archivo no se mostrarán correctamente.</b>  Debido a las "
-#~ "diferencias entre la nomenclatura de iconos de GNOME y KDE, los temas de "
-#~ "KDE no se pueden usar.  Actualmente no hay estándar para esto, pero será "
-#~ "resuelto por freedesktop.org en el futuro."
-
-#~ msgid "_Text File"
-#~ msgstr "Archivo de _texto"
-
-#~ msgid "File _Properties"
-#~ msgstr "Propiedades del _archivo"
-
-#~ msgid "Go _Back"
-#~ msgstr "_Atrás"
-
-#~ msgid "Go _Forward"
-#~ msgstr "Adelan_te"
-
-#~ msgid "Go to _Parent Folder"
-#~ msgstr "Ir a la carpeta _superior"
-
-#~ msgid "Sort by _Permission"
-#~ msgstr "Ordenar por _permisos"
-
-#~ msgid "Sort by _Owner"
-#~ msgstr "Ordenar por p_ropietario"
-
-#~ msgid "_Open Side Pane"
-#~ msgstr "_Abrir panel lateral"
-
-#~ msgid "Show _Directory Tree"
-#~ msgstr "Mostrar árbol de _carpetas"
-
-#~ msgid "_Refresh"
-#~ msgstr "Ac_tualizar"
-
-#~ msgid "View as _Icons"
-#~ msgstr "Ver como _iconos"
-
-#~ msgid "View as _Compact List"
-#~ msgstr "Ver como lista _compacta"
-
-#~ msgid "View as Detailed _List"
-#~ msgstr "Ver como lista _detallada"
-
-#~ msgid "Open Current Folder as _Root"
-#~ msgstr "Abrir carpeta actual como _root"
-
-#~ msgid "Open Side Pane"
-#~ msgstr "Abrir panel lateral"
-
-#~ msgid "Warning: You are in super user mode"
-#~ msgstr "Advertencia: Está en modo superusuario"
-
-#~ msgid "Terminal program has not been set"
-#~ msgstr "No se ha configurado el programa de terminal"
-
-#~ msgid "_Add to Bookmarks"
-#~ msgstr "_Añadir a marcadores"
-
-#~ msgid "_Edit Bookmarks"
-#~ msgstr "_Editar marcadores"
-
-#~ msgid ", Free space: %s (Total: %s )"
-#~ msgstr ", Espacio libre: %s (Total: %s )"
-
-#~ msgid "%d item selected (%s)%s"
-#~ msgid_plural "%d items selected (%s)%s"
-#~ msgstr[0] "%d elemento seleccionado (%s)%s"
-#~ msgstr[1] "%d elementos seleccionados (%s)%s"
-
-#~ msgid "Desktop"
-#~ msgstr "Escritorio"
-
-#~ msgid "Move to Trash: "
-#~ msgstr "Mover a la papelera: "
-
-#~ msgid "Change Properties: "
-#~ msgstr "Cambiar propiedades: "
-
-#~ msgid "Changing Properties"
-#~ msgstr "Cambiando las propiedades"
-
-#~ msgid "Cancel the operation?"
-#~ msgstr "¿Cancelar la operación?"
-
-#~ msgid "Do you want to overwrite the folder and its content?"
-#~ msgstr "¿Quiere sobreescribir la carpeta y su contenido?"
-
-#~ msgid "Do you want to overwrite this file?"
-#~ msgstr "¿Quiere sobreescribir este archivo?"
-
-#~ msgid "Please choose a new file name."
-#~ msgstr "Por favor, elija un nuevo nombre de archivo."
-
-#~ msgid ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "Destination and source are the same file.\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "El destino y el origen son el mismo archivo.\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Save Compressed Files to..."
-#~ msgstr "Guardar los archivos comprimidos en..."
-
-#~ msgid "Format of compressed File:"
-#~ msgstr "Formato del archivo comprimido:"
-
-#~ msgid "Creating Compressed File: %s"
-#~ msgstr "Creando archivo comprimido: %s"
-
-#~ msgid "Extract File to..."
-#~ msgstr "Extraer archivo a..."
-
-#~ msgid "No Sub Folder"
-#~ msgstr "Sin subcarpetas"
-
-#~ msgid "E_xtract Here"
-#~ msgstr "E_xtraer aquí"
-
-#~ msgid "Compress"
-#~ msgstr "Comprimir"
-
-#~ msgid "_Open with another program"
-#~ msgstr "Abrir con _otro programa"
-
-#~ msgid "Please input new file name:"
-#~ msgstr "Por favor, introduzca un nuevo nombre de archivo:"
-
-#~ msgid "Input a name for the new folder:"
-#~ msgstr "Introduzca un nombre para la nueva carpeta:"
-
-#~ msgid "Input a name for the new file:"
-#~ msgstr "Introduzca un nombre para el nuevo archivo:"
-
-#~ msgid "Multiple files of different types"
-#~ msgstr "Múltiples archivos o de tipos diferentes"
-
-#~ msgid "Other program..."
-#~ msgstr "Otro programa..."
-
-#~ msgid ""
-#~ "Do you want to recursively apply these changes to all files and sub-"
-#~ "folders?"
-#~ msgstr ""
-#~ "¿Quiere aplicar los cambios recursivamente a todos los archivos y "
-#~ "carpetas?"
-
-#~ msgid "My Documents"
-#~ msgstr "Mis documentos"
-
-#~ msgid "All Local Disk Partitions"
-#~ msgstr "Todas las particiones de disco locales"
-
-#~ msgid "Center on the screen"
-#~ msgstr "Centrar en la pantalla"
-
-#~ msgid "Opened in New Tab"
-#~ msgstr "Abrir en una nueva pestaña"
-
-#~ msgid "Stretch to fill the entire screen"
-#~ msgstr "Estirar para llenar toda la pantalla"
-
-#~ msgid "Stretch to fit the screen"
-#~ msgstr "Estirar para ajustar con la pantalla"
-
-#~ msgid "Tile the image to fill the entire screen"
-#~ msgstr "Usar mosaico para llenar toda la pantalla"
+msgstr ""
