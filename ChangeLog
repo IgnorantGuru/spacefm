@@ -23,6 +23,7 @@
     Russian translation updated
     status bar show selected/visible
     debian build-from-source packages optimize CFLAGS=-O2
+    new link use target of current selected file #112
 0.8.5   2013-01-14:
     fix left-click ignored in Open context submenu #31 #228
     Dialog fix progress bar; add auto-pulse

@@ -536,7 +536,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         //gboolean opt_copy_target = gtk_toggle_button_get_active( mset->opt_copy_target );
         //gboolean opt_link_target = gtk_toggle_button_get_active( mset->opt_link_target );
 
-        if ( full_path_same && !mset->create_new )
+        if ( full_path_same && ( mset->create_new == 0 || mset->create_new == 3 ) )
         {
             gtk_widget_set_sensitive( mset->next, gtk_toggle_button_get_active(
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) ) );
@@ -637,7 +637,9 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     {
         path = g_strdup( gtk_entry_get_text( GTK_ENTRY( mset->entry_target ) ) );
         g_strstrip( path );
-        gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' ) );
+        gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' && 
+                                                        !full_path_same &&
+                                                        !full_path_exists_dir ) );
         g_free( path );
     }
     
@@ -1835,7 +1837,6 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         mset->is_dir = vfs_file_info_is_dir( file );
         mset->is_link = vfs_file_info_is_symlink( file );
         mset->clip_copy = clip_copy;
-        mset->create_new = create_new;
         mset->full_path = g_build_filename( file_dir, full_name, NULL );
         if ( dest_dir )
             mset->new_path = g_build_filename( dest_dir, full_name, NULL );
@@ -1844,6 +1845,17 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         g_free( full_name );
         full_name = NULL;
     }
+    else if ( create_new == 3 && file ) // new link
+    {
+        full_name = g_strdup( vfs_file_info_get_disp_name( file ) );
+        if ( !full_name )
+            full_name = g_strdup( vfs_file_info_get_name( file ) );
+        mset->full_path = g_build_filename( file_dir, full_name, NULL );
+        mset->new_path = g_strdup( mset->full_path );
+        mset->is_dir = vfs_file_info_is_dir( file );
+        mset->is_link = vfs_file_info_is_symlink( file );
+        mset->clip_copy = FALSE;
+    }
     else
     {
         mset->full_path = get_unique_name( file_dir, NULL );
@@ -1851,9 +1863,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         mset->is_dir = FALSE;
         mset->is_link = FALSE;
         mset->clip_copy = FALSE;
-        mset->create_new = create_new;
     }
     
+    mset->create_new = create_new;
     mset->old_path = file_dir;
 
     mset->full_path_exists = FALSE;
@@ -2052,6 +2064,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             gtk_button_set_image( GTK_BUTTON( mset->browse_target ),
                             xset_get_image( "GTK_STOCK_OPEN", GTK_ICON_SIZE_BUTTON ) );
             gtk_button_set_focus_on_click( GTK_BUTTON( mset->browse_target ), FALSE );
+            if ( mset->new_path && file )
+                gtk_entry_set_text( GTK_ENTRY( mset->entry_target ), mset->new_path );
             g_signal_connect( G_OBJECT( mset->browse_target ), "clicked",
                             G_CALLBACK( on_create_browse_button_press ), mset );
         }

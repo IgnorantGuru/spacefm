@@ -388,7 +388,7 @@ ENABLE KERNEL POLLING
     To use kernel polling, your Linux kernel may need to be 2.6.38 or newer,
     and udev may need to be version 173 or newer.
 
-    TO DETERIME IF KERNEL POLLING IS ENABLED, run these commands:
+    TO DETERMINE IF KERNEL POLLING IS ENABLED, run these commands:
 
         cat /sys/module/block/parameters/events_dfl_poll_msecs
         cat /sys/block/sr0/events_poll_msecs
