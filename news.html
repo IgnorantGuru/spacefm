@@ -37,6 +37,77 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.6"></a>
+<big><b><a href="#0.8.6">0.8.6 released</a></b></big><br>
+2013-Feb-13
+
+<ul>
+    <b>SpaceFM's Path Bar has been redesigned</b> with the following added and changed features:<br><br>
+    <ul>
+        <li>By default, the Path Bar will <b>auto seek</b>, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list. You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek. In this case, you will need to press the Enter key to change to the directory entered.<br><br>
+        <li>The Breadcrumbs feature now works with a single left-click.  The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back. If Auto Seek is enabled (the default), this will also immediately change to the new path. Or, use Ctrl+Click to force the directory change.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you click on the name 'share', the path will change to <i>/usr/share</i>. This provides a convenient way to go up to a specific directory.<br><br>
+        <li>Tab completion when entering a path in the Path Bar now performs more like a typical terminal emulator, including a slash at the end of the path and completing partial names.  The popup completion is now sorted alphabetically, and a problem which caused two columns to appear in the GTK3 version of the completion has been corrected.<br><br>
+        <li>The command history is now shown in a popup completion.  Up/Down arrows keys may now select previous commands only if the completion popup is shown.  The command history is now instance-wide, which means commands entered in one window, panel, or tab, will be shown in the history of all windows, panels, and tabs for the duration of the instance.<br><br>
+        <li>There is now an instance-wide history for URLs entered in the Path Bar.<br><br>
+        <li>Single-quoted paths (such as those produced by Edit|Copy Path) are now evaluated when pasted into the Path Bar.<br><br>
+        <li>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.  (see <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar-keys">special editing keys</a>)<br><br>
+        <li>The user's manual <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar">Path Bar</a> section has been updated.<br><br>
+    </ul>
+    
+    <li>When used with <a href="http://ignorantguru.github.com/udevil/news.html#0.4.0">udevil 0.4.0</a> or later, <b>http:// and https:// URLs may be entered in SpaceFM's path bar</b> to mount a WebDAV-enabled site via <a href="http://linux.die.net/man/8/mount.davfs">davfs2</a>.  This is used to edit site contents or for file sharing via services such as box.com.  (SpaceFM &gt;=0.7.8 and udevil &gt;=0.4.0 required.)<br><br>
+    
+    <li><b>The keyboard alone may now be used to set and unset key shortcuts</b> in the Design Mode <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-designmenu-key">Set Key dialog</a>.  To use only the keyboard, press a key combination and then press Enter to click the Set button. Or, to click Unset, press the Escape key twice. To cancel, simply close the dialog (usually Alt-F4).<br><br>
+    
+    <li>The user's manual has been updated to include a section detailing <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-find">Find-As-You-Type Search</a>.<br><br>
+    
+    <li><b>The debian/ directory in the source tree has been moved</b> to distros/debian/ to remove conflicts with official Debian packaging (which is reportedly underway).  Please see the updated <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file for instructions on creating a deb package.<br><br>
+    
+    <li>Provided build-from-source debian packages now ensure the build is optimized with CFLAGS=-O2 for a faster smaller executable.<br><br>
+    
+    <li>When changing the directory of the current tab, devices or bookmarks will be selected or unselected based on whether they match the new current directory.<br><br>
+    
+    <li>A crash in SpaceFM built with GTK &lt; 2.24 (affected Debian Stable, CentOS) when creating a new file or folder has been corrected.<br><br>
+    
+    <li>Sorting by Type or Owner columns in Detailed view is now case-insensitive.<br><br>
+    
+    <li>The New|File/Folder/Link menu items are now enabled even if there is no write access in the current directory (because the new file dialog allows As Root performance).<br><br>
+    
+    <li>When items are selected, the status bar now shows selected item count / total visible item count.<br><br>
+    
+    <li>A problem which made it impossible to unset a key shortcut assigned to a plugin has been corrected.<br><br>
+
+    <li><b>Mouse back/forward buttons</b> (buttons 4 &amp; 5 or 8 &amp; 9) now work almost anywhere in the window, rather than only over the file list.<br><br>
+    
+    <li>Custom submenus which are empty due to all of their children being hidden based on context are now hidden automatically.<br><br>
+    
+    <li>For new installs (no existing config directory), the default view style is now Compact, and the 'Default' toolbar icon has been moved to the left of the Path Bar.<br><br>
+    
+    <li>The user's manual <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar-protoscript">example custom protocol handler script</a> has been updated to use the run_in_terminal socket command to run programs in the user's terminal.<br><br>
+    
+    <li><b>Configure option --with-gtk2 has been added</b>.  This forces a GTK2-only build, producing an error if GTK2 is not installed.  This option is also provided for forward compatibility - if GTK3 eventually becomes the default build, including --with-gtk2 in packaging files now will remove the need for changes later.  Note that if neither --with-gtk2 nor --with-gtk3 is supplied, SpaceFM currently builds with GTK2 if available, or GTK3 if GTK2 is unavailable.<br><br>
+  
+    <li>ftp:// udevil mounts are now conducted in a terminal to allow entry of a password as needed.<br><br>
+     
+    <li><b>Distro-specific information for SpaceFM</b> and udevil has been moved to a new <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">wiki page</a>, allowing packagers and users to keep information for their distro up-to-date.  Thanks for helping to maintain this page.<br><br>
+    
+    <li>A new wiki page on <a href="https://github.com/IgnorantGuru/spacefm/wiki/Conky">Using Conky With SpaceFM Desktop Manager</a> has been added.  If you have any suggestions to add there, please do.<br><br>
+    
+    <li>Thanks to Vladimir Kudrya for an updated Russian translation.
+</ul>
+
+
+<br><br>Also, SpaceFM with udevil is now the default file manager in the latest release of <a href="http://sourceforge.net/projects/archpup/">ArchPup</a> (13.2) and in the new Debian sid-based distro <a href="http://vsido.org/index.php">VSIDO</a>.  <b>See the new <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Distros wiki page</a> for more information.</b>
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.8.5"></a>
 <big><b><a href="#0.8.5">0.8.5 released</a></b></big><br>
 2013-Jan-14
@@ -48,7 +119,7 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
     
     <b>If you are packaging SpaceFM</b>, due to the unfinished and changing nature of GTK3 please consider providing both spacefm-gtk2 and spacefm-gtk3 packages to provide users with flexibility.<br><br>
     
-    <b>IMPORTANT:  Many GTK3 themes are broken</b> due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.<br><br>
+    <b>IMPORTANT:  Many GTK3 themes are broken</b> due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.  [UPDATE 2013-Feb-02: There have been some reports of memory leaks related to Clearlooks-Phenix.]<br><br>
     
     <li><b>Two new options have been added to View|Tasks|Popups</b>:  <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks-menu-popabove">Above Others</a> to keep SpaceFM task dialogs above all other windows, and <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#tasks-menu-popstick">All Workspaces</a> (aka sticky) to show task dialogs on all workspaces.  How these perform will depend on the window manager in use - they are hints only.  These are disabled by default.<BR><BR>
     
@@ -120,7 +191,7 @@ For a full list of changes see <a href="https://github.com/IgnorantGuru/spacefm/
 <ul>
     <li>SpaceFM can now be built for <b>either GTK2 (the default) or GTK3 (beta test build)</b>.  Many thanks to BwackNinja for his continuing work on the GTK3 port and other areas of SpaceFM!  See the updated <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file for GTK3 build instructions.<br><br>
     
-    <b>IMPORTANT:  The GTK3 build is currently provided for testing purposes.</b>  SpaceFM runs very well in GTK3 with a functional theme, but many themes are broken due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.<br><br>
+    <b>IMPORTANT:  The GTK3 build is currently provided for testing purposes.</b>  SpaceFM runs very well in GTK3 with a functional theme, but many themes are broken due to <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">frequent breakage in GTK3's theme support</a>.  Thus it is very important to <b>use a GTK3 theme which is compatible</b> with your current version of GTK.  Run <code>spacefm</code> in a terminal to see any theme-related warnings.  When in doubt, compare behavior with the Adwaita default GNOME theme.  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes.  [UPDATE 2013-Feb-02: There have been some reports of memory leaks related to Clearlooks-Phenix.]<br><br>
     
     <b>Plugin authors</b> should note that their plugins may now be running on GTK3 as well as GTK2.  Most <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog">SpaceFM Dialog</a> functions work comparably in GTK3, but there are minor differences.  If you encounter a major difference or breakage in SpaceFM Dialog on GTK3, please report it.<br><br>
     
@@ -216,7 +287,7 @@ For a full list of changes see <a href="https://github.com/IgnorantGuru/spacefm/
     
 <p>Or if using Arch Linux, you can install the gtk3 build using <a href="https://aur.archlinux.org/packages.php?ID=63929">AUR spacefm-gtk3</a>.
 
-<p><b>Be sure to use a gtk3 theme that is compatible</b> with your version of gtk3.  If spacefm is run in a terminal, you should see no theme warnings.  Beware - broken themes can cause malfunctions in the GUI, and <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">many gtk3 themes are broken</a>.  Also note that some themes will make spacefm run more slowly.  <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> is a well-maintained theme for gtk 3.4 (although on some systems Clearlooks themes in general tend to run more slowly).  For a dark theme, <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> runs fast and is well-maintained for gtk 3.4.
+<p><b>Be sure to use a gtk3 theme that is compatible</b> with your version of gtk3.  If spacefm is run in a terminal, you should see no theme warnings.  Beware - broken themes can cause malfunctions in the GUI, and <a href="http://igurublog.wordpress.com/2012/11/05/gnome-et-al-rotting-in-threes/">many gtk3 themes are broken</a>.  Also note that some themes will make spacefm run more slowly.  <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> is a well-maintained theme for gtk 3.4 (although on some systems Clearlooks themes in general tend to run more slowly).  For a dark theme, <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> runs fast and is well-maintained for gtk 3.4.  [UPDATE 2013-Feb-02: There have been some reports of memory leaks related to Clearlooks-Phenix.]
 
 
 <br><br><br><hr>
@@ -462,7 +533,7 @@ added user manual GUI|Path Bar<br>
 
 <p>SpaceFM's icon designer, <b>Goran Simovic, has provided new SpaceFM icons for the Faenza theme</b> (see locations below).
     
-<p><b>New sort options</b> have been added to allow a natural sort and a case senstive sort.  Also, folders in the file list may now be places after files, or mixed with files.  Hidden files may now be placed after regular files.  Right-click on the file list and select View|Style|Sort to adjust these new options.  Natural sort is now the new default.
+<p><b>New sort options</b> have been added to allow a natural sort and a case sensitive sort.  Also, folders in the file list may now be places after files, or mixed with files.  Hidden files may now be placed after regular files.  Right-click on the file list and select View|Style|Sort to adjust these new options.  Natural sort is now the new default.
 
 <p>The status bar and running tasks now show one decimal place for GB and TB sizes under 10.
 
@@ -811,7 +882,7 @@ Also, there are now a number of <a href="https://github.com/IgnorantGuru/spacefm
 </td></tr></table>
 <br><br><br>
 <img src="spacefm-banner.png"><br><br>
-SpaceFM Icons &amp; Logo by Goran Simovic (C) 2012<br>
+SpaceFM Icons &amp; Logo by Goran Simovic (C) 2013<br>
 <table cellspacing="0" cellpadding="0" align="center" width="75%">
  <tr> 
 	<td>

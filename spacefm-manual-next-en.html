@@ -155,9 +155,9 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file manager for Linux which is lightweight and has minimal dependencies, yet is very capable, flexible, and extensible.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
 
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and other distros, SpaceFM is gaining popularity among novice and power users alike for its exceptional stability, speed, convenience and flexibility.
+<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is gaining popularity among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -175,7 +175,7 @@
 	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
-	<li>File search - flexibly search for file names, sizes, content, etc. with no daemon required
+	<li>File search - flexibly search system-wide for file names, sizes, content, etc. with no daemon required
 	<li>Extended Rename dialog allows not only renaming, but moving, copying, and creating links, with optional root priviledges, and allows creation of new files and folders from templates
 	<li>Roomy dialogs for easy editing and viewing of long filenames, paths, and commands
 	<li>Extended Path Bar uses tab completion and allows entry of full bash commands with substitution <a href="#gui-pathbar">*</a>
@@ -723,8 +723,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <!-- #GTK 3 #gtk3 --> 
 <p><a name="invocation-gtkthemes-gtk3 -->"/><a href="#invocation-gtkthemes-gtk3 -->"><b>GTK 3</b></a><br>
-<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes (but always check GTK version compatibility).
-
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
 <!-- @end invocation-gtkthemes-->
@@ -912,27 +911,54 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <a name="gui-pathbar"/><a href="#gui-pathbar"><font size=+2>Path Bar</font></a>
 <!-- @GUI @Path Bar -->
 
-<p>SpaceFM's Path Bar (address bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At it's simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
+<p>SpaceFM's Path Bar (location bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At its simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
 
 <p>TIP:  To place the cursor in the Path Bar, you can use Go|Focus|Path Bar, accessed from the right-click menu of the file list.  By default, this is assigned to key shortcut Ctrl+L.
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
-<!-- # File Path -->
-<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
-The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
+<!-- # Editing Keys #keys -->
+<p><a name="gui-pathbar-keys"/><a href="#gui-pathbar-keys"><b>Editing Keys</b></a><br>
+When the cursor is in the Path Bar, the following editing key combinations can be used:
 
-<!-- # Tab Completion #tab -->
-<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Tab Completion</b></a><br>
-As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+<br><br>
+<table border=1 cellpadding="5">
+<tr>
+	<th>Key Combo</th>
+	<th>Result</th>
+</tr>
+	<tr>
+		<td>Shift+Backspace</td> <td>Clear the entry</td>
+	</tr><tr>
+		<td>Ctrl+Backspace</td> <td>Backspace to the previous separator</td>
+	</tr><tr>
+		<td>Ctrl+Left</td> <td>Jump to previous separator</td>
+	</tr><tr>
+		<td>Ctrl+Right</td> <td>Jump to next separator</td>
+	</tr><tr>
+		<td>Tab</td> <td><a href="#gui-pathbar-tab">Complete entry</a></td>
+	</tr>
+</table>
+
+<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
+
+<!-- # Auto Seek #seek -->
+<p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
+By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
+
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.  See also <a href="#gui-pathbar-bread">Breadcrumbs</a>.
+
+<!-- # Completion #tab -->
+<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Completion</b></a><br>
+As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
-The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to change to that level directory.  For example, if this path is currently in the Path Bar:
-<pre>    /usr/<b>share</b>/spacefm/plugins</pre>
+The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
-and you Ctrl+Click on the name 'share', SpaceFM will change to directory /usr/share.  This provides a convenient way to go up to a specific directory.
-
+<!-- # File Path -->
+<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
+The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
 
 <!-- # Protocol URL #proto -->
 <p><a name="gui-pathbar-proto"/><a href="#gui-pathbar-proto"><b>Protocol URL</b></a><br>
@@ -952,7 +978,9 @@ If you would like to use a custom handler for URLs within SpaceFM, right-click o
 
 <p>Note that any Path Bar entry which looks like a protocol URL will be passed to your command, so this feature <b>can be used to create custom protocols</b> or to support ones not recognized by udevil.  For example, if your handler knows what to do with the URL <i>myproto://something-here</I>, then you will be able to enter this URL in SpaceFM's Path Bar to take a custom action.  Your handler doesn't necessarily have to mount anything - it can take any action on the URL passed to it.
 
-<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>)
+<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>).
+
+<p>Although SpaceFM will not run the custom handler in a terminal, you can run some commands in your script in a terminal (eg for password entry) using 'spacefm -s set run_in_terminal', as shown in the <a href="#gui-pathbar-protoscript">example script</a>.
 
 <p><a href="#devices-menu-bookmark">Bookmarked</a> protocol URLs are also opened by the Protocol Handler.
 
@@ -967,9 +995,6 @@ Finally, set <a href="#gui-pathbar-protohand">Protocol Handler</a> to 'protocol-
 
 <pre>#!/bin/bash
 # Example Protocol Handler script to open URLs entered in SpaceFM's Path Bar
-
-# Set prefered terminal
-terminal=xterm
 
 # Get just the protocol, eg "smb" from "smb://..."
 protocol="${1%%:*}"
@@ -1003,15 +1028,20 @@ case "$protocol" in
         hostname="${hostname%:*}"
         hostname="${hostname%/*}"
 
-        # Run sshfs in a terminal to mount hostname to mount point
-        $terminal -e "sshfs $hostname: $mount_point; echo; echo Press Enter; read"
+        # Run sshfs in user's terminal to mount hostname to mount point
+        # Note - If the terminal is closed, sshfs may unmount (sshfs bug)
+        spacefm -s set run_in_terminal \
+		"sshfs $hostname: $mount_point; echo; echo Press Enter; read"
 
-	# Attempt to remove mount point in case of mount error
-	rmdir "$mount_point" 2>/dev/null
+        # Attempt to remove mount point in case of mount error
+        rmdir "$mount_point" 2>/dev/null
         ;;
     * )
         # For any other protocols, use udevil
-        udevil mount "$1"
+        # Run udevil in user's terminal in case password entry is required
+        # Prompt to close terminal if an error occurs so the error can be seen
+        spacefm -s set run_in_terminal \
+	        "udevil mount '$1' || ( echo; echo Press Enter; read )"
         ;;
 esac
 </pre>
@@ -1060,7 +1090,9 @@ Or to run umount in a terminal (+) as root (!) passing it the currently selected
 
 For a reminder of prefixes and substitution variables, enter a lone dollar sign ($) in the Path Bar and press Enter.  Or press F1 while the Path Bar has focus to open this manual.
 
-<p>SpaceFM also keeps a command history, similar to terminals.  Enter a lone dollar sign ($) or other command prefix in the Path Bar and press the Up/Down Arrow keys repeatedly to access the history of commands.
+<!-- # Command History #hist -->
+<p><a name="gui-pathbar-hist"/><a href="#gui-pathbar-hist"><b>Command History</b></a><br>
+SpaceFM also keeps a command history.  As you enter a command, any commands previously entered will be shown in a popup.  Use Up/Down Arrow keys to select a previous command and press Enter, or click it.
 
 
 <!-- # Select By Pattern #pattern -->
@@ -1120,7 +1152,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 <p>In addition, Find-As-You-Type Search supports the following modes:
 
 <ul>
-    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is now used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
@@ -5618,12 +5650,12 @@ queue_state                     run|pause|queue|stop
 <a href="#sockets-events-winnew">evt_win_new</a>                     Window new            %e %w %p %t
 <a href="#sockets-events-winfoc">evt_win_focus</a>                   Window focus          %e %w %p %t
 <a href="#sockets-events-winmov">evt_win_move</a>                    Window move/resize    %e %w %p %t
-<a href="#sockets-events-winclk">evt_win_click</a>                       Mouse click           %e %w %p %t %b %m %f
+<a href="#sockets-events-winclk">evt_win_click</a>                   Mouse click           %e %w %p %t %b %m %f
 <a href="#sockets-events-winkey">evt_win_key</a>                     Window keypress       %e %w %p %t %k %m
 <a href="#sockets-events-wincls">evt_win_close</a>                   Window close          %e %w %p %t
 <a href="#sockets-events-pnlfoc">evt_pnl_focus</a>                   Panel focus           %e %w %p %t
 <a href="#sockets-events-pnlshw">evt_pnl_show</a>                    Panel show/hide       %e %w %p %t %f %v
-<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                         Selection changed     %e %w %p %t
+<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                     Selection changed     %e %w %p %t
 <a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
 <a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
 <a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t
@@ -6508,7 +6540,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-02-01&nbsp;&nbsp;(SpaceFM version 0.8.5+)
+<p>Updated 2013-02-12&nbsp;&nbsp;(SpaceFM version 0.8.5+)
 <br><br>
 </center>
 </td></tr></table>
