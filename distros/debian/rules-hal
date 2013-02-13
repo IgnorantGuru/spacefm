@@ -13,4 +13,4 @@
 	dh $@ 
 
 override_dh_auto_configure:
-	dh_auto_configure -- --enable-hal
+	dh_auto_configure -- --enable-hal --with-gtk2

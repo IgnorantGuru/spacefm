@@ -13,4 +13,4 @@
 	dh $@ 
 
 override_dh_auto_configure:
-	dh_auto_configure -- --disable-pixmaps
+	dh_auto_configure -- --with-gtk2
