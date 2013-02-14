@@ -442,7 +442,7 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 <!-- # Auto Seek #seek -->
 By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
 
-<p>To locate files within the current directory, use <a href="#gui-find">Find-As_you-Type search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.  See also <a href="#gui-pathbar-bread">Breadcrumbs</a>.
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.  See also <a href="#gui-pathbar-bread">Breadcrumbs</a>.
 
 <!-- # Completion #tab -->
 As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
@@ -1705,6 +1705,8 @@ The context dialog allows you to set rules which determine when and how a menu i
 <p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would tell you if the currently selected device contains a blank DVD.
 
 <p>It is important to note that built-in menu items sometimes have a built-in context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+
+<p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
 <p><b>Impossible Context</b>
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).

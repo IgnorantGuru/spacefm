@@ -20,7 +20,7 @@ CONTENTS
     CREATE DEB PACKAGE
     UNINSTALL
     ENABLE KERNEL POLLING
-    TRANSLATIONS
+    TRANSLATE
     LICENSE
 
 
@@ -429,10 +429,16 @@ ENABLE KERNEL POLLING
     https://bugs.archlinux.org/task/25609
 
 
-TRANSLATIONS
+TRANSLATE
 
-    For instructions on providing a translation of SpaceFM, see the 
-    TRANSLATE file.
+    To help translate SpaceFM please visit:
+        https://github.com/IgnorantGuru/spacefm/wiki/Translate
+    
+    At Transifex:
+        https://www.transifex.com/projects/p/spacefm/resource/spacefmpot_1/
+
+    Just sign up for a free Transifex account.  For instructions visit:
+        http://help.transifex.com/intro/translating.html#translating
 
 
 LICENSE
