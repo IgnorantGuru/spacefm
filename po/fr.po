@@ -1,24 +1,26 @@
-# SpaceFM fr.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
-#
+# 
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Ersplus - Fraide <ersplus@free.fr>, 2006.
+# Héonium - Christophe CRIER, 2006.
 # Jean-Philippe Fleury <contact@jpfleury.net>, 2012.
 # Robert-André Mauchin <zebob.m@pengzone.org>, 2008.
-# Frederic Bezies <fredbezies@gmail.com>.
-# Ersplus - Fraide <ersplus@free.fr>, 2006.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6\n"
+"Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 20:59+0000\n"
-"PO-Revision-Date: 2012-10-24 15:48-0400\n"
-"Last-Translator: Jean-Philippe Fleury <contact@jpfleury.net>\n"
-"Language-Team: \n"
-"Language: fr\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:30+0000\n"
+"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
@@ -54,57 +56,23 @@ msgid "by IgnorantGuru"
 msgstr "par IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "Copyright (C) 2012    GPL3+"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
-#, fuzzy
 msgid ""
 "SpaceFM - Copyright (C) 2013   GPL3+\n"
 "\n"
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 3 of the License, or (at your option) "
-"any later version.\n"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
-"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details.\n"
+"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 "\n"
-"The 'exo' libraries and source code used by this software are licensed under "
-"the GNU General Public License and the GNU Lesser General Public License "
-"version 3 (LGPL3).\n"
+"The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
-"You should have received a copy of the GNU General Public License and the "
-"GNU Lesser General Public License along with this program; if not, write to "
-"the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-"MA  02110-1301, USA."
+"You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 msgstr ""
-"SpaceFM - Copyright (C) 2012   GPL3+\n"
-"\n"
-"Ce programme est un logiciel libre ; vous pouvez le redistribuer et/ou le "
-"modifier au titre des clauses de la GNU General Public License, telle que "
-"publiée par la Free Software Foundation ; soit la version 3 de la Licence, "
-"ou (à votre discrétion) une version ultérieure quelconque.\n"
-"\n"
-"UTILISATION À VOS PROPRES RISQUES. Ce programme est distribué dans l'espoir "
-"qu'il sera utile, mais SANS AUCUNE GARANTIE ; sans même une garantie "
-"implicite de COMMERCIABILITE ou DE CONFORMITE A UNE UTILISATION "
-"PARTICULIERE. Voir la Licence publique générale GNU pour plus de détails.\n"
-"\n"
-"La bibliothèque « exo » ainsi que son code source utilisés par ce logiciel "
-"sont distribués sous la GNU General Public License et la GNU Lesser General "
-"Public License version 3 (LGPL3).\n"
-"\n"
-"Vous devriez avoir reçu un exemplaire de la GNU General Public License et de "
-"la GNU Lesser General Public License avec ce programme ; si ce n'est pas le "
-"cas, écrivez à la Free Software Foundation Inc., 51 Franklin Street, Fifth "
-"Floor, Boston, MA 02110-1301, USA."
 
 #: ../data/ui/about-dlg.ui.h:12
-#, fuzzy
 msgid ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
@@ -126,49 +94,18 @@ msgid ""
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 msgstr ""
-"IgnorantGuru <ignorantguru@gmx.com>\n"
-"\n"
-"Contributeurs:\n"
-"   BwackNinja <BwackNinja@gmail.com>  (compatibilité avec GTK 2.18)\n"
-"\n"
-"Merci aux utilisateurs de SpaceFM pour leurs précieux commentaires !\n"
-"\n"
-"SpaceFM est développé avec geany, gcc et git, ainsi que, dans une moindre "
-"mesure, gdb.\n"
-"\n"
-"\n"
-"Code source emprunté à d'autres projets :\n"
-" * pcmanfm-mod: IgnorantGuru <ignorantguru@gmx.com>\n"
-" * pcmanfm v0.5.2 : Hon Jen Yee (PCMan)\n"
-" * libmd5-rfc : Aladdin Enterprises\n"
-" * Détection de la zone de travail : Gary Kramlich\n"
-" * ExoIconView : os-cillation e.K, Anders Carlsson et Benedikt Meurer\n"
-" * L'affichage du texte et des icônes utilise du code de Jonathan Blandford\n"
-" * Les icônes du bureau utilisent du code de Brian Tarricône\n"
-" * Support de HAL (déprécié) : gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
-msgstr ""
-"Ersplus - Fraide\n"
-"Héonium - Christophe CRIER\n"
-"Frédéric Béziès\n"
-"Cilyan Olowen\n"
-"Robert-André Mauchin\n"
-"Jean-Philippe Fleury"
+msgstr "Ersplus - Fraide\nHéonium - Christophe CRIER\nFrédéric Béziès\nCilyan Olowen\nRobert-André Mauchin\nJean-Philippe Fleury"
 
 #: ../data/ui/about-dlg.ui.h:32
-#, fuzzy
 msgid ""
 "\n"
 "SpaceFM icons and logo by Goran Simovic\n"
 "\n"
 "Additional icons were taken from the Tango Desktop Project icon set"
 msgstr ""
-"Icônes et logo de SpaceFM par Goran Simovic\n"
-"\n"
-"Des icônes additionnelles proviennent du thème d'icônes du projet Tango "
-"Desktop"
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
@@ -580,9 +517,7 @@ msgstr "Afficher les icônes de volume sur le bureau"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr ""
-"Afficher le menu fourni par le gestionnaire de fenêtres lors d'un clic droit "
-"sur le bureau"
+msgstr "Afficher le menu fourni par le gestionnaire de fenêtres lors d'un clic droit sur le bureau"
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
@@ -698,9 +633,7 @@ msgstr "Activer la recherche"
 
 #: ../src/exo/exo-icon-view.c:801
 msgid "View allows user to search through columns interactively"
-msgstr ""
-"L'affichage permet à l'utilisateur de rechercher dans les colonnes de "
-"manière interactive"
+msgstr "L'affichage permet à l'utilisateur de rechercher dans les colonnes de manière interactive"
 
 #: ../src/exo/exo-icon-view.c:818
 msgid "Width for each item"
@@ -732,9 +665,7 @@ msgstr "Colonne de balisage"
 
 #: ../src/exo/exo-icon-view.c:872
 msgid "Model column used to retrieve the text if using Pango markup"
-msgstr ""
-"Colonne modèle utilisée pour récupérer le texte si le balisage Pango est "
-"utilisé"
+msgstr "Colonne modèle utilisée pour récupérer le texte si le balisage Pango est utilisé"
 
 #: ../src/exo/exo-icon-view.c:886
 msgid "Icon View Model"
@@ -751,9 +682,7 @@ msgstr "Orientation"
 #: ../src/exo/exo-icon-view.c:901
 msgid ""
 "How the text and icon of each item are positioned relative to each other"
-msgstr ""
-"La manière dont le texte et l'icône sont positionnés l'un par rapport à "
-"l'autre"
+msgstr "La manière dont le texte et l'icône sont positionnés l'un par rapport à l'autre"
 
 #: ../src/exo/exo-icon-view.c:917
 msgid "Pixbuf column"
@@ -801,8 +730,7 @@ msgstr "Simple clic"
 
 #: ../src/exo/exo-icon-view.c:996 ../src/exo/exo-tree-view.c:204
 msgid "Whether the items in the view can be activated with single clicks"
-msgstr ""
-"Indique si les éléments dans la vue peuvent être activés par simple clic"
+msgstr "Indique si les éléments dans la vue peuvent être activés par simple clic"
 
 #: ../src/exo/exo-icon-view.c:1012 ../src/exo/exo-tree-view.c:220
 msgid "Single Click Timeout"
@@ -812,9 +740,7 @@ msgstr "Délai du simple clic"
 msgid ""
 "The amount of time after which the item under the mouse cursor will be "
 "selected automatically in single click mode"
-msgstr ""
-"Durée après laquelle l'élément sous la souris sera sélectionné "
-"automatiquement dans le mode simple clic"
+msgstr "Durée après laquelle l'élément sous la souris sera sélectionné automatiquement dans le mode simple clic"
 
 #: ../src/exo/exo-icon-view.c:1028
 msgid "Spacing"
@@ -893,16 +819,12 @@ msgstr "l'élément « %s » n'existe pas"
 #: ../src/cust-dialog.c:1392
 #, c-format
 msgid "internal command press is invalid for non-button %s"
-msgstr ""
-"la commande interne « press » n'est pas valide pour « %s », qui n'est pas un "
-"bouton"
+msgstr "la commande interne « press » n'est pas valide pour « %s », qui n'est pas un bouton"
 
 #: ../src/cust-dialog.c:1426
 #, c-format
 msgid "internal command un/select is invalid for %s"
-msgstr ""
-"les commandes internes « select » et « unselect » ne sont pas valides pour "
-"« %s »"
+msgstr "les commandes internes « select » et « unselect » ne sont pas valides pour « %s »"
 
 #: ../src/cust-dialog.c:1460 ../src/cust-dialog.c:1607
 #: ../src/cust-dialog.c:1612
@@ -927,9 +849,7 @@ msgstr "les données du tube « %s » ne sont pas dans un codage UTF-8 valide"
 
 #: ../src/cust-dialog.c:1782 ../src/ptk/ptk-file-task.c:1352
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
-msgstr ""
-"[TRONCATION - la sortie supplémentaire ci-dessus a été enlevée de ce "
-"journal]\n"
+msgstr "[TRONCATION - la sortie supplémentaire ci-dessus a été enlevée de ce journal]\n"
 
 #: ../src/cust-dialog.c:1887
 msgid "( file contents are not valid UTF-8 )"
@@ -955,14 +875,9 @@ msgstr "le fichier « %s » n'est pas un fichier régulier ni un tube"
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
-"specify on the command line, features run-time internal/external commands "
-"which\n"
+"specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
-msgstr ""
-"SpaceFM Dialog crée une boîte de dialogue personnalisée GTK avec les\n"
-"éléments d'interface utilisateur spécifiés en ligne de commande, dispose\n"
-"de commandes internes et externes pouvant modifier les éléments durant\n"
-"l'exécution et retourne des résultats évaluables et analysables.\n"
+msgstr "SpaceFM Dialog crée une boîte de dialogue personnalisée GTK avec les\néléments d'interface utilisateur spécifiés en ligne de commande, dispose\nde commandes internes et externes pouvant modifier les éléments durant\nl'exécution et retourne des résultats évaluables et analysables.\n"
 
 #: ../src/cust-dialog.c:3688
 #, c-format
@@ -989,9 +904,7 @@ msgstr "    spacefm -g --label \"Un message\" --button ok\n"
 msgid ""
 "\n"
 "ELEMENT:       OPTIONS & ARGUMENTS:\n"
-msgstr ""
-"\n"
-"ÉLÉMENT:       OPTIONS & ARGUMENTS:\n"
+msgstr "\nÉLÉMENT:       OPTIONS & ARGUMENTS:\n"
 
 #: ../src/cust-dialog.c:3693
 #, c-format
@@ -1003,14 +916,12 @@ msgstr "--------       --------------------\n"
 msgid ""
 "\n"
 "The following arguments may be used as shown above:\n"
-msgstr ""
-"\n"
-"Les arguments suivants peuvent être utilisés comme indiqué ci-dessus :\n"
+msgstr "\nLes arguments suivants peuvent être utilisés comme indiqué ci-dessus :\n"
 
 #: ../src/cust-dialog.c:3705
-#, fuzzy, c-format
+#, c-format
 msgid "    STOCK    %s\n"
-msgstr "    STOCK    Un seul : %s\n"
+msgstr ""
 
 #: ../src/cust-dialog.c:3706
 #, c-format
@@ -1020,29 +931,20 @@ msgstr "    ICON     Le nom d'une icône, ex. : gtk-open\n"
 #: ../src/cust-dialog.c:3707
 #, c-format
 msgid ""
-"    @FILE    A text file from which to read a value.  In some cases this "
-"file\n"
-"             is monitored, so writing a new value to the file will update "
-"the\n"
+"    @FILE    A text file from which to read a value.  In some cases this file\n"
+"             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
-msgstr ""
-"    @FILE    Un fichier texte dans lequel lire une valeur. Dans certaines\n"
-"             situations, ce fichier est surveillé, donc écrire une nouvelle\n"
-"             valeur dans le fichier mettra à jour l'élément. Dans d'autres\n"
-"             situations, le fichier spécifie une valeur initiale.\n"
+msgstr "    @FILE    Un fichier texte dans lequel lire une valeur. Dans certaines\n             situations, ce fichier est surveillé, donc écrire une nouvelle\n             valeur dans le fichier mettra à jour l'élément. Dans d'autres\n             situations, le fichier spécifie une valeur initiale.\n"
 
 #: ../src/cust-dialog.c:3708
-#, fuzzy, c-format
+#, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
 msgstr ""
-"    SAVEFILE Le contenu d'un éditeur est enregistré dans ce fichier si "
-"spécifié.\n"
 
 #: ../src/cust-dialog.c:3709
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"    COMMAND  An internal command or executable followed by arguments. "
-"Separate\n"
+"    COMMAND  An internal command or executable followed by arguments. Separate\n"
 "             multiple commands with a -- argument.\n"
 "             The following substitutions may be used in COMMANDs:\n"
 "                 %%n           Name of the current element\n"
@@ -1051,17 +953,6 @@ msgid ""
 "                 %%(command)   stdout from a bash command line\n"
 "                 %%%%           %%\n"
 msgstr ""
-"    COMMAND  Une commande interne ou un exécutable suivi d'arguments.\n"
-"             Séparer plusieurs commandes à l'aide de l'argument « -- ».\n"
-"             Ex. : echo '#1' -- echo '#2'\n"
-"             Les substitutions suivantes peuvent être utilisées dans "
-"COMMAND :\n"
-"                 %%n           Nom de l'élément actuel\n"
-"                 %%v           Valeur de l'élément actuel\n"
-"                 %%NAME        Valeur de l'élément nommé NAME (ex. : "
-"%%input1)\n"
-"                 %%(command)   Sortie (stdout) d'une commande\n"
-"                 %%%%           %%\n"
 
 #: ../src/cust-dialog.c:3710
 #, c-format
@@ -1074,55 +965,31 @@ msgid ""
 "             In --label elements only, if the first character in LABEL is a\n"
 "             tilde (~), pango markup may be used.  For example:\n"
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
-msgstr ""
-"    LABEL    Les séquences d'échappement suivantes dans LABEL sont\n"
-"             interprétées :\n"
-"                 \\n   nouvelle ligne\n"
-"                 \\t   tabulation\n"
-"                 \\\"   \"\n"
-"                 \\\\   \\\n"
-"             Pour les éléments « --label » seulement, si le premier "
-"caractère\n"
-"             de LABEL est un tilde (~), le balisage Pango peut être "
-"utilisé.\n"
-"             Exemple :\n"
-"                 --label '~Texte normal. <b>Texte en gras.</b>'\n"
+msgstr "    LABEL    Les séquences d'échappement suivantes dans LABEL sont\n             interprétées :\n                 \\n   nouvelle ligne\n                 \\t   tabulation\n                 \\\"   \"\n                 \\\\   \\\n             Pour les éléments « --label » seulement, si le premier caractère\n             de LABEL est un tilde (~), le balisage Pango peut être utilisé.\n             Exemple :\n                 --label '~Texte normal. <b>Texte en gras.</b>'\n"
 
 #: ../src/cust-dialog.c:3712
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
-"In addition to the OPTIONS listed above, --compact or --expand options may "
-"be\n"
+"In addition to the OPTIONS listed above, --compact or --expand options may be\n"
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
 msgstr ""
-"\n"
-"En plus des OPTIONS listées ci-dessus, l'option « --font » peut être "
-"utilisée\n"
-"avec la plupart des types d'élément pour modifier la police de caractètes "
-"et\n"
-"la taille de police d'un élément. Exemple :\n"
-"    --input --font \"Times New Roman 16\" \"Texte par défaut\"\n"
 
 #: ../src/cust-dialog.c:3714
 #, c-format
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
-msgstr ""
-"\n"
-"COMMANDES INTERNES :\n"
+msgstr "\nCOMMANDES INTERNES :\n"
 
 #: ../src/cust-dialog.c:3725
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
-msgstr ""
-"\n"
-"EXEMPLE DE COMMANDE :\n"
+msgstr "\nEXEMPLE DE COMMANDE :\n"
 
 #: ../src/cust-dialog.c:3726
 #, c-format
@@ -1131,20 +998,14 @@ msgid ""
 "               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
 "               --label \\\n"
 "               --button ok\n"
-msgstr ""
-"    spacefm -g --label \"Saisir du texte et appuyer sur « Entrée » :\" \\\n"
-"               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
-"               --label \\\n"
-"               --button ok\n"
+msgstr "    spacefm -g --label \"Saisir du texte et appuyer sur « Entrée » :\" \\\n               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n               --label \\\n               --button ok\n"
 
 #: ../src/cust-dialog.c:3728
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
-msgstr ""
-"\n"
-"EXEMPLE DE SCRIPT :\n"
+msgstr "\nEXEMPLE DE SCRIPT :\n"
 
 #: ../src/cust-dialog.c:3729
 #, c-format
@@ -1152,38 +1013,20 @@ msgid ""
 "    #!/bin/bash\n"
 "    # This script shows a Yes/No dialog\n"
 "    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
-"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
-"\"\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
 "        echo \"User pressed Yes - take some action\"\n"
 "    else\n"
 "        echo \"User did NOT press Yes - abort\"\n"
 "    fi\n"
-msgstr ""
-"    #!/bin/bash\n"
-"    # Ce script affiche une boîte de dialogue « Oui/Non »\n"
-"    # Utiliser la commande « eval » ENTRE GUILLEMETS pour lire les "
-"variables\n"
-"    # retournées par SpaceFM Dialog :\n"
-"    eval \"`spacefm -g --label \"Êtes-vous certain ?\" --button yes --button "
-"no`\"\n"
-"    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
-"        echo \"L'utilisateur a appuyé sur « Oui » - effectuer l'action "
-"désirée\"\n"
-"    else\n"
-"        echo \"L'utilisateur n'a pas appuyé sur « Oui » - abandon\"\n"
-"    fi\n"
+msgstr "    #!/bin/bash\n    # Ce script affiche une boîte de dialogue « Oui/Non »\n    # Utiliser la commande « eval » ENTRE GUILLEMETS pour lire les variables\n    # retournées par SpaceFM Dialog :\n    eval \"`spacefm -g --label \"Êtes-vous certain ?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"L'utilisateur a appuyé sur « Oui » - effectuer l'action désirée\"\n    else\n        echo \"L'utilisateur n'a pas appuyé sur « Oui » - abandon\"\n    fi\n"
 
 #: ../src/cust-dialog.c:3730
 #, c-format
 msgid ""
 "\n"
 "For full documentation and examples see the SpaceFM User's Manual:\n"
-msgstr ""
-"\n"
-"Pour la documentation complète et des exemples, voir le manuel "
-"d'utilisation\n"
-"de SpaceFM :\n"
+msgstr "\nPour la documentation complète et des exemples, voir le manuel d'utilisation\nde SpaceFM :\n"
 
 #: ../src/cust-dialog.c:3757
 #, c-format
@@ -1208,15 +1051,11 @@ msgstr "Ajoute une étiquette et spécifie le texte"
 
 #: ../src/cust-dialog.h:18
 msgid "Add STOCK dialog button, or LABEL button with ICON"
-msgstr ""
-"Ajoute un bouton prédéfini (STOCK) ou un bouton avec étiquette\n"
-"               (LABEL) et icône (ICON)"
+msgstr "Ajoute un bouton prédéfini (STOCK) ou un bouton avec étiquette\n               (LABEL) et icône (ICON)"
 
 #: ../src/cust-dialog.h:20
 msgid "Add STOCK button, or LABEL button with ICON anywhere"
-msgstr ""
-"Ajoute et positionne librement un bouton prédéfini (STOCK) ou\n"
-"               un bouton avec étiquette (LABEL) et icône (ICON)"
+msgstr "Ajoute et positionne librement un bouton prédéfini (STOCK) ou\n               un bouton avec étiquette (LABEL) et icône (ICON)"
 
 #: ../src/cust-dialog.h:22
 msgid "Add a text entry"
@@ -1276,11 +1115,10 @@ msgstr "Ajoute une liste déroulante (COMMAND se lance lors du clic)"
 
 #: ../src/cust-dialog.h:54
 msgid "Add a combo list.  COMMAND run when Enter pressed."
-msgstr ""
-"Ajoute une boîte combinée (COMMAND se lance lors de l'appui de\n"
-"               la touche « Entrée »)"
+msgstr "Ajoute une boîte combinée (COMMAND se lance lors de l'appui de\n               la touche « Entrée »)"
 
-#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. ^HIDE   hidden column (must be first) for data return  (int or double or
+#. string no progress)
 #. use --colwidth=W inside column list
 #: ../src/cust-dialog.h:58
 msgid "Add a list box.  COMMAND run when double-clicked."
@@ -1300,9 +1138,7 @@ msgstr "Définie le préfixe des noms de variable (« dialog » par défaut)"
 
 #: ../src/cust-dialog.h:66
 msgid "Set minimum width, height, padding (-1 = don't change)"
-msgstr ""
-"Définie la largeur, la hauteur et la marge interne minimums\n"
-"               (-1 = aucun changement)"
+msgstr "Définie la largeur, la hauteur et la marge interne minimums\n               (-1 = aucun changement)"
 
 #: ../src/cust-dialog.h:68
 msgid "Add following widgets to a horizontal box"
@@ -1326,9 +1162,7 @@ msgstr ""
 
 #: ../src/cust-dialog.h:78
 msgid "Read commands from FILE or PIPE.  COMMAND for init."
-msgstr ""
-"Lit les commandes à partir d'un fichier ou d'un tube (COMMAND\n"
-"               sert à initialiser)"
+msgstr "Lit les commandes à partir d'un fichier ou d'un tube (COMMAND\n               sert à initialiser)"
 
 #: ../src/cust-dialog.h:141
 msgid "No operation - does nothing but evaluate arguments"
@@ -1350,18 +1184,15 @@ msgstr "Définie l'élément NAME avec la valeur VALUE"
 #. also do for inputs?
 #: ../src/cust-dialog.h:149
 msgid "Select item VALUE (or first/all) in element NAME"
-msgstr ""
-"Sélectionne l'item VALUE (ou le premier item ou tous) de\n"
-"               l'élément NAME"
+msgstr "Sélectionne l'item VALUE (ou le premier item ou tous) de\n               l'élément NAME"
 
 #: ../src/cust-dialog.h:151
 msgid "Unselect item VALUE (or all) in element NAME"
 msgstr "Désélectionne l'item VALUE (ou tous les items) de l'élément NAME"
 
 #: ../src/cust-dialog.h:153
-#, fuzzy
 msgid "Focus element NAME, or raise dialog window"
-msgstr "Active le focus sur l'élément NAME"
+msgstr ""
 
 #: ../src/cust-dialog.h:155
 msgid "Hide element NAME"
@@ -1385,9 +1216,7 @@ msgstr "Enregistre les fichiers et écrit la sortie de la source dans FILE"
 
 #: ../src/main.c:126
 msgid "Open folders in new tab of last window (default)"
-msgstr ""
-"Ouvre les dossiers dans un nouvel onglet de la dernière fenêtre utilisée "
-"(par défaut)"
+msgstr "Ouvre les dossiers dans un nouvel onglet de la dernière fenêtre utilisée (par défaut)"
 
 #: ../src/main.c:127
 msgid "Open folder in current tab of last used window"
@@ -1415,8 +1244,7 @@ msgstr "Affiche les paramètres du bureau"
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
-msgstr ""
-"Affiche les préférences (« N » correspond au numéro d'onglet des préférences)"
+msgstr "Affiche les préférences (« N » correspond au numéro d'onglet des préférences)"
 
 #: ../src/main.c:134
 msgid "Run as a daemon"
@@ -1439,9 +1267,8 @@ msgid "Show a custom dialog (See -g help)"
 msgstr "Affiche une boîte de dialogue personnalisée (voir « -g help »)"
 
 #: ../src/main.c:146
-#, fuzzy
 msgid "Send a socket command (See -s help)"
-msgstr "Affiche une boîte de dialogue personnalisée (voir « -g help »)"
+msgstr ""
 
 #: ../src/main.c:147 ../src/main.c:148
 msgid "No function - for compatibility only"
@@ -1461,14 +1288,12 @@ msgstr "Option « --config-dir » ignorée - une instance est déjà en cours"
 
 #: ../src/main.c:477
 msgid "Option --config-dir contains invalid chars - cannot start"
-msgstr ""
-"L'option « --config-dir » contient des caractères invalides - démarrage "
-"impossible"
+msgstr "L'option « --config-dir » contient des caractères invalides - démarrage impossible"
 
 #: ../src/main.c:558
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: --socket-cmd requires an argument\n"
-msgstr "La commande interne « %s » requiert un argument"
+msgstr ""
 
 #: ../src/main.c:565
 #, c-format
@@ -1502,14 +1327,12 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "Usage :\n"
+msgstr ""
 
 #: ../src/main.c:632
-#, fuzzy
 msgid "Example:"
-msgstr "Exemple :\n"
+msgstr ""
 
 #: ../src/main.c:635
 msgid ""
@@ -1574,9 +1397,8 @@ msgid ""
 msgstr ""
 
 #: ../src/main.c:671
-#, fuzzy
 msgid "Specify window.  eg:"
-msgstr "Définir le titre de la fenêtre"
+msgstr ""
 
 #: ../src/main.c:673
 msgid "Specify panel 1-4.  eg:"
@@ -1779,9 +1601,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "_Icône de la fenêtre"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1812,31 +1633,23 @@ msgid "focus element is visible (0 or 1, or device state change)"
 msgstr ""
 
 #: ../src/main.c:765
-#, fuzzy
 msgid "Examples"
-msgstr "Exemple :\n"
+msgstr ""
 
 #: ../src/main.c:779
 msgid "These files have been copied to the clipboard"
 msgstr ""
 
 #: ../src/main.c:790
-#, fuzzy
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr ""
-"\n"
-"Pour la documentation complète et des exemples, voir le manuel "
-"d'utilisation\n"
-"de SpaceFM :\n"
 
 #: ../src/main.c:1133
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
-msgstr ""
-"spacefm: Erreur: impossible de sauvegarder la session\n"
-"       %s\n"
+msgstr "spacefm: Erreur: impossible de sauvegarder la session\n       %s\n"
 
 #: ../src/main.c:1188
 msgid "File doesn't exist"
@@ -1860,30 +1673,22 @@ msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
-msgstr ""
-"Erreur: impossible d'initialiser le mécanisme de surveillance des "
-"modifications de fichiers inotify.\n"
-"\n"
-"Êtes-vous certain que votre noyau supporte inotify?"
+msgstr "Erreur: impossible d'initialiser le mécanisme de surveillance des modifications de fichiers inotify.\n\nÊtes-vous certain que votre noyau supporte inotify?"
 
 #: ../src/main.c:1263 ../src/main.c:1380
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
-msgstr ""
-"Erreur : impossible d'établir une connexion avec FAM.\n"
-"\n"
-"« FAM » ou « Gamin » sont-ils installés et fonctionnels ?"
+msgstr "Erreur : impossible d'établir une connexion avec FAM.\n\n« FAM » ou « Gamin » sont-ils installés et fonctionnels ?"
 
 #: ../src/main.c:1315
 msgid "--dialog must be first option"
 msgstr "« --dialog » doit être la première option"
 
 #: ../src/main.c:1322
-#, fuzzy
 msgid "--socket-cmd must be first option"
-msgstr "« --dialog » doit être la première option"
+msgstr ""
 
 #: ../src/main.c:1508
 msgid "Don't know how to open the file"
@@ -1895,10 +1700,7 @@ msgid ""
 "Unable to open file:\n"
 "\"%s\"\n"
 "%s"
-msgstr ""
-"Impossible d'ouvrir le fichier :\n"
-"« %s »\n"
-"%s"
+msgstr "Impossible d'ouvrir le fichier :\n« %s »\n%s"
 
 #: ../src/main-window.c:366 ../src/settings.c:5269
 msgid "_Add"
@@ -1923,19 +1725,14 @@ msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
 "(wget will be used to download the plugin file)"
-msgstr ""
-"Entrer l'URL de l'extension pour SpaceFM :\n"
-"\n"
-"(« wget » sera utilisé pour télécharger le fichier)"
+msgstr "Entrer l'URL de l'extension pour SpaceFM :\n\n(« wget » sera utilisé pour télécharger le fichier)"
 
 #: ../src/main-window.c:453
 #, c-format
 msgid ""
 "This plugin's filename is invalid.  Please rename it using alpha-numeric "
 "ASCII characters and try again."
-msgstr ""
-"Le nom de fichier de cette extension est invalide. Veuillez essayer à "
-"nouveau en utilisant seulement des caractères alphanumériques ASCII."
+msgstr "Le nom de fichier de cette extension est invalide. Veuillez essayer à nouveau en utilisant seulement des caractères alphanumériques ASCII."
 
 #: ../src/main-window.c:455
 msgid "Invalid Plugin Filename"
@@ -1946,13 +1743,8 @@ msgstr "Nom de fichier de l'extension invalide"
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
 "\n"
-"Tip: You can also rename this plugin file to install it under a different "
-"name."
-msgstr ""
-"Une extension « %s » est déjà installée. Voulez-vous l'écraser ?\n"
-"\n"
-"Astuce : vous pouvez renommer le fichier pour installer l'extension sous un "
-"autre nom."
+"Tip: You can also rename this plugin file to install it under a different name."
+msgstr "Une extension « %s » est déjà installée. Voulez-vous l'écraser ?\n\nAstuce : vous pouvez renommer le fichier pour installer l'extension sous un autre nom."
 
 #: ../src/main-window.c:480
 msgid "Overwrite Plugin ?"
@@ -1969,9 +1761,7 @@ msgstr "Impossible de créer le dossier temporaire"
 #: ../src/main-window.c:699
 #, c-format
 msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
-msgstr ""
-"Erreur de SpaceFM: impossible d'effectuer la sauvegarde automatique du "
-"fichier de session (« %s »)\n"
+msgstr "Erreur de SpaceFM: impossible d'effectuer la sauvegarde automatique du fichier de session (« %s »)\n"
 
 #: ../src/main-window.c:743
 #, c-format
@@ -1979,10 +1769,7 @@ msgid ""
 "Error: Unable to save session file\n"
 "\n"
 "( %s )"
-msgstr ""
-"Erreur: impossible de sauvegarder le fichier de session\n"
-"\n"
-"(« %s »)"
+msgstr "Erreur: impossible de sauvegarder le fichier de session\n\n(« %s »)"
 
 #: ../src/main-window.c:745
 msgid "Save Session Error"
@@ -1999,9 +1786,7 @@ msgstr "Terminal non disponible"
 
 #: ../src/main-window.c:807
 msgid "Please set your terminal program in View|Preferences|Advanced"
-msgstr ""
-"Veuillez paramétrer le programme utilisé pour le terminal dans « Affichage|"
-"Préférences|Avancé »"
+msgstr "Veuillez paramétrer le programme utilisé pour le terminal dans « Affichage|Préférences|Avancé »"
 
 #: ../src/main-window.c:818
 msgid "Open Terminal"
@@ -2013,31 +1798,14 @@ msgstr "Aide du mode design"
 
 #: ../src/main-window.c:1138
 msgid ""
-"Design Mode allows you to change the name, shortcut key and icon of menu "
-"items, show help for an item, and add your own custom commands to most "
-"menus.\n"
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
 "To open the design menu, simply right-click on a menu item.\n"
 "\n"
-"To use Design Mode on a submenu, you must first close the submenu (by "
-"clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
 "\n"
-"To modify a toolbar, click the leftmost tool icon to open the toolbar config "
-"menu and select Help."
-msgstr ""
-"Le mode design permet de modifier le nom, le raccourci-clavier et l'icône "
-"des éléments de menu, d'afficher l'aide d'un élément et d'ajouter vos "
-"propres commandes personnalisées à la plupart des menus.\n"
-"\n"
-"Pour ouvrir le menu de design, cliquez droit sur un élément de menu.\n"
-"\n"
-"Pour passer au mode design dans un sous-menu, vous devez préalablement "
-"fermer ce dernier (en cliquant dessus). Le menu des signets ne supporte pas "
-"le mode design.\n"
-"\n"
-"Pour modifier une barre d'outils, ouvrez son menu de configuration en "
-"cliquant sur l'icône la plus à gauche de la barre et sélectionnez l'élément "
-"« Aide »."
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
+msgstr "Le mode design permet de modifier le nom, le raccourci-clavier et l'icône des éléments de menu, d'afficher l'aide d'un élément et d'ajouter vos propres commandes personnalisées à la plupart des menus.\n\nPour ouvrir le menu de design, cliquez droit sur un élément de menu.\n\nPour passer au mode design dans un sous-menu, vous devez préalablement fermer ce dernier (en cliquant dessus). Le menu des signets ne supporte pas le mode design.\n\nPour modifier une barre d'outils, ouvrez son menu de configuration en cliquant sur l'icône la plus à gauche de la barre et sélectionnez l'élément « Aide »."
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
@@ -2084,11 +1852,7 @@ msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
 "\n"
 "( %s )"
-msgstr ""
-"Erreur: impossible de sauvegarder le fichier de session. Voulez-vous quitter "
-"sans sauvegarder ?\n"
-"\n"
-"(« %s »)"
+msgstr "Erreur: impossible de sauvegarder le fichier de session. Voulez-vous quitter sans sauvegarder ?\n\n(« %s »)"
 
 #: ../src/main-window.c:2122
 msgid "SpaceFM Error"
@@ -2159,9 +1923,7 @@ msgstr[1] "%s%d éléments   %s"
 
 #: ../src/main-window.c:3675
 msgid "Device manager key shortcuts are disabled in HAL mode"
-msgstr ""
-"Les raccourcis-clavier du gestionnaire de périphériques sont désactivés dans "
-"le mode HAL"
+msgstr "Les raccourcis-clavier du gestionnaire de périphériques sont désactivés dans le mode HAL"
 
 #. If you change "Status", also change it in on_task_button_press_event
 #: ../src/main-window.c:3805 ../src/main-window.c:5204
@@ -2225,9 +1987,7 @@ msgstr "Aide de la réorganisation des colonnes"
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
-msgstr ""
-"Pour modifier l'ordre des colonnes, glissez le titre de colonne à "
-"l'emplacement désiré."
+msgstr "Pour modifier l'ordre des colonnes, glissez le titre de colonne à l'emplacement désiré."
 
 #: ../src/main-window.c:5327
 msgid "moving"
@@ -2308,9 +2068,9 @@ msgid "spacefm: invalid option '%s'\n"
 msgstr ""
 
 #: ../src/main-window.c:5761
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: option %s requires an argument\n"
-msgstr "La commande interne « %s » requiert un argument"
+msgstr ""
 
 #: ../src/main-window.c:5771
 msgid "spacefm: invalid window\n"
@@ -2327,9 +2087,9 @@ msgid "spacefm: invalid panel %d\n"
 msgstr ""
 
 #: ../src/main-window.c:5808
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: panel %d is not visible\n"
-msgstr "spacefm : l'argument n'a pas un codage UTF-8 valide\n"
+msgstr ""
 
 #: ../src/main-window.c:5821
 #, c-format
@@ -2337,9 +2097,8 @@ msgid "spacefm: invalid tab %d\n"
 msgstr ""
 
 #: ../src/main-window.c:5833
-#, fuzzy
 msgid "spacefm: command set requires an argument\n"
-msgstr "La commande interne « %s » requiert un argument"
+msgstr ""
 
 #: ../src/main-window.c:5859
 #, c-format
@@ -2374,9 +2133,8 @@ msgid "spacefm: invalid column name '%s'\n"
 msgstr ""
 
 #: ../src/main-window.c:6121
-#, fuzzy
 msgid "spacefm: text is not valid UTF-8\n"
-msgstr "spacefm : l'argument n'a pas un codage UTF-8 valide\n"
+msgstr ""
 
 #: ../src/main-window.c:6138
 #, c-format
@@ -2384,14 +2142,14 @@ msgid "spacefm: %s requires a file path\n"
 msgstr ""
 
 #: ../src/main-window.c:6144
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: error reading file '%s'\n"
-msgstr "erreur lors de la lecture du fichier « %s » : %s"
+msgstr ""
 
 #: ../src/main-window.c:6150
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
-msgstr "spacefm : l'argument n'a pas un codage UTF-8 valide\n"
+msgstr ""
 
 #: ../src/main-window.c:6191
 #, c-format
@@ -2399,21 +2157,21 @@ msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
 #: ../src/main-window.c:6197
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr "l'élément « %s » n'existe pas"
+msgstr ""
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: command %s requires an argument\n"
-msgstr "La commande interne « %s » requiert un argument"
+msgstr ""
 
 #: ../src/main-window.c:6534 ../src/main-window.c:6664
 #: ../src/main-window.c:6833
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: %s requires two arguments\n"
-msgstr "La commande interne « %s » requiert un argument"
+msgstr ""
 
 #: ../src/main-window.c:6562 ../src/main-window.c:6692
 #, c-format
@@ -2481,12 +2239,7 @@ msgid ""
 "this user to a file in /etc/spacefm/  Supplying the password in the next "
 "window is recommended.  Because SpaceFM runs some commands as root via su, "
 "these settings are best protected by root."
-msgstr ""
-"Vous allez maintenant être invité à fournir votre mot de passe root pour "
-"enregistrer les paramètres root de l'utilisateur actuel dans le dossier « /"
-"etc/spacefm/ ». Fournir le mot de passe dans la fenêtre suivante est "
-"recommandé. En effet, puisque SpaceFM exécute quelques commandes en tant que "
-"root à l'aide de « su », ces paramètres sont mieux protégés par root."
+msgstr "Vous allez maintenant être invité à fournir votre mot de passe root pour enregistrer les paramètres root de l'utilisateur actuel dans le dossier « /etc/spacefm/ ». Fournir le mot de passe dans la fenêtre suivante est recommandé. En effet, puisque SpaceFM exécute quelques commandes en tant que root à l'aide de « su », ces paramètres sont mieux protégés par root."
 
 #. also in aboutdlg.ui
 #: ../src/settings.c:114
@@ -2504,62 +2257,30 @@ msgid ""
 "\t%%t\tselected task directory;  %%p task pid\n"
 "\t%%a\tmenu item value\n"
 "\t$fm_panel, $fm_tab, $fm_command, etc"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash :\n"
-"\n"
-"Usage :\n"
-"\t%%F\tfichiers sélectionnés, ou %%f premier fichier sélectionné\n"
-"\t%%N\tnom des fichiers sélectionnés, ou %%n nom du premier fichier "
-"sélectionné\n"
-"\t%%d\tdossier actuel\n"
-"\t%%v\tpériphérique sélectionné (ex. : « /dev/sda1 »)\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/dvd »);  %%l "
-"étiquette du périphérique\n"
-"\t%%b\tsignet sélectionné\n"
-"\t%%t\tdossier de la tâche sélectionnée; %%p pid de la tâche\n"
-"\t%%a\tvaleur de l'élément du menu\n"
-"\t$fm_panel, $fm_tab, $fm_command, etc."
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash :\n\nUsage :\n\t%%F\tfichiers sélectionnés, ou %%f premier fichier sélectionné\n\t%%N\tnom des fichiers sélectionnés, ou %%n nom du premier fichier sélectionné\n\t%%d\tdossier actuel\n\t%%v\tpériphérique sélectionné (ex. : « /dev/sda1 »)\n\t%%m\tpoint de montage du périphérique (ex. : « /media/dvd »);  %%l étiquette du périphérique\n\t%%b\tsignet sélectionné\n\t%%t\tdossier de la tâche sélectionnée; %%p pid de la tâche\n\t%%a\tvaleur de l'élément du menu\n\t$fm_panel, $fm_tab, $fm_command, etc."
 
 #: ../src/settings.c:115
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
 "Not all icons may work due to various issues."
-msgstr ""
-"Entrer le nom d'une icône, le chemin vers une icône ou le nom d'un élément "
-"prédéfini :\n"
-"\n"
-"Certaines icônes peuvent ne pas fonctionner à cause de restrictions diverses."
+msgstr "Entrer le nom d'une icône, le chemin vers une icône ou le nom d'un élément prédéfini :\n\nCertaines icônes peuvent ne pas fonctionner à cause de restrictions diverses."
 
 #: ../src/settings.c:117
 msgid ""
 "Enter menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
-msgstr ""
-"Entrer le nom de l'élément de menu :\n"
-"\n"
-"Un caractère précédé d'une barre de soulignement (« _ ») sera souligné et "
-"pourra être utilisé comme touche de raccourci."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
+msgstr "Entrer le nom de l'élément de menu :\n\nUn caractère précédé d'une barre de soulignement (« _ ») sera souligné et pourra être utilisé comme touche de raccourci."
 
 #: ../src/settings.c:118
 msgid ""
 "Enter new menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired.\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired.\n"
 "\n"
-"TIP: To change this menu item later, right-click on the menu item to open "
-"the design menu."
-msgstr ""
-"Entrer le nom du nouvel élément de menu :\n"
-"\n"
-"Un caractère précédé d'une barre de soulignement (« _ ») sera souligné et "
-"pourra être utilisé comme touche de raccourci.\n"
-"\n"
-"Astuce : cet élément pourra être modifié par la suite en cliquant droit "
-"dessus pour ouvrir le menu de design."
+"TIP: To change this menu item later, right-click on the menu item to open the design menu."
+msgstr "Entrer le nom du nouvel élément de menu :\n\nUn caractère précédé d'une barre de soulignement (« _ ») sera souligné et pourra être utilisé comme touche de raccourci.\n\nAstuce : cet élément pourra être modifié par la suite en cliquant droit dessus pour ouvrir le menu de design."
 
 #: ../src/settings.c:122
 msgid "MIME Type"
@@ -2755,9 +2476,7 @@ msgstr "est plus grand que"
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
-msgstr ""
-"Le dossier personnalisé « tmp_dir » contient des caractères invalides - "
-"retour à « /tmp »"
+msgstr "Le dossier personnalisé « tmp_dir » contient des caractères invalides - retour à « /tmp »"
 
 #: ../src/settings.c:451
 msgid "custom tmp_dir does not exist - reverting to /tmp"
@@ -2809,9 +2528,8 @@ msgid "_Detailed Stats"
 msgstr "Statistiques _détaillées"
 
 #: ../src/settings.c:975 ../src/settings.c:8906
-#, fuzzy
 msgid "Remo_ve / Eject"
-msgstr "_Retirer"
+msgstr ""
 
 #. General
 #: ../src/settings.c:1068
@@ -2820,17 +2538,9 @@ msgid ""
 "\n"
 "# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
 "\n"
-"# If you delete all session* files, SpaceFM will be reset to factory "
-"defaults.\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
 "\n"
-msgstr ""
-"# Fichier de session de SpaceFM\n"
-"\n"
-"# CE FICHIER N'EST PAS DESTINÉ À ÊTRE MODIFIÉ - il sera lu et ÉCRASÉ\n"
-"\n"
-"# Si vous supprimez tous les fichiers « session* », SpaceFM sera "
-"réinitialisé à ses valeurs par défaut.\n"
-"\n"
+msgstr "# Fichier de session de SpaceFM\n\n# CE FICHIER N'EST PAS DESTINÉ À ÊTRE MODIFIÉ - il sera lu et ÉCRASÉ\n\n# Si vous supprimez tous les fichiers « session* », SpaceFM sera réinitialisé à ses valeurs par défaut.\n\n"
 
 #: ../src/settings.c:1215
 #, c-format
@@ -2841,21 +2551,14 @@ msgstr "Erreur lors de la sauvegarde du fichier"
 msgid ""
 "Error reading root settings from /etc/spacefm/  Commands run as root may "
 "present a security risk"
-msgstr ""
-"Erreur lors de la lecture des paramètres root à partir de « /etc/spacefm/ ». "
-"Les commandes lancées en tant que root peuvent présenter un risque de "
-"sécurité."
+msgstr "Erreur lors de la lecture des paramètres root à partir de « /etc/spacefm/ ». Les commandes lancées en tant que root peuvent présenter un risque de sécurité."
 
 #: ../src/settings.c:2427
 msgid ""
 "No root settings found in /etc/spacefm/  Setting a root editor in "
 "Preferences should remove this warning on startup.   Otherwise commands run "
 "as root may present a security risk."
-msgstr ""
-"Aucun paramètres root trouvé dans « /etc/spacefm/ ». Définir un éditeur root "
-"dans les préférences devrait supprimer cet avertissement au démarrage. "
-"Autrement, les commandes lancées en tant que root peuvent présenter un "
-"risque de sécurité."
+msgstr "Aucun paramètres root trouvé dans « /etc/spacefm/ ». Définir un éditeur root dans les préférences devrait supprimer cet avertissement au démarrage. Autrement, les commandes lancées en tant que root peuvent présenter un risque de sécurité."
 
 #: ../src/settings.c:3251
 #, c-format
@@ -2863,10 +2566,7 @@ msgid ""
 "An error occured copying command files\n"
 "\n"
 "%s"
-msgstr ""
-"Une erreur s'est produite lors de la copie des fichiers de la commande\n"
-"\n"
-"%s"
+msgstr "Une erreur s'est produite lors de la copie des fichiers de la commande\n\n%s"
 
 #: ../src/settings.c:3253 ../src/settings.c:3288
 msgid "Copy Command Error"
@@ -2878,11 +2578,7 @@ msgid ""
 "An error occured copying command data files\n"
 "\n"
 "%s"
-msgstr ""
-"Une erreur s'est produite lors de la copie des fichiers de données de la "
-"commande\n"
-"\n"
-"%s"
+msgstr "Une erreur s'est produite lors de la copie des fichiers de données de la commande\n\n%s"
 
 #: ../src/settings.c:3658
 #, c-format
@@ -2895,51 +2591,25 @@ msgid ""
 "The imported plugin folder does not contain a valid plugin.\n"
 "\n"
 "(%s/)"
-msgstr ""
-"Le dossier d'extension importé ne contient pas une extension valide.\n"
-"\n"
-"(« %s/ »)"
+msgstr "Le dossier d'extension importé ne contient pas une extension valide.\n\n(« %s/ »)"
 
 #: ../src/settings.c:3751
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu."
-msgstr ""
-"L'extension « %s » a été copiée dans le presse-papiers de design. Utiliser "
-"« Affichage|Design Mode » pour la coller dans un menu.\n"
-"\n"
-"Puisque cette extension n'a pas été installée, elle n'apparaîtra pas dans le "
-"menu « Extension »."
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
+msgstr "L'extension « %s » a été copiée dans le presse-papiers de design. Utiliser « Affichage|Design Mode » pour la coller dans un menu.\n\nPuisque cette extension n'a pas été installée, elle n'apparaîtra pas dans le menu « Extension »."
 
 #: ../src/settings.c:3753
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu, and its contents are not protected by root (once pasted it "
-"will be saved with normal ownership).\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
 "\n"
-"If this plugin contains su commands or will be run as root, installing it to "
-"and running it only from the Plugins menu is recommended to improve your "
-"system security."
-msgstr ""
-"L'extension « %s » a été copiée dans le presse-papiers de design. Utiliser "
-"« Affichage|Mode Design » pour la coller dans un menu.\n"
-"\n"
-"Puisque cette extension n'a pas été installée, elle n'apparaîtra pas dans le "
-"menu « Extension », et son contenu n'est pas protégé par root (une fois "
-"copiée, elle sera sauvegardée avec les droits normaux).\n"
-"\n"
-"Si cette extension contient des commandes « su » ou lancées en tant que "
-"root, il est recommandé de l'installer dans le menu « Extensions » et de la "
-"lancer seulement à partir de ce menu, et ce dans le but d'améliorer la "
-"sécurité de votre système."
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
+msgstr "L'extension « %s » a été copiée dans le presse-papiers de design. Utiliser « Affichage|Mode Design » pour la coller dans un menu.\n\nPuisque cette extension n'a pas été installée, elle n'apparaîtra pas dans le menu « Extension », et son contenu n'est pas protégé par root (une fois copiée, elle sera sauvegardée avec les droits normaux).\n\nSi cette extension contient des commandes « su » ou lancées en tant que root, il est recommandé de l'installer dans le menu « Extensions » et de la lancer seulement à partir de ce menu, et ce dans le but d'améliorer la sécurité de votre système."
 
 #: ../src/settings.c:3783
 #, c-format
@@ -2947,10 +2617,7 @@ msgid ""
 "Uninstall the '%s' plugin?\n"
 "\n"
 "( %s )"
-msgstr ""
-"Désinstaller l'extension « %s » ?\n"
-"\n"
-"(« %s »)"
+msgstr "Désinstaller l'extension « %s » ?\n\n(« %s »)"
 
 #: ../src/settings.c:3786 ../src/settings.c:3794
 msgid "Uninstall Plugin"
@@ -3095,16 +2762,8 @@ msgstr "Manuel d'utilisation non trouvé"
 msgid ""
 "Read the user's manual online?\n"
 "\n"
-"The local copy of the SpaceFM user's manual was not found.  Click Yes to "
-"read it online, or click No and then set the correct location in Help|"
-"Options|Manual Location."
-msgstr ""
-"Consulter le manuel d'utilisation en ligne ?\n"
-"\n"
-"La copie locale du manuel d'utilisation de SpaceFM n'a pas été trouvée. "
-"Sélectionner « Oui » pour consulter le manuel est ligne, ou sélectionner "
-"« Non » et définir l'emplacement correct dans « Aide|Options|Emplacement du "
-"manuel »."
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
+msgstr "Consulter le manuel d'utilisation en ligne ?\n\nLa copie locale du manuel d'utilisation de SpaceFM n'a pas été trouvée. Sélectionner « Oui » pour consulter le manuel est ligne, ou sélectionner « Non » et définir l'emplacement correct dans « Aide|Options|Emplacement du manuel »."
 
 #: ../src/settings.c:5565
 msgid "Help Not Available"
@@ -3120,9 +2779,7 @@ msgstr "Échec de la création"
 
 #: ../src/settings.c:5567
 msgid "An error occured creating a README file for this command."
-msgstr ""
-"Une erreur s'est produite lors de la création d'un fichier README pour cette "
-"commande."
+msgstr "Une erreur s'est produite lors de la création d'un fichier README pour cette commande."
 
 #: ../src/settings.c:5589
 msgid "Manual Opened ?"
@@ -3130,17 +2787,10 @@ msgstr "Manuel ouvert ?"
 
 #: ../src/settings.c:5589
 msgid ""
-"The SpaceFM user's manual should have opened in your browser.  If it didn't "
-"open, or if you would like to use a different browser, set your browser in "
-"Help|Options|Browser.\n"
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
-msgstr ""
-"Le manuel d'utilisation de SpaceFM devrait s'être ouvert dans votre "
-"navigateur. Si ce n'est pas le cas ou si vous souhaitez utiliser un autre "
-"navigateur, configurez « Aide|Options|Navigateur ».\n"
-"\n"
-"Ce message ne s'affichera plus."
+msgstr "Le manuel d'utilisation de SpaceFM devrait s'être ouvert dans votre navigateur. Si ce n'est pas le cas ou si vous souhaitez utiliser un autre navigateur, configurez « Aide|Options|Navigateur ».\n\nCe message ne s'affichera plus."
 
 #: ../src/settings.c:5665
 #, c-format
@@ -3150,13 +2800,7 @@ msgid ""
 "This key combination is already assigned to '%s'.\n"
 "\n"
 "Press a different key or click Set to replace the current key assignment."
-msgstr ""
-"    Code de touche : %#4x  Modificateur : %#x\n"
-"\n"
-"Cette combinaison de touches est déjà affectée à « %s ».\n"
-"\n"
-"Choisissez une combinaison différente ou cliquez sur « Définir » pour "
-"remplacer l'affectation actuelle."
+msgstr "    Code de touche : %#4x  Modificateur : %#x\n\nCette combinaison de touches est déjà affectée à « %s ».\n\nChoisissez une combinaison différente ou cliquez sur « Définir » pour remplacer l'affectation actuelle."
 
 #: ../src/settings.c:5672
 #, c-format
@@ -3166,12 +2810,9 @@ msgstr "    Code de touche : %#4x  Modificateur : %#x"
 #: ../src/settings.c:5726
 #, c-format
 msgid ""
-"Press your key combination for menu item '%s' then click Set.  To remove the "
-"current key assignment, click Unset."
-msgstr ""
-"Effectuez la combinaison de touches souhaitée pour l'élément de menu « %s » "
-"et cliquez sur « Définir ». Pour supprimer la combinaison actuelle, cliquez "
-"sur «Effacer»."
+"Press your key combination for menu item '%s' then click Set.  To remove the"
+" current key assignment, click Unset."
+msgstr "Effectuez la combinaison de touches souhaitée pour l'élément de menu « %s » et cliquez sur « Définir ». Pour supprimer la combinaison actuelle, cliquez sur «Effacer»."
 
 #: ../src/settings.c:5737
 msgid "Cancel"
@@ -3207,28 +2848,15 @@ msgid ""
 "Run this command as username:\n"
 "\n"
 "( Leave blank for current user )"
-msgstr ""
-"Lancer cette commande avec l'utilisateur suivant :\n"
-"\n"
-"(laisser vide pour l'utilisateur actuel)"
+msgstr "Lancer cette commande avec l'utilisateur suivant :\n\n(laisser vide pour l'utilisateur actuel)"
 
 #: ../src/settings.c:5939
 #, c-format
 msgid ""
-"You are adding a custom command to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
-msgstr ""
-"Vous ajoutez une commande personnalisée à l'élément de menu « Par défaut ». "
-"Cette commande aura automatiquement un précontexte ; elle sera affichée "
-"seulement lorsque le type MIME du premier fichier sélectionné correspond au "
-"type actuel « %s ».\n"
-"\n"
-"Ajoutez ici des commandes ou des menus que vous ne souhaitez voir apparaître "
-"que pour ce type MIME."
+"Add commands or menus here which you only want to appear for this one MIME type."
+msgstr "Vous ajoutez une commande personnalisée à l'élément de menu « Par défaut ». Cette commande aura automatiquement un précontexte ; elle sera affichée seulement lorsque le type MIME du premier fichier sélectionné correspond au type actuel « %s ».\n\nAjoutez ici des commandes ou des menus que vous ne souhaitez voir apparaître que pour ce type MIME."
 
 #: ../src/settings.c:5940
 msgid "New Context Command"
@@ -3241,20 +2869,10 @@ msgstr "Définir le nom du menu"
 #: ../src/settings.c:5988
 #, c-format
 msgid ""
-"You are adding a custom submenu to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
-msgstr ""
-"Vous ajoutez un sous-menu personnalisé à l'élément de menu « Par défaut ». "
-"Ce sous-menu aura automatiquement un précontexte ; il sera affiché seulement "
-"lorsque le type MIME du premier fichier sélectionné correspond au type "
-"actuel « %s ».\n"
-"\n"
-"Ajoutez ici des commandes ou des menus que vous ne souhaitez voir apparaître "
-"que pour ce type MIME."
+"Add commands or menus here which you only want to appear for this one MIME type."
+msgstr "Vous ajoutez un sous-menu personnalisé à l'élément de menu « Par défaut ». Ce sous-menu aura automatiquement un précontexte ; il sera affiché seulement lorsque le type MIME du premier fichier sélectionné correspond au type actuel « %s ».\n\nAjoutez ici des commandes ou des menus que vous ne souhaitez voir apparaître que pour ce type MIME."
 
 #: ../src/settings.c:5988
 msgid "(none)"
@@ -3268,13 +2886,8 @@ msgstr "Définir le nom du sous-menu"
 msgid ""
 "Enter submenu name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
-msgstr ""
-"Entrer le nom du sous-menu :\n"
-"\n"
-"Un caractère précédé d'une barre de soulignement (« _ ») sera souligné et "
-"pourra être utilisé comme touche de raccourci."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
+msgstr "Entrer le nom du sous-menu :\n\nUn caractère précédé d'une barre de soulignement (« _ ») sera souligné et pourra être utilisé comme touche de raccourci."
 
 #: ../src/settings.c:5997
 msgid "New _Submenu"
@@ -3290,12 +2903,7 @@ msgid ""
 "Permanently remove the '%s' SUBMENU AND ALL COMMANDS WITHIN IT?\n"
 "\n"
 "This action will delete all settings and files associated with these items."
-msgstr ""
-"Supprimer définitivement le sous-menu « %s » ainsi que TOUTES LES COMMANDES "
-"qu'il contient ?\n"
-"\n"
-"Cette action va supprimer toutes les préférences et tous les fichiers "
-"associés à ces items."
+msgstr "Supprimer définitivement le sous-menu « %s » ainsi que TOUTES LES COMMANDES qu'il contient ?\n\nCette action va supprimer toutes les préférences et tous les fichiers associés à ces items."
 
 #: ../src/settings.c:6121
 #, c-format
@@ -3303,11 +2911,7 @@ msgid ""
 "Permanently remove the '%s' command?\n"
 "\n"
 "This action will delete all settings and files associated with this command."
-msgstr ""
-"Supprimer définitivement la commande « %s » ?\n"
-"\n"
-"Cette action va supprimer toutes les préférences et tous les fichiers "
-"associés à cette commande."
+msgstr "Supprimer définitivement la commande « %s » ?\n\nCette action va supprimer toutes les préférences et tous les fichiers associés à cette commande."
 
 #: ../src/settings.c:6134
 msgid "Confirm Remove"
@@ -3328,12 +2932,7 @@ msgid ""
 "Use:\n"
 "\t\\n\tnewline\n"
 "\t\\t\ttab"
-msgstr ""
-"Entrer le message à afficher dans la boîte de dialogue :\n"
-"\n"
-"Usage :\n"
-"\t\\n\tnouvelle ligne\n"
-"\t\\t\ttabulation"
+msgstr "Entrer le message à afficher dans la boîte de dialogue :\n\nUsage :\n\t\\n\tnouvelle ligne\n\t\\t\ttabulation"
 
 #. Show Tool
 #. dev settings
@@ -3577,12 +3176,11 @@ msgstr "Barre d'outils _droite"
 msgid "_Side Toolbar"
 msgstr "Barre d'outils _latérale"
 
-#.
 #. xset_set( "panel_left", "label", _("_Left") );
 #. xset_set( "panel_right", "label", _("_Right") );
 #. xset_set( "panel_top", "label", _("_Top") );
 #. xset_set( "panel_bottom", "label", _("_Bottom") );
-#.
+#. 
 #: ../src/settings.c:8658 ../src/settings.c:8661 ../src/settings.c:9590
 #: ../src/settings.c:10482
 msgid "_Hide"
@@ -3677,10 +3275,9 @@ msgid "_Sync"
 msgstr "_Synchroniser"
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3773,29 +3370,14 @@ msgstr "Afficher/Cacher les volumes"
 
 #: ../src/settings.c:9164
 msgid ""
-"To force showing or hiding of some volumes, overriding other settings, you "
-"can specify the devices, volume labels, or device IDs in the space-separated "
-"list below.\n"
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume "
-"with label \"Label With Space\" to be hidden.\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
-msgstr ""
-"Pour outrepasser d'autres paramètres et forcer ou empêcher l'affichage de "
-"certains volumes, vous pouvez spécifier les périphériques, les étiquettes de "
-"volume ou les ID de périphérique dans la liste ci-dessous.\n"
-"\n"
-"Exemple : « +/dev/sdd1 -Étiquette contenant des espaces +ata-OCZ-partie4 »\n"
-"Cet exemple permet d'afficher « /dev/sdd1 » et le périphérique OCZ, et de "
-"cacher le volume dont l'étiquette est « Étiquette contenant des espaces ».\n"
-"\n"
-"Chaque élément doit être séparé par une espace et précédé d'un signe plus "
-"(« + ») ou moins (« - »). Cette liste est sensible à la casse.\n"
-"\n"
+msgstr "Pour outrepasser d'autres paramètres et forcer ou empêcher l'affichage de certains volumes, vous pouvez spécifier les périphériques, les étiquettes de volume ou les ID de périphérique dans la liste ci-dessous.\n\nExemple : « +/dev/sdd1 -Étiquette contenant des espaces +ata-OCZ-partie4 »\nCet exemple permet d'afficher « /dev/sdd1 » et le périphérique OCZ, et de cacher le volume dont l'étiquette est « Étiquette contenant des espaces ».\n\nChaque élément doit être séparé par une espace et précédé d'un signe plus (« + ») ou moins (« - »). Cette liste est sensible à la casse.\n\n"
 
 #: ../src/settings.c:9171
 msgid "_Display Name"
@@ -3817,16 +3399,7 @@ msgid ""
 "\t%%l\tvolume label (eg Label or [no media])\n"
 "\t%%m\tmount point if mounted, or ---\n"
 "\t%%i\tdevice ID\n"
-msgstr ""
-"Entrer le format d'affichage du nom des périphériques :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tnom de fichier du périphérique (ex. : « sdd1 »)\n"
-"\t%%s\ttaille totale (ex. : « 800G »)\n"
-"\t%%t\ttype de système de fichiers (ex. : « ext4 »)\n"
-"\t%%l\tétiquette du volume (ex. : « Étiquette » ou « [aucun média] »)\n"
-"\t%%m\tpoint de montage si monté, sinon « --- »\n"
-"\t%%i\tID du périphérique\n"
+msgstr "Entrer le format d'affichage du nom des périphériques :\n\nUsage :\n\t%%v\tnom de fichier du périphérique (ex. : « sdd1 »)\n\t%%s\ttaille totale (ex. : « 800G »)\n\t%%t\ttype de système de fichiers (ex. : « ext4 »)\n\t%%l\tétiquette du volume (ex. : « Étiquette » ou « [aucun média] »)\n\t%%m\tpoint de montage si monté, sinon « --- »\n\t%%i\tID du périphérique\n"
 
 #: ../src/settings.c:9180
 msgid "_Auto Mount"
@@ -3863,22 +3436,13 @@ msgstr "Lancement automatique au montage"
 #: ../src/settings.c:9217
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically after a removable "
-"drive or data disc is auto-mounted:\n"
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement après qu'un périphérique amovible ou qu'un disque de données "
-"a été automonté :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement après qu'un périphérique amovible ou qu'un disque de données a été automonté :\n\nUsage :\n\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9220
 msgid "On _Audio CD"
@@ -3891,21 +3455,13 @@ msgstr "Lancement automatique si CD audio"
 #: ../src/settings.c:9223
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when an audio CD "
-"is inserted in a qualified device:\n"
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un CD audio est inséré dans un périphérique géré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement quand un CD audio est inséré dans un périphérique géré :\n\nUsage :\n\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9226
 msgid "On _Video DVD"
@@ -3918,21 +3474,13 @@ msgstr "Lancement automatique si DVD vidéo"
 #: ../src/settings.c:9229
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a video DVD "
-"is auto-mounted:\n"
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un DVD vidéo est monté automatiquement :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement quand un DVD vidéo est monté automatiquement :\n\nUsage :\n\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9232
 msgid "On _Insert"
@@ -3945,21 +3493,13 @@ msgstr "Lancement automatique à l'insertion"
 #: ../src/settings.c:9235
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is inserted:\n"
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice added (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est inséré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement quand un périphérique est inséré :\n\nUsage :\n\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9238
 msgid "On _Unmount"
@@ -3972,22 +3512,13 @@ msgstr "Lancement automatique au démontage"
 #: ../src/settings.c:9241
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is unmounted by any means:\n"
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice unmounted (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est démonté d'une manière "
-"quelconque :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement quand un périphérique est démonté d'une manière quelconque :\n\nUsage :\n\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9244
 msgid "On _Remove"
@@ -4000,22 +3531,13 @@ msgstr "Lancement automatique lorsque retiré"
 #: ../src/settings.c:9247
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is removed (ejection of media does not qualify):\n"
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice removed (eg /dev/sda1)\n"
 "\t%%l\tdevice label\n"
 "\t%%m\tdevice mount point (eg /media/disk)"
-msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est retiré (n'inclut pas l'éjection "
-"d'un média) :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique retiré (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
+msgstr "Entrer le nom d'un programme ou une ligne de commande Bash à lancer automatiquement quand un périphérique est retiré (n'inclut pas l'éjection d'un média) :\n\nUsage :\n\t%%v\tpériphérique retiré (ex. : « /dev/sda1 »)\n\t%%l\tétiquette du périphérique\n\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9254
 msgid "Mount _Volumes..."
@@ -4027,31 +3549,14 @@ msgstr "Monter automatiquement les volumes"
 
 #: ../src/settings.c:9256
 msgid ""
-"To force or prevent automounting of some volumes, overriding other settings, "
-"you can specify the devices, volume labels, or device IDs in the space-"
-"separated list below.\n"
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when "
-"detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
-msgstr ""
-"Pour outrepasser d'autres paramètres et forcer ou empêcher le montage "
-"automatique de certains volumes, vous pouvez spécifier les périphériques, "
-"les étiquettes de volume ou les ID de périphérique dans la liste ci-"
-"dessous.\n"
-"\n"
-"Exemple : « +/dev/sdd1 -Étiquette contenant des espaces +ata-OCZ-partie4 »\n"
-"Cet exemple permet de monter automatiquement « /dev/sdd1 » et le "
-"périphérique OCZ lorsqu'ils sont détectés, et d'ignorer le volume dont "
-"l'étiquette est « Étiquette contenant des espaces ».\n"
-"\n"
-"Chaque élément doit être séparé par une espace et précédé d'un signe plus "
-"(« + ») ou moins (« - »). Cette liste est sensible à la casse.\n"
-"\n"
+msgstr "Pour outrepasser d'autres paramètres et forcer ou empêcher le montage automatique de certains volumes, vous pouvez spécifier les périphériques, les étiquettes de volume ou les ID de périphérique dans la liste ci-dessous.\n\nExemple : « +/dev/sdd1 -Étiquette contenant des espaces +ata-OCZ-partie4 »\nCet exemple permet de monter automatiquement « /dev/sdd1 » et le périphérique OCZ lorsqu'ils sont détectés, et d'ignorer le volume dont l'étiquette est « Étiquette contenant des espaces ».\n\nChaque élément doit être séparé par une espace et précédé d'un signe plus (« + ») ou moins (« - »). Cette liste est sensible à la casse.\n\n"
 
 #: ../src/settings.c:9259
 msgid "_Mount Options"
@@ -4059,38 +3564,15 @@ msgstr "Options de monta_ge"
 
 #: ../src/settings.c:9260
 msgid ""
-"Enter your comma- or space-separated list of default mount options below (to "
-"be used for all mounts).\n"
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
-msgstr ""
-"Entrer ci-dessous la liste des options de montage par défaut. Ces options "
-"seront utilisées pour tous les montages. Chaque option doit être séparée par "
-"une virgule ou une espace.\n"
-"\n"
-"En plus des options de base, vous pouvez également spécifier l'ajout ou "
-"l'annulation d'options pour un type de système de fichiers en particulier en "
-"utilisant la syntaxe « OPTION+TYPEFS » ou « OPTION-TYPEFS ».\n"
-"\n"
-"Exemple : « nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4 »\n"
-"Cet exemple ajoute les options « nosuid » et « noatime » pour tous les types "
-"de systèmes de fichiers, ajoute « sync » pour « vfat » et « ntfs » "
-"seulement, et enlève « noatime » pour « ext4 ».\n"
-"\n"
-"Note : quelques options, dont « nosuid », peuvent être ajoutées par le "
-"programme de montage même si vous ne les incluez pas. Les options dans le "
-"fichier « fstab » ont préséance. « pmount » ignore les options définies dans "
-"cette boîte de dialogue."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
+msgstr "Entrer ci-dessous la liste des options de montage par défaut. Ces options seront utilisées pour tous les montages. Chaque option doit être séparée par une virgule ou une espace.\n\nEn plus des options de base, vous pouvez également spécifier l'ajout ou l'annulation d'options pour un type de système de fichiers en particulier en utilisant la syntaxe « OPTION+TYPEFS » ou « OPTION-TYPEFS ».\n\nExemple : « nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4 »\nCet exemple ajoute les options « nosuid » et « noatime » pour tous les types de systèmes de fichiers, ajoute « sync » pour « vfat » et « ntfs » seulement, et enlève « noatime » pour « ext4 ».\n\nNote : quelques options, dont « nosuid », peuvent être ajoutées par le programme de montage même si vous ne les incluez pas. Les options dans le fichier « fstab » ont préséance. « pmount » ignore les options définies dans cette boîte de dialogue."
 
 #: ../src/settings.c:9262
 msgid "Default Mount Options"
@@ -4104,33 +3586,13 @@ msgstr "Monter ou remonter avec certaines options"
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
-msgstr ""
-"Le périphérique va être monté ou remonté avec les options ci-dessous.\n"
-"\n"
-"En plus des options de base, vous pouvez également spécifier l'ajout ou "
-"l'annulation d'options pour un type de système de fichiers en particulier en "
-"utilisant la syntaxe « OPTION+TYPEFS » ou « OPTION-TYPEFS ».\n"
-"\n"
-"Exemple : « nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4 »\n"
-"Cet exemple ajoute les options « nosuid » et « noatime » pour tous les types "
-"de systèmes de fichiers, ajoute « sync » pour « vfat » et « ntfs » "
-"seulement, et enlève « noatime » pour « ext4 ».\n"
-"\n"
-"Note : quelques options, dont « nosuid », peuvent être ajoutées par le "
-"programme de montage même si vous ne les incluez pas. Les options dans le "
-"fichier « fstab » ont préséance. « pmount » ignore les options définies dans "
-"cette boîte de dialogue."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
+msgstr "Le périphérique va être monté ou remonté avec les options ci-dessous.\n\nEn plus des options de base, vous pouvez également spécifier l'ajout ou l'annulation d'options pour un type de système de fichiers en particulier en utilisant la syntaxe « OPTION+TYPEFS » ou « OPTION-TYPEFS ».\n\nExemple : « nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4 »\nCet exemple ajoute les options « nosuid » et « noatime » pour tous les types de systèmes de fichiers, ajoute « sync » pour « vfat » et « ntfs » seulement, et enlève « noatime » pour « ext4 ».\n\nNote : quelques options, dont « nosuid », peuvent être ajoutées par le programme de montage même si vous ne les incluez pas. Les options dans le fichier « fstab » ont préséance. « pmount » ignore les options définies dans cette boîte de dialogue."
 
 #: ../src/settings.c:9275
 msgid "Mount _Command"
@@ -4151,19 +3613,7 @@ msgid ""
 "Udisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n"
 "\n"
 "Leave blank for auto-detection."
-msgstr ""
-"Entrer la commande pour monter un périphérique :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tfichier de périphérique (ex. : « /dev/sda5 »)\n"
-"\t%%o\toptions de montage spécifiques au volume\n"
-"\n"
-"udevil :\t/usr/bin/udevil mount -o %%o %%v\n"
-"pmount :\t/usr/bin/pmount %%v\n"
-"Udisks2 :\t/usr/bin/udisksctl mount -b %%v -o %%o\n"
-"Udisks1 :\t/usr/bin/udisks --mount %%v --mount-options %%o\n"
-"\n"
-"Laisser vide pour détection automatique."
+msgstr "Entrer la commande pour monter un périphérique :\n\nUsage :\n\t%%v\tfichier de périphérique (ex. : « /dev/sda5 »)\n\t%%o\toptions de montage spécifiques au volume\n\nudevil :\t/usr/bin/udevil mount -o %%o %%v\npmount :\t/usr/bin/pmount %%v\nUdisks2 :\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1 :\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLaisser vide pour détection automatique."
 
 #: ../src/settings.c:9278
 msgid "Mount Command"
@@ -4187,18 +3637,7 @@ msgid ""
 "Udisks2:\t/usr/bin/udisksctl unmount -b %%v\n"
 "\n"
 "Leave blank for auto-detection."
-msgstr ""
-"Entrer la commande pour démonter un périphérique :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tfichier de périphérique (ex. : « /dev/sda5 »)\n"
-"\n"
-"udevil :\t/usr/bin/udevil umount %%v\n"
-"pmount :\t/usr/bin/pumount %%v\n"
-"Udisks1 :\t/usr/bin/udisks --unmount %%v\n"
-"Udisks2 :\t/usr/bin/udisksctl unmount -b %%v\n"
-"\n"
-"Laisser vide pour détection automatique."
+msgstr "Entrer la commande pour démonter un périphérique :\n\nUsage :\n\t%%v\tfichier de périphérique (ex. : « /dev/sda5 »)\n\nudevil :\t/usr/bin/udevil umount %%v\npmount :\t/usr/bin/pumount %%v\nUdisks1 :\t/usr/bin/udisks --unmount %%v\nUdisks2 :\t/usr/bin/udisksctl unmount -b %%v\n\nLaisser vide pour détection automatique."
 
 #: ../src/settings.c:9285
 msgid "Unmount Command"
@@ -4268,10 +3707,9 @@ msgid "Re_move"
 msgstr "_Supprimer"
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:9393
 msgid "_Settings"
@@ -4463,77 +3901,55 @@ msgid "_Events"
 msgstr ""
 
 #: ../src/settings.c:9602
-#, fuzzy
 msgid "_Instance"
-msgstr "_Installer"
+msgstr ""
 
 #: ../src/settings.c:9607
-#, fuzzy
 msgid "_Startup"
-msgstr "É_tat"
+msgstr ""
 
 #: ../src/settings.c:9609
 msgid "Set Instance Startup Command"
 msgstr ""
 
 #: ../src/settings.c:9610
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance starts:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_start)\n"
 msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est inséré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9613
 msgid "_Exit"
 msgstr ""
 
 #: ../src/settings.c:9615
-#, fuzzy
 msgid "Set Instance Exit Command"
-msgstr "Nouvelle commande contextuelle"
+msgstr ""
 
 #: ../src/settings.c:9616
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance exits:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est inséré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "Nouvelle fe_nêtre"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "Définir l'icône de la fenêtre"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"SpaceFM window is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_new)\n"
@@ -4549,15 +3965,13 @@ msgid "_Focus"
 msgstr ""
 
 #: ../src/settings.c:9632
-#, fuzzy
 msgid "Set Window Focus Command"
-msgstr "Définir l'icône de la fenêtre"
+msgstr ""
 
 #: ../src/settings.c:9633
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_focus)\n"
@@ -4573,15 +3987,13 @@ msgid "_Move/Resize"
 msgstr ""
 
 #: ../src/settings.c:9638
-#, fuzzy
 msgid "Set Window Move/Resize Command"
-msgstr "Définir le format du titre de la fenêtre"
+msgstr ""
 
 #: ../src/settings.c:9639
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is moved or resized:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_move)\n"
@@ -4595,20 +4007,17 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9642
-#, fuzzy
 msgid "_Click"
-msgstr "Clic _milieu"
+msgstr ""
 
 #: ../src/settings.c:9644
-#, fuzzy
 msgid "Set Click Command"
-msgstr "Définir la ligne de commande"
+msgstr ""
 
 #: ../src/settings.c:9645
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the "
-"mouse is clicked:\n"
+"Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_click)\n"
@@ -4619,30 +4028,24 @@ msgid ""
 "\t%%m\tmodifier  (modifier keys)\n"
 "\t%%f\tfocus  (element which received the click)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle "
-"button was clicked in %%f\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9648
-#, fuzzy
 msgid "_Keypress"
-msgstr "C_lé"
+msgstr ""
 
 #: ../src/settings.c:9650
-#, fuzzy
 msgid "Set Window Keypress Command"
-msgstr "Définir le format du titre de la fenêtre"
+msgstr ""
 
 #: ../src/settings.c:9651
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a key is "
-"pressed:\n"
+"Enter program or bash command line to be run automatically whenever a key is pressed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_key)\n"
@@ -4652,13 +4055,10 @@ msgid ""
 "\t%%k\tkey code  (key pressed)\n"
 "\t%%m\tmodifier  (modifier keys)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey "
-"F8 was pressed.\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9654
@@ -4666,15 +4066,13 @@ msgid "Cl_ose"
 msgstr ""
 
 #: ../src/settings.c:9656
-#, fuzzy
 msgid "Set Window Close Command"
-msgstr "Définir le format du titre de la fenêtre"
+msgstr ""
 
 #: ../src/settings.c:9657
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is closed:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_close)\n"
@@ -4696,8 +4094,7 @@ msgstr ""
 #: ../src/settings.c:9668
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_focus)\n"
@@ -4709,9 +4106,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9671
-#, fuzzy
 msgid "_Show"
-msgstr "Afficher"
+msgstr ""
 
 #: ../src/settings.c:9673
 msgid "Set Panel Show Command"
@@ -4720,8 +4116,7 @@ msgstr ""
 #: ../src/settings.c:9674
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"or panel element is shown or hidden:\n"
+"Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_show)\n"
@@ -4735,20 +4130,17 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9677
-#, fuzzy
 msgid "S_elect"
-msgstr "Tout _sélectionner"
+msgstr ""
 
 #: ../src/settings.c:9679
-#, fuzzy
 msgid "Set Panel Select Command"
-msgstr "Nouvelle commande contextuelle"
+msgstr ""
 
 #: ../src/settings.c:9680
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the file "
-"selection changes:\n"
+"Enter program or bash command line to be run automatically whenever the file selection changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_sel)\n"
@@ -4758,26 +4150,22 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler."
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:9690
-#, fuzzy
 msgid "Set New Tab Command"
-msgstr "Nouvelle _commande"
+msgstr ""
 
 #: ../src/settings.c:9691
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"tab is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_new)\n"
@@ -4787,13 +4175,6 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un DVD vidéo est monté automatiquement :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9696
 msgid "Set Tab Focus Command"
@@ -4802,8 +4183,7 @@ msgstr ""
 #: ../src/settings.c:9697
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_focus)\n"
@@ -4819,15 +4199,13 @@ msgid "_Close"
 msgstr "_Fermer"
 
 #: ../src/settings.c:9702
-#, fuzzy
 msgid "Set Tab Close Command"
-msgstr "Nouvelle commande contextuelle"
+msgstr ""
 
 #: ../src/settings.c:9703
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab is "
-"closed:\n"
+"Enter program or bash command line to be run automatically whenever a tab is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_close)\n"
@@ -4835,42 +4213,25 @@ msgid ""
 "\t%%p\tpanel\n"
 "\t%%t\tclosed tab"
 msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est inséré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9706
-#, fuzzy
 msgid "_Device"
-msgstr "_Périphériques"
+msgstr ""
 
 #: ../src/settings.c:9708
-#, fuzzy
 msgid "Set Device Command"
-msgstr "Définir la ligne de commande"
+msgstr ""
 
 #: ../src/settings.c:9709
-#, fuzzy, c-format
+#, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a device "
-"state changes:\n"
+"Enter program or bash command line to be run automatically whenever a device state changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_device)\n"
 "\t%%f\tdevice file\n"
 "\t%%v\tchange  (added|removed|changed)\n"
 msgstr ""
-"Entrer le nom d'un programme ou une ligne de commande Bash à lancer "
-"automatiquement quand un périphérique est inséré :\n"
-"\n"
-"Usage :\n"
-"\t%%v\tpériphérique (ex. : « /dev/sda1 »)\n"
-"\t%%l\tétiquette du périphérique\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/disque »)"
 
 #: ../src/settings.c:9712
 msgid "Wi_ndow Title"
@@ -4893,17 +4254,7 @@ msgid ""
 "\t%%P\ttotal number of panels visible\n"
 "\t%%T\ttotal number of tabs in current panel\n"
 "\t*\tasterisk shown if tasks running in window"
-msgstr ""
-"Définir le format du titre de la fenêtre :\n"
-"\n"
-"Usage :\n"
-"\t%%n\tnom du dossier actuel (ex. : « bin »)\n"
-"\t%%d\tchemin du dossier actuel (ex. : « /usr/bin »)\n"
-"\t%%p\tnuméro du panneau actif (1-4)\n"
-"\t%%t\tnuméro de l'onglet actif\n"
-"\t%%P\tnombre total de panneaux visibles\n"
-"\t%%T\tnombre total d'onglets dans le panneau actif\n"
-"\t*\tastérisque visible si des tâches tournent dans la fenêtre"
+msgstr "Définir le format du titre de la fenêtre :\n\nUsage :\n\t%%n\tnom du dossier actuel (ex. : « bin »)\n\t%%d\tchemin du dossier actuel (ex. : « /usr/bin »)\n\t%%p\tnuméro du panneau actif (1-4)\n\t%%t\tnuméro de l'onglet actif\n\t%%P\tnombre total de panneaux visibles\n\t%%T\tnombre total d'onglets dans le panneau actif\n\t*\tastérisque visible si des tâches tournent dans la fenêtre"
 
 #: ../src/settings.c:9719
 msgid "_Window Icon"
@@ -4924,18 +4275,7 @@ msgid ""
 "\tspacefm-48-folder-[blue|red]\n"
 "\n"
 "For example: spacefm-48-pyramid-green"
-msgstr ""
-"Entrer le nom d'une icône, le chemin vers une icône ou le nom d'un élément "
-"prédéfini :\n"
-"\n"
-"Certaines icônes peuvent ne pas fonctionner à cause de restrictions "
-"diverses.\n"
-"\n"
-"Des icônes alternatives de SpaceFM sont fournies :\n"
-"\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n"
-"\tspacefm-48-folder-[blue|red]\n"
-"\n"
-"Exemple : « spacefm-48-pyramid-green »"
+msgstr "Entrer le nom d'une icône, le chemin vers une icône ou le nom d'un élément prédéfini :\n\nCertaines icônes peuvent ne pas fonctionner à cause de restrictions diverses.\n\nDes icônes alternatives de SpaceFM sont fournies :\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nExemple : « spacefm-48-pyramid-green »"
 
 #: ../src/settings.c:9724
 msgid "_Fullscreen"
@@ -5001,21 +4341,13 @@ msgstr "Choisir le navigateur HTML"
 #: ../src/settings.c:9812
 #, c-format
 msgid ""
-"Enter browser name or bash command line to be used to display HTML files and "
-"URLs:\n"
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
 "\n"
 "Use:\n"
 "\t%%u\turl\n"
 "\n"
 "(Leave blank for automatic browser detection)"
-msgstr ""
-"Entrer le nom du navigateur ou une ligne de commande Bash à utiliser pour "
-"afficher les fichiers HTML et les URL :\n"
-"\n"
-"Usage :\n"
-"\t%%u\tURL\n"
-"\n"
-"(laisser vide pour détection automatique du navigateur)"
+msgstr "Entrer le nom du navigateur ou une ligne de commande Bash à utiliser pour afficher les fichiers HTML et les URL :\n\nUsage :\n\t%%u\tURL\n\n(laisser vide pour détection automatique du navigateur)"
 
 #: ../src/settings.c:9815
 msgid "_Manual Location"
@@ -5030,11 +4362,7 @@ msgid ""
 "Enter local file path or remote URL for the SpaceFM User's Manual:\n"
 "\n"
 "(Leave blank for default)\n"
-msgstr ""
-"Entrer un chemin de fichier local ou une URL distante correspondant au "
-"manuel d'utilisation de SpaceFM :\n"
-"\n"
-"(laisser vide pour utiliser la valeur par défaut)\n"
+msgstr "Entrer un chemin de fichier local ou une URL distante correspondant au manuel d'utilisation de SpaceFM :\n\n(laisser vide pour utiliser la valeur par défaut)\n"
 
 #: ../src/settings.c:9821
 msgid "_About"
@@ -5104,9 +4432,8 @@ msgid "_Resume"
 msgstr "_Reprendre"
 
 #: ../src/settings.c:9942
-#, fuzzy
 msgid "Sho_w Output"
-msgstr "Notifier la s_ortie"
+msgstr ""
 
 #: ../src/settings.c:9945
 msgid "_All Tasks"
@@ -5316,7 +4643,6 @@ msgid "Fol_der"
 msgstr "_Dossier"
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "_Signet"
@@ -5326,10 +4652,9 @@ msgid "_Archive"
 msgstr "_Archive"
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
@@ -5380,28 +4705,25 @@ msgid "De_vices"
 msgstr "_Périphériques"
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
 msgstr "S_tyle"
 
 #: ../src/settings.c:10285
-#, fuzzy
 msgid "C_olumns"
-msgstr "Colo_nnes"
+msgstr ""
 
 #: ../src/settings.c:10288
 msgid "_Reorder"
 msgstr "_Réorganiser"
 
 #: ../src/settings.c:10290
-#, fuzzy
 msgid "_Rubberband Select"
-msgstr "Sélection élastique"
+msgstr ""
 
 #: ../src/settings.c:10303
 msgid "_Sort"
@@ -5470,9 +4792,8 @@ msgid "Re_fresh"
 msgstr "_Actualiser"
 
 #: ../src/settings.c:10342
-#, fuzzy
 msgid "Auto See_k"
-msgstr "Renommer automatiquement"
+msgstr ""
 
 #: ../src/settings.c:10347
 msgid "P_rotocol Handler..."
@@ -5484,22 +4805,12 @@ msgstr "Définir le gestionnaire de protocole"
 
 #: ../src/settings.c:10350
 msgid ""
-"Enter command to be used to mount or open protocols (such as nfs://, smb://, "
-"etc):\n"
+"Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
 "If this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n"
 "\n"
-"TIP:  To unmount networks, install udevil or set Unmount Command to a "
-"command which handles network protocols.\n"
-msgstr ""
-"Entrer la commande pour monter ou ouvrir les protocoles (« nfs:// », "
-"« smb:// », etc.) :\n"
-"\n"
-"Si ce paramètre n'est pas renseigné, SpaceFM utilisera la commande « udevil "
-"mount ».\n"
-"\n"
-"ASTUCE : pour démonter des réseaux, vous pouvez installer « udevil » ou "
-"définir une commande de démontage capable de gérer les protocoles réseau.\n"
+"TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
+msgstr "Entrer la commande pour monter ou ouvrir les protocoles (« nfs:// », « smb:// », etc.) :\n\nSi ce paramètre n'est pas renseigné, SpaceFM utilisera la commande « udevil mount ».\n\nASTUCE : pour démonter des réseaux, vous pouvez installer « udevil » ou définir une commande de démontage capable de gérer les protocoles réseau.\n"
 
 #: ../src/settings.c:10354
 msgid "Path Bar _Help"
@@ -5538,13 +4849,11 @@ msgid "L_ast Location"
 msgstr "_Dernier emplacement"
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:10433
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
 msgstr "_Panneau"
@@ -5558,13 +4867,11 @@ msgid "_Location"
 msgstr "_Emplacement"
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "_Onglet"
+msgstr ""
 
 #: ../src/settings.c:10471
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
 msgstr "_Panneau"
@@ -5663,8 +4970,7 @@ msgstr "Police de la liste de fichiers (panneau 1)"
 
 #: ../src/settings.c:10646
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
-msgstr ""
-"Exemple  1,1 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-01-01 01:11"
+msgstr "Exemple  1,1 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-01-01 01:11"
 
 #: ../src/settings.c:10651
 msgid "Devices Font (Panel 1)"
@@ -5712,8 +5018,7 @@ msgstr "Police de la liste de fichiers (panneau 2)"
 
 #: ../src/settings.c:10767
 msgid "Example  2.2 M  file  -rwxr--r--  user:group  2011-02-02 02:22"
-msgstr ""
-"Exemple  2,2 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-02-02 02:22"
+msgstr "Exemple  2,2 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-02-02 02:22"
 
 #: ../src/settings.c:10772
 msgid "Devices Font (Panel 2)"
@@ -5741,8 +5046,7 @@ msgstr "Police de la liste de fichiers (panneau 3)"
 
 #: ../src/settings.c:10895
 msgid "Example  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33"
-msgstr ""
-"Exemple  3,3 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-03-03 03:33"
+msgstr "Exemple  3,3 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-03-03 03:33"
 
 #: ../src/settings.c:10900
 msgid "Devices Font (Panel 3)"
@@ -5770,8 +5074,7 @@ msgstr "Police de la liste de fichiers (panneau 4)"
 
 #: ../src/settings.c:11023
 msgid "Example  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44"
-msgstr ""
-"Exemple  4,4 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-04-04 04:44"
+msgstr "Exemple  4,4 Mo  fichier  -rwxr--r--  utilisateur:groupe  2011-04-04 04:44"
 
 #: ../src/settings.c:11028
 msgid "Devices Font (Panel 4)"
@@ -5814,20 +5117,10 @@ msgstr "Aide des menus de configuration des barres d'outils"
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
-"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-"
-"click on an item to show or hide it, change the icon, or add a custom tool "
-"item.\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
 "\n"
 "For more information, click the Help button below."
-msgstr ""
-"Ces menus de configuration permettent de personnaliser les barres d'outils.\n"
-"\n"
-"Ouvrir le sous-menu de la barre d'outils gauche, de la barre d'outils droite "
-"ou de la barre d'outils latérale et cliquer droit sur un élément pour "
-"l'afficher, le cacher, modifier son icône ou ajouter un élément d'outil "
-"personnalisé.\n"
-"\n"
-"Pour plus de détails, cliquer sur le bouton « Aide » ci-dessous."
+msgstr "Ces menus de configuration permettent de personnaliser les barres d'outils.\n\nOuvrir le sous-menu de la barre d'outils gauche, de la barre d'outils droite ou de la barre d'outils latérale et cliquer droit sur un élément pour l'afficher, le cacher, modifier son icône ou ajouter un élément d'outil personnalisé.\n\nPour plus de détails, cliquer sur le bouton « Aide » ci-dessous."
 
 #: ../src/ptk/ptk-file-browser.c:2227
 #, c-format
@@ -5835,10 +5128,7 @@ msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr ""
-"Le dossier n'existe pas\n"
-"\n"
-"%s"
+msgstr "Le dossier n'existe pas\n\n%s"
 
 #: ../src/ptk/ptk-file-browser.c:2252
 #, c-format
@@ -5846,10 +5136,7 @@ msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
-msgstr ""
-"Impossible d'accéder à « %s »\n"
-"\n"
-"%s"
+msgstr "Impossible d'accéder à « %s »\n\n%s"
 
 #: ../src/ptk/ptk-file-browser.c:2897
 msgid "Select By Pattern"
@@ -5860,21 +5147,12 @@ msgstr "Sélectionner en utilisant un motif"
 msgid ""
 "Enter pattern to select files and folders:\n"
 "\n"
-"If your pattern contains any uppercase characters, the matching will be case "
-"sensitive.\n"
+"If your pattern contains any uppercase characters, the matching will be case sensitive.\n"
 "\n"
 "Example:  *sp*e?m*\n"
 "\n"
 "TIP: You can also enter '%% PATTERN' in the path bar."
-msgstr ""
-"Entrer un motif pour sélectionner des fichiers et des dossiers :\n"
-"\n"
-"Si le motif contient au moins une lettre majuscule, la correspondance sera "
-"sensible à la casse.\n"
-"\n"
-"Exemple : « *sp*e?m* »\n"
-"\n"
-"ASTUCE : il est possible de saisir « %% MOTIF » dans la barre de chemin."
+msgstr "Entrer un motif pour sélectionner des fichiers et des dossiers :\n\nSi le motif contient au moins une lettre majuscule, la correspondance sera sensible à la casse.\n\nExemple : « *sp*e?m* »\n\nASTUCE : il est possible de saisir « %% MOTIF » dans la barre de chemin."
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
 msgid "Choose Location"
@@ -5925,21 +5203,10 @@ msgstr "Cacher le fichier"
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
-"The names of the selected files will be added to the '.hidden' file located "
-"in this folder, which will hide them from view in SpaceFM.  You may need to "
-"refresh the view or restart SpaceFM for the files to disappear.\n"
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
-"To unhide a file, open the .hidden file in your text editor, remove the name "
-"of the file, and refresh."
-msgstr ""
-"Le nom des fichiers sélectionnés sera ajouté au fichier « .hidden » situé "
-"dans le dossier actuel. Ainsi, SpaceFM ne les affichera plus. Il sera peut-"
-"être nécessaire d'actualiser l'affichage ou de redémarrer SpaceFM pour que "
-"cette configuration soit prise en compte.\n"
-"\n"
-"Pour afficher de nouveau un fichier, ouvrir le fichier « .hidden » dans un "
-"éditeur de texte, supprimer le nom du fichier concerné et actualiser "
-"l'affichage de SapceFM."
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
+msgstr "Le nom des fichiers sélectionnés sera ajouté au fichier « .hidden » situé dans le dossier actuel. Ainsi, SpaceFM ne les affichera plus. Il sera peut-être nécessaire d'actualiser l'affichage ou de redémarrer SpaceFM pour que cette configuration soit prise en compte.\n\nPour afficher de nouveau un fichier, ouvrir le fichier « .hidden » dans un éditeur de texte, supprimer le nom du fichier concerné et actualiser l'affichage de SapceFM."
 
 #: ../src/ptk/ptk-file-browser.c:5947
 msgid "Error hiding files"
@@ -5951,9 +5218,8 @@ msgstr "Aucun fichier sélectionné"
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "Signets"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
@@ -5966,9 +5232,7 @@ msgstr "AVERTISSEMENT DE PERTE DE DONNÉES - écrasement"
 
 #: ../src/ptk/ptk-location-view.c:104
 msgid "Type yes and press Enter to proceed, or no to cancel"
-msgstr ""
-"Saisir « yes » et appuyer sur « Entrée » pour continuer, ou « no » pour "
-"annuler"
+msgstr "Saisir « yes » et appuyer sur « Entrée » pour continuer, ou « no » pour annuler"
 
 #: ../src/ptk/ptk-location-view.c:105 ../src/vfs/vfs-file-task.c:1629
 msgid "[ Finished ]  Press Enter to close"
@@ -5993,9 +5257,7 @@ msgstr "« udev » n'est pas configuré"
 #: ../src/ptk/ptk-location-view.c:713
 msgid ""
 "Mounting a network share requires a udev (--disable-hal) build of SpaceFM."
-msgstr ""
-"Le montage d'un réseau partagé requiert une compilation de SpaceFM avec "
-"« udev » (« --disable-hal »)."
+msgstr "Le montage d'un réseau partagé requiert une compilation de SpaceFM avec « udev » (« --disable-hal »)."
 
 #: ../src/ptk/ptk-location-view.c:773 ../src/ptk/ptk-location-view.c:2584
 msgid "udevil Not Installed"
@@ -6005,10 +5267,7 @@ msgstr "« udevil » n'est pas installé"
 msgid ""
 "Mounting a network share requires udevil to be installed, or you can set a "
 "custom protocol handler by right-clicking on the Path Bar."
-msgstr ""
-"Le montage d'un réseau partagé requiert l'installation de « udevil » ou la "
-"définition d'un gestionnaire de protocole personnalisé par un clic droit sur "
-"la barre de chemin."
+msgstr "Le montage d'un réseau partagé requiert l'installation de « udevil » ou la définition d'un gestionnaire de protocole personnalisé par un clic droit sur la barre de chemin."
 
 #: ../src/ptk/ptk-location-view.c:884
 #, c-format
@@ -6024,9 +5283,7 @@ msgstr "Monter « %s »"
 #: ../src/ptk/ptk-location-view.c:973
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can check it."
-msgstr ""
-"« %s » est actuellement monté. Vous devez le démonter avant de pouvoir "
-"effectuer une vérification."
+msgstr "« %s » est actuellement monté. Vous devez le démonter avant de pouvoir effectuer une vérification."
 
 #: ../src/ptk/ptk-location-view.c:974 ../src/ptk/ptk-location-view.c:1743
 #: ../src/ptk/ptk-location-view.c:1822 ../src/ptk/ptk-location-view.c:2164
@@ -6042,13 +5299,7 @@ msgid ""
 "\t%%%%v\tdevice file ( %s )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Entrer la commande de vérification du système de fichiers :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Entrer la commande de vérification du système de fichiers :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:986
 msgid "Check As Root"
@@ -6076,17 +5327,7 @@ msgid ""
 "Note: fstab overrides some options\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Entrer la commande de montage :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\t%%%%o\toptions de montage spécifiques au volume\n"
-"\t\t(« %s »)\n"
-"\n"
-"Note : « fstab » écrase certaines options.\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Entrer la commande de montage :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\t%%%%o\toptions de montage spécifiques au volume\n\t\t(« %s »)\n\nNote : « fstab » écrase certaines options.\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:1037
 msgid "Mount As Root"
@@ -6110,13 +5351,7 @@ msgid ""
 "\t%%%%v\tdevice file ( %s )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Entrer la commande de démontage :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Entrer la commande de démontage :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:1091
 msgid "Unmount As Root"
@@ -6136,13 +5371,8 @@ msgstr "Démonter « %s » en tant que root"
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  You may want or need to unmount it before changing "
-"the label."
-msgstr ""
-"\n"
-"\n"
-"AVERTISSEMENT : « %s » est monté. Vous voulez ou devez peut-être le démonter "
-"avant de modifier l'étiquette."
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
+msgstr "\n\nAVERTISSEMENT : « %s » est monté. Vous voulez ou devez peut-être le démonter avant de modifier l'étiquette."
 
 #: ../src/ptk/ptk-location-view.c:1166
 #, c-format
@@ -6163,15 +5393,7 @@ msgid ""
 "\t%%%%l\tnew label ( \"%s\" )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root%s"
-msgstr ""
-"Entrer la commande de suppression de l'étiquette pour le type de système de "
-"fichiers « %s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\t%%%%l\tnouvelle étiquette (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root.%s"
+msgstr "Entrer la commande de suppression de l'étiquette pour le type de système de fichiers « %s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\t%%%%l\tnouvelle étiquette (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root.%s"
 
 #: ../src/ptk/ptk-location-view.c:1199
 #, c-format
@@ -6183,15 +5405,7 @@ msgid ""
 "\t%%%%l\tnew label ( \"%s\" )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root%s"
-msgstr ""
-"Entrer la commande de modification de l'étiquette pour le type de système de "
-"fichiers « %s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\t%%%%l\tnouvelle étiquette (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root.%s"
+msgstr "Entrer la commande de modification de l'étiquette pour le type de système de fichiers « %s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\t%%%%l\tnouvelle étiquette (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root.%s"
 
 #: ../src/ptk/ptk-location-view.c:1202
 msgid "Change Label As Root"
@@ -6233,10 +5447,9 @@ msgstr "Synchroniser"
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
-msgid "%s is currently mounted.  You must unmount it before you can format it."
-msgstr ""
-"« %s » est actuellement monté. Vous devez le démonter avant de pouvoir le "
-"formater."
+msgid ""
+"%s is currently mounted.  You must unmount it before you can format it."
+msgstr "« %s » est actuellement monté. Vous devez le démonter avant de pouvoir le formater."
 
 #: ../src/ptk/ptk-location-view.c:1754 ../src/ptk/ptk-location-view.c:1914
 #, c-format
@@ -6246,8 +5459,7 @@ msgstr " (UN PÉRIPHÉRIQUE ENTIER) "
 #: ../src/ptk/ptk-location-view.c:1760
 #, c-format
 msgid ""
-"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
-"take awhile and dd gives no feedback.\n"
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
 "\n"
 "Enter command to overwrite entire volume with /dev/%s:\n"
 "\n"
@@ -6255,17 +5467,7 @@ msgid ""
 "\t%%%%v\tdevice file ( %s )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Vous vous apprêtez à effacer « %s » %s- TOUTES LES DONNÉES SERONT PERDUES. "
-"Soyez patient ; cela peut prendre un certain temps, et « dd » ne donne pas "
-"d'information sur l'avancement.\n"
-"\n"
-"Entrer la commande pour écraser le volume entier avec « /dev/%s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Vous vous apprêtez à effacer « %s » %s- TOUTES LES DONNÉES SERONT PERDUES. Soyez patient ; cela peut prendre un certain temps, et « dd » ne donne pas d'information sur l'avancement.\n\nEntrer la commande pour écraser le volume entier avec « /dev/%s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:1763
 #, c-format
@@ -6278,15 +5480,7 @@ msgid ""
 "\t%%%%v\tdevice file ( %s )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Vous vous apprêtez à formater « %s » %s- TOUTES LES DONNÉES SERONT PERDUES.\n"
-"\n"
-"Entrer la commande de formatage « %s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Vous vous apprêtez à formater « %s » %s- TOUTES LES DONNÉES SERONT PERDUES.\n\nEntrer la commande de formatage « %s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:1764
 msgid "Format"
@@ -6306,9 +5500,7 @@ msgstr "Formater « %s »"
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can restore it."
-msgstr ""
-"« %s » est actuellement monté. Vous devez le démonter avant de pouvoir le "
-"restaurer."
+msgstr "« %s » est actuellement monté. Vous devez le démonter avant de pouvoir le restaurer."
 
 #: ../src/ptk/ptk-location-view.c:1829
 msgid "Choose Backup For Restore"
@@ -6319,21 +5511,10 @@ msgstr "Choisir la sauvegarde pour la restauration"
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
 "\n"
-"This change may prevent your computer from booting properly.  All important "
-"data on the entire device should be backed up first.\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
 "\n"
-"Proceed?  (If you press Yes, you still have one more opportunity to abort "
-"before the disk is modified.)"
-msgstr ""
-"Vous vous apprêtez à écraser le code de démarrage MBR de « %s » à partir de "
-"« %s ».\n"
-"\n"
-"Cette modification peut empêcher votre ordinateur de démarrer correctement. "
-"Toutes les données importantes se trouvant sur le périphérique devraient "
-"être sauvegardées au préalable.\n"
-"\n"
-"Continuer ? (Si vous choisissez de continuer, vous aurez quand même la "
-"possibilité d'annuler l'action avant que le disque soit modifié.)"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
+msgstr "Vous vous apprêtez à écraser le code de démarrage MBR de « %s » à partir de « %s ».\n\nCette modification peut empêcher votre ordinateur de démarrer correctement. Toutes les données importantes se trouvant sur le périphérique devraient être sauvegardées au préalable.\n\nContinuer ? (Si vous choisissez de continuer, vous aurez quand même la possibilité d'annuler l'action avant que le disque soit modifié.)"
 
 #: ../src/ptk/ptk-location-view.c:1864
 msgid "Restore MBR"
@@ -6347,19 +5528,8 @@ msgstr "Type inconnu"
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
-"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage "
-"filenames contain 'partimage' or end in '.000'.  MBR filenames end in '."
-"mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE "
-"this file is a valid backup, you can rename it to avoid this error."
-msgstr ""
-"Le fichier sélectionné n'est pas reconnu comme un fichier de sauvegarde.\n"
-"\n"
-"Un nom de fichier de FSArchiver contient « fsarchiver » ou se termine par « ."
-"fsa ». Un nom de fichier de Partimage contient « partimage » ou se termine "
-"par « .000 ». Un nom de fichier du MBR se termine par « .mbr », « .mbr.bin » "
-"ou « -MBR-back » et a une taille de 512 octets. Si vous êtes CERTAIN que ce "
-"fichier est un fichier de sauvegarde valide, vous pouvez le renommer pour "
-"éviter cette erreur."
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
+msgstr "Le fichier sélectionné n'est pas reconnu comme un fichier de sauvegarde.\n\nUn nom de fichier de FSArchiver contient « fsarchiver » ou se termine par « .fsa ». Un nom de fichier de Partimage contient « partimage » ou se termine par « .000 ». Un nom de fichier du MBR se termine par « .mbr », « .mbr.bin » ou « -MBR-back » et a une taille de 512 octets. Si vous êtes CERTAIN que ce fichier est un fichier de sauvegarde valide, vous pouvez le renommer pour éviter cette erreur."
 
 #: ../src/ptk/ptk-location-view.c:1917
 #, c-format
@@ -6373,17 +5543,7 @@ msgid ""
 "\t%%%%s\tbackup file ( %s )\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Vous vous apprêtez à restaurer « %s » %sà partir de « %s » - TOUTES LES "
-"DONNÉES SERONT PERDUES.\n"
-"\n"
-"Entrer la commande de restauration « %s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\t%%%%s\tfichier de sauvegarde (« %s »)\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Vous vous apprêtez à restaurer « %s » %sà partir de « %s » - TOUTES LES DONNÉES SERONT PERDUES.\n\nEntrer la commande de restauration « %s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\t%%%%s\tfichier de sauvegarde (« %s »)\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:1918
 msgid "Restore"
@@ -6396,8 +5556,7 @@ msgstr "Restauration « %s » de « %s »"
 
 #: ../src/ptk/ptk-location-view.c:1965
 msgid "DATA LOSS WARNING - overwriting MBR boot code of"
-msgstr ""
-"AVERTISSEMENT DE PERTE DE DONNÉES - écrasement du code de démarrage MBR de"
+msgstr "AVERTISSEMENT DE PERTE DE DONNÉES - écrasement du code de démarrage MBR de"
 
 #: ../src/ptk/ptk-location-view.c:2013
 msgid "Directory Missing"
@@ -6405,8 +5564,7 @@ msgstr "Dossier inexistant"
 
 #: ../src/ptk/ptk-location-view.c:2014
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
-msgstr ""
-"Le dossier « /etc/udevil » n'a pas été trouvé. « udevil » est-il installé ?"
+msgstr "Le dossier « /etc/udevil » n'a pas été trouvé. « udevil » est-il installé ?"
 
 #: ../src/ptk/ptk-location-view.c:2027
 msgid "Choose Backup For Info"
@@ -6420,9 +5578,7 @@ msgstr "Fichier MBR"
 msgid ""
 "Based on its name, the selected file appears to be an MBR backup file.  No "
 "other information is available for this type of backup."
-msgstr ""
-"Selon son nom, le fichier sélectionné semble être un fichier de sauvegarde "
-"du MBR. Aucune autre information n'est disponible pour ce type de sauvegarde."
+msgstr "Selon son nom, le fichier sélectionné semble être un fichier de sauvegarde du MBR. Aucune autre information n'est disponible pour ce type de sauvegarde."
 
 #: ../src/ptk/ptk-location-view.c:2096
 msgid "Restore Info"
@@ -6433,25 +5589,15 @@ msgstr "Information sur la restauration"
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes "
-"mounted read-only.  To backup a read-write volume, you need to add --allow-"
-"rw-mounted to the command.  See 'man fsarchiver' for details."
-msgstr ""
-"\n"
-"\n"
-"AVERTISSEMENT: « %s » est monté. Par défaut, FSArchiver sauvegarde seulement "
-"les volumes montés en lecture seulement. Pour sauvegarder un volume en "
-"lecture/écriture, vous devez ajouter « --allow-rw-mounted » à la commande. "
-"Voir « man fsarchiver » pour plus de détails."
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
+msgstr "\n\nAVERTISSEMENT: « %s » est monté. Par défaut, FSArchiver sauvegarde seulement les volumes montés en lecture seulement. Pour sauvegarder un volume en lecture/écriture, vous devez ajouter « --allow-rw-mounted » à la commande. Voir « man fsarchiver » pour plus de détails."
 
 #: ../src/ptk/ptk-location-view.c:2163
 #, c-format
 msgid ""
-"%s is currently mounted.  You must unmount it before you can create a backup "
-"using Partimage."
-msgstr ""
-"« %s » est actuellement monté. Vous devez le démonter avant de pouvoir créer "
-"une sauvegarde avec Partimage."
+"%s is currently mounted.  You must unmount it before you can create a backup"
+" using Partimage."
+msgstr "« %s » est actuellement monté. Vous devez le démonter avant de pouvoir créer une sauvegarde avec Partimage."
 
 #: ../src/ptk/ptk-location-view.c:2180
 #, c-format
@@ -6476,14 +5622,7 @@ msgid ""
 "\t%%%%s\tbackup file ( %s )%s\n"
 "\n"
 "EDIT WITH CARE   This command is run as root"
-msgstr ""
-"Entrer la commande de sauvegarde « %s » :\n"
-"\n"
-"Usage :\n"
-"\t%%%%v\tfichier de périphérique (« %s »)\n"
-"\t%%%%s\tfichier de sauvegarde (« %s »)%s\n"
-"\n"
-"MODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
+msgstr "Entrer la commande de sauvegarde « %s » :\n\nUsage :\n\t%%%%v\tfichier de périphérique (« %s »)\n\t%%%%s\tfichier de sauvegarde (« %s »)%s\n\nMODIFIER AVEC PRÉCAUTION. Cette commande est lancée en tant que root."
 
 #: ../src/ptk/ptk-location-view.c:2229
 msgid "Backup"
@@ -6505,10 +5644,7 @@ msgid ""
 "%sCurrently Selected Device: %s\n"
 "Volume Label: %s\n"
 "Device ID: %s"
-msgstr ""
-"%sPériphérique actuellement sélectionné : « %s »\n"
-"Étiquette du volume : « %s »\n"
-"ID du périphérique : « %s »"
+msgstr "%sPériphérique actuellement sélectionné : « %s »\nÉtiquette du volume : « %s »\nID du périphérique : « %s »"
 
 #: ../src/ptk/ptk-location-view.c:2585
 msgid "Mounting a disc image file requires udevil to be installed."
@@ -6693,9 +5829,7 @@ msgstr "%s  (%s)  %s restant"
 
 #: ../src/ptk/ptk-file-task.c:1354
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
-msgstr ""
-"[TRONCATION - les erreurs supplémentaires ci-dessus ont été enlevées de ce "
-"journal]\n"
+msgstr "[TRONCATION - les erreurs supplémentaires ci-dessus ont été enlevées de ce journal]\n"
 
 #: ../src/ptk/ptk-file-task.c:1384
 #, c-format
@@ -6792,9 +5926,7 @@ msgstr "Dossier existant"
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
-msgstr ""
-"<b>Le dossier existe déjà.</b> Veuillez le renommer une sélectionner une "
-"action."
+msgstr "<b>Le dossier existe déjà.</b> Veuillez le renommer une sélectionner une action."
 
 #: ../src/ptk/ptk-file-task.c:2058 ../src/ptk/ptk-file-task.c:2062
 msgid "\t<b>( link )</b>"
@@ -6839,9 +5971,7 @@ msgstr "Le fichier existe"
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
-msgstr ""
-"<b>Le nom de fichier existe déjà.</b> Veuillez le renommer ou sélectionner "
-"une action."
+msgstr "<b>Le nom de fichier existe déjà.</b> Veuillez le renommer ou sélectionner une action."
 
 #: ../src/ptk/ptk-file-task.c:2131
 msgid "Rename Required"
@@ -6941,9 +6071,7 @@ msgstr "Extraire « %s »"
 msgid ""
 "\n"
 "Complete!"
-msgstr ""
-"\n"
-"Terminé !"
+msgstr "\nTerminé !"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
@@ -6963,24 +6091,15 @@ msgstr "Supprimer une association pour le type texte"
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid ""
-"NOTE:  When compiling the list of applications to appear in the Open submenu "
-"for a text file, SpaceFM will include applications associated with the MIME "
-"type (eg text/html) AND applications associated with text/plain.  If you "
+"NOTE:  When compiling the list of applications to appear in the Open submenu"
+" for a text file, SpaceFM will include applications associated with the MIME"
+" type (eg text/html) AND applications associated with text/plain.  If you "
 "select Remove on an application, it will be removed as an associated "
 "application for the MIME type (eg text/html), but will NOT be removed as an "
-"associated application for text/plain (unless the MIME type is text/plain).  "
-"Thus using Remove may not remove the application from the Open submenu for "
-"this type, unless you also remove it from text/plain."
-msgstr ""
-"NOTE : lorsqu'il génère la liste des applications devant apparaître dans le "
-"sous-menu « Ouvrir » pour un fichier texte, SpaceFM inclut les applications "
-"associées au type MIME (par exemple « text/html ») ET celles associées à "
-"« text/plain ». Si vous supprimez une application de ce menu, cette dernière "
-"sera enlevée de la liste des applications associées au type MIME (par "
-"exemple « text/html »), mais NE SERA PAS enlevée de la liste de « text/"
-"plain » (sauf si le type MIME est « text/plain »). Ainsi, l'option "
-"« Supprimer » peut ne pas supprimer l'application du sous-menu « Ouvrir » "
-"pour ce type MIME, sauf si vous la supprimer de « text/plain »."
+"associated application for text/plain (unless the MIME type is text/plain)."
+"  Thus using Remove may not remove the application from the Open submenu for"
+" this type, unless you also remove it from text/plain."
+msgstr "NOTE : lorsqu'il génère la liste des applications devant apparaître dans le sous-menu « Ouvrir » pour un fichier texte, SpaceFM inclut les applications associées au type MIME (par exemple « text/html ») ET celles associées à « text/plain ». Si vous supprimez une application de ce menu, cette dernière sera enlevée de la liste des applications associées au type MIME (par exemple « text/html »), mais NE SERA PAS enlevée de la liste de « text/plain » (sauf si le type MIME est « text/plain »). Ainsi, l'option « Supprimer » peut ne pas supprimer l'application du sous-menu « Ouvrir » pour ce type MIME, sauf si vous la supprimer de « text/plain »."
 
 #. Set Default
 #: ../src/ptk/ptk-file-menu.c:1869
@@ -7125,50 +6244,33 @@ msgstr "Astuces pour Renommer/Déplacer"
 
 #: ../src/ptk/ptk-file-misc.c:983
 msgid ""
-"* To select all the text in an entry, click the entry's label (eg "
-"'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
 "\n"
-"* To quickly copy an entry's text to the clipboard, double- or middle-click "
-"on the entry's label (eg 'Filename:').\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
 "\n"
-"* Multiple files can be selected in the file browser to rename a batch of "
-"files."
-msgstr ""
-"* Pour sélectionner tout le texte d'un champ, cliquer sur son titre (ex. : "
-"« Nom de fichier : »), appuyer sur la touche de raccourci « Alt » ou "
-"utiliser la touche de tabulation.\n"
-"\n"
-"* Pour copier rapidement le texte d'un champ dans le presse-papiers, "
-"effectuer un double clic ou un clic millieu sur son titre (ex. : « Nom de "
-"fichier : »).\n"
-"\n"
-"* Plusieurs fichiers peuvent être sélectionnés dans le gestionnaire de "
-"fichiers dans le but de procéder à un renommage en masse."
+"* Multiple files can be selected in the file browser to rename a batch of files."
+msgstr "* Pour sélectionner tout le texte d'un champ, cliquer sur son titre (ex. : « Nom de fichier : »), appuyer sur la touche de raccourci « Alt » ou utiliser la touche de tabulation.\n\n* Pour copier rapidement le texte d'un champ dans le presse-papiers, effectuer un double clic ou un clic millieu sur son titre (ex. : « Nom de fichier : »).\n\n* Plusieurs fichiers peuvent être sélectionnés dans le gestionnaire de fichiers dans le but de procéder à un renommage en masse."
 
 #: ../src/ptk/ptk-file-misc.c:1042
 msgid "C_reate"
 msgstr "Cré_er"
 
 #: ../src/ptk/ptk-file-misc.c:1043
-#, fuzzy
 msgctxt "Title|"
 msgid "Create New"
-msgstr "Créer un nouveau"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
 msgstr "Fichier"
 
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
 msgstr "Dossier"
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
 msgstr "Lien"
@@ -7275,19 +6377,16 @@ msgid "A_s Root"
 msgstr "En tant que roo_t"
 
 #: ../src/ptk/ptk-file-misc.c:2308
-#, fuzzy
 msgctxt "New|Radio"
 msgid "Fil_e"
-msgstr "Fi_chier"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2310
-#, fuzzy
 msgctxt "New|Radio"
 msgid "Fol_der"
 msgstr "_Dossier"
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
 msgstr "_Lien"
@@ -7314,10 +6413,7 @@ msgid ""
 "Error creating parent folder\n"
 "\n"
 "%s"
-msgstr ""
-"Erreur durant la création du dossier parent\n"
-"\n"
-"%s"
+msgstr "Erreur durant la création du dossier parent\n\n%s"
 
 #: ../src/ptk/ptk-file-misc.c:2617
 msgid "Mkdir Error"
@@ -7390,10 +6486,7 @@ msgid ""
 "Error renaming file\n"
 "\n"
 "%s"
-msgstr ""
-"Erreur lors du renommage du fichier\n"
-"\n"
-"%s"
+msgstr "Erreur lors du renommage du fichier\n\n%s"
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
 msgid "Rename Error"
@@ -7420,10 +6513,7 @@ msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
-msgstr ""
-"Le nom existe déjà.\n"
-"\n"
-"Veuillez en saisir un nouveau :"
+msgstr "Le nom existe déjà.\n\nVeuillez en saisir un nouveau :"
 
 #: ../src/ptk/ptk-file-misc.c:3196
 msgid "The new file cannot be created"
@@ -7432,17 +6522,11 @@ msgstr "Le nouveau fichier ne peut pas être créé"
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
 msgid ""
-"This symlink's target is missing or you do not have permission to access "
-"it:\n"
+"This symlink's target is missing or you do not have permission to access it:\n"
 "%s\n"
 "\n"
 "Target: %s"
-msgstr ""
-"La cible de ce lien symbolique n'existe pas ou ses npermissions ne vous "
-"permettent pas d'y accéder :\n"
-"%s\n"
-"\n"
-"Cible : « %s »"
+msgstr "La cible de ce lien symbolique n'existe pas ou ses npermissions ne vous permettent pas d'y accéder :\n%s\n\nCible : « %s »"
 
 #: ../src/ptk/ptk-file-misc.c:3409
 msgid "Broken Link"
@@ -7468,11 +6552,11 @@ msgstr[0] "%d fichier, %s"
 msgstr[1] "%d fichiers, %s"
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "%d fichiers"
-msgstr[1] "%d fichiers"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
 msgid "( multiple files )"
@@ -7512,8 +6596,7 @@ msgstr "Groupe invalide"
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
 msgid ""
-"In addition to a folder or file path, commands can be entered in the Path "
-"Bar.  Prefixes:\n"
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
 "\t$\trun as task\n"
 "\t&\trun and forget\n"
 "\t+\trun in terminal\n"
@@ -7531,28 +6614,7 @@ msgid ""
 "\n"
 "Example:  $ echo \"Current Directory: %%d\"\n"
 "Example:  +! umount %%v"
-msgstr ""
-"En plus du chemin d'un dossier ou d'un fichier, il est possible de saisir "
-"des commandes dans la barre de chemin.  Préfixes :\n"
-"\t$\tlancer en tant que tâche\n"
-"\t&\tlancer et oublier\n"
-"\t+\tlancer dans un terminal\n"
-"\t!\tlancer en tant que root\n"
-"Usage :\n"
-"\t%%F\tfichiers sélectionnés, ou %%f premier fichier sélectionné\n"
-"\t%%N\tnom des fichiers sélectionnés, ou %%n nom du premier fichier "
-"sélectionné\n"
-"\t%%d\tdossier actuel\n"
-"\t%%v\tpériphérique sélectionné (ex. : « /dev/sda1 »)\n"
-"\t%%m\tpoint de montage du périphérique (ex. : « /media/dvd »);  %%l "
-"étiquette du périphérique\n"
-"\t%%b\tsignet sélectionné\n"
-"\t%%t\tdossier de la tâche sélectionnée; %%p pid de la tâche\n"
-"\t%%a\tvaleur de l'élément du menu\n"
-"\t$fm_panel, $fm_tab, $fm_command, etc.\n"
-"\n"
-"Exemple : « $ echo \"Dossier actuel : %%d\" »\n"
-"Exemple : « +! umount %%v »"
+msgstr "En plus du chemin d'un dossier ou d'un fichier, il est possible de saisir des commandes dans la barre de chemin.  Préfixes :\n\t$\tlancer en tant que tâche\n\t&\tlancer et oublier\n\t+\tlancer dans un terminal\n\t!\tlancer en tant que root\nUsage :\n\t%%F\tfichiers sélectionnés, ou %%f premier fichier sélectionné\n\t%%N\tnom des fichiers sélectionnés, ou %%n nom du premier fichier sélectionné\n\t%%d\tdossier actuel\n\t%%v\tpériphérique sélectionné (ex. : « /dev/sda1 »)\n\t%%m\tpoint de montage du périphérique (ex. : « /media/dvd »);  %%l étiquette du périphérique\n\t%%b\tsignet sélectionné\n\t%%t\tdossier de la tâche sélectionnée; %%p pid de la tâche\n\t%%a\tvaleur de l'élément du menu\n\t$fm_panel, $fm_tab, $fm_command, etc.\n\nExemple : « $ echo \"Dossier actuel : %%d\" »\nExemple : « +! umount %%v »"
 
 #: ../src/edit-bookmarks.c:74
 msgid "New Item"
@@ -7645,16 +6707,12 @@ msgstr "En renommant"
 msgid ""
 "Please install /usr/bin/sha256sum so I can improve your security while "
 "running root commands\n"
-msgstr ""
-"Veuillez installer « /usr/bin/sha256sum » dans le but d'améliorer votre "
-"sécurité lors du lancement de commandes root\n"
+msgstr "Veuillez installer « /usr/bin/sha256sum » dans le but d'améliorer votre sécurité lors du lancement de commandes root\n"
 
 #: ../src/vfs/vfs-file-task.c:1437
 msgid ""
 "Please configure a valid Terminal SU command in View|Preferences|Advanced"
-msgstr ""
-"Veuillez configuer une commande valide pour le terminal SU dans « Affichage|"
-"Préférences|Avancé »"
+msgstr "Veuillez configuer une commande valide pour le terminal SU dans « Affichage|Préférences|Avancé »"
 
 #: ../src/vfs/vfs-file-task.c:1442
 msgid "Terminal SU Not Available"
@@ -7663,9 +6721,7 @@ msgstr "Terminal SU inaccessible"
 #: ../src/vfs/vfs-file-task.c:1448
 msgid ""
 "Please configure a valid Graphical SU command in View|Preferences|Advanced"
-msgstr ""
-"Veuillez configurer une commande valide pour la commande graphique SU dans "
-"« Affichage|Préférences|Avancé »"
+msgstr "Veuillez configurer une commande valide pour la commande graphique SU dans « Affichage|Préférences|Avancé »"
 
 #: ../src/vfs/vfs-file-task.c:1453
 msgid "Graphical SU Not Available"
@@ -7681,8 +6737,7 @@ msgstr "Veuillez définir un terminal valide « Affichage|Préférences|Avancé
 
 #: ../src/vfs/vfs-file-task.c:1632
 msgid "[ Finished ]  Press Enter to close or s + Enter for a shell"
-msgstr ""
-"[Terminé] Appuyer sur « Entrée » pour fermer ou « s + Entrée » pour un shell"
+msgstr "[Terminé] Appuyer sur « Entrée » pour fermer ou « s + Entrée » pour un shell"
 
 #: ../src/vfs/vfs-file-task.c:1632
 msgid "You are ROOT"
@@ -7690,19 +6745,14 @@ msgstr "Vous êtes ROOT"
 
 #: ../src/vfs/vfs-file-task.c:1759
 msgid "spacefm-auth not found in path - this reduces your security"
-msgstr ""
-"« spacefm-auth » pas trouvé dans le chemin - votre sécurité en est affectée "
-"négativement"
+msgstr "« spacefm-auth » pas trouvé dans le chemin - votre sécurité en est affectée négativement"
 
 #: ../src/vfs/vfs-file-task.c:1860
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
-msgstr ""
-"Erreur durant l'exécution de « %s »\n"
-"Voir la sortie (lancer SpaceFM dans un terminal) pour obtenir des "
-"informations de débogage"
+msgstr "Erreur durant l'exécution de « %s »\nVoir la sortie (lancer SpaceFM dans un terminal) pour obtenir des informations de débogage"
 
 #: ../src/vfs/vfs-file-task.c:1929
 msgid "Error writing temporary file"
@@ -7718,10 +6768,7 @@ msgid ""
 "\n"
 "%s %s\n"
 "Error: %s\n"
-msgstr ""
-"\n"
-"%s %s\n"
-"Erreur : « %s »\n"
+msgstr "\n%s %s\nErreur : « %s »\n"
 
 #: ../src/vfs/vfs-volume-hal.c:479 ../src/vfs/vfs-volume-hal.c:702
 #, c-format
@@ -7917,9 +6964,7 @@ msgstr "Le périphérique « %s » n'est pas un volume ou un lecteur"
 #: ../src/vfs/vfs-volume-hal.c:2077
 #, c-format
 msgid "Device \"%s\" not found in file system device table"
-msgstr ""
-"Le périphérique « %s » n'a pas été trouvé dans la table des périphériques du "
-"système de fichiers"
+msgstr "Le périphérique « %s » n'a pas été trouvé dans la table des périphériques du système de fichiers"
 
 #: ../src/vfs/vfs-volume-hal.c:2260
 #, c-format
@@ -7936,21 +6981,19 @@ msgstr "Vous n'avez pas les permissions pour démonter le volume « %s »"
 msgid "You are not privileged to eject the volume \"%s\""
 msgstr "Vous n'avez pas les permissions pour éjecter le volume « %s »"
 
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#. TODO: slim down mount options to what is allowed, cf.
+#. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
-msgstr ""
-"Option de montage invalide lors de la tentative de montage du volume « %s »"
+msgstr "Option de montage invalide lors de la tentative de montage du volume « %s »"
 
 #: ../src/vfs/vfs-volume-hal.c:2276
 #, c-format
 msgid ""
 "The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
 "your system"
-msgstr ""
-"Le volume « %s » utilise le système de fichiers « <i>%s</i> », qui n'est pas "
-"pris en charge par votre système"
+msgstr "Le volume « %s » utilise le système de fichiers « <i>%s</i> », qui n'est pas pris en charge par votre système"
 
 #: ../src/vfs/vfs-volume-hal.c:2278
 #, c-format
@@ -7971,25 +7014,20 @@ msgstr "Erreur <i>%s</i>"
 #: ../src/vfs/vfs-volume-hal.c:2285
 #, c-format
 msgid "The volume \"%s\" was probably mounted manually on the command line"
-msgstr ""
-"Le volume « %s » a probablement été monté manuellement à partir de la ligne "
-"de commande"
+msgstr "Le volume « %s » a probablement été monté manuellement à partir de la ligne de commande"
 
 #: ../src/vfs/vfs-volume-hal.c:2293
 #, c-format
 msgid ""
 "Blank discs cannot be mounted, use a CD recording application to record "
 "audio or data on the disc"
-msgstr ""
-"Les disques vierges ne peuvent être montés, utilisez un logiciel de gravure "
-"pour enregistrer un CD audio ou de données sur le disque"
+msgstr "Les disques vierges ne peuvent être montés, utilisez un logiciel de gravure pour enregistrer un CD audio ou de données sur le disque"
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
-msgstr ""
-"Les CD audio ne peuvent pas être montés, utilisez un lecteur de musique pour "
-"l'écouter"
+msgid ""
+"Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr "Les CD audio ne peuvent pas être montés, utilisez un lecteur de musique pour l'écouter"
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
 #, c-format
@@ -8041,54 +7079,42 @@ msgstr "(aucun périphérique « udev »)"
 msgid ""
 "\n"
 "Autoexec: %s\n"
-msgstr ""
-"\n"
-"Exécution automatique : « %s »\n"
+msgstr "\nExécution automatique : « %s »\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3476
 #, c-format
 msgid ""
 "\n"
 "Auto Open Tab for %s in %s\n"
-msgstr ""
-"\n"
-"Ouvrir un onglet automatiquement pour « %s » dans « %s »\n"
+msgstr "\nOuvrir un onglet automatiquement pour « %s » dans « %s »\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3522 ../src/vfs/vfs-volume-nohal.c:3769
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: %s\n"
-msgstr ""
-"\n"
-"Démontage automatique : « %s »\n"
+msgstr "\nDémontage automatique : « %s »\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3527
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: error: no unmount program available\n"
-msgstr ""
-"\n"
-"Démontage automatique : erreur : aucun programme de démontage disponible\n"
+msgstr "\nDémontage automatique : erreur : aucun programme de démontage disponible\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3544
 #, c-format
 msgid ""
 "\n"
 "Automount: %s\n"
-msgstr ""
-"\n"
-"Montage automatique : « %s »\n"
+msgstr "\nMontage automatique : « %s »\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3549
 #, c-format
 msgid ""
 "\n"
 "Automount: error: no mount program available\n"
-msgstr ""
-"\n"
-"Montage automatique : erreur : aucun programme de montage disponible\n"
+msgstr "\nMontage automatique : erreur : aucun programme de montage disponible\n"
 
 #: ../src/vfs/vfs-volume-nohal.c:3754
 #, c-format
@@ -8132,13 +7158,8 @@ msgstr "Paramètres du _bureau"
 msgid ""
 "Enter new desktop item name:\n"
 "\n"
-"Changing the name of this desktop item requires modifying the contents of "
-"desktop file %s"
-msgstr ""
-"Entrer le nouveau nom de l'élément « .desktop » :\n"
-"\n"
-"Modifier le nom de cet élément « .desktop » nécessite de modifier le contenu "
-"du fichier « %s »"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
+msgstr "Entrer le nouveau nom de l'élément « .desktop » :\n\nModifier le nom de cet élément « .desktop » nécessite de modifier le contenu du fichier « %s »"
 
 #: ../src/desktop/desktop-window.c:1795
 msgid "Change Desktop Item Name"
@@ -8146,8 +7167,7 @@ msgstr "Modifier le nom de l'élément « .desktop »"
 
 #: ../src/desktop/desktop-window.c:1817
 msgid "An error occured renaming this desktop item."
-msgstr ""
-"Une erreur s'est produite lors du renommage de cet élément « .desktop »"
+msgstr "Une erreur s'est produite lors du renommage de cet élément « .desktop »"
 
 #: ../src/find-files.c:276
 msgid "Open Containing _Folder"
@@ -8168,12 +7188,3 @@ msgstr "Volumes locaux"
 #: ../src/find-files.c:934
 msgid "Last Modified"
 msgstr "Dernière modification"
-
-#~ msgid "%s%d sel (%s)%s"
-#~ msgstr "%s%d sél. (%s)%s"
-
-#~ msgid "%s%d sel (%s)"
-#~ msgstr "%s%d sél. (%s)"
-
-#~ msgid "_Text File"
-#~ msgstr "Fichier _texte"

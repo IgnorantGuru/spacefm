@@ -1,51 +1,48 @@
-# SpaceFM bn_IN.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
-#
+# 
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
 # sankarshan mukhopadhyay <sankarshan@fedoraproject.org>, 2009.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6\n"
+"Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 20:59+0000\n"
-"PO-Revision-Date: 2009-08-31 18:25+0200\n"
-"Last-Translator: Sankarshan <sankarshan.mukhopadhyay@gmail.com>\n"
-"Language-Team: anubad@lists.ankur.org.in\n"
-"Language: bn_IN\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:10+0000\n"
+"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: bn_IN\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
 msgid "SpaceFM Open Folder"
 msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
-#, fuzzy
 msgid "Open folder"
-msgstr "নতুন ফোল্ডার"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM File Search"
-msgstr "খোঁজা সক্রিয় করা হবে"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:2
-#, fuzzy
 msgid "Search for files and folders"
-msgstr "সকল ফাইল ও ফোলডার"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
 msgstr ""
 
 #: ../data/spacefm.desktop.in.h:2
-#, fuzzy
 msgid "File Manager"
-msgstr "ভলিউম সঞ্চালন(_V)"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:3
 msgid "Browse the file system"
@@ -56,36 +53,23 @@ msgid "by IgnorantGuru"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "সত্বাধিকার (C) ২০০৫ - ২০০৮"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
 "SpaceFM - Copyright (C) 2013   GPL3+\n"
 "\n"
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 3 of the License, or (at your option) "
-"any later version.\n"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
-"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details.\n"
+"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 "\n"
-"The 'exo' libraries and source code used by this software are licensed under "
-"the GNU General Public License and the GNU Lesser General Public License "
-"version 3 (LGPL3).\n"
+"The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
-"You should have received a copy of the GNU General Public License and the "
-"GNU Lesser General Public License along with this program; if not, write to "
-"the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-"MA  02110-1301, USA."
+"You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:12
-#, fuzzy
 msgid ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
@@ -107,18 +91,6 @@ msgid ""
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 msgstr ""
-"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
-"\n"
-"যে সকল প্রজেক্ট থেকে সোর্স কোড গ্রহণ করা হয়েছে:\n"
-" * libmd5-rfc: Aladdin Enterprises\n"
-" * Working area detection: Gary Kramlich\n"
-" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
-" * Text and icon renderer uses code from Jonathan Blandford\n"
-" * Desktop icons use code from Brian Tarricone\n"
-" * Volume management uses code from following projects/authors:\n"
-"     * gnome-vfs: David Zeuthen\n"
-"     * thunar-vfs and libexo: Benedikt Meurer\n"
-"     * gnome-mount: David Zeuthen"
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
@@ -133,33 +105,28 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:1
-#, fuzzy
 msgid "Choose Application"
-msgstr "অ্যাপ্লিকেশন নির্বাচন করুন"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:2
-#, fuzzy
 msgid "Please choose an application or enter a command:"
-msgstr "তালিকা থেকে একটি অ্যাপ্লিকেশন বেছে নিন অথবা কম্যান্ড লাইনটি লিখে নিন:"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:3
-#, fuzzy
 msgid "File Type:"
-msgstr "<b>ফাইলের প্রকার:</b>"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
-#, fuzzy
 msgid "A_ll Apps"
-msgstr "সকল অ্যাপ্লিকেশন(_A)"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:6
-#, fuzzy
 msgid "_Command:"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #. // Browse submenu
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:6936
@@ -180,48 +147,40 @@ msgid "File Properties"
 msgstr "ফাইলের বৈশিষ্ট্য"
 
 #: ../data/ui/file_properties.ui.h:2
-#, fuzzy
 msgid "<b>File_name:</b>"
-msgstr "<b>ফাইলের নাম(_N):</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
-#, fuzzy
 msgid "<b>Type:</b>"
-msgstr "<b>ফাইলের প্রকার:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:4
-#, fuzzy
 msgid "<b>Total Size:</b>"
-msgstr "<b>ফাইলের সর্বমোট আয়তন:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:5
-#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "<b>সর্বশেষ পরিবর্তনের সময়</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:6
-#, fuzzy
 msgid "<b>Accessed:</b>"
-msgstr "<b>শেষবার ব্যবহার করার সময়:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
 msgstr "<b>অবস্থান:</b>"
 
 #: ../data/ui/file_properties.ui.h:8
-#, fuzzy
 msgid "<b>Size On Disk:</b>"
-msgstr "<b>ডিস্কের উপর আয়তন:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:9
-#, fuzzy
 msgid "<b>Count:</b>"
-msgstr "<b>গ্রুপ:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:10
-#, fuzzy
 msgid "<b>Opens _With:</b>"
-msgstr "<b>এটি ব্যবহার করে খুলুন(_w):</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
@@ -244,9 +203,8 @@ msgid "<b>Group:</b>"
 msgstr "<b>গ্রুপ:</b>"
 
 #: ../data/ui/file_properties.ui.h:16
-#, fuzzy
 msgid "<b>Other:</b>"
-msgstr "<b>প্রস্তুতকর্তা:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -327,9 +285,8 @@ msgstr "ফাইল খুঁজে নিন"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Filename:</b>"
-msgstr "<b>ফাইলের নাম(_N):</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -360,14 +317,12 @@ msgid "<b>File Types to Search</b>"
 msgstr "<b>যে সকল ফাইলের প্রকার খোঁজা হবে</b>"
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
-#, fuzzy
 msgid "Search in subfolders"
-msgstr "সাব ডিরেক্টরিগুলি খুঁজে নিন"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
-#, fuzzy
 msgid "Search hidden files"
-msgstr "লুকিয়ে থাকা ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
@@ -430,9 +385,8 @@ msgid "Open In Current Tab"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
-#, fuzzy
 msgid "Open In New Tab"
-msgstr "নতুন ট্যাব"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
@@ -475,9 +429,8 @@ msgid "Preferences"
 msgstr "বিবিধ বৈশিষ্ট্য"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
-#, fuzzy
 msgid "Small Icons:"
-msgstr "ছোট আইকনের মাপ:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
@@ -492,9 +445,8 @@ msgid "<b>Display</b>"
 msgstr "<b>প্রদর্শন</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
-#, fuzzy
 msgid "Single click opens files"
-msgstr "সিঙ্গল ক্লিক টাইমআউট"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
@@ -521,9 +473,8 @@ msgid "Always show the tab bar"
 msgstr "সর্বদা ট্যাব-বার প্রদর্শন করা হবে"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
-#, fuzzy
 msgid "Hide 'Close Tab' buttons"
-msgstr "'ট্যাব বন্ধ করা হবে' বটনকে লুকিয়ে রাখা হবে"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
@@ -562,9 +513,8 @@ msgid "Show icons of volumes on desktop"
 msgstr "ভলিউমের আইকন ডেস্কটপে প্রদর্শন করা হবে"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
-#, fuzzy
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr "ডেস্কটপে ক্লিক করলে WM দ্বারা উপলব্ধ মেনু প্রদর্শন করা হবে"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
@@ -615,27 +565,24 @@ msgid "Terminal:"
 msgstr "টার্মিনাল:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
-#, fuzzy
 msgid "Terminal SU:"
-msgstr "টার্মিনাল:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
-#, fuzzy
 msgid "Filename Encoding:"
-msgstr "অন-ডিস্ক ফাইলের নাম এনকোডিং:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
 msgid "Editor:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
-#, fuzzy
 msgid "Run editor in terminal"
-msgstr "টার্মিনালে খোলা হয়েছে"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
@@ -790,9 +737,7 @@ msgstr "সিঙ্গল ক্লিক টাইমআউট"
 msgid ""
 "The amount of time after which the item under the mouse cursor will be "
 "selected automatically in single click mode"
-msgstr ""
-"যে অবসরের পরে মাউস কার্সারের নীচে বস্তু সংক্রিয়ভাবে সিঙ্গল ক্লিকের সাহায্যে সক্রিয় "
-"করা যাবে"
+msgstr "যে অবসরের পরে মাউস কার্সারের নীচে বস্তু সংক্রিয়ভাবে সিঙ্গল ক্লিকের সাহায্যে সক্রিয় করা যাবে"
 
 #: ../src/exo/exo-icon-view.c:1028
 msgid "Spacing"
@@ -811,9 +756,8 @@ msgid "Model column used to retrieve the text from"
 msgstr "যে মডেল কলাম থেকে টেক্সট নেওয়া হবে"
 
 #: ../src/exo/exo-icon-view.c:1052
-#, fuzzy
 msgid "Selection Box Color"
-msgstr "সিলেকশন বক্স কালার"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1053
 msgid "Color of the selection box"
@@ -865,9 +809,9 @@ msgid "internal command %s requires an argument"
 msgstr ""
 
 #: ../src/cust-dialog.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "element '%s' does not exist"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -928,8 +872,7 @@ msgstr ""
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
-"specify on the command line, features run-time internal/external commands "
-"which\n"
+"specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr ""
 
@@ -985,10 +928,8 @@ msgstr ""
 #: ../src/cust-dialog.c:3707
 #, c-format
 msgid ""
-"    @FILE    A text file from which to read a value.  In some cases this "
-"file\n"
-"             is monitored, so writing a new value to the file will update "
-"the\n"
+"    @FILE    A text file from which to read a value.  In some cases this file\n"
+"             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr ""
 
@@ -1000,8 +941,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3709
 #, c-format
 msgid ""
-"    COMMAND  An internal command or executable followed by arguments. "
-"Separate\n"
+"    COMMAND  An internal command or executable followed by arguments. Separate\n"
 "             multiple commands with a -- argument.\n"
 "             The following substitutions may be used in COMMANDs:\n"
 "                 %%n           Name of the current element\n"
@@ -1028,8 +968,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"In addition to the OPTIONS listed above, --compact or --expand options may "
-"be\n"
+"In addition to the OPTIONS listed above, --compact or --expand options may be\n"
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
@@ -1071,8 +1010,7 @@ msgid ""
 "    #!/bin/bash\n"
 "    # This script shows a Yes/No dialog\n"
 "    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
-"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
-"\"\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
 "        echo \"User pressed Yes - take some action\"\n"
 "    else\n"
@@ -1176,7 +1114,8 @@ msgstr ""
 msgid "Add a combo list.  COMMAND run when Enter pressed."
 msgstr ""
 
-#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. ^HIDE   hidden column (must be first) for data return  (int or double or
+#. string no progress)
 #. use --colwidth=W inside column list
 #: ../src/cust-dialog.h:58
 msgid "Add a list box.  COMMAND run when double-clicked."
@@ -1297,32 +1236,28 @@ msgid "Launch desktop manager daemon"
 msgstr ""
 
 #: ../src/main.c:132
-#, fuzzy
 msgid "Show desktop settings"
-msgstr "ডেস্কটপের বৈশিষ্ট্য(_D)"
+msgstr ""
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
 msgstr ""
 
 #: ../src/main.c:134
-#, fuzzy
 msgid "Run as a daemon"
-msgstr "PCManFM কে ডেমন হিসাবে চালান"
+msgstr ""
 
 #: ../src/main.c:135
 msgid "Use DIR as configuration directory"
 msgstr ""
 
 #: ../src/main.c:136
-#, fuzzy
 msgid "Show File Search"
-msgstr "খোঁজা সক্রিয় করা হবে"
+msgstr ""
 
 #: ../src/main.c:143
-#, fuzzy
 msgid "Set desktop wallpaper to FILE"
-msgstr "ডেস্কটপ ওয়ালপেপার নির্ধারণ করুন"
+msgstr ""
 
 #: ../src/main.c:145
 msgid "Show a custom dialog (See -g help)"
@@ -1389,9 +1324,8 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "সংবাদ"
+msgstr ""
 
 #: ../src/main.c:632
 msgid "Example:"
@@ -1490,9 +1424,8 @@ msgid "DIR            eg '/etc'"
 msgstr ""
 
 #: ../src/main.c:708
-#, fuzzy
 msgid "[FILENAME ...]"
-msgstr "[FILE1, FILE2,...]"
+msgstr ""
 
 #: ../src/main.c:709
 msgid "[PATTERN]      eg '*.jpg'"
@@ -1665,9 +1598,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1808,8 +1740,7 @@ msgstr ""
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
 "\n"
-"Tip: You can also rename this plugin file to install it under a different "
-"name."
+"Tip: You can also rename this plugin file to install it under a different name."
 msgstr ""
 
 #: ../src/main-window.c:480
@@ -1855,9 +1786,8 @@ msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr ""
 
 #: ../src/main-window.c:818
-#, fuzzy
 msgid "Open Terminal"
-msgstr "টার্মিনালে খুলুন"
+msgstr ""
 
 #: ../src/main-window.c:1138
 msgid "Design Mode Help"
@@ -1865,24 +1795,20 @@ msgstr ""
 
 #: ../src/main-window.c:1138
 msgid ""
-"Design Mode allows you to change the name, shortcut key and icon of menu "
-"items, show help for an item, and add your own custom commands to most "
-"menus.\n"
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
 "To open the design menu, simply right-click on a menu item.\n"
 "\n"
-"To use Design Mode on a submenu, you must first close the submenu (by "
-"clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
 "\n"
-"To modify a toolbar, click the leftmost tool icon to open the toolbar config "
-"menu and select Help."
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr ""
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
-#, fuzzy, c-format
+#, c-format
 msgid "New _Command"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #: ../src/main-window.c:1789
 #, c-format
@@ -1900,9 +1826,8 @@ msgstr ""
 
 #: ../src/main-window.c:1823 ../src/settings.c:10254 ../src/settings.c:10623
 #: ../src/settings.c:10738 ../src/settings.c:10866 ../src/settings.c:10994
-#, fuzzy
 msgid "_Bookmarks"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/main-window.c:1829
 msgid "_Plugins"
@@ -2012,19 +1937,16 @@ msgid "Folder"
 msgstr "ফোল্ডার"
 
 #: ../src/main-window.c:3805
-#, fuzzy
 msgid "Item"
-msgstr "নতুন বস্তু"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "To"
-msgstr "গন্তব্যস্থল:"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "Progress"
-msgstr "প্রগতি:"
+msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
@@ -2073,9 +1995,8 @@ msgid "copying"
 msgstr ""
 
 #: ../src/main-window.c:5329
-#, fuzzy
 msgid "trashing"
-msgstr "আবর্জনা"
+msgstr ""
 
 #: ../src/main-window.c:5330
 msgid "deleting"
@@ -2131,9 +2052,8 @@ msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Modified"
-msgstr "শেষ পরিবর্তনের তারিখ"
+msgstr ""
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
@@ -2307,9 +2227,8 @@ msgstr ""
 
 #. task
 #: ../src/pref-dialog.c:668 ../src/pref-dialog.c:669
-#, fuzzy
 msgid "Save Root Settings"
-msgstr "ডেস্কটপের বৈশিষ্ট্য(_D)"
+msgstr ""
 
 #: ../src/pref-dialog.c:668
 msgid ""
@@ -2348,25 +2267,21 @@ msgstr ""
 msgid ""
 "Enter menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:118
 msgid ""
 "Enter new menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired.\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired.\n"
 "\n"
-"TIP: To change this menu item later, right-click on the menu item to open "
-"the design menu."
+"TIP: To change this menu item later, right-click on the menu item to open the design menu."
 msgstr ""
 
 #: ../src/settings.c:122
-#, fuzzy
 msgid "MIME Type"
-msgstr "প্রকার"
+msgstr ""
 
 #: ../src/settings.c:123
 msgid "Filename"
@@ -2381,9 +2296,8 @@ msgid "Dir Write Access"
 msgstr ""
 
 #: ../src/settings.c:126
-#, fuzzy
 msgid "File Is Text"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2398,9 +2312,8 @@ msgid "User Is Root"
 msgstr ""
 
 #: ../src/settings.c:130
-#, fuzzy
 msgid "Multiple Selected"
-msgstr "অনেকগুলি ফাইল একসাথে নির্বাচন করা হয়েছে"
+msgstr ""
 
 #: ../src/settings.c:131
 msgid "Clipboard Has Files"
@@ -2427,9 +2340,8 @@ msgid "Tab Count"
 msgstr ""
 
 #: ../src/settings.c:137
-#, fuzzy
 msgid "Bookmark"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/settings.c:138
 msgid "Device"
@@ -2452,9 +2364,8 @@ msgid "Device UDI"
 msgstr ""
 
 #: ../src/settings.c:143
-#, fuzzy
 msgid "Device Properties"
-msgstr "ফাইলের বৈশিষ্ট্য"
+msgstr ""
 
 #: ../src/settings.c:144
 msgid "Task Count"
@@ -2465,14 +2376,12 @@ msgid "Task Directory"
 msgstr ""
 
 #: ../src/settings.c:146
-#, fuzzy
 msgid "Task Type"
-msgstr "প্রকার"
+msgstr ""
 
 #: ../src/settings.c:147
-#, fuzzy
 msgid "Task Name"
-msgstr "নাম"
+msgstr ""
 
 #: ../src/settings.c:148
 msgid "Panel 1 Directory"
@@ -2531,9 +2440,8 @@ msgid "doesn't equal"
 msgstr ""
 
 #: ../src/settings.c:221
-#, fuzzy
 msgid "contains"
-msgstr "ফাইলের বিষয়বস্তু:"
+msgstr ""
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
@@ -2544,28 +2452,24 @@ msgid "begins with"
 msgstr ""
 
 #: ../src/settings.c:224
-#, fuzzy
 msgid "doesn't begin with"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/settings.c:225
-#, fuzzy
 msgid "ends with"
-msgstr "এর সাহায্যে খুলুন(_w)..."
+msgstr ""
 
 #: ../src/settings.c:226
-#, fuzzy
 msgid "doesn't end with"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/settings.c:227
 msgid "is less than"
 msgstr ""
 
 #: ../src/settings.c:228
-#, fuzzy
 msgid "is greater than"
-msgstr "এর থেকে বেশী:"
+msgstr ""
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
@@ -2631,8 +2535,7 @@ msgid ""
 "\n"
 "# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
 "\n"
-"# If you delete all session* files, SpaceFM will be reset to factory "
-"defaults.\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
 "\n"
 msgstr ""
 
@@ -2690,26 +2593,19 @@ msgstr ""
 #: ../src/settings.c:3751
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu."
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr ""
 
 #: ../src/settings.c:3753
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu, and its contents are not protected by root (once pasted it "
-"will be saved with normal ownership).\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
 "\n"
-"If this plugin contains su commands or will be run as root, installing it to "
-"and running it only from the Plugins menu is recommended to improve your "
-"system security."
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr ""
 
 #: ../src/settings.c:3783
@@ -2752,9 +2648,8 @@ msgid "Change Menu Name"
 msgstr ""
 
 #: ../src/settings.c:4195 ../src/settings.c:5958
-#, fuzzy
 msgid "Set Command Line"
-msgstr "কম্যান্ড লাইন(_C)"
+msgstr ""
 
 #: ../src/settings.c:4232 ../src/settings.c:5922
 msgid "Choose Custom Executable"
@@ -2795,9 +2690,8 @@ msgid "Current: Disable"
 msgstr ""
 
 #: ../src/settings.c:5213
-#, fuzzy
 msgid "Context Rules"
-msgstr "বিষয়বস্তু"
+msgstr ""
 
 #. list buttons
 #. Remove
@@ -2834,9 +2728,8 @@ msgid "Show"
 msgstr ""
 
 #: ../src/settings.c:5323
-#, fuzzy
 msgid "Enable"
-msgstr "খোঁজা সক্রিয় করা হবে"
+msgstr ""
 
 #: ../src/settings.c:5325
 msgid "Hide"
@@ -2866,9 +2759,7 @@ msgstr ""
 msgid ""
 "Read the user's manual online?\n"
 "\n"
-"The local copy of the SpaceFM user's manual was not found.  Click Yes to "
-"read it online, or click No and then set the correct location in Help|"
-"Options|Manual Location."
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr ""
 
 #: ../src/settings.c:5565
@@ -2893,9 +2784,7 @@ msgstr ""
 
 #: ../src/settings.c:5589
 msgid ""
-"The SpaceFM user's manual should have opened in your browser.  If it didn't "
-"open, or if you would like to use a different browser, set your browser in "
-"Help|Options|Browser.\n"
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr ""
@@ -2918,8 +2807,8 @@ msgstr ""
 #: ../src/settings.c:5726
 #, c-format
 msgid ""
-"Press your key combination for menu item '%s' then click Set.  To remove the "
-"current key assignment, click Unset."
+"Press your key combination for menu item '%s' then click Set.  To remove the"
+" current key assignment, click Unset."
 msgstr ""
 
 #: ../src/settings.c:5737
@@ -2931,9 +2820,8 @@ msgid "Unset"
 msgstr ""
 
 #: ../src/settings.c:5756
-#, fuzzy
 msgid "Set"
-msgstr "GID ধার্য্য করুন"
+msgstr ""
 
 #: ../src/settings.c:5770
 msgid "Set Key"
@@ -2945,9 +2833,8 @@ msgstr ""
 
 #. line
 #: ../src/settings.c:5828 ../src/settings.c:5896
-#, fuzzy
 msgid "Edit Command Line"
-msgstr "কম্যান্ড লাইন(_C)"
+msgstr ""
 
 #: ../src/settings.c:5933
 msgid "Run As User"
@@ -2963,12 +2850,9 @@ msgstr ""
 #: ../src/settings.c:5939
 #, c-format
 msgid ""
-"You are adding a custom command to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5940
@@ -2982,12 +2866,9 @@ msgstr ""
 #: ../src/settings.c:5988
 #, c-format
 msgid ""
-"You are adding a custom submenu to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5988
@@ -3002,14 +2883,12 @@ msgstr ""
 msgid ""
 "Enter submenu name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "New _Submenu"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:6113
 msgid "( no name )"
@@ -3064,9 +2943,8 @@ msgstr ""
 #: ../src/settings.c:6786 ../src/settings.c:9402 ../src/settings.c:10307
 #: ../src/settings.c:10688 ../src/settings.c:10811 ../src/settings.c:10939
 #: ../src/settings.c:11067
-#, fuzzy
 msgid "_Name"
-msgstr "নাম"
+msgstr ""
 
 #. Key
 #: ../src/settings.c:6791
@@ -3078,9 +2956,8 @@ msgstr ""
 #: ../src/settings.c:10674 ../src/settings.c:10684 ../src/settings.c:10795
 #: ../src/settings.c:10806 ../src/settings.c:10923 ../src/settings.c:10934
 #: ../src/settings.c:11051 ../src/settings.c:11062
-#, fuzzy
 msgid "_Icon"
-msgstr "আইকন(_I)"
+msgstr ""
 
 #. // Style submenu
 #: ../src/settings.c:6811
@@ -3108,15 +2985,13 @@ msgstr ""
 
 #. Description
 #: ../src/settings.c:6871
-#, fuzzy
 msgid "_Message"
-msgstr "সংবাদ"
+msgstr ""
 
 #. Context
 #: ../src/settings.c:6881
-#, fuzzy
 msgid "Con_text"
-msgstr "টেক্সট"
+msgstr ""
 
 #: ../src/settings.c:6888
 msgid "Ign_ore Context (global)"
@@ -3124,9 +2999,8 @@ msgstr ""
 
 #. // Command submenu
 #: ../src/settings.c:6894
-#, fuzzy
 msgid "C_ommand"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #. Edit
 #: ../src/settings.c:6907 ../src/settings.c:7891 ../src/settings.c:9381
@@ -3146,9 +3020,8 @@ msgid "_Copy"
 msgstr ""
 
 #: ../src/settings.c:6953
-#, fuzzy
 msgid "_Files"
-msgstr "ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:6956
 msgid "_Files (none)"
@@ -3193,15 +3066,13 @@ msgstr ""
 
 #. Run In Terminal
 #: ../src/settings.c:7037
-#, fuzzy
 msgid "Run _In Terminal"
-msgstr "টার্মিনালে খুলুন"
+msgstr ""
 
 #. Keep Terminal
 #: ../src/settings.c:7043
-#, fuzzy
 msgid "_Keep Terminal"
-msgstr "টার্মিনাল:"
+msgstr ""
 
 #: ../src/settings.c:7055
 #, c-format
@@ -3269,9 +3140,8 @@ msgid "S_eparator"
 msgstr ""
 
 #: ../src/settings.c:7540
-#, fuzzy
 msgid "Set Icon"
-msgstr "GID ধার্য্য করুন"
+msgstr ""
 
 #: ../src/settings.c:7901 ../src/settings.c:8111 ../src/settings.c:10114
 #: ../src/settings.c:10236
@@ -3303,12 +3173,11 @@ msgstr ""
 msgid "_Side Toolbar"
 msgstr ""
 
-#.
 #. xset_set( "panel_left", "label", _("_Left") );
 #. xset_set( "panel_right", "label", _("_Right") );
 #. xset_set( "panel_top", "label", _("_Top") );
 #. xset_set( "panel_bottom", "label", _("_Bottom") );
-#.
+#. 
 #: ../src/settings.c:8658 ../src/settings.c:8661 ../src/settings.c:9590
 #: ../src/settings.c:10482
 msgid "_Hide"
@@ -3330,9 +3199,8 @@ msgid "Tree"
 msgstr ""
 
 #: ../src/settings.c:8678 ../src/settings.c:8748 ../src/settings.c:8817
-#, fuzzy
 msgid "Bookmarks"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/settings.c:8684 ../src/settings.c:8754 ../src/settings.c:8823
 msgid "Devices"
@@ -3343,9 +3211,8 @@ msgid "New Tab"
 msgstr "নতুন ট্যাব"
 
 #: ../src/settings.c:8695 ../src/settings.c:8765 ../src/settings.c:8834
-#, fuzzy
 msgid "New Tab Here"
-msgstr "নতুন ট্যাব"
+msgstr ""
 
 #: ../src/settings.c:8700 ../src/settings.c:8770 ../src/settings.c:8839
 msgid "Back"
@@ -3405,10 +3272,9 @@ msgid "_Sync"
 msgstr ""
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3456,9 +3322,8 @@ msgid "_Restore"
 msgstr ""
 
 #: ../src/settings.c:9116
-#, fuzzy
 msgid "_From File"
-msgstr "ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:9121 ../src/settings.c:9487
 msgid "File _Info"
@@ -3469,19 +3334,16 @@ msgid "_Properties"
 msgstr "বিবিধ বৈশিষ্ট্য(_P)"
 
 #: ../src/settings.c:9127
-#, fuzzy
 msgid "Setti_ngs"
-msgstr "ডেস্কটপের বৈশিষ্ট্য(_D)"
+msgstr ""
 
 #: ../src/settings.c:9138
-#, fuzzy
 msgid "_Internal Drives"
-msgstr "পেন ড্রাইভ"
+msgstr ""
 
 #: ../src/settings.c:9143
-#, fuzzy
 msgid "_Empty Drives"
-msgstr "ফ্লপি ড্রাইভ"
+msgstr ""
 
 #: ../src/settings.c:9148
 msgid "_Partition Tables"
@@ -3492,14 +3354,12 @@ msgid "Mounted _Networks"
 msgstr ""
 
 #: ../src/settings.c:9157
-#, fuzzy
 msgid "Mounted _Files"
-msgstr "ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:9162
-#, fuzzy
 msgid "_Volumes..."
-msgstr "ভলিউম"
+msgstr ""
 
 #: ../src/settings.c:9163
 msgid "Show/Hide Volumes"
@@ -3507,16 +3367,12 @@ msgstr ""
 
 #: ../src/settings.c:9164
 msgid ""
-"To force showing or hiding of some volumes, overriding other settings, you "
-"can specify the devices, volume labels, or device IDs in the space-separated "
-"list below.\n"
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume "
-"with label \"Label With Space\" to be hidden.\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3555,9 +3411,8 @@ msgid "_Mount Removable"
 msgstr ""
 
 #: ../src/settings.c:9195
-#, fuzzy
 msgid "Open _Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:9200
 msgid "_Unmount On Exit"
@@ -3578,8 +3433,7 @@ msgstr ""
 #: ../src/settings.c:9217
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically after a removable "
-"drive or data disc is auto-mounted:\n"
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3588,9 +3442,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9220
-#, fuzzy
 msgid "On _Audio CD"
-msgstr "অডিও ডিস্ক"
+msgstr ""
 
 #: ../src/settings.c:9222
 msgid "Auto Run On Audio CD"
@@ -3599,8 +3452,7 @@ msgstr ""
 #: ../src/settings.c:9223
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when an audio CD "
-"is inserted in a qualified device:\n"
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3619,8 +3471,7 @@ msgstr ""
 #: ../src/settings.c:9229
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a video DVD "
-"is auto-mounted:\n"
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3639,8 +3490,7 @@ msgstr ""
 #: ../src/settings.c:9235
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is inserted:\n"
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice added (eg /dev/sda1)\n"
@@ -3659,8 +3509,7 @@ msgstr ""
 #: ../src/settings.c:9241
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is unmounted by any means:\n"
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice unmounted (eg /dev/sda1)\n"
@@ -3679,8 +3528,7 @@ msgstr ""
 #: ../src/settings.c:9247
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is removed (ejection of media does not qualify):\n"
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice removed (eg /dev/sda1)\n"
@@ -3698,16 +3546,12 @@ msgstr ""
 
 #: ../src/settings.c:9256
 msgid ""
-"To force or prevent automounting of some volumes, overriding other settings, "
-"you can specify the devices, volume labels, or device IDs in the space-"
-"separated list below.\n"
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when "
-"detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3717,20 +3561,14 @@ msgstr ""
 
 #: ../src/settings.c:9260
 msgid ""
-"Enter your comma- or space-separated list of default mount options below (to "
-"be used for all mounts).\n"
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9262
@@ -3745,23 +3583,17 @@ msgstr ""
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9275
-#, fuzzy
 msgid "Mount _Command"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #: ../src/settings.c:9276
 #, c-format
@@ -3781,9 +3613,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9278
-#, fuzzy
 msgid "Mount Command"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #: ../src/settings.c:9282
 msgid "_Unmount Command"
@@ -3806,14 +3637,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9285
-#, fuzzy
 msgid "Unmount Command"
-msgstr "কম্যান্ড:"
+msgstr ""
 
 #: ../src/settings.c:9307
-#, fuzzy
 msgid "Audio CD"
-msgstr "অডিও ডিস্ক"
+msgstr ""
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3828,23 +3657,20 @@ msgid "Optical No Media"
 msgstr ""
 
 #: ../src/settings.c:9328
-#, fuzzy
 msgid "Floppy Mounted"
-msgstr "ফ্লপি ড্রাইভ"
+msgstr ""
 
 #: ../src/settings.c:9333
 msgid "Floppy Unmounted"
 msgstr ""
 
 #: ../src/settings.c:9338
-#, fuzzy
 msgid "Removable Mounted"
-msgstr "%s রিমুভেবেল ভলিউম"
+msgstr ""
 
 #: ../src/settings.c:9343
-#, fuzzy
 msgid "Removable Unmounted"
-msgstr "%s রিমুভেবেল ভলিউম"
+msgstr ""
 
 #: ../src/settings.c:9348
 msgid "Internal Mounted"
@@ -3859,9 +3685,8 @@ msgid "Mounted Network"
 msgstr ""
 
 #: ../src/settings.c:9363
-#, fuzzy
 msgid "Mounted File"
-msgstr "ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
@@ -3879,15 +3704,13 @@ msgid "Re_move"
 msgstr ""
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:9393
-#, fuzzy
 msgid "_Settings"
-msgstr "ডেস্কটপের বৈশিষ্ট্য(_D)"
+msgstr ""
 
 #: ../src/settings.c:9405
 msgid "_Filename"
@@ -3903,9 +3726,8 @@ msgstr ""
 
 #: ../src/settings.c:9416 ../src/settings.c:10311 ../src/settings.c:10698
 #: ../src/settings.c:10822 ../src/settings.c:10950 ../src/settings.c:11078
-#, fuzzy
 msgid "_Type"
-msgstr "প্রকার"
+msgstr ""
 
 #: ../src/settings.c:9420
 msgid "_Target"
@@ -3922,9 +3744,8 @@ msgstr ""
 #: ../src/settings.c:9436 ../src/settings.c:10201
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
-#, fuzzy
 msgid "_Link"
-msgstr "লিংক:"
+msgstr ""
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -3952,9 +3773,8 @@ msgid "_Font"
 msgstr ""
 
 #: ../src/settings.c:9453
-#, fuzzy
 msgid "Move Dialog Font"
-msgstr "নীচের সারিতে নিয়ে যান( _D)"
+msgstr ""
 
 #: ../src/settings.c:9454
 msgid "/home/user/Example Filename.ext"
@@ -3985,9 +3805,8 @@ msgid "Status Bar Text Highlight Color"
 msgstr ""
 
 #: ../src/settings.c:9477
-#, fuzzy
 msgid "_Middle Click"
-msgstr "একটিমাত্র ক্লিক"
+msgstr ""
 
 #: ../src/settings.c:9481 ../src/settings.c:10387
 msgid "Copy _Name"
@@ -4006,25 +3825,21 @@ msgid "New _Window"
 msgstr "নতুন উইন্ডো(_W)"
 
 #: ../src/settings.c:9510
-#, fuzzy
 msgid "R_oot Window"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/settings.c:9513
-#, fuzzy
 msgid "_File Search"
-msgstr "খোঁজা সক্রিয় করা হবে"
+msgstr ""
 
 #: ../src/settings.c:9516
-#, fuzzy
 msgid "_Terminal"
-msgstr "টার্মিনাল:"
+msgstr ""
 
 #. discovery notification
 #: ../src/settings.c:9519
-#, fuzzy
 msgid "_Root Terminal"
-msgstr "টার্মিনাল:"
+msgstr ""
 
 #: ../src/settings.c:9522
 msgid "_Save Session"
@@ -4097,8 +3912,7 @@ msgstr ""
 #: ../src/settings.c:9610
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance starts:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_start)\n"
@@ -4115,28 +3929,24 @@ msgstr ""
 #: ../src/settings.c:9616
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance exits:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr ""
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"SpaceFM window is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_new)\n"
@@ -4158,8 +3968,7 @@ msgstr ""
 #: ../src/settings.c:9633
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_focus)\n"
@@ -4181,8 +3990,7 @@ msgstr ""
 #: ../src/settings.c:9639
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is moved or resized:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_move)\n"
@@ -4206,8 +4014,7 @@ msgstr ""
 #: ../src/settings.c:9645
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the "
-"mouse is clicked:\n"
+"Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_click)\n"
@@ -4218,13 +4025,10 @@ msgid ""
 "\t%%m\tmodifier  (modifier keys)\n"
 "\t%%f\tfocus  (element which received the click)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle "
-"button was clicked in %%f\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9648
@@ -4238,8 +4042,7 @@ msgstr ""
 #: ../src/settings.c:9651
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a key is "
-"pressed:\n"
+"Enter program or bash command line to be run automatically whenever a key is pressed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_key)\n"
@@ -4249,13 +4052,10 @@ msgid ""
 "\t%%k\tkey code  (key pressed)\n"
 "\t%%m\tmodifier  (modifier keys)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey "
-"F8 was pressed.\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9654
@@ -4269,8 +4069,7 @@ msgstr ""
 #: ../src/settings.c:9657
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is closed:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_close)\n"
@@ -4292,8 +4091,7 @@ msgstr ""
 #: ../src/settings.c:9668
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_focus)\n"
@@ -4315,8 +4113,7 @@ msgstr ""
 #: ../src/settings.c:9674
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"or panel element is shown or hidden:\n"
+"Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_show)\n"
@@ -4340,8 +4137,7 @@ msgstr ""
 #: ../src/settings.c:9680
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the file "
-"selection changes:\n"
+"Enter program or bash command line to be run automatically whenever the file selection changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_sel)\n"
@@ -4351,15 +4147,13 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler."
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4368,8 +4162,7 @@ msgstr ""
 #: ../src/settings.c:9691
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"tab is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_new)\n"
@@ -4387,8 +4180,7 @@ msgstr ""
 #: ../src/settings.c:9697
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_focus)\n"
@@ -4410,8 +4202,7 @@ msgstr ""
 #: ../src/settings.c:9703
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab is "
-"closed:\n"
+"Enter program or bash command line to be run automatically whenever a tab is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_close)\n"
@@ -4431,8 +4222,7 @@ msgstr ""
 #: ../src/settings.c:9709
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a device "
-"state changes:\n"
+"Enter program or bash command line to be run automatically whenever a device state changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_device)\n"
@@ -4464,14 +4254,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9719
-#, fuzzy
 msgid "_Window Icon"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/settings.c:9721
-#, fuzzy
 msgid "Set Window Icon"
-msgstr "নতুন উইন্ডো(_W)"
+msgstr ""
 
 #: ../src/settings.c:9722
 msgid ""
@@ -4495,9 +4283,8 @@ msgid "_Design Mode"
 msgstr ""
 
 #: ../src/settings.c:9730
-#, fuzzy
 msgid "_Preferences"
-msgstr "বিবিধ বৈশিষ্ট্য"
+msgstr ""
 
 #: ../src/settings.c:9733
 msgid "_Tool"
@@ -4541,9 +4328,8 @@ msgid "_Options"
 msgstr ""
 
 #: ../src/settings.c:9809
-#, fuzzy
 msgid "_Browser"
-msgstr "ব্রাউজ(_B)"
+msgstr ""
 
 #: ../src/settings.c:9811
 msgid "Choose HTML Browser"
@@ -4552,8 +4338,7 @@ msgstr ""
 #: ../src/settings.c:9812
 #, c-format
 msgid ""
-"Enter browser name or bash command line to be used to display HTML files and "
-"URLs:\n"
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
 "\n"
 "Use:\n"
 "\t%%u\turl\n"
@@ -4562,14 +4347,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9815
-#, fuzzy
 msgid "_Manual Location"
-msgstr "অবস্থান"
+msgstr ""
 
 #: ../src/settings.c:9817
-#, fuzzy
 msgid "Choose User's Manual Location"
-msgstr "অ্যাপ্লিকেশন নির্বাচন করুন"
+msgstr ""
 
 #: ../src/settings.c:9818
 msgid ""
@@ -4597,19 +4380,16 @@ msgid "_Count"
 msgstr ""
 
 #: ../src/settings.c:9865
-#, fuzzy
 msgid "_Item"
-msgstr "নতুন বস্তু"
+msgstr ""
 
 #: ../src/settings.c:9871
-#, fuzzy
 msgid "_To"
-msgstr "গন্তব্যস্থল:"
+msgstr ""
 
 #: ../src/settings.c:9877
-#, fuzzy
 msgid "_Progress"
-msgstr "প্রগতি:"
+msgstr ""
 
 #: ../src/settings.c:9884
 msgid "T_otal"
@@ -4632,9 +4412,8 @@ msgid "_Average Speed"
 msgstr ""
 
 #: ../src/settings.c:9927
-#, fuzzy
 msgid "Reor_der"
-msgstr "পুনরায় সাজানোর যোগ্য"
+msgstr ""
 
 #: ../src/settings.c:9933 ../src/settings.c:9953
 #: ../src/ptk/ptk-file-task.c:500 ../src/ptk/ptk-file-task.c:792
@@ -4714,9 +4493,8 @@ msgid "Stop On _Any"
 msgstr ""
 
 #: ../src/settings.c:10047
-#, fuzzy
 msgid "_Continue"
-msgstr "বিষয়বস্তু"
+msgstr ""
 
 #: ../src/settings.c:10052
 msgid "Qu_eue"
@@ -4755,15 +4533,13 @@ msgid "Edit As _Root"
 msgstr ""
 
 #: ../src/settings.c:10111
-#, fuzzy
 msgid "_Choose..."
-msgstr "ব্রাউজ..."
+msgstr ""
 
 #. virtual
 #: ../src/settings.c:10116
-#, fuzzy
 msgid "In _Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:10120
 msgid "N_ew"
@@ -4824,32 +4600,28 @@ msgid "In _Panel"
 msgstr ""
 
 #: ../src/settings.c:10145 ../src/settings.c:10164
-#, fuzzy
 msgid "_Extract"
-msgstr "এক্সট্র্যাক্ট(_x)"
+msgstr ""
 
 #: ../src/settings.c:10148 ../src/settings.c:10168
 msgid "Extract _To"
 msgstr "ঐখানে এক্সট্র্যাক্ট করুন(_T)"
 
 #: ../src/settings.c:10151 ../src/settings.c:10171
-#, fuzzy
 msgid "_List Contents"
-msgstr "বিষয়বস্তু"
+msgstr ""
 
 #: ../src/settings.c:10157
 msgid "_Archive Default"
 msgstr ""
 
 #: ../src/settings.c:10161
-#, fuzzy
 msgid "_Open With App"
-msgstr "\"%s\" এর সাহায্যে খুলুন(_O)"
+msgstr ""
 
 #: ../src/settings.c:10174
-#, fuzzy
 msgid "_Create Subfolder"
-msgstr "কোন সাব-ফোল্ডার নেই"
+msgstr ""
 
 #: ../src/settings.c:10178
 msgid "_Write Access"
@@ -4868,20 +4640,18 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/settings.c:10208
 msgid "_Archive"
 msgstr ""
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
@@ -4916,14 +4686,12 @@ msgid "Fo_cus"
 msgstr ""
 
 #: ../src/settings.c:10248
-#, fuzzy
 msgid "_Path Bar"
-msgstr "পথ"
+msgstr ""
 
 #: ../src/settings.c:10250
-#, fuzzy
 msgid "_File List"
-msgstr "ফাইল সিস্টেম"
+msgstr ""
 
 #: ../src/settings.c:10252
 msgid "_Tree"
@@ -4934,10 +4702,9 @@ msgid "De_vices"
 msgstr ""
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -4948,9 +4715,8 @@ msgid "C_olumns"
 msgstr ""
 
 #: ../src/settings.c:10288
-#, fuzzy
 msgid "_Reorder"
-msgstr "পুনরায় সাজানোর যোগ্য"
+msgstr ""
 
 #: ../src/settings.c:10290
 msgid "_Rubberband Select"
@@ -4964,27 +4730,23 @@ msgstr ""
 #. position
 #: ../src/settings.c:10309 ../src/settings.c:10693 ../src/settings.c:10816
 #: ../src/settings.c:10944 ../src/settings.c:11072
-#, fuzzy
 msgid "_Size"
-msgstr "মাপ"
+msgstr ""
 
 #: ../src/settings.c:10313 ../src/settings.c:10703 ../src/settings.c:10828
 #: ../src/settings.c:10956 ../src/settings.c:11084
-#, fuzzy
 msgid "_Permission"
-msgstr "অনুমতি(_P)"
+msgstr ""
 
 #: ../src/settings.c:10315 ../src/settings.c:10577 ../src/settings.c:10708
 #: ../src/settings.c:10834 ../src/settings.c:10962 ../src/settings.c:11090
-#, fuzzy
 msgid "_Owner"
-msgstr "<b>মালিক(_O):</b>"
+msgstr ""
 
 #: ../src/settings.c:10317 ../src/settings.c:10713 ../src/settings.c:10840
 #: ../src/settings.c:10968 ../src/settings.c:11096
-#, fuzzy
 msgid "_Modified"
-msgstr "শেষ পরিবর্তনের তারিখ"
+msgstr ""
 
 #: ../src/settings.c:10319
 msgid "_Ascending"
@@ -4999,14 +4761,12 @@ msgid "Nat_ural"
 msgstr ""
 
 #: ../src/settings.c:10326
-#, fuzzy
 msgid "_Case Sensitive"
-msgstr "ছাঁদ সংবেদনশীল"
+msgstr ""
 
 #: ../src/settings.c:10328
-#, fuzzy
 msgid "Folders Fi_rst"
-msgstr "ফোল্ডার"
+msgstr ""
 
 #: ../src/settings.c:10330
 msgid "F_iles First"
@@ -5017,9 +4777,8 @@ msgid "Mi_xed"
 msgstr ""
 
 #: ../src/settings.c:10334
-#, fuzzy
 msgid "_Hidden First"
-msgstr "লুকিয়ে থাকা ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:10336
 msgid "Hidden _Last"
@@ -5043,13 +4802,11 @@ msgstr ""
 
 #: ../src/settings.c:10350
 msgid ""
-"Enter command to be used to mount or open protocols (such as nfs://, smb://, "
-"etc):\n"
+"Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
 "If this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n"
 "\n"
-"TIP:  To unmount networks, install udevil or set Unmount Command to a "
-"command which handles network protocols.\n"
+"TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr ""
 
 #: ../src/settings.c:10354
@@ -5081,20 +4838,17 @@ msgid "_Copy To"
 msgstr ""
 
 #: ../src/settings.c:10412
-#, fuzzy
 msgid "L_ocation"
-msgstr "অবস্থান"
+msgstr ""
 
 #: ../src/settings.c:10413 ../src/settings.c:10452
-#, fuzzy
 msgid "L_ast Location"
-msgstr "অবস্থান"
+msgstr ""
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:10433
 msgctxt "Edit|CopyTo|"
@@ -5102,20 +4856,17 @@ msgid "_Panel"
 msgstr ""
 
 #: ../src/settings.c:10447
-#, fuzzy
 msgid "_Move To"
-msgstr "নীচের সারিতে নিয়ে যান( _D)"
+msgstr ""
 
 #: ../src/settings.c:10451
-#, fuzzy
 msgid "_Location"
-msgstr "অবস্থান"
+msgstr ""
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "নতুন ট্যাব(_T)"
+msgstr ""
 
 #: ../src/settings.c:10471
 msgctxt "Edit|MoveTo|"
@@ -5123,9 +4874,8 @@ msgid "_Panel"
 msgstr ""
 
 #: ../src/settings.c:10484
-#, fuzzy
 msgid "_Select All"
-msgstr "একটি ফোল্ডার বেছে নিন"
+msgstr ""
 
 #: ../src/settings.c:10487
 msgid "_Unselect All"
@@ -5136,24 +4886,21 @@ msgid "_Invert Selection"
 msgstr ""
 
 #: ../src/settings.c:10491
-#, fuzzy
 msgid "S_elect By Pattern"
-msgstr "একটি ফোল্ডার বেছে নিন"
+msgstr ""
 
 #: ../src/settings.c:10493
 msgid "R_oot"
 msgstr ""
 
 #: ../src/settings.c:10499
-#, fuzzy
 msgid "Move _To"
-msgstr "নীচের সারিতে নিয়ে যান( _D)"
+msgstr ""
 
 #. Properties
 #: ../src/settings.c:10504
-#, fuzzy
 msgid "Propert_ies"
-msgstr "বিবিধ বৈশিষ্ট্য(_P)"
+msgstr ""
 
 #: ../src/settings.c:10515
 msgid "_Quick"
@@ -5211,9 +4958,8 @@ msgstr ""
 
 #: ../src/settings.c:10639 ../src/settings.c:10759 ../src/settings.c:10887
 #: ../src/settings.c:11015
-#, fuzzy
 msgid "_Hidden Files"
-msgstr "লুকিয়ে থাকা ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/settings.c:10645
 msgid "File List Font (Panel 1)"
@@ -5353,14 +5099,12 @@ msgstr ""
 #. sort_hidden_first
 #. speed
 #: ../src/settings.c:11109 ../src/settings.c:11116
-#, fuzzy
 msgid "_New Tab"
-msgstr "নতুন ট্যাব"
+msgstr ""
 
 #: ../src/settings.c:11112 ../src/settings.c:11121
-#, fuzzy
 msgid "_Single Click"
-msgstr "একটিমাত্র ক্লিক"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:551
 msgid "Toolbar Config Menu Help"
@@ -5370,20 +5114,18 @@ msgstr ""
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
-"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-"
-"click on an item to show or hide it, change the icon, or add a custom tool "
-"item.\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
 "\n"
 "For more information, click the Help button below."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2252
 #, c-format
@@ -5394,17 +5136,15 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
-#, fuzzy
 msgid "Select By Pattern"
-msgstr "একটি ফোল্ডার বেছে নিন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
 "\n"
-"If your pattern contains any uppercase characters, the matching will be case "
-"sensitive.\n"
+"If your pattern contains any uppercase characters, the matching will be case sensitive.\n"
 "\n"
 "Example:  *sp*e?m*\n"
 "\n"
@@ -5412,9 +5152,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
-#, fuzzy
 msgid "Choose Location"
-msgstr "অ্যাপ্লিকেশন নির্বাচন করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5751 ../src/ptk/ptk-file-browser.c:5783
 msgid "Invalid Destination"
@@ -5429,11 +5168,11 @@ msgid "Invalid destination"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5826
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
-msgstr[0] "নির্বাচিত ফাইলগুলি মুছে ফেলা হবে কি?"
-msgstr[1] "নির্বাচিত ফাইলগুলি মুছে ফেলা হবে কি?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-browser.c:5830
 msgid "Confirm Delete As Root"
@@ -5456,18 +5195,14 @@ msgid "Copy As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
-#, fuzzy
 msgid "Hide File"
-msgstr "ফাইল খুঁজে নিন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
-"The names of the selected files will be added to the '.hidden' file located "
-"in this folder, which will hide them from view in SpaceFM.  You may need to "
-"refresh the view or restart SpaceFM for the files to disappear.\n"
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
-"To unhide a file, open the .hidden file in your text editor, remove the name "
-"of the file, and refresh."
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5947
@@ -5475,15 +5210,13 @@ msgid "Error hiding files"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5954
-#, fuzzy
 msgid "No files are selected"
-msgstr "অনেকগুলি ফাইল একসাথে নির্বাচন করা হয়েছে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
@@ -5635,8 +5368,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  You may want or need to unmount it before changing "
-"the label."
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1166
@@ -5712,7 +5444,8 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
-msgid "%s is currently mounted.  You must unmount it before you can format it."
+msgid ""
+"%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1754 ../src/ptk/ptk-location-view.c:1914
@@ -5723,8 +5456,7 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1760
 #, c-format
 msgid ""
-"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
-"take awhile and dd gives no feedback.\n"
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
 "\n"
 "Enter command to overwrite entire volume with /dev/%s:\n"
 "\n"
@@ -5776,11 +5508,9 @@ msgstr ""
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
 "\n"
-"This change may prevent your computer from booting properly.  All important "
-"data on the entire device should be backed up first.\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
 "\n"
-"Proceed?  (If you press Yes, you still have one more opportunity to abort "
-"before the disk is modified.)"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1864
@@ -5788,18 +5518,14 @@ msgid "Restore MBR"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
-#, fuzzy
 msgid "Unknown Type"
-msgstr "পরিচিত ফাইল প্রকার:"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
-"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage "
-"filenames contain 'partimage' or end in '.000'.  MBR filenames end in '."
-"mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE "
-"this file is a valid backup, you can rename it to avoid this error."
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1917
@@ -5842,9 +5568,8 @@ msgid "Choose Backup For Info"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
-#, fuzzy
 msgid "MBR File"
-msgstr "ফাইলের নাম পরিবর্তন করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5861,16 +5586,14 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes "
-"mounted read-only.  To backup a read-write volume, you need to add --allow-"
-"rw-mounted to the command.  See 'man fsarchiver' for details."
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2163
 #, c-format
 msgid ""
-"%s is currently mounted.  You must unmount it before you can create a backup "
-"using Partimage."
+"%s is currently mounted.  You must unmount it before you can create a backup"
+" using Partimage."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2180
@@ -5908,9 +5631,9 @@ msgid "%s Backup %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Properties %s"
-msgstr "বিবিধ বৈশিষ্ট্য(_P)"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2519 ../src/ptk/ptk-location-view.c:2546
 #, c-format
@@ -5933,9 +5656,8 @@ msgid "_Eject"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3337
-#, fuzzy
 msgid "Rename Bookmark"
-msgstr "বুকমার্ক:"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3339
 msgid "Enter new bookmark name:"
@@ -5979,9 +5701,8 @@ msgid "Copy: "
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:754
-#, fuzzy
 msgid "Trash: "
-msgstr "আবর্জনা"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:755
 msgid "Delete: "
@@ -6008,9 +5729,8 @@ msgid "Copying..."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:764
-#, fuzzy
 msgid "Trashing..."
-msgstr "প্রস্তুতি চলছে..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:765
 msgid "Deleting..."
@@ -6021,9 +5741,8 @@ msgid "Linking..."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:767
-#, fuzzy
 msgid "Changing..."
-msgstr "গণনা করা হচ্ছে..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:768 ../src/ptk/ptk-file-task.c:936
 #: ../src/ptk/ptk-file-task.c:1462
@@ -6040,9 +5759,8 @@ msgid "To:"
 msgstr "গন্তব্যস্থল:"
 
 #: ../src/ptk/ptk-file-task.c:887
-#, fuzzy
 msgid "Progress:  "
-msgstr "প্রগতি:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:925
 msgid "Status:  "
@@ -6083,9 +5801,8 @@ msgid "Stop On Any Error"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1004
-#, fuzzy
 msgid "Continue"
-msgstr "বিষয়বস্তু"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1161 ../src/ptk/ptk-file-task.c:1394
 #, c-format
@@ -6188,24 +5905,21 @@ msgid "stalled"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2020
-#, fuzzy
 msgid "Moving from folder:"
-msgstr "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2022
 msgid "Linking from folder:"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2024
-#, fuzzy
 msgid "Copying from folder:"
-msgstr "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr ""
 
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2040
-#, fuzzy
 msgid "Folder Exists"
-msgstr "ফোল্ডার"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -6220,9 +5934,8 @@ msgid "\t<b>! overwrite file with link !</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2071
-#, fuzzy
 msgid "<b>( same size )</b>"
-msgstr "<b>ফাইলের আয়তন</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2077 ../src/ptk/ptk-file-task.c:2100
 #, c-format
@@ -6234,9 +5947,8 @@ msgid "larger"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2081
-#, fuzzy
 msgid "smaller"
-msgstr "এর থেকে ছোট:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2085
 msgid "<b>( same time )</b>\t"
@@ -6247,28 +5959,24 @@ msgid "newer"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2097
-#, fuzzy
 msgid "older"
-msgstr "ফোল্ডার"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2118
-#, fuzzy
 msgid "Filename Exists"
-msgstr "ফাইল অনুপস্থিত"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
-#, fuzzy
 msgid "Rename Required"
-msgstr "ফাইলের নাম পরিবর্তন করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2133
-#, fuzzy
 msgid "In folder:"
-msgstr "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2212
 msgid "_Overwrite"
@@ -6291,20 +5999,17 @@ msgid "S_kip All"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2273
-#, fuzzy
 msgid "To folder:"
-msgstr "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Folder Name:</b>"
-msgstr "<b>ফাইলের নাম(_N):</b>"
+msgstr ""
 
 #. extra buttons
 #: ../src/ptk/ptk-file-task.c:2328
-#, fuzzy
 msgid " _Rename "
-msgstr "ফাইলের নাম পরিবর্তন করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2332
 msgid " A_uto Rename "
@@ -6337,9 +6042,8 @@ msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
-#, fuzzy
 msgid "Extract To"
-msgstr "ঐখানে এক্সট্র্যাক্ট করুন(_T)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:485
 msgid "Cre_ate subfolder(s)"
@@ -6356,17 +6060,15 @@ msgstr ""
 
 #. task
 #: ../src/ptk/ptk-file-archiver.c:689
-#, fuzzy, c-format
+#, c-format
 msgid "Extract %s"
-msgstr "ফাইল এক্সট্র্যাক্ট করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-console-output.c:74
 msgid ""
 "\n"
 "Complete!"
-msgstr ""
-"\n"
-"সমাপ্ত!"
+msgstr "\nসমাপ্ত!"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
@@ -6377,9 +6079,8 @@ msgid "File System"
 msgstr "ফাইল সিস্টেম"
 
 #: ../src/ptk/ptk-dir-tree.c:396
-#, fuzzy
 msgid "( no subfolder )"
-msgstr "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid "Remove Text Type Association"
@@ -6387,14 +6088,14 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid ""
-"NOTE:  When compiling the list of applications to appear in the Open submenu "
-"for a text file, SpaceFM will include applications associated with the MIME "
-"type (eg text/html) AND applications associated with text/plain.  If you "
+"NOTE:  When compiling the list of applications to appear in the Open submenu"
+" for a text file, SpaceFM will include applications associated with the MIME"
+" type (eg text/html) AND applications associated with text/plain.  If you "
 "select Remove on an application, it will be removed as an associated "
 "application for the MIME type (eg text/html), but will NOT be removed as an "
-"associated application for text/plain (unless the MIME type is text/plain).  "
-"Thus using Remove may not remove the application from the Open submenu for "
-"this type, unless you also remove it from text/plain."
+"associated application for text/plain (unless the MIME type is text/plain)."
+"  Thus using Remove may not remove the application from the Open submenu for"
+" this type, unless you also remove it from text/plain."
 msgstr ""
 
 #. Set Default
@@ -6412,11 +6113,11 @@ msgid "new"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
-msgstr[0] "নির্বাচিত ফাইলগুলি মুছে ফেলা হবে কি?"
-msgstr[1] "নির্বাচিত ফাইলগুলি মুছে ফেলা হবে কি?"
+msgstr[0] ""
+msgstr[1] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:159
@@ -6454,9 +6155,8 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:561 ../src/ptk/ptk-file-misc.c:575
 #: ../src/ptk/ptk-file-misc.c:586 ../src/ptk/ptk-file-misc.c:623
 #: ../src/ptk/ptk-file-misc.c:2248
-#, fuzzy
 msgid "<b>_Parent:</b>"
-msgstr "<b>গ্রুপ(_G):</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:570
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
@@ -6488,15 +6188,13 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:595 ../src/ptk/ptk-file-misc.c:607
 #: ../src/ptk/ptk-file-misc.c:619 ../src/ptk/ptk-file-misc.c:2177
-#, fuzzy
 msgid "<b>_Name:</b>"
-msgstr "<b>ফাইলের নাম(_N):</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:597 ../src/ptk/ptk-file-misc.c:609
 #: ../src/ptk/ptk-file-misc.c:621 ../src/ptk/ptk-file-misc.c:2224
-#, fuzzy
 msgid "<b>_Filename:</b>"
-msgstr "<b>ফাইলের নাম(_N):</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:599
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
@@ -6511,29 +6209,24 @@ msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:617 ../src/ptk/ptk-file-misc.c:2272
-#, fuzzy
 msgid "<b>P_ath:</b>"
-msgstr "<b>এটি ব্যবহার করে খুলুন(_w):</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
-#, fuzzy
 msgid "_Move"
-msgstr "উপরের সারিতে নিয়ে যান(_U)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:783
-#, fuzzy
 msgid "Select Link Target"
-msgstr "নির্বাচনের মোড"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:799
-#, fuzzy
 msgid "Select Template File"
-msgstr "একটি ফোল্ডার বেছে নিন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:818
-#, fuzzy
 msgid "Select Template Folder"
-msgstr "একটি ফোল্ডার বেছে নিন"
+msgstr ""
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -6548,14 +6241,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:983
 msgid ""
-"* To select all the text in an entry, click the entry's label (eg "
-"'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
 "\n"
-"* To quickly copy an entry's text to the clipboard, double- or middle-click "
-"on the entry's label (eg 'Filename:').\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
 "\n"
-"* Multiple files can be selected in the file browser to rename a batch of "
-"files."
+"* Multiple files can be selected in the file browser to rename a batch of files."
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1042
@@ -6568,27 +6258,23 @@ msgid "Create New"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr "নতুন ফাইল"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
 msgstr "ফোল্ডার"
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr "লিংক:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
-#, fuzzy
 msgid "Move"
-msgstr "উপরের সারিতে নিয়ে যান(_U)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1070 ../src/ptk/ptk-file-misc.c:1080
 msgid "C_opy"
@@ -6615,14 +6301,12 @@ msgid " As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
-#, fuzzy
 msgid "Link"
-msgstr "লিংক:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1886
-#, fuzzy
 msgid "File"
-msgstr "নতুন ফাইল"
+msgstr ""
 
 #. g_free( title );
 #. Buttons
@@ -6635,14 +6319,13 @@ msgid "Re_vert"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1956
-#, fuzzy
 msgid "& _Open"
-msgstr "খুলুন(_O)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1990
-#, fuzzy, c-format
+#, c-format
 msgid "Link-> %s"
-msgstr "লিংক:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1993
 #, c-format
@@ -6650,29 +6333,24 @@ msgid "!Link-> %s (missing)"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2042
-#, fuzzy
 msgid "<b>_Target:</b>"
-msgstr "<b>গ্রুপ(_G):</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2088
-#, fuzzy
 msgid "<b>_Template:</b>"
-msgstr "<b>ফাইলের প্রকার:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2104 ../src/ptk/ptk-file-misc.c:2693
-#, fuzzy
 msgid "Empty File"
-msgstr "ফাইল এক্সট্র্যাক্ট করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2134 ../src/ptk/ptk-file-misc.c:2771
-#, fuzzy
 msgid "Empty Folder"
-msgstr "ফোল্ডার"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2202
-#, fuzzy
 msgid "<b>E_xtension:</b>"
-msgstr "<b>অবস্থান:</b>"
+msgstr ""
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2297
@@ -6706,15 +6384,13 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr "লিংক:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2415
-#, fuzzy
 msgid "New"
-msgstr "নতুন ট্যাব"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2544
 msgid "Path contains linefeeds"
@@ -6768,14 +6444,14 @@ msgid "The specified template does not exist"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "Create New File%s"
-msgstr "নতুন ফাইল"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2802
-#, fuzzy, c-format
+#, c-format
 msgid "Create New Folder%s"
-msgstr "নতুন ফোল্ডার"
+msgstr ""
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2833
@@ -6810,27 +6486,24 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
-#, fuzzy
 msgid "Rename Error"
-msgstr "ফাইলের নাম পরিবর্তন করুন"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3132 ../src/ptk/ptk-file-misc.c:3134
 msgid "New Folder"
 msgstr "নতুন ফোল্ডার"
 
 #: ../src/ptk/ptk-file-misc.c:3133
-#, fuzzy
 msgid "New folder name:"
-msgstr "নতুন ফোল্ডার"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3139 ../src/ptk/ptk-file-misc.c:3141
 msgid "New File"
 msgstr "নতুন ফাইল"
 
 #: ../src/ptk/ptk-file-misc.c:3140
-#, fuzzy
 msgid "New filename:"
-msgstr "নতুন ফাইল"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3163
 msgid ""
@@ -6840,15 +6513,13 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3196
-#, fuzzy
 msgid "The new file cannot be created"
-msgstr "নতুন ফাইল তৈরী করা সম্ভব নয়!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
 msgid ""
-"This symlink's target is missing or you do not have permission to access "
-"it:\n"
+"This symlink's target is missing or you do not have permission to access it:\n"
 "%s\n"
 "\n"
 "Target: %s"
@@ -6864,11 +6535,11 @@ msgid "%s ( %llu bytes )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "%d folder"
 msgid_plural "%d folders"
-msgstr[0] "ঐ ফোল্ডারে যাওয়া হবে"
-msgstr[1] "ঐ ফোল্ডারে যাওয়া হবে"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:177
 #, c-format
@@ -6878,25 +6549,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "ফাইল খুঁজে নিন"
-msgstr[1] "ফাইল খুঁজে নিন"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
-#, fuzzy
 msgid "( multiple files )"
-msgstr "অনেকগুলি ফাইল একসাথে নির্বাচন করা হয়েছে"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:443
 msgid "( multiple types )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:512
-#, fuzzy
 msgid "Choose..."
-msgstr "ব্রাউজ..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:568 ../src/ptk/ptk-file-properties.c:575
 #, c-format
@@ -6924,8 +6593,7 @@ msgstr "অবৈধ গ্রুপ"
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
 msgid ""
-"In addition to a folder or file path, commands can be entered in the Path "
-"Bar.  Prefixes:\n"
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
 "\t$\trun as task\n"
 "\t&\trun and forget\n"
 "\t+\trun in terminal\n"
@@ -6973,9 +6641,8 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:483 ../src/vfs/vfs-file-info.c:488
 #: ../src/vfs/vfs-file-info.c:582 ../src/vfs/vfs-file-info.c:587
-#, fuzzy
 msgid "G"
-msgstr "চলুন"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:502 ../src/vfs/vfs-file-info.c:507
 #: ../src/vfs/vfs-file-info.c:601 ../src/vfs/vfs-file-info.c:606
@@ -7002,9 +6669,8 @@ msgstr ""
 #: ../src/vfs/vfs-file-task.c:797 ../src/vfs/vfs-file-task.c:828
 #: ../src/vfs/vfs-file-task.c:913 ../src/vfs/vfs-file-task.c:1055
 #: ../src/vfs/vfs-file-task.c:2029
-#, fuzzy
 msgid "Accessing"
-msgstr "প্রক্রিয়াকরণ:"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:457 ../src/vfs/vfs-file-task.c:493
 #: ../src/vfs/vfs-file-task.c:511 ../src/vfs/vfs-file-task.c:556
@@ -7023,18 +6689,16 @@ msgid "Creating Link"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:585
-#, fuzzy
 msgid "Writing"
-msgstr "লিখুন"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:628
 msgid "Creating"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:714
-#, fuzzy
 msgid "Renaming"
-msgstr "ফাইলের নাম পরিবর্তন করুন"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1346
 msgid ""
@@ -7314,7 +6978,8 @@ msgstr "আপনার ভলিউম \"%s\" আনমাউন্ট কর�
 msgid "You are not privileged to eject the volume \"%s\""
 msgstr "আপনার ভলিউম \"%s\" বহিষ্কার করার অধিকার নেই"
 
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#. TODO: slim down mount options to what is allowed, cf.
+#. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
@@ -7325,9 +6990,7 @@ msgstr "\"%s\" ভলিউম মাউন্ট করার সময় অব�
 msgid ""
 "The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
 "your system"
-msgstr ""
-"ভলিউম \"%s\" এই <i>%s</i> ফাইলসিস্টেম ব্যবহার করে যেটি আপনার সিস্টেম দ্বারা "
-"সমর্থিত নয়"
+msgstr "ভলিউম \"%s\" এই <i>%s</i> ফাইলসিস্টেম ব্যবহার করে যেটি আপনার সিস্টেম দ্বারা সমর্থিত নয়"
 
 #: ../src/vfs/vfs-volume-hal.c:2278
 #, c-format
@@ -7348,24 +7011,20 @@ msgstr "ত্রুটি <i>%s</i>"
 #: ../src/vfs/vfs-volume-hal.c:2285
 #, c-format
 msgid "The volume \"%s\" was probably mounted manually on the command line"
-msgstr ""
-"ভলিউম \"%s\" টি বোধহয় কম্যান্ড লাইনের সাহায্য মাউন্ট করা হয়েছে HAL এটি আনমাউন্ট "
-"করতে সক্ষম নয়"
+msgstr "ভলিউম \"%s\" টি বোধহয় কম্যান্ড লাইনের সাহায্য মাউন্ট করা হয়েছে HAL এটি আনমাউন্ট করতে সক্ষম নয়"
 
 #: ../src/vfs/vfs-volume-hal.c:2293
 #, c-format
 msgid ""
 "Blank discs cannot be mounted, use a CD recording application to record "
 "audio or data on the disc"
-msgstr ""
-"শূন্য ডিস্ক মাউন্ট করা সম্ভব নয়, কোন সিডি রেকর্ডিং অ্যাপ্লিকেশন ব্যবহার করে ডিস্কে "
-"অডিও বা তথ্য লিখুন"
+msgstr "শূন্য ডিস্ক মাউন্ট করা সম্ভব নয়, কোন সিডি রেকর্ডিং অ্যাপ্লিকেশন ব্যবহার করে ডিস্কে অডিও বা তথ্য লিখুন"
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
-msgstr ""
-"অডিও সিডি মাউন্ট করা যায়নি, অডিও ট্র্যাক শোনার জন্য মিউজিক প্লেয়ার ব্যবহার করুন"
+msgid ""
+"Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr "অডিও সিডি মাউন্ট করা যায়নি, অডিও ট্র্যাক শোনার জন্য মিউজিক প্লেয়ার ব্যবহার করুন"
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
 #, c-format
@@ -7383,9 +7042,9 @@ msgid "[blank]"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2383
-#, fuzzy, c-format
+#, c-format
 msgid "[audio]"
-msgstr "অডিও"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2397
 #, c-format
@@ -7496,8 +7155,7 @@ msgstr "ডেস্কটপের বৈশিষ্ট্য(_D)"
 msgid ""
 "Enter new desktop item name:\n"
 "\n"
-"Changing the name of this desktop item requires modifying the contents of "
-"desktop file %s"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr ""
 
 #: ../src/desktop/desktop-window.c:1795
@@ -7521,194 +7179,9 @@ msgid "Browse..."
 msgstr "ব্রাউজ..."
 
 #: ../src/find-files.c:846
-#, fuzzy
 msgid "Local Volumes"
-msgstr "%s ভলিউম"
+msgstr ""
 
 #: ../src/find-files.c:934
 msgid "Last Modified"
 msgstr "শেষ পরিবর্তনের তারিখ"
-
-#~ msgid ""
-#~ "Lightweight file manager\n"
-#~ "\n"
-#~ "Developed by Hon Jen Yee (PCMan)"
-#~ msgstr ""
-#~ "লাইটওয়েট ফাইল ম্যানেজার\n"
-#~ "\n"
-#~ "Hon Jen Yee (PCMan) দ্বারা তৈরী"
-
-#~ msgid ""
-#~ "The icon was taken from \"nuoveXT 2\" icon theme\n"
-#~ "created by Alexandre Moore (saki).\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-#~ msgstr ""
-#~ "এই আইকনটি \"nuoveXT 2\" আইকন থিম থেকে গ্রহণ করা হয়েছে\n"
-#~ "Alexandre Moore (saki) দ্বারা তৈরী করা।\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-
-#~ msgid "File Type To be Opened:"
-#~ msgstr "যে প্রকারের ফাইল খোলা হবে:"
-
-#~ msgid "Set selected application to default action"
-#~ msgstr "নির্বাচিত অ্যাপ্লিকেশনটিকে ডিফল্ট ক্রিয়ার জন্য ধার্য্য করুন"
-
-#~ msgid "_Recommended Applications"
-#~ msgstr "প্রস্তাবিত অ্যাপ্লিকশেন(_R)"
-
-#~ msgid "Actions Showed in Popup Menus"
-#~ msgstr "পপ-আপ মেনুতে প্রদর্শিত অ্যাকশন"
-
-#~ msgid "Add _Application"
-#~ msgstr "অ্যাপ্লিকেশন যোগ করুন(_A)"
-
-#~ msgid "Add _Custom Action"
-#~ msgstr " নিজস্ব ক্রিয়া যোগ করুন(_C)"
-
-#~ msgid "File Associations"
-#~ msgstr "ফাইল সমরূপ"
-
-#~ msgid "<b>Last Modification:</b>"
-#~ msgstr "<b>শেষবার পরিবর্তন করার সময়:</b>"
-
-#~ msgid "<b>Other Users:</b>"
-#~ msgstr "<b>অন্যান্য ব্যবহারকারী:</b>"
-
-#~ msgid "<b>File Name Contains:</b>"
-#~ msgstr "<b>ফাইলের নামে আছে:</b>"
-
-#~ msgid ""
-#~ "Any\n"
-#~ "Within One Day\n"
-#~ "Within One Week\n"
-#~ "Within One Month\n"
-#~ "Within One Year\n"
-#~ "Within Selected Date Range"
-#~ msgstr ""
-#~ "যে কোন\n"
-#~ "এক দিনের মধ্যে\n"
-#~ "এক সপ্তাহের মধ্যে\n"
-#~ "এক মাসের মধ্যে\n"
-#~ "এক বছরের মধ্যে\n"
-#~ "নির্বাচিত তারিখের মধ্যে"
-
-#~ msgid ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-#~ msgstr ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-
-#~ msgid "Disable \"Trash Can\" and delete files from disk directly"
-#~ msgstr "\"আবর্জনার বাক্স\" নিষ্ক্রিয় করে সরাসরি ডিস্ক থেকে ফাইল মুছে ফেলুন"
-
-#~ msgid "Display image files with supported format as thumbnails"
-#~ msgstr "সমর্থিত বিন্যাসের ছবিগুলি থাম্ব-নেইল হিসাবে প্রদর্শন করুন"
-
-#~ msgid "Hide folder content border"
-#~ msgstr "ফোল্ডারের বিষয়বস্তু প্রান্তরেখা লুকিয়ে রাখা হবে"
-
-#~ msgid "Hide side pane buttons"
-#~ msgstr "পাশের পেন-এর বটন লুকিয়ে রাখা হবে"
-
-#~ msgid "Max size of files displayed as thumbnails:"
-#~ msgstr "থাম্ব-নেইল হিসাবে প্রদর্শিত ফাইলের সর্ব্বোচ্চ মাপ:"
-
-#~ msgid "Open files with single click"
-#~ msgstr "একটি ক্লিকের সাহায্যে ফাইল খোলা যাবে"
-
-#~ msgid ""
-#~ "Opened in Current Tab\n"
-#~ "Opened in New Tab\n"
-#~ "Opened in New Window"
-#~ msgstr ""
-#~ "বর্তমান ট্যাবে খোলা হবে\n"
-#~ "নতুন ট্যাবে খোলা হবে\n"
-#~ "নতুন উইন্ডোয় খোলা হবে"
-
-#~ msgid "Size of Big Icons:"
-#~ msgstr "বড় আইকনের মাপ:"
-
-#~ msgid ""
-#~ "Stretch to fill the entire screen\n"
-#~ "Stretch to fit the screen\n"
-#~ "Center on the screen\n"
-#~ "Tile the image to fill the entire screen"
-#~ msgstr ""
-#~ "পর্দা জুড়ে দেখানো হবে\n"
-#~ "পর্দার মাপ অনুযায়ী দেখানো হবে\n"
-#~ "পর্দার মাঝামাঝি দেখানো হবে\n"
-#~ "টালির ছক করে পর্দা জুড়ে দেখানো হবে"
-
-#~ msgid "Use SI decimal prefixes instead of IEC binary prefixes"
-#~ msgstr "IEC বাইনারি প্রেফিক্সের বদলে SI ডেসিমাল প্রেফিক্স ব্যবহার করা হবে"
-
-#~ msgid "application"
-#~ msgstr "অ্যাপ্লিকেশন"
-
-#~ msgid "video"
-#~ msgstr "ভিডিও"
-
-#~ msgid "multipart"
-#~ msgstr "মাল্টিপার্ট"
-
-#~ msgid "image"
-#~ msgstr "ছবি"
-
-#~ msgid "model"
-#~ msgstr "মডেল"
-
-#~ msgid "inode"
-#~ msgstr "আইনোড"
-
-#~ msgid "packages"
-#~ msgstr "প্যাকেজসমূহ"
-
-#~ msgid "Don't show desktop icons."
-#~ msgstr "ডেস্ককটপ আইকন প্রদর্শন করা হবে না।"
-
-#~ msgid "Find Files with PCManFM"
-#~ msgstr "PCManFM এর সাহায্যে ফাইল খুঁজুন"
-
-#~ msgid "GTK+ icon theme is not properly set"
-#~ msgstr "GTK+ আইকন থিম সঠিকভাবে নির্ধারিত হয়নি"
-
-#~ msgid "_Text File"
-#~ msgstr "টেক্সট ফাইল(_T)"
-
-#~ msgid "Desktop"
-#~ msgstr "ডেস্কটপ"
-
-#~ msgid "E_xtract Here"
-#~ msgstr "এখানে এক্সট্র্যাক্ট করুন(_x)"
-
-#~ msgid "Compress"
-#~ msgstr "সংকোচন করুন"
-
-#~ msgid "_Open with another program"
-#~ msgstr "অন্য প্রোগ্রামের সাহায্যে খুলুন(_O)"
-
-#~ msgid "Please input new file name:"
-#~ msgstr "অনুগ্রহ করে নতুন ফাইলের নাম লিখুন:"
-
-#~ msgid "Input a name for the new folder:"
-#~ msgstr "নতুন ফোল্ডারের জন্য নাম লিখুন:"
-
-#~ msgid "Input a name for the new file:"
-#~ msgstr "নতুন ফাইলের জন্য নাম লিখুন:"
-
-#~ msgid "Multiple files of different types"
-#~ msgstr "বিভিন্ন প্রকারের বহু ফাইল"
-
-#~ msgid "Other program..."
-#~ msgstr "অন্য প্রোগ্রাম..."
-
-#~ msgid "My Documents"
-#~ msgstr "আমার ডকুমেন্ট"
-
-#~ msgid "All Local Disk Partitions"
-#~ msgstr "সকল স্থানীয় ডিস্ক পার্টিশন"

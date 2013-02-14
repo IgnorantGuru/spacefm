@@ -1,90 +1,73 @@
-# SpaceFM zh_CN.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
-#
-# Haifeng Chen <optical.dlz@gmail.com>, 2006.
+# 
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
 # Careone <zzbusagain@yahoo.com.cn>, 2009.
-#
+# Haifeng Chen <optical.dlz@gmail.com>, 2006.
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6\n"
+"Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 21:00+0000\n"
-"PO-Revision-Date: 2009-06-05 22:57+0800\n"
-"Last-Translator: Careone <zzbusagain@yahoo.com.cn>\n"
-"Language-Team: zh_CN\n"
-"Language: zh_CN\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:20+0000\n"
+"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1;plural=0;\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM Open Folder"
-msgstr "向上"
+msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
-#, fuzzy
 msgid "Open folder"
-msgstr "向上"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM File Search"
-msgstr "启用搜索"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:2
-#, fuzzy
 msgid "Search for files and folders"
-msgstr "所有文件和文件夹"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
 msgstr ""
 
 #: ../data/spacefm.desktop.in.h:2
-#, fuzzy
 msgid "File Manager"
-msgstr "PCMan 文件管理器"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:3
-#, fuzzy
 msgid "Browse the file system"
-msgstr "挂载文件系统(_M)"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:1
 msgid "by IgnorantGuru"
 msgstr ""
 
-#
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "版权所有 (C) 2005 - 2008"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
 "SpaceFM - Copyright (C) 2013   GPL3+\n"
 "\n"
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 3 of the License, or (at your option) "
-"any later version.\n"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
-"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details.\n"
+"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 "\n"
-"The 'exo' libraries and source code used by this software are licensed under "
-"the GNU General Public License and the GNU Lesser General Public License "
-"version 3 (LGPL3).\n"
+"The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
-"You should have received a copy of the GNU General Public License and the "
-"GNU Lesser General Public License along with this program; if not, write to "
-"the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-"MA  02110-1301, USA."
+"You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:12
@@ -112,9 +95,7 @@ msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
-msgstr ""
-"陈海峰 Haifeng Chen <optical.dlz@gmail.com>\n"
-"Careone <zzbusagain@yahoo.com.cn>"
+msgstr "陈海峰 Haifeng Chen <optical.dlz@gmail.com>\nCareone <zzbusagain@yahoo.com.cn>"
 
 #: ../data/ui/about-dlg.ui.h:32
 msgid ""
@@ -125,34 +106,28 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:1
-#, fuzzy
 msgid "Choose Application"
-msgstr "选择一个程序"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:2
-#, fuzzy
 msgid "Please choose an application or enter a command:"
-msgstr "请从列表中选择一个程序，或者手动输入命令："
+msgstr ""
 
-#
 #: ../data/ui/appchooserdlg.ui.h:3
-#, fuzzy
 msgid "File Type:"
-msgstr "<b>文件类型：</b>"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
-#, fuzzy
 msgid "A_ll Apps"
-msgstr "所有程序(_A)"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:6
-#, fuzzy
 msgid "_Command:"
-msgstr "命令行："
+msgstr ""
 
 #. // Browse submenu
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:6936
@@ -172,87 +147,65 @@ msgstr ""
 msgid "File Properties"
 msgstr "文件属性"
 
-#
 #: ../data/ui/file_properties.ui.h:2
-#, fuzzy
 msgid "<b>File_name:</b>"
-msgstr "<b>文件名：(_N)</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
-#, fuzzy
 msgid "<b>Type:</b>"
-msgstr "<b>文件类型：</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:4
-#, fuzzy
 msgid "<b>Total Size:</b>"
-msgstr "<b>文件总大小：</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:5
-#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "<b>最后修改</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:6
-#, fuzzy
 msgid "<b>Accessed:</b>"
-msgstr "<b>最后访问：</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
 msgstr "<b>位置：</b>"
 
-#
 #: ../data/ui/file_properties.ui.h:8
-#, fuzzy
 msgid "<b>Size On Disk:</b>"
-msgstr "<b>占用的磁盘空间：</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:9
-#, fuzzy
 msgid "<b>Count:</b>"
-msgstr "<b>群组：</b>"
+msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:10
-#, fuzzy
 msgid "<b>Opens _With:</b>"
-msgstr "<b>打开方式：(_W)</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
 msgstr ""
 
-#
 #: ../data/ui/file_properties.ui.h:12
 msgid "<b>_Owner:</b>"
 msgstr "<b>所有者(_O)：</b>"
 
-#
 #: ../data/ui/file_properties.ui.h:13
 msgid "<b>_Group:</b>"
 msgstr "<b>群组(_G)：</b>"
 
-#
 #: ../data/ui/file_properties.ui.h:14
 msgid "<b>Owner:</b>"
 msgstr "<b>所有者：</b>"
 
-#
 #: ../data/ui/file_properties.ui.h:15
 msgid "<b>Group:</b>"
 msgstr "<b>群组：</b>"
 
-#
 #: ../data/ui/file_properties.ui.h:16
-#, fuzzy
 msgid "<b>Other:</b>"
-msgstr "<b>所有者：</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -331,12 +284,10 @@ msgstr ""
 msgid "Find Files"
 msgstr "查找文件"
 
-#
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Filename:</b>"
-msgstr "<b>文件名：(_N)</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -354,7 +305,6 @@ msgstr "音频文件 (mp3, ogg,...)"
 msgid "Image Files (jpg, png,...)"
 msgstr "图像文件 (jpg, png,...)"
 
-#
 #: ../data/ui/find-files.ui.h:17 ../data/ui/find-files2.ui.h:17
 msgid "Plain Text Files"
 msgstr "文本文件"
@@ -368,17 +318,13 @@ msgid "<b>File Types to Search</b>"
 msgstr "<b>搜索指定类型的文件</b>"
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
-#, fuzzy
 msgid "Search in subfolders"
-msgstr "搜索子目录"
+msgstr ""
 
-#
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
-#, fuzzy
 msgid "Search hidden files"
-msgstr "搜索隐藏文件"
+msgstr ""
 
-#
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
 msgstr "<b>搜索的位置</b>"
@@ -403,12 +349,9 @@ msgstr "<b>文件内容</b>"
 msgid "Content"
 msgstr "内容"
 
-# msgid "Greater Than:"
-# 但编译时只有写成以下才能使翻译生效
 #: ../data/ui/find-files.ui.h:28 ../data/ui/find-files2.ui.h:28
-#, fuzzy
 msgid "Greater Than:"
-msgstr "大于："
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:29 ../data/ui/find-files2.ui.h:29
 msgid "Smaller Than:"
@@ -434,20 +377,17 @@ msgstr "<b>搜索结果：</b>"
 msgid "Search Again"
 msgstr "继续搜索"
 
-#
 #: ../data/ui/godlg.ui.h:1
 msgid "Go to folder"
 msgstr "向上(_P)"
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
-#, fuzzy
 msgid "Open In Current Tab"
-msgstr "在当前标签中打开"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
-#, fuzzy
 msgid "Open In New Tab"
-msgstr "在新标签中打开(_T)"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
@@ -485,15 +425,13 @@ msgstr ""
 msgid "Link (Ctrl+Shift+Drag)"
 msgstr ""
 
-#
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
 msgid "Preferences"
 msgstr "首选项"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
-#, fuzzy
 msgid "Small Icons:"
-msgstr "小图标大小"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
@@ -503,15 +441,13 @@ msgstr ""
 msgid "Toolbar Icons:"
 msgstr ""
 
-#
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Display</b>"
 msgstr "<b>显示</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
-#, fuzzy
 msgid "Single click opens files"
-msgstr "单击延时"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
@@ -525,7 +461,6 @@ msgstr ""
 msgid "Max Pic Size To Thumbnail:"
 msgstr ""
 
-#
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "<b>Behavior</b>"
 msgstr "<b>行为</b>"
@@ -539,9 +474,8 @@ msgid "Always show the tab bar"
 msgstr "总是显示标签"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
-#, fuzzy
 msgid "Hide 'Close Tab' buttons"
-msgstr "隐藏“关闭标签页”按钮"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
@@ -571,22 +505,18 @@ msgstr "界面(_N)"
 msgid "Manage the desktop and show file icons"
 msgstr "管理桌面并显示文件图标"
 
-#
 #: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
 msgid "Show \"My Documents\" icon on desktop"
 msgstr "在桌面上显示“我的文档”"
 
-#
 #: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
 msgid "Show icons of volumes on desktop"
 msgstr "在桌面上显示磁盘图标"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
-#, fuzzy
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr "点击桌面时显示窗口管理器的菜单"
+msgstr ""
 
-#
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
 msgstr "<b>一般</b>"
@@ -595,7 +525,6 @@ msgstr "<b>一般</b>"
 msgid "Please select an image file"
 msgstr "请选择图像文件"
 
-#
 #: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
 msgid "Mode:"
 msgstr "模式："
@@ -604,17 +533,14 @@ msgstr "模式："
 msgid "Wallpaper:"
 msgstr "壁纸："
 
-#
 #: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
 msgid "<b>Wallpaper</b>"
 msgstr "<b>壁纸</b>"
 
-#
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Background:"
 msgstr "背景颜色："
 
-#
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Text:"
 msgstr "文字："
@@ -623,7 +549,6 @@ msgstr "文字："
 msgid "Shadow:"
 msgstr "阴影："
 
-#
 #: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
 msgid "<b>Colors</b>"
 msgstr "<b>颜色</b>"
@@ -641,28 +566,24 @@ msgid "Terminal:"
 msgstr "终端："
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
-#, fuzzy
 msgid "Terminal SU:"
-msgstr "终端："
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
-#, fuzzy
 msgid "Filename Encoding:"
-msgstr "磁盘上文件名的编码："
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
-#, fuzzy
 msgid "Editor:"
-msgstr "编辑(_E)"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
-#, fuzzy
 msgid "Run editor in terminal"
-msgstr "在终端中打开"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
@@ -785,7 +706,6 @@ msgstr "行距"
 msgid "Space which is inserted between grid rows"
 msgstr "行与行之间的间隔"
 
-#
 #: ../src/exo/exo-icon-view.c:964
 msgid "Search Column"
 msgstr "搜索栏目"
@@ -794,7 +714,6 @@ msgstr "搜索栏目"
 msgid "Model column to search through when searching through item"
 msgstr "查找时，要查找的栏目模型"
 
-#
 #: ../src/exo/exo-icon-view.c:979
 msgid "Selection mode"
 msgstr "选择模式"
@@ -829,7 +748,6 @@ msgstr "间隔"
 msgid "Space which is inserted between cells of an item"
 msgstr "项目各单元之前的间隔"
 
-#
 #: ../src/exo/exo-icon-view.c:1044
 msgid "Text column"
 msgstr "文字颜色"
@@ -838,7 +756,6 @@ msgstr "文字颜色"
 msgid "Model column used to retrieve the text from"
 msgstr "显示信息的模型栏"
 
-#
 #: ../src/exo/exo-icon-view.c:1052
 msgid "Selection Box Color"
 msgstr "选区颜色"
@@ -847,7 +764,6 @@ msgstr "选区颜色"
 msgid "Color of the selection box"
 msgstr "选中区域的颜色"
 
-#
 #: ../src/exo/exo-icon-view.c:1059
 msgid "Selection Box Alpha"
 msgstr "选中区域的透明度"
@@ -894,9 +810,9 @@ msgid "internal command %s requires an argument"
 msgstr ""
 
 #: ../src/cust-dialog.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "element '%s' does not exist"
-msgstr "文件不存在"
+msgstr ""
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -920,9 +836,9 @@ msgid "'%s' is not an internal command"
 msgstr ""
 
 #: ../src/cust-dialog.c:1630
-#, fuzzy, c-format
+#, c-format
 msgid "error creating file %s: %s"
-msgstr "解压缩到：%s"
+msgstr ""
 
 #: ../src/cust-dialog.c:1746
 #, c-format
@@ -957,8 +873,7 @@ msgstr ""
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
-"specify on the command line, features run-time internal/external commands "
-"which\n"
+"specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr ""
 
@@ -1014,10 +929,8 @@ msgstr ""
 #: ../src/cust-dialog.c:3707
 #, c-format
 msgid ""
-"    @FILE    A text file from which to read a value.  In some cases this "
-"file\n"
-"             is monitored, so writing a new value to the file will update "
-"the\n"
+"    @FILE    A text file from which to read a value.  In some cases this file\n"
+"             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr ""
 
@@ -1029,8 +942,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3709
 #, c-format
 msgid ""
-"    COMMAND  An internal command or executable followed by arguments. "
-"Separate\n"
+"    COMMAND  An internal command or executable followed by arguments. Separate\n"
 "             multiple commands with a -- argument.\n"
 "             The following substitutions may be used in COMMANDs:\n"
 "                 %%n           Name of the current element\n"
@@ -1057,8 +969,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"In addition to the OPTIONS listed above, --compact or --expand options may "
-"be\n"
+"In addition to the OPTIONS listed above, --compact or --expand options may be\n"
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
@@ -1100,8 +1011,7 @@ msgid ""
 "    #!/bin/bash\n"
 "    # This script shows a Yes/No dialog\n"
 "    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
-"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
-"\"\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
 "        echo \"User pressed Yes - take some action\"\n"
 "    else\n"
@@ -1205,7 +1115,8 @@ msgstr ""
 msgid "Add a combo list.  COMMAND run when Enter pressed."
 msgstr ""
 
-#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. ^HIDE   hidden column (must be first) for data return  (int or double or
+#. string no progress)
 #. use --colwidth=W inside column list
 #: ../src/cust-dialog.h:58
 msgid "Add a list box.  COMMAND run when double-clicked."
@@ -1302,23 +1213,20 @@ msgid "Save files and write source output to FILE"
 msgstr ""
 
 #: ../src/main.c:126
-#, fuzzy
 msgid "Open folders in new tab of last window (default)"
-msgstr "在上次使用的窗口中打开新标签，不创建新窗口"
+msgstr ""
 
 #: ../src/main.c:127
-#, fuzzy
 msgid "Open folder in current tab of last used window"
-msgstr "在上次使用的窗口中打开新标签，不创建新窗口"
+msgstr ""
 
 #: ../src/main.c:128
 msgid "Don't load saved tabs"
 msgstr ""
 
 #: ../src/main.c:129
-#, fuzzy
 msgid "Open folders in new window"
-msgstr "在窗口中打开"
+msgstr ""
 
 #: ../src/main.c:130
 msgid "Open folders in panel 'P' (1-4)"
@@ -1328,34 +1236,29 @@ msgstr ""
 msgid "Launch desktop manager daemon"
 msgstr ""
 
-#
 #: ../src/main.c:132
-#, fuzzy
 msgid "Show desktop settings"
-msgstr "桌面设置(_D)"
+msgstr ""
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
 msgstr ""
 
 #: ../src/main.c:134
-#, fuzzy
 msgid "Run as a daemon"
-msgstr "将 PCManFM 作为守护进程运行"
+msgstr ""
 
 #: ../src/main.c:135
 msgid "Use DIR as configuration directory"
 msgstr ""
 
 #: ../src/main.c:136
-#, fuzzy
 msgid "Show File Search"
-msgstr "启用搜索"
+msgstr ""
 
 #: ../src/main.c:143
-#, fuzzy
 msgid "Set desktop wallpaper to FILE"
-msgstr "设置桌面壁纸"
+msgstr ""
 
 #: ../src/main.c:145
 msgid "Show a custom dialog (See -g help)"
@@ -1422,9 +1325,8 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "消息"
+msgstr ""
 
 #: ../src/main.c:632
 msgid "Example:"
@@ -1523,9 +1425,8 @@ msgid "DIR            eg '/etc'"
 msgstr ""
 
 #: ../src/main.c:708
-#, fuzzy
 msgid "[FILENAME ...]"
-msgstr "[文件1，文件2，...]"
+msgstr ""
 
 #: ../src/main.c:709
 msgid "[PATTERN]      eg '*.jpg'"
@@ -1698,9 +1599,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "新窗口(_W)"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1778,10 +1678,7 @@ msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
-msgstr ""
-"错误：无法和 FAM 服务建立连接\n"
-"\n"
-"您是否已安装 \"FAM\" 或 \"Gamin\" 并正确运行？"
+msgstr "错误：无法和 FAM 服务建立连接\n\n您是否已安装 \"FAM\" 或 \"Gamin\" 并正确运行？"
 
 #: ../src/main.c:1315
 msgid "--dialog must be first option"
@@ -1801,10 +1698,7 @@ msgid ""
 "Unable to open file:\n"
 "\"%s\"\n"
 "%s"
-msgstr ""
-"无法打开文件：\n"
-"\"%s\"\n"
-"%s"
+msgstr "无法打开文件：\n\"%s\"\n%s"
 
 #: ../src/main-window.c:366 ../src/settings.c:5269
 msgid "_Add"
@@ -1847,14 +1741,12 @@ msgstr ""
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
 "\n"
-"Tip: You can also rename this plugin file to install it under a different "
-"name."
+"Tip: You can also rename this plugin file to install it under a different name."
 msgstr ""
 
 #: ../src/main-window.c:480
-#, fuzzy
 msgid "Overwrite Plugin ?"
-msgstr "全部覆盖"
+msgstr ""
 
 #: ../src/main-window.c:501
 msgid "Error Creating Temp Directory"
@@ -1870,15 +1762,12 @@ msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr ""
 
 #: ../src/main-window.c:743
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Unable to save session file\n"
 "\n"
 "( %s )"
 msgstr ""
-"无法打开文件：\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/main-window.c:745
 msgid "Save Session Error"
@@ -1886,9 +1775,8 @@ msgstr ""
 
 #. root task
 #: ../src/main-window.c:776
-#, fuzzy
 msgid "Open Root Window"
-msgstr "在新窗口中打开(_W)"
+msgstr ""
 
 #: ../src/main-window.c:806 ../src/vfs/vfs-file-task.c:1504
 msgid "Terminal Not Available"
@@ -1908,24 +1796,20 @@ msgstr ""
 
 #: ../src/main-window.c:1138
 msgid ""
-"Design Mode allows you to change the name, shortcut key and icon of menu "
-"items, show help for an item, and add your own custom commands to most "
-"menus.\n"
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
 "To open the design menu, simply right-click on a menu item.\n"
 "\n"
-"To use Design Mode on a submenu, you must first close the submenu (by "
-"clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
 "\n"
-"To modify a toolbar, click the leftmost tool icon to open the toolbar config "
-"menu and select Help."
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr ""
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
-#, fuzzy, c-format
+#, c-format
 msgid "New _Command"
-msgstr "命令行："
+msgstr ""
 
 #: ../src/main-window.c:1789
 #, c-format
@@ -1943,18 +1827,16 @@ msgstr "查看(_V)"
 
 #: ../src/main-window.c:1823 ../src/settings.c:10254 ../src/settings.c:10623
 #: ../src/settings.c:10738 ../src/settings.c:10866 ../src/settings.c:10994
-#, fuzzy
 msgid "_Bookmarks"
-msgstr "书签(_B)"
+msgstr ""
 
 #: ../src/main-window.c:1829
 msgid "_Plugins"
 msgstr ""
 
 #: ../src/main-window.c:1833
-#, fuzzy
 msgid "_Tools"
-msgstr "工具(_T)"
+msgstr ""
 
 #. Help
 #: ../src/main-window.c:1836 ../src/settings.c:7104 ../src/settings.c:7603
@@ -1978,11 +1860,9 @@ msgstr ""
 msgid "Stop all tasks running in this window?"
 msgstr ""
 
-#
 #: ../src/main-window.c:2147
-#, fuzzy
 msgid "Aborting tasks..."
-msgstr "移动到回收站..."
+msgstr ""
 
 #: ../src/main-window.c:3310
 #, c-format
@@ -2020,16 +1900,15 @@ msgid "   !Link → ( error reading target )"
 msgstr ""
 
 #: ../src/main-window.c:3433
-#, fuzzy
 msgid "hidden"
 msgid_plural "hidden"
-msgstr[0] "%d 个隐藏"
+msgstr[0] ""
 
 #: ../src/main-window.c:3436
-#, fuzzy, c-format
+#, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
-msgstr[0] "%d 个可见项 (%s)%s"
+msgstr[0] ""
 
 #: ../src/main-window.c:3441
 #, c-format
@@ -2050,26 +1929,22 @@ msgstr ""
 msgid "#"
 msgstr ""
 
-#
 #: ../src/main-window.c:3805 ../src/ptk/ptk-file-misc.c:1884
 #: ../src/find-files.c:918
 msgid "Folder"
 msgstr "文件夹"
 
 #: ../src/main-window.c:3805
-#, fuzzy
 msgid "Item"
-msgstr "新建项目"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "To"
-msgstr "到："
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "Progress"
-msgstr "进度："
+msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
@@ -2110,29 +1985,24 @@ msgid ""
 msgstr ""
 
 #: ../src/main-window.c:5327
-#, fuzzy
 msgid "moving"
-msgstr "移动中..."
+msgstr ""
 
 #: ../src/main-window.c:5328
-#, fuzzy
 msgid "copying"
-msgstr "复制中..."
+msgstr ""
 
 #: ../src/main-window.c:5329
-#, fuzzy
 msgid "trashing"
-msgstr "回收站"
+msgstr ""
 
 #: ../src/main-window.c:5330
-#, fuzzy
 msgid "deleting"
-msgstr "正在刪除..."
+msgstr ""
 
 #: ../src/main-window.c:5331
-#, fuzzy
 msgid "linking"
-msgstr "正在创建链接..."
+msgstr ""
 
 #: ../src/main-window.c:5332
 msgid "changing"
@@ -2175,16 +2045,13 @@ msgstr "权限"
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Owner"
-msgstr "所有者：群组"
+msgstr ""
 
-#
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Modified"
-msgstr "最后修改"
+msgstr ""
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
@@ -2285,9 +2152,9 @@ msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
 #: ../src/main-window.c:6197
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr "目录不存在！"
+msgstr ""
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
@@ -2356,12 +2223,10 @@ msgstr ""
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr ""
 
-#
 #. task
 #: ../src/pref-dialog.c:668 ../src/pref-dialog.c:669
-#, fuzzy
 msgid "Save Root Settings"
-msgstr "桌面设置(_D)"
+msgstr ""
 
 #: ../src/pref-dialog.c:668
 msgid ""
@@ -2400,44 +2265,37 @@ msgstr ""
 msgid ""
 "Enter menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:118
 msgid ""
 "Enter new menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired.\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired.\n"
 "\n"
-"TIP: To change this menu item later, right-click on the menu item to open "
-"the design menu."
+"TIP: To change this menu item later, right-click on the menu item to open the design menu."
 msgstr ""
 
 #: ../src/settings.c:122
-#, fuzzy
 msgid "MIME Type"
-msgstr "类型"
+msgstr ""
 
 #: ../src/settings.c:123
-#, fuzzy
 msgid "Filename"
-msgstr "重命名"
+msgstr ""
 
 #: ../src/settings.c:124
-#, fuzzy
 msgid "Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:125
 msgid "Dir Write Access"
 msgstr ""
 
 #: ../src/settings.c:126
-#, fuzzy
 msgid "File Is Text"
-msgstr "文件不存在"
+msgstr ""
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2452,14 +2310,12 @@ msgid "User Is Root"
 msgstr ""
 
 #: ../src/settings.c:130
-#, fuzzy
 msgid "Multiple Selected"
-msgstr "多个文件被选中"
+msgstr ""
 
 #: ../src/settings.c:131
-#, fuzzy
 msgid "Clipboard Has Files"
-msgstr "压缩文件"
+msgstr ""
 
 #: ../src/settings.c:132
 msgid "Clipboard Has Text"
@@ -2474,18 +2330,16 @@ msgid "Panel Count"
 msgstr ""
 
 #: ../src/settings.c:135
-#, fuzzy
 msgid "Current Tab"
-msgstr "在当前标签中打开"
+msgstr ""
 
 #: ../src/settings.c:136
 msgid "Tab Count"
 msgstr ""
 
 #: ../src/settings.c:137
-#, fuzzy
 msgid "Bookmark"
-msgstr "书签(_B)"
+msgstr ""
 
 #: ../src/settings.c:138
 msgid "Device"
@@ -2508,48 +2362,40 @@ msgid "Device UDI"
 msgstr ""
 
 #: ../src/settings.c:143
-#, fuzzy
 msgid "Device Properties"
-msgstr "文件属性"
+msgstr ""
 
 #: ../src/settings.c:144
 msgid "Task Count"
 msgstr ""
 
 #: ../src/settings.c:145
-#, fuzzy
 msgid "Task Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:146
-#, fuzzy
 msgid "Task Type"
-msgstr "类型"
+msgstr ""
 
 #: ../src/settings.c:147
-#, fuzzy
 msgid "Task Name"
-msgstr "名称"
+msgstr ""
 
 #: ../src/settings.c:148
-#, fuzzy
 msgid "Panel 1 Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:149
-#, fuzzy
 msgid "Panel 2 Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:150
-#, fuzzy
 msgid "Panel 3 Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:151
-#, fuzzy
 msgid "Panel 4 Directory"
-msgstr "主目录"
+msgstr ""
 
 #: ../src/settings.c:152
 msgid "Panel 1 Has Sel"
@@ -2592,9 +2438,8 @@ msgid "doesn't equal"
 msgstr ""
 
 #: ../src/settings.c:221
-#, fuzzy
 msgid "contains"
-msgstr "文件包含："
+msgstr ""
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
@@ -2605,30 +2450,24 @@ msgid "begins with"
 msgstr ""
 
 #: ../src/settings.c:224
-#, fuzzy
 msgid "doesn't begin with"
-msgstr "文件不存在"
+msgstr ""
 
 #: ../src/settings.c:225
-#, fuzzy
 msgid "ends with"
-msgstr "打开文件... (_W)"
+msgstr ""
 
 #: ../src/settings.c:226
-#, fuzzy
 msgid "doesn't end with"
-msgstr "文件不存在"
+msgstr ""
 
 #: ../src/settings.c:227
 msgid "is less than"
 msgstr ""
 
-# msgid "Greater Than:"
-# 但编译时只有写成以下才能使翻译生效
 #: ../src/settings.c:228
-#, fuzzy
 msgid "is greater than"
-msgstr "大于："
+msgstr ""
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
@@ -2656,9 +2495,8 @@ msgid "_Stop"
 msgstr ""
 
 #: ../src/settings.c:916 ../src/settings.c:9963
-#, fuzzy
 msgid "Show _Manager"
-msgstr "显示位置栏(_L)"
+msgstr ""
 
 #: ../src/settings.c:922 ../src/settings.c:9968
 msgid "Auto-_Hide Manager"
@@ -2695,8 +2533,7 @@ msgid ""
 "\n"
 "# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
 "\n"
-"# If you delete all session* files, SpaceFM will be reset to factory "
-"defaults.\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
 "\n"
 msgstr ""
 
@@ -2754,26 +2591,19 @@ msgstr ""
 #: ../src/settings.c:3751
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu."
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr ""
 
 #: ../src/settings.c:3753
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu, and its contents are not protected by root (once pasted it "
-"will be saved with normal ownership).\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
 "\n"
-"If this plugin contains su commands or will be run as root, installing it to "
-"and running it only from the Plugins menu is recommended to improve your "
-"system security."
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr ""
 
 #: ../src/settings.c:3783
@@ -2816,9 +2646,8 @@ msgid "Change Menu Name"
 msgstr ""
 
 #: ../src/settings.c:4195 ../src/settings.c:5958
-#, fuzzy
 msgid "Set Command Line"
-msgstr "命令行(_C)："
+msgstr ""
 
 #: ../src/settings.c:4232 ../src/settings.c:5922
 msgid "Choose Custom Executable"
@@ -2842,9 +2671,9 @@ msgstr ""
 
 #. task
 #: ../src/settings.c:4564
-#, fuzzy, c-format
+#, c-format
 msgid "Edit %s"
-msgstr "编辑(_E)"
+msgstr ""
 
 #: ../src/settings.c:5022
 msgid "Current: Show"
@@ -2859,9 +2688,8 @@ msgid "Current: Disable"
 msgstr ""
 
 #: ../src/settings.c:5213
-#, fuzzy
 msgid "Context Rules"
-msgstr "内容"
+msgstr ""
 
 #. list buttons
 #. Remove
@@ -2898,9 +2726,8 @@ msgid "Show"
 msgstr ""
 
 #: ../src/settings.c:5323
-#, fuzzy
 msgid "Enable"
-msgstr "启用搜索"
+msgstr ""
 
 #: ../src/settings.c:5325
 msgid "Hide"
@@ -2930,9 +2757,7 @@ msgstr ""
 msgid ""
 "Read the user's manual online?\n"
 "\n"
-"The local copy of the SpaceFM user's manual was not found.  Click Yes to "
-"read it online, or click No and then set the correct location in Help|"
-"Options|Manual Location."
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr ""
 
 #: ../src/settings.c:5565
@@ -2957,9 +2782,7 @@ msgstr ""
 
 #: ../src/settings.c:5589
 msgid ""
-"The SpaceFM user's manual should have opened in your browser.  If it didn't "
-"open, or if you would like to use a different browser, set your browser in "
-"Help|Options|Browser.\n"
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr ""
@@ -2982,8 +2805,8 @@ msgstr ""
 #: ../src/settings.c:5726
 #, c-format
 msgid ""
-"Press your key combination for menu item '%s' then click Set.  To remove the "
-"current key assignment, click Unset."
+"Press your key combination for menu item '%s' then click Set.  To remove the"
+" current key assignment, click Unset."
 msgstr ""
 
 #: ../src/settings.c:5737
@@ -2995,9 +2818,8 @@ msgid "Unset"
 msgstr ""
 
 #: ../src/settings.c:5756
-#, fuzzy
 msgid "Set"
-msgstr "设置群组 ID"
+msgstr ""
 
 #: ../src/settings.c:5770
 msgid "Set Key"
@@ -3009,9 +2831,8 @@ msgstr ""
 
 #. line
 #: ../src/settings.c:5828 ../src/settings.c:5896
-#, fuzzy
 msgid "Edit Command Line"
-msgstr "命令行(_C)："
+msgstr ""
 
 #: ../src/settings.c:5933
 msgid "Run As User"
@@ -3027,12 +2848,9 @@ msgstr ""
 #: ../src/settings.c:5939
 #, c-format
 msgid ""
-"You are adding a custom command to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5940
@@ -3040,19 +2858,15 @@ msgid "New Context Command"
 msgstr ""
 
 #: ../src/settings.c:5949
-#, fuzzy
 msgid "Set Menu Name"
-msgstr "按文件名排序(_N)"
+msgstr ""
 
 #: ../src/settings.c:5988
 #, c-format
 msgid ""
-"You are adding a custom submenu to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5988
@@ -3060,22 +2874,19 @@ msgid "(none)"
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "Set Submenu Name"
-msgstr "按文件名排序(_N)"
+msgstr ""
 
 #: ../src/settings.c:5997
 msgid ""
 "Enter submenu name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "New _Submenu"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:6113
 msgid "( no name )"
@@ -3130,24 +2941,21 @@ msgstr ""
 #: ../src/settings.c:6786 ../src/settings.c:9402 ../src/settings.c:10307
 #: ../src/settings.c:10688 ../src/settings.c:10811 ../src/settings.c:10939
 #: ../src/settings.c:11067
-#, fuzzy
 msgid "_Name"
-msgstr "名称"
+msgstr ""
 
 #. Key
 #: ../src/settings.c:6791
 msgid "_Key"
 msgstr ""
 
-#
 #. Icon
 #: ../src/settings.c:6799 ../src/settings.c:9302 ../src/settings.c:9397
 #: ../src/settings.c:10674 ../src/settings.c:10684 ../src/settings.c:10795
 #: ../src/settings.c:10806 ../src/settings.c:10923 ../src/settings.c:10934
 #: ../src/settings.c:11051 ../src/settings.c:11062
-#, fuzzy
 msgid "_Icon"
-msgstr "图标(_I)"
+msgstr ""
 
 #. // Style submenu
 #: ../src/settings.c:6811
@@ -3175,16 +2983,13 @@ msgstr ""
 
 #. Description
 #: ../src/settings.c:6871
-#, fuzzy
 msgid "_Message"
-msgstr "消息"
+msgstr ""
 
-#
 #. Context
 #: ../src/settings.c:6881
-#, fuzzy
 msgid "Con_text"
-msgstr "文字："
+msgstr ""
 
 #: ../src/settings.c:6888
 msgid "Ign_ore Context (global)"
@@ -3192,9 +2997,8 @@ msgstr ""
 
 #. // Command submenu
 #: ../src/settings.c:6894
-#, fuzzy
 msgid "C_ommand"
-msgstr "命令行："
+msgstr ""
 
 #. Edit
 #: ../src/settings.c:6907 ../src/settings.c:7891 ../src/settings.c:9381
@@ -3210,14 +3014,12 @@ msgstr ""
 #. Copy
 #: ../src/settings.c:6930 ../src/settings.c:7121 ../src/settings.c:9432
 #: ../src/settings.c:9756 ../src/settings.c:10361
-#, fuzzy
 msgid "_Copy"
-msgstr "复制："
+msgstr ""
 
 #: ../src/settings.c:6953
-#, fuzzy
 msgid "_Files"
-msgstr "文件(_F)"
+msgstr ""
 
 #: ../src/settings.c:6956
 msgid "_Files (none)"
@@ -3262,15 +3064,13 @@ msgstr ""
 
 #. Run In Terminal
 #: ../src/settings.c:7037
-#, fuzzy
 msgid "Run _In Terminal"
-msgstr "在终端中打开"
+msgstr ""
 
 #. Keep Terminal
 #: ../src/settings.c:7043
-#, fuzzy
 msgid "_Keep Terminal"
-msgstr "打开终端"
+msgstr ""
 
 #: ../src/settings.c:7055
 #, c-format
@@ -3338,9 +3138,8 @@ msgid "S_eparator"
 msgstr ""
 
 #: ../src/settings.c:7540
-#, fuzzy
 msgid "Set Icon"
-msgstr "设置群组 ID"
+msgstr ""
 
 #: ../src/settings.c:7901 ../src/settings.c:8111 ../src/settings.c:10114
 #: ../src/settings.c:10236
@@ -3372,12 +3171,11 @@ msgstr ""
 msgid "_Side Toolbar"
 msgstr ""
 
-#.
 #. xset_set( "panel_left", "label", _("_Left") );
 #. xset_set( "panel_right", "label", _("_Right") );
 #. xset_set( "panel_top", "label", _("_Top") );
 #. xset_set( "panel_bottom", "label", _("_Bottom") );
-#.
+#. 
 #: ../src/settings.c:8658 ../src/settings.c:8661 ../src/settings.c:9590
 #: ../src/settings.c:10482
 msgid "_Hide"
@@ -3399,9 +3197,8 @@ msgid "Tree"
 msgstr ""
 
 #: ../src/settings.c:8678 ../src/settings.c:8748 ../src/settings.c:8817
-#, fuzzy
 msgid "Bookmarks"
-msgstr "书签："
+msgstr ""
 
 #: ../src/settings.c:8684 ../src/settings.c:8754 ../src/settings.c:8823
 msgid "Devices"
@@ -3412,27 +3209,24 @@ msgid "New Tab"
 msgstr "新标签"
 
 #: ../src/settings.c:8695 ../src/settings.c:8765 ../src/settings.c:8834
-#, fuzzy
 msgid "New Tab Here"
-msgstr "新标签"
+msgstr ""
 
 #: ../src/settings.c:8700 ../src/settings.c:8770 ../src/settings.c:8839
 msgid "Back"
 msgstr "上一页"
 
 #: ../src/settings.c:8705 ../src/settings.c:8775 ../src/settings.c:8844
-#, fuzzy
 msgid "Back Menu"
-msgstr "上一页"
+msgstr ""
 
 #: ../src/settings.c:8710 ../src/settings.c:8780 ../src/settings.c:8849
 msgid "Forward"
 msgstr "下一页"
 
 #: ../src/settings.c:8715 ../src/settings.c:8785 ../src/settings.c:8854
-#, fuzzy
 msgid "Forward Menu"
-msgstr "下一页"
+msgstr ""
 
 #: ../src/settings.c:8720 ../src/settings.c:8790 ../src/settings.c:8859
 msgid "Up"
@@ -3443,9 +3237,8 @@ msgid "Refresh"
 msgstr "刷新"
 
 #: ../src/settings.c:8730 ../src/settings.c:8800 ../src/settings.c:8869
-#, fuzzy
 msgid "Home"
-msgstr "转到主文件夹(_H)"
+msgstr ""
 
 #: ../src/settings.c:8735 ../src/settings.c:8805 ../src/settings.c:8873
 msgid "Default"
@@ -3477,10 +3270,9 @@ msgid "_Sync"
 msgstr ""
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3508,9 +3300,8 @@ msgid "_Check"
 msgstr ""
 
 #: ../src/settings.c:9021
-#, fuzzy
 msgid "_Edit fstab"
-msgstr "编辑(_E)"
+msgstr ""
 
 #: ../src/settings.c:9025
 msgid "Edit u_devil.conf"
@@ -3521,19 +3312,16 @@ msgid "_Format"
 msgstr ""
 
 #: ../src/settings.c:9089
-#, fuzzy
 msgid "_Backup"
-msgstr "上一页"
+msgstr ""
 
 #: ../src/settings.c:9111
 msgid "_Restore"
 msgstr ""
 
-#
 #: ../src/settings.c:9116
-#, fuzzy
 msgid "_From File"
-msgstr "查找文件(_F)"
+msgstr ""
 
 #: ../src/settings.c:9121 ../src/settings.c:9487
 msgid "File _Info"
@@ -3543,21 +3331,17 @@ msgstr ""
 msgid "_Properties"
 msgstr "属性(_P)"
 
-#
 #: ../src/settings.c:9127
-#, fuzzy
 msgid "Setti_ngs"
-msgstr "桌面设置(_D)"
+msgstr ""
 
 #: ../src/settings.c:9138
-#, fuzzy
 msgid "_Internal Drives"
-msgstr "Pen 驱动器"
+msgstr ""
 
 #: ../src/settings.c:9143
-#, fuzzy
 msgid "_Empty Drives"
-msgstr "软驱"
+msgstr ""
 
 #: ../src/settings.c:9148
 msgid "_Partition Tables"
@@ -3568,32 +3352,25 @@ msgid "Mounted _Networks"
 msgstr ""
 
 #: ../src/settings.c:9157
-#, fuzzy
 msgid "Mounted _Files"
-msgstr "挂载文件系统(_M)"
+msgstr ""
 
 #: ../src/settings.c:9162
-#, fuzzy
 msgid "_Volumes..."
-msgstr "磁盘"
+msgstr ""
 
 #: ../src/settings.c:9163
-#, fuzzy
 msgid "Show/Hide Volumes"
-msgstr "显示隐藏文件(_H)"
+msgstr ""
 
 #: ../src/settings.c:9164
 msgid ""
-"To force showing or hiding of some volumes, overriding other settings, you "
-"can specify the devices, volume labels, or device IDs in the space-separated "
-"list below.\n"
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume "
-"with label \"Label With Space\" to be hidden.\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3632,14 +3409,12 @@ msgid "_Mount Removable"
 msgstr ""
 
 #: ../src/settings.c:9195
-#, fuzzy
 msgid "Open _Tab"
-msgstr "在新标签中打开(_T)"
+msgstr ""
 
 #: ../src/settings.c:9200
-#, fuzzy
 msgid "_Unmount On Exit"
-msgstr "卸载文件系统(_U)"
+msgstr ""
 
 #: ../src/settings.c:9208
 msgid "Auto _Run"
@@ -3656,8 +3431,7 @@ msgstr ""
 #: ../src/settings.c:9217
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically after a removable "
-"drive or data disc is auto-mounted:\n"
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3666,9 +3440,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9220
-#, fuzzy
 msgid "On _Audio CD"
-msgstr "音频碟片"
+msgstr ""
 
 #: ../src/settings.c:9222
 msgid "Auto Run On Audio CD"
@@ -3677,8 +3450,7 @@ msgstr ""
 #: ../src/settings.c:9223
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when an audio CD "
-"is inserted in a qualified device:\n"
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3697,8 +3469,7 @@ msgstr ""
 #: ../src/settings.c:9229
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a video DVD "
-"is auto-mounted:\n"
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3717,8 +3488,7 @@ msgstr ""
 #: ../src/settings.c:9235
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is inserted:\n"
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice added (eg /dev/sda1)\n"
@@ -3737,8 +3507,7 @@ msgstr ""
 #: ../src/settings.c:9241
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is unmounted by any means:\n"
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice unmounted (eg /dev/sda1)\n"
@@ -3757,8 +3526,7 @@ msgstr ""
 #: ../src/settings.c:9247
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is removed (ejection of media does not qualify):\n"
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice removed (eg /dev/sda1)\n"
@@ -3776,16 +3544,12 @@ msgstr ""
 
 #: ../src/settings.c:9256
 msgid ""
-"To force or prevent automounting of some volumes, overriding other settings, "
-"you can specify the devices, volume labels, or device IDs in the space-"
-"separated list below.\n"
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when "
-"detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3795,20 +3559,14 @@ msgstr ""
 
 #: ../src/settings.c:9260
 msgid ""
-"Enter your comma- or space-separated list of default mount options below (to "
-"be used for all mounts).\n"
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9262
@@ -3823,23 +3581,17 @@ msgstr ""
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9275
-#, fuzzy
 msgid "Mount _Command"
-msgstr "命令行："
+msgstr ""
 
 #: ../src/settings.c:9276
 #, c-format
@@ -3859,9 +3611,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9278
-#, fuzzy
 msgid "Mount Command"
-msgstr "命令行："
+msgstr ""
 
 #: ../src/settings.c:9282
 msgid "_Unmount Command"
@@ -3884,14 +3635,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9285
-#, fuzzy
 msgid "Unmount Command"
-msgstr "命令行："
+msgstr ""
 
 #: ../src/settings.c:9307
-#, fuzzy
 msgid "Audio CD"
-msgstr "音频碟片"
+msgstr ""
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3906,23 +3655,20 @@ msgid "Optical No Media"
 msgstr ""
 
 #: ../src/settings.c:9328
-#, fuzzy
 msgid "Floppy Mounted"
-msgstr "软驱"
+msgstr ""
 
 #: ../src/settings.c:9333
 msgid "Floppy Unmounted"
 msgstr ""
 
 #: ../src/settings.c:9338
-#, fuzzy
 msgid "Removable Mounted"
-msgstr "%s 可移动磁盘"
+msgstr ""
 
 #: ../src/settings.c:9343
-#, fuzzy
 msgid "Removable Unmounted"
-msgstr "%s 可移动磁盘"
+msgstr ""
 
 #: ../src/settings.c:9348
 msgid "Internal Mounted"
@@ -3937,9 +3683,8 @@ msgid "Mounted Network"
 msgstr ""
 
 #: ../src/settings.c:9363
-#, fuzzy
 msgid "Mounted File"
-msgstr "挂载文件系统(_M)"
+msgstr ""
 
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
@@ -3957,26 +3702,21 @@ msgid "Re_move"
 msgstr ""
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
-#
 #: ../src/settings.c:9393
-#, fuzzy
 msgid "_Settings"
-msgstr "桌面设置(_D)"
+msgstr ""
 
 #: ../src/settings.c:9405
-#, fuzzy
 msgid "_Filename"
-msgstr "重命名(_R)"
+msgstr ""
 
 #: ../src/settings.c:9409
-#, fuzzy
 msgid "_Parent"
-msgstr "向上"
+msgstr ""
 
 #: ../src/settings.c:9412
 msgid "P_ath"
@@ -3984,9 +3724,8 @@ msgstr ""
 
 #: ../src/settings.c:9416 ../src/settings.c:10311 ../src/settings.c:10698
 #: ../src/settings.c:10822 ../src/settings.c:10950 ../src/settings.c:11078
-#, fuzzy
 msgid "_Type"
-msgstr "类型"
+msgstr ""
 
 #: ../src/settings.c:9420
 msgid "_Target"
@@ -4003,9 +3742,8 @@ msgstr ""
 #: ../src/settings.c:9436 ../src/settings.c:10201
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
-#, fuzzy
 msgid "_Link"
-msgstr "创建链接："
+msgstr ""
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -4033,9 +3771,8 @@ msgid "_Font"
 msgstr ""
 
 #: ../src/settings.c:9453
-#, fuzzy
 msgid "Move Dialog Font"
-msgstr "向下移动(_D)"
+msgstr ""
 
 #: ../src/settings.c:9454
 msgid "/home/user/Example Filename.ext"
@@ -4066,50 +3803,41 @@ msgid "Status Bar Text Highlight Color"
 msgstr ""
 
 #: ../src/settings.c:9477
-#, fuzzy
 msgid "_Middle Click"
-msgstr "单击"
+msgstr ""
 
 #: ../src/settings.c:9481 ../src/settings.c:10387
-#, fuzzy
 msgid "Copy _Name"
-msgstr "按文件名排序(_N)"
+msgstr ""
 
 #: ../src/settings.c:9484 ../src/settings.c:10390
-#, fuzzy
 msgid "Copy _Path"
-msgstr "复制："
+msgstr ""
 
 #: ../src/settings.c:9491
-#, fuzzy
 msgid "_Hide Panel"
-msgstr "侧边栏(_P)"
+msgstr ""
 
 #: ../src/settings.c:9507
 msgid "New _Window"
 msgstr "新窗口(_W)"
 
-#
 #: ../src/settings.c:9510
-#, fuzzy
 msgid "R_oot Window"
-msgstr "关闭窗口(_C)"
+msgstr ""
 
 #: ../src/settings.c:9513
-#, fuzzy
 msgid "_File Search"
-msgstr "启用搜索"
+msgstr ""
 
 #: ../src/settings.c:9516
-#, fuzzy
 msgid "_Terminal"
-msgstr "终端："
+msgstr ""
 
 #. discovery notification
 #: ../src/settings.c:9519
-#, fuzzy
 msgid "_Root Terminal"
-msgstr "终端："
+msgstr ""
 
 #: ../src/settings.c:9522
 msgid "_Save Session"
@@ -4182,8 +3910,7 @@ msgstr ""
 #: ../src/settings.c:9610
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance starts:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_start)\n"
@@ -4200,28 +3927,24 @@ msgstr ""
 #: ../src/settings.c:9616
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance exits:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr ""
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "新窗口(_W)"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "新窗口(_W)"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"SpaceFM window is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_new)\n"
@@ -4243,8 +3966,7 @@ msgstr ""
 #: ../src/settings.c:9633
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_focus)\n"
@@ -4266,8 +3988,7 @@ msgstr ""
 #: ../src/settings.c:9639
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is moved or resized:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_move)\n"
@@ -4291,8 +4012,7 @@ msgstr ""
 #: ../src/settings.c:9645
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the "
-"mouse is clicked:\n"
+"Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_click)\n"
@@ -4303,13 +4023,10 @@ msgid ""
 "\t%%m\tmodifier  (modifier keys)\n"
 "\t%%f\tfocus  (element which received the click)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle "
-"button was clicked in %%f\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9648
@@ -4323,8 +4040,7 @@ msgstr ""
 #: ../src/settings.c:9651
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a key is "
-"pressed:\n"
+"Enter program or bash command line to be run automatically whenever a key is pressed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_key)\n"
@@ -4334,13 +4050,10 @@ msgid ""
 "\t%%k\tkey code  (key pressed)\n"
 "\t%%m\tmodifier  (modifier keys)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey "
-"F8 was pressed.\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9654
@@ -4354,8 +4067,7 @@ msgstr ""
 #: ../src/settings.c:9657
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is closed:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_close)\n"
@@ -4367,9 +4079,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9660
-#, fuzzy
 msgid "_Panel"
-msgstr "侧边栏(_P)"
+msgstr ""
 
 #: ../src/settings.c:9667
 msgid "Set Panel Focus Command"
@@ -4378,8 +4089,7 @@ msgstr ""
 #: ../src/settings.c:9668
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_focus)\n"
@@ -4401,8 +4111,7 @@ msgstr ""
 #: ../src/settings.c:9674
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"or panel element is shown or hidden:\n"
+"Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_show)\n"
@@ -4416,9 +4125,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9677
-#, fuzzy
 msgid "S_elect"
-msgstr "全选(_A)"
+msgstr ""
 
 #: ../src/settings.c:9679
 msgid "Set Panel Select Command"
@@ -4427,8 +4135,7 @@ msgstr ""
 #: ../src/settings.c:9680
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the file "
-"selection changes:\n"
+"Enter program or bash command line to be run automatically whenever the file selection changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_sel)\n"
@@ -4438,15 +4145,13 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler."
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4455,8 +4160,7 @@ msgstr ""
 #: ../src/settings.c:9691
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"tab is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_new)\n"
@@ -4474,8 +4178,7 @@ msgstr ""
 #: ../src/settings.c:9697
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_focus)\n"
@@ -4487,9 +4190,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9700 ../src/settings.c:10265
-#, fuzzy
 msgid "_Close"
-msgstr "关闭标签"
+msgstr ""
 
 #: ../src/settings.c:9702
 msgid "Set Tab Close Command"
@@ -4498,8 +4200,7 @@ msgstr ""
 #: ../src/settings.c:9703
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab is "
-"closed:\n"
+"Enter program or bash command line to be run automatically whenever a tab is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_close)\n"
@@ -4519,8 +4220,7 @@ msgstr ""
 #: ../src/settings.c:9709
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a device "
-"state changes:\n"
+"Enter program or bash command line to be run automatically whenever a device state changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_device)\n"
@@ -4552,14 +4252,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9719
-#, fuzzy
 msgid "_Window Icon"
-msgstr "新窗口(_W)"
+msgstr ""
 
 #: ../src/settings.c:9721
-#, fuzzy
 msgid "Set Window Icon"
-msgstr "新窗口(_W)"
+msgstr ""
 
 #: ../src/settings.c:9722
 msgid ""
@@ -4575,19 +4273,16 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9724
-#, fuzzy
 msgid "_Fullscreen"
-msgstr "全屏(_F)"
+msgstr ""
 
 #: ../src/settings.c:9727
 msgid "_Design Mode"
 msgstr ""
 
-#
 #: ../src/settings.c:9730
-#, fuzzy
 msgid "_Preferences"
-msgstr "首选项"
+msgstr ""
 
 #: ../src/settings.c:9733
 msgid "_Tool"
@@ -4631,9 +4326,8 @@ msgid "_Options"
 msgstr ""
 
 #: ../src/settings.c:9809
-#, fuzzy
 msgid "_Browser"
-msgstr "浏览(_B)"
+msgstr ""
 
 #: ../src/settings.c:9811
 msgid "Choose HTML Browser"
@@ -4642,8 +4336,7 @@ msgstr ""
 #: ../src/settings.c:9812
 #, c-format
 msgid ""
-"Enter browser name or bash command line to be used to display HTML files and "
-"URLs:\n"
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
 "\n"
 "Use:\n"
 "\t%%u\turl\n"
@@ -4652,14 +4345,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9815
-#, fuzzy
 msgid "_Manual Location"
-msgstr "位置："
+msgstr ""
 
 #: ../src/settings.c:9817
-#, fuzzy
 msgid "Choose User's Manual Location"
-msgstr "选择一个程序"
+msgstr ""
 
 #: ../src/settings.c:9818
 msgid ""
@@ -4687,19 +4378,16 @@ msgid "_Count"
 msgstr ""
 
 #: ../src/settings.c:9865
-#, fuzzy
 msgid "_Item"
-msgstr "新建项目"
+msgstr ""
 
 #: ../src/settings.c:9871
-#, fuzzy
 msgid "_To"
-msgstr "工具(_T)"
+msgstr ""
 
 #: ../src/settings.c:9877
-#, fuzzy
 msgid "_Progress"
-msgstr "进度："
+msgstr ""
 
 #: ../src/settings.c:9884
 msgid "T_otal"
@@ -4722,9 +4410,8 @@ msgid "_Average Speed"
 msgstr ""
 
 #: ../src/settings.c:9927
-#, fuzzy
 msgid "Reor_der"
-msgstr "可以重新排序"
+msgstr ""
 
 #: ../src/settings.c:9933 ../src/settings.c:9953
 #: ../src/ptk/ptk-file-task.c:500 ../src/ptk/ptk-file-task.c:792
@@ -4780,9 +4467,8 @@ msgid "All _Workspaces"
 msgstr ""
 
 #: ../src/settings.c:10015
-#, fuzzy
 msgid "_Overwrite Option"
-msgstr "覆盖"
+msgstr ""
 
 #: ../src/settings.c:10020
 msgid "_Error Option"
@@ -4805,9 +4491,8 @@ msgid "Stop On _Any"
 msgstr ""
 
 #: ../src/settings.c:10047
-#, fuzzy
 msgid "_Continue"
-msgstr "内容"
+msgstr ""
 
 #: ../src/settings.c:10052
 msgid "Qu_eue"
@@ -4845,17 +4530,14 @@ msgstr ""
 msgid "Edit As _Root"
 msgstr ""
 
-#
 #: ../src/settings.c:10111
-#, fuzzy
 msgid "_Choose..."
-msgstr "浏览..."
+msgstr ""
 
 #. virtual
 #: ../src/settings.c:10116
-#, fuzzy
 msgid "In _Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:10120
 msgid "N_ew"
@@ -4912,37 +4594,32 @@ msgid "Tab 1_0"
 msgstr ""
 
 #: ../src/settings.c:10134
-#, fuzzy
 msgid "In _Panel"
-msgstr "侧边栏(_P)"
+msgstr ""
 
 #: ../src/settings.c:10145 ../src/settings.c:10164
-#, fuzzy
 msgid "_Extract"
-msgstr "解压(_X)"
+msgstr ""
 
 #: ../src/settings.c:10148 ../src/settings.c:10168
 msgid "Extract _To"
 msgstr "解压缩到(_T)"
 
 #: ../src/settings.c:10151 ../src/settings.c:10171
-#, fuzzy
 msgid "_List Contents"
-msgstr "内容"
+msgstr ""
 
 #: ../src/settings.c:10157
 msgid "_Archive Default"
 msgstr ""
 
 #: ../src/settings.c:10161
-#, fuzzy
 msgid "_Open With App"
-msgstr "用\"%s\"打开(_O)"
+msgstr ""
 
 #: ../src/settings.c:10174
-#, fuzzy
 msgid "_Create Subfolder"
-msgstr "新建(_C)"
+msgstr ""
 
 #: ../src/settings.c:10178
 msgid "_Write Access"
@@ -4961,7 +4638,6 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "书签(_B)"
@@ -4971,33 +4647,29 @@ msgid "_Archive"
 msgstr ""
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
 msgstr ""
 
 #: ../src/settings.c:10228
-#, fuzzy
 msgid "_Back"
-msgstr "上一页"
+msgstr ""
 
 #: ../src/settings.c:10230
-#, fuzzy
 msgid "_Forward"
-msgstr "下一页"
+msgstr ""
 
 #: ../src/settings.c:10232
 msgid "_Up"
 msgstr ""
 
 #: ../src/settings.c:10234
-#, fuzzy
 msgid "_Home"
-msgstr "转到主文件夹(_H)"
+msgstr ""
 
 #: ../src/settings.c:10239
 msgid "_Set Default"
@@ -5011,16 +4683,13 @@ msgstr ""
 msgid "Fo_cus"
 msgstr ""
 
-#
 #: ../src/settings.c:10248
-#, fuzzy
 msgid "_Path Bar"
-msgstr "位置： (_O)"
+msgstr ""
 
 #: ../src/settings.c:10250
-#, fuzzy
 msgid "_File List"
-msgstr "文件(_F)"
+msgstr ""
 
 #: ../src/settings.c:10252
 msgid "_Tree"
@@ -5031,10 +4700,9 @@ msgid "De_vices"
 msgstr ""
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -5045,71 +4713,58 @@ msgid "C_olumns"
 msgstr ""
 
 #: ../src/settings.c:10288
-#, fuzzy
 msgid "_Reorder"
-msgstr "可以重新排序"
+msgstr ""
 
 #: ../src/settings.c:10290
 msgid "_Rubberband Select"
 msgstr ""
 
 #: ../src/settings.c:10303
-#, fuzzy
 msgid "_Sort"
-msgstr "排列项目...(_S)"
+msgstr ""
 
 #. visible
 #. position
 #: ../src/settings.c:10309 ../src/settings.c:10693 ../src/settings.c:10816
 #: ../src/settings.c:10944 ../src/settings.c:11072
-#, fuzzy
 msgid "_Size"
-msgstr "大小"
+msgstr ""
 
 #: ../src/settings.c:10313 ../src/settings.c:10703 ../src/settings.c:10828
 #: ../src/settings.c:10956 ../src/settings.c:11084
-#, fuzzy
 msgid "_Permission"
-msgstr "权限(_P)"
+msgstr ""
 
-#
 #: ../src/settings.c:10315 ../src/settings.c:10577 ../src/settings.c:10708
 #: ../src/settings.c:10834 ../src/settings.c:10962 ../src/settings.c:11090
-#, fuzzy
 msgid "_Owner"
-msgstr "<b>所有者(_O)：</b>"
+msgstr ""
 
-#
 #: ../src/settings.c:10317 ../src/settings.c:10713 ../src/settings.c:10840
 #: ../src/settings.c:10968 ../src/settings.c:11096
-#, fuzzy
 msgid "_Modified"
-msgstr "最后修改"
+msgstr ""
 
 #: ../src/settings.c:10319
-#, fuzzy
 msgid "_Ascending"
-msgstr "升顺"
+msgstr ""
 
 #: ../src/settings.c:10321
-#, fuzzy
 msgid "_Descending"
-msgstr "逆序"
+msgstr ""
 
 #: ../src/settings.c:10324
 msgid "Nat_ural"
 msgstr ""
 
 #: ../src/settings.c:10326
-#, fuzzy
 msgid "_Case Sensitive"
-msgstr "区分字母大小写"
+msgstr ""
 
-#
 #: ../src/settings.c:10328
-#, fuzzy
 msgid "Folders Fi_rst"
-msgstr "文件夹"
+msgstr ""
 
 #: ../src/settings.c:10330
 msgid "F_iles First"
@@ -5120,18 +4775,16 @@ msgid "Mi_xed"
 msgstr ""
 
 #: ../src/settings.c:10334
-#, fuzzy
 msgid "_Hidden First"
-msgstr "显示隐藏文件(_H)"
+msgstr ""
 
 #: ../src/settings.c:10336
 msgid "Hidden _Last"
 msgstr ""
 
 #: ../src/settings.c:10339
-#, fuzzy
 msgid "Re_fresh"
-msgstr "刷新"
+msgstr ""
 
 #: ../src/settings.c:10342
 msgid "Auto See_k"
@@ -5147,13 +4800,11 @@ msgstr ""
 
 #: ../src/settings.c:10350
 msgid ""
-"Enter command to be used to mount or open protocols (such as nfs://, smb://, "
-"etc):\n"
+"Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
 "If this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n"
 "\n"
-"TIP:  To unmount networks, install udevil or set Unmount Command to a "
-"command which handles network protocols.\n"
+"TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr ""
 
 #: ../src/settings.c:10354
@@ -5181,88 +4832,73 @@ msgid "Paste _As"
 msgstr ""
 
 #: ../src/settings.c:10408 ../src/settings.c:10498
-#, fuzzy
 msgid "_Copy To"
-msgstr "复制："
+msgstr ""
 
 #: ../src/settings.c:10412
-#, fuzzy
 msgid "L_ocation"
-msgstr "位置："
+msgstr ""
 
 #: ../src/settings.c:10413 ../src/settings.c:10452
-#, fuzzy
 msgid "L_ast Location"
-msgstr "最后修改"
+msgstr ""
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:10433
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
-msgstr "侧边栏(_P)"
+msgstr ""
 
 #: ../src/settings.c:10447
-#, fuzzy
 msgid "_Move To"
-msgstr "移动："
+msgstr ""
 
 #: ../src/settings.c:10451
-#, fuzzy
 msgid "_Location"
-msgstr "位置："
+msgstr ""
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "新标签(_T)"
+msgstr ""
 
 #: ../src/settings.c:10471
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
-msgstr "侧边栏(_P)"
+msgstr ""
 
 #: ../src/settings.c:10484
-#, fuzzy
 msgid "_Select All"
-msgstr "全选(_A)"
+msgstr ""
 
 #: ../src/settings.c:10487
-#, fuzzy
 msgid "_Unselect All"
-msgstr "全选(_A)"
+msgstr ""
 
 #: ../src/settings.c:10489
 msgid "_Invert Selection"
 msgstr "反向选择(_I)"
 
-#
 #: ../src/settings.c:10491
-#, fuzzy
 msgid "S_elect By Pattern"
-msgstr "选择文件夹"
+msgstr ""
 
 #: ../src/settings.c:10493
 msgid "R_oot"
 msgstr ""
 
 #: ../src/settings.c:10499
-#, fuzzy
 msgid "Move _To"
-msgstr "向下移动(_D)"
+msgstr ""
 
 #. Properties
 #: ../src/settings.c:10504
-#, fuzzy
 msgid "Propert_ies"
-msgstr "属性(_P)"
+msgstr ""
 
 #: ../src/settings.c:10515
 msgid "_Quick"
@@ -5290,9 +4926,8 @@ msgstr ""
 #. PANEL FOUR
 #: ../src/settings.c:10612 ../src/settings.c:10725 ../src/settings.c:10853
 #: ../src/settings.c:10981
-#, fuzzy
 msgid "_Toolbar"
-msgstr "工具(_T)"
+msgstr ""
 
 #: ../src/settings.c:10616 ../src/settings.c:10730 ../src/settings.c:10858
 #: ../src/settings.c:10986
@@ -5309,7 +4944,6 @@ msgstr ""
 msgid "_Detailed"
 msgstr ""
 
-#
 #: ../src/settings.c:10632 ../src/settings.c:10750 ../src/settings.c:10878
 #: ../src/settings.c:11006 ../src/desktop/desktop-window.c:209
 msgid "_Icons"
@@ -5322,9 +4956,8 @@ msgstr ""
 
 #: ../src/settings.c:10639 ../src/settings.c:10759 ../src/settings.c:10887
 #: ../src/settings.c:11015
-#, fuzzy
 msgid "_Hidden Files"
-msgstr "显示隐藏文件(_H)"
+msgstr ""
 
 #: ../src/settings.c:10645
 msgid "File List Font (Panel 1)"
@@ -5464,14 +5097,12 @@ msgstr ""
 #. sort_hidden_first
 #. speed
 #: ../src/settings.c:11109 ../src/settings.c:11116
-#, fuzzy
 msgid "_New Tab"
-msgstr "新标签"
+msgstr ""
 
 #: ../src/settings.c:11112 ../src/settings.c:11121
-#, fuzzy
 msgid "_Single Click"
-msgstr "单击"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:551
 msgid "Toolbar Config Menu Help"
@@ -5481,45 +5112,37 @@ msgstr ""
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
-"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-"
-"click on an item to show or hide it, change the icon, or add a custom tool "
-"item.\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
 "\n"
 "For more information, click the Help button below."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr "目录不存在！"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
 msgstr ""
-"无法打开文件：\n"
-"\"%s\"\n"
-"%s"
 
-#
 #: ../src/ptk/ptk-file-browser.c:2897
-#, fuzzy
 msgid "Select By Pattern"
-msgstr "选择文件夹"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
 "\n"
-"If your pattern contains any uppercase characters, the matching will be case "
-"sensitive.\n"
+"If your pattern contains any uppercase characters, the matching will be case sensitive.\n"
 "\n"
 "Example:  *sp*e?m*\n"
 "\n"
@@ -5527,9 +5150,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
-#, fuzzy
 msgid "Choose Location"
-msgstr "选择一个程序"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5751 ../src/ptk/ptk-file-browser.c:5783
 msgid "Invalid Destination"
@@ -5544,10 +5166,10 @@ msgid "Invalid destination"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5826
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
-msgstr[0] "确定要删除文件？"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-browser.c:5830
 msgid "Confirm Delete As Root"
@@ -5558,9 +5180,8 @@ msgid "DELETE AS ROOT"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5839
-#, fuzzy
 msgid "Delete As Root"
-msgstr "删除："
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5858
 msgid "Move As Root"
@@ -5571,18 +5192,14 @@ msgid "Copy As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
-#, fuzzy
 msgid "Hide File"
-msgstr "查找文件"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
-"The names of the selected files will be added to the '.hidden' file located "
-"in this folder, which will hide them from view in SpaceFM.  You may need to "
-"refresh the view or restart SpaceFM for the files to disappear.\n"
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
-"To unhide a file, open the .hidden file in your text editor, remove the name "
-"of the file, and refresh."
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5947
@@ -5590,24 +5207,18 @@ msgid "Error hiding files"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5954
-#, fuzzy
 msgid "No files are selected"
-msgstr "多个文件被选中"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "书签："
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
-#, fuzzy
 msgid "Bookmark already exists"
 msgstr ""
-"\"%s\" 已经存在。\n"
-"\n"
-"%s"
 
 #: ../src/ptk/ptk-location-view.c:103
 msgid "DATA LOSS WARNING - overwriting"
@@ -5754,8 +5365,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  You may want or need to unmount it before changing "
-"the label."
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1166
@@ -5805,9 +5415,9 @@ msgid "Label As Root %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1280
-#, fuzzy, c-format
+#, c-format
 msgid "Unmount %s"
-msgstr "卸载文件系统(_U)"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1360 ../src/ptk/ptk-location-view.c:1372
 #, c-format
@@ -5831,7 +5441,8 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
-msgid "%s is currently mounted.  You must unmount it before you can format it."
+msgid ""
+"%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1754 ../src/ptk/ptk-location-view.c:1914
@@ -5842,8 +5453,7 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1760
 #, c-format
 msgid ""
-"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
-"take awhile and dd gives no feedback.\n"
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
 "\n"
 "Enter command to overwrite entire volume with /dev/%s:\n"
 "\n"
@@ -5895,11 +5505,9 @@ msgstr ""
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
 "\n"
-"This change may prevent your computer from booting properly.  All important "
-"data on the entire device should be backed up first.\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
 "\n"
-"Proceed?  (If you press Yes, you still have one more opportunity to abort "
-"before the disk is modified.)"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1864
@@ -5907,18 +5515,14 @@ msgid "Restore MBR"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
-#, fuzzy
 msgid "Unknown Type"
-msgstr "已知的文件类型："
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
-"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage "
-"filenames contain 'partimage' or end in '.000'.  MBR filenames end in '."
-"mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE "
-"this file is a valid backup, you can rename it to avoid this error."
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1917
@@ -5949,9 +5553,8 @@ msgid "DATA LOSS WARNING - overwriting MBR boot code of"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2013
-#, fuzzy
 msgid "Directory Missing"
-msgstr "树状目录"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2014
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
@@ -5962,9 +5565,8 @@ msgid "Choose Backup For Info"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
-#, fuzzy
 msgid "MBR File"
-msgstr "重命名"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5981,16 +5583,14 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes "
-"mounted read-only.  To backup a read-write volume, you need to add --allow-"
-"rw-mounted to the command.  See 'man fsarchiver' for details."
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2163
 #, c-format
 msgid ""
-"%s is currently mounted.  You must unmount it before you can create a backup "
-"using Partimage."
+"%s is currently mounted.  You must unmount it before you can create a backup"
+" using Partimage."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2180
@@ -5999,9 +5599,8 @@ msgid "Save %s Backup"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
-#, fuzzy
 msgid "Overwrite?"
-msgstr "覆盖"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
 msgid "The selected backup already exists.  Overwrite?"
@@ -6020,9 +5619,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2229
-#, fuzzy
 msgid "Backup"
-msgstr "上一页"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2257
 #, c-format
@@ -6030,9 +5628,9 @@ msgid "%s Backup %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Properties %s"
-msgstr "属性(_P)"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2519 ../src/ptk/ptk-location-view.c:2546
 #, c-format
@@ -6055,14 +5653,12 @@ msgid "_Eject"
 msgstr "弹出(_E)"
 
 #: ../src/ptk/ptk-location-view.c:3337
-#, fuzzy
 msgid "Rename Bookmark"
-msgstr "书签(_B)"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3339
-#, fuzzy
 msgid "Enter new bookmark name:"
-msgstr "输入新的目录路径"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3360
 #, c-format
@@ -6070,9 +5666,8 @@ msgid "Enter new folder for bookmark '%s':"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3361
-#, fuzzy
 msgid "Edit Bookmark Location"
-msgstr "编辑书签"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:444
 msgid "Kill As Other"
@@ -6103,9 +5698,8 @@ msgid "Copy: "
 msgstr "复制："
 
 #: ../src/ptk/ptk-file-task.c:754
-#, fuzzy
 msgid "Trash: "
-msgstr "回收站"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:755
 msgid "Delete: "
@@ -6132,9 +5726,8 @@ msgid "Copying..."
 msgstr "复制中..."
 
 #: ../src/ptk/ptk-file-task.c:764
-#, fuzzy
 msgid "Trashing..."
-msgstr "准备中..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:765
 msgid "Deleting..."
@@ -6145,15 +5738,14 @@ msgid "Linking..."
 msgstr "正在创建链接..."
 
 #: ../src/ptk/ptk-file-task.c:767
-#, fuzzy
 msgid "Changing..."
-msgstr "下载中..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:768 ../src/ptk/ptk-file-task.c:936
 #: ../src/ptk/ptk-file-task.c:1462
-#, fuzzy, c-format
+#, c-format
 msgid "Running..."
-msgstr "正在创建链接..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "From:"
@@ -6164,9 +5756,8 @@ msgid "To:"
 msgstr "到："
 
 #: ../src/ptk/ptk-file-task.c:887
-#, fuzzy
 msgid "Progress:  "
-msgstr "进度："
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:925
 msgid "Status:  "
@@ -6195,9 +5786,8 @@ msgid "Skip All"
 msgstr "全部跳过"
 
 #: ../src/ptk/ptk-file-task.c:998
-#, fuzzy
 msgid "Auto Rename"
-msgstr "重命名"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1002
 msgid "Stop If Error First"
@@ -6208,9 +5798,8 @@ msgid "Stop On Any Error"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1004
-#, fuzzy
 msgid "Continue"
-msgstr "内容"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1161 ../src/ptk/ptk-file-task.c:1394
 #, c-format
@@ -6218,9 +5807,8 @@ msgid "Stopped"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1165
-#, fuzzy
 msgid "Errors"
-msgstr "错误"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1167 ../src/ptk/ptk-file-task.c:1406
 #: ../src/ptk/ptk-file-task.c:1416
@@ -6310,28 +5898,22 @@ msgstr ""
 msgid "stalled"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2020
-#, fuzzy
 msgid "Moving from folder:"
-msgstr "向上(_P)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2022
 msgid "Linking from folder:"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2024
-#, fuzzy
 msgid "Copying from folder:"
-msgstr "向上(_P)"
+msgstr ""
 
-#
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2040
-#, fuzzy
 msgid "Folder Exists"
-msgstr "文件夹"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -6346,9 +5928,8 @@ msgid "\t<b>! overwrite file with link !</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2071
-#, fuzzy
 msgid "<b>( same size )</b>"
-msgstr "<b>文件大小</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2077 ../src/ptk/ptk-file-task.c:2100
 #, c-format
@@ -6360,9 +5941,8 @@ msgid "larger"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2081
-#, fuzzy
 msgid "smaller"
-msgstr "小于："
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2085
 msgid "<b>( same time )</b>\t"
@@ -6372,78 +5952,62 @@ msgstr ""
 msgid "newer"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2097
-#, fuzzy
 msgid "older"
-msgstr "文件夹"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2118
-#, fuzzy
 msgid "Filename Exists"
-msgstr "文件不存在"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
-#, fuzzy
 msgid "Rename Required"
-msgstr "重命名"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2133
-#, fuzzy
 msgid "In folder:"
-msgstr "向上(_P)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2212
-#, fuzzy
 msgid "_Overwrite"
-msgstr "覆盖"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2213
-#, fuzzy
 msgid "Overwrite _All"
-msgstr "全部覆盖"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2218
 msgid "_Pause"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2220
-#, fuzzy
 msgid "_Skip"
-msgstr "跳过"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2221
-#, fuzzy
 msgid "S_kip All"
-msgstr "全部跳过"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2273
-#, fuzzy
 msgid "To folder:"
-msgstr "向上(_P)"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Folder Name:</b>"
-msgstr "<b>文件名：(_N)</b>"
+msgstr ""
 
 #. extra buttons
 #: ../src/ptk/ptk-file-task.c:2328
-#, fuzzy
 msgid " _Rename "
-msgstr "重命名(_R)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2332
-#, fuzzy
 msgid " A_uto Rename "
-msgstr "重命名(_R)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2336
 msgid " Auto Re_name All "
@@ -6472,9 +6036,8 @@ msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
-#, fuzzy
 msgid "Extract To"
-msgstr "解压缩到(_T)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:485
 msgid "Cre_ate subfolder(s)"
@@ -6491,17 +6054,15 @@ msgstr ""
 
 #. task
 #: ../src/ptk/ptk-file-archiver.c:689
-#, fuzzy, c-format
+#, c-format
 msgid "Extract %s"
-msgstr "解压缩文件"
+msgstr ""
 
 #: ../src/ptk/ptk-console-output.c:74
 msgid ""
 "\n"
 "Complete!"
-msgstr ""
-"\n"
-"完成！"
+msgstr "\n完成！"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
@@ -6511,11 +6072,9 @@ msgstr "命令行："
 msgid "File System"
 msgstr "文件系统"
 
-#
 #: ../src/ptk/ptk-dir-tree.c:396
-#, fuzzy
 msgid "( no subfolder )"
-msgstr "向上(_P)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid "Remove Text Type Association"
@@ -6523,14 +6082,14 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid ""
-"NOTE:  When compiling the list of applications to appear in the Open submenu "
-"for a text file, SpaceFM will include applications associated with the MIME "
-"type (eg text/html) AND applications associated with text/plain.  If you "
+"NOTE:  When compiling the list of applications to appear in the Open submenu"
+" for a text file, SpaceFM will include applications associated with the MIME"
+" type (eg text/html) AND applications associated with text/plain.  If you "
 "select Remove on an application, it will be removed as an associated "
 "application for the MIME type (eg text/html), but will NOT be removed as an "
-"associated application for text/plain (unless the MIME type is text/plain).  "
-"Thus using Remove may not remove the application from the Open submenu for "
-"this type, unless you also remove it from text/plain."
+"associated application for text/plain (unless the MIME type is text/plain)."
+"  Thus using Remove may not remove the application from the Open submenu for"
+" this type, unless you also remove it from text/plain."
 msgstr ""
 
 #. Set Default
@@ -6548,10 +6107,10 @@ msgid "new"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
-msgstr[0] "确定要删除文件？"
+msgstr[0] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:159
@@ -6586,13 +6145,11 @@ msgstr ""
 msgid "<b>_Filename:</b>   <i>exists as folder</i>"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:561 ../src/ptk/ptk-file-misc.c:575
 #: ../src/ptk/ptk-file-misc.c:586 ../src/ptk/ptk-file-misc.c:623
 #: ../src/ptk/ptk-file-misc.c:2248
-#, fuzzy
 msgid "<b>_Parent:</b>"
-msgstr "<b>群组(_G)：</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:570
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
@@ -6622,19 +6179,15 @@ msgstr ""
 msgid "<b>P_ath:</b>   <i>parent exists as file</i>"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:595 ../src/ptk/ptk-file-misc.c:607
 #: ../src/ptk/ptk-file-misc.c:619 ../src/ptk/ptk-file-misc.c:2177
-#, fuzzy
 msgid "<b>_Name:</b>"
-msgstr "<b>文件名：(_N)</b>"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:597 ../src/ptk/ptk-file-misc.c:609
 #: ../src/ptk/ptk-file-misc.c:621 ../src/ptk/ptk-file-misc.c:2224
-#, fuzzy
 msgid "<b>_Filename:</b>"
-msgstr "<b>文件名：(_N)</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:599
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
@@ -6648,34 +6201,25 @@ msgstr ""
 msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:617 ../src/ptk/ptk-file-misc.c:2272
-#, fuzzy
 msgid "<b>P_ath:</b>"
-msgstr "<b>打开方式：(_W)</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
-#, fuzzy
 msgid "_Move"
-msgstr "移动："
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:783
-#, fuzzy
 msgid "Select Link Target"
-msgstr "选择模式"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:799
-#, fuzzy
 msgid "Select Template File"
-msgstr "选择文件夹"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:818
-#, fuzzy
 msgid "Select Template Folder"
-msgstr "选择文件夹"
+msgstr ""
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -6690,59 +6234,48 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:983
 msgid ""
-"* To select all the text in an entry, click the entry's label (eg "
-"'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
 "\n"
-"* To quickly copy an entry's text to the clipboard, double- or middle-click "
-"on the entry's label (eg 'Filename:').\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
 "\n"
-"* Multiple files can be selected in the file browser to rename a batch of "
-"files."
+"* Multiple files can be selected in the file browser to rename a batch of files."
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1042
-#, fuzzy
 msgid "C_reate"
-msgstr "新建(_C)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1043
-#, fuzzy
 msgctxt "Title|"
 msgid "Create New"
-msgstr "新建(_C)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr "文件(_F)"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
 msgstr "文件夹"
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr "创建链接："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
-#, fuzzy
 msgid "Move"
-msgstr "移动："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1070 ../src/ptk/ptk-file-misc.c:1080
 msgid "C_opy"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1071 ../src/ptk/ptk-file-misc.c:1081
-#, fuzzy
 msgid "Copy"
-msgstr "复制："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1076 ../src/ptk/ptk-file-misc.c:1087
 msgid "Create Link To"
@@ -6761,14 +6294,12 @@ msgid " As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
-#, fuzzy
 msgid "Link"
-msgstr "创建链接："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1886
-#, fuzzy
 msgid "File"
-msgstr "文件(_F)"
+msgstr ""
 
 #. g_free( title );
 #. Buttons
@@ -6781,48 +6312,38 @@ msgid "Re_vert"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1956
-#, fuzzy
 msgid "& _Open"
-msgstr "打开(_O)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1990
-#, fuzzy, c-format
+#, c-format
 msgid "Link-> %s"
-msgstr "创建链接："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1993
 #, c-format
 msgid "!Link-> %s (missing)"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:2042
-#, fuzzy
 msgid "<b>_Target:</b>"
-msgstr "<b>群组(_G)：</b>"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:2088
-#, fuzzy
 msgid "<b>_Template:</b>"
-msgstr "<b>文件类型：</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2104 ../src/ptk/ptk-file-misc.c:2693
-#, fuzzy
 msgid "Empty File"
-msgstr "解压缩文件"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:2134 ../src/ptk/ptk-file-misc.c:2771
-#, fuzzy
 msgid "Empty Folder"
-msgstr "文件夹"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:2202
-#, fuzzy
 msgid "<b>E_xtension:</b>"
-msgstr "<b>位置：</b>"
+msgstr ""
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2297
@@ -6856,24 +6377,21 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr "创建链接："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2415
-#, fuzzy
 msgid "New"
-msgstr "新标签"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2544
 msgid "Path contains linefeeds"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2599
-#, fuzzy
 msgid "Create Parent Folder"
-msgstr "向上"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2601
 msgid "The parent folder does not exist.  Create it?"
@@ -6888,14 +6406,12 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2617
-#, fuzzy
 msgid "Mkdir Error"
-msgstr "错误"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2630
-#, fuzzy
 msgid "Overwrite Existing File"
-msgstr "全部覆盖"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2632
 msgid "OVERWRITE WARNING"
@@ -6921,20 +6437,20 @@ msgid "The specified template does not exist"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "Create New File%s"
-msgstr "新建(_C)"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2802
-#, fuzzy, c-format
+#, c-format
 msgid "Create New Folder%s"
-msgstr "创建文件夹"
+msgstr ""
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2833
-#, fuzzy, c-format
+#, c-format
 msgid "Copy%s"
-msgstr "复制："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2846
 msgid "Copy Target Error"
@@ -6950,9 +6466,9 @@ msgstr ""
 
 #. move task
 #: ../src/ptk/ptk-file-misc.c:2927
-#, fuzzy, c-format
+#, c-format
 msgid "Move%s"
-msgstr "移动："
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2959
 #, c-format
@@ -6963,49 +6479,40 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
-#, fuzzy
 msgid "Rename Error"
-msgstr "重命名"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3132 ../src/ptk/ptk-file-misc.c:3134
 msgid "New Folder"
 msgstr "创建文件夹"
 
 #: ../src/ptk/ptk-file-misc.c:3133
-#, fuzzy
 msgid "New folder name:"
-msgstr "创建文件夹"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3139 ../src/ptk/ptk-file-misc.c:3141
 msgid "New File"
 msgstr "创建文件"
 
 #: ../src/ptk/ptk-file-misc.c:3140
-#, fuzzy
 msgid "New filename:"
-msgstr "创建文件"
+msgstr ""
 
-#
 #: ../src/ptk/ptk-file-misc.c:3163
-#, fuzzy
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr ""
-"指定的文件名已经存在\n"
-"请重新输入："
 
 #: ../src/ptk/ptk-file-misc.c:3196
-#, fuzzy
 msgid "The new file cannot be created"
-msgstr "无法创建新文件！"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
 msgid ""
-"This symlink's target is missing or you do not have permission to access "
-"it:\n"
+"This symlink's target is missing or you do not have permission to access it:\n"
 "%s\n"
 "\n"
 "Target: %s"
@@ -7020,12 +6527,11 @@ msgstr ""
 msgid "%s ( %llu bytes )"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-properties.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "%d folder"
 msgid_plural "%d folders"
-msgstr[0] "向上(_P)"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:177
 #, c-format
@@ -7034,25 +6540,22 @@ msgid_plural "%d files, %s"
 msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "查找文件"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
-#, fuzzy
 msgid "( multiple files )"
-msgstr "多个文件被选中"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:443
 msgid "( multiple types )"
 msgstr ""
 
-#
 #: ../src/ptk/ptk-file-properties.c:512
-#, fuzzy
 msgid "Choose..."
-msgstr "浏览..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:568 ../src/ptk/ptk-file-properties.c:575
 #, c-format
@@ -7080,8 +6583,7 @@ msgstr "无效的群组"
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
 msgid ""
-"In addition to a folder or file path, commands can be entered in the Path "
-"Bar.  Prefixes:\n"
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
 "\t$\trun as task\n"
 "\t&\trun and forget\n"
 "\t+\trun in terminal\n"
@@ -7129,9 +6631,8 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:483 ../src/vfs/vfs-file-info.c:488
 #: ../src/vfs/vfs-file-info.c:582 ../src/vfs/vfs-file-info.c:587
-#, fuzzy
 msgid "G"
-msgstr "转到"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:502 ../src/vfs/vfs-file-info.c:507
 #: ../src/vfs/vfs-file-info.c:601 ../src/vfs/vfs-file-info.c:606
@@ -7158,9 +6659,8 @@ msgstr "目标目录 \"%1$s\" 包含在源 \"%2$s\" 中"
 #: ../src/vfs/vfs-file-task.c:797 ../src/vfs/vfs-file-task.c:828
 #: ../src/vfs/vfs-file-task.c:913 ../src/vfs/vfs-file-task.c:1055
 #: ../src/vfs/vfs-file-task.c:2029
-#, fuzzy
 msgid "Accessing"
-msgstr "正在处理："
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:457 ../src/vfs/vfs-file-task.c:493
 #: ../src/vfs/vfs-file-task.c:511 ../src/vfs/vfs-file-task.c:556
@@ -7179,18 +6679,16 @@ msgid "Creating Link"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:585
-#, fuzzy
 msgid "Writing"
-msgstr "写入"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:628
 msgid "Creating"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:714
-#, fuzzy
 msgid "Renaming"
-msgstr "重命名"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1346
 msgid ""
@@ -7252,12 +6750,12 @@ msgid "Timed out calculating total size\n"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:2444
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "%s %s\n"
 "Error: %s\n"
-msgstr "错误：%s\n"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:479 ../src/vfs/vfs-volume-hal.c:702
 #, c-format
@@ -7352,7 +6850,6 @@ msgstr "%s %s 音乐播放器"
 msgid "%s %s Digital Camera"
 msgstr "%s %s 数码相机"
 
-#
 #: ../src/vfs/vfs-volume-hal.c:590
 msgid "Drive"
 msgstr "驱动器"
@@ -7471,7 +6968,8 @@ msgstr "您没有权限卸载磁盘 \"%s\""
 msgid "You are not privileged to eject the volume \"%s\""
 msgstr "您没有权限弹出磁盘 \"%s\""
 
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#. TODO: slim down mount options to what is allowed, cf.
+#. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
@@ -7514,7 +7012,8 @@ msgstr "无法挂载空白碟片，请使用刻录程序往碟片里写入音频
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgid ""
+"Audio CDs cannot be mounted, use music players to play the audio tracks"
 msgstr "无法挂载音频 CD，请使用音乐播放器来播放音轨"
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
@@ -7533,9 +7032,9 @@ msgid "[blank]"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2383
-#, fuzzy, c-format
+#, c-format
 msgid "[audio]"
-msgstr "音乐"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2397
 #, c-format
@@ -7637,7 +7136,6 @@ msgstr "逆序"
 msgid "_Create New"
 msgstr "新建(_C)"
 
-#
 #: ../src/desktop/desktop-window.c:214
 msgid "_Desktop Settings"
 msgstr "桌面设置(_D)"
@@ -7647,8 +7145,7 @@ msgstr "桌面设置(_D)"
 msgid ""
 "Enter new desktop item name:\n"
 "\n"
-"Changing the name of this desktop item requires modifying the contents of "
-"desktop file %s"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr ""
 
 #: ../src/desktop/desktop-window.c:1795
@@ -7663,441 +7160,18 @@ msgstr ""
 msgid "Open Containing _Folder"
 msgstr "打开文件所在的文件夹(_F)"
 
-#
 #: ../src/find-files.c:773
 msgid "Select a folder"
 msgstr "选择文件夹"
 
-#
 #: ../src/find-files.c:822
 msgid "Browse..."
 msgstr "浏览..."
 
 #: ../src/find-files.c:846
-#, fuzzy
 msgid "Local Volumes"
-msgstr "%s 磁盘"
+msgstr ""
 
-#
 #: ../src/find-files.c:934
 msgid "Last Modified"
 msgstr "最后修改"
-
-#~ msgid ""
-#~ "Lightweight file manager\n"
-#~ "\n"
-#~ "Developed by Hon Jen Yee (PCMan)"
-#~ msgstr ""
-#~ "轻量级文件管理器\n"
-#~ "\n"
-#~ "由洪任谕 (PCMan) 开发"
-
-#~ msgid "File Type To be Opened:"
-#~ msgstr "要打开的文件类型："
-
-#~ msgid "Set selected application to default action"
-#~ msgstr "默认使用选择的应用程序打开"
-
-#~ msgid "_Recommended Applications"
-#~ msgstr "推荐的程序(_R)"
-
-#~ msgid "Actions Showed in Popup Menus"
-#~ msgstr "在弹出窗口中显示的动作"
-
-#~ msgid "Add _Application"
-#~ msgstr "添加程序(_A)"
-
-#~ msgid "Add _Custom Action"
-#~ msgstr "添加自定义动作(_C)"
-
-#
-#~ msgid "File Associations"
-#~ msgstr "文件关联："
-
-#~ msgid "Move _Up"
-#~ msgstr "向上移动(_U)"
-
-#
-#~ msgid "<b>Last Modification:</b>"
-#~ msgstr "<b>最后修改：</b>"
-
-#
-#~ msgid "<b>Other Users:</b>"
-#~ msgstr "<b>其他用户：</b>"
-
-#~ msgid "<b>File Name Contains:</b>"
-#~ msgstr "<b>文件名包含：</b>"
-
-#~ msgid ""
-#~ "Any\n"
-#~ "Within One Day\n"
-#~ "Within One Week\n"
-#~ "Within One Month\n"
-#~ "Within One Year\n"
-#~ "Within Selected Date Range"
-#~ msgstr ""
-#~ "任意\n"
-#~ "一天之内的文件\n"
-#~ "一周之内的文件\n"
-#~ "一个月之内的文件\n"
-#~ "一年之内的文件\n"
-#~ "选择日期范围"
-
-#~ msgid ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-#~ msgstr ""
-#~ "字节\n"
-#~ "K\n"
-#~ "M\n"
-#~ "G"
-
-#~ msgid "Disable \"Trash Can\" and delete files from disk directly"
-#~ msgstr "禁用“回收站”(直接从硬盘删除文件)"
-
-#~ msgid "Display image files with supported format as thumbnails"
-#~ msgstr "对于支持的图像格式使用缩略图显示"
-
-#~ msgid "Hide folder content border"
-#~ msgstr "隐藏文件夹内容边框"
-
-#~ msgid "Hide side pane buttons"
-#~ msgstr "隐藏侧边栏按钮"
-
-#~ msgid "Max size of files displayed as thumbnails:"
-#~ msgstr "显示为缩略图的最大文件大小："
-
-#~ msgid "Open files with single click"
-#~ msgstr "单击打开文件"
-
-#~ msgid ""
-#~ "Opened in Current Tab\n"
-#~ "Opened in New Tab\n"
-#~ "Opened in New Window"
-#~ msgstr ""
-#~ "在当前标签页打开\n"
-#~ "在新标签页中打开\n"
-#~ "在新窗口中打开"
-
-#~ msgid "Size of Big Icons:"
-#~ msgstr "大图标大小："
-
-#~ msgid ""
-#~ "Stretch to fill the entire screen\n"
-#~ "Stretch to fit the screen\n"
-#~ "Center on the screen\n"
-#~ "Tile the image to fill the entire screen"
-#~ msgstr ""
-#~ "填充屏幕(拉伸)\n"
-#~ "填充屏幕(最佳比例)\n"
-#~ "屏幕居中\n"
-#~ "平铺"
-
-#~ msgid "Use SI decimal prefixes instead of IEC binary prefixes"
-#~ msgstr "使用十进制权限，而不是IEC二进制权限"
-
-#~ msgid "application"
-#~ msgstr "程序"
-
-#~ msgid "video"
-#~ msgstr "视频"
-
-#~ msgid "multipart"
-#~ msgstr "多段"
-
-#~ msgid "image"
-#~ msgstr "图片"
-
-#~ msgid "model"
-#~ msgstr "模型"
-
-#~ msgid "inode"
-#~ msgstr "节点"
-
-#~ msgid "packages"
-#~ msgstr "软件包"
-
-#~ msgid "Don't show desktop icons."
-#~ msgstr "不显示桌面图标。"
-
-#~ msgid ""
-#~ "Open preference dialog. 'n' is the number of page you want to show (1, 2, "
-#~ "3...)."
-#~ msgstr "打开首选项对话框。 n 代表你要查看的是第几页 (1, 2, 3...)。"
-
-#~ msgid "Find Files with PCManFM"
-#~ msgstr "通过 PCManFM 查找文件"
-
-#~ msgid "GTK+ icon theme is not properly set"
-#~ msgstr "GTK+ 图标主题未正确设置"
-
-#~ msgid ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "This usually means you don't have an XSETTINGS manager running.  Desktop "
-#~ "environment like GNOME or XFCE automatically execute their XSETTING "
-#~ "managers like gnome-settings-daemon or xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>If you don't use these desktop environments, you have two choices:\n"
-#~ "1. run an XSETTINGS manager, or\n"
-#~ "2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
-#~ "For example to use the Tango icon theme add a line:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create "
-#~ "it if no such file)\n"
-#~ "\n"
-#~ "<b>NOTICE: The icon theme you choose should be compatible with GNOME, or "
-#~ "the file icons cannot be displayed correctly.</b>  Due to the differences "
-#~ "in icon naming of GNOME and KDE, KDE themes cannot be used.  Currently "
-#~ "there is no standard for this, but it will be solved by freedesktop.org "
-#~ "in the future."
-#~ msgstr ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "通常，这意味着您没有一个正在运行的 XSETTINGS 管理器。像 GNOME、XFCE 这些桌"
-#~ "面环境都会自动启动他们的 XSETTINGS 管理器，即 gnome-settings-deamon 和 "
-#~ "xfce-mcs-manager\n"
-#~ "\n"
-#~ "<b>如果您没有使用这些桌面环境，您有如下两个选择：\n"
-#~ "1. 运行某个 XSETTINGS 管理器，或者\n"
-#~ "2. 在 ~/.gtkrc-2.0 中指定图标主题。</b>\n"
-#~ "例如使用 Tango 这个图标主题，在您的 ~/.gtkrc-2.0 (不存在则自行创建)中加入"
-#~ "一行：\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i>\n"
-#~ "<b>注意：您所选择的图标主题必须和 GNOME 兼容，否则文件图标将无法正确显示。"
-#~ "</b>由于 GNOME 和 KDE 图标的命名机制不同，KDE 主题将无法使用。现在还没有这"
-#~ "种标准，将来 freedesktop.org 会解决这个问题。"
-
-#~ msgid "_Text File"
-#~ msgstr "文本文件(_T)"
-
-#~ msgid "File _Properties"
-#~ msgstr "文件属性(_P)"
-
-#~ msgid "Go _Back"
-#~ msgstr "后退(_B)"
-
-#~ msgid "Go _Forward"
-#~ msgstr "前进(_F)"
-
-#~ msgid "Go to _Parent Folder"
-#~ msgstr "向上(_P)"
-
-#~ msgid "Sort by _Permission"
-#~ msgstr "按权限排序(_P)"
-
-#~ msgid "Sort by _Owner"
-#~ msgstr "按所有者排序(_O)"
-
-#~ msgid "_Open Side Pane"
-#~ msgstr "打开侧边栏(_O)"
-
-#~ msgid "Show _Directory Tree"
-#~ msgstr "显示树状目录(_D)"
-
-#~ msgid "_Refresh"
-#~ msgstr "刷新(_R)"
-
-#~ msgid "View as _Icons"
-#~ msgstr "图标查看(_I)"
-
-#
-#~ msgid "View as _Compact List"
-#~ msgstr "紧凑列表查看(_C)"
-
-#~ msgid "View as Detailed _List"
-#~ msgstr "列表查看(_L)"
-
-#~ msgid "Open _Terminal"
-#~ msgstr "打开终端(_T)"
-
-#~ msgid "Open Current Folder as _Root"
-#~ msgstr "以 Root 权限打开当前文件夹(_R)"
-
-#~ msgid "Open Side Pane"
-#~ msgstr "在侧边栏中打开"
-
-#~ msgid "Warning: You are in super user mode"
-#~ msgstr "警告：您现在处于超级用户的状态"
-
-#~ msgid "Terminal program has not been set"
-#~ msgstr "终端程序未设定"
-
-#~ msgid "_Add to Bookmarks"
-#~ msgstr "添加书签 (_A)"
-
-#~ msgid "_Edit Bookmarks"
-#~ msgstr "编辑书签(_E)"
-
-#~ msgid ", Free space: %s (Total: %s )"
-#~ msgstr "，剩余空间：%s (总共：%s)"
-
-#~ msgid "%d item selected (%s)%s"
-#~ msgid_plural "%d items selected (%s)%s"
-#~ msgstr[0] "选中了 %d 项 (%s)%s"
-
-#~ msgid "Desktop"
-#~ msgstr "桌面"
-
-#~ msgid "Move to Trash: "
-#~ msgstr "移动到回收站："
-
-#~ msgid "Change Properties: "
-#~ msgstr "修改属性："
-
-#~ msgid "Changing Properties"
-#~ msgstr "修改属性"
-
-#~ msgid "Cancel the operation?"
-#~ msgstr "取消这个操作？"
-
-#~ msgid "Do you want to overwrite the folder and its content?"
-#~ msgstr "您想要覆盖这个文件夹，以及文件夹内的所有内容吗？"
-
-#~ msgid "Do you want to overwrite this file?"
-#~ msgstr "您想要覆盖这个文件吗？"
-
-#~ msgid "Please choose a new file name."
-#~ msgstr "请输入新文件名。"
-
-#~ msgid ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "Destination and source are the same file.\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "目标和源为同一文件\n"
-#~ "\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "Save Compressed Files to..."
-#~ msgstr "将压缩文件保存到..."
-
-#~ msgid "Format of compressed File:"
-#~ msgstr "压缩文件的格式为："
-
-#~ msgid "Creating Compressed File: %s"
-#~ msgstr "创建压缩文件：%s"
-
-#~ msgid "Extract File to..."
-#~ msgstr "解压缩到..."
-
-#~ msgid "No Sub Folder"
-#~ msgstr "没有子文件夹"
-
-#~ msgid "E_xtract Here"
-#~ msgstr "解压缩到这里(_X)"
-
-#~ msgid "Compress"
-#~ msgstr "压缩"
-
-#~ msgid "_Open with another program"
-#~ msgstr "使用其他程序打开(_O)"
-
-#~ msgid "Please input new file name:"
-#~ msgstr "请输入新文件名："
-
-#~ msgid "Input a name for the new folder:"
-#~ msgstr "请输入新文件夹的名称："
-
-#~ msgid "Input a name for the new file:"
-#~ msgstr "请输入新文件的文件名："
-
-#~ msgid "Multiple files of different types"
-#~ msgstr "多个不同类型文件"
-
-#~ msgid "Other program..."
-#~ msgstr "使用其他程序打开..."
-
-#~ msgid ""
-#~ "Do you want to recursively apply these changes to all files and sub-"
-#~ "folders?"
-#~ msgstr "将改变应用到所有文件夹和子文件夹？"
-
-#~ msgid "My Documents"
-#~ msgstr "我的文档"
-
-#~ msgid "All Local Disk Partitions"
-#~ msgstr "所有本地磁盘分区"
-
-#~ msgid "Opened in New Tab"
-#~ msgstr "在新标签中打开"
-
-#~ msgid "Stretch to fill the entire screen"
-#~ msgstr "缩放到填充整个屏幕"
-
-#~ msgid "Stretch to fit the screen"
-#~ msgstr "缩放到适合屏幕尺寸"
-
-#~ msgid "gksu or kdesu is not found"
-#~ msgstr "没有发现 gksu 或者 kdesu"
-
-#~ msgid ""
-#~ "The volume \"%s\" is not mounted.\n"
-#~ "Do you want to mount it?"
-#~ msgstr ""
-#~ "磁盘 \"%s\" 尚未挂载\n"
-#~ "您是否想挂载这个磁盘？"
-
-#~ msgid "Source code taken from other projects:"
-#~ msgstr "从其他项目借鉴的代码："
-
-#~ msgid " * libmd5-rfc: Aladdin Enterprises"
-#~ msgstr " * libmd5-rfc: Aladdin Enterprises"
-
-#~ msgid " * Working area detection: Gary Kramlich"
-#~ msgstr " * 工作区检测：Gary Kamlich"
-
-#~ msgid " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
-#~ msgstr ""
-#~ " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
-
-#~ msgid " * Text and icon renderer uese code from Jonathan Blandford"
-#~ msgstr " * 文字和图标渲染使用 Jonathan Blandford 的代码"
-
-#~ msgid " * Desktop icons use code from Brian Tarricone"
-#~ msgstr " * 桌面图标使用 Brian Tarricone 的代码"
-
-#~ msgid ""
-#~ " * Volume management uses code from following projects/authors:\n"
-#~ "     * gnome-vfs: David Zeuthen,\n"
-#~ "     * thunar-vfs and libexo: Benedikt Meurer\n"
-#~ "     * gnome-mount: David Zeuthen"
-#~ msgstr ""
-#~ " * 磁盘管理使用了下列项目/作者的代码：\n"
-#~ "     * gnome-vfs: David Zeuthen,\n"
-#~ "     * thunar-vfs and libexo: Benedikt Meurer\n"
-#~ "     * gnome-mount: David Zeuthen"
-
-#~ msgid "Icon Theme:"
-#~ msgstr "图标主题"
-
-#~ msgid "A_ddress:"
-#~ msgstr "地址(_D)"
-
-#~ msgid " * xdgmime: Red Hat, Inc & Jonathan Blandford"
-#~ msgstr "* xdgmime: Red Hat, Inc 及 Jonathan Blandford"
-
-#~ msgid ""
-#~ "File operation failed.\n"
-#~ "\n"
-#~ "Unable to process \"%s\"\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "文件操作失败\n"
-#~ "\n"
-#~ "无法处理 \"%s\"\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Add to Bookmarks"
-#~ msgstr "添加到书签"
-
-#~ msgid "Open Directory _Tree"
-#~ msgstr "打开树状目录"

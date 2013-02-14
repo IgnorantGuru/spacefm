@@ -1,94 +1,75 @@
-# SpaceFM he.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
-#
+# 
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
 # Yaron Shahrbani <sh.yaron@gmail.com>, 2009.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6\n"
+"Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 20:59+0000\n"
-"PO-Revision-Date: 2009-09-29 20:16+0200\n"
-"Last-Translator: Yaron Shahrbani <sh.yaron@gmail.com>\n"
-"Language-Team: \n"
-"Language: he\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:20+0000\n"
+"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: he\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 1.1.0\n"
-"X-Poedit-Language: Hebrew\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM Open Folder"
-msgstr "תיקיית ההורה"
+msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
-#, fuzzy
 msgid "Open folder"
-msgstr "תיקיית ההורה"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM File Search"
-msgstr "הפעלת החיפוש"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:2
-#, fuzzy
 msgid "Search for files and folders"
-msgstr "כל הקבצים והתיקיות"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
 msgstr ""
 
 #: ../data/spacefm.desktop.in.h:2
-#, fuzzy
 msgid "File Manager"
-msgstr "_ניהול התקני אחסון"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:3
-#, fuzzy
 msgid "Browse the file system"
-msgstr "_עיגון מערכת הקבצים"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:1
 msgid "by IgnorantGuru"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "כל הזכויות שמורות (C) ‏2005 - 2008"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
 "SpaceFM - Copyright (C) 2013   GPL3+\n"
 "\n"
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 3 of the License, or (at your option) "
-"any later version.\n"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
-"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details.\n"
+"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 "\n"
-"The 'exo' libraries and source code used by this software are licensed under "
-"the GNU General Public License and the GNU Lesser General Public License "
-"version 3 (LGPL3).\n"
+"The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
-"You should have received a copy of the GNU General Public License and the "
-"GNU Lesser General Public License along with this program; if not, write to "
-"the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-"MA  02110-1301, USA."
+"You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:12
-#, fuzzy
 msgid ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
@@ -110,24 +91,10 @@ msgid ""
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 msgstr ""
-"洪任諭 Hong Jen Yee <pcman.tw@gmail.com>\n"
-"\n"
-"קוד מקור שנלקח ממיזמים אחרים:\n"
-" * libmd5-rfc: Aladdin Enterprises\n"
-" * זיהוי האזור הפעיל: Gary Kramlich\n"
-" * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer\n"
-" * התכונה לעיבוד של הסמלים והטקסט Jonathan Blandford\n"
-" * סמלי שולחן העבודה נעזרים בקוד שנכתב על ידי Brian Tarricone\n"
-" * ניהול התקני האחסון נעזר בקוד שנכתב על ידי היוצרים/המיזמים הבאים:\n"
-"     * gnome-vfs: David Zeuthen\n"
-"     * thunar-vfs and libexo: Benedikt Meurer\n"
-"     * gnome-mount: David Zeuthen"
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
-msgstr ""
-"מארק קרפיבנר <mark125@gmail.com>\n"
-"ירון שהרבני <sh.yaron@gmail.com>"
+msgstr "מארק קרפיבנר <mark125@gmail.com>\nירון שהרבני <sh.yaron@gmail.com>"
 
 #: ../data/ui/about-dlg.ui.h:32
 msgid ""
@@ -138,33 +105,28 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:1
-#, fuzzy
 msgid "Choose Application"
-msgstr "בחירת יישום"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:2
-#, fuzzy
 msgid "Please choose an application or enter a command:"
-msgstr "נא לבחור יישום מהרשימות האלו או להזין לשורת הפקודה ידנית:"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:3
-#, fuzzy
 msgid "File Type:"
-msgstr "<b>סוג הקובץ:</b>"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
-#, fuzzy
 msgid "A_ll Apps"
-msgstr "_כל היישומים"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:6
-#, fuzzy
 msgid "_Command:"
-msgstr "פקודה:"
+msgstr ""
 
 #. // Browse submenu
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:6936
@@ -185,48 +147,40 @@ msgid "File Properties"
 msgstr "מאפייני קובץ"
 
 #: ../data/ui/file_properties.ui.h:2
-#, fuzzy
 msgid "<b>File_name:</b>"
-msgstr "<b>שם ה_קובץ:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
-#, fuzzy
 msgid "<b>Type:</b>"
-msgstr "<b>סוג הקובץ:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:4
-#, fuzzy
 msgid "<b>Total Size:</b>"
-msgstr "<b>סך גודל הקבצים:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:5
-#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "<b>שינוי אחרון</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:6
-#, fuzzy
 msgid "<b>Accessed:</b>"
-msgstr "<b>גישה אחרונה:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
 msgstr "<b>מיקום:</b>"
 
 #: ../data/ui/file_properties.ui.h:8
-#, fuzzy
 msgid "<b>Size On Disk:</b>"
-msgstr "<b>גודל על הכונן:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:9
-#, fuzzy
 msgid "<b>Count:</b>"
-msgstr "<b>קבוצה:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:10
-#, fuzzy
 msgid "<b>Opens _With:</b>"
-msgstr "<b>פתיחה _באמצעות:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
@@ -249,9 +203,8 @@ msgid "<b>Group:</b>"
 msgstr "<b>קבוצה:</b>"
 
 #: ../data/ui/file_properties.ui.h:16
-#, fuzzy
 msgid "<b>Other:</b>"
-msgstr "<b>בעלים:</b>"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -332,9 +285,8 @@ msgstr "חיפוש קבצים"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Filename:</b>"
-msgstr "<b>שם ה_קובץ:</b>"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -365,14 +317,12 @@ msgid "<b>File Types to Search</b>"
 msgstr "<b>סוגי הקבצים לחיפוש</b>"
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
-#, fuzzy
 msgid "Search in subfolders"
-msgstr "חיפוש בתת־תיקיות"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
-#, fuzzy
 msgid "Search hidden files"
-msgstr "חיפוש אחר קבצים מוסתרים"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
@@ -431,14 +381,12 @@ msgid "Go to folder"
 msgstr "מעבר לתיקייה"
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
-#, fuzzy
 msgid "Open In Current Tab"
-msgstr "בפתח ב_לשונית חדשה"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
-#, fuzzy
 msgid "Open In New Tab"
-msgstr "פתיחה ב_לשונית חדשה"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
@@ -481,9 +429,8 @@ msgid "Preferences"
 msgstr "העדפות"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
-#, fuzzy
 msgid "Small Icons:"
-msgstr "גודל סמלים קטנים:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
@@ -498,9 +445,8 @@ msgid "<b>Display</b>"
 msgstr "<b>תצוגה</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
-#, fuzzy
 msgid "Single click opens files"
-msgstr "תפוגת זמן ללחיצה בודדת"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
@@ -527,9 +473,8 @@ msgid "Always show the tab bar"
 msgstr "תמיד להציג את סרגל הלשוניות"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
-#, fuzzy
 msgid "Hide 'Close Tab' buttons"
-msgstr "הסתרת לחצני 'סגירת הלשונית'"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
@@ -568,9 +513,8 @@ msgid "Show icons of volumes on desktop"
 msgstr "הצגת סמלים ליחידות אחסון על שולחן העבודה"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
-#, fuzzy
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr "הצגת התפריטים בעת הלחיצה על הרקע מתבצעת על ידי מנהל החלונות"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
@@ -621,28 +565,24 @@ msgid "Terminal:"
 msgstr "מסוף:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
-#, fuzzy
 msgid "Terminal SU:"
-msgstr "מסוף:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
-#, fuzzy
 msgid "Filename Encoding:"
-msgstr "קידוד שמות קבצים על הכונן:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
-#, fuzzy
 msgid "Editor:"
-msgstr "_עריכה"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
-#, fuzzy
 msgid "Run editor in terminal"
-msgstr "פתיחה במסוף"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
@@ -869,9 +809,9 @@ msgid "internal command %s requires an argument"
 msgstr ""
 
 #: ../src/cust-dialog.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "element '%s' does not exist"
-msgstr "הקובץ אינו קיים"
+msgstr ""
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -895,9 +835,9 @@ msgid "'%s' is not an internal command"
 msgstr ""
 
 #: ../src/cust-dialog.c:1630
-#, fuzzy, c-format
+#, c-format
 msgid "error creating file %s: %s"
-msgstr "חילוץ הקבצים מתבצע אל: %s"
+msgstr ""
 
 #: ../src/cust-dialog.c:1746
 #, c-format
@@ -932,8 +872,7 @@ msgstr ""
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
-"specify on the command line, features run-time internal/external commands "
-"which\n"
+"specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr ""
 
@@ -989,10 +928,8 @@ msgstr ""
 #: ../src/cust-dialog.c:3707
 #, c-format
 msgid ""
-"    @FILE    A text file from which to read a value.  In some cases this "
-"file\n"
-"             is monitored, so writing a new value to the file will update "
-"the\n"
+"    @FILE    A text file from which to read a value.  In some cases this file\n"
+"             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr ""
 
@@ -1004,8 +941,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3709
 #, c-format
 msgid ""
-"    COMMAND  An internal command or executable followed by arguments. "
-"Separate\n"
+"    COMMAND  An internal command or executable followed by arguments. Separate\n"
 "             multiple commands with a -- argument.\n"
 "             The following substitutions may be used in COMMANDs:\n"
 "                 %%n           Name of the current element\n"
@@ -1032,8 +968,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"In addition to the OPTIONS listed above, --compact or --expand options may "
-"be\n"
+"In addition to the OPTIONS listed above, --compact or --expand options may be\n"
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
@@ -1075,8 +1010,7 @@ msgid ""
 "    #!/bin/bash\n"
 "    # This script shows a Yes/No dialog\n"
 "    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
-"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
-"\"\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
 "        echo \"User pressed Yes - take some action\"\n"
 "    else\n"
@@ -1180,7 +1114,8 @@ msgstr ""
 msgid "Add a combo list.  COMMAND run when Enter pressed."
 msgstr ""
 
-#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. ^HIDE   hidden column (must be first) for data return  (int or double or
+#. string no progress)
 #. use --colwidth=W inside column list
 #: ../src/cust-dialog.h:58
 msgid "Add a list box.  COMMAND run when double-clicked."
@@ -1277,23 +1212,20 @@ msgid "Save files and write source output to FILE"
 msgstr ""
 
 #: ../src/main.c:126
-#, fuzzy
 msgid "Open folders in new tab of last window (default)"
-msgstr "פתיחת תיקיות בלשוניות חדשות בתוך החלון הפעיל במקום בחלונות חדשים"
+msgstr ""
 
 #: ../src/main.c:127
-#, fuzzy
 msgid "Open folder in current tab of last used window"
-msgstr "פתיחת תיקיות בלשוניות חדשות בתוך החלון הפעיל במקום בחלונות חדשים"
+msgstr ""
 
 #: ../src/main.c:128
 msgid "Don't load saved tabs"
 msgstr ""
 
 #: ../src/main.c:129
-#, fuzzy
 msgid "Open folders in new window"
-msgstr "פתח ב_חלון חדש"
+msgstr ""
 
 #: ../src/main.c:130
 msgid "Open folders in panel 'P' (1-4)"
@@ -1304,32 +1236,28 @@ msgid "Launch desktop manager daemon"
 msgstr ""
 
 #: ../src/main.c:132
-#, fuzzy
 msgid "Show desktop settings"
-msgstr "הגדרות _שולחן העבודה"
+msgstr ""
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
 msgstr ""
 
 #: ../src/main.c:134
-#, fuzzy
 msgid "Run as a daemon"
-msgstr "הרצת PCManFM כסוכן ברקע"
+msgstr ""
 
 #: ../src/main.c:135
 msgid "Use DIR as configuration directory"
 msgstr ""
 
 #: ../src/main.c:136
-#, fuzzy
 msgid "Show File Search"
-msgstr "הפעלת החיפוש"
+msgstr ""
 
 #: ../src/main.c:143
-#, fuzzy
 msgid "Set desktop wallpaper to FILE"
-msgstr "הגדרת רקע שולחן העבודה"
+msgstr ""
 
 #: ../src/main.c:145
 msgid "Show a custom dialog (See -g help)"
@@ -1396,9 +1324,8 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "הודעה"
+msgstr ""
 
 #: ../src/main.c:632
 msgid "Example:"
@@ -1497,9 +1424,8 @@ msgid "DIR            eg '/etc'"
 msgstr ""
 
 #: ../src/main.c:708
-#, fuzzy
 msgid "[FILENAME ...]"
-msgstr "[FILE1, FILE2,...]"
+msgstr ""
 
 #: ../src/main.c:709
 msgid "[PATTERN]      eg '*.jpg'"
@@ -1672,9 +1598,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "_חלון חדש"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1752,10 +1677,7 @@ msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
-msgstr ""
-"שגיאה: לא ניתן לקיים את החיבור אל FAM.\n"
-"\n"
-"האם יש ברשותך \"FAM\" או \"Gamin\" מותקן ופעיל?"
+msgstr "שגיאה: לא ניתן לקיים את החיבור אל FAM.\n\nהאם יש ברשותך \"FAM\" או \"Gamin\" מותקן ופעיל?"
 
 #: ../src/main.c:1315
 msgid "--dialog must be first option"
@@ -1775,10 +1697,7 @@ msgid ""
 "Unable to open file:\n"
 "\"%s\"\n"
 "%s"
-msgstr ""
-"לא ניתן לפתוח את הקובץ:\n"
-"\"%s\"\n"
-"%s"
+msgstr "לא ניתן לפתוח את הקובץ:\n\"%s\"\n%s"
 
 #: ../src/main-window.c:366 ../src/settings.c:5269
 msgid "_Add"
@@ -1821,14 +1740,12 @@ msgstr ""
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
 "\n"
-"Tip: You can also rename this plugin file to install it under a different "
-"name."
+"Tip: You can also rename this plugin file to install it under a different name."
 msgstr ""
 
 #: ../src/main-window.c:480
-#, fuzzy
 msgid "Overwrite Plugin ?"
-msgstr "שכתוב הכול"
+msgstr ""
 
 #: ../src/main-window.c:501
 msgid "Error Creating Temp Directory"
@@ -1844,15 +1761,12 @@ msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr ""
 
 #: ../src/main-window.c:743
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Unable to save session file\n"
 "\n"
 "( %s )"
 msgstr ""
-"לא ניתן לפתוח את הקובץ:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/main-window.c:745
 msgid "Save Session Error"
@@ -1860,9 +1774,8 @@ msgstr ""
 
 #. root task
 #: ../src/main-window.c:776
-#, fuzzy
 msgid "Open Root Window"
-msgstr "פתיחה ב_חלון חדש"
+msgstr ""
 
 #: ../src/main-window.c:806 ../src/vfs/vfs-file-task.c:1504
 msgid "Terminal Not Available"
@@ -1873,9 +1786,8 @@ msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr ""
 
 #: ../src/main-window.c:818
-#, fuzzy
 msgid "Open Terminal"
-msgstr "פתיחת _מסוף"
+msgstr ""
 
 #: ../src/main-window.c:1138
 msgid "Design Mode Help"
@@ -1883,24 +1795,20 @@ msgstr ""
 
 #: ../src/main-window.c:1138
 msgid ""
-"Design Mode allows you to change the name, shortcut key and icon of menu "
-"items, show help for an item, and add your own custom commands to most "
-"menus.\n"
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
 "To open the design menu, simply right-click on a menu item.\n"
 "\n"
-"To use Design Mode on a submenu, you must first close the submenu (by "
-"clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
 "\n"
-"To modify a toolbar, click the leftmost tool icon to open the toolbar config "
-"menu and select Help."
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr ""
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
-#, fuzzy, c-format
+#, c-format
 msgid "New _Command"
-msgstr "פקודה:"
+msgstr ""
 
 #: ../src/main-window.c:1789
 #, c-format
@@ -1918,18 +1826,16 @@ msgstr "_תצוגה"
 
 #: ../src/main-window.c:1823 ../src/settings.c:10254 ../src/settings.c:10623
 #: ../src/settings.c:10738 ../src/settings.c:10866 ../src/settings.c:10994
-#, fuzzy
 msgid "_Bookmarks"
-msgstr "_סימניות"
+msgstr ""
 
 #: ../src/main-window.c:1829
 msgid "_Plugins"
 msgstr ""
 
 #: ../src/main-window.c:1833
-#, fuzzy
 msgid "_Tools"
-msgstr "_כלים"
+msgstr ""
 
 #. Help
 #: ../src/main-window.c:1836 ../src/settings.c:7104 ../src/settings.c:7603
@@ -1954,9 +1860,8 @@ msgid "Stop all tasks running in this window?"
 msgstr ""
 
 #: ../src/main-window.c:2147
-#, fuzzy
 msgid "Aborting tasks..."
-msgstr "בהליכי העברה אל האשפה..."
+msgstr ""
 
 #: ../src/main-window.c:3310
 #, c-format
@@ -1994,18 +1899,17 @@ msgid "   !Link → ( error reading target )"
 msgstr ""
 
 #: ../src/main-window.c:3433
-#, fuzzy
 msgid "hidden"
 msgid_plural "hidden"
-msgstr[0] "אחד מוסתר"
-msgstr[1] "%d מוסתרים"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3436
-#, fuzzy, c-format
+#, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
-msgstr[0] "פריט גלוי אחד ‎(%s)%s"
-msgstr[1] "%d פריטים גלויים ‎(%s)%s"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3441
 #, c-format
@@ -2033,19 +1937,16 @@ msgid "Folder"
 msgstr "תיקייה"
 
 #: ../src/main-window.c:3805
-#, fuzzy
 msgid "Item"
-msgstr "פריט חדש"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "To"
-msgstr "אל:"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "Progress"
-msgstr "התקדמות:"
+msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
@@ -2086,29 +1987,24 @@ msgid ""
 msgstr ""
 
 #: ../src/main-window.c:5327
-#, fuzzy
 msgid "moving"
-msgstr "בהליכי העברה..."
+msgstr ""
 
 #: ../src/main-window.c:5328
-#, fuzzy
 msgid "copying"
-msgstr "בהליכי העתקה..."
+msgstr ""
 
 #: ../src/main-window.c:5329
-#, fuzzy
 msgid "trashing"
-msgstr "אשפה"
+msgstr ""
 
 #: ../src/main-window.c:5330
-#, fuzzy
 msgid "deleting"
-msgstr "בהליכי מחיקה..."
+msgstr ""
 
 #: ../src/main-window.c:5331
-#, fuzzy
 msgid "linking"
-msgstr "בהליכי קישור..."
+msgstr ""
 
 #: ../src/main-window.c:5332
 msgid "changing"
@@ -2151,15 +2047,13 @@ msgstr "הרשאות"
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Owner"
-msgstr "בעלים:"
+msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Modified"
-msgstr "שינוי אחרון"
+msgstr ""
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
@@ -2260,9 +2154,9 @@ msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
 #: ../src/main-window.c:6197
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr "התיקייה אינה קיימת!"
+msgstr ""
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
@@ -2333,9 +2227,8 @@ msgstr ""
 
 #. task
 #: ../src/pref-dialog.c:668 ../src/pref-dialog.c:669
-#, fuzzy
 msgid "Save Root Settings"
-msgstr "הגדרות _שולחן העבודה"
+msgstr ""
 
 #: ../src/pref-dialog.c:668
 msgid ""
@@ -2374,44 +2267,37 @@ msgstr ""
 msgid ""
 "Enter menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:118
 msgid ""
 "Enter new menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired.\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired.\n"
 "\n"
-"TIP: To change this menu item later, right-click on the menu item to open "
-"the design menu."
+"TIP: To change this menu item later, right-click on the menu item to open the design menu."
 msgstr ""
 
 #: ../src/settings.c:122
-#, fuzzy
 msgid "MIME Type"
-msgstr "סוג"
+msgstr ""
 
 #: ../src/settings.c:123
-#, fuzzy
 msgid "Filename"
-msgstr "שינוי שם"
+msgstr ""
 
 #: ../src/settings.c:124
-#, fuzzy
 msgid "Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:125
 msgid "Dir Write Access"
 msgstr ""
 
 #: ../src/settings.c:126
-#, fuzzy
 msgid "File Is Text"
-msgstr "הקובץ אינו קיים"
+msgstr ""
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2426,14 +2312,12 @@ msgid "User Is Root"
 msgstr ""
 
 #: ../src/settings.c:130
-#, fuzzy
 msgid "Multiple Selected"
-msgstr "קבצים רבים נבחרו"
+msgstr ""
 
 #: ../src/settings.c:131
-#, fuzzy
 msgid "Clipboard Has Files"
-msgstr "דחיסת קבצים"
+msgstr ""
 
 #: ../src/settings.c:132
 msgid "Clipboard Has Text"
@@ -2448,18 +2332,16 @@ msgid "Panel Count"
 msgstr ""
 
 #: ../src/settings.c:135
-#, fuzzy
 msgid "Current Tab"
-msgstr "בפתח ב_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:136
 msgid "Tab Count"
 msgstr ""
 
 #: ../src/settings.c:137
-#, fuzzy
 msgid "Bookmark"
-msgstr "_סימניות"
+msgstr ""
 
 #: ../src/settings.c:138
 msgid "Device"
@@ -2482,48 +2364,40 @@ msgid "Device UDI"
 msgstr ""
 
 #: ../src/settings.c:143
-#, fuzzy
 msgid "Device Properties"
-msgstr "מאפייני קובץ"
+msgstr ""
 
 #: ../src/settings.c:144
 msgid "Task Count"
 msgstr ""
 
 #: ../src/settings.c:145
-#, fuzzy
 msgid "Task Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:146
-#, fuzzy
 msgid "Task Type"
-msgstr "סוג"
+msgstr ""
 
 #: ../src/settings.c:147
-#, fuzzy
 msgid "Task Name"
-msgstr "שם"
+msgstr ""
 
 #: ../src/settings.c:148
-#, fuzzy
 msgid "Panel 1 Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:149
-#, fuzzy
 msgid "Panel 2 Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:150
-#, fuzzy
 msgid "Panel 3 Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:151
-#, fuzzy
 msgid "Panel 4 Directory"
-msgstr "תיקיית הבית"
+msgstr ""
 
 #: ../src/settings.c:152
 msgid "Panel 1 Has Sel"
@@ -2566,9 +2440,8 @@ msgid "doesn't equal"
 msgstr ""
 
 #: ../src/settings.c:221
-#, fuzzy
 msgid "contains"
-msgstr "הקובץ מכיל:"
+msgstr ""
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
@@ -2579,28 +2452,24 @@ msgid "begins with"
 msgstr ""
 
 #: ../src/settings.c:224
-#, fuzzy
 msgid "doesn't begin with"
-msgstr "הקובץ אינו קיים"
+msgstr ""
 
 #: ../src/settings.c:225
-#, fuzzy
 msgid "ends with"
-msgstr "פתיחה _באמצעות..."
+msgstr ""
 
 #: ../src/settings.c:226
-#, fuzzy
 msgid "doesn't end with"
-msgstr "הקובץ אינו קיים"
+msgstr ""
 
 #: ../src/settings.c:227
 msgid "is less than"
 msgstr ""
 
 #: ../src/settings.c:228
-#, fuzzy
 msgid "is greater than"
-msgstr "גדולים מ־:"
+msgstr ""
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
@@ -2628,9 +2497,8 @@ msgid "_Stop"
 msgstr ""
 
 #: ../src/settings.c:916 ../src/settings.c:9963
-#, fuzzy
 msgid "Show _Manager"
-msgstr "הצגת חלונית ה_מיקומים"
+msgstr ""
 
 #: ../src/settings.c:922 ../src/settings.c:9968
 msgid "Auto-_Hide Manager"
@@ -2667,8 +2535,7 @@ msgid ""
 "\n"
 "# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
 "\n"
-"# If you delete all session* files, SpaceFM will be reset to factory "
-"defaults.\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
 "\n"
 msgstr ""
 
@@ -2726,26 +2593,19 @@ msgstr ""
 #: ../src/settings.c:3751
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu."
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr ""
 
 #: ../src/settings.c:3753
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu, and its contents are not protected by root (once pasted it "
-"will be saved with normal ownership).\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
 "\n"
-"If this plugin contains su commands or will be run as root, installing it to "
-"and running it only from the Plugins menu is recommended to improve your "
-"system security."
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr ""
 
 #: ../src/settings.c:3783
@@ -2788,9 +2648,8 @@ msgid "Change Menu Name"
 msgstr ""
 
 #: ../src/settings.c:4195 ../src/settings.c:5958
-#, fuzzy
 msgid "Set Command Line"
-msgstr "שורת _פקודה:"
+msgstr ""
 
 #: ../src/settings.c:4232 ../src/settings.c:5922
 msgid "Choose Custom Executable"
@@ -2814,9 +2673,9 @@ msgstr ""
 
 #. task
 #: ../src/settings.c:4564
-#, fuzzy, c-format
+#, c-format
 msgid "Edit %s"
-msgstr "_עריכה"
+msgstr ""
 
 #: ../src/settings.c:5022
 msgid "Current: Show"
@@ -2831,9 +2690,8 @@ msgid "Current: Disable"
 msgstr ""
 
 #: ../src/settings.c:5213
-#, fuzzy
 msgid "Context Rules"
-msgstr "תוכן"
+msgstr ""
 
 #. list buttons
 #. Remove
@@ -2870,9 +2728,8 @@ msgid "Show"
 msgstr ""
 
 #: ../src/settings.c:5323
-#, fuzzy
 msgid "Enable"
-msgstr "הפעלת החיפוש"
+msgstr ""
 
 #: ../src/settings.c:5325
 msgid "Hide"
@@ -2902,9 +2759,7 @@ msgstr ""
 msgid ""
 "Read the user's manual online?\n"
 "\n"
-"The local copy of the SpaceFM user's manual was not found.  Click Yes to "
-"read it online, or click No and then set the correct location in Help|"
-"Options|Manual Location."
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr ""
 
 #: ../src/settings.c:5565
@@ -2929,9 +2784,7 @@ msgstr ""
 
 #: ../src/settings.c:5589
 msgid ""
-"The SpaceFM user's manual should have opened in your browser.  If it didn't "
-"open, or if you would like to use a different browser, set your browser in "
-"Help|Options|Browser.\n"
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr ""
@@ -2954,8 +2807,8 @@ msgstr ""
 #: ../src/settings.c:5726
 #, c-format
 msgid ""
-"Press your key combination for menu item '%s' then click Set.  To remove the "
-"current key assignment, click Unset."
+"Press your key combination for menu item '%s' then click Set.  To remove the"
+" current key assignment, click Unset."
 msgstr ""
 
 #: ../src/settings.c:5737
@@ -2967,9 +2820,8 @@ msgid "Unset"
 msgstr ""
 
 #: ../src/settings.c:5756
-#, fuzzy
 msgid "Set"
-msgstr "הגדרת מזהה הקבוצה (GID)"
+msgstr ""
 
 #: ../src/settings.c:5770
 msgid "Set Key"
@@ -2981,9 +2833,8 @@ msgstr ""
 
 #. line
 #: ../src/settings.c:5828 ../src/settings.c:5896
-#, fuzzy
 msgid "Edit Command Line"
-msgstr "שורת _פקודה:"
+msgstr ""
 
 #: ../src/settings.c:5933
 msgid "Run As User"
@@ -2999,12 +2850,9 @@ msgstr ""
 #: ../src/settings.c:5939
 #, c-format
 msgid ""
-"You are adding a custom command to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5940
@@ -3012,19 +2860,15 @@ msgid "New Context Command"
 msgstr ""
 
 #: ../src/settings.c:5949
-#, fuzzy
 msgid "Set Menu Name"
-msgstr "מיון לפי _שם"
+msgstr ""
 
 #: ../src/settings.c:5988
 #, c-format
 msgid ""
-"You are adding a custom submenu to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5988
@@ -3032,22 +2876,19 @@ msgid "(none)"
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "Set Submenu Name"
-msgstr "מיון לפי _שם"
+msgstr ""
 
 #: ../src/settings.c:5997
 msgid ""
 "Enter submenu name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "New _Submenu"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:6113
 msgid "( no name )"
@@ -3102,9 +2943,8 @@ msgstr ""
 #: ../src/settings.c:6786 ../src/settings.c:9402 ../src/settings.c:10307
 #: ../src/settings.c:10688 ../src/settings.c:10811 ../src/settings.c:10939
 #: ../src/settings.c:11067
-#, fuzzy
 msgid "_Name"
-msgstr "שם"
+msgstr ""
 
 #. Key
 #: ../src/settings.c:6791
@@ -3116,9 +2956,8 @@ msgstr ""
 #: ../src/settings.c:10674 ../src/settings.c:10684 ../src/settings.c:10795
 #: ../src/settings.c:10806 ../src/settings.c:10923 ../src/settings.c:10934
 #: ../src/settings.c:11051 ../src/settings.c:11062
-#, fuzzy
 msgid "_Icon"
-msgstr "_סמלים"
+msgstr ""
 
 #. // Style submenu
 #: ../src/settings.c:6811
@@ -3146,15 +2985,13 @@ msgstr ""
 
 #. Description
 #: ../src/settings.c:6871
-#, fuzzy
 msgid "_Message"
-msgstr "הודעה"
+msgstr ""
 
 #. Context
 #: ../src/settings.c:6881
-#, fuzzy
 msgid "Con_text"
-msgstr "טקסט"
+msgstr ""
 
 #: ../src/settings.c:6888
 msgid "Ign_ore Context (global)"
@@ -3162,9 +2999,8 @@ msgstr ""
 
 #. // Command submenu
 #: ../src/settings.c:6894
-#, fuzzy
 msgid "C_ommand"
-msgstr "פקודה:"
+msgstr ""
 
 #. Edit
 #: ../src/settings.c:6907 ../src/settings.c:7891 ../src/settings.c:9381
@@ -3180,14 +3016,12 @@ msgstr ""
 #. Copy
 #: ../src/settings.c:6930 ../src/settings.c:7121 ../src/settings.c:9432
 #: ../src/settings.c:9756 ../src/settings.c:10361
-#, fuzzy
 msgid "_Copy"
-msgstr "העתקה: "
+msgstr ""
 
 #: ../src/settings.c:6953
-#, fuzzy
 msgid "_Files"
-msgstr "_קובץ"
+msgstr ""
 
 #: ../src/settings.c:6956
 msgid "_Files (none)"
@@ -3232,15 +3066,13 @@ msgstr ""
 
 #. Run In Terminal
 #: ../src/settings.c:7037
-#, fuzzy
 msgid "Run _In Terminal"
-msgstr "פתיחה במסוף"
+msgstr ""
 
 #. Keep Terminal
 #: ../src/settings.c:7043
-#, fuzzy
 msgid "_Keep Terminal"
-msgstr "פתיחת _מסוף"
+msgstr ""
 
 #: ../src/settings.c:7055
 #, c-format
@@ -3308,9 +3140,8 @@ msgid "S_eparator"
 msgstr ""
 
 #: ../src/settings.c:7540
-#, fuzzy
 msgid "Set Icon"
-msgstr "הגדרת מזהה הקבוצה (GID)"
+msgstr ""
 
 #: ../src/settings.c:7901 ../src/settings.c:8111 ../src/settings.c:10114
 #: ../src/settings.c:10236
@@ -3342,12 +3173,11 @@ msgstr ""
 msgid "_Side Toolbar"
 msgstr ""
 
-#.
 #. xset_set( "panel_left", "label", _("_Left") );
 #. xset_set( "panel_right", "label", _("_Right") );
 #. xset_set( "panel_top", "label", _("_Top") );
 #. xset_set( "panel_bottom", "label", _("_Bottom") );
-#.
+#. 
 #: ../src/settings.c:8658 ../src/settings.c:8661 ../src/settings.c:9590
 #: ../src/settings.c:10482
 msgid "_Hide"
@@ -3369,9 +3199,8 @@ msgid "Tree"
 msgstr ""
 
 #: ../src/settings.c:8678 ../src/settings.c:8748 ../src/settings.c:8817
-#, fuzzy
 msgid "Bookmarks"
-msgstr "סימניות:"
+msgstr ""
 
 #: ../src/settings.c:8684 ../src/settings.c:8754 ../src/settings.c:8823
 msgid "Devices"
@@ -3382,27 +3211,24 @@ msgid "New Tab"
 msgstr "לשונית חדשה"
 
 #: ../src/settings.c:8695 ../src/settings.c:8765 ../src/settings.c:8834
-#, fuzzy
 msgid "New Tab Here"
-msgstr "לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:8700 ../src/settings.c:8770 ../src/settings.c:8839
 msgid "Back"
 msgstr "אחורה"
 
 #: ../src/settings.c:8705 ../src/settings.c:8775 ../src/settings.c:8844
-#, fuzzy
 msgid "Back Menu"
-msgstr "אחורה"
+msgstr ""
 
 #: ../src/settings.c:8710 ../src/settings.c:8780 ../src/settings.c:8849
 msgid "Forward"
 msgstr "קדימה"
 
 #: ../src/settings.c:8715 ../src/settings.c:8785 ../src/settings.c:8854
-#, fuzzy
 msgid "Forward Menu"
-msgstr "קדימה"
+msgstr ""
 
 #: ../src/settings.c:8720 ../src/settings.c:8790 ../src/settings.c:8859
 msgid "Up"
@@ -3413,9 +3239,8 @@ msgid "Refresh"
 msgstr "רענון"
 
 #: ../src/settings.c:8730 ../src/settings.c:8800 ../src/settings.c:8869
-#, fuzzy
 msgid "Home"
-msgstr "מעבר לתיקיית ה_בית"
+msgstr ""
 
 #: ../src/settings.c:8735 ../src/settings.c:8805 ../src/settings.c:8873
 msgid "Default"
@@ -3447,10 +3272,9 @@ msgid "_Sync"
 msgstr ""
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3478,9 +3302,8 @@ msgid "_Check"
 msgstr ""
 
 #: ../src/settings.c:9021
-#, fuzzy
 msgid "_Edit fstab"
-msgstr "_עריכה"
+msgstr ""
 
 #: ../src/settings.c:9025
 msgid "Edit u_devil.conf"
@@ -3491,18 +3314,16 @@ msgid "_Format"
 msgstr ""
 
 #: ../src/settings.c:9089
-#, fuzzy
 msgid "_Backup"
-msgstr "אחורה"
+msgstr ""
 
 #: ../src/settings.c:9111
 msgid "_Restore"
 msgstr ""
 
 #: ../src/settings.c:9116
-#, fuzzy
 msgid "_From File"
-msgstr "חיפוש _קבצים"
+msgstr ""
 
 #: ../src/settings.c:9121 ../src/settings.c:9487
 msgid "File _Info"
@@ -3513,19 +3334,16 @@ msgid "_Properties"
 msgstr "_מאפיינים"
 
 #: ../src/settings.c:9127
-#, fuzzy
 msgid "Setti_ngs"
-msgstr "הגדרות _שולחן העבודה"
+msgstr ""
 
 #: ../src/settings.c:9138
-#, fuzzy
 msgid "_Internal Drives"
-msgstr "דיסק־און־קי"
+msgstr ""
 
 #: ../src/settings.c:9143
-#, fuzzy
 msgid "_Empty Drives"
-msgstr "כונן דיסקטים"
+msgstr ""
 
 #: ../src/settings.c:9148
 msgid "_Partition Tables"
@@ -3536,32 +3354,25 @@ msgid "Mounted _Networks"
 msgstr ""
 
 #: ../src/settings.c:9157
-#, fuzzy
 msgid "Mounted _Files"
-msgstr "_עיגון מערכת הקבצים"
+msgstr ""
 
 #: ../src/settings.c:9162
-#, fuzzy
 msgid "_Volumes..."
-msgstr "כרך"
+msgstr ""
 
 #: ../src/settings.c:9163
-#, fuzzy
 msgid "Show/Hide Volumes"
-msgstr "ה_צגת קבצים מוסתרים"
+msgstr ""
 
 #: ../src/settings.c:9164
 msgid ""
-"To force showing or hiding of some volumes, overriding other settings, you "
-"can specify the devices, volume labels, or device IDs in the space-separated "
-"list below.\n"
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume "
-"with label \"Label With Space\" to be hidden.\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3600,14 +3411,12 @@ msgid "_Mount Removable"
 msgstr ""
 
 #: ../src/settings.c:9195
-#, fuzzy
 msgid "Open _Tab"
-msgstr "פתיחה ב_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:9200
-#, fuzzy
 msgid "_Unmount On Exit"
-msgstr "_ניתוק מערכת הקבצים"
+msgstr ""
 
 #: ../src/settings.c:9208
 msgid "Auto _Run"
@@ -3624,8 +3433,7 @@ msgstr ""
 #: ../src/settings.c:9217
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically after a removable "
-"drive or data disc is auto-mounted:\n"
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3634,9 +3442,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9220
-#, fuzzy
 msgid "On _Audio CD"
-msgstr "דיסק שמע"
+msgstr ""
 
 #: ../src/settings.c:9222
 msgid "Auto Run On Audio CD"
@@ -3645,8 +3452,7 @@ msgstr ""
 #: ../src/settings.c:9223
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when an audio CD "
-"is inserted in a qualified device:\n"
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3665,8 +3471,7 @@ msgstr ""
 #: ../src/settings.c:9229
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a video DVD "
-"is auto-mounted:\n"
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3685,8 +3490,7 @@ msgstr ""
 #: ../src/settings.c:9235
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is inserted:\n"
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice added (eg /dev/sda1)\n"
@@ -3705,8 +3509,7 @@ msgstr ""
 #: ../src/settings.c:9241
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is unmounted by any means:\n"
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice unmounted (eg /dev/sda1)\n"
@@ -3725,8 +3528,7 @@ msgstr ""
 #: ../src/settings.c:9247
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is removed (ejection of media does not qualify):\n"
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice removed (eg /dev/sda1)\n"
@@ -3744,16 +3546,12 @@ msgstr ""
 
 #: ../src/settings.c:9256
 msgid ""
-"To force or prevent automounting of some volumes, overriding other settings, "
-"you can specify the devices, volume labels, or device IDs in the space-"
-"separated list below.\n"
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when "
-"detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3763,20 +3561,14 @@ msgstr ""
 
 #: ../src/settings.c:9260
 msgid ""
-"Enter your comma- or space-separated list of default mount options below (to "
-"be used for all mounts).\n"
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9262
@@ -3791,23 +3583,17 @@ msgstr ""
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9275
-#, fuzzy
 msgid "Mount _Command"
-msgstr "פקודה:"
+msgstr ""
 
 #: ../src/settings.c:9276
 #, c-format
@@ -3827,9 +3613,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9278
-#, fuzzy
 msgid "Mount Command"
-msgstr "פקודה:"
+msgstr ""
 
 #: ../src/settings.c:9282
 msgid "_Unmount Command"
@@ -3852,14 +3637,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9285
-#, fuzzy
 msgid "Unmount Command"
-msgstr "פקודה:"
+msgstr ""
 
 #: ../src/settings.c:9307
-#, fuzzy
 msgid "Audio CD"
-msgstr "דיסק שמע"
+msgstr ""
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3874,23 +3657,20 @@ msgid "Optical No Media"
 msgstr ""
 
 #: ../src/settings.c:9328
-#, fuzzy
 msgid "Floppy Mounted"
-msgstr "כונן דיסקטים"
+msgstr ""
 
 #: ../src/settings.c:9333
 msgid "Floppy Unmounted"
 msgstr ""
 
 #: ../src/settings.c:9338
-#, fuzzy
 msgid "Removable Mounted"
-msgstr "כרך %s נתיק"
+msgstr ""
 
 #: ../src/settings.c:9343
-#, fuzzy
 msgid "Removable Unmounted"
-msgstr "כרך %s נתיק"
+msgstr ""
 
 #: ../src/settings.c:9348
 msgid "Internal Mounted"
@@ -3905,9 +3685,8 @@ msgid "Mounted Network"
 msgstr ""
 
 #: ../src/settings.c:9363
-#, fuzzy
 msgid "Mounted File"
-msgstr "_עיגון מערכת הקבצים"
+msgstr ""
 
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
@@ -3925,25 +3704,21 @@ msgid "Re_move"
 msgstr ""
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:9393
-#, fuzzy
 msgid "_Settings"
-msgstr "הגדרות _שולחן העבודה"
+msgstr ""
 
 #: ../src/settings.c:9405
-#, fuzzy
 msgid "_Filename"
-msgstr "_שינוי שם"
+msgstr ""
 
 #: ../src/settings.c:9409
-#, fuzzy
 msgid "_Parent"
-msgstr "תיקיית ההורה"
+msgstr ""
 
 #: ../src/settings.c:9412
 msgid "P_ath"
@@ -3951,9 +3726,8 @@ msgstr ""
 
 #: ../src/settings.c:9416 ../src/settings.c:10311 ../src/settings.c:10698
 #: ../src/settings.c:10822 ../src/settings.c:10950 ../src/settings.c:11078
-#, fuzzy
 msgid "_Type"
-msgstr "סוג"
+msgstr ""
 
 #: ../src/settings.c:9420
 msgid "_Target"
@@ -3970,9 +3744,8 @@ msgstr ""
 #: ../src/settings.c:9436 ../src/settings.c:10201
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
-#, fuzzy
 msgid "_Link"
-msgstr "קישור: "
+msgstr ""
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -4000,9 +3773,8 @@ msgid "_Font"
 msgstr ""
 
 #: ../src/settings.c:9453
-#, fuzzy
 msgid "Move Dialog Font"
-msgstr "העברה מ_טה"
+msgstr ""
 
 #: ../src/settings.c:9454
 msgid "/home/user/Example Filename.ext"
@@ -4033,49 +3805,41 @@ msgid "Status Bar Text Highlight Color"
 msgstr ""
 
 #: ../src/settings.c:9477
-#, fuzzy
 msgid "_Middle Click"
-msgstr "לחיצה בודדת"
+msgstr ""
 
 #: ../src/settings.c:9481 ../src/settings.c:10387
-#, fuzzy
 msgid "Copy _Name"
-msgstr "מיון לפי _שם"
+msgstr ""
 
 #: ../src/settings.c:9484 ../src/settings.c:10390
-#, fuzzy
 msgid "Copy _Path"
-msgstr "העתקה: "
+msgstr ""
 
 #: ../src/settings.c:9491
-#, fuzzy
 msgid "_Hide Panel"
-msgstr "חלונית _צד"
+msgstr ""
 
 #: ../src/settings.c:9507
 msgid "New _Window"
 msgstr "_חלון חדש"
 
 #: ../src/settings.c:9510
-#, fuzzy
 msgid "R_oot Window"
-msgstr "_סגירת החלון"
+msgstr ""
 
 #: ../src/settings.c:9513
-#, fuzzy
 msgid "_File Search"
-msgstr "הפעלת החיפוש"
+msgstr ""
 
 #: ../src/settings.c:9516
-#, fuzzy
 msgid "_Terminal"
-msgstr "מסוף:"
+msgstr ""
 
 #. discovery notification
 #: ../src/settings.c:9519
-#, fuzzy
 msgid "_Root Terminal"
-msgstr "מסוף:"
+msgstr ""
 
 #: ../src/settings.c:9522
 msgid "_Save Session"
@@ -4148,8 +3912,7 @@ msgstr ""
 #: ../src/settings.c:9610
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance starts:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_start)\n"
@@ -4166,28 +3929,24 @@ msgstr ""
 #: ../src/settings.c:9616
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance exits:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr ""
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "_חלון חדש"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "_חלון חדש"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"SpaceFM window is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_new)\n"
@@ -4209,8 +3968,7 @@ msgstr ""
 #: ../src/settings.c:9633
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_focus)\n"
@@ -4232,8 +3990,7 @@ msgstr ""
 #: ../src/settings.c:9639
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is moved or resized:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_move)\n"
@@ -4257,8 +4014,7 @@ msgstr ""
 #: ../src/settings.c:9645
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the "
-"mouse is clicked:\n"
+"Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_click)\n"
@@ -4269,13 +4025,10 @@ msgid ""
 "\t%%m\tmodifier  (modifier keys)\n"
 "\t%%f\tfocus  (element which received the click)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle "
-"button was clicked in %%f\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9648
@@ -4289,8 +4042,7 @@ msgstr ""
 #: ../src/settings.c:9651
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a key is "
-"pressed:\n"
+"Enter program or bash command line to be run automatically whenever a key is pressed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_key)\n"
@@ -4300,13 +4052,10 @@ msgid ""
 "\t%%k\tkey code  (key pressed)\n"
 "\t%%m\tmodifier  (modifier keys)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey "
-"F8 was pressed.\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9654
@@ -4320,8 +4069,7 @@ msgstr ""
 #: ../src/settings.c:9657
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is closed:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_close)\n"
@@ -4333,9 +4081,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9660
-#, fuzzy
 msgid "_Panel"
-msgstr "חלונית _צד"
+msgstr ""
 
 #: ../src/settings.c:9667
 msgid "Set Panel Focus Command"
@@ -4344,8 +4091,7 @@ msgstr ""
 #: ../src/settings.c:9668
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_focus)\n"
@@ -4367,8 +4113,7 @@ msgstr ""
 #: ../src/settings.c:9674
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"or panel element is shown or hidden:\n"
+"Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_show)\n"
@@ -4382,9 +4127,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9677
-#, fuzzy
 msgid "S_elect"
-msgstr "בחר ה_כל"
+msgstr ""
 
 #: ../src/settings.c:9679
 msgid "Set Panel Select Command"
@@ -4393,8 +4137,7 @@ msgstr ""
 #: ../src/settings.c:9680
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the file "
-"selection changes:\n"
+"Enter program or bash command line to be run automatically whenever the file selection changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_sel)\n"
@@ -4404,15 +4147,13 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler."
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4421,8 +4162,7 @@ msgstr ""
 #: ../src/settings.c:9691
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"tab is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_new)\n"
@@ -4440,8 +4180,7 @@ msgstr ""
 #: ../src/settings.c:9697
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_focus)\n"
@@ -4453,9 +4192,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9700 ../src/settings.c:10265
-#, fuzzy
 msgid "_Close"
-msgstr "סגירת הלשונית"
+msgstr ""
 
 #: ../src/settings.c:9702
 msgid "Set Tab Close Command"
@@ -4464,8 +4202,7 @@ msgstr ""
 #: ../src/settings.c:9703
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab is "
-"closed:\n"
+"Enter program or bash command line to be run automatically whenever a tab is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_close)\n"
@@ -4485,8 +4222,7 @@ msgstr ""
 #: ../src/settings.c:9709
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a device "
-"state changes:\n"
+"Enter program or bash command line to be run automatically whenever a device state changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_device)\n"
@@ -4518,14 +4254,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9719
-#, fuzzy
 msgid "_Window Icon"
-msgstr "_חלון חדש"
+msgstr ""
 
 #: ../src/settings.c:9721
-#, fuzzy
 msgid "Set Window Icon"
-msgstr "_חלון חדש"
+msgstr ""
 
 #: ../src/settings.c:9722
 msgid ""
@@ -4549,9 +4283,8 @@ msgid "_Design Mode"
 msgstr ""
 
 #: ../src/settings.c:9730
-#, fuzzy
 msgid "_Preferences"
-msgstr "העדפות"
+msgstr ""
 
 #: ../src/settings.c:9733
 msgid "_Tool"
@@ -4595,9 +4328,8 @@ msgid "_Options"
 msgstr ""
 
 #: ../src/settings.c:9809
-#, fuzzy
 msgid "_Browser"
-msgstr "_עיון"
+msgstr ""
 
 #: ../src/settings.c:9811
 msgid "Choose HTML Browser"
@@ -4606,8 +4338,7 @@ msgstr ""
 #: ../src/settings.c:9812
 #, c-format
 msgid ""
-"Enter browser name or bash command line to be used to display HTML files and "
-"URLs:\n"
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
 "\n"
 "Use:\n"
 "\t%%u\turl\n"
@@ -4616,14 +4347,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9815
-#, fuzzy
 msgid "_Manual Location"
-msgstr "מיקום"
+msgstr ""
 
 #: ../src/settings.c:9817
-#, fuzzy
 msgid "Choose User's Manual Location"
-msgstr "בחירת יישום"
+msgstr ""
 
 #: ../src/settings.c:9818
 msgid ""
@@ -4651,19 +4380,16 @@ msgid "_Count"
 msgstr ""
 
 #: ../src/settings.c:9865
-#, fuzzy
 msgid "_Item"
-msgstr "פריט חדש"
+msgstr ""
 
 #: ../src/settings.c:9871
-#, fuzzy
 msgid "_To"
-msgstr "_כלים"
+msgstr ""
 
 #: ../src/settings.c:9877
-#, fuzzy
 msgid "_Progress"
-msgstr "התקדמות:"
+msgstr ""
 
 #: ../src/settings.c:9884
 msgid "T_otal"
@@ -4686,9 +4412,8 @@ msgid "_Average Speed"
 msgstr ""
 
 #: ../src/settings.c:9927
-#, fuzzy
 msgid "Reor_der"
-msgstr "לסידור משתנה"
+msgstr ""
 
 #: ../src/settings.c:9933 ../src/settings.c:9953
 #: ../src/ptk/ptk-file-task.c:500 ../src/ptk/ptk-file-task.c:792
@@ -4744,9 +4469,8 @@ msgid "All _Workspaces"
 msgstr ""
 
 #: ../src/settings.c:10015
-#, fuzzy
 msgid "_Overwrite Option"
-msgstr "שכתוב"
+msgstr ""
 
 #: ../src/settings.c:10020
 msgid "_Error Option"
@@ -4769,9 +4493,8 @@ msgid "Stop On _Any"
 msgstr ""
 
 #: ../src/settings.c:10047
-#, fuzzy
 msgid "_Continue"
-msgstr "תוכן"
+msgstr ""
 
 #: ../src/settings.c:10052
 msgid "Qu_eue"
@@ -4810,15 +4533,13 @@ msgid "Edit As _Root"
 msgstr ""
 
 #: ../src/settings.c:10111
-#, fuzzy
 msgid "_Choose..."
-msgstr "עיון..."
+msgstr ""
 
 #. virtual
 #: ../src/settings.c:10116
-#, fuzzy
 msgid "In _Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:10120
 msgid "N_ew"
@@ -4875,37 +4596,32 @@ msgid "Tab 1_0"
 msgstr ""
 
 #: ../src/settings.c:10134
-#, fuzzy
 msgid "In _Panel"
-msgstr "חלונית _צד"
+msgstr ""
 
 #: ../src/settings.c:10145 ../src/settings.c:10164
-#, fuzzy
 msgid "_Extract"
-msgstr "חי_לוץ"
+msgstr ""
 
 #: ../src/settings.c:10148 ../src/settings.c:10168
 msgid "Extract _To"
 msgstr "חילוץ _אל"
 
 #: ../src/settings.c:10151 ../src/settings.c:10171
-#, fuzzy
 msgid "_List Contents"
-msgstr "תוכן"
+msgstr ""
 
 #: ../src/settings.c:10157
 msgid "_Archive Default"
 msgstr ""
 
 #: ../src/settings.c:10161
-#, fuzzy
 msgid "_Open With App"
-msgstr "_פתיחה באמצעות \"%s\""
+msgstr ""
 
 #: ../src/settings.c:10174
-#, fuzzy
 msgid "_Create Subfolder"
-msgstr "_חדש"
+msgstr ""
 
 #: ../src/settings.c:10178
 msgid "_Write Access"
@@ -4924,7 +4640,6 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "_סימניות"
@@ -4934,33 +4649,29 @@ msgid "_Archive"
 msgstr ""
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
 msgstr ""
 
 #: ../src/settings.c:10228
-#, fuzzy
 msgid "_Back"
-msgstr "אחורה"
+msgstr ""
 
 #: ../src/settings.c:10230
-#, fuzzy
 msgid "_Forward"
-msgstr "קדימה"
+msgstr ""
 
 #: ../src/settings.c:10232
 msgid "_Up"
 msgstr ""
 
 #: ../src/settings.c:10234
-#, fuzzy
 msgid "_Home"
-msgstr "מעבר לתיקיית ה_בית"
+msgstr ""
 
 #: ../src/settings.c:10239
 msgid "_Set Default"
@@ -4975,14 +4686,12 @@ msgid "Fo_cus"
 msgstr ""
 
 #: ../src/settings.c:10248
-#, fuzzy
 msgid "_Path Bar"
-msgstr "סרגל ה_מיקום"
+msgstr ""
 
 #: ../src/settings.c:10250
-#, fuzzy
 msgid "_File List"
-msgstr "_קובץ"
+msgstr ""
 
 #: ../src/settings.c:10252
 msgid "_Tree"
@@ -4993,10 +4702,9 @@ msgid "De_vices"
 msgstr ""
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -5007,68 +4715,58 @@ msgid "C_olumns"
 msgstr ""
 
 #: ../src/settings.c:10288
-#, fuzzy
 msgid "_Reorder"
-msgstr "לסידור משתנה"
+msgstr ""
 
 #: ../src/settings.c:10290
 msgid "_Rubberband Select"
 msgstr ""
 
 #: ../src/settings.c:10303
-#, fuzzy
 msgid "_Sort"
-msgstr "_מיון..."
+msgstr ""
 
 #. visible
 #. position
 #: ../src/settings.c:10309 ../src/settings.c:10693 ../src/settings.c:10816
 #: ../src/settings.c:10944 ../src/settings.c:11072
-#, fuzzy
 msgid "_Size"
-msgstr "גודל"
+msgstr ""
 
 #: ../src/settings.c:10313 ../src/settings.c:10703 ../src/settings.c:10828
 #: ../src/settings.c:10956 ../src/settings.c:11084
-#, fuzzy
 msgid "_Permission"
-msgstr "ה_רשאות"
+msgstr ""
 
 #: ../src/settings.c:10315 ../src/settings.c:10577 ../src/settings.c:10708
 #: ../src/settings.c:10834 ../src/settings.c:10962 ../src/settings.c:11090
-#, fuzzy
 msgid "_Owner"
-msgstr "בעלים:"
+msgstr ""
 
 #: ../src/settings.c:10317 ../src/settings.c:10713 ../src/settings.c:10840
 #: ../src/settings.c:10968 ../src/settings.c:11096
-#, fuzzy
 msgid "_Modified"
-msgstr "שינוי אחרון"
+msgstr ""
 
 #: ../src/settings.c:10319
-#, fuzzy
 msgid "_Ascending"
-msgstr "סדר עולה"
+msgstr ""
 
 #: ../src/settings.c:10321
-#, fuzzy
 msgid "_Descending"
-msgstr "סדר יורד"
+msgstr ""
 
 #: ../src/settings.c:10324
 msgid "Nat_ural"
 msgstr ""
 
 #: ../src/settings.c:10326
-#, fuzzy
 msgid "_Case Sensitive"
-msgstr "תלוי רישיות"
+msgstr ""
 
 #: ../src/settings.c:10328
-#, fuzzy
 msgid "Folders Fi_rst"
-msgstr "תיקייה"
+msgstr ""
 
 #: ../src/settings.c:10330
 msgid "F_iles First"
@@ -5079,18 +4777,16 @@ msgid "Mi_xed"
 msgstr ""
 
 #: ../src/settings.c:10334
-#, fuzzy
 msgid "_Hidden First"
-msgstr "ה_צגת קבצים מוסתרים"
+msgstr ""
 
 #: ../src/settings.c:10336
 msgid "Hidden _Last"
 msgstr ""
 
 #: ../src/settings.c:10339
-#, fuzzy
 msgid "Re_fresh"
-msgstr "רענון"
+msgstr ""
 
 #: ../src/settings.c:10342
 msgid "Auto See_k"
@@ -5106,13 +4802,11 @@ msgstr ""
 
 #: ../src/settings.c:10350
 msgid ""
-"Enter command to be used to mount or open protocols (such as nfs://, smb://, "
-"etc):\n"
+"Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
 "If this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n"
 "\n"
-"TIP:  To unmount networks, install udevil or set Unmount Command to a "
-"command which handles network protocols.\n"
+"TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr ""
 
 #: ../src/settings.c:10354
@@ -5140,87 +4834,73 @@ msgid "Paste _As"
 msgstr ""
 
 #: ../src/settings.c:10408 ../src/settings.c:10498
-#, fuzzy
 msgid "_Copy To"
-msgstr "העתקה: "
+msgstr ""
 
 #: ../src/settings.c:10412
-#, fuzzy
 msgid "L_ocation"
-msgstr "מיקום"
+msgstr ""
 
 #: ../src/settings.c:10413 ../src/settings.c:10452
-#, fuzzy
 msgid "L_ast Location"
-msgstr "שינוי אחרון"
+msgstr ""
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:10433
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
-msgstr "חלונית _צד"
+msgstr ""
 
 #: ../src/settings.c:10447
-#, fuzzy
 msgid "_Move To"
-msgstr "העברה: "
+msgstr ""
 
 #: ../src/settings.c:10451
-#, fuzzy
 msgid "_Location"
-msgstr "מיקום"
+msgstr ""
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "_לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:10471
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
-msgstr "חלונית _צד"
+msgstr ""
 
 #: ../src/settings.c:10484
-#, fuzzy
 msgid "_Select All"
-msgstr "בחר ה_כל"
+msgstr ""
 
 #: ../src/settings.c:10487
-#, fuzzy
 msgid "_Unselect All"
-msgstr "בחר ה_כל"
+msgstr ""
 
 #: ../src/settings.c:10489
 msgid "_Invert Selection"
 msgstr "_ביטול הבחירה"
 
 #: ../src/settings.c:10491
-#, fuzzy
 msgid "S_elect By Pattern"
-msgstr "בחירת תיקייה"
+msgstr ""
 
 #: ../src/settings.c:10493
 msgid "R_oot"
 msgstr ""
 
 #: ../src/settings.c:10499
-#, fuzzy
 msgid "Move _To"
-msgstr "העברה מ_טה"
+msgstr ""
 
 #. Properties
 #: ../src/settings.c:10504
-#, fuzzy
 msgid "Propert_ies"
-msgstr "_מאפיינים"
+msgstr ""
 
 #: ../src/settings.c:10515
 msgid "_Quick"
@@ -5248,9 +4928,8 @@ msgstr ""
 #. PANEL FOUR
 #: ../src/settings.c:10612 ../src/settings.c:10725 ../src/settings.c:10853
 #: ../src/settings.c:10981
-#, fuzzy
 msgid "_Toolbar"
-msgstr "_כלים"
+msgstr ""
 
 #: ../src/settings.c:10616 ../src/settings.c:10730 ../src/settings.c:10858
 #: ../src/settings.c:10986
@@ -5279,9 +4958,8 @@ msgstr ""
 
 #: ../src/settings.c:10639 ../src/settings.c:10759 ../src/settings.c:10887
 #: ../src/settings.c:11015
-#, fuzzy
 msgid "_Hidden Files"
-msgstr "ה_צגת קבצים מוסתרים"
+msgstr ""
 
 #: ../src/settings.c:10645
 msgid "File List Font (Panel 1)"
@@ -5421,14 +5099,12 @@ msgstr ""
 #. sort_hidden_first
 #. speed
 #: ../src/settings.c:11109 ../src/settings.c:11116
-#, fuzzy
 msgid "_New Tab"
-msgstr "לשונית חדשה"
+msgstr ""
 
 #: ../src/settings.c:11112 ../src/settings.c:11121
-#, fuzzy
 msgid "_Single Click"
-msgstr "לחיצה בודדת"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:551
 msgid "Toolbar Config Menu Help"
@@ -5438,44 +5114,37 @@ msgstr ""
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
-"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-"
-"click on an item to show or hide it, change the icon, or add a custom tool "
-"item.\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
 "\n"
 "For more information, click the Help button below."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr "התיקייה אינה קיימת!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
 msgstr ""
-"לא ניתן לפתוח את הקובץ:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/ptk/ptk-file-browser.c:2897
-#, fuzzy
 msgid "Select By Pattern"
-msgstr "בחירת תיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
 "\n"
-"If your pattern contains any uppercase characters, the matching will be case "
-"sensitive.\n"
+"If your pattern contains any uppercase characters, the matching will be case sensitive.\n"
 "\n"
 "Example:  *sp*e?m*\n"
 "\n"
@@ -5483,9 +5152,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
-#, fuzzy
 msgid "Choose Location"
-msgstr "בחירת יישום"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5751 ../src/ptk/ptk-file-browser.c:5783
 msgid "Invalid Destination"
@@ -5500,11 +5168,11 @@ msgid "Invalid destination"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5826
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
-msgstr[0] "האם באמת למחוק את הקבצים הנבחרים?"
-msgstr[1] "האם באמת למחוק את הקבצים הנבחרים?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-browser.c:5830
 msgid "Confirm Delete As Root"
@@ -5515,9 +5183,8 @@ msgid "DELETE AS ROOT"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5839
-#, fuzzy
 msgid "Delete As Root"
-msgstr "מחיקה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5858
 msgid "Move As Root"
@@ -5528,18 +5195,14 @@ msgid "Copy As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
-#, fuzzy
 msgid "Hide File"
-msgstr "חיפוש קבצים"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
-"The names of the selected files will be added to the '.hidden' file located "
-"in this folder, which will hide them from view in SpaceFM.  You may need to "
-"refresh the view or restart SpaceFM for the files to disappear.\n"
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
-"To unhide a file, open the .hidden file in your text editor, remove the name "
-"of the file, and refresh."
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5947
@@ -5547,24 +5210,18 @@ msgid "Error hiding files"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5954
-#, fuzzy
 msgid "No files are selected"
-msgstr "קבצים רבים נבחרו"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "סימניות:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
-#, fuzzy
 msgid "Bookmark already exists"
 msgstr ""
-"\"%s\" כבר קיים.\n"
-"\n"
-"%s"
 
 #: ../src/ptk/ptk-location-view.c:103
 msgid "DATA LOSS WARNING - overwriting"
@@ -5711,8 +5368,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  You may want or need to unmount it before changing "
-"the label."
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1166
@@ -5762,9 +5418,9 @@ msgid "Label As Root %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1280
-#, fuzzy, c-format
+#, c-format
 msgid "Unmount %s"
-msgstr "_ניתוק מערכת הקבצים"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1360 ../src/ptk/ptk-location-view.c:1372
 #, c-format
@@ -5788,7 +5444,8 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
-msgid "%s is currently mounted.  You must unmount it before you can format it."
+msgid ""
+"%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1754 ../src/ptk/ptk-location-view.c:1914
@@ -5799,8 +5456,7 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1760
 #, c-format
 msgid ""
-"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
-"take awhile and dd gives no feedback.\n"
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
 "\n"
 "Enter command to overwrite entire volume with /dev/%s:\n"
 "\n"
@@ -5852,11 +5508,9 @@ msgstr ""
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
 "\n"
-"This change may prevent your computer from booting properly.  All important "
-"data on the entire device should be backed up first.\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
 "\n"
-"Proceed?  (If you press Yes, you still have one more opportunity to abort "
-"before the disk is modified.)"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1864
@@ -5864,18 +5518,14 @@ msgid "Restore MBR"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
-#, fuzzy
 msgid "Unknown Type"
-msgstr "סוגי קבצים מוכרים:"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
-"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage "
-"filenames contain 'partimage' or end in '.000'.  MBR filenames end in '."
-"mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE "
-"this file is a valid backup, you can rename it to avoid this error."
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1917
@@ -5906,9 +5556,8 @@ msgid "DATA LOSS WARNING - overwriting MBR boot code of"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2013
-#, fuzzy
 msgid "Directory Missing"
-msgstr "עץ תיקיות"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2014
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
@@ -5919,9 +5568,8 @@ msgid "Choose Backup For Info"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
-#, fuzzy
 msgid "MBR File"
-msgstr "שינוי שם לקובץ"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5938,16 +5586,14 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes "
-"mounted read-only.  To backup a read-write volume, you need to add --allow-"
-"rw-mounted to the command.  See 'man fsarchiver' for details."
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2163
 #, c-format
 msgid ""
-"%s is currently mounted.  You must unmount it before you can create a backup "
-"using Partimage."
+"%s is currently mounted.  You must unmount it before you can create a backup"
+" using Partimage."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2180
@@ -5956,9 +5602,8 @@ msgid "Save %s Backup"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
-#, fuzzy
 msgid "Overwrite?"
-msgstr "שכתוב"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
 msgid "The selected backup already exists.  Overwrite?"
@@ -5977,9 +5622,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2229
-#, fuzzy
 msgid "Backup"
-msgstr "אחורה"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2257
 #, c-format
@@ -5987,9 +5631,9 @@ msgid "%s Backup %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Properties %s"
-msgstr "_מאפיינים"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2519 ../src/ptk/ptk-location-view.c:2546
 #, c-format
@@ -6012,9 +5656,8 @@ msgid "_Eject"
 msgstr "_שליפה"
 
 #: ../src/ptk/ptk-location-view.c:3337
-#, fuzzy
 msgid "Rename Bookmark"
-msgstr "_סימניות"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3339
 msgid "Enter new bookmark name:"
@@ -6026,9 +5669,8 @@ msgid "Enter new folder for bookmark '%s':"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3361
-#, fuzzy
 msgid "Edit Bookmark Location"
-msgstr "עריכת סימניות"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:444
 msgid "Kill As Other"
@@ -6059,9 +5701,8 @@ msgid "Copy: "
 msgstr "העתקה: "
 
 #: ../src/ptk/ptk-file-task.c:754
-#, fuzzy
 msgid "Trash: "
-msgstr "אשפה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:755
 msgid "Delete: "
@@ -6088,9 +5729,8 @@ msgid "Copying..."
 msgstr "בהליכי העתקה..."
 
 #: ../src/ptk/ptk-file-task.c:764
-#, fuzzy
 msgid "Trashing..."
-msgstr "בתהליכי הכנה..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:765
 msgid "Deleting..."
@@ -6101,15 +5741,14 @@ msgid "Linking..."
 msgstr "בהליכי קישור..."
 
 #: ../src/ptk/ptk-file-task.c:767
-#, fuzzy
 msgid "Changing..."
-msgstr "בהליכי טעינה..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:768 ../src/ptk/ptk-file-task.c:936
 #: ../src/ptk/ptk-file-task.c:1462
-#, fuzzy, c-format
+#, c-format
 msgid "Running..."
-msgstr "בהליכי קישור..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "From:"
@@ -6120,9 +5759,8 @@ msgid "To:"
 msgstr "אל:"
 
 #: ../src/ptk/ptk-file-task.c:887
-#, fuzzy
 msgid "Progress:  "
-msgstr "התקדמות:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:925
 msgid "Status:  "
@@ -6151,9 +5789,8 @@ msgid "Skip All"
 msgstr "דילוג על הכול"
 
 #: ../src/ptk/ptk-file-task.c:998
-#, fuzzy
 msgid "Auto Rename"
-msgstr "שינוי שם"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1002
 msgid "Stop If Error First"
@@ -6164,9 +5801,8 @@ msgid "Stop On Any Error"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1004
-#, fuzzy
 msgid "Continue"
-msgstr "תוכן"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1161 ../src/ptk/ptk-file-task.c:1394
 #, c-format
@@ -6174,9 +5810,8 @@ msgid "Stopped"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1165
-#, fuzzy
 msgid "Errors"
-msgstr "שגיאה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1167 ../src/ptk/ptk-file-task.c:1406
 #: ../src/ptk/ptk-file-task.c:1416
@@ -6270,24 +5905,21 @@ msgid "stalled"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2020
-#, fuzzy
 msgid "Moving from folder:"
-msgstr "מעבר לתיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2022
 msgid "Linking from folder:"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2024
-#, fuzzy
 msgid "Copying from folder:"
-msgstr "מעבר לתיקייה"
+msgstr ""
 
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2040
-#, fuzzy
 msgid "Folder Exists"
-msgstr "תיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -6302,9 +5934,8 @@ msgid "\t<b>! overwrite file with link !</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2071
-#, fuzzy
 msgid "<b>( same size )</b>"
-msgstr "<b>גודל הקובץ</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2077 ../src/ptk/ptk-file-task.c:2100
 #, c-format
@@ -6316,9 +5947,8 @@ msgid "larger"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2081
-#, fuzzy
 msgid "smaller"
-msgstr "קטנים מ־:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2085
 msgid "<b>( same time )</b>\t"
@@ -6329,73 +5959,61 @@ msgid "newer"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2097
-#, fuzzy
 msgid "older"
-msgstr "תיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2118
-#, fuzzy
 msgid "Filename Exists"
-msgstr "הקובץ אינו קיים"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
-#, fuzzy
 msgid "Rename Required"
-msgstr "שינוי שם לקובץ"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2133
-#, fuzzy
 msgid "In folder:"
-msgstr "מעבר לתיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2212
-#, fuzzy
 msgid "_Overwrite"
-msgstr "שכתוב"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2213
-#, fuzzy
 msgid "Overwrite _All"
-msgstr "שכתוב הכול"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2218
 msgid "_Pause"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2220
-#, fuzzy
 msgid "_Skip"
-msgstr "דילוג"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2221
-#, fuzzy
 msgid "S_kip All"
-msgstr "דילוג על הכול"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2273
-#, fuzzy
 msgid "To folder:"
-msgstr "מעבר לתיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Folder Name:</b>"
-msgstr "<b>שם ה_קובץ:</b>"
+msgstr ""
 
 #. extra buttons
 #: ../src/ptk/ptk-file-task.c:2328
-#, fuzzy
 msgid " _Rename "
-msgstr "_שינוי שם"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2332
-#, fuzzy
 msgid " A_uto Rename "
-msgstr "_שינוי שם"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2336
 msgid " Auto Re_name All "
@@ -6424,9 +6042,8 @@ msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
-#, fuzzy
 msgid "Extract To"
-msgstr "חילוץ _אל"
+msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:485
 msgid "Cre_ate subfolder(s)"
@@ -6443,17 +6060,15 @@ msgstr ""
 
 #. task
 #: ../src/ptk/ptk-file-archiver.c:689
-#, fuzzy, c-format
+#, c-format
 msgid "Extract %s"
-msgstr "חילוץ קבצים"
+msgstr ""
 
 #: ../src/ptk/ptk-console-output.c:74
 msgid ""
 "\n"
 "Complete!"
-msgstr ""
-"\n"
-"הושלם!"
+msgstr "\nהושלם!"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
@@ -6464,9 +6079,8 @@ msgid "File System"
 msgstr "מערכת קבצים"
 
 #: ../src/ptk/ptk-dir-tree.c:396
-#, fuzzy
 msgid "( no subfolder )"
-msgstr "מעבר לתיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid "Remove Text Type Association"
@@ -6474,14 +6088,14 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid ""
-"NOTE:  When compiling the list of applications to appear in the Open submenu "
-"for a text file, SpaceFM will include applications associated with the MIME "
-"type (eg text/html) AND applications associated with text/plain.  If you "
+"NOTE:  When compiling the list of applications to appear in the Open submenu"
+" for a text file, SpaceFM will include applications associated with the MIME"
+" type (eg text/html) AND applications associated with text/plain.  If you "
 "select Remove on an application, it will be removed as an associated "
 "application for the MIME type (eg text/html), but will NOT be removed as an "
-"associated application for text/plain (unless the MIME type is text/plain).  "
-"Thus using Remove may not remove the application from the Open submenu for "
-"this type, unless you also remove it from text/plain."
+"associated application for text/plain (unless the MIME type is text/plain)."
+"  Thus using Remove may not remove the application from the Open submenu for"
+" this type, unless you also remove it from text/plain."
 msgstr ""
 
 #. Set Default
@@ -6499,11 +6113,11 @@ msgid "new"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
-msgstr[0] "האם באמת למחוק את הקבצים הנבחרים?"
-msgstr[1] "האם באמת למחוק את הקבצים הנבחרים?"
+msgstr[0] ""
+msgstr[1] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:159
@@ -6541,9 +6155,8 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:561 ../src/ptk/ptk-file-misc.c:575
 #: ../src/ptk/ptk-file-misc.c:586 ../src/ptk/ptk-file-misc.c:623
 #: ../src/ptk/ptk-file-misc.c:2248
-#, fuzzy
 msgid "<b>_Parent:</b>"
-msgstr "<b>_קבוצה:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:570
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
@@ -6575,15 +6188,13 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:595 ../src/ptk/ptk-file-misc.c:607
 #: ../src/ptk/ptk-file-misc.c:619 ../src/ptk/ptk-file-misc.c:2177
-#, fuzzy
 msgid "<b>_Name:</b>"
-msgstr "<b>שם ה_קובץ:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:597 ../src/ptk/ptk-file-misc.c:609
 #: ../src/ptk/ptk-file-misc.c:621 ../src/ptk/ptk-file-misc.c:2224
-#, fuzzy
 msgid "<b>_Filename:</b>"
-msgstr "<b>שם ה_קובץ:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:599
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
@@ -6598,29 +6209,24 @@ msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:617 ../src/ptk/ptk-file-misc.c:2272
-#, fuzzy
 msgid "<b>P_ath:</b>"
-msgstr "<b>פתיחה _באמצעות:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
-#, fuzzy
 msgid "_Move"
-msgstr "העברה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:783
-#, fuzzy
 msgid "Select Link Target"
-msgstr "מצב בחירה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:799
-#, fuzzy
 msgid "Select Template File"
-msgstr "בחירת תיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:818
-#, fuzzy
 msgid "Select Template Folder"
-msgstr "בחירת תיקייה"
+msgstr ""
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -6635,58 +6241,48 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:983
 msgid ""
-"* To select all the text in an entry, click the entry's label (eg "
-"'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
 "\n"
-"* To quickly copy an entry's text to the clipboard, double- or middle-click "
-"on the entry's label (eg 'Filename:').\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
 "\n"
-"* Multiple files can be selected in the file browser to rename a batch of "
-"files."
+"* Multiple files can be selected in the file browser to rename a batch of files."
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1042
-#, fuzzy
 msgid "C_reate"
-msgstr "_חדש"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1043
-#, fuzzy
 msgctxt "Title|"
 msgid "Create New"
-msgstr "_חדש"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr "_קובץ"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
 msgstr "תיקייה"
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr "קישור: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
-#, fuzzy
 msgid "Move"
-msgstr "העברה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1070 ../src/ptk/ptk-file-misc.c:1080
 msgid "C_opy"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1071 ../src/ptk/ptk-file-misc.c:1081
-#, fuzzy
 msgid "Copy"
-msgstr "העתקה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1076 ../src/ptk/ptk-file-misc.c:1087
 msgid "Create Link To"
@@ -6705,14 +6301,12 @@ msgid " As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
-#, fuzzy
 msgid "Link"
-msgstr "קישור: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1886
-#, fuzzy
 msgid "File"
-msgstr "_קובץ"
+msgstr ""
 
 #. g_free( title );
 #. Buttons
@@ -6725,14 +6319,13 @@ msgid "Re_vert"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1956
-#, fuzzy
 msgid "& _Open"
-msgstr "_פתיחה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1990
-#, fuzzy, c-format
+#, c-format
 msgid "Link-> %s"
-msgstr "קישור: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1993
 #, c-format
@@ -6740,29 +6333,24 @@ msgid "!Link-> %s (missing)"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2042
-#, fuzzy
 msgid "<b>_Target:</b>"
-msgstr "<b>_קבוצה:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2088
-#, fuzzy
 msgid "<b>_Template:</b>"
-msgstr "<b>סוג הקובץ:</b>"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2104 ../src/ptk/ptk-file-misc.c:2693
-#, fuzzy
 msgid "Empty File"
-msgstr "חילוץ קבצים"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2134 ../src/ptk/ptk-file-misc.c:2771
-#, fuzzy
 msgid "Empty Folder"
-msgstr "תיקייה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2202
-#, fuzzy
 msgid "<b>E_xtension:</b>"
-msgstr "<b>מיקום:</b>"
+msgstr ""
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2297
@@ -6796,24 +6384,21 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr "קישור: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2415
-#, fuzzy
 msgid "New"
-msgstr "לשונית חדשה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2544
 msgid "Path contains linefeeds"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2599
-#, fuzzy
 msgid "Create Parent Folder"
-msgstr "תיקיית ההורה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2601
 msgid "The parent folder does not exist.  Create it?"
@@ -6828,14 +6413,12 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2617
-#, fuzzy
 msgid "Mkdir Error"
-msgstr "שגיאה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2630
-#, fuzzy
 msgid "Overwrite Existing File"
-msgstr "שכתוב הכול"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2632
 msgid "OVERWRITE WARNING"
@@ -6861,20 +6444,20 @@ msgid "The specified template does not exist"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "Create New File%s"
-msgstr "_חדש"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2802
-#, fuzzy, c-format
+#, c-format
 msgid "Create New Folder%s"
-msgstr "תיקייה חדשה"
+msgstr ""
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2833
-#, fuzzy, c-format
+#, c-format
 msgid "Copy%s"
-msgstr "העתקה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2846
 msgid "Copy Target Error"
@@ -6890,9 +6473,9 @@ msgstr ""
 
 #. move task
 #: ../src/ptk/ptk-file-misc.c:2927
-#, fuzzy, c-format
+#, c-format
 msgid "Move%s"
-msgstr "העברה: "
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2959
 #, c-format
@@ -6903,48 +6486,40 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
-#, fuzzy
 msgid "Rename Error"
-msgstr "שינוי שם"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3132 ../src/ptk/ptk-file-misc.c:3134
 msgid "New Folder"
 msgstr "תיקייה חדשה"
 
 #: ../src/ptk/ptk-file-misc.c:3133
-#, fuzzy
 msgid "New folder name:"
-msgstr "תיקייה חדשה"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3139 ../src/ptk/ptk-file-misc.c:3141
 msgid "New File"
 msgstr "קובץ חדש"
 
 #: ../src/ptk/ptk-file-misc.c:3140
-#, fuzzy
 msgid "New filename:"
-msgstr "קובץ חדש"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3163
-#, fuzzy
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr ""
-"השם שהוזן כבר קיים.\n"
-"נא להכניס שם חדש:"
 
 #: ../src/ptk/ptk-file-misc.c:3196
-#, fuzzy
 msgid "The new file cannot be created"
-msgstr "לא ניתן ליצור את הקובץ החדש!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
 msgid ""
-"This symlink's target is missing or you do not have permission to access "
-"it:\n"
+"This symlink's target is missing or you do not have permission to access it:\n"
 "%s\n"
 "\n"
 "Target: %s"
@@ -6960,11 +6535,11 @@ msgid "%s ( %llu bytes )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "%d folder"
 msgid_plural "%d folders"
-msgstr[0] "מעבר לתיקייה"
-msgstr[1] "מעבר לתיקייה"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:177
 #, c-format
@@ -6974,25 +6549,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "חיפוש קבצים"
-msgstr[1] "חיפוש קבצים"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
-#, fuzzy
 msgid "( multiple files )"
-msgstr "קבצים רבים נבחרו"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:443
 msgid "( multiple types )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:512
-#, fuzzy
 msgid "Choose..."
-msgstr "עיון..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:568 ../src/ptk/ptk-file-properties.c:575
 #, c-format
@@ -7020,8 +6593,7 @@ msgstr "קבוצה לא תקינה"
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
 msgid ""
-"In addition to a folder or file path, commands can be entered in the Path "
-"Bar.  Prefixes:\n"
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
 "\t$\trun as task\n"
 "\t&\trun and forget\n"
 "\t+\trun in terminal\n"
@@ -7069,9 +6641,8 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:483 ../src/vfs/vfs-file-info.c:488
 #: ../src/vfs/vfs-file-info.c:582 ../src/vfs/vfs-file-info.c:587
-#, fuzzy
 msgid "G"
-msgstr "מעבר"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:502 ../src/vfs/vfs-file-info.c:507
 #: ../src/vfs/vfs-file-info.c:601 ../src/vfs/vfs-file-info.c:606
@@ -7098,9 +6669,8 @@ msgstr "תיקיית היעד \"%1$s\" מוכלת תחת המקור \"%2$s\""
 #: ../src/vfs/vfs-file-task.c:797 ../src/vfs/vfs-file-task.c:828
 #: ../src/vfs/vfs-file-task.c:913 ../src/vfs/vfs-file-task.c:1055
 #: ../src/vfs/vfs-file-task.c:2029
-#, fuzzy
 msgid "Accessing"
-msgstr "בתהליכי עיבוד:"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:457 ../src/vfs/vfs-file-task.c:493
 #: ../src/vfs/vfs-file-task.c:511 ../src/vfs/vfs-file-task.c:556
@@ -7119,18 +6689,16 @@ msgid "Creating Link"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:585
-#, fuzzy
 msgid "Writing"
-msgstr "כתיבה"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:628
 msgid "Creating"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:714
-#, fuzzy
 msgid "Renaming"
-msgstr "שינוי שם"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1346
 msgid ""
@@ -7410,7 +6978,8 @@ msgstr "אינך מורשה לנתק את הכרך \"%s\""
 msgid "You are not privileged to eject the volume \"%s\""
 msgstr "אינך מורשה לשלוף את הכרך \"%s\""
 
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#. TODO: slim down mount options to what is allowed, cf.
+#. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
@@ -7421,8 +6990,7 @@ msgstr "אפשרות העגינה לא היתה תקנית בעת הנסיון �
 msgid ""
 "The volume \"%s\" uses the <i>%s</i> file system which is not supported by "
 "your system"
-msgstr ""
-"הכרך \"%s\" משתמש במערכת הקבצים <i>%s</i> שאינה נתמכת על ידי המערכת שלך"
+msgstr "הכרך \"%s\" משתמש במערכת הקבצים <i>%s</i> שאינה נתמכת על ידי המערכת שלך"
 
 #: ../src/vfs/vfs-volume-hal.c:2278
 #, c-format
@@ -7450,15 +7018,13 @@ msgstr "קרוב לוודאי שהכרך \"%s\" עוגן אוטומטית באמ
 msgid ""
 "Blank discs cannot be mounted, use a CD recording application to record "
 "audio or data on the disc"
-msgstr ""
-"לא ניתן לעגן דיסקים ריקים, יש להשתמש בתוכנת צריבה כדי לצרוב רצועות שמע או "
-"נתונים על הדיסק"
+msgstr "לא ניתן לעגן דיסקים ריקים, יש להשתמש בתוכנת צריבה כדי לצרוב רצועות שמע או נתונים על הדיסק"
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
-msgstr ""
-"לא ניתן לעגן תקליטורי שמע, יש להשתמש בנגני מוזיקה כדי לנגן את רצועות השמע"
+msgid ""
+"Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgstr "לא ניתן לעגן תקליטורי שמע, יש להשתמש בנגני מוזיקה כדי לנגן את רצועות השמע"
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
 #, c-format
@@ -7476,9 +7042,9 @@ msgid "[blank]"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2383
-#, fuzzy, c-format
+#, c-format
 msgid "[audio]"
-msgstr "שמע"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2397
 #, c-format
@@ -7589,8 +7155,7 @@ msgstr "הגדרות _שולחן העבודה"
 msgid ""
 "Enter new desktop item name:\n"
 "\n"
-"Changing the name of this desktop item requires modifying the contents of "
-"desktop file %s"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr ""
 
 #: ../src/desktop/desktop-window.c:1795
@@ -7614,366 +7179,9 @@ msgid "Browse..."
 msgstr "עיון..."
 
 #: ../src/find-files.c:846
-#, fuzzy
 msgid "Local Volumes"
-msgstr "כרך %s"
+msgstr ""
 
 #: ../src/find-files.c:934
 msgid "Last Modified"
 msgstr "שינוי אחרון"
-
-#~ msgid ""
-#~ "Lightweight file manager\n"
-#~ "\n"
-#~ "Developed by Hon Jen Yee (PCMan)"
-#~ msgstr ""
-#~ "מנהל קבצים קליל\n"
-#~ "\n"
-#~ "פותח על ידי Hon Jen Yee (PCMan)"
-
-#~ msgid ""
-#~ "The icon was taken from \"nuoveXT 2\" icon theme\n"
-#~ "created by Alexandre Moore (saki).\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-#~ msgstr ""
-#~ "הסמל נלקח מערכת הסמלים \"nuoveXT 2\"\n"
-#~ "שנוצרה על ידי Alexandre Moore (saki).\n"
-#~ "http://www.gnome-look.org/content/show.php/nuoveXT+2?content=56625"
-
-#~ msgid "File Type To be Opened:"
-#~ msgstr "סוג קובץ לפתיחה:"
-
-#~ msgid "Set selected application to default action"
-#~ msgstr "הגדרת היישום הנבחר לפעולת ברירת מחדל"
-
-#~ msgid "_Recommended Applications"
-#~ msgstr "יי_שומים מומלצים"
-
-#~ msgid "Actions Showed in Popup Menus"
-#~ msgstr "פעולות המופיעות בתפריטים מוקפצים"
-
-#~ msgid "Add _Application"
-#~ msgstr "הו_ספת יישום"
-
-#~ msgid "Add _Custom Action"
-#~ msgstr "הוספת פעולה א_חרת"
-
-#~ msgid "File Associations"
-#~ msgstr "שיוכי קבצים"
-
-#~ msgid "Move _Up"
-#~ msgstr "העברה מ_עלה"
-
-#~ msgid "<b>Last Modification:</b>"
-#~ msgstr "<b>שינוי אחרון:</b>"
-
-#~ msgid "<b>Other Users:</b>"
-#~ msgstr "<b>משתמשים אחרים:</b>"
-
-#~ msgid "<b>File Name Contains:</b>"
-#~ msgstr "<b>שם הקובץ מכיל:</b>"
-
-#~ msgid ""
-#~ "Any\n"
-#~ "Within One Day\n"
-#~ "Within One Week\n"
-#~ "Within One Month\n"
-#~ "Within One Year\n"
-#~ "Within Selected Date Range"
-#~ msgstr ""
-#~ "מתישהו\n"
-#~ "ביממה האחרונה\n"
-#~ "בשבוע האחרון\n"
-#~ "בחודש האחרון\n"
-#~ "בשנה האחרונה\n"
-#~ "בטווח התאריכים הנבחר"
-
-#~ msgid ""
-#~ "Bytes\n"
-#~ "KB\n"
-#~ "MB\n"
-#~ "GB"
-#~ msgstr ""
-#~ "בתים\n"
-#~ "ק\"ב\n"
-#~ "מ\"ב\n"
-#~ "ג\"ב"
-
-#~ msgid "Disable \"Trash Can\" and delete files from disk directly"
-#~ msgstr "ביטול \"סל המיחזור\" ומחיקת הקבצים מהכונן ישירות"
-
-#~ msgid "Display image files with supported format as thumbnails"
-#~ msgstr "הצגת תמונות ממוזערות לסוגי קבצים נתמכים"
-
-#~ msgid "Hide folder content border"
-#~ msgstr "הסתרת מסגרת תכני התיקייה"
-
-#~ msgid "Hide side pane buttons"
-#~ msgstr "הסתרת לחצני חלונית הצד"
-
-#~ msgid "Max size of files displayed as thumbnails:"
-#~ msgstr "הגודל המירבי לקבצים שעבורם יוצגו תמונות ממוזערות:"
-
-#~ msgid "Open files with single click"
-#~ msgstr "פתיחת קבצים בלחיצה בודדת"
-
-#~ msgid ""
-#~ "Opened in Current Tab\n"
-#~ "Opened in New Tab\n"
-#~ "Opened in New Window"
-#~ msgstr ""
-#~ "פתיחה בלשונית הנוכחית\n"
-#~ "פתיחה בלשונית חדשה\n"
-#~ "פתיחה בחלון חדש"
-
-#~ msgid "Size of Big Icons:"
-#~ msgstr "גודל סמלים גדולים:"
-
-#~ msgid ""
-#~ "Stretch to fill the entire screen\n"
-#~ "Stretch to fit the screen\n"
-#~ "Center on the screen\n"
-#~ "Tile the image to fill the entire screen"
-#~ msgstr ""
-#~ "מתיחה למילוי המסך כולו\n"
-#~ "מתיחה להתאמה לגודל המסך\n"
-#~ "מירכוז במסך\n"
-#~ "פריסת התמונה למילוי המסך כולו"
-
-#~ msgid "Use SI decimal prefixes instead of IEC binary prefixes"
-#~ msgstr ""
-#~ "שימוש בקידומות עשרוניות לפי תקן ה־SI במקום קידומות בינאריות לפי תקן ה־IEC"
-
-#~ msgid "application"
-#~ msgstr "יישום"
-
-#~ msgid "video"
-#~ msgstr "וידאו"
-
-#~ msgid "multipart"
-#~ msgstr "מרובה חלקים"
-
-#~ msgid "image"
-#~ msgstr "תמונה"
-
-#~ msgid "model"
-#~ msgstr "דגם"
-
-#~ msgid "inode"
-#~ msgstr "inode"
-
-#~ msgid "packages"
-#~ msgstr "חבילות"
-
-#~ msgid "Don't show desktop icons."
-#~ msgstr "אין להציג את סמלי שולחן העבודה."
-
-#~ msgid ""
-#~ "Open preference dialog. 'n' is the number of page you want to show (1, 2, "
-#~ "3...)."
-#~ msgstr ""
-#~ "פתיחת תיבת דו־שיח ההעדפות. 'n' יהיה מספר העמודים המבוקש להצגה (1, 2, "
-#~ "3...)."
-
-#~ msgid "Find Files with PCManFM"
-#~ msgstr "מציאת קבצים באמצעות PCManFM"
-
-#~ msgid "GTK+ icon theme is not properly set"
-#~ msgstr "ערכת הסמלים של GTK+ לא הוגדרה כראוי"
-
-#~ msgid ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "This usually means you don't have an XSETTINGS manager running.  Desktop "
-#~ "environment like GNOME or XFCE automatically execute their XSETTING "
-#~ "managers like gnome-settings-daemon or xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>If you don't use these desktop environments, you have two choices:\n"
-#~ "1. run an XSETTINGS manager, or\n"
-#~ "2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
-#~ "For example to use the Tango icon theme add a line:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create "
-#~ "it if no such file)\n"
-#~ "\n"
-#~ "<b>NOTICE: The icon theme you choose should be compatible with GNOME, or "
-#~ "the file icons cannot be displayed correctly.</b>  Due to the differences "
-#~ "in icon naming of GNOME and KDE, KDE themes cannot be used.  Currently "
-#~ "there is no standard for this, but it will be solved by freedesktop.org "
-#~ "in the future."
-#~ msgstr ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "משמעות הדבר היא שמנהל ה־XSETTINGS אינו פעיל.  סביבות שולחן עבודה כגון "
-#~ "GNOME או XFCE מפעילות באופן אוטומטי את מנהלי ה־XSETTING שלהן לדוגמה gnome-"
-#~ "settings-daemon או xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>אם אינך עושה שימוש בסביבות עבודה אלו, עומדות בפניך שתי אפשרויות:\n"
-#~ "1. להריץ מנהל XSETTINGS, או\n"
-#~ "2. פשוט לציין ערכת נושא תחת ~/.gtkrc-2.0.</b>\n"
-#~ "לדוגמה כדי להשתמש בערכת הסמלים Tango יש להוסיף את השורה:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> תחת הקובץ ~/.gtkrc-2.0. (יש "
-#~ "ליצור אם לא קיים אחד כזה)\n"
-#~ "\n"
-#~ "<b>לתשומת לבך: על ערכת הסמלים הנבחרת להיות תואמת ל־GNOME, אחרת לא ניתן "
-#~ "יהיה להציגה כראוי.</b>  עקב ההבדלים בין שמות הסמלים של GNOME ושל KDE, לא "
-#~ "ניתן להשתמש בערכות נושא של KDE.  לעת עתה נושא זה אינו מתוקנן עדיין, אך "
-#~ "הוא יפתר על ידי freedesktop.org בעתיד."
-
-#~ msgid "_Text File"
-#~ msgstr "קובץ _טקסט"
-
-#~ msgid "File _Properties"
-#~ msgstr "_מאפייני קובץ"
-
-#~ msgid "Go _Back"
-#~ msgstr "מעבר _אחורה"
-
-#~ msgid "Go _Forward"
-#~ msgstr "מעבר _קדימה"
-
-#~ msgid "Go to _Parent Folder"
-#~ msgstr "מעבר לתיקיית הה_ורה"
-
-#~ msgid "Sort by _Permission"
-#~ msgstr "מיון לפי _הרשאות"
-
-#~ msgid "Sort by _Owner"
-#~ msgstr "מיון לפי _בעלים"
-
-#~ msgid "_Open Side Pane"
-#~ msgstr "_פתיחת חלונית צד"
-
-#~ msgid "Show _Directory Tree"
-#~ msgstr "הצגת _עץ התיקיות"
-
-#~ msgid "_Refresh"
-#~ msgstr "_רענון"
-
-#~ msgid "View as _Icons"
-#~ msgstr "הצגה כ_סמלים"
-
-#~ msgid "View as _Compact List"
-#~ msgstr "הצגה כרשימה _מצומצמת"
-
-#~ msgid "View as Detailed _List"
-#~ msgstr "הצגה כרשימה מ_פורטת"
-
-#~ msgid "Open Current Folder as _Root"
-#~ msgstr "פתיחת התיקייה הנוכחית כמשתמש _על"
-
-#~ msgid "Open Side Pane"
-#~ msgstr "פתיחת חלונית הצד"
-
-#~ msgid "Warning: You are in super user mode"
-#~ msgstr "אזהרה: המצב הנוכחי הוא מצב משתמש על"
-
-#~ msgid "Terminal program has not been set"
-#~ msgstr "לא הוגדר יישום מסוף"
-
-#~ msgid "_Add to Bookmarks"
-#~ msgstr "הו_ספה לסימניות"
-
-#~ msgid "_Edit Bookmarks"
-#~ msgstr "_עריכת סימניות"
-
-#~ msgid ", Free space: %s (Total: %s )"
-#~ msgstr ", מקום פנוי: %s (סך הכל: %s )"
-
-#~ msgid "%d item selected (%s)%s"
-#~ msgid_plural "%d items selected (%s)%s"
-#~ msgstr[0] "נבחר פריט אחד ‎(%s)%s"
-#~ msgstr[1] "%d פריטים נבחרו ‎(%s)%s"
-
-#~ msgid "Owner:Group"
-#~ msgstr "בעלים:קבוצה"
-
-#~ msgid "Desktop"
-#~ msgstr "שולחן העבודה"
-
-#~ msgid "Move to Trash: "
-#~ msgstr "העברה לאשפה: "
-
-#~ msgid "Change Properties: "
-#~ msgstr "שינוי מאפיינים: "
-
-#~ msgid "Changing Properties"
-#~ msgstr "שינוי המאפיינים"
-
-#~ msgid "Cancel the operation?"
-#~ msgstr "האם לבטל את הפעולה?"
-
-#~ msgid "Do you want to overwrite the folder and its content?"
-#~ msgstr "האם לשכתב על התיקייה ועל תוכנה?"
-
-#~ msgid "Do you want to overwrite this file?"
-#~ msgstr "האם לשכתב את הקובץ?"
-
-#~ msgid "Please choose a new file name."
-#~ msgstr "נא לבחור שם חדש לקובץ."
-
-#~ msgid ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "Destination and source are the same file.\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "קובץ היעד וקובץ המקור הינם אותו הקובץ.\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "Save Compressed Files to..."
-#~ msgstr "שמירת קבצים דחוסים אל..."
-
-#~ msgid "Format of compressed File:"
-#~ msgstr "סוג הקובץ הדחוס:"
-
-#~ msgid "Creating Compressed File: %s"
-#~ msgstr "הקובץ הדחוס נוצר: %s"
-
-#~ msgid "Extract File to..."
-#~ msgstr "חילוץ קבצים אל..."
-
-#~ msgid "No Sub Folder"
-#~ msgstr "אין תת־תיקייה"
-
-#~ msgid "E_xtract Here"
-#~ msgstr "חי_לוץ לכאן"
-
-#~ msgid "Compress"
-#~ msgstr "דחיסה"
-
-#~ msgid "_Open with another program"
-#~ msgstr "_פתיחה באמצעות יישום אחר"
-
-#~ msgid "Please input new file name:"
-#~ msgstr "נא להכניס את שם הקובץ החדש:"
-
-#~ msgid "Input a name for the new folder:"
-#~ msgstr "נא להכניס שם עבור התיקייה החדשה:"
-
-#~ msgid "Input a name for the new file:"
-#~ msgstr "נא להזין שם עבור הקובץ החדש:"
-
-#~ msgid "Multiple files of different types"
-#~ msgstr "קבצים רבים מסוגים שונים"
-
-#~ msgid "Other program..."
-#~ msgstr "תוכנה אחרת..."
-
-#~ msgid ""
-#~ "Do you want to recursively apply these changes to all files and sub-"
-#~ "folders?"
-#~ msgstr "האם להחל שינוים אלה על כל הקבצים ותת־התיקיות באופן נסוג?"
-
-#~ msgid "My Documents"
-#~ msgstr "המסמכים שלי"
-
-#~ msgid "All Local Disk Partitions"
-#~ msgstr "כל המחיצות של הכונן המקומי"
-
-#, fuzzy
-#~ msgid "Opened in New Tab"
-#~ msgstr "בפתח ב_לשונית חדשה"

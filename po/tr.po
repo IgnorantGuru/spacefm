@@ -1,88 +1,72 @@
-# SpaceFM tr.po    http://ignorantguru.github.com/spacefm/
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
 # This file is distributed under the same copyright and license as the SpaceFM
 # package.
-#
+# 
+# FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
 # Bekir SONAT <bekirsonat@kde.org.tr>, 2006.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6\n"
+"Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 21:00+0000\n"
-"PO-Revision-Date: 2006-11-14 15:51+0200\n"
-"Last-Translator: Bekir SONAT <bekirsonat@kde.org.tr>\n"
-"Language-Team: Türkçe <yerellestirme@kde.org.tr>\n"
-"Language: tr\n"
+"POT-Creation-Date: 2013-02-13 19:37+0000\n"
+"PO-Revision-Date: 2013-02-13 22:10+0000\n"
+"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms:  nplurals=1; plural=0;\n"
-"X-Generator: KBabel 1.11.4\n"
+"Language: tr\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
-#, fuzzy
 msgid "SpaceFM Open Folder"
-msgstr "Üst Dizin"
+msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
-#, fuzzy
 msgid "Open folder"
-msgstr "Üst Dizin"
+msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:1
 msgid "SpaceFM File Search"
 msgstr ""
 
 #: ../data/spacefm-find.desktop.in.h:2
-#, fuzzy
 msgid "Search for files and folders"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
 msgstr ""
 
 #: ../data/spacefm.desktop.in.h:2
-#, fuzzy
 msgid "File Manager"
-msgstr "PCMan Dosya Yönetici"
+msgstr ""
 
 #: ../data/spacefm.desktop.in.h:3
-#, fuzzy
 msgid "Browse the file system"
-msgstr "Dosya Sistemini _Bağla"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:1
 msgid "by IgnorantGuru"
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
-#, fuzzy
 msgid "Copyright (C) 2013    GPL3+"
-msgstr "Copyright (C) 2005 - 2006"
+msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
 "SpaceFM - Copyright (C) 2013   GPL3+\n"
 "\n"
-"This program is free software; you can redistribute it and/or modify it "
-"under the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 3 of the License, or (at your option) "
-"any later version.\n"
+"This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
-"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will "
-"be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of "
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General "
-"Public License for more details.\n"
+"USE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n"
 "\n"
-"The 'exo' libraries and source code used by this software are licensed under "
-"the GNU General Public License and the GNU Lesser General Public License "
-"version 3 (LGPL3).\n"
+"The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
-"You should have received a copy of the GNU General Public License and the "
-"GNU Lesser General Public License along with this program; if not, write to "
-"the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, "
-"MA  02110-1301, USA."
+"You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:12
@@ -121,33 +105,28 @@ msgid ""
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:1
-#, fuzzy
 msgid "Choose Application"
-msgstr "Uygulama seç"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:2
-#, fuzzy
 msgid "Please choose an application or enter a command:"
-msgstr "Aşağıdaki listeden uygulama seçin veya el ile komut satırı yazın:"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:3
-#, fuzzy
 msgid "File Type:"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
 msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
-#, fuzzy
 msgid "A_ll Apps"
-msgstr "_Tüm Uygulamalar"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:6
-#, fuzzy
 msgid "_Command:"
-msgstr "Komut:"
+msgstr ""
 
 #. // Browse submenu
 #: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:6936
@@ -156,9 +135,8 @@ msgid "_Browse"
 msgstr "_Göz-at"
 
 #: ../data/ui/appchooserdlg.ui.h:8
-#, fuzzy
 msgid "Opened in Terminal"
-msgstr "Terminalde Aç"
+msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:9
 msgid "_Set as default"
@@ -169,78 +147,64 @@ msgid "File Properties"
 msgstr "Dosya Öznitelikleri"
 
 #: ../data/ui/file_properties.ui.h:2
-#, fuzzy
 msgid "<b>File_name:</b>"
-msgstr "Dosya Adı:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
-#, fuzzy
 msgid "<b>Type:</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:4
-#, fuzzy
 msgid "<b>Total Size:</b>"
-msgstr "Dosyaların Toplam Büyüklüğü:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:5
-#, fuzzy
 msgid "<b>Modified:</b>"
-msgstr "Son Düzenleme:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:6
-#, fuzzy
 msgid "<b>Accessed:</b>"
-msgstr "Son Erişim:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:7
-#, fuzzy
 msgid "<b>Location:</b>"
-msgstr "Konum:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:8
-#, fuzzy
 msgid "<b>Size On Disk:</b>"
-msgstr "Diskteki Büyüklüğü:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:9
-#, fuzzy
 msgid "<b>Count:</b>"
-msgstr "Grup:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:10
-#, fuzzy
 msgid "<b>Opens _With:</b>"
-msgstr "...ile Aç:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
 msgstr ""
 
 #: ../data/ui/file_properties.ui.h:12
-#, fuzzy
 msgid "<b>_Owner:</b>"
-msgstr "Duvarkağıdı:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:13
-#, fuzzy
 msgid "<b>_Group:</b>"
-msgstr "Grup:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:14
-#, fuzzy
 msgid "<b>Owner:</b>"
-msgstr "Sahip:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:15
-#, fuzzy
 msgid "<b>Group:</b>"
-msgstr "Grup:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:16
-#, fuzzy
 msgid "<b>Other:</b>"
-msgstr "Sahip:"
+msgstr ""
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -316,15 +280,13 @@ msgid "Within Selected Date Range"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:11 ../data/ui/find-files2.ui.h:11
-#, fuzzy
 msgid "Find Files"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Filename:</b>"
-msgstr "Dosya Adı:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -343,52 +305,44 @@ msgid "Image Files (jpg, png,...)"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:17 ../data/ui/find-files2.ui.h:17
-#, fuzzy
 msgid "Plain Text Files"
-msgstr "_Metin Dosyası"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:18 ../data/ui/find-files2.ui.h:18
 msgid "All Files and Folders"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:19 ../data/ui/find-files2.ui.h:19
-#, fuzzy
 msgid "<b>File Types to Search</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
-#, fuzzy
 msgid "Search in subfolders"
-msgstr "_Gizli Dosyaları Göster"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
-#, fuzzy
 msgid "Search hidden files"
-msgstr "_Gizli Dosyaları Göster"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
-#, fuzzy
 msgid "<b>Places to Search</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:23 ../data/ui/find-files2.ui.h:23
-#, fuzzy
 msgid "General"
-msgstr "_Genel"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:24 ../data/ui/find-files2.ui.h:24
-#, fuzzy
 msgid "File Contains:"
-msgstr "Dosya İlişkilendirmeleri"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:25 ../data/ui/find-files2.ui.h:25
 msgid "Use Regular Expression"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:26 ../data/ui/find-files2.ui.h:26
-#, fuzzy
 msgid "<b>File Content</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:27 ../data/ui/find-files2.ui.h:27
 msgid "Content"
@@ -403,42 +357,36 @@ msgid "Smaller Than:"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:30 ../data/ui/find-files2.ui.h:30
-#, fuzzy
 msgid "<b>File Size</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:31 ../data/ui/find-files2.ui.h:31
-#, fuzzy
 msgid "<b>Last Modified</b>"
-msgstr "Son Düzenleme:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:32 ../data/ui/find-files2.ui.h:32
 msgid "Size & Date"
 msgstr ""
 
 #: ../data/ui/find-files.ui.h:33 ../data/ui/find-files2.ui.h:33
-#, fuzzy
 msgid "<b>Search Result:</b>"
-msgstr "Diğer Kullanıcılar:"
+msgstr ""
 
 #: ../data/ui/find-files.ui.h:34 ../data/ui/find-files2.ui.h:34
 msgid "Search Again"
 msgstr ""
 
 #: ../data/ui/godlg.ui.h:1
-#, fuzzy
 msgid "Go to folder"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
-#, fuzzy
 msgid "Open In Current Tab"
-msgstr "Şimdiki sekmede aç"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
-#, fuzzy
 msgid "Open In New Tab"
-msgstr "Yeni _Sekmede Aç"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
@@ -477,14 +425,12 @@ msgid "Link (Ctrl+Shift+Drag)"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
-#, fuzzy
 msgid "Preferences"
-msgstr "Ayarlar"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
-#, fuzzy
 msgid "Small Icons:"
-msgstr "Küçük simgelerin boyu:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
@@ -495,9 +441,8 @@ msgid "Toolbar Icons:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
-#, fuzzy
 msgid "<b>Display</b>"
-msgstr "Duvarkağıdı:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
@@ -516,9 +461,8 @@ msgid "Max Pic Size To Thumbnail:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
-#, fuzzy
 msgid "<b>Behavior</b>"
-msgstr "Konum:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "_General"
@@ -561,60 +505,52 @@ msgid "Manage the desktop and show file icons"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
-#, fuzzy
 msgid "Show \"My Documents\" icon on desktop"
-msgstr "Masaüstünde dosya simgelerini göster"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
-#, fuzzy
 msgid "Show icons of volumes on desktop"
-msgstr "Masaüstünde dosya simgelerini göster"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
 msgid "Show WM's menu when desktop is right-clicked"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
-#, fuzzy
 msgid "<b>General</b>"
-msgstr "_Genel"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:37 ../data/ui/prefdlg2.ui.h:37
 msgid "Please select an image file"
 msgstr "Lütfen bir resim dosyası seçin"
 
 #: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
-#, fuzzy
 msgid "Mode:"
-msgstr "Taşı:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Wallpaper:"
 msgstr "Duvarkağıdı:"
 
 #: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
-#, fuzzy
 msgid "<b>Wallpaper</b>"
-msgstr "Duvarkağıdı:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
-#, fuzzy
 msgid "Background:"
-msgstr "Arkaplan rengi"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
-#, fuzzy
 msgid "Text:"
-msgstr "text"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Shadow:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
-#, fuzzy
 msgid "<b>Colors</b>"
-msgstr "Duvarkağıdı:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
 msgid "_Desktop"
@@ -629,28 +565,24 @@ msgid "Terminal:"
 msgstr "Terminal:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
-#, fuzzy
 msgid "Terminal SU:"
-msgstr "Terminal:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
 msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
-#, fuzzy
 msgid "Filename Encoding:"
-msgstr "Diskteki dosya ismi kodlaması:"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
-#, fuzzy
 msgid "Editor:"
-msgstr "Dü_zen"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
-#, fuzzy
 msgid "Run editor in terminal"
-msgstr "Terminalde Aç"
+msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
@@ -782,9 +714,8 @@ msgid "Model column to search through when searching through item"
 msgstr ""
 
 #: ../src/exo/exo-icon-view.c:979
-#, fuzzy
 msgid "Selection mode"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:980
 msgid "The selection mode"
@@ -817,27 +748,24 @@ msgid "Space which is inserted between cells of an item"
 msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1044
-#, fuzzy
 msgid "Text column"
-msgstr "Metin rengi"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1045
 msgid "Model column used to retrieve the text from"
 msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1052
-#, fuzzy
 msgid "Selection Box Color"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1053
 msgid "Color of the selection box"
 msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1059
-#, fuzzy
 msgid "Selection Box Alpha"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/exo/exo-icon-view.c:1060
 msgid "Opacity of the selection box"
@@ -881,9 +809,9 @@ msgid "internal command %s requires an argument"
 msgstr ""
 
 #: ../src/cust-dialog.c:1348
-#, fuzzy, c-format
+#, c-format
 msgid "element '%s' does not exist"
-msgstr "Dosya mevuct değil"
+msgstr ""
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -907,9 +835,9 @@ msgid "'%s' is not an internal command"
 msgstr ""
 
 #: ../src/cust-dialog.c:1630
-#, fuzzy, c-format
+#, c-format
 msgid "error creating file %s: %s"
-msgstr "Dosyaların çıkartıldığı yer: %s"
+msgstr ""
 
 #: ../src/cust-dialog.c:1746
 #, c-format
@@ -944,8 +872,7 @@ msgstr ""
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
-"specify on the command line, features run-time internal/external commands "
-"which\n"
+"specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr ""
 
@@ -1001,10 +928,8 @@ msgstr ""
 #: ../src/cust-dialog.c:3707
 #, c-format
 msgid ""
-"    @FILE    A text file from which to read a value.  In some cases this "
-"file\n"
-"             is monitored, so writing a new value to the file will update "
-"the\n"
+"    @FILE    A text file from which to read a value.  In some cases this file\n"
+"             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr ""
 
@@ -1016,8 +941,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3709
 #, c-format
 msgid ""
-"    COMMAND  An internal command or executable followed by arguments. "
-"Separate\n"
+"    COMMAND  An internal command or executable followed by arguments. Separate\n"
 "             multiple commands with a -- argument.\n"
 "             The following substitutions may be used in COMMANDs:\n"
 "                 %%n           Name of the current element\n"
@@ -1044,8 +968,7 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"In addition to the OPTIONS listed above, --compact or --expand options may "
-"be\n"
+"In addition to the OPTIONS listed above, --compact or --expand options may be\n"
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
@@ -1087,8 +1010,7 @@ msgid ""
 "    #!/bin/bash\n"
 "    # This script shows a Yes/No dialog\n"
 "    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n"
-"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`"
-"\"\n"
+"    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n"
 "    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n"
 "        echo \"User pressed Yes - take some action\"\n"
 "    else\n"
@@ -1192,7 +1114,8 @@ msgstr ""
 msgid "Add a combo list.  COMMAND run when Enter pressed."
 msgstr ""
 
-#. ^HIDE   hidden column (must be first) for data return  (int or double or string no progress)
+#. ^HIDE   hidden column (must be first) for data return  (int or double or
+#. string no progress)
 #. use --colwidth=W inside column list
 #: ../src/cust-dialog.h:58
 msgid "Add a list box.  COMMAND run when double-clicked."
@@ -1301,9 +1224,8 @@ msgid "Don't load saved tabs"
 msgstr ""
 
 #: ../src/main.c:129
-#, fuzzy
 msgid "Open folders in new window"
-msgstr "Yeni Pencerede aç"
+msgstr ""
 
 #: ../src/main.c:130
 msgid "Open folders in panel 'P' (1-4)"
@@ -1314,9 +1236,8 @@ msgid "Launch desktop manager daemon"
 msgstr ""
 
 #: ../src/main.c:132
-#, fuzzy
 msgid "Show desktop settings"
-msgstr "_Masaüstü"
+msgstr ""
 
 #: ../src/main.c:133
 msgid "Show Preferences ('N' is the Pref tab number)"
@@ -1403,9 +1324,8 @@ msgid "windows.  To handle events see View|Auto Run in the main menu bar."
 msgstr ""
 
 #: ../src/main.c:630
-#, fuzzy
 msgid "Usage:"
-msgstr "message"
+msgstr ""
 
 #: ../src/main.c:632
 msgid "Example:"
@@ -1678,9 +1598,8 @@ msgid "event name (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:756
-#, fuzzy
 msgid "window ID"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/main.c:757
 msgid "panel number (1-4)"
@@ -1778,10 +1697,7 @@ msgid ""
 "Unable to open file:\n"
 "\"%s\"\n"
 "%s"
-msgstr ""
-"Açılamayan dosya:\n"
-"\"%s\"\n"
-"%s"
+msgstr "Açılamayan dosya:\n\"%s\"\n%s"
 
 #: ../src/main-window.c:366 ../src/settings.c:5269
 msgid "_Add"
@@ -1824,14 +1740,12 @@ msgstr ""
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
 "\n"
-"Tip: You can also rename this plugin file to install it under a different "
-"name."
+"Tip: You can also rename this plugin file to install it under a different name."
 msgstr ""
 
 #: ../src/main-window.c:480
-#, fuzzy
 msgid "Overwrite Plugin ?"
-msgstr "Tümünün Üzerine-yaz"
+msgstr ""
 
 #: ../src/main-window.c:501
 msgid "Error Creating Temp Directory"
@@ -1847,15 +1761,12 @@ msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr ""
 
 #: ../src/main-window.c:743
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error: Unable to save session file\n"
 "\n"
 "( %s )"
 msgstr ""
-"Açılamayan dosya:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/main-window.c:745
 msgid "Save Session Error"
@@ -1863,9 +1774,8 @@ msgstr ""
 
 #. root task
 #: ../src/main-window.c:776
-#, fuzzy
 msgid "Open Root Window"
-msgstr "Yeni _Pencerede Aç"
+msgstr ""
 
 #: ../src/main-window.c:806 ../src/vfs/vfs-file-task.c:1504
 msgid "Terminal Not Available"
@@ -1876,9 +1786,8 @@ msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr ""
 
 #: ../src/main-window.c:818
-#, fuzzy
 msgid "Open Terminal"
-msgstr "_Terminal Aç"
+msgstr ""
 
 #: ../src/main-window.c:1138
 msgid "Design Mode Help"
@@ -1886,24 +1795,20 @@ msgstr ""
 
 #: ../src/main-window.c:1138
 msgid ""
-"Design Mode allows you to change the name, shortcut key and icon of menu "
-"items, show help for an item, and add your own custom commands to most "
-"menus.\n"
+"Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
 "To open the design menu, simply right-click on a menu item.\n"
 "\n"
-"To use Design Mode on a submenu, you must first close the submenu (by "
-"clicking on it).  The Bookmarks menu does not support Design Mode.\n"
+"To use Design Mode on a submenu, you must first close the submenu (by clicking on it).  The Bookmarks menu does not support Design Mode.\n"
 "\n"
-"To modify a toolbar, click the leftmost tool icon to open the toolbar config "
-"menu and select Help."
+"To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr ""
 
 #: ../src/main-window.c:1689 ../src/settings.c:4168 ../src/settings.c:4393
 #: ../src/settings.c:5948 ../src/settings.c:6022
-#, fuzzy, c-format
+#, c-format
 msgid "New _Command"
-msgstr "Komut:"
+msgstr ""
 
 #: ../src/main-window.c:1789
 #, c-format
@@ -1921,18 +1826,16 @@ msgstr "Görü_nüm"
 
 #: ../src/main-window.c:1823 ../src/settings.c:10254 ../src/settings.c:10623
 #: ../src/settings.c:10738 ../src/settings.c:10866 ../src/settings.c:10994
-#, fuzzy
 msgid "_Bookmarks"
-msgstr "Yerİ_mleri"
+msgstr ""
 
 #: ../src/main-window.c:1829
 msgid "_Plugins"
 msgstr ""
 
 #: ../src/main-window.c:1833
-#, fuzzy
 msgid "_Tools"
-msgstr "_Araçlar"
+msgstr ""
 
 #. Help
 #: ../src/main-window.c:1836 ../src/settings.c:7104 ../src/settings.c:7603
@@ -1957,9 +1860,8 @@ msgid "Stop all tasks running in this window?"
 msgstr ""
 
 #: ../src/main-window.c:2147
-#, fuzzy
 msgid "Aborting tasks..."
-msgstr "Taşıyor..."
+msgstr ""
 
 #: ../src/main-window.c:3310
 #, c-format
@@ -2002,10 +1904,10 @@ msgid_plural "hidden"
 msgstr[0] ""
 
 #: ../src/main-window.c:3436
-#, fuzzy, c-format
+#, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
-msgstr[0] "%d görünen (%d gizli)%s"
+msgstr[0] ""
 
 #: ../src/main-window.c:3441
 #, c-format
@@ -2028,24 +1930,20 @@ msgstr ""
 
 #: ../src/main-window.c:3805 ../src/ptk/ptk-file-misc.c:1884
 #: ../src/find-files.c:918
-#, fuzzy
 msgid "Folder"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/main-window.c:3805
-#, fuzzy
 msgid "Item"
-msgstr "Yeni Öge"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "To"
-msgstr "Hedef:"
+msgstr ""
 
 #: ../src/main-window.c:3806
-#, fuzzy
 msgid "Progress"
-msgstr "İlerleme:"
+msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
@@ -2086,28 +1984,24 @@ msgid ""
 msgstr ""
 
 #: ../src/main-window.c:5327
-#, fuzzy
 msgid "moving"
-msgstr "Taşıyor..."
+msgstr ""
 
 #: ../src/main-window.c:5328
-#, fuzzy
 msgid "copying"
-msgstr "Kopyalıyor..."
+msgstr ""
 
 #: ../src/main-window.c:5329
 msgid "trashing"
 msgstr ""
 
 #: ../src/main-window.c:5330
-#, fuzzy
 msgid "deleting"
-msgstr "Siliyor..."
+msgstr ""
 
 #: ../src/main-window.c:5331
-#, fuzzy
 msgid "linking"
-msgstr "Bağlıyor..."
+msgstr ""
 
 #: ../src/main-window.c:5332
 msgid "changing"
@@ -2150,15 +2044,13 @@ msgstr "Yetkiler"
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Owner"
-msgstr "Sahip:Grup"
+msgstr ""
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
-#, fuzzy
 msgid "Modified"
-msgstr "Son Değişiklik"
+msgstr ""
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
@@ -2259,9 +2151,9 @@ msgid "spacefm: %s requires a directory path\n"
 msgstr ""
 
 #: ../src/main-window.c:6197
-#, fuzzy, c-format
+#, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr "Dizin mevcut değil."
+msgstr ""
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
@@ -2332,9 +2224,8 @@ msgstr ""
 
 #. task
 #: ../src/pref-dialog.c:668 ../src/pref-dialog.c:669
-#, fuzzy
 msgid "Save Root Settings"
-msgstr "_Masaüstü"
+msgstr ""
 
 #: ../src/pref-dialog.c:668
 msgid ""
@@ -2373,44 +2264,37 @@ msgstr ""
 msgid ""
 "Enter menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:118
 msgid ""
 "Enter new menu item name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired.\n"
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired.\n"
 "\n"
-"TIP: To change this menu item later, right-click on the menu item to open "
-"the design menu."
+"TIP: To change this menu item later, right-click on the menu item to open the design menu."
 msgstr ""
 
 #: ../src/settings.c:122
-#, fuzzy
 msgid "MIME Type"
-msgstr "Tür"
+msgstr ""
 
 #: ../src/settings.c:123
-#, fuzzy
 msgid "Filename"
-msgstr "Yeniden Adlandır"
+msgstr ""
 
 #: ../src/settings.c:124
-#, fuzzy
 msgid "Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:125
 msgid "Dir Write Access"
 msgstr ""
 
 #: ../src/settings.c:126
-#, fuzzy
 msgid "File Is Text"
-msgstr "Dosya mevuct değil"
+msgstr ""
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2425,14 +2309,12 @@ msgid "User Is Root"
 msgstr ""
 
 #: ../src/settings.c:130
-#, fuzzy
 msgid "Multiple Selected"
-msgstr "Birçok dosya seçildi"
+msgstr ""
 
 #: ../src/settings.c:131
-#, fuzzy
 msgid "Clipboard Has Files"
-msgstr "Dosyaları Sıkıştır"
+msgstr ""
 
 #: ../src/settings.c:132
 msgid "Clipboard Has Text"
@@ -2447,18 +2329,16 @@ msgid "Panel Count"
 msgstr ""
 
 #: ../src/settings.c:135
-#, fuzzy
 msgid "Current Tab"
-msgstr "Şimdiki sekmede aç"
+msgstr ""
 
 #: ../src/settings.c:136
 msgid "Tab Count"
 msgstr ""
 
 #: ../src/settings.c:137
-#, fuzzy
 msgid "Bookmark"
-msgstr "Yerİ_mleri"
+msgstr ""
 
 #: ../src/settings.c:138
 msgid "Device"
@@ -2481,48 +2361,40 @@ msgid "Device UDI"
 msgstr ""
 
 #: ../src/settings.c:143
-#, fuzzy
 msgid "Device Properties"
-msgstr "Dosya Öznitelikleri"
+msgstr ""
 
 #: ../src/settings.c:144
 msgid "Task Count"
 msgstr ""
 
 #: ../src/settings.c:145
-#, fuzzy
 msgid "Task Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:146
-#, fuzzy
 msgid "Task Type"
-msgstr "Tür"
+msgstr ""
 
 #: ../src/settings.c:147
-#, fuzzy
 msgid "Task Name"
-msgstr "Ad"
+msgstr ""
 
 #: ../src/settings.c:148
-#, fuzzy
 msgid "Panel 1 Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:149
-#, fuzzy
 msgid "Panel 2 Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:150
-#, fuzzy
 msgid "Panel 3 Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:151
-#, fuzzy
 msgid "Panel 4 Directory"
-msgstr "home Dizini"
+msgstr ""
 
 #: ../src/settings.c:152
 msgid "Panel 1 Has Sel"
@@ -2565,9 +2437,8 @@ msgid "doesn't equal"
 msgstr ""
 
 #: ../src/settings.c:221
-#, fuzzy
 msgid "contains"
-msgstr "Dosya İlişkilendirmeleri"
+msgstr ""
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
@@ -2578,19 +2449,16 @@ msgid "begins with"
 msgstr ""
 
 #: ../src/settings.c:224
-#, fuzzy
 msgid "doesn't begin with"
-msgstr "Dosya mevuct değil"
+msgstr ""
 
 #: ../src/settings.c:225
-#, fuzzy
 msgid "ends with"
-msgstr "..._ile Aç"
+msgstr ""
 
 #: ../src/settings.c:226
-#, fuzzy
 msgid "doesn't end with"
-msgstr "Dosya mevuct değil"
+msgstr ""
 
 #: ../src/settings.c:227
 msgid "is less than"
@@ -2626,9 +2494,8 @@ msgid "_Stop"
 msgstr ""
 
 #: ../src/settings.c:916 ../src/settings.c:9963
-#, fuzzy
 msgid "Show _Manager"
-msgstr "_Konum Panelini Göster"
+msgstr ""
 
 #: ../src/settings.c:922 ../src/settings.c:9968
 msgid "Auto-_Hide Manager"
@@ -2665,8 +2532,7 @@ msgid ""
 "\n"
 "# THIS FILE IS NOT DESIGNED TO BE EDITED - it will be read and OVERWRITTEN\n"
 "\n"
-"# If you delete all session* files, SpaceFM will be reset to factory "
-"defaults.\n"
+"# If you delete all session* files, SpaceFM will be reset to factory defaults.\n"
 "\n"
 msgstr ""
 
@@ -2724,26 +2590,19 @@ msgstr ""
 #: ../src/settings.c:3751
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu."
+"Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr ""
 
 #: ../src/settings.c:3753
 #, c-format
 msgid ""
-"The '%s' plugin has been copied to the design clipboard.  Use View|Design "
-"Mode to paste it into a menu.\n"
+"The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
 "\n"
-"Because it has not been installed, this plugin will not appear in the "
-"Plugins menu, and its contents are not protected by root (once pasted it "
-"will be saved with normal ownership).\n"
+"Because it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n"
 "\n"
-"If this plugin contains su commands or will be run as root, installing it to "
-"and running it only from the Plugins menu is recommended to improve your "
-"system security."
+"If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr ""
 
 #: ../src/settings.c:3783
@@ -2786,9 +2645,8 @@ msgid "Change Menu Name"
 msgstr ""
 
 #: ../src/settings.c:4195 ../src/settings.c:5958
-#, fuzzy
 msgid "Set Command Line"
-msgstr "_Komut Satırı:"
+msgstr ""
 
 #: ../src/settings.c:4232 ../src/settings.c:5922
 msgid "Choose Custom Executable"
@@ -2812,9 +2670,9 @@ msgstr ""
 
 #. task
 #: ../src/settings.c:4564
-#, fuzzy, c-format
+#, c-format
 msgid "Edit %s"
-msgstr "Dü_zen"
+msgstr ""
 
 #: ../src/settings.c:5022
 msgid "Current: Show"
@@ -2898,9 +2756,7 @@ msgstr ""
 msgid ""
 "Read the user's manual online?\n"
 "\n"
-"The local copy of the SpaceFM user's manual was not found.  Click Yes to "
-"read it online, or click No and then set the correct location in Help|"
-"Options|Manual Location."
+"The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr ""
 
 #: ../src/settings.c:5565
@@ -2925,9 +2781,7 @@ msgstr ""
 
 #: ../src/settings.c:5589
 msgid ""
-"The SpaceFM user's manual should have opened in your browser.  If it didn't "
-"open, or if you would like to use a different browser, set your browser in "
-"Help|Options|Browser.\n"
+"The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr ""
@@ -2950,8 +2804,8 @@ msgstr ""
 #: ../src/settings.c:5726
 #, c-format
 msgid ""
-"Press your key combination for menu item '%s' then click Set.  To remove the "
-"current key assignment, click Unset."
+"Press your key combination for menu item '%s' then click Set.  To remove the"
+" current key assignment, click Unset."
 msgstr ""
 
 #: ../src/settings.c:5737
@@ -2963,9 +2817,8 @@ msgid "Unset"
 msgstr ""
 
 #: ../src/settings.c:5756
-#, fuzzy
 msgid "Set"
-msgstr "Set GID"
+msgstr ""
 
 #: ../src/settings.c:5770
 msgid "Set Key"
@@ -2977,9 +2830,8 @@ msgstr ""
 
 #. line
 #: ../src/settings.c:5828 ../src/settings.c:5896
-#, fuzzy
 msgid "Edit Command Line"
-msgstr "_Komut Satırı:"
+msgstr ""
 
 #: ../src/settings.c:5933
 msgid "Run As User"
@@ -2995,12 +2847,9 @@ msgstr ""
 #: ../src/settings.c:5939
 #, c-format
 msgid ""
-"You are adding a custom command to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5940
@@ -3008,19 +2857,15 @@ msgid "New Context Command"
 msgstr ""
 
 #: ../src/settings.c:5949
-#, fuzzy
 msgid "Set Menu Name"
-msgstr "_isime Göre Sıralı"
+msgstr ""
 
 #: ../src/settings.c:5988
 #, c-format
 msgid ""
-"You are adding a custom submenu to the Default menu item.  This item will "
-"automatically have a pre-context - it will only appear when the MIME type of "
-"the first selected file matches the current type '%s'.\n"
+"You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
 "\n"
-"Add commands or menus here which you only want to appear for this one MIME "
-"type."
+"Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
 #: ../src/settings.c:5988
@@ -3028,22 +2873,19 @@ msgid "(none)"
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "Set Submenu Name"
-msgstr "_isime Göre Sıralı"
+msgstr ""
 
 #: ../src/settings.c:5997
 msgid ""
 "Enter submenu name:\n"
 "\n"
-"Precede a character with an underscore (_) to underline that character as a "
-"shortcut key if desired."
+"Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr ""
 
 #: ../src/settings.c:5997
-#, fuzzy
 msgid "New _Submenu"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:6113
 msgid "( no name )"
@@ -3098,9 +2940,8 @@ msgstr ""
 #: ../src/settings.c:6786 ../src/settings.c:9402 ../src/settings.c:10307
 #: ../src/settings.c:10688 ../src/settings.c:10811 ../src/settings.c:10939
 #: ../src/settings.c:11067
-#, fuzzy
 msgid "_Name"
-msgstr "Ad"
+msgstr ""
 
 #. Key
 #: ../src/settings.c:6791
@@ -3112,9 +2953,8 @@ msgstr ""
 #: ../src/settings.c:10674 ../src/settings.c:10684 ../src/settings.c:10795
 #: ../src/settings.c:10806 ../src/settings.c:10923 ../src/settings.c:10934
 #: ../src/settings.c:11051 ../src/settings.c:11062
-#, fuzzy
 msgid "_Icon"
-msgstr "Si_mge Görünümü"
+msgstr ""
 
 #. // Style submenu
 #: ../src/settings.c:6811
@@ -3142,15 +2982,13 @@ msgstr ""
 
 #. Description
 #: ../src/settings.c:6871
-#, fuzzy
 msgid "_Message"
-msgstr "message"
+msgstr ""
 
 #. Context
 #: ../src/settings.c:6881
-#, fuzzy
 msgid "Con_text"
-msgstr "text"
+msgstr ""
 
 #: ../src/settings.c:6888
 msgid "Ign_ore Context (global)"
@@ -3158,9 +2996,8 @@ msgstr ""
 
 #. // Command submenu
 #: ../src/settings.c:6894
-#, fuzzy
 msgid "C_ommand"
-msgstr "Komut:"
+msgstr ""
 
 #. Edit
 #: ../src/settings.c:6907 ../src/settings.c:7891 ../src/settings.c:9381
@@ -3176,14 +3013,12 @@ msgstr ""
 #. Copy
 #: ../src/settings.c:6930 ../src/settings.c:7121 ../src/settings.c:9432
 #: ../src/settings.c:9756 ../src/settings.c:10361
-#, fuzzy
 msgid "_Copy"
-msgstr "Kopyala:"
+msgstr ""
 
 #: ../src/settings.c:6953
-#, fuzzy
 msgid "_Files"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../src/settings.c:6956
 msgid "_Files (none)"
@@ -3228,15 +3063,13 @@ msgstr ""
 
 #. Run In Terminal
 #: ../src/settings.c:7037
-#, fuzzy
 msgid "Run _In Terminal"
-msgstr "Terminalde Aç"
+msgstr ""
 
 #. Keep Terminal
 #: ../src/settings.c:7043
-#, fuzzy
 msgid "_Keep Terminal"
-msgstr "_Terminal Aç"
+msgstr ""
 
 #: ../src/settings.c:7055
 #, c-format
@@ -3304,9 +3137,8 @@ msgid "S_eparator"
 msgstr ""
 
 #: ../src/settings.c:7540
-#, fuzzy
 msgid "Set Icon"
-msgstr "Set GID"
+msgstr ""
 
 #: ../src/settings.c:7901 ../src/settings.c:8111 ../src/settings.c:10114
 #: ../src/settings.c:10236
@@ -3338,12 +3170,11 @@ msgstr ""
 msgid "_Side Toolbar"
 msgstr ""
 
-#.
 #. xset_set( "panel_left", "label", _("_Left") );
 #. xset_set( "panel_right", "label", _("_Right") );
 #. xset_set( "panel_top", "label", _("_Top") );
 #. xset_set( "panel_bottom", "label", _("_Bottom") );
-#.
+#. 
 #: ../src/settings.c:8658 ../src/settings.c:8661 ../src/settings.c:9590
 #: ../src/settings.c:10482
 msgid "_Hide"
@@ -3365,9 +3196,8 @@ msgid "Tree"
 msgstr ""
 
 #: ../src/settings.c:8678 ../src/settings.c:8748 ../src/settings.c:8817
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Yerİmleri:"
+msgstr ""
 
 #: ../src/settings.c:8684 ../src/settings.c:8754 ../src/settings.c:8823
 msgid "Devices"
@@ -3378,27 +3208,24 @@ msgid "New Tab"
 msgstr "Yeni Sekme"
 
 #: ../src/settings.c:8695 ../src/settings.c:8765 ../src/settings.c:8834
-#, fuzzy
 msgid "New Tab Here"
-msgstr "Yeni Sekme"
+msgstr ""
 
 #: ../src/settings.c:8700 ../src/settings.c:8770 ../src/settings.c:8839
 msgid "Back"
 msgstr "Geriye"
 
 #: ../src/settings.c:8705 ../src/settings.c:8775 ../src/settings.c:8844
-#, fuzzy
 msgid "Back Menu"
-msgstr "Geriye"
+msgstr ""
 
 #: ../src/settings.c:8710 ../src/settings.c:8780 ../src/settings.c:8849
 msgid "Forward"
 msgstr "İleriye"
 
 #: ../src/settings.c:8715 ../src/settings.c:8785 ../src/settings.c:8854
-#, fuzzy
 msgid "Forward Menu"
-msgstr "İleriye"
+msgstr ""
 
 #: ../src/settings.c:8720 ../src/settings.c:8790 ../src/settings.c:8859
 msgid "Up"
@@ -3409,9 +3236,8 @@ msgid "Refresh"
 msgstr "Yenile"
 
 #: ../src/settings.c:8730 ../src/settings.c:8800 ../src/settings.c:8869
-#, fuzzy
 msgid "Home"
-msgstr "_home Dizinine Git"
+msgstr ""
 
 #: ../src/settings.c:8735 ../src/settings.c:8805 ../src/settings.c:8873
 msgid "Default"
@@ -3443,10 +3269,9 @@ msgid "_Sync"
 msgstr ""
 
 #: ../src/settings.c:8926
-#, fuzzy
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3474,9 +3299,8 @@ msgid "_Check"
 msgstr ""
 
 #: ../src/settings.c:9021
-#, fuzzy
 msgid "_Edit fstab"
-msgstr "Dü_zen"
+msgstr ""
 
 #: ../src/settings.c:9025
 msgid "Edit u_devil.conf"
@@ -3487,18 +3311,16 @@ msgid "_Format"
 msgstr ""
 
 #: ../src/settings.c:9089
-#, fuzzy
 msgid "_Backup"
-msgstr "Geriye"
+msgstr ""
 
 #: ../src/settings.c:9111
 msgid "_Restore"
 msgstr ""
 
 #: ../src/settings.c:9116
-#, fuzzy
 msgid "_From File"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../src/settings.c:9121 ../src/settings.c:9487
 msgid "File _Info"
@@ -3509,9 +3331,8 @@ msgid "_Properties"
 msgstr "Ö_zellikler"
 
 #: ../src/settings.c:9127
-#, fuzzy
 msgid "Setti_ngs"
-msgstr "_Masaüstü"
+msgstr ""
 
 #: ../src/settings.c:9138
 msgid "_Internal Drives"
@@ -3530,31 +3351,25 @@ msgid "Mounted _Networks"
 msgstr ""
 
 #: ../src/settings.c:9157
-#, fuzzy
 msgid "Mounted _Files"
-msgstr "Dosya Sistemini _Bağla"
+msgstr ""
 
 #: ../src/settings.c:9162
 msgid "_Volumes..."
 msgstr ""
 
 #: ../src/settings.c:9163
-#, fuzzy
 msgid "Show/Hide Volumes"
-msgstr "_Gizli Dosyaları Göster"
+msgstr ""
 
 #: ../src/settings.c:9164
 msgid ""
-"To force showing or hiding of some volumes, overriding other settings, you "
-"can specify the devices, volume labels, or device IDs in the space-separated "
-"list below.\n"
+"To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume "
-"with label \"Label With Space\" to be hidden.\n"
+"This would cause /dev/sdd1 and the OCZ device to be shown, and the volume with label \"Label With Space\" to be hidden.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3593,14 +3408,12 @@ msgid "_Mount Removable"
 msgstr ""
 
 #: ../src/settings.c:9195
-#, fuzzy
 msgid "Open _Tab"
-msgstr "Yeni _Sekmede Aç"
+msgstr ""
 
 #: ../src/settings.c:9200
-#, fuzzy
 msgid "_Unmount On Exit"
-msgstr "Dosya Sistemini _Ayır"
+msgstr ""
 
 #: ../src/settings.c:9208
 msgid "Auto _Run"
@@ -3617,8 +3430,7 @@ msgstr ""
 #: ../src/settings.c:9217
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically after a removable "
-"drive or data disc is auto-mounted:\n"
+"Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3637,8 +3449,7 @@ msgstr ""
 #: ../src/settings.c:9223
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when an audio CD "
-"is inserted in a qualified device:\n"
+"Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3657,8 +3468,7 @@ msgstr ""
 #: ../src/settings.c:9229
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a video DVD "
-"is auto-mounted:\n"
+"Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice (eg /dev/sda1)\n"
@@ -3677,8 +3487,7 @@ msgstr ""
 #: ../src/settings.c:9235
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is inserted:\n"
+"Enter program or bash command line to be run automatically when any device is inserted:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice added (eg /dev/sda1)\n"
@@ -3697,8 +3506,7 @@ msgstr ""
 #: ../src/settings.c:9241
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is unmounted by any means:\n"
+"Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice unmounted (eg /dev/sda1)\n"
@@ -3717,8 +3525,7 @@ msgstr ""
 #: ../src/settings.c:9247
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when any device "
-"is removed (ejection of media does not qualify):\n"
+"Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
 "\n"
 "Use:\n"
 "\t%%v\tdevice removed (eg /dev/sda1)\n"
@@ -3736,16 +3543,12 @@ msgstr ""
 
 #: ../src/settings.c:9256
 msgid ""
-"To force or prevent automounting of some volumes, overriding other settings, "
-"you can specify the devices, volume labels, or device IDs in the space-"
-"separated list below.\n"
+"To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
 "Example:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\n"
-"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when "
-"detected, and the volume with label \"Label With Space\" to be ignored.\n"
+"This would cause /dev/sdd1 and the OCZ device to be auto-mounted when detected, and the volume with label \"Label With Space\" to be ignored.\n"
 "\n"
-"There must be a space between entries and a plus or minus sign directly "
-"before each item.  This list is case-sensitive.\n"
+"There must be a space between entries and a plus or minus sign directly before each item.  This list is case-sensitive.\n"
 "\n"
 msgstr ""
 
@@ -3755,20 +3558,14 @@ msgstr ""
 
 #: ../src/settings.c:9260
 msgid ""
-"Enter your comma- or space-separated list of default mount options below (to "
-"be used for all mounts).\n"
+"Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9262
@@ -3783,23 +3580,17 @@ msgstr ""
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
-"In addition to regular options, you can also specify options to be added or "
-"removed for a specific filesystem type by using the form OPTION+FSTYPE or "
-"OPTION-FSTYPE.\n"
+"In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.\n"
 "\n"
 "Example:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\n"
-"This will add nosuid and noatime for all filesystem types, add sync for vfat "
-"and ntfs only, and remove noatime for ext4.\n"
+"This will add nosuid and noatime for all filesystem types, add sync for vfat and ntfs only, and remove noatime for ext4.\n"
 "\n"
-"Note: Some options, such as nosuid, may be added by the mount program even "
-"if you don't include them.  Options in fstab take precedence.  pmount "
-"ignores options set here."
+"Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr ""
 
 #: ../src/settings.c:9275
-#, fuzzy
 msgid "Mount _Command"
-msgstr "Komut:"
+msgstr ""
 
 #: ../src/settings.c:9276
 #, c-format
@@ -3819,9 +3610,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9278
-#, fuzzy
 msgid "Mount Command"
-msgstr "Komut:"
+msgstr ""
 
 #: ../src/settings.c:9282
 msgid "_Unmount Command"
@@ -3844,14 +3634,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9285
-#, fuzzy
 msgid "Unmount Command"
-msgstr "Komut:"
+msgstr ""
 
 #: ../src/settings.c:9307
-#, fuzzy
 msgid "Audio CD"
-msgstr "audio"
+msgstr ""
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3894,9 +3682,8 @@ msgid "Mounted Network"
 msgstr ""
 
 #: ../src/settings.c:9363
-#, fuzzy
 msgid "Mounted File"
-msgstr "Dosya Sistemini _Bağla"
+msgstr ""
 
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
@@ -3914,25 +3701,21 @@ msgid "Re_move"
 msgstr ""
 
 #: ../src/settings.c:9390
-#, fuzzy
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:9393
-#, fuzzy
 msgid "_Settings"
-msgstr "_Masaüstü"
+msgstr ""
 
 #: ../src/settings.c:9405
-#, fuzzy
 msgid "_Filename"
-msgstr "Yeniden _Adlandır"
+msgstr ""
 
 #: ../src/settings.c:9409
-#, fuzzy
 msgid "_Parent"
-msgstr "Üst Dizin"
+msgstr ""
 
 #: ../src/settings.c:9412
 msgid "P_ath"
@@ -3940,9 +3723,8 @@ msgstr ""
 
 #: ../src/settings.c:9416 ../src/settings.c:10311 ../src/settings.c:10698
 #: ../src/settings.c:10822 ../src/settings.c:10950 ../src/settings.c:11078
-#, fuzzy
 msgid "_Type"
-msgstr "Tür"
+msgstr ""
 
 #: ../src/settings.c:9420
 msgid "_Target"
@@ -3959,9 +3741,8 @@ msgstr ""
 #: ../src/settings.c:9436 ../src/settings.c:10201
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
-#, fuzzy
 msgid "_Link"
-msgstr "Bağ:"
+msgstr ""
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -3989,9 +3770,8 @@ msgid "_Font"
 msgstr ""
 
 #: ../src/settings.c:9453
-#, fuzzy
 msgid "Move Dialog Font"
-msgstr "_Aşağıya Taşı"
+msgstr ""
 
 #: ../src/settings.c:9454
 msgid "/home/user/Example Filename.ext"
@@ -4026,44 +3806,37 @@ msgid "_Middle Click"
 msgstr ""
 
 #: ../src/settings.c:9481 ../src/settings.c:10387
-#, fuzzy
 msgid "Copy _Name"
-msgstr "_isime Göre Sıralı"
+msgstr ""
 
 #: ../src/settings.c:9484 ../src/settings.c:10390
-#, fuzzy
 msgid "Copy _Path"
-msgstr "Kopyala:"
+msgstr ""
 
 #: ../src/settings.c:9491
-#, fuzzy
 msgid "_Hide Panel"
-msgstr "Yan Panel"
+msgstr ""
 
 #: ../src/settings.c:9507
 msgid "New _Window"
 msgstr "Yeni _Pencere"
 
 #: ../src/settings.c:9510
-#, fuzzy
 msgid "R_oot Window"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/settings.c:9513
-#, fuzzy
 msgid "_File Search"
-msgstr "Dosya Sistemi"
+msgstr ""
 
 #: ../src/settings.c:9516
-#, fuzzy
 msgid "_Terminal"
-msgstr "Terminal:"
+msgstr ""
 
 #. discovery notification
 #: ../src/settings.c:9519
-#, fuzzy
 msgid "_Root Terminal"
-msgstr "Terminal:"
+msgstr ""
 
 #: ../src/settings.c:9522
 msgid "_Save Session"
@@ -4136,8 +3909,7 @@ msgstr ""
 #: ../src/settings.c:9610
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance starts:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_start)\n"
@@ -4154,28 +3926,24 @@ msgstr ""
 #: ../src/settings.c:9616
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically when a SpaceFM "
-"instance exits:\n"
+"Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr ""
 
 #: ../src/settings.c:9619
-#, fuzzy
 msgid "_Window"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/settings.c:9626
-#, fuzzy
 msgid "Set New Window Command"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/settings.c:9627
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"SpaceFM window is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_new)\n"
@@ -4197,8 +3965,7 @@ msgstr ""
 #: ../src/settings.c:9633
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_focus)\n"
@@ -4220,8 +3987,7 @@ msgstr ""
 #: ../src/settings.c:9639
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is moved or resized:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_move)\n"
@@ -4245,8 +4011,7 @@ msgstr ""
 #: ../src/settings.c:9645
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the "
-"mouse is clicked:\n"
+"Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_click)\n"
@@ -4257,13 +4022,10 @@ msgid ""
 "\t%%m\tmodifier  (modifier keys)\n"
 "\t%%f\tfocus  (element which received the click)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle "
-"button was clicked in %%f\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9648
@@ -4277,8 +4039,7 @@ msgstr ""
 #: ../src/settings.c:9651
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a key is "
-"pressed:\n"
+"Enter program or bash command line to be run automatically whenever a key is pressed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_key)\n"
@@ -4288,13 +4049,10 @@ msgid ""
 "\t%%k\tkey code  (key pressed)\n"
 "\t%%m\tmodifier  (modifier keys)\n"
 "\n"
-"Exported bash variables (eg $fm_pwd, etc) can be used in this command when "
-"no asterisk prefix is used.\n"
+"Exported bash variables (eg $fm_pwd, etc) can be used in this command when no asterisk prefix is used.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler.  For example:\n"
-"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey "
-"F8 was pressed.\" --button ok &"
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler.  For example:\n"
+"*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr ""
 
 #: ../src/settings.c:9654
@@ -4308,8 +4066,7 @@ msgstr ""
 #: ../src/settings.c:9657
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a "
-"SpaceFM window is closed:\n"
+"Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_win_close)\n"
@@ -4321,9 +4078,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9660
-#, fuzzy
 msgid "_Panel"
-msgstr "Yan Panel"
+msgstr ""
 
 #: ../src/settings.c:9667
 msgid "Set Panel Focus Command"
@@ -4332,8 +4088,7 @@ msgstr ""
 #: ../src/settings.c:9668
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_focus)\n"
@@ -4355,8 +4110,7 @@ msgstr ""
 #: ../src/settings.c:9674
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a panel "
-"or panel element is shown or hidden:\n"
+"Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_show)\n"
@@ -4370,9 +4124,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9677
-#, fuzzy
 msgid "S_elect"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/settings.c:9679
 msgid "Set Panel Select Command"
@@ -4381,8 +4134,7 @@ msgstr ""
 #: ../src/settings.c:9680
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever the file "
-"selection changes:\n"
+"Enter program or bash command line to be run automatically whenever the file selection changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_pnl_sel)\n"
@@ -4392,15 +4144,13 @@ msgid ""
 "\n"
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command.\n"
 "\n"
-"Prefix your command with an asterisk (*) and conditionally return exit "
-"status 0 to inhibit the default handler."
+"Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr ""
 
 #: ../src/settings.c:9683
-#, fuzzy
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4409,8 +4159,7 @@ msgstr ""
 #: ../src/settings.c:9691
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a new "
-"tab is opened:\n"
+"Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_new)\n"
@@ -4428,8 +4177,7 @@ msgstr ""
 #: ../src/settings.c:9697
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab "
-"gets focus:\n"
+"Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_focus)\n"
@@ -4441,9 +4189,8 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9700 ../src/settings.c:10265
-#, fuzzy
 msgid "_Close"
-msgstr "Sekmeyi Kapat"
+msgstr ""
 
 #: ../src/settings.c:9702
 msgid "Set Tab Close Command"
@@ -4452,8 +4199,7 @@ msgstr ""
 #: ../src/settings.c:9703
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a tab is "
-"closed:\n"
+"Enter program or bash command line to be run automatically whenever a tab is closed:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_tab_close)\n"
@@ -4473,8 +4219,7 @@ msgstr ""
 #: ../src/settings.c:9709
 #, c-format
 msgid ""
-"Enter program or bash command line to be run automatically whenever a device "
-"state changes:\n"
+"Enter program or bash command line to be run automatically whenever a device state changes:\n"
 "\n"
 "Use:\n"
 "\t%%e\tevent type  (evt_device)\n"
@@ -4506,14 +4251,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9719
-#, fuzzy
 msgid "_Window Icon"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/settings.c:9721
-#, fuzzy
 msgid "Set Window Icon"
-msgstr "Yeni _Pencere"
+msgstr ""
 
 #: ../src/settings.c:9722
 msgid ""
@@ -4537,9 +4280,8 @@ msgid "_Design Mode"
 msgstr ""
 
 #: ../src/settings.c:9730
-#, fuzzy
 msgid "_Preferences"
-msgstr "Ayarlar"
+msgstr ""
 
 #: ../src/settings.c:9733
 msgid "_Tool"
@@ -4583,9 +4325,8 @@ msgid "_Options"
 msgstr ""
 
 #: ../src/settings.c:9809
-#, fuzzy
 msgid "_Browser"
-msgstr "_Göz-at"
+msgstr ""
 
 #: ../src/settings.c:9811
 msgid "Choose HTML Browser"
@@ -4594,8 +4335,7 @@ msgstr ""
 #: ../src/settings.c:9812
 #, c-format
 msgid ""
-"Enter browser name or bash command line to be used to display HTML files and "
-"URLs:\n"
+"Enter browser name or bash command line to be used to display HTML files and URLs:\n"
 "\n"
 "Use:\n"
 "\t%%u\turl\n"
@@ -4604,14 +4344,12 @@ msgid ""
 msgstr ""
 
 #: ../src/settings.c:9815
-#, fuzzy
 msgid "_Manual Location"
-msgstr "Konum"
+msgstr ""
 
 #: ../src/settings.c:9817
-#, fuzzy
 msgid "Choose User's Manual Location"
-msgstr "Uygulama seç"
+msgstr ""
 
 #: ../src/settings.c:9818
 msgid ""
@@ -4639,19 +4377,16 @@ msgid "_Count"
 msgstr ""
 
 #: ../src/settings.c:9865
-#, fuzzy
 msgid "_Item"
-msgstr "Yeni Öge"
+msgstr ""
 
 #: ../src/settings.c:9871
-#, fuzzy
 msgid "_To"
-msgstr "_Araçlar"
+msgstr ""
 
 #: ../src/settings.c:9877
-#, fuzzy
 msgid "_Progress"
-msgstr "İlerleme:"
+msgstr ""
 
 #: ../src/settings.c:9884
 msgid "T_otal"
@@ -4731,9 +4466,8 @@ msgid "All _Workspaces"
 msgstr ""
 
 #: ../src/settings.c:10015
-#, fuzzy
 msgid "_Overwrite Option"
-msgstr "Üzerine-yaz"
+msgstr ""
 
 #: ../src/settings.c:10020
 msgid "_Error Option"
@@ -4796,15 +4530,13 @@ msgid "Edit As _Root"
 msgstr ""
 
 #: ../src/settings.c:10111
-#, fuzzy
 msgid "_Choose..."
-msgstr "_Göz-at"
+msgstr ""
 
 #. virtual
 #: ../src/settings.c:10116
-#, fuzzy
 msgid "In _Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:10120
 msgid "N_ew"
@@ -4861,14 +4593,12 @@ msgid "Tab 1_0"
 msgstr ""
 
 #: ../src/settings.c:10134
-#, fuzzy
 msgid "In _Panel"
-msgstr "Yan Panel"
+msgstr ""
 
 #: ../src/settings.c:10145 ../src/settings.c:10164
-#, fuzzy
 msgid "_Extract"
-msgstr "Çıkar_t"
+msgstr ""
 
 #: ../src/settings.c:10148 ../src/settings.c:10168
 msgid "Extract _To"
@@ -4883,14 +4613,12 @@ msgid "_Archive Default"
 msgstr ""
 
 #: ../src/settings.c:10161
-#, fuzzy
 msgid "_Open With App"
-msgstr " \"%s\" ..._ile Aç"
+msgstr ""
 
 #: ../src/settings.c:10174
-#, fuzzy
 msgid "_Create Subfolder"
-msgstr "_Yeni Oluştur"
+msgstr ""
 
 #: ../src/settings.c:10178
 msgid "_Write Access"
@@ -4909,7 +4637,6 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/settings.c:10204
-#, fuzzy
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "Yerİ_mleri"
@@ -4919,33 +4646,29 @@ msgid "_Archive"
 msgstr ""
 
 #: ../src/settings.c:10215
-#, fuzzy
 msgctxt "New|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
 msgstr ""
 
 #: ../src/settings.c:10228
-#, fuzzy
 msgid "_Back"
-msgstr "Geriye"
+msgstr ""
 
 #: ../src/settings.c:10230
-#, fuzzy
 msgid "_Forward"
-msgstr "İleriye"
+msgstr ""
 
 #: ../src/settings.c:10232
 msgid "_Up"
 msgstr ""
 
 #: ../src/settings.c:10234
-#, fuzzy
 msgid "_Home"
-msgstr "_home Dizinine Git"
+msgstr ""
 
 #: ../src/settings.c:10239
 msgid "_Set Default"
@@ -4960,14 +4683,12 @@ msgid "Fo_cus"
 msgstr ""
 
 #: ../src/settings.c:10248
-#, fuzzy
 msgid "_Path Bar"
-msgstr "Konum"
+msgstr ""
 
 #: ../src/settings.c:10250
-#, fuzzy
 msgid "_File List"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../src/settings.c:10252
 msgid "_Tree"
@@ -4978,10 +4699,9 @@ msgid "De_vices"
 msgstr ""
 
 #: ../src/settings.c:10259
-#, fuzzy
 msgctxt "Go|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -5000,45 +4720,38 @@ msgid "_Rubberband Select"
 msgstr ""
 
 #: ../src/settings.c:10303
-#, fuzzy
 msgid "_Sort"
-msgstr "_Sırala"
+msgstr ""
 
 #. visible
 #. position
 #: ../src/settings.c:10309 ../src/settings.c:10693 ../src/settings.c:10816
 #: ../src/settings.c:10944 ../src/settings.c:11072
-#, fuzzy
 msgid "_Size"
-msgstr "Büyüklük"
+msgstr ""
 
 #: ../src/settings.c:10313 ../src/settings.c:10703 ../src/settings.c:10828
 #: ../src/settings.c:10956 ../src/settings.c:11084
-#, fuzzy
 msgid "_Permission"
-msgstr "i_zinler"
+msgstr ""
 
 #: ../src/settings.c:10315 ../src/settings.c:10577 ../src/settings.c:10708
 #: ../src/settings.c:10834 ../src/settings.c:10962 ../src/settings.c:11090
-#, fuzzy
 msgid "_Owner"
-msgstr "Duvarkağıdı:"
+msgstr ""
 
 #: ../src/settings.c:10317 ../src/settings.c:10713 ../src/settings.c:10840
 #: ../src/settings.c:10968 ../src/settings.c:11096
-#, fuzzy
 msgid "_Modified"
-msgstr "Son Değişiklik"
+msgstr ""
 
 #: ../src/settings.c:10319
-#, fuzzy
 msgid "_Ascending"
-msgstr "Yukarı-doğru"
+msgstr ""
 
 #: ../src/settings.c:10321
-#, fuzzy
 msgid "_Descending"
-msgstr "Aşağı-doğru"
+msgstr ""
 
 #: ../src/settings.c:10324
 msgid "Nat_ural"
@@ -5049,9 +4762,8 @@ msgid "_Case Sensitive"
 msgstr ""
 
 #: ../src/settings.c:10328
-#, fuzzy
 msgid "Folders Fi_rst"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/settings.c:10330
 msgid "F_iles First"
@@ -5062,18 +4774,16 @@ msgid "Mi_xed"
 msgstr ""
 
 #: ../src/settings.c:10334
-#, fuzzy
 msgid "_Hidden First"
-msgstr "_Gizli Dosyaları Göster"
+msgstr ""
 
 #: ../src/settings.c:10336
 msgid "Hidden _Last"
 msgstr ""
 
 #: ../src/settings.c:10339
-#, fuzzy
 msgid "Re_fresh"
-msgstr "Yenile"
+msgstr ""
 
 #: ../src/settings.c:10342
 msgid "Auto See_k"
@@ -5089,13 +4799,11 @@ msgstr ""
 
 #: ../src/settings.c:10350
 msgid ""
-"Enter command to be used to mount or open protocols (such as nfs://, smb://, "
-"etc):\n"
+"Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
 "If this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n"
 "\n"
-"TIP:  To unmount networks, install udevil or set Unmount Command to a "
-"command which handles network protocols.\n"
+"TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr ""
 
 #: ../src/settings.c:10354
@@ -5123,87 +4831,73 @@ msgid "Paste _As"
 msgstr ""
 
 #: ../src/settings.c:10408 ../src/settings.c:10498
-#, fuzzy
 msgid "_Copy To"
-msgstr "Kopyala:"
+msgstr ""
 
 #: ../src/settings.c:10412
-#, fuzzy
 msgid "L_ocation"
-msgstr "Konum"
+msgstr ""
 
 #: ../src/settings.c:10413 ../src/settings.c:10452
-#, fuzzy
 msgid "L_ast Location"
-msgstr "Son Değişiklik"
+msgstr ""
 
 #: ../src/settings.c:10416
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:10433
-#, fuzzy
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
-msgstr "Yan Panel"
+msgstr ""
 
 #: ../src/settings.c:10447
-#, fuzzy
 msgid "_Move To"
-msgstr "Taşı:"
+msgstr ""
 
 #: ../src/settings.c:10451
-#, fuzzy
 msgid "_Location"
-msgstr "Konum"
+msgstr ""
 
 #: ../src/settings.c:10454
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr "Yeni _Sekme"
+msgstr ""
 
 #: ../src/settings.c:10471
-#, fuzzy
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
-msgstr "Yan Panel"
+msgstr ""
 
 #: ../src/settings.c:10484
-#, fuzzy
 msgid "_Select All"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/settings.c:10487
-#, fuzzy
 msgid "_Unselect All"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/settings.c:10489
 msgid "_Invert Selection"
 msgstr "Seçimi Tersine Çe_vir"
 
 #: ../src/settings.c:10491
-#, fuzzy
 msgid "S_elect By Pattern"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/settings.c:10493
 msgid "R_oot"
 msgstr ""
 
 #: ../src/settings.c:10499
-#, fuzzy
 msgid "Move _To"
-msgstr "_Aşağıya Taşı"
+msgstr ""
 
 #. Properties
 #: ../src/settings.c:10504
-#, fuzzy
 msgid "Propert_ies"
-msgstr "Ö_zellikler"
+msgstr ""
 
 #: ../src/settings.c:10515
 msgid "_Quick"
@@ -5231,9 +4925,8 @@ msgstr ""
 #. PANEL FOUR
 #: ../src/settings.c:10612 ../src/settings.c:10725 ../src/settings.c:10853
 #: ../src/settings.c:10981
-#, fuzzy
 msgid "_Toolbar"
-msgstr "_Araçlar"
+msgstr ""
 
 #: ../src/settings.c:10616 ../src/settings.c:10730 ../src/settings.c:10858
 #: ../src/settings.c:10986
@@ -5252,9 +4945,8 @@ msgstr ""
 
 #: ../src/settings.c:10632 ../src/settings.c:10750 ../src/settings.c:10878
 #: ../src/settings.c:11006 ../src/desktop/desktop-window.c:209
-#, fuzzy
 msgid "_Icons"
-msgstr "Si_mge Görünümü"
+msgstr ""
 
 #: ../src/settings.c:10635 ../src/settings.c:10754 ../src/settings.c:10882
 #: ../src/settings.c:11010
@@ -5263,9 +4955,8 @@ msgstr ""
 
 #: ../src/settings.c:10639 ../src/settings.c:10759 ../src/settings.c:10887
 #: ../src/settings.c:11015
-#, fuzzy
 msgid "_Hidden Files"
-msgstr "_Gizli Dosyaları Göster"
+msgstr ""
 
 #: ../src/settings.c:10645
 msgid "File List Font (Panel 1)"
@@ -5405,9 +5096,8 @@ msgstr ""
 #. sort_hidden_first
 #. speed
 #: ../src/settings.c:11109 ../src/settings.c:11116
-#, fuzzy
 msgid "_New Tab"
-msgstr "Yeni Sekme"
+msgstr ""
 
 #: ../src/settings.c:11112 ../src/settings.c:11121
 msgid "_Single Click"
@@ -5421,44 +5111,37 @@ msgstr ""
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
-"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-"
-"click on an item to show or hide it, change the icon, or add a custom tool "
-"item.\n"
+"Enter the Left Toolbar, Right Toolbar, or Side Toolbar submenu and right-click on an item to show or hide it, change the icon, or add a custom tool item.\n"
 "\n"
 "For more information, click the Help button below."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2227
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Directory doesn't exist\n"
 "\n"
 "%s"
-msgstr "Dizin mevcut değil."
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2252
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Unable to access %s\n"
 "\n"
 "%s"
 msgstr ""
-"Açılamayan dosya:\n"
-"\"%s\"\n"
-"%s"
 
 #: ../src/ptk/ptk-file-browser.c:2897
-#, fuzzy
 msgid "Select By Pattern"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:2897
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
 "\n"
-"If your pattern contains any uppercase characters, the matching will be case "
-"sensitive.\n"
+"If your pattern contains any uppercase characters, the matching will be case sensitive.\n"
 "\n"
 "Example:  *sp*e?m*\n"
 "\n"
@@ -5466,9 +5149,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5718 ../src/ptk/ptk-file-browser.c:5850
-#, fuzzy
 msgid "Choose Location"
-msgstr "Uygulama seç"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5751 ../src/ptk/ptk-file-browser.c:5783
 msgid "Invalid Destination"
@@ -5483,10 +5165,10 @@ msgid "Invalid destination"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5826
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
-msgstr[0] "Seçilen dosyaları gerçekten silmek istiyor musunuz?"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-browser.c:5830
 msgid "Confirm Delete As Root"
@@ -5497,9 +5179,8 @@ msgid "DELETE AS ROOT"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5839
-#, fuzzy
 msgid "Delete As Root"
-msgstr "Sil:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5858
 msgid "Move As Root"
@@ -5510,18 +5191,14 @@ msgid "Copy As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
-#, fuzzy
 msgid "Hide File"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5934
 msgid ""
-"The names of the selected files will be added to the '.hidden' file located "
-"in this folder, which will hide them from view in SpaceFM.  You may need to "
-"refresh the view or restart SpaceFM for the files to disappear.\n"
+"The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
-"To unhide a file, open the .hidden file in your text editor, remove the name "
-"of the file, and refresh."
+"To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5947
@@ -5529,24 +5206,18 @@ msgid "Error hiding files"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5954
-#, fuzzy
 msgid "No files are selected"
-msgstr "Birçok dosya seçildi"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6756 ../src/ptk/ptk-location-view.c:3308
 #: ../src/ptk/ptk-file-menu.c:459
-#, fuzzy
 msgid "Bookmark Exists"
-msgstr "Yerİmleri:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:6757 ../src/ptk/ptk-location-view.c:3309
 #: ../src/ptk/ptk-file-menu.c:460
-#, fuzzy
 msgid "Bookmark already exists"
 msgstr ""
-"\"%s\" oluşturuldu.\n"
-"\n"
-"%s"
 
 #: ../src/ptk/ptk-location-view.c:103
 msgid "DATA LOSS WARNING - overwriting"
@@ -5693,8 +5364,7 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  You may want or need to unmount it before changing "
-"the label."
+"WARNING: %s is mounted.  You may want or need to unmount it before changing the label."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1166
@@ -5744,9 +5414,9 @@ msgid "Label As Root %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1280
-#, fuzzy, c-format
+#, c-format
 msgid "Unmount %s"
-msgstr "Dosya Sistemini _Ayır"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1360 ../src/ptk/ptk-location-view.c:1372
 #, c-format
@@ -5770,7 +5440,8 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
-msgid "%s is currently mounted.  You must unmount it before you can format it."
+msgid ""
+"%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1754 ../src/ptk/ptk-location-view.c:1914
@@ -5781,8 +5452,7 @@ msgstr ""
 #: ../src/ptk/ptk-location-view.c:1760
 #, c-format
 msgid ""
-"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
-"take awhile and dd gives no feedback.\n"
+"You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can take awhile and dd gives no feedback.\n"
 "\n"
 "Enter command to overwrite entire volume with /dev/%s:\n"
 "\n"
@@ -5834,11 +5504,9 @@ msgstr ""
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
 "\n"
-"This change may prevent your computer from booting properly.  All important "
-"data on the entire device should be backed up first.\n"
+"This change may prevent your computer from booting properly.  All important data on the entire device should be backed up first.\n"
 "\n"
-"Proceed?  (If you press Yes, you still have one more opportunity to abort "
-"before the disk is modified.)"
+"Proceed?  (If you press Yes, you still have one more opportunity to abort before the disk is modified.)"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1864
@@ -5846,18 +5514,14 @@ msgid "Restore MBR"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
-#, fuzzy
 msgid "Unknown Type"
-msgstr "Bilinen dosya türleri:"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1876 ../src/ptk/ptk-location-view.c:2086
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
-"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage "
-"filenames contain 'partimage' or end in '.000'.  MBR filenames end in '."
-"mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE "
-"this file is a valid backup, you can rename it to avoid this error."
+"FSArchiver filenames contain 'fsarchiver' or end in '.fsa'.  Partimage filenames contain 'partimage' or end in '.000'.  MBR filenames end in '.mbr', '.mbr.bin', or '-MBR-back' and are 512 bytes in size.  If you are SURE this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1917
@@ -5888,9 +5552,8 @@ msgid "DATA LOSS WARNING - overwriting MBR boot code of"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2013
-#, fuzzy
 msgid "Directory Missing"
-msgstr "Dizin Ağacı"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2014
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
@@ -5901,9 +5564,8 @@ msgid "Choose Backup For Info"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
-#, fuzzy
 msgid "MBR File"
-msgstr "Dosyayı Yeniden-adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5920,16 +5582,14 @@ msgstr ""
 msgid ""
 "\n"
 "\n"
-"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes "
-"mounted read-only.  To backup a read-write volume, you need to add --allow-"
-"rw-mounted to the command.  See 'man fsarchiver' for details."
+"WARNING: %s is mounted.  By default, FSArchiver will only backup volumes mounted read-only.  To backup a read-write volume, you need to add --allow-rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2163
 #, c-format
 msgid ""
-"%s is currently mounted.  You must unmount it before you can create a backup "
-"using Partimage."
+"%s is currently mounted.  You must unmount it before you can create a backup"
+" using Partimage."
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2180
@@ -5938,9 +5598,8 @@ msgid "Save %s Backup"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
-#, fuzzy
 msgid "Overwrite?"
-msgstr "Üzerine-yaz"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2197
 msgid "The selected backup already exists.  Overwrite?"
@@ -5959,9 +5618,8 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2229
-#, fuzzy
 msgid "Backup"
-msgstr "Geriye"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2257
 #, c-format
@@ -5969,9 +5627,9 @@ msgid "%s Backup %s"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2482
-#, fuzzy, c-format
+#, c-format
 msgid "Properties %s"
-msgstr "Ö_zellikler"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2519 ../src/ptk/ptk-location-view.c:2546
 #, c-format
@@ -5994,9 +5652,8 @@ msgid "_Eject"
 msgstr "Çı_kart"
 
 #: ../src/ptk/ptk-location-view.c:3337
-#, fuzzy
 msgid "Rename Bookmark"
-msgstr "Yerİ_mleri"
+msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3339
 msgid "Enter new bookmark name:"
@@ -6008,9 +5665,8 @@ msgid "Enter new folder for bookmark '%s':"
 msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:3361
-#, fuzzy
 msgid "Edit Bookmark Location"
-msgstr "Yerİmlerini Düzenle"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:444
 msgid "Kill As Other"
@@ -6069,9 +5725,8 @@ msgid "Copying..."
 msgstr "Kopyalıyor..."
 
 #: ../src/ptk/ptk-file-task.c:764
-#, fuzzy
 msgid "Trashing..."
-msgstr "Hazırlıyor..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:765
 msgid "Deleting..."
@@ -6082,15 +5737,14 @@ msgid "Linking..."
 msgstr "Bağlıyor..."
 
 #: ../src/ptk/ptk-file-task.c:767
-#, fuzzy
 msgid "Changing..."
-msgstr "Yüklüyor..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:768 ../src/ptk/ptk-file-task.c:936
 #: ../src/ptk/ptk-file-task.c:1462
-#, fuzzy, c-format
+#, c-format
 msgid "Running..."
-msgstr "Bağlıyor..."
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:852
 msgid "From:"
@@ -6101,9 +5755,8 @@ msgid "To:"
 msgstr "Hedef:"
 
 #: ../src/ptk/ptk-file-task.c:887
-#, fuzzy
 msgid "Progress:  "
-msgstr "İlerleme:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:925
 msgid "Status:  "
@@ -6132,9 +5785,8 @@ msgid "Skip All"
 msgstr "Tümünü Atla"
 
 #: ../src/ptk/ptk-file-task.c:998
-#, fuzzy
 msgid "Auto Rename"
-msgstr "Yeniden Adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:1002
 msgid "Stop If Error First"
@@ -6246,24 +5898,21 @@ msgid "stalled"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2020
-#, fuzzy
 msgid "Moving from folder:"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2022
 msgid "Linking from folder:"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2024
-#, fuzzy
 msgid "Copying from folder:"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #. Ask the user whether to overwrite dir content or not
 #: ../src/ptk/ptk-file-task.c:2040
-#, fuzzy
 msgid "Folder Exists"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2041
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
@@ -6278,9 +5927,8 @@ msgid "\t<b>! overwrite file with link !</b>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2071
-#, fuzzy
 msgid "<b>( same size )</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2077 ../src/ptk/ptk-file-task.c:2100
 #, c-format
@@ -6304,73 +5952,61 @@ msgid "newer"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2097
-#, fuzzy
 msgid "older"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2118
-#, fuzzy
 msgid "Filename Exists"
-msgstr "Dosya mevuct değil"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2119 ../src/ptk/ptk-file-task.c:2134
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2131
-#, fuzzy
 msgid "Rename Required"
-msgstr "Dosyayı Yeniden-adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2133
-#, fuzzy
 msgid "In folder:"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2212
-#, fuzzy
 msgid "_Overwrite"
-msgstr "Üzerine-yaz"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2213
-#, fuzzy
 msgid "Overwrite _All"
-msgstr "Tümünün Üzerine-yaz"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2218
 msgid "_Pause"
 msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2220
-#, fuzzy
 msgid "_Skip"
-msgstr "Atla"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2221
-#, fuzzy
 msgid "S_kip All"
-msgstr "Tümünü Atla"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2273
-#, fuzzy
 msgid "To folder:"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2300
-#, fuzzy
 msgid "<b>Folder Name:</b>"
-msgstr "Dosya Adı:"
+msgstr ""
 
 #. extra buttons
 #: ../src/ptk/ptk-file-task.c:2328
-#, fuzzy
 msgid " _Rename "
-msgstr "Yeniden _Adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2332
-#, fuzzy
 msgid " A_uto Rename "
-msgstr "Yeniden _Adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:2336
 msgid " Auto Re_name All "
@@ -6399,9 +6035,8 @@ msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
-#, fuzzy
 msgid "Extract To"
-msgstr "Çıkartılacak _Yer"
+msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:485
 msgid "Cre_ate subfolder(s)"
@@ -6418,17 +6053,15 @@ msgstr ""
 
 #. task
 #: ../src/ptk/ptk-file-archiver.c:689
-#, fuzzy, c-format
+#, c-format
 msgid "Extract %s"
-msgstr "Dosyaları Çıkart"
+msgstr ""
 
 #: ../src/ptk/ptk-console-output.c:74
 msgid ""
 "\n"
 "Complete!"
-msgstr ""
-"\n"
-"Tamamlandı!"
+msgstr "\nTamamlandı!"
 
 #: ../src/ptk/ptk-console-output.c:178
 msgid "Command:"
@@ -6439,9 +6072,8 @@ msgid "File System"
 msgstr "Dosya Sistemi"
 
 #: ../src/ptk/ptk-dir-tree.c:396
-#, fuzzy
 msgid "( no subfolder )"
-msgstr "_Üst Dizine Git"
+msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid "Remove Text Type Association"
@@ -6449,14 +6081,14 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1521
 msgid ""
-"NOTE:  When compiling the list of applications to appear in the Open submenu "
-"for a text file, SpaceFM will include applications associated with the MIME "
-"type (eg text/html) AND applications associated with text/plain.  If you "
+"NOTE:  When compiling the list of applications to appear in the Open submenu"
+" for a text file, SpaceFM will include applications associated with the MIME"
+" type (eg text/html) AND applications associated with text/plain.  If you "
 "select Remove on an application, it will be removed as an associated "
 "application for the MIME type (eg text/html), but will NOT be removed as an "
-"associated application for text/plain (unless the MIME type is text/plain).  "
-"Thus using Remove may not remove the application from the Open submenu for "
-"this type, unless you also remove it from text/plain."
+"associated application for text/plain (unless the MIME type is text/plain)."
+"  Thus using Remove may not remove the application from the Open submenu for"
+" this type, unless you also remove it from text/plain."
 msgstr ""
 
 #. Set Default
@@ -6474,10 +6106,10 @@ msgid "new"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:150
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
-msgstr[0] "Seçilen dosyaları gerçekten silmek istiyor musunuz?"
+msgstr[0] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:159
@@ -6515,9 +6147,8 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:561 ../src/ptk/ptk-file-misc.c:575
 #: ../src/ptk/ptk-file-misc.c:586 ../src/ptk/ptk-file-misc.c:623
 #: ../src/ptk/ptk-file-misc.c:2248
-#, fuzzy
 msgid "<b>_Parent:</b>"
-msgstr "Grup:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:570
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
@@ -6549,15 +6180,13 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:595 ../src/ptk/ptk-file-misc.c:607
 #: ../src/ptk/ptk-file-misc.c:619 ../src/ptk/ptk-file-misc.c:2177
-#, fuzzy
 msgid "<b>_Name:</b>"
-msgstr "Dosya Adı:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:597 ../src/ptk/ptk-file-misc.c:609
 #: ../src/ptk/ptk-file-misc.c:621 ../src/ptk/ptk-file-misc.c:2224
-#, fuzzy
 msgid "<b>_Filename:</b>"
-msgstr "Dosya Adı:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:599
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
@@ -6572,29 +6201,24 @@ msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:617 ../src/ptk/ptk-file-misc.c:2272
-#, fuzzy
 msgid "<b>P_ath:</b>"
-msgstr "...ile Aç:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
-#, fuzzy
 msgid "_Move"
-msgstr "Taşı:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:783
-#, fuzzy
 msgid "Select Link Target"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:799
-#, fuzzy
 msgid "Select Template File"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:818
-#, fuzzy
 msgid "Select Template Folder"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
@@ -6609,58 +6233,48 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:983
 msgid ""
-"* To select all the text in an entry, click the entry's label (eg "
-"'Filename:'), press the Alt key shortcut, or use Tab.\n"
+"* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n"
 "\n"
-"* To quickly copy an entry's text to the clipboard, double- or middle-click "
-"on the entry's label (eg 'Filename:').\n"
+"* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n"
 "\n"
-"* Multiple files can be selected in the file browser to rename a batch of "
-"files."
+"* Multiple files can be selected in the file browser to rename a batch of files."
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1042
-#, fuzzy
 msgid "C_reate"
-msgstr "_Yeni Oluştur"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1043
-#, fuzzy
 msgctxt "Title|"
 msgid "Create New"
-msgstr "_Yeni Oluştur"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1045
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr "_Dosya"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1047
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Folder"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1049
-#, fuzzy
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr "Bağ:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
-#, fuzzy
 msgid "Move"
-msgstr "Taşı:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1070 ../src/ptk/ptk-file-misc.c:1080
 msgid "C_opy"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1071 ../src/ptk/ptk-file-misc.c:1081
-#, fuzzy
 msgid "Copy"
-msgstr "Kopyala:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1076 ../src/ptk/ptk-file-misc.c:1087
 msgid "Create Link To"
@@ -6679,14 +6293,12 @@ msgid " As Root"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
-#, fuzzy
 msgid "Link"
-msgstr "Bağ:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1886
-#, fuzzy
 msgid "File"
-msgstr "_Dosya"
+msgstr ""
 
 #. g_free( title );
 #. Buttons
@@ -6699,14 +6311,13 @@ msgid "Re_vert"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1956
-#, fuzzy
 msgid "& _Open"
-msgstr "_Aç"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1990
-#, fuzzy, c-format
+#, c-format
 msgid "Link-> %s"
-msgstr "Bağ:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1993
 #, c-format
@@ -6714,29 +6325,24 @@ msgid "!Link-> %s (missing)"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2042
-#, fuzzy
 msgid "<b>_Target:</b>"
-msgstr "Grup:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2088
-#, fuzzy
 msgid "<b>_Template:</b>"
-msgstr "Dosya Türü:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2104 ../src/ptk/ptk-file-misc.c:2693
-#, fuzzy
 msgid "Empty File"
-msgstr "Dosyaları Çıkart"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2134 ../src/ptk/ptk-file-misc.c:2771
-#, fuzzy
 msgid "Empty Folder"
-msgstr "_Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2202
-#, fuzzy
 msgid "<b>E_xtension:</b>"
-msgstr "Konum:"
+msgstr ""
 
 #. Options
 #: ../src/ptk/ptk-file-misc.c:2297
@@ -6770,24 +6376,21 @@ msgid "Fol_der"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2312
-#, fuzzy
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr "Bağ:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2415
-#, fuzzy
 msgid "New"
-msgstr "Yeni Sekme"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2544
 msgid "Path contains linefeeds"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2599
-#, fuzzy
 msgid "Create Parent Folder"
-msgstr "Üst Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2601
 msgid "The parent folder does not exist.  Create it?"
@@ -6806,9 +6409,8 @@ msgid "Mkdir Error"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2630
-#, fuzzy
 msgid "Overwrite Existing File"
-msgstr "Tümünün Üzerine-yaz"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2632
 msgid "OVERWRITE WARNING"
@@ -6834,20 +6436,20 @@ msgid "The specified template does not exist"
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2729
-#, fuzzy, c-format
+#, c-format
 msgid "Create New File%s"
-msgstr "_Yeni Oluştur"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2802
-#, fuzzy, c-format
+#, c-format
 msgid "Create New Folder%s"
-msgstr "Yeni Dizin"
+msgstr ""
 
 #. copy task
 #: ../src/ptk/ptk-file-misc.c:2833
-#, fuzzy, c-format
+#, c-format
 msgid "Copy%s"
-msgstr "Kopyala:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2846
 msgid "Copy Target Error"
@@ -6863,9 +6465,9 @@ msgstr ""
 
 #. move task
 #: ../src/ptk/ptk-file-misc.c:2927
-#, fuzzy, c-format
+#, c-format
 msgid "Move%s"
-msgstr "Taşı:"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2959
 #, c-format
@@ -6876,48 +6478,40 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:2962 ../src/desktop/desktop-window.c:1817
-#, fuzzy
 msgid "Rename Error"
-msgstr "Yeniden Adlandır"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3132 ../src/ptk/ptk-file-misc.c:3134
 msgid "New Folder"
 msgstr "Yeni Dizin"
 
 #: ../src/ptk/ptk-file-misc.c:3133
-#, fuzzy
 msgid "New folder name:"
-msgstr "Yeni Dizin"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3139 ../src/ptk/ptk-file-misc.c:3141
 msgid "New File"
 msgstr "Yeni Dosya"
 
 #: ../src/ptk/ptk-file-misc.c:3140
-#, fuzzy
 msgid "New filename:"
-msgstr "Yeni Dosya"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3163
-#, fuzzy
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr ""
-"Seçtiğiniz isimde bir dosya zaten var.\n"
-"Lütfen başka bir isim verin:"
 
 #: ../src/ptk/ptk-file-misc.c:3196
-#, fuzzy
 msgid "The new file cannot be created"
-msgstr "Yeni dosya oluşturulamadı!"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:3406
 #, c-format
 msgid ""
-"This symlink's target is missing or you do not have permission to access "
-"it:\n"
+"This symlink's target is missing or you do not have permission to access it:\n"
 "%s\n"
 "\n"
 "Target: %s"
@@ -6933,10 +6527,10 @@ msgid "%s ( %llu bytes )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:173
-#, fuzzy, c-format
+#, c-format
 msgid "%d folder"
 msgid_plural "%d folders"
-msgstr[0] "_Üst Dizine Git"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:177
 #, c-format
@@ -6945,24 +6539,22 @@ msgid_plural "%d files, %s"
 msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:184
-#, fuzzy, c-format
+#, c-format
 msgid "%d files"
 msgid_plural "%d files"
-msgstr[0] "_Dosya"
+msgstr[0] ""
 
 #: ../src/ptk/ptk-file-properties.c:332
-#, fuzzy
 msgid "( multiple files )"
-msgstr "Birçok dosya seçildi"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:443
 msgid "( multiple types )"
 msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:512
-#, fuzzy
 msgid "Choose..."
-msgstr "_Göz-at"
+msgstr ""
 
 #: ../src/ptk/ptk-file-properties.c:568 ../src/ptk/ptk-file-properties.c:575
 #, c-format
@@ -6990,8 +6582,7 @@ msgstr "Geçersiz Grup"
 #: ../src/ptk/ptk-path-entry.c:616
 #, c-format
 msgid ""
-"In addition to a folder or file path, commands can be entered in the Path "
-"Bar.  Prefixes:\n"
+"In addition to a folder or file path, commands can be entered in the Path Bar.  Prefixes:\n"
 "\t$\trun as task\n"
 "\t&\trun and forget\n"
 "\t+\trun in terminal\n"
@@ -7039,9 +6630,8 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:483 ../src/vfs/vfs-file-info.c:488
 #: ../src/vfs/vfs-file-info.c:582 ../src/vfs/vfs-file-info.c:587
-#, fuzzy
 msgid "G"
-msgstr "Git"
+msgstr ""
 
 #: ../src/vfs/vfs-file-info.c:502 ../src/vfs/vfs-file-info.c:507
 #: ../src/vfs/vfs-file-info.c:601 ../src/vfs/vfs-file-info.c:606
@@ -7061,18 +6651,15 @@ msgstr ""
 #: ../src/vfs/vfs-file-task.c:294
 #, c-format
 msgid "Destination directory \"%1$s\" is contained in source \"%2$s\""
-msgstr ""
-"Hedef dizininiz \"%1$s\", zaten kaynak dizininiz içinde yer alıyor! : \"%2$s"
-"\""
+msgstr "Hedef dizininiz \"%1$s\", zaten kaynak dizininiz içinde yer alıyor! : \"%2$s\""
 
 #: ../src/vfs/vfs-file-task.c:381 ../src/vfs/vfs-file-task.c:527
 #: ../src/vfs/vfs-file-task.c:635 ../src/vfs/vfs-file-task.c:686
 #: ../src/vfs/vfs-file-task.c:797 ../src/vfs/vfs-file-task.c:828
 #: ../src/vfs/vfs-file-task.c:913 ../src/vfs/vfs-file-task.c:1055
 #: ../src/vfs/vfs-file-task.c:2029
-#, fuzzy
 msgid "Accessing"
-msgstr "Süreç:"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:457 ../src/vfs/vfs-file-task.c:493
 #: ../src/vfs/vfs-file-task.c:511 ../src/vfs/vfs-file-task.c:556
@@ -7091,18 +6678,16 @@ msgid "Creating Link"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:585
-#, fuzzy
 msgid "Writing"
-msgstr "Yazma"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:628
 msgid "Creating"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:714
-#, fuzzy
 msgid "Renaming"
-msgstr "Yeniden Adlandır"
+msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1346
 msgid ""
@@ -7265,9 +6850,8 @@ msgid "%s %s Digital Camera"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:590
-#, fuzzy
 msgid "Drive"
-msgstr "Yazma"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:595
 #, c-format
@@ -7383,7 +6967,8 @@ msgstr ""
 msgid "You are not privileged to eject the volume \"%s\""
 msgstr ""
 
-#. TODO: slim down mount options to what is allowed, cf. volume.mount.valid_options
+#. TODO: slim down mount options to what is allowed, cf.
+#. volume.mount.valid_options
 #: ../src/vfs/vfs-volume-hal.c:2274
 #, c-format
 msgid "Invalid mount option when attempting to mount the volume \"%s\""
@@ -7402,11 +6987,9 @@ msgid "An application is preventing the volume \"%s\" from being unmounted"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2280
-#, fuzzy, c-format
+#, c-format
 msgid "The volume \"%s\" is not mounted"
 msgstr ""
-"Sürücü \"%s\" bağlı değil.\n"
-"Bağlamak ister misiniz?"
 
 #: ../src/vfs/vfs-volume-hal.c:2282
 #, c-format
@@ -7415,11 +6998,9 @@ msgstr ""
 
 #. TRANSLATORS: HAL can only unmount volumes that were mounted via HAL.
 #: ../src/vfs/vfs-volume-hal.c:2285
-#, fuzzy, c-format
+#, c-format
 msgid "The volume \"%s\" was probably mounted manually on the command line"
 msgstr ""
-"Sürücü \"%s\" bağlı değil.\n"
-"Bağlamak ister misiniz?"
 
 #: ../src/vfs/vfs-volume-hal.c:2293
 #, c-format
@@ -7430,7 +7011,8 @@ msgstr ""
 
 #: ../src/vfs/vfs-volume-hal.c:2304
 #, c-format
-msgid "Audio CDs cannot be mounted, use music players to play the audio tracks"
+msgid ""
+"Audio CDs cannot be mounted, use music players to play the audio tracks"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2313
@@ -7449,9 +7031,9 @@ msgid "[blank]"
 msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2383
-#, fuzzy, c-format
+#, c-format
 msgid "[audio]"
-msgstr "audio"
+msgstr ""
 
 #: ../src/vfs/vfs-volume-nohal.c:2397
 #, c-format
@@ -7554,17 +7136,15 @@ msgid "_Create New"
 msgstr "_Yeni Oluştur"
 
 #: ../src/desktop/desktop-window.c:214
-#, fuzzy
 msgid "_Desktop Settings"
-msgstr "_Masaüstü"
+msgstr ""
 
 #: ../src/desktop/desktop-window.c:1793
 #, c-format
 msgid ""
 "Enter new desktop item name:\n"
 "\n"
-"Changing the name of this desktop item requires modifying the contents of "
-"desktop file %s"
+"Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr ""
 
 #: ../src/desktop/desktop-window.c:1795
@@ -7580,328 +7160,17 @@ msgid "Open Containing _Folder"
 msgstr ""
 
 #: ../src/find-files.c:773
-#, fuzzy
 msgid "Select a folder"
-msgstr "_Tümünü Seç"
+msgstr ""
 
 #: ../src/find-files.c:822
-#, fuzzy
 msgid "Browse..."
-msgstr "_Göz-at"
+msgstr ""
 
 #: ../src/find-files.c:846
 msgid "Local Volumes"
 msgstr ""
 
 #: ../src/find-files.c:934
-#, fuzzy
 msgid "Last Modified"
-msgstr "Son Değişiklik"
-
-#~ msgid ""
-#~ "Lightweight file manager\n"
-#~ "\n"
-#~ "Developed by Hon Jen Yee (PCMan)"
-#~ msgstr ""
-#~ "Hafif sıklet dosya yöneticisi\n"
-#~ "\n"
-#~ "Hon Jen Yee (PCMan) tarafından geliştirildi."
-
-#, fuzzy
-#~ msgid "File Type To be Opened:"
-#~ msgstr "Açılacak dosya türü:"
-
-#~ msgid "Set selected application to default action"
-#~ msgstr "Seçilen uygulamayı varsayılan eylem olarak ata"
-
-#~ msgid "_Recommended Applications"
-#~ msgstr "Önerilen _Uygulamalar"
-
-#~ msgid "Actions Showed in Popup Menus"
-#~ msgstr "Çıkma-menülerde gösterilen eylemler"
-
-#~ msgid "Add _Application"
-#~ msgstr "Uygulama _Ekle"
-
-#~ msgid "Add _Custom Action"
-#~ msgstr "Ö_zel Eylem Ekle"
-
-#, fuzzy
-#~ msgid "File Associations"
-#~ msgstr "Dosya İlişkilendirmeleri"
-
-#~ msgid "Move _Up"
-#~ msgstr "_Yukarıya Taşı"
-
-#, fuzzy
-#~ msgid "<b>Last Modification:</b>"
-#~ msgstr "Son Düzenleme:"
-
-#, fuzzy
-#~ msgid "<b>Other Users:</b>"
-#~ msgstr "Diğer Kullanıcılar:"
-
-#, fuzzy
-#~ msgid "<b>File Name Contains:</b>"
-#~ msgstr "Dosya Adı:"
-
-#, fuzzy
-#~ msgid "Display image files with supported format as thumbnails"
-#~ msgstr "Resim dosyalarını minyatür şeklinde göster"
-
-#~ msgid "Max size of files displayed as thumbnails:"
-#~ msgstr "Minyatürde görünecek azami dosya sayısı:"
-
-#~ msgid "Size of Big Icons:"
-#~ msgstr "Büyük simgelerin boyu:"
-
-#~ msgid "application"
-#~ msgstr "uygulama"
-
-#~ msgid "video"
-#~ msgstr "video"
-
-#~ msgid "multipart"
-#~ msgstr "multipart"
-
-#~ msgid "image"
-#~ msgstr "image"
-
-#~ msgid "model"
-#~ msgstr "model"
-
-#~ msgid "inode"
-#~ msgstr "inode"
-
-#~ msgid "packages"
-#~ msgstr "packages"
-
-#~ msgid "GTK+ icon theme is not properly set"
-#~ msgstr "GTK+ simge teması yeterince ayarlanmamış"
-
-#~ msgid ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "This usually means you don't have an XSETTINGS manager running.  Desktop "
-#~ "environment like GNOME or XFCE automatically execute their XSETTING "
-#~ "managers like gnome-settings-daemon or xfce-mcs-manager.\n"
-#~ "\n"
-#~ "<b>If you don't use these desktop environments, you have two choices:\n"
-#~ "1. run an XSETTINGS manager, or\n"
-#~ "2. simply specify an icon theme in ~/.gtkrc-2.0.</b>\n"
-#~ "For example to use the Tango icon theme add a line:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> in your ~/.gtkrc-2.0. (create "
-#~ "it if no such file)\n"
-#~ "\n"
-#~ "<b>NOTICE: The icon theme you choose should be compatible with GNOME, or "
-#~ "the file icons cannot be displayed correctly.</b>  Due to the differences "
-#~ "in icon naming of GNOME and KDE, KDE themes cannot be used.  Currently "
-#~ "there is no standard for this, but it will be solved by freedesktop.org "
-#~ "in the future."
-#~ msgstr ""
-#~ "<big><b>%s</b></big>\n"
-#~ "\n"
-#~ "Bu genellikle çalışır durumda bir  XSETTINGS yöneticisinin bulunmadığını "
-#~ "işaret eder. GNOME veya XFCE benzeri Masaüstü ortamları, kendilerine ait "
-#~ "gnome-settings-daemon veya xfce-mcs-manager aracılığıyla XSETTINGS "
-#~ "yönetimini otomatik olarak gerçekleştirirler.\n"
-#~ "\n"
-#~ "<b>Eğer bu masaüstü ortamlarını kullanmıyorsanız iki seçeneğiniz var:\n"
-#~ "1. bir XSETTINGS yöneticisini çalıştırın, veya\n"
-#~ "2. basitçe ~/.gtkrc-2.0 dosyası içinde bir simge teması belirleyin.</b>\n"
-#~ "Örneğin Tango icon theme için ~/.gtkrc-2.0 dosyasına ( eğer bu dosya "
-#~ "yoksa,-oluşturun) şu satırı ekleyin:\n"
-#~ "<i><b>gtk-icon-theme-name=\"Tango\"</b></i> \n"
-#~ "\n"
-#~ "<b>NOT: Seçtiğiniz simge teması GNOME ile uyumlu olmalıdır,-aksi takdirde "
-#~ "dosya simgeleri düzgün görüntülenmeyecektir.</b>GNOME ve KDE, simgelerin "
-#~ "adlandırmalarını farklı yaptıkları için KDE temalarını kullanamazsınız. "
-#~ "Halihazırda bu konu ile ilgili bir standart yoktur ama freedesktop.org "
-#~ "sitesi bu türden sorunların gelecekte olmaması için kurulmuştur."
-
-#~ msgid "_Text File"
-#~ msgstr "_Metin Dosyası"
-
-#~ msgid "File _Properties"
-#~ msgstr "Dosya Öz_Nitelikleri"
-
-#~ msgid "Go _Back"
-#~ msgstr "_Geri Git"
-
-#~ msgid "Go _Forward"
-#~ msgstr "_ileri Git"
-
-#~ msgid "Go to _Parent Folder"
-#~ msgstr "_Üst Dizine Git"
-
-#~ msgid "Sort by _Permission"
-#~ msgstr "_Yetkilere Göre Sıralı"
-
-#~ msgid "Sort by _Owner"
-#~ msgstr "_Sahibine Göre Sıralı"
-
-#~ msgid "_Open Side Pane"
-#~ msgstr "_Yan Paneli Aç"
-
-#~ msgid "Show _Directory Tree"
-#~ msgstr "Dizin _Ağacını Göster"
-
-#~ msgid "_Refresh"
-#~ msgstr "_Yenile"
-
-#~ msgid "View as _Icons"
-#~ msgstr "Si_mge Görünümü"
-
-#, fuzzy
-#~ msgid "View as _Compact List"
-#~ msgstr "_Ayrıntılı Liste Görünümü"
-
-#~ msgid "View as Detailed _List"
-#~ msgstr "_Ayrıntılı Liste Görünümü"
-
-#~ msgid "Open Current Folder as _Root"
-#~ msgstr "Bulunulan dizini _root olarak Aç"
-
-#~ msgid "Open Side Pane"
-#~ msgstr "Yan Paneli Aç"
-
-#~ msgid "Warning: You are in super user mode"
-#~ msgstr "Uyarı:Yetkili kullanıcı kipindesiniz"
-
-#~ msgid "Terminal program has not been set"
-#~ msgstr "Terminal programı yapılandırılmadı"
-
-#~ msgid "_Add to Bookmarks"
-#~ msgstr "Yerimlerine _Ekle"
-
-#~ msgid "_Edit Bookmarks"
-#~ msgstr "Yerimlerini _Düzenle"
-
-#~ msgid ", Free space: %s (Total: %s )"
-#~ msgstr ", Boş yer: %s (Toplam: %s )"
-
-#~ msgid "%d item selected (%s)%s"
-#~ msgid_plural "%d items selected (%s)%s"
-#~ msgstr[0] "%d öge seçildi (%s)%s"
-
-#~ msgid "Desktop"
-#~ msgstr "Masaüstü"
-
-#~ msgid "Change Properties: "
-#~ msgstr "Öznitelikler Değiştir:"
-
-#~ msgid "Changing Properties"
-#~ msgstr "Öznitelikleri Değiştiriyor"
-
-#~ msgid "Cancel the operation?"
-#~ msgstr "Eylem iptal edilecek?"
-
-#~ msgid "Do you want to overwrite the folder and its content?"
-#~ msgstr "Dizin ve içeriğinin üzerine yazmak ister misiniz?"
-
-#~ msgid "Do you want to overwrite this file?"
-#~ msgstr "Bu dosyanın üzerine yazmak ister misiniz?"
-
-#~ msgid "Please choose a new file name."
-#~ msgstr "Lütfen yeni bir dosya ismi belirleyin."
-
-#~ msgid ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "Destination and source are the same file.\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "\"%s\"\n"
-#~ "\n"
-#~ "Kaynak ve hedef aynı dosya!.\n"
-#~ "\n"
-#~ "%s"
-
-#, fuzzy
-#~ msgid "Save Compressed Files to..."
-#~ msgstr "Sıkıştırılmış Dosyaları Sakla..."
-
-#~ msgid "Format of compressed File:"
-#~ msgstr "Sıkıştırılmış dosyanın biçimi:"
-
-#~ msgid "Creating Compressed File: %s"
-#~ msgstr "Sıkıştırılmış dosya oluşturuluyor: %s"
-
-#~ msgid "Extract File to..."
-#~ msgstr "Dosyayı çıkart..."
-
-#~ msgid "No Sub Folder"
-#~ msgstr "Alt-dizin yok"
-
-#~ msgid "E_xtract Here"
-#~ msgstr "_Buraya Çıkart"
-
-#~ msgid "Compress"
-#~ msgstr "Sıkıştır"
-
-#~ msgid "_Open with another program"
-#~ msgstr "Başka bir _programla aç"
-
-#~ msgid "Please input new file name:"
-#~ msgstr "Lütfen yeni dosya ismi yazın:"
-
-#~ msgid "Input a name for the new folder:"
-#~ msgstr "Yeni dizin için bir isim verin:"
-
-#~ msgid "Input a name for the new file:"
-#~ msgstr "Yeni dosya için bir isim verin:"
-
-#~ msgid "Multiple files of different types"
-#~ msgstr "Farklı türlerde birçok dosya"
-
-#~ msgid "Other program..."
-#~ msgstr "Diğer program..."
-
-#~ msgid ""
-#~ "Do you want to recursively apply these changes to all files and sub-"
-#~ "folders?"
-#~ msgstr ""
-#~ "Bu değişiklikleri tüm alt-dizinler ve içindeki dosyalara uygulamak ister "
-#~ "misiniz?"
-
-#~ msgid "Opened in New Tab"
-#~ msgstr "Yeni sekmede aç"
-
-#~ msgid "gksu or kdesu is not found"
-#~ msgstr "gksu veya kdesu bulunamadı"
-
-#~ msgid ""
-#~ "The volume \"%s\" is not mounted.\n"
-#~ "Do you want to mount it?"
-#~ msgstr ""
-#~ "Sürücü \"%s\" bağlı değil.\n"
-#~ "Bağlamak ister misiniz?"
-
-#~ msgid "Source code taken from other projects:"
-#~ msgstr "Diğer projelerden alınana kaynak kodlar:"
-
-#~ msgid " * libmd5-rfc: Aladdin Enterprises"
-#~ msgstr " * libmd5-rfc: Aladdin Enterprises"
-
-#~ msgid " * Working area detection: Gary Kramlich"
-#~ msgstr " * Çalışma alanının tesbiti: Gary Kramlich"
-
-#~ msgid " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
-#~ msgstr ""
-#~ " * ExoIconView: os-cillation e.K, Anders Carlsson, & Benedikt Meurer"
-
-#~ msgid " * Text and icon renderer uese code from Jonathan Blandford"
-#~ msgstr " * Metin ve simge yorumlayıcı: Jonathan Blandford"
-
-#~ msgid " * Desktop icons use code from Brian Tarricone"
-#~ msgstr " * Masaüstü simgelerinin işlenmesi: Brian Tarricone"
-
-#~ msgid "Icon Theme:"
-#~ msgstr "Simge teması:"
-
-#~ msgid "A_ddress:"
-#~ msgstr "_Konum"
-
-#~ msgid " * xdgmime: Red Hat, Inc & Jonathan Blandford"
-#~ msgstr " * xdgmime: Red Hat, Inc & Jonathan Blandford"
+msgstr ""
