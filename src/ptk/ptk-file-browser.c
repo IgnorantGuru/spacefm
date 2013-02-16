@@ -1006,6 +1006,15 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
+
+        // inhibit auto seek because if multiple completions will change dir
+        EntryData* edata = (EntryData*)g_object_get_data(
+                                                    G_OBJECT( entry ), "edata" );
+        if ( edata && edata->seek_timer )
+        {
+            g_source_remove( edata->seek_timer );
+            edata->seek_timer = 0;
+        }
     }
     g_free( final_path );
 }

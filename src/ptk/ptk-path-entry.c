@@ -636,7 +636,7 @@ static gboolean on_button_release( GtkEntry       *entry,
     if ( GDK_BUTTON_RELEASE != evt->type )
         return FALSE;
 
-    if ( 1 == evt->button )
+    if ( 1 == evt->button && ( evt->state & GDK_CONTROL_MASK ) )
     {
         int pos;
         const char *text, *sep;
@@ -646,11 +646,6 @@ static gboolean on_button_release( GtkEntry       *entry,
         if ( !( text[0] == '$' || text[0] == '+' || text[0] == '&'
                   || text[0] == '!' || text[0] == '%' || text[0] == '\0' ) )
         {
-            if ( !( evt->state & GDK_CONTROL_MASK ) && 
-                        gtk_editable_get_selection_bounds( GTK_EDITABLE( entry ),
-                                                           NULL, NULL ) )
-                // text is selected - no auto breadcrumbs
-                return FALSE;
             pos = gtk_editable_get_position( GTK_EDITABLE( entry ) );
             if( G_LIKELY( text && *text ) )
             {
@@ -670,12 +665,7 @@ static gboolean on_button_release( GtkEntry       *entry,
                     gtk_entry_set_text( entry, path );
                     gtk_editable_set_position( (GtkEditable*)entry, -1 );
                     g_free( path );
-
-                    if ( evt->state & GDK_CONTROL_MASK )
-                        gtk_widget_activate( (GtkWidget*)entry );
-                    else
-                        // speed up auto seek chdir
-                        seek_path_delayed( GTK_ENTRY( entry ), 10 );
+                    gtk_widget_activate( (GtkWidget*)entry );
                 }
             }
         }

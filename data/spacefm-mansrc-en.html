@@ -442,13 +442,13 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 <!-- # Auto Seek #seek -->
 By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
 
-<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.  See also <a href="#gui-pathbar-bread">Breadcrumbs</a>.
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
 
 <!-- # Completion #tab -->
 As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # Breadcrumbs #bread -->
-The Breadcrumbs feature allows you to click on a portion of the path in the Path Bar to trim the path back.  If <a href="#gui-pathbar-seek">Auto Seek</a> is enabled (the default), this will also immediately change to the new path.  Or, use Ctrl+Click to force the directory change.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
+The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
 <!-- # File Path -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
