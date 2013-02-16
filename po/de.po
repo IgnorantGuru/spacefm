@@ -5,14 +5,15 @@
 # FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+#  <delix.fb@t-online.de>, 2013.
 # Rüdiger Arp <ruediger@gmx.net>, 2006.
 msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-13 19:37+0000\n"
-"PO-Revision-Date: 2013-02-13 21:30+0000\n"
-"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"PO-Revision-Date: 2013-02-15 20:43+0000\n"
+"Last-Translator: delix <delix.fb@t-online.de>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/spacefm/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr ""
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
-msgstr ""
+msgstr "SpaceFM"
 
 #: ../data/spacefm.desktop.in.h:2
 msgid "File Manager"
@@ -54,7 +55,7 @@ msgstr ""
 
 #: ../data/ui/about-dlg.ui.h:2
 msgid "Copyright (C) 2013    GPL3+"
-msgstr ""
+msgstr "Copyright (C) 2013    GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
@@ -184,7 +185,7 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
-msgstr ""
+msgstr "_Info"
 
 #: ../data/ui/file_properties.ui.h:12
 msgid "<b>_Owner:</b>"
@@ -240,20 +241,20 @@ msgstr "_Zugriffsrechte"
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #: ../data/ui/find-files.ui.h:2 ../data/ui/find-files2.ui.h:2
 #: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../data/ui/find-files.ui.h:3 ../data/ui/find-files2.ui.h:3
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: ../data/ui/find-files.ui.h:4 ../data/ui/find-files2.ui.h:4
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: ../data/ui/find-files.ui.h:5 ../data/ui/find-files2.ui.h:5
 msgid "Any"
@@ -530,11 +531,11 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Wallpaper:"
-msgstr ""
+msgstr "Hintergrundbild:"
 
 #: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
 msgid "<b>Wallpaper</b>"
-msgstr ""
+msgstr "<b>Hintergrundbild</b>"
 
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Background:"
@@ -542,7 +543,7 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Text:"
-msgstr ""
+msgstr "Text:"
 
 #: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Shadow:"
@@ -562,7 +563,7 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:47 ../data/ui/prefdlg2.ui.h:47
 msgid "Terminal:"
-msgstr ""
+msgstr "Terminal:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
 msgid "Terminal SU:"
@@ -774,19 +775,19 @@ msgstr "Deckkraft der Auswahlbox"
 #: ../src/cust-dialog.c:394
 #, c-format
 msgid "Too many columns (>%d) in %s"
-msgstr ""
+msgstr "zu viele Spalten (>%d) in %s"
 
 #: ../src/cust-dialog.c:631 ../src/cust-dialog.c:1643
 #: ../src/cust-dialog.c:1657 ../src/cust-dialog.c:1876
 #, c-format
 msgid "error reading file %s: %s"
-msgstr ""
+msgstr "Fehler beim Lesen von Datei %s: %s"
 
 #: ../src/cust-dialog.c:639 ../src/cust-dialog.c:1677
 #: ../src/cust-dialog.c:1890
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
-msgstr ""
+msgstr "Inhalt der Datei '%s' entspricht nicht der UTF-8 Norm"
 
 #: ../src/cust-dialog.c:693
 #, c-format
@@ -796,7 +797,7 @@ msgstr ""
 #: ../src/cust-dialog.c:819 ../src/cust-dialog.c:908
 #, c-format
 msgid "file '%s' is not a regular file"
-msgstr ""
+msgstr "Datei %s ist keine reguläre Datei"
 
 #: ../src/cust-dialog.c:991 ../src/cust-dialog.c:1327
 #: ../src/cust-dialog.c:3421
@@ -861,7 +862,7 @@ msgstr ""
 #: ../src/cust-dialog.c:2293 ../src/cust-dialog.c:3579
 #: ../src/cust-dialog.c:3634
 msgid "Pause"
-msgstr ""
+msgstr "Pause"
 
 #: ../src/cust-dialog.c:2973
 #, c-format
@@ -1925,11 +1926,11 @@ msgstr ""
 #. If you change "Status", also change it in on_task_button_press_event
 #: ../src/main-window.c:3805 ../src/main-window.c:5204
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: ../src/main-window.c:3805
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #: ../src/main-window.c:3805 ../src/ptk/ptk-file-misc.c:1884
 #: ../src/find-files.c:918
@@ -2489,12 +2490,12 @@ msgstr ""
 
 #: ../src/settings.c:897 ../src/settings.c:9792
 msgid "_FAQ"
-msgstr ""
+msgstr "_FAQ"
 
 #: ../src/settings.c:906 ../src/settings.c:910 ../src/settings.c:9930
 #: ../src/settings.c:9950
 msgid "_Stop"
-msgstr ""
+msgstr "_Stop"
 
 #: ../src/settings.c:916 ../src/settings.c:9963
 msgid "Show _Manager"
@@ -3274,7 +3275,7 @@ msgstr ""
 #: ../src/settings.c:8926
 msgctxt "Devices|Open|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:8930 ../src/settings.c:8957
 #: ../src/ptk/ptk-location-view.c:2948
@@ -3642,7 +3643,7 @@ msgstr ""
 
 #: ../src/settings.c:9307
 msgid "Audio CD"
-msgstr ""
+msgstr "Audio CD"
 
 #: ../src/settings.c:9313
 msgid "Optical Mounted"
@@ -3691,7 +3692,7 @@ msgstr ""
 #: ../src/settings.c:9375 ../src/settings.c:9624 ../src/settings.c:9688
 #: ../src/settings.c:10190
 msgid "_New"
-msgstr ""
+msgstr "_Neu"
 
 #: ../src/settings.c:9378 ../src/settings.c:10367
 #: ../src/ptk/ptk-file-misc.c:632 ../src/ptk/ptk-file-misc.c:1065
@@ -3706,7 +3707,7 @@ msgstr ""
 #: ../src/settings.c:9390
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:9393
 msgid "_Settings"
@@ -4153,7 +4154,7 @@ msgstr ""
 #: ../src/settings.c:9683
 msgctxt "View|Events|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:9690
 msgid "Set New Tab Command"
@@ -4548,52 +4549,52 @@ msgstr ""
 #: ../src/settings.c:10123 ../src/settings.c:10267 ../src/settings.c:10422
 #: ../src/settings.c:10460
 msgid "Tab _1"
-msgstr ""
+msgstr "Tab _1"
 
 #: ../src/settings.c:10124 ../src/settings.c:10268 ../src/settings.c:10423
 #: ../src/settings.c:10461
 msgid "Tab _2"
-msgstr ""
+msgstr "Tab _2"
 
 #: ../src/settings.c:10125 ../src/settings.c:10269 ../src/settings.c:10424
 #: ../src/settings.c:10462
 msgid "Tab _3"
-msgstr ""
+msgstr "Tab _3"
 
 #: ../src/settings.c:10126 ../src/settings.c:10270 ../src/settings.c:10425
 #: ../src/settings.c:10463
 msgid "Tab _4"
-msgstr ""
+msgstr "Tab _4"
 
 #: ../src/settings.c:10127 ../src/settings.c:10271 ../src/settings.c:10426
 #: ../src/settings.c:10464
 msgid "Tab _5"
-msgstr ""
+msgstr "Tab _5"
 
 #: ../src/settings.c:10128 ../src/settings.c:10272 ../src/settings.c:10427
 #: ../src/settings.c:10465
 msgid "Tab _6"
-msgstr ""
+msgstr "Tab _6"
 
 #: ../src/settings.c:10129 ../src/settings.c:10273 ../src/settings.c:10428
 #: ../src/settings.c:10466
 msgid "Tab _7"
-msgstr ""
+msgstr "Tab _7"
 
 #: ../src/settings.c:10130 ../src/settings.c:10274 ../src/settings.c:10429
 #: ../src/settings.c:10467
 msgid "Tab _8"
-msgstr ""
+msgstr "Tab _8"
 
 #: ../src/settings.c:10131 ../src/settings.c:10275 ../src/settings.c:10430
 #: ../src/settings.c:10468
 msgid "Tab _9"
-msgstr ""
+msgstr "Tab _9"
 
 #: ../src/settings.c:10132 ../src/settings.c:10276 ../src/settings.c:10431
 #: ../src/settings.c:10469
 msgid "Tab 1_0"
-msgstr ""
+msgstr "Tab 1_0"
 
 #: ../src/settings.c:10134
 msgid "In _Panel"
@@ -4651,7 +4652,7 @@ msgstr ""
 #: ../src/settings.c:10215
 msgctxt "New|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:10217
 msgid "Tab _Here"
@@ -4704,7 +4705,7 @@ msgstr ""
 #: ../src/settings.c:10259
 msgctxt "Go|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:10282
 msgid "Styl_e"
@@ -4848,7 +4849,7 @@ msgstr ""
 #: ../src/settings.c:10416
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:10433
 msgctxt "Edit|CopyTo|"
@@ -4866,7 +4867,7 @@ msgstr ""
 #: ../src/settings.c:10454
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
-msgstr ""
+msgstr "_Tab"
 
 #: ../src/settings.c:10471
 msgctxt "Edit|MoveTo|"
@@ -5440,7 +5441,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:1708
 msgid "Sync"
-msgstr ""
+msgstr "Sync"
 
 #: ../src/ptk/ptk-location-view.c:1742
 #, c-format
@@ -5569,7 +5570,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid "MBR File"
-msgstr ""
+msgstr "MBR Datei"
 
 #: ../src/ptk/ptk-location-view.c:2080
 msgid ""
@@ -5623,12 +5624,12 @@ msgstr ""
 
 #: ../src/ptk/ptk-location-view.c:2229
 msgid "Backup"
-msgstr ""
+msgstr "Backup"
 
 #: ../src/ptk/ptk-location-view.c:2257
 #, c-format
 msgid "%s Backup %s"
-msgstr ""
+msgstr "%s Backup %s"
 
 #: ../src/ptk/ptk-location-view.c:2482
 #, c-format
@@ -5817,7 +5818,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-task.c:1416
 #, c-format
 msgid "Done"
-msgstr ""
+msgstr "Fertig"
 
 #: ../src/ptk/ptk-file-task.c:1322
 #, c-format
@@ -6110,7 +6111,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-menu.c:1942 ../src/ptk/ptk-file-misc.c:1606
 msgid "new"
-msgstr ""
+msgstr "neu"
 
 #: ../src/ptk/ptk-file-misc.c:150
 #, c-format

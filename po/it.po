@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-13 19:37+0000\n"
-"PO-Revision-Date: 2013-02-14 00:50+0000\n"
+"PO-Revision-Date: 2013-02-14 16:01+0000\n"
 "Last-Translator: ihaveadrin <asbrasbra@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -96,7 +96,7 @@ msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nContributori:\n   BwackNinja <Bwa
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
-msgstr "Alessandro Pellizzari <alex@amiran.it>"
+msgstr "Teodoro Santoni <asbrasbra@gmail.com>"
 
 #: ../data/ui/about-dlg.ui.h:32
 msgid ""
@@ -142,7 +142,7 @@ msgstr "Aperto nel Terminale"
 
 #: ../data/ui/appchooserdlg.ui.h:9
 msgid "_Set as default"
-msgstr ""
+msgstr "Imposta come predefinito"
 
 #: ../data/ui/file_properties.ui.h:1
 msgid "File Properties"
@@ -150,23 +150,23 @@ msgstr "Proprietà File"
 
 #: ../data/ui/file_properties.ui.h:2
 msgid "<b>File_name:</b>"
-msgstr ""
+msgstr "<b>Nome_file:</b>"
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
 msgid "<b>Type:</b>"
-msgstr ""
+msgstr "<b>Tipo:</b>"
 
 #: ../data/ui/file_properties.ui.h:4
 msgid "<b>Total Size:</b>"
-msgstr ""
+msgstr "<b>Dimensione totale:</b>"
 
 #: ../data/ui/file_properties.ui.h:5
 msgid "<b>Modified:</b>"
-msgstr ""
+msgstr "<b>Modificato il:</b>"
 
 #: ../data/ui/file_properties.ui.h:6
 msgid "<b>Accessed:</b>"
-msgstr ""
+msgstr "<b>Ultimo accesso:</b>"
 
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
@@ -174,19 +174,19 @@ msgstr "<b>Locazione:</b>"
 
 #: ../data/ui/file_properties.ui.h:8
 msgid "<b>Size On Disk:</b>"
-msgstr ""
+msgstr "<b>Dimensione su disco:</b>"
 
 #: ../data/ui/file_properties.ui.h:9
 msgid "<b>Count:</b>"
-msgstr ""
+msgstr "<b>Quantità:</b>"
 
 #: ../data/ui/file_properties.ui.h:10
 msgid "<b>Opens _With:</b>"
-msgstr ""
+msgstr "<b>Apri_Con:</b>"
 
 #: ../data/ui/file_properties.ui.h:11 ../src/settings.c:10509
 msgid "_Info"
-msgstr ""
+msgstr "_Informazioni"
 
 #: ../data/ui/file_properties.ui.h:12
 msgid "<b>_Owner:</b>"
@@ -206,7 +206,7 @@ msgstr "<b>Gruppo:</b>"
 
 #: ../data/ui/file_properties.ui.h:16
 msgid "<b>Other:</b>"
-msgstr ""
+msgstr "<b>Altro:</b>"
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
@@ -234,7 +234,7 @@ msgstr "Sticky"
 
 #: ../data/ui/file_properties.ui.h:23
 msgid "Recursive (apply changes to folder contents)"
-msgstr ""
+msgstr "Applica al contenuto della cartella"
 
 #: ../data/ui/file_properties.ui.h:24 ../src/settings.c:10512
 msgid "_Permissions"
@@ -242,44 +242,44 @@ msgstr "_Permessi"
 
 #: ../data/ui/find-files.ui.h:1 ../data/ui/find-files2.ui.h:1
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #: ../data/ui/find-files.ui.h:2 ../data/ui/find-files2.ui.h:2
 #: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
 msgid "KB"
-msgstr ""
+msgstr "KB"
 
 #: ../data/ui/find-files.ui.h:3 ../data/ui/find-files2.ui.h:3
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: ../data/ui/find-files.ui.h:4 ../data/ui/find-files2.ui.h:4
 msgid "GB"
-msgstr ""
+msgstr "GB"
 
 #: ../data/ui/find-files.ui.h:5 ../data/ui/find-files2.ui.h:5
 msgid "Any"
-msgstr ""
+msgstr "Tutti"
 
 #: ../data/ui/find-files.ui.h:6 ../data/ui/find-files2.ui.h:6
 msgid "Within One Day"
-msgstr ""
+msgstr "Ultime 24 ore"
 
 #: ../data/ui/find-files.ui.h:7 ../data/ui/find-files2.ui.h:7
 msgid "Within One Week"
-msgstr ""
+msgstr "Ultima settimana"
 
 #: ../data/ui/find-files.ui.h:8 ../data/ui/find-files2.ui.h:8
 msgid "Within One Month"
-msgstr ""
+msgstr "Ultimo mese"
 
 #: ../data/ui/find-files.ui.h:9 ../data/ui/find-files2.ui.h:9
 msgid "Within One Year"
-msgstr ""
+msgstr "Ultimo anno"
 
 #: ../data/ui/find-files.ui.h:10 ../data/ui/find-files2.ui.h:10
 msgid "Within Selected Date Range"
-msgstr ""
+msgstr "Nell'intervallo date selezionato"
 
 #: ../data/ui/find-files.ui.h:11 ../data/ui/find-files2.ui.h:11
 msgid "Find Files"
@@ -288,7 +288,7 @@ msgstr "Cerca File"
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
 msgid "<b>Filename:</b>"
-msgstr ""
+msgstr "<b>Nome file:</b>"
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
@@ -320,11 +320,11 @@ msgstr "<b>Cerca nei file di tipo</b>"
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
 msgid "Search in subfolders"
-msgstr ""
+msgstr "Cerca nelle sottocartelle"
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
 msgid "Search hidden files"
-msgstr ""
+msgstr "Cerca fra i file nascosti"
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
@@ -384,47 +384,47 @@ msgstr "Vai alla cartella"
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
 msgid "Open In Current Tab"
-msgstr ""
+msgstr "Apti nella scheda corrente"
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
 msgid "Open In New Tab"
-msgstr ""
+msgstr "Apri in una nuova scheda"
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
-msgstr ""
+msgstr "Esteso"
 
 #: ../data/ui/prefdlg.ui.h:4 ../data/ui/prefdlg2.ui.h:4
 msgid "Fit"
-msgstr ""
+msgstr "Adatta"
 
 #: ../data/ui/prefdlg.ui.h:5 ../data/ui/prefdlg2.ui.h:5
 msgid "Center"
-msgstr ""
+msgstr "Centrato"
 
 #: ../data/ui/prefdlg.ui.h:6 ../data/ui/prefdlg2.ui.h:6
 msgid "Tile"
-msgstr ""
+msgstr "Affiancato"
 
 #: ../data/ui/prefdlg.ui.h:7 ../data/ui/prefdlg2.ui.h:7
 msgid "Zoom"
-msgstr ""
+msgstr "Ingrandito"
 
 #: ../data/ui/prefdlg.ui.h:8 ../data/ui/prefdlg2.ui.h:8
 msgid "Automatic"
-msgstr ""
+msgstr "Modalità Automatica"
 
 #: ../data/ui/prefdlg.ui.h:9 ../data/ui/prefdlg2.ui.h:9
 msgid "Copy (Ctrl+Drag)"
-msgstr ""
+msgstr "Copia (Ctrl+Trascina)"
 
 #: ../data/ui/prefdlg.ui.h:10 ../data/ui/prefdlg2.ui.h:10
 msgid "Move (Shift+Drag)"
-msgstr ""
+msgstr "Muovi (Shift+Trascina)"
 
 #: ../data/ui/prefdlg.ui.h:11 ../data/ui/prefdlg2.ui.h:11
 msgid "Link (Ctrl+Shift+Drag)"
-msgstr ""
+msgstr "Crea collegamento (Ctrl+Shift+Trascina)"
 
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
 msgid "Preferences"
@@ -432,15 +432,15 @@ msgstr "Preferenze"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
 msgid "Small Icons:"
-msgstr ""
+msgstr "Icone piccole:"
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
-msgstr ""
+msgstr "Icone grandi:"
 
 #: ../data/ui/prefdlg.ui.h:15 ../data/ui/prefdlg2.ui.h:15
 msgid "Toolbar Icons:"
-msgstr ""
+msgstr "Icone barra degli strumenti:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Display</b>"
@@ -448,7 +448,7 @@ msgstr "<b>Display</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
-msgstr ""
+msgstr "Apri i file con un singolo click"
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
@@ -456,11 +456,11 @@ msgstr "Segnalibri:"
 
 #: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Mostra anteprime"
 
 #: ../data/ui/prefdlg.ui.h:20 ../data/ui/prefdlg2.ui.h:20
 msgid "Max Pic Size To Thumbnail:"
-msgstr ""
+msgstr "Dimensione massima immagini d'anteprima:"
 
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "<b>Behavior</b>"
@@ -476,27 +476,27 @@ msgstr "Mostra sempre la barra delle schede"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
 msgid "Hide 'Close Tab' buttons"
-msgstr ""
+msgstr "Nascondi tasti 'Chiudi Scheda'"
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
-msgstr ""
+msgstr "Chiedi conferma cancellazioni/rimozioni"
 
 #: ../data/ui/prefdlg.ui.h:27 ../data/ui/prefdlg2.ui.h:27
 msgid "Click runs executables"
-msgstr ""
+msgstr "Avvia eseguibili cliccando"
 
 #: ../data/ui/prefdlg.ui.h:28 ../data/ui/prefdlg2.ui.h:28
 msgid "SI File Sizes (1K = 1000) (requires restart)"
-msgstr ""
+msgstr "Dimensione file SI (1K = 1000) (è necessario riavviare SpaceFM)"
 
 #: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
 msgid "Show root user indicator color"
-msgstr ""
+msgstr "Colore per evidenziare utente root"
 
 #: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
 msgid "Default Drag Action:"
-msgstr ""
+msgstr "Azione predefinita quando si trascinano elementi:"
 
 #: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
 msgid "I_nterface"
@@ -516,7 +516,7 @@ msgstr "Mostra icone dei dischi sul desktop"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr ""
+msgstr "Mostra il menù del gestore finestre cliccando col tasto destro del mouse"
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
@@ -568,43 +568,43 @@ msgstr "Terminale:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
 msgid "Terminal SU:"
-msgstr ""
+msgstr "Comando SU da terminale:"
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
-msgstr ""
+msgstr "SU grafico:"
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
 msgid "Filename Encoding:"
-msgstr ""
+msgstr "Codifica caratteri per i nomi dei files:"
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
 msgid "Editor:"
-msgstr ""
+msgstr "Editor testi:"
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
 msgid "Run editor in terminal"
-msgstr ""
+msgstr "Avvia l'editor da terminale"
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
-msgstr ""
+msgstr "Editor testi (utente root):"
 
 #: ../data/ui/prefdlg.ui.h:54 ../data/ui/prefdlg2.ui.h:54
 msgid "Run root's editor in terminal"
-msgstr ""
+msgstr "Avvia l'editor da terminale (utente root)"
 
 #: ../data/ui/prefdlg.ui.h:55 ../data/ui/prefdlg2.ui.h:55
 msgid "Date Format:"
-msgstr ""
+msgstr "Formato data:"
 
 #: ../data/ui/prefdlg.ui.h:56 ../data/ui/prefdlg2.ui.h:56
 msgid "(requires reload)"
-msgstr ""
+msgstr "(è necessario riavviare SpaceFM)"
 
 #: ../data/ui/prefdlg.ui.h:57 ../data/ui/prefdlg2.ui.h:57
 msgid "Date Display"
-msgstr ""
+msgstr "Mostra data"
 
 #: ../data/ui/prefdlg.ui.h:58 ../data/ui/prefdlg2.ui.h:58
 msgid "_Advanced"
@@ -933,12 +933,12 @@ msgid ""
 "    @FILE    A text file from which to read a value.  In some cases this file\n"
 "             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
-msgstr ""
+msgstr "    @FILE    Un file di testo da cui leggere un valore. In alcuni casi questo file\n             è monitorato, quindi inserire un nuovo valore aggiornerà\n             l'elemento. In altri casi, il file specificherà un valore iniziale.\n"
 
 #: ../src/cust-dialog.c:3708
 #, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
-msgstr ""
+msgstr "    SAVEFILE I contenuti di un editor o di un visualizzatore saranno salvati in questo file.\n"
 
 #: ../src/cust-dialog.c:3709
 #, c-format
@@ -951,7 +951,7 @@ msgid ""
 "                 %%NAME        Value of element named NAME (eg: %%input1)\n"
 "                 %%(command)   stdout from a bash command line\n"
 "                 %%%%           %%\n"
-msgstr ""
+msgstr "    COMMAND  Un comando interno o eseguibile seguito da parametri. Separa\n             comandi multipli intervallando con --.\n             I seguenti alias possono essere usati nei COMMAND:\n                 %%n           Nome dell'elemento prelevato\n                 %%v           Valore dell'elemento prelevato\n                 %%NAME        Valore dell'elemento chiamato NAME (esempio: %%input1)\n                 %%(command)   stdout da un comando eseguito in bash shell\n                 %%%%           %%\n"
 
 #: ../src/cust-dialog.c:3710
 #, c-format
@@ -964,7 +964,7 @@ msgid ""
 "             In --label elements only, if the first character in LABEL is a\n"
 "             tilde (~), pango markup may be used.  For example:\n"
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
-msgstr ""
+msgstr "    LABEL    I seguenti caratteri escape non vengono processati in LABEL:\n                 \\n   newline\n                 \\t   tab\n                 \\\"   \"\n                 \\\\   \\\n             Negli elementi --label, se il primo carattere di LABEL è una\n             tilde (~), può essere utilizzato il markup pango.  Ad esempio:\n                 --label '~Testo base. <b>Grassetto.</b>'\n"
 
 #: ../src/cust-dialog.c:3712
 #, c-format
@@ -974,21 +974,21 @@ msgid ""
 "added to any element.  Also, a --font option may be used with most element\n"
 "types to change the element's font and font size.  For example:\n"
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
-msgstr ""
+msgstr "\nAssieme alle opzioni OPTIONS mostrate sopra, --compact o --expand possono essere aggiunte \na qualsiasi elemento. Inoltre, un'opzione --font può essere introdotta in gran parte degli elementi\nper modificare il tipo e la dimensione dei font usati. Ad esempio:\n    --input --font \"Times New Roman 16\" \"Testo Predefinito\"\n"
 
 #: ../src/cust-dialog.c:3714
 #, c-format
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
-msgstr ""
+msgstr "\nCOMANDI INTERNI:\n"
 
 #: ../src/cust-dialog.c:3725
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
-msgstr ""
+msgstr "\nESEMPIO CON COMANDI:\n"
 
 #: ../src/cust-dialog.c:3726
 #, c-format
@@ -997,14 +997,14 @@ msgid ""
 "               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n"
 "               --label \\\n"
 "               --button ok\n"
-msgstr ""
+msgstr "    spacefm -g --label \"Inserisci del testo e premi Invio:\" \\\n               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n               --label \\\n               --button ok\n"
 
 #: ../src/cust-dialog.c:3728
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
-msgstr ""
+msgstr "\nSCRIPT DI ESEMPIO:\n"
 
 #: ../src/cust-dialog.c:3729
 #, c-format
@@ -1018,35 +1018,35 @@ msgid ""
 "    else\n"
 "        echo \"User did NOT press Yes - abort\"\n"
 "    fi\n"
-msgstr ""
+msgstr "    #!/bin/bash\n    # Questo script mostra una finestra di dialogo a doppia uscita (Sì o No)\n    # Usa QUOTED eval per leggere le variabili in uscita dalla finestra di dialogo SpaceFM:\n    eval \"`spacefm -g --label \"Sei sicuro?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"Utente ha premuto Sì - Fai qualche cosa\"\n    else\n"
 
 #: ../src/cust-dialog.c:3730
 #, c-format
 msgid ""
 "\n"
 "For full documentation and examples see the SpaceFM User's Manual:\n"
-msgstr ""
+msgstr "\nPer la documentazione completa ed esempi, vedi il manuale utente di SpaceFM:\n"
 
 #: ../src/cust-dialog.c:3757
 #, c-format
 msgid "spacefm: argument is not valid UTF-8\n"
-msgstr ""
+msgstr "spacefm: parametro non UTF-8\n"
 
 #: ../src/cust-dialog.c:3804
 msgid "invalid dialog option"
-msgstr ""
+msgstr "Opzione non valida"
 
 #: ../src/cust-dialog.h:12
 msgid "Set window title"
-msgstr ""
+msgstr "Imposta titolo della finestra"
 
 #: ../src/cust-dialog.h:14
 msgid "Set window icon"
-msgstr ""
+msgstr "Imposta icona della finestra"
 
 #: ../src/cust-dialog.h:16
 msgid "Add a text label"
-msgstr ""
+msgstr "Aggiungi una casella di testo"
 
 #: ../src/cust-dialog.h:18
 msgid "Add STOCK dialog button, or LABEL button with ICON"
