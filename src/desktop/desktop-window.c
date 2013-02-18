@@ -46,6 +46,7 @@
 #include <X11/Xatom.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
+#include <fnmatch.h>
 
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <cairo-xlib.h>
@@ -1138,20 +1139,12 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
         /* if ctrl / shift is not pressed, deselect all. */
         if( ! (evt->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)) )
         {
-            /* don't cancel selection if clicking on selected items */
+            /* don't cancel selection if clicking on selected items OR
+             * clicking on desktop with right button */
             if( !( (evt->button == 1 || evt->button == 3 || evt->button == 0)
-                                && clicked_item && clicked_item->is_selected) )
-            {
-                for( l = self->items; l ;l = l->next )
-                {
-                    item = (DesktopItem*) l->data;
-                    if( item->is_selected )
-                    {
-                        item->is_selected = FALSE;
-                        redraw_item( self, item );
-                    }
-                }
-            }
+                                && clicked_item && clicked_item->is_selected)
+                        && !( !clicked_item && evt->button == 3 ) )
+                desktop_window_select( self, DW_SELECT_NONE );
         }
 
         if( clicked_item )
@@ -1898,16 +1891,64 @@ void focus_item( DesktopWindow* self, DesktopItem* item )
     redraw_item( self, item );
 }
 
-void clear_selection( DesktopWindow* self )
+void desktop_window_select( DesktopWindow* self, DWSelectMode mode )
 {
+    char* key;
+    char* name;
+    gboolean icase = FALSE;
+    
+    if ( mode < DW_SELECT_ALL || mode > DW_SELECT_PATTERN )
+        return;
+
+    if ( mode == DW_SELECT_PATTERN )
+    {
+        // get pattern from user  (store in ob1 so it's not saved)
+        XSet* set = xset_get( "select_patt" );
+        if ( !xset_text_dialog( GTK_WIDGET( self ), _("Select By Pattern"), NULL, FALSE, _("Enter pattern to select files and folders:\n\nIf your pattern contains any uppercase characters, the matching will be case sensitive.\n\nExample:  *sp*e?m*\n\nTIP: You can also enter '%% PATTERN' in the path bar."),
+                                            NULL, set->ob1, &set->ob1,
+                                            NULL, FALSE, NULL ) || !set->ob1 )
+            return;
+        key = set->ob1;
+
+        // case insensitive search ?
+        char* lower_key = g_utf8_strdown( key, -1 );
+        if ( !strcmp( lower_key, key ) )
+        {
+            // key is all lowercase so do icase search
+            icase = TRUE;
+        }
+        g_free( lower_key );
+    }
+    else
+        key = NULL;
+
     GList* l;
     DesktopItem* item;
+    gboolean sel;
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*) l->data;
-        if ( item->is_selected )
+        if ( mode == DW_SELECT_ALL )
+            sel = TRUE;
+        else if ( mode == DW_SELECT_NONE )
+            sel = FALSE;
+        else if ( mode == DW_SELECT_INVERSE )
+            sel = !item->is_selected;
+        else
         {
-            item->is_selected = FALSE;
+            // DW_SELECT_PATTERN - test name
+            name = (char*)vfs_file_info_get_disp_name( item->fi );
+            if ( icase )
+                name = g_utf8_strdown( name, -1 );
+
+            sel = fnmatch( key, name, 0 ) == 0;
+
+            if ( icase )
+                g_free( name );
+        }
+        if ( sel != item->is_selected )
+        {
+            item->is_selected = sel;
             redraw_item( self, item );
         }
     }
@@ -1992,7 +2033,7 @@ gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            clear_selection( self );
+            desktop_window_select( self, DW_SELECT_NONE );
             focus_item( self, get_next_item( self, evt->keyval ) );
             if ( self->focus )
                 select_item( self, self->focus, TRUE );
@@ -2174,7 +2215,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 
             if ( l ) // found
             {
-                clear_selection( self );
+                desktop_window_select( self, DW_SELECT_NONE );
                 select_item( self, (DesktopItem*)l->data, TRUE );
                 focus_item( self, (DesktopItem*)l->data );
             }
@@ -2480,6 +2521,109 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     }
 }
 
+void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
+                                                char* cwd, char* setname )
+{
+    if ( !setname || !desktop || !sel_files )
+        return;
+    XSet* set2;
+    char* copy_dest = NULL;
+    char* move_dest = NULL;
+    char* path;
+    
+    if ( !strcmp( setname, "copy_loc_last" ) )
+    {
+        set2 = xset_get( "copy_loc_last" );
+        copy_dest = g_strdup( set2->desc );
+    }
+    else if ( !strcmp( setname, "move_loc_last" ) )
+    {
+        set2 = xset_get( "copy_loc_last" );
+        move_dest = g_strdup( set2->desc );
+    }
+    else if ( strcmp( setname, "copy_loc" ) && strcmp( setname, "move_loc" ) )
+        return;
+
+    if ( !strcmp( setname, "copy_loc" ) || !strcmp( setname, "move_loc" ) ||
+                                            ( !copy_dest && !move_dest ) )
+    {
+        char* folder;
+        set2 = xset_get( "copy_loc_last" );
+        if ( set2->desc )
+            folder = set2->desc;
+        else
+            folder = cwd;
+        path = xset_file_dialog( GTK_WIDGET( desktop ),
+                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                            _("Choose Location"), folder, NULL );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        {
+            if ( g_str_has_prefix( setname, "copy_loc" ) )
+                copy_dest = path;
+            else
+                move_dest = path;
+            set2 = xset_get( "copy_loc_last" );
+            xset_set_set( set2, "desc", path );
+        }
+        else
+            return;
+    }
+    
+    if ( copy_dest || move_dest )
+    {
+        int file_action;
+        char* dest_dir;
+        
+        if ( copy_dest )
+        {
+            file_action = VFS_FILE_TASK_COPY;
+            dest_dir = copy_dest;
+        }
+        else
+        {
+            file_action = VFS_FILE_TASK_MOVE;
+            dest_dir = move_dest;
+        }
+        
+        if ( !strcmp( dest_dir, cwd ) )
+        {
+            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                        _("Invalid Destination"), NULL, 0,
+                                        _("Destination same as source"), NULL, NULL );
+            g_free( dest_dir );
+            return;
+        }
+
+        // rebuild sel_files with full paths
+        GList* file_list = NULL;
+        GList* sel;
+        char* file_path;
+        VFSFileInfo* file;
+        for ( sel = sel_files; sel; sel = sel->next )
+        {
+            file = ( VFSFileInfo* ) sel->data;
+            file_path = g_build_filename( cwd,
+                                          vfs_file_info_get_name( file ), NULL );
+            file_list = g_list_prepend( file_list, file_path );
+        }
+
+        // task
+        PtkFileTask* task = ptk_file_task_new( file_action,
+                                file_list,
+                                dest_dir,
+                                GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
+                                                                desktop ) ) ),
+                                NULL );
+        ptk_file_task_run( task );
+        g_free( dest_dir );
+    }
+    else
+    {
+        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                    _("Invalid Destination"), NULL, 0,
+                                    _("Invalid destination"), NULL, NULL );
+    }
+}
 
 /*-------------- Private methods -------------------*/
 

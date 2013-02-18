@@ -44,6 +44,9 @@ void ptk_clipboard_copy_text( const char* text );  //MOD added
 
 void ptk_clipboard_copy_file_list( char** path, gboolean copy ); //sfm
 
+GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
+                                                    gint* missing_targets ); //sfm
+
 G_END_DECLS
 
 #endif

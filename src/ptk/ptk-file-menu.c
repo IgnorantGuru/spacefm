@@ -98,6 +98,11 @@ on_popup_copy_name_activate ( GtkMenuItem *menuitem,
 void
 on_popup_copy_parent_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data );   //MOD added
+
+void
+on_popup_paste_as_activate ( GtkMenuItem *menuitem,
+                          PtkFileMenu* data );   //sfm added
+
 static void
 on_popup_delete_activate ( GtkMenuItem *menuitem,
                            PtkFileMenu* data );
@@ -291,9 +296,13 @@ void on_copycmd( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
         set = (XSet*)g_object_get_data( G_OBJECT( menuitem ), "set" );
     else
         set = set2;
-    
-    if ( set && data->browser )
+    if ( !set )
+        return;
+    if ( data->browser )
         ptk_file_browser_copycmd( data->browser, data->sel_files, data->cwd,
+                                                                    set->name );
+    else if ( data->desktop )
+        desktop_window_copycmd( data->desktop, data->sel_files, data->cwd,
                                                                     set->name );
 }
 
@@ -304,9 +313,9 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
         set = (XSet*)g_object_get_data( G_OBJECT( menuitem ), "set" );
     else
         set = set2;
-    if ( set && data->browser )
-        ptk_file_browser_rootcmd( data->browser, data->sel_files, data->cwd,
-                                                                    set->name );
+    if ( set )
+        ptk_file_misc_rootcmd( data->desktop, data->browser, data->sel_files,
+                                                        data->cwd, set->name );
 }
 
 void on_popup_select_pattern( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -510,6 +519,31 @@ void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* deskt
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
     return;
+}
+
+void on_popup_desktop_select( GtkMenuItem *menuitem,
+                                            DesktopWindow* desktop, XSet* set2 )
+{
+    XSet* set;
+    if ( menuitem )
+        set = (XSet*)g_object_get_data( G_OBJECT( menuitem ), "set" );
+    else
+        set = set2;
+    if ( !( set && set->name && desktop ) )
+        return;
+        
+    DWSelectMode mode;
+    if ( !strcmp( set->name, "select_all" ) )
+        mode = DW_SELECT_ALL;
+    else if ( !strcmp( set->name, "select_un" ) )
+        mode = DW_SELECT_NONE;
+    else if ( !strcmp( set->name, "select_invert" ) )
+        mode = DW_SELECT_INVERSE;
+    else if ( !strcmp( set->name, "select_patt" ) )
+        mode = DW_SELECT_PATTERN;
+    else
+        return;
+    desktop_window_select( desktop, mode );
 }
 
 static void ptk_file_menu_free( PtkFileMenu *data )
@@ -1022,8 +1056,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         set = xset_set_cb( "paste_target", on_popup_paste_target_activate, data );
         set->disable = !is_clip || no_write_access;
 
-        set = xset_set_cb( "paste_as", ptk_file_browser_paste_as, browser );
-            set->disable = !is_clip || !browser;
+        set = xset_set_cb( "paste_as", on_popup_paste_as_activate, data );
+            set->disable = !is_clip;
 
         set = xset_set_cb( "root_copy_loc", on_popup_rootcmd_activate, data );
             xset_set_ob1( set, "set", set );
@@ -1038,12 +1072,22 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         set = xset_set_cb( "edit_hide", on_hide_file, data );
         set->disable = !sel_files || no_write_access || desktop || !browser;
 
-        xset_set_cb( "select_all", ptk_file_browser_select_all, data->browser );
-        set = xset_set_cb( "select_un", ptk_file_browser_unselect_all, browser );
-        set->disable = !sel_files;
-        xset_set_cb( "select_invert", ptk_file_browser_invert_selection, browser );
-        xset_set_cb( "select_patt", on_popup_select_pattern, data );
-
+        if ( browser )
+        {
+            xset_set_cb( "select_all", ptk_file_browser_select_all, data->browser );
+            set = xset_set_cb( "select_un", ptk_file_browser_unselect_all, browser );
+            set->disable = !sel_files;
+            xset_set_cb( "select_invert", ptk_file_browser_invert_selection, browser );
+            xset_set_cb( "select_patt", on_popup_select_pattern, data );
+        }
+        else
+        {
+            xset_set_cb( "select_all", on_popup_desktop_select, desktop );
+            set = xset_set_cb( "select_un", on_popup_desktop_select, desktop );
+            set->disable = !sel_files;
+            xset_set_cb( "select_invert", on_popup_desktop_select, desktop );
+            xset_set_cb( "select_patt", on_popup_desktop_select, desktop );
+        }
 
         static const char* copycmd[] =
         {
@@ -1095,13 +1139,22 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
 
         // enables
-        if ( browser )
+        set = xset_get( "copy_loc_last" );
+        set2 = xset_get( "move_loc_last" );
+        
+        if ( desktop )
         {
-            set = xset_get( "copy_loc_last" );
-            set->disable = !set->desc;
-            set2 = xset_get( "move_loc_last" );
-            set2->disable = set->disable;
-            
+            set = xset_get( "copy_tab" );
+            set->disable = TRUE;
+            set = xset_get( "copy_panel" );
+            set->disable = TRUE;
+            set = xset_get( "move_tab" );
+            set->disable = TRUE;
+            set = xset_get( "move_panel" );
+            set->disable = TRUE;
+        }
+        else
+        {
             set = xset_get( "copy_tab_prev" );
             set->disable = ( tab_num == 1 );
             set = xset_get( "copy_tab_next" );
@@ -1119,7 +1172,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             set->disable = ( panel_count < 2 );
             set = xset_get( "move_panel_next" );
             set->disable = ( panel_count < 2 );
-            
+        
             gboolean b;
             for ( i = 1; i < 11; i++ )
             {
@@ -1151,13 +1204,13 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
         
         set = xset_get( "copy_to" );
-        set->disable = !sel_files || !browser;
+        set->disable = !sel_files;
         
         set = xset_get( "move_to" );
-        set->disable = !sel_files || !browser;
+        set->disable = !sel_files;
 
         set = xset_get( "edit_root" );
-        set->disable = ( geteuid() == 0 ) || !browser || !sel_files;
+        set->disable = ( geteuid() == 0 ) || !sel_files;
 
         set = xset_get( "edit_submenu" );
         xset_add_menuitem( desktop, browser, popup, accel_group, set );
@@ -1181,8 +1234,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     set = xset_get( "sep_edit" );
     xset_add_menuitem( desktop, browser, popup, accel_group, set );
-    //item = gtk_separator_menu_item_new ();
-    //gtk_menu_shell_append( popup, item );
 
     // View >
     if ( browser )
@@ -1455,7 +1506,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         item = GTK_MENU_ITEM( xset_add_menuitem( desktop, browser, popup,
                                                         accel_group, set ) );
 
-        set = xset_set_cb( "desk_pref", on_popup_desktop_pref_activate, data );
+        set = xset_set_cb( "desk_pref", on_popup_desktop_pref_activate, desktop );
         xset_add_menuitem( desktop, browser, popup, accel_group, set );
     }
     
@@ -2423,9 +2474,12 @@ void
 on_popup_paste_link_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //MOD added
 {
-    // ignore sel_files and use browser's sel files
     if ( data->browser )
         ptk_file_browser_paste_link( data->browser );
+    else if ( data->desktop )
+        ptk_clipboard_paste_links(
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
+            data->cwd, NULL );
 }
 
 void
@@ -2434,7 +2488,13 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
 {
     if ( data->browser )
         ptk_file_browser_paste_target( data->browser );
+    else if ( data->desktop )
+        ptk_clipboard_paste_targets(
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
+            data->cwd,
+            NULL );
 }
+
 void
 on_popup_copy_text_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //MOD added
@@ -2455,6 +2515,13 @@ on_popup_copy_parent_activate ( GtkMenuItem *menuitem,
 {
     if ( data->cwd )
         ptk_clipboard_copy_text( data->cwd );
+}
+
+void
+on_popup_paste_as_activate ( GtkMenuItem *menuitem,
+                          PtkFileMenu* data )   //sfm added
+{
+    ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd );
 }
 
 void

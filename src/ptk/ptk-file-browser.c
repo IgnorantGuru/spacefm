@@ -5396,106 +5396,6 @@ _done:
     vfs_file_info_list_free( sel_files );
 }
 
-void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
-    GdkAtom gnome_target;
-    GdkAtom uri_list_target;
-    gchar **uri_list, **puri;
-    GtkSelectionData* sel_data = NULL;
-    GList* files = NULL;
-    gchar* file_path;
-    gint missing_targets = 0;
-    char* str;
-    gboolean is_cut = FALSE;
-    char* uri_list_str;
-    VFSFileInfo* file;
-    char* file_dir;
-
-    const char* cwd = ptk_file_browser_get_cwd( file_browser );
-    
-    // get files from clip
-    gnome_target = gdk_atom_intern( "x-special/gnome-copied-files", FALSE );
-    sel_data = gtk_clipboard_wait_for_contents( clip, gnome_target );
-    if ( sel_data )
-    {
-        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
-
-        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
-        is_cut = ( 0 == strncmp( ( char* ) gtk_selection_data_get_data ( sel_data ), "cut", 3 ) );
-
-        if ( uri_list_str )
-        {
-            while ( *uri_list_str && *uri_list_str != '\n' )
-                ++uri_list_str;
-        }
-    }
-    else
-    {
-        uri_list_target = gdk_atom_intern( "text/uri-list", FALSE );
-        sel_data = gtk_clipboard_wait_for_contents( clip, uri_list_target );
-        if ( ! sel_data )
-            return ;
-        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
-        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
-    }
-
-    if ( !uri_list_str )
-        return;
-
-    // create file list
-    puri = uri_list = g_uri_list_extract_uris( uri_list_str );
-    while ( *puri )
-    {
-        file_path = g_filename_from_uri( *puri, NULL, NULL );
-        if ( file_path )
-        {
-            if ( g_file_test( file_path, G_FILE_TEST_EXISTS ) )             
-            {
-                files = g_list_prepend( files, file_path );
-            }
-            else
-                missing_targets++;
-        }
-        ++puri;
-    }
-    g_strfreev( uri_list );
-    gtk_selection_data_free( sel_data );
-
-    GList* l;
-    GtkWidget* parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-    
-    for ( l = files; l; l = l->next )
-    {
-        file_path = (char*)l->data;
-        file = vfs_file_info_new();
-        vfs_file_info_get( file, file_path, NULL );
-        file_dir = g_path_get_dirname( file_path );
-        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut,
-                                                                    0, NULL ) )
-        {
-            vfs_file_info_unref( file );
-            g_free( file_dir );
-            missing_targets = 0;
-            break;
-        }
-        vfs_file_info_unref( file );
-        g_free( file_dir );
-    }
-    g_list_foreach( files, ( GFunc ) g_free, NULL );
-    g_list_free( files );
-
-    if ( missing_targets > 0 )
-        ptk_show_error( GTK_WINDOW( parent ),
-                        g_strdup_printf ( _("Error") ),
-                        g_strdup_printf ( "%i target%s missing",
-                        missing_targets, 
-                        missing_targets > 1 ? g_strdup_printf ( "s are" ) : 
-                        g_strdup_printf ( " is" ) ) );
-}
-
 /*
 void ptk_file_browser_paste_move( PtkFileBrowser* file_browser, char* setname )
 {
@@ -5714,7 +5614,10 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
         set2 = xset_get( "copy_loc_last" );
         move_dest = g_strdup( set2->desc );
     }
-    else if ( !strcmp( setname, "copy_loc" ) || !strcmp( setname, "move_loc" ) )
+    
+    if ( ( g_str_has_prefix( setname, "copy_loc" ) ||
+                                g_str_has_prefix( setname, "move_loc" ) ) &&
+                                                !copy_dest && !move_dest )
     {
         char* folder;
         set2 = xset_get( "copy_loc_last" );
@@ -5727,7 +5630,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
                                             _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
-            if ( !strcmp( setname, "copy_loc" ) )
+            if ( g_str_has_prefix( setname, "copy_loc" ) )
                 copy_dest = path;
             else
                 move_dest = path;
@@ -5792,109 +5695,6 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
-}
-
-void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
-                                                char* cwd, char* setname )
-{
-    /*
-     * root_copy_loc    copy to location
-     * root_move2       move to
-     * root_delete      delete
-     */
-    if ( !setname || !file_browser || !sel_files )
-        return;
-    XSet* set;
-    char* path;
-    char* cmd;
-    char* task_name;
-    
-    char* file_paths = g_strdup( "" );
-    GList* sel;
-    char* file_path;
-    char* file_path_q;
-    char* str;
-    int item_count = 0;
-    for ( sel = sel_files; sel; sel = sel->next )
-    {
-        file_path = g_build_filename( cwd,
-                    vfs_file_info_get_name( ( VFSFileInfo* ) sel->data ), NULL );
-        file_path_q = bash_quote( file_path );
-        str = file_paths;
-        file_paths = g_strdup_printf( "%s %s", file_paths, file_path_q );
-        g_free( str );
-        g_free( file_path );
-        g_free( file_path_q );
-        item_count++;
-    }
-    
-    if ( !strcmp( setname, "root_delete" ) )
-    {
-        if ( !app_settings.no_confirm )
-        {
-            str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
-                                             "Delete %d selected items as root ?",
-                                             item_count ), item_count );
-            if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_WARNING,
-                                _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
-                                _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
-            {
-                g_free( str );
-                return;
-            }
-            g_free( str );
-        }
-        cmd = g_strdup_printf( "rm -r %s", file_paths );
-        task_name = g_strdup( _("Delete As Root") );
-    }
-    else
-    {
-        char* folder;
-        set = xset_get( setname );
-        if ( set->desc )
-            folder = set->desc;
-        else
-            folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( file_browser ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                                _("Choose Location"), folder, NULL );
-        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
-        {
-            xset_set_set( set, "desc", path );
-            char* quote_path = bash_quote( path );
-            
-            if ( !strcmp( setname, "root_move2" ) )
-            {
-                task_name = g_strdup( _("Move As Root") );
-                // problem: no warning if already exists
-                cmd = g_strdup_printf( "mv -f %s %s", file_paths, quote_path );
-            }
-            else
-            {
-                task_name = g_strdup( _("Copy As Root") );
-                // problem: no warning if already exists
-                cmd = g_strdup_printf( "cp -r %s %s", file_paths, quote_path );
-            }
-            
-            g_free( quote_path );
-            g_free( path );
-        }
-        else
-            return;
-    }
-    g_free( file_paths );
-
-    // root task
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
-                                            file_browser->task_view );
-    g_free( task_name );
-    task->task->exec_command = cmd;
-    task->task->exec_sync = TRUE;
-    task->task->exec_popup = FALSE;
-    task->task->exec_show_output = FALSE;
-    task->task->exec_show_error = TRUE;
-    task->task->exec_export = FALSE;
-    task->task->exec_as_user = g_strdup( "root" );
-    ptk_file_task_run( task );          
 }
 
 void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -7314,7 +7114,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         else if ( !strcmp( xname, "target" ) )
             ptk_file_browser_paste_target( browser );
         else if ( !strcmp( xname, "as" ) )
-            ptk_file_browser_paste_as( NULL, browser );
+            ptk_file_misc_paste_as( NULL, browser, 
+                                        ptk_file_browser_get_cwd( browser ) );
     }
     else if ( g_str_has_prefix( set->name, "select_" ) )
     {

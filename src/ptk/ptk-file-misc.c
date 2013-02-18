@@ -31,6 +31,7 @@
 #include "vfs-app-desktop.h"
 #include "vfs-execute.h"
 #include "ptk-app-chooser.h"
+#include "ptk-clipboard.h"
 #include <gdk/gdkkeysyms.h>
 
 #include "settings.h"
@@ -3476,4 +3477,159 @@ void ptk_open_files_with_app( const char* cwd,
 
         g_free( new_dir );
     }
+}
+
+void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            const char* cwd )
+{
+    gchar* file_path;
+    char* str;
+    gboolean is_cut = FALSE;
+    gint missing_targets;
+    VFSFileInfo* file;
+    char* file_dir;
+        
+    GList* files = ptk_clipboard_get_file_paths( cwd, &is_cut, &missing_targets );
+    
+    GList* l;
+    
+    for ( l = files; l; l = l->next )
+    {
+        file_path = (char*)l->data;
+        file = vfs_file_info_new();
+        vfs_file_info_get( file, file_path, NULL );
+        file_dir = g_path_get_dirname( file_path );
+        if ( !ptk_rename_file( desktop, file_browser, file_dir, file, cwd, !is_cut,
+                                                                    0, NULL ) )
+        {
+            vfs_file_info_unref( file );
+            g_free( file_dir );
+            missing_targets = 0;
+            break;
+        }
+        vfs_file_info_unref( file );
+        g_free( file_dir );
+    }
+    g_list_foreach( files, ( GFunc ) g_free, NULL );
+    g_list_free( files );
+
+    if ( missing_targets > 0 )
+    {
+        GtkWidget* parent = NULL;
+        if ( file_browser )
+            parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+        else if ( desktop )
+            parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
+        ptk_show_error( GTK_WINDOW( parent ),
+                        g_strdup_printf ( _("Error") ),
+                        g_strdup_printf ( "%i target%s missing",
+                        missing_targets, 
+                        missing_targets > 1 ? g_strdup_printf ( "s are" ) : 
+                        g_strdup_printf ( " is" ) ) );
+    }
+}
+
+void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                GList* sel_files,
+                                                char* cwd, char* setname )
+{
+    /*
+     * root_copy_loc    copy to location
+     * root_move2       move to
+     * root_delete      delete
+     */
+    if ( !setname || ( !file_browser && !desktop ) || !sel_files )
+        return;
+    XSet* set;
+    char* path;
+    char* cmd;
+    char* task_name;
+    
+    GtkWidget* parent = desktop ? GTK_WIDGET( desktop ) : GTK_WIDGET( file_browser );
+    char* file_paths = g_strdup( "" );
+    GList* sel;
+    char* file_path;
+    char* file_path_q;
+    char* str;
+    int item_count = 0;
+    for ( sel = sel_files; sel; sel = sel->next )
+    {
+        file_path = g_build_filename( cwd,
+                    vfs_file_info_get_name( ( VFSFileInfo* ) sel->data ), NULL );
+        file_path_q = bash_quote( file_path );
+        str = file_paths;
+        file_paths = g_strdup_printf( "%s %s", file_paths, file_path_q );
+        g_free( str );
+        g_free( file_path );
+        g_free( file_path_q );
+        item_count++;
+    }
+    
+    if ( !strcmp( setname, "root_delete" ) )
+    {
+        if ( !app_settings.no_confirm )
+        {
+            str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
+                                             "Delete %d selected items as root ?",
+                                             item_count ), item_count );
+            if ( xset_msg_dialog( GTK_WIDGET( parent ), GTK_MESSAGE_WARNING,
+                                _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
+                                _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
+            {
+                g_free( str );
+                return;
+            }
+            g_free( str );
+        }
+        cmd = g_strdup_printf( "rm -r %s", file_paths );
+        task_name = g_strdup( _("Delete As Root") );
+    }
+    else
+    {
+        char* folder;
+        set = xset_get( setname );
+        if ( set->desc )
+            folder = set->desc;
+        else
+            folder = cwd;
+        path = xset_file_dialog( GTK_WIDGET( parent ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                                _("Choose Location"), folder, NULL );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        {
+            xset_set_set( set, "desc", path );
+            char* quote_path = bash_quote( path );
+            
+            if ( !strcmp( setname, "root_move2" ) )
+            {
+                task_name = g_strdup( _("Move As Root") );
+                // problem: no warning if already exists
+                cmd = g_strdup_printf( "mv -f %s %s", file_paths, quote_path );
+            }
+            else
+            {
+                task_name = g_strdup( _("Copy As Root") );
+                // problem: no warning if already exists
+                cmd = g_strdup_printf( "cp -r %s %s", file_paths, quote_path );
+            }
+            
+            g_free( quote_path );
+            g_free( path );
+        }
+        else
+            return;
+    }
+    g_free( file_paths );
+
+    // root task
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( parent ),
+                                file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+    task->task->exec_command = cmd;
+    task->task->exec_sync = TRUE;
+    task->task->exec_popup = FALSE;
+    task->task->exec_show_output = FALSE;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_export = FALSE;
+    task->task->exec_as_user = g_strdup( "root" );
+    ptk_file_task_run( task );          
 }

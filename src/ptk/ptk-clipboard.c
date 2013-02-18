@@ -411,7 +411,7 @@ void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                   files,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
-                                  GTK_WIDGET( task_view ) );
+                                  task_view ? GTK_WIDGET( task_view ) : NULL );
         ptk_file_task_run( task );
     }
 }
@@ -509,3 +509,70 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
     }
 }
 
+GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
+                                                    gint* missing_targets )
+{
+    GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
+    GdkAtom gnome_target;
+    GdkAtom uri_list_target;
+    gchar **uri_list, **puri;
+    GtkSelectionData* sel_data = NULL;
+    GList* files = NULL;
+    gchar* file_path;
+    char* uri_list_str;
+    
+    *is_cut = FALSE;
+    *missing_targets = 0;
+
+    // get files from clip
+    gnome_target = gdk_atom_intern( "x-special/gnome-copied-files", FALSE );
+    sel_data = gtk_clipboard_wait_for_contents( clip, gnome_target );
+    if ( sel_data )
+    {
+        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
+            return ;
+
+        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
+        *is_cut = ( 0 == strncmp( ( char* ) gtk_selection_data_get_data ( sel_data ), "cut", 3 ) );
+
+        if ( uri_list_str )
+        {
+            while ( *uri_list_str && *uri_list_str != '\n' )
+                ++uri_list_str;
+        }
+    }
+    else
+    {
+        uri_list_target = gdk_atom_intern( "text/uri-list", FALSE );
+        sel_data = gtk_clipboard_wait_for_contents( clip, uri_list_target );
+        if ( ! sel_data )
+            return ;
+        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
+            return ;
+        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
+    }
+
+    if ( !uri_list_str )
+        return;
+
+    // create file list
+    puri = uri_list = g_uri_list_extract_uris( uri_list_str );
+    while ( *puri )
+    {
+        file_path = g_filename_from_uri( *puri, NULL, NULL );
+        if ( file_path )
+        {
+            if ( g_file_test( file_path, G_FILE_TEST_EXISTS ) )             
+            {
+                files = g_list_prepend( files, file_path );
+            }
+            else
+                *missing_targets++;
+        }
+        ++puri;
+    }
+    g_strfreev( uri_list );
+    gtk_selection_data_free( sel_data );
+
+    return files;
+}

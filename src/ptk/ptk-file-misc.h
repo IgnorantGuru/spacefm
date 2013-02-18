@@ -59,6 +59,13 @@ void ptk_open_files_with_app( const char* cwd,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever );
 
+void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            const char* cwd ); //sfm
+
+void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                GList* sel_files,
+                                                char* cwd, char* setname ); //sfm
+
 G_END_DECLS
 
 #endif
