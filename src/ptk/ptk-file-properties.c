@@ -34,6 +34,7 @@
 #include "vfs-file-info.h"
 #include "vfs-app-desktop.h"
 #include "ptk-app-chooser.h"
+#include "main-window.h"
 
 const char* chmod_names[] =
     {
@@ -322,6 +323,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
 
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
     GtkNotebook* notebook = (GtkNotebook*)gtk_builder_get_object( builder, "notebook" );
+    update_window_icon( GTK_WINDOW( dlg ), gtk_icon_theme_get_default() );
 
     FilePropertiesDialogData* data;
     gboolean need_calc_size = TRUE;

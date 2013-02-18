@@ -10068,6 +10068,37 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#tasks-menu-qpause" );
 
+    // Desktop
+    set = xset_get( "sep_desk1" );
+    set->menu_style = XSET_MENU_SEP;
+
+    set = xset_set( "desk_icons", "label", _("Arrange _Icons") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "icon", "gtk-sort-ascending" );
+    xset_set_set( set, "desc", "desk_sort_name desk_sort_type desk_sort_date desk_sort_size sep_desk1 desk_sort_ascend desk_sort_descend" );
+
+        set = xset_set( "desk_sort_name", "label", _("By _Name") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_type", "label", _("By _Type") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_date", "label", _("By _Date") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_size", "label", _("By _Size") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_ascend", "label", _("_Ascending") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_descend", "label", _("D_escending") );
+        set->menu_style = XSET_MENU_RADIO;
+
+    set = xset_set( "desk_pref", "label", _("Desktop _Settings") );
+    xset_set_set( set, "icon", "gtk-preferences" );
+
+
     // PANELS COMMON
     set = xset_get( "sep_new" );
     set->menu_style = XSET_MENU_SEP;
@@ -10215,6 +10246,9 @@ void xset_defaults()
         set = xset_set( "tab_new", "label", C_("New|", "_Tab") );
         xset_set_set( set, "icon", "gtk-add" );
         set = xset_set( "tab_new_here", "label", _("Tab _Here") );
+        xset_set_set( set, "icon", "gtk-add" );
+
+        set = xset_set( "new_app", "label", _("_Application") );
         xset_set_set( set, "icon", "gtk-add" );
 
     set = xset_get( "sep_g1" );

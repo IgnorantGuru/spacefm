@@ -179,6 +179,7 @@ gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* fil
 void desktop_context_fill( DesktopWindow* win, gpointer context );
 void desktop_window_rename_selected_files( DesktopWindow* win,
                                                 GList* files, const char* cwd );
+void desktop_window_on_autoopen_cb( gpointer task, gpointer aop );
 
 G_END_DECLS
 
