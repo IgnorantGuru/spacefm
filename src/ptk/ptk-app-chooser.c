@@ -143,6 +143,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
     
     g_object_set_data_full( G_OBJECT(dlg), "builder", builder, (GDestroyNotify)g_object_unref );
 
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+
     gtk_dialog_set_alternative_button_order( GTK_DIALOG(dlg), GTK_RESPONSE_OK, GTK_RESPONSE_CANCEL, -1 );
     ptk_dialog_fit_small_screen( GTK_DIALOG(dlg) );
 
@@ -320,6 +322,8 @@ on_browse_btn_clicked ( GtkButton *button,
                                                   GTK_RESPONSE_OK,
                                                   NULL );
     GtkBuilder* builder = (GtkBuilder*)g_object_get_data(G_OBJECT(parent), "builder");
+
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     gtk_file_chooser_set_current_folder ( GTK_FILE_CHOOSER ( dlg ),
                                           "/usr/bin" );

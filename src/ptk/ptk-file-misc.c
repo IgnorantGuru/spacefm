@@ -158,6 +158,8 @@ void ptk_delete_files( GtkWindow* parent_win,
                                       msg );
         gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_YES); //MOD
         gtk_window_set_title( GTK_WINDOW( dlg ), _("Confirm Delete") );
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
+
         ret = gtk_dialog_run( GTK_DIALOG( dlg ) );
         gtk_widget_destroy( dlg );
         g_free( msg );
@@ -840,6 +842,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
                     
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( !name )
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), dir );
@@ -1096,8 +1099,15 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
         root_msg = "";
 
     // Window Icon
+    const char* win_icon;
+    if ( as_root )
+        win_icon = "gtk-dialog-warning";
+    else if ( mset->create_new )
+        win_icon = "gtk-new";
+    else
+        win_icon = "gtk-edit";
     GdkPixbuf* pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
-                        as_root ? "gtk-dialog-warning" : "gtk-edit", 16,
+                        win_icon, 16,
                         GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     if ( pixbuf )
         gtk_window_set_icon( GTK_WINDOW( mset->dlg ), pixbuf );    

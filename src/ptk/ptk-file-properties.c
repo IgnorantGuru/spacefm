@@ -323,7 +323,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
 
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
     GtkNotebook* notebook = (GtkNotebook*)gtk_builder_get_object( builder, "notebook" );
-    update_window_icon( GTK_WINDOW( dlg ), gtk_icon_theme_get_default() );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     FilePropertiesDialogData* data;
     gboolean need_calc_size = TRUE;

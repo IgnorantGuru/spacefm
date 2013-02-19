@@ -518,7 +518,8 @@ void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* deskt
 
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
-    return;
+    if ( desktop )
+        desktop_window_add_application( desktop );
 }
 
 void on_popup_desktop_select( GtkMenuItem *menuitem,
@@ -546,6 +547,12 @@ void on_popup_desktop_select( GtkMenuItem *menuitem,
     desktop_window_select( desktop, mode );
 }
 
+void on_bookmark_activate( GtkWidget* item, const char* name )
+{
+    if ( name )
+        open_in_prog( ptk_bookmarks_item_get_path( name ) );
+}
+
 static void ptk_file_menu_free( PtkFileMenu *data )
 {
     if ( data->file_path )
@@ -568,6 +575,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     GtkWidget * popup = NULL;
     VFSMimeType* mime_type;
     GtkWidget *app_menu_item;
+    GtkWidget* submenu;
     gboolean is_dir;
     gboolean is_text;
     gboolean is_clip;
@@ -707,7 +715,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                     accel_group, set ) );
     if ( sel_files )
     {
-        GtkWidget* submenu = gtk_menu_item_get_submenu( item );
+        submenu = gtk_menu_item_get_submenu( item );
 
         // Execute
         if ( !is_dir && info && file_path && 
@@ -1460,13 +1468,56 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         g_free( desc );
         xset_add_menuitem( desktop, browser, popup, accel_group, set );
     }
-    else if ( desktop && sel_files )
-    {
-        set = xset_set_cb( "prop_info", on_popup_file_properties_activate, data );
-        xset_add_menuitem( desktop, browser, popup, accel_group, set );
-    }
     else if ( desktop )
     {
+        // Desktop|Devices
+        set = xset_get( "desk_dev" );
+        item = GTK_MENU_ITEM( xset_add_menuitem( desktop, NULL, popup,
+                                                        accel_group, set ) );
+        submenu = gtk_menu_item_get_submenu( item );
+        
+        ptk_location_view_dev_menu( GTK_WIDGET( desktop ), submenu );
+#ifndef HAVE_HAL
+        set = xset_get( "sep_dm3" );
+        xset_add_menuitem( desktop, NULL, submenu, accel_group, set );
+
+        set = xset_get( "dev_menu_settings" );
+        xset_add_menuitem( desktop, NULL, submenu, accel_group, set );
+#endif
+
+        // Desktop|Bookmarks
+        set = xset_get( "desk_book" );
+        GtkMenuItem* book_item = GTK_MENU_ITEM( xset_add_menuitem( desktop,
+                                                        NULL, popup,
+                                                        accel_group, set ) );
+        submenu = gtk_menu_item_get_submenu( book_item );
+
+        GtkWidget* folder_image;
+        XSet* set = xset_get( "book_icon" );
+        const char* book_icon = set->icon;
+        int count = 0;
+        GList* l;
+        for ( l = app_settings.bookmarks->list; l; l = l->next )
+        {
+            item = GTK_MENU_ITEM( gtk_image_menu_item_new_with_label(
+                                                            (char*)l->data ) );
+            if ( book_icon )
+                folder_image = xset_get_image( book_icon, GTK_ICON_SIZE_MENU );
+            if ( !folder_image )
+                folder_image = xset_get_image( "gtk-directory", GTK_ICON_SIZE_MENU );
+            if ( folder_image )
+                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM ( item ),
+                                                            folder_image );
+            g_signal_connect( item, "activate", G_CALLBACK( on_bookmark_activate ),
+                                                        (char*)l->data );
+            gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
+            count++;
+            if ( count > 200 )
+                break;
+        }
+        if ( count == 0 )
+            gtk_widget_set_sensitive( GTK_WIDGET( book_item ), FALSE );
+            
         // Desktop|Icons >
         set = xset_set_cb( "desk_sort_name", on_popup_desktop_sort_activate,
                                                                     desktop );
@@ -1503,11 +1554,18 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_ob2( set, NULL, set_radio );
 
         set = xset_get( "desk_icons" );
-        item = GTK_MENU_ITEM( xset_add_menuitem( desktop, browser, popup,
+        item = GTK_MENU_ITEM( xset_add_menuitem( desktop, NULL, popup,
                                                         accel_group, set ) );
 
         set = xset_set_cb( "desk_pref", on_popup_desktop_pref_activate, desktop );
-        xset_add_menuitem( desktop, browser, popup, accel_group, set );
+        xset_add_menuitem( desktop, NULL, popup, accel_group, set );
+
+        // Desktop|Info
+        set = xset_get( "sep_desk2" );
+        xset_add_menuitem( desktop, NULL, popup, accel_group, set );
+
+        set = xset_set_cb( "prop_info", on_popup_file_properties_activate, data );
+        xset_add_menuitem( desktop, NULL, popup, accel_group, set );
     }
     
     gtk_widget_show_all( GTK_WIDGET( popup ) );
@@ -2738,7 +2796,8 @@ on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data )
     ptk_file_browser_canon( data->browser, data->file_path ? data->file_path : data->cwd );
 }
 
-void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
+void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
+                                                            char* setname )
 {
     const char * cwd;
     char* file_path = NULL;
@@ -2747,13 +2806,21 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
     int i;
     char* xname;
     
-    if ( !browser || !setname )
+    if ( ( !browser && !desktop ) || !setname )
         return;
     XSet* set = xset_get( setname );
     
     // setup data
-    cwd = ptk_file_browser_get_cwd( browser );
-    sel_files = ptk_file_browser_get_selected_files( browser );
+    if ( browser )
+    {
+        cwd = ptk_file_browser_get_cwd( browser );
+        sel_files = ptk_file_browser_get_selected_files( browser );
+    }
+    else
+    {
+        cwd = vfs_get_desktop_dir();
+        sel_files = desktop_window_get_selected_files( desktop );
+    }
     if( !sel_files )
         info = NULL;
     else
@@ -2763,9 +2830,9 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
     }
     
     PtkFileMenu* data = g_slice_new0( PtkFileMenu );
-
     data->cwd = g_strdup( cwd );
     data->browser = browser;
+    data->desktop = desktop;
 
     data->file_path = file_path;
     if ( info )
@@ -2777,18 +2844,7 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
     data->accel_group = NULL;
 
     // action
-    if ( g_str_has_prefix( set->name, "open_in_panel" ) )
-    {
-        xname = set->name + 13;
-        if ( !strcmp( xname, "prev" ) )
-            i = -1;
-        else if ( !strcmp( xname, "next" ) )
-            i = -2;
-        else
-            i = atoi( xname );
-        main_window_open_in_panel( data->browser, i, data->file_path );
-    }
-    else if ( g_str_has_prefix( set->name, "open_" ) )
+    if ( g_str_has_prefix( set->name, "open_" ) )
     {
         xname = set->name + 5;
         if ( !strcmp( xname, "edit" ) )
@@ -2801,22 +2857,6 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
             on_popup_open_activate( NULL, data );
         else if ( !strcmp( xname, "all" ) )
             on_popup_open_all( NULL, data );
-    }
-    else if ( g_str_has_prefix( set->name, "opentab_" ) )
-    {
-        xname = set->name + 8;
-        if ( !strcmp( xname, "new" ) )
-            on_popup_open_in_new_tab_activate( NULL, data );
-        else
-        {
-            if ( !strcmp( xname, "prev" ) )
-                i = -1;
-            else if ( !strcmp( xname, "next" ) )
-                i = -2;
-            else
-                i = atoi( xname );
-            ptk_file_browser_open_in_tab( data->browser, i, data->file_path );
-        }
     }
     else if ( g_str_has_prefix( set->name, "arc_" ) )
     {
@@ -2841,15 +2881,16 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
             on_popup_new_text_file_activate( NULL, data );
         else if ( !strcmp( xname, "folder" ) )
             on_popup_new_folder_activate( NULL, data );
+        else if ( !strcmp( xname, "link" ) )
+            on_popup_new_link_activate( NULL, data );
         else if ( !strcmp( xname, "bookmark" ) )
             on_add_bookmark( NULL, data );
         else if ( !strcmp( xname, "archive" ) )
-            on_popup_compress_activate( NULL, data );
+        {
+            if ( browser )
+                on_popup_compress_activate( NULL, data );
+        }
     }
-    else if ( !strcmp( set->name, "tab_new" ) )
-        on_shortcut_new_tab_activate( NULL, browser );
-    else if ( !strcmp( set->name, "tab_new_here" ) )
-        on_popup_open_in_new_tab_here( NULL, data );
     else if ( !strcmp( set->name, "prop_info" ) )
         on_popup_file_properties_activate( NULL, data );
     else if ( !strcmp( set->name, "prop_perm" ) )
@@ -2870,7 +2911,10 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
         else if ( !strcmp( xname, "hide" ) )
             on_hide_file( NULL, data );
         else if ( !strcmp( xname, "canon" ) )
-            on_popup_canon( NULL, data );
+        {
+            if ( browser )
+                on_popup_canon( NULL, data );
+        }
     }
     else if ( !strcmp( set->name, "copy_name" ) )
         on_popup_copy_name_activate( NULL, data );
@@ -2893,7 +2937,46 @@ void ptk_file_menu_action( PtkFileBrowser* browser, char* setname )
                             || !strcmp( xname, "delete" ) )
             on_popup_rootcmd_activate( NULL, data, set );
     }
-
+    else if ( browser )
+    {
+        // browser only
+        if ( g_str_has_prefix( set->name, "open_in_panel" ) )
+        {
+            xname = set->name + 13;
+            if ( !strcmp( xname, "prev" ) )
+                i = -1;
+            else if ( !strcmp( xname, "next" ) )
+                i = -2;
+            else
+                i = atoi( xname );
+            main_window_open_in_panel( data->browser, i, data->file_path );
+        }
+        else if ( g_str_has_prefix( set->name, "opentab_" ) )
+        {
+            xname = set->name + 8;
+            if ( !strcmp( xname, "new" ) )
+                on_popup_open_in_new_tab_activate( NULL, data );
+            else
+            {
+                if ( !strcmp( xname, "prev" ) )
+                    i = -1;
+                else if ( !strcmp( xname, "next" ) )
+                    i = -2;
+                else
+                    i = atoi( xname );
+                ptk_file_browser_open_in_tab( data->browser, i, data->file_path );
+            }
+        }
+        else if ( !strcmp( set->name, "tab_new" ) )
+            on_shortcut_new_tab_activate( NULL, browser );
+        else if ( !strcmp( set->name, "tab_new_here" ) )
+            on_popup_open_in_new_tab_here( NULL, data );
+    }
+    else
+    {
+        // desktop only
+        
+    }
     ptk_file_menu_free( data );
 }
 

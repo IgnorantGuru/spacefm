@@ -362,9 +362,16 @@ GtkWidget* create_bookmarks_menu ( FMMainWindow* main_window )
                                             accel_group );
     */
 
-    static PtkMenuItemEntry fm_bookmarks_menu[] = {
+    XSet* set = xset_get( "tool_book" );
+    char* book_icon = set->icon;
+    // ptk_menu_new_from_data only accept stock icons - is it?
+    if ( book_icon && !g_str_has_prefix( book_icon, "gtk-" ) )
+        book_icon = NULL;
+    if ( !book_icon )
+        book_icon = "gtk-jump-to";
+    PtkMenuItemEntry fm_bookmarks_menu[] = {
+        PTK_IMG_MENU_ITEM( N_( "_Show" ), book_icon, show_bookmarks, 0, 0 ),
         PTK_IMG_MENU_ITEM( N_( "_Add" ), "gtk-add", add_bookmark, 0, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "_Open" ), "gtk-open", show_bookmarks, 0, 0 ),
         PTK_SEPARATOR_MENU_ITEM,
         PTK_MENU_END
     };
@@ -379,7 +386,7 @@ GtkWidget* create_bookmarks_menu ( FMMainWindow* main_window )
                                                 ( char* ) l->data );
         gtk_menu_shell_append ( GTK_MENU_SHELL( bookmark_menu ), menu_item );
         count++;
-        if ( count > 50 )
+        if ( count > 200 )
             break;
     }
     gtk_widget_show_all( bookmark_menu );
@@ -690,51 +697,60 @@ void import_all_plugins( FMMainWindow* main_window )
     clean_plugin_mirrors();
 }
 
-gboolean on_autosave_timer( FMMainWindow* main_window )
+void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
 {
-    //printf("AUTOSAVE on_timer\n" );
-    char* err_msg = save_settings( main_window );
-    if ( err_msg )
-    {
-        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"), err_msg );
-        g_free( err_msg );
-    }
-    g_source_remove( main_window->autosave_timer );
-    main_window->autosave_timer = 0;
-    return FALSE;
-}
-
-void main_window_autosave( PtkFileBrowser* file_browser )
-{
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                        fm_main_window_get_current_file_browser( main_window ) );
     if ( !file_browser )
         return;
-    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
-    if ( main_window->autosave_timer )
+    if ( !file_browser->side_dev )
     {
-        // autosave timer is already running, so ignore request
-        //printf("AUTOSAVE already set\n" );
-        return;
+        xset_set_panel( file_browser->mypanel, "show_devmon", "b", "1" );
+        update_views_all_windows( NULL, file_browser );
     }
-    // autosave settings in 30 seconds 
-    main_window->autosave_timer = g_timeout_add_seconds( 30,
-                                ( GSourceFunc ) on_autosave_timer, main_window );
-    //printf("AUTOSAVE timer started\n" );
+    if ( file_browser->side_dev )
+        gtk_widget_grab_focus( GTK_WIDGET( file_browser->side_dev ) );
+}
+
+GtkWidget* create_devices_menu( FMMainWindow* main_window )
+{
+    GtkWidget* dev_menu;
+    GtkWidget* item;
+    XSet* set;
+    
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                    fm_main_window_get_current_file_browser( main_window ) );
+    GtkAccelGroup* accel_group = gtk_accel_group_new();
+    dev_menu = gtk_menu_new();
+    if ( !file_browser )
+        return dev_menu;
+
+    set = xset_set_cb( "main_dev", on_devices_show, main_window );
+    xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
+
+    set = xset_get( "main_dev_sep" );
+    xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
+
+    ptk_location_view_dev_menu( GTK_WIDGET( main_window ), dev_menu );
+#ifndef HAVE_HAL
+    set = xset_get( "sep_dm3" );
+    xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
+
+    set = xset_get( "dev_menu_settings" );
+    xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
+#endif
+
+    gtk_widget_show_all( dev_menu );
+    return dev_menu;
 }
 
 void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
 {
-    GList* l;
-    FMMainWindow* a_window;
-    
-    // disable timer all windows
-    for ( l = all_windows; l; l = l->next )
+    // disable autosave timer
+    if ( xset_autosave_timer )
     {
-        a_window = (FMMainWindow*)l->data;
-        if ( a_window->autosave_timer )
-        {
-            g_source_remove( a_window->autosave_timer );
-            a_window->autosave_timer = 0;
-        }
+        g_source_remove( xset_autosave_timer );
+        xset_autosave_timer = 0;
     }
 
     char* err_msg = save_settings( main_window );
@@ -1190,8 +1206,7 @@ void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
             }
         }
     }
-    if ( file_browser )
-        main_window_autosave( file_browser );
+    xset_autosave( file_browser );
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -1228,7 +1243,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
         }
     }
     
-    main_window_autosave( file_browser );
+    xset_autosave( file_browser );
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
@@ -1342,7 +1357,7 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
     
     PtkFileBrowser* file_browser = 
             (PtkFileBrowser*)fm_main_window_get_current_file_browser( main_window );
-    main_window_autosave( file_browser );
+    xset_autosave( file_browser );
 }
 
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
@@ -1664,6 +1679,11 @@ void rebuild_menus( FMMainWindow* main_window )
                       G_CALLBACK( xset_menu_keypress ), NULL );
     gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->view_menu_item ), newmenu );
 
+    // Devices
+    main_window->dev_menu = create_devices_menu( main_window );
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( main_window->dev_menu_item ),
+                                                    main_window->dev_menu );
+    
     // Bookmarks
     if ( !main_window->book_menu )
     {
@@ -1729,8 +1749,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     int i;
     char* icon_name;
     XSet* set;
-
-    main_window->autosave_timer = 0;
     
     /* this is used to limit the scope of gtk_grab and modal dialogs */
     main_window->wgroup = gtk_window_group_new();
@@ -1820,6 +1838,10 @@ void fm_main_window_init( FMMainWindow* main_window )
     main_window->view_menu_item = gtk_menu_item_new_with_mnemonic( _("_View") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->view_menu_item );
     
+    main_window->dev_menu_item = gtk_menu_item_new_with_mnemonic( _("_Devices") );
+    gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->dev_menu_item );
+    main_window->dev_menu = NULL;
+
     main_window->book_menu_item = gtk_menu_item_new_with_mnemonic( _("_Bookmarks") );
     gtk_menu_shell_append( GTK_MENU_SHELL( main_window->menu_bar ), main_window->book_menu_item );
     main_window->book_menu = NULL;
@@ -1946,6 +1968,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     g_signal_connect( G_OBJECT( main_window->file_menu_item ), "button-press-event",
                       G_CALLBACK( on_menu_bar_event ), main_window );
     g_signal_connect( G_OBJECT( main_window->view_menu_item ), "button-press-event",
+                      G_CALLBACK( on_menu_bar_event ), main_window );
+    g_signal_connect( G_OBJECT( main_window->dev_menu_item ), "button-press-event",
                       G_CALLBACK( on_menu_bar_event ), main_window );
     g_signal_connect( G_OBJECT( main_window->book_menu_item ), "button-press-event",
                       G_CALLBACK( on_menu_bar_event ), main_window );
@@ -2102,10 +2126,10 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
     }
 
     // save settings
-    if ( main_window->autosave_timer )
+    if ( xset_autosave_timer )
     {
-        g_source_remove( main_window->autosave_timer );
-        main_window->autosave_timer = 0;
+        g_source_remove( xset_autosave_timer );
+        xset_autosave_timer = 0;
     }
     char* err_msg = save_settings( main_window );
     if ( err_msg )

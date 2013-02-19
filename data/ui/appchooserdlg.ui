@@ -228,7 +228,7 @@
               <object class="GtkCheckButton" id="set_default">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">_Set as default</property>
+                <property name="label" translatable="yes">_Set as default application for this file type</property>
                 <property name="use_underline">True</property>
                 <property name="draw_indicator">True</property>
               </object>

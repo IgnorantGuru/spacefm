@@ -4,6 +4,8 @@
     Josué Hernández & CommanderC completed Spanish translation
     Teodoro Santoni contributed to Italian translation
     revert breadcrumbs to Ctrl+Click #266 and no auto seek on activate path
+    fix broken key shortcut New|Link
+    new desktop menu; new Devices menu
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

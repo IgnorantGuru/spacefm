@@ -25,10 +25,12 @@ typedef struct _FMMainWindow
     //MOD
     GtkWidget* file_menu_item;
     GtkWidget* view_menu_item;
+    GtkWidget* dev_menu_item;
     GtkWidget* book_menu_item;
     GtkWidget* plug_menu_item;
     GtkWidget* tool_menu_item;
     GtkWidget* help_menu_item;
+    GtkWidget* dev_menu;
     GtkWidget* book_menu;
     GtkWidget* plug_menu;
     GtkWidget* notebook;  //MOD changed use to current panel
@@ -46,9 +48,6 @@ typedef struct _FMMainWindow
     GtkWidget* task_vpane;
     GtkWidget* task_scroll;
     GtkWidget* task_view;
-    
-    guint autosave_timer;
-
 
 //  GtkWidget* toolbar;
 //  GtkEntry* address_bar;
@@ -134,7 +133,6 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser );
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window );
 void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window );
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser );
-void update_window_icon( GtkWindow* window, GtkIconTheme* theme );
 void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser );
 gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
 void main_update_fonts( GtkWidget* widget, PtkFileBrowser* file_browser );

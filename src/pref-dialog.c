@@ -732,7 +732,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
         if ( parent )
             gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
-        update_window_icon( GTK_WINDOW( dlg ), gtk_icon_theme_get_default() );
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
 
         ptk_dialog_fit_small_screen( GTK_DIALOG( dlg ) );
         data->dlg = dlg;

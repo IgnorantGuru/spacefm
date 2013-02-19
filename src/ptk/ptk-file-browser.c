@@ -7130,7 +7130,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             ptk_file_browser_select_pattern( NULL, browser, NULL );
     }
     else  // all the rest require ptkfilemenu data
-        ptk_file_menu_action( browser, set->name );
+        ptk_file_menu_action( NULL, browser, set->name );
 }
 
 

@@ -41,6 +41,7 @@
 #include "ptk-clipboard.h"
 #include "ptk-file-archiver.h"
 #include "ptk-location-view.h"
+#include "ptk-app-chooser.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -1975,100 +1976,158 @@ void select_item( DesktopWindow* self, DesktopItem* item, gboolean val )
     redraw_item( self, item );
 }
 
-gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
+gboolean on_key_press( GtkWidget* w, GdkEventKey* event )
 {
-    DesktopWindow* self = (DesktopWindow*)w;
-    int modifier = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK ) );
+    DesktopWindow* desktop = (DesktopWindow*)w;
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    //GList* sels = desktop_window_get_selected_files( self );
+    if ( event->keyval == 0 )
+        return FALSE;
 
-    if ( modifier == GDK_CONTROL_MASK )
+    GList* l;
+    XSet* set;
+    char* xname;
+    for ( l = xsets; l; l = l->next )
     {
-        switch ( evt->keyval )
+        if ( ((XSet*)l->data)->shared_key )
         {
-/*
-        case GDK_KEY_x:
-            if( sels )
-                ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, FALSE );
-            break;
-        case GDK_KEY_c:
-            if( sels )
-                ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, TRUE );
-            break;
-        case GDK_KEY_v:
-            on_paste( NULL, self );
-            break;
-*/
+            // set has shared key
+            set = xset_get( ((XSet*)l->data)->shared_key );
+            if ( set->key == event->keyval && set->keymod == keymod )
+            {
+                // shared key match
+                if ( g_str_has_prefix( set->name, "panel" ) )
+                    return FALSE;
+                goto _key_found;  // for speed
+            }
+            else
+                continue;
+        }
+        if ( ((XSet*)l->data)->key == event->keyval
+                                        && ((XSet*)l->data)->keymod == keymod )
+        {
+            set = (XSet*)l->data;
+_key_found:
+            // run menu_cb
+            if ( set->menu_style < XSET_MENU_SUBMENU )
+            {
+                set->browser = NULL;
+                set->desktop = desktop;
+                xset_menu_cb( NULL, set );  // also does custom activate
+            }
+            if ( !set->lock )
+                return TRUE;
+
+            // handlers
+            if ( !strcmp( set->name, "new_app" ) )
+                desktop_window_add_application( desktop );
+            else if ( g_str_has_prefix( set->name, "desk_" ) )
+            {
+                if ( g_str_has_prefix( set->name, "desk_sort_" ) )
+                {
+                    int by;
+                    char* xname = set->name + 10;
+                    if ( !strcmp( xname, "name" ) )
+                        by = DW_SORT_BY_NAME;
+                    else if ( !strcmp( xname, "size" ) )
+                        by = DW_SORT_BY_SIZE;
+                    else if ( !strcmp( xname, "type" ) )
+                        by = DW_SORT_BY_TYPE;
+                    else if ( !strcmp( xname, "date" ) )
+                        by = DW_SORT_BY_MTIME;
+                    else
+                    {
+                        if ( !strcmp( xname, "ascend" ) )
+                            by = GTK_SORT_ASCENDING;
+                        else if ( !strcmp( xname, "descend" ) )
+                            by = GTK_SORT_DESCENDING;
+                        else
+                            return TRUE;
+                        desktop_window_sort_items( desktop, desktop->sort_by, by );
+                        return TRUE;
+                    }
+                    desktop_window_sort_items( desktop, by, desktop->sort_type );
+                }
+                else if ( !strcmp( set->name, "desk_pref" ) )
+                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+            }
+            else if ( g_str_has_prefix( set->name, "paste_" ) )
+            {
+                xname = set->name + 6;
+                if ( !strcmp( xname, "link" ) )
+                    ptk_clipboard_paste_links(
+                        GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( desktop ) ) ),
+                                            vfs_get_desktop_dir(), NULL );
+                else if ( !strcmp( xname, "target" ) )
+                    ptk_clipboard_paste_targets( GTK_WINDOW( 
+                            gtk_widget_get_toplevel( GTK_WIDGET( desktop ) ) ),
+                            vfs_get_desktop_dir(),
+                            NULL );
+                else if ( !strcmp( xname, "as" ) )
+                    ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir() );
+            }
+            else if ( g_str_has_prefix( set->name, "select_" ) )
+            {
+                DWSelectMode mode;
+                xname = set->name + 7;
+                if ( !strcmp( xname, "all" ) )
+                    mode = DW_SELECT_ALL;
+                else if ( !strcmp( xname, "un" ) )
+                    mode = DW_SELECT_NONE;
+                else if ( !strcmp( xname, "invert" ) )
+                    mode = DW_SELECT_INVERSE;
+                else if ( !strcmp( xname, "patt" ) )
+                    mode = DW_SELECT_PATTERN;
+                else
+                    return TRUE;
+                desktop_window_select( desktop, mode );
+            }
+            else
+                // all the rest require ptkfilemenu data
+                ptk_file_menu_action( desktop, NULL, set->name );
+            return TRUE;
+        }
+    }
+
+    if ( keymod == GDK_CONTROL_MASK )
+    {
+        switch ( event->keyval )
+        {
         case GDK_KEY_Down:
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            focus_item( self, get_next_item( self, evt->keyval ) );
-            break;
+            focus_item( desktop, get_next_item( desktop, event->keyval ) );
+            return TRUE;
         case GDK_KEY_space:
-            if ( self->focus )
-                select_item( self, self->focus, !self->focus->is_selected );
-            break;
+            if ( desktop->focus )
+                select_item( desktop, desktop->focus, !desktop->focus->is_selected );
+            return TRUE;
         }
     }
-/*
-    else if ( modifier == GDK_MOD1_MASK )
+    else if ( keymod == 0 )
     {
-        switch ( evt->keyval )
-        {
-        case GDK_KEY_Return:
-            if( sels )
-                ptk_show_file_properties( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, 0 );
-            break;
-        }
-    }
-    else if ( modifier == GDK_SHIFT_MASK )
-    {
-        switch ( evt->keyval )
-        {
-        case GDK_KEY_Delete:
-            if( sels )
-                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
-            break;
-        }
-    }
-*/
-    else if ( modifier == 0 )
-    {
-        switch ( evt->keyval )
+        switch ( event->keyval )
         {
         case GDK_KEY_Return:
         case GDK_KEY_space:
-            if ( self->focus )
-                open_clicked_item( self->focus );
-            break;
+            if ( desktop->focus )
+                open_clicked_item( desktop->focus );
+            return TRUE;
         case GDK_KEY_Down:
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            desktop_window_select( self, DW_SELECT_NONE );
-            focus_item( self, get_next_item( self, evt->keyval ) );
-            if ( self->focus )
-                select_item( self, self->focus, TRUE );
-            break;
-/*
-        case GDK_KEY_F2:
-            if ( sels )
-                desktop_window_rename_selected_files( self, sels, vfs_get_desktop_dir() );
-                //ptk_rename_file( NULL, vfs_get_desktop_dir(), (VFSFileInfo*)sels->data );
-            break;
-        case GDK_KEY_Delete:
-            if( sels )
-                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
-            break;
-*/
+            desktop_window_select( desktop, DW_SELECT_NONE );
+            focus_item( desktop, get_next_item( desktop, event->keyval ) );
+            if ( desktop->focus )
+                select_item( desktop, desktop->focus, TRUE );
+            return TRUE;
         }
     }
-/*
-    if( sels )
-        vfs_file_info_list_free( sels );
-*/
-    return TRUE;
+    return FALSE;
 }
 
 void on_style_set( GtkWidget* w, GtkStyle* prev )
@@ -2963,7 +3022,7 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
 
     app_settings.desktop_sort_by = win->sort_by = sort_by;
     app_settings.desktop_sort_type = win->sort_type = sort_type;
-    save_settings( NULL );  //MOD
+    xset_autosave( NULL );
 
     /* skip the special items since they always appears first */
     gboolean special = FALSE;    //MOD added - otherwise caused infinite loop in layout items once My Documents was removed
@@ -3042,6 +3101,44 @@ GList* desktop_window_get_selected_files( DesktopWindow* win )
     return sel;
 }
 
+void desktop_window_add_application( DesktopWindow* desktop )
+{
+    char* app = NULL;
+    VFSMimeType* mime_type;
+
+    GList* sel_files = desktop_window_get_selected_files( desktop );
+    if ( sel_files )
+    {
+        mime_type = vfs_file_info_get_mime_type( (VFSFileInfo*)sel_files->data );
+        if ( G_LIKELY( ! mime_type ) )
+            mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );
+        g_list_foreach( sel_files, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( sel_files );
+    }
+    else
+        mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
+
+    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
+                                                                mime_type );
+    if ( app )
+    {
+        char* path = vfs_mime_type_locate_desktop_file( NULL, app );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
+        {
+            sel_files = g_list_prepend( NULL, path );
+            PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
+                                                   sel_files,
+                                                   vfs_get_desktop_dir(),
+                                                   GTK_WINDOW( desktop ),
+                                                   NULL );
+            ptk_file_task_run( task );
+        }
+        else
+            g_free( path );
+        g_free( app );
+    }
+    vfs_mime_type_unref( mime_type );
+}
 
 /*----------------- X11-related sutff ----------------*/
 

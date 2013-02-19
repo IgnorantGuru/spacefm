@@ -607,6 +607,12 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
     ptask->progress_count = 50;  // trigger fast display
 }
 
+gboolean on_progress_dlg_delete_event( GtkWidget *widget, GdkEvent *event,
+                                                        PtkFileTask* ptask )
+{
+    return !( ptask->complete || ptask->task_view );
+}
+
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
 {
     if ( response != GTK_RESPONSE_HELP && ptask->complete && !ptask->complete_notify )
@@ -810,6 +816,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
                                                     ptask->progress_btn_close,
                                                     GTK_RESPONSE_OK);
+    gtk_widget_set_sensitive( ptask->progress_btn_close, !!ptask->task_view );
+    
     // Help
     GtkWidget* help_btn = gtk_button_new_from_stock( GTK_STOCK_HELP );
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
@@ -1097,6 +1105,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                       G_CALLBACK( on_progress_dlg_response ), ptask );
     g_signal_connect( ptask->progress_dlg, "destroy",
                       G_CALLBACK( on_progress_dlg_destroy ), ptask );
+    g_signal_connect( ptask->progress_dlg, "delete-event",
+                      G_CALLBACK( on_progress_dlg_delete_event ), ptask );
 
     gtk_widget_show_all( ptask->progress_dlg );
     if ( ptask->overwrite_combo && !xset_get_b( "task_pop_over" ) )
@@ -2228,6 +2238,7 @@ static void query_overwrite( PtkFileTask* ptask )
         pause_icon = GTK_STOCK_MEDIA_PAUSE;
     gtk_button_set_image( GTK_BUTTON( btn_pause ),
                             xset_get_image( pause_icon, GTK_ICON_SIZE_BUTTON ) );
+    gtk_widget_set_sensitive( btn_pause, !!ptask->task_view );
 
     // labels
     gtk_box_pack_start( GTK_BOX( vbox ), 

@@ -464,6 +464,7 @@ void load_settings( char* config_dir )
     char* str;
     
     xset_cmd_history = NULL;
+    xset_autosave_timer = 0;
     app_settings.load_saved_tabs = TRUE;
     if ( config_dir )
         settings_config_dir = config_dir;
@@ -1288,6 +1289,41 @@ const char* xset_get_user_tmp_dir()
         g_warning( "Unable to create temporary directory in %s", settings_tmp_dir );
     }
     return settings_user_tmp_dir;
+}
+
+gboolean on_autosave_timer( gpointer main_window )
+{
+    //printf("AUTOSAVE on_timer\n" );
+    char* err_msg = save_settings( main_window );
+    if ( err_msg )
+    {
+        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"), err_msg );
+        g_free( err_msg );
+    }
+    if ( xset_autosave_timer )
+    {
+        g_source_remove( xset_autosave_timer );
+        xset_autosave_timer = 0;
+    }
+    return FALSE;
+}
+
+void xset_autosave( PtkFileBrowser* file_browser )
+{
+    gpointer mw = NULL;
+    if ( file_browser )
+        mw = file_browser->main_window;
+
+    if ( xset_autosave_timer )
+    {
+        // autosave timer is already running, so ignore request
+        //printf("AUTOSAVE already set\n" );
+        return;
+    }
+    // autosave settings in 10 seconds 
+    xset_autosave_timer = g_timeout_add_seconds( 10,
+                                ( GSourceFunc ) on_autosave_timer, mw );
+    //printf("AUTOSAVE timer started\n" );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -5214,6 +5250,7 @@ void xset_context_dlg( XSet* set )
                                 GTK_WINDOW( ctxt->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL );
+    xset_set_window_icon( GTK_WINDOW( ctxt->dlg ) );
 
     int width = xset_get_int( "context_dlg", "x" );
     int height = xset_get_int( "context_dlg", "y" );
@@ -5732,7 +5769,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                       GTK_MESSAGE_QUESTION,
                                       GTK_BUTTONS_NONE,
                                       keymsg );
-                                      
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
+
         GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
         gtk_button_set_label( GTK_BUTTON( btn_cancel ), _("Cancel") );
         gtk_button_set_image( GTK_BUTTON( btn_cancel ), xset_get_image( "GTK_STOCK_CANCEL",
@@ -6131,6 +6169,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                           GTK_MESSAGE_WARNING,
                                           buttons,
                                           msg );
+            xset_set_window_icon( GTK_WINDOW( dlg ) );
             gtk_window_set_title( GTK_WINDOW( dlg ), _("Confirm Remove") );
             gtk_widget_show_all( dlg );
             response = gtk_dialog_run( GTK_DIALOG( dlg ) );
@@ -6341,8 +6380,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     //    main_window_on_plugins_change( NULL );
 
     // autosave
-    if ( set->browser )
-        main_window_autosave( set->browser );
+    xset_autosave( set->browser );
 }
 
 void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
@@ -7562,7 +7600,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         xset_custom_activate( item, rset );
 
     if ( rset->menu_style )
-        main_window_autosave( rset->browser );
+        xset_autosave( rset->browser );
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
@@ -7590,6 +7628,7 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                                               action,
                                               buttons,
                                               msg1 );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( msg2 )
         gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2 );
@@ -7831,6 +7870,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                   GTK_MESSAGE_QUESTION,
                                   GTK_BUTTONS_NONE,
                                   msg1 );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
     
     if ( large )
     {
@@ -8085,7 +8125,8 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     GtkWidget* image;
     
     GtkWidget* dlg = gtk_font_selection_dialog_new( title );
-    
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+
     if ( deffont )
         gtk_font_selection_dialog_set_font_name( GTK_FONT_SELECTION_DIALOG( dlg ),
                                                                         deffont );
@@ -8168,6 +8209,7 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
     //gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( deffolder )
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), deffolder );
@@ -8247,6 +8289,8 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
 
     gtk_button_set_label( GTK_BUTTON( help_button ), _("_Unset") );
     gtk_button_set_image( GTK_BUTTON( help_button ), xset_get_image( "GTK_STOCK_REMOVE", GTK_ICON_SIZE_BUTTON ) );
+
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( defcolor && defcolor[0] != '\0' )
     {
@@ -8456,6 +8500,41 @@ void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,
             while ( elements[0] == ' ' )
                 elements++;
         }
+    }
+}
+
+void open_in_prog( const char* path )
+{
+    char* prog = g_find_program_in_path( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( g_get_prgname() );
+    if ( !prog )
+        prog = g_strdup( "spacefm" );
+    char* qpath = bash_quote( path );
+    char* line = g_strdup_printf( "%s %s", prog, qpath );
+    g_spawn_command_line_async( line, NULL );
+    g_free( qpath );
+    g_free( line );
+}
+
+void xset_set_window_icon( GtkWindow* win )
+{
+    char* name;
+    XSet* set = xset_get( "main_icon" );
+    if ( set->icon )
+        name = set->icon;
+    else if ( geteuid() == 0 )
+        name = "spacefm-root";
+    else
+        name = "spacefm";
+    GtkIconTheme* theme = gtk_icon_theme_get_default();
+    if ( !theme )
+        return;
+    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, name, 48, 0, NULL );
+    if ( icon )
+    {
+        gtk_window_set_icon( GTK_WINDOW( win ), icon );
+        g_object_unref( icon );
     }
 }
 
@@ -9821,6 +9900,11 @@ void xset_defaults()
     set = xset_set( "main_about", "label", _("_About") );
     xset_set_set( set, "icon", "gtk-about" );
 
+    set = xset_set( "main_dev", "label", _("_Show") );
+    xset_set_set( set, "icon", "gtk-harddisk" );
+    set = xset_get( "main_dev_sep" );
+    set->menu_style = XSET_MENU_SEP;
+
     // Tasks
     set = xset_get( "sep_t1" );
     set->menu_style = XSET_MENU_SEP;
@@ -10071,6 +10155,8 @@ void xset_defaults()
     // Desktop
     set = xset_get( "sep_desk1" );
     set->menu_style = XSET_MENU_SEP;
+    set = xset_get( "sep_desk2" );
+    set->menu_style = XSET_MENU_SEP;
 
     set = xset_set( "desk_icons", "label", _("Arrange _Icons") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -10098,6 +10184,13 @@ void xset_defaults()
     set = xset_set( "desk_pref", "label", _("Desktop _Settings") );
     xset_set_set( set, "icon", "gtk-preferences" );
 
+    set = xset_set( "desk_dev", "label", _("De_vices") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "icon", "gtk-harddisk" );
+
+    set = xset_set( "desk_book", "label", _("_Bookmarks") );
+    set->menu_style = XSET_MENU_SUBMENU;
+    xset_set_set( set, "icon", "gtk-jump-to" );
 
     // PANELS COMMON
     set = xset_get( "sep_new" );
@@ -10248,7 +10341,7 @@ void xset_defaults()
         set = xset_set( "tab_new_here", "label", _("Tab _Here") );
         xset_set_set( set, "icon", "gtk-add" );
 
-        set = xset_set( "new_app", "label", _("_Application") );
+        set = xset_set( "new_app", "label", _("_Desktop Application") );
         xset_set_set( set, "icon", "gtk-add" );
 
     set = xset_get( "sep_g1" );
