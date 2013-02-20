@@ -85,6 +85,7 @@ GtkCheckMenuItem* open_side_pane_menu;
 
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
+  long desktop_index;  // workspace that window was opened on
 }FMMainWindow;
 
 typedef struct _FMMainWindowClass
@@ -116,6 +117,7 @@ void fm_main_window_preference( FMMainWindow* main_window );
 
 /* get last active window */
 FMMainWindow* fm_main_window_get_last_active();
+FMMainWindow* fm_main_window_get_on_current_desktop();
 
 /* get all windows
  * The returned GList is owned and used internally by FMMainWindow, and

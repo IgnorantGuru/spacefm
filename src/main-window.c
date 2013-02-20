@@ -19,6 +19,7 @@
 #include <glib-object.h>
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdkx.h>  // XGetWindowProperty
 
 #include <string.h>
 
@@ -166,6 +167,7 @@ void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 static gboolean delayed_focus( GtkWidget* widget );
 static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser );
+static long get_current_desktop_index();
 
 
 static GtkWindowClass *parent_class = NULL;
@@ -385,8 +387,7 @@ GtkWidget* create_bookmarks_menu ( FMMainWindow* main_window )
         menu_item = create_bookmarks_menu_item( main_window,
                                                 ( char* ) l->data );
         gtk_menu_shell_append ( GTK_MENU_SHELL( bookmark_menu ), menu_item );
-        count++;
-        if ( count > 200 )
+        if ( ++count > 200 )
             break;
     }
     gtk_widget_show_all( bookmark_menu );
@@ -1759,6 +1760,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     all_windows = g_list_prepend( all_windows, main_window );
 
     pcmanfm_ref();
+
+    main_window->desktop_index = get_current_desktop_index();
 
     //g_signal_connect( G_OBJECT( main_window ), "task-notify",
     //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
@@ -3802,6 +3805,77 @@ FMMainWindow* fm_main_window_get_last_active()
 const GList* fm_main_window_get_all()
 {
     return all_windows;
+}
+
+static long get_current_desktop_index()
+{
+    GdkWindow* window = NULL;
+    long desktop = -1;
+    GdkDisplay* display;
+
+/*  // gtk_widget_get_screen returns wrong screen for specific gtkwindow
+    if ( win )
+    {
+        display = gtk_widget_get_display( GTK_WIDGET( win ) );
+        printf( "gtk_widget_get_display = %#x\n", display );
+        //window = gtk_widget_get_window( GTK_WIDGET( win ) );
+        //printf( "gtk_widget_get_window = %#x\n", window );
+        //GdkScreen* screen = gtk_widget_get_screen( GTK_WIDGET( win ) );
+        //printf( "gtk_widget_get_screen = %#x\n", screen );
+        //printf("gdk_screen_get_number = %d\n", gdk_screen_get_number( screen ) );
+    }
+*/
+    display = gdk_display_get_default();
+    if ( display )
+        window = gdk_x11_window_lookup_for_display( display,
+                                gdk_x11_get_default_root_xwindow() );
+    
+    if ( !GDK_IS_WINDOW( window ) )
+        return desktop;
+
+    // find out what desktop (workspace) window is on   #include <gdk/gdkx.h>
+    Atom type;
+    gint format;
+    gulong nitems;
+    gulong bytes_after;
+    guchar *data;
+    
+    Atom net_wm_desktop = gdk_x11_get_xatom_by_name_for_display ( display,
+                                                        "_NET_CURRENT_DESKTOP");
+    if ( net_wm_desktop == None )
+        fprintf( stderr, "spacefm: no _NET_CURRENT_DESKTOP atom found\n" );
+    else if ( XGetWindowProperty( GDK_DISPLAY_XDISPLAY( display ),
+                                  GDK_WINDOW_XID( window ), 
+                                  net_wm_desktop, 0, 1, 
+                                  False, 6 /*XA_CARDINAL*/, (Atom*)&type,
+                                  &format, &nitems, &bytes_after, 
+                                  &data ) != Success || data == NULL )
+    {
+        fprintf( stderr, "spacefm: XGetWindowProperty() failed\n");
+        if ( data == NULL )
+            fprintf(stderr, "spacefm: No data returned from XGetWindowProperty()\n" );
+    }
+    else
+    {
+        desktop = *data;
+        XFree( data );
+    }
+    return desktop;
+}
+
+FMMainWindow* fm_main_window_get_on_current_desktop()
+{
+    long cur_desktop = get_current_desktop_index();
+    if ( cur_desktop == -1 )
+        return fm_main_window_get_last_active(); // revert to dumb if no current
+
+    GList* l;
+    for ( l = all_windows; l; l = l->next )
+    {
+        if ( ((FMMainWindow*)l->data)->desktop_index == cur_desktop )
+            return (FMMainWindow*)l->data;
+    }
+    return NULL;
 }
 
 enum {

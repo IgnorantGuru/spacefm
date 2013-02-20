@@ -513,6 +513,9 @@ void set_button_states( PtkFileTask* ptask )
                             xset_get_image( icon,
                                             GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_label( GTK_BUTTON( ptask->progress_btn_pause ), label );
+
+    gtk_widget_set_sensitive( ptask->progress_btn_close,
+                                    ptask->complete || !!ptask->task_view );
 }
 
 void ptk_file_task_pause( PtkFileTask* ptask, int state )
@@ -1157,6 +1160,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     {
         gtk_widget_set_sensitive( ptask->progress_btn_stop, FALSE );
         gtk_widget_set_sensitive( ptask->progress_btn_pause, FALSE );
+        gtk_widget_set_sensitive( ptask->progress_btn_close, TRUE );
         if ( ptask->overwrite_combo )
             gtk_widget_set_sensitive( ptask->overwrite_combo, FALSE );
         if ( ptask->error_combo )

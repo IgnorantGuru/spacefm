@@ -1511,8 +1511,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             g_signal_connect( item, "activate", G_CALLBACK( on_bookmark_activate ),
                                                         (char*)l->data );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
-            count++;
-            if ( count > 200 )
+            if ( ++count > 200 )
                 break;
         }
         if ( count == 0 )

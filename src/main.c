@@ -989,7 +989,6 @@ static void open_in_tab( FMMainWindow** main_window, const char* real_path )
 {
     XSet* set;
     int p;
-
     // create main window if needed
     if( G_UNLIKELY( !*main_window ) )
     {
@@ -1080,10 +1079,11 @@ gboolean handle_parsed_commandline_args()
         //files[0] = (char*)g_get_home_dir();
     }
 
-    /* get the last active window, if available */
+    // get the last active window on this desktop, if available
     if( new_tab || reuse_tab )
     {
-        main_window = fm_main_window_get_last_active();
+        //main_window = fm_main_window_get_last_active();
+        main_window = fm_main_window_get_on_current_desktop();
     }
 
     if ( desktop_pref )  //MOD

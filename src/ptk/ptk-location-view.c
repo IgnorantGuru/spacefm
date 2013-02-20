@@ -36,6 +36,8 @@
 #include "ptk-file-task.h"
 #include "main-window.h"
 
+#include "gtk2-compat.h"
+
 static GtkTreeModel* model = NULL;
 static GtkTreeModel* bookmodel = NULL;
 static int n_vols = 0;
@@ -3230,25 +3232,6 @@ gboolean on_dev_menu_keypress( GtkWidget* menu, GdkEventKey* event,
         }
     }
     return FALSE;
-/*
-    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
-    if ( item )
-    {
-        // if original menu, desktop_file will be set
-        desktop_file = ( VFSAppDesktop* ) g_object_get_data( 
-                                    G_OBJECT( item ), "desktop_file" );
-        // else if app menu, data will be set
-        app_data = (PtkFileMenu*)g_object_get_data( G_OBJECT(item), "data" );
-
-        if ( !desktop_file && !app_data )
-            return FALSE;
-    }
-    else
-        return FALSE;
-
-    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
-                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
-*/
 }    
 
 gboolean on_dev_menu_button_press( GtkWidget* item, GdkEventButton* event,

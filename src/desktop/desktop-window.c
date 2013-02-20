@@ -2860,7 +2860,7 @@ void open_folders( GList* folders )
     FMMainWindow* main_window;
     gboolean new_window = FALSE;
     
-    main_window = fm_main_window_get_last_active();
+    main_window = fm_main_window_get_on_current_desktop();
     
     if ( !main_window )
     {

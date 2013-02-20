@@ -6,6 +6,7 @@
     revert breadcrumbs to Ctrl+Click #266 and no auto seek on activate path
     fix broken key shortcut New|Link
     new desktop menu; new Devices menu
+    fix open folder on desktop reuses browser on wrong desktop
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation
