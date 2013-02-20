@@ -6700,8 +6700,11 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
         else
         {
             item = gtk_image_menu_item_new_with_mnemonic( label );
-            gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), 
-                      gtk_image_new_from_stock( stock_icon, GTK_ICON_SIZE_MENU ) );
+            GtkWidget* image = gtk_image_new_from_stock( stock_icon,
+                                                    GTK_ICON_SIZE_MENU );
+            if ( image )
+                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), 
+                                                    image );
         }
     }
     else

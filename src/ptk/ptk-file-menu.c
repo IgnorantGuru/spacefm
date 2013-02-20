@@ -783,7 +783,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 if ( app_icon )
                 {
                     app_img = gtk_image_new_from_pixbuf( app_icon );
-                    gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
+                    if ( app_img )
+                        gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
                                                 app_menu_item ), app_img );
                     g_object_unref( app_icon );
                 }
@@ -833,7 +834,9 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         if ( app_icon )
         {
             app_img = gtk_image_new_from_pixbuf( app_icon );
-            gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( item ), app_img );
+            if ( app_img )
+                gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( item ),
+                                                                    app_img );
             g_object_unref( app_icon );
         } 
         if ( set->menu_label )
@@ -1503,6 +1506,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                             (char*)l->data ) );
             if ( book_icon )
                 folder_image = xset_get_image( book_icon, GTK_ICON_SIZE_MENU );
+            else
+                folder_image = NULL;
             if ( !folder_image )
                 folder_image = xset_get_image( "gtk-directory", GTK_ICON_SIZE_MENU );
             if ( folder_image )
@@ -2030,8 +2035,11 @@ GtkWidget* app_menu_additem( GtkWidget* menu, char* label, gchar* stock_icon,
         else
         {
             item = gtk_image_menu_item_new_with_mnemonic( label );
-            gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), 
-                      gtk_image_new_from_stock( stock_icon, GTK_ICON_SIZE_MENU ) );
+            GtkWidget* image = gtk_image_new_from_stock( stock_icon,
+                                                            GTK_ICON_SIZE_MENU );
+            if ( image )
+                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( item ), 
+                                                            image );
         }
     }
     else
