@@ -2240,7 +2240,7 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( app_menu ) );
-    gtk_menu_popup( GTK_MENU( app_menu ), GTK_WIDGET( menu ), NULL, NULL, NULL,
+    gtk_menu_popup( GTK_MENU( app_menu ), GTK_WIDGET( menu ), app_item, NULL, NULL,
                                                                 button, time );
     gtk_widget_set_sensitive( GTK_WIDGET( menu ), FALSE );
     

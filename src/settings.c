@@ -992,7 +992,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "16" );  // 0.8.3
+    xset_set( "config_version", "s", "17" );  // 0.8.7
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -7207,7 +7207,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_set_sensitive( newitem, !set->plugin );
                                 
     gtk_widget_show_all( GTK_WIDGET( design_menu ) );
-    gtk_menu_popup( GTK_MENU( design_menu ), GTK_WIDGET( menu ), NULL, NULL, NULL, button, time );
+    gtk_menu_popup( GTK_MENU( design_menu ), GTK_WIDGET( menu ), NULL, NULL,
+                                                    NULL, button, time );
     gtk_widget_set_sensitive( GTK_WIDGET( menu ), FALSE );
     
     g_signal_connect( menu, "hide", G_CALLBACK( on_menu_hide ),

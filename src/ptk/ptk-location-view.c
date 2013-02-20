@@ -3207,13 +3207,49 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
 
     // show menu
     gtk_widget_show_all( GTK_WIDGET( popup ) );
-    gtk_menu_popup( GTK_MENU( popup ), GTK_WIDGET( menu ), NULL, NULL, NULL,
+    gtk_menu_popup( GTK_MENU( popup ), GTK_WIDGET( menu ), dev_item, NULL, NULL,
                                                                 button, time );
     gtk_widget_set_sensitive( GTK_WIDGET( menu ), FALSE );    
     g_signal_connect( menu, "hide", G_CALLBACK( on_dev_menu_hide ), popup );
     g_signal_connect( popup, "selection-done",
                       G_CALLBACK( gtk_widget_destroy ), NULL );
 }
+
+gboolean on_dev_menu_keypress( GtkWidget* menu, GdkEventKey* event,
+                                                            gpointer user_data )
+{
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
+    if ( item )
+    {
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter ||
+                                                event->keyval == GDK_KEY_space )
+        {
+            VFSVolume* vol = (VFSVolume*)g_object_get_data( G_OBJECT(item), "vol" );
+            show_dev_design_menu( menu, item, vol, 1, event->time );
+            return TRUE;
+        }
+    }
+    return FALSE;
+/*
+    GtkWidget* item = gtk_menu_shell_get_selected_item( GTK_MENU_SHELL( menu ) );
+    if ( item )
+    {
+        // if original menu, desktop_file will be set
+        desktop_file = ( VFSAppDesktop* ) g_object_get_data( 
+                                    G_OBJECT( item ), "desktop_file" );
+        // else if app menu, data will be set
+        app_data = (PtkFileMenu*)g_object_get_data( G_OBJECT(item), "data" );
+
+        if ( !desktop_file && !app_data )
+            return FALSE;
+    }
+    else
+        return FALSE;
+
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+*/
+}    
 
 gboolean on_dev_menu_button_press( GtkWidget* item, GdkEventButton* event,
                                                             VFSVolume* vol )
@@ -3287,6 +3323,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* menu )
                                                                     image );
         }
         g_object_set_data( G_OBJECT( item ), "menu", menu );
+        g_object_set_data( G_OBJECT( item ), "vol", vol );
         g_signal_connect( item, "button-press-event",
                             G_CALLBACK( on_dev_menu_button_press ), vol );
         g_signal_connect( item, "button-release-event",
@@ -3294,6 +3331,8 @@ void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* menu )
         gtk_menu_shell_append( GTK_MENU_SHELL( menu ), item );
     }
     g_list_free( names );
+    g_signal_connect( menu, "key_press_event",
+                            G_CALLBACK( on_dev_menu_keypress ), NULL );
     
 #ifndef HAVE_HAL
     xset_set_cb( "dev_show_internal_drives", update_all, NULL );
