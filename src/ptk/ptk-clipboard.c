@@ -530,8 +530,11 @@ GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
     if ( sel_data )
     {
         if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
-
+        {
+            gtk_selection_data_free( sel_data );
+            return NULL;
+        }
+        
         uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
         *is_cut = ( 0 == strncmp( ( char* ) gtk_selection_data_get_data ( sel_data ), "cut", 3 ) );
 
@@ -546,15 +549,21 @@ GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
         uri_list_target = gdk_atom_intern( "text/uri-list", FALSE );
         sel_data = gtk_clipboard_wait_for_contents( clip, uri_list_target );
         if ( ! sel_data )
-            return ;
+            return NULL;
         if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
+        {
+            gtk_selection_data_free( sel_data );
+            return NULL;
+        }
         uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
     }
 
     if ( !uri_list_str )
-        return;
-
+    {
+        gtk_selection_data_free( sel_data );
+        return NULL;
+    }
+    
     // create file list
     puri = uri_list = g_uri_list_extract_uris( uri_list_str );
     while ( *puri )
