@@ -5,14 +5,15 @@
 # FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+#  <appukonrad@gmail.com>, 2013.
 # Radek Tříška <radek@fastlinux.eu>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-13 19:37+0000\n"
-"PO-Revision-Date: 2013-02-13 22:01+0000\n"
-"Last-Translator: ignorantguru <jgj7.ignorantguru@mailnull.com>\n"
+"PO-Revision-Date: 2013-02-19 07:39+0000\n"
+"Last-Translator: jui <appukonrad@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -774,24 +775,24 @@ msgstr ""
 #: ../src/cust-dialog.c:394
 #, c-format
 msgid "Too many columns (>%d) in %s"
-msgstr ""
+msgstr "Příliš mnoho sloupců (>%d) v %s"
 
 #: ../src/cust-dialog.c:631 ../src/cust-dialog.c:1643
 #: ../src/cust-dialog.c:1657 ../src/cust-dialog.c:1876
 #, c-format
 msgid "error reading file %s: %s"
-msgstr ""
+msgstr "chyba při čtení souboru %s: %s"
 
 #: ../src/cust-dialog.c:639 ../src/cust-dialog.c:1677
 #: ../src/cust-dialog.c:1890
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
-msgstr ""
+msgstr "obsah souboru '%s' není UTF-8"
 
 #: ../src/cust-dialog.c:693
 #, c-format
 msgid "Cannot set missing element '%s'"
-msgstr ""
+msgstr "Nelze nastavit chybějící prvek '%s'"
 
 #: ../src/cust-dialog.c:819 ../src/cust-dialog.c:908
 #, c-format
@@ -801,17 +802,17 @@ msgstr ""
 #: ../src/cust-dialog.c:991 ../src/cust-dialog.c:1327
 #: ../src/cust-dialog.c:3421
 msgid "Dynamic resize requires width and height > 0"
-msgstr ""
+msgstr "Dynamická změna velikosti vyžaduje šířku a výšku > 0"
 
 #: ../src/cust-dialog.c:1300
 #, c-format
 msgid "internal command %s requires an argument"
-msgstr ""
+msgstr "interníí příkaz %s vyžaduje argument"
 
 #: ../src/cust-dialog.c:1348
 #, c-format
 msgid "element '%s' does not exist"
-msgstr ""
+msgstr "prvek '%s' neexistuje"
 
 #: ../src/cust-dialog.c:1392
 #, c-format
@@ -861,7 +862,7 @@ msgstr ""
 #: ../src/cust-dialog.c:2293 ../src/cust-dialog.c:3579
 #: ../src/cust-dialog.c:3634
 msgid "Pause"
-msgstr ""
+msgstr "Pozastavit"
 
 #: ../src/cust-dialog.c:2973
 #, c-format
@@ -879,7 +880,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3688
 #, c-format
 msgid "Usage:\n"
-msgstr ""
+msgstr "Použití:\n"
 
 #: ../src/cust-dialog.c:3689
 #, c-format
@@ -889,7 +890,7 @@ msgstr ""
 #: ../src/cust-dialog.c:3690
 #, c-format
 msgid "Example:\n"
-msgstr ""
+msgstr "Příklad:\n"
 
 #: ../src/cust-dialog.c:3691
 #, c-format
@@ -979,14 +980,14 @@ msgstr ""
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
-msgstr ""
+msgstr "\nINTERNÍ PŘÍKAZY:\n"
 
 #: ../src/cust-dialog.c:3725
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
-msgstr ""
+msgstr "\nPŘÍKLAD S PŘÍKAZY:\n"
 
 #: ../src/cust-dialog.c:3726
 #, c-format
@@ -1002,7 +1003,7 @@ msgstr ""
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
-msgstr ""
+msgstr "\nPŘÍKLAD SKRIPTU:\n"
 
 #: ../src/cust-dialog.c:3729
 #, c-format
@@ -1168,11 +1169,11 @@ msgstr ""
 #. exit status ?
 #: ../src/cust-dialog.h:143
 msgid "Close the dialog"
-msgstr ""
+msgstr "Zavřít dialog"
 
 #: ../src/cust-dialog.h:145
 msgid "Press button named BUTTON-NAME"
-msgstr ""
+msgstr "Stiskněte tlačítko BUTTON-NAME"
 
 #: ../src/cust-dialog.h:147
 msgid "Set element NAME to VALUE"
@@ -1245,7 +1246,7 @@ msgstr ""
 
 #: ../src/main.c:134
 msgid "Run as a daemon"
-msgstr ""
+msgstr "Spustit jako démona"
 
 #: ../src/main.c:135
 msgid "Use DIR as configuration directory"
@@ -1853,15 +1854,15 @@ msgstr ""
 
 #: ../src/main-window.c:2122
 msgid "SpaceFM Error"
-msgstr ""
+msgstr "Chyba SpaceFM"
 
 #: ../src/main-window.c:2138
 msgid "Stop all tasks running in this window?"
-msgstr ""
+msgstr "Zastavit všechny úkoly spuštěné v tomto okně?"
 
 #: ../src/main-window.c:2147
 msgid "Aborting tasks..."
-msgstr ""
+msgstr "Rušení úkolů..."
 
 #: ../src/main-window.c:3310
 #, c-format
@@ -1928,11 +1929,11 @@ msgstr ""
 #. If you change "Status", also change it in on_task_button_press_event
 #: ../src/main-window.c:3805 ../src/main-window.c:5204
 msgid "Status"
-msgstr ""
+msgstr "Stav"
 
 #: ../src/main-window.c:3805
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #: ../src/main-window.c:3805 ../src/ptk/ptk-file-misc.c:1884
 #: ../src/find-files.c:918
@@ -1953,31 +1954,31 @@ msgstr ""
 
 #: ../src/main-window.c:3806
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #: ../src/main-window.c:3807
 msgid "Started"
-msgstr ""
+msgstr "Začátek"
 
 #: ../src/main-window.c:3807
 msgid "Elapsed"
-msgstr ""
+msgstr "Uplynulo"
 
 #: ../src/main-window.c:3807
 msgid "Current"
-msgstr ""
+msgstr "Aktuální"
 
 #: ../src/main-window.c:3807
 msgid "CRemain"
-msgstr ""
+msgstr "Zbývá"
 
 #: ../src/main-window.c:3808
 msgid "Average"
-msgstr ""
+msgstr "Průměr"
 
 #: ../src/main-window.c:3808
 msgid "Remain"
-msgstr ""
+msgstr "Zbývá"
 
 #: ../src/main-window.c:3821
 msgid "Reorder Columns Help"
@@ -1991,41 +1992,41 @@ msgstr ""
 
 #: ../src/main-window.c:5327
 msgid "moving"
-msgstr ""
+msgstr "přesun"
 
 #: ../src/main-window.c:5328
 msgid "copying"
-msgstr ""
+msgstr "kopírování"
 
 #: ../src/main-window.c:5329
 msgid "trashing"
-msgstr ""
+msgstr "zahazování"
 
 #: ../src/main-window.c:5330
 msgid "deleting"
-msgstr ""
+msgstr "mazání"
 
 #: ../src/main-window.c:5331
 msgid "linking"
-msgstr ""
+msgstr "odkazování"
 
 #: ../src/main-window.c:5332
 msgid "changing"
-msgstr ""
+msgstr "změna"
 
 #: ../src/main-window.c:5333
 msgid "running"
-msgstr ""
+msgstr "běh"
 
 #: ../src/main-window.c:5453 ../src/ptk/ptk-file-task.c:1595
 #, c-format
 msgid "paused"
-msgstr ""
+msgstr "pozastaveno"
 
 #: ../src/main-window.c:5455 ../src/ptk/ptk-file-task.c:1597
 #, c-format
 msgid "queued"
-msgstr ""
+msgstr "čeká ve frontě"
 
 #: ../src/main-window.c:5722 ../src/ptk/ptk-file-browser.c:4024
 #: ../src/ptk/ptk-file-browser.c:4365 ../src/edit-bookmarks.c:196
@@ -2051,40 +2052,40 @@ msgstr "Práva"
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
 msgid "Owner"
-msgstr ""
+msgstr "Vlastník"
 
 #: ../src/main-window.c:5723 ../src/ptk/ptk-file-browser.c:4025
 #: ../src/ptk/ptk-file-browser.c:4366
 msgid "Modified"
-msgstr ""
+msgstr "Upraveno"
 
 #: ../src/main-window.c:5729
 msgid "spacefm: invalid socket command\n"
-msgstr ""
+msgstr "spacefm: neplatný příkaz konektoru\n"
 
 #: ../src/main-window.c:5758
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
-msgstr ""
+msgstr "spacefm: neplatný přepínač '%s'\n"
 
 #: ../src/main-window.c:5761
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
-msgstr ""
+msgstr "spacefm: přepínač %s vyžaduje argument\n"
 
 #: ../src/main-window.c:5771
 msgid "spacefm: invalid window\n"
-msgstr ""
+msgstr "spacefm: neplatné okno\n"
 
 #: ../src/main-window.c:5791
 #, c-format
 msgid "spacefm: invalid window %s\n"
-msgstr ""
+msgstr "spacefm: neplatné okno %s\n"
 
 #: ../src/main-window.c:5801
 #, c-format
 msgid "spacefm: invalid panel %d\n"
-msgstr ""
+msgstr "spacefm: neplatný panel %d\n"
 
 #: ../src/main-window.c:5808
 #, c-format
@@ -2103,7 +2104,7 @@ msgstr ""
 #: ../src/main-window.c:5859
 #, c-format
 msgid "spacefm: invalid %s value\n"
-msgstr ""
+msgstr "spacefm: neplatná %s hodnota\n"
 
 #: ../src/main-window.c:5892 ../src/main-window.c:6010
 msgid "spacefm: invalid slider value\n"
@@ -2111,7 +2112,7 @@ msgstr ""
 
 #: ../src/main-window.c:5921
 msgid "spacefm: invalid panel number\n"
-msgstr ""
+msgstr "spacefm: neplatné číslo panelu\n"
 
 #: ../src/main-window.c:5962
 msgid "spacefm: invalid tab number\n"
@@ -2121,67 +2122,67 @@ msgstr ""
 #: ../src/main-window.c:6338 ../src/main-window.c:6526
 #, c-format
 msgid "spacefm: invalid property %s\n"
-msgstr ""
+msgstr "spacefm: neplatná vlastnost %s\n"
 
 #: ../src/main-window.c:6030
 msgid "spacefm: invalid column width\n"
-msgstr ""
+msgstr "spacefm: neplatná šířka sloupce\n"
 
 #: ../src/main-window.c:6066 ../src/main-window.c:6399
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
-msgstr ""
+msgstr "spacefm: neplatný název sloupce '%s'\n"
 
 #: ../src/main-window.c:6121
 msgid "spacefm: text is not valid UTF-8\n"
-msgstr ""
+msgstr "spacefm: text není validní UTF-8\n"
 
 #: ../src/main-window.c:6138
 #, c-format
 msgid "spacefm: %s requires a file path\n"
-msgstr ""
+msgstr "spacefm: %s vyžaduje cestu k souboru\n"
 
 #: ../src/main-window.c:6144
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
-msgstr ""
+msgstr "spacefm: chyba při čtení souboru '%s'\n"
 
 #: ../src/main-window.c:6150
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
-msgstr ""
+msgstr "spacefm: obsah souboru '%s' neobsahuje validní UTF-8 text\n"
 
 #: ../src/main-window.c:6191
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
-msgstr ""
+msgstr "spacefm: %s vyžaduje cestu k adresáři\n"
 
 #: ../src/main-window.c:6197
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
-msgstr ""
+msgstr "spacefm: adresář '%s' neexistuje\n"
 
 #: ../src/main-window.c:6243 ../src/main-window.c:6768
 #: ../src/main-window.c:6794
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
-msgstr ""
+msgstr "spacefm: příkaz %s vyžaduje argument\n"
 
 #: ../src/main-window.c:6534 ../src/main-window.c:6664
 #: ../src/main-window.c:6833
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
-msgstr ""
+msgstr "spacefm: %s vyžaduje dva argumenty\n"
 
 #: ../src/main-window.c:6562 ../src/main-window.c:6692
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
-msgstr ""
+msgstr "spacefm: neplatný úkol '%s'\n"
 
 #: ../src/main-window.c:6567
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
-msgstr ""
+msgstr "spacefm: interní úkol %s je pouze ke čtení\n"
 
 #: ../src/main-window.c:6619
 #, c-format
@@ -2284,15 +2285,15 @@ msgstr ""
 
 #: ../src/settings.c:122
 msgid "MIME Type"
-msgstr ""
+msgstr "MIME Typ"
 
 #: ../src/settings.c:123
 msgid "Filename"
-msgstr ""
+msgstr "Jméno souboru"
 
 #: ../src/settings.c:124
 msgid "Directory"
-msgstr ""
+msgstr "Adresář"
 
 #: ../src/settings.c:125
 msgid "Dir Write Access"
@@ -2300,7 +2301,7 @@ msgstr ""
 
 #: ../src/settings.c:126
 msgid "File Is Text"
-msgstr ""
+msgstr "Soubor je text"
 
 #: ../src/settings.c:127
 msgid "File Is Dir"
@@ -2308,27 +2309,27 @@ msgstr ""
 
 #: ../src/settings.c:128
 msgid "File Is Link"
-msgstr ""
+msgstr "Soubor je zástupce"
 
 #: ../src/settings.c:129
 msgid "User Is Root"
-msgstr ""
+msgstr "Uživatel je Root"
 
 #: ../src/settings.c:130
 msgid "Multiple Selected"
-msgstr ""
+msgstr "Výcenásobný výběr"
 
 #: ../src/settings.c:131
 msgid "Clipboard Has Files"
-msgstr ""
+msgstr "Schránka obsahuje soubory"
 
 #: ../src/settings.c:132
 msgid "Clipboard Has Text"
-msgstr ""
+msgstr "Schránka obsahuje text"
 
 #: ../src/settings.c:133
 msgid "Current Panel"
-msgstr ""
+msgstr "Současný panel"
 
 #: ../src/settings.c:134
 msgid "Panel Count"
@@ -2344,31 +2345,31 @@ msgstr ""
 
 #: ../src/settings.c:137
 msgid "Bookmark"
-msgstr ""
+msgstr "Záložka"
 
 #: ../src/settings.c:138
 msgid "Device"
-msgstr ""
+msgstr "Zařízení"
 
 #: ../src/settings.c:139
 msgid "Device Mount Point"
-msgstr ""
+msgstr "Přípojný bod zařízení"
 
 #: ../src/settings.c:140
 msgid "Device Label"
-msgstr ""
+msgstr "Štítek zařízení"
 
 #: ../src/settings.c:141
 msgid "Device FSType"
-msgstr ""
+msgstr "Typ FS zařízení"
 
 #: ../src/settings.c:142
 msgid "Device UDI"
-msgstr ""
+msgstr "UID zařízení"
 
 #: ../src/settings.c:143
 msgid "Device Properties"
-msgstr ""
+msgstr "Vlastnosti zařízení"
 
 #: ../src/settings.c:144
 msgid "Task Count"
@@ -2436,43 +2437,43 @@ msgstr ""
 
 #: ../src/settings.c:219
 msgid "equals"
-msgstr ""
+msgstr "rovná se"
 
 #: ../src/settings.c:220
 msgid "doesn't equal"
-msgstr ""
+msgstr "nerovná se"
 
 #: ../src/settings.c:221
 msgid "contains"
-msgstr ""
+msgstr "obsahuje"
 
 #: ../src/settings.c:222
 msgid "doesn't contain"
-msgstr ""
+msgstr "neobsahuje"
 
 #: ../src/settings.c:223
 msgid "begins with"
-msgstr ""
+msgstr "začíná s"
 
 #: ../src/settings.c:224
 msgid "doesn't begin with"
-msgstr ""
+msgstr "nezačíná"
 
 #: ../src/settings.c:225
 msgid "ends with"
-msgstr ""
+msgstr "končí na"
 
 #: ../src/settings.c:226
 msgid "doesn't end with"
-msgstr ""
+msgstr "nekončí na"
 
 #: ../src/settings.c:227
 msgid "is less than"
-msgstr ""
+msgstr "je menší než"
 
 #: ../src/settings.c:228
 msgid "is greater than"
-msgstr ""
+msgstr "je větší než"
 
 #: ../src/settings.c:445
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
@@ -3748,7 +3749,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:1075 ../src/ptk/ptk-file-misc.c:1086
 #: ../src/desktop/desktop-window.c:203
 msgid "_Link"
-msgstr ""
+msgstr "_Zástupce"
 
 #: ../src/settings.c:9440 ../src/ptk/ptk-file-misc.c:2303
 msgid "Copy _Target"
@@ -4640,7 +4641,7 @@ msgstr ""
 
 #: ../src/settings.c:10198 ../src/desktop/desktop-window.c:202
 msgid "Fol_der"
-msgstr ""
+msgstr "Slo_žka"
 
 #: ../src/settings.c:10204
 msgctxt "New|"
@@ -5706,7 +5707,7 @@ msgstr "Kopírovat:"
 
 #: ../src/ptk/ptk-file-task.c:754
 msgid "Trash: "
-msgstr ""
+msgstr "Koš:"
 
 #: ../src/ptk/ptk-file-task.c:755
 msgid "Delete: "
@@ -5782,7 +5783,7 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-task.c:995
 msgid "Ask"
-msgstr ""
+msgstr "Ptát se"
 
 #: ../src/ptk/ptk-file-task.c:996
 msgid "Overwrite All"
@@ -5794,19 +5795,19 @@ msgstr "Přeskočit Vše"
 
 #: ../src/ptk/ptk-file-task.c:998
 msgid "Auto Rename"
-msgstr ""
+msgstr "Automaticky přejmenovat"
 
 #: ../src/ptk/ptk-file-task.c:1002
 msgid "Stop If Error First"
-msgstr ""
+msgstr "Zastavit při první chybě"
 
 #: ../src/ptk/ptk-file-task.c:1003
 msgid "Stop On Any Error"
-msgstr ""
+msgstr "Zastavit při jakékoli chybě"
 
 #: ../src/ptk/ptk-file-task.c:1004
 msgid "Continue"
-msgstr ""
+msgstr "Pokračovat"
 
 #: ../src/ptk/ptk-file-task.c:1161 ../src/ptk/ptk-file-task.c:1394
 #, c-format
@@ -6263,12 +6264,12 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:1043
 msgctxt "Title|"
 msgid "Create New"
-msgstr ""
+msgstr "Vytvořit nový"
 
 #: ../src/ptk/ptk-file-misc.c:1045
 msgctxt "Title|CreateNew|"
 msgid "File"
-msgstr ""
+msgstr "Soubor"
 
 #: ../src/ptk/ptk-file-misc.c:1047
 msgctxt "Title|CreateNew|"
@@ -6278,7 +6279,7 @@ msgstr "Adresář"
 #: ../src/ptk/ptk-file-misc.c:1049
 msgctxt "Title|CreateNew|"
 msgid "Link"
-msgstr ""
+msgstr "Zástupce"
 
 #: ../src/ptk/ptk-file-misc.c:1066 ../src/ptk/ptk-file-misc.c:1913
 msgid "Move"
@@ -6310,11 +6311,11 @@ msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1882
 msgid "Link"
-msgstr ""
+msgstr "Zástupce"
 
 #: ../src/ptk/ptk-file-misc.c:1886
 msgid "File"
-msgstr ""
+msgstr "Soubor"
 
 #. g_free( title );
 #. Buttons
@@ -6384,17 +6385,17 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:2308
 msgctxt "New|Radio"
 msgid "Fil_e"
-msgstr ""
+msgstr "Sou_bor"
 
 #: ../src/ptk/ptk-file-misc.c:2310
 msgctxt "New|Radio"
 msgid "Fol_der"
-msgstr ""
+msgstr "Slo_žka"
 
 #: ../src/ptk/ptk-file-misc.c:2312
 msgctxt "New|Radio"
 msgid "_Link"
-msgstr ""
+msgstr "_Zástupce"
 
 #: ../src/ptk/ptk-file-misc.c:2415
 msgid "New"
@@ -7040,12 +7041,12 @@ msgstr "Audio CD nemohou být připojena, použijte hudební přehrávač pro p�
 #: ../src/vfs/vfs-volume-nohal.c:2313
 #, c-format
 msgid ":floppy"
-msgstr ""
+msgstr ":disketa"
 
 #: ../src/vfs/vfs-volume-nohal.c:2334
 #, c-format
 msgid ":optical"
-msgstr ""
+msgstr ":optické médium"
 
 #: ../src/vfs/vfs-volume-nohal.c:2379
 #, c-format
@@ -7183,7 +7184,7 @@ msgstr "Otevřít Obsahující _Adresář"
 
 #: ../src/find-files.c:773
 msgid "Select a folder"
-msgstr ""
+msgstr "Vyber složku"
 
 #: ../src/find-files.c:822
 msgid "Browse..."

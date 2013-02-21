@@ -5,6 +5,7 @@
 # FIRST TRANSLATOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
+# Aqualung71 <hugohirsch@gmx.de>, 2013.
 #  <delix.fb@t-online.de>, 2013.
 # Rüdiger Arp <ruediger@gmx.net>, 2006.
 msgid ""
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-13 19:37+0000\n"
-"PO-Revision-Date: 2013-02-15 20:43+0000\n"
+"PO-Revision-Date: 2013-02-19 19:27+0000\n"
 "Last-Translator: delix <delix.fb@t-online.de>\n"
 "Language-Team: German (http://www.transifex.com/projects/p/spacefm/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -23,19 +24,19 @@ msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
 msgid "SpaceFM Open Folder"
-msgstr ""
+msgstr "SpaceFM Verzeichnis öffnen"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
 msgid "Open folder"
-msgstr ""
+msgstr "Verzeichnis öffnen"
 
 #: ../data/spacefm-find.desktop.in.h:1
 msgid "SpaceFM File Search"
-msgstr ""
+msgstr "SpaceFM Dateisuche"
 
 #: ../data/spacefm-find.desktop.in.h:2
 msgid "Search for files and folders"
-msgstr ""
+msgstr "Suche nach Dateien und Verzeichnissen"
 
 #: ../data/spacefm.desktop.in.h:1
 msgid "SpaceFM"
@@ -43,15 +44,15 @@ msgstr "SpaceFM"
 
 #: ../data/spacefm.desktop.in.h:2
 msgid "File Manager"
-msgstr ""
+msgstr "Dateiverwaltung"
 
 #: ../data/spacefm.desktop.in.h:3
 msgid "Browse the file system"
-msgstr ""
+msgstr "Im Dateisystem navigieren"
 
 #: ../data/ui/about-dlg.ui.h:1
 msgid "by IgnorantGuru"
-msgstr ""
+msgstr "by IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
 msgid "Copyright (C) 2013    GPL3+"
@@ -68,7 +69,7 @@ msgid ""
 "The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
-msgstr ""
+msgstr "SpaceFM - Copyright (C) 2013   GPL3+\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nUSE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nThe 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n\nYou should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 
 #: ../data/ui/about-dlg.ui.h:12
 msgid ""
@@ -91,11 +92,11 @@ msgid ""
 " * Text and icon renderer uses code from Jonathan Blandford\n"
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
-msgstr ""
+msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nMitwirkende:\n   BwackNinja <BwackNinja@gmail.com>  (gtk misc, gtk3 port)\n\nDanke an die SpaceFM Nutzer für wertvolle Rückmeldungen!\n\nSpaceFM wird entwickelt mit geany, gcc, und git, sowie etwas Hilfe von gdb.\n\n\nVon folgenden Projecten wird Quellcode übernommen:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Arbeitsbereichsfeststellung: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * Text- und Symbole-Renderer enthält Code von Jonathan Blandford\n * Desktop Icons benutzen Code von Brian Tarricone\n * HAL support (veraltet): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
 #: ../data/ui/about-dlg.ui.h:31
 msgid "translator-credits"
-msgstr ""
+msgstr "mitwirkende Übersetzer"
 
 #: ../data/ui/about-dlg.ui.h:32
 msgid ""
@@ -103,19 +104,19 @@ msgid ""
 "SpaceFM icons and logo by Goran Simovic\n"
 "\n"
 "Additional icons were taken from the Tango Desktop Project icon set"
-msgstr ""
+msgstr "\nSpaceFM icons und Logo by Goran Simovic\n\nZusätzliche Symbole stammen wurden vom Tango Desktop Project übernommen"
 
 #: ../data/ui/appchooserdlg.ui.h:1
 msgid "Choose Application"
-msgstr ""
+msgstr "Anwendung auswählen"
 
 #: ../data/ui/appchooserdlg.ui.h:2
 msgid "Please choose an application or enter a command:"
-msgstr ""
+msgstr "Bitte Anwendung auswählen oder Befehl eingeben:"
 
 #: ../data/ui/appchooserdlg.ui.h:3
 msgid "File Type:"
-msgstr ""
+msgstr "Dateityp:"
 
 #: ../data/ui/appchooserdlg.ui.h:4
 msgid "_Associated Apps"
@@ -123,7 +124,7 @@ msgstr ""
 
 #: ../data/ui/appchooserdlg.ui.h:5
 msgid "A_ll Apps"
-msgstr ""
+msgstr "a_lle Anwendungen"
 
 #: ../data/ui/appchooserdlg.ui.h:6
 msgid "_Command:"
@@ -137,47 +138,47 @@ msgstr "_Durchsuchen"
 
 #: ../data/ui/appchooserdlg.ui.h:8
 msgid "Opened in Terminal"
-msgstr ""
+msgstr "im Terminal geöffnet"
 
 #: ../data/ui/appchooserdlg.ui.h:9
 msgid "_Set as default"
-msgstr ""
+msgstr "voreingestellt"
 
 #: ../data/ui/file_properties.ui.h:1
 msgid "File Properties"
-msgstr ""
+msgstr "Dateieigenschaften"
 
 #: ../data/ui/file_properties.ui.h:2
 msgid "<b>File_name:</b>"
-msgstr ""
+msgstr "<b>Dateiname:</b>"
 
 #: ../data/ui/file_properties.ui.h:3 ../src/ptk/ptk-file-misc.c:1980
 msgid "<b>Type:</b>"
-msgstr ""
+msgstr "<b>Typ:</b>"
 
 #: ../data/ui/file_properties.ui.h:4
 msgid "<b>Total Size:</b>"
-msgstr ""
+msgstr "<b>Gesamtgröße:</b>"
 
 #: ../data/ui/file_properties.ui.h:5
 msgid "<b>Modified:</b>"
-msgstr ""
+msgstr "<b>Geändert:</b>"
 
 #: ../data/ui/file_properties.ui.h:6
 msgid "<b>Accessed:</b>"
-msgstr ""
+msgstr "<b>Zugegriffen auf:</b>"
 
 #: ../data/ui/file_properties.ui.h:7
 msgid "<b>Location:</b>"
-msgstr ""
+msgstr "<b>Aufenthaltsort:</b>"
 
 #: ../data/ui/file_properties.ui.h:8
 msgid "<b>Size On Disk:</b>"
-msgstr ""
+msgstr "<b> Größe auf Festplatte:</b>"
 
 #: ../data/ui/file_properties.ui.h:9
 msgid "<b>Count:</b>"
-msgstr ""
+msgstr "<b>Zählerstand:</b>"
 
 #: ../data/ui/file_properties.ui.h:10
 msgid "<b>Opens _With:</b>"
@@ -193,47 +194,47 @@ msgstr ""
 
 #: ../data/ui/file_properties.ui.h:13
 msgid "<b>_Group:</b>"
-msgstr ""
+msgstr "<b>_Gruppe:</b>"
 
 #: ../data/ui/file_properties.ui.h:14
 msgid "<b>Owner:</b>"
-msgstr ""
+msgstr "<b>Besitzer:</b>"
 
 #: ../data/ui/file_properties.ui.h:15
 msgid "<b>Group:</b>"
-msgstr ""
+msgstr "<b>Nutzergruppe:</b>"
 
 #: ../data/ui/file_properties.ui.h:16
 msgid "<b>Other:</b>"
-msgstr ""
+msgstr "<b>Sonstiges:</b>"
 
 #: ../data/ui/file_properties.ui.h:17
 msgid "Read"
-msgstr ""
+msgstr "Lesen"
 
 #: ../data/ui/file_properties.ui.h:18
 msgid "Write"
-msgstr ""
+msgstr "Schreiben"
 
 #: ../data/ui/file_properties.ui.h:19
 msgid "Execute"
-msgstr ""
+msgstr "Ausführen"
 
 #: ../data/ui/file_properties.ui.h:20
 msgid "Set UID"
-msgstr ""
+msgstr "UID setzen"
 
 #: ../data/ui/file_properties.ui.h:21
 msgid "Set GID"
-msgstr ""
+msgstr "GID setzen"
 
 #: ../data/ui/file_properties.ui.h:22
 msgid "Sticky"
-msgstr ""
+msgstr "dauerhaft sichtbar"
 
 #: ../data/ui/file_properties.ui.h:23
 msgid "Recursive (apply changes to folder contents)"
-msgstr ""
+msgstr "rekursiv (Änderungen werden auch auf Verzeichnisinhalte angewendet)"
 
 #: ../data/ui/file_properties.ui.h:24 ../src/settings.c:10512
 msgid "_Permissions"
@@ -258,212 +259,212 @@ msgstr "GB"
 
 #: ../data/ui/find-files.ui.h:5 ../data/ui/find-files2.ui.h:5
 msgid "Any"
-msgstr ""
+msgstr "beliebig"
 
 #: ../data/ui/find-files.ui.h:6 ../data/ui/find-files2.ui.h:6
 msgid "Within One Day"
-msgstr ""
+msgstr "innerhalb eines Tages"
 
 #: ../data/ui/find-files.ui.h:7 ../data/ui/find-files2.ui.h:7
 msgid "Within One Week"
-msgstr ""
+msgstr "innerhalb einer Woche"
 
 #: ../data/ui/find-files.ui.h:8 ../data/ui/find-files2.ui.h:8
 msgid "Within One Month"
-msgstr ""
+msgstr "innerhalb eines Monats"
 
 #: ../data/ui/find-files.ui.h:9 ../data/ui/find-files2.ui.h:9
 msgid "Within One Year"
-msgstr ""
+msgstr "innerhalb eines Jahres"
 
 #: ../data/ui/find-files.ui.h:10 ../data/ui/find-files2.ui.h:10
 msgid "Within Selected Date Range"
-msgstr ""
+msgstr "innerhalb des angegebenen Zeitraums"
 
 #: ../data/ui/find-files.ui.h:11 ../data/ui/find-files2.ui.h:11
 msgid "Find Files"
-msgstr ""
+msgstr "Dateisuche"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
 #: ../src/ptk/ptk-file-task.c:2300
 msgid "<b>Filename:</b>"
-msgstr ""
+msgstr "<b>Dateiname:</b>"
 
 #: ../data/ui/find-files.ui.h:13 ../data/ui/find-files2.ui.h:13
 msgid "Case Sensitive"
-msgstr ""
+msgstr "Groß-/Kleinschreibung"
 
 #: ../data/ui/find-files.ui.h:14 ../data/ui/find-files2.ui.h:14
 msgid "Video Files (avi, mpg,...)"
-msgstr ""
+msgstr "Video Dateien (avi, mpg,...)"
 
 #: ../data/ui/find-files.ui.h:15 ../data/ui/find-files2.ui.h:15
 msgid "Audio Files (mp3, ogg,...)"
-msgstr ""
+msgstr "Audio Dateien (mp3, ogg,...)"
 
 #: ../data/ui/find-files.ui.h:16 ../data/ui/find-files2.ui.h:16
 msgid "Image Files (jpg, png,...)"
-msgstr ""
+msgstr "Bilddateien (jpg, png,...)"
 
 #: ../data/ui/find-files.ui.h:17 ../data/ui/find-files2.ui.h:17
 msgid "Plain Text Files"
-msgstr ""
+msgstr "unformatierte Textdateien"
 
 #: ../data/ui/find-files.ui.h:18 ../data/ui/find-files2.ui.h:18
 msgid "All Files and Folders"
-msgstr ""
+msgstr "alle Dateien und Verzeichnisse"
 
 #: ../data/ui/find-files.ui.h:19 ../data/ui/find-files2.ui.h:19
 msgid "<b>File Types to Search</b>"
-msgstr ""
+msgstr "<b>gesuchte Dateitypen</b>"
 
 #: ../data/ui/find-files.ui.h:20 ../data/ui/find-files2.ui.h:20
 msgid "Search in subfolders"
-msgstr ""
+msgstr "Suche in Unterverzeichnissen"
 
 #: ../data/ui/find-files.ui.h:21 ../data/ui/find-files2.ui.h:21
 msgid "Search hidden files"
-msgstr ""
+msgstr "Suche nach versteckten Dateien"
 
 #: ../data/ui/find-files.ui.h:22 ../data/ui/find-files2.ui.h:22
 msgid "<b>Places to Search</b>"
-msgstr ""
+msgstr "<b>zu durchsuchen</b>"
 
 #: ../data/ui/find-files.ui.h:23 ../data/ui/find-files2.ui.h:23
 msgid "General"
-msgstr ""
+msgstr "allgemein"
 
 #: ../data/ui/find-files.ui.h:24 ../data/ui/find-files2.ui.h:24
 msgid "File Contains:"
-msgstr ""
+msgstr "Datei enthält:"
 
 #: ../data/ui/find-files.ui.h:25 ../data/ui/find-files2.ui.h:25
 msgid "Use Regular Expression"
-msgstr ""
+msgstr "verwende reulären Ausdruck"
 
 #: ../data/ui/find-files.ui.h:26 ../data/ui/find-files2.ui.h:26
 msgid "<b>File Content</b>"
-msgstr ""
+msgstr "<b>Dateiinhalt</b>"
 
 #: ../data/ui/find-files.ui.h:27 ../data/ui/find-files2.ui.h:27
 msgid "Content"
-msgstr ""
+msgstr "Inhalt"
 
 #: ../data/ui/find-files.ui.h:28 ../data/ui/find-files2.ui.h:28
 msgid "Greater Than:"
-msgstr ""
+msgstr "größer als :"
 
 #: ../data/ui/find-files.ui.h:29 ../data/ui/find-files2.ui.h:29
 msgid "Smaller Than:"
-msgstr ""
+msgstr "kleiner als:"
 
 #: ../data/ui/find-files.ui.h:30 ../data/ui/find-files2.ui.h:30
 msgid "<b>File Size</b>"
-msgstr ""
+msgstr "<b>Dateigröße</b>"
 
 #: ../data/ui/find-files.ui.h:31 ../data/ui/find-files2.ui.h:31
 msgid "<b>Last Modified</b>"
-msgstr ""
+msgstr "<b>zuletzt geändert</b>"
 
 #: ../data/ui/find-files.ui.h:32 ../data/ui/find-files2.ui.h:32
 msgid "Size & Date"
-msgstr ""
+msgstr "Größe & Datum"
 
 #: ../data/ui/find-files.ui.h:33 ../data/ui/find-files2.ui.h:33
 msgid "<b>Search Result:</b>"
-msgstr ""
+msgstr "<b>Suchergebnis:</b>"
 
 #: ../data/ui/find-files.ui.h:34 ../data/ui/find-files2.ui.h:34
 msgid "Search Again"
-msgstr ""
+msgstr "Suche wiederholen"
 
 #: ../data/ui/godlg.ui.h:1
 msgid "Go to folder"
-msgstr ""
+msgstr "Gehe zu Verzeichnis"
 
 #: ../data/ui/prefdlg.ui.h:1 ../data/ui/prefdlg2.ui.h:1
 msgid "Open In Current Tab"
-msgstr ""
+msgstr "in diesem Reiter öffnen"
 
 #: ../data/ui/prefdlg.ui.h:2 ../data/ui/prefdlg2.ui.h:2
 msgid "Open In New Tab"
-msgstr ""
+msgstr "in neuem Reiter öffnen"
 
 #: ../data/ui/prefdlg.ui.h:3 ../data/ui/prefdlg2.ui.h:3
 msgid "Stretch"
-msgstr ""
+msgstr "in die Breite gezogen"
 
 #: ../data/ui/prefdlg.ui.h:4 ../data/ui/prefdlg2.ui.h:4
 msgid "Fit"
-msgstr ""
+msgstr "angepasst"
 
 #: ../data/ui/prefdlg.ui.h:5 ../data/ui/prefdlg2.ui.h:5
 msgid "Center"
-msgstr ""
+msgstr "zentriert"
 
 #: ../data/ui/prefdlg.ui.h:6 ../data/ui/prefdlg2.ui.h:6
 msgid "Tile"
-msgstr ""
+msgstr "Kacheln"
 
 #: ../data/ui/prefdlg.ui.h:7 ../data/ui/prefdlg2.ui.h:7
 msgid "Zoom"
-msgstr ""
+msgstr "vergrößert"
 
 #: ../data/ui/prefdlg.ui.h:8 ../data/ui/prefdlg2.ui.h:8
 msgid "Automatic"
-msgstr ""
+msgstr "automatisch"
 
 #: ../data/ui/prefdlg.ui.h:9 ../data/ui/prefdlg2.ui.h:9
 msgid "Copy (Ctrl+Drag)"
-msgstr ""
+msgstr "Kopieren (Strg+Mauszeiger ziehen)"
 
 #: ../data/ui/prefdlg.ui.h:10 ../data/ui/prefdlg2.ui.h:10
 msgid "Move (Shift+Drag)"
-msgstr ""
+msgstr "Verschieben (Strg+Mauszeiger ziehen)"
 
 #: ../data/ui/prefdlg.ui.h:11 ../data/ui/prefdlg2.ui.h:11
 msgid "Link (Ctrl+Shift+Drag)"
-msgstr ""
+msgstr "Verknüpfen (Strg+Umschalttaste+Mauszeiger ziehen)"
 
 #: ../data/ui/prefdlg.ui.h:12 ../data/ui/prefdlg2.ui.h:12
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: ../data/ui/prefdlg.ui.h:13 ../data/ui/prefdlg2.ui.h:13
 msgid "Small Icons:"
-msgstr ""
+msgstr "kleine Symbole:"
 
 #: ../data/ui/prefdlg.ui.h:14 ../data/ui/prefdlg2.ui.h:14
 msgid "Large Icons:"
-msgstr ""
+msgstr "große Symbole:"
 
 #: ../data/ui/prefdlg.ui.h:15 ../data/ui/prefdlg2.ui.h:15
 msgid "Toolbar Icons:"
-msgstr ""
+msgstr "Symbole Werkzeugleiste:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Display</b>"
-msgstr ""
+msgstr "<b>Anzeige</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
-msgstr ""
+msgstr "einfacher Klick öffnet Dateien"
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Bookmarks:"
-msgstr ""
+msgstr "Lesezeichen:"
 
 #: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Vorschaubilder anzeigen:"
 
 #: ../data/ui/prefdlg.ui.h:20 ../data/ui/prefdlg2.ui.h:20
 msgid "Max Pic Size To Thumbnail:"
-msgstr ""
+msgstr "Maximale Pixelgröße Vorschaubilder:"
 
 #: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "<b>Behavior</b>"
-msgstr ""
+msgstr "<b>Verhalten</b>"
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "_General"
@@ -471,31 +472,31 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "Always show the tab bar"
-msgstr ""
+msgstr "Reiterleist immer anzeigen"
 
 #: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
 msgid "Hide 'Close Tab' buttons"
-msgstr ""
+msgstr "'Reiter schließen' Schaltfläche verstecken"
 
 #: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Confirm delete/remove"
-msgstr ""
+msgstr "Löschen/Entfernen bestätigen"
 
 #: ../data/ui/prefdlg.ui.h:27 ../data/ui/prefdlg2.ui.h:27
 msgid "Click runs executables"
-msgstr ""
+msgstr "Anklicken startet ausführbare Dateien"
 
 #: ../data/ui/prefdlg.ui.h:28 ../data/ui/prefdlg2.ui.h:28
 msgid "SI File Sizes (1K = 1000) (requires restart)"
-msgstr ""
+msgstr "Dateigröße in SI (1K=1000) (erfordert Neustart)"
 
 #: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
 msgid "Show root user indicator color"
-msgstr ""
+msgstr "Systemadministratoren farblich kennzeichnen"
 
 #: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
 msgid "Default Drag Action:"
-msgstr ""
+msgstr "voreingestelltest Verhalten bei Ziehen mit Mauszeiger"
 
 #: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
 msgid "I_nterface"
@@ -503,31 +504,31 @@ msgstr ""
 
 #: ../data/ui/prefdlg.ui.h:32 ../data/ui/prefdlg2.ui.h:32
 msgid "Manage the desktop and show file icons"
-msgstr ""
+msgstr "Schreibtisch verwalten und Symbole anzeigen"
 
 #: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
 msgid "Show \"My Documents\" icon on desktop"
-msgstr ""
+msgstr "Zeige \"Meine Dokumente\" Symbol auf Schreibtisch"
 
 #: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
 msgid "Show icons of volumes on desktop"
-msgstr ""
+msgstr "Zeige Symbole für Partitionen auf Schreibtisch"
 
 #: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
 msgid "Show WM's menu when desktop is right-clicked"
-msgstr ""
+msgstr "Zeige Menü der Fensterverwaltung bei Rechtsklick auf Schreibtisch"
 
 #: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "<b>General</b>"
-msgstr ""
+msgstr "<b>Allgemein</b>"
 
 #: ../data/ui/prefdlg.ui.h:37 ../data/ui/prefdlg2.ui.h:37
 msgid "Please select an image file"
-msgstr ""
+msgstr "Bilddatei auswählen"
 
 #: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
 msgid "Mode:"
-msgstr ""
+msgstr "Modus:"
 
 #: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Wallpaper:"
@@ -539,7 +540,7 @@ msgstr "<b>Hintergrundbild</b>"
 
 #: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Background:"
-msgstr ""
+msgstr "Hintergrund:"
 
 #: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Text:"
@@ -547,11 +548,11 @@ msgstr "Text:"
 
 #: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Shadow:"
-msgstr ""
+msgstr "Schattierung:"
 
 #: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
 msgid "<b>Colors</b>"
-msgstr ""
+msgstr "<b>Farben</b>"
 
 #: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
 msgid "_Desktop"
@@ -567,43 +568,43 @@ msgstr "Terminal:"
 
 #: ../data/ui/prefdlg.ui.h:48 ../data/ui/prefdlg2.ui.h:48
 msgid "Terminal SU:"
-msgstr ""
+msgstr "Terminal Administrator:"
 
 #: ../data/ui/prefdlg.ui.h:49 ../data/ui/prefdlg2.ui.h:49
 msgid "Graphical SU:"
-msgstr ""
+msgstr "GUI Administrator:"
 
 #: ../data/ui/prefdlg.ui.h:50 ../data/ui/prefdlg2.ui.h:50
 msgid "Filename Encoding:"
-msgstr ""
+msgstr "Zeichensatz Dateinamen:"
 
 #: ../data/ui/prefdlg.ui.h:51 ../data/ui/prefdlg2.ui.h:51
 msgid "Editor:"
-msgstr ""
+msgstr "Editor:"
 
 #: ../data/ui/prefdlg.ui.h:52 ../data/ui/prefdlg2.ui.h:52
 msgid "Run editor in terminal"
-msgstr ""
+msgstr "Editor in Terminal starten"
 
 #: ../data/ui/prefdlg.ui.h:53 ../data/ui/prefdlg2.ui.h:53
 msgid "Root's Editor:"
-msgstr ""
+msgstr "Editor Administrator:"
 
 #: ../data/ui/prefdlg.ui.h:54 ../data/ui/prefdlg2.ui.h:54
 msgid "Run root's editor in terminal"
-msgstr ""
+msgstr "Editor für Administrator in Terminal starten"
 
 #: ../data/ui/prefdlg.ui.h:55 ../data/ui/prefdlg2.ui.h:55
 msgid "Date Format:"
-msgstr ""
+msgstr "Datumsformat:"
 
 #: ../data/ui/prefdlg.ui.h:56 ../data/ui/prefdlg2.ui.h:56
 msgid "(requires reload)"
-msgstr ""
+msgstr "(erfordert neues Laden)"
 
 #: ../data/ui/prefdlg.ui.h:57 ../data/ui/prefdlg2.ui.h:57
 msgid "Date Display"
-msgstr ""
+msgstr "Datumsanzeige"
 
 #: ../data/ui/prefdlg.ui.h:58 ../data/ui/prefdlg2.ui.h:58
 msgid "_Advanced"
@@ -615,7 +616,7 @@ msgstr "Spaltenabstand"
 
 #: ../src/exo/exo-icon-view.c:769
 msgid "Space which is inserted between grid column"
-msgstr ""
+msgstr "zwischen Netzspalten einzufügender Platz"
 
 #: ../src/exo/exo-icon-view.c:785
 msgid "Number of columns"
@@ -631,7 +632,7 @@ msgstr "Suche aktivieren"
 
 #: ../src/exo/exo-icon-view.c:801
 msgid "View allows user to search through columns interactively"
-msgstr ""
+msgstr "Anzeigemodus erlaubt interaktive Suche in Spalten"
 
 #: ../src/exo/exo-icon-view.c:818
 msgid "Width for each item"
@@ -792,7 +793,7 @@ msgstr "Inhalt der Datei '%s' entspricht nicht der UTF-8 Norm"
 #: ../src/cust-dialog.c:693
 #, c-format
 msgid "Cannot set missing element '%s'"
-msgstr ""
+msgstr "Kann fehlendes Element '%s' nicht setzen "
 
 #: ../src/cust-dialog.c:819 ../src/cust-dialog.c:908
 #, c-format
