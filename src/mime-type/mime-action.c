@@ -463,43 +463,40 @@ void mime_type_add_action( const char* type, const char* desktop_id, char** cust
         g_free( cust );
 }
 
-static char* _locate_desktop_file( const char* dir, const char* unused, const gpointer desktop_id )
-{   //sfm 0.7.7+ modified
-    char *path;
+static char* _locate_desktop_file( const char* dir, const char* unused,
+                                                    const gpointer desktop_id )
+{   //sfm 0.7.8 modified + 0.8.7 modified
     gboolean found = FALSE;
 
-    path = g_build_filename( dir, "applications", (const char*)desktop_id, NULL );
-    if ( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
-        return path;
-    g_free( path );
-    return NULL;
-/*
+    char *path = g_build_filename( dir, "applications", (const char*)desktop_id,
+                                                                        NULL );
+
     char* sep = strchr( (const char*)desktop_id, '-' );
     if( sep )
         sep = strrchr( path, '-' );
 
-    do{
-        if( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
+    do
+    {
+        if ( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
         {
             found = TRUE;
             break;
         }
-        if( sep )
+        if ( sep )
         {
             *sep = '/';
             sep = strchr( sep + 1, '-' );
         }
         else
             break;
-    }while( ! found );
+    } while( !found );
 
-    if( ! found )
+    if ( !found )
     {
         g_free( path );
         return NULL;
     }
     return path;
-*/
 }
 
 char* mime_type_locate_desktop_file( const char* dir, const char* desktop_id )
