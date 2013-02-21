@@ -181,6 +181,54 @@ static GtkTargetEntry drag_targets[] = {
 static GdkAtom text_uri_list_atom = 0;
 static GdkAtom desktop_icon_atom = 0;
 
+//sfm from ptk-file-icon-renderer.c
+static GdkPixbuf* link_icon = NULL;
+/* GdkPixbuf RGBA C-Source image dump */
+#ifdef __SUNPRO_C
+#pragma align 4 (link_icon_data)
+#endif
+#ifdef __GNUC__
+static const guint8 link_icon_data[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 link_icon_data[] =
+#endif
+    { ""
+      /* Pixbuf magic (0x47646b50) */
+      "GdkP"
+      /* length: header (24) + pixel_data (400) */
+      "\0\0\1\250"
+      /* pixdata_type (0x1010002) */
+      "\1\1\0\2"
+      /* rowstride (40) */
+      "\0\0\0("
+      /* width (10) */
+      "\0\0\0\12"
+      /* height (10) */
+      "\0\0\0\12"
+      /* pixel_data: */
+      "\200\200\200\377\200\200\200\377\200\200\200\377\200\200\200\377\200"
+      "\200\200\377\200\200\200\377\200\200\200\377\200\200\200\377\200\200"
+      "\200\377\0\0\0\377\200\200\200\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377\377\0"
+      "\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377"
+      "\377\377\377\0\0\0\377\200\200\200\377\377\377\377\377\0\0\0\377\0\0"
+      "\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\0\0\0\377\200\200\200\377\377\377\377\377\0\0\0\377\0\0\0\377\0"
+      "\0\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377\377\377\377\0\0\0\377"
+      "\200\200\200\377\377\377\377\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0"
+      "\377\0\0\0\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377"
+      "\377\377\377\0\0\0\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0"
+      "\0\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0\0"
+      "\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0\0\377"
+      "\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377"
+      "\0\0\0\377\0\0\0\377"
+    };
+
+
 GType desktop_window_get_type(void)
 {
     static GType self_type = 0;
@@ -300,6 +348,17 @@ static void desktop_window_init(DesktopWindow *self)
     self->y_margin = 6;
     self->x_margin = 6;
 
+    if ( !link_icon )
+    {
+        link_icon = gdk_pixbuf_new_from_inline(
+                sizeof(link_icon_data),
+                link_icon_data,
+                FALSE, NULL );
+        g_object_add_weak_pointer( G_OBJECT(link_icon), (gpointer)&link_icon  );
+    }
+    else
+        g_object_ref( (link_icon) );
+
     const char* desk_dir = vfs_get_desktop_dir();
     if ( desk_dir )
     {
@@ -385,6 +444,9 @@ void desktop_window_finalize(GObject *object)
 
     if( self->hand_cursor )
         gdk_cursor_unref( self->hand_cursor );
+
+    if ( link_icon )
+        g_object_unref( link_icon );
 
     self = DESKTOP_WINDOW(object);
     if ( self->dir )
@@ -2746,6 +2808,21 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 	if( icon )
 		g_object_unref( icon );
 
+    // add link_icon arrow to links
+    if ( item->fi )
+    {
+        if ( vfs_file_info_is_symlink( item->fi ) && link_icon )
+        {
+            cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
+            gdk_cairo_set_source_pixbuf ( cr, link_icon,
+                                          item->icon_rect.x,
+                                          item->icon_rect.y );
+           gdk_cairo_rectangle ( cr, &item->icon_rect );
+            cairo_fill ( cr );
+        }
+    }
+
+    // text
     text_rect = item->text_rect;
 
     pango_layout_set_wrap( self->pl, 0 );
