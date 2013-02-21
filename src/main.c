@@ -1484,7 +1484,7 @@ void open_file( const char* path )
         VFSAppDesktop* app;
         GList* files;
 
-        app_name = (char *) ptk_choose_app_for_mime_type( NULL, mime_type );
+        app_name = (char *) ptk_choose_app_for_mime_type( NULL, mime_type, FALSE );
         if ( app_name )
         {
             app = vfs_app_desktop_new( app_name );

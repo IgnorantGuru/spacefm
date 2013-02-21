@@ -3431,7 +3431,7 @@ void ptk_open_files_with_app( const char* cwd,
                     toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;                    /* Let the user choose an application */
                     choosen_app = (char *) ptk_choose_app_for_mime_type(
                                       ( GtkWindow* ) toplevel,
-                                      mime_type );
+                                      mime_type, FALSE );
                     app_desktop = choosen_app;
                 }
                 if ( ! app_desktop )

@@ -1620,7 +1620,7 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
     else
         parent_win = GTK_WIDGET( data->desktop );
     app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( parent_win ),
-                                                                mime_type );
+                                                            mime_type, FALSE );
     if ( app )
     {
         GList* sel_files = data->sel_files;
@@ -1779,7 +1779,7 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                                 GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
                                                 GTK_WIDGET( data->browser ) :
                                                 GTK_WIDGET( data->desktop ) ) ),
-                                                mime_type );
+                                                mime_type, FALSE );
         // ptk_choose_app_for_mime_type returns either a bare command that 
         // was already set as default, or a (custom or shared) desktop file
         if ( path && g_str_has_suffix( path, ".desktop" ) && !strchr( path, '/' )

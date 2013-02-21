@@ -130,7 +130,8 @@ gboolean on_cmdline_keypress( GtkWidget *widget,
     return FALSE;
 }
 
-GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
+GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
+                                                        gboolean no_default )
 {
     GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/appchooserdlg.ui", NULL );
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
@@ -162,7 +163,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
         g_free( mime_desc );
     }
     /* Don't set default handler for directories and files with unknown type */
-    if ( 0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
+    if ( no_default ||
+         0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
          0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) )
     {
         gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder, "set_default" ) );
@@ -188,6 +190,13 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
                                     G_CALLBACK(on_browse_btn_clicked), dlg );
 
     gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
+    
+    if ( no_default )
+    {
+        // select All Apps tab
+        gtk_widget_show( dlg );
+        gtk_notebook_next_page( notebook );
+    }
     return dlg;
 }
 
@@ -398,13 +407,14 @@ printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
 }
 
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
-                                           VFSMimeType* mime_type )
+                                           VFSMimeType* mime_type,
+                                           gboolean no_default )
 {
     GtkWidget * dlg;
     gchar* app = NULL;
     gchar* custom = NULL;
 
-    dlg = app_chooser_dialog_new( parent, mime_type );
+    dlg = app_chooser_dialog_new( parent, mime_type, no_default );
 
     g_signal_connect( dlg, "response",  G_CALLBACK(on_dlg_response), NULL );
 

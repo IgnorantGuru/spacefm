@@ -250,7 +250,7 @@ static void on_combo_change( GtkComboBox* combo, gpointer user_data )
             VFSMimeType* mime = (VFSMimeType*)user_data;
             parent = gtk_widget_get_toplevel( GTK_WIDGET( combo ) );
             action = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW(parent),
-                                                   mime );
+                                                   mime, FALSE );
             if( action )
             {
                 gboolean exist = FALSE;

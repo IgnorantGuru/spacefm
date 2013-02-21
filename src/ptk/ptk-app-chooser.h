@@ -20,10 +20,9 @@ G_BEGIN_DECLS
 
 /* Let the user choose a application */
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
-                                    VFSMimeType* mime_type );
+                                           VFSMimeType* mime_type,
+                                           gboolean no_default );
 
-/* Let the user choose a application */
-GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type );
 
 /*
 * Return selected application in a ``newly allocated'' string.
