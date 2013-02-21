@@ -1120,6 +1120,32 @@ _done:
     }
 }
 
+void show_desktop_menu( DesktopWindow* self, guint event_button,
+                                                guint32 event_time )
+{
+    GtkMenu* popup;
+    DesktopItem *item;
+    GList* l;
+
+    GList* sel = desktop_window_get_selected_items( self );
+    if ( sel )
+    {
+        item = (DesktopItem*)sel->data;
+        char* file_path = g_build_filename( vfs_get_desktop_dir(),
+                                            item->fi->name, NULL );
+        for ( l = sel; l; l = l->next )
+            l->data = vfs_file_info_ref( ((DesktopItem*)l->data)->fi );
+        popup = GTK_MENU( ptk_file_menu_new( self, NULL, file_path,
+                            item->fi, vfs_get_desktop_dir(), sel ) );
+        g_free( file_path );
+    }
+    else
+        popup = GTK_MENU( ptk_file_menu_new( self, NULL, NULL, NULL,
+                                    vfs_get_desktop_dir(), NULL ) );
+    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, event_button,
+                                                   event_time );
+}
+
 gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
 {
     DesktopWindow* self = (DesktopWindow*)w;
@@ -1224,25 +1250,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
             {
                 if( ! app_settings.show_wm_menu ) /* if our desktop menu is used */
                 {
-                    GtkMenu* popup;
-                    GList* sel = desktop_window_get_selected_items( self );
-                    if ( sel )
-                    {
-                        item = (DesktopItem*)sel->data;
-                        GList* l;
-                        char* file_path = g_build_filename( vfs_get_desktop_dir(),
-                                                            item->fi->name, NULL );
-                        for( l = sel; l; l = l->next )
-                            l->data = vfs_file_info_ref( ((DesktopItem*)l->data)->fi );
-                        popup = GTK_MENU(ptk_file_menu_new( self, NULL, file_path,
-                                            item->fi, vfs_get_desktop_dir(), sel ));
-                        g_free( file_path );
-                    }
-                    else
-                        popup = GTK_MENU( ptk_file_menu_new( self, NULL, NULL, NULL,
-                                                    vfs_get_desktop_dir(), NULL ) );
-                    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, evt->button,
-                                                                   evt->time );
+                    show_desktop_menu( self, evt->button, evt->time );
                     goto out;   // don't forward the event to root win
                 }
             }
@@ -2124,6 +2132,9 @@ _key_found:
             focus_item( desktop, get_next_item( desktop, event->keyval ) );
             if ( desktop->focus )
                 select_item( desktop, desktop->focus, TRUE );
+            return TRUE;
+        case GDK_KEY_Menu:
+            show_desktop_menu( desktop, 0, event->time );
             return TRUE;
         }
     }

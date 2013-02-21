@@ -370,6 +370,8 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <p>To stop management of the desktop prematurely (before logoff), send spacefm a quit signal:
 <pre>    killall spacefm</pre>
 
+Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used in the desktop's right-click menu to add custom commands and set key shortcuts (which will be active when the desktop has focus).
+
 
 <!-- @Invocation @Daemon Mode -->
 
@@ -659,9 +661,11 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-<p>The Devices context menu includes:
+In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which contain an abbreviated version of the full Devices list and context menu, for ready access.
 
-<!-- #Remove -->
+<p>The Devices List context menu includes:
+
+<!-- #Remove / Eject #remove -->
 The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
@@ -1479,7 +1483,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>Design Menu</i>.
 
-<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, but is not available in the Bookmarks menu.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
+<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
 
 <p>To open the Design Menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
 
@@ -4149,7 +4153,9 @@ Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
 
 <p>The set-task method requires a TASKID, which indicates what task is being modified.  There are two ways to obtain the TASKID.  One is to use the <a href="#exvar">exported bash variable</a> $fm_my_task, which refers to the current command task.  The other is to use $fm_task_id, which refers to the task currently <i>selected</i> in the task list when the current task is run.  Note that a TASKID is only valid in the window in which the task is currently running, so it's generally appropriate to specify a WINDOWID ($fm_my_window) with the --window option to ensure the correct window is accessed.
 
-<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - it usually takes about a half second for a task to appear in the task manager.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown.
+<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - <b>it usually takes about a half second for a task to appear in the task manager</b>.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown in the task manager, or it can use a small delay (sleep 0.75) before sending task-related socket commands.
+
+<p>Also, <b>if a custom command is run from the SpaceFM desktop manager menu</b>, note that there is no task manager or window associated with the task, so the TASKID will not be valid in socket commands.
 
 <p>Examples using the set-task method:
 <pre>
