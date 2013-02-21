@@ -9,6 +9,8 @@
     fix open folder on desktop reuses browser on wrong desktop
     use menu key on desktop
     handle hyphened desktop references #118
+    add link indicator to desktop icons
+    file props show link target; allow change file dates closes #192
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

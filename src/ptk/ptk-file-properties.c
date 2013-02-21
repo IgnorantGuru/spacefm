@@ -55,6 +55,11 @@ typedef struct
     char* owner_name;
     char* group_name;
 
+    GtkEntry* mtime;
+    char* orig_mtime;
+    GtkEntry* atime;
+    char* orig_atime;
+
     GtkToggleButton* chmod_btns[ N_CHMOD_ACTIONS ];
     guchar chmod_states[ N_CHMOD_ACTIONS ];
 
@@ -334,17 +339,18 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
     const char* multiple_files = _( "( multiple files )" );
     const char* calculating;
     GtkWidget* name = (GtkWidget*)gtk_builder_get_object( builder, "file_name" );
+    GtkWidget* label_name = (GtkWidget*)gtk_builder_get_object( builder, "label_filename" );
     GtkWidget* location = (GtkWidget*)gtk_builder_get_object( builder, "location" );
     gtk_editable_set_editable ( GTK_EDITABLE( location ), FALSE );
+    GtkWidget* target = (GtkWidget*)gtk_builder_get_object( builder, "target" );
+    GtkWidget* label_target = (GtkWidget*)gtk_builder_get_object( builder, "label_target" );
+    gtk_editable_set_editable ( GTK_EDITABLE( target ), FALSE );
     GtkWidget* mime_type = (GtkWidget*)gtk_builder_get_object( builder, "mime_type" );
     GtkWidget* open_with = (GtkWidget*)gtk_builder_get_object( builder, "open_with" );
 
-    GtkWidget* mtime = (GtkWidget*)gtk_builder_get_object( builder, "mtime" );
-    GtkWidget* atime = (GtkWidget*)gtk_builder_get_object( builder, "atime" );
-
     char buf[ 64 ];
     char buf2[ 32 ];
-    const char* time_format = "%Y-%m-%d %H:%M";
+    const char* time_format = "%Y-%m-%d %H:%M:%S";
 
     gchar* disp_path;
     gchar* file_type;
@@ -361,7 +367,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
     int width = xset_get_int( "app_dlg", "s" );
     int height = xset_get_int( "app_dlg", "z" );
     if ( width && height )
-        gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
+        gtk_window_set_default_size( GTK_WINDOW( dlg ), width, -1 );
 
     data = g_slice_new0( FilePropertiesDialogData );
     /* FIXME: When will the data be freed??? */
@@ -380,6 +386,8 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
     data->count_label = GTK_LABEL( (GtkWidget*)gtk_builder_get_object( builder, "count" ) );
     data->owner = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "owner" ) );
     data->group = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "group" ) );
+    data->mtime = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "mtime" ) );
+    data->atime = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "atime" ) );
 
     for ( i = 0; i < N_CHMOD_ACTIONS; ++i )
     {
@@ -433,7 +441,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
     if ( same_type )
     {
         mime = vfs_file_info_get_mime_type( file );
-        file_type = g_strdup_printf( "%s ( %s )",
+        file_type = g_strdup_printf( "%s\n%s",
                                      vfs_mime_type_get_description( mime ),
                                      vfs_mime_type_get_type( mime ) );
         gtk_label_set_text( GTK_LABEL( mime_type ), file_type );
@@ -534,8 +542,12 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
         gtk_widget_set_sensitive( name, FALSE );
         gtk_entry_set_text( GTK_ENTRY( name ), multiple_files );
 
-        gtk_label_set_text( GTK_LABEL( mtime ), "-" );
-        gtk_label_set_text( GTK_LABEL( atime ), "-" );
+        gtk_entry_set_text( GTK_ENTRY( data->mtime ), multiple_files );
+        gtk_entry_set_text( GTK_ENTRY( data->atime ), multiple_files );
+        gtk_editable_set_editable ( GTK_EDITABLE( data->mtime ), FALSE );
+        gtk_editable_set_editable ( GTK_EDITABLE( data->atime ), FALSE );
+        gtk_widget_set_sensitive( GTK_WIDGET( data->mtime ), FALSE );
+        gtk_widget_set_sensitive( GTK_WIDGET( data->atime ), FALSE );
 
         for ( i = 0; i < N_CHMOD_ACTIONS; ++i )
         {
@@ -556,9 +568,15 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
             g_free( disp_name );
         }
         else
+        {
+            if ( vfs_file_info_is_dir( file ) && 
+                                            !vfs_file_info_is_symlink( file ) )
+                gtk_label_set_markup_with_mnemonic( GTK_LABEL( label_name ),
+                                                    _("<b>Folder _Name:</b>") );
             gtk_entry_set_text( GTK_ENTRY( name ),
                                 vfs_file_info_get_disp_name( file ) );
-
+        }
+        
         gtk_editable_set_editable ( GTK_EDITABLE( name ), FALSE );
 
         if ( ! vfs_file_info_is_dir( file ) )
@@ -580,13 +598,21 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
             
             gtk_label_set_text( data->count_label, _("1 file") );
         }
-        gtk_label_set_text( GTK_LABEL( mtime ),
-                            vfs_file_info_get_disp_mtime( file ) );
+        
+        // Modified / Accessed
+        //gtk_entry_set_text( GTK_ENTRY( mtime ),
+        //                    vfs_file_info_get_disp_mtime( file ) );
+        strftime( buf, sizeof( buf ),
+                  time_format, localtime( vfs_file_info_get_mtime( file ) ) );
+        gtk_entry_set_text( GTK_ENTRY( data->mtime ), buf );
+        data->orig_mtime = g_strdup( buf );
 
         strftime( buf, sizeof( buf ),
                   time_format, localtime( vfs_file_info_get_atime( file ) ) );
-        gtk_label_set_text( GTK_LABEL( atime ), buf );
+        gtk_entry_set_text( GTK_ENTRY( data->atime ), buf );
+        data->orig_atime = g_strdup( buf );
 
+        // Permissions
         owner_group = (char *) vfs_file_info_get_disp_owner( file );
         tmp = strchr( owner_group, ':' );
         data->owner_name = g_strndup( owner_group, tmp - owner_group );
@@ -601,6 +627,28 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                 data->chmod_states[ i ] = ( vfs_file_info_get_mode( file ) & chmod_flags[ i ] ? 1 : 0 );
                 gtk_toggle_button_set_active( data->chmod_btns[ i ], data->chmod_states[ i ] );
             }
+        }
+        
+        // target
+        if ( vfs_file_info_is_symlink( file ) )
+        {
+            gtk_label_set_markup_with_mnemonic( GTK_LABEL( label_name ),
+                                                    _("<b>Link _Name:</b>") );
+            disp_path = g_build_filename( dir_path, file->name, NULL );
+            char* target_path = g_file_read_link( disp_path, NULL );
+            if ( target_path )
+            {
+                if ( !g_file_test( target_path, G_FILE_TEST_EXISTS ) )
+                    gtk_label_set_text( GTK_LABEL( mime_type ),
+                                                    _("( broken link )") );
+                gtk_entry_set_text( GTK_ENTRY( target ), target_path );
+                g_free( target_path );
+            }
+            else
+                gtk_entry_set_text( GTK_ENTRY( target ), _("( read link error )") );
+            g_free( disp_path );
+            gtk_widget_show( target );
+            gtk_widget_show( label_target );
         }
     }
 
@@ -750,6 +798,68 @@ on_dlg_response ( GtkDialog *dialog,
         {
             GtkWidget* open_with;
 
+            // change file date
+            if ( !( data->file_list && data->file_list->next ) )
+            {
+                char* cmd = NULL;
+                char* quoted_time;
+                char* quoted_path;
+                const char* new_mtime = gtk_entry_get_text( data->mtime );
+                if ( !( new_mtime && new_mtime[0] ) || 
+                                    !( data->orig_mtime && 
+                                       strcmp( data->orig_mtime, new_mtime ) ) )
+                    new_mtime = NULL;
+                const char* new_atime = gtk_entry_get_text( data->atime );
+                if ( !( new_atime && new_atime[0] ) || 
+                                    !( data->orig_atime && 
+                                       strcmp( data->orig_atime, new_atime ) ) )
+                    new_atime = NULL;
+                
+                if ( new_mtime )
+                {
+                    quoted_time = bash_quote( new_mtime );
+                    file = ( VFSFileInfo* ) data->file_list->data;
+                    file_path = g_build_filename( data->dir_path, file->name,
+                                                                    NULL );
+                    quoted_path = bash_quote( file_path );
+                    cmd = g_strdup_printf( "touch --no-dereference --no-create -m -d %s %s",
+                                                                quoted_time,
+                                                                quoted_path );
+                    g_free( quoted_time );
+                    g_free( quoted_path );
+                    g_free( file_path );
+                }
+                if ( new_atime )
+                {
+                    quoted_time = bash_quote( new_atime );
+                    file = ( VFSFileInfo* ) data->file_list->data;
+                    file_path = g_build_filename( data->dir_path, file->name,
+                                                                    NULL );
+                    quoted_path = bash_quote( file_path );
+                    g_free( file_path );
+                    file_path = cmd;  // temp str
+                    cmd = g_strdup_printf( "%s%stouch --no-dereference --no-create -a -d %s %s",
+                                                                cmd ? cmd : "",
+                                                                cmd ? "; " : "",
+                                                                quoted_time,
+                                                                quoted_path );
+                    g_free( file_path );
+                    g_free( quoted_time );
+                    g_free( quoted_path );
+                }
+                if ( cmd )
+                {
+                    task = ptk_file_exec_new( _("Change File Date"), "/",
+                                              GTK_WIDGET( dialog ), NULL );
+                    task->task->exec_command = cmd;
+                    task->task->exec_sync = TRUE;
+                    task->task->exec_export = FALSE;
+                    task->task->exec_show_output = TRUE;
+                    task->task->exec_show_error = TRUE;
+                    ptk_file_task_run( task );
+                }
+            }
+        
             /* Set default action for mimetype */
             if( ( open_with = (GtkWidget*)g_object_get_data( G_OBJECT(dialog), "open_with" ) ) )
             {
@@ -870,6 +980,8 @@ on_dlg_response ( GtkDialog *dialog,
 
         g_free( data->owner_name );
         g_free( data->group_name );
+        g_free( data->orig_mtime );
+        g_free( data->orig_atime );
         /*
          *NOTE: File operation chmod/chown will free the list when it's done,
          *and we only need to free it when there is no file operation applyed.

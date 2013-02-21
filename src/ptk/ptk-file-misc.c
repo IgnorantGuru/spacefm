@@ -484,6 +484,17 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     if ( !strcmp( full_path, mset->full_path ) )
     {
         full_path_same = TRUE;
+        if ( mset->create_new && 
+                    gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
+                                                        mset->opt_new_link ) ) )
+        {
+            if ( lstat64( full_path, &statbuf ) == 0 )
+            {
+                full_path_exists = TRUE;
+                if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                    full_path_exists_dir = TRUE;
+            }
+        }
     }
     else
     {
@@ -641,8 +652,8 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         path = g_strdup( gtk_entry_get_text( GTK_ENTRY( mset->entry_target ) ) );
         g_strstrip( path );
         gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' && 
-                                                        !full_path_same &&
-                                                        !full_path_exists_dir ) );
+                                !( full_path_same && full_path_exists ) &&
+                                !full_path_exists_dir ) );
         g_free( path );
     }
     
