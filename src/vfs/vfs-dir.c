@@ -206,7 +206,7 @@ void vfs_dir_init( VFSDir* dir )
 void vfs_dir_finalize( GObject *obj )
 {
     VFSDir * dir = VFS_DIR( obj );
-
+//printf("vfs_dir_finalize  %s\n", dir->path );
     do{}
     while( g_source_remove_by_user_data( dir ) );
 
@@ -390,7 +390,15 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
 
     if ( !force && dir->avoid_changes )
         return;
-    
+
+/*  Test not needed because file won't be found in list?
+    if ( G_UNLIKELY( 0 == strcmp(file_name, dir->path) ) )
+    {
+        // Special Case: The directory itself was changed
+        return;
+    }
+*/
+
     g_mutex_lock( dir->mutex );
 
     l = vfs_dir_find_file( dir, file_name, file );
