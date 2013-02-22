@@ -542,13 +542,9 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
         gtk_widget_set_sensitive( name, FALSE );
         gtk_entry_set_text( GTK_ENTRY( name ), multiple_files );
 
-        gtk_entry_set_text( GTK_ENTRY( data->mtime ), multiple_files );
-        gtk_entry_set_text( GTK_ENTRY( data->atime ), multiple_files );
-        gtk_editable_set_editable ( GTK_EDITABLE( data->mtime ), FALSE );
-        gtk_editable_set_editable ( GTK_EDITABLE( data->atime ), FALSE );
-        gtk_widget_set_sensitive( GTK_WIDGET( data->mtime ), FALSE );
-        gtk_widget_set_sensitive( GTK_WIDGET( data->atime ), FALSE );
-
+        data->orig_mtime = NULL;
+        data->orig_atime = NULL;
+        
         for ( i = 0; i < N_CHMOD_ACTIONS; ++i )
         {
             gtk_toggle_button_set_inconsistent ( data->chmod_btns[ i ], TRUE );
@@ -796,57 +792,53 @@ on_dlg_response ( GtkDialog *dialog,
 
         if ( response_id == GTK_RESPONSE_OK )
         {
-            GtkWidget* open_with;
-
-            // change file date
-            if ( !( data->file_list && data->file_list->next ) )
+            // change file dates
+            char* cmd = NULL;
+            char* quoted_time;
+            char* quoted_path;
+            const char* new_mtime = gtk_entry_get_text( data->mtime );
+            if ( !( new_mtime && new_mtime[0] ) || 
+                                !g_strcmp0( data->orig_mtime, new_mtime ) )
+                new_mtime = NULL;
+            const char* new_atime = gtk_entry_get_text( data->atime );
+            if ( !( new_atime && new_atime[0] ) || 
+                                !g_strcmp0( data->orig_atime, new_atime ) )
+                new_atime = NULL;
+            
+            if ( ( new_mtime || new_atime ) && data->file_list )
             {
-                char* cmd = NULL;
-                char* quoted_time;
-                char* quoted_path;
-                const char* new_mtime = gtk_entry_get_text( data->mtime );
-                if ( !( new_mtime && new_mtime[0] ) || 
-                                    !( data->orig_mtime && 
-                                       strcmp( data->orig_mtime, new_mtime ) ) )
-                    new_mtime = NULL;
-                const char* new_atime = gtk_entry_get_text( data->atime );
-                if ( !( new_atime && new_atime[0] ) || 
-                                    !( data->orig_atime && 
-                                       strcmp( data->orig_atime, new_atime ) ) )
-                    new_atime = NULL;
-                
+                GString* gstr = g_string_new( NULL );
+                for ( l = data->file_list; l; l = l->next )
+                {
+                    file_path = g_build_filename( data->dir_path,
+                                                  ((VFSFileInfo*)l->data)->name,
+                                                  NULL );
+                    quoted_path = bash_quote( file_path );
+                    g_string_append_printf( gstr, " %s", quoted_path );
+                    g_free( file_path );
+                    g_free( quoted_path );
+                }
+                    
                 if ( new_mtime )
                 {
                     quoted_time = bash_quote( new_mtime );
-                    file = ( VFSFileInfo* ) data->file_list->data;
-                    file_path = g_build_filename( data->dir_path, file->name,
-                                                                    NULL );
-                    quoted_path = bash_quote( file_path );
-                    cmd = g_strdup_printf( "touch --no-dereference --no-create -m -d %s %s",
+                    cmd = g_strdup_printf( "touch --no-dereference --no-create -m -d %s%s",
                                                                 quoted_time,
-                                                                quoted_path );
-                    g_free( quoted_time );
-                    g_free( quoted_path );
-                    g_free( file_path );
+                                                                gstr->str );
                 }
                 if ( new_atime )
                 {
                     quoted_time = bash_quote( new_atime );
-                    file = ( VFSFileInfo* ) data->file_list->data;
-                    file_path = g_build_filename( data->dir_path, file->name,
-                                                                    NULL );
-                    quoted_path = bash_quote( file_path );
-                    g_free( file_path );
-                    file_path = cmd;  // temp str
-                    cmd = g_strdup_printf( "%s%stouch --no-dereference --no-create -a -d %s %s",
+                    quoted_path = cmd;  // temp str
+                    cmd = g_strdup_printf( "%s%stouch --no-dereference --no-create -a -d %s%s",
                                                                 cmd ? cmd : "",
-                                                                cmd ? "; " : "",
+                                                                cmd ? "\n" : "",
                                                                 quoted_time,
-                                                                quoted_path );
-                    g_free( file_path );
-                    g_free( quoted_time );
+                                                                gstr->str );
                     g_free( quoted_path );
                 }
+                g_free( quoted_time );
+                g_string_free( gstr, TRUE );
                 if ( cmd )
                 {
                     task = ptk_file_exec_new( _("Change File Date"), "/",
@@ -861,6 +853,7 @@ on_dlg_response ( GtkDialog *dialog,
             }
         
             /* Set default action for mimetype */
+            GtkWidget* open_with;
             if( ( open_with = (GtkWidget*)g_object_get_data( G_OBJECT(dialog), "open_with" ) ) )
             {
                 GtkTreeModel* model = gtk_combo_box_get_model( GTK_COMBO_BOX(open_with) );
