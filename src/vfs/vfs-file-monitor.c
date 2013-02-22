@@ -58,6 +58,7 @@ static gboolean connect_to_fam()
     inotify_fd = inotify_init ();
     if ( inotify_fd < 0 )
     {
+        fam_io_channel = NULL;
         g_warning( "failed to initialize inotify." );
         return FALSE;
     }
@@ -217,19 +218,27 @@ VFSFileMonitor* vfs_file_monitor_add( char* path,
 #else /* Use FAM|gamin */
 //MOD see NOTE1 in vfs-mime-type.c - what happens here if path doesn't exist?
 //    inotify returns NULL - does fam?
-        if ( is_dir )
+        if ( fam_io_channel )
         {
-            FAMMonitorDirectory( &fam,
-                                    real_path,
-                                    &monitor->request,
-                                    monitor );
+            if ( is_dir )
+            {
+                FAMMonitorDirectory( &fam,
+                                        real_path,
+                                        &monitor->request,
+                                        monitor );
+            }
+            else
+            {
+                FAMMonitorFile( &fam,
+                                real_path,
+                                &monitor->request,
+                                monitor );
+            }
         }
         else
         {
-            FAMMonitorFile( &fam,
-                            real_path,
-                            &monitor->request,
-                            monitor );
+            g_warning( "FAM/gamin server is not running ?" );
+            return NULL;
         }
 #endif
     }
@@ -275,7 +284,10 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
 //printf( "vfs_file_monitor_remove  %d\n", fm->wd );
         inotify_rm_watch ( inotify_fd, fm->wd );
 #else /*  Use FAM|gamin */
-        FAMCancelMonitor( &fam, &fm->request );
+        if ( fam_io_channel )
+            FAMCancelMonitor( &fam, &fm->request );
+        else
+            g_warning( "FAM/gamin server is not running ?" );
 #endif
 
         g_hash_table_remove( monitor_hash, fm->path );
@@ -402,8 +414,9 @@ static gboolean on_fam_event( GIOChannel * channel,
               This may be caused by crash of FAM server.
               So we have to reconnect to FAM server.
             */
-            connect_to_fam();
-            g_hash_table_foreach( monitor_hash, ( GHFunc ) reconnect_fam, NULL );
+            if ( connect_to_fam() )
+                g_hash_table_foreach( monitor_hash, ( GHFunc ) reconnect_fam,
+                                                                        NULL );
         }
         return TRUE; /* don't need to remove the event source since
                                     it has been removed by disconnect_from_fam(). */
