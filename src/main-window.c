@@ -6545,16 +6545,26 @@ _invalid_set:
             }
             if ( gtk_selection_data_get_length( sel_data ) <= 0 || 
                             gtk_selection_data_get_format( sel_data ) != 8 )
+            {
+                gtk_selection_data_free( sel_data );
                 return 0;
+            }
             if ( 0 == strncmp( ( char* ) 
                         gtk_selection_data_get_data( sel_data ), "cut", 3 ) )
             {
                 if ( !strcmp( argv[i], "clipboard_copy_files" ) )
+                {
+                    gtk_selection_data_free( sel_data );
                     return 0;
+                }
             }
             else if ( !strcmp( argv[i], "clipboard_cut_files" ) )
+            {
+                gtk_selection_data_free( sel_data );
                 return 0;
+            }
             str = gtk_clipboard_wait_for_text( clip );
+            gtk_selection_data_free( sel_data );
             if ( !( str && str[0] ) )
             {
                 g_free( str );
