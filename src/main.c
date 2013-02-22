@@ -1208,12 +1208,11 @@ gboolean handle_parsed_commandline_args()
                     init_folder();
                 main_window = create_main_window();
             }
-            else
-                gtk_window_present( GTK_WINDOW( main_window ) );
+            gtk_window_present( GTK_WINDOW( main_window ) );
+
             if ( panel > 0 && panel < 5 )
             {
                 // user specified a panel with no file, let's show the panel
-printf("panel=%d\n", panel );
                 if ( !gtk_widget_get_visible( main_window->panel[panel-1] ) )
                 {
                     // show panel
