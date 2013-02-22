@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# SpaceFM PO Template    http://ignorantguru.github.com/spacefm/
+# This file is distributed under the same copyright and license as the SpaceFM
+# package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: spacefm 0.8.6+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-21 15:19-0700\n"
+"POT-Creation-Date: 2013-02-22 13:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1677,7 +1677,7 @@ msgstr ""
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2566
 #: ../src/ptk/ptk-file-misc.c:3217 ../src/ptk/ptk-file-misc.c:3297
 #: ../src/ptk/ptk-file-misc.c:3387 ../src/ptk/ptk-file-misc.c:3545
-#: ../src/ptk/ptk-file-properties.c:892 ../src/ptk/ptk-file-properties.c:903
+#: ../src/ptk/ptk-file-properties.c:885 ../src/ptk/ptk-file-properties.c:896
 #: ../src/vfs/vfs-file-task.c:1472
 #, c-format
 msgid "Error"
@@ -6716,46 +6716,46 @@ msgstr ""
 msgid "Choose..."
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:575
+#: ../src/ptk/ptk-file-properties.c:571
 msgid "<b>Folder _Name:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:588 ../src/ptk/ptk-file-properties.c:595
+#: ../src/ptk/ptk-file-properties.c:584 ../src/ptk/ptk-file-properties.c:591
 #, c-format
 msgid "%s  ( %llu bytes )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:599
+#: ../src/ptk/ptk-file-properties.c:595
 msgid "1 file"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:636
+#: ../src/ptk/ptk-file-properties.c:632
 msgid "<b>Link _Name:</b>"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:643
+#: ../src/ptk/ptk-file-properties.c:639
 msgid "( broken link )"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:648
+#: ../src/ptk/ptk-file-properties.c:644
 msgid "( read link error )"
 msgstr ""
 
 #. The total file size displayed in "File Properties" is not
 #. completely calculated yet. So "Calculating..." is displayed.
-#: ../src/ptk/ptk-file-properties.c:659
+#: ../src/ptk/ptk-file-properties.c:655
 msgid "Calculating..."
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:852
+#: ../src/ptk/ptk-file-properties.c:844
 msgid "Change File Date"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:892
+#: ../src/ptk/ptk-file-properties.c:885
 msgid "Invalid User"
 msgstr ""
 
-#: ../src/ptk/ptk-file-properties.c:903
+#: ../src/ptk/ptk-file-properties.c:896
 msgid "Invalid Group"
 msgstr ""
 

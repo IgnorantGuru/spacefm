@@ -10,9 +10,11 @@
     use menu key on desktop
     handle hyphened desktop references #118
     add link indicator to desktop icons
-    file props show link target; allow change file dates closes #192
+    file props show link target - closes #192
+    file props allow change file dates
     Jui contributed to Czech translation
-    
+    fix spacefm -p 1 nospec opens wrong panel
+    always present window on create
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation
