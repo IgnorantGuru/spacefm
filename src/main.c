@@ -1213,6 +1213,7 @@ gboolean handle_parsed_commandline_args()
             if ( panel > 0 && panel < 5 )
             {
                 // user specified a panel with no file, let's show the panel
+printf("panel=%d\n", panel );
                 if ( !gtk_widget_get_visible( main_window->panel[panel-1] ) )
                 {
                     // show panel
@@ -1220,7 +1221,7 @@ gboolean handle_parsed_commandline_args()
                     set->b = XSET_B_TRUE;
                     show_panels_all_windows( NULL, main_window );
                 }
-                focus_panel( NULL, (gpointer)main_window, 2 );
+                focus_panel( NULL, (gpointer)main_window, panel );
             }
         }
     }
