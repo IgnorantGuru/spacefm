@@ -689,6 +689,8 @@ void show_socket_help()
     printf( "focused_panel                   1|2|3|4|prev|next|hide\n" );
     printf( "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
     printf( "current_tab                     1|2|...|prev|next|close\n" );
+    printf( "tab_count                       1|2|...\n" );
+    printf( "new_tab                         [DIR]    %s\n", _("Open DIR or default in a new tab") );
     printf( "bookmarks_visible               1|true|yes|0|false|no\n" );
     printf( "dirtree_visible                 1|true|yes|0|false|no\n" );
     printf( "toolbar_visible                 1|true|yes|0|false|no\n" );
@@ -702,6 +704,12 @@ void show_socket_help()
     printf( "panel_hslider_bottom            eg '100'\n" );
     printf( "panel_vslider                   eg '100'\n" );
     printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
+    printf( "sort_by                         name|size|type|permission|owner|modified\n" );
+    printf( "sort_ascend                     1|true|yes|0|false|no\n" );
+    printf( "sort_natural                    1|true|yes|0|false|no\n" );
+    printf( "sort_case                       1|true|yes|0|false|no\n" );
+    printf( "sort_hidden_first               1|true|yes|0|false|no\n" );
+    printf( "sort_first                      files|folders|mixed\n" );
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
     printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
     printf( "current_dir                     %s\n", _("DIR            eg '/etc'") );
