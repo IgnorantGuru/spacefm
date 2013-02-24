@@ -18,6 +18,7 @@
     dir change monitor truly canonicalize paths
     stabilize on fam/gamin server exited
     added socket properties: tab_count new_tab sort_... #225 #272
+    fix File Search|Content|Case Sensitive checkbox function inverted #276
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

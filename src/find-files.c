@@ -487,7 +487,7 @@ static char** compose_command( FindFile* data )
         arg = g_strdup("grep");
         g_array_append_val( argv, arg );
 
-        if( gtk_toggle_button_get_active((GtkToggleButton*)data->fc_case_sensitive) )
+        if( !gtk_toggle_button_get_active((GtkToggleButton*)data->fc_case_sensitive) )
         {
             arg = g_strdup("-i");
             g_array_append_val( argv, arg );
