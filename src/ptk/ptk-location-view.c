@@ -864,8 +864,8 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     }
     else if ( !handler && ( !g_strcmp0( fstype, "smbfs" ) || 
                             !g_strcmp0( fstype, "cifs" ) ||
-                            !g_strcmp0( fstype, "curlftpfs" )
-                            !g_strcmp0( fstype, "davfs2" ) )
+                            !g_strcmp0( fstype, "curlftpfs" ) ||
+                            !g_strcmp0( fstype, "davfs" ) ) )
     {
         in_term = TRUE;
         keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
