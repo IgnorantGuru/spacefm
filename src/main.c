@@ -675,7 +675,7 @@ void show_socket_help()
     printf( "--panel PANEL\n" );
     printf( "    %s spacefm -s set --panel 2 bookmarks_visible true\n", _("Specify panel 1-4.  eg:") );
     printf( "--tab TAB\n" );
-    printf( "    %s spacefm -s set selected_filenames --tab 3 fstab\n", _("Specify tab 1-...  eg:") );
+    printf( "    %s spacefm -s set --tab 3 selected_filenames fstab\n", _("Specify tab 1-...  eg:") );
 
     printf( "\n%s\n", _("PROPERTIES\n----------") );
     printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );

@@ -21,6 +21,7 @@
     fix File Search|Content|Case Sensitive checkbox function inverted #276
     added and documented socket method run-task #224
     run_in_terminal and edit_file deprecated yet left-in
+    list double-click activates in app chooser
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

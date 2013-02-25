@@ -6066,13 +6066,14 @@ _missing_arg:
         {}
         else if ( !strcmp( argv[i], "new_tab" ) )
         {
+            focus_panel( NULL, (gpointer)main_window, panel );
             if ( !( argv[i+1] && g_file_test( argv[i+1], G_FILE_TEST_IS_DIR ) ) )
                 on_shortcut_new_tab_activate( NULL, file_browser );
             else
-            {
-                focus_panel( NULL, (gpointer)main_window, panel );
                 fm_main_window_add_new_tab( main_window, argv[i+1] );
-            }
+            main_window_get_counts( file_browser, &i, &tab, &j );
+            *reply = g_strdup_printf( "#!/bin/bash\nnew_tab_window=%#x\nnew_tab_panel=%d\nnew_tab_number=%d\n",
+                                                    main_window, panel, tab );
         }
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
