@@ -130,6 +130,16 @@ gboolean on_cmdline_keypress( GtkWidget *widget,
     return FALSE;
 }
 
+void on_view_row_activated ( GtkTreeView *tree_view,
+                             GtkTreePath *path,
+                             GtkTreeViewColumn* col,
+                             GtkWidget* dlg )
+{
+    GtkBuilder* builder = (GtkBuilder*)g_object_get_data(G_OBJECT(dlg), "builder");
+    GtkWidget* ok = (GtkWidget*)gtk_builder_get_object( builder, "okbutton");
+    gtk_button_clicked( GTK_BUTTON( ok ) );
+}
+
 GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
                                                         gboolean no_default )
 {
@@ -188,6 +198,9 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
     g_signal_connect( (GtkWidget*)gtk_builder_get_object( builder, "browse_btn"),
                                     "clicked",
                                     G_CALLBACK(on_browse_btn_clicked), dlg );
+    g_signal_connect ( G_OBJECT( view ), "row_activated",
+                                    G_CALLBACK ( on_view_row_activated ),
+                                    dlg );
 
     gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
     
@@ -258,6 +271,9 @@ on_notebook_switch_page ( GtkNotebook *notebook,
             g_object_set_data( G_OBJECT(dlg), "task", task );
             g_signal_connect( task, "finish", G_CALLBACK(on_load_all_apps_finish), dlg );
             vfs_async_task_execute( task );
+            g_signal_connect ( G_OBJECT( view ), "row_activated",
+                                    G_CALLBACK ( on_view_row_activated ),
+                                    dlg );
         }
     }
 }
