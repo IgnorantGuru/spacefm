@@ -6377,13 +6377,13 @@ _missing_arg:
             ptk_file_browser_chdir( file_browser, argv[i+1],
                                                     PTK_FB_CHDIR_ADD_HISTORY );      
         }
-        else if ( !strcmp( argv[i], "edit_file" ) )
+        else if ( !strcmp( argv[i], "edit_file" ) ) // deprecated >= 0.8.7
         {
             if ( ( argv[i+1] && argv[i+1][0] ) && 
                                 g_file_test( argv[i+1], G_FILE_TEST_IS_REGULAR ) )
                 xset_edit( GTK_WIDGET( file_browser ), argv[i+1], FALSE, TRUE );
         }
-        else if ( !strcmp( argv[i], "run_in_terminal" ) )
+        else if ( !strcmp( argv[i], "run_in_terminal" ) ) // deprecated >= 0.8.7
         {
             if ( ( argv[i+1] && argv[i+1][0] ) )
             {
@@ -7019,6 +7019,246 @@ _invalid_get:
         if ( str )
             *reply = g_strdup_printf( "%s\n", str );
         g_free( str );
+    }
+    else if ( !strcmp( argv[0], "run-task" ) )
+    {   // TYPE [OPTIONS] ...
+        if ( !( argv[i] && argv[i+1] ) )
+        {
+            *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
+                                                                        argv[0] );
+            return 1;        
+        }
+        if ( !strcmp( argv[i], "cmd" ) || !strcmp( argv[i], "command" ) )
+        {
+            // custom command task
+            // cmd [--task [--popup] [--scroll]] [--terminal] 
+            //                     [--user USER] [--title TITLE] 
+            //                     [--icon ICON] [--dir DIR] COMMAND
+            // get opts
+            gboolean opt_task = FALSE;
+            gboolean opt_popup = FALSE;
+            gboolean opt_scroll = FALSE;
+            gboolean opt_terminal = FALSE;
+            const char* opt_user = NULL;
+            const char* opt_title = NULL;
+            const char* opt_icon = NULL;
+            const char* opt_cwd = NULL;
+            for ( j = i + 1; argv[j] && argv[j][0] == '-'; j++ )
+            {
+                if ( !strcmp( argv[j], "--task" ) )
+                    opt_task = TRUE;
+                else if ( !strcmp( argv[j], "--popup" ) )
+                    opt_popup = opt_task = TRUE;
+                else if ( !strcmp( argv[j], "--scroll" ) )
+                    opt_scroll = opt_task = TRUE;
+                else if ( !strcmp( argv[j], "--terminal" ) )
+                    opt_terminal = TRUE;
+                else if ( !strcmp( argv[j], "--user" ) )
+                    opt_user = argv[++j];
+                else if ( !strcmp( argv[j], "--title" ) )
+                    opt_title = argv[++j];
+                else if ( !strcmp( argv[j], "--icon" ) )
+                    opt_icon = argv[++j];
+                else if ( !strcmp( argv[j], "--dir" ) )
+                {
+                    opt_cwd = argv[++j];
+                    if ( !( opt_cwd && opt_cwd[0] == '/' &&
+                                g_file_test( opt_cwd, G_FILE_TEST_IS_DIR ) ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
+                                                            opt_cwd );
+                        return 2;        
+                    }
+                }
+                else
+                {
+                    *reply = g_strdup_printf( _("spacefm: invalid %s task option '%s'\n"),
+                                                        argv[i], argv[j] );
+                    return 2;        
+                }
+            }
+            if ( !argv[j] )
+            {
+                *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
+                                                                            argv[0] );
+                return 1;        
+            }
+            GString* gcmd = g_string_new( argv[j] );
+            while ( argv[++j] )
+                g_string_append_printf( gcmd, " %s", argv[j] );
+            
+            PtkFileTask* ptask = ptk_file_exec_new( opt_title ? opt_title : gcmd->str,
+                                       opt_cwd ? opt_cwd : 
+                                         ptk_file_browser_get_cwd( file_browser ),
+                                       GTK_WIDGET( file_browser ),
+                                       file_browser->task_view );
+            ptask->task->exec_browser = file_browser;
+            ptask->task->exec_command = g_string_free( gcmd, FALSE );
+            ptask->task->exec_as_user = g_strdup( opt_user );
+            ptask->task->exec_icon = g_strdup( opt_icon );
+            ptask->task->exec_terminal = opt_terminal;
+            ptask->task->exec_keep_terminal = FALSE;
+            ptask->task->exec_sync = opt_task;
+            ptask->task->exec_popup = opt_popup;
+            ptask->task->exec_show_output = opt_popup;
+            ptask->task->exec_show_error = TRUE;
+            ptask->task->exec_scroll_lock = !opt_scroll;
+            ptask->task->exec_export = TRUE;
+            if ( opt_popup )
+                gtk_window_present( GTK_WINDOW( main_window ) );
+            ptk_file_task_run( ptask );
+            if ( opt_task )
+                *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%#x\nnew_task_id=%#x\n",
+                                                        main_window, ptask );
+        }
+        else if ( !strcmp( argv[i], "edit" ) || !strcmp( argv[i], "web" ) )
+        {
+            // edit or web
+            // edit [--as-root] FILE
+            // web URL
+            gboolean opt_root = FALSE;
+            for ( j = i + 1; argv[j] && argv[j][0] == '-'; j++ )
+            {
+                if ( !strcmp( argv[i], "edit" ) && !strcmp( argv[j], "--as-root" ) )
+                    opt_root = TRUE;
+                else
+                {
+                    *reply = g_strdup_printf( _("spacefm: invalid %s task option '%s'\n"),
+                                                        argv[i], argv[j] );
+                    return 2;        
+                }
+            }
+            if ( !argv[j] )
+            {
+                *reply = g_strdup_printf( _("spacefm: %s requires two arguments\n"),
+                                                                            argv[0] );
+                return 1;
+            }
+            if ( !strcmp( argv[i], "edit" ) )
+            {
+                if ( !( argv[j][0] == '/' && 
+                                    g_file_test( argv[j], G_FILE_TEST_EXISTS ) ) )
+                {
+                    *reply = g_strdup_printf( _("spacefm: no such file '%s'\n"),
+                                                                    argv[j] );
+                    return 2;
+                }
+                xset_edit( GTK_WIDGET( file_browser ), argv[j], opt_root, !opt_root );
+            }
+            else
+                xset_open_url( GTK_WIDGET( file_browser ), argv[j] );
+        }
+        else if ( !strcmp( argv[i], "copy" ) || !strcmp( argv[i], "move" )
+                                             || !strcmp( argv[i], "link" )
+                                             || !strcmp( argv[i], "delete" ) )
+        {
+            // built-in task
+            // copy SOURCE FILENAME [...] TARGET
+            // move SOURCE FILENAME [...] TARGET
+            // link SOURCE FILENAME [...] TARGET
+            // delete SOURCE FILENAME [...]
+            // get opts
+            const char* opt_cwd = NULL;
+            for ( j = i + 1; argv[j] && argv[j][0] == '-'; j++ )
+            {
+                if ( !strcmp( argv[j], "--dir" ) )
+                {
+                    opt_cwd = argv[++j];
+                    if ( !( opt_cwd && opt_cwd[0] == '/' &&
+                                g_file_test( opt_cwd, G_FILE_TEST_IS_DIR ) ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
+                                                            opt_cwd );
+                        return 2;        
+                    }
+                }
+                else
+                {
+                    *reply = g_strdup_printf( _("spacefm: invalid %s task option '%s'\n"),
+                                                        argv[i], argv[j] );
+                    return 2;        
+                }
+            }
+            l = NULL;  // file list
+            char* target_dir = NULL;
+            for ( ; argv[j]; j++ )
+            {
+                if ( strcmp( argv[i], "delete" ) && !argv[j+1] )
+                {
+                    // last argument - use as TARGET
+                    if ( argv[j][0] != '/' || 
+                                    !g_file_test( argv[j], G_FILE_TEST_IS_DIR ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
+                                                                    argv[j] );
+                        g_list_foreach( l, (GFunc)g_free, NULL );
+                        g_list_free( l );
+                        return 2;
+                    }
+                    target_dir = argv[j];
+                    break;
+                }
+                else
+                {
+                    if ( argv[j][0] == '/' )
+                        // absolute path
+                        str = g_strdup( argv[j] );
+                    else
+                    {
+                        // relative path
+                        if ( !opt_cwd )
+                        {
+                            *reply = g_strdup_printf( _("spacefm: relative path '%s' requires %s option --dir DIR\n"),
+                                                               argv[j], argv[i] );
+                            g_list_foreach( l, (GFunc)g_free, NULL );
+                            g_list_free( l );
+                            return 2;
+                        }
+                        str = g_build_filename( opt_cwd, argv[j], NULL );
+                    }
+                    if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
+                    {
+                        *reply = g_strdup_printf( _("spacefm: file '%s' does not exist\n"),
+                                                            str );
+                        g_free( str );
+                        g_list_foreach( l, (GFunc)g_free, NULL );
+                        g_list_free( l );
+                        return 2;
+                    }                    
+                    l = g_list_prepend( l, str );
+                }
+            }
+            if ( !l || ( strcmp( argv[i], "delete" ) && !target_dir ) )
+            {
+                *reply = g_strdup_printf( _("spacefm: task type %s requires FILE argument(s)\n"),
+                                                                    argv[i] );
+                return 2;
+            }
+            l = g_list_reverse( l );
+            if ( !strcmp( argv[i], "copy" ) )
+                j = VFS_FILE_TASK_COPY;
+            else if ( !strcmp( argv[i], "move" ) )
+                j = VFS_FILE_TASK_MOVE;
+            else if ( !strcmp( argv[i], "link" ) )
+                j = VFS_FILE_TASK_LINK;
+            else if ( !strcmp( argv[i], "delete" ) )
+                j = VFS_FILE_TASK_DELETE;
+            else
+                return 1; // failsafe
+            PtkFileTask* ptask = ptk_file_task_new( j, l, target_dir,
+                                        GTK_WINDOW( gtk_widget_get_toplevel( 
+                                            GTK_WIDGET( file_browser ) ) ),
+                                        file_browser->task_view );
+            ptk_file_task_run( ptask );
+            *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%#x\nnew_task_id=%#x\n",
+                                                        main_window, ptask );
+        }
+        else
+        {
+            *reply = g_strdup_printf( _("spacefm: invalid task type '%s'\n"),
+                                                                    argv[i] );
+            return 2;
+        }
     }
     else if ( !strcmp( argv[0], "emit-key" ) )
     {   // KEYCODE [KEYMOD]

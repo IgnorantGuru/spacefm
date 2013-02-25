@@ -633,31 +633,34 @@ void show_socket_help()
     printf( "    spacefm -s set window_size 800x600\n" );
 
     printf( "\n%s\n", _("METHODS\n-------") );
-    printf( "spacefm -s set PROPERTY [VALUE...]\n" );
+    printf( "spacefm -s set [OPTIONS] PROPERTY [VALUE...]\n" );
     printf( "    %s\n", _("Sets a property") );
 
-    printf( "\nspacefm -s get PROPERTY\n" );
+    printf( "\nspacefm -s get [OPTIONS] PROPERTY\n" );
     printf( "    %s\n", _("Gets a property") );
 
-    printf( "\nspacefm -s set-task TASKID TASKPROPERTY [VALUE...]\n" );
+    printf( "\nspacefm -s set-task [OPTIONS] TASKID TASKPROPERTY [VALUE...]\n" );
     printf( "    %s\n", _("Sets a task property") );
 
-    printf( "\nspacefm -s get-task TASKID TASKPROPERTY\n" );
+    printf( "\nspacefm -s get-task [OPTIONS] TASKID TASKPROPERTY\n" );
     printf( "    %s\n", _("Gets a task property") );
 
-    printf( "\nspacefm -s emit-key KEYCODE [MODIFIER]\n" );
+    printf( "\nspacefm -s run-task [OPTIONS] TASKTYPE ARGUMENTS\n" );
+    printf( "    %s\n", _("Starts a new task") );
+
+    printf( "\nspacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]\n" );
     printf( "    %s\n", _("Activates a menu item by emitting its shortcut key") );
 
-    printf( "\nspacefm -s show-menu MENUNAME\n" );
+    printf( "\nspacefm -s show-menu [OPTIONS] MENUNAME\n" );
     printf( "    %s\n", _("Shows custom submenu named MENUNAME as a popup menu") );
 
-    printf( "\nspacefm -s add-event EVENT COMMAND ...\n" );
+    printf( "\nspacefm -s add-event EVENT COMMAND...\n" );
     printf( "    %s\n", _("Add asynchronous handler COMMAND to EVENT") );
 
-    printf( "\nspacefm -s replace-event EVENT COMMAND ...\n" );
+    printf( "\nspacefm -s replace-event EVENT COMMAND...\n" );
     printf( "    %s\n", _("Add synchronous handler COMMAND to EVENT, replacing default handler") );
 
-    printf( "\nspacefm -s remove-event EVENT COMMAND ...\n" );
+    printf( "\nspacefm -s remove-event EVENT COMMAND...\n" );
     printf( "    %s\n", _("Remove handler COMMAND from EVENT") );
 
     printf( "\nspacefm -s help|--help\n" );
@@ -713,16 +716,14 @@ void show_socket_help()
     printf( "statusbar_text                  %s\n", _("eg 'Current Status: Example'") );
     printf( "pathbar_text                    [TEXT [SELSTART [SELEND]]]\n" );
     printf( "current_dir                     %s\n", _("DIR            eg '/etc'") );
-    printf( "selected_filenames              %s\n", _("[FILENAME ...]") );
+    printf( "selected_filenames              %s\n", _("[FILENAME...]") );
     printf( "selected_pattern                %s\n", _("[PATTERN]      eg '*.jpg'") );
     printf( "clipboard_text                  %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_primary_text          %s\n", _("eg 'Some\\nlines\\nof text'") );
     printf( "clipboard_from_file             %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
     printf( "clipboard_primary_from_file     %s\n", _("eg '~/copy-file-contents-to-clipboard.txt'") );
-    printf( "clipboard_copy_files            %s\n", _("FILE ...  Files copied to clipboard") );
-    printf( "clipboard_cut_files             %s\n", _("FILE ...  Files cut to clipboard") );
-    printf( "edit_file                       %s\n", _("FILE        Open FILE in user's text editor") );
-    printf( "run_in_terminal                 %s\n", _("COMMAND...  Run COMMAND in user's terminal") );
+    printf( "clipboard_copy_files            %s\n", _("FILE...  Files copied to clipboard") );
+    printf( "clipboard_cut_files             %s\n", _("FILE...  Files cut to clipboard") );
 
     printf( "\n%s\n", _("TASK PROPERTIES\n---------------") );
     printf( "status                          %s\n", _("contents of Status task column  (read-only)") );
@@ -742,6 +743,15 @@ void show_socket_help()
     printf( "queue_state                     run|pause|queue|stop\n" );
     printf( "popup_handler                   %s\n", _("COMMAND  command to show a custom task dialog\n") );
 
+    printf( "\n%s\n", _("TASK TYPES\n----------") );
+    printf( "cmd [--task] [--popup] [--scroll] [--terminal] [--user USER] [--icon ICON] \\\n" );
+    printf( "    [--dir DIR] COMMAND...      %s\n", _("Run COMMAND as USER in DIR") );
+    printf( "copy|move|link [--dir DIR] FILE|DIR... TARGET\n" );
+    printf( "                                %s\n", _("Copy|Move|Link FILE(s) or DIR(s) to TARGET dir") );
+    printf( "delete [--dir DIR] FILE|DIR...  %s\n", _("Recursively delete FILE(s) or DIR(s)" ) );
+    printf( "edit [--as-root] FILE           %s\n", _("Open FILE in user's or root's text editor") );
+    printf( "web URL                         %s\n", _("Open URL in user's web browser") );
+
     printf( "\n%s\n", _("EVENTS\n------") );
     printf( "evt_start                       %s\n", _("Instance start        %e") );
     printf( "evt_exit                        %s\n", _("Instance exit         %e") );
@@ -760,15 +770,15 @@ void show_socket_help()
     printf( "evt_device                      %s\n", _("Device change         %e %f %v") );
 
     printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
-    printf( "    %%e   %s\n", _("event name (evt_start|evt_exit|...)") );
-    printf( "    %%w   %s\n", _("window ID") );
-    printf( "    %%p   %s\n", _("panel number (1-4)") );
-    printf( "    %%t   %s\n", _("tab number (1-...)") );
-    printf( "    %%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
-    printf( "    %%k   %s\n", _("key code  (eg 0x63)") );
-    printf( "    %%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
-    printf( "    %%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
-    printf( "    %%v   %s\n", _("focus element is visible (0 or 1, or device state change)") );
+    printf( "%%e   %s\n", _("event name (evt_start|evt_exit|...)") );
+    printf( "%%w   %s\n", _("window ID") );
+    printf( "%%p   %s\n", _("panel number (1-4)") );
+    printf( "%%t   %s\n", _("tab number (1-...)") );
+    printf( "%%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
+    printf( "%%k   %s\n", _("key code  (eg 0x63)") );
+    printf( "%%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
+    printf( "%%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
+    printf( "%%v   %s\n", _("focus element is visible (0 or 1, or device state change)") );
 
     printf( "\n%s:\n\n", _("Examples") );
 
@@ -776,6 +786,8 @@ void show_socket_help()
     printf( "    spacefm -s set window_size 1024x768\n" );
     printf( "    spacefm -s set column_width name 100\n" );
     printf( "    spacefm -s set-task $fm_my_task progress 25\n" );
+    printf( "    spacefm -s run-task --window $fm_my_window cmd --task --popup ls /etc\n" );
+    printf( "    spacefm -s run-task copy --dir /etc fstab hosts /destdir\n" );
     printf( "    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts\n" );
     printf( "    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts\n" );
     printf( "    spacefm -s emit-key 0xffbe 0   # press F1 to show Help\n" );
