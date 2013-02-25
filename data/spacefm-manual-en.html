@@ -5588,7 +5588,7 @@ Otherwise the current tab of the current panel in the last window is used.
 --panel PANEL
     Specify panel 1-4.  eg: spacefm -s set --panel 2 bookmarks_visible true
 --tab TAB
-    Specify tab 1-...  eg: spacefm -s set selected_filenames --tab 3 fstab
+    Specify tab 1-...  eg: spacefm -s set --tab 3 selected_filenames fstab
 
 <a name="socket-props"><a href="#socket-props">PROPERTIES</a></a>
 ----------
@@ -6054,9 +6054,13 @@ Usage: <b>spacefm -s run-task [OPTIONS] TASKTYPE [TYPEOPTIONS] ARGUMENTS</b>
 
 <p>Each TASKTYPE accepts a different set of TYPEOPTIONS and ARGUMENTS, as detailed below.
 
+<p><b>NOTE:</b>  The run-task method was added in SpaceFM 0.8.7.  If sharing a plugin the user's current SpaceFM version can be examined with <code>spacefm --version</code>.
+
 <p><a name="run-task-cmd"><a href="#run-task-cmd">cmd [--task] [--popup] [--scroll] [--terminal] [--user USER] [--icon ICON] [--dir DIR] COMMAND...</a></a>
 
-<p>The <b>cmd</b> (or 'command') TASKTYPE is used to run a program or bash command.  By default the command is run asynchronously (run and forgotten).  It will not appear in the <a href="#tasks-man">Task Manager</a>, and no popup will be shown.  No <a href="#exvar">exported bash variables</a> may be used in asynchronous commands.  For example:
+<p>The <b>cmd</b> (or 'command') TASKTYPE is used to run a program or bash command.  <a href="#exvar">Exported bash variables</a> may be used in any COMMAND - just remember to include the $fm_import line in your command or script.  Note that the contents of the variables will reflect the window, panel, and tab active for the socket command, not necessarily the focused tab of SpaceFM.
+
+<p>By default COMMAND is run asynchronously (run and forgotten).  It will not appear in the <a href="#tasks-man">Task Manager</a>, and no popup will be shown.  For example:
 <pre>    spacefm -s run-task cmd <b>touch /tmp/a_new_file</b></pre>
 
 cmd also accepts the following TYPEOPTIONS:
@@ -6069,7 +6073,7 @@ cmd also accepts the following TYPEOPTIONS:
 </tr>
 	<tr>
 		<td>--task</td>
-		<td>Run COMMAND as a SpaceFM task and list it in the Task Manager if it runs for more than one half second, and show a <a href="#tasks-dlg">popup dialog</a> if the command's exit status is non-zero.  This is equivalent to custom command options <a href="#designmode-command-task">Run As Task</a> plus <a href="#designmode-command-poperr">Popup Error</a>.  <a href="#exvar">Exported bash variables</a> may be used in task COMMAND scripts by including $fm_import.</td>
+		<td>Run COMMAND as a SpaceFM task and list it in the Task Manager if it runs for more than one half second, and show a <a href="#tasks-dlg">popup dialog</a> if the command's exit status is non-zero.  This is equivalent to custom command options <a href="#designmode-command-task">Run As Task</a> plus <a href="#designmode-command-poperr">Popup Error</a>.</td>
 	</tr><tr>
 		<td>--popup</td>
 		<td>Run COMMAND as a SpaceFM task and show a popup dialog if the task runs for longer than one half second or produces output or an error.  This is equivalent to custom command options <a href="#designmode-command-task">Run As Task</a> plus <a href="#designmode-command-popout">Popup Output</a> plus <a href="#designmode-command-poperr">Popup Error</a>.</td>
@@ -6706,7 +6710,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-02-24&nbsp;&nbsp;(SpaceFM version 0.8.6+)
+<p>Updated 2013-02-25&nbsp;&nbsp;(SpaceFM version 0.8.6+)
 <br><br>
 </center>
 </td></tr></table>
