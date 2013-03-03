@@ -7221,7 +7221,7 @@ _invalid_get:
                     }
                     if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
                     {
-                        *reply = g_strdup_printf( _("spacefm: file '%s' does not exist\n"),
+                        *reply = g_strdup_printf( _("spacefm: no such file '%s'\n"),
                                                             str );
                         g_free( str );
                         g_list_foreach( l, (GFunc)g_free, NULL );
