@@ -334,7 +334,9 @@ void get_socket_name_nogdk( char* buf, int len )
         g_free( dpy );
         dpy = g_strdup( ":0" );
     }
-    g_snprintf( buf, len, "/tmp/.spacefm-socket%s-%s", dpy, g_get_user_name() );
+    g_snprintf( buf, len, "%s/.spacefm-socket%s-%s", xset_get_tmp_dir(),
+                                                     dpy,
+                                                     g_get_user_name() );
     g_free( dpy );
 }
 
@@ -347,7 +349,9 @@ void get_socket_name( char* buf, int len )
         g_free( dpy );
         dpy = g_strdup( ":0" );
     }
-    g_snprintf( buf, len, "/tmp/.spacefm-socket%s-%s", dpy, g_get_user_name() );
+    g_snprintf( buf, len, "%s/.spacefm-socket%s-%s", xset_get_tmp_dir(),
+                                                     dpy,
+                                                     g_get_user_name() );
     g_free( dpy );
 }
 
@@ -1305,6 +1309,9 @@ int main ( int argc, char *argv[] )
     textdomain ( GETTEXT_PACKAGE );
 #endif
 
+    // load spacefm.conf
+    load_conf();
+    
     // separate instance options
     if ( argc > 1 )
     {

@@ -86,6 +86,7 @@ AppSettings;
 
 extern AppSettings app_settings;
 
+void load_conf();
 void load_settings( char* config_dir );
 char* save_settings( gpointer main_window_ptr );
 void free_settings();

@@ -453,6 +453,23 @@ static void parse_conf( char* line )
     }
 }
 
+void load_conf()
+{
+    // load spacefm.conf
+    char line[ 2048 ];
+    FILE* file = fopen( "/etc/spacefm/spacefm.conf", "r" );
+    if ( file )
+    {
+        while ( fgets( line, sizeof( line ), file ) )
+            parse_conf( line );
+        fclose( file );
+    }
+    
+    // set tmp dirs
+    if ( !settings_tmp_dir )
+        settings_tmp_dir = g_strdup( "/tmp" );
+}        
+
 void load_settings( char* config_dir )
 {
     FILE * file;
@@ -527,15 +544,6 @@ void load_settings( char* config_dir )
     }
     */
 
-    // load spacefm.conf
-    file = fopen( "/etc/spacefm/spacefm.conf", "r" );
-    if ( file )
-    {
-        while ( fgets( line, sizeof( line ), file ) )
-            parse_conf( line );
-        fclose( file );
-    }
-    
     // set tmp dirs
     if ( !settings_tmp_dir )
         settings_tmp_dir = g_strdup( "/tmp" );
