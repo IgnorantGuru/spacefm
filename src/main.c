@@ -778,7 +778,7 @@ void show_socket_help()
     printf( "popup_handler                   %s\n", _("COMMAND  command to show a custom task dialog\n") );
 
     printf( "\n%s\n", _("TASK TYPES\n----------") );
-    printf( "cmd [--task] [--popup] [--scroll] [--terminal] [--user USER] [--icon ICON] \\\n" );
+    printf( "cmd [--task] [--popup] [--scroll] [--terminal] [--icon ICON] \\\n" );
     printf( "    [--dir DIR] COMMAND...      %s\n", _("Run COMMAND as USER in DIR") );
     printf( "copy|move|link [--dir DIR] FILE|DIR... TARGET\n" );
     printf( "                                %s\n", _("Copy|Move|Link FILE(s) or DIR(s) to TARGET dir") );

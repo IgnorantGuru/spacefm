@@ -3923,7 +3923,7 @@ queue_state                     run|pause|queue|stop
 
 <a href="#sockets-methods-run-task">TASK TYPES</a>
 ----------
-<a href="#run-task-cmd">cmd</a> [--task] [--popup] [--scroll] [--terminal] [--user USER] [--icon ICON] \
+<a href="#run-task-cmd">cmd</a> [--task] [--popup] [--scroll] [--terminal] [--icon ICON] \
     [--dir DIR] COMMAND...      Run COMMAND as USER in DIR
 <a href="#run-task-copy">copy|move|link</a> [--dir DIR] FILE|DIR... TARGET
                                 Copy|Move|Link FILE(s) or DIR(s) to TARGET dir
@@ -4283,7 +4283,7 @@ Usage: <b>spacefm -s run-task [OPTIONS] TASKTYPE [TYPEOPTIONS] ARGUMENTS</b>
 
 <p><b>NOTE:</b>  The run-task method was added in SpaceFM 0.8.7.  If sharing a plugin the user's current SpaceFM version can be examined with <code>spacefm --version</code>.
 
-<p><a name="run-task-cmd"><a href="#run-task-cmd">cmd [--task] [--popup] [--scroll] [--terminal] [--user USER] [--icon ICON] [--dir DIR] COMMAND...</a></a>
+<p><a name="run-task-cmd"><a href="#run-task-cmd">cmd [--task] [--popup] [--scroll] [--terminal] [--icon ICON] [--dir DIR] COMMAND...</a></a>
 
 <p>The <b>cmd</b> (or 'command') TASKTYPE is used to run a program or bash command.  <a href="#exvar">Exported bash variables</a> may be used in any COMMAND - just remember to include the $fm_import line in your command or script.  Note that the contents of the variables will reflect the window, panel, and tab active for the socket command, not necessarily the focused tab of SpaceFM.
 
@@ -4310,10 +4310,6 @@ cmd also accepts the following TYPEOPTIONS:
 	</tr><tr>
 		<td>--terminal</td>
 		<td>Run COMMAND in the user's configured terminal emulator.  This is equivalent to custom command option <a href="#designmode-command-terminal">Run In Terminal</a>.  Generally this option is used <i>without</i> --task or --popup.</td>
-	</tr><tr>
-		<td>--user USER</td>
-		<td>Run COMMAND as user USER.  This is equivalent to custom command option <a href="#designmode-command-user">Run As User</a>.<br>
-		Note: If you are writing a plugin which runs any commands as root, please document this clearly in the plugin description.</td>
 	</tr><tr>
 		<td>--icon ICON</td>
 		<td>Use ICON as the task's icon in the Task Manager and popup dialog, where ICON is an icon name or absolute path.  Not all icons may be shown due to various issues.</td>

@@ -7054,8 +7054,10 @@ _invalid_get:
                     opt_scroll = opt_task = TRUE;
                 else if ( !strcmp( argv[j], "--terminal" ) )
                     opt_terminal = TRUE;
+                /* disabled due to potential misuse of password caching su programs
                 else if ( !strcmp( argv[j], "--user" ) )
                     opt_user = argv[++j];
+                */
                 else if ( !strcmp( argv[j], "--title" ) )
                     opt_title = argv[++j];
                 else if ( !strcmp( argv[j], "--icon" ) )
