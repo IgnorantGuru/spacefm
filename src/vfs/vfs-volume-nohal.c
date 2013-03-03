@@ -1269,16 +1269,16 @@ void info_partition( device_t *device )
       size = sysfs_get_uint64 (device->native_path, "size");
       alignment_offset = sysfs_get_uint64 (device->native_path, "alignment_offset");
 
-      device->partition_size = g_strdup_printf( "%d", size * 512 );
-      device->partition_alignment_offset = g_strdup_printf( "%d", alignment_offset );
+      device->partition_size = g_strdup_printf( "%lu", size * 512 );
+      device->partition_alignment_offset = g_strdup_printf( "%lu", alignment_offset );
 
       offset = sysfs_get_uint64 (device->native_path, "start") * device->device_block_size;
-      device->partition_offset = g_strdup_printf( "%d", offset );
+      device->partition_offset = g_strdup_printf( "%lu", offset );
 
       s = device->native_path;
       for (n = strlen (s) - 1; n >= 0 && g_ascii_isdigit (s[n]); n--)
         ;
-      device->partition_number = g_strdup_printf( "%d", strtol (s + n + 1, NULL, 0) );
+      device->partition_number = g_strdup_printf( "%ld", strtol (s + n + 1, NULL, 0) );
         /*
       s = g_strdup (device->priv->native_path);
       for (n = strlen (s) - 1; n >= 0 && s[n] != '/'; n--)
@@ -1521,7 +1521,7 @@ char* device_show_info( device_t *device )
         line[i++] = g_strdup_printf("  partition:\n");
         line[i++] = g_strdup_printf("    scheme:                    %s\n", device->partition_scheme ?
                                                     device->partition_scheme : "" );
-        line[i++] = g_strdup_printf("    number:                    %d\n", device->partition_number ? 
+        line[i++] = g_strdup_printf("    number:                    %s\n", device->partition_number ? 
                                                     device->partition_number : "" );
         line[i++] = g_strdup_printf("    type:                      %s\n", device->partition_type ?
                                                     device->partition_type : "" );
@@ -2241,7 +2241,7 @@ char* free_slash_total( const char* dir )
         return g_strdup_printf( "%s/%s", size_str, total_size_str );
     }
 #endif
-    return g_strdup_printf( "" );
+    return g_strdup( "" );
 }
 
 void vfs_volume_set_info( VFSVolume* volume )
@@ -2333,7 +2333,7 @@ void vfs_volume_set_info( VFSVolume* volume )
         else if ( volume->is_optical )
             disp_id = g_strdup_printf( _(":optical") );
         if ( !disp_id )
-            disp_id = g_strdup_printf( "" );
+            disp_id = g_strdup( "" );
         // table type
         if ( volume->is_table )
         {
@@ -2355,7 +2355,7 @@ void vfs_volume_set_info( VFSVolume* volume )
         if ( volume->label && volume->label[0] != '\0' )
             disp_label = g_strdup_printf( "%s", volume->label );
         else
-            disp_label = g_strdup_printf( "" );
+            disp_label = g_strdup( "" );
         /* if ( volume->mount_point && volume->mount_point[0] != '\0' )
         {
             // causes GUI hang during mount due to fs access
@@ -2367,7 +2367,7 @@ void vfs_volume_set_info( VFSVolume* volume )
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else
-            disp_size = g_strdup_printf( "" );
+            disp_size = g_strdup( "" );
         if ( volume->mount_point && volume->mount_point[0] != '\0' )
             disp_mount = g_strdup_printf( "%s", volume->mount_point );
         else
@@ -2382,21 +2382,21 @@ void vfs_volume_set_info( VFSVolume* volume )
         else if ( volume->is_audiocd )
             disp_label = g_strdup_printf( _("[audio]") );
         else
-            disp_label = g_strdup_printf( "" );
+            disp_label = g_strdup( "" );
         if ( volume->size > 0 )
         {
             vfs_file_size_to_string_format( size_str, volume->size, "%.0f%s" );
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else
-            disp_size = g_strdup_printf( "" );
+            disp_size = g_strdup( "" );
         disp_mount = g_strdup_printf( "---" );
     }
     else
     {
         disp_label = g_strdup_printf( _("[no media]") );
-        disp_size = g_strdup_printf( "" );
-        disp_mount = g_strdup_printf( "" );
+        disp_size = g_strdup( "" );
+        disp_mount = g_strdup( "" );
     }
     if ( !strncmp( volume->device_file, "/dev/", 5 ) )
         disp_device = g_strdup( volume->device_file + 5 );
@@ -3218,7 +3218,7 @@ char* vfs_volume_device_info( const char* device_file )
     
     device_t *device = device_alloc( udevice );
     if ( !device_get_info( device ) )
-        return g_strdup_printf( "" );
+        return g_strdup( "" );
     
     char* info = device_show_info( device );
     device_free( device );

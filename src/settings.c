@@ -1017,7 +1017,7 @@ char* save_settings( gpointer main_window_ptr )
                     g_free( set->s );
                     set->s = NULL;
                 }
-                tabs = g_strdup_printf( "" );
+                tabs = g_strdup( "" );
                 for ( g = 0; g < pages; g++ )
                 {
                     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
@@ -5257,7 +5257,7 @@ void xset_context_dlg( XSet* set )
     ctxt->dlg = gtk_dialog_new_with_buttons( _("Context Rules"),
                                 GTK_WINDOW( ctxt->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                NULL );
+                                NULL, NULL );
     xset_set_window_icon( GTK_WINDOW( ctxt->dlg ) );
 
     int width = xset_get_int( "context_dlg", "x" );
@@ -5776,7 +5776,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                       GTK_DIALOG_MODAL,
                                       GTK_MESSAGE_QUESTION,
                                       GTK_BUTTONS_NONE,
-                                      keymsg );
+                                      keymsg, NULL );
         xset_set_window_icon( GTK_WINDOW( dlg ) );
 
         GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
@@ -6000,7 +6000,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             g_free( name );
             break;
         }
-        char* line = g_strdup_printf( "" );
+        char* line = g_strdup( "" );
         if ( !xset_text_dialog( parent, _("Set Command Line"), NULL, TRUE,
                                     _(enter_command_line), NULL, line, &line,
                                     NULL, FALSE, "#designmode-command-line" ) )
@@ -6176,7 +6176,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
                                           GTK_DIALOG_MODAL,
                                           GTK_MESSAGE_WARNING,
                                           buttons,
-                                          msg );
+                                          msg, NULL );
             xset_set_window_icon( GTK_WINDOW( dlg ) );
             gtk_window_set_title( GTK_WINDOW( dlg ), _("Confirm Remove") );
             gtk_widget_show_all( dlg );
@@ -7060,7 +7060,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
             if ( strlen( s ) < 20 )
                 label = g_strdup_printf( _("Custo_m (%s)"), s );
             else
-                label = g_strdup_printf( _("Custo_m (...)"), s );
+                label = g_strdup( _("Custo_m (...)") );
             g_free( s );
         }
         else
@@ -7639,11 +7639,11 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                                               GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                               action,
                                               buttons,
-                                              msg1 );
+                                              msg1, NULL );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( msg2 )
-        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2 );
+        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2, NULL );
     if ( image )
         gtk_message_dialog_set_image( GTK_MESSAGE_DIALOG( dlg ), image );
     if ( title )
@@ -7881,7 +7881,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_QUESTION,
                                   GTK_BUTTONS_NONE,
-                                  msg1 );
+                                  msg1, NULL );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
     
     if ( large )
@@ -7908,7 +7908,7 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
     gtk_window_set_resizable( GTK_WINDOW( dlg ), TRUE );
 
     if ( msg2 )
-        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2 );
+        gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2, NULL );
     if ( image )
         gtk_message_dialog_set_image( GTK_MESSAGE_DIALOG( dlg ), image );
 
@@ -8198,7 +8198,7 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     else if( response == GTK_RESPONSE_OK )
     {
         // default font
-        fontname = g_strdup_printf( "" );
+        fontname = g_strdup( "" );
     }
     
     gtk_widget_destroy( dlg );
@@ -8565,9 +8565,9 @@ char *replace_string( const char* orig, const char* str, const char* replace,
     if ( !replace )
     {
         if ( quote )
-            rep = g_strdup_printf( "''" );
+            rep = g_strdup( "''" );
         else
-            rep = g_strdup_printf( "" );
+            rep = g_strdup( "" );
     }
     else if ( quote )
         rep = g_strdup_printf( "'%s'", replace );

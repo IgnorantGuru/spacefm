@@ -1040,7 +1040,7 @@ static void on_mount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     XSet* set = xset_get( "dev_root_mount" );
     char* options = vfs_volume_get_mount_options( vol, xset_get_s( "dev_mount_options" ) );
     if ( !options )
-        options = g_strdup_printf( "" );
+        options = g_strdup( "" );
     char* msg = g_strdup_printf( _("Enter mount command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%o\tvolume-specific mount options\n\t\t( %s )\n\nNote: fstab overrides some options\n\nEDIT WITH CARE   This command is run as root"), vol->device_file, options );
     if ( !set->s )
         set->s = g_strdup( set->z );
@@ -1174,7 +1174,7 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
         mount_warn = g_strdup_printf( _("\n\nWARNING: %s is mounted.  You may want or need to unmount it before changing the label."), vol->device_file );
     }
     else
-        mount_warn = g_strdup_printf( "" );
+        mount_warn = g_strdup( "" );
     char* msg = g_strdup_printf( _("Enter volume label for %s:%s"), vol->device_file, mount_warn );
     char* new_label = NULL;
     if ( !xset_text_dialog( view, _("Change Volume Label"),
@@ -1194,12 +1194,12 @@ static void on_change_label( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2
     if ( !vol->is_mounted )
     {
         g_free( mount_warn );
-        mount_warn = g_strdup_printf( "" );
+        mount_warn = g_strdup( "" );
     }
     
     if ( !new_label )
     {
-        new_label = g_strdup_printf( "" );
+        new_label = g_strdup( "" );
         label_cmd = set->y;
         def_cmd = set->desc;
         msg = g_strdup_printf( _("Enter remove label command for fstype '%s':\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%l\tnew label ( \"%s\" )\n\nEDIT WITH CARE   This command is run as root%s"), vol->fs_type, vol->device_file, new_label, mount_warn );
@@ -1764,7 +1764,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     if ( strlen( vol->device_file ) < 9 )
         entire = g_strdup_printf( _(" ( AN ENTIRE DEVICE ) ") );
     else
-        entire = g_strdup_printf( "" );
+        entire = g_strdup( "" );
     if ( !strcmp( set->desc, "zero" ) || !strcmp( set->desc, "urandom" ) )
     
     {
@@ -2149,7 +2149,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         hostname = g_strdup_printf( "%s-", buf );
     }
     else
-        hostname = g_strdup_printf( "" );
+        hostname = g_strdup( "" );
 
     if ( !strcmp( set->name, "dev_back_mbr" ) )
     {
@@ -2477,7 +2477,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         }
     }
     else
-        lsof = g_strdup_printf( "" );
+        lsof = g_strdup( "" );
 /*  not desirable ?
     if ( path = g_find_program_in_path( "infobash" ) )
     {
@@ -2485,7 +2485,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         g_free( path );
     }
     else
-*/        infobash = g_strdup_printf( "" );
+*/        infobash = g_strdup( "" );
     
     // task
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),

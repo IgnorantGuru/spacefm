@@ -760,7 +760,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
         {
             goto on_error;
         }
-        g_debug( dest_file );
+        g_debug( dest_file, NULL );
     }
     else
         dest_file = g_build_filename( task->dest_dir, file_name, NULL );
@@ -1435,7 +1435,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( !su )
             {
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
-                g_warning ( str );
+                g_warning ( str, NULL );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1446,7 +1446,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( !gsu )
             {
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
-                g_warning ( str );
+                g_warning ( str, NULL );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1465,7 +1465,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     if ( !tmp || ( tmp && !g_file_test( tmp, G_FILE_TEST_IS_DIR ) ) )
     {
         str = _("Cannot create temporary directory");
-        g_warning ( str );
+        g_warning ( str, NULL );
         // do not use xset_msg_dialog if non-main thread
         //vfs_file_task_exec_error( task, 0, str );
         xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1497,7 +1497,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         if ( !( terminal && terminal[0] == '/' ) )
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
-            g_warning ( str );
+            g_warning ( str, NULL );
             // do not use xset_msg_dialog if non-main thread
             //vfs_file_task_exec_error( task, 0, str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,

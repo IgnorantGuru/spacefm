@@ -1362,7 +1362,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
         desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns rubberband sep_v6 panel%d_font_file",
-                                        p, p, p, p, p );
+                                        p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
         set = xset_get( "view_fonts" );

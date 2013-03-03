@@ -165,11 +165,11 @@ gboolean on_update_labels( FilePropertiesDialogData* data )
     gdk_threads_enter();
 
     vfs_file_size_to_string( buf2, data->total_size );
-    sprintf( buf, _("%s ( %llu bytes )"), buf2, ( guint64 ) data->total_size );
+    sprintf( buf, _("%s ( %lu bytes )"), buf2, ( guint64 ) data->total_size );
     gtk_label_set_text( data->total_size_label, buf );
 
     vfs_file_size_to_string( buf2, data->size_on_disk );
-    sprintf( buf, _("%s ( %llu bytes )"), buf2, ( guint64 ) data->size_on_disk );
+    sprintf( buf, _("%s ( %lu bytes )"), buf2, ( guint64 ) data->size_on_disk );
     gtk_label_set_text( data->size_on_disk_label, buf );
 
     char* count;
@@ -581,14 +581,14 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
                 caculate total file size */
             need_calc_size = FALSE;
 
-            sprintf( buf, _("%s  ( %llu bytes )"),
+            sprintf( buf, _("%s  ( %lu bytes )"),
                      vfs_file_info_get_disp_size( file ),
                      ( guint64 ) vfs_file_info_get_size( file ) );
             gtk_label_set_text( data->total_size_label, buf );
 
             vfs_file_size_to_string( buf2,
                                  vfs_file_info_get_blocks( file ) * 512 );
-            sprintf( buf, _("%s  ( %llu bytes )"), buf2,
+            sprintf( buf, _("%s  ( %lu bytes )"), buf2,
                      ( guint64 ) vfs_file_info_get_blocks( file ) * 512 );
             gtk_label_set_text( data->size_on_disk_label, buf );
             

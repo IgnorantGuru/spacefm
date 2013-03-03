@@ -155,7 +155,7 @@ void ptk_delete_files( GtkWindow* parent_win,
                                       GTK_DIALOG_MODAL,
                                       GTK_MESSAGE_WARNING,
                                       GTK_BUTTONS_YES_NO,
-                                      msg );
+                                      msg, NULL );
         gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_YES); //MOD
         gtk_window_set_title( GTK_WINDOW( dlg ), _("Confirm Delete") );
         xset_set_window_icon( GTK_WINDOW( dlg ) );
@@ -278,7 +278,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         else if ( !name && ext )
             full_name = g_strdup( ext );
         else
-            full_name = g_strdup_printf( "" );
+            full_name = g_strdup( "" );
         if ( name )
             g_free( name );
         gtk_text_buffer_set_text( mset->buf_full_name, full_name, -1 );
@@ -402,7 +402,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
 
         // update name & ext
         if ( full_path[0] == '\0' )
-            full_name = g_strdup_printf( "" );
+            full_name = g_strdup( "" );
         else
             full_name = g_path_get_basename( full_path );
         
@@ -442,7 +442,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         else if ( !name && ext )
             full_name = g_strdup( ext );
         else
-            full_name = g_strdup_printf( "" );
+            full_name = g_strdup( "" );
         g_free( name );
         g_free( ext );
         gtk_text_buffer_set_text( mset->buf_full_name, full_name, -1 );
@@ -1935,7 +1935,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
                                 GTK_WINDOW( mset->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                NULL );
+                                NULL, NULL );
     //g_free( title );
 
     // Buttons

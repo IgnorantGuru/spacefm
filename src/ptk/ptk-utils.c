@@ -196,7 +196,7 @@ GtkWidget* ptk_toolbar_add_items_from_data( GtkWidget* toolbar,
 
 void ptk_show_error(GtkWindow* parent, const char* title, const char* message )
 {
-  GtkWidget* dlg = gtk_message_dialog_new_with_markup(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
+  GtkWidget* dlg = gtk_message_dialog_new_with_markup(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message, NULL);
   if( title )
     gtk_window_set_title( (GtkWindow*)dlg, title );
   gtk_dialog_run( GTK_DIALOG(dlg) );

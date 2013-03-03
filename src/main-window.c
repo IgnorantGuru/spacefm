@@ -2142,7 +2142,7 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
         GtkWidget* dlg = gtk_message_dialog_new( GTK_WINDOW( widget ), GTK_DIALOG_MODAL,
                                         GTK_MESSAGE_ERROR,
                                         GTK_BUTTONS_YES_NO,
-                                        msg );
+                                        msg, NULL );
         g_free( msg );
         gtk_dialog_set_default_response( GTK_DIALOG( dlg ), GTK_RESPONSE_NO );
         gtk_widget_show_all( dlg );
@@ -3421,7 +3421,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             }
         }
         if ( ! link_info )
-            link_info = g_strdup_printf( "" );
+            link_info = g_strdup( "" );
             
         vfs_file_size_to_string( size_str, total_size );
         msg = g_strdup_printf( "%s%d / %d (%s)%s", free_space, num_sel, num_vis,
@@ -3453,7 +3453,7 @@ void fm_main_window_update_status_bar( FMMainWindow* main_window,
             if ( num_hidx )
                 xhidden = g_strdup_printf( "+%d", num_hidx );
             else
-                xhidden = g_strdup_printf( "" );
+                xhidden = g_strdup( "" );
 
             char hidden[128];
             char *hnc = NULL;
@@ -4339,7 +4339,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
 
             if ( file_browser == a_browser )
             {
-                fprintf( file, "fm_filenames=(\n", p );
+                fprintf( file, "fm_filenames=(\n" );
                 for ( l = sel_files; l; l = l->next )
                 {
                     path = (char*)vfs_file_info_get_name( (VFSFileInfo*)l->data );
@@ -4443,7 +4443,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
                     }
                     if ( vol->fs_type )
                         fprintf( file, "fm_device_fstype='%s'\n", vol->fs_type );
-                    fprintf( file, "fm_device_size=\"%d\"\n", vol->size );
+                    fprintf( file, "fm_device_size=\"%lu\"\n", vol->size );
                     if ( vol->disp_name )
                     {
                         esc_path = bash_quote( vol->disp_name );
@@ -4495,7 +4495,7 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
                 if ( vol->fs_type )
                     fprintf( file, "fm_panel%d_device_fstype='%s'\n", p,
                                                                     vol->fs_type );
-                fprintf( file, "fm_panel%d_device_size=\"%d\"\n", p, vol->size );
+                fprintf( file, "fm_panel%d_device_size=\"%lu\"\n", p, vol->size );
                 if ( vol->disp_name )
                 {
                     esc_path = bash_quote( vol->disp_name );

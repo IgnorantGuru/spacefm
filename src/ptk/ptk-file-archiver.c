@@ -635,18 +635,18 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 if ( write_access && geteuid() != 0 )
                     perm = g_strdup_printf( " && chmod -R u+rwX %s", parent_quote );
                 else
-                    perm = g_strdup_printf( "" );
+                    perm = g_strdup( "" );
                 g_free( parent_path );
                 g_free( parent_quote );
             }
             else
             {
                 // no create parent
-                mkparent = g_strdup_printf( "" );
+                mkparent = g_strdup( "" );
                 if ( write_access && geteuid() != 0 && strcmp( type, "application/x-gzip" ) )
                     perm = g_strdup_printf( " && chmod -R u+rwX %s/*", dest_quote );
                 else
-                    perm = g_strdup_printf( "" );
+                    perm = g_strdup( "" );
             }
             
             if ( i == 3 || i == 4 || i == 6 )
@@ -658,7 +658,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                             "[ Finished With Errors ]  Press Enter to close" );
             }
             else
-                prompt = g_strdup_printf( "" );
+                prompt = g_strdup( "" );
             
             char* handler = NULL;
             if ( i == 4 )
