@@ -178,6 +178,19 @@ static GList* get_file_info_list( char** files );
 static char* dup_to_absolute_file_path( char** file );
 void receive_socket_command( int client, GString* args );  //sfm
 
+char* get_inode_tag()
+{
+    struct stat stat_buf;
+    
+    const char* path = g_get_home_dir();
+    if ( !path || stat( path, &stat_buf ) == -1 )
+        return g_strdup_printf( "%d=", getuid() );
+    return g_strdup_printf( "%d=%d:%d-%ld", getuid(),
+                                         major( stat_buf.st_dev ),
+                                         minor( stat_buf.st_dev ),
+                                         stat_buf.st_ino );
+}
+
 gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
 {
     int client, r;
@@ -503,6 +516,7 @@ void receive_socket_command( int client, GString* args )  //sfm
     char** argv;
     char** arg;
     char cmd;
+    char* reply = NULL;
     
     if ( args->str[1] )
     {
@@ -532,12 +546,26 @@ void receive_socket_command( int client, GString* args )  //sfm
         }
     }
 */
-    // process command and get reply
-    char* reply = NULL;
-    gdk_threads_enter();
-    cmd = main_window_socket_command( argv, &reply );
-    gdk_threads_leave();
+
+    // check inode tag - was socket command sent from the same filesystem?
+    // eg this helps deter use of socket commands sent from a chroot jail
+    // or from another user or system
+    char* inode_tag = get_inode_tag();
+    if ( argv && strcmp( inode_tag, argv[0] ) )
+    {
+        reply = g_strdup( "spacefm: invalid socket command user\n" );
+        cmd = 1;
+        g_warning( "invalid socket command user" );
+    }
+    else
+    {
+        // process command and get reply
+        gdk_threads_enter();
+        cmd = main_window_socket_command( argv ? argv + 1 : NULL, &reply );
+        gdk_threads_leave();
+    }
     g_strfreev( argv );
+    g_free( inode_tag );
     
     // send response
     write( client, &cmd, sizeof(char) );  // send exit status
@@ -585,6 +613,12 @@ int send_socket_command( int argc, char* argv[], char** reply )   //sfm
     char cmd = CMD_SOCKET_CMD;
     write( sock, &cmd, sizeof(char) );
 
+    // send inode tag
+    char* inode_tag = get_inode_tag();
+    write( sock, inode_tag, strlen( inode_tag ) );
+    write( sock, "\n", 1 );
+    g_free( inode_tag );
+    
     // send arguments
     int i;
     for ( i = 2; i < argc; i++ )
