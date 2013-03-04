@@ -1626,10 +1626,10 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( geteuid() == 0 || 
                     ( task->exec_as_user && !strcmp( task->exec_as_user, "root" ) ) )
                 result = fprintf( file, "\necho\necho -n '%s: '\nread s",
-                                        _("[ Finished ]  Press Enter to close") );
+                                        "[ Finished ]  Press Enter to close" );
             else 
             {         
-                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", _("[ Finished ]  Press Enter to close or s + Enter for a shell"), _("You are ROOT") );
+                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", "[ Finished ]  Press Enter to close or s + Enter for a shell", "You are ROOT" );
             }
             if ( result < 0 ) goto _exit_with_error;
         }

@@ -102,9 +102,10 @@ gboolean volume_is_visible( VFSVolume* vol );
 gboolean run_command( char* command, char** output );
 void update_all();
 
-const char* data_loss_overwrite = N_("DATA LOSS WARNING - overwriting");
-const char* type_yes_to_proceed = N_("Type yes and press Enter to proceed, or no to cancel");
-const char* press_enter_to_close = N_("[ Finished ]  Press Enter to close");
+// do not translate - bash security
+const char* data_loss_overwrite = "DATA LOSS WARNING - overwriting";
+const char* type_yes_to_proceed = "Type yes and press Enter to proceed, or no to cancel";
+const char* press_enter_to_close = "[ Finished ]  Press Enter to close";
 
 /*  Drag & Drop/Clipboard targets  */
 static GtkTargetEntry drag_targets[] = { {"text/uri-list", 0 , 0 } };
@@ -1011,7 +1012,7 @@ static void on_check_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         char* task_name = g_strdup_printf( _("Check As Root %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
+        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, press_enter_to_close );
         g_free( cmd );
         task->task->exec_command = scmd;
         task->task->exec_write_root = change_root;
@@ -1787,7 +1788,7 @@ static void on_format( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
         char* task_name = g_strdup_printf( _("Format %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
-        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, _(data_loss_overwrite), vol->device_file, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
+        char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, data_loss_overwrite, vol->device_file, type_yes_to_proceed, cmd, press_enter_to_close );
         g_free( cmd );
         task->task->exec_command = scmd;
         task->task->exec_write_root = change_root;
@@ -1973,9 +1974,9 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     char* scmd;
     
     if ( job == 2 )
-        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s \"; read s", cmd, _("DATA LOSS WARNING - overwriting MBR boot code of"), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
+        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s \"; read s", cmd, "DATA LOSS WARNING - overwriting MBR boot code of", vfile, type_yes_to_proceed, cmd, press_enter_to_close );
     else if ( job == 1 )
-        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, _(data_loss_overwrite), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );    
+        scmd = g_strdup_printf( "echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", cmd, data_loss_overwrite, vfile, type_yes_to_proceed, cmd, press_enter_to_close );    
     else
     {
         // sudo has trouble finding fsarchiver because it's not in user path
@@ -1990,7 +1991,7 @@ static void on_restore( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
                 fsarc_bin = g_strdup( "fsarchiver" );
             }
         }
-        scmd = g_strdup_printf( "echo \">>> %s archinfo %s\"; echo; %s archinfo %s; echo; echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", fsarc_bin, sfile, fsarc_bin, sfile, cmd, _(data_loss_overwrite), vfile, _(type_yes_to_proceed), cmd, _(press_enter_to_close) );
+        scmd = g_strdup_printf( "echo \">>> %s archinfo %s\"; echo; %s archinfo %s; echo; echo \">>> %s\"; echo; echo \"%s %s\"; echo; echo -n \"%s: \"; read s; if [ \"$s\" != \"yes\" ]; then exit; fi; %s; echo; echo -n \"%s: \"; read s", fsarc_bin, sfile, fsarc_bin, sfile, cmd, data_loss_overwrite, vfile, type_yes_to_proceed, cmd, press_enter_to_close );
         g_free( fsarc_bin );
     }
     g_free( cmd );
@@ -2105,7 +2106,7 @@ static void on_restore_info( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     PtkFileTask* task = ptk_file_exec_new( _("Restore Info"), NULL, view, file_browser->task_view );
-    task->task->exec_command = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
+    task->task->exec_command = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, press_enter_to_close );
     g_free( cmd );
     task->task->exec_as_user = g_strdup_printf( "root" );
     task->task->exec_sync = FALSE;
@@ -2269,7 +2270,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
     g_free( task_name );
     g_free( vfile );
-    char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, _(press_enter_to_close) );
+    char* scmd = g_strdup_printf( "echo \">>> %s\"; echo; %s; echo; echo -n \"%s: \"; read s", cmd, cmd, press_enter_to_close );
     g_free( cmd );    
     task->task->exec_command = scmd;
     task->task->exec_write_root = change_root;

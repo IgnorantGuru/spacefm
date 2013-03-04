@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 0.8.6+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-03 16:58+0000\n"
+"POT-Creation-Date: 2013-03-04 12:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3379,7 +3379,7 @@ msgid "Remove"
 msgstr ""
 
 #: ../src/settings.c:9001 ../src/settings.c:9053
-#: ../src/ptk/ptk-location-view.c:2978 ../src/ptk/ptk-location-view.c:3203
+#: ../src/ptk/ptk-location-view.c:2979 ../src/ptk/ptk-location-view.c:3204
 msgid "_Unmount"
 msgstr ""
 
@@ -3402,7 +3402,7 @@ msgid "_Tab"
 msgstr ""
 
 #: ../src/settings.c:9021 ../src/settings.c:9048
-#: ../src/ptk/ptk-location-view.c:2962 ../src/ptk/ptk-location-view.c:3189
+#: ../src/ptk/ptk-location-view.c:2963 ../src/ptk/ptk-location-view.c:3190
 msgid "_Mount"
 msgstr ""
 
@@ -5391,81 +5391,69 @@ msgstr ""
 msgid "No files are selected"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:6565 ../src/ptk/ptk-location-view.c:3551
+#: ../src/ptk/ptk-file-browser.c:6565 ../src/ptk/ptk-location-view.c:3552
 #: ../src/ptk/ptk-file-menu.c:469
 msgid "Bookmark Exists"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:6566 ../src/ptk/ptk-location-view.c:3552
+#: ../src/ptk/ptk-file-browser.c:6566 ../src/ptk/ptk-location-view.c:3553
 #: ../src/ptk/ptk-file-menu.c:470
 msgid "Bookmark already exists"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:105
-msgid "DATA LOSS WARNING - overwriting"
-msgstr ""
-
-#: ../src/ptk/ptk-location-view.c:106
-msgid "Type yes and press Enter to proceed, or no to cancel"
-msgstr ""
-
-#: ../src/ptk/ptk-location-view.c:107 ../src/vfs/vfs-file-task.c:1629
-msgid "[ Finished ]  Press Enter to close"
-msgstr ""
-
-#: ../src/ptk/ptk-location-view.c:644 ../src/ptk/ptk-location-view.c:705
+#: ../src/ptk/ptk-location-view.c:645 ../src/ptk/ptk-location-view.c:706
 msgid "Unable to mount device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:663
+#: ../src/ptk/ptk-location-view.c:664
 msgid "Unable to unmount device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:684
+#: ../src/ptk/ptk-location-view.c:685
 msgid "Unable to eject device"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:723
+#: ../src/ptk/ptk-location-view.c:724
 msgid "udev Not Configured"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:724
+#: ../src/ptk/ptk-location-view.c:725
 msgid ""
 "Mounting a network share requires a udev (--disable-hal) build of SpaceFM."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:784 ../src/ptk/ptk-location-view.c:2598
+#: ../src/ptk/ptk-location-view.c:785 ../src/ptk/ptk-location-view.c:2599
 msgid "udevil Not Installed"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:785
+#: ../src/ptk/ptk-location-view.c:786
 msgid ""
 "Mounting a network share requires udevil to be installed, or you can set a "
 "custom protocol handler by right-clicking on the Path Bar."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:896
+#: ../src/ptk/ptk-location-view.c:897
 #, c-format
 msgid "Netmount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:959 ../src/ptk/ptk-location-view.c:1458
-#: ../src/ptk/ptk-location-view.c:1505 ../src/ptk/ptk-location-view.c:1556
+#: ../src/ptk/ptk-location-view.c:960 ../src/ptk/ptk-location-view.c:1459
+#: ../src/ptk/ptk-location-view.c:1506 ../src/ptk/ptk-location-view.c:1557
 #, c-format
 msgid "Mount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:985
+#: ../src/ptk/ptk-location-view.c:986
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can check it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:986 ../src/ptk/ptk-location-view.c:1754
-#: ../src/ptk/ptk-location-view.c:1833 ../src/ptk/ptk-location-view.c:2175
+#: ../src/ptk/ptk-location-view.c:987 ../src/ptk/ptk-location-view.c:1755
+#: ../src/ptk/ptk-location-view.c:1834 ../src/ptk/ptk-location-view.c:2176
 msgid "Device Is Mounted"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:993
+#: ../src/ptk/ptk-location-view.c:994
 #, c-format
 msgid ""
 "Enter filesystem check command:\n"
@@ -5476,20 +5464,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:998
+#: ../src/ptk/ptk-location-view.c:999
 msgid "Check As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1001
+#: ../src/ptk/ptk-location-view.c:1002
 msgid "CHECK AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1011
+#: ../src/ptk/ptk-location-view.c:1012
 #, c-format
 msgid "Check As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1044
+#: ../src/ptk/ptk-location-view.c:1045
 #, c-format
 msgid ""
 "Enter mount command:\n"
@@ -5504,20 +5492,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1049
+#: ../src/ptk/ptk-location-view.c:1050
 msgid "Mount As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1052
+#: ../src/ptk/ptk-location-view.c:1053
 msgid "MOUNT AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1068
+#: ../src/ptk/ptk-location-view.c:1069
 #, c-format
 msgid "Mount As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1098
+#: ../src/ptk/ptk-location-view.c:1099
 #, c-format
 msgid ""
 "Enter unmount command:\n"
@@ -5528,20 +5516,20 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1103
+#: ../src/ptk/ptk-location-view.c:1104
 msgid "Unmount As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1106
+#: ../src/ptk/ptk-location-view.c:1107
 msgid "UNMOUNT AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1118
+#: ../src/ptk/ptk-location-view.c:1119
 #, c-format
 msgid "Unmount As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1174
+#: ../src/ptk/ptk-location-view.c:1175
 #, c-format
 msgid ""
 "\n"
@@ -5550,16 +5538,16 @@ msgid ""
 "the label."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1178
+#: ../src/ptk/ptk-location-view.c:1179
 #, c-format
 msgid "Enter volume label for %s:%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1180
+#: ../src/ptk/ptk-location-view.c:1181
 msgid "Change Volume Label"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1205
+#: ../src/ptk/ptk-location-view.c:1206
 #, c-format
 msgid ""
 "Enter remove label command for fstype '%s':\n"
@@ -5571,7 +5559,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1211
+#: ../src/ptk/ptk-location-view.c:1212
 #, c-format
 msgid ""
 "Enter change label command for fstype '%s':\n"
@@ -5583,55 +5571,55 @@ msgid ""
 "EDIT WITH CARE   This command is run as root%s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1214
+#: ../src/ptk/ptk-location-view.c:1215
 msgid "Change Label As Root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1217
+#: ../src/ptk/ptk-location-view.c:1218
 msgid "LABEL AS ROOT"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1232
+#: ../src/ptk/ptk-location-view.c:1233
 #, c-format
 msgid "Label As Root %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1292
+#: ../src/ptk/ptk-location-view.c:1293
 #, c-format
 msgid "Unmount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1374 ../src/ptk/ptk-location-view.c:1387
+#: ../src/ptk/ptk-location-view.c:1375 ../src/ptk/ptk-location-view.c:1388
 #, c-format
 msgid "Remove %s"
 msgstr ""
 
 #. task
-#: ../src/ptk/ptk-location-view.c:1605
+#: ../src/ptk/ptk-location-view.c:1606
 #, c-format
 msgid "Remount %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1691
+#: ../src/ptk/ptk-location-view.c:1692
 #, c-format
 msgid "Reload %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1719
+#: ../src/ptk/ptk-location-view.c:1720
 msgid "Sync"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1753
+#: ../src/ptk/ptk-location-view.c:1754
 #, c-format
 msgid "%s is currently mounted.  You must unmount it before you can format it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1765 ../src/ptk/ptk-location-view.c:1925
+#: ../src/ptk/ptk-location-view.c:1766 ../src/ptk/ptk-location-view.c:1926
 #, c-format
 msgid " ( AN ENTIRE DEVICE ) "
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1771
+#: ../src/ptk/ptk-location-view.c:1772
 #, c-format
 msgid ""
 "You are about to erase %s %s- ALL DATA WILL BE LOST.  Be patient - this can "
@@ -5645,7 +5633,7 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1774
+#: ../src/ptk/ptk-location-view.c:1775
 #, c-format
 msgid ""
 "You are about to format %s %s- ALL DATA WILL BE LOST.\n"
@@ -5658,31 +5646,31 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1775
+#: ../src/ptk/ptk-location-view.c:1776
 msgid "Format"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1778 ../src/ptk/ptk-location-view.c:1875
-#: ../src/ptk/ptk-location-view.c:1932
+#: ../src/ptk/ptk-location-view.c:1779 ../src/ptk/ptk-location-view.c:1876
+#: ../src/ptk/ptk-location-view.c:1933
 msgid "DATA LOSS WARNING"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1787
+#: ../src/ptk/ptk-location-view.c:1788
 #, c-format
 msgid "Format %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1832
+#: ../src/ptk/ptk-location-view.c:1833
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can restore it."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1840
+#: ../src/ptk/ptk-location-view.c:1841
 msgid "Choose Backup For Restore"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1874
+#: ../src/ptk/ptk-location-view.c:1875
 #, c-format
 msgid ""
 "You are about to overwrite the MBR boot code of %s using %s.\n"
@@ -5694,15 +5682,15 @@ msgid ""
 "before the disk is modified.)"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1875
+#: ../src/ptk/ptk-location-view.c:1876
 msgid "Restore MBR"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1887 ../src/ptk/ptk-location-view.c:2097
+#: ../src/ptk/ptk-location-view.c:1888 ../src/ptk/ptk-location-view.c:2098
 msgid "Unknown Type"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1887 ../src/ptk/ptk-location-view.c:2097
+#: ../src/ptk/ptk-location-view.c:1888 ../src/ptk/ptk-location-view.c:2098
 msgid ""
 "The selected file is not a recognized backup file.\n"
 "\n"
@@ -5712,7 +5700,7 @@ msgid ""
 "this file is a valid backup, you can rename it to avoid this error."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1928
+#: ../src/ptk/ptk-location-view.c:1929
 #, c-format
 msgid ""
 "You are about to restore %s %susing %s - ALL DATA WILL BE LOST.\n"
@@ -5726,46 +5714,42 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1929
+#: ../src/ptk/ptk-location-view.c:1930
 msgid "Restore"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1970
+#: ../src/ptk/ptk-location-view.c:1971
 #, c-format
 msgid "%s Restore %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:1976
-msgid "DATA LOSS WARNING - overwriting MBR boot code of"
-msgstr ""
-
-#: ../src/ptk/ptk-location-view.c:2024
+#: ../src/ptk/ptk-location-view.c:2025
 msgid "Directory Missing"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2025
+#: ../src/ptk/ptk-location-view.c:2026
 msgid "The /etc/udevil directory was not found.  Is udevil installed?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2038
+#: ../src/ptk/ptk-location-view.c:2039
 msgid "Choose Backup For Info"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2091
+#: ../src/ptk/ptk-location-view.c:2092
 msgid "MBR File"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2091
+#: ../src/ptk/ptk-location-view.c:2092
 msgid ""
 "Based on its name, the selected file appears to be an MBR backup file.  No "
 "other information is available for this type of backup."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2107
+#: ../src/ptk/ptk-location-view.c:2108
 msgid "Restore Info"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2166
+#: ../src/ptk/ptk-location-view.c:2167
 #, c-format
 msgid ""
 "\n"
@@ -5775,27 +5759,27 @@ msgid ""
 "rw-mounted to the command.  See 'man fsarchiver' for details."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2174
+#: ../src/ptk/ptk-location-view.c:2175
 #, c-format
 msgid ""
 "%s is currently mounted.  You must unmount it before you can create a backup "
 "using Partimage."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2191
+#: ../src/ptk/ptk-location-view.c:2192
 #, c-format
 msgid "Save %s Backup"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2208
+#: ../src/ptk/ptk-location-view.c:2209
 msgid "Overwrite?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2208
+#: ../src/ptk/ptk-location-view.c:2209
 msgid "The selected backup already exists.  Overwrite?"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2237
+#: ../src/ptk/ptk-location-view.c:2238
 #, c-format
 msgid ""
 "Enter %s backup command:\n"
@@ -5807,22 +5791,22 @@ msgid ""
 "EDIT WITH CARE   This command is run as root"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2240
+#: ../src/ptk/ptk-location-view.c:2241
 msgid "Backup"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2268
+#: ../src/ptk/ptk-location-view.c:2269
 #, c-format
 msgid "%s Backup %s"
 msgstr ""
 
 #. Note: file_browser may be NULL
-#: ../src/ptk/ptk-location-view.c:2495
+#: ../src/ptk/ptk-location-view.c:2496
 #, c-format
 msgid "Properties %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2533 ../src/ptk/ptk-location-view.c:2560
+#: ../src/ptk/ptk-location-view.c:2534 ../src/ptk/ptk-location-view.c:2561
 #, c-format
 msgid ""
 "%sCurrently Selected Device: %s\n"
@@ -5830,32 +5814,32 @@ msgid ""
 "Device ID: %s"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2599
+#: ../src/ptk/ptk-location-view.c:2600
 msgid "Mounting a disc image file requires udevil to be installed."
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2633
+#: ../src/ptk/ptk-location-view.c:2634
 msgid "Mount Disc Image Failed"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:2972 ../src/ptk/ptk-location-view.c:3198
+#: ../src/ptk/ptk-location-view.c:2973 ../src/ptk/ptk-location-view.c:3199
 msgid "_Eject"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3580
+#: ../src/ptk/ptk-location-view.c:3581
 msgid "Rename Bookmark"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3582
+#: ../src/ptk/ptk-location-view.c:3583
 msgid "Enter new bookmark name:"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3603
+#: ../src/ptk/ptk-location-view.c:3604
 #, c-format
 msgid "Enter new folder for bookmark '%s':"
 msgstr ""
 
-#: ../src/ptk/ptk-location-view.c:3604
+#: ../src/ptk/ptk-location-view.c:3605
 msgid "Edit Bookmark Location"
 msgstr ""
 
@@ -6222,10 +6206,6 @@ msgstr ""
 #: ../src/ptk/ptk-file-archiver.c:375
 #, c-format
 msgid "Archive"
-msgstr ""
-
-#: ../src/ptk/ptk-file-archiver.c:386
-msgid "[ Finished With Errors ]  Press Enter to close"
 msgstr ""
 
 #: ../src/ptk/ptk-file-archiver.c:477
@@ -6969,14 +6949,6 @@ msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1499
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
-msgstr ""
-
-#: ../src/vfs/vfs-file-task.c:1632
-msgid "[ Finished ]  Press Enter to close or s + Enter for a shell"
-msgstr ""
-
-#: ../src/vfs/vfs-file-task.c:1632
-msgid "You are ROOT"
 msgstr ""
 
 #: ../src/vfs/vfs-file-task.c:1759

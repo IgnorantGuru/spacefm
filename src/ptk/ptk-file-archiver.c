@@ -383,7 +383,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         task->task->exec_terminal = TRUE;
         task->task->exec_sync = FALSE;
         s1 = cmd;
-        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, _("[ Finished With Errors ]  Press Enter to close") );
+        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
         g_free( s1 );
     }
     else
