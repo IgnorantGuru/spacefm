@@ -4585,11 +4585,11 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
     }
     if ( vtask->exec_ptask )
     {
-        fprintf( file, "fm_my_task=%#x\n", vtask->exec_ptask );
-        fprintf( file, "fm_my_task_id=%#x\n", vtask->exec_ptask );
+        fprintf( file, "fm_my_task=%p\n", vtask->exec_ptask );
+        fprintf( file, "fm_my_task_id=%p\n", vtask->exec_ptask );
     }
-    fprintf( file, "fm_my_window=%#x\n", main_window );
-    fprintf( file, "fm_my_window_id=%#x\n", main_window );
+    fprintf( file, "fm_my_window=%p\n", main_window );
+    fprintf( file, "fm_my_window_id=%p\n", main_window );
     
     // utils
     esc_path = bash_quote( xset_get_s( "editor" ) );
@@ -4703,12 +4703,12 @@ gboolean main_write_exports( VFSFileTask* vtask, const char* value, FILE* file )
             fprintf( file, "fm_task_current_dest_file=%s\n", esc_path );
             g_free( esc_path );
         }
-        fprintf( file, "fm_task_id=%#x\n", ptask );
+        fprintf( file, "fm_task_id=%p\n", ptask );
         if ( ptask->task_view &&
                     ( main_window = get_task_view_window( ptask->task_view ) ) )
         {
-            fprintf( file, "fm_task_window=%#x\n", main_window );
-            fprintf( file, "fm_task_window_id=%#x\n", main_window );
+            fprintf( file, "fm_task_window=%p\n", main_window );
+            fprintf( file, "fm_task_window_id=%p\n", main_window );
         }
     }
 
@@ -5875,7 +5875,7 @@ _missing_arg:
         main_window = NULL;
         for ( l = all_windows; l; l = l->next )
         {
-            str = g_strdup_printf( "%#x", l->data );
+            str = g_strdup_printf( "%p", l->data );
             if ( !strcmp( str, window ) )
             {
                 main_window = (FMMainWindow*)l->data;
@@ -6072,7 +6072,7 @@ _missing_arg:
             else
                 fm_main_window_add_new_tab( main_window, argv[i+1] );
             main_window_get_counts( file_browser, &i, &tab, &j );
-            *reply = g_strdup_printf( "#!/bin/bash\nnew_tab_window=%#x\nnew_tab_panel=%d\nnew_tab_number=%d\n",
+            *reply = g_strdup_printf( "#!/bin/bash\nnew_tab_window=%p\nnew_tab_panel=%d\nnew_tab_number=%d\n",
                                                     main_window, panel, tab );
         }
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
@@ -6806,7 +6806,7 @@ _invalid_get:
             do
             {
                 gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
-                str = g_strdup_printf( "%#x", ptask );
+                str = g_strdup_printf( "%p", ptask );
                 if ( !strcmp( str, argv[i] ) )
                 {
                     g_free( str );
@@ -6936,7 +6936,7 @@ _invalid_get:
             do
             {
                 gtk_tree_model_get( model, &it, TASK_COL_DATA, &ptask, -1 );
-                str = g_strdup_printf( "%#x", ptask );
+                str = g_strdup_printf( "%p", ptask );
                 if ( !strcmp( str, argv[i] ) )
                 {
                     g_free( str );
@@ -7111,7 +7111,7 @@ _invalid_get:
                 gtk_window_present( GTK_WINDOW( main_window ) );
             ptk_file_task_run( ptask );
             if ( opt_task )
-                *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%#x\nnew_task_id=%#x\n",
+                *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
                                                         main_window, ptask );
         }
         else if ( !strcmp( argv[i], "edit" ) || !strcmp( argv[i], "web" ) )
@@ -7253,7 +7253,7 @@ _invalid_get:
                                             GTK_WIDGET( file_browser ) ) ),
                                         file_browser->task_view );
             ptk_file_task_run( ptask );
-            *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%#x\nnew_task_id=%#x\n",
+            *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
                                                         main_window, ptask );
         }
         else
@@ -7494,7 +7494,7 @@ gboolean run_event( FMMainWindow* main_window, PtkFileBrowser* file_browser,
             }
             else if ( var[1] == 'w' )
             {
-                rep = g_strdup_printf( "%#x", main_window );
+                rep = g_strdup_printf( "%p", main_window );
                 cmd = replace_string( str, var, rep, FALSE );
                 g_free( rep );
             }
