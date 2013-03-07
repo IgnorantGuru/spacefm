@@ -3680,10 +3680,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
             return TRUE;
         }
         
-        if ( event->button == 4 || event->button == 5
-                        || event->button == 8 || event->button == 9 )     //sfm
+        if ( event->button > 3 && event->button < 10 )     //sfm
         {
-            if ( event->button == 4 || event->button == 8 )
+            if ( event->button == 4 || event->button == 6 || event->button == 8 )
                 ptk_file_browser_go_back( NULL, file_browser );
             else
                 ptk_file_browser_go_forward( NULL, file_browser );
