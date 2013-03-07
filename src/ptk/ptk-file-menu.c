@@ -301,9 +301,11 @@ void on_copycmd( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
     if ( data->browser )
         ptk_file_browser_copycmd( data->browser, data->sel_files, data->cwd,
                                                                     set->name );
+#ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
         desktop_window_copycmd( data->desktop, data->sel_files, data->cwd,
                                                                     set->name );
+#endif
 }
 
 void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
@@ -485,7 +487,8 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
         set = set2;
     if ( !( set && desktop && g_str_has_prefix( set->name, "desk_sort_" ) ) )
         return;
-        
+
+#ifdef DESKTOP_INTEGRATION
     int by;
     char* xname = set->name + 10;
     if ( !strcmp( xname, "name" ) )
@@ -508,6 +511,7 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
         return;
     }
     desktop_window_sort_items( desktop, by, desktop->sort_type );
+#endif
 }
 
 void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
@@ -518,8 +522,10 @@ void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* deskt
 
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
+#ifdef DESKTOP_INTEGRATION
     if ( desktop )
         desktop_window_add_application( desktop );
+#endif
 }
 
 void on_popup_desktop_select( GtkMenuItem *menuitem,
@@ -533,6 +539,7 @@ void on_popup_desktop_select( GtkMenuItem *menuitem,
     if ( !( set && set->name && desktop ) )
         return;
         
+#ifdef DESKTOP_INTEGRATION
     DWSelectMode mode;
     if ( !strcmp( set->name, "select_all" ) )
         mode = DW_SELECT_ALL;
@@ -545,6 +552,7 @@ void on_popup_desktop_select( GtkMenuItem *menuitem,
     else
         return;
     desktop_window_select( desktop, mode );
+#endif
 }
 
 void on_bookmark_activate( GtkWidget* item, const char* name )
@@ -2728,7 +2736,9 @@ create_new_file( PtkFileMenu* data, int create_new )
             ao = g_slice_new0( AutoOpenCreate );
             ao->path = NULL;
             ao->file_browser = (PtkFileBrowser*)data->desktop;  // hack
+#ifdef DESKTOP_INTEGRATION
             ao->callback = (GFunc)desktop_window_on_autoopen_cb;
+#endif
             ao->open_file = FALSE;            
         }
         int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
@@ -2809,7 +2819,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
     const char * cwd;
     char* file_path = NULL;
     VFSFileInfo* info;
-    GList* sel_files;
+    GList* sel_files = NULL;
     int i;
     char* xname;
     
@@ -2826,7 +2836,9 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
     else
     {
         cwd = vfs_get_desktop_dir();
+#ifdef DESKTOP_INTEGRATION
         sel_files = desktop_window_get_selected_files( desktop );
+#endif
     }
     if( !sel_files )
         info = NULL;

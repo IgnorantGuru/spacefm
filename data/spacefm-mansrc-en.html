@@ -329,6 +329,8 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 
 <p>The GTK theme you're using may have a significant impact on SpaceFM's performance, and a non-working theme may create dysfunctional behavior.  Because multiple panels in SpaceFM use many GUI elements, some themes cause SpaceFM to run more slowly.  For example, the Clearlooks GTK2 theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
 
+<p>SpaceFM may be built to use GTK v2 or v3.  To see if your installed copy of SpaceFM is using GTK2 or GTK3 themes, run <code>spacefm --version</code>
+
 <!-- #GTK 2 #gtk2 --> 
 <b>When using GTK2</b>, it is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
 <pre>    GTK2_RC_FILES=/usr/share/themes/Raleigh/gtk-2.0/gtkrc spacefm</pre>
@@ -348,7 +350,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <p><a href="http://irtfweb.ifa.hawaii.edu/~spex/computers/techdocs/misc/gtk_themes.html">More information on using GTK2 themes</a>
 
 <!-- #GTK 3 #gtk3 --> 
-<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems visible in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
 <!-- @Invocation @Desktop Manager -->
@@ -4076,6 +4078,13 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
     # Cut files to the clipboard:
     spacefm -s set clipboard_cut_files /etc/fstab /etc/hosts
+
+    # Adjust sort settings:
+    spacefm -s set sort_by size
+    spacefm -s set sort_by name
+    spacefm -s set sort_ascend false
+    spacefm -s set sort_natural true
+    spacefm -s set sort_first folders
 </pre>
 
 

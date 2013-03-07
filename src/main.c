@@ -1394,6 +1394,15 @@ int main ( int argc, char *argv[] )
         return 1;
     }
     
+    // --desktop with no desktop build?
+#ifndef DESKTOP_INTEGRATION
+    if ( desktop )
+    {
+        fprintf( stderr, "spacefm: %s\n", _("This build of SpaceFM has desktop integration disabled") );
+        return 1;
+    }
+#endif
+
     // --version
     if ( version_opt )
     {
