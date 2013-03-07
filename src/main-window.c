@@ -3866,6 +3866,7 @@ static long get_current_desktop_index()
 FMMainWindow* fm_main_window_get_on_current_desktop()
 {
     long cur_desktop = get_current_desktop_index();
+printf("    get_current_desktop_index = %d\n", cur_desktop );
     if ( cur_desktop == -1 )
         return fm_main_window_get_last_active(); // revert to dumb if no current
 

@@ -268,10 +268,10 @@ Application Options:
     spacefm -n
 </pre>
 
-<p>To open an additional folder in a new tab of the last used window:
+<p>To open an additional folder in a new tab of the last used SpaceFM window on the current workspace:
 <pre>    spacefm /etc</pre>
 
-<p>To open a folder in the current tab of the last used window:
+<p>To open a folder in the current tab of the last used SpaceFM window on the current workspace:
 <pre>    spacefm -r /etc</pre>
 
 <p>To simply bring the SpaceFM window to the top of other windows:
@@ -2015,7 +2015,9 @@ In addition to Line and Script, a command's type may also be set to Custom.  Thi
 
 <p>When the Custom target is an executable, no filenames are passed to the program, so integration with the file browser is limited.  If the Custom target is a desktop file, and the Exec line of the file contains substitution variables %f, %F, %d, or %D, these will be used to pass selected files or the current directory to the program as command line arguments.
 
-<p>One use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
+<p>One use for Custom is to add applications to the <a href="#invocation-desktopmanager">desktop</a>'s right-click menu.
+
+<p>Another use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
 
 <p>NOTE:  When exporting a command, the value of the custom target will be exported with the plugin even if Custom is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
