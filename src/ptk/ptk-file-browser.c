@@ -817,6 +817,7 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
                         gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
                                                         tree_path, NULL, TRUE, .25, 0 );
                     }
+                    gtk_tree_path_free( tree_path );
                     vfs_file_info_unref( file );
                     break;
                 }
@@ -826,6 +827,30 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
     g_free( name );
+}
+
+void save_command_history( GtkEntry* entry )
+{
+    GList* l;
+    
+    EntryData* edata = (EntryData*)g_object_get_data( G_OBJECT( entry ), "edata" );
+    if ( !edata )
+        return;
+    const char* text = gtk_entry_get_text( GTK_ENTRY( entry ) );
+    // remove duplicates
+    while ( l = g_list_find_custom( xset_cmd_history, text, (GCompareFunc)g_strcmp0 ) )
+    {
+        g_free( (char*)l->data );
+        xset_cmd_history = g_list_delete_link( xset_cmd_history, l );
+    }
+    xset_cmd_history = g_list_prepend( xset_cmd_history, g_strdup( text ) );
+    // shorten to 200 entries
+    while ( g_list_length( xset_cmd_history ) > 200 )
+    {
+        l = g_list_last( xset_cmd_history );
+        g_free( (char*)l->data );
+        xset_cmd_history = g_list_delete_link( xset_cmd_history, l );
+    }
 }
 
 gboolean on_address_bar_focus_in( GtkWidget *entry, GdkEventFocus* evt,
@@ -883,6 +908,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             g_free( str );
             text++;
         }
+        gboolean is_space = text[0] == ' ';
         command = g_strdup( text );
         trim_command = g_strstrip( command );
         if ( trim_command[0] == '\0' )
@@ -894,55 +920,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             return;
         }
 
-        // save history
-        EntryData* edata = (EntryData*)g_object_get_data( G_OBJECT( entry ), "edata" );
-        text = gtk_entry_get_text( GTK_ENTRY( entry ) );
-        if ( edata->current )
-        {
-            if ( !strcmp( edata->current->data, text ) )
-            {
-                // no change
-                //printf( "    same as current\n");
-            }
-            else
-            {
-                //printf( "    append (!= current)\n");
-                edata->history = g_list_append( edata->history, g_strdup( text ) );
-                edata->current = g_list_last( edata->history );
-            }
-        }
-        else //( !edata->current )
-        {
-            if ( edata->history )
-            {
-                l = g_list_last( edata->history );
-                if ( !strcmp( l->data, text ) )
-                {
-                    // same as last history
-                    //printf( "    same as history last  %s\n", l->data );
-                }
-                else
-                {
-                    //printf( "    append (!current history)\n");
-                    edata->history = g_list_append( edata->history, g_strdup( text ) );
-                    edata->current = g_list_last( edata->history );
-                }
-            }
-            else
-            {
-                //printf( "    append (!current !history)\n");
-                edata->history = g_list_append( edata->history, g_strdup( text ) );
-                edata->current = g_list_last( edata->history );
-            }
-        }
-        if ( edata->editing )
-        {
-            g_free( edata->editing );
-            edata->editing = NULL;
-        }
-        if ( edata->history && g_list_length( edata->history ) > 50 )
-            edata->history = g_list_delete_link( edata->history, edata->history );
-
+        save_command_history( GTK_ENTRY( entry ) );
+            
         // task
         char* task_name = g_strdup( gtk_entry_get_text( GTK_ENTRY( entry ) ) );
         const char* cwd = ptk_file_browser_get_cwd( file_browser );
@@ -970,23 +949,26 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
 
         // reset entry text
         str = prefix;
-        prefix = g_strdup_printf( "%s ", str );
+        prefix = g_strdup_printf( "%s%s", str, is_space ? " " : "" );
         g_free( str );
         gtk_entry_set_text( GTK_ENTRY( entry ), prefix );
         g_free( prefix );
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
-        edata->current = NULL;
     }
     else if ( !g_file_test( final_path, G_FILE_TEST_EXISTS ) && text[0] == '%' )
     {
         str = g_strdup( ++text );
         g_strstrip( str );
         if ( str && str[0] != '\0' )
+        {
+            save_command_history( GTK_ENTRY( entry ) );
             ptk_file_browser_select_pattern( NULL, file_browser, str );
+        }
         g_free( str );
     }
     else if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
     {
+        save_command_history( GTK_ENTRY( entry ) );
         str = g_strdup( text );
         mount_network( file_browser, str, FALSE );
         g_free( str );
@@ -1024,6 +1006,15 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
+
+        // inhibit auto seek because if multiple completions will change dir
+        EntryData* edata = (EntryData*)g_object_get_data(
+                                                    G_OBJECT( entry ), "edata" );
+        if ( edata && edata->seek_timer )
+        {
+            g_source_remove( edata->seek_timer );
+            edata->seek_timer = 0;
+        }
     }
     g_free( final_path );
 }
@@ -1540,6 +1531,10 @@ void ptk_file_browser_finalize( GObject *obj )
     }
 
     g_free( file_browser->status_bar_custom );
+    g_free( file_browser->seek_name );
+    file_browser->seek_name = NULL;
+    g_free( file_browser->select_path );
+    file_browser->select_path = NULL;
     
     G_OBJECT_CLASS( parent_class ) ->finalize( obj );
 }
@@ -1904,6 +1899,8 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     file_browser->main_window = main_window;
     file_browser->task_view = task_view;
     file_browser->sel_change_idle = 0;
+    file_browser->inhibit_focus = FALSE;
+    file_browser->seek_name = NULL;
     file_browser->slide_x = slide_x;
     file_browser->slide_y = slide_y;
     file_browser->slide_s = slide_s;
@@ -2206,6 +2203,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     char* path;
     char* msg;
 
+    gboolean inhibit_focus = file_browser->inhibit_focus;
     //file_browser->button_press = FALSE;
     file_browser->is_drag = FALSE;
     file_browser->skip_release = FALSE;
@@ -2233,13 +2231,17 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     if ( ! path || ! g_file_test( path, ( G_FILE_TEST_IS_DIR ) ) )
     {
-        msg = g_strdup_printf( _("Directory doesn't exist\n\n%s"), path );
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
-                        _("Error"),
-                        msg );
-        if ( path )
-            g_free( path );
-        g_free( msg );
+        if ( !inhibit_focus )
+        {
+            msg = g_strdup_printf( _("Directory doesn't exist\n\n%s"), path );
+            ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( 
+                                                GTK_WIDGET( file_browser ) ) ),
+                            _("Error"),
+                            msg );
+            if ( path )
+                g_free( path );
+            g_free( msg );
+        }
         return FALSE;
     }
 
@@ -2254,18 +2256,22 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
 
     if ( test_access == -1 )
     {
-        msg = g_strdup_printf( _("Unable to access %s\n\n%s"), path, 
-                                    g_markup_escape_text(g_strerror( errno ), -1) );
-        ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
-                        _("Error"),
-                        msg );
-        g_free(msg);
+        if ( !inhibit_focus )
+        {
+            msg = g_strdup_printf( _("Unable to access %s\n\n%s"), path, 
+                                        g_markup_escape_text(g_strerror( errno ), -1) );
+            ptk_show_error( GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( 
+                                                            file_browser ) ) ),
+                            _("Error"),
+                            msg );
+            g_free(msg);
+        }
         return FALSE;
     }
 
     g_signal_emit( file_browser, signals[ BEFORE_CHDIR_SIGNAL ], 0, path, &cancel );
 
-    if( cancel )
+    if ( cancel )
         return FALSE;
 
     //MOD remember selected files
@@ -2372,11 +2378,9 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     ptk_file_browser_update_tab_label( file_browser );
 
     char* disp_path = g_filename_display_name( ptk_file_browser_get_cwd( file_browser ) );
-    gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
-    EntryData* edata = (EntryData*)g_object_get_data(
-                                    G_OBJECT( file_browser->path_bar ), "edata" );
-    if ( edata )
-        edata->current = NULL;
+    if ( !inhibit_focus )
+        gtk_entry_set_text( GTK_ENTRY( file_browser->path_bar ), disp_path );
+
     g_free( disp_path );
 
     enable_toolbar( file_browser );
@@ -2640,7 +2644,12 @@ void on_dir_file_listed( VFSDir* dir,
                          ptk_file_browser_get_cwd( file_browser ) );
     }
 */
-
+    if ( file_browser->side_dev )
+        ptk_location_view_chdir( GTK_TREE_VIEW( file_browser->side_dev ), 
+                                ptk_file_browser_get_cwd( file_browser ) );
+    if ( file_browser->side_book )
+        ptk_bookmark_view_chdir( GTK_TREE_VIEW( file_browser->side_book ), 
+                                ptk_file_browser_get_cwd( file_browser ) );
 
     //FIXME:  This is already done in update_model, but is there any better way to
     //            reduce unnecessary code?
@@ -3000,6 +3009,7 @@ void ptk_file_browser_select_pattern( GtkWidget* item, PtkFileBrowser* file_brow
                     first_select = FALSE;
                 }
             }
+            gtk_tree_path_free( path );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
@@ -3144,6 +3154,7 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                     first_select = FALSE;
                 }
             }
+            gtk_tree_path_free( path );
         }
         while ( gtk_tree_model_iter_next( model, &it ) );
     }
@@ -3168,6 +3179,165 @@ void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                                         file_browser );
     }
     focus_folder_view( file_browser );
+}
+
+void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
+                                                    const char* seek_dir,
+                                                    const char* seek_name )
+{
+    // change to dir seek_dir if needed; select first dir or else file with
+    // prefix seek_name
+    const char* cwd = ptk_file_browser_get_cwd( file_browser );
+
+    if ( seek_dir && g_strcmp0( cwd, seek_dir ) )
+    {
+        // change dir
+        g_free( file_browser->seek_name );
+        file_browser->seek_name = g_strdup( seek_name );
+        file_browser->inhibit_focus = TRUE;
+        if ( !ptk_file_browser_chdir( file_browser, seek_dir,
+                                                    PTK_FB_CHDIR_ADD_HISTORY ) )
+        {
+            file_browser->inhibit_focus = FALSE;
+            g_free( file_browser->seek_name );
+            file_browser->seek_name = NULL;
+        }
+        // return here to allow dir to load
+        // finishes seek in main-window.c on_file_browser_after_chdir()
+        return;
+    }
+    
+    // no change dir was needed or was called from on_file_browser_after_chdir()
+    // select seek name
+    ptk_file_browser_unselect_all( NULL, file_browser );
+
+    if ( !( seek_name && seek_name[0] ) )
+        return;
+
+    // get model, treesel, and stop signals
+    GtkTreeModel* model;
+    GtkTreePath* path;
+    GtkTreeIter it;
+    GtkTreeIter it_file;
+    GtkTreeIter it_dir;
+    it_file.stamp = 0;
+    it_dir.stamp = 0;
+    GtkTreeSelection* tree_sel;
+    VFSFileInfo* file;
+    gboolean select;
+    char* name;
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || 
+                                file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        model = exo_icon_view_get_model( EXO_ICON_VIEW( file_browser->folder_view ) );
+        g_signal_handlers_block_matched( file_browser->folder_view,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        tree_sel = gtk_tree_view_get_selection(GTK_TREE_VIEW( file_browser->folder_view ));
+        g_signal_handlers_block_matched( tree_sel,
+                                         G_SIGNAL_MATCH_FUNC,
+                                         0, 0, NULL,
+                                         on_folder_view_item_sel_change, NULL );
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( file_browser->folder_view ) );
+    }
+    if ( !GTK_IS_TREE_MODEL( model ) )
+        goto _restore_sig;
+    
+    // test rows - give preference to matching dir, else match file
+    if ( gtk_tree_model_get_iter_first( model, &it ) )
+    {
+        do
+        {
+            // get file
+            gtk_tree_model_get( model, &it, COL_FILE_INFO, &file, -1 );
+            if ( !file )
+                continue;
+
+            // test name
+            name = (char*)vfs_file_info_get_disp_name( file );
+            if ( !g_strcmp0( name, seek_name ) )
+            {
+                // exact match (may be file or dir)
+                it_dir = it;
+                break;
+            }
+            if ( g_str_has_prefix( name, seek_name ) )
+            {
+                // prefix found
+                if ( vfs_file_info_is_dir( file ) )
+                {
+                    if ( !it_dir.stamp )
+                        it_dir = it;
+                }
+                else if ( !it_file.stamp )
+                    it_file = it;
+            }
+        }
+        while ( gtk_tree_model_iter_next( model, &it ) );
+    }
+    
+    if ( it_dir.stamp )
+        it = it_dir;
+    else
+        it = it_file;
+    if ( !it.stamp )
+        goto _restore_sig;
+
+    // do selection and scroll to selected
+    path = gtk_tree_model_get_path( GTK_TREE_MODEL( PTK_FILE_LIST( 
+                                    file_browser->file_list ) ), &it );
+    if ( !path )
+        goto _restore_sig;
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW
+                            || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        // select
+        exo_icon_view_select_path( 
+                                EXO_ICON_VIEW( file_browser->folder_view ), path );
+        
+        // scroll and set cursor
+        exo_icon_view_set_cursor( EXO_ICON_VIEW( 
+                    file_browser->folder_view ), path, NULL, FALSE );
+        exo_icon_view_scroll_to_path( EXO_ICON_VIEW(
+                file_browser->folder_view ), path, TRUE, .25, 0 );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        // select
+        gtk_tree_selection_select_path( tree_sel, path );
+
+        // scroll and set cursor
+        gtk_tree_view_set_cursor(GTK_TREE_VIEW( file_browser->folder_view ),
+                                                    path, NULL, FALSE);
+        gtk_tree_view_scroll_to_cell( GTK_TREE_VIEW( file_browser->folder_view ),
+                                        path, NULL, TRUE, .25, 0 );
+    }
+    gtk_tree_path_free( path );
+
+_restore_sig:
+    // restore signals and trigger sel change
+    if ( file_browser->view_mode == PTK_FB_ICON_VIEW || file_browser->view_mode == PTK_FB_COMPACT_VIEW )
+    {
+        g_signal_handlers_unblock_matched( file_browser->folder_view,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( EXO_ICON_VIEW( file_browser->folder_view ),
+                                        file_browser );
+    }
+    else if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+    {
+        g_signal_handlers_unblock_matched( tree_sel,
+                                           G_SIGNAL_MATCH_FUNC,
+                                           0, 0, NULL,
+                                           on_folder_view_item_sel_change, NULL );
+        on_folder_view_item_sel_change( (ExoIconView*)tree_sel,
+                                        file_browser );
+    }
 }
 
 /* signal handlers */
@@ -3510,10 +3680,9 @@ on_folder_view_button_press_event ( GtkWidget *widget,
             return TRUE;
         }
         
-        if ( event->button == 4 || event->button == 5
-                        || event->button == 8 || event->button == 9 )     //sfm
+        if ( event->button > 3 && event->button < 10 )     //sfm
         {
-            if ( event->button == 4 || event->button == 8 )
+            if ( event->button == 4 || event->button == 6 || event->button == 8 )
                 ptk_file_browser_go_back( NULL, file_browser );
             else
                 ptk_file_browser_go_forward( NULL, file_browser );
@@ -5226,106 +5395,6 @@ _done:
     vfs_file_info_list_free( sel_files );
 }
 
-void ptk_file_browser_paste_as( GtkMenuItem* item, PtkFileBrowser* file_browser )
-{
-    GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
-    GdkAtom gnome_target;
-    GdkAtom uri_list_target;
-    gchar **uri_list, **puri;
-    GtkSelectionData* sel_data = NULL;
-    GList* files = NULL;
-    gchar* file_path;
-    gint missing_targets = 0;
-    char* str;
-    gboolean is_cut = FALSE;
-    char* uri_list_str;
-    VFSFileInfo* file;
-    char* file_dir;
-
-    const char* cwd = ptk_file_browser_get_cwd( file_browser );
-    
-    // get files from clip
-    gnome_target = gdk_atom_intern( "x-special/gnome-copied-files", FALSE );
-    sel_data = gtk_clipboard_wait_for_contents( clip, gnome_target );
-    if ( sel_data )
-    {
-        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
-
-        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
-        is_cut = ( 0 == strncmp( ( char* ) gtk_selection_data_get_data ( sel_data ), "cut", 3 ) );
-
-        if ( uri_list_str )
-        {
-            while ( *uri_list_str && *uri_list_str != '\n' )
-                ++uri_list_str;
-        }
-    }
-    else
-    {
-        uri_list_target = gdk_atom_intern( "text/uri-list", FALSE );
-        sel_data = gtk_clipboard_wait_for_contents( clip, uri_list_target );
-        if ( ! sel_data )
-            return ;
-        if ( gtk_selection_data_get_length( sel_data ) <= 0 || gtk_selection_data_get_format( sel_data ) != 8 )
-            return ;
-        uri_list_str = ( char* ) gtk_selection_data_get_data( sel_data );
-    }
-
-    if ( !uri_list_str )
-        return;
-
-    // create file list
-    puri = uri_list = g_uri_list_extract_uris( uri_list_str );
-    while ( *puri )
-    {
-        file_path = g_filename_from_uri( *puri, NULL, NULL );
-        if ( file_path )
-        {
-            if ( g_file_test( file_path, G_FILE_TEST_EXISTS ) )             
-            {
-                files = g_list_prepend( files, file_path );
-            }
-            else
-                missing_targets++;
-        }
-        ++puri;
-    }
-    g_strfreev( uri_list );
-    gtk_selection_data_free( sel_data );
-
-    GList* l;
-    GtkWidget* parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-    
-    for ( l = files; l; l = l->next )
-    {
-        file_path = (char*)l->data;
-        file = vfs_file_info_new();
-        vfs_file_info_get( file, file_path, NULL );
-        file_dir = g_path_get_dirname( file_path );
-        if ( !ptk_rename_file( NULL, file_browser, file_dir, file, cwd, !is_cut,
-                                                                    0, NULL ) )
-        {
-            vfs_file_info_unref( file );
-            g_free( file_dir );
-            missing_targets = 0;
-            break;
-        }
-        vfs_file_info_unref( file );
-        g_free( file_dir );
-    }
-    g_list_foreach( files, ( GFunc ) g_free, NULL );
-    g_list_free( files );
-
-    if ( missing_targets > 0 )
-        ptk_show_error( GTK_WINDOW( parent ),
-                        g_strdup_printf ( _("Error") ),
-                        g_strdup_printf ( "%i target%s missing",
-                        missing_targets, 
-                        missing_targets > 1 ? g_strdup_printf ( "s are" ) : 
-                        g_strdup_printf ( " is" ) ) );
-}
-
 /*
 void ptk_file_browser_paste_move( PtkFileBrowser* file_browser, char* setname )
 {
@@ -5544,7 +5613,10 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
         set2 = xset_get( "copy_loc_last" );
         move_dest = g_strdup( set2->desc );
     }
-    else if ( !strcmp( setname, "copy_loc" ) || !strcmp( setname, "move_loc" ) )
+    
+    if ( ( g_str_has_prefix( setname, "copy_loc" ) ||
+                                g_str_has_prefix( setname, "move_loc" ) ) &&
+                                                !copy_dest && !move_dest )
     {
         char* folder;
         set2 = xset_get( "copy_loc_last" );
@@ -5557,7 +5629,7 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
                                             _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
-            if ( !strcmp( setname, "copy_loc" ) )
+            if ( g_str_has_prefix( setname, "copy_loc" ) )
                 copy_dest = path;
             else
                 move_dest = path;
@@ -5622,109 +5694,6 @@ void ptk_file_browser_copycmd( PtkFileBrowser* file_browser, GList* sel_files,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
-}
-
-void ptk_file_browser_rootcmd( PtkFileBrowser* file_browser, GList* sel_files,
-                                                char* cwd, char* setname )
-{
-    /*
-     * root_copy_loc    copy to location
-     * root_move2       move to
-     * root_delete      delete
-     */
-    if ( !setname || !file_browser || !sel_files )
-        return;
-    XSet* set;
-    char* path;
-    char* cmd;
-    char* task_name;
-    
-    char* file_paths = g_strdup( "" );
-    GList* sel;
-    char* file_path;
-    char* file_path_q;
-    char* str;
-    int item_count = 0;
-    for ( sel = sel_files; sel; sel = sel->next )
-    {
-        file_path = g_build_filename( cwd,
-                    vfs_file_info_get_name( ( VFSFileInfo* ) sel->data ), NULL );
-        file_path_q = bash_quote( file_path );
-        str = file_paths;
-        file_paths = g_strdup_printf( "%s %s", file_paths, file_path_q );
-        g_free( str );
-        g_free( file_path );
-        g_free( file_path_q );
-        item_count++;
-    }
-    
-    if ( !strcmp( setname, "root_delete" ) )
-    {
-        if ( !app_settings.no_confirm )
-        {
-            str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
-                                             "Delete %d selected items as root ?",
-                                             item_count ), item_count );
-            if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_WARNING,
-                                _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
-                                _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
-            {
-                g_free( str );
-                return;
-            }
-            g_free( str );
-        }
-        cmd = g_strdup_printf( "rm -r %s", file_paths );
-        task_name = g_strdup( _("Delete As Root") );
-    }
-    else
-    {
-        char* folder;
-        set = xset_get( setname );
-        if ( set->desc )
-            folder = set->desc;
-        else
-            folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( file_browser ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                                _("Choose Location"), folder, NULL );
-        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
-        {
-            xset_set_set( set, "desc", path );
-            char* quote_path = bash_quote( path );
-            
-            if ( !strcmp( setname, "root_move2" ) )
-            {
-                task_name = g_strdup( _("Move As Root") );
-                // problem: no warning if already exists
-                cmd = g_strdup_printf( "mv -f %s %s", file_paths, quote_path );
-            }
-            else
-            {
-                task_name = g_strdup( _("Copy As Root") );
-                // problem: no warning if already exists
-                cmd = g_strdup_printf( "cp -r %s %s", file_paths, quote_path );
-            }
-            
-            g_free( quote_path );
-            g_free( path );
-        }
-        else
-            return;
-    }
-    g_free( file_paths );
-
-    // root task
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
-                                            file_browser->task_view );
-    g_free( task_name );
-    task->task->exec_command = cmd;
-    task->task->exec_sync = TRUE;
-    task->task->exec_popup = FALSE;
-    task->task->exec_show_output = FALSE;
-    task->task->exec_show_error = TRUE;
-    task->task->exec_export = FALSE;
-    task->task->exec_as_user = g_strdup( "root" );
-    ptk_file_task_run( task );          
 }
 
 void ptk_file_browser_open_terminal( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -7144,7 +7113,8 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         else if ( !strcmp( xname, "target" ) )
             ptk_file_browser_paste_target( browser );
         else if ( !strcmp( xname, "as" ) )
-            ptk_file_browser_paste_as( NULL, browser );
+            ptk_file_misc_paste_as( NULL, browser, 
+                                        ptk_file_browser_get_cwd( browser ) );
     }
     else if ( g_str_has_prefix( set->name, "select_" ) )
     {
@@ -7159,7 +7129,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             ptk_file_browser_select_pattern( NULL, browser, NULL );
     }
     else  // all the rest require ptkfilemenu data
-        ptk_file_menu_action( browser, set->name );
+        ptk_file_menu_action( NULL, browser, set->name );
 }
 
 

@@ -86,6 +86,7 @@ AppSettings;
 
 extern AppSettings app_settings;
 
+void load_conf();
 void load_settings( char* config_dir );
 char* save_settings( gpointer main_window_ptr );
 void free_settings();
@@ -245,6 +246,12 @@ XSet* evt_tab_focus;
 XSet* evt_tab_close;
 XSet* evt_device;
 
+// instance-wide command history
+GList* xset_cmd_history;
+
+// delayed session saving
+guint xset_autosave_timer;
+
 
 static const char* terminal_programs[] =  //for pref-dialog.c
 {
@@ -349,7 +356,10 @@ void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
 char* unescape( const char* t );
+void xset_autosave( PtkFileBrowser* file_browser );
 
+void open_in_prog( const char* path );
+void xset_set_window_icon( GtkWindow* win );
 char* get_valid_su();
 char* get_valid_gsu();
 gboolean xset_copy_file( char* src, char* dest );

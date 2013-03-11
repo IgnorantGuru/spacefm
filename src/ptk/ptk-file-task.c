@@ -423,7 +423,7 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                     rm_cmd = g_strdup_printf( " ; rm -f %s",
                                         ptask->task->exec_script );
                 else
-                    rm_cmd = g_strdup_printf( "" );
+                    rm_cmd = g_strdup( "" );
 
                 // kill command
                 if ( cpids )
@@ -513,6 +513,9 @@ void set_button_states( PtkFileTask* ptask )
                             xset_get_image( icon,
                                             GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_label( GTK_BUTTON( ptask->progress_btn_pause ), label );
+
+    gtk_widget_set_sensitive( ptask->progress_btn_close,
+                                    ptask->complete || !!ptask->task_view );
 }
 
 void ptk_file_task_pause( PtkFileTask* ptask, int state )
@@ -605,6 +608,12 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
     set_button_states( ptask );
     ptask->pause_change = ptask->pause_change_view = TRUE;
     ptask->progress_count = 50;  // trigger fast display
+}
+
+gboolean on_progress_dlg_delete_event( GtkWidget *widget, GdkEvent *event,
+                                                        PtkFileTask* ptask )
+{
+    return !( ptask->complete || ptask->task_view );
 }
 
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
@@ -778,7 +787,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     ptask->progress_dlg = gtk_dialog_new_with_buttons(
                              _( titles[ task->type ] ),
                              NULL /*was task->parent_window*/ , 0,
-                             NULL );
+                             NULL, NULL );
 
     // cache this value for speed
     ptask->pop_detail = xset_get_b( "task_pop_detail" );
@@ -810,6 +819,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
                                                     ptask->progress_btn_close,
                                                     GTK_RESPONSE_OK);
+    gtk_widget_set_sensitive( ptask->progress_btn_close, !!ptask->task_view );
+    
     // Help
     GtkWidget* help_btn = gtk_button_new_from_stock( GTK_STOCK_HELP );
     gtk_dialog_add_action_widget( GTK_DIALOG( ptask->progress_dlg ),
@@ -1097,6 +1108,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                       G_CALLBACK( on_progress_dlg_response ), ptask );
     g_signal_connect( ptask->progress_dlg, "destroy",
                       G_CALLBACK( on_progress_dlg_destroy ), ptask );
+    g_signal_connect( ptask->progress_dlg, "delete-event",
+                      G_CALLBACK( on_progress_dlg_delete_event ), ptask );
 
     gtk_widget_show_all( ptask->progress_dlg );
     if ( ptask->overwrite_combo && !xset_get_b( "task_pop_over" ) )
@@ -1147,6 +1160,7 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
     {
         gtk_widget_set_sensitive( ptask->progress_btn_stop, FALSE );
         gtk_widget_set_sensitive( ptask->progress_btn_pause, FALSE );
+        gtk_widget_set_sensitive( ptask->progress_btn_close, TRUE );
         if ( ptask->overwrite_combo )
             gtk_widget_set_sensitive( ptask->overwrite_combo, FALSE );
         if ( ptask->error_combo )
@@ -1618,7 +1632,7 @@ void ptk_file_task_update( PtkFileTask* ptask )
         else
             remain = 0;
         if ( remain <= 0 )
-            remain1 = g_strdup_printf( "" );  // n/a
+            remain1 = g_strdup( "" );  // n/a
         else if ( remain > 3599 )
         {
             hours = remain / 3600;
@@ -1627,17 +1641,17 @@ void ptk_file_task_update( PtkFileTask* ptask )
             remain1 = g_strdup_printf( "%dh", hours );
         }
         else if ( remain > 59 )
-            remain1 = g_strdup_printf( "%d:%02d", remain / 60, remain -
+            remain1 = g_strdup_printf( "%lu:%02lu", remain / 60, remain -
                                             ( (guint)( remain / 60 ) * 60 ) );
         else
-            remain1 = g_strdup_printf( ":%02d", remain );
+            remain1 = g_strdup_printf( ":%02lu", remain );
         //remain avg
         if ( avg_speed > 0 && task->total_size != 0 )
             remain = ( task->total_size - task->progress ) / avg_speed;
         else
             remain = 0;
         if ( remain <= 0 )
-            remain2 = g_strdup_printf( "" );  // n/a
+            remain2 = g_strdup( "" );  // n/a
         else if ( remain > 3599 )
         {
             hours = remain / 3600;
@@ -1646,10 +1660,10 @@ void ptk_file_task_update( PtkFileTask* ptask )
             remain2 = g_strdup_printf( "%dh", hours );
         }
         else if ( remain > 59 )
-            remain2 = g_strdup_printf( "%d:%02d", remain / 60, remain - 
+            remain2 = g_strdup_printf( "%lu:%02lu", remain / 60, remain - 
                                             ( (guint)( remain / 60 ) * 60 ) );
         else
-            remain2 = g_strdup_printf( ":%02d", remain );
+            remain2 = g_strdup_printf( ":%02lu", remain );
 
         g_free( ptask->dsp_file_count );
         ptask->dsp_file_count = file_count;
@@ -2074,7 +2088,7 @@ static void query_overwrite( PtkFileTask* ptask )
             else
             {
                 vfs_file_size_to_string( buf, src_stat.st_size );
-                src_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, src_stat.st_size );
+                src_size = g_strdup_printf( _("%s\t( %lu bytes )"), buf, src_stat.st_size );
                 if ( src_stat.st_size > dest_stat.st_size )
                     src_rel_size = _("larger");
                 else
@@ -2097,7 +2111,7 @@ static void query_overwrite( PtkFileTask* ptask )
                     src_rel_time = _("older");
             }
             vfs_file_size_to_string( buf, dest_stat.st_size );
-            dest_size = g_strdup_printf( _("%s\t( %llu bytes )"), buf, dest_stat.st_size );
+            dest_size = g_strdup_printf( _("%s\t( %lu bytes )"), buf, dest_stat.st_size );
             strftime( buf, sizeof( buf ),
                       app_settings.date_format,
                       localtime( &dest_stat.st_mtime ) );
@@ -2171,7 +2185,7 @@ static void query_overwrite( PtkFileTask* ptask )
                              title,
                              GTK_WINDOW( parent_win ),
                              GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                             NULL );
+                             NULL, NULL );
 
     g_signal_connect( G_OBJECT( dlg ), "response",
                                 G_CALLBACK( query_overwrite_response ), ptask );
@@ -2228,6 +2242,7 @@ static void query_overwrite( PtkFileTask* ptask )
         pause_icon = GTK_STOCK_MEDIA_PAUSE;
     gtk_button_set_image( GTK_BUTTON( btn_pause ),
                             xset_get_image( pause_icon, GTK_ICON_SIZE_BUTTON ) );
+    gtk_widget_set_sensitive( btn_pause, !!ptask->task_view );
 
     // labels
     gtk_box_pack_start( GTK_BOX( vbox ), 

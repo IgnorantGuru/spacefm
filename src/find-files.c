@@ -242,7 +242,7 @@ static void on_open_files( GtkAction* action, FindFile* data )
     {
         if ( open_files_has_dir )
         {
-            w = GTK_WIDGET( fm_main_window_get_last_active() );
+            w = GTK_WIDGET( fm_main_window_get_on_current_desktop() );
             if( ! w )
             {
                 w = fm_main_window_new();
@@ -256,7 +256,7 @@ static void on_open_files( GtkAction* action, FindFile* data )
     }
     else
     {
-        w = GTK_WIDGET( fm_main_window_get_last_active() );
+        w = GTK_WIDGET( fm_main_window_get_on_current_desktop() );
         if( ! w )
         {
             w = fm_main_window_new();
@@ -487,7 +487,7 @@ static char** compose_command( FindFile* data )
         arg = g_strdup("grep");
         g_array_append_val( argv, arg );
 
-        if( gtk_toggle_button_get_active((GtkToggleButton*)data->fc_case_sensitive) )
+        if( !gtk_toggle_button_get_active((GtkToggleButton*)data->fc_case_sensitive) )
         {
             arg = g_strdup("-i");
             g_array_append_val( argv, arg );

@@ -760,7 +760,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
         {
             goto on_error;
         }
-        g_debug( dest_file );
+        g_debug( dest_file, NULL );
     }
     else
         dest_file = g_build_filename( task->dest_dir, file_name, NULL );
@@ -1435,7 +1435,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( !su )
             {
                 str = _("Please configure a valid Terminal SU command in View|Preferences|Advanced");
-                g_warning ( str );
+                g_warning ( str, NULL );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1446,7 +1446,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( !gsu )
             {
                 str = _("Please configure a valid Graphical SU command in View|Preferences|Advanced");
-                g_warning ( str );
+                g_warning ( str, NULL );
                 // do not use xset_msg_dialog if non-main thread
                 //vfs_file_task_exec_error( task, 0, str );
                 xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1465,7 +1465,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     if ( !tmp || ( tmp && !g_file_test( tmp, G_FILE_TEST_IS_DIR ) ) )
     {
         str = _("Cannot create temporary directory");
-        g_warning ( str );
+        g_warning ( str, NULL );
         // do not use xset_msg_dialog if non-main thread
         //vfs_file_task_exec_error( task, 0, str );
         xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1497,7 +1497,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         if ( !( terminal && terminal[0] == '/' ) )
         {
             str = _("Please set a valid terminal program in View|Preferences|Advanced");
-            g_warning ( str );
+            g_warning ( str, NULL );
             // do not use xset_msg_dialog if non-main thread
             //vfs_file_task_exec_error( task, 0, str );
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
@@ -1626,10 +1626,10 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             if ( geteuid() == 0 || 
                     ( task->exec_as_user && !strcmp( task->exec_as_user, "root" ) ) )
                 result = fprintf( file, "\necho\necho -n '%s: '\nread s",
-                                        _("[ Finished ]  Press Enter to close") );
+                                        "[ Finished ]  Press Enter to close" );
             else 
             {         
-                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", _("[ Finished ]  Press Enter to close or s + Enter for a shell"), _("You are ROOT") );
+                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", "[ Finished ]  Press Enter to close or s + Enter for a shell", "You are ROOT" );
             }
             if ( result < 0 ) goto _exit_with_error;
         }

@@ -507,6 +507,7 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
             gtk_tree_selection_select_path(select, path);
             gtk_tree_view_set_cursor(GTK_TREE_VIEW(view), path, NULL, FALSE);
         } else {
+            gtk_tree_path_free( path );
             return FALSE;
         }
         break;
@@ -520,6 +521,7 @@ gboolean on_dir_tree_view_key_press( GtkWidget* view,
         }
         break;
     }
+    gtk_tree_path_free( path );
     return TRUE;  
 }
 

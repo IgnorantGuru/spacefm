@@ -45,6 +45,7 @@ enum{
 };
 
 // sort_dir of folder view - do not change order, saved
+// see also: main-window.c main_window_socket_command() get sort_first
 enum{
     PTK_LIST_SORT_DIR_MIXED = 0,
     PTK_LIST_SORT_DIR_FIRST,

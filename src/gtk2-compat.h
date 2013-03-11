@@ -8,7 +8,7 @@
 
 #if GTK_CHECK_VERSION(2, 24, 0)
 #else
-#define gtk_combo_box_text_new_with_entry gtk_combo_box_new_text
+#define gtk_combo_box_text_new_with_entry gtk_combo_box_entry_new_text
 #define gtk_combo_box_text_new gtk_combo_box_new_text
 #define gtk_combo_box_text_get_active_text gtk_combo_box_get_active_text
 #define gtk_combo_box_text_append_text gtk_combo_box_append_text

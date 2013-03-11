@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.5+
+README for SpaceFM v0.8.6+
 
 
 For updates and instructions visit:
@@ -19,7 +19,8 @@ CONTENTS
     BUILD DEBUG
     CREATE DEB PACKAGE
     UNINSTALL
-    TRANSLATIONS
+    ENABLE KERNEL POLLING
+    TRANSLATE
     LICENSE
 
 
@@ -31,71 +32,14 @@ DESCRIPTION
 
 PACKAGES
 
-    antiX-12 includes spacefm and udevil:
-        http://sourceforge.net/projects/antix-linux/
+    Find or add packages, forum threads, and other info for your distro:
+        https://github.com/IgnorantGuru/spacefm/wiki/Distros
 
-    Arch Linux's [community] repository includes spacefm:
-        http://www.archlinux.org/packages/community/i686/spacefm/
-        http://www.archlinux.org/packages/community/x86_64/spacefm/
-    and Arch's AUR includes spacefm-git (equivalent to BUILD NEXT):
-        http://aur.archlinux.org/packages.php?ID=58247
-
-    Debian-based spacefm, spacefm-gtk3, and spacefm-hal packages are available
-        (to save a file, click on its filename and click 'View Raw'):
-            https://github.com/IgnorantGuru/spacefm/tree/master/packages
-
-        and are also available in the author's PPA:
-            http://igurublog.wordpress.com/downloads/ppa/
-
-        These convenience deb packages contain the source code and will build
-        and install SpaceFM automatically on most Debian-based distros.
-        $TMPDIR (usually /tmp) must NOT be mounted noexec. Or see CREATE DEB
-        PACKAGE below.
-
-        For signatures and SHA256 sums see
-            http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt
-
-    Foresight Lxde uses SpaceFM as its default file manager; Foresight includes
-    spacefm in its repositories:
-        http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm
-
-    Gentoo's portage tree includes spacefm:
-        http://packages.gentoo.org/package/x11-misc/spacefm
-
-    openSUSE 12.1 repo (add the following repo to Yast software manager):
-        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1
-
-    openSUSE Tumbleweed repo:
-        http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/
-
-    openSUSE rpm packages:
-        http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true
-
-    Parted Magic includes SpaceFM with udevil as its default file manager:
-        http://partedmagic.com/doku.php
-
-    PCLinuxOS has spacefm test packages available (see forum):
-        http://www.pclinuxos.com/
-
-    Pibang Linux includes SpaceFM built for the Raspberry Pi (armhf) - can be
-    installed as the default file manager via Pibang's welcome scripts
-        http://pibanglinux.org/
-
-    Sabayon includes spacefm in its repositories:
-        http://www.sabayon.org/
-
-    SliTaz includes spacefm in its repositories:
-        http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search"
-
-    Ubuntu: see 'Debian-based' above
-
-    VectorLinux has spacefm test packages available:
-        http://vectorlinux.com/
-
-    Other:
+    For other distros:
         See INSTALLER below
 
-    NOTE: Enabling kernel polling is recommended after installing SpaceFM:
+    NOTE: Enabling kernel polling is recommended after installing SpaceFM.  See
+          the ENABLE KERNEL POLLING section below or visit:
     http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
@@ -289,7 +233,7 @@ BUILD NEXT
 
 The git 'next' branch of SpaceFM is a work in progress which eventually becomes
 the next release version.  To build from this branch, install the required
-build dependencies listed above for your build, plus libtool.  Then:
+build dependencies listed above for your build, then:
 
     # Download & Extract
     mkdir /tmp/spacefm-next && cd /tmp/spacefm-next
@@ -297,8 +241,8 @@ build dependencies listed above for your build, plus libtool.  Then:
     tar xzf spacefm-next.tar.gz
     cd IgnorantGuru-spacefm-*
 
-    # Build, & Install
-    ./autogen.sh     # pass any desired configure options here for your build
+    # Build & Install
+    ./configure
     make -s
     sudo make install
     sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -338,7 +282,7 @@ For other distros:
         cd IgnorantGuru-spacefm-*
 
         # Build & Install
-        CFLAGS='-ggdb -O1' STRIP='!strip' ./configure  # pass any options here
+        CFLAGS='-ggdb3 -O1' STRIP='!strip' ./configure  # pass any options here
         make -s
         sudo make install
         sudo update-mime-database /usr/local/share/mime > /dev/null
@@ -380,24 +324,28 @@ To build a deb file of SpaceFM on your Debian-based distro:
         tar xzf spacefm.tar.gz
         cd IgnorantGuru-spacefm-*
 
-3)  IF GTK3 support IS desired:
+3)  Move the distros/debian directory into the source directory:
+
+        mv distros/debian .
+
+4)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
         cp debian/rules-gtk3 debian/rules
         sed -i 's/^spacefm \(.*\)/spacefm-gtk3 \1/' debian/changelog
 
-4)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
+5)  IF hal support IS desired (cannot be used with GTK3 unless you edit rules):
 
         cp debian/control-hal debian/control
         cp debian/rules-hal debian/rules
         sed -i 's/^spacefm \(.*\)/spacefm-hal \1/' debian/changelog
 
-5)  Build package:  (the package files will appear in the parent directory)
+6)  Build package:  (the package files will appear in the parent directory)
 
         dpkg-buildpackage -b -uc
         cd .. && rm -rf IgnorantGuru-spacefm-* spacefm.tar.gz
 
-6)  To install the package you built:
+7)  To install the package you built:
 
         dpkg -i spacefm*.deb
 
@@ -423,14 +371,79 @@ Otherwise, run these commands AS ROOT:
     gtk-update-icon-cache -q -t -f /usr/local/share/icons/hicolor
 
 
-TRANSLATIONS
+ENABLE KERNEL POLLING
 
-For instructions on providing a translation of SpaceFM, see the TRANSLATE file.
+    You may need to enable kernel polling for device media to be detected by 
+    SpaceFM, especially when used without udisks.  For example, if you 
+    insert a CD and the Devices list doesn't report a change to the device 
+    or doesn't see a filesystem on the device, this is a symptom that 
+    kernel polling is not enabled.
+
+    Kernel polling is a new feature of the Linux kernel and udev, so most
+    distros don't yet have it enabled. Even if you are using udisks, enabling
+    kernel polling is recommended to eliminate the need for udisks to do
+    userspace polling. Kernel polling also corrects a common issue where the
+    eject button on a drive won't respond with the newer udev.
+
+    To use kernel polling, your Linux kernel may need to be 2.6.38 or newer,
+    and udev may need to be version 173 or newer.
+
+    TO DETERMINE IF KERNEL POLLING IS ENABLED, run these commands:
+
+        cat /sys/module/block/parameters/events_dfl_poll_msecs
+        cat /sys/block/sr0/events_poll_msecs
+
+    If you get 0 or -1 from those commands, then it's probably disabled.
+
+    TO ENABLE KERNEL POLLING PERMANENTLY (survives a reboot), add this command
+    to your /etc/rc.local file (anywhere before the 'exit' line in that file):
+
+        echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
+
+    Any number between 2000 and 5000 (milliseconds) should be reasonable - the
+    higher 5000 means poll every 5 seconds, which is less overhead but a little
+    slower.
+
+    OR you can pass this option to the kernel boot command line in grub:
+
+        block.events_dfl_poll_msecs=2000
+
+
+    TO ENABLE KERNEL POLLING TEMPORARILY, enable common polling for the block
+    module:
+
+        sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+
+    OR you can enable polling just for a single device like this (/dev/sr0 in
+    this example):
+
+        sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
+
+    The change should be immediate - media will be detected and the eject
+    button on the drive should work normally again. However, the above changes
+    will be lost when you reboot.
+
+    References:
+    http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html
+    http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/
+    https://bugs.archlinux.org/task/25609
+
+
+TRANSLATE
+
+    To help translate SpaceFM please visit:
+        https://github.com/IgnorantGuru/spacefm/wiki/Translate
+    
+    At Transifex:
+        https://www.transifex.com/projects/p/spacefm/resource/spacefmpot_1/
+
+    Just sign up for a free Transifex account.  For instructions visit:
+        http://help.transifex.com/intro/translating.html#translating
 
 
 LICENSE
 
-    SpaceFM - Copyright (C) 2012   GPL3+
+    SpaceFM - Copyright (C) 2013   GPL3+
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the

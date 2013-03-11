@@ -31,6 +31,7 @@
 #include "vfs-app-desktop.h"
 #include "vfs-execute.h"
 #include "ptk-app-chooser.h"
+#include "ptk-clipboard.h"
 #include <gdk/gdkkeysyms.h>
 
 #include "settings.h"
@@ -154,9 +155,11 @@ void ptk_delete_files( GtkWindow* parent_win,
                                       GTK_DIALOG_MODAL,
                                       GTK_MESSAGE_WARNING,
                                       GTK_BUTTONS_YES_NO,
-                                      msg );
+                                      msg, NULL );
         gtk_dialog_set_default_response (GTK_DIALOG (dlg), GTK_RESPONSE_YES); //MOD
         gtk_window_set_title( GTK_WINDOW( dlg ), _("Confirm Delete") );
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
+
         ret = gtk_dialog_run( GTK_DIALOG( dlg ) );
         gtk_widget_destroy( dlg );
         g_free( msg );
@@ -275,7 +278,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         else if ( !name && ext )
             full_name = g_strdup( ext );
         else
-            full_name = g_strdup_printf( "" );
+            full_name = g_strdup( "" );
         if ( name )
             g_free( name );
         gtk_text_buffer_set_text( mset->buf_full_name, full_name, -1 );
@@ -318,14 +321,12 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         full_name = gtk_text_buffer_get_text( mset->buf_full_name, &siter, &iter, FALSE );
         name = get_name_extension( full_name, mset->is_dir, &ext );
         gtk_text_buffer_set_text( mset->buf_name, name, -1 );
-        if (ext )
+        if ( ext )
             gtk_entry_set_text( mset->entry_ext, ext );
         else
             gtk_entry_set_text( mset->entry_ext, "" );
-        if ( name )
-            g_free( name );
-        if ( ext )
-            g_free( ext );
+        g_free( name );
+        g_free( ext );
 
         // update full_path
         gtk_text_buffer_get_start_iter( mset->buf_path, &siter );
@@ -401,7 +402,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
 
         // update name & ext
         if ( full_path[0] == '\0' )
-            full_name = g_strdup_printf( "" );
+            full_name = g_strdup( "" );
         else
             full_name = g_path_get_basename( full_path );
         
@@ -441,11 +442,9 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         else if ( !name && ext )
             full_name = g_strdup( ext );
         else
-            full_name = g_strdup_printf( "" );
-        if ( name )
-            g_free( name );
-        if ( ext )
-            g_free( ext );
+            full_name = g_strdup( "" );
+        g_free( name );
+        g_free( ext );
         gtk_text_buffer_set_text( mset->buf_full_name, full_name, -1 );
         
         // update path
@@ -485,6 +484,17 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     if ( !strcmp( full_path, mset->full_path ) )
     {
         full_path_same = TRUE;
+        if ( mset->create_new && 
+                    gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
+                                                        mset->opt_new_link ) ) )
+        {
+            if ( lstat64( full_path, &statbuf ) == 0 )
+            {
+                full_path_exists = TRUE;
+                if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                    full_path_exists_dir = TRUE;
+            }
+        }
     }
     else
     {
@@ -540,7 +550,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         //gboolean opt_copy_target = gtk_toggle_button_get_active( mset->opt_copy_target );
         //gboolean opt_link_target = gtk_toggle_button_get_active( mset->opt_link_target );
 
-        if ( full_path_same && !mset->create_new )
+        if ( full_path_same && ( mset->create_new == 0 || mset->create_new == 3 ) )
         {
             gtk_widget_set_sensitive( mset->next, gtk_toggle_button_get_active(
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) ) );
@@ -641,7 +651,9 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     {
         path = g_strdup( gtk_entry_get_text( GTK_ENTRY( mset->entry_target ) ) );
         g_strstrip( path );
-        gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' ) );
+        gtk_widget_set_sensitive( mset->next, ( path && path[0] != '\0' && 
+                                !( full_path_same && full_path_exists ) &&
+                                !full_path_exists_dir ) );
         g_free( path );
     }
     
@@ -802,7 +814,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
         text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
                                                     mset->combo_template ) ) ) );
-        if ( text[0] == '/' )
+        if ( text && text[0] == '/' )
         {
             dir = g_path_get_dirname( text );
             name = g_path_get_basename( text );
@@ -821,7 +833,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
         action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
         text = gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN(
                                                     mset->combo_template ) ) ) );
-        if ( text[0] == '/' )
+        if ( text && text[0] == '/' )
         {
             dir = g_path_get_dirname( text );
             name = g_path_get_basename( text );
@@ -841,6 +853,7 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
                     
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     if ( !name )
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), dir );
@@ -1097,8 +1110,15 @@ void on_opt_toggled( GtkMenuItem* item, MoveSet* mset )
         root_msg = "";
 
     // Window Icon
+    const char* win_icon;
+    if ( as_root )
+        win_icon = "gtk-dialog-warning";
+    else if ( mset->create_new )
+        win_icon = "gtk-new";
+    else
+        win_icon = "gtk-edit";
     GdkPixbuf* pixbuf = gtk_icon_theme_load_icon( gtk_icon_theme_get_default(),
-                        as_root ? "gtk-dialog-warning" : "gtk-edit", 16,
+                        win_icon, 16,
                         GTK_ICON_LOOKUP_USE_BUILTIN, NULL );
     if ( pixbuf )
         gtk_window_set_icon( GTK_WINDOW( mset->dlg ), pixbuf );    
@@ -1726,22 +1746,25 @@ GList* get_templates( const char* templates_dir, const char* subdir,
 
 void on_template_changed( GtkWidget* widget, MoveSet* mset )
 {
-    char* str, *str2;
+    char* str = NULL;
+    char* str2;
     if ( !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mset->opt_new_file ) ) )
         return;
     char* text = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
                                         GTK_BIN( mset->combo_template ) ) ) ) );
-    g_strstrip( text );
-    str = text;
-    while ( str2 = strchr( str, '/' ) )
-        str = str2 + 1;
-    if ( str[0] == '.' )
-        str++;
-    if ( str2 = strchr( str, '.' ) )
-        str = str2 + 1;
-    else
-        str = NULL;
-    
+    if ( text )
+    {
+        g_strstrip( text );
+        str = text;
+        while ( str2 = strchr( str, '/' ) )
+            str = str2 + 1;
+        if ( str[0] == '.' )
+            str++;
+        if ( str2 = strchr( str, '.' ) )
+            str = str2 + 1;
+        else
+            str = NULL;
+    }
     gtk_entry_set_text( mset->entry_ext, str ? str : "" );
 
     // need new name due to extension added?
@@ -1836,7 +1859,6 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         mset->is_dir = vfs_file_info_is_dir( file );
         mset->is_link = vfs_file_info_is_symlink( file );
         mset->clip_copy = clip_copy;
-        mset->create_new = create_new;
         mset->full_path = g_build_filename( file_dir, full_name, NULL );
         if ( dest_dir )
             mset->new_path = g_build_filename( dest_dir, full_name, NULL );
@@ -1845,6 +1867,17 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         g_free( full_name );
         full_name = NULL;
     }
+    else if ( create_new == 3 && file ) // new link
+    {
+        full_name = g_strdup( vfs_file_info_get_disp_name( file ) );
+        if ( !full_name )
+            full_name = g_strdup( vfs_file_info_get_name( file ) );
+        mset->full_path = g_build_filename( file_dir, full_name, NULL );
+        mset->new_path = g_strdup( mset->full_path );
+        mset->is_dir = vfs_file_info_is_dir( file );
+        mset->is_link = vfs_file_info_is_symlink( file );
+        mset->clip_copy = FALSE;
+    }
     else
     {
         mset->full_path = get_unique_name( file_dir, NULL );
@@ -1852,9 +1885,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         mset->is_dir = FALSE;
         mset->is_link = FALSE;
         mset->clip_copy = FALSE;
-        mset->create_new = create_new;
     }
     
+    mset->create_new = create_new;
     mset->old_path = file_dir;
 
     mset->full_path_exists = FALSE;
@@ -1902,7 +1935,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
                                 GTK_WINDOW( mset->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                NULL );
+                                NULL, NULL );
     //g_free( title );
 
     // Buttons
@@ -2053,6 +2086,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             gtk_button_set_image( GTK_BUTTON( mset->browse_target ),
                             xset_get_image( "GTK_STOCK_OPEN", GTK_ICON_SIZE_BUTTON ) );
             gtk_button_set_focus_on_click( GTK_BUTTON( mset->browse_target ), FALSE );
+            if ( mset->new_path && file )
+                gtk_entry_set_text( GTK_ENTRY( mset->entry_target ), mset->new_path );
             g_signal_connect( G_OBJECT( mset->browse_target ), "clicked",
                             G_CALLBACK( on_create_browse_button_press ), mset );
         }
@@ -2155,6 +2190,8 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     else
     {
         mset->label_template = NULL;
+        mset->combo_template = NULL;
+        mset->combo_template_dir = NULL;
     }
     
     // Name
@@ -2668,10 +2705,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             {
                 // new file task
                 if ( gtk_widget_get_visible( gtk_widget_get_parent(
-                                        GTK_WIDGET( mset->combo_template ) ) ) )
+                                        GTK_WIDGET( mset->combo_template ) ) ) &&
+                        ( str = gtk_combo_box_text_get_active_text( 
+                                GTK_COMBO_BOX_TEXT( mset->combo_template ) ) ) )
                 {
-                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                        GTK_BIN( mset->combo_template ) ) ) ) );
                     g_strstrip( str );
                     if ( str[0] == '/' )
                         from_path = bash_quote( str );
@@ -2746,10 +2783,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 if ( !new_folder )
                     goto _continue_free;  // failsafe
                 if ( gtk_widget_get_visible( gtk_widget_get_parent(
-                                        GTK_WIDGET( mset->combo_template_dir ) ) ) )
+                                        GTK_WIDGET( mset->combo_template_dir ) ) ) && 
+                        ( str = gtk_combo_box_text_get_active_text( 
+                                GTK_COMBO_BOX_TEXT( mset->combo_template_dir ) ) ) )
                 {
-                    str = g_strdup( gtk_entry_get_text( GTK_ENTRY( gtk_bin_get_child(
-                                        GTK_BIN( mset->combo_template_dir ) ) ) ) );
                     g_strstrip( str );
                     if ( str[0] == '/' )
                         from_path = bash_quote( str );
@@ -3405,7 +3442,7 @@ void ptk_open_files_with_app( const char* cwd,
                     toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;                    /* Let the user choose an application */
                     choosen_app = (char *) ptk_choose_app_for_mime_type(
                                       ( GtkWindow* ) toplevel,
-                                      mime_type );
+                                      mime_type, FALSE );
                     app_desktop = choosen_app;
                 }
                 if ( ! app_desktop )
@@ -3461,4 +3498,159 @@ void ptk_open_files_with_app( const char* cwd,
 
         g_free( new_dir );
     }
+}
+
+void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            const char* cwd )
+{
+    gchar* file_path;
+    char* str;
+    gboolean is_cut = FALSE;
+    gint missing_targets;
+    VFSFileInfo* file;
+    char* file_dir;
+        
+    GList* files = ptk_clipboard_get_file_paths( cwd, &is_cut, &missing_targets );
+    
+    GList* l;
+    
+    for ( l = files; l; l = l->next )
+    {
+        file_path = (char*)l->data;
+        file = vfs_file_info_new();
+        vfs_file_info_get( file, file_path, NULL );
+        file_dir = g_path_get_dirname( file_path );
+        if ( !ptk_rename_file( desktop, file_browser, file_dir, file, cwd, !is_cut,
+                                                                    0, NULL ) )
+        {
+            vfs_file_info_unref( file );
+            g_free( file_dir );
+            missing_targets = 0;
+            break;
+        }
+        vfs_file_info_unref( file );
+        g_free( file_dir );
+    }
+    g_list_foreach( files, ( GFunc ) g_free, NULL );
+    g_list_free( files );
+
+    if ( missing_targets > 0 )
+    {
+        GtkWidget* parent = NULL;
+        if ( file_browser )
+            parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+        else if ( desktop )
+            parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
+        ptk_show_error( GTK_WINDOW( parent ),
+                        g_strdup_printf ( _("Error") ),
+                        g_strdup_printf ( "%i target%s missing",
+                        missing_targets, 
+                        missing_targets > 1 ? g_strdup_printf ( "s are" ) : 
+                        g_strdup_printf ( " is" ) ) );
+    }
+}
+
+void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                GList* sel_files,
+                                                char* cwd, char* setname )
+{
+    /*
+     * root_copy_loc    copy to location
+     * root_move2       move to
+     * root_delete      delete
+     */
+    if ( !setname || ( !file_browser && !desktop ) || !sel_files )
+        return;
+    XSet* set;
+    char* path;
+    char* cmd;
+    char* task_name;
+    
+    GtkWidget* parent = desktop ? GTK_WIDGET( desktop ) : GTK_WIDGET( file_browser );
+    char* file_paths = g_strdup( "" );
+    GList* sel;
+    char* file_path;
+    char* file_path_q;
+    char* str;
+    int item_count = 0;
+    for ( sel = sel_files; sel; sel = sel->next )
+    {
+        file_path = g_build_filename( cwd,
+                    vfs_file_info_get_name( ( VFSFileInfo* ) sel->data ), NULL );
+        file_path_q = bash_quote( file_path );
+        str = file_paths;
+        file_paths = g_strdup_printf( "%s %s", file_paths, file_path_q );
+        g_free( str );
+        g_free( file_path );
+        g_free( file_path_q );
+        item_count++;
+    }
+    
+    if ( !strcmp( setname, "root_delete" ) )
+    {
+        if ( !app_settings.no_confirm )
+        {
+            str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
+                                             "Delete %d selected items as root ?",
+                                             item_count ), item_count );
+            if ( xset_msg_dialog( GTK_WIDGET( parent ), GTK_MESSAGE_WARNING,
+                                _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
+                                _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
+            {
+                g_free( str );
+                return;
+            }
+            g_free( str );
+        }
+        cmd = g_strdup_printf( "rm -r %s", file_paths );
+        task_name = g_strdup( _("Delete As Root") );
+    }
+    else
+    {
+        char* folder;
+        set = xset_get( setname );
+        if ( set->desc )
+            folder = set->desc;
+        else
+            folder = cwd;
+        path = xset_file_dialog( GTK_WIDGET( parent ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                                _("Choose Location"), folder, NULL );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        {
+            xset_set_set( set, "desc", path );
+            char* quote_path = bash_quote( path );
+            
+            if ( !strcmp( setname, "root_move2" ) )
+            {
+                task_name = g_strdup( _("Move As Root") );
+                // problem: no warning if already exists
+                cmd = g_strdup_printf( "mv -f %s %s", file_paths, quote_path );
+            }
+            else
+            {
+                task_name = g_strdup( _("Copy As Root") );
+                // problem: no warning if already exists
+                cmd = g_strdup_printf( "cp -r %s %s", file_paths, quote_path );
+            }
+            
+            g_free( quote_path );
+            g_free( path );
+        }
+        else
+            return;
+    }
+    g_free( file_paths );
+
+    // root task
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( parent ),
+                                file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+    task->task->exec_command = cmd;
+    task->task->exec_sync = TRUE;
+    task->task->exec_popup = FALSE;
+    task->task->exec_show_output = FALSE;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_export = FALSE;
+    task->task->exec_as_user = g_strdup( "root" );
+    ptk_file_task_run( task );          
 }

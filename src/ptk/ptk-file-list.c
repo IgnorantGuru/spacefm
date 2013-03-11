@@ -683,14 +683,14 @@ static gint ptk_file_list_compare( gconstpointer a,
             result = -1;
         break;
     case COL_FILE_DESC:
-        result = strcmp( vfs_file_info_get_mime_type_desc( file_a ),
+        result = g_ascii_strcasecmp( vfs_file_info_get_mime_type_desc( file_a ),
                          vfs_file_info_get_mime_type_desc( file_b ) );
         break;
     case COL_FILE_PERM:
         result = strcmp( file_a->disp_perm, file_b->disp_perm );
         break;
     case COL_FILE_OWNER:
-        result = strcmp( file_a->disp_owner, file_b->disp_owner );
+        result = g_ascii_strcasecmp( file_a->disp_owner, file_b->disp_owner );
         break;
     default:
         result = 0;

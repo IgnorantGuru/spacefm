@@ -154,7 +154,7 @@ check: all $(GETTEXT_PACKAGE).pot
 	fi
 
 mostlyclean:
-	rm -f *.pox $(GETTEXT_PACKAGE).pot *.old.po cat-id-tbl.tmp
+	rm -f *.pox *.old.po cat-id-tbl.tmp
 	rm -f .intltool-merge-cache
 
 clean: mostlyclean

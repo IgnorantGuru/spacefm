@@ -130,7 +130,18 @@ gboolean on_cmdline_keypress( GtkWidget *widget,
     return FALSE;
 }
 
-GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
+void on_view_row_activated ( GtkTreeView *tree_view,
+                             GtkTreePath *path,
+                             GtkTreeViewColumn* col,
+                             GtkWidget* dlg )
+{
+    GtkBuilder* builder = (GtkBuilder*)g_object_get_data(G_OBJECT(dlg), "builder");
+    GtkWidget* ok = (GtkWidget*)gtk_builder_get_object( builder, "okbutton");
+    gtk_button_clicked( GTK_BUTTON( ok ) );
+}
+
+GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
+                                                        gboolean no_default )
 {
     GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/appchooserdlg.ui", NULL );
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
@@ -142,6 +153,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
     GtkNotebook* notebook;
     
     g_object_set_data_full( G_OBJECT(dlg), "builder", builder, (GDestroyNotify)g_object_unref );
+
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     gtk_dialog_set_alternative_button_order( GTK_DIALOG(dlg), GTK_RESPONSE_OK, GTK_RESPONSE_CANCEL, -1 );
     ptk_dialog_fit_small_screen( GTK_DIALOG(dlg) );
@@ -160,7 +173,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
         g_free( mime_desc );
     }
     /* Don't set default handler for directories and files with unknown type */
-    if ( 0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
+    if ( no_default ||
+         0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
          0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) )
     {
         gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder, "set_default" ) );
@@ -184,8 +198,18 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type )
     g_signal_connect( (GtkWidget*)gtk_builder_get_object( builder, "browse_btn"),
                                     "clicked",
                                     G_CALLBACK(on_browse_btn_clicked), dlg );
+    g_signal_connect ( G_OBJECT( view ), "row_activated",
+                                    G_CALLBACK ( on_view_row_activated ),
+                                    dlg );
 
     gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
+    
+    if ( no_default )
+    {
+        // select All Apps tab
+        gtk_widget_show( dlg );
+        gtk_notebook_next_page( notebook );
+    }
     return dlg;
 }
 
@@ -247,6 +271,9 @@ on_notebook_switch_page ( GtkNotebook *notebook,
             g_object_set_data( G_OBJECT(dlg), "task", task );
             g_signal_connect( task, "finish", G_CALLBACK(on_load_all_apps_finish), dlg );
             vfs_async_task_execute( task );
+            g_signal_connect ( G_OBJECT( view ), "row_activated",
+                                    G_CALLBACK ( on_view_row_activated ),
+                                    dlg );
         }
     }
 }
@@ -321,6 +348,8 @@ on_browse_btn_clicked ( GtkButton *button,
                                                   NULL );
     GtkBuilder* builder = (GtkBuilder*)g_object_get_data(G_OBJECT(parent), "builder");
 
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+
     gtk_file_chooser_set_current_folder ( GTK_FILE_CHOOSER ( dlg ),
                                           "/usr/bin" );
     if ( gtk_dialog_run( GTK_DIALOG( dlg ) ) == GTK_RESPONSE_OK )
@@ -394,13 +423,14 @@ printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
 }
 
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
-                                           VFSMimeType* mime_type )
+                                           VFSMimeType* mime_type,
+                                           gboolean no_default )
 {
     GtkWidget * dlg;
     gchar* app = NULL;
     gchar* custom = NULL;
 
-    dlg = app_chooser_dialog_new( parent, mime_type );
+    dlg = app_chooser_dialog_new( parent, mime_type, no_default );
 
     g_signal_connect( dlg, "response",  G_CALLBACK(on_dlg_response), NULL );
 

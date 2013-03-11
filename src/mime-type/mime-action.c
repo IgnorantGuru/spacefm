@@ -463,43 +463,78 @@ void mime_type_add_action( const char* type, const char* desktop_id, char** cust
         g_free( cust );
 }
 
-static char* _locate_desktop_file( const char* dir, const char* unused, const gpointer desktop_id )
-{   //sfm 0.7.7+ modified
-    char *path;
+static char* _locate_desktop_file_recursive( const char* path,
+                                    const char* desktop_id, gboolean first )
+{   // if first is true, just search for subdirs not desktop_id (already searched)
+    const char* name;
+    char* sub_path;
+    
+    GDir* dir = g_dir_open( path, 0, NULL );
+    if ( !dir )
+        return NULL;
+    
+    char* found = NULL;
+    while ( name = g_dir_read_name( dir ) )
+    {
+        sub_path = g_build_filename( path, name, NULL );
+        if ( g_file_test( sub_path, G_FILE_TEST_IS_DIR ) )
+        {
+            if ( found = _locate_desktop_file_recursive( sub_path, desktop_id,
+                                                                    FALSE ) )
+            {
+                g_free( sub_path );
+                break;
+            }
+        }
+        else if ( !first && !strcmp( name, desktop_id ) && 
+                                g_file_test( sub_path, G_FILE_TEST_IS_REGULAR ) )
+        {
+            found = sub_path;
+            break;
+        }
+        g_free( sub_path );
+    }
+    g_dir_close( dir );
+    return found;
+}
+
+static char* _locate_desktop_file( const char* dir, const char* unused,
+                                                    const gpointer desktop_id )
+{   //sfm 0.7.8 modified + 0.8.7 modified
     gboolean found = FALSE;
 
-    path = g_build_filename( dir, "applications", (const char*)desktop_id, NULL );
-    if ( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
-        return path;
-    g_free( path );
-    return NULL;
-/*
+    char *path = g_build_filename( dir, "applications", (const char*)desktop_id,
+                                                                        NULL );
+
     char* sep = strchr( (const char*)desktop_id, '-' );
     if( sep )
         sep = strrchr( path, '-' );
 
-    do{
-        if( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
+    do
+    {
+        if ( g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
         {
             found = TRUE;
             break;
         }
-        if( sep )
+        if ( sep )
         {
             *sep = '/';
             sep = strchr( sep + 1, '-' );
         }
         else
             break;
-    }while( ! found );
+    } while( !found );
 
-    if( ! found )
-    {
-        g_free( path );
-        return NULL;
-    }
-    return path;
-*/
+    if ( found )
+        return path;
+    g_free( path );
+    
+    //sfm 0.8.7 some desktop files listed by the app chooser are in subdirs
+    path = g_build_filename( dir, "applications", NULL );
+    sep = _locate_desktop_file_recursive( path, desktop_id, TRUE );
+    g_free( path );
+    return sep;
 }
 
 char* mime_type_locate_desktop_file( const char* dir, const char* desktop_id )

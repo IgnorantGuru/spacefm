@@ -45,7 +45,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 void on_popup_open_in_new_tab_here( GtkMenuItem *menuitem,
                                         PtkFileMenu* data );
 
-void ptk_file_menu_action( PtkFileBrowser* browser, char* setname );
+void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
+                                                            char* setname );
 
 void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int order );
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser );

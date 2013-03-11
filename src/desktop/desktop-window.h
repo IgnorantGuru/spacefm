@@ -64,6 +64,13 @@ typedef enum {
     DW_BG_ZOOM,
 }DWBgType;
 
+typedef enum {
+    DW_SELECT_ALL,
+    DW_SELECT_NONE,
+    DW_SELECT_INVERSE,
+    DW_SELECT_PATTERN
+}DWSelectMode;
+
 struct _DesktopWindow
 {
     GtkWindow parent;
@@ -179,6 +186,11 @@ gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* fil
 void desktop_context_fill( DesktopWindow* win, gpointer context );
 void desktop_window_rename_selected_files( DesktopWindow* win,
                                                 GList* files, const char* cwd );
+void desktop_window_on_autoopen_cb( gpointer task, gpointer aop );
+void desktop_window_select( DesktopWindow* self, DWSelectMode mode );
+void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
+                                                char* cwd, char* setname );
+void desktop_window_add_application( DesktopWindow* desktop );
 
 G_END_DECLS
 

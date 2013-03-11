@@ -227,7 +227,7 @@ char* get_column_value( GtkTreeModel* model, GtkTreeIter* iter, int col_index )
     {
         case G_TYPE_INT64:
             gtk_tree_model_get( model, iter, col_index, &i64, -1 );
-            str = g_strdup_printf( "%d", i64 );
+            str = g_strdup_printf( "%ld", i64 );
             break;
         case G_TYPE_INT:
             gtk_tree_model_get( model, iter, col_index, &i, -1 );
@@ -2173,7 +2173,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
         case CDLG_LIST:
         case CDLG_MLIST:
             str = get_tree_view_selected( el, prefix );
-            fprintf( out, str );
+            fprintf( out, str, NULL );
             g_free( str );
             break;
         case CDLG_PROGRESS:

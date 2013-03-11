@@ -40,7 +40,6 @@
 <a href="#installation">Installation</a>
 <ul>
     <a href="#installation-downloads">Downloads</a><br>
-    <a href="#installation-packages">Packages</a><br>
     <a href="#installation-installer">Installer</a><br>
     <a href="#installation-manualbuild">Manual Builds </a><br>
     <a href="#installation-uninstall">Uninstall</a><br>
@@ -60,6 +59,7 @@
 <a href="#gui">GUI</a>
 <ul>
     <a href="#gui-pathbar">Path Bar</a><br>
+    <a href="#gui-find">Find-As-You-Type Search </a><br>
 </ul>
 <a href="#devices">Devices</a>
 <ul>
@@ -155,9 +155,9 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file manager for Linux which is lightweight and has minimal dependencies, yet is very capable, flexible, and extensible.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
 
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and other distros, SpaceFM is gaining popularity among novice and power users alike for its exceptional stability, speed, convenience and flexibility.
+<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is gaining popularity among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -172,10 +172,10 @@
     <li><b>Feature-Rich</b> - <i>Subtle power features to improve efficiency and abilities</i><br>
     <ul>
 	<li>Extensive file management features to move, copy, link, plus configurable drag-n-drop and unique clipboard functions
-	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern
+	<li>Find-As-You-Type search to quickly locate a file with a case-sensitive/insensitive search of filenames - just type a few letters, or use a wildcard pattern <a href="#gui-find">*</a>
 	<li>System management features to safely perform convenient commands as root: edit, copy, move, and delete files and folders as root, change permissions, and create links, or run a root instance
 	<li>In-program archive creation and extraction (or use an external app)
-	<li>File search - flexibly search for file names, sizes, content, etc. with no daemon required
+	<li>File search - flexibly search system-wide for file names, sizes, content, etc. with no daemon required
 	<li>Extended Rename dialog allows not only renaming, but moving, copying, and creating links, with optional root priviledges, and allows creation of new files and folders from templates
 	<li>Roomy dialogs for easy editing and viewing of long filenames, paths, and commands
 	<li>Extended Path Bar uses tab completion and allows entry of full bash commands with substitution <a href="#gui-pathbar">*</a>
@@ -299,7 +299,6 @@
     <li>Installation
     <ul>
         <li>Downloads
-        <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
         <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
@@ -320,15 +319,19 @@
 <a name="installation-downloads"/><a href="#installation-downloads"><font size=+2>Downloads</font></a>
 <!-- @Installation @Downloads -->
 
-<p>SpaceFM is distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.  <a href="#installation-packages">Packages</a> are also available for some distros, and SpaceFM is available in some distro repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
+<p><a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Packages</a> <a name="installation-packages">are available<!-- backwards compat --></a> for many distros, and SpaceFM is already included in some distros and repositories.  For others, there is a <a href="#installation-installer">self-extracting installer</a>, as well as several <a href="#installation-manualbuild">manual build methods</a> available.
 
-<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
+<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
-The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
+<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.
 
 <p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
-<p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
+<p>You can also check the <a href="http://ignorantguru.github.com/spacefm/">homepage</a>, <a href="http://ignorantguru.github.com/spacefm/news.html">latest news</a> and <a href="https://github.com/IgnorantGuru/spacefm/issues">report issues</a>.
+
+<p>The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> contains user-contributed <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>, help, and information.  Everyone is encouraged to contribute to the wiki.
+
+
 
 
 <!-- @end installation-downloads-->
@@ -343,172 +346,6 @@ The <a href="https://github.com/IgnorantGuru/spacefm/wiki">SpaceFM Wiki</a> cont
     <li>Installation
     <ul>
         <li><a href="#installation-downloads">Downloads</a>
-        <li>Packages
-        <li><a href="#installation-installer">Installer</a>
-        <li><a href="#installation-manualbuild">Manual Builds </a>
-        <li><a href="#installation-uninstall">Uninstall</a>
-    </ul>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="installation-packages"/><a href="#installation-packages"><font size=+2>Packages</font></a>
-<!-- @Installation @Packages -->
-
-<br><br><br>
-<table border=1 cellpadding="5" width="80%">
-<tr>
-	<th>Distro</th>
-	<th>Packages &amp; Repositories*</th>
-</tr>
-
-<tr>
-<td valign="top"><b>antiX<b></td>
-<td>
-	<a href="http://sourceforge.net/projects/antix-linux/">antiX-12</a> base and full includes spacefm
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Arch Linux</b></td>
-<td>
-	Arch Linux's [community] repository includes <b>spacefm</b> (<a href="http://www.archlinux.org/packages/community/i686/spacefm/">i686</a> &amp; <a href="http://www.archlinux.org/packages/community/x86_64/spacefm/">amd64</a>), and the <a href="http://aur.archlinux.org/packages.php?ID=58247">spacefm-git AUR package</a> provides the 'next' branch as a work in progress.
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b><a name="deb">Debian-based</a></b></td>
-<td>
-	<p>deb packages are available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw'), and are also available in <a href="http://igurublog.wordpress.com/downloads/ppa/">the author's PPA</a>.  These convenience deb packages contain the source code and will build and install SpaceFM automatically on most Debian-based distros.  $TMPDIR (usually /tmp) must NOT be mounted noexec.
-
-	<p><b>Or</b> easily build your own deb package from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
-</td>
-</tr>
-
-<tr>
-<td><b>Foresight</b></td>
-<td>
-	Foresight Lxde uses SpaceFM as its default file manager; Foresight includes <a href="http://www.foresightlinux.se/wiki-en/index.php?title=Spacefm">spacefm</a> in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Gentoo</b></td>
-<td>
-	Gentoo's portage tree includes <a href="http://packages.gentoo.org/package/x11-misc/spacefm">spacefm</a>
-</td>
-
-<tr>
-<td valign="top"><b>openSUSE</b></td>
-<td>
-	openSUSE 12.1 repo (add the following repo to Yast software manager):<br>
-	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_12.1</a>
-
-	<p>openSUSE Tumbleweed repo:<br>
-	<a href="http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/">http://download.opensuse.org/repositories/home:/mournblade:/spacefm/openSUSE_Tumbleweed/</a>
-
-	<p><a href="http://software.opensuse.org/search?q=spacefm&baseproject=openSUSE%3A12.1&lang=en&include_home=true&exclude_debug=true">rpm package downloads</a> are also available for a one-click install.
-
-	<p>Feedback on openSUSE builds can be sent via the <a href="https://build.opensuse.org/project/show?project=home%3Amournblade%3Aspacefm">SpaceFM OBS project</a>.
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Parted Magic</b></td>
-<td>
-	<a href="http://partedmagic.com/doku.php">Parted Magic</a> includes SpaceFM with udevil as its default file manager
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>PCLinuxOS</b></td>
-<td>
-	spacefm test packages available (see forum)
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Pibang Linux</b></td>
-<td>
-	<a href="http://pibanglinux.org/">Pibang Linux</a> includes SpaceFM built for the <a href="http://www.raspberrypi.org/">Raspberry Pi</a> (armhf) - can be installed as the default file manager via Pibang's welcome scripts
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Sabayon</b></td>
-<td>
-	Includes spacefm in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>Slackware</b></td>
-<td>
-	SlackBuilds.org includes <a href="http://slackbuilds.org/system/spacefm/">spacefm</a>
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>SliTaz</b></td>
-<td>
-	Includes <a href="http://pkgs.slitaz.org/search.sh?lang=C&object=Package&query=spacefm&submit=Search">spacefm</a> in its repositories
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>SystemRescueCD</b></td>
-<td>
-	SpaceFM is included by default in <a href="http://sysresccd.org/">SystemRescueCD</a> live distro
-</td>
-</tr>
-
-<tr>
-<td><b>Ubuntu</b></td>
-<td>
-	See <a href="#deb">Debian</a>
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b>VectorLinux</b></td>
-<td>
-	spacefm test packages available
-</td>
-</tr>
-
-<tr>
-<td valign="top"><b><i>Other</i></b></td>
-<td>
-	A <a href="#installer">self-extracting installer</a> is available, <b>or</b> use one of the <a href="#installation-manualbuild">manual build methods</a>
-</td>
-</tr>
-</table>
-<P><i>* For the most up to date table, please visit the <a href="http://ignorantguru.github.com/spacefm/">SpaceFM Homepage</a></i>
-
-
-
-<!-- @end installation-packages-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li>Installation
-    <ul>
-        <li><a href="#installation-downloads">Downloads</a>
-        <li><a href="#installation-packages">Packages</a>
         <li>Installer
         <li><a href="#installation-manualbuild">Manual Builds </a>
         <li><a href="#installation-uninstall">Uninstall</a>
@@ -569,7 +406,6 @@ Or, to see the help for alternate build options, run:
     <li>Installation
     <ul>
         <li><a href="#installation-downloads">Downloads</a>
-        <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
         <li>Manual Builds 
         <li><a href="#installation-uninstall">Uninstall</a>
@@ -613,7 +449,6 @@ Or, to see the help for alternate build options, run:
     <li>Installation
     <ul>
         <li><a href="#installation-downloads">Downloads</a>
-        <li><a href="#installation-packages">Packages</a>
         <li><a href="#installation-installer">Installer</a>
         <li><a href="#installation-manualbuild">Manual Builds </a>
         <li>Uninstall
@@ -888,8 +723,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <!-- #GTK 3 #gtk3 --> 
 <p><a name="invocation-gtkthemes-gtk3 -->"/><a href="#invocation-gtkthemes-gtk3 -->"><b>GTK 3</b></a><br>
-<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).  SpaceFM also recommends <a href="http://gnome-look.org/content/show.php/Clearlooks-Phenix?content=145210">Clearlooks-Phenix</a> and <a href="http://gnome-look.org/content/show.php/DarkMint?content=150904">DarkMint</a> as generally well-maintained themes (but always check GTK version compatibility).
-
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
 <!-- @end invocation-gtkthemes-->
@@ -941,6 +775,8 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <p>To stop management of the desktop prematurely (before logoff), send spacefm a quit signal:
 <pre>    killall spacefm</pre>
+
+Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used in the desktop's right-click menu to add custom commands and set key shortcuts (which will be active when the desktop has focus).
 
 
 <!-- @end invocation-desktopmanager-->
@@ -1062,6 +898,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
     <li>GUI
     <ul>
         <li>Path Bar
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1076,27 +913,54 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 <a name="gui-pathbar"/><a href="#gui-pathbar"><font size=+2>Path Bar</font></a>
 <!-- @GUI @Path Bar -->
 
-<p>SpaceFM's Path Bar (address bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At it's simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
+<p>SpaceFM's Path Bar (location bar) is located above the file list between the Left and Right <a href="#designmode-toolbars">toolbars</a>.  At its simplest, the Path Bar allows you to see the current folder's path, and you can enter a new path and press Enter to change to another folder.
 
 <p>TIP:  To place the cursor in the Path Bar, you can use Go|Focus|Path Bar, accessed from the right-click menu of the file list.  By default, this is assigned to key shortcut Ctrl+L.
 
 <p>In addition to displaying and accepting a folder path, SpaceFM's Path Bar has additional methods and uses as detailed below.
 
-<!-- # File Path -->
-<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
-The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
+<!-- # Editing Keys #keys -->
+<p><a name="gui-pathbar-keys"/><a href="#gui-pathbar-keys"><b>Editing Keys</b></a><br>
+When the cursor is in the Path Bar, the following editing key combinations can be used:
 
-<!-- # Tab Completion #tab -->
-<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Tab Completion</b></a><br>
-As you're entering a directory path in the Path Bar, tab completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  If there is only one match, you can press Tab to complete the entry automatically ("/us" will be completed to "/usr").  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
+<br><br>
+<table border=1 cellpadding="5">
+<tr>
+	<th>Key Combo</th>
+	<th>Result</th>
+</tr>
+	<tr>
+		<td>Shift+Backspace</td> <td>Clear the entry</td>
+	</tr><tr>
+		<td>Ctrl+Backspace</td> <td>Backspace to the previous separator</td>
+	</tr><tr>
+		<td>Ctrl+Left</td> <td>Jump to previous separator</td>
+	</tr><tr>
+		<td>Ctrl+Right</td> <td>Jump to next separator</td>
+	</tr><tr>
+		<td>Tab</td> <td><a href="#gui-pathbar-tab">Complete entry</a></td>
+	</tr>
+</table>
+
+<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
+
+<!-- # Auto Seek #seek -->
+<p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
+By default, the Path Bar will auto seek, which means that as you type in the Path Bar, the current directory will change automatically, and any partial filename typed will select the first matching directory or file found in the file list.  You can turn off auto seek by right-clicking on the Path Bar and unchecking option Auto Seek.  In this case, you will need to press the Enter key to change to the directory entered.
+
+<p>To locate files within the current directory, use <a href="#gui-find">Find-As_You-Type Search</a> or <a href="#gui-pathbar-pattern">Edit|Select By Pattern</a>.
+
+<!-- # Completion #tab -->
+<p><a name="gui-pathbar-tab"/><a href="#gui-pathbar-tab"><b>Completion</b></a><br>
+As you're entering a directory path in the Path Bar, completion will be active.  For example, if you enter "/us", a drop down box will appear listing /usr (and any other directories that may begin with "/us" on your system).  You can press Tab to complete the entry automatically ("/us" will be completed to "/usr/", or as much as possible if there are multiple matches).  If multiple possibilities are listed, press Down Arrow to select the desired completion and press Enter (or select it using the mouse).
 
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
-The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to change to that level directory.  For example, if this path is currently in the Path Bar:
-<pre>    /usr/<b>share</b>/spacefm/plugins</pre>
+The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
-and you Ctrl+Click on the name 'share', SpaceFM will change to directory /usr/share.  This provides a convenient way to go up to a specific directory.
-
+<!-- # File Path -->
+<p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
+The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
 
 <!-- # Protocol URL #proto -->
 <p><a name="gui-pathbar-proto"/><a href="#gui-pathbar-proto"><b>Protocol URL</b></a><br>
@@ -1116,7 +980,9 @@ If you would like to use a custom handler for URLs within SpaceFM, right-click o
 
 <p>Note that any Path Bar entry which looks like a protocol URL will be passed to your command, so this feature <b>can be used to create custom protocols</b> or to support ones not recognized by udevil.  For example, if your handler knows what to do with the URL <i>myproto://something-here</I>, then you will be able to enter this URL in SpaceFM's Path Bar to take a custom action.  Your handler doesn't necessarily have to mount anything - it can take any action on the URL passed to it.
 
-<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>)
+<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>).
+
+<p>Although SpaceFM will not run the custom handler in a terminal, you can run some commands in your script in a terminal (eg for password entry) using 'spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal', as shown in the <a href="#gui-pathbar-protoscript">example script</a>.
 
 <p><a href="#devices-menu-bookmark">Bookmarked</a> protocol URLs are also opened by the Protocol Handler.
 
@@ -1131,9 +997,6 @@ Finally, set <a href="#gui-pathbar-protohand">Protocol Handler</a> to 'protocol-
 
 <pre>#!/bin/bash
 # Example Protocol Handler script to open URLs entered in SpaceFM's Path Bar
-
-# Set prefered terminal
-terminal=xterm
 
 # Get just the protocol, eg "smb" from "smb://..."
 protocol="${1%%:*}"
@@ -1167,15 +1030,20 @@ case "$protocol" in
         hostname="${hostname%:*}"
         hostname="${hostname%/*}"
 
-        # Run sshfs in a terminal to mount hostname to mount point
-        $terminal -e "sshfs $hostname: $mount_point; echo; echo Press Enter; read"
+        # Run sshfs in user's terminal to mount hostname to mount point
+        # Note - If the terminal is closed, sshfs may unmount (sshfs bug)
+        spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal \
+		"sshfs $hostname: $mount_point; echo; echo Press Enter; read"
 
-	# Attempt to remove mount point in case of mount error
-	rmdir "$mount_point" 2>/dev/null
+        # Attempt to remove mount point in case of mount error
+        rmdir "$mount_point" 2>/dev/null
         ;;
     * )
         # For any other protocols, use udevil
-        udevil mount "$1"
+        # Run udevil in user's terminal in case password entry is required
+        # Prompt to close terminal if an error occurs so the error can be seen
+        spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal \
+	        "udevil mount '$1' || ( echo; echo Press Enter; read )"
         ;;
 esac
 </pre>
@@ -1207,7 +1075,7 @@ In addition, a bash command line can be entered in the Path Bar.  This is a conv
 <p>A Path Bar entry is interpreted as a command only if at least one of the above prefixes preceeds the command.  A space after the prefix(es) is optional.  For example, enter in the Path Bar:
 <pre>    $ ls</pre>
 
-When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and an <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
+When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and a <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
 
 <p>In addition, the substitution variables defined in <a href="#designmode-command-line">Command|Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command|Script</a> may also be used in Path Bar command lines.
 
@@ -1224,7 +1092,9 @@ Or to run umount in a terminal (+) as root (!) passing it the currently selected
 
 For a reminder of prefixes and substitution variables, enter a lone dollar sign ($) in the Path Bar and press Enter.  Or press F1 while the Path Bar has focus to open this manual.
 
-<p>SpaceFM also keeps a command history, similar to terminals.  Enter a lone dollar sign ($) or other command prefix in the Path Bar and press the Up/Down Arrow keys repeatedly to access the history of commands.
+<!-- # Command History #hist -->
+<p><a name="gui-pathbar-hist"/><a href="#gui-pathbar-hist"><b>Command History</b></a><br>
+SpaceFM also keeps a command history.  As you enter a command, any commands previously entered will be shown in a popup.  Use Up/Down Arrow keys to select a previous command and press Enter, or click it.
 
 
 <!-- # Select By Pattern #pattern -->
@@ -1235,6 +1105,8 @@ If a percent sign (%) prefix is entered in the Path Bar, SpaceFM treats the rest
 When you press Enter, all filenames in the file list ending in ".avi" will be selected, and all other files will be unselected.
 
 If your pattern contains any uppercase characters, the matching will be case sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
+
+<p>See also: <a href="#gui-find">Find-As-You-Type Search</a>.
 
 <!-- # Font -->
 <p><a name="gui-pathbar-font"/><a href="#gui-pathbar-font"><b>Font</b></a><br>
@@ -1247,9 +1119,61 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
 
 
-
-
 <!-- @end gui-pathbar-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li>Find-As-You-Type Search 
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-find"/><a href="#gui-find"><font size=+2>Find-As-You-Type Search </font></a>
+<!-- @GUI @Find-As-You-Type Search #find -->
+
+<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  By default, SpaceFM conducts a case insensitive substring search.  This means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
+
+<p>In addition, Find-As-You-Type Search supports the following modes:
+
+<ul>
+    <li><b>Pattern Mode:</b>  If the search key contains at least one asterisk (*) or question mark (?), a glob substring search is used. (An asterisk is automatically added before and after your key before testing.)  For pattern usage see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.<br><br>
+
+    <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
+    <ul>
+        <li>If the search key begins with a caret (^), the search will match names <i>beginning</i> with your key.  
+        <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
+        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are not supported in this mode.)
+    </ul><br>
+    <li>Anytime you use an uppercase letter anywhere in your search key, the search mode becomes <b>case sensitive</b>.<br><br>
+
+    <li>Regardless of mode, you can press down or up arrow, or scroll wheel down/up, to go to the <b>next or previous matched filename</b>.<br><br>
+</ul>
+
+See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
+
+
+
+
+
+<!-- @end gui-find-->
 <br><br></td></tr>
 
 
@@ -1381,10 +1305,12 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-<p>The Devices context menu includes:
+In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which contain an abbreviated version of the full Devices list and context menu, for ready access.
 
-<!-- #Remove -->
-<p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove</b></a><br>
+<p>The Devices List context menu includes:
+
+<!-- #Remove / Eject #remove -->
+<p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove / Eject</b></a><br>
 The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
@@ -2393,7 +2319,7 @@ If option Queue New Tasks is checked (the default), new internal tasks are queue
 
 <!-- # Queue|Smart Queue #smart -->
 <p><a name="tasks-menu-smart"/><a href="#tasks-menu-smart"><b>Queue|Smart Queue</b></a><br>
-The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to only do one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
+The Smart Queue option determines under what conditions the Task Manager will remove a task from the queue and resume it.  If UNchecked, the queue is simple - only one internal task is run at a time, and other tasks are queued.  (exec tasks such as custom commands are always run regardless of option Smart Queue.)  When a task finishes, the next task is removed from the queue and resumed.  If you always want SpaceFM to do only one file operation at time, uncheck option Smart Queue.  However, this may be less efficient.
 
 <p>If option Smart Queue is checked (the default), the Task Manager is more sophisticated in its handling of the queue to improve both performance and convenience.  In general, tasks will <i>not</i> be run concurrently, but the following exceptions may be made if Smart Queue is checked:
 
@@ -2533,7 +2459,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>Design Menu</i>.
 
-<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, but is not available in the Bookmarks menu.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
+<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
 
 <p>To open the Design Menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
 
@@ -2600,6 +2526,8 @@ The Name item allows you to change a menu item's name as it appears in the menu.
 The Key item allows you to bind any shortcut key to the current menu item, and to change or unset an existing shortcut key.  When you select Key, a dialog will open asking you to press your key combination (for example Ctrl+G), and the keycode will be displayed.  If the key combination is already in use, you will be told what function the key is currently assigned to and be given the option to replace the current assignment.  Once you have pressed the desired key combination, click the Set button.  Or, to unset the current key assignment, leaving no key assigned to this menu item, click the Unset button.  The Key option can be used on built-in and custom commands, but cannot be used on a submenu.
 
 <p>After you have set a key combination, when you reopen the menu the new key shortcut will be displayed in the menu.
+
+<p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
@@ -2844,6 +2772,8 @@ The context dialog allows you to set rules which determine when and how a menu i
 <p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would tell you if the currently selected device contains a blank DVD.
 
 <p>It is important to note that built-in menu items sometimes have a built-in context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+
+<p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
 <p><b>Impossible Context</b>
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).
@@ -5615,22 +5545,25 @@ Example:
 
 <a href="#sockets-methods">METHODS</a>
 -------
-spacefm -s <a href="#sockets-methods-set">set</a> PROPERTY [VALUE...]
+spacefm -s <a href="#sockets-methods-set">set</a> [OPTIONS] PROPERTY [VALUE...]
     Sets a property
 
-spacefm -s <a href="#sockets-methods-get">get</a> PROPERTY
+spacefm -s <a href="#sockets-methods-get">get</a> [OPTIONS] PROPERTY
     Gets a property
 
-spacefm -s <a href="#sockets-methods-set-task">set-task</a> TASKID TASKPROPERTY [VALUE...]
+spacefm -s <a href="#sockets-methods-set-task">set-task</a> [OPTIONS] TASKID TASKPROPERTY [VALUE...]
     Sets a task property
 
-spacefm -s <a href="#sockets-methods-get-task">get-task</a> TASKID TASKPROPERTY
+spacefm -s <a href="#sockets-methods-get-task">get-task</a> [OPTIONS] TASKID TASKPROPERTY
     Gets a task property
 
-spacefm -s <a href="#sockets-methods-emit-key">emit-key</a> KEYCODE [MODIFIER]
+spacefm -s <a href="#sockets-methods-run-task">run-task</a> [OPTIONS] TASKTYPE ARGUMENTS
+    Starts a new task
+
+spacefm -s <a href="#sockets-methods-emit-key">emit-key</a> [OPTIONS] KEYCODE [MODIFIER]
     Activates a menu item by emitting its shortcut key
 
-spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> MENUNAME
+spacefm -s <a href="#sockets-methods-show-menu">show-menu</a> [OPTIONS] MENUNAME
     Shows custom submenu named MENUNAME as a popup menu
 
 spacefm -s <a href="#sockets-methods-add-event">add-event</a> EVENT COMMAND ...
@@ -5645,7 +5578,7 @@ spacefm -s <a href="#sockets-methods-remove-event">remove-event</a> EVENT COMMAN
 spacefm -s help|--help
     Shows this help reference.
 
-OPTIONS
+<a href="#socket-options">OPTIONS</a>
 -------
 Add options after METHOD to specify a specific window, panel, and/or tab.
 Otherwise the current tab of the current panel in the last window is used.
@@ -5655,7 +5588,7 @@ Otherwise the current tab of the current panel in the last window is used.
 --panel PANEL
     Specify panel 1-4.  eg: spacefm -s set --panel 2 bookmarks_visible true
 --tab TAB
-    Specify tab 1-...  eg: spacefm -s set selected_filenames --tab 3 fstab
+    Specify tab 1-...  eg: spacefm -s set --tab 3 selected_filenames fstab
 
 <a name="socket-props"><a href="#socket-props">PROPERTIES</a></a>
 ----------
@@ -5673,6 +5606,8 @@ window_tslider                  eg '100'
 focused_panel                   1|2|3|4|prev|next|hide
 focused_pane                    filelist|devices|bookmarks|dirtree|pathbar
 current_tab                     1|2|...|prev|next|close
+tab_count                       1|2|...
+new_tab                         [DIR]    Open DIR or default in a new tab
 bookmarks_visible               1|true|yes|0|false|no
 dirtree_visible                 1|true|yes|0|false|no
 toolbar_visible                 1|true|yes|0|false|no
@@ -5686,6 +5621,12 @@ panel_hslider_top               eg '100'
 panel_hslider_bottom            eg '100'
 panel_vslider                   eg '100'
 column_width                    name|size|type|permission|owner|modified WIDTH
+sort_by                         name|size|type|permission|owner|modified
+sort_ascend                     1|true|yes|0|false|no
+sort_natural                    1|true|yes|0|false|no
+sort_case                       1|true|yes|0|false|no
+sort_hidden_first               1|true|yes|0|false|no
+sort_first                      files|folders|mixed
 statusbar_text                  eg 'Current Status: Example'
 pathbar_text                    [TEXT [SELSTART [SELEND]]]
 current_dir                     DIR            eg '/etc'
@@ -5697,8 +5638,6 @@ clipboard_from_file             eg '~/copy-file-contents-to-clipboard.txt'
 clipboard_primary_from_file     eg '~/copy-file-contents-to-clipboard.txt'
 clipboard_copy_files            FILE ...  Files copied to clipboard
 clipboard_cut_files             FILE ...  Files cut to clipboard
-edit_file                       FILE        Open FILE in user's text editor
-run_in_terminal                 COMMAND...  Run COMMAND in user's terminal
 
 <a name="socket-tprops"><a href="#socket-tprops">TASK PROPERTIES</a></a>
 ---------------
@@ -5719,6 +5658,16 @@ started                         contents of Started task column (read-only)
 queue_state                     run|pause|queue|stop
 <a href="#pophandler">popup_handler</a>                   COMMAND  command to show a custom task dialog
 
+<a href="#sockets-methods-run-task">TASK TYPES</a>
+----------
+<a href="#run-task-cmd">cmd</a> [--task] [--popup] [--scroll] [--terminal] [--icon ICON] \
+    [--dir DIR] COMMAND...      Run COMMAND as USER in DIR
+<a href="#run-task-copy">copy|move|link</a> [--dir DIR] FILE|DIR... TARGET
+                                Copy|Move|Link FILE(s) or DIR(s) to TARGET dir
+<a href="#run-task-del">delete</a> [--dir DIR] FILE|DIR...  Recursively delete FILE(s) or DIR(s)
+<a href="#run-task-edit">edit</a> [--as-root] FILE           Open FILE in user's or root's text editor
+<a href="#run-task-web">web</a> URL                         Open URL in user's web browser
+
 <a href="#sockets-events">EVENTS</a>
 ------
 <a href="#sockets-events-start">evt_start</a>                       Instance start        %e
@@ -5726,27 +5675,54 @@ queue_state                     run|pause|queue|stop
 <a href="#sockets-events-winnew">evt_win_new</a>                     Window new            %e %w %p %t
 <a href="#sockets-events-winfoc">evt_win_focus</a>                   Window focus          %e %w %p %t
 <a href="#sockets-events-winmov">evt_win_move</a>                    Window move/resize    %e %w %p %t
-<a href="#sockets-events-winclk">evt_win_click</a>                       Mouse click           %e %w %p %t %b %m %f
+<a href="#sockets-events-winclk">evt_win_click</a>                   Mouse click           %e %w %p %t %b %m %f
 <a href="#sockets-events-winkey">evt_win_key</a>                     Window keypress       %e %w %p %t %k %m
 <a href="#sockets-events-wincls">evt_win_close</a>                   Window close          %e %w %p %t
 <a href="#sockets-events-pnlfoc">evt_pnl_focus</a>                   Panel focus           %e %w %p %t
 <a href="#sockets-events-pnlshw">evt_pnl_show</a>                    Panel show/hide       %e %w %p %t %f %v
-<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                         Selection changed     %e %w %p %t
+<a href="#sockets-events-pnlsel">evt_pnl_sel</a>                     Selection changed     %e %w %p %t
 <a href="#sockets-events-tabnew">evt_tab_new</a>                     Tab new               %e %w %p %t
 <a href="#sockets-events-tabfoc">evt_tab_focus</a>                   Tab focus             %e %w %p %t
 <a href="#sockets-events-tabcls">evt_tab_close</a>                   Tab close             %e %w %p %t
 <a href="#sockets-events-device">evt_device</a>                      Device change         %e %f %v
 
 <a name="evtsub"><a href="#evtsub">Event COMMAND Substitution Variables:</a></a>
-    %e   event name (evt_start|evt_exit|...)
-    %w   window ID
-    %p   panel number (1-4)
-    %t   tab number (1-...)
-    %b   mouse button (0=double 1=left 2=middle 3=right ...
-    %k   key code  (eg 0x63)
-    %m   modifier key (eg 0x4  used with clicks and keypresses)
-    %f   focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)
-    %v   focus element is visible (0 or 1, or device state change)
+%e   event name (evt_start|evt_exit|...)
+%w   window ID
+%p   panel number (1-4)
+%t   tab number (1-...)
+%b   mouse button (0=double 1=left 2=middle 3=right ...
+%k   key code  (eg 0x63)
+%m   modifier key (eg 0x4  used with clicks and keypresses)
+%f   focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)
+%v   focus element is visible (0 or 1, or device state change)
+
+Examples:
+
+    window_size="$(spacefm -s get window_size)"
+    spacefm -s set window_size 1024x768
+    spacefm -s set column_width name 100
+    spacefm -s set-task $fm_my_task progress 25
+    spacefm -s run-task --window $fm_my_window cmd --task --popup ls /etc
+    spacefm -s run-task copy --dir /etc fstab hosts /destdir
+    spacefm -r /etc; sleep 0.3; spacefm -s set selected_filenames fstab hosts
+    spacefm -s set clipboard_copy_files /etc/fstab /etc/hosts
+    spacefm -s emit-key 0xffbe 0   # press F1 to show Help
+    spacefm -s show-menu --window $fm_my_window "Custom Menu"
+    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text "$fm_file"'
+
+    #!/bin/bash
+    eval copied_files="$(spacefm -s get clipboard_copy_files)"
+    echo "These files have been copied to the clipboard:"
+    i=0
+    while [ "${copied_files[i]}" != "" ]; do
+        echo "    ${copied_files[i]}"
+        (( i++ ))
+    done
+    if (( i != 0 )); then
+        echo "MD5SUMS:"
+        md5sum "${copied_files[@]}"
+    fi
 </pre>
 
 <!-- @end sockets-invoc-->
@@ -5785,11 +5761,11 @@ queue_state                     run|pause|queue|stop
 
 <!-- # set -->
 <p><a name="sockets-methods-set"/><a href="#sockets-methods-set"><b>set</b></a><br>
-Usage: <b>spacefm -s set PROPERTY [VALUE...]</b>
+Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
 <p>The set method sets a property to one or more values.  Different properties accept different kinds of values.  To see what values a property accepts, look the property up in the <a href="#socket-props">Help Reference</a>.
 
-<p>As with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab options.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
+<p><a name="socket-options">As</a> with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab OPTIONS.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
 <pre>
     spacefm -s set --window $fm_my_window --panel 3 --tab 2 pathbar_text "/"
 </pre>
@@ -5874,11 +5850,11 @@ Usage: <b>spacefm -s set PROPERTY [VALUE...]</b>
 
 <!-- # get -->
 <p><a name="sockets-methods-get"/><a href="#sockets-methods-get"><b>get</b></a><br>
-Usage: <b>spacefm -s get PROPERTY</b>
+Usage: <b>spacefm -s get [OPTIONS] PROPERTY</b>
 
 <p>The get method gets a property's value.  The reply is written to stdout.
 
-<p>As with all methods, by default the get method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab options.
+<p>As with all methods, by default the get method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab OPTIONS.
 
 <p>The reply to a get can be saved in a bash variable directly:
 <pre>
@@ -5984,17 +5960,19 @@ Note that when files have been <i>copied</i> to the clipboard, <i>clipboard_copy
 
 <!-- # set-task -->
 <p><a name="sockets-methods-set-task"/><a href="#sockets-methods-set-task"><b>set-task</b></a><br>
-Usage: <b>spacefm -s set-task TASKID TASKPROPERTY [VALUE...]</b>
+Usage: <b>spacefm -s set-task [OPTIONS] TASKID TASKPROPERTY [VALUE...]</b>
 
 <p>The set-task method is used to change the display values for a task, and also to stop, pause, queue, or resume a task, by setting a task property.  Different task properties accept different kinds of values.  To see what values a task property accepts, look the task property up in the <a href="#socket-tprops">Help Reference</a>.
 
 <p>Display values for a task are shown in the <a href="#tasks-man">Task Manager</a>, and also in task <a  href="#tasks-dlg">popup dialogs</a>.  These include such things as the Item, Total, Current, Remain, and other columns, the progress bar percentage, etc.
 
-<p>As with all methods, by default the set-task method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab options.
+<p>As with all methods, by default the set-task method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab OPTIONS.
 
 <p>The set-task method requires a TASKID, which indicates what task is being modified.  There are two ways to obtain the TASKID.  One is to use the <a href="#exvar">exported bash variable</a> $fm_my_task, which refers to the current command task.  The other is to use $fm_task_id, which refers to the task currently <i>selected</i> in the task list when the current task is run.  Note that a TASKID is only valid in the window in which the task is currently running, so it's generally appropriate to specify a WINDOWID ($fm_my_window) with the --window option to ensure the correct window is accessed.
 
-<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - it usually takes about a half second for a task to appear in the task manager.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown.
+<p>Note that when using $fm_my_task, the TASKID will not be valid when the command is first run - <b>it usually takes about a half second for a task to appear in the task manager</b>.  If your script uses $fm_my_task immediately, it should plan for the socket command to fail until the task is shown in the task manager, or it can use a small delay (sleep 0.75) before sending task-related socket commands.
+
+<p>Also, <b>if a custom command is run from the SpaceFM desktop manager menu</b>, note that there is no task manager or window associated with the task, so the TASKID will not be valid in socket commands.
 
 <p>Examples using the set-task method:
 <pre>
@@ -6048,7 +6026,7 @@ Running the above command script within SpaceFM will show the dialog.  Anytime y
 
 <!-- # get-task -->
 <p><a name="sockets-methods-get-task"/><a href="#sockets-methods-get-task"><b>get-task</b></a><br>
-Usage: <b>spacefm -s get-task TASKID TASKPROPERTY</b>
+Usage: <b>spacefm -s get-task [OPTIONS] TASKID TASKPROPERTY</b>
 
 <p>The get-task method gets a task property's value.  The reply is written to stdout.  For instructions on saving the reply to a variable or testing it directly, see the examples in <a href="#sockets-methods-get">get</a>.
 
@@ -6066,10 +6044,122 @@ Usage: <b>spacefm -s get-task TASKID TASKPROPERTY</b>
     spacefm -s get-task --window $fm_my_window $fm_my_task queue_state
 </pre>
 
+<!-- # run-task -->
+<p><a name="sockets-methods-run-task"/><a href="#sockets-methods-run-task"><b>run-task</b></a><br>
+Usage: <b>spacefm -s run-task [OPTIONS] TASKTYPE [TYPEOPTIONS] ARGUMENTS</b>
+
+<p>The run-task method is used to tell a running SpaceFM window to start a new task.  A task may run an asynchronous command (run and forget), a command run as a SpaceFM task (shown in the <a href="#tasks-man">Task Manager</a> if it runs for more than one half second), or an internal task to copy, move, or delete files, or create links.  A task can also be used to run a command in the user's configured terminal, open a file in the user's configured text editor, or open a URL in the user's web browser.
+
+<p>To run a task in a particular SpaceFM window, or with the <a href="#exvar">exported bash variables</a> of a particular tab, --window, --panel, and --tab <a href="#socket-options">OPTIONS</a> may be included.
+
+<p>Each TASKTYPE accepts a different set of TYPEOPTIONS and ARGUMENTS, as detailed below.
+
+<p><b>NOTE:</b>  The run-task method was added in SpaceFM 0.8.7.  If sharing a plugin the user's current SpaceFM version can be examined with <code>spacefm --version</code>.
+
+<p><a name="run-task-cmd"><a href="#run-task-cmd">cmd [--task] [--popup] [--scroll] [--terminal] [--icon ICON] [--dir DIR] COMMAND...</a></a>
+
+<p>The <b>cmd</b> (or 'command') TASKTYPE is used to run a program or bash command.  <a href="#exvar">Exported bash variables</a> may be used in any COMMAND - just remember to include the $fm_import line in your command or script.  Note that the contents of the variables will reflect the window, panel, and tab active for the socket command, not necessarily the focused tab of SpaceFM.
+
+<p>By default COMMAND is run asynchronously (run and forgotten).  It will not appear in the <a href="#tasks-man">Task Manager</a>, and no popup will be shown.  For example:
+<pre>    spacefm -s run-task cmd <b>touch /tmp/a_new_file</b></pre>
+
+cmd also accepts the following TYPEOPTIONS:
+
+<p>
+<table border=1 cellpadding="5">
+<tr>
+	<th>TYPEOPTION</th>
+	<th>Use</th>
+</tr>
+	<tr>
+		<td>--task</td>
+		<td>Run COMMAND as a SpaceFM task and list it in the Task Manager if it runs for more than one half second, and show a <a href="#tasks-dlg">popup dialog</a> if the command's exit status is non-zero.  This is equivalent to custom command options <a href="#designmode-command-task">Run As Task</a> plus <a href="#designmode-command-poperr">Popup Error</a>.</td>
+	</tr><tr>
+		<td>--popup</td>
+		<td>Run COMMAND as a SpaceFM task and show a popup dialog if the task runs for longer than one half second or produces output or an error.  This is equivalent to custom command options <a href="#designmode-command-task">Run As Task</a> plus <a href="#designmode-command-popout">Popup Output</a> plus <a href="#designmode-command-poperr">Popup Error</a>.</td>
+	</tr><tr>
+		<td>--scroll</td>
+		<td>If option --task or --popup is used with --scroll, the scrollbar in the popup will be moved down, equivalent to custom command option <a href="#designmode-command-scroll">Scroll</a>.</td>
+	</tr><tr>
+		<td>--terminal</td>
+		<td>Run COMMAND in the user's configured terminal emulator.  This is equivalent to custom command option <a href="#designmode-command-terminal">Run In Terminal</a>.  Generally this option is used <i>without</i> --task or --popup.</td>
+	</tr><tr>
+		<td>--icon ICON</td>
+		<td>Use ICON as the task's icon in the Task Manager and popup dialog, where ICON is an icon name or absolute path.  Not all icons may be shown due to various issues.</td>
+	</tr><tr>
+		<td>--dir DIR</td>
+		<td>Start COMMAND in working directory DIR.  If not specified, SpaceFM's current working directory is used.</td>
+	</tr>
+</table>
+
+<p>If the --task or --popup options are used, meaning the task is run as a SpaceFM task, the command will return values for $new_task_id and $new_task_window, to be used in future socket commands for this running task.  For example:
+<pre>    spacefm -s run-task cmd --popup 'while true; do date; sleep 1; done'
+<i>    #!/bin/bash
+    # Note: $new_task_id not valid until approx one half second after task start
+    new_task_window=0x207a030
+    new_task_id=0x2343150</i></pre>
+
+The output can be evaluated in one step like so (note the double-quoted backticks):
+<pre>    eval "`spacefm -s run-task cmd --popup 'while true; do date; sleep 1; done'`"
+    echo "Task window is $new_task_window and ID is $new_task_id."
+<i>    Task window is 0x207a030 and ID is 0x23432a0.</i></pre>
+
+Note when attempting to use $new_task_id in socket commands, the task ID will not be recognized until the task is listed in the <a href="#tasks-man">Task Manager</a>, which takes about one half second (if the command runs that long).
+
+
+<p><a name="run-task-copy"><a href="#run-task-copy">copy|move|link [--dir DIR] FILE|DIR... TARGET</a></a>
+
+<p>The copy, move, and link TASKTYPEs start an internal SpaceFM task to copy, move, or create links to files and folders.  The task will be listed in the <a href="#tasks-man">Task Manager</a> if it runs for longer than one half second.  If files already exist in the TARGET directory, the SpaceFM overwrite query dialog will be shown as usual.
+
+<p>FILE(s) and DIR(s) may be specified as absolute paths.  Or, if the --dir DIR option is used to specify an (absolute) source directory, they may be relative to DIR.  Each FILE and DIR specified must exist.  TARGET, which is required as the last argument, specifies an absolute destination directory.
+
+<p>For example:
+<pre>    spacefm -s run-task copy /etc/fstab /etc/hosts /tmp</pre>
+
+The above command will copy the files 'fstab' and 'hosts' from /etc to /tmp.  Also, the following command is equivalent:
+<pre>    spacefm -s run-task copy <b>--dir /etc</b> fstab hosts /tmp</pre>
+
+In the above case, a source directory is specified so that simple filenames may be used in place of absolute paths.
+
+<p>Another example, to create links to files and folders:
+<pre>    spacefm -s run-task link /etc /etc/fstab /tmp</pre>
+
+The above command will create links to the folder /etc and the file /etc/fstab, placing them in /tmp.
+
+<p>As with the cmd TASKTYPE, copy, move, and link TASKTYPEs will output $new_task_window and $new_task_id for evaluation and later use.
+
+<p><a name="run-task-del"><a href="#run-task-del">delete [--dir DIR] FILE|DIR...</a></a>
+
+<p>The delete TASKTYPE starts an internal SpaceFM task to <b>recursively</b> delete files and folders.  The task will be listed in the Task Manager if it runs for longer than one half second.
+
+<p>FILE(s) and DIR(s) may be specified as absolute paths.  Or, if the --dir DIR option is used to specify an (absolute) source directory, they may be relative to DIR.  Each FILE and DIR must exist.
+
+<p><b>WARNING:</b>  No confirmation dialog is shown to the user before files are deleted permanently.  If you want a confirmation dialog, your command or script must show one itself.  Also note that any specified folders are deleted recursively.
+
+<p>For example, to delete the links created in the previous example:
+<pre>    spacefm -s run-task delete /tmp/etc /tmp/fstab</pre>
+
+<p>As with the cmd TASKTYPE, the delete TASKTYPE will output $new_task_window and $new_task_id for evaluation and later use.
+
+
+<p><a name="run-task-edit"><a href="#run-task-edit">edit [--as-root] FILE</a></a>
+
+<p>The edit TASKTYPE opens FILE in the user's configured text editor (set in View|Preferences|Advanced).  Or, if the --as-root option is included, FILE is opened in the user's configered root editor.  This task type is always asynchronous (run and forgotten).  For example:
+<pre>    spacefm -s run-task edit /etc/fstab</pre>
+
+<b>IMPORTANT:</b>  If sharing a plugin which does anything as root, please be sure to include this information clearly in the plugin's description.
+
+<p><a name="run-task-web"><a href="#run-task-web">web URL</a></a>
+
+<p>The web TASKTYPE opens URL in the user's configured or auto-discovered web browser (set in Help|Options|Browser).  This task type is always asynchronous (run and forgotten).  For example:
+<pre>    spacefm -s run-task web http://ignorantguru.github.com/spacefm/</pre>
+
+<b>IMPORTANT:</b>  If sharing a plugin which open URLs in the user's browser, please be sure to include this information clearly in the plugin's description.
+<br><br>
 
 <!-- # emit-key -->
 <p><a name="sockets-methods-emit-key"/><a href="#sockets-methods-emit-key"><b>emit-key</b></a><br>
-Usage: <b>spacefm -s emit-key KEYCODE [MODIFIER]</b>
+Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 
 <p>The emit-key method activates the menu item with the given shortcut key, as if the user had pressed the key combination.
 
@@ -6083,7 +6173,7 @@ The KEYCODE and MODIFIER may also be specifed as decimal numbers by omitting the
 
 <!-- # show-menu -->
 <p><a name="sockets-methods-show-menu"/><a href="#sockets-methods-show-menu"><b>show-menu</b></a><br>
-Usage: <b>spacefm -s show-menu MENUNAME</b>
+Usage: <b>spacefm -s show-menu [OPTIONS] MENUNAME</b>
 
 <p>The show-menu method is used to display any <a href="#designmode-designmenu-submenu">custom submenu</a> as a popup menu.  MENUNAME is the name of the submenu as it appears in the menu (underscores may be omitted).  If multiple custom submenus have MENUNAME as their name, only one be displayed.
 
@@ -6616,7 +6706,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-01-14&nbsp;&nbsp;(SpaceFM version 0.8.5)
+<p>Updated 2013-03-03&nbsp;&nbsp;(SpaceFM version 0.8.6+)
 <br><br>
 </center>
 </td></tr></table>

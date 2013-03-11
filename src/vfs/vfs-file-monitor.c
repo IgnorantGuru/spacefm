@@ -58,6 +58,7 @@ static gboolean connect_to_fam()
     inotify_fd = inotify_init ();
     if ( inotify_fd < 0 )
     {
+        fam_io_channel = NULL;
         g_warning( "failed to initialize inotify." );
         return FALSE;
     }
@@ -147,26 +148,42 @@ VFSFileMonitor* vfs_file_monitor_add( char* path,
     VFSFileMonitor * monitor;
     VFSFileMonitorCallbackEntry cb_ent;
     struct stat file_stat;   // skip stat64
-    gchar* real_path = NULL;
+    char resolved_path[PATH_MAX];
+    char* real_path;
 
 //printf( "vfs_file_monitor_add  %s\n", path );
 
     if ( ! monitor_hash )
         return NULL;
 
-    monitor = ( VFSFileMonitor* ) g_hash_table_lookup ( monitor_hash, path );
+    // Since gamin, FAM and inotify don't follow symlinks, need to get real path
+    if ( strlen( path ) > PATH_MAX - 1 )
+    {
+        g_warning ( "PATH_MAX exceeded on %s", path );
+        real_path = path;  //fallback
+    }
+    else if ( realpath( path, resolved_path ) == NULL )
+    {
+        g_warning ( "realpath failed on %s", path );
+        real_path = path;  //fallback
+    }
+    else
+        real_path = resolved_path;
+    
+    monitor = ( VFSFileMonitor* ) g_hash_table_lookup ( monitor_hash, real_path );
     if ( ! monitor )
     {
         monitor = g_slice_new0( VFSFileMonitor );
-        monitor->path = g_strdup( path );
+        monitor->path = g_strdup( real_path );
 
         monitor->callbacks = g_array_new ( FALSE, FALSE, sizeof( VFSFileMonitorCallbackEntry ) );
         g_hash_table_insert ( monitor_hash,
                               monitor->path,
                               monitor );
 
-        /* NOTE: Since gamin, FAM and inotify don't follow symlinks,
-                 we need to do some special processing here. */
+        /*  OLD METHOD - removes wrong dir due to symlinks
+        // NOTE: Since gamin, FAM and inotify don't follow symlinks,
+                 we need to do some special processing here.
         if ( lstat( path, &file_stat ) == 0 )
         {
             const char* link_file = path;
@@ -182,36 +199,48 @@ VFSFileMonitor* vfs_file_monitor_add( char* path,
                 link_file = real_path;
             }
         }
+        */
 
 #ifdef USE_INOTIFY /* Linux inotify */
-        monitor->wd = inotify_add_watch ( inotify_fd, real_path ? real_path : path,
-                                            IN_MODIFY | IN_CREATE | IN_DELETE | IN_DELETE_SELF | IN_MOVE | IN_MOVE_SELF | IN_UNMOUNT | IN_ATTRIB);
+        monitor->wd = inotify_add_watch ( inotify_fd, real_path,
+                                          IN_MODIFY | IN_CREATE | IN_DELETE |
+                                          IN_DELETE_SELF | IN_MOVE |
+                                          IN_MOVE_SELF | IN_UNMOUNT | IN_ATTRIB );
         if ( monitor->wd < 0 )
         {
-            g_warning ( "Failed to add monitor on '%s': %s",
-                        path,
+            g_warning ( "Failed to add monitor on '%s' ('%s'): %s",
+                        real_path, path, 
                         g_strerror ( errno ) );
             return NULL;
         }
+//printf("vfs_file_monitor_add  %s (%s) %d\n", real_path, path, monitor->wd );
+
 #else /* Use FAM|gamin */
 //MOD see NOTE1 in vfs-mime-type.c - what happens here if path doesn't exist?
 //    inotify returns NULL - does fam?
-        if ( is_dir )
+        if ( fam_io_channel )
         {
-            FAMMonitorDirectory( &fam,
-                                    real_path ? real_path : path,
-                                    &monitor->request,
-                                    monitor );
+            if ( is_dir )
+            {
+                FAMMonitorDirectory( &fam,
+                                        real_path,
+                                        &monitor->request,
+                                        monitor );
+            }
+            else
+            {
+                FAMMonitorFile( &fam,
+                                real_path,
+                                &monitor->request,
+                                monitor );
+            }
         }
         else
         {
-            FAMMonitorFile( &fam,
-                            real_path ? real_path : path,
-                            &monitor->request,
-                            monitor );
+            g_warning( "FAM/gamin server is not running ?" );
+            return NULL;
         }
 #endif
-        g_free( real_path );
     }
 
     if( G_LIKELY(monitor) )
@@ -252,9 +281,13 @@ void vfs_file_monitor_remove( VFSFileMonitor * fm,
     if ( fm && g_atomic_int_dec_and_test( &fm->n_ref ) )  //MOD added "fm &&"
     {
 #ifdef USE_INOTIFY /* Linux inotify */
+//printf( "vfs_file_monitor_remove  %d\n", fm->wd );
         inotify_rm_watch ( inotify_fd, fm->wd );
 #else /*  Use FAM|gamin */
-        FAMCancelMonitor( &fam, &fm->request );
+        if ( fam_io_channel )
+            FAMCancelMonitor( &fam, &fm->request );
+        else
+            g_warning( "FAM/gamin server is not running ?" );
 #endif
 
         g_hash_table_remove( monitor_hash, fm->path );
@@ -381,8 +414,9 @@ static gboolean on_fam_event( GIOChannel * channel,
               This may be caused by crash of FAM server.
               So we have to reconnect to FAM server.
             */
-            connect_to_fam();
-            g_hash_table_foreach( monitor_hash, ( GHFunc ) reconnect_fam, NULL );
+            if ( connect_to_fam() )
+                g_hash_table_foreach( monitor_hash, ( GHFunc ) reconnect_fam,
+                                                                        NULL );
         }
         return TRUE; /* don't need to remove the event source since
                                     it has been removed by disconnect_from_fam(). */
@@ -412,7 +446,8 @@ static gboolean on_fam_event( GIOChannel * channel,
     while ( i < len )
     {
         struct inotify_event * ievent = ( struct inotify_event * ) & buf [ i ];
-        /* FIXME: 2 different paths can have the same wd because of link */
+        /* FIXME: 2 different paths can have the same wd because of link
+         *        This was fixed in spacefm 0.8.7 ?? */
         monitor = ( VFSFileMonitor* ) g_hash_table_find(
                       monitor_hash,
                       find_monitor,

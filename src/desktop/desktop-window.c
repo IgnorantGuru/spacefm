@@ -41,11 +41,13 @@
 #include "ptk-clipboard.h"
 #include "ptk-file-archiver.h"
 #include "ptk-location-view.h"
+#include "ptk-app-chooser.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <gdk/gdkx.h>
 #include <gdk/gdkkeysyms.h>
+#include <fnmatch.h>
 
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <cairo-xlib.h>
@@ -126,10 +128,6 @@ static void on_sort_descending( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_paste( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_settings( GtkMenuItem *menuitem, DesktopWindow* self );
 
-static void on_popup_new_link_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
-static void on_popup_new_folder_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
-static void on_popup_new_text_file_activate ( GtkMenuItem *menuitem, DesktopWindow* self );
-
 static GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent, GdkEvent *event, gpointer data );
 static void forward_event_to_rootwin( GdkScreen *gscreen, GdkEvent *event );
 
@@ -183,37 +181,53 @@ static GtkTargetEntry drag_targets[] = {
 static GdkAtom text_uri_list_atom = 0;
 static GdkAtom desktop_icon_atom = 0;
 
-static PtkMenuItemEntry icon_menu[] =
-{
-    PTK_RADIO_MENU_ITEM( N_( "Sort by _Name" ), on_sort_by_name, 0, 0 ),
-    PTK_RADIO_MENU_ITEM( N_( "Sort by _Size" ), on_sort_by_size, 0, 0 ),
-    PTK_RADIO_MENU_ITEM( N_( "Sort by _Type" ), on_sort_by_type, 0, 0 ),
-    PTK_RADIO_MENU_ITEM( N_( "Sort by _Modification Time" ), on_sort_by_mtime, 0, 0 ),
-    /* PTK_RADIO_MENU_ITEM( N_( "Custom" ), on_sort_custom, 0, 0 ), */
-    PTK_SEPARATOR_MENU_ITEM,
-    PTK_RADIO_MENU_ITEM( N_( "Ascending" ), on_sort_ascending, 0, 0 ),
-    PTK_RADIO_MENU_ITEM( N_( "Descending" ), on_sort_descending, 0, 0 ),
-    PTK_MENU_END
-};
+//sfm from ptk-file-icon-renderer.c
+static GdkPixbuf* link_icon = NULL;
+/* GdkPixbuf RGBA C-Source image dump */
+#ifdef __SUNPRO_C
+#pragma align 4 (link_icon_data)
+#endif
+#ifdef __GNUC__
+static const guint8 link_icon_data[] __attribute__ ((__aligned__ (4))) =
+#else
+static const guint8 link_icon_data[] =
+#endif
+    { ""
+      /* Pixbuf magic (0x47646b50) */
+      "GdkP"
+      /* length: header (24) + pixel_data (400) */
+      "\0\0\1\250"
+      /* pixdata_type (0x1010002) */
+      "\1\1\0\2"
+      /* rowstride (40) */
+      "\0\0\0("
+      /* width (10) */
+      "\0\0\0\12"
+      /* height (10) */
+      "\0\0\0\12"
+      /* pixel_data: */
+      "\200\200\200\377\200\200\200\377\200\200\200\377\200\200\200\377\200"
+      "\200\200\377\200\200\200\377\200\200\200\377\200\200\200\377\200\200"
+      "\200\377\0\0\0\377\200\200\200\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377\377\0"
+      "\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377"
+      "\377\377\377\0\0\0\377\200\200\200\377\377\377\377\377\0\0\0\377\0\0"
+      "\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\0\0\0\377\200\200\200\377\377\377\377\377\0\0\0\377\0\0\0\377\0"
+      "\0\0\377\0\0\0\377\0\0\0\377\377\377\377\377\377\377\377\377\0\0\0\377"
+      "\200\200\200\377\377\377\377\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0"
+      "\377\0\0\0\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377"
+      "\377\377\377\0\0\0\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0"
+      "\0\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0\0"
+      "\377\0\0\0\377\377\377\377\377\0\0\0\377\200\200\200\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377\377"
+      "\377\377\377\377\377\377\377\377\377\377\377\377\0\0\0\377\0\0\0\377"
+      "\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377\0\0\0\377"
+      "\0\0\0\377\0\0\0\377"
+    };
 
-static PtkMenuItemEntry create_new_menu[] =
-{
-    PTK_IMG_MENU_ITEM( N_( "_File" ), "gtk-file", on_popup_new_text_file_activate, 0, 0 ),
-    PTK_IMG_MENU_ITEM( N_( "Fol_der" ), "gtk-directory", on_popup_new_folder_activate, 0, 0 ),
-    PTK_IMG_MENU_ITEM( N_( "_Link" ), "gtk-file", on_popup_new_link_activate, 0, 0 ),
-    PTK_MENU_END
-};
-
-static PtkMenuItemEntry desktop_menu[] =
-{
-    PTK_POPUP_MENU( N_( "_Icons" ), icon_menu ),
-    PTK_STOCK_MENU_ITEM( GTK_STOCK_PASTE, on_paste ),
-    PTK_SEPARATOR_MENU_ITEM,
-    PTK_POPUP_IMG_MENU( N_( "_Create New" ), "gtk-new", create_new_menu ),
-    PTK_SEPARATOR_MENU_ITEM,
-    PTK_IMG_MENU_ITEM( N_( "_Desktop Settings" ), GTK_STOCK_PREFERENCES, on_settings, GDK_KEY_Return, GDK_MOD1_MASK ),
-    PTK_MENU_END
-};
 
 GType desktop_window_get_type(void)
 {
@@ -334,6 +348,17 @@ static void desktop_window_init(DesktopWindow *self)
     self->y_margin = 6;
     self->x_margin = 6;
 
+    if ( !link_icon )
+    {
+        link_icon = gdk_pixbuf_new_from_inline(
+                sizeof(link_icon_data),
+                link_icon_data,
+                FALSE, NULL );
+        g_object_add_weak_pointer( G_OBJECT(link_icon), (gpointer)&link_icon  );
+    }
+    else
+        g_object_ref( (link_icon) );
+
     const char* desk_dir = vfs_get_desktop_dir();
     if ( desk_dir )
     {
@@ -419,6 +444,9 @@ void desktop_window_finalize(GObject *object)
 
     if( self->hand_cursor )
         gdk_cursor_unref( self->hand_cursor );
+
+    if ( link_icon )
+        g_object_unref( link_icon );
 
     self = DESKTOP_WINDOW(object);
     if ( self->dir )
@@ -1154,6 +1182,32 @@ _done:
     }
 }
 
+void show_desktop_menu( DesktopWindow* self, guint event_button,
+                                                guint32 event_time )
+{
+    GtkMenu* popup;
+    DesktopItem *item;
+    GList* l;
+
+    GList* sel = desktop_window_get_selected_items( self );
+    if ( sel )
+    {
+        item = (DesktopItem*)sel->data;
+        char* file_path = g_build_filename( vfs_get_desktop_dir(),
+                                            item->fi->name, NULL );
+        for ( l = sel; l; l = l->next )
+            l->data = vfs_file_info_ref( ((DesktopItem*)l->data)->fi );
+        popup = GTK_MENU( ptk_file_menu_new( self, NULL, file_path,
+                            item->fi, vfs_get_desktop_dir(), sel ) );
+        g_free( file_path );
+    }
+    else
+        popup = GTK_MENU( ptk_file_menu_new( self, NULL, NULL, NULL,
+                                    vfs_get_desktop_dir(), NULL ) );
+    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, event_button,
+                                                   event_time );
+}
+
 gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
 {
     DesktopWindow* self = (DesktopWindow*)w;
@@ -1174,20 +1228,12 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
         /* if ctrl / shift is not pressed, deselect all. */
         if( ! (evt->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)) )
         {
-            /* don't cancel selection if clicking on selected items */
+            /* don't cancel selection if clicking on selected items OR
+             * clicking on desktop with right button */
             if( !( (evt->button == 1 || evt->button == 3 || evt->button == 0)
-                                && clicked_item && clicked_item->is_selected) )
-            {
-                for( l = self->items; l ;l = l->next )
-                {
-                    item = (DesktopItem*) l->data;
-                    if( item->is_selected )
-                    {
-                        item->is_selected = FALSE;
-                        redraw_item( self, item );
-                    }
-                }
-            }
+                                && clicked_item && clicked_item->is_selected)
+                        && !( !clicked_item && evt->button == 3 ) )
+                desktop_window_select( self, DW_SELECT_NONE );
         }
 
         if( clicked_item )
@@ -1246,14 +1292,16 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
                     item = (DesktopItem*)sel->data;
                     GtkMenu* popup;
                     GList* l;
-                    char* file_path = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
-                    /* FIXME: show popup menu for files */
+                    char* file_path = g_build_filename( vfs_get_desktop_dir(),
+                                                        item->fi->name, NULL );
                     for( l = sel; l; l = l->next )
                         l->data = vfs_file_info_ref( ((DesktopItem*)l->data)->fi );
-                    popup = GTK_MENU(ptk_file_menu_new( self, NULL, file_path, item->fi, vfs_get_desktop_dir(), sel ));
+                    popup = GTK_MENU(ptk_file_menu_new( self, NULL, file_path,
+                                        item->fi, vfs_get_desktop_dir(), sel ));
                     g_free( file_path );
 
-                    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, evt->button, evt->time );
+                    gtk_menu_popup( popup, NULL, NULL, NULL, NULL, evt->button,
+                                                                   evt->time );
                 }
             }
             goto out;
@@ -1264,21 +1312,8 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
             {
                 if( ! app_settings.show_wm_menu ) /* if our desktop menu is used */
                 {
-                    GtkWidget *popup, *sort_by_items[ 4 ], *sort_type_items[ 2 ];
-                    int i;
-                    /* show the desktop menu */
-                    for( i = 0; i < 4; ++i )
-                        icon_menu[ i ].ret = &sort_by_items[ i ];
-                    for( i = 0; i < 2; ++i )
-                        icon_menu[ 5 + i ].ret = &sort_type_items[ i ];
-                    popup = ptk_menu_new_from_data( desktop_menu, self, NULL );
-                    gtk_check_menu_item_set_active( (GtkCheckMenuItem*)sort_by_items[ self->sort_by ], TRUE );
-                    gtk_check_menu_item_set_active( (GtkCheckMenuItem*)sort_type_items[ self->sort_type ], TRUE );
-                    gtk_widget_show_all(popup);
-                    g_signal_connect( popup, "selection-done", G_CALLBACK(gtk_widget_destroy), NULL );
-
-                    gtk_menu_popup( GTK_MENU(popup), NULL, NULL, NULL, NULL, evt->button, evt->time );
-                    goto out;   /* don't forward the event to root win */
+                    show_desktop_menu( self, evt->button, evt->time );
+                    goto out;   // don't forward the event to root win
                 }
             }
             else if( evt->button == 1 )
@@ -1940,16 +1975,64 @@ void focus_item( DesktopWindow* self, DesktopItem* item )
     redraw_item( self, item );
 }
 
-void clear_selection( DesktopWindow* self )
+void desktop_window_select( DesktopWindow* self, DWSelectMode mode )
 {
+    char* key;
+    char* name;
+    gboolean icase = FALSE;
+    
+    if ( mode < DW_SELECT_ALL || mode > DW_SELECT_PATTERN )
+        return;
+
+    if ( mode == DW_SELECT_PATTERN )
+    {
+        // get pattern from user  (store in ob1 so it's not saved)
+        XSet* set = xset_get( "select_patt" );
+        if ( !xset_text_dialog( GTK_WIDGET( self ), _("Select By Pattern"), NULL, FALSE, _("Enter pattern to select files and folders:\n\nIf your pattern contains any uppercase characters, the matching will be case sensitive.\n\nExample:  *sp*e?m*\n\nTIP: You can also enter '%% PATTERN' in the path bar."),
+                                            NULL, set->ob1, &set->ob1,
+                                            NULL, FALSE, NULL ) || !set->ob1 )
+            return;
+        key = set->ob1;
+
+        // case insensitive search ?
+        char* lower_key = g_utf8_strdown( key, -1 );
+        if ( !strcmp( lower_key, key ) )
+        {
+            // key is all lowercase so do icase search
+            icase = TRUE;
+        }
+        g_free( lower_key );
+    }
+    else
+        key = NULL;
+
     GList* l;
     DesktopItem* item;
+    gboolean sel;
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*) l->data;
-        if ( item->is_selected )
+        if ( mode == DW_SELECT_ALL )
+            sel = TRUE;
+        else if ( mode == DW_SELECT_NONE )
+            sel = FALSE;
+        else if ( mode == DW_SELECT_INVERSE )
+            sel = !item->is_selected;
+        else
         {
-            item->is_selected = FALSE;
+            // DW_SELECT_PATTERN - test name
+            name = (char*)vfs_file_info_get_disp_name( item->fi );
+            if ( icase )
+                name = g_utf8_strdown( name, -1 );
+
+            sel = fnmatch( key, name, 0 ) == 0;
+
+            if ( icase )
+                g_free( name );
+        }
+        if ( sel != item->is_selected )
+        {
+            item->is_selected = sel;
             redraw_item( self, item );
         }
     }
@@ -1963,104 +2046,161 @@ void select_item( DesktopWindow* self, DesktopItem* item, gboolean val )
     redraw_item( self, item );
 }
 
-gboolean on_key_press( GtkWidget* w, GdkEventKey* evt )
+gboolean on_key_press( GtkWidget* w, GdkEventKey* event )
 {
-    GList* sels;
-    DesktopWindow* self = (DesktopWindow*)w;
-    int modifier = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK ) );
+    DesktopWindow* desktop = (DesktopWindow*)w;
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
 
-    sels = desktop_window_get_selected_files( self );
+    if ( event->keyval == 0 )
+        return FALSE;
 
-    if ( modifier == GDK_CONTROL_MASK )
+    GList* l;
+    XSet* set;
+    char* xname;
+    for ( l = xsets; l; l = l->next )
     {
-        switch ( evt->keyval )
+        if ( ((XSet*)l->data)->shared_key )
         {
-        case GDK_KEY_x:
-            if( sels )
-                ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, FALSE );
-            break;
-        case GDK_KEY_c:
-            if( sels )
-                ptk_clipboard_cut_or_copy_files( vfs_get_desktop_dir(), sels, TRUE );
-            break;
-        case GDK_KEY_v:
-            on_paste( NULL, self );
-            break;
+            // set has shared key
+            set = xset_get( ((XSet*)l->data)->shared_key );
+            if ( set->key == event->keyval && set->keymod == keymod )
+            {
+                // shared key match
+                if ( g_str_has_prefix( set->name, "panel" ) )
+                    return FALSE;
+                goto _key_found;  // for speed
+            }
+            else
+                continue;
+        }
+        if ( ((XSet*)l->data)->key == event->keyval
+                                        && ((XSet*)l->data)->keymod == keymod )
+        {
+            set = (XSet*)l->data;
+_key_found:
+            // run menu_cb
+            if ( set->menu_style < XSET_MENU_SUBMENU )
+            {
+                set->browser = NULL;
+                set->desktop = desktop;
+                xset_menu_cb( NULL, set );  // also does custom activate
+            }
+            if ( !set->lock )
+                return TRUE;
+
+            // handlers
+            if ( !strcmp( set->name, "new_app" ) )
+                desktop_window_add_application( desktop );
+            else if ( g_str_has_prefix( set->name, "desk_" ) )
+            {
+                if ( g_str_has_prefix( set->name, "desk_sort_" ) )
+                {
+                    int by;
+                    char* xname = set->name + 10;
+                    if ( !strcmp( xname, "name" ) )
+                        by = DW_SORT_BY_NAME;
+                    else if ( !strcmp( xname, "size" ) )
+                        by = DW_SORT_BY_SIZE;
+                    else if ( !strcmp( xname, "type" ) )
+                        by = DW_SORT_BY_TYPE;
+                    else if ( !strcmp( xname, "date" ) )
+                        by = DW_SORT_BY_MTIME;
+                    else
+                    {
+                        if ( !strcmp( xname, "ascend" ) )
+                            by = GTK_SORT_ASCENDING;
+                        else if ( !strcmp( xname, "descend" ) )
+                            by = GTK_SORT_DESCENDING;
+                        else
+                            return TRUE;
+                        desktop_window_sort_items( desktop, desktop->sort_by, by );
+                        return TRUE;
+                    }
+                    desktop_window_sort_items( desktop, by, desktop->sort_type );
+                }
+                else if ( !strcmp( set->name, "desk_pref" ) )
+                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+            }
+            else if ( g_str_has_prefix( set->name, "paste_" ) )
+            {
+                xname = set->name + 6;
+                if ( !strcmp( xname, "link" ) )
+                    ptk_clipboard_paste_links(
+                        GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( desktop ) ) ),
+                                            vfs_get_desktop_dir(), NULL );
+                else if ( !strcmp( xname, "target" ) )
+                    ptk_clipboard_paste_targets( GTK_WINDOW( 
+                            gtk_widget_get_toplevel( GTK_WIDGET( desktop ) ) ),
+                            vfs_get_desktop_dir(),
+                            NULL );
+                else if ( !strcmp( xname, "as" ) )
+                    ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir() );
+            }
+            else if ( g_str_has_prefix( set->name, "select_" ) )
+            {
+                DWSelectMode mode;
+                xname = set->name + 7;
+                if ( !strcmp( xname, "all" ) )
+                    mode = DW_SELECT_ALL;
+                else if ( !strcmp( xname, "un" ) )
+                    mode = DW_SELECT_NONE;
+                else if ( !strcmp( xname, "invert" ) )
+                    mode = DW_SELECT_INVERSE;
+                else if ( !strcmp( xname, "patt" ) )
+                    mode = DW_SELECT_PATTERN;
+                else
+                    return TRUE;
+                desktop_window_select( desktop, mode );
+            }
+            else
+                // all the rest require ptkfilemenu data
+                ptk_file_menu_action( desktop, NULL, set->name );
+            return TRUE;
+        }
+    }
+
+    if ( keymod == GDK_CONTROL_MASK )
+    {
+        switch ( event->keyval )
+        {
         case GDK_KEY_Down:
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            focus_item( self, get_next_item( self, evt->keyval ) );
-            break;
+            focus_item( desktop, get_next_item( desktop, event->keyval ) );
+            return TRUE;
         case GDK_KEY_space:
-            if ( self->focus )
-                select_item( self, self->focus, !self->focus->is_selected );
-            break;
-
-/*
-        case GDK_i:
-            ptk_file_browser_invert_selection( file_browser );
-            break;
-        case GDK_a:
-            ptk_file_browser_select_all( file_browser );
-            break;
-*/
+            if ( desktop->focus )
+                select_item( desktop, desktop->focus, !desktop->focus->is_selected );
+            return TRUE;
         }
     }
-    else if ( modifier == GDK_MOD1_MASK )
+    else if ( keymod == 0 )
     {
-        switch ( evt->keyval )
-        {
-        case GDK_KEY_Return:
-            if( sels )
-                ptk_show_file_properties( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, 0 );
-            break;
-        }
-    }
-    else if ( modifier == GDK_SHIFT_MASK )
-    {
-        switch ( evt->keyval )
-        {
-        case GDK_KEY_Delete:
-            if( sels )
-                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
-            break;
-        }
-    }
-    else if ( modifier == 0 )
-    {
-        switch ( evt->keyval )
+        switch ( event->keyval )
         {
         case GDK_KEY_Return:
         case GDK_KEY_space:
-            if ( self->focus )
-                open_clicked_item( self->focus );
-            break;
+            if ( desktop->focus )
+                open_clicked_item( desktop->focus );
+            return TRUE;
         case GDK_KEY_Down:
         case GDK_KEY_Up:
         case GDK_KEY_Left:
         case GDK_KEY_Right:
-            clear_selection( self );
-            focus_item( self, get_next_item( self, evt->keyval ) );
-            if ( self->focus )
-                select_item( self, self->focus, TRUE );
-            break;        	
-        case GDK_KEY_F2:
-            if ( sels )
-                desktop_window_rename_selected_files( self, sels, vfs_get_desktop_dir() );
-                //ptk_rename_file( NULL, vfs_get_desktop_dir(), (VFSFileInfo*)sels->data );
-            break;
-        case GDK_KEY_Delete:
-            if( sels )
-                ptk_delete_files( GTK_WINDOW( self ), vfs_get_desktop_dir(), sels, NULL );
-            break;
+            desktop_window_select( desktop, DW_SELECT_NONE );
+            focus_item( desktop, get_next_item( desktop, event->keyval ) );
+            if ( desktop->focus )
+                select_item( desktop, desktop->focus, TRUE );
+            return TRUE;
+        case GDK_KEY_Menu:
+            show_desktop_menu( desktop, 0, event->time );
+            return TRUE;
         }
     }
-
-    if( sels )
-        vfs_file_info_list_free( sels );
-
-    return TRUE;
+    return FALSE;
 }
 
 void on_style_set( GtkWidget* w, GtkStyle* prev )
@@ -2185,11 +2325,12 @@ void on_paste( GtkMenuItem *menuitem, DesktopWindow* self )
     ptk_clipboard_paste_files( NULL, dest_dir, NULL );
 }
 
-void on_autoopen_desktop_cb( gpointer task, AutoOpenCreate* ao )
+void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 {
-    if ( !ao )
+    if ( !aop )
         return;
 
+    AutoOpenCreate* ao = (AutoOpenCreate*)aop;
     DesktopWindow* self = (DesktopWindow*)ao->file_browser;
     
     if ( ao->path && g_file_test( ao->path, G_FILE_TEST_EXISTS ) )
@@ -2219,7 +2360,7 @@ void on_autoopen_desktop_cb( gpointer task, AutoOpenCreate* ao )
 
             if ( l ) // found
             {
-                clear_selection( self );
+                desktop_window_select( self, DW_SELECT_NONE );
                 select_item( self, (DesktopItem*)l->data, TRUE );
                 focus_item( self, (DesktopItem*)l->data );
             }
@@ -2249,43 +2390,6 @@ void on_autoopen_desktop_cb( gpointer task, AutoOpenCreate* ao )
     }
     g_free( ao->path );
     g_slice_free( AutoOpenCreate, ao );
-}
-
-static void create_new_file( DesktopWindow* self, int create_new )
-{
-    AutoOpenCreate* ao;    
-    ao = g_slice_new0( AutoOpenCreate );
-    ao->path = NULL;
-    ao->file_browser = (PtkFileBrowser*)self;
-    ao->callback = (GFunc)on_autoopen_desktop_cb;
-    ao->open_file = FALSE;
-    int result = ptk_rename_file( self, NULL, vfs_get_desktop_dir(),
-                                  NULL, NULL, FALSE, create_new, ao );
-    if ( result == 0 )
-    {
-        ao->file_browser = NULL;
-        g_free( ao->path );
-        ao->path = NULL;
-        g_slice_free( AutoOpenCreate, ao );
-        ao = NULL;
-    }
-}
-
-void on_popup_new_link_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
-{
-    create_new_file( self, 3 );
-}
-
-void on_popup_new_folder_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
-{
-    //ptk_create_new_file( GTK_WINDOW( self ), vfs_get_desktop_dir(), TRUE, NULL );
-    create_new_file( self, 2 );
-}
-
-void on_popup_new_text_file_activate ( GtkMenuItem *menuitem, DesktopWindow* self )
-{
-    //ptk_create_new_file( GTK_WINDOW( self ), vfs_get_desktop_dir(), FALSE, NULL );
-    create_new_file( self, 1 );
 }
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
@@ -2562,6 +2666,109 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     }
 }
 
+void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
+                                                char* cwd, char* setname )
+{
+    if ( !setname || !desktop || !sel_files )
+        return;
+    XSet* set2;
+    char* copy_dest = NULL;
+    char* move_dest = NULL;
+    char* path;
+    
+    if ( !strcmp( setname, "copy_loc_last" ) )
+    {
+        set2 = xset_get( "copy_loc_last" );
+        copy_dest = g_strdup( set2->desc );
+    }
+    else if ( !strcmp( setname, "move_loc_last" ) )
+    {
+        set2 = xset_get( "copy_loc_last" );
+        move_dest = g_strdup( set2->desc );
+    }
+    else if ( strcmp( setname, "copy_loc" ) && strcmp( setname, "move_loc" ) )
+        return;
+
+    if ( !strcmp( setname, "copy_loc" ) || !strcmp( setname, "move_loc" ) ||
+                                            ( !copy_dest && !move_dest ) )
+    {
+        char* folder;
+        set2 = xset_get( "copy_loc_last" );
+        if ( set2->desc )
+            folder = set2->desc;
+        else
+            folder = cwd;
+        path = xset_file_dialog( GTK_WIDGET( desktop ),
+                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                            _("Choose Location"), folder, NULL );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
+        {
+            if ( g_str_has_prefix( setname, "copy_loc" ) )
+                copy_dest = path;
+            else
+                move_dest = path;
+            set2 = xset_get( "copy_loc_last" );
+            xset_set_set( set2, "desc", path );
+        }
+        else
+            return;
+    }
+    
+    if ( copy_dest || move_dest )
+    {
+        int file_action;
+        char* dest_dir;
+        
+        if ( copy_dest )
+        {
+            file_action = VFS_FILE_TASK_COPY;
+            dest_dir = copy_dest;
+        }
+        else
+        {
+            file_action = VFS_FILE_TASK_MOVE;
+            dest_dir = move_dest;
+        }
+        
+        if ( !strcmp( dest_dir, cwd ) )
+        {
+            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                        _("Invalid Destination"), NULL, 0,
+                                        _("Destination same as source"), NULL, NULL );
+            g_free( dest_dir );
+            return;
+        }
+
+        // rebuild sel_files with full paths
+        GList* file_list = NULL;
+        GList* sel;
+        char* file_path;
+        VFSFileInfo* file;
+        for ( sel = sel_files; sel; sel = sel->next )
+        {
+            file = ( VFSFileInfo* ) sel->data;
+            file_path = g_build_filename( cwd,
+                                          vfs_file_info_get_name( file ), NULL );
+            file_list = g_list_prepend( file_list, file_path );
+        }
+
+        // task
+        PtkFileTask* task = ptk_file_task_new( file_action,
+                                file_list,
+                                dest_dir,
+                                GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
+                                                                desktop ) ) ),
+                                NULL );
+        ptk_file_task_run( task );
+        g_free( dest_dir );
+    }
+    else
+    {
+        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                    _("Invalid Destination"), NULL, 0,
+                                    _("Invalid destination"), NULL, NULL );
+    }
+}
 
 /*-------------- Private methods -------------------*/
 
@@ -2601,6 +2808,21 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 	if( icon )
 		g_object_unref( icon );
 
+    // add link_icon arrow to links
+    if ( item->fi )
+    {
+        if ( vfs_file_info_is_symlink( item->fi ) && link_icon )
+        {
+            cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
+            gdk_cairo_set_source_pixbuf ( cr, link_icon,
+                                          item->icon_rect.x,
+                                          item->icon_rect.y );
+           gdk_cairo_rectangle ( cr, &item->icon_rect );
+            cairo_fill ( cr );
+        }
+    }
+
+    // text
     text_rect = item->text_rect;
 
     pango_layout_set_wrap( self->pl, 0 );
@@ -2726,7 +2948,7 @@ void open_folders( GList* folders )
     FMMainWindow* main_window;
     gboolean new_window = FALSE;
     
-    main_window = fm_main_window_get_last_active();
+    main_window = fm_main_window_get_on_current_desktop();
     
     if ( !main_window )
     {
@@ -2882,13 +3104,13 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
 {
     GList* items = NULL;
     GList* special_items;
-    
+
     if( win->sort_type == sort_type && win->sort_by == sort_by )
         return;
 
     app_settings.desktop_sort_by = win->sort_by = sort_by;
     app_settings.desktop_sort_type = win->sort_type = sort_type;
-    save_settings( NULL );  //MOD
+    xset_autosave( NULL );
 
     /* skip the special items since they always appears first */
     gboolean special = FALSE;    //MOD added - otherwise caused infinite loop in layout items once My Documents was removed
@@ -2967,6 +3189,44 @@ GList* desktop_window_get_selected_files( DesktopWindow* win )
     return sel;
 }
 
+void desktop_window_add_application( DesktopWindow* desktop )
+{
+    char* app = NULL;
+    VFSMimeType* mime_type;
+
+    GList* sel_files = desktop_window_get_selected_files( desktop );
+    if ( sel_files )
+    {
+        mime_type = vfs_file_info_get_mime_type( (VFSFileInfo*)sel_files->data );
+        if ( G_LIKELY( ! mime_type ) )
+            mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_UNKNOWN );
+        g_list_foreach( sel_files, (GFunc)vfs_file_info_unref, NULL );
+        g_list_free( sel_files );
+    }
+    else
+        mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
+
+    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
+                                                 mime_type, TRUE );
+    if ( app )
+    {
+        char* path = vfs_mime_type_locate_desktop_file( NULL, app );
+        if ( path && g_file_test( path, G_FILE_TEST_IS_REGULAR ) )
+        {
+            sel_files = g_list_prepend( NULL, path );
+            PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
+                                                   sel_files,
+                                                   vfs_get_desktop_dir(),
+                                                   GTK_WINDOW( desktop ),
+                                                   NULL );
+            ptk_file_task_run( task );
+        }
+        else
+            g_free( path );
+        g_free( app );
+    }
+    vfs_mime_type_unref( mime_type );
+}
 
 /*----------------- X11-related sutff ----------------*/
 

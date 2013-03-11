@@ -1269,16 +1269,16 @@ void info_partition( device_t *device )
       size = sysfs_get_uint64 (device->native_path, "size");
       alignment_offset = sysfs_get_uint64 (device->native_path, "alignment_offset");
 
-      device->partition_size = g_strdup_printf( "%d", size * 512 );
-      device->partition_alignment_offset = g_strdup_printf( "%d", alignment_offset );
+      device->partition_size = g_strdup_printf( "%lu", size * 512 );
+      device->partition_alignment_offset = g_strdup_printf( "%lu", alignment_offset );
 
       offset = sysfs_get_uint64 (device->native_path, "start") * device->device_block_size;
-      device->partition_offset = g_strdup_printf( "%d", offset );
+      device->partition_offset = g_strdup_printf( "%lu", offset );
 
       s = device->native_path;
       for (n = strlen (s) - 1; n >= 0 && g_ascii_isdigit (s[n]); n--)
         ;
-      device->partition_number = g_strdup_printf( "%d", strtol (s + n + 1, NULL, 0) );
+      device->partition_number = g_strdup_printf( "%ld", strtol (s + n + 1, NULL, 0) );
         /*
       s = g_strdup (device->priv->native_path);
       for (n = strlen (s) - 1; n >= 0 && s[n] != '/'; n--)
@@ -1521,7 +1521,7 @@ char* device_show_info( device_t *device )
         line[i++] = g_strdup_printf("  partition:\n");
         line[i++] = g_strdup_printf("    scheme:                    %s\n", device->partition_scheme ?
                                                     device->partition_scheme : "" );
-        line[i++] = g_strdup_printf("    number:                    %d\n", device->partition_number ? 
+        line[i++] = g_strdup_printf("    number:                    %s\n", device->partition_number ? 
                                                     device->partition_number : "" );
         line[i++] = g_strdup_printf("    type:                      %s\n", device->partition_type ?
                                                     device->partition_type : "" );
@@ -2241,7 +2241,7 @@ char* free_slash_total( const char* dir )
         return g_strdup_printf( "%s/%s", size_str, total_size_str );
     }
 #endif
-    return g_strdup_printf( "" );
+    return g_strdup( "" );
 }
 
 void vfs_volume_set_info( VFSVolume* volume )
@@ -2333,7 +2333,7 @@ void vfs_volume_set_info( VFSVolume* volume )
         else if ( volume->is_optical )
             disp_id = g_strdup_printf( _(":optical") );
         if ( !disp_id )
-            disp_id = g_strdup_printf( "" );
+            disp_id = g_strdup( "" );
         // table type
         if ( volume->is_table )
         {
@@ -2355,7 +2355,7 @@ void vfs_volume_set_info( VFSVolume* volume )
         if ( volume->label && volume->label[0] != '\0' )
             disp_label = g_strdup_printf( "%s", volume->label );
         else
-            disp_label = g_strdup_printf( "" );
+            disp_label = g_strdup( "" );
         /* if ( volume->mount_point && volume->mount_point[0] != '\0' )
         {
             // causes GUI hang during mount due to fs access
@@ -2367,7 +2367,7 @@ void vfs_volume_set_info( VFSVolume* volume )
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else
-            disp_size = g_strdup_printf( "" );
+            disp_size = g_strdup( "" );
         if ( volume->mount_point && volume->mount_point[0] != '\0' )
             disp_mount = g_strdup_printf( "%s", volume->mount_point );
         else
@@ -2382,21 +2382,21 @@ void vfs_volume_set_info( VFSVolume* volume )
         else if ( volume->is_audiocd )
             disp_label = g_strdup_printf( _("[audio]") );
         else
-            disp_label = g_strdup_printf( "" );
+            disp_label = g_strdup( "" );
         if ( volume->size > 0 )
         {
             vfs_file_size_to_string_format( size_str, volume->size, "%.0f%s" );
             disp_size = g_strdup_printf( "%s", size_str );
         }
         else
-            disp_size = g_strdup_printf( "" );
+            disp_size = g_strdup( "" );
         disp_mount = g_strdup_printf( "---" );
     }
     else
     {
         disp_label = g_strdup_printf( _("[no media]") );
-        disp_size = g_strdup_printf( "" );
-        disp_mount = g_strdup_printf( "" );
+        disp_size = g_strdup( "" );
+        disp_mount = g_strdup( "" );
     }
     if ( !strncmp( volume->device_file, "/dev/", 5 ) )
         disp_device = g_strdup( volume->device_file + 5 );
@@ -2625,11 +2625,6 @@ int parse_network_url( const char* url, const char* fstype,
     nm->pass = NULL;
     nm->path = NULL;
 
-    if ( fstype && ( !strcmp( fstype, "nfs" ) || !strcmp( fstype, "smbfs" ) 
-            || !strcmp( fstype, "cifs" ) || !strcmp( fstype, "sshfs" ) 
-            || !strcmp( fstype, "nfs4" ) ) )
-        ret = 2; //invalid as default response
-
     char* orig_url = strdup( url );
     char* xurl = orig_url;
     gboolean is_colon = FALSE;
@@ -2645,7 +2640,7 @@ int parse_network_url( const char* url, const char* fstype,
             is_colon = TRUE;
         if ( fstype && strcmp( fstype, "smbfs" ) && strcmp( fstype, "cifs" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for SMB share - must be cifs or smbfs\n",
+            // wlog( _("udevil: error 26: invalid type '%s' for SMB share - must be cifs or smbfs\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
@@ -2660,7 +2655,7 @@ int parse_network_url( const char* url, const char* fstype,
         is_colon = TRUE;
         if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for NFS share - must be nfs or nfs4\n",
+            // wlog( _("udevil: error 27: invalid type '%s' for NFS share - must be nfs or nfs4\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
@@ -2673,7 +2668,7 @@ int parse_network_url( const char* url, const char* fstype,
             is_colon = TRUE;
         if ( fstype && strcmp( fstype, "curlftpfs" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for curlftpfs share - must be curlftpfs\n",
+            // wlog( _("udevil: error 28: invalid type '%s' for curlftpfs share - must be curlftpfs\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
@@ -2685,7 +2680,7 @@ int parse_network_url( const char* url, const char* fstype,
         is_colon = TRUE;
         if ( fstype && strcmp( fstype, "ftpfs" ) && strcmp( fstype, "curlftpfs" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for FTP share - must be curlftpfs or ftpfs\n",
+            // wlog( _("udevil: error 29: invalid type '%s' for FTP share - must be curlftpfs or ftpfs\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
@@ -2710,7 +2705,7 @@ int parse_network_url( const char* url, const char* fstype,
             is_colon = TRUE;
         if ( fstype && strcmp( fstype, "sshfs" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for sshfs share - must be sshfs\n",
+            // wlog( _("udevil: error 30: invalid type '%s' for sshfs share - must be sshfs\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
@@ -2723,30 +2718,63 @@ int parse_network_url( const char* url, const char* fstype,
         is_colon = TRUE;
         if ( fstype && strcmp( fstype, "sshfs" ) )
         {
-            //wlog( "udevil: error: invalid type '%s' for sshfs share - must be sshfs\n",
+            // wlog( _("udevil: error 31: invalid type '%s' for sshfs share - must be sshfs\n"),
             //                                                    fstype, 2 );
             goto _net_free;
         }
         nm->fstype = g_strdup( "sshfs" );
+    }
+    else if ( g_str_has_prefix( xurl, "http:" ) || g_str_has_prefix( xurl, "https:" ) )
+    {
+        ret = 2;
+        is_colon = TRUE;
+        if ( fstype && strcmp( fstype, "davfs" ) )
+        {
+            // wlog( _("udevil: error 151: invalid type '%s' for WebDAV share - must be davfs\n"),
+            //                                                    fstype, 2 );
+            goto _net_free;
+        }
+        nm->fstype = g_strdup( "davfs" );
     }
     else if ( ( str = strstr( xurl, ":/" ) ) && xurl[0] != ':' && xurl[0] != '/' )
     {
         ret = 2;
         str[0] = '\0';
         if ( strchr( xurl, '@' ) || !g_strcmp0( fstype, "sshfs" ) )
+        {
             nm->fstype = g_strdup( "sshfs" );
+            if ( fstype && strcmp( fstype, "sshfs" ) )
+            {
+                // wlog( _("udevil: error 32: invalid type '%s' for sshfs share - must be sshfs\n"),
+                //                                                    fstype, 2 );
+                goto _net_free;
+            }
+        }
         else
         {
             // mount [-t nfs] host:/path
             nm->fstype = g_strdup( "nfs" );
             if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
             {
-                //wlog( "udevil: error: invalid type '%s' for NFS share - must be nfs or nfs4\n",
+                // wlog( _("udevil: error 33: invalid type '%s' for NFS share - must be nfs or nfs4\n"),
                 //                                                    fstype, 2 );
                 goto _net_free;
             }
         }
         str[0] = ':';
+    }
+    else if ( fstype && ( !strcmp( fstype, "nfs" ) || 
+                          !strcmp( fstype, "nfs4" ) ||
+                          !strcmp( fstype, "smbfs" ) ||
+                          !strcmp( fstype, "cifs" ) ||
+                          !strcmp( fstype, "sshfs" ) ||
+                          !strcmp( fstype, "davfs" ) ||
+                          !strcmp( fstype, "curlftpfs" ) ||
+                          !strcmp( fstype, "ftpfs" ) ) )
+    {
+        // no protocol but user specified a valid network fstype
+        ret = 2;
+        nm->fstype = g_strdup( fstype );
     }
 
     if ( ret != 2 )
@@ -2757,7 +2785,6 @@ int parse_network_url( const char* url, const char* fstype,
     {
         xurl = str + 1;
     }
-
     while ( xurl[0] == '/' )
         xurl++;
     char* trim_url = g_strdup( xurl );
@@ -2781,12 +2808,14 @@ int parse_network_url( const char* url, const char* fstype,
             nm->user = g_strdup( xurl );
         xurl = str + 1;
     }
+
     // path
     if ( str = strchr( xurl, '/' ) )
     {
         nm->path = g_strdup( str );
         str[0] = '\0';
     }
+
     // host:port
     if ( xurl[0] == '[' )
     {
@@ -2814,9 +2843,9 @@ int parse_network_url( const char* url, const char* fstype,
     // url
     if ( nm->host )
     {
-        if ( !strcmp( nm->fstype, "cifs" ) || !strcmp( nm->fstype, "smbfs" ) )
+        if ( !g_strcmp0( nm->fstype, "cifs" ) || !g_strcmp0( nm->fstype, "smbfs" ) )
             nm->url = g_strdup_printf( "//%s%s", nm->host, nm->path ? nm->path : "/" );
-        else if ( !strcmp( nm->fstype, "nfs" ) )
+        else if ( !g_strcmp0( nm->fstype, "nfs" ) )
             nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
         else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
             nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s",
@@ -2834,6 +2863,8 @@ int parse_network_url( const char* url, const char* fstype,
                             "@",   //nm->user || nm->pass ? "@" : "",
                             nm->host,
                             nm->path ? nm->path : "/" );
+        else if ( !g_strcmp0( nm->fstype, "davfs" ) )
+            nm->url = g_strdup( url );
         else
             nm->url = g_strdup( trim_url );
     }
@@ -2842,7 +2873,7 @@ int parse_network_url( const char* url, const char* fstype,
 
     if ( !nm->host )
     {
-        //wlog( "udevil: error: '%s' is not a recognized network url\n", url, 2 );
+        // wlog( _("udevil: error 34: '%s' is not a recognized network url\n"), url, 2 );
         goto _net_free;
     }
     
@@ -2851,15 +2882,14 @@ int parse_network_url( const char* url, const char* fstype,
             || ( nm->pass && strchr( nm->pass, ' ' ) )
             || ( nm->port && strchr( nm->port, ' ' ) ) )
     {
-        //wlog( "udevil: error: invalid network url\n", fstype, 2 );
+        // wlog( _("udevil: error 35: invalid network url\n"), fstype, 2 );
         goto _net_free;
     }
-
-/*
+/* for udevil only
     // lookup ip
     if ( !( nm->ip = get_ip( nm->host ) ) || ( nm->ip && nm->ip[0] == '\0' ) )
     {
-        wlog( "udevil: error: lookup host '%s' failed\n", nm->host, 2 );
+        // wlog( _("udevil: error 36: lookup host '%s' failed\n"), nm->host, 2 );
         goto _net_free;
     }
 */
@@ -3188,7 +3218,7 @@ char* vfs_volume_device_info( const char* device_file )
     
     device_t *device = device_alloc( udevice );
     if ( !device_get_info( device ) )
-        return g_strdup_printf( "" );
+        return g_strdup( "" );
     
     char* info = device_show_info( device );
     device_free( device );

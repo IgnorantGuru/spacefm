@@ -63,6 +63,10 @@ struct _PtkFileBrowser
     off_t sel_size;
     guint sel_change_idle;
     
+    // path bar auto seek
+    gboolean inhibit_focus;
+    char* seek_name;
+    
     /* side pane */
     GtkWidget* side_pane_buttons;
     GtkToggleToolButton* location_btn;
@@ -346,6 +350,9 @@ void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path );
 void ptk_file_browser_select_file_list( PtkFileBrowser* file_browser,
                                                         char** filename,
                                                         gboolean do_select );
+void ptk_file_browser_seek_path( PtkFileBrowser* file_browser, 
+                                                    const char* seek_dir,
+                                                    const char* seek_name );
 
 
 G_END_DECLS
