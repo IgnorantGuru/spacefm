@@ -34,6 +34,12 @@ typedef struct _ArchiveHandler
 }
 ArchiveHandler;
 
+// Archive handlers treeview model enum
+enum {
+    COL_XSET_NAME,
+    COL_HANDLER_NAME
+};
+
 const ArchiveHandler handlers[]=
     {
         {
@@ -95,87 +101,349 @@ const ArchiveHandler handlers[]=
     };
 
 
-gboolean on_configure_selection_change( GtkTreeSelection* tree_sel,
-                                      GtkWidget* dlg )
+// handler_xset_name optional if handler_xset passed
+void config_load_handler_settings( XSet* handler_xset,
+                                    gchar* handler_xset_name,
+                                    GtkWidget* dlg )
 {
-    /* TODO
-    enable_context( ctxt );
-    return FALSE;*/
+    // Fetching actual xset if only the name has been passed
+    if ( !handler_xset )
+        handler_xset = xset_get( handler_xset_name );
+
+    // Fetching widget references
+    GtkWidget* chkbtn_handler_enabled = g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_enabled" );
+    GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_name" );
+    GtkWidget* entry_handler_mime = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_mime" );
+    GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extension" );
+    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_compress" );
+    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extract" );
+    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_list" );
+    GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_compress_term" );
+    GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_extract_term" );
+    GtkWidget* chkbtn_handler_list_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_list_term" );
+
+    // Configuring widgets with handler settings. Only name, MIME and
+    // extension warrant a warning
+    gboolean check_value = handler_xset->b != XSET_B_TRUE ? FALSE : TRUE;
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
+                                    check_value);
+    if (!handler_xset->menu_label)
+    {
+        // Handler name is NULL - fall back to null-length string and
+        // warn user
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
+                            g_strdup( "" ) );
+        g_warning("Archive handler associated with xset '%s' has no name",
+                    handler_xset->name);
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
+                            g_strdup( handler_xset->menu_label ) );
+    }
+    if (!handler_xset->s)
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ),
+                            g_strdup( "" ) );
+        g_warning("Archive handler '%s' has no configured MIME type",
+                    handler_xset->menu_label);
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ),
+                            g_strdup( handler_xset->s ) );
+    }
+    if (!handler_xset->x)
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
+                            g_strdup( "" ) );
+        g_warning("Archive handler '%s' has no configured extension",
+                    handler_xset->menu_label);
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
+                            g_strdup( handler_xset->x ) );
+    }
+    if (!handler_xset->y)
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
+                            g_strdup( "" ) );
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
+                            g_strdup( handler_xset->y ) );
+    }
+    if (!handler_xset->z)
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
+                            g_strdup( "" ) );
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
+                            g_strdup( handler_xset->z ) );
+    }
+    if (!handler_xset->context)
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
+                            g_strdup( "" ) );
+    }
+    else
+    {
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
+                            g_strdup( handler_xset->context ) );
+    }
+
+    check_value = handler_xset->y && handler_xset->y == "+";
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
+                                    check_value);
+    check_value = handler_xset->z && handler_xset->z == "+";
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
+                                    check_value);
+    check_value = handler_xset->context && handler_xset->context == "+";
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
+                                    check_value);
 }
 
-void on_configure_button_press( GtkWidget* widget, GtkWidget* dlg )
+void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
-    /* TODO
-    GtkTreeIter it;
-    GtkTreeSelection* tree_sel;
-    GtkTreeModel* model;
+    const char* dialog_title = _("Archive Handlers");
+    gchar* help_string;
 
-    if ( widget == GTK_WIDGET( ctxt->btn_add ) || 
-                                        widget == GTK_WIDGET( ctxt->btn_apply ) )
+    // Fetching buttons and treeview
+    GtkButton* btn_add = g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_add" );
+    GtkButton* btn_apply = g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_apply" );
+    GtkTreeView* view_handlers = g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handlers" );
+
+    // Dealing with add and apply buttons
+    if ( widget == btn_add || widget == btn_apply )
     {
-        int sub = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_sub ) );
-        int comp = gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->box_comp ) );
-        if ( sub < 0 || comp < 0 )
-            return;
-        model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
-        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
-            gtk_list_store_append( GTK_LIST_STORE( model ), &it );
-        else
+        // Fetching widget references
+        GtkWidget* chkbtn_handler_enabled = g_object_get_data(
+                                                G_OBJECT( dlg ),
+                                                "chkbtn_handler_enabled" );
+        GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data(
+                                                G_OBJECT( dlg ),
+                                                    "entry_handler_name" );
+        GtkWidget* entry_handler_mime = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                    "entry_handler_mime" );
+        GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_extension" );
+        GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_compress" );
+        GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_extract" );
+        GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                    "entry_handler_list" );
+        GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_compress_term" );
+        GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_extract_term" );
+        GtkWidget* chkbtn_handler_list_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "chkbtn_handler_list_term" );
+
+        // Validating data. Note that data straight from widgets shouldnt
+        // be modified or stored
+        const gchar* handler_name = gtk_entry_get_text( GTK_ENTRY ( entry_handler_name ) );
+        if (g_strcmp0(handler_name, "") <= 0)
         {
-            tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
-            if ( !gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
-                return;
+            // Handler name not set - warning user and exiting. Note
+            // that the created dialog does not have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                _("Please enter a valid handler name "
+                                "before saving."), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_name );
+            return;
         }
-        char* value = gtk_combo_box_text_get_active_text( 
-                                        GTK_COMBO_BOX_TEXT( ctxt->box_value ) );
-        char* disp = context_display( sub, comp, value );
-        gtk_list_store_set( GTK_LIST_STORE( model ), &it,
-                                    CONTEXT_COL_DISP, disp,
-                                    CONTEXT_COL_SUB, sub,
-                                    CONTEXT_COL_COMP, comp,
-                                    CONTEXT_COL_VALUE, value,
-                                    -1 );
-        g_free( disp );
-        g_free( value );
-        gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), TRUE );
-        if ( widget == GTK_WIDGET( ctxt->btn_add ) )
-            gtk_tree_selection_select_iter( gtk_tree_view_get_selection(
-                                        GTK_TREE_VIEW( ctxt->view ) ), &it );
-        enable_context( ctxt );
+        const gchar* handler_mime = gtk_entry_get_text( GTK_ENTRY ( entry_handler_mime ) );
+        if (g_strcmp0(handler_mime, "") <= 0)
+        {
+            // Handler MIME not set - warning user and exiting. Note
+            // that the created dialog does not have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("Please enter a valid "
+                                "MIME content type for the '%s' handler "
+                                "before saving."),
+                                handler_mime), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_mime );
+            return;
+        }
+        const gchar* handler_extension = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extension ) );
+        if (g_strcmp0(handler_extension, "") <= 0 || *handler_extension != '.')
+        {
+            // Handler extension is either not set or does not start with
+            // a full stop - warning user and exiting. Note
+            // that the created dialog does not have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("Please enter a valid "
+                                "file extension for the '%s' handler "
+                                "before saving."),
+                                handler_extension), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_extension );
+            return;
+        }
+
+        // Other settings are commands to run in different situations -
+        // since different handlers may or may not need different
+        // commands, nothing further is mandated
+        const gchar* handler_compress = gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) );
+        const gchar* handler_extract = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) );
+        const gchar* handler_list = gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) );
+        const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
+        const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
+        const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+
+        // Prepending commands with '+' if they are to be ran in a
+        // terminal
+        if (handler_compress_term)
+            handler_compress = g_string_append
+            // WIP: Work on a test application to gain understanding of what I can/cant do with strings. Prsumably I cant overwrite strings, but can with pointers? Will old string contents still get freed?
+            // Reading GCC manual to understand how you configure it to include and link to glib (need to writeup pkg-config perhaps, have dealt with it with geany?)
+        
+        // Saving archive handler
+        // Fetching the xset
+        // Fetching selection from treeview
+        GtkTreeSelection* selection;
+        selection = gtk_tree_view_get_selection(GTK_TREE_VIEW (view_handlers));
+        
+        // Fetching the model and iter from the selection
+        GtkTreeIter it;
+        GtkTreeModel* model;
+        if ( !gtk_tree_selection_get_selected( selection, &model, &it ) )
+        {
+            // TODO: Shouldnt these be shown to the user?
+            g_warning("Unable to fetch GtkTreeIter - can't save archive"
+            " handler '%s'!\n", handler_name);
+            return;
+        }
+
+        // Fetching data from the model based on the iterator. Note that
+        // this variable used for the G_STRING is defined on the stack,
+        // so should be freed for me
+        gchar* handler_name_unused;  // Not actually used...
+        gchar* xset_name;
+        gtk_tree_model_get( model, &it,
+                            COL_XSET_NAME, &xset_name,
+                            COL_HANDLER_NAME, &handler_name_unused,
+                            -1 );
+
+        // Attempting to fetch the xset now I have the xset name
+        XSet* handler_xset = xset_get(xset_name);
+
+        // Making sure it has been fetched
+        if (!handler_xset)
+        {
+            g_warning("Unable to fetch the xset for the archive handler"
+            " '%s' - does it exist?", handler_name);
+            return;
+        }
+
+        // Finally saving the archive handler parameters
+        xset_set_set( handler_xset, "label", handler_name );
+        xset_set_set( handler_xset, "s", handler_mime );
+        xset_set_set( handler_xset, "x", handler_extension );
+        xset_set_set( handler_xset, "y", handler_compress );
+        xset_set_set( handler_xset, "z", handler_extract );
+        xset_set_set( handler_xset, "cxt", handler_list );
         return;
     }
-    
-    //remove
-    model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
-    tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
-    if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
-        gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
-        
-    enable_context( ctxt );*/
+    else
+    {
+        // Dealing with remove button
+        /*
+        model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+        tree_sel = gtk_tree_view_get_selection( GTK_TREE_VIEW( ctxt->view ) );
+        if ( gtk_tree_selection_get_selected( tree_sel, NULL, &it ) )
+            gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
+            
+        enable_context( ctxt );
+        * */
+    }
+}
+
+void on_configure_changed( GtkTreeSelection* selection, GtkWidget* dlg )
+{
+    // This event is triggered when the selected row is changed through
+    // the keyboard
+
+    // Fetching the model and iter from the selection
+    GtkTreeIter it;
+    GtkTreeModel* model;
+    if ( !gtk_tree_selection_get_selected( selection, &model, &it ) )
+        return;
+
+    // Fetching data from the model based on the iterator. Note that this
+    // variable used for the G_STRING is defined on the stack, so should
+    // be freed for me
+    gchar* handler_name;  // Not actually used...
+    gchar* xset_name;
+    gtk_tree_model_get( model, &it,
+                        COL_XSET_NAME, &xset_name,
+                        COL_HANDLER_NAME, &handler_name,
+                        -1 );
+
+    // Loading new archive handler values
+    config_load_handler_settings( NULL, xset_name, dlg );
+
+    // Focussing archive handler name
+    // Selects the text rather than just placing the cursor at the start
+    // of the text...
+    /*GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_name" );
+    gtk_widget_grab_focus( entry_handler_name );*/
 }
 
 void on_configure_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
                                         GtkTreeViewColumn* col, GtkWidget* dlg )
 {
-    /* TODO
-    GtkTreeIter it;
-    char* value;
-    int sub, comp;
+    // This event is triggered when the selected row is changed by the
+    // mouse
 
-    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) );
+    // Fetching the model from the view
+    GtkTreeModel* model = gtk_tree_view_get_model( GTK_TREE_VIEW( view ) );
+
+    // Obtaining an iterator based on the view position
+    GtkTreeIter it;
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
         return;
-    gtk_tree_model_get( model, &it, 
-                                    CONTEXT_COL_VALUE, &value,
-                                    CONTEXT_COL_SUB, &sub,
-                                    CONTEXT_COL_COMP, &comp,
-                                    -1 );
-    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), sub );
-    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_comp ), comp );
-    gtk_entry_set_text( GTK_ENTRY( gtk_bin_get_child( GTK_BIN( ctxt->box_value ) ) ), value );
-    gtk_widget_grab_focus( ctxt->box_value );
-    //enable_context( ctxt );
-    */
+
+    // Fetching data from the model based on the iterator. Note that this
+    // variable used for the G_STRING is defined on the stack, so should
+    // be freed for me
+    gchar* handler_name;  // Not actually used...
+    gchar* xset_name;
+    gtk_tree_model_get( model, &it,
+                        COL_XSET_NAME, &xset_name,
+                        COL_HANDLER_NAME, &handler_name,
+                        -1 );
+
+    // Loading new archive handler values
+    config_load_handler_settings( NULL, xset_name, dlg );
+
+    // Focussing archive handler name
+    // Selects the text rather than just placing the cursor at the start
+    // of the text...
+    /*GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_name" );
+    gtk_widget_grab_focus( entry_handler_name );*/
 }
 
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
@@ -752,7 +1020,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     /*
     Archives Types - 1 per xset as:
         set->name       xset name
-        set->b          enabled  (XSET_UNSET|XSET_FALSE|XSET_TRUE)
+        set->b          enabled  (XSET_UNSET|XSET_B_FALSE|XSET_B_TRUE)
         set->menu_label Display Name
         set->s          Mime Type(s)
         set->x          Extension(s)
@@ -769,13 +1037,13 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 
     Example to add a new custom archive type:
         XSet* newset = add_new_arctype();
-        newset->b = XSET_TRUE;                              // enable
+        newset->b = XSET_B_TRUE;                              // enable
         xset_set_set( newset, "label", "Windows CAB" );        // set archive Name
         xset_set_set( newset, "s", "application/winjunk" );    // set Mime Type(s)
         xset_set_set( newset, "x", ".cab" );                   // set Extension(s)
         xset_set_set( newset, "y", "createcab" );              // set Compress cmd
         xset_set_set( newset, "z", "excab" );                  // set Extract cmd
-        xset_set_set( newset, "cxt", "listcab" );              // set List cmd
+        xset_set_set( newset, "cxt", "listcab" );              // set List cmd - This really is ctxt and not context - xset_set_set bug thats already worked around
     
     Example to retrieve an xset for an archive type:
         XSet* set = xset_is( "arctype_rar" );
@@ -790,8 +1058,10 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         }
     */
 
-    // TODO: Spaces or tabs?
-
+    // TODO: <IgnorantGuru> Also, you might have a look at how your config dialog behaves from the desktop menu.  Specifically, you may want to pass your function (DesktopWindow* desktop) in lieu of file_browser in that case.  So the prototype will be:
+    // nm don't have that branch handy.  But you function can accept both file_browser and desktop and use whichever is non-NULL for the parent
+    // If that doesn't make sense now, ask me later or I can hack it in.  That archive menu appears when right-clicking a desktop item
+    
     // Archive handlers dialog, attaching to top-level window (in GTK,
     // everything is a 'widget') - no buttons etc added as everything is
     // custom...
@@ -866,8 +1136,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     g_signal_connect( G_OBJECT( gtk_tree_view_get_selection( 
                                     GTK_TREE_VIEW( view_handlers ) ) ),
                         "changed",
-                        G_CALLBACK( on_configure_selection_change ),
-                        dlg );
+                        G_CALLBACK( on_configure_changed ), dlg );
 
     // Adding column to the treeview
     GtkTreeViewColumn* col = gtk_tree_view_column_new();
@@ -879,9 +1148,8 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_tree_view_column_pack_start( col, renderer, TRUE );
     
     // Tie model data to the column
-    // TODO: Hook up proper column with the relevant enum
-    gtk_tree_view_column_set_attributes( col, renderer,
-                                         "text", 0, NULL );
+    gtk_tree_view_column_add_attribute( col, renderer,
+                                         "text", COL_HANDLER_NAME);
                                          
     gtk_tree_view_append_column ( GTK_TREE_VIEW( view_handlers ), col );
     
@@ -949,17 +1217,23 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                         GTK_ENTRY( entry_handler_compress ) );
     GtkWidget* entry_handler_extract = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_extract",
-                        GTK_ENTRY( entry_handler_extension ) );
+                        GTK_ENTRY( entry_handler_extract ) );
     GtkWidget* entry_handler_list = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_list",
                         GTK_ENTRY( entry_handler_list ) );
     GtkWidget* chkbtn_handler_compress_term = gtk_check_button_new();
+    g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_compress_term",
+                        GTK_CHECK_BUTTON( chkbtn_handler_compress_term ) );
     gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_compress_term ),
                                     "Run in terminal" );
     GtkWidget* chkbtn_handler_extract_term = gtk_check_button_new();
+    g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_extract_term",
+                        GTK_CHECK_BUTTON( chkbtn_handler_extract_term ) );
     gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_extract_term ),
                                     "Run in terminal" );
     GtkWidget* chkbtn_handler_list_term = gtk_check_button_new();
+    g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_list_term",
+                        GTK_CHECK_BUTTON( chkbtn_handler_list_term ) );
     gtk_widget_set_tooltip_text( GTK_WIDGET( chkbtn_handler_list_term ),
                                     "Run in terminal" );
 
@@ -1060,72 +1334,45 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Packing boxes into dialog with padding to separate from dialog's
     // standard buttons at the bottom
     gtk_box_pack_start( 
-				GTK_BOX(
-					gtk_dialog_get_content_area( GTK_DIALOG( dlg ) )
-				),
-				GTK_WIDGET( hbox_main ), TRUE, TRUE, 4 );
-	
-	// Fetching available archive handlers (literally gets member s from
-	// the xset)
-	char* archiveHandlers = xset_get_s( "arc_conf" );
+                GTK_BOX(
+                    gtk_dialog_get_content_area( GTK_DIALOG( dlg ) )
+                ),
+                GTK_WIDGET( hbox_main ), TRUE, TRUE, 4 );
 
-	// TODO: Custom handlers are to be added to this - arctype rar and zip already exist??
-	// TODO: Commands prepended with + indicate terminal running
+    // Fetching available archive handlers (literally gets member s from
+    // the xset) - user-defined order has already been set
+    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
-	/*
-    // plugin?
-    XSet* mset = xset_get_plugin_mirror( set );
+    // Looping for handlers (NULL-terminated list)
+    GtkTreeIter iter;
+    int i;
+    for (i = 0; archive_handlers[i] != NULL; i++)
+    {
+        // Obtaining appending iterator for treeview model
+        gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
 
-    // set match / action
-    char* elements = mset->context;
-    char* action = get_element_next( &elements );
-    char* match = get_element_next( &elements );
-    if ( match && action )
-    {
-        i = atoi( match );
-        if ( i < 0 || i > 3 )
-            i = 0;
-        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), i );
-        i = atoi( action );
-        if ( i < 0 || i > 3 )
-            i = 0;
-        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), i );
-        g_free( match );
-        g_free( action );
+        // Fetching handler
+        XSet* handler_xset = xset_get( archive_handlers[i] );
+
+        // Adding handler to model
+        gchar* handler_name = g_strdup( handler_xset->menu_label );
+        gchar* xset_name = g_strdup( archive_handlers[i] );
+        gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
+                            COL_XSET_NAME, xset_name,
+                            COL_HANDLER_NAME, handler_name,
+                            -1 );
+
+        // Populating widgets if this is the first handler
+        if ( i == 0 )
+            config_load_handler_settings( handler_xset, NULL, dlg );
     }
-    else
-    {
-        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_match ), 0 );
-        gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_action ), 0 );        
-        if ( match )
-            g_free( match );
-        if ( action )
-            g_free( action );
-    }
-    // set rules
-    int sub, comp;
-    char* value;
-    char* disp;
-    GtkTreeIter it;
-    gboolean is_rules = FALSE;
-    while ( get_rule_next( &elements, &sub, &comp, &value ) )
-    {
-        disp = context_display( sub, comp, value );
-        gtk_list_store_append( GTK_LIST_STORE( list ), &it );
-        gtk_list_store_set( GTK_LIST_STORE( list ), &it,
-                                            CONTEXT_COL_DISP, disp,
-                                            CONTEXT_COL_SUB, sub,
-                                            CONTEXT_COL_COMP, comp,
-                                            CONTEXT_COL_VALUE, value,
-                                            -1 );
-        g_free( disp );
-        if ( value )
-            g_free( value );
-        is_rules = TRUE;
-    }
-    gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->box_sub ), 0 );
-    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_ok ), is_rules );
-    */
+
+    // TODO: set_reorderable TRUE?
+    // TODO: Help text in label on right? below stuff of substitutions?
+
+    // Clearing up archive_handlers
+    g_strfreev( archive_handlers );
 
     // Rendering dialog - while loop is done to allow user to launch
     // help I think
