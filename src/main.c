@@ -663,7 +663,7 @@ void show_socket_help()
 {
     printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
     printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
+    printf( "%s\n", _("windows.  To handle events see View|Events in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
@@ -732,6 +732,7 @@ void show_socket_help()
     printf( "current_tab                     1|2|...|prev|next|close\n" );
     printf( "tab_count                       1|2|...\n" );
     printf( "new_tab                         [DIR]    %s\n", _("Open DIR or default in a new tab") );
+    printf( "devices_visible                 1|true|yes|0|false|no\n" );
     printf( "bookmarks_visible               1|true|yes|0|false|no\n" );
     printf( "dirtree_visible                 1|true|yes|0|false|no\n" );
     printf( "toolbar_visible                 1|true|yes|0|false|no\n" );

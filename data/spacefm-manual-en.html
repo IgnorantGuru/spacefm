@@ -610,10 +610,10 @@ Application Options:
     spacefm -n
 </pre>
 
-<p>To open an additional folder in a new tab of the last used window:
+<p>To open an additional folder in a new tab of the last used SpaceFM window on the current workspace:
 <pre>    spacefm /etc</pre>
 
-<p>To open a folder in the current tab of the last used window:
+<p>To open a folder in the current tab of the last used SpaceFM window on the current workspace:
 <pre>    spacefm -r /etc</pre>
 
 <p>To simply bring the SpaceFM window to the top of other windows:
@@ -702,6 +702,8 @@ If you specify a file rather than a folder on the command line, SpaceFM will ope
 
 <p>The GTK theme you're using may have a significant impact on SpaceFM's performance, and a non-working theme may create dysfunctional behavior.  Because multiple panels in SpaceFM use many GUI elements, some themes cause SpaceFM to run more slowly.  For example, the Clearlooks GTK2 theme has been observed to be very slow with SpaceFM, while the Raleigh theme is quite fast.
 
+<p>SpaceFM may be built to use GTK v2 or v3.  To see if your installed copy of SpaceFM is using GTK2 or GTK3 themes, run <code>spacefm --version</code>
+
 <!-- #GTK 2 #gtk2 --> 
 <p><a name="invocation-gtkthemes-gtk2 -->"/><a href="#invocation-gtkthemes-gtk2 -->"><b>GTK 2</b></a><br>
 <b>When using GTK2</b>, it is possible to use a specific theme just for SpaceFM, overriding your default theme.  For example, to use the Raleigh theme (if installed), run SpaceFM like this:
@@ -723,7 +725,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
 
 <!-- #GTK 3 #gtk3 --> 
 <p><a name="invocation-gtkthemes-gtk3 -->"/><a href="#invocation-gtkthemes-gtk3 -->"><b>GTK 3</b></a><br>
-<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
+<b>When using GTK3</b>, theme choice becomes especially important because themes are often broken with every minor GTK3 release, and a theme not made specifically for your current version of GTK3 can cause memory leaks, GUI glitches, and other severe problems visible in SpaceFM.  To determine if your theme is the cause of problems, run SpaceFM in a terminal to see any warnings, and also compare behavior with Adwaita (default GNOME theme).
 
 
 <!-- @end invocation-gtkthemes-->
@@ -1841,6 +1843,8 @@ Auto Run|On Insert opens a dialog which allows you to set a command line to be r
     udisks --show-info /dev/sdX
     udisksctl info -b /dev/sdX</pre>
 
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
+
 <!-- #Auto Run|On Unmount #runu -->
 <p><a name="devices-settings-runu"/><a href="#devices-settings-runu"><b>Auto Run|On Unmount</b></a><br>
 Auto Run|On Unmount opens a dialog which allows you to set a command line to be run when any device is unmounted by any means.
@@ -1849,6 +1853,8 @@ Auto Run|On Unmount opens a dialog which allows you to set a command line to be 
 
 <p>For example, to automatically remove the drive from traydevice, set the On Unmount command line to:
 <pre>    pkill -f "traydevice %v"</pre>
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Auto Run|On Remove #runr -->
 <p><a name="devices-settings-runr"/><a href="#devices-settings-runr"><b>Auto Run|On Remove</b></a><br>
@@ -1859,6 +1865,8 @@ Auto Run|On Remove opens a dialog which allows you to set a command line to be r
 <p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
 
 <p>Note that when removing a single drive, your command may be run several times - once for each device file removed.  For example, if you remove device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  Note that when the command is run, %v equals the device file which has been removed, not the device file which is selected in the Devices list.
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Mount Options #opts -->
 <p><a name="devices-settings-opts"/><a href="#devices-settings-opts"><b>Mount Options</b></a><br>
@@ -3121,7 +3129,9 @@ In addition to Line and Script, a command's type may also be set to Custom.  Thi
 
 <p>When the Custom target is an executable, no filenames are passed to the program, so integration with the file browser is limited.  If the Custom target is a desktop file, and the Exec line of the file contains substitution variables %f, %F, %d, or %D, these will be used to pass selected files or the current directory to the program as command line arguments.
 
-<p>One use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
+<p>One use for Custom is to add applications to the <a href="#invocation-desktopmanager">desktop</a>'s right-click menu.
+
+<p>Another use for Custom is to maintain an external script associated with a command, rather than the script provided by <a href="#designmode-command-script">Command|Script</a>.  This way you can still use the <a href="#designmode-command-edit">Edit or Edit As Root</a> items to edit the associated script, even though it is stored outside of your SpaceFM config folder.  (Tip:  When using an external script, be sure to include the line "$fm_import" at the top of your script, just below the "#!/bin/bash" line, if you want to use the provided bash variables.)
 
 <p>NOTE:  When exporting a command, the value of the custom target will be exported with the plugin even if Custom is no longer the selected command type.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
@@ -5608,6 +5618,7 @@ focused_pane                    filelist|devices|bookmarks|dirtree|pathbar
 current_tab                     1|2|...|prev|next|close
 tab_count                       1|2|...
 new_tab                         [DIR]    Open DIR or default in a new tab
+devices_visible                 1|true|yes|0|false|no
 bookmarks_visible               1|true|yes|0|false|no
 dirtree_visible                 1|true|yes|0|false|no
 toolbar_visible                 1|true|yes|0|false|no
@@ -5843,6 +5854,13 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
     # Cut files to the clipboard:
     spacefm -s set clipboard_cut_files /etc/fstab /etc/hosts
+
+    # Adjust sort settings:
+    spacefm -s set sort_by size
+    spacefm -s set sort_by name
+    spacefm -s set sort_ascend false
+    spacefm -s set sort_natural true
+    spacefm -s set sort_first folders
 </pre>
 
 
@@ -6653,15 +6671,11 @@ Plugins included in a standard SpaceFM installation.  This folder should NOT be 
 <p><a name="programfiles-usr-ui"/><a href="#programfiles-usr-ui"><b>share/spacefm/ui/</b></a><br>
 A folder containing glade files for some of SpaceFM's dialogs.
 
-<!-- # share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png #png -->
-<p><a name="programfiles-usr-png"/><a href="#programfiles-usr-png"><b>share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png</b></a><br>
-The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
+<!-- # share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png #png -->
+<p><a name="programfiles-usr-png"/><a href="#programfiles-usr-png"><b>share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png</b></a><br>
+The 48 pixel window icons for the non-root and root user of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.  See also share/icons/hicolor/128x128/apps/ and share/icons/Faenza/apps/48/, as well as the alternate icons named "spacefm-<i>[48|128]</i>-<i>[cube|pyramid|folder]</i>-<i>[blue|green|red]</i>.png".
 
-<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/48x48/apps/, share/icons/hicolor/128x128/apps/, and share/icons/Faenza/apps/48/ instead.
-
-<!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
-<p><a name="programfiles-usr-pngalt"/><a href="#programfiles-usr-pngalt"><b>share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png</b></a><br>
-Alternate SpaceFM icons.
+<p>Note:  If configure option --enable-pixmaps is used during installation, icons will be installed to share/pixmaps/ instead.
 
 <!-- # share/locale/*/LC_MESSAGES/spacefm.mo #mo -->
 <p><a name="programfiles-usr-mo"/><a href="#programfiles-usr-mo"><b>share/locale/*/LC_MESSAGES/spacefm.mo</b></a><br>
@@ -6706,7 +6720,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-03-03&nbsp;&nbsp;(SpaceFM version 0.8.6+)
+<p>Updated 2013-03-16&nbsp;&nbsp;(SpaceFM version 0.8.6+)
 <br><br>
 </center>
 </td></tr></table>

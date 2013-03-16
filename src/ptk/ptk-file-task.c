@@ -1102,6 +1102,7 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
     gtk_window_set_gravity ( GTK_WINDOW ( ptask->progress_dlg ),
                              GDK_GRAVITY_NORTH_EAST );
     gtk_window_set_position( GTK_WINDOW( ptask->progress_dlg ), GTK_WIN_POS_CENTER );
+    gtk_window_set_role( GTK_WINDOW( ptask->progress_dlg ), "task_dialog" );
 
 //    gtk_dialog_set_default_response( ptask->progress_dlg, GTK_RESPONSE_OK );
     g_signal_connect( ptask->progress_dlg, "response",
@@ -2195,6 +2196,7 @@ static void query_overwrite( PtkFileTask* ptask )
     gtk_window_set_gravity ( GTK_WINDOW ( dlg ),
                              GDK_GRAVITY_NORTH_EAST );
     gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
+    gtk_window_set_role( GTK_WINDOW( dlg ), "overwrite_dialog" );
 
     int width, height;
     if ( has_overwrite_btn )

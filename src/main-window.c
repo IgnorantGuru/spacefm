@@ -1964,6 +1964,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_container_add( GTK_CONTAINER( main_window->task_scroll ),
                                             GTK_WIDGET( main_window->task_view ) );    
 
+    gtk_window_set_role( GTK_WINDOW( main_window ), "file_manager" );
+
     gtk_widget_show_all( main_window->main_vbox );
 
     g_signal_connect( G_OBJECT( main_window->file_menu_item ), "button-press-event",

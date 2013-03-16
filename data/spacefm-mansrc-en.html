@@ -1093,6 +1093,8 @@ Auto Run|On Insert opens a dialog which allows you to set a command line to be r
     udisks --show-info /dev/sdX
     udisksctl info -b /dev/sdX</pre>
 
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
+
 <!-- #Auto Run|On Unmount #runu -->
 Auto Run|On Unmount opens a dialog which allows you to set a command line to be run when any device is unmounted by any means.
 
@@ -1100,6 +1102,8 @@ Auto Run|On Unmount opens a dialog which allows you to set a command line to be 
 
 <p>For example, to automatically remove the drive from traydevice, set the On Unmount command line to:
 <pre>    pkill -f "traydevice %v"</pre>
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Auto Run|On Remove #runr -->
 Auto Run|On Remove opens a dialog which allows you to set a command line to be run when any device is removed.  This allows you to connect your command to the removal event.
@@ -1109,6 +1113,8 @@ Auto Run|On Remove opens a dialog which allows you to set a command line to be r
 <p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
 
 <p>Note that when removing a single drive, your command may be run several times - once for each device file removed.  For example, if you remove device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  Note that when the command is run, %v equals the device file which has been removed, not the device file which is selected in the Devices list.
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Mount Options #opts -->
 Mount Options opens a dialog which allows you to set default mount options to be used for all mounts, including auto-mounts.  In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
@@ -3875,6 +3881,7 @@ focused_pane                    filelist|devices|bookmarks|dirtree|pathbar
 current_tab                     1|2|...|prev|next|close
 tab_count                       1|2|...
 new_tab                         [DIR]    Open DIR or default in a new tab
+devices_visible                 1|true|yes|0|false|no
 bookmarks_visible               1|true|yes|0|false|no
 dirtree_visible                 1|true|yes|0|false|no
 toolbar_visible                 1|true|yes|0|false|no
@@ -4662,13 +4669,10 @@ Plugins included in a standard SpaceFM installation.  This folder should NOT be 
 <!-- # share/spacefm/ui/ #ui -->
 A folder containing glade files for some of SpaceFM's dialogs.
 
-<!-- # share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png #png -->
-The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
+<!-- # share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png #png -->
+The 48 pixel window icons for the non-root and root user of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.  See also icons in share/icons/hicolor/128x128/apps/ and share/icons/Faenza/apps/48/, as well as the alternate icons named "spacefm-<i>[48|128]</i>-<i>[cube|pyramid|folder]</i>-<i>[blue|green|red]</i>.png".
 
-<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/48x48/apps/, share/icons/hicolor/128x128/apps/, and share/icons/Faenza/apps/48/ instead.
-
-<!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
-Alternate SpaceFM icons.
+<p>Note:  If configure option --enable-pixmaps is used during build, icons will be installed to share/pixmaps/ instead.
 
 <!-- # share/locale/*/LC_MESSAGES/spacefm.mo #mo -->
 Language files used by SpaceFM, where '*' is a locale.

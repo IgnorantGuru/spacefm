@@ -24,6 +24,7 @@
     list double-click activates in app chooser
     mount webdav shares in terminal for password entry - udevil issue 21
     use mouse buttons 6,7 as back,forward in addition to 4,5 8,9 #279
+    add WM_WINDOW_ROLEs
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

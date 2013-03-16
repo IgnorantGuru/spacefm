@@ -5259,6 +5259,7 @@ void xset_context_dlg( XSet* set )
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL, NULL );
     xset_set_window_icon( GTK_WINDOW( ctxt->dlg ) );
+    gtk_window_set_role( GTK_WINDOW( ctxt->dlg ), "context_dialog" );
 
     int width = xset_get_int( "context_dlg", "x" );
     int height = xset_get_int( "context_dlg", "y" );
@@ -7641,6 +7642,7 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                                               buttons,
                                               msg1, NULL );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
+    gtk_window_set_role( GTK_WINDOW( dlg ), "msg_dialog" );
 
     if ( msg2 )
         gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), msg2, NULL );
@@ -7883,7 +7885,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                                   GTK_BUTTONS_NONE,
                                   msg1, NULL );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
-    
+    gtk_window_set_role( GTK_WINDOW( dlg ), "text_dialog" );
+
     if ( large )
     {
         width = xset_get_int( "text_dlg", "s" );
@@ -8138,6 +8141,7 @@ char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* def
     
     GtkWidget* dlg = gtk_font_selection_dialog_new( title );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
+    gtk_window_set_role( GTK_WINDOW( dlg ), "font_dialog" );
 
     if ( deffont )
         gtk_font_selection_dialog_set_font_name( GTK_FONT_SELECTION_DIALOG( dlg ),
@@ -8222,6 +8226,7 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
     //gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
     xset_set_window_icon( GTK_WINDOW( dlg ) );
+    gtk_window_set_role( GTK_WINDOW( dlg ), "file_dialog" );
 
     if ( deffolder )
         gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), deffolder );
@@ -8303,6 +8308,7 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
     gtk_button_set_image( GTK_BUTTON( help_button ), xset_get_image( "GTK_STOCK_REMOVE", GTK_ICON_SIZE_BUTTON ) );
 
     xset_set_window_icon( GTK_WINDOW( dlg ) );
+    gtk_window_set_role( GTK_WINDOW( dlg ), "color_dialog" );
 
     if ( defcolor && defcolor[0] != '\0' )
     {

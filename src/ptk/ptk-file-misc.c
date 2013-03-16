@@ -1937,6 +1937,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL, NULL );
     //g_free( title );
+    gtk_window_set_role( GTK_WINDOW( mset->dlg ), "rename_dialog" );
 
     // Buttons
     mset->options = gtk_button_new_with_mnemonic( _("Opt_ions") );
