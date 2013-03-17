@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: spacefm 0.8.6+\n"
+"Project-Id-Version: spacefm 0.8.7\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 16:11+0000\n"
+"POT-Creation-Date: 2013-03-17 18:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1695,19 +1695,19 @@ msgstr ""
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr ""
 
-#: ../src/main.c:1201
+#: ../src/main.c:1199
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr ""
 
-#: ../src/main.c:1256
+#: ../src/main.c:1254
 msgid "File doesn't exist"
 msgstr ""
 
-#: ../src/main.c:1258 ../src/main.c:1333 ../src/main.c:1335 ../src/main.c:1459
-#: ../src/main.c:1461 ../src/main.c:1593 ../src/settings.c:7995
+#: ../src/main.c:1256 ../src/main.c:1331 ../src/main.c:1333 ../src/main.c:1457
+#: ../src/main.c:1459 ../src/main.c:1591 ../src/settings.c:7995
 #: ../src/ptk/ptk-file-browser.c:2239 ../src/ptk/ptk-file-browser.c:2265
 #: ../src/ptk/ptk-file-browser.c:5755 ../src/ptk/ptk-file-browser.c:5762
 #: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2567
@@ -1719,37 +1719,37 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: ../src/main.c:1333 ../src/main.c:1459
+#: ../src/main.c:1331 ../src/main.c:1457
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr ""
 
-#: ../src/main.c:1335 ../src/main.c:1461
+#: ../src/main.c:1333 ../src/main.c:1459
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr ""
 
-#: ../src/main.c:1387
+#: ../src/main.c:1385
 msgid "--dialog must be first option"
 msgstr ""
 
-#: ../src/main.c:1394
+#: ../src/main.c:1392
 msgid "--socket-cmd must be first option"
 msgstr ""
 
-#: ../src/main.c:1402
+#: ../src/main.c:1400
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr ""
 
-#: ../src/main.c:1589
+#: ../src/main.c:1587
 msgid "Don't know how to open the file"
 msgstr ""
 
-#: ../src/main.c:1591
+#: ../src/main.c:1589
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -5338,11 +5338,11 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:1991
+#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:1993
 msgid "Select By Pattern"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:1991
+#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:1993
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -5356,20 +5356,20 @@ msgid ""
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5629 ../src/ptk/ptk-file-misc.c:3618
-#: ../src/desktop/desktop-window.c:2703
+#: ../src/desktop/desktop-window.c:2705
 msgid "Choose Location"
 msgstr ""
 
 #: ../src/ptk/ptk-file-browser.c:5662 ../src/ptk/ptk-file-browser.c:5694
-#: ../src/desktop/desktop-window.c:2736 ../src/desktop/desktop-window.c:2768
+#: ../src/desktop/desktop-window.c:2738 ../src/desktop/desktop-window.c:2770
 msgid "Invalid Destination"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5663 ../src/desktop/desktop-window.c:2737
+#: ../src/ptk/ptk-file-browser.c:5663 ../src/desktop/desktop-window.c:2739
 msgid "Destination same as source"
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5695 ../src/desktop/desktop-window.c:2769
+#: ../src/ptk/ptk-file-browser.c:5695 ../src/desktop/desktop-window.c:2771
 msgid "Invalid destination"
 msgstr ""
 
@@ -6658,7 +6658,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../src/ptk/ptk-file-misc.c:2985 ../src/desktop/desktop-window.c:1852
+#: ../src/ptk/ptk-file-misc.c:2985 ../src/desktop/desktop-window.c:1854
 msgid "Rename Error"
 msgstr ""
 
@@ -7330,7 +7330,7 @@ msgstr ""
 msgid "Unmount-If-Mounted: %s\n"
 msgstr ""
 
-#: ../src/desktop/desktop-window.c:1828
+#: ../src/desktop/desktop-window.c:1830
 #, c-format
 msgid ""
 "Enter new desktop item name:\n"
@@ -7339,11 +7339,11 @@ msgid ""
 "desktop file %s"
 msgstr ""
 
-#: ../src/desktop/desktop-window.c:1830
+#: ../src/desktop/desktop-window.c:1832
 msgid "Change Desktop Item Name"
 msgstr ""
 
-#: ../src/desktop/desktop-window.c:1852
+#: ../src/desktop/desktop-window.c:1854
 msgid "An error occured renaming this desktop item."
 msgstr ""
 
