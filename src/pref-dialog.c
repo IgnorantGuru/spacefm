@@ -462,9 +462,9 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             rebuild_toolbar_all_windows( 1, NULL );
         }
 
-	    /* unit settings changed? */
+        /* unit settings changed? */
         gboolean need_refresh = FALSE;
-	    use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
+        use_si_prefix = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->use_si_prefix ) );
         if( use_si_prefix != app_settings.use_si_prefix )
         {
             app_settings.use_si_prefix = use_si_prefix;
@@ -752,9 +752,9 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->small_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "small_icon_size" );
         data->tool_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "tool_icon_size" );
         data->single_click = (GtkWidget*)gtk_builder_get_object( builder, "single_click" );
-	    data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
+        data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
         //data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
-	    data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
+        data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
         data->drag_action = (GtkWidget*)gtk_builder_get_object( builder, "drag_action" );
 
         model = GTK_TREE_MODEL( gtk_list_store_new( 1, G_TYPE_STRING ) );
@@ -898,7 +898,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         /* Setup 'Desktop' tab */
 
-    	gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
+        gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 /*
         data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
         g_signal_connect( data->show_desktop, "toggled",

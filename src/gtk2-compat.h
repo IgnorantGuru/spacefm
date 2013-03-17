@@ -15,22 +15,22 @@
 static inline void gtk_combo_box_set_entry_text_column( 
                               GtkComboBox *combo_box, gint text_column )
 {
-	gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( combo_box ),
+    gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( combo_box ),
                                                    text_column );
 }
 #define gtk_combo_box_text_prepend_text gtk_combo_box_prepend_text
 #define GTK_COMBO_BOX_TEXT GTK_COMBO_BOX
 static inline gint gdk_window_get_width (GdkWindow *window)
 { 
-	gint width;
-	gdk_drawable_get_size(GDK_DRAWABLE(window), &width, NULL);
-	return width;
+    gint width;
+    gdk_drawable_get_size(GDK_DRAWABLE(window), &width, NULL);
+    return width;
 }
 static inline gint gdk_window_get_height (GdkWindow *window)
 {
-	gint height;
-	gdk_drawable_get_size(GDK_DRAWABLE(window), NULL, &height);
-	return height;
+    gint height;
+    gdk_drawable_get_size(GDK_DRAWABLE(window), NULL, &height);
+    return height;
 }
 #define gdk_x11_window_lookup_for_display gdk_window_lookup_for_display
 #endif
@@ -94,12 +94,12 @@ static inline gint gdk_window_get_height (GdkWindow *window)
 #define gtk_widget_get_realized GTK_WIDGET_REALIZED
 #define gtk_widget_get_mapped GTK_WIDGET_MAPPED
 static inline void gtk_widget_set_realized( GtkWidget *widget,
-											gboolean realized )
+                                            gboolean realized )
 {
-	if ( realized )
-		GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
-	else
-		GTK_WIDGET_UNSET_FLAGS (widget, GTK_REALIZED);
+    if ( realized )
+        GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+    else
+        GTK_WIDGET_UNSET_FLAGS (widget, GTK_REALIZED);
 }
 #endif
 
