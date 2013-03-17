@@ -49,6 +49,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <fnmatch.h>
 
+#include "gtk2-compat.h"
+
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <cairo-xlib.h>
 #endif

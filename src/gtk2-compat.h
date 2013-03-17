@@ -12,11 +12,27 @@
 #define gtk_combo_box_text_new gtk_combo_box_new_text
 #define gtk_combo_box_text_get_active_text gtk_combo_box_get_active_text
 #define gtk_combo_box_text_append_text gtk_combo_box_append_text
-#define gtk_combo_box_set_entry_text_column gtk_combo_box_entry_set_text_column
+static inline void gtk_combo_box_set_entry_text_column( 
+                              GtkComboBox *combo_box, gint text_column )
+{
+	gtk_combo_box_entry_set_text_column( GTK_COMBO_BOX_ENTRY( combo_box ),
+                                                   text_column );
+}
 #define gtk_combo_box_text_prepend_text gtk_combo_box_prepend_text
 #define GTK_COMBO_BOX_TEXT GTK_COMBO_BOX
-static inline gint gdk_window_get_width (GdkWindow *window) { gint width; gdk_drawable_get_size(GDK_DRAWABLE(window), &width, NULL); return width;}
-static inline gint gdk_window_get_height (GdkWindow *window) { gint height; gdk_drawable_get_size(GDK_DRAWABLE(window), NULL, &height); return height;}
+static inline gint gdk_window_get_width (GdkWindow *window)
+{ 
+	gint width;
+	gdk_drawable_get_size(GDK_DRAWABLE(window), &width, NULL);
+	return width;
+}
+static inline gint gdk_window_get_height (GdkWindow *window)
+{
+	gint height;
+	gdk_drawable_get_size(GDK_DRAWABLE(window), NULL, &height);
+	return height;
+}
+#define gdk_x11_window_lookup_for_display gdk_window_lookup_for_display
 #endif
 
 #if GTK_CHECK_VERSION(2, 22, 0)
@@ -54,6 +70,7 @@ static inline gint gdk_window_get_height (GdkWindow *window) { gint height; gdk_
 #define GDK_KEY_Escape GDK_Escape
 #define GDK_KEY_Delete GDK_Delete
 #define GDK_KEY_BackSpace GDK_BackSpace
+#define GDK_KEY_Menu GDK_Menu
 #define GDK_KEY_Tab GDK_Tab
 #define GDK_KEY_F1 GDK_F1
 #define GDK_KEY_F2 GDK_F2
@@ -76,7 +93,14 @@ static inline gint gdk_window_get_height (GdkWindow *window) { gint height; gdk_
 #define gtk_statusbar_get_message_area(widget) widget->frame
 #define gtk_widget_get_realized GTK_WIDGET_REALIZED
 #define gtk_widget_get_mapped GTK_WIDGET_MAPPED
-static inline void gtk_widget_set_realized(GtkWidget *widget, gboolean realized) { if (realized) GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED); else GTK_WIDGET_UNSET_FLAGS (widget, GTK_REALIZED); }
+static inline void gtk_widget_set_realized( GtkWidget *widget,
+											gboolean realized )
+{
+	if ( realized )
+		GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+	else
+		GTK_WIDGET_UNSET_FLAGS (widget, GTK_REALIZED);
+}
 #endif
 
 #endif /* __GTK2_COMPAT_H */
