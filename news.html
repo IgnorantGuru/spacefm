@@ -1,5 +1,6 @@
 <html>
 <head>
+    <meta charset="UTF-8" />
 	<title>SpaceFM News</title>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
@@ -33,6 +34,73 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 <br>
 
 <p><br>
+
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="0.8.7"></a>
+<big><b><a href="#0.8.7">0.8.7 released</a></b></big><br>
+2013-Mar-17
+
+<ul>
+    <li><b>IMPORTANT: Sandfox users</b> who have SpaceFM installed should <a href="http://igurublog.wordpress.com/downloads/script-sandfox/#spacefm">read the new advisory</a> on using Sandfox with SpaceFM.  Those desiring greater security should consider moving the tmp directory as advised there.  This has become recommended due to the new run-task socket method described below, as well as other filesystem information obtainable via the socket.  Upgrading to SpaceFM 0.8.7 is also recommended, as this version includes mechanisms to deter socket use from within sandboxes (chroot jails).<br><br>
+
+    <li><b>SpaceFM has been added to the cloud-based Transifex translation server</b>, making it much easier for translators (anyone) to help translate using their online editor.  See the new wiki page for <a href="https://github.com/IgnorantGuru/spacefm/wiki/Translate">translator instructions</a>.
+    
+    <p>Much thanks to Delix for helping to setup the server, and to numerous translators who have updated translations there already, including complete or almost complete Portuguese (Brazil), Russian, Spanish, and Serbian translations, and updated yet incomplete French, Dutch, Swedish, German, Italian, Czech, Polish, and Hungarian translations (<a href="https://www.transifex.com/projects/p/spacefm/">see complete list</a>).  See Help|About|Credits|Translated By for the translators responsible for your language.<br><br>
+    <li><b>The <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#invocation-desktopmanager">desktop manager</a> (--desktop) includes the following changes in 0.8.7:</b><br><br>
+    <ul>
+        <li>The <b>right-click menu on the desktop has been redesigned</b>, now providing a limited version of the file manager's menu.  <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode">Design Mode</a> may now be used in most parts of this menu to rename items, change keys, and add custom commands or application shortcuts (commands of type <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#designmode-command-custom">Custom</a>).  Key shortcuts on this menu will be active when the desktop has focus.<br><br>
+        <li><b>A Bookmarks submenu has been added</b> to the desktop menu for quick access to bookmarks set in the file manager.<br><br>
+        <li><b>A limited Devices submenu has been added</b> to the desktop menu for quick handling of devices.<br><br>
+        <li><b>New|Desktop Application</b> has been added to the desktop menu for adding an application shortcut or custom command to the desktop.<br><br>
+        <li><b>Symlinks on the desktop</b> are now shown with an arrow indicator in the icon.<br><br>
+        <li><b>The menu key may now be used</b> on the desktop to show the desktop menu (even if option View|Preferences|Desktop|Show WM's Menu is checked).<br><br>
+        <li>The desktop window now sets property <b>WM_WINDOW_ROLE</b> to "desktop_manager" to help window managers and custom rules differentiate between SpaceFM windows.<br><br>
+    </ul>
+    <li><b>A limited Devices menu has been added</b> to the main menu bar for quick handling of devices, particularly useful when the Devices side pane is not visible.<br><br>
+    <li><b>The Path Bar's <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#gui-pathbar-bread">Breadcrumbs</a> feature has been reverted to using only Ctrl+Click</b>, rather than an unmodified click (as was briefly the case in version 0.8.6 only).  Using an unmodified click for this function made editing in the Path Bar difficult with some panel configurations.  If you would like an option to also have Breadcrumbs active with an unmodified click, you can <a href="https://github.com/IgnorantGuru/spacefm/issues/285">add a comment on this</a> and it will be considered.  See Path Bar click behavior in SpaceFM 0.8.6 for an example of how this would work.<br><br>
+    <li><b>Handling of multiple workspaces</b> (aka "desktops") has been improved when opening a folder, reusing any already-open SpaceFM window on the current workspace, and bringing the correct window to focus.  (In some circumstances, prior versions opened folders in a SpaceFM window on the wrong workspace, etc.)<br><br>
+    <li><b>.desktop filenames which contain a hyphen</b>, such as <a href="https://github.com/IgnorantGuru/spacefm/issues/118">those used by KDE</a>, or those located in subdirectories of /usr/share/applications, should now be found by SpaceFM.  (This is somewhat beyond the very poorly maintained freedesktop.org specs, but has become somewhat common.)<br><br>
+    <li><b>File Properties</b> (right-click on file and select Properties|Info) now allows you to <b>edit the Modified and Accessed times</b> of one or more files/folders.<br><br>
+    <li><b>File Properties now shows the target of a link</b>.<br><br>
+    <li><b>Mouse buttons 6 &amp; 7 may now be used as 'back' and 'forward'</b> in the file browser (in addition to 4 &amp; 5 and 8 &amp; 9).  These buttons are common on Logitech scroll wheels.<br><br>
+    <li>New <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket-props">socket properties</a> <b>tab_count</b> (how many tabs a panel contains) and <b>new_tab</b> (open a new tab) have been added.<br><br>
+    <li>New <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#socket-props">socket properties</a> have been added to control sorting of the file list, including: <b>sort_by, sort_ascend, sort_natural, sort_case, sort_hidden_first, and sort_first</b>.  For example:
+<pre>
+    spacefm -s set sort_by size
+    spacefm -s set sort_by name
+    spacefm -s set sort_ascend false
+    spacefm -s set sort_natural true
+    spacefm -s set sort_first folders
+</pre>
+    <li>A new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets-methods-run-task">run-task</a> socket method has been added, allowing custom commands to <b>start new tasks in SpaceFM</b>, listing them in the task manager, and using the normal overwrite query dialog for copy, etc.  For example, to start a copy task in SpaceFM, prompting before overwriting files and showing progress:
+<pre>    spacefm -s run-task copy /etc/fstab /etc/hosts /tmp</pre>
+    <li><b>The socket properties edit_file and run_in_terminal are now deprecated</b> (yet still usable) in favor of the new <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets-methods-run-task">run-task</a> method.  For example, to open a file in the user's configured root editor:
+<pre>    spacefm -s run-task edit --as-root /etc/fstab</pre>
+    Or to run a command in the user's configured terminal:
+<pre>    spacefm -s run-task cmd --terminal 'date; read'</pre>
+    <li><b>Window property WM_WINDOW_ROLE is now set</b> to an appropriate value for many windows created by SpaceFM, such as "file_manager", "desktop_manager", "text_dialog", "rename_dialog", "task_dialog", etc.  This should help window managers treat their positioning differently, and also allow custom rules for where and how windows are opened (such as in Openbox's rc.xml).  See xprop.<br><br>
+    <li>When a custom tmp directory is specified in /etc/spacefm/spacefm.conf, this dir is now used for SpaceFM's socket (previously was hard-coded to /tmp).<br><br>
+    <li><b>WebDAV shares (http://) are now mounted in a terminal</b> window to allow for password entry.<br><br>
+    <li>Double-click on an app in the Application Chooser dialog now activates the item.<br><br>
+    <li>A problem in SpaceFM's directory change monitor which caused changes in a directory to fail to be detected under some rare circumstances has been corrected (<a href="https://github.com/IgnorantGuru/spacefm/commit/1be8be03483d47b7389061fe9f8063efc6621aa9">details</a>).<br><br>
+    <li>When built with deprecated configure option --disable-inotify: SpaceFM is now stabilized in the event the FAM/gamin server is stopped while SpaceFM is running, such that it won't crash and will print warnings to stderr (but directory change detection will of course stop working).<br><br>
+    <li>Compile errors generated by make option -Werror=format-security, and other format-related warnings have been cleared.<br><br>
+    <li>A problem in the File Search window which caused the function of option Content|Case Sensitive to be inverted has been corrected.<br><br>
+    <li>A problem where a key shortcut set to menu item New|Link had no effect has been corrected.
+</ul>
+
+<br><br>Also, SpaceFM with udevil is now the <b>default file manager in <a href="http://archbang.org/"></b>ArchBang</a>, a lightweight Arch Linux system combined with the Openbox window manager.
+
+<p><a href="https://launchpad.net/%7Emati75/+archive/lubuntu">Mateusz Łukasik's Lubuntu PPA</a> includes SpaceFM and udevil packages.  Mateusz is also the new official Debian packager for SpaceFM and udevil and is working on including official packages in Debian's repos (not yet available).
+
+<p><b>NOTE</b>:  For those building SpaceFM from source using the instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a>, Github recently changed the way they package the source when downloading a tarball.  Because they now ignore .gitattributes, the download is over 75 MB and contains all old and new SpaceFM versions and packages.  The instructions will still work, but the download is unnecessarily large.  I have submitted a bug report to Github and will consider necessary changes based on their response.  If you simply want the current release of SpaceFM (master branch), you can download the official tarball <a href="http://sourceforge.net/projects/spacefm/files/">here</a> (SF's mirrors may take awhile to update immediately after a release).
+<br><br><br><hr>
+
+
+
+
 
 
 
