@@ -1131,7 +1131,6 @@ gboolean handle_parsed_commandline_args()
 
     app_settings.load_saved_tabs = !no_tabs;
     
-printf("handle_parsed_commandline_args files = %p\n", files );
     // If no files are specified, open home dir by defualt.
     if( G_LIKELY( ! files ) )
     {
@@ -1142,11 +1141,10 @@ printf("handle_parsed_commandline_args files = %p\n", files );
     // get the last active window on this desktop, if available
     if( new_tab || reuse_tab )
     {
-        //main_window = fm_main_window_get_last_active();
         main_window = fm_main_window_get_on_current_desktop();
-printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
-                                                            new_tab ? "new_tab" : "",
-                                                            reuse_tab ? "reuse_tab" : "" );
+//printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
+//                                                            new_tab ? "new_tab" : "",
+//                                                            reuse_tab ? "reuse_tab" : "" );
     }
 
     if ( desktop_pref )  //MOD
@@ -1287,7 +1285,7 @@ printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
             }
         }
     }
-printf("    handle_parsed_commandline_args mw = %p\n\n", main_window );
+//printf("    handle_parsed_commandline_args mw = %p\n\n", main_window );
 
 out:
     if( files != default_files )

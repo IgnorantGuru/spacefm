@@ -3870,7 +3870,7 @@ FMMainWindow* fm_main_window_get_on_current_desktop()
 {   // find the last used spacefm window on the current desktop
     long desktop;
     long cur_desktop = get_desktop_index( NULL );
-printf("current_desktop = %ld\n", cur_desktop );
+    //printf("current_desktop = %ld\n", cur_desktop );
     if ( cur_desktop == -1 )
         return fm_main_window_get_last_active(); // revert to dumb if no current
 
@@ -3879,7 +3879,7 @@ printf("current_desktop = %ld\n", cur_desktop );
     for ( l = all_windows; l; l = l->next )
     {
         desktop = get_desktop_index( GTK_WINDOW( (FMMainWindow*)l->data ) );
-        printf( "    test win %p = %ld\n", (FMMainWindow*)l->data, desktop );
+        //printf( "    test win %p = %ld\n", (FMMainWindow*)l->data, desktop );
         if ( desktop == cur_desktop || desktop > 254 /* 255 == all desktops */ )
             return (FMMainWindow*)l->data;
         else if ( desktop == -1 && !invalid )
