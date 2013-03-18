@@ -1023,6 +1023,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
                                         GTK_DIALOG( dlg ) ) ),
                                         hbox, FALSE, TRUE, 6 );
     g_object_set_data( G_OBJECT( dlg ), "mode", mode );
+    gtk_widget_show_all( hbox );
 
     int width = xset_get_int( "move_dlg_help", "x" );
     int height = xset_get_int( "move_dlg_help", "y" );
