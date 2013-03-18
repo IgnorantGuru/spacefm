@@ -922,20 +922,63 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
     gtk_widget_destroy( dlg );
 }
 
+enum {
+    MODE_FILENAME,
+    MODE_PARENT,
+    MODE_PATH
+};
+
+void on_browse_mode_toggled( GtkMenuItem* item, GtkWidget* dlg )
+{
+    int i;
+    GtkWidget** mode = (GtkWidget**)g_object_get_data( G_OBJECT( dlg ), "mode" );
+
+    for ( i = MODE_FILENAME; i <= MODE_PATH; i++ )
+    {
+        if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mode[i] ) ) )
+        {
+            int action = i == MODE_PARENT ? GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER :
+                                        GTK_FILE_CHOOSER_ACTION_SAVE;
+            GtkAllocation allocation;
+            gtk_widget_get_allocation( GTK_WIDGET(dlg), &allocation );
+            int width = allocation.width;
+            int height = allocation.height;
+            gtk_file_chooser_set_action( GTK_FILE_CHOOSER( dlg ), action );
+            if ( width && height )
+            {
+                // under some circumstances, changing the action changes the size
+                gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
+                gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+                while( gtk_events_pending() )
+                    gtk_main_iteration();
+                gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
+            }
+            return;
+        }
+    }
+}
+
 void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
 {
+    char* str;
     GtkTextIter iter, siter;
+    int mode_default = MODE_PARENT;
+    
+    XSet* set = xset_get( "move_dlg_help" );
+    if ( set->z )
+        mode_default = xset_get_int( "move_dlg_help", "z" );
 
     // action create folder does not work properly so not used:
     //  it creates a folder by default with no way to stop it
     //  it gives 'folder already exists' error popup
-    GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Select File Path"),
+    GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Browse"),
                                    GTK_WINDOW( mset->parent ), 
-                                   //mset->is_dir ? GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER :
-                                   GTK_FILE_CHOOSER_ACTION_SAVE,
+                                   mode_default == MODE_PARENT ?
+                                        GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER :
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
-
+    gtk_window_set_role( GTK_WINDOW( dlg ), "file_dialog" );
 
     gtk_text_buffer_get_start_iter( mset->buf_path, &siter );
     gtk_text_buffer_get_end_iter( mset->buf_path, &iter );
@@ -944,15 +987,42 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dlg), path );
     g_free( path );
     
-    gtk_text_buffer_get_start_iter( mset->buf_full_name, &siter );
-    gtk_text_buffer_get_end_iter( mset->buf_full_name, &iter );
-    path = gtk_text_buffer_get_text( mset->buf_full_name, &siter,
-                                                            &iter, FALSE );
-                                                            
-    gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), path );
-    g_free( path );
-
+    if ( mode_default != MODE_PARENT )
+    {
+        gtk_text_buffer_get_start_iter( mset->buf_full_name, &siter );
+        gtk_text_buffer_get_end_iter( mset->buf_full_name, &iter );
+        path = gtk_text_buffer_get_text( mset->buf_full_name, &siter,
+                                                                &iter, FALSE );
+        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), path );
+        g_free( path );
+    }
+    
     gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), FALSE );
+
+    // Mode
+    int i;
+    GtkWidget* mode[3];
+    GtkWidget* hbox = gtk_hbox_new( FALSE, 4 );
+    mode[MODE_FILENAME] = gtk_radio_button_new_with_mnemonic( NULL,
+                                                                _("Fil_ename") );
+    mode[MODE_PARENT] = gtk_radio_button_new_with_mnemonic_from_widget(
+                            GTK_RADIO_BUTTON(mode[MODE_FILENAME]), _("Pa_rent") );
+    mode[MODE_PATH] =  gtk_radio_button_new_with_mnemonic_from_widget( 
+                            GTK_RADIO_BUTTON(mode[MODE_FILENAME]), _("P_ath") );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( mode[mode_default] ), TRUE );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        gtk_label_new( _("Browse for") ), FALSE, TRUE, 2 );
+    for ( i = MODE_FILENAME; i <= MODE_PATH; i++ )
+    {
+        gtk_button_set_focus_on_click( GTK_BUTTON( mode[i] ), FALSE );
+        g_signal_connect( G_OBJECT( mode[i] ), "toggled",
+                                        G_CALLBACK( on_browse_mode_toggled ), dlg );
+        gtk_box_pack_start( GTK_BOX( hbox ), mode[i], FALSE, TRUE, 2 );
+    }
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area ( 
+                                        GTK_DIALOG( dlg ) ) ),
+                                        hbox, FALSE, TRUE, 6 );
+    g_object_set_data( G_OBJECT( dlg ), "mode", mode );
 
     int width = xset_get_int( "move_dlg_help", "x" );
     int height = xset_get_int( "move_dlg_help", "y" );
@@ -971,18 +1041,42 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     // bogus GTK warning here: Unable to retrieve the file info for...
     if( response == GTK_RESPONSE_OK )
     {
-        path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER ( dlg ) );
-        gtk_text_buffer_set_text( mset->buf_full_path, path, -1 );
-        g_free( path );
+        for ( i = MODE_FILENAME; i <= MODE_PATH; i++ )
+        {
+            if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mode[i] ) ) )
+            {
+                if ( i == MODE_FILENAME )
+                {
+                    path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER ( dlg ) );
+                    str = g_path_get_basename( path );
+                    gtk_text_buffer_set_text( mset->buf_full_name, str, -1 );
+                    g_free( str );
+                }
+                else if ( i == MODE_PARENT )
+                {
+                    path = gtk_file_chooser_get_current_folder( 
+                                                    GTK_FILE_CHOOSER ( dlg ) );
+                    gtk_text_buffer_set_text( mset->buf_path, path, -1 );
+                }
+                else
+                {
+                    path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER ( dlg ) );
+                    gtk_text_buffer_set_text( mset->buf_full_path, path, -1 );
+                }
+                g_free( path );
+                break;
+            }
+        }
     }
     
+    // save size
     GtkAllocation allocation;
     gtk_widget_get_allocation( GTK_WIDGET(dlg), &allocation );
     width = allocation.width;
     height = allocation.height;
     if ( width && height )
     {
-        char* str = g_strdup_printf( "%d", width );
+        str = g_strdup_printf( "%d", width );
         xset_set( "move_dlg_help", "x", str );
         g_free( str );
         str = g_strdup_printf( "%d", height );
@@ -990,6 +1084,18 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
         g_free( str );
     }
 
+    // save mode
+    for ( i = MODE_FILENAME; i <= MODE_PATH; i++ )
+    {
+        if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( mode[i] ) ) )
+        {
+            str = g_strdup_printf( "%d", i );
+            xset_set( "move_dlg_help", "z", str );
+            g_free( str );
+            break;
+        }
+    }
+    
     gtk_widget_destroy( dlg );    
 }
 
