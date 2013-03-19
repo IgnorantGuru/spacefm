@@ -732,7 +732,7 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
     set = xset_get( "main_dev_sep" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
 
-    ptk_location_view_dev_menu( GTK_WIDGET( main_window ), dev_menu );
+    ptk_location_view_dev_menu( GTK_WIDGET( file_browser ), file_browser, dev_menu );
 #ifndef HAVE_HAL
     set = xset_get( "sep_dm3" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );

@@ -1487,7 +1487,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                         accel_group, set ) );
         submenu = gtk_menu_item_get_submenu( item );
         
-        ptk_location_view_dev_menu( GTK_WIDGET( desktop ), submenu );
+        ptk_location_view_dev_menu( GTK_WIDGET( desktop ), NULL, submenu );
 #ifndef HAVE_HAL
         set = xset_get( "sep_dm3" );
         xset_add_menuitem( desktop, NULL, submenu, accel_group, set );

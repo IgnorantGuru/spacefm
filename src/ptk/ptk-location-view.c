@@ -1317,7 +1317,9 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     // Note: file_browser may be NULL
-    
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
+
     /*
     if ( vol->device_type != DEVICE_TYPE_BLOCK )
     {
@@ -1537,7 +1539,9 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                     "file_browser" );
     // Note: file_browser may be NULL
-    
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
+
     if ( !vol )
         return;
         
@@ -2492,6 +2496,8 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
                                                                 "file_browser" );
     // Note: file_browser may be NULL
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
     
     char* task_name = g_strdup_printf( _("Properties %s"), vol->device_file );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, 
@@ -3141,9 +3147,6 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(menu), "parent" );
     GtkWidget* popup = gtk_menu_new();
 
-    //////////XSetContext* context = xset_context_new();
-    //main_context_fill( file_browser, context );
-    
 #ifndef HAVE_HAL
     GtkWidget* image;
     set = xset_get( "dev_menu_remove" );
@@ -3272,8 +3275,9 @@ gint cmp_dev_name( VFSVolume* a, VFSVolume* b )
     return g_strcmp0( vfs_volume_get_disp_name( a ),
                       vfs_volume_get_disp_name( b ) );
 }
-                                                         
-void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* menu )
+
+void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser, 
+                                                    GtkWidget* menu )
 {   // add currently visible devices to menu with dev design mode callback
     const GList* v;
     VFSVolume* vol;
@@ -3284,6 +3288,8 @@ void ptk_location_view_dev_menu( GtkWidget* parent, GtkWidget* menu )
     GList* l;
     
     g_object_set_data( G_OBJECT( menu ), "parent", parent );
+    // file_browser may be NULL
+    g_object_set_data( G_OBJECT( parent ), "file_browser", file_browser );
     
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( v = volumes; v; v = v->next )
