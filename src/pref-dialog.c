@@ -707,6 +707,13 @@ void on_show_thumbnail_toggled( GtkWidget* widget, FMPrefDlg* data )
                     GTK_TOGGLE_BUTTON( data->show_thumbnail ) ) );
 }
 
+void on_wallpaper_toggled( GtkToggleButton* show_wallpaper, FMPrefDlg* data )
+{
+    gboolean active = gtk_toggle_button_get_active( show_wallpaper );
+    gtk_widget_set_sensitive( GTK_WIDGET( data->wallpaper ), active );
+    gtk_widget_set_sensitive( GTK_WIDGET( data->wallpaper_mode ), active );
+}
+
 gboolean fm_edit_preference( GtkWindow* parent, int page )
 {
     const char* filename_encoding;
@@ -895,10 +902,9 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         }
         gtk_combo_box_set_active( GTK_COMBO_BOX( data->drag_action ), drag_action_set );
 
+        gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 
         /* Setup 'Desktop' tab */
-
-        gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 /*
         data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
         g_signal_connect( data->show_desktop, "toggled",
@@ -909,6 +915,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->show_wallpaper = (GtkWidget*)gtk_builder_get_object( builder, "show_wallpaper" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->show_wallpaper ),
                                       app_settings.show_wallpaper );
+        g_signal_connect( data->show_wallpaper, "toggled",
+                                G_CALLBACK( on_wallpaper_toggled ), data );
 
         data->wallpaper = (GtkWidget*)gtk_builder_get_object( builder, "wallpaper" );
 
@@ -940,6 +948,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                    &app_settings.desktop_text);
         gtk_color_button_set_color(GTK_COLOR_BUTTON(data->shadow_color),
                                    &app_settings.desktop_shadow);
+                                   
+        on_wallpaper_toggled( GTK_TOGGLE_BUTTON( data->show_wallpaper ), data );
 
         //MOD Advanced
         

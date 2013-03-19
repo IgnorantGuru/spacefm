@@ -2,6 +2,7 @@
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man
     let vfs task show run-task missing file errors
+    desktop prefs - insensitive wallpaper options if unchecked
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
