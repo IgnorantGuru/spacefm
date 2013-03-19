@@ -7200,8 +7200,7 @@ _invalid_get:
                 if ( strcmp( argv[i], "delete" ) && !argv[j+1] )
                 {
                     // last argument - use as TARGET
-                    if ( argv[j][0] != '/' || 
-                                    !g_file_test( argv[j], G_FILE_TEST_IS_DIR ) )
+                    if ( argv[j][0] != '/' )
                     {
                         *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
                                                                     argv[j] );
@@ -7230,6 +7229,7 @@ _invalid_get:
                         }
                         str = g_build_filename( opt_cwd, argv[j], NULL );
                     }
+                    /*   Let vfs task show error instead
                     if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
                     {
                         *reply = g_strdup_printf( _("spacefm: no such file '%s'\n"),
@@ -7238,7 +7238,8 @@ _invalid_get:
                         g_list_foreach( l, (GFunc)g_free, NULL );
                         g_list_free( l );
                         return 2;
-                    }                    
+                    }
+                    */
                     l = g_list_prepend( l, str );
                 }
             }
