@@ -663,20 +663,20 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which contain an abbreviated version of the full Devices list and context menu, for ready access.
+In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which list currently shown devices for ready access.  In these menus, you can left-click on a device to open it, or <i>right</i>-click on a device for an abbreviated context menu.  As in the Devices List, you can also middle-click on a device to 'Remove / Eject'.
 
 <p>The Devices List context menu includes:
 
 <!-- #Remove / Eject #remove -->
-The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
-<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
+<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
-<p>If you click Remove and nothing seems to happen, this also indicates the device is ready to be removed.
+<p>If you click 'Remove / Eject' and nothing seems to happen, this also indicates the device is ready to be removed.
 
 <p>When a device is removed or unmounted, any tabs showing directories on the device may be automatically closed.
 
-<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting Remove.  Thus to quickly remove a device, just middle-click on it.
+<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
 <!-- #Reload -->
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.

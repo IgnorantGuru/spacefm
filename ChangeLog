@@ -4,6 +4,15 @@
     let vfs task show run-task missing file errors
     desktop prefs - insensitive wallpaper options if unchecked
     file props dlg - show target type of relative link
+    Devices menu activate Open on left-click
+    Devices menu activate Remove / Eject on middle-click
+    Devices menu add Mount and Unmount
+    device remove via desktop shows progress dialog
+    fm Devices menu show and obey option Settings|New Tab
+    allow HAL eject unmounted
+    add HAL unmount optical in addition to eject
+    fix HAL duplicate devices listed
+    Devices list and menu Mount and Unmount sensitivity
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
