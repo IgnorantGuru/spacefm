@@ -8533,6 +8533,7 @@ void open_in_prog( const char* path )
     g_spawn_command_line_async( line, NULL );
     g_free( qpath );
     g_free( line );
+    g_free( prog );
 }
 
 void xset_set_window_icon( GtkWindow* win )

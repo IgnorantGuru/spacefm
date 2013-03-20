@@ -1399,10 +1399,16 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
         if ( !file_browser )
         {
+            char* prog = g_find_program_in_path( g_get_prgname() );
+            if ( !prog )
+                prog = g_strdup( g_get_prgname() );
+            if ( !prog )
+                prog = g_strdup( "spacefm" );
             // run from desktop window - show a pending dialog
-            wait = g_strdup_printf( "spacefm -g --title 'Remove %s' --label '\\nPlease wait while device %s is synced and unmounted...' >/dev/null &\nwaitp=$!\n", vol->device_file, vol->device_file );
+            wait = g_strdup_printf( "%s -g --title 'Remove %s' --label '\\nPlease wait while device %s is synced and unmounted...' >/dev/null &\nwaitp=$!\n", prog, vol->device_file, vol->device_file );
             // sleep .2 here to ensure spacefm -g isn't killed too quickly causing hang
             wait_done = g_strdup( "\n( sleep .2; kill $waitp 2>/dev/null ) &" );
+            g_free( prog );
         }
         else
         {
