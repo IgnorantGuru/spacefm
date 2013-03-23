@@ -720,9 +720,13 @@ static gint ptk_file_list_compare( gconstpointer a,
     }
     else
     {
-        // non-natural   FIXME: don't compare utf8 as ascii ?
-        // both g_ascii_strcasecmp and g_ascii_strncasecmp appear to be
-        // case insensitive when used on utf8? 
+        // non-natural
+        /* FIXME: don't compare utf8 as ascii ?  This is done to avoid casefolding
+         * and caching expenses and seems to work
+         * NOTE: both g_ascii_strcasecmp and g_ascii_strncasecmp appear to be
+         * case insensitive when used on utf8
+         * FIXME: No case sensitive mode here because no function compare
+         * UTF-8 strings case sensitively without collating (natural) */ 
         result = g_ascii_strcasecmp( file_a->disp_name, file_b->disp_name );
     }
     return list->sort_order == GTK_SORT_ASCENDING ? result : -result;

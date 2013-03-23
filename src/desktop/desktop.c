@@ -83,6 +83,8 @@ void fm_turn_on_desktop_icons()
         desktop_window_set_icon_size( (DesktopWindow*)desktops[ i ], big );
         desktop_window_set_single_click( (DesktopWindow*)desktops[ i ], app_settings.single_click );
 
+        gtk_window_set_role( GTK_WINDOW( desktops[i] ), "desktop_manager" );
+
         gtk_widget_realize( desktops[ i ] );  /* without this, setting wallpaper won't work */
         gtk_widget_show_all( desktops[ i ] );
         gdk_window_lower( gtk_widget_get_window(desktops[ i ]) );

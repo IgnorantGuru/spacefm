@@ -663,7 +663,7 @@ void show_socket_help()
 {
     printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
     printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  To handle events see View|Auto Run in the main menu bar.") );
+    printf( "%s\n", _("windows.  To handle events see View|Events in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
@@ -732,6 +732,7 @@ void show_socket_help()
     printf( "current_tab                     1|2|...|prev|next|close\n" );
     printf( "tab_count                       1|2|...\n" );
     printf( "new_tab                         [DIR]    %s\n", _("Open DIR or default in a new tab") );
+    printf( "devices_visible                 1|true|yes|0|false|no\n" );
     printf( "bookmarks_visible               1|true|yes|0|false|no\n" );
     printf( "dirtree_visible                 1|true|yes|0|false|no\n" );
     printf( "toolbar_visible                 1|true|yes|0|false|no\n" );
@@ -1130,7 +1131,6 @@ gboolean handle_parsed_commandline_args()
 
     app_settings.load_saved_tabs = !no_tabs;
     
-printf("handle_parsed_commandline_args files = %p\n", files );
     // If no files are specified, open home dir by defualt.
     if( G_LIKELY( ! files ) )
     {
@@ -1141,11 +1141,10 @@ printf("handle_parsed_commandline_args files = %p\n", files );
     // get the last active window on this desktop, if available
     if( new_tab || reuse_tab )
     {
-        //main_window = fm_main_window_get_last_active();
         main_window = fm_main_window_get_on_current_desktop();
-printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
-                                                            new_tab ? "new_tab" : "",
-                                                            reuse_tab ? "reuse_tab" : "" );
+//printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
+//                                                            new_tab ? "new_tab" : "",
+//                                                            reuse_tab ? "reuse_tab" : "" );
     }
 
     if ( desktop_pref )  //MOD
@@ -1286,7 +1285,7 @@ printf("    fm_main_window_get_on_current_desktop = %p  %s %s\n", main_window,
             }
         }
     }
-printf("    handle_parsed_commandline_args mw = %p\n\n", main_window );
+//printf("    handle_parsed_commandline_args mw = %p\n\n", main_window );
 
 out:
     if( files != default_files )

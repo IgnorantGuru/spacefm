@@ -85,7 +85,6 @@ GtkCheckMenuItem* open_side_pane_menu;
 
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
-  long desktop_index;  // workspace that window was opened on
 }FMMainWindow;
 
 typedef struct _FMMainWindowClass

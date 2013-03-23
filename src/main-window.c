@@ -20,6 +20,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkx.h>  // XGetWindowProperty
+#include <X11/Xatom.h> // XA_CARDINAL
 
 #include <string.h>
 
@@ -167,7 +168,6 @@ void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 static gboolean delayed_focus( GtkWidget* widget );
 static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser );
-static long get_current_desktop_index();
 
 
 static GtkWindowClass *parent_class = NULL;
@@ -732,7 +732,7 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
     set = xset_get( "main_dev_sep" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
 
-    ptk_location_view_dev_menu( GTK_WIDGET( main_window ), dev_menu );
+    ptk_location_view_dev_menu( GTK_WIDGET( file_browser ), file_browser, dev_menu );
 #ifndef HAVE_HAL
     set = xset_get( "sep_dm3" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
@@ -1761,8 +1761,6 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     pcmanfm_ref();
 
-    main_window->desktop_index = get_current_desktop_index();
-
     //g_signal_connect( G_OBJECT( main_window ), "task-notify",
     //                            G_CALLBACK( ptk_file_task_notify_handler ), NULL );
 
@@ -1965,6 +1963,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     main_window->task_view = main_task_view_new( main_window );
     gtk_container_add( GTK_CONTAINER( main_window->task_scroll ),
                                             GTK_WIDGET( main_window->task_view ) );    
+
+    gtk_window_set_role( GTK_WINDOW( main_window ), "file_manager" );
 
     gtk_widget_show_all( main_window->main_vbox );
 
@@ -3806,30 +3806,28 @@ const GList* fm_main_window_get_all()
     return all_windows;
 }
 
-static long get_current_desktop_index()
+static long get_desktop_index( GtkWindow* win )
 {
-    GdkWindow* window = NULL;
     long desktop = -1;
     GdkDisplay* display;
+    GdkWindow* window = NULL;
 
-/*  // gtk_widget_get_screen returns wrong screen for specific gtkwindow
     if ( win )
     {
+        // get desktop of win
         display = gtk_widget_get_display( GTK_WIDGET( win ) );
-        printf( "gtk_widget_get_display = %#x\n", display );
-        //window = gtk_widget_get_window( GTK_WIDGET( win ) );
-        //printf( "gtk_widget_get_window = %#x\n", window );
-        //GdkScreen* screen = gtk_widget_get_screen( GTK_WIDGET( win ) );
-        //printf( "gtk_widget_get_screen = %#x\n", screen );
-        //printf("gdk_screen_get_number = %d\n", gdk_screen_get_number( screen ) );
+        window = gtk_widget_get_window( GTK_WIDGET( win ) );
     }
-*/
-    display = gdk_display_get_default();
-    if ( display )
-        window = gdk_x11_window_lookup_for_display( display,
-                                gdk_x11_get_default_root_xwindow() );
-    
-    if ( !GDK_IS_WINDOW( window ) )
+    else
+    {
+        // get current desktop
+        display = gdk_display_get_default();
+        if ( display )
+            window = gdk_x11_window_lookup_for_display( display,
+                                    gdk_x11_get_default_root_xwindow() );
+    }
+
+    if ( !( GDK_IS_DISPLAY( display ) && GDK_IS_WINDOW( window ) ) )
         return desktop;
 
     // find out what desktop (workspace) window is on   #include <gdk/gdkx.h>
@@ -3838,21 +3836,27 @@ static long get_current_desktop_index()
     gulong nitems;
     gulong bytes_after;
     guchar *data;
-    
-    Atom net_wm_desktop = gdk_x11_get_xatom_by_name_for_display ( display,
-                                                        "_NET_CURRENT_DESKTOP");
+    const gchar* atom_name = win ? "_NET_WM_DESKTOP" : "_NET_CURRENT_DESKTOP";
+    Atom net_wm_desktop = gdk_x11_get_xatom_by_name_for_display ( display, atom_name );
+
     if ( net_wm_desktop == None )
-        fprintf( stderr, "spacefm: no _NET_CURRENT_DESKTOP atom found\n" );
+        fprintf( stderr, "spacefm: %s atom not found\n", atom_name );
     else if ( XGetWindowProperty( GDK_DISPLAY_XDISPLAY( display ),
                                   GDK_WINDOW_XID( window ), 
                                   net_wm_desktop, 0, 1, 
-                                  False, 6 /*XA_CARDINAL*/, (Atom*)&type,
+                                  False, XA_CARDINAL, (Atom*)&type,
                                   &format, &nitems, &bytes_after, 
-                                  &data ) != Success || data == NULL )
+                                  &data ) != Success || type == None || data == NULL )
     {
-        fprintf( stderr, "spacefm: XGetWindowProperty() failed\n");
-        if ( data == NULL )
-            fprintf(stderr, "spacefm: No data returned from XGetWindowProperty()\n" );
+        if ( type == None )
+            fprintf( stderr, "spacefm: No such property from XGetWindowProperty() %s\n",
+                                                                    atom_name );
+        else if ( data == NULL )
+            fprintf( stderr, "spacefm: No data returned from XGetWindowProperty() %s\n",
+                                                                    atom_name );
+        else
+            fprintf( stderr, "spacefm: XGetWindowProperty() %s failed\n",
+                                                                    atom_name );
     }
     else
     {
@@ -3863,19 +3867,26 @@ static long get_current_desktop_index()
 }
 
 FMMainWindow* fm_main_window_get_on_current_desktop()
-{
-    long cur_desktop = get_current_desktop_index();
-printf("    get_current_desktop_index = %d\n", cur_desktop );
+{   // find the last used spacefm window on the current desktop
+    long desktop;
+    long cur_desktop = get_desktop_index( NULL );
+    //printf("current_desktop = %ld\n", cur_desktop );
     if ( cur_desktop == -1 )
         return fm_main_window_get_last_active(); // revert to dumb if no current
 
     GList* l;
+    gboolean invalid = FALSE;
     for ( l = all_windows; l; l = l->next )
     {
-        if ( ((FMMainWindow*)l->data)->desktop_index == cur_desktop )
+        desktop = get_desktop_index( GTK_WINDOW( (FMMainWindow*)l->data ) );
+        //printf( "    test win %p = %ld\n", (FMMainWindow*)l->data, desktop );
+        if ( desktop == cur_desktop || desktop > 254 /* 255 == all desktops */ )
             return (FMMainWindow*)l->data;
+        else if ( desktop == -1 && !invalid )
+            invalid = TRUE;
     }
-    return NULL;
+    // revert to dumb if one or more window desktops unreadable
+    return invalid ? fm_main_window_get_last_active() : NULL;
 }
 
 enum {
@@ -7189,8 +7200,7 @@ _invalid_get:
                 if ( strcmp( argv[i], "delete" ) && !argv[j+1] )
                 {
                     // last argument - use as TARGET
-                    if ( argv[j][0] != '/' || 
-                                    !g_file_test( argv[j], G_FILE_TEST_IS_DIR ) )
+                    if ( argv[j][0] != '/' )
                     {
                         *reply = g_strdup_printf( _("spacefm: no such directory '%s'\n"),
                                                                     argv[j] );
@@ -7219,6 +7229,7 @@ _invalid_get:
                         }
                         str = g_build_filename( opt_cwd, argv[j], NULL );
                     }
+                    /*   Let vfs task show error instead
                     if ( !g_file_test( str, G_FILE_TEST_EXISTS ) )
                     {
                         *reply = g_strdup_printf( _("spacefm: no such file '%s'\n"),
@@ -7227,7 +7238,8 @@ _invalid_get:
                         g_list_foreach( l, (GFunc)g_free, NULL );
                         g_list_free( l );
                         return 2;
-                    }                    
+                    }
+                    */
                     l = g_list_prepend( l, str );
                 }
             }

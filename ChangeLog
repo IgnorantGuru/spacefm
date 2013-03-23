@@ -1,4 +1,19 @@
-0.8.6+
+0.8.7+
+    add browse-for options in Rename/New dialog Browse dialog
+    run fm Devices menu functions in task man
+    let vfs task show run-task missing file errors
+    desktop prefs - insensitive wallpaper options if unchecked
+    file props dlg - show target type of relative link
+    Devices menu activate Open on left-click
+    Devices menu activate Remove / Eject on middle-click
+    Devices menu add Mount and Unmount
+    device remove via desktop shows progress dialog
+    fm Devices menu show and obey option Settings|New Tab
+    allow HAL eject unmounted
+    add HAL unmount optical in addition to eject
+    fix HAL duplicate devices listed
+    Devices list and menu Mount and Unmount sensitivity
+0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
     Josué Hernández & CommanderC completed Spanish translation
@@ -24,6 +39,7 @@
     list double-click activates in app chooser
     mount webdav shares in terminal for password entry - udevil issue 21
     use mouse buttons 6,7 as back,forward in addition to 4,5 8,9 #279
+    add WM_WINDOW_ROLEs
 0.8.6   2013-02-13:
     fix cannot create directory or file on CentOS #253
     update russian translation

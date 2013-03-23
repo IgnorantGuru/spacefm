@@ -663,20 +663,20 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which contain an abbreviated version of the full Devices list and context menu, for ready access.
+In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which list currently shown devices for ready access.  In these menus, you can left-click on a device to open it, or <i>right</i>-click on a device for an abbreviated context menu.  As in the Devices List, you can also middle-click on a device to 'Remove / Eject'.
 
 <p>The Devices List context menu includes:
 
 <!-- #Remove / Eject #remove -->
-The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
-<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
+<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
-<p>If you click Remove and nothing seems to happen, this also indicates the device is ready to be removed.
+<p>If you click 'Remove / Eject' and nothing seems to happen, this also indicates the device is ready to be removed.
 
 <p>When a device is removed or unmounted, any tabs showing directories on the device may be automatically closed.
 
-<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting Remove.  Thus to quickly remove a device, just middle-click on it.
+<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
 <!-- #Reload -->
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
@@ -1093,6 +1093,8 @@ Auto Run|On Insert opens a dialog which allows you to set a command line to be r
     udisks --show-info /dev/sdX
     udisksctl info -b /dev/sdX</pre>
 
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
+
 <!-- #Auto Run|On Unmount #runu -->
 Auto Run|On Unmount opens a dialog which allows you to set a command line to be run when any device is unmounted by any means.
 
@@ -1100,6 +1102,8 @@ Auto Run|On Unmount opens a dialog which allows you to set a command line to be 
 
 <p>For example, to automatically remove the drive from traydevice, set the On Unmount command line to:
 <pre>    pkill -f "traydevice %v"</pre>
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Auto Run|On Remove #runr -->
 Auto Run|On Remove opens a dialog which allows you to set a command line to be run when any device is removed.  This allows you to connect your command to the removal event.
@@ -1109,6 +1113,8 @@ Auto Run|On Remove opens a dialog which allows you to set a command line to be r
 <p><a href="#devices-settings-optical">Auto-mount settings</a> have no impact on this function.
 
 <p>Note that when removing a single drive, your command may be run several times - once for each device file removed.  For example, if you remove device /dev/sdd which contains one partition /dev/sdd1, your command will be run once with %v=/dev/sdd and once with %v=/dev/sdd1.  It is up to your command or script to discard events for unwanted devices or partitions.  Note that when the command is run, %v equals the device file which has been removed, not the device file which is selected in the Devices list.
+
+<p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
 <!-- #Mount Options #opts -->
 Mount Options opens a dialog which allows you to set default mount options to be used for all mounts, including auto-mounts.  In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
@@ -1485,7 +1491,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>Design Menu</i>.
 
-<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
+<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available on bookmarked items in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
 
 <p>To open the Design Menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
 
@@ -3875,6 +3881,7 @@ focused_pane                    filelist|devices|bookmarks|dirtree|pathbar
 current_tab                     1|2|...|prev|next|close
 tab_count                       1|2|...
 new_tab                         [DIR]    Open DIR or default in a new tab
+devices_visible                 1|true|yes|0|false|no
 bookmarks_visible               1|true|yes|0|false|no
 dirtree_visible                 1|true|yes|0|false|no
 toolbar_visible                 1|true|yes|0|false|no
@@ -4662,13 +4669,10 @@ Plugins included in a standard SpaceFM installation.  This folder should NOT be 
 <!-- # share/spacefm/ui/ #ui -->
 A folder containing glade files for some of SpaceFM's dialogs.
 
-<!-- # share/pixmaps/spacefm.png &amp; share/pixmaps/spacefm-root.png #png -->
-The window icons for the normal user mode and root mode of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.
+<!-- # share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png #png -->
+The 48 pixel window icons for the non-root and root user of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.  See also icons in share/icons/hicolor/128x128/apps/ and share/icons/Faenza/apps/48/, as well as the alternate icons named "spacefm-<i>[48|128]</i>-<i>[cube|pyramid|folder]</i>-<i>[blue|green|red]</i>.png".
 
-<p>Note:  If configure option --disable-pixmaps is used during installation, these icons will be located in share/icons/hicolor/48x48/apps/, share/icons/hicolor/128x128/apps/, and share/icons/Faenza/apps/48/ instead.
-
-<!-- # share/pixmaps/spacefm-[48|128]-[cube|pyramid|folder]-[blue|green|red].png #pngalt -->
-Alternate SpaceFM icons.
+<p>Note:  If configure option --enable-pixmaps is used during build, icons will be installed to share/pixmaps/ instead.
 
 <!-- # share/locale/*/LC_MESSAGES/spacefm.mo #mo -->
 Language files used by SpaceFM, where '*' is a locale.

@@ -634,10 +634,17 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
             char* target_path = g_file_read_link( disp_path, NULL );
             if ( target_path )
             {
+                gtk_entry_set_text( GTK_ENTRY( target ), target_path );
+                if ( target_path[0] && target_path[0] != '/' )
+                {
+                    // relative link to absolute
+                    char* str = target_path;
+                    target_path = g_build_filename( dir_path, str, NULL );
+                    g_free( str );
+                }
                 if ( !g_file_test( target_path, G_FILE_TEST_EXISTS ) )
                     gtk_label_set_text( GTK_LABEL( mime_type ),
                                                     _("( broken link )") );
-                gtk_entry_set_text( GTK_ENTRY( target ), target_path );
                 g_free( target_path );
             }
             else

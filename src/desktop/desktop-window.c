@@ -49,6 +49,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <fnmatch.h>
 
+#include "gtk2-compat.h"
+
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <cairo-xlib.h>
 #endif
@@ -257,7 +259,7 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
 {
     GObjectClass *g_object_class;
     GtkWidgetClass* wc;
-	typedef gboolean (*DeleteEvtHandler) (GtkWidget*, GdkEvent*);
+    typedef gboolean (*DeleteEvtHandler) (GtkWidget*, GdkEvent*);
 
     g_object_class = G_OBJECT_CLASS(klass);
     wc = GTK_WIDGET_CLASS(klass);
@@ -415,8 +417,8 @@ GtkWidget* desktop_window_new(void)
 
 void desktop_item_free( DesktopItem* item )
 {
-	vfs_file_info_unref( item->fi );
-	g_slice_free( DesktopItem, item );
+    vfs_file_info_unref( item->fi );
+    g_slice_free( DesktopItem, item );
 }
 
 void desktop_window_finalize(GObject *object)
@@ -452,8 +454,8 @@ void desktop_window_finalize(GObject *object)
     if ( self->dir )
         g_object_unref( self->dir );
 
-	g_list_foreach( self->items, (GFunc)desktop_item_free, NULL );
-	g_list_free( self->items );
+    g_list_foreach( self->items, (GFunc)desktop_item_free, NULL );
+    g_list_free( self->items );
 
     if (G_OBJECT_CLASS(parent_class)->finalize)
         (* G_OBJECT_CLASS(parent_class)->finalize)(object);
@@ -827,21 +829,21 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
 void desktop_window_reload_icons( DesktopWindow* win )
 {
 /*
-	GList* l;
-	for( l = win->items; l; l = l->next )
-	{
-		DesktopItem* item = (DesktopItem*)l->data;
+    GList* l;
+    for( l = win->items; l; l = l->next )
+    {
+        DesktopItem* item = (DesktopItem*)l->data;
 
-		if( item->icon )
-			g_object_unref( item->icon );
+        if( item->icon )
+            g_object_unref( item->icon );
 
-		if( item->fi )
-			item->icon =  vfs_file_info_get_big_icon( item->fi );
-		else
-			item->icon = NULL;
-	}
+        if( item->fi )
+            item->icon =  vfs_file_info_get_big_icon( item->fi );
+        else
+            item->icon = NULL;
+    }
 */
-	layout_items( win );
+    layout_items( win );
 }
 
 
@@ -2516,7 +2518,7 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
         item = g_slice_new0( DesktopItem );
         item->fi = vfs_file_info_ref( fi );
         items = g_list_prepend( items, item );
-		/* item->icon = vfs_file_info_get_big_icon( fi ); */
+        /* item->icon = vfs_file_info_get_big_icon( fi ); */
 
         if( vfs_file_info_is_image( fi ) )
             vfs_thumbnail_loader_request( dir, fi, TRUE );
@@ -2540,7 +2542,7 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
 
     item = g_slice_new0( DesktopItem );
     item->fi = fi;
-	// item->icon = vfs_file_info_get_big_thumbnail( fi );
+    // item->icon = vfs_file_info_get_big_thumbnail( fi );
     self->items = g_list_prepend( self->items, item );
 */
 
@@ -2558,9 +2560,9 @@ void on_thumbnail_loaded( VFSDir* dir,  VFSFileInfo* fi, DesktopWindow* self )
         if( item->fi == fi )
         {
 /*
-        	if( item->icon )
-        		g_object_unref( item->icon );
-        	item->icon = vfs_file_info_get_big_thumbnail( fi );
+            if( item->icon )
+                g_object_unref( item->icon );
+            item->icon = vfs_file_info_get_big_thumbnail( fi );
 */
             redraw_item( self, item );
             return;
@@ -2655,9 +2657,9 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
         item = (DesktopItem*)l->data;
         /*
    if( item->icon )
-        	g_object_unref( item->icon );
-		item->icon = vfs_file_info_get_big_icon( file );
-		*/
+            g_object_unref( item->icon );
+        item->icon = vfs_file_info_get_big_icon( file );
+        */
         if( gtk_widget_get_visible( w ) )
         {
             /* redraw the item */
@@ -2805,8 +2807,8 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
                                                        &item->icon_rect, &item->icon_rect, expose_area, state );
 #endif
 
-	if( icon )
-		g_object_unref( icon );
+    if( icon )
+        g_object_unref( icon );
 
     // add link_icon arrow to links
     if ( item->fi )
