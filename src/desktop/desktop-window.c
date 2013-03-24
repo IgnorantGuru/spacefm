@@ -1857,7 +1857,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             gdk_drag_status( ctx, suggested_action, time );
             return;
         }
-        printf("on_drag_data_received  text_uri_list_atom\n" );
+        //printf("on_drag_data_received  text_uri_list_atom\n" );
 
         switch ( gdk_drag_context_get_selected_action( ctx ) )
         {
@@ -2623,7 +2623,7 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
     pango_layout_get_pixel_size( self->pl, NULL, &line_h );
     item->text_rect.height += line_h;
 
-    item->text_rect.width = 100;
+    item->text_rect.width = self->item_w; //100;
 
     // add empty text line height to standardize height to two lines for custom sort
     item->box.height += item->text_rect.height * ( fake_line ? 2 : 1 );
