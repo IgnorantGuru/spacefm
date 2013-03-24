@@ -65,7 +65,7 @@ const GdkColor desktop_bg1_default={0};
 const GdkColor desktop_bg2_default={0};
 const GdkColor desktop_text_default={0, 65535, 65535, 65535};
 const GdkColor desktop_shadow_default={0};
-const int desktop_sort_by_default = DW_SORT_BY_MTIME;
+const int desktop_sort_by_default = DW_SORT_BY_NAME;
 const int desktop_sort_type_default = GTK_SORT_ASCENDING;
 const gboolean show_wm_menu_default = FALSE;
 
@@ -92,6 +92,10 @@ char* settings_shared_tmp_dir = NULL;
 char* settings_user_tmp_dir = NULL;
 XSetContext* xset_context = NULL;
 
+// delayed session saving
+guint xset_autosave_timer = 0;
+gboolean xset_autosave_request = FALSE;
+
 typedef void ( *SettingsParseFunc ) ( char* line );
 
 static void color_from_str( GdkColor* ret, const char* value );
@@ -107,6 +111,7 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor );
 GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
                                                             int job, XSet* set );
 gboolean xset_design_cb( GtkWidget* item, GdkEventButton * event, XSet* set );
+gboolean on_autosave_timer( gpointer main_window );
 
 const char* user_manual_url = "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html";
 const char* homepage = "http://ignorantguru.github.com/spacefm/"; //also in aboutdlg.ui
@@ -481,7 +486,6 @@ void load_settings( char* config_dir )
     char* str;
     
     xset_cmd_history = NULL;
-    xset_autosave_timer = 0;
     app_settings.load_saved_tabs = TRUE;
     if ( config_dir )
         settings_config_dir = config_dir;
@@ -1299,39 +1303,73 @@ const char* xset_get_user_tmp_dir()
     return settings_user_tmp_dir;
 }
 
-gboolean on_autosave_timer( gpointer main_window )
+static gboolean idle_save_settings( gpointer main_window )
 {
-    //printf("AUTOSAVE on_timer\n" );
+    //printf("AUTOSAVE idle save\n" );
     char* err_msg = save_settings( main_window );
     if ( err_msg )
     {
         printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"), err_msg );
         g_free( err_msg );
     }
+    return FALSE;
+}
+
+static void auto_save_settings( gpointer main_window )
+{
+    //printf("AUTOSAVE autosave\n" );
+    g_idle_add( ( GSourceFunc ) idle_save_settings, main_window );
+    xset_autosave_request = FALSE;
+    if ( !xset_autosave_timer )
+    {
+        xset_autosave_timer = g_timeout_add_seconds( 10,
+                            ( GSourceFunc ) on_autosave_timer, main_window );
+        //printf("AUTOSAVE timer started\n" );
+    }
+}
+
+gboolean on_autosave_timer( gpointer main_window )
+{
+    //printf("AUTOSAVE timeout\n" );
     if ( xset_autosave_timer )
     {
         g_source_remove( xset_autosave_timer );
         xset_autosave_timer = 0;
     }
+    if ( xset_autosave_request )
+        auto_save_settings( main_window );
     return FALSE;
 }
 
-void xset_autosave( PtkFileBrowser* file_browser )
+void xset_autosave( PtkFileBrowser* file_browser, gboolean force )
 {
-    gpointer mw = NULL;
-    if ( file_browser )
-        mw = file_browser->main_window;
+    if ( xset_autosave_timer && !force )
+    {
+        // autosave timer is running, so request save on timeout to prevent
+        // saving too frequently, unless force
+        xset_autosave_request = TRUE;
+        //printf("AUTOSAVE request\n" );
+    }
+    else
+    {
+        if ( xset_autosave_timer )
+        {
+            g_source_remove( xset_autosave_timer );
+            xset_autosave_timer = 0;
+        }
+        //if ( force ) printf("AUTOSAVE force\n" );
+        auto_save_settings( file_browser ? file_browser->main_window : NULL );
+    }
+}
 
+void xset_autosave_cancel()
+{
+    xset_autosave_request = FALSE;
     if ( xset_autosave_timer )
     {
-        // autosave timer is already running, so ignore request
-        //printf("AUTOSAVE already set\n" );
-        return;
+        g_source_remove( xset_autosave_timer );
+        xset_autosave_timer = 0;
     }
-    // autosave settings in 10 seconds 
-    xset_autosave_timer = g_timeout_add_seconds( 10,
-                                ( GSourceFunc ) on_autosave_timer, mw );
-    //printf("AUTOSAVE timer started\n" );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -6389,7 +6427,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     //    main_window_on_plugins_change( NULL );
 
     // autosave
-    xset_autosave( set->browser );
+    xset_autosave( set->browser, FALSE );
 }
 
 void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
@@ -7613,7 +7651,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         xset_custom_activate( item, rset );
 
     if ( rset->menu_style )
-        xset_autosave( rset->browser );
+        xset_autosave( rset->browser, FALSE );
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
@@ -10180,7 +10218,7 @@ void xset_defaults()
     set = xset_set( "desk_icons", "label", _("Arrange _Icons") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icon", "gtk-sort-ascending" );
-    xset_set_set( set, "desc", "desk_sort_name desk_sort_type desk_sort_date desk_sort_size sep_desk1 desk_sort_ascend desk_sort_descend" );
+    xset_set_set( set, "desc", "desk_sort_name desk_sort_type desk_sort_date desk_sort_size desk_sort_cust sep_desk1 desk_sort_ascend desk_sort_descend" );
 
         set = xset_set( "desk_sort_name", "label", _("By _Name") );
         set->menu_style = XSET_MENU_RADIO;
@@ -10192,6 +10230,9 @@ void xset_defaults()
         set->menu_style = XSET_MENU_RADIO;
 
         set = xset_set( "desk_sort_size", "label", _("By _Size") );
+        set->menu_style = XSET_MENU_RADIO;
+
+        set = xset_set( "desk_sort_cust", "label", _("_Custom") );
         set->menu_style = XSET_MENU_RADIO;
 
         set = xset_set( "desk_sort_ascend", "label", _("_Ascending") );

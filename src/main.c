@@ -1189,11 +1189,7 @@ gboolean handle_parsed_commandline_args()
             g_free( app_settings.wallpaper );
             app_settings.wallpaper = file;
             app_settings.show_wallpaper = TRUE;
-            if ( xset_autosave_timer )
-            {
-                g_source_remove( xset_autosave_timer );
-                xset_autosave_timer = 0;
-            }
+            xset_autosave( NULL, TRUE );
             char* err_msg = save_settings( NULL );
             if ( err_msg )
                 printf( _("spacefm: Error: Unable to save session\n       %s\n"), err_msg );

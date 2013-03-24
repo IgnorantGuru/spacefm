@@ -13,6 +13,8 @@
     add HAL unmount optical in addition to eject
     fix HAL duplicate devices listed
     Devices list and menu Mount and Unmount sensitivity
+    added desktop option Arrange Icons|Custom
+    single-click or right-click on desktop or unselected unselects
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

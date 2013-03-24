@@ -3609,7 +3609,7 @@ void ptk_open_files_with_app( const char* cwd,
 }
 
 void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browser,
-                                                            const char* cwd )
+                                            const char* cwd, GFunc callback )
 {
     gchar* file_path;
     char* str;
@@ -3641,6 +3641,9 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
     }
     g_list_foreach( files, ( GFunc ) g_free, NULL );
     g_list_free( files );
+
+    if ( callback && desktop )
+        callback( NULL, desktop );
 
     if ( missing_targets > 0 )
     {

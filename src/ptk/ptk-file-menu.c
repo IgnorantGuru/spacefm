@@ -499,6 +499,8 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
         by = DW_SORT_BY_TYPE;
     else if ( !strcmp( xname, "date" ) )
         by = DW_SORT_BY_MTIME;
+    else if ( !strcmp( xname, "cust" ) )
+        by = DW_SORT_CUSTOM;
     else
     {
         if ( !strcmp( xname, "ascend" ) )
@@ -1553,17 +1555,25 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                                 XSET_B_TRUE : XSET_B_FALSE;
             xset_set_ob2( set, NULL, set_radio );
 
+        set = xset_set_cb( "desk_sort_cust", on_popup_desktop_sort_activate,
+                                                                    desktop );
+            set->b = app_settings.desktop_sort_by == DW_SORT_CUSTOM ? 
+                                                XSET_B_TRUE : XSET_B_FALSE;
+            xset_set_ob2( set, NULL, set_radio );
+
         set = xset_set_cb( "desk_sort_ascend", on_popup_desktop_sort_activate,
                                                                     desktop );
             set->b = app_settings.desktop_sort_type == GTK_SORT_ASCENDING ? 
                                                 XSET_B_TRUE : XSET_B_FALSE;
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
+            set->disable = app_settings.desktop_sort_by == DW_SORT_CUSTOM;
         set = xset_set_cb( "desk_sort_descend", on_popup_desktop_sort_activate,
                                                                     desktop );
             set->b = app_settings.desktop_sort_type == GTK_SORT_DESCENDING ? 
                                                 XSET_B_TRUE : XSET_B_FALSE;
             xset_set_ob2( set, NULL, set_radio );
+            set->disable = app_settings.desktop_sort_by == DW_SORT_CUSTOM;
 
         set = xset_get( "desk_icons" );
         item = GTK_MENU_ITEM( xset_add_menuitem( desktop, NULL, popup,
@@ -2535,11 +2545,13 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
         GtkWidget* parent_win = gtk_widget_get_toplevel( 
                                             GTK_WIDGET( data->browser ) );
         ptk_clipboard_paste_files( GTK_WINDOW( parent_win ), data->cwd,
-                                        GTK_TREE_VIEW( data->browser->task_view ) );
+                            GTK_TREE_VIEW( data->browser->task_view ), NULL );
     }
     else if ( data->desktop )
     {
-        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL );        
+        desktop_window_set_insert_item( data->desktop );
+        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL,
+                            (GFunc)desktop_window_insert_task_complete );        
     }
 }
 
@@ -2550,9 +2562,12 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
     if ( data->browser )
         ptk_file_browser_paste_link( data->browser );
     else if ( data->desktop )
+    {
+        desktop_window_set_insert_item( data->desktop );
         ptk_clipboard_paste_links(
             GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
-            data->cwd, NULL );
+            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete );
+    }
 }
 
 void
@@ -2562,10 +2577,13 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
     if ( data->browser )
         ptk_file_browser_paste_target( data->browser );
     else if ( data->desktop )
+    {
+        desktop_window_set_insert_item( data->desktop );
         ptk_clipboard_paste_targets(
             GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
             data->cwd,
-            NULL );
+            NULL, (GFunc)desktop_window_insert_task_complete );
+    }
 }
 
 void
@@ -2594,7 +2612,10 @@ void
 on_popup_paste_as_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //sfm added
 {
-    ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd );
+    if ( data->desktop )
+        desktop_window_set_insert_item( data->desktop );
+    ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd,
+            data->desktop ? (GFunc)desktop_window_insert_task_complete : NULL );
 }
 
 void

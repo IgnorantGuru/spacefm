@@ -747,13 +747,7 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
 
 void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
 {
-    // disable autosave timer
-    if ( xset_autosave_timer )
-    {
-        g_source_remove( xset_autosave_timer );
-        xset_autosave_timer = 0;
-    }
-
+    xset_autosave_cancel();
     char* err_msg = save_settings( main_window );
     if ( err_msg )
     {
@@ -1207,7 +1201,7 @@ void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
             }
         }
     }
-    xset_autosave( file_browser );
+    xset_autosave( file_browser, FALSE );
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -1244,7 +1238,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
         }
     }
     
-    xset_autosave( file_browser );
+    xset_autosave( file_browser, FALSE );
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
@@ -1358,7 +1352,7 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
     
     PtkFileBrowser* file_browser = 
             (PtkFileBrowser*)fm_main_window_get_current_file_browser( main_window );
-    xset_autosave( file_browser );
+    xset_autosave( file_browser, FALSE );
 }
 
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
@@ -2129,11 +2123,7 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
     }
 
     // save settings
-    if ( xset_autosave_timer )
-    {
-        g_source_remove( xset_autosave_timer );
-        xset_autosave_timer = 0;
-    }
+    xset_autosave_cancel();
     char* err_msg = save_settings( main_window );
     if ( err_msg )
     {

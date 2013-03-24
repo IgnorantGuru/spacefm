@@ -150,6 +150,10 @@ struct _DesktopWindow
     GdkColor shadow;
 
     GdkRectangle wa;    /* working area */
+    
+    guint desktop_index;
+    guint box_count;        // number of boxes visible on the desktop
+    gpointer insert_item;   // item at which to insert dragged files
 };
 
 struct _DesktopWindowClass
@@ -191,6 +195,9 @@ void desktop_window_select( DesktopWindow* self, DWSelectMode mode );
 void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
                                                 char* cwd, char* setname );
 void desktop_window_add_application( DesktopWindow* desktop );
+void desktop_window_insert_task_complete( VFSFileTask* task, DesktopWindow* self );
+void desktop_window_set_insert_item( DesktopWindow* self );
+
 
 G_END_DECLS
 

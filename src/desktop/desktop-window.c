@@ -19,6 +19,7 @@
  */
 
 #include <glib/gi18n.h>
+#include <math.h>  // sqrt
 
 #include "desktop-window.h"
 #include "vfs-file-info.h"
@@ -49,8 +50,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <fnmatch.h>
 
-#include "gtk2-compat.h"
-
 #if GTK_CHECK_VERSION (3, 0, 0)
 #include <cairo-xlib.h>
 #endif
@@ -66,8 +65,7 @@
 
 struct _DesktopItem
 {
-    VFSFileInfo* fi;
-    guint order;
+    VFSFileInfo* fi;    // empty box if NULL
     GdkRectangle box;   /* bounding rect */
     GdkRectangle icon_rect;
     GdkRectangle text_rect;
@@ -127,7 +125,6 @@ static void on_sort_custom( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_sort_ascending( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_sort_descending( GtkMenuItem *menuitem, DesktopWindow* self );
 
-static void on_paste( GtkMenuItem *menuitem, DesktopWindow* self );
 static void on_settings( GtkMenuItem *menuitem, DesktopWindow* self );
 
 static GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent, GdkEvent *event, gpointer data );
@@ -149,7 +146,6 @@ static int comp_item_by_name( DesktopItem* item1, DesktopItem* item2, DesktopWin
 static int comp_item_by_size( DesktopItem* item1, DesktopItem* item2, DesktopWindow* win );
 static int comp_item_by_mtime( DesktopItem* item1, DesktopItem* item2, DesktopWindow* win );
 static int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWindow* win );
-static int comp_item_custom( DesktopItem* item1, DesktopItem* item2, DesktopWindow* win );
 
 static void redraw_item( DesktopWindow* win, DesktopItem* item );
 static void desktop_item_free( DesktopItem* item );
@@ -160,6 +156,7 @@ static gboolean set_root_pixmap(  GdkWindow* root , GdkPixmap* pix );
 */
 
 static DesktopItem* hit_test( DesktopWindow* self, int x, int y );
+static DesktopItem* hit_box_test( DesktopWindow* self, int x, int y );  //sfm
 
 /* static Atom ATOM_XROOTMAP_ID = 0; */
 static Atom ATOM_NET_WORKAREA = 0;
@@ -349,6 +346,7 @@ static void desktop_window_init(DesktopWindow *self)
     self->y_pad = 6;
     self->y_margin = 6;
     self->x_margin = 6;
+    self->insert_item = NULL;
 
     if ( !link_icon )
     {
@@ -417,7 +415,8 @@ GtkWidget* desktop_window_new(void)
 
 void desktop_item_free( DesktopItem* item )
 {
-    vfs_file_info_unref( item->fi );
+    if ( item->fi )
+        vfs_file_info_unref( item->fi );
     g_slice_free( DesktopItem, item );
 }
 
@@ -802,9 +801,11 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
     for( l = win->items; l; l = l->next )
     {
         VFSFileInfo* fi = ((DesktopItem*)l->data)->fi;
+        if ( !fi )
+            continue;
         char* path;
         /* reload the icons for special items if needed */
-        if( (fi->flags & VFS_FILE_INFO_DESKTOP_ENTRY)  && ! fi->big_thumbnail)
+        if ( (fi->flags & VFS_FILE_INFO_DESKTOP_ENTRY) && !fi->big_thumbnail )
         {
             path = g_build_filename( vfs_get_desktop_dir(), fi->name, NULL );
             vfs_file_info_load_special_info( fi, path );
@@ -1081,8 +1082,9 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
     {
         DesktopItem* item = (DesktopItem*)l->data;
         gboolean selected;
-        if( gdk_rectangle_intersect( &new_rect, &item->icon_rect, NULL ) ||
-            gdk_rectangle_intersect( &new_rect, &item->text_rect, NULL ) )
+        if( item->fi &&
+            ( gdk_rectangle_intersect( &new_rect, &item->icon_rect, NULL ) ||
+              gdk_rectangle_intersect( &new_rect, &item->text_rect, NULL ) ) )
             selected = TRUE;
         else
             selected = FALSE;
@@ -1099,7 +1101,9 @@ static void open_clicked_item( DesktopItem* clicked_item )
 {
     char* path = NULL;
 
-    if( vfs_file_info_is_dir( clicked_item->fi ) )  /* this is a folder */
+    if ( !clicked_item->fi )
+        return;
+    else if( vfs_file_info_is_dir( clicked_item->fi ) )  /* this is a folder */
     {
         GList* sel_files = NULL;
         sel_files = g_list_prepend( sel_files, clicked_item->fi );
@@ -1231,10 +1235,12 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
         if( ! (evt->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK)) )
         {
             /* don't cancel selection if clicking on selected items OR
-             * clicking on desktop with right button */
+             * clicking on desktop with right button 
             if( !( (evt->button == 1 || evt->button == 3 || evt->button == 0)
                                 && clicked_item && clicked_item->is_selected)
-                        && !( !clicked_item && evt->button == 3 ) )
+                        && !( !clicked_item && evt->button == 3 ) ) */
+            if ( !( ( evt->button == 1 || evt->button == 3 || evt->button == 0 )
+                                && clicked_item && clicked_item->is_selected ) )
                 desktop_window_select( self, DW_SELECT_NONE );
         }
 
@@ -1362,7 +1368,8 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
 
     if( self->rubber_bending )
     {
-        update_rubberbanding( self, evt->x, evt->y, !!(evt->state & GDK_CONTROL_MASK) );
+        update_rubberbanding( self, evt->x, evt->y,
+                                        !!(evt->state & GDK_CONTROL_MASK) );
         gtk_grab_remove( w );
         self->rubber_bending = FALSE;
     }
@@ -1370,13 +1377,22 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
     {
         self->dragging = FALSE;
     }
-    else if( self->single_click && evt->button == 1 && (GDK_BUTTON1_MASK == evt->state) )
+    else if( self->single_click && evt->button == 1 &&
+                                            (GDK_BUTTON1_MASK == evt->state) )
     {
         if( clicked_item )
         {
             open_clicked_item( clicked_item );
             return TRUE;
         }
+    }
+    else if ( !self->single_click && evt->button == 1 &&
+                                            (GDK_BUTTON1_MASK == evt->state) &&
+                                            clicked_item )
+    {
+        desktop_window_select( self, DW_SELECT_NONE );
+        clicked_item->is_selected = TRUE;
+        redraw_item( self, clicked_item );
     }
 
     /* forward the event to root window */
@@ -1561,13 +1577,14 @@ gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guin
         {
             if( get_best_target_at_dest(self, ctx, x, y ) == text_uri_list_atom )
             {
+                // move to icon - check the status of drop site
                 self->pending_drop_action = TRUE;
-                /* check the status of drop site */
                 gtk_drag_get_data( w, ctx, text_uri_list_atom, time );
                 return TRUE;
             }
-            else /* move desktop icon */
+            else
             {
+                // move to desktop
                 suggested_action = GDK_ACTION_MOVE;
             }
         }
@@ -1588,7 +1605,7 @@ gboolean on_drag_drop( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint 
 {
     DesktopWindow* self = (DesktopWindow*)w;
     GdkAtom target = get_best_target_at_dest( self, ctx, x, y );
-    /* g_debug("DROP: %s!", gdk_atom_name(target) ); */
+    //printf("DROP: %s\n", gdk_atom_name(target) );
     if( target == GDK_NONE )
         return FALSE;
     if( target == text_uri_list_atom || target == desktop_icon_atom )
@@ -1681,35 +1698,130 @@ static char** get_files_from_selection_data(GtkSelectionData* data)
     return files;
 }
 
-void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, GtkSelectionData* data, guint info, guint time )
+void move_desktop_items( DesktopWindow* self, GdkDragContext* ctx, 
+                                                    DesktopItem* target_item )
+{
+    DesktopItem* item;
+    GList* l, *ll, *target_l;
+
+    if ( !( target_item && ( target_l = g_list_find( self->items, target_item ) ) ) )
+        return;
+
+    GList* sel_items = desktop_window_get_selected_items( self );
+    if ( !sel_items )
+        return;
+
+    if ( g_list_find( sel_items, target_item ) )
+    {
+        // dropped selection onto self
+        g_list_free( sel_items );
+        return;
+    }
+    
+    // sort selected items by name - don't change user's order of icons ?
+    //sel_items = g_list_sort_with_data( sel_items,
+    //                                (GCompareDataFunc)comp_item_by_name, NULL );   
+
+    for ( l = sel_items; l; l = l->next )
+    {
+        if ( !( ll = g_list_find( self->items, l->data ) ) )
+            continue;  // not in list failsafe
+        if ( !target_l )
+        {
+            // no target - add to end
+            //printf( "NO TARGET\n" );
+            ll->data = g_slice_new0( DesktopItem );  // new empty
+            ((DesktopItem*)ll->data)->fi = NULL;
+            self->items = g_list_append( self->items, l->data );
+        }
+        else if ( !((DesktopItem*)target_l->data)->fi )
+        {
+            // target is empty, swap them
+            //printf( "SWAP %p -> %p\n", l->data, target_l->data );
+            ll->data = target_l->data;
+            target_l->data = l->data;
+            target_l = target_l->next;
+        }
+        else
+        {
+            // target is not empty, insert before
+            //printf( "INSERT %p before %p\n", l->data, target_l->data );
+            ll->data = g_slice_new0( DesktopItem );  // new empty
+            ((DesktopItem*)ll->data)->fi = NULL;
+            self->items = g_list_insert_before( self->items, target_l, l->data );
+            // scan downward and remove first empty
+            for ( ll = target_l->next; ll; ll = ll->next )
+            {
+                if ( !((DesktopItem*)ll->data)->fi )
+                {
+                    desktop_item_free( (DesktopItem*)ll->data );
+                    self->items = g_list_remove( self->items, ll->data );
+                    break;
+                }
+            }
+        }
+    }
+    g_list_free( sel_items );
+    layout_items( self );
+}
+
+
+gboolean on_insert_item_invalidate( DesktopWindow* self )
+{
+    self->insert_item = NULL;
+    return FALSE;
+}
+
+void desktop_window_insert_task_complete( VFSFileTask* task, DesktopWindow* self )
+{
+    // invalidate insert_item 2 seconds after task completion
+    g_timeout_add_seconds( 2, ( GSourceFunc ) on_insert_item_invalidate, self );
+}
+
+void desktop_window_set_insert_item( DesktopWindow* self )
+{
+    GList* sel_items = desktop_window_get_selected_items( self );
+    if ( !sel_items )
+        self->insert_item = NULL;
+    else
+    {
+        self->insert_item = sel_items->data;
+        g_list_free( sel_items );
+    }
+}
+
+void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, 
+                            GtkSelectionData* data, guint info, guint time )
 {
     DesktopWindow* self = (DesktopWindow*)w;
+    DesktopItem* item;
 
     if( gtk_selection_data_get_target( data ) == text_uri_list_atom )
     {
-        DesktopItem* item = hit_test( self, x, y );
+        item = hit_test( self, x, y );
         char* dest_dir = NULL;
         VFSFileTaskType file_action = VFS_FILE_TASK_MOVE;
         PtkFileTask* task = NULL;
         char** files;
         int n, i;
         GList* file_list;
+        struct stat statbuf;    // skip stat64
 
-        if( (gtk_selection_data_get_length( data ) < 0) || (gtk_selection_data_get_format( data ) != 8) )
+        if( (gtk_selection_data_get_length( data ) < 0) || 
+                                (gtk_selection_data_get_format( data ) != 8) )
         {
             gtk_drag_finish( ctx, FALSE, FALSE, time );
             return;
         }
 
-        if ( item && vfs_file_info_is_dir( item->fi ) )
+        if ( item && item->fi && vfs_file_info_is_dir( item->fi ) )
             dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
 
-        /* We are just checking the suggested actions for the drop site, not really drop */
+        // We are just checking the suggested actions for the drop site, not really drop
         if( self->pending_drop_action )
         {
             GdkDragAction suggested_action = 0;
             dev_t dest_dev;
-            struct stat statbuf;    // skip stat64
 
             if( stat( dest_dir ? dest_dir : vfs_get_desktop_dir(), &statbuf ) == 0 )
             {
@@ -1723,7 +1835,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
                     {
                         for( pfile = files; *pfile; ++pfile )
                         {
-                            if( stat( *pfile, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                            if( lstat( *pfile, &statbuf ) == 0 
+                                                && statbuf.st_dev != dest_dev )
                             {
                                 self->drag_src_dev = statbuf.st_dev;
                                 break;
@@ -1733,7 +1846,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
                     g_strfreev( files );
                 }
 
-                if( self->drag_src_dev != dest_dev )     /* src and dest are on different devices */
+                if( self->drag_src_dev != dest_dev )
+                    // src and dest are on different devices
                     suggested_action = GDK_ACTION_COPY;
                 else
                     suggested_action = GDK_ACTION_MOVE;
@@ -1743,6 +1857,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
             gdk_drag_status( ctx, suggested_action, time );
             return;
         }
+        printf("on_drag_data_received  text_uri_list_atom\n" );
 
         switch ( gdk_drag_context_get_selected_action( ctx ) )
         {
@@ -1752,46 +1867,87 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, G
         case GDK_ACTION_LINK:
             file_action = VFS_FILE_TASK_LINK;
             break;
-            /* FIXME:
-              GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled */
+            // FIXME: GDK_ACTION_DEFAULT, GDK_ACTION_PRIVATE, and GDK_ACTION_ASK are not handled
         default:
             break;
         }
 
         files = get_files_from_selection_data( data );
-        if( files )
+        if ( files )
         {
-            /* g_debug("file_atcion: %d", file_action); */
+            if ( file_action == VFS_FILE_TASK_MOVE && item && item->fi && !dest_dir )
+            {
+                // moving onto non-dir item - are source files on desktop?
+                ino_t src_dir_inode;
+                char* src_dir = g_path_get_dirname( files[0] );
+                if ( stat( src_dir, &statbuf ) == 0 )
+                {
+                    src_dir_inode = statbuf.st_ino;
+                    if ( stat( vfs_get_desktop_dir(), &statbuf ) == 0 &&
+                                            statbuf.st_ino == src_dir_inode )
+                    {
+                        // source files are on desktop, move items only
+                        g_strfreev( files );
+                        g_free( src_dir );
+                        move_desktop_items( self, ctx, item );
+                        gtk_drag_finish( ctx, TRUE, FALSE, time );
+                        return;
+                    }
+                }
+                g_free( src_dir );
+            }
+
             file_list = NULL;
             n = g_strv_length( files );
             for( i = 0; i < n; ++i )
                 file_list = g_list_prepend( file_list, files[i] );
             g_free( files );
-
+            file_list = g_list_reverse( file_list );
+            
             task = ptk_file_task_new( file_action,
                                       file_list,
                                       dest_dir ? dest_dir : vfs_get_desktop_dir(),
                                       GTK_WINDOW( self ), NULL );
+            // get insertion box
+            if ( self->sort_by == DW_SORT_CUSTOM )
+            {
+                if ( !item )
+                    item = hit_box_test( self, x, y );
+                self->insert_item = item;
+                ptk_file_task_set_complete_notify( task,
+                                    (GFunc)desktop_window_insert_task_complete,
+                                    self );
+            }
             ptk_file_task_run( task );
         }
         g_free( dest_dir );
 
         gtk_drag_finish( ctx, files != NULL, FALSE, time );
     }
-    else if( gtk_selection_data_get_target( data ) == desktop_icon_atom ) /* moving desktop icon */
-    {
-        GList* sels = desktop_window_get_selected_items(self), *l;
-        int x_off = x - self->drag_start_x;
-        int y_off = y - self->drag_start_y;
-        for( l = sels; l; l = l->next )
+    else if ( gtk_selection_data_get_target( data ) == desktop_icon_atom )
+    {   // moving desktop icon to desktop
+        if ( self->sort_by == DW_SORT_CUSTOM )
         {
-            DesktopItem* item = l->data;
-            #if 0   /* temporarily turn off */
-            move_item( self, item, x_off, y_off, TRUE );
-            #endif
-            /* g_debug( "move: %d, %d", x_off, y_off ); */
+            //printf("on_drag_data_received - desktop_icon_atom\n");
+            item = hit_box_test( self, x, y );
+            move_desktop_items( self, ctx, item );
+
+            /*
+            GList* sels = desktop_window_get_selected_items(self), *l;
+            int x_off = x - self->drag_start_x;
+            int y_off = y - self->drag_start_y;
+            for( l = sels; l; l = l->next )
+            {
+                DesktopItem* item = l->data;
+                #if 0   // temporarily turn off
+                move_item( self, item, x_off, y_off, TRUE );
+                #endif
+                DesktopItem* hit_item = hit_box_test( self, x, y );
+                printf( "    move: %s, %d (%d), %d (%d) -> %s\n", item->fi ? vfs_file_info_get_name( item->fi ) : "Empty", x, x_off, y, y_off, hit_item ? hit_item->fi ? vfs_file_info_get_name( hit_item->fi ) : "EMPTY" : "MISS" );
+            }
+            g_list_free( sels );
+            */
         }
-        g_list_free( sels );
         gtk_drag_finish( ctx, TRUE, FALSE, time );
     }
 }
@@ -2014,7 +2170,9 @@ void desktop_window_select( DesktopWindow* self, DWSelectMode mode )
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*) l->data;
-        if ( mode == DW_SELECT_ALL )
+        if ( !item->fi )
+            sel = FALSE;  // empty
+        else if ( mode == DW_SELECT_ALL )
             sel = TRUE;
         else if ( mode == DW_SELECT_NONE )
             sel = FALSE;
@@ -2044,7 +2202,7 @@ void select_item( DesktopWindow* self, DesktopItem* item, gboolean val )
 {
     if ( !item )
         return;
-    item->is_selected = val;
+    item->is_selected = item->fi ? val : FALSE;
     redraw_item( self, item );
 }
 
@@ -2108,6 +2266,8 @@ _key_found:
                         by = DW_SORT_BY_TYPE;
                     else if ( !strcmp( xname, "date" ) )
                         by = DW_SORT_BY_MTIME;
+                    else if ( !strcmp( xname, "cust" ) )
+                        by = DW_SORT_CUSTOM;
                     else
                     {
                         if ( !strcmp( xname, "ascend" ) )
@@ -2128,17 +2288,28 @@ _key_found:
             {
                 xname = set->name + 6;
                 if ( !strcmp( xname, "link" ) )
+                {
+                    desktop_window_set_insert_item( desktop );
                     ptk_clipboard_paste_links(
                         GTK_WINDOW( gtk_widget_get_toplevel(
-                                            GTK_WIDGET( desktop ) ) ),
-                                            vfs_get_desktop_dir(), NULL );
+                                    GTK_WIDGET( desktop ) ) ),
+                                    vfs_get_desktop_dir(), NULL,
+                                    (GFunc)desktop_window_insert_task_complete );
+                }
                 else if ( !strcmp( xname, "target" ) )
+                {
+                    desktop_window_set_insert_item( desktop );
                     ptk_clipboard_paste_targets( GTK_WINDOW( 
                             gtk_widget_get_toplevel( GTK_WIDGET( desktop ) ) ),
                             vfs_get_desktop_dir(),
-                            NULL );
+                            NULL, (GFunc)desktop_window_insert_task_complete );
+                }
                 else if ( !strcmp( xname, "as" ) )
-                    ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir() );
+                {
+                    desktop_window_set_insert_item( desktop );
+                    ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir(),
+                                    (GFunc)desktop_window_insert_task_complete );
+                }
             }
             else if ( g_str_has_prefix( set->name, "select_" ) )
             {
@@ -2321,12 +2492,6 @@ void on_sort_descending( GtkMenuItem *menuitem, DesktopWindow* self )
     desktop_window_sort_items( self, self->sort_by, GTK_SORT_DESCENDING );
 }
 
-void on_paste( GtkMenuItem *menuitem, DesktopWindow* self )
-{
-    const gchar* dest_dir = vfs_get_desktop_dir();
-    ptk_clipboard_paste_files( NULL, dest_dir, NULL );
-}
-
 void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 {
     if ( !aop )
@@ -2356,7 +2521,8 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
             for ( l = self->items; l; l = l->next )
             {
                 item = (DesktopItem*)l->data;
-                if ( !g_strcmp0( vfs_file_info_get_name( item->fi ), name ) )
+                if ( item->fi && 
+                            !g_strcmp0( vfs_file_info_get_name( item->fi ), name ) )
                     break;
             }
 
@@ -2406,53 +2572,61 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
 {
     PangoLayoutLine* line;
     int line_h;
-
+    gboolean fake_line = TRUE;  //self->sort_by == DW_SORT_CUSTOM;
+    
     item->box.width = self->item_w;
     item->box.height = self->y_pad * 2;
     item->box.height += self->icon_size;
     item->box.height += self->spacing;
 
-    pango_layout_set_text( self->pl, item->fi->disp_name, -1 );
-    pango_layout_set_wrap( self->pl, PANGO_WRAP_WORD_CHAR );    /* wrap the text */
-    pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_NONE );
-
-    if( pango_layout_get_line_count(self->pl) >= 2 ) /* there are more than 2 lines */
+    // get text_rect height 
+    item->text_rect.height = 0;
+    
+    if ( item->fi )  // not empty
     {
-        /* we only allow displaying two lines, so let's get the second line */
-/* Pango only provide version check macros in the latest versions...
- *  So there is no point in making this check.
- *  FIXME: this check should be done ourselves in configure.
-  */
+        pango_layout_set_text( self->pl, item->fi->disp_name, -1 );
+        pango_layout_set_wrap( self->pl, PANGO_WRAP_WORD_CHAR );  // wrap the text
+        pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_NONE );
+
+        if( pango_layout_get_line_count(self->pl) >= 2 ) // there are more than 2 lines
+        {
+            // we only allow displaying two lines, so let's get the second line
+            // Pango only provide version check macros in the latest versions...
+            // So there is no point in making this check.
+            // FIXME: this check should be done ourselves in configure.
 #if defined (PANGO_VERSION_CHECK)
 #if PANGO_VERSION_CHECK( 1, 16, 0 )
-        line = pango_layout_get_line_readonly( self->pl, 1 );
+            line = pango_layout_get_line_readonly( self->pl, 1 );
 #else
-        line = pango_layout_get_line( self->pl, 1 );
+            line = pango_layout_get_line( self->pl, 1 );
 #endif
 #else
-        line = pango_layout_get_line( self->pl, 1 );
+            line = pango_layout_get_line( self->pl, 1 );
 #endif
-        item->len1 = line->start_index; /* this the position where the first line wraps */
+            item->len1 = line->start_index; // this the position where the first line wraps
 
-        /* OK, now we layout these 2 lines separately */
-        pango_layout_set_text( self->pl, item->fi->disp_name, item->len1 );
-        pango_layout_get_pixel_size( self->pl, NULL, &line_h );
-        item->text_rect.height = line_h;
-    }
-    else
-    {
-        item->text_rect.height = 0;
+            // OK, now we layout these 2 lines separately
+            pango_layout_set_text( self->pl, item->fi->disp_name, item->len1 );
+            pango_layout_get_pixel_size( self->pl, NULL, &line_h );
+            item->text_rect.height = line_h;
+            fake_line = FALSE;
+        }
     }
 
-    pango_layout_set_wrap( self->pl, 0 );    /* wrap the text */
+    pango_layout_set_wrap( self->pl, 0 );    // wrap the text
     pango_layout_set_ellipsize( self->pl, PANGO_ELLIPSIZE_END );
 
-    pango_layout_set_text( self->pl, item->fi->disp_name + item->len1, -1 );
+    if ( item->fi )
+        pango_layout_set_text( self->pl, item->fi->disp_name + item->len1, -1 );
+    else
+        pango_layout_set_text( self->pl, "Empty", -1 );
     pango_layout_get_pixel_size( self->pl, NULL, &line_h );
     item->text_rect.height += line_h;
 
     item->text_rect.width = 100;
-    item->box.height += item->text_rect.height;
+
+    // add empty text line height to standardize height to two lines for custom sort
+    item->box.height += item->text_rect.height * ( fake_line ? 2 : 1 );
 
     item->icon_rect.width = item->icon_rect.height = self->icon_size;
 }
@@ -2460,46 +2634,133 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
 void layout_items( DesktopWindow* self )
 {
     GList* l;
+    GList* ll;
     DesktopItem* item;
     GtkWidget* widget = (GtkWidget*)self;
-    int x, y, w, y2;
+    int x, y, w, bottom, right;
+    gboolean list_compressed = self->sort_by != DW_SORT_CUSTOM;
 
     self->item_w = MAX( self->label_w, self->icon_size ) + self->x_pad * 2;
-
-    x = self->wa.x + self->x_margin;
-    y = self->wa.y + self->y_margin;
-
     pango_layout_set_width( self->pl, 100 * PANGO_SCALE );
 
-    for( l = self->items; l; l = l->next )
+start_layout:    
+    //printf( "==================== layout_items\n" );
+    x = self->wa.x + self->x_margin;
+    y = self->wa.y + self->y_margin;
+    self->box_count = 0;
+    for ( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*)l->data;
-        item->box.x = x;
-        item->box.y = y;
-
         item->box.width = self->item_w;
         calc_item_size( self, item );
 
-        y2 = self->wa.y + self->wa.height - self->y_margin; /* bottom */
-        if( y + item->box.height > y2 ) /* bottom is reached */
+        bottom = self->wa.y + self->wa.height - self->y_margin;
+        if ( y + item->box.height > bottom )
         {
+            // bottom reached - go to next column
             y = self->wa.y + self->y_margin;
-            item->box.y = y;
-            y += item->box.height;
-            x += self->item_w;  /* go to the next column */
-            item->box.x = x;
+            x += self->item_w;
         }
-        else /* bottom is not reached */
+        right = self->wa.x + self->wa.width - self->x_margin;
+        if ( !list_compressed && x + item->box.width > right )
         {
-            y += item->box.height;  /* move to the next row */
+            // right side reached - remove empties and redo layout (custom sort)
+            gboolean list_changed = FALSE;
+            // scan down below box_count and remove all empties
+            for ( ll = g_list_nth( self->items, self->box_count ); ll; 
+                                                            ll = ll->next )
+            {
+                if ( !((DesktopItem*)ll->data)->fi )
+                {
+                    desktop_item_free( (DesktopItem*)ll->data );
+                    self->items = g_list_remove( self->items, ll->data );
+                    if ( !list_changed )
+                        list_changed = TRUE;
+                }
+            }
+            // scan up above box_count and remove empties until all items fit
+            gboolean empty_removed = TRUE;
+            while ( empty_removed &&
+                                g_list_length( self->items ) > self->box_count )
+            {
+                empty_removed = FALSE;
+                for ( ll = g_list_nth( self->items, self->box_count - 1 ); ll; 
+                                                                ll = ll->prev )
+                {
+                    if ( !((DesktopItem*)ll->data)->fi )
+                    {
+                        desktop_item_free( (DesktopItem*)ll->data );
+                        self->items = g_list_remove( self->items, ll->data );
+                        if ( !list_changed )
+                            list_changed = TRUE;
+                        empty_removed = TRUE;
+                        break;
+                    }
+                }                
+            }
+            // all items now fit or list is as compressed as possible - redo
+            list_compressed = TRUE;
+            if ( list_changed )
+                goto start_layout;
         }
+        else
+            self->box_count++;
+
+        item->box.x = x;
+        item->box.y = y;
+        y += item->box.height; // go to next row
 
         item->icon_rect.x = item->box.x + (item->box.width - self->icon_size) / 2;
         item->icon_rect.y = item->box.y + self->y_pad;
 
         item->text_rect.x = item->box.x + self->x_pad;
         item->text_rect.y = item->box.y + self->y_pad + self->icon_size + self->spacing;
+        /*
+        if ( !item->fi )
+            printf( "LAY EMPTY %d, %d  %p\n", x, y, item );            
+        else
+            printf( "LAY %s %d, %d  %p\n", vfs_file_info_get_name( item->fi ), x, y, item );
+        */
     }
+    
+    if ( self->sort_by == DW_SORT_CUSTOM )
+    {
+        // add empty boxes to fill window
+        //printf("---------- ADD_EMPTY_BOXES\n");
+        do
+        {
+            item = g_slice_new0( DesktopItem );
+            item->fi = NULL;
+            item->box.width = self->item_w;
+            calc_item_size( self, item );
+            
+            bottom = self->wa.y + self->wa.height - self->y_margin;
+            if( y + item->box.height > bottom )
+            {
+                // bottom reached - go to next column
+                y = self->wa.y + self->y_margin;
+                x += self->item_w;
+            }
+            right = self->wa.x + self->wa.width - self->x_margin;
+            if ( x + item->box.width > right )
+            {
+                // right side reached - stop adding empty boxes
+                //printf( "RIGHT reached - stop adding empty %d, %d\n", x, y );
+                g_slice_free( DesktopItem, item );
+                break;
+            }
+            
+            item->box.x = x;
+            item->box.y = y;
+            //printf( "ADD empty %d, %d  %p\n", x, y, item );
+            y += item->box.height; // go to next row
+            
+            // add to list
+            self->items = g_list_append( self->items, item );
+            self->box_count++;
+        } while ( 1 );
+    }
+    //printf("    box_count = %d\n", self->box_count );
     gtk_widget_queue_draw( GTK_WIDGET(self) );
 }
 
@@ -2525,8 +2786,11 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
     }
     g_mutex_unlock( dir->mutex );
 
-    self->items = NULL;
-    self->items = g_list_sort_with_data( items, get_sort_func(self), self );
+    GCompareDataFunc comp_func = get_sort_func( self );
+    if ( comp_func )
+        self->items = g_list_sort_with_data( items, comp_func, self );
+    else
+        self->items = items;
 
 /*
     // Make an item for Home dir
@@ -2557,7 +2821,7 @@ void on_thumbnail_loaded( VFSDir* dir,  VFSFileInfo* fi, DesktopWindow* self )
     for( l = self->items; l; l = l->next )
     {
         DesktopItem* item = (DesktopItem*) l->data;
-        if( item->fi == fi )
+        if ( item->fi && item->fi == fi )
         {
 /*
             if( item->icon )
@@ -2584,7 +2848,7 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*)l->data;
-        if( strcmp( file->name, item->fi->name ) == 0 )
+        if( item->fi && strcmp( file->name, item->fi->name ) == 0 )
             return;
     }
 
@@ -2592,8 +2856,63 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     item->fi = vfs_file_info_ref( file );
     /* item->icon = vfs_file_info_get_big_icon( file ); */
 
-    self->items = g_list_insert_sorted_with_data( self->items, item,
-                                                                            get_sort_func(self), self );
+    GCompareDataFunc comp_func = get_sort_func( self );
+    if ( comp_func )
+        self->items = g_list_insert_sorted_with_data( self->items, item,
+                                                    get_sort_func(self), self );
+    else
+    {
+        // custom sort
+        GList* ll;
+        if ( self->insert_item &&
+                        ( l = g_list_find( self->items, self->insert_item ) ) )
+        {
+            // insert where dropped
+            if ( ((DesktopItem*)self->insert_item)->fi )
+            {
+                // dropped onto a non-empty item - insert before
+                self->items = g_list_insert_before( self->items, l, item );
+                // scan downward and remove first empty
+                for ( ll = l->next; ll; ll = ll->next )
+                {
+                    if ( !((DesktopItem*)ll->data)->fi )
+                    {
+                        desktop_item_free( (DesktopItem*)ll->data );
+                        self->items = g_list_remove( self->items, ll->data );
+                        break;
+                    }
+                }                
+            }
+            else
+            {
+                // dropped onto empty item, replace it
+                desktop_item_free( (DesktopItem*)self->insert_item );
+                l->data = item;
+                self->insert_item = l->next->data;
+            }
+        }
+        else
+        {
+            // find empty at end of all icons
+            ll = NULL;
+            for ( l = g_list_last( self->items ); l; l = l->prev )
+            {
+                if ( !((DesktopItem*)l->data)->fi )
+                    ll = l;  // found empty
+                else 
+                    break;   // found icon
+            }
+            if ( ll )
+            {
+                // replace empty
+                desktop_item_free( (DesktopItem*)ll->data );
+                ll->data = item;
+            }
+            else
+                // no empties found
+                self->items = g_list_append( self->items, item );
+        }
+    }
 
     /* FIXME: we shouldn't update the whole screen */
     /* FIXME: put this in idle handler with priority higher than redraw but lower than resize */
@@ -2618,18 +2937,31 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*)l->data;
-        if( item->fi == file )
+        if ( item->fi && item->fi == file )
             break;
     }
 
     if( l ) /* found */
     {
         item = (DesktopItem*)l->data;
-        self->items = g_list_delete_link( self->items, l );
-        desktop_item_free( item );
-        /* FIXME: we shouldn't update the whole screen */
-        /* FIXME: put this in idle handler with priority higher than redraw but lower than resize */
-        layout_items( self );
+        if ( self->sort_by == DW_SORT_CUSTOM )
+        {
+            // replace item with empty
+            DesktopItem* item_new = g_slice_new0( DesktopItem );
+            item_new->fi = NULL;
+            item_new->box = item->box;
+            desktop_item_free( item );
+            l->data = item_new;
+            redraw_item( self, item_new );
+        }
+        else
+        {
+            self->items = g_list_delete_link( self->items, l );
+            desktop_item_free( item );
+            /* FIXME: we shouldn't update the whole screen */
+            /* FIXME: put this in idle handler with priority higher than redraw but lower than resize */
+            layout_items( self );
+        }
     }
 }
 
@@ -2648,7 +2980,7 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*)l->data;
-        if( item->fi == file )
+        if ( item->fi && item->fi == file )
             break;
     }
 
@@ -2778,6 +3110,9 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 {
     /* GdkPixbuf* icon = item->icon ? gdk_pixbuf_ref(item->icon) : NULL; */
     GdkPixbuf* icon;
+    
+    if ( !item->fi )
+        return;   // empty
     const char* text = item->fi->disp_name;
     GtkWidget* widget = (GtkWidget*)self;
 #if !GTK_CHECK_VERSION (3, 0, 0)
@@ -2811,17 +3146,14 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
         g_object_unref( icon );
 
     // add link_icon arrow to links
-    if ( item->fi )
+    if ( vfs_file_info_is_symlink( item->fi ) && link_icon )
     {
-        if ( vfs_file_info_is_symlink( item->fi ) && link_icon )
-        {
-            cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
-            gdk_cairo_set_source_pixbuf ( cr, link_icon,
-                                          item->icon_rect.x,
-                                          item->icon_rect.y );
-           gdk_cairo_rectangle ( cr, &item->icon_rect );
-            cairo_fill ( cr );
-        }
+        cairo_set_operator ( cr, CAIRO_OPERATOR_OVER );
+        gdk_cairo_set_source_pixbuf ( cr, link_icon,
+                                      item->icon_rect.x,
+                                      item->icon_rect.y );
+       gdk_cairo_rectangle ( cr, &item->icon_rect );
+        cairo_fill ( cr );
     }
 
     // text
@@ -2936,11 +3268,51 @@ DesktopItem* hit_test( DesktopWindow* self, int x, int y )
     for( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*) l->data;
+        if ( !item->fi )
+            continue;  // empty box
         if( is_point_in_rect( &item->icon_rect, x, y )
          || is_point_in_rect( &item->text_rect, x, y ) )
             return item;
     }
     return NULL;
+}
+
+DesktopItem* hit_box_test( DesktopWindow* self, int x, int y )  //sfm
+{
+    DesktopItem* item;
+    GList* l;
+
+    for ( l = self->items; l; l = l->next )
+    {
+        item = (DesktopItem*)l->data;
+        if ( is_point_in_rect( &item->box, x, y ) )
+        {
+            if ( l->next && ((DesktopItem*)l->next->data)->box.x == item->box.x
+                         && y > item->box.y + item->box.height * 0.8 )
+                // clicked in lower area of box, return next box if same column
+                return (DesktopItem*)l->next->data;
+            return item;
+        }
+    }
+    
+    // unlikely - no box was directly hit, so use closest
+    DesktopItem* closest_item = NULL;
+    float dist_min, dist;
+    int x2, y2;
+    for ( l = self->items; l; l = l->next )
+    {
+        item = (DesktopItem*)l->data;
+        x2 = x - ( item->box.x + item->box.width / 2 );
+        y2 = y - ( item->box.y + item->box.height / 2 );
+        dist = sqrt( x2 * x2 + y2 * y2  );
+        if ( !closest_item || dist < dist_min )
+        {
+            dist_min = dist;
+            closest_item = item;
+        }
+    }
+    printf( "MISS %p  dist = %f\n", closest_item, dist_min );
+    return closest_item;
 }
 
 /* FIXME: this is too dirty and here is some redundant code.
@@ -3018,7 +3390,7 @@ GCompareDataFunc get_sort_func( DesktopWindow* win )
             comp = (GCompareDataFunc)comp_item_by_mtime;
             break;
         case DW_SORT_CUSTOM:
-            comp = (GCompareDataFunc)comp_item_custom;
+            comp = NULL;
             break;
         default:
             comp = (GCompareDataFunc)comp_item_by_name;
@@ -3036,7 +3408,7 @@ int comp_item_by_name( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
     ret =g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
-    if( win->sort_type == GTK_SORT_DESCENDING )
+    if( win && win->sort_type == GTK_SORT_DESCENDING )
         ret = -ret;
     return ret;
 }
@@ -3083,11 +3455,6 @@ int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     return ret;
 }
 
-int comp_item_custom( DesktopItem* item1, DesktopItem* item2, DesktopWindow* win )
-{
-    return (item1->order - item2->order);
-}
-
 void redraw_item( DesktopWindow* win, DesktopItem* item )
 {
     GdkRectangle rect = item->box;
@@ -3104,19 +3471,50 @@ void redraw_item( DesktopWindow* win, DesktopItem* item )
 void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
                                                             GtkSortType sort_type )
 {
-    GList* items = NULL;
-    GList* special_items;
-
     if( win->sort_type == sort_type && win->sort_by == sort_by )
         return;
 
     app_settings.desktop_sort_by = win->sort_by = sort_by;
     app_settings.desktop_sort_type = win->sort_type = sort_type;
-    xset_autosave( NULL );
+    
+    if ( sort_type != DW_SORT_CUSTOM )
+    {
+        // remove empty boxes for non-custom sort
+        DesktopItem* item;
+        GList* items = win->items;
+        //printf("\n-------------------\nREMOVE\n" );
+        while ( items )
+        {
+            if ( ((DesktopItem*)items->data)->fi )
+            {
+                //item = (DesktopItem*)items->data; printf( "KEEP %s %d, %d  %p\n", vfs_file_info_get_name( item->fi ), item->box.x, item->box.y, item );
+                items = items->next;
+            }
+            else
+            {
+                // remove
+                item = (DesktopItem*)items->data;
+                //printf("REMOVE empty %d, %d  %p\n", item->box.x, item->box.y, item );
+                items = items->next;                
+                win->items = g_list_remove( win->items, item );
+                desktop_item_free( item );
+            }
+        }
+    }
 
-    /* skip the special items since they always appears first */
+    // sort
+    GCompareDataFunc comp_func = get_sort_func( win );
+    if ( comp_func )
+        win->items = g_list_sort_with_data( win->items, comp_func, win );
+
+    // layout
+    layout_items( win );
+        
+    /* //sfm 0.9.0 no longer using special items
+    // skip the special items since they always appears first
+    GList* items = NULL;
     gboolean special = FALSE;    //MOD added - otherwise caused infinite loop in layout items once My Documents was removed
-    special_items = win->items;
+    GList* special_items = win->items;
     for( items = special_items; items; items = items->next )
     {
         DesktopItem* item = (DesktopItem*)items->data;
@@ -3129,20 +3527,23 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
     if( ! items )
         return;
 
-    /* the previous item of the first non-special item is the last special item */
+    // the previous item of the first non-special item is the last special item
     if( special && items->prev )
     {
         items->prev->next = NULL;
         items->prev = NULL;
     }
 
-    items = g_list_sort_with_data( items, get_sort_func(win), win );
+    GCompareDataFunc comp_func = get_sort_func( win );
+    if ( comp_func )
+        items = g_list_sort_with_data( items, comp_func, win );
     if ( special )
         win->items = g_list_concat( special_items, items );
     else
         win->items = items;
         
     layout_items( win );
+    */
 }
 
 GList* desktop_window_get_selected_items( DesktopWindow* win )
@@ -3153,11 +3554,12 @@ GList* desktop_window_get_selected_items( DesktopWindow* win )
     for( l = win->items; l; l = l->next )
     {
         DesktopItem* item = (DesktopItem*) l->data;
-        if( item->is_selected )
+        if ( item->is_selected && item->fi )
         {
+            /* preserve order
             if( G_UNLIKELY( item == win->focus ) )
                 sel = g_list_prepend( sel, item );
-            else
+            else */
                 sel = g_list_append( sel, item );
         }
     }
@@ -3174,7 +3576,7 @@ GList* desktop_window_get_selected_files( DesktopWindow* win )
     while( l )
     {
         DesktopItem* item = (DesktopItem*) l->data;
-        if( item->fi->flags & VFS_FILE_INFO_VIRTUAL )
+        if ( item->fi->flags & VFS_FILE_INFO_VIRTUAL )
         {
             /* don't include virtual items */
             GList* tmp = l;

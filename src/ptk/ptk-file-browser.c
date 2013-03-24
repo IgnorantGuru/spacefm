@@ -5197,7 +5197,7 @@ void ptk_file_browser_paste( PtkFileBrowser* file_browser )
     ptk_clipboard_paste_files(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         dest_dir ? dest_dir : ptk_file_browser_get_cwd( file_browser ),
-        GTK_TREE_VIEW( file_browser->task_view ) );
+        GTK_TREE_VIEW( file_browser->task_view ), NULL );
     if ( dest_dir )
         g_free( dest_dir );
     if ( sel_files )
@@ -5212,7 +5212,7 @@ void ptk_file_browser_paste_link( PtkFileBrowser* file_browser )  //MOD added
     ptk_clipboard_paste_links(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         ptk_file_browser_get_cwd( file_browser ),
-        GTK_TREE_VIEW( file_browser->task_view ) );
+        GTK_TREE_VIEW( file_browser->task_view ), NULL );
 }
 
 void ptk_file_browser_paste_target( PtkFileBrowser* file_browser )  //MOD added
@@ -5220,7 +5220,7 @@ void ptk_file_browser_paste_target( PtkFileBrowser* file_browser )  //MOD added
     ptk_clipboard_paste_targets(
         GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) ),
         ptk_file_browser_get_cwd( file_browser ),
-        GTK_TREE_VIEW( file_browser->task_view ) );
+        GTK_TREE_VIEW( file_browser->task_view ), NULL );
 }
 
 gboolean ptk_file_browser_can_cut_or_copy( PtkFileBrowser* file_browser )
@@ -7114,7 +7114,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             ptk_file_browser_paste_target( browser );
         else if ( !strcmp( xname, "as" ) )
             ptk_file_misc_paste_as( NULL, browser, 
-                                        ptk_file_browser_get_cwd( browser ) );
+                                ptk_file_browser_get_cwd( browser ), NULL );
     }
     else if ( g_str_has_prefix( set->name, "select_" ) )
     {
