@@ -1879,17 +1879,21 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             {
                 // moving onto non-dir item - are source files on desktop?
                 ino_t src_dir_inode;
+                dev_t src_dir_dev;
                 char* src_dir = g_path_get_dirname( files[0] );
                 if ( stat( src_dir, &statbuf ) == 0 )
                 {
                     src_dir_inode = statbuf.st_ino;
+                    src_dir_dev = statbuf.st_dev;
                     if ( stat( vfs_get_desktop_dir(), &statbuf ) == 0 &&
-                                            statbuf.st_ino == src_dir_inode )
+                                            statbuf.st_ino == src_dir_inode &&
+                                            statbuf.st_dev == src_dir_dev )
                     {
                         // source files are on desktop, move items only
                         g_strfreev( files );
                         g_free( src_dir );
-                        move_desktop_items( self, ctx, item );
+                        if ( self->sort_by == DW_SORT_CUSTOM )
+                            move_desktop_items( self, ctx, item );
                         gtk_drag_finish( ctx, TRUE, FALSE, time );
                         return;
                     }
