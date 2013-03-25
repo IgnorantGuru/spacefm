@@ -125,6 +125,8 @@ struct _DesktopWindow
 
     gint drag_start_x;  /* for drag & drop */
     gint drag_start_y;
+    gint drag_pending_x;
+    gint drag_pending_y;
     guint rubber_bending_x;
     guint rubber_bending_y;
 

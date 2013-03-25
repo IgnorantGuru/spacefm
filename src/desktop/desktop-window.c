@@ -156,7 +156,10 @@ static gboolean set_root_pixmap(  GdkWindow* root , GdkPixmap* pix );
 */
 
 static DesktopItem* hit_test( DesktopWindow* self, int x, int y );
-static DesktopItem* hit_box_test( DesktopWindow* self, int x, int y );  //sfm
+static DesktopItem* hit_test_icon( DesktopWindow* self, int x, int y );
+static gboolean hit_test_text( DesktopWindow* self, int x, int y,
+                                                    DesktopItem** next_item );
+static DesktopItem* hit_test_box( DesktopWindow* self, int x, int y );
 
 /* static Atom ATOM_XROOTMAP_ID = 0; */
 static Atom ATOM_NET_WORKAREA = 0;
@@ -1514,7 +1517,10 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
             expected_target = text_uri_list_atom;
         else
         {
-            item = hit_test( self, x, y );
+            if ( self->sort_by == DW_SORT_CUSTOM )
+                item = hit_test_icon( self, x, y );
+            else
+                item = hit_test( self, x, y );
             if( item )  /* drag over a desktpo item */
             {
                 GList* sels;
@@ -1579,6 +1585,8 @@ gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guin
             {
                 // move to icon - check the status of drop site
                 self->pending_drop_action = TRUE;
+                self->drag_pending_x = x;
+                self->drag_pending_y = y;
                 gtk_drag_get_data( w, ctx, text_uri_list_atom, time );
                 return TRUE;
             }
@@ -1702,16 +1710,16 @@ void move_desktop_items( DesktopWindow* self, GdkDragContext* ctx,
                                                     DesktopItem* target_item )
 {
     DesktopItem* item;
-    GList* l, *ll, *target_l;
+    GList* l, *ll, *target_l = NULL;
 
-    if ( !( target_item && ( target_l = g_list_find( self->items, target_item ) ) ) )
+    if ( target_item && !( target_l = g_list_find( self->items, target_item ) ) )
         return;
 
     GList* sel_items = desktop_window_get_selected_items( self );
     if ( !sel_items )
         return;
 
-    if ( g_list_find( sel_items, target_item ) )
+    if ( target_item && g_list_find( sel_items, target_item ) )
     {
         // dropped selection onto self
         g_list_free( sel_items );
@@ -1798,7 +1806,20 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
 
     if( gtk_selection_data_get_target( data ) == text_uri_list_atom )
     {
-        item = hit_test( self, x, y );
+        gboolean text_hit = FALSE;
+        if ( self->pending_drop_action )
+        {
+            x = self->drag_pending_x;
+            y = self->drag_pending_y;
+        }
+        if ( self->sort_by == DW_SORT_CUSTOM )
+        {
+            item = hit_test_icon( self, x, y );
+            if ( !item )
+                text_hit = hit_test_text( self, x, y, &item );
+        }
+        else
+            item = hit_test( self, x, y );
         char* dest_dir = NULL;
         VFSFileTaskType file_action = VFS_FILE_TASK_MOVE;
         PtkFileTask* task = NULL;
@@ -1814,7 +1835,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             return;
         }
 
-        if ( item && item->fi && vfs_file_info_is_dir( item->fi ) )
+        if ( item && item->fi && !text_hit && vfs_file_info_is_dir( item->fi ) )
+            // drop into a dir item on the desktop
             dest_dir = g_build_filename( vfs_get_desktop_dir(), item->fi->name, NULL );
 
         // We are just checking the suggested actions for the drop site, not really drop
@@ -1857,7 +1879,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             gdk_drag_status( ctx, suggested_action, time );
             return;
         }
-        //printf("on_drag_data_received  text_uri_list_atom\n" );
+        //printf("on_drag_data_received  text_uri_list_atom  %s\n", text_hit ? "text_hit" : item ? "item" : "no-item" );
 
         switch ( gdk_drag_context_get_selected_action( ctx ) )
         {
@@ -1916,7 +1938,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             if ( self->sort_by == DW_SORT_CUSTOM )
             {
                 if ( !item )
-                    item = hit_box_test( self, x, y );
+                    item = hit_test_box( self, x, y );
                 self->insert_item = item;
                 ptk_file_task_set_complete_notify( task,
                                     (GFunc)desktop_window_insert_task_complete,
@@ -1933,7 +1955,8 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
         if ( self->sort_by == DW_SORT_CUSTOM )
         {
             //printf("on_drag_data_received - desktop_icon_atom\n");
-            item = hit_box_test( self, x, y );
+            if ( !hit_test_text( self, x, y, &item ) )
+                item = hit_test_box( self, x, y );
             move_desktop_items( self, ctx, item );
 
             /*
@@ -1946,7 +1969,7 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
                 #if 0   // temporarily turn off
                 move_item( self, item, x_off, y_off, TRUE );
                 #endif
-                DesktopItem* hit_item = hit_box_test( self, x, y );
+                DesktopItem* hit_item = hit_test_box( self, x, y );
                 printf( "    move: %s, %d (%d), %d (%d) -> %s\n", item->fi ? vfs_file_info_get_name( item->fi ) : "Empty", x, x_off, y, y_off, hit_item ? hit_item->fi ? vfs_file_info_get_name( hit_item->fi ) : "EMPTY" : "MISS" );
             }
             g_list_free( sels );
@@ -3266,23 +3289,65 @@ static gboolean is_point_in_rect( GdkRectangle* rect, int x, int y )
 }
 
 DesktopItem* hit_test( DesktopWindow* self, int x, int y )
-{
+{   // hit on icon or text ?
     DesktopItem* item;
     GList* l;
-    for( l = self->items; l; l = l->next )
+    for ( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*) l->data;
         if ( !item->fi )
             continue;  // empty box
-        if( is_point_in_rect( &item->icon_rect, x, y )
-         || is_point_in_rect( &item->text_rect, x, y ) )
+        if ( is_point_in_rect( &item->icon_rect, x, y )
+                        || is_point_in_rect( &item->text_rect, x, y ) )
             return item;
     }
     return NULL;
 }
 
-DesktopItem* hit_box_test( DesktopWindow* self, int x, int y )  //sfm
-{
+DesktopItem* hit_test_icon( DesktopWindow* self, int x, int y )
+{   // hit on icon ?
+    DesktopItem* item;
+    GList* l;
+    for ( l = self->items; l; l = l->next )
+    {
+        item = (DesktopItem*) l->data;
+        if ( !item->fi )
+            continue;  // empty box
+        if ( is_point_in_rect( &item->icon_rect, x, y ) )
+            return item;
+    }
+    return NULL;
+}
+
+gboolean hit_test_text( DesktopWindow* self, int x, int y,
+                                                    DesktopItem** next_item )
+{   // hit on text ?   sets next item
+    DesktopItem* item;
+    GList* l;
+    for ( l = self->items; l; l = l->next )
+    {
+        item = (DesktopItem*) l->data;
+        if ( !item->fi )
+            continue;  // empty box
+        if ( is_point_in_rect( &item->text_rect, x, y ) )
+        {
+            // hit text
+            if ( l->next )
+                item = (DesktopItem*)l->next->data;
+            else
+                item = NULL;
+            if ( next_item )
+                *next_item = item;
+            return TRUE;
+        }
+    }
+    if ( next_item )
+        *next_item = NULL;
+    return FALSE;
+}
+
+DesktopItem* hit_test_box( DesktopWindow* self, int x, int y )  //sfm
+{   // hit on box ?
     DesktopItem* item;
     GList* l;
 
@@ -3291,16 +3356,18 @@ DesktopItem* hit_box_test( DesktopWindow* self, int x, int y )  //sfm
         item = (DesktopItem*)l->data;
         if ( is_point_in_rect( &item->box, x, y ) )
         {
-            if ( l->next && ((DesktopItem*)l->next->data)->box.x == item->box.x
-                         && y > item->box.y + item->box.height * 0.8 )
-                // clicked in lower area of box, return next box if same column
+            if ( item->fi && l->next &&
+                         ((DesktopItem*)l->next->data)->box.x == item->box.x &&
+                         y > item->text_rect.y )
+                // clicked in lower area of non-empty box,
+                // return next box if same column
                 return (DesktopItem*)l->next->data;
             return item;
         }
     }
     
     // unlikely - no box was directly hit, so use closest
-    DesktopItem* closest_item = NULL;
+    GList* closest_l = NULL;
     float dist_min, dist;
     int x2, y2;
     for ( l = self->items; l; l = l->next )
@@ -3309,14 +3376,22 @@ DesktopItem* hit_box_test( DesktopWindow* self, int x, int y )  //sfm
         x2 = x - ( item->box.x + item->box.width / 2 );
         y2 = y - ( item->box.y + item->box.height / 2 );
         dist = sqrt( x2 * x2 + y2 * y2  );
-        if ( !closest_item || dist < dist_min )
+        if ( !closest_l || dist < dist_min )
         {
             dist_min = dist;
-            closest_item = item;
+            closest_l = l;
         }
     }
-    printf( "MISS %p  dist = %f\n", closest_item, dist_min );
-    return closest_item;
+    printf( "MISS %p  dist = %f\n", closest_l ? closest_l->data : NULL, dist_min );
+    if ( !closest_l )
+        return NULL;
+    if ( !((DesktopItem*)closest_l->data)->fi )
+        return (DesktopItem*)closest_l->data;
+    if ( !( closest_l->next && ((DesktopItem*)closest_l->next->data)->box.x == 
+                               ((DesktopItem*)closest_l->data)->box.x ) )
+        // if closest is non-empty and last item in column, use next
+        return closest_l->next ? (DesktopItem*)closest_l->next->data : NULL;
+    return (DesktopItem*)closest_l->data;
 }
 
 /* FIXME: this is too dirty and here is some redundant code.
