@@ -822,9 +822,13 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
             /* Currently only "My Documents" is supported */
             if( fi->big_thumbnail )
                 g_object_unref( fi->big_thumbnail );
-            fi->big_thumbnail = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "gnome-fs-home", size, 0, NULL );
+            fi->big_thumbnail = gtk_icon_theme_load_icon(
+                                            gtk_icon_theme_get_default(),
+                                            "gnome-fs-home", size, 0, NULL );
             if( ! fi->big_thumbnail )
-                fi->big_thumbnail = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), "folder-home", size, 0, NULL );
+                fi->big_thumbnail = gtk_icon_theme_load_icon(
+                                            gtk_icon_theme_get_default(),
+                                            "folder-home", size, 0, NULL );
         }
         else if( vfs_file_info_is_image( fi ) && ! fi->big_thumbnail )
         {
@@ -2884,7 +2888,8 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
 
     item = g_slice_new0( DesktopItem );
     item->fi = vfs_file_info_ref( file );
-    /* item->icon = vfs_file_info_get_big_icon( file ); */
+    if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
+        vfs_thumbnail_loader_request( dir, item->fi, TRUE );
 
     GCompareDataFunc comp_func = get_sort_func( self );
     if ( comp_func )
@@ -3017,11 +3022,9 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     if( l ) /* found */
     {
         item = (DesktopItem*)l->data;
-        /*
-   if( item->icon )
-            g_object_unref( item->icon );
-        item->icon = vfs_file_info_get_big_icon( file );
-        */
+        if ( !item->fi->big_thumbnail && vfs_file_info_is_image( item->fi ) )
+            vfs_thumbnail_loader_request( dir, item->fi, TRUE );
+
         if( gtk_widget_get_visible( w ) )
         {
             /* redraw the item */
@@ -3155,7 +3158,7 @@ void paint_item( DesktopWindow* self, DesktopItem* item, GdkRectangle* expose_ar
 
     cr = gdk_cairo_create( gtk_widget_get_window( widget ) );
 
-    if( item->fi->big_thumbnail )
+    if ( item->fi->big_thumbnail )
         icon = g_object_ref( item->fi->big_thumbnail );
     else
         icon = vfs_file_info_get_big_icon( item->fi );
