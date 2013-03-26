@@ -185,7 +185,6 @@ void desktop_window_reload_icons( DesktopWindow* win );
 
 void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by, GtkSortType sort_type );
 
-GList* desktop_window_get_selected_items( DesktopWindow* win );
 GList* desktop_window_get_selected_files( DesktopWindow* win );
 
 gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* file );

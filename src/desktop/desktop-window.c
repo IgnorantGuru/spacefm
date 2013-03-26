@@ -150,6 +150,9 @@ static int comp_item_by_type( DesktopItem* item1, DesktopItem* item2, DesktopWin
 static void redraw_item( DesktopWindow* win, DesktopItem* item );
 static void desktop_item_free( DesktopItem* item );
 
+GList* desktop_window_get_selected_items( DesktopWindow* win,
+                                          gboolean current_first );
+
 /*
 static GdkPixmap* get_root_pixmap( GdkWindow* root );
 static gboolean set_root_pixmap(  GdkWindow* root , GdkPixmap* pix );
@@ -1198,7 +1201,7 @@ void show_desktop_menu( DesktopWindow* self, guint event_button,
     DesktopItem *item;
     GList* l;
 
-    GList* sel = desktop_window_get_selected_items( self );
+    GList* sel = desktop_window_get_selected_items( self, TRUE );
     if ( sel )
     {
         item = (DesktopItem*)sel->data;
@@ -1297,7 +1300,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
 
             if( evt->button == 3 )  /* right click */
             {
-                GList* sel = desktop_window_get_selected_items( self );
+                GList* sel = desktop_window_get_selected_items( self, TRUE );
                 if( sel )
                 {
                     item = (DesktopItem*)sel->data;
@@ -1477,7 +1480,7 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
         {
             GtkTargetList* target_list;
             gboolean virtual_item = FALSE;
-            GList* sels = desktop_window_get_selected_items(self);
+            GList* sels = desktop_window_get_selected_items(self, FALSE);
 
             self->dragging = TRUE;
             if( sels && sels->next == NULL ) /* only one item selected */
@@ -1524,7 +1527,7 @@ static GdkAtom get_best_target_at_dest( DesktopWindow* self, GdkDragContext* ctx
             if( item )  /* drag over a desktpo item */
             {
                 GList* sels;
-                sels = desktop_window_get_selected_items( self );
+                sels = desktop_window_get_selected_items( self, FALSE );
                 /* drag over the selected items themselves */
                 if( g_list_find( sels, item ) )
                     expected_target = desktop_icon_atom;
@@ -1715,7 +1718,7 @@ void move_desktop_items( DesktopWindow* self, GdkDragContext* ctx,
     if ( target_item && !( target_l = g_list_find( self->items, target_item ) ) )
         return;
 
-    GList* sel_items = desktop_window_get_selected_items( self );
+    GList* sel_items = desktop_window_get_selected_items( self, FALSE );
     if ( !sel_items )
         return;
 
@@ -1788,7 +1791,7 @@ void desktop_window_insert_task_complete( VFSFileTask* task, DesktopWindow* self
 
 void desktop_window_set_insert_item( DesktopWindow* self )
 {
-    GList* sel_items = desktop_window_get_selected_items( self );
+    GList* sel_items = desktop_window_get_selected_items( self, FALSE );
     if ( !sel_items )
         self->insert_item = NULL;
     else
@@ -3625,7 +3628,8 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
     */
 }
 
-GList* desktop_window_get_selected_items( DesktopWindow* win )
+GList* desktop_window_get_selected_items( DesktopWindow* win,
+                                          gboolean current_first )
 {
     GList* sel = NULL;
     GList* l;
@@ -3635,10 +3639,9 @@ GList* desktop_window_get_selected_items( DesktopWindow* win )
         DesktopItem* item = (DesktopItem*) l->data;
         if ( item->is_selected && item->fi )
         {
-            /* preserve order
-            if( G_UNLIKELY( item == win->focus ) )
+            if( G_UNLIKELY( item == win->focus && current_first ) )
                 sel = g_list_prepend( sel, item );
-            else */
+            else
                 sel = g_list_append( sel, item );
         }
     }
@@ -3648,7 +3651,7 @@ GList* desktop_window_get_selected_items( DesktopWindow* win )
 
 GList* desktop_window_get_selected_files( DesktopWindow* win )
 {
-    GList* sel = desktop_window_get_selected_items( win );
+    GList* sel = desktop_window_get_selected_items( win, TRUE );
     GList* l;
 
     l = sel;
