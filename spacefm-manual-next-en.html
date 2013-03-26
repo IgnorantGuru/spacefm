@@ -1307,21 +1307,21 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>To access the Devices menu, right-click on the Devices list.  By right-clicking directly on a listed device, more options will be available.  Like most menus in SpaceFM, to see the help for any menu item, hover your mouse cursor over the menu item and press F1.  Alternatively, right-click on the menu item and select <a href="#designmode-help">Help</a> in the Design Menu.
 
-In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which contain an abbreviated version of the full Devices list and context menu, for ready access.
+In addition, SpaceFM's main menu bar and the desktop menu include Devices menus which list currently shown devices for ready access.  In these menus, you can left-click on a device to open it, or <i>right</i>-click on a device for an abbreviated context menu.  As in the Devices List, you can also middle-click on a device to 'Remove / Eject'.
 
 <p>The Devices List context menu includes:
 
 <!-- #Remove / Eject #remove -->
 <p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove / Eject</b></a><br>
-The Remove item is used to remove a device and eject media.  When you click Remove, first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
-<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the Remove command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
+<p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
-<p>If you click Remove and nothing seems to happen, this also indicates the device is ready to be removed.
+<p>If you click 'Remove / Eject' and nothing seems to happen, this also indicates the device is ready to be removed.
 
 <p>When a device is removed or unmounted, any tabs showing directories on the device may be automatically closed.
 
-<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting Remove.  Thus to quickly remove a device, just middle-click on it.
+<p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
 <!-- #Reload -->
 <p><a name="devices-menu-reload"/><a href="#devices-menu-reload"><b>Reload</b></a><br>
@@ -2467,7 +2467,7 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
 
 <p>SpaceFM's Design Mode allows you to change the name, shortcut key and icon of menu and toolbar items; access help for the menu item's function; set menu items to be disabled or hidden based on your rules; add, copy, and move your own custom commands to any position in most menus; and save your custom commands as plugins.  All of this is controlled from the <i>Design Menu</i>.
 
-<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
+<p>To open the Design Menu, simply right-click on a menu item.  The Design Menu is available for most menu items, including in the right-click menu of the desktop, but is not available on bookmarked items in the Bookmarks menus.  Alternatively, to open the Design Menu using a shortcut key, press F2 while the menu item is highlighted.
 
 <p>To open the Design Menu for a submenu, first close the submenu (by clicking on it), then right-click on the submenu name.  Or, press F2 while the submenu is highlighted.
 
@@ -6673,9 +6673,9 @@ A folder containing glade files for some of SpaceFM's dialogs.
 
 <!-- # share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png #png -->
 <p><a name="programfiles-usr-png"/><a href="#programfiles-usr-png"><b>share/icons/hicolor/48x48/apps/spacefm.png &amp; spacefm-root.png</b></a><br>
-The 48 pixel window icons for the non-root and root user of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.  See also share/icons/hicolor/128x128/apps/ and share/icons/Faenza/apps/48/, as well as the alternate icons named "spacefm-<i>[48|128]</i>-<i>[cube|pyramid|folder]</i>-<i>[blue|green|red]</i>.png".
+The 48 pixel window icons for the non-root and root user of SpaceFM.  Use of these icons can be avoided by changing View|Window Icon.  See also icons in share/icons/hicolor/128x128/apps/ and share/icons/Faenza/apps/48/, as well as the alternate icons named "spacefm-<i>[48|128]</i>-<i>[cube|pyramid|folder]</i>-<i>[blue|green|red]</i>.png".
 
-<p>Note:  If configure option --enable-pixmaps is used during installation, icons will be installed to share/pixmaps/ instead.
+<p>Note:  If configure option --enable-pixmaps is used during build, icons will be installed to share/pixmaps/ instead.
 
 <!-- # share/locale/*/LC_MESSAGES/spacefm.mo #mo -->
 <p><a name="programfiles-usr-mo"/><a href="#programfiles-usr-mo"><b>share/locale/*/LC_MESSAGES/spacefm.mo</b></a><br>
@@ -6720,7 +6720,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-03-16&nbsp;&nbsp;(SpaceFM version 0.8.6+)
+<p>Updated 2013-03-20&nbsp;&nbsp;(SpaceFM version 0.8.7+)
 <br><br>
 </center>
 </td></tr></table>
