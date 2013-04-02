@@ -68,6 +68,12 @@ const GdkColor desktop_shadow_default={0};
 const int desktop_sort_by_default = DW_SORT_BY_NAME;
 const int desktop_sort_type_default = GTK_SORT_ASCENDING;
 const gboolean show_wm_menu_default = FALSE;
+const gboolean desk_single_click_default = FALSE;
+const int margin_top_default = 12;
+const int margin_left_default = 6;
+const int margin_right_default = 6;
+const int margin_bottom_default = 12;
+const int margin_pad_default = 6;
 
 /* Default values of interface settings */
 const gboolean always_show_tabs_default = TRUE;
@@ -401,6 +407,18 @@ static void parse_desktop_settings( char* line )
         app_settings.desktop_sort_type = atoi( value );
     else if ( 0 == strcmp( name, "show_wm_menu" ) )
         app_settings.show_wm_menu = atoi( value );
+    else if ( 0 == strcmp( name, "desk_single_click" ) )
+        app_settings.desk_single_click = atoi( value );
+    else if ( 0 == strcmp( name, "margin_top" ) )
+        app_settings.margin_top = atoi( value );
+    else if ( 0 == strcmp( name, "margin_left" ) )
+        app_settings.margin_left = atoi( value );
+    else if ( 0 == strcmp( name, "margin_right" ) )
+        app_settings.margin_right = atoi( value );
+    else if ( 0 == strcmp( name, "margin_bottom" ) )
+        app_settings.margin_bottom = atoi( value );
+    else if ( 0 == strcmp( name, "margin_pad" ) )
+        app_settings.margin_pad = atoi( value );
 }
 
 static void parse_interface_settings( char* line )
@@ -503,7 +521,13 @@ void load_settings( char* config_dir )
     app_settings.desktop_sort_by = desktop_sort_by_default;
     app_settings.desktop_sort_type = desktop_sort_type_default;
     app_settings.show_wm_menu = show_wm_menu_default;
-
+    app_settings.desk_single_click = desk_single_click_default;
+    app_settings.margin_top = margin_top_default;
+    app_settings.margin_left = margin_left_default;
+    app_settings.margin_right = margin_right_default;
+    app_settings.margin_bottom = margin_bottom_default;
+    app_settings.margin_pad = margin_pad_default;
+    
     app_settings.encoding[ 0 ] = '\0';
     //app_settings.show_hidden_files = show_hidden_files_default;
     //app_settings.show_side_pane = show_side_pane_default;
@@ -670,6 +694,18 @@ void load_settings( char* config_dir )
     {
         setenv( "G_FILENAME_ENCODING", app_settings.encoding, 1 );
     }
+
+    //sfm margin limits
+    if ( app_settings.margin_top < 0 || app_settings.margin_top > 999 )
+        app_settings.margin_top = margin_top_default;
+    if ( app_settings.margin_left < 0 || app_settings.margin_left > 999 )
+        app_settings.margin_left = margin_left_default;
+    if ( app_settings.margin_right < 0 || app_settings.margin_right > 999 )
+        app_settings.margin_right = margin_right_default;
+    if ( app_settings.margin_bottom < 0 || app_settings.margin_bottom > 999 )
+        app_settings.margin_bottom = margin_bottom_default;
+    if ( app_settings.margin_pad < 0 || app_settings.margin_pad > 999 )
+        app_settings.margin_pad = margin_pad_default;
 
     //MOD turn off fullscreen
     xset_set_b( "main_full", FALSE );
@@ -988,6 +1024,10 @@ void load_settings( char* config_dir )
             set->menu_label = g_strdup( _("Remo_ve / Eject") );
         }
     }
+    if ( ver < 18 ) // < 0.9.0
+    {
+        app_settings.desk_single_click = app_settings.single_click;
+    }
 }
 
 
@@ -1004,7 +1044,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "17" );  // 0.8.7
+    xset_set( "config_version", "s", "18" );  // 0.9.0
 
     // save tabs
     if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
@@ -1158,6 +1198,8 @@ char* save_settings( gpointer main_window_ptr )
             fprintf( file, "sort_type=%d\n", app_settings.desktop_sort_type );
         if ( app_settings.show_wm_menu != show_wm_menu_default )
             fprintf( file, "show_wm_menu=%d\n", app_settings.show_wm_menu );
+        if ( app_settings.desk_single_click != desk_single_click_default )
+            fprintf( file, "desk_single_click=%d\n", app_settings.desk_single_click );
         if ( ! gdk_color_equal( &app_settings.desktop_bg1,
                &desktop_bg1_default ) )
             save_color( file, "bg1",
@@ -1174,6 +1216,16 @@ char* save_settings( gpointer main_window_ptr )
                &desktop_shadow_default ) )
             save_color( file, "shadow",
                         &app_settings.desktop_shadow );
+        if ( app_settings.margin_top != margin_top_default )
+            fprintf( file, "margin_top=%d\n", app_settings.margin_top );
+        if ( app_settings.margin_left != margin_left_default )
+            fprintf( file, "margin_left=%d\n", app_settings.margin_left );
+        if ( app_settings.margin_right != margin_right_default )
+            fprintf( file, "margin_right=%d\n", app_settings.margin_right );
+        if ( app_settings.margin_bottom != margin_bottom_default )
+            fprintf( file, "margin_bottom=%d\n", app_settings.margin_bottom );
+        if ( app_settings.margin_pad != margin_pad_default )
+            fprintf( file, "margin_pad=%d\n", app_settings.margin_pad );
 
         /* Interface */
         fputs( "\n[Interface]\n", file );

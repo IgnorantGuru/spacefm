@@ -329,6 +329,17 @@ static void desktop_window_init(DesktopWindow *self)
     self->sort_by = app_settings.desktop_sort_by;
     self->sort_type = app_settings.desktop_sort_type;
 
+    self->label_w = 100;
+    self->icon_size = 48;
+    self->spacing = 0;
+    self->x_pad = app_settings.margin_pad;
+    self->y_pad = app_settings.margin_pad;
+    self->margin_top = app_settings.margin_top;
+    self->margin_left = app_settings.margin_left;
+    self->margin_right = app_settings.margin_right;
+    self->margin_bottom = app_settings.margin_bottom;
+    self->insert_item = NULL;
+
     self->icon_render = gtk_cell_renderer_pixbuf_new();
     g_object_set( self->icon_render, "follow-state", TRUE, NULL);
     g_object_ref_sink(self->icon_render);
@@ -336,7 +347,7 @@ static void desktop_window_init(DesktopWindow *self)
     self->pl = gtk_widget_create_pango_layout( (GtkWidget*)self, NULL );
     pango_layout_set_alignment( self->pl, PANGO_ALIGN_CENTER );
     pango_layout_set_wrap( self->pl, PANGO_WRAP_WORD_CHAR );
-    pango_layout_set_width( self->pl, 100 * PANGO_SCALE );
+    pango_layout_set_width( self->pl, self->label_w * PANGO_SCALE );
 
     metrics = pango_context_get_metrics(
                             pc, gtk_widget_get_style( ((GtkWidget*)self) )->font_desc,
@@ -344,15 +355,6 @@ static void desktop_window_init(DesktopWindow *self)
 
     font_h = pango_font_metrics_get_ascent(metrics) + pango_font_metrics_get_descent (metrics);
     font_h /= PANGO_SCALE;
-
-    self->label_w = 100;
-    self->icon_size = 48;
-    self->spacing = 0;
-    self->x_pad = 6;
-    self->y_pad = 6;
-    self->y_margin = 6;
-    self->x_margin = 6;
-    self->insert_item = NULL;
 
     if ( !link_icon )
     {
@@ -803,6 +805,12 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
 {
     GList* l;
     win->icon_size = size;
+    win->x_pad = app_settings.margin_pad;
+    win->y_pad = app_settings.margin_pad;
+    win->margin_top = app_settings.margin_top;
+    win->margin_left = app_settings.margin_left;
+    win->margin_right = app_settings.margin_right;
+    win->margin_bottom = app_settings.margin_bottom;
     layout_items( win );
     for( l = win->items; l; l = l->next )
     {
@@ -2657,7 +2665,7 @@ void calc_item_size( DesktopWindow* self, DesktopItem* item )
     pango_layout_get_pixel_size( self->pl, NULL, &line_h );
     item->text_rect.height += line_h;
 
-    item->text_rect.width = self->item_w; //100;
+    item->text_rect.width = MAX( self->label_w, self->icon_size ); //100;
 
     // add empty text line height to standardize height to two lines for custom sort
     item->box.height += item->text_rect.height * ( fake_line ? 2 : 1 );
@@ -2675,12 +2683,13 @@ void layout_items( DesktopWindow* self )
     gboolean list_compressed = self->sort_by != DW_SORT_CUSTOM;
 
     self->item_w = MAX( self->label_w, self->icon_size ) + self->x_pad * 2;
-    pango_layout_set_width( self->pl, 100 * PANGO_SCALE );
+    pango_layout_set_width( self->pl, MAX( self->label_w, self->icon_size ) *
+                                                        PANGO_SCALE );  // 100
 
 start_layout:    
     //printf( "==================== layout_items\n" );
-    x = self->wa.x + self->x_margin;
-    y = self->wa.y + self->y_margin;
+    x = self->wa.x + self->margin_left;
+    y = self->wa.y + self->margin_top;
     self->box_count = 0;
     for ( l = self->items; l; l = l->next )
     {
@@ -2688,14 +2697,14 @@ start_layout:
         item->box.width = self->item_w;
         calc_item_size( self, item );
 
-        bottom = self->wa.y + self->wa.height - self->y_margin;
+        bottom = self->wa.y + self->wa.height - self->margin_bottom;
         if ( y + item->box.height > bottom )
         {
             // bottom reached - go to next column
-            y = self->wa.y + self->y_margin;
+            y = self->wa.y + self->margin_top;
             x += self->item_w;
         }
-        right = self->wa.x + self->wa.width - self->x_margin;
+        right = self->wa.x + self->wa.width - self->margin_right;
         if ( !list_compressed && x + item->box.width > right )
         {
             // right side reached - remove empties and redo layout (custom sort)
@@ -2768,14 +2777,14 @@ start_layout:
             item->box.width = self->item_w;
             calc_item_size( self, item );
             
-            bottom = self->wa.y + self->wa.height - self->y_margin;
+            bottom = self->wa.y + self->wa.height - self->margin_bottom;
             if( y + item->box.height > bottom )
             {
                 // bottom reached - go to next column
-                y = self->wa.y + self->y_margin;
+                y = self->wa.y + self->margin_top;
                 x += self->item_w;
             }
-            right = self->wa.x + self->wa.width - self->x_margin;
+            right = self->wa.x + self->wa.width - self->margin_right;
             if ( x + item->box.width > right )
             {
                 // right side reached - stop adding empty boxes

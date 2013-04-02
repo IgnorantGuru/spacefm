@@ -81,7 +81,8 @@ void fm_turn_on_desktop_icons()
     {
         desktops[ i ] = desktop_window_new();
         desktop_window_set_icon_size( (DesktopWindow*)desktops[ i ], big );
-        desktop_window_set_single_click( (DesktopWindow*)desktops[ i ], app_settings.single_click );
+        desktop_window_set_single_click( (DesktopWindow*)desktops[ i ],
+                                            app_settings.desk_single_click );
 
         gtk_window_set_role( GTK_WINDOW( desktops[i] ), "desktop_manager" );
 

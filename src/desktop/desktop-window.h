@@ -79,8 +79,10 @@ struct _DesktopWindow
     GList* items;
 
     /* margins of the whole desktop window */
-    int x_margin;
-    int y_margin;
+    int margin_top;
+    int margin_left;
+    int margin_right;
+    int margin_bottom;
 
     /* padding oudside the bounding box of the whole item */
     int x_pad;

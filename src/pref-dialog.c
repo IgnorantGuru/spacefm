@@ -66,6 +66,12 @@ struct _FMPrefDlg
     GtkWidget* wallpaper_mode;
     GtkWidget* img_preview;
     GtkWidget* show_wm_menu;
+    GtkWidget* desk_single_click;
+    GtkWidget* margin_top;
+    GtkWidget* margin_left;
+    GtkWidget* margin_right;
+    GtkWidget* margin_bottom;
+    GtkWidget* margin_pad;
 
     GtkWidget* bg_color1;
     GtkWidget* text_color;
@@ -309,69 +315,102 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         }
 */
 
-        /* desktop settings */
-        //show_desktop = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->show_desktop ) );
+        // Desktop settings =================================================
 
-        show_wallpaper = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->show_wallpaper ) );
-        wallpaper = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( data->wallpaper ) );
-        wallpaper_mode = gtk_combo_box_get_active( (GtkComboBox*)data->wallpaper_mode );
-        app_settings.show_wm_menu = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( data->show_wm_menu ) );
+        // checkboxes
+        int desk_single_click = !!gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( data->desk_single_click ) );
+        if ( app_settings.desk_single_click != desk_single_click )
+        {
+            app_settings.desk_single_click = desk_single_click;
+            fm_desktop_set_single_click( app_settings.desk_single_click );
+        }
+        app_settings.show_wm_menu = gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( data->show_wm_menu ) );
 
+        // wallpaper
+        show_wallpaper = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
+                                                    data->show_wallpaper ) );
+        wallpaper = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER(
+                                                    data->wallpaper ) );
+        wallpaper_mode = gtk_combo_box_get_active(
+                                        (GtkComboBox*)data->wallpaper_mode );
+
+        // colors
         gtk_color_button_get_color(GTK_COLOR_BUTTON(data->bg_color1), &bg1);
         gtk_color_button_get_color(GTK_COLOR_BUTTON(data->text_color), &text);
         gtk_color_button_get_color(GTK_COLOR_BUTTON(data->shadow_color), &shadow);
-/*
-        if( show_desktop != app_settings.show_desktop )
+
+        // need update ?
+        gboolean need_update_bg = FALSE;
+        // are desktop colors are changed ?
+        if ( !gdk_color_equal( &bg1, &app_settings.desktop_bg1 ) ||
+                !gdk_color_equal( &bg2, &app_settings.desktop_bg2 ) ||
+                !gdk_color_equal( &text, &app_settings.desktop_text ) ||
+                !gdk_color_equal( &shadow, &app_settings.desktop_shadow ) )
         {
-            app_settings.show_wallpaper = show_wallpaper;
-            g_free( app_settings.wallpaper );
-            app_settings.wallpaper = wallpaper;
-            app_settings.wallpaper_mode = wallpaper_mode;
             app_settings.desktop_bg1 = bg1;
             app_settings.desktop_bg2 = bg2;
             app_settings.desktop_text = text;
             app_settings.desktop_shadow = shadow;
-            app_settings.show_desktop = show_desktop;
 
-            if ( app_settings.show_desktop )
-                fm_turn_on_desktop_icons();
-            else
-                fm_turn_off_desktop_icons();
+            fm_desktop_update_colors();
+
+            if( wallpaper_mode == WPM_CENTER || !show_wallpaper )
+                need_update_bg = TRUE;
         }
-        else if ( app_settings.show_desktop )
+
+        // are wallpaper settings are changed ?
+        if ( need_update_bg ||
+             wallpaper_mode != app_settings.wallpaper_mode ||
+             show_wallpaper != app_settings.show_wallpaper ||
+             ( g_strcmp0( wallpaper, app_settings.wallpaper ) ) )
         {
-*/
-            gboolean need_update_bg = FALSE;
-            /* desktop colors are changed */
-            if ( !gdk_color_equal( &bg1, &app_settings.desktop_bg1 ) ||
-                    !gdk_color_equal( &bg2, &app_settings.desktop_bg2 ) ||
-                    !gdk_color_equal( &text, &app_settings.desktop_text ) ||
-                    !gdk_color_equal( &shadow, &app_settings.desktop_shadow ) )
-            {
-                app_settings.desktop_bg1 = bg1;
-                app_settings.desktop_bg2 = bg2;
-                app_settings.desktop_text = text;
-                app_settings.desktop_shadow = shadow;
+            app_settings.wallpaper_mode = wallpaper_mode;
+            app_settings.show_wallpaper = show_wallpaper;
+            g_free( app_settings.wallpaper );
+            app_settings.wallpaper = wallpaper;
+            fm_desktop_update_wallpaper();
+        }
 
-                fm_desktop_update_colors();
+        // margins
+        int margin_top = atoi( gtk_entry_get_text( 
+                                        GTK_ENTRY( data->margin_top ) ) );
+        int margin_left = atoi( gtk_entry_get_text( 
+                                        GTK_ENTRY( data->margin_left ) ) );
+        int margin_right = atoi( gtk_entry_get_text( 
+                                        GTK_ENTRY( data->margin_right ) ) );
+        int margin_bottom = atoi( gtk_entry_get_text( 
+                                        GTK_ENTRY( data->margin_bottom ) ) );
+        int margin_pad = atoi( gtk_entry_get_text( 
+                                        GTK_ENTRY( data->margin_pad ) ) );
+        if ( margin_top != app_settings.margin_top ||
+             margin_left != app_settings.margin_left ||
+             margin_right != app_settings.margin_right ||
+             margin_bottom != app_settings.margin_bottom ||
+             margin_pad != app_settings.margin_pad )
+        {
+            // margins changed
+            app_settings.margin_top = margin_top;
+            app_settings.margin_left = margin_left;
+            app_settings.margin_right = margin_right;
+            app_settings.margin_bottom = margin_bottom;
+            app_settings.margin_pad = margin_pad;
+            if ( app_settings.margin_top < 0 || app_settings.margin_top > 999 )
+                app_settings.margin_top = 12;
+            if ( app_settings.margin_left < 0 || app_settings.margin_left > 999 )
+                app_settings.margin_left = 6;
+            if ( app_settings.margin_right < 0 || app_settings.margin_right > 999 )
+                app_settings.margin_right = 6;
+            if ( app_settings.margin_bottom < 0 || app_settings.margin_bottom > 999 )
+                app_settings.margin_bottom = 12;
+            if ( app_settings.margin_pad < 0 || app_settings.margin_pad > 999 )
+                app_settings.margin_pad = 6;
+            fm_desktop_update_icons();
+        }
+        
 
-                if( wallpaper_mode == WPM_CENTER || !show_wallpaper )
-                    need_update_bg = TRUE;
-            }
-
-            /* wallpaper settings are changed */
-            if( need_update_bg ||
-                wallpaper_mode != app_settings.wallpaper_mode ||
-                show_wallpaper != app_settings.show_wallpaper ||
-                ( g_strcmp0( wallpaper, app_settings.wallpaper ) ) )
-            {
-                app_settings.wallpaper_mode = wallpaper_mode;
-                app_settings.show_wallpaper = show_wallpaper;
-                g_free( app_settings.wallpaper );
-                app_settings.wallpaper = wallpaper;
-                fm_desktop_update_wallpaper();
-            }
-//        }
+        // ===============================================================
 
         /* thumbnail settings are changed */
         if( app_settings.show_thumbnail != show_thumbnail || app_settings.max_thumb_size != max_thumb )
@@ -511,7 +550,6 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                     }
                 }
             }
-            fm_desktop_set_single_click( app_settings.single_click );
         }
 
         //MOD
@@ -721,7 +759,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
     int ibig_icon = -1, ismall_icon = -1, itool_icon = -1;
     GtkWidget* img_preview;
     GtkWidget* dlg;
-
+    char* str;
+    
     if( ! data )
     {
         GtkTreeModel* model;
@@ -904,41 +943,63 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
 
         gtk_toggle_button_set_active( (GtkToggleButton*)data->use_si_prefix, app_settings.use_si_prefix );
 
-        /* Setup 'Desktop' tab */
-/*
-        data->show_desktop = (GtkWidget*)gtk_builder_get_object( builder, "show_desktop" );
-        g_signal_connect( data->show_desktop, "toggled",
-                          G_CALLBACK(on_show_desktop_toggled), gtk_builder_get_object( builder, "desktop_page" ) );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->show_desktop ),
-                                      app_settings.show_desktop );
-*/
-        data->show_wallpaper = (GtkWidget*)gtk_builder_get_object( builder, "show_wallpaper" );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->show_wallpaper ),
-                                      app_settings.show_wallpaper );
-        g_signal_connect( data->show_wallpaper, "toggled",
-                                G_CALLBACK( on_wallpaper_toggled ), data );
 
-        data->wallpaper = (GtkWidget*)gtk_builder_get_object( builder, "wallpaper" );
-
+        // Desktop Tab ====================================================
+        data->show_wallpaper = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "show_wallpaper" );
+        data->wallpaper = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "wallpaper" );
         img_preview = gtk_image_new();
         gtk_widget_set_size_request( img_preview, 128, 128 );
-        gtk_file_chooser_set_preview_widget( (GtkFileChooser*)data->wallpaper, img_preview );
-        g_signal_connect( data->wallpaper, "update-preview", G_CALLBACK(on_update_img_preview), img_preview );
+        gtk_file_chooser_set_preview_widget( (GtkFileChooser*)data->wallpaper,
+                                                        img_preview );
+        g_signal_connect( data->wallpaper, "update-preview",
+                                G_CALLBACK(on_update_img_preview), img_preview );
 
+        data->wallpaper_mode = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "wallpaper_mode" );
+        data->show_wm_menu = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "show_wm_menu" );
+        data->desk_single_click = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "desk_single_click" );
+        data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "bg_color1" );
+        data->text_color = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "text_color" );
+        data->shadow_color = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "shadow_color" );
+        data->margin_top = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "margin_top" );
+        data->margin_left = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "margin_left" );
+        data->margin_right = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "margin_right" );
+        data->margin_bottom = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "margin_bottom" );
+        data->margin_pad = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "margin_pad" );
+
+        // wallpaper
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->show_wallpaper ),
+                                      app_settings.show_wallpaper );
         if ( app_settings.wallpaper )
         {
-            /* FIXME: GTK+ has a known bug here. Sometimes it doesn't update the preview... */
-            set_preview_image( GTK_IMAGE( img_preview ), app_settings.wallpaper ); /* so, we do it manually */
+            /* FIXME: GTK+ has a known bug here. Sometimes it doesn't update the preview...
+             * so, we do it manually */
+            set_preview_image( GTK_IMAGE( img_preview ), app_settings.wallpaper );
             gtk_file_chooser_set_filename( GTK_FILE_CHOOSER( data->wallpaper ),
                                            app_settings.wallpaper );
         }
-        data->wallpaper_mode = (GtkWidget*)gtk_builder_get_object( builder, "wallpaper_mode" );
-        gtk_combo_box_set_active( (GtkComboBox*)data->wallpaper_mode, app_settings.wallpaper_mode );
-
-        data->show_wm_menu = (GtkWidget*)gtk_builder_get_object( builder, "show_wm_menu" );
+        gtk_combo_box_set_active( (GtkComboBox*)data->wallpaper_mode,
+                                                app_settings.wallpaper_mode );
+        
+        // checkboxes
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->show_wm_menu ),
                                       app_settings.show_wm_menu );
-
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_single_click ),
+                                      app_settings.desk_single_click );
+        
+        // colors
         data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder, "bg_color1" );
         data->text_color = (GtkWidget*)gtk_builder_get_object( builder, "text_color" );
         data->shadow_color = (GtkWidget*)gtk_builder_get_object( builder, "shadow_color" );
@@ -948,11 +1009,32 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                    &app_settings.desktop_text);
         gtk_color_button_set_color(GTK_COLOR_BUTTON(data->shadow_color),
                                    &app_settings.desktop_shadow);
-                                   
-        on_wallpaper_toggled( GTK_TOGGLE_BUTTON( data->show_wallpaper ), data );
 
-        //MOD Advanced
+        // wallpaper signals
+        on_wallpaper_toggled( GTK_TOGGLE_BUTTON( data->show_wallpaper ), data );
+        g_signal_connect( data->show_wallpaper, "toggled",
+                                G_CALLBACK( on_wallpaper_toggled ), data );
         
+        // margins
+        str = g_strdup_printf( "%d", app_settings.margin_top );
+        gtk_entry_set_text( GTK_ENTRY( data->margin_top ), str );
+        g_free( str );
+        str = g_strdup_printf( "%d", app_settings.margin_right );
+        gtk_entry_set_text( GTK_ENTRY( data->margin_right ), str );
+        g_free( str );
+        str = g_strdup_printf( "%d", app_settings.margin_left );
+        gtk_entry_set_text( GTK_ENTRY( data->margin_left ), str );
+        g_free( str );
+        str = g_strdup_printf( "%d", app_settings.margin_bottom );
+        gtk_entry_set_text( GTK_ENTRY( data->margin_bottom ), str );
+        g_free( str );
+        str = g_strdup_printf( "%d", app_settings.margin_pad );
+        gtk_entry_set_text( GTK_ENTRY( data->margin_pad ), str );
+        g_free( str );
+
+
+        //MOD Advanced Tab ==================================================
+     
         // su
         int set_x;
         GtkTreeIter it;

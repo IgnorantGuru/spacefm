@@ -66,11 +66,17 @@ typedef struct
     int desktop_sort_by;
     int desktop_sort_type;
     gboolean show_wm_menu;
+    gboolean desk_single_click;
     GdkColor desktop_bg1;
     GdkColor desktop_bg2;
     GdkColor desktop_text;
     GdkColor desktop_shadow;
-
+    int margin_top;
+    int margin_left;
+    int margin_right;
+    int margin_bottom;
+    int margin_pad;
+    
     /* Interface */
     gboolean always_show_tabs;
     gboolean hide_close_tab_buttons;
