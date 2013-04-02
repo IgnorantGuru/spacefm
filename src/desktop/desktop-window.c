@@ -2693,20 +2693,21 @@ start_layout:
     x = self->wa.x + self->margin_left;
     y = self->wa.y + self->margin_top;
     self->box_count = 0;
+    right = self->wa.x + self->wa.width - self->margin_right;
+    bottom = self->wa.y + self->wa.height - self->margin_bottom;
+    
     for ( l = self->items; l; l = l->next )
     {
         item = (DesktopItem*)l->data;
         item->box.width = self->item_w;
         calc_item_size( self, item );
 
-        bottom = self->wa.y + self->wa.height - self->margin_bottom;
         if ( y + item->box.height > bottom )
         {
             // bottom reached - go to next column
             y = self->wa.y + self->margin_top;
             x += self->item_w;
         }
-        right = self->wa.x + self->wa.width - self->margin_right;
         if ( !list_compressed && x + item->box.width > right )
         {
             // right side reached - remove empties and redo layout (custom sort)
@@ -2779,14 +2780,12 @@ start_layout:
             item->box.width = self->item_w;
             calc_item_size( self, item );
             
-            bottom = self->wa.y + self->wa.height - self->margin_bottom;
             if( y + item->box.height > bottom )
             {
                 // bottom reached - go to next column
                 y = self->wa.y + self->margin_top;
                 x += self->item_w;
             }
-            right = self->wa.x + self->wa.width - self->margin_right;
             if ( x + item->box.width > right )
             {
                 // right side reached - stop adding empty boxes
@@ -2998,7 +2997,9 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
             item_new->box = item->box;
             desktop_item_free( item );
             l->data = item_new;
-            redraw_item( self, item_new );
+            // layout all since deleting may allow more icons to fit if full
+            //redraw_item( self, item_new );
+            layout_items( self );
         }
         else
         {
