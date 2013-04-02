@@ -3536,7 +3536,9 @@ int comp_item_by_name( DesktopItem* item1, DesktopItem* item2, DesktopWindow* wi
     int ret;
     if( ret = COMP_VIRTUAL( item1, item2 ) )
         return ret;
-    ret =g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
+    //ret =g_utf8_collate( item1->fi->disp_name, item2->fi->disp_name );
+    // natural icase
+    ret = strcmp( item1->fi->collate_icase_key, item2->fi->collate_icase_key );
     if( win && win->sort_type == GTK_SORT_DESCENDING )
         ret = -ret;
     return ret;
