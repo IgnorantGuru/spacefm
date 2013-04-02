@@ -200,6 +200,8 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
 void desktop_window_add_application( DesktopWindow* desktop );
 void desktop_window_insert_task_complete( VFSFileTask* task, DesktopWindow* self );
 void desktop_window_set_insert_item( DesktopWindow* self );
+void desktop_window_open_desktop_dir( GtkMenuItem *menuitem,
+                                                    DesktopWindow* desktop );
 
 
 G_END_DECLS

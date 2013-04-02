@@ -2325,6 +2325,8 @@ _key_found:
                 }
                 else if ( !strcmp( set->name, "desk_pref" ) )
                     fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+                else if ( !strcmp( set->name, "desk_open" ) )
+                    desktop_window_open_desktop_dir( NULL, desktop );
             }
             else if ( g_str_has_prefix( set->name, "paste_" ) )
             {
@@ -3462,6 +3464,38 @@ void open_folders( GList* folders )
         g_free( path );
         folders = folders->next;
     }
+    gtk_window_present( GTK_WINDOW( main_window ) );
+}
+
+void desktop_window_open_desktop_dir( GtkMenuItem *menuitem,
+                                                    DesktopWindow* desktop )
+{
+    FMMainWindow* main_window;
+    gboolean new_window = FALSE;
+    
+    const char* path = vfs_get_desktop_dir();
+    if ( !desktop || !path )
+        return;
+    main_window = fm_main_window_get_on_current_desktop();
+    
+    if ( !main_window )
+    {
+        main_window = FM_MAIN_WINDOW( fm_main_window_new() );
+        gtk_window_set_default_size( GTK_WINDOW( main_window ),
+                                     app_settings.width,
+                                     app_settings.height );
+        gtk_widget_show( GTK_WIDGET(main_window) );
+        new_window = !xset_get_b( "main_save_tabs" );
+    }
+    
+    if ( new_window )
+    {
+        main_window_open_path_in_current_tab( main_window, path );
+        new_window = FALSE;
+    }
+    else
+        fm_main_window_add_new_tab( FM_MAIN_WINDOW( main_window ), path );
+
     gtk_window_present( GTK_WINDOW( main_window ) );
 }
 

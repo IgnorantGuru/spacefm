@@ -10304,6 +10304,9 @@ void xset_defaults()
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icon", "gtk-jump-to" );
 
+    set = xset_set( "desk_open", "label", _("_Desktop Folder") );
+    xset_set_set( set, "icon", "gtk-open" );
+
     // PANELS COMMON
     set = xset_get( "sep_new" );
     set->menu_style = XSET_MENU_SEP;

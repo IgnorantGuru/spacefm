@@ -720,7 +720,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
     // Open >
     set = xset_get( "con_open" );
-    set->disable = !sel_files;
+    set->disable = !( sel_files || desktop );
     item = GTK_MENU_ITEM( xset_add_menuitem( desktop, browser, popup,
                                                     accel_group, set ) );
     if ( sel_files )
@@ -979,6 +979,17 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
     }
+#ifdef DESKTOP_INTEGRATION
+    else if ( desktop )
+    {
+        // desktop, no selected files
+        submenu = gtk_menu_item_get_submenu( item );
+        set = xset_set_cb( "desk_open", desktop_window_open_desktop_dir,
+                                                                desktop );
+        xset_add_menuitem( desktop, browser, submenu, accel_group, set );
+    }
+#endif
+    
     if ( mime_type )
         vfs_mime_type_unref( mime_type );
 
