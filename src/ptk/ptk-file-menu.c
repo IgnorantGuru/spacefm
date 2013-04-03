@@ -2558,12 +2558,14 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
         ptk_clipboard_paste_files( GTK_WINDOW( parent_win ), data->cwd,
                             GTK_TREE_VIEW( data->browser->task_view ), NULL );
     }
+#ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
         ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL,
                             (GFunc)desktop_window_insert_task_complete );        
     }
+#endif
 }
 
 void
@@ -2572,6 +2574,7 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
 {
     if ( data->browser )
         ptk_file_browser_paste_link( data->browser );
+#ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
@@ -2579,6 +2582,7 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
             GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
             data->cwd, NULL, (GFunc)desktop_window_insert_task_complete );
     }
+#endif
 }
 
 void
@@ -2587,6 +2591,7 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
 {
     if ( data->browser )
         ptk_file_browser_paste_target( data->browser );
+#ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
@@ -2595,6 +2600,7 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
             data->cwd,
             NULL, (GFunc)desktop_window_insert_task_complete );
     }
+#endif
 }
 
 void
@@ -2623,10 +2629,14 @@ void
 on_popup_paste_as_activate ( GtkMenuItem *menuitem,
                           PtkFileMenu* data )   //sfm added
 {
+#ifdef DESKTOP_INTEGRATION
     if ( data->desktop )
         desktop_window_set_insert_item( data->desktop );
     ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd,
             data->desktop ? (GFunc)desktop_window_insert_task_complete : NULL );
+#else
+    ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd, NULL );
+#endif
 }
 
 void
