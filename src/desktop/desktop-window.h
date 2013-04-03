@@ -155,9 +155,10 @@ struct _DesktopWindow
 
     GdkRectangle wa;    /* working area */
     
-    guint desktop_index;
+    guint screen_index;     // screen index of this desktop window
     guint box_count;        // number of boxes visible on the desktop
     gpointer insert_item;   // item at which to insert dragged files
+    gboolean file_listed;   // TRUE once files are read
 };
 
 struct _DesktopWindowClass

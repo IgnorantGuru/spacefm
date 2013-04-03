@@ -18,6 +18,7 @@
  *      MA 02110-1301, USA.
  */
 
+#include <stdlib.h>
 #include <glib/gi18n.h>
 #include <math.h>  // sqrt
 
@@ -163,6 +164,9 @@ static DesktopItem* hit_test_icon( DesktopWindow* self, int x, int y );
 static gboolean hit_test_text( DesktopWindow* self, int x, int y,
                                                     DesktopItem** next_item );
 static DesktopItem* hit_test_box( DesktopWindow* self, int x, int y );
+
+static void custom_order_write( DesktopWindow* self );
+static GHashTable* custom_order_read( DesktopWindow* self );
 
 /* static Atom ATOM_XROOTMAP_ID = 0; */
 static Atom ATOM_NET_WORKAREA = 0;
@@ -339,7 +343,8 @@ static void desktop_window_init(DesktopWindow *self)
     self->margin_right = app_settings.margin_right;
     self->margin_bottom = app_settings.margin_bottom;
     self->insert_item = NULL;
-
+    self->file_listed = FALSE;
+    
     self->icon_render = gtk_cell_renderer_pixbuf_new();
     g_object_set( self->icon_render, "follow-state", TRUE, NULL);
     g_object_ref_sink(self->icon_render);
@@ -2688,8 +2693,7 @@ void layout_items( DesktopWindow* self )
     pango_layout_set_width( self->pl, MAX( self->label_w, self->icon_size ) *
                                                         PANGO_SCALE );  // 100
 
-start_layout:    
-    //printf( "==================== layout_items\n" );
+start_layout:
     x = self->wa.x + self->margin_left;
     y = self->wa.y + self->margin_top;
     self->box_count = 0;
@@ -2803,6 +2807,7 @@ start_layout:
             self->items = g_list_append( self->items, item );
             self->box_count++;
         } while ( 1 );
+        custom_order_write( self );
     }
     //printf("    box_count = %d\n", self->box_count );
     gtk_widget_queue_draw( GTK_WIDGET(self) );
@@ -2813,6 +2818,14 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
     GList* l, *items = NULL;
     VFSFileInfo* fi;
     DesktopItem* item;
+    DesktopItem* target_item;
+    gpointer ptr;
+    int order, i;
+    GList* ll;
+    GList* unordered = NULL;
+    
+    self->file_listed = TRUE;
+    GHashTable* order_hash = custom_order_read( self );
 
     g_mutex_lock( dir->mutex );
     for( l = dir->file_list; l; l = l->next )
@@ -2822,19 +2835,66 @@ void on_file_listed( VFSDir* dir, gboolean is_cancelled, DesktopWindow* self )
             continue;
         item = g_slice_new0( DesktopItem );
         item->fi = vfs_file_info_ref( fi );
-        items = g_list_prepend( items, item );
-        /* item->icon = vfs_file_info_get_big_icon( fi ); */
-
-        if( vfs_file_info_is_image( fi ) )
+        if ( self->sort_by == DW_SORT_CUSTOM )
+        {
+            if ( order_hash && ( ptr = g_hash_table_lookup( order_hash,
+                                            vfs_file_info_get_name( fi ) ) ) )
+            {
+                order = GPOINTER_TO_INT( ptr ) - 1;
+                ll = g_list_nth( items, order );
+                if ( !ll )
+                {
+                    // position is beyond end of list - add empties
+                    for ( i = g_list_length( items ); i < order; i++ )
+                    {
+                        target_item = g_slice_new0( DesktopItem );
+                        target_item->fi = NULL;
+                        items = g_list_append( items, target_item );                    
+                    }
+                    items = g_list_append( items, item );                    
+                }
+                else if ( ((DesktopItem*)ll->data)->fi )
+                {
+                    // position already used - insert
+                    items = g_list_insert( items, item, order + 1 );
+                }
+                else
+                {
+                    // position empty - replace
+                    desktop_item_free( (DesktopItem*)ll->data );
+                    ll->data = item;
+                }
+            }
+            else
+            {
+                // order not found
+                unordered = g_list_prepend( unordered, item );
+            }
+        }
+        else
+            items = g_list_prepend( items, item );
+        if ( vfs_file_info_is_image( fi ) )
             vfs_thumbnail_loader_request( dir, fi, TRUE );
     }
     g_mutex_unlock( dir->mutex );
 
+    // sort
     GCompareDataFunc comp_func = get_sort_func( self );
     if ( comp_func )
         self->items = g_list_sort_with_data( items, comp_func, self );
     else
+    {
+        // custom sort
+        if ( unordered )
+        {
+            unordered = g_list_sort_with_data( unordered,
+                                (GCompareDataFunc)comp_item_by_name, self );
+            items = g_list_concat( items, unordered );
+        }
         self->items = items;
+        if ( order_hash )
+            g_hash_table_destroy( order_hash );
+    }
 
 /*
     // Make an item for Home dir
@@ -3608,7 +3668,72 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
     app_settings.desktop_sort_by = win->sort_by = sort_by;
     app_settings.desktop_sort_type = win->sort_type = sort_type;
     
-    if ( sort_type != DW_SORT_CUSTOM )
+    if ( sort_by == DW_SORT_CUSTOM )
+    {
+        GHashTable* order_hash = custom_order_read( win );
+        if ( order_hash )
+        {
+            // rebuild ordered item list
+            GList* items = NULL;
+            GList* unordered = NULL;
+            GList* l, *ll;
+            DesktopItem* item, *target_item;
+            gpointer ptr;
+            int order, i;
+            for ( l = win->items; l; l = l->next )
+            {
+                item = (DesktopItem*)l->data;
+                if ( G_UNLIKELY( !item->fi ) )
+                {
+                    desktop_item_free( item );
+                    continue;
+                }
+                if ( ptr = g_hash_table_lookup( order_hash,
+                                    vfs_file_info_get_name( item->fi ) ) )
+                {
+                    order = GPOINTER_TO_INT( ptr ) - 1;
+                    ll = g_list_nth( items, order );
+                    if ( !ll )
+                    {
+                        // position is beyond end of list - add empties
+                        for ( i = g_list_length( items ); i < order; i++ )
+                        {
+                            target_item = g_slice_new0( DesktopItem );
+                            target_item->fi = NULL;
+                            items = g_list_append( items, target_item );                    
+                        }
+                        items = g_list_append( items, item );                    
+                    }
+                    else if ( ((DesktopItem*)ll->data)->fi )
+                    {
+                        // position already used - insert
+                        items = g_list_insert( items, item, order + 1 );
+                    }
+                    else
+                    {
+                        // position empty - replace
+                        desktop_item_free( (DesktopItem*)ll->data );
+                        ll->data = item;
+                    }
+                }
+                else
+                {
+                    // order not found
+                    unordered = g_list_prepend( unordered, item );
+                }
+            }
+            if ( unordered )
+            {
+                unordered = g_list_sort_with_data( unordered,
+                                    (GCompareDataFunc)comp_item_by_name, win );
+                items = g_list_concat( items, unordered );
+            }
+            g_list_free( win->items );
+            win->items = items;
+            g_hash_table_destroy( order_hash );
+        }        
+    }
+    else
     {
         // remove empty boxes for non-custom sort
         DesktopItem* item;
@@ -3631,12 +3756,11 @@ void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by,
                 desktop_item_free( item );
             }
         }
+        // sort
+        GCompareDataFunc comp_func = get_sort_func( win );
+        if ( comp_func )
+            win->items = g_list_sort_with_data( win->items, comp_func, win );
     }
-
-    // sort
-    GCompareDataFunc comp_func = get_sort_func( win );
-    if ( comp_func )
-        win->items = g_list_sort_with_data( win->items, comp_func, win );
 
     // layout
     layout_items( win );
@@ -3761,6 +3885,72 @@ void desktop_window_add_application( DesktopWindow* desktop )
         g_free( app );
     }
     vfs_mime_type_unref( mime_type );
+}
+
+static void custom_order_write( DesktopWindow* self )
+{
+    if ( self->sort_by != DW_SORT_CUSTOM || !self->file_listed )
+        return;
+
+    char* filename = g_strdup_printf( "desktop%d", self->screen_index );
+    char* path = g_build_filename( xset_get_config_dir(), filename, NULL );
+    g_free( filename );
+    FILE* file = fopen( path, "w" );
+    if ( file )
+    {
+        GList* l;
+        int i = 1; // start from 1 to detect atoi failure
+        for ( l = self->items; l; l = l->next )
+        {
+            if ( ((DesktopItem*)l->data)->fi )
+                fprintf( file, "%d=%s\n", i,
+                        vfs_file_info_get_name( ((DesktopItem*)l->data)->fi ) );
+            i++;
+        }
+        fclose( file );
+    }
+    g_free( path );
+}
+
+static GHashTable* custom_order_read( DesktopWindow* self )
+{
+    char line[ 2048 ];
+    char* sep;
+    int order;
+    GHashTable* order_hash = NULL;
+
+    if ( self->sort_by != DW_SORT_CUSTOM )
+        return NULL;
+    char* filename = g_strdup_printf( "desktop%d", self->screen_index );
+    char* path = g_build_filename( xset_get_config_dir(), filename, NULL );
+    g_free( filename );
+    
+    FILE* file = fopen( path, "r" );
+    if ( file )
+    {
+        order_hash = g_hash_table_new_full( g_str_hash, g_str_equal,
+                                            (GDestroyNotify)g_free, NULL );
+        while ( fgets( line, sizeof( line ), file ) )
+        {
+            strtok( line, "\r\n" );
+            if ( sep = strchr( line, '=' ) )
+            {
+                sep[0] = '\0';
+                if ( !strchr( line, '_' ) )  // forward compat for attribs
+                {
+                    order = atoi( line );
+                    if ( order < 1 )
+                        continue;
+                    g_hash_table_insert( order_hash,
+                                            (gpointer)g_strdup( sep + 1 ),
+                                            GINT_TO_POINTER( order ) );
+                }
+            }
+        }
+        fclose( file );
+    }
+    g_free( path );    
+    return order_hash;
 }
 
 /*----------------- X11-related sutff ----------------*/

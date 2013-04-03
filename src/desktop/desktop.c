@@ -80,6 +80,7 @@ void fm_turn_on_desktop_icons()
     for ( i = 0; i < n_screens; i++ )
     {
         desktops[ i ] = desktop_window_new();
+        ((DesktopWindow*)desktops[ i ])->screen_index = i;
         desktop_window_set_icon_size( (DesktopWindow*)desktops[ i ], big );
         desktop_window_set_single_click( (DesktopWindow*)desktops[ i ],
                                             app_settings.desk_single_click );
