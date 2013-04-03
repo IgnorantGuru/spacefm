@@ -1047,7 +1047,8 @@ char* save_settings( gpointer main_window_ptr )
     xset_set( "config_version", "s", "18" );  // 0.9.0
 
     // save tabs
-    if ( main_window_ptr && xset_get_b( "main_save_tabs" ) )
+    gboolean save_tabs = xset_get_b( "main_save_tabs" );
+    if ( main_window_ptr && save_tabs )
     {
         main_window = (FMMainWindow*)main_window_ptr;
         for ( p = 1; p < 5; p++ )
@@ -1084,7 +1085,7 @@ char* save_settings( gpointer main_window_ptr )
             }
         }
     }
-    else
+    else if ( !save_tabs )
     {
         // clear saved tabs
         for ( p = 1; p < 5; p++ )
