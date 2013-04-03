@@ -19,6 +19,7 @@
     Desktop prefs added margins, desktop single click
     add Open|Desktop Folder
     desktop name sort natural icase
+    fix desktop center wallpaper larger than screen #296
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

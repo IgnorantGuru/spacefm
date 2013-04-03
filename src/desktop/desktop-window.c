@@ -681,29 +681,18 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
                 dest_x = (dest_w - w) / 2;
                 dest_y = (dest_h - h) / 2;
                 break;
-            case DW_BG_CENTER:  /* no scale is needed */
+            case DW_BG_CENTER:
                 scaled = (GdkPixbuf*)g_object_ref( src_pix );
-
                 if( src_w > dest_w )
-                {
                     w = dest_w;
-                    src_x = (src_w - dest_w) / 2;
-                }
                 else
-                {
                     w = src_w;
-                    dest_x = (dest_w - src_w) / 2;
-                }
                 if( src_h > dest_h )
-                {
                     h = dest_h;
-                    src_y = (src_h - dest_h) / 2;
-                }
                 else
-                {
                     h = src_h;
-                    dest_y = (dest_h - src_h) / 2;
-                }
+                dest_x = (dest_w - src_w) / 2;
+                dest_y = (dest_h - src_h) / 2;
                 break;
             }
 
