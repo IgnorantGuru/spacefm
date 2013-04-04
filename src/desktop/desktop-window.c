@@ -1412,14 +1412,19 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
         else
         {
             desktop_window_select( self, DW_SELECT_NONE );
-            clicked_item->is_selected = TRUE;
-            redraw_item( self, clicked_item );
+            if ( clicked_item )
+            {
+                clicked_item->is_selected = TRUE;
+                redraw_item( self, clicked_item );
+            }
         }
     }
 
     /* forward the event to root window */
     if( ! clicked_item )
+    {
         forward_event_to_rootwin( gtk_widget_get_screen(w), (GdkEvent*)evt );
+    }
 
     return TRUE;
 }
