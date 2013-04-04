@@ -137,7 +137,7 @@ gf_display_get_workarea(GdkScreen* g_screen, GdkRectangle *rect) {
 
 void get_working_area( GdkScreen* screen, GdkRectangle* area )
 {
-	if( 1 /*!gf_display_get_workarea(screen, area)*/ )
+	if( !gf_display_get_workarea(screen, area) )
 	{
 		area->x = 0;
 		area->y = 0;

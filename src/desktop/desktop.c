@@ -89,6 +89,10 @@ void fm_turn_on_desktop_icons()
 
         gtk_widget_realize( desktops[ i ] );  /* without this, setting wallpaper won't work */
         gtk_widget_show_all( desktops[ i ] );
+        // move desktop window to 0,0 so background in window aligns with
+        // root window background for transparent panel
+        // re https://github.com/IgnorantGuru/spacefm/issues/248
+        gtk_window_move( GTK_WINDOW( desktops[ i ] ), 0, 0 );
         gdk_window_lower( gtk_widget_get_window(desktops[ i ]) );
 
         gtk_window_group_add_window( GTK_WINDOW_GROUP(group), GTK_WINDOW( desktops[i] ) );

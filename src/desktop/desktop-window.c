@@ -22,7 +22,7 @@
 #include <glib/gi18n.h>
 #include <math.h>  // sqrt
 
-#include "desktop-window.h"
+#include "desktop.h"
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "vfs-thumbnail-loader.h"
@@ -102,7 +102,6 @@ static void on_style_set( GtkWidget* w, GtkStyle* prev );
 static void on_realize( GtkWidget* w );
 static gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt );
 static gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt );
-static gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event );
 /* static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data ); */
 
 static void on_drag_begin( GtkWidget* w, GdkDragContext* ctx );
@@ -168,6 +167,7 @@ static DesktopItem* hit_test_box( DesktopWindow* self, int x, int y );
 
 static void custom_order_write( DesktopWindow* self );
 static GHashTable* custom_order_read( DesktopWindow* self );
+static gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event );
 
 /* static Atom ATOM_XROOTMAP_ID = 0; */
 static Atom ATOM_NET_WORKAREA = 0;
@@ -302,7 +302,7 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
     wc->drag_leave = on_drag_leave;
     wc->drag_end = on_drag_end;
     wc->configure_event = on_configure_event;
-    
+
     parent_class = (GtkWindowClass*)g_type_class_peek(GTK_TYPE_WINDOW);
 
     /* ATOM_XROOTMAP_ID = XInternAtom( GDK_DISPLAY(),"_XROOTMAP_ID", False ); */
@@ -527,7 +527,7 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
 
 void on_size_allocate( GtkWidget* w, GtkAllocation* alloc )
 {
-printf("on_size_allocate\n");
+printf("on_size_allocate  %p  x,y=%d, %d    w,h=%d, %d\n", w, alloc->x, alloc->y, alloc->width, alloc->height);
     GdkPixbuf* pix;
     DesktopWindow* self = (DesktopWindow*)w;
 
@@ -874,6 +874,7 @@ void on_size_request( GtkWidget* w, GtkRequisition* req )
     GdkScreen* scr = gtk_widget_get_screen( w );
     req->width = gdk_screen_get_width( scr );
     req->height = gdk_screen_get_height( scr );
+printf("on_size_request  %p  w,h=%d, %d\n", w, req->width, req->height );
 }
 
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -2499,24 +2500,6 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     return FALSE;
 }
 
-gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
-{
-    DesktopWindow* self = (DesktopWindow*) w;
-    
-    printf("on_configure_event %p  %d, %d  [%d, %d]  (was %d, %d)  file_listed = %s\n", self, event->width, event->height, self->wa.x, self->wa.y, self->wa.width, self->wa.height, self->file_listed ? "TRUE" : "FALSE" );
-
-    if ( self->file_listed )  // skip initial configure events
-    {
-        // possible desktop resize - get working area and redo layout
-        printf( "    get_working_area\n");
-        get_working_area( gtk_widget_get_screen(w), &self->wa );
-        if ( self->sort_by == DW_SORT_CUSTOM )
-            self->order_rows = self->row_count; // possible change of row count in new layout
-        layout_items( self );
-    }
-    return FALSE;
-}
-
 /*
 gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data )
 {
@@ -4060,8 +4043,10 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
         if( evt->atom == ATOM_NET_WORKAREA )
         {
             /* working area is resized */
-            printf("working area is resized\n");
             get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa );
+            printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
+                                self->wa.x, self->wa.y, self->wa.width, self->wa.height);
+            fm_desktop_update_wallpaper();
             if ( self->sort_by == DW_SORT_CUSTOM )
                 self->order_rows = self->row_count; // possible change of row count in new layout
             layout_items( self );
@@ -4430,5 +4415,23 @@ gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* fil
 
     result = fputs( "\n", file );
     return result >= 0;
+}
+
+gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
+{
+    DesktopWindow* self = (DesktopWindow*) w;
+    
+    printf("on_configure_event %p  x,y=%d, %d    w,h=%d, %d  file_listed = %s\n", self, event->x, event->y, event->width, event->height, self->file_listed ? "TRUE" : "FALSE" );
+
+    if ( self->file_listed )  // skip initial configure events
+    {
+        // possible desktop resize - get working area and redo layout
+        printf( "    get_working_area\n");
+        get_working_area( gtk_widget_get_screen(w), &self->wa );
+        if ( self->sort_by == DW_SORT_CUSTOM )
+            self->order_rows = self->row_count; // possible change of row count in new layout
+        layout_items( self );
+    }
+    return FALSE;
 }
 
