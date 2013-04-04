@@ -59,12 +59,14 @@ static void on_icon_theme_changed( GtkIconTheme* theme, gpointer data )
         desktop_window_reload_icons( (DesktopWindow*)desktops[ i ] );
 }
 
-#include <glib-object.h>
+/*
+#include <glib-object.h>   // for g_signal_connect
 void on_size_changed( GdkScreen *screen, GtkWidget* w )
 {
     printf( "screen size changed  %d, %d\n", gdk_screen_get_width( screen ),
                                              gdk_screen_get_height( screen ) );
 }
+*/
 
 void fm_turn_on_desktop_icons()
 {
@@ -76,7 +78,7 @@ void fm_turn_on_desktop_icons()
         group = gtk_window_group_new();
 
     theme_change_notify = g_signal_connect( gtk_icon_theme_get_default(), "changed",
-                                                                                                        G_CALLBACK(on_icon_theme_changed), NULL );
+                                    G_CALLBACK(on_icon_theme_changed), NULL );
 
     vfs_mime_type_get_icon_size( &big, NULL );
 
@@ -87,7 +89,8 @@ void fm_turn_on_desktop_icons()
     for ( i = 0; i < n_screens; i++ )
     {
         desktops[ i ] = desktop_window_new();
-        printf("added desktop window %p to screen %d on display %p (%s)\n", desktops[ i ], i, gdpy, g_getenv( "DISPLAY" ) );
+        //printf("added desktop window %p to screen %d on display %p (%s)\n",
+        //                  desktops[ i ], i, gdpy, g_getenv( "DISPLAY" ) );
         ((DesktopWindow*)desktops[ i ])->screen_index = i;
         desktop_window_set_icon_size( (DesktopWindow*)desktops[ i ], big );
         desktop_window_set_single_click( (DesktopWindow*)desktops[ i ],
@@ -97,19 +100,22 @@ void fm_turn_on_desktop_icons()
 
         gtk_widget_realize( desktops[ i ] );  /* without this, setting wallpaper won't work */
         gtk_widget_show_all( desktops[ i ] );
+        
         // move desktop window to 0,0 so background in window aligns with
         // root window background for transparent panel
         // re https://github.com/IgnorantGuru/spacefm/issues/248
         gtk_window_move( GTK_WINDOW( desktops[ i ] ), 0, 0 );
+        
         gdk_window_lower( gtk_widget_get_window(desktops[ i ]) );
 
         gtk_window_group_add_window( GTK_WINDOW_GROUP(group), GTK_WINDOW( desktops[i] ) );
         
+        /*   this doesn't work when size is changed via xrandr?
         // temp detect screen size change
         g_signal_connect( gtk_widget_get_screen( GTK_WIDGET( desktops[ i ] ) ),
                             "size-changed", G_CALLBACK( on_size_changed ),
                             desktops[ i ] );
-         
+        */
     }
     fm_desktop_update_colors();
     fm_desktop_update_wallpaper();

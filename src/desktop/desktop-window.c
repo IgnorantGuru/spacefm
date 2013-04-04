@@ -22,7 +22,7 @@
 #include <glib/gi18n.h>
 #include <math.h>  // sqrt
 
-#include "desktop.h"
+#include "desktop-window.h"
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "vfs-thumbnail-loader.h"
@@ -167,7 +167,7 @@ static DesktopItem* hit_test_box( DesktopWindow* self, int x, int y );
 
 static void custom_order_write( DesktopWindow* self );
 static GHashTable* custom_order_read( DesktopWindow* self );
-static gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event );
+//static gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event );
 
 /* static Atom ATOM_XROOTMAP_ID = 0; */
 static Atom ATOM_NET_WORKAREA = 0;
@@ -301,7 +301,7 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
     wc->drag_data_received = on_drag_data_received;
     wc->drag_leave = on_drag_leave;
     wc->drag_end = on_drag_end;
-    wc->configure_event = on_configure_event;
+    //wc->configure_event = on_configure_event;
 
     parent_class = (GtkWindowClass*)g_type_class_peek(GTK_TYPE_WINDOW);
 
@@ -527,7 +527,8 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
 
 void on_size_allocate( GtkWidget* w, GtkAllocation* alloc )
 {
-printf("on_size_allocate  %p  x,y=%d, %d    w,h=%d, %d\n", w, alloc->x, alloc->y, alloc->width, alloc->height);
+    //printf("on_size_allocate  %p  x,y=%d, %d    w,h=%d, %d\n", w, alloc->x,
+    //                                alloc->y, alloc->width, alloc->height);
     GdkPixbuf* pix;
     DesktopWindow* self = (DesktopWindow*)w;
 
@@ -874,7 +875,7 @@ void on_size_request( GtkWidget* w, GtkRequisition* req )
     GdkScreen* scr = gtk_widget_get_screen( w );
     req->width = gdk_screen_get_width( scr );
     req->height = gdk_screen_get_height( scr );
-printf("on_size_request  %p  w,h=%d, %d\n", w, req->width, req->height );
+    //printf("on_size_request  %p  w,h=%d, %d\n", w, req->width, req->height );
 }
 
 #if GTK_CHECK_VERSION (3, 0, 0)
@@ -3517,7 +3518,7 @@ DesktopItem* hit_test_box( DesktopWindow* self, int x, int y )  //sfm
             closest_l = l;
         }
     }
-    printf( "MISS %p  dist = %f\n", closest_l ? closest_l->data : NULL, dist_min );
+    //printf( "MISS %p  dist = %f\n", closest_l ? closest_l->data : NULL, dist_min );
     if ( !closest_l )
         return NULL;
     if ( !((DesktopItem*)closest_l->data)->fi )
@@ -4044,20 +4045,23 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
         {
             /* working area is resized */
             get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa );
-            printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
-                                self->wa.x, self->wa.y, self->wa.width, self->wa.height);
+            //printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
+            //        self->wa.x, self->wa.y, self->wa.width, self->wa.height);
+            
+            /* This doesn't seem to have the desired effect, and also
+             * desktop window size should be based on screen size not WA
+             * https://github.com/IgnorantGuru/spacefm/issues/300
             // resize desktop window
             GdkScreen* screen = gtk_widget_get_screen( GTK_WIDGET( self ) );
             int width = gdk_screen_get_width( screen );
             int height = gdk_screen_get_height( screen );
             if ( width && height )
-            {
                 printf( "    screen size   w,h=%d, %d\n", width, height );
-            }
             gtk_window_resize( GTK_WINDOW( self ), self->wa.width, self->wa.height );
             gtk_window_move( GTK_WINDOW( self ), 0, 0 );
             // update wallpaper
             fm_desktop_update_wallpaper();
+            */
             // layout icons
             if ( self->sort_by == DW_SORT_CUSTOM )
                 self->order_rows = self->row_count; // possible change of row count in new layout
@@ -4429,6 +4433,8 @@ gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* fil
     return result >= 0;
 }
 
+/* This does not detect screen size changes, only fires initially
+ * and when desktop window is manually resized
 gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
 {
     DesktopWindow* self = (DesktopWindow*) w;
@@ -4449,4 +4455,4 @@ gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
     }
     return FALSE;
 }
-
+*/
