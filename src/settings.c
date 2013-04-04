@@ -61,10 +61,10 @@ const int sort_type_default = GTK_SORT_ASCENDING;
 //gboolean show_desktop_default = FALSE;
 const gboolean show_wallpaper_default = FALSE;
 const WallpaperMode wallpaper_mode_default=WPM_STRETCH;
-const GdkColor desktop_bg1_default={0};
-const GdkColor desktop_bg2_default={0};
+const GdkColor desktop_bg1_default={0, 4656, 4125, 12014};
+const GdkColor desktop_bg2_default={0};   // unused?
 const GdkColor desktop_text_default={0, 65535, 65535, 65535};
-const GdkColor desktop_shadow_default={0};
+const GdkColor desktop_shadow_default={0, 11822, 13364, 13878};
 const int desktop_sort_by_default = DW_SORT_CUSTOM;
 const int desktop_sort_type_default = GTK_SORT_ASCENDING;
 const gboolean show_wm_menu_default = FALSE;
@@ -1201,20 +1201,22 @@ char* save_settings( gpointer main_window_ptr )
             fprintf( file, "show_wm_menu=%d\n", app_settings.show_wm_menu );
         if ( app_settings.desk_single_click != desk_single_click_default )
             fprintf( file, "desk_single_click=%d\n", app_settings.desk_single_click );
-        if ( ! gdk_color_equal( &app_settings.desktop_bg1,
-               &desktop_bg1_default ) )
+        
+        // always save these colors in case defaults change
+        //if ( ! gdk_color_equal( &app_settings.desktop_bg1,
+        //       &desktop_bg1_default ) )
             save_color( file, "bg1",
                         &app_settings.desktop_bg1 );
-        if ( ! gdk_color_equal( &app_settings.desktop_bg2,
-               &desktop_bg2_default ) )
+        //if ( ! gdk_color_equal( &app_settings.desktop_bg2,
+        //       &desktop_bg2_default ) )
             save_color( file, "bg2",
                         &app_settings.desktop_bg2 );
-        if ( ! gdk_color_equal( &app_settings.desktop_text,
-               &desktop_text_default ) )
+        //if ( ! gdk_color_equal( &app_settings.desktop_text,
+        //       &desktop_text_default ) )
             save_color( file, "text",
                         &app_settings.desktop_text );
-        if ( ! gdk_color_equal( &app_settings.desktop_shadow,
-               &desktop_shadow_default ) )
+        //if ( ! gdk_color_equal( &app_settings.desktop_shadow,
+        //       &desktop_shadow_default ) )
             save_color( file, "shadow",
                         &app_settings.desktop_shadow );
         if ( app_settings.margin_top != margin_top_default )

@@ -3986,6 +3986,8 @@ static void custom_order_write( DesktopWindow* self )
         }
         fclose( file );
     }
+    else
+        g_warning( "Error writing to file %s\n", path );
     g_free( path );
 }
 
