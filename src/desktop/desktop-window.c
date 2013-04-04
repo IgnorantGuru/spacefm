@@ -862,7 +862,9 @@ void desktop_window_reload_icons( DesktopWindow* win )
             item->icon = NULL;
     }
 */
-    layout_items( win );
+    if ( win->sort_by == DW_SORT_CUSTOM )
+        win->order_rows = win->row_count; // possible change of row count in new layout
+     layout_items( win );
 }
 
 
@@ -4051,7 +4053,10 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
         if( evt->atom == ATOM_NET_WORKAREA )
         {
             /* working area is resized */
+            printf("working area is resized\n");
             get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa );
+            if ( self->sort_by == DW_SORT_CUSTOM )
+                self->order_rows = self->row_count; // possible change of row count in new layout
             layout_items( self );
         }
 #if 0
