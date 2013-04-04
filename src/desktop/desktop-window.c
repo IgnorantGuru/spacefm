@@ -4046,7 +4046,19 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
             get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa );
             printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
                                 self->wa.x, self->wa.y, self->wa.width, self->wa.height);
+            // resize desktop window
+            GdkScreen* screen = gtk_widget_get_screen( GTK_WIDGET( self ) );
+            int width = gdk_screen_get_width( screen );
+            int height = gdk_screen_get_height( screen );
+            if ( width && height )
+            {
+                printf( "    screen size   w,h=%d, %d\n", width, height );
+                gtk_window_resize( GTK_WINDOW( self ), width, height );
+                gtk_window_move( GTK_WINDOW( self ), 0, 0 );
+            }
+            // update wallpaper
             fm_desktop_update_wallpaper();
+            // layout icons
             if ( self->sort_by == DW_SORT_CUSTOM )
                 self->order_rows = self->row_count; // possible change of row count in new layout
             layout_items( self );
