@@ -1397,22 +1397,24 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
     {
         self->dragging = FALSE;
     }
-    else if( self->single_click && evt->button == 1 &&
-                                            (GDK_BUTTON1_MASK == evt->state) )
+    else if ( evt->button == 1 && !( evt->state & 
+                      ( GDK_SHIFT_MASK | GDK_CONTROL_MASK | GDK_MOD1_MASK ) ) )
     {
-        if( clicked_item )
+        // unmodified left click release
+        if ( self->single_click )
         {
-            open_clicked_item( clicked_item );
-            return TRUE;
+            if ( clicked_item )
+            {
+                open_clicked_item( clicked_item );
+                return TRUE;
+            }
         }
-    }
-    else if ( !self->single_click && evt->button == 1 &&
-                                            (GDK_BUTTON1_MASK == evt->state) &&
-                                            clicked_item )
-    {
-        desktop_window_select( self, DW_SELECT_NONE );
-        clicked_item->is_selected = TRUE;
-        redraw_item( self, clicked_item );
+        else
+        {
+            desktop_window_select( self, DW_SELECT_NONE );
+            clicked_item->is_selected = TRUE;
+            redraw_item( self, clicked_item );
+        }
     }
 
     /* forward the event to root window */
