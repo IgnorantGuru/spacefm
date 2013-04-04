@@ -102,6 +102,7 @@ static void on_style_set( GtkWidget* w, GtkStyle* prev );
 static void on_realize( GtkWidget* w );
 static gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt );
 static gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt );
+static gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event );
 /* static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data ); */
 
 static void on_drag_begin( GtkWidget* w, GdkDragContext* ctx );
@@ -300,7 +301,8 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
     wc->drag_data_received = on_drag_data_received;
     wc->drag_leave = on_drag_leave;
     wc->drag_end = on_drag_end;
-
+    wc->configure_event = on_configure_event;
+    
     parent_class = (GtkWindowClass*)g_type_class_peek(GTK_TYPE_WINDOW);
 
     /* ATOM_XROOTMAP_ID = XInternAtom( GDK_DISPLAY(),"_XROOTMAP_ID", False ); */
@@ -525,11 +527,13 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
 
 void on_size_allocate( GtkWidget* w, GtkAllocation* alloc )
 {
+printf("on_size_allocate\n");
     GdkPixbuf* pix;
     DesktopWindow* self = (DesktopWindow*)w;
-    GdkRectangle wa;
 
     get_working_area( gtk_widget_get_screen(w), &self->wa );
+    if ( self->sort_by == DW_SORT_CUSTOM )
+        self->order_rows = self->row_count; // possible change of row count in new layout
     layout_items( DESKTOP_WINDOW(w) );
 
     GTK_WIDGET_CLASS(parent_class)->size_allocate( w, alloc );
@@ -2484,6 +2488,24 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
         GTK_WIDGET_UNSET_FLAGS( w, GTK_HAS_FOCUS );
 #endif
         redraw_item( self, self->focus );
+    }
+    return FALSE;
+}
+
+gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
+{
+    DesktopWindow* self = (DesktopWindow*) w;
+    
+    printf("on_configure_event %p  %d, %d  [%d, %d]  (was %d, %d)  file_listed = %s\n", self, event->width, event->height, self->wa.x, self->wa.y, self->wa.width, self->wa.height, self->file_listed ? "TRUE" : "FALSE" );
+
+    if ( self->file_listed )  // skip initial configure events
+    {
+        // possible desktop resize - get working area and redo layout
+        printf( "    get_working_area\n");
+        get_working_area( gtk_widget_get_screen(w), &self->wa );
+        if ( self->sort_by == DW_SORT_CUSTOM )
+            self->order_rows = self->row_count; // possible change of row count in new layout
+        layout_items( self );
     }
     return FALSE;
 }
