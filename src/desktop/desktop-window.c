@@ -1422,9 +1422,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
 
     /* forward the event to root window */
     if( ! clicked_item )
-    {
         forward_event_to_rootwin( gtk_widget_get_screen(w), (GdkEvent*)evt );
-    }
 
     return TRUE;
 }
