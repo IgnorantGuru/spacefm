@@ -4053,9 +4053,9 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
             if ( width && height )
             {
                 printf( "    screen size   w,h=%d, %d\n", width, height );
-                gtk_window_resize( GTK_WINDOW( self ), width, height );
-                gtk_window_move( GTK_WINDOW( self ), 0, 0 );
             }
+            gtk_window_resize( GTK_WINDOW( self ), self->wa.width, self->wa.height );
+            gtk_window_move( GTK_WINDOW( self ), 0, 0 );
             // update wallpaper
             fm_desktop_update_wallpaper();
             // layout icons
@@ -4434,6 +4434,9 @@ gboolean on_configure_event( GtkWidget* w, GdkEventConfigure *event )
     DesktopWindow* self = (DesktopWindow*) w;
     
     printf("on_configure_event %p  x,y=%d, %d    w,h=%d, %d  file_listed = %s\n", self, event->x, event->y, event->width, event->height, self->file_listed ? "TRUE" : "FALSE" );
+    get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa ); //temp
+    printf("    working area is   x,y=%d, %d   w,h=%d, %d\n",
+                        self->wa.x, self->wa.y, self->wa.width, self->wa.height);
 
     if ( self->file_listed )  // skip initial configure events
     {

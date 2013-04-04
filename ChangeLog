@@ -20,7 +20,7 @@
     add Open|Desktop Folder
     desktop name sort natural icase
     fix desktop center wallpaper larger than screen #296
-    detect desktop size changes
+    desktop manager detect screen size changes
     new default desktop background colors
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
