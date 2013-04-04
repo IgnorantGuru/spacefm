@@ -20,8 +20,9 @@
     add Open|Desktop Folder
     desktop name sort natural icase
     fix desktop center wallpaper larger than screen #296
-    desktop manager detect screen size changes
     new default desktop background colors
+    fix desktop shifted with panel #248
+    revert mouse buttons 6 7 as back/forward (for horz scrolling) #294
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
