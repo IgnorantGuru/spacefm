@@ -59,6 +59,13 @@ static void on_icon_theme_changed( GtkIconTheme* theme, gpointer data )
         desktop_window_reload_icons( (DesktopWindow*)desktops[ i ] );
 }
 
+#include <glib-object.h>
+void on_size_changed( GdkScreen *screen, GtkWidget* w )
+{
+    printf( "screen size changed  %d, %d\n", gdk_screen_get_width( screen ),
+                                             gdk_screen_get_height( screen ) );
+}
+
 void fm_turn_on_desktop_icons()
 {
     GdkDisplay * gdpy;
@@ -97,6 +104,12 @@ void fm_turn_on_desktop_icons()
         gdk_window_lower( gtk_widget_get_window(desktops[ i ]) );
 
         gtk_window_group_add_window( GTK_WINDOW_GROUP(group), GTK_WINDOW( desktops[i] ) );
+        
+        // temp detect screen size change
+        g_signal_connect( gtk_widget_get_screen( GTK_WIDGET( desktops[ i ] ) ),
+                            "size-changed", G_CALLBACK( on_size_changed ),
+                            desktops[ i ] );
+         
     }
     fm_desktop_update_colors();
     fm_desktop_update_wallpaper();
