@@ -805,6 +805,8 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
     win->margin_left = app_settings.margin_left;
     win->margin_right = app_settings.margin_right;
     win->margin_bottom = app_settings.margin_bottom;
+    if ( win->sort_by == DW_SORT_CUSTOM )
+        win->order_rows = win->row_count; // possible change of row count in new layout
     layout_items( win );
     for( l = win->items; l; l = l->next )
     {
@@ -2675,7 +2677,7 @@ void layout_items( DesktopWindow* self )
     GList* ll;
     DesktopItem* item;
     GtkWidget* widget = (GtkWidget*)self;
-    int x, y, w, bottom, right;
+    int i, x, y, w, bottom, right, row_count;
     gboolean list_compressed = self->sort_by != DW_SORT_CUSTOM;
 
     self->item_w = MAX( self->label_w, self->icon_size ) + self->x_pad * 2;
@@ -2685,9 +2687,11 @@ void layout_items( DesktopWindow* self )
 start_layout:
     x = self->wa.x + self->margin_left;
     y = self->wa.y + self->margin_top;
-    self->box_count = 0;
     right = self->wa.x + self->wa.width - self->margin_right;
     bottom = self->wa.y + self->wa.height - self->margin_bottom;
+    self->box_count = 0;
+    self->row_count = 0;
+    row_count = 0;
     
     for ( l = self->items; l; l = l->next )
     {
@@ -2700,7 +2704,58 @@ start_layout:
             // bottom reached - go to next column
             y = self->wa.y + self->margin_top;
             x += self->item_w;
+            // save row count for this layout
+            if ( !self->row_count )
+                self->row_count = row_count;
+            row_count = 1;  // adding first row of new column
+            if ( self->sort_by == DW_SORT_CUSTOM && 
+                                self->order_rows > self->row_count && l->prev )
+            {
+                // saved row count was greater than current - eat empties
+                GList* l_prev = l->prev;
+                ll = l;
+                for ( i = self->row_count; i < self->order_rows && ll; i++ )
+                {
+                    item = (DesktopItem*)ll->data;
+                    if ( item->fi )
+                    {
+                        // non-empty encountered in non-existent row
+                        // This will cause subsequent rows to be out of alignment
+                        ll = NULL;
+                    }
+                    else
+                    {
+                        if ( l_prev )
+                        {
+                            // rewind to previous item once for l = l->next
+                            // before deleting current l
+                            l = l_prev;
+                            l_prev = NULL;
+                        }
+                        ll = ll->next;
+                        desktop_item_free( item );
+                        self->items = g_list_remove( self->items, item );
+                    }
+                }
+                if ( !l_prev )
+                    continue;  // was rewound
+            }
         }
+        else if ( self->sort_by == DW_SORT_CUSTOM )
+        {
+            row_count++;  // adding new row to current column
+            if ( self->order_rows && self->order_rows < row_count && l->prev )
+            {
+                // saved row count was less than current - insert empty
+                item = g_slice_new0( DesktopItem );
+                item->fi = NULL;
+                item->box.width = self->item_w;
+                calc_item_size( self, item );
+                self->items = g_list_insert_before( self->items, l, item );
+                l = l->prev;
+            }
+        }
+        
         if ( !list_compressed && x + item->box.width > right )
         {
             // right side reached - remove empties and redo layout (custom sort)
@@ -2761,6 +2816,7 @@ start_layout:
             printf( "LAY %s %d, %d  %p\n", vfs_file_info_get_name( item->fi ), x, y, item );
         */
     }
+    self->order_rows = 0;  // reset
     
     if ( self->sort_by == DW_SORT_CUSTOM )
     {
@@ -3888,6 +3944,9 @@ static void custom_order_write( DesktopWindow* self )
     if ( file )
     {
         GList* l;
+        
+        fprintf( file, "~rows=%d\n", self->row_count );
+        
         int i = 1; // start from 1 to detect atoi failure
         for ( l = self->items; l; l = l->next )
         {
@@ -3908,6 +3967,7 @@ static GHashTable* custom_order_read( DesktopWindow* self )
     int order;
     GHashTable* order_hash = NULL;
 
+    self->order_rows = 0;    
     if ( self->sort_by != DW_SORT_CUSTOM )
         return NULL;
     char* filename = g_strdup_printf( "desktop%d", self->screen_index );
@@ -3925,8 +3985,20 @@ static GHashTable* custom_order_read( DesktopWindow* self )
             if ( sep = strchr( line, '=' ) )
             {
                 sep[0] = '\0';
-                if ( !strchr( line, '_' ) )  // forward compat for attribs
+                if ( line[0] == '~' )
                 {
+                    // read setting
+                    if ( !strcmp( line + 1, "rows" ) )
+                    {
+                        // get saved row count
+                        order = atoi( sep + 1 );
+                        if ( order != self->row_count )
+                            self->order_rows = order;
+                    }
+                }
+                else if ( !strchr( line, '_' ) )  // forward compat for attribs
+                {
+                    // read file order and name
                     order = atoi( line );
                     if ( order < 1 )
                         continue;
