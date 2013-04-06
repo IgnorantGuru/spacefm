@@ -69,6 +69,7 @@ const int desktop_sort_by_default = DW_SORT_CUSTOM;
 const int desktop_sort_type_default = GTK_SORT_ASCENDING;
 const gboolean show_wm_menu_default = FALSE;
 const gboolean desk_single_click_default = FALSE;
+const gboolean desk_open_mime_default = FALSE;
 const int margin_top_default = 12;
 const int margin_left_default = 6;
 const int margin_right_default = 6;
@@ -409,6 +410,8 @@ static void parse_desktop_settings( char* line )
         app_settings.show_wm_menu = atoi( value );
     else if ( 0 == strcmp( name, "desk_single_click" ) )
         app_settings.desk_single_click = atoi( value );
+    else if ( 0 == strcmp( name, "desk_open_mime" ) )
+        app_settings.desk_open_mime = atoi( value );
     else if ( 0 == strcmp( name, "margin_top" ) )
         app_settings.margin_top = atoi( value );
     else if ( 0 == strcmp( name, "margin_left" ) )
@@ -522,6 +525,7 @@ void load_settings( char* config_dir )
     app_settings.desktop_sort_type = desktop_sort_type_default;
     app_settings.show_wm_menu = show_wm_menu_default;
     app_settings.desk_single_click = desk_single_click_default;
+    app_settings.desk_open_mime = desk_open_mime_default;
     app_settings.margin_top = margin_top_default;
     app_settings.margin_left = margin_left_default;
     app_settings.margin_right = margin_right_default;
@@ -1201,6 +1205,8 @@ char* save_settings( gpointer main_window_ptr )
             fprintf( file, "show_wm_menu=%d\n", app_settings.show_wm_menu );
         if ( app_settings.desk_single_click != desk_single_click_default )
             fprintf( file, "desk_single_click=%d\n", app_settings.desk_single_click );
+        if ( app_settings.desk_open_mime != desk_open_mime_default )
+            fprintf( file, "desk_open_mime=%d\n", app_settings.desk_open_mime );
         
         // always save these colors in case defaults change
         //if ( ! gdk_color_equal( &app_settings.desktop_bg1,

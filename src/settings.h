@@ -67,6 +67,7 @@ typedef struct
     int desktop_sort_type;
     gboolean show_wm_menu;
     gboolean desk_single_click;
+    gboolean desk_open_mime;
     GdkColor desktop_bg1;
     GdkColor desktop_bg2;
     GdkColor desktop_text;

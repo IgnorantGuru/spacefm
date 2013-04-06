@@ -1125,8 +1125,10 @@ static void open_clicked_item( DesktopItem* clicked_item )
 
     if ( !clicked_item->fi )
         return;
-    else if( vfs_file_info_is_dir( clicked_item->fi ) )  /* this is a folder */
+    else if ( vfs_file_info_is_dir( clicked_item->fi ) &&
+                                                !app_settings.desk_open_mime )
     {
+        // a folder - open in SpaceFM browser by default
         GList* sel_files = NULL;
         sel_files = g_list_prepend( sel_files, clicked_item->fi );
         open_folders( sel_files );
@@ -3924,7 +3926,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
     app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
-                                                 mime_type, TRUE );
+                                                 mime_type, TRUE, FALSE );
     if ( app )
     {
         char* path = vfs_mime_type_locate_desktop_file( NULL, app );

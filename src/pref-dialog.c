@@ -67,6 +67,7 @@ struct _FMPrefDlg
     GtkWidget* img_preview;
     GtkWidget* show_wm_menu;
     GtkWidget* desk_single_click;
+    GtkWidget* desk_open_mime;
     GtkWidget* margin_top;
     GtkWidget* margin_left;
     GtkWidget* margin_right;
@@ -327,6 +328,8 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
         }
         app_settings.show_wm_menu = gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( data->show_wm_menu ) );
+        app_settings.desk_open_mime = gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( data->desk_open_mime ) );
 
         // wallpaper
         show_wallpaper = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
@@ -962,6 +965,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                                         "show_wm_menu" );
         data->desk_single_click = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "desk_single_click" );
+        data->desk_open_mime = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "desk_open_mime" );
         data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "bg_color1" );
         data->text_color = (GtkWidget*)gtk_builder_get_object( builder,
@@ -998,6 +1003,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                       app_settings.show_wm_menu );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_single_click ),
                                       app_settings.desk_single_click );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_open_mime ),
+                                      app_settings.desk_open_mime );
         
         // colors
         data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder, "bg_color1" );

@@ -141,7 +141,8 @@ void on_view_row_activated ( GtkTreeView *tree_view,
 }
 
 GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
-                                                        gboolean no_default )
+                                                        gboolean no_default,
+                                                        gboolean dir_default )
 {
     GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/appchooserdlg.ui", NULL );
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
@@ -175,7 +176,8 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
     /* Don't set default handler for directories and files with unknown type */
     if ( no_default ||
          0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
-         0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) )
+         ( 0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) &&
+           !dir_default ) )
     {
         gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder, "set_default" ) );
     }
@@ -423,14 +425,17 @@ printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
 }
 
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
-                                           VFSMimeType* mime_type,
-                                           gboolean no_default )
+                                     VFSMimeType* mime_type,
+                                     gboolean no_default,
+                                     gboolean dir_default )
 {
+    // if no_default don't show 'set as default' checkbox
+    // if dir_default, show 'set as default' checkbox for directory type
     GtkWidget * dlg;
     gchar* app = NULL;
     gchar* custom = NULL;
 
-    dlg = app_chooser_dialog_new( parent, mime_type, no_default );
+    dlg = app_chooser_dialog_new( parent, mime_type, no_default, dir_default );
 
     g_signal_connect( dlg, "response",  G_CALLBACK(on_dlg_response), NULL );
 
@@ -445,8 +450,11 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
             {
                 vfs_mime_type_set_default_action( mime_type, app );
             }
-            else if ( strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN )
-                      && strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ))
+            else if ( strcmp( vfs_mime_type_get_type( mime_type ),
+                                                    XDG_MIME_TYPE_UNKNOWN ) &&
+                    ( dir_default ||
+                      strcmp( vfs_mime_type_get_type( mime_type ),
+                                                    XDG_MIME_TYPE_DIRECTORY ) ) )
             {
                 vfs_mime_type_add_action( mime_type, app, &custom );
                 g_free( app );

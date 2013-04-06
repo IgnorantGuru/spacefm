@@ -23,6 +23,9 @@
     new default desktop background colors
     fix desktop shifted with panel #248
     revert mouse buttons 6 7 as back/forward (for horz scrolling) #294
+    move packages to pkg branch
+    add desktop prefs option Open folders with MIME app
+    Open|Default on dir now uses MIME app
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

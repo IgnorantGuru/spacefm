@@ -3439,6 +3439,8 @@ void ptk_open_files_with_app( const char* cwd,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever )
 {
+    // if xnever, never execute an executable
+    // if xforce, force execute of executable ignoring app_settings.no_execute
     GList * l;
     gchar* full_path = NULL;
     VFSFileInfo* file;
@@ -3464,7 +3466,8 @@ void ptk_open_files_with_app( const char* cwd,
         {
             if ( ! app_desktop )    /* Use default apps for each file */
             {
-                if ( g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
+                if ( G_LIKELY( file_browser ) && 
+                                g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
                 {
                     if ( ! new_dir )
                         new_dir = full_path;
@@ -3478,6 +3481,7 @@ void ptk_open_files_with_app( const char* cwd,
                     }
                     continue;
                 }
+                
                 /* If this file is an executable file, run it. */
                 if ( !xnever && vfs_file_info_is_executable( file, full_path ) &&
                                     ( ! app_settings.no_execute || xforce ) )  //MOD
@@ -3550,7 +3554,7 @@ void ptk_open_files_with_app( const char* cwd,
                     toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;                    /* Let the user choose an application */
                     choosen_app = (char *) ptk_choose_app_for_mime_type(
                                       ( GtkWindow* ) toplevel,
-                                      mime_type, FALSE );
+                                      mime_type, FALSE, !file_browser );
                     app_desktop = choosen_app;
                 }
                 if ( ! app_desktop )
