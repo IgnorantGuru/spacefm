@@ -3400,11 +3400,11 @@ static gboolean open_files_with_app( const char* cwd,
     if ( ! vfs_app_desktop_open_files( screen, cwd, app, files, &err ) )
     {
         GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
-        char* msg = g_markup_escape_text(err->message, -1);
+        //char* msg = g_markup_escape_text(err->message, -1);
         ptk_show_error( GTK_WINDOW( toplevel ),
                         _("Error"),
-                        msg );
-        g_free(msg);
+                        err->message );
+        //g_free(msg);
         g_error_free( err );
     }
     vfs_app_desktop_unref( app );
@@ -3493,12 +3493,12 @@ void ptk_open_files_with_app( const char* cwd,
                                                 vfs_file_info_get_disp_name( file ),
                                                 VFS_EXEC_DEFAULT_FLAGS, &err ) )
                     {
-                        char* msg = g_markup_escape_text(err->message, -1);
+                        //char* msg = g_markup_escape_text(err->message, -1);
                         toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
                         ptk_show_error( ( GtkWindow* ) toplevel,
                                         _("Error"),
-                                        msg );
-                        g_free(msg);
+                                        err->message );
+                        //g_free(msg);
                         g_error_free( err );
                     }
                     else

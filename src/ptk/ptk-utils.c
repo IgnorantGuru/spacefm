@@ -15,6 +15,7 @@
 #include <glib/gi18n.h>
 #include "working-area.h"
 
+#include "settings.h"
 #include "gtk2-compat.h"
 
 GtkWidget* ptk_menu_new_from_data( PtkMenuItemEntry* entries,
@@ -196,11 +197,15 @@ GtkWidget* ptk_toolbar_add_items_from_data( GtkWidget* toolbar,
 
 void ptk_show_error(GtkWindow* parent, const char* title, const char* message )
 {
-  GtkWidget* dlg = gtk_message_dialog_new_with_markup(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message, NULL);
-  if( title )
-    gtk_window_set_title( (GtkWindow*)dlg, title );
-  gtk_dialog_run( GTK_DIALOG(dlg) );
-  gtk_widget_destroy( dlg );
+    char* msg = replace_string( message, "%", "%%", FALSE );
+    GtkWidget* dlg = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL,
+                        GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, msg, NULL);
+    g_free( msg );
+    if( title )
+        gtk_window_set_title( (GtkWindow*)dlg, title );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+    gtk_dialog_run( GTK_DIALOG(dlg) );
+    gtk_widget_destroy( dlg );
 }
 
 /* Make the size of dialogs smaller by breaking GNOME HIG
