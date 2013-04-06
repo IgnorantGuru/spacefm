@@ -346,7 +346,7 @@ static void desktop_window_init(DesktopWindow *self)
     self->margin_bottom = app_settings.margin_bottom;
     self->insert_item = NULL;
     self->file_listed = FALSE;
-    
+
     self->icon_render = gtk_cell_renderer_pixbuf_new();
     g_object_set( self->icon_render, "follow-state", TRUE, NULL);
     g_object_ref_sink(self->icon_render);
@@ -812,7 +812,9 @@ void desktop_window_set_icon_size( DesktopWindow* win, int size )
     win->margin_bottom = app_settings.margin_bottom;
     if ( win->sort_by == DW_SORT_CUSTOM )
         win->order_rows = win->row_count; // possible change of row count in new layout
+    
     layout_items( win );
+
     for( l = win->items; l; l = l->next )
     {
         VFSFileInfo* fi = ((DesktopItem*)l->data)->fi;
@@ -863,6 +865,7 @@ void desktop_window_reload_icons( DesktopWindow* win )
             item->icon = NULL;
     }
 */
+
     if ( win->sort_by == DW_SORT_CUSTOM )
         win->order_rows = win->row_count; // possible change of row count in new layout
      layout_items( win );
@@ -2698,6 +2701,7 @@ void layout_items( DesktopWindow* self )
     self->item_w = MAX( self->label_w, self->icon_size ) + self->x_pad * 2;
     pango_layout_set_width( self->pl, MAX( self->label_w, self->icon_size ) *
                                                         PANGO_SCALE );  // 100
+    pango_layout_set_font_description( self->pl, app_settings.desk_font );
 
 start_layout:
     x = self->wa.x + self->margin_left;

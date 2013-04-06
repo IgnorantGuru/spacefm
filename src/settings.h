@@ -68,6 +68,7 @@ typedef struct
     gboolean show_wm_menu;
     gboolean desk_single_click;
     gboolean desk_open_mime;
+    PangoFontDescription* desk_font;
     GdkColor desktop_bg1;
     GdkColor desktop_bg2;
     GdkColor desktop_text;
@@ -412,6 +413,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                             gboolean edit_care, const char* help );
 char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
                         const char* title, const char* deffolder, const char* deffile );
+char* xset_font_dialog( GtkWidget* parent, const char* title,
+                                    const char* preview, const char* deffont );
 void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
 void xset_open_url( GtkWidget* parent, const char* url );
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,

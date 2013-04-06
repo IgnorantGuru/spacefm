@@ -29,6 +29,7 @@
     obey desktop file keys Path and Terminal (+full bash Exec) #232
     execute separate commands on no desktop file Exec field code
     fix crash on special escape chars on command line #302
+    add desktop pref font button
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

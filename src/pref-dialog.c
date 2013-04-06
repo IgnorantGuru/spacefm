@@ -68,6 +68,7 @@ struct _FMPrefDlg
     GtkWidget* show_wm_menu;
     GtkWidget* desk_single_click;
     GtkWidget* desk_open_mime;
+    GtkWidget* desk_font;
     GtkWidget* margin_top;
     GtkWidget* margin_left;
     GtkWidget* margin_right;
@@ -150,6 +151,49 @@ static void
 dir_unload_thumbnails( const char* path, VFSDir* dir, gpointer user_data )
 {
     vfs_dir_unload_thumbnails( dir, GPOINTER_TO_INT( user_data ) );
+}
+
+static const char* font_button_get_font( GtkWidget* button )
+{
+    if ( !g_strcmp0( gtk_button_get_label( GTK_BUTTON( button ) ),
+                                                    _("Default") ) )
+        return NULL;
+    else
+        return gtk_button_get_label( GTK_BUTTON( button ) );
+}
+
+static void font_button_set_font( GtkWidget* button,
+                                            PangoFontDescription* font_desc,
+                                            const char* font_name )
+{
+    if ( !font_desc && !font_name )
+    {
+        gtk_button_set_label( GTK_BUTTON( button ), _("Default") );
+        gtk_widget_modify_font( GTK_WIDGET( button ), NULL );
+    }
+    else
+    {
+        char* font_name_str = NULL;
+        char* fontname;
+        if ( font_name )
+            fontname = (char*)font_name;
+        else
+            fontname = font_name_str =
+                                pango_font_description_to_string( font_desc );
+        gtk_button_set_label( GTK_BUTTON( button ), fontname );        
+        g_free( font_name_str );
+    }
+}
+
+void on_font_button_clicked( GtkButton* button, FMPrefDlg* data )
+{
+    char* fontname = xset_font_dialog( GTK_WIDGET( data->dlg ),
+                                    _("Choose Desktop Font"),
+                                   _("Example Item 0123456789"),
+                                   font_button_get_font( data->desk_font ) );
+    font_button_set_font( data->desk_font, NULL, fontname && fontname[0] ?
+                                                 fontname : NULL );
+    g_free( fontname );
 }
 
 static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
@@ -376,6 +420,22 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             fm_desktop_update_wallpaper();
         }
 
+        //font
+        gboolean update_icons = FALSE;
+        char* old_fontname = app_settings.desk_font ?
+                                    pango_font_description_to_string(
+                                                    app_settings.desk_font ) :
+                                    NULL;
+        const char* new_fontname = font_button_get_font( data->desk_font );
+        if ( g_strcmp0( new_fontname, old_fontname ) )
+        {
+            app_settings.desk_font = new_fontname ?
+                            pango_font_description_from_string( new_fontname ) :
+                                                                        NULL;
+            update_icons = TRUE;
+        }
+        g_free( old_fontname );
+
         // margins
         int margin_top = atoi( gtk_entry_get_text( 
                                         GTK_ENTRY( data->margin_top ) ) );
@@ -409,8 +469,11 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 app_settings.margin_bottom = 12;
             if ( app_settings.margin_pad < 0 || app_settings.margin_pad > 999 )
                 app_settings.margin_pad = 6;
-            fm_desktop_update_icons();
+            update_icons = TRUE;
         }
+
+        if ( update_icons )
+            fm_desktop_update_icons();
         
 
         // ===============================================================
@@ -973,6 +1036,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                                         "text_color" );
         data->shadow_color = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "shadow_color" );
+        data->desk_font = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "desk_font" );
         data->margin_top = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "margin_top" );
         data->margin_left = (GtkWidget*)gtk_builder_get_object( builder,
@@ -1005,6 +1070,11 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                       app_settings.desk_single_click );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_open_mime ),
                                       app_settings.desk_open_mime );
+        
+        //font
+        font_button_set_font( data->desk_font, app_settings.desk_font, NULL );
+        g_signal_connect( data->desk_font, "clicked",
+                                G_CALLBACK(on_font_button_clicked), data );
         
         // colors
         data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder, "bg_color1" );

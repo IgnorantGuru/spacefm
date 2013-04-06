@@ -109,7 +109,6 @@ static void color_from_str( GdkColor* ret, const char* value );
 static void save_color( FILE* file, const char* name,
                  GdkColor* color );
 void xset_free_all();
-char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* deffont );
 void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_default_keys();
 int xset_context_test( char* rules, gboolean def_disable );
@@ -402,6 +401,8 @@ static void parse_desktop_settings( char* line )
         color_from_str( &app_settings.desktop_text, value );
     else if ( 0 == strcmp( name, "shadow" ) )
         color_from_str( &app_settings.desktop_shadow, value );
+    else if ( 0 == strcmp( name, "font" ) )
+        app_settings.desk_font = pango_font_description_from_string( value );
     else if ( 0 == strcmp( name, "sort_by" ) )
         app_settings.desktop_sort_by = atoi( value );
     else if ( 0 == strcmp( name, "sort_type" ) )
@@ -521,6 +522,7 @@ void load_settings( char* config_dir )
     app_settings.desktop_bg1 = desktop_bg1_default;
     app_settings.desktop_bg2 = desktop_bg2_default;
     app_settings.desktop_text = desktop_text_default;
+    app_settings.desk_font = NULL;
     app_settings.desktop_sort_by = desktop_sort_by_default;
     app_settings.desktop_sort_type = desktop_sort_type_default;
     app_settings.show_wm_menu = show_wm_menu_default;
@@ -1225,6 +1227,15 @@ char* save_settings( gpointer main_window_ptr )
         //       &desktop_shadow_default ) )
             save_color( file, "shadow",
                         &app_settings.desktop_shadow );
+                        
+        if ( app_settings.desk_font )
+        {
+            char* fontname = pango_font_description_to_string(
+                                                    app_settings.desk_font );
+            if ( fontname )
+                fprintf( file, "font=%s\n", fontname );
+            g_free( fontname );
+        }
         if ( app_settings.margin_top != margin_top_default )
             fprintf( file, "margin_top=%d\n", app_settings.margin_top );
         if ( app_settings.margin_left != margin_left_default )
@@ -8233,7 +8244,8 @@ static gboolean on_fontdlg_keypress ( GtkWidget *widget, GdkEventKey *event,
     return FALSE;
 }
 
-char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* deffont )
+char* xset_font_dialog( GtkWidget* parent, const char* title,
+                                    const char* preview, const char* deffont )
 {
     char* fontname = NULL;
     GtkWidget* image;
