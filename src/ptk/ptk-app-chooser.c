@@ -175,7 +175,7 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
     }
     /* Don't set default handler for directories and files with unknown type */
     if ( no_default ||
-         0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) ||
+       /*  0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) || */
          ( 0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) &&
            !dir_default ) )
     {
@@ -450,8 +450,8 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
             {
                 vfs_mime_type_set_default_action( mime_type, app );
             }
-            else if ( strcmp( vfs_mime_type_get_type( mime_type ),
-                                                    XDG_MIME_TYPE_UNKNOWN ) &&
+            else if (/* strcmp( vfs_mime_type_get_type( mime_type ),
+                                                    XDG_MIME_TYPE_UNKNOWN ) && */
                     ( dir_default ||
                       strcmp( vfs_mime_type_get_type( mime_type ),
                                                     XDG_MIME_TYPE_DIRECTORY ) ) )

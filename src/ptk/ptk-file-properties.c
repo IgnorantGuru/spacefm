@@ -459,7 +459,7 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
      */
     if( ! same_type ||
           vfs_file_info_is_desktop_entry( file ) ||
-          vfs_file_info_is_unknown_type( file ) ||
+        /*  vfs_file_info_is_unknown_type( file ) || */
           vfs_file_info_is_executable( file, NULL ) )
     {
         /* if open with shouldn't show, destroy it. */
