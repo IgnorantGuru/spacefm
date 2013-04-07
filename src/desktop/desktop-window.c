@@ -22,7 +22,7 @@
 #include <glib/gi18n.h>
 #include <math.h>  // sqrt
 
-#include "desktop-window.h"
+#include "desktop.h"
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "vfs-thumbnail-loader.h"
@@ -620,6 +620,7 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
         int dest_w = gdk_screen_get_width( gtk_widget_get_screen((GtkWidget*)win) );
         int dest_h = gdk_screen_get_height( gtk_widget_get_screen((GtkWidget*)win) );
         GdkPixbuf* scaled = NULL;
+printf("set wallpaper: gdkscreen size = %d, %d\n", dest_w, dest_h );
 
         if( type == DW_BG_TILE )
         {
@@ -1246,6 +1247,12 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     DesktopWindow* self = (DesktopWindow*)w;
     DesktopItem *item, *clicked_item = NULL;
     GList* l;
+
+    int dest_w = gdk_screen_get_width( gtk_widget_get_screen((GtkWidget*)self) );
+    int dest_h = gdk_screen_get_height( gtk_widget_get_screen((GtkWidget*)self) );
+printf("button: gdkscreen size = %d, %d\n", dest_w, dest_h );
+print_xdisplay_size( gtk_widget_get_display( GTK_WIDGET( self ) ),
+            gdk_screen_get_number( gtk_widget_get_screen((GtkWidget*)self) ) );
 
     clicked_item = hit_test( DESKTOP_WINDOW(w), (int)evt->x, (int)evt->y );
 
@@ -4051,23 +4058,23 @@ GdkFilterReturn on_rootwin_event ( GdkXEvent *xevent,
         {
             /* working area is resized */
             get_working_area( gtk_widget_get_screen((GtkWidget*)self), &self->wa );
-            //printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
-            //        self->wa.x, self->wa.y, self->wa.width, self->wa.height);
+            printf("working area is resized   x,y=%d, %d   w,h=%d, %d\n",
+                    self->wa.x, self->wa.y, self->wa.width, self->wa.height);
             
             /* This doesn't seem to have the desired effect, and also
              * desktop window size should be based on screen size not WA
-             * https://github.com/IgnorantGuru/spacefm/issues/300
+             * https://github.com/IgnorantGuru/spacefm/issues/300 */
             // resize desktop window
             GdkScreen* screen = gtk_widget_get_screen( GTK_WIDGET( self ) );
             int width = gdk_screen_get_width( screen );
             int height = gdk_screen_get_height( screen );
             if ( width && height )
-                printf( "    screen size   w,h=%d, %d\n", width, height );
-            gtk_window_resize( GTK_WINDOW( self ), self->wa.width, self->wa.height );
-            gtk_window_move( GTK_WINDOW( self ), 0, 0 );
+                printf( "    gdkscreen size = %d, %d\n", width, height );
+            //gtk_window_resize( GTK_WINDOW( self ), self->wa.width, self->wa.height );
+            ////gtk_window_move( GTK_WINDOW( self ), 0, 0 );
             // update wallpaper
             fm_desktop_update_wallpaper();
-            */
+            
             // layout icons
             if ( self->sort_by == DW_SORT_CUSTOM )
                 self->order_rows = self->row_count; // possible change of row count in new layout

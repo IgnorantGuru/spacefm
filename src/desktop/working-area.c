@@ -145,3 +145,14 @@ void get_working_area( GdkScreen* screen, GdkRectangle* area )
 		area->height = gdk_screen_get_height( screen );
 	}
 }
+
+void print_xdisplay_size( GdkDisplay* gdisplay, int screen_num )
+{
+	//GdkDisplay* gdisplay = gtk_widget_get_display( GTK_WIDGET( win ) );
+	//GdkWindow* gwindow = gtk_widget_get_window( GTK_WIDGET( win ) );
+	//GDK_WINDOW_XID( gwindow )
+	Display* dpy = GDK_DISPLAY_XDISPLAY( gdisplay );
+	printf( "        XDisplay size: %d, %d\n", DisplayWidth (dpy, screen_num),
+										DisplayHeight (dpy, screen_num) );
+}
+
