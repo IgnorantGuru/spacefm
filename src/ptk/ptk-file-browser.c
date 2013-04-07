@@ -5106,7 +5106,8 @@ void ptk_file_browser_rename_selected_files( PtkFileBrowser* file_browser,
     for ( l = files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
-        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE, 0, NULL ) )
+        if ( !ptk_rename_file( NULL, file_browser, cwd, file, NULL, FALSE,
+                                                        PTK_RENAME, NULL ) )
             break;
     }
 }

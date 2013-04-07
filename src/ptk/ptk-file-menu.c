@@ -2802,21 +2802,21 @@ void
 on_popup_new_folder_activate ( GtkMenuItem *menuitem,
                                PtkFileMenu* data )
 {
-    create_new_file( data, 2 );
+    create_new_file( data, PTK_RENAME_NEW_DIR );
 }
 
 void
 on_popup_new_text_file_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
-    create_new_file( data, 1 );
+    create_new_file( data, PTK_RENAME_NEW_FILE );
 }
 
 void
 on_popup_new_link_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
-    create_new_file( data, 3 );
+    create_new_file( data, PTK_RENAME_NEW_LINK );
 }
 
 void

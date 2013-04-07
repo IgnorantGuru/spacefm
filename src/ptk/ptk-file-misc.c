@@ -47,7 +47,7 @@ typedef struct
     gboolean is_dir;
     gboolean is_link;
     gboolean clip_copy;
-    int create_new;
+    PtkRenameMode create_new;
     
     GtkWidget* dlg;
     GtkWidget* parent;
@@ -247,6 +247,32 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
     g_signal_handlers_block_matched( mset->buf_full_path, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
                                      on_move_change, NULL );
 
+    // change is_dir to reflect state of new folder or link option
+    if ( mset->create_new )
+    {
+        gboolean new_folder = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
+                                                    mset->opt_new_folder ) );
+        gboolean new_link = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
+                                                    mset->opt_new_link ) );
+        if ( new_folder || ( new_link && 
+                             g_file_test( gtk_entry_get_text( 
+                                             GTK_ENTRY( mset->entry_target ) ),
+                                          G_FILE_TEST_IS_DIR ) &&
+                             gtk_entry_get_text( GTK_ENTRY( 
+                                          mset->entry_target ) )[0] == '/' ) )
+        {
+             if ( !mset->is_dir )
+                mset->is_dir = TRUE;
+        }
+        else if ( mset->is_dir )
+            mset->is_dir = FALSE;
+        if ( mset->is_dir && 
+                        gtk_widget_is_focus( GTK_WIDGET( mset->entry_ext ) ) )
+            gtk_widget_grab_focus( GTK_WIDGET( mset->input_name ) );
+        gtk_widget_set_sensitive( GTK_WIDGET( mset->entry_ext ), !mset->is_dir );
+        gtk_widget_set_sensitive( GTK_WIDGET( mset->label_ext ), !mset->is_dir );
+    }
+    
     if ( widget == GTK_WIDGET( mset->buf_name ) || widget == GTK_WIDGET( mset->entry_ext ) )
     {
         if ( widget == GTK_WIDGET( mset->buf_name ) )
@@ -550,7 +576,8 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         //gboolean opt_copy_target = gtk_toggle_button_get_active( mset->opt_copy_target );
         //gboolean opt_link_target = gtk_toggle_button_get_active( mset->opt_link_target );
 
-        if ( full_path_same && ( mset->create_new == 0 || mset->create_new == 3 ) )
+        if ( full_path_same && ( mset->create_new == PTK_RENAME ||
+                                 mset->create_new == PTK_RENAME_NEW_LINK ) )
         {
             gtk_widget_set_sensitive( mset->next, gtk_toggle_button_get_active(
                                             GTK_TOGGLE_BUTTON( mset->opt_move ) ) );
@@ -576,8 +603,7 @@ void on_move_change( GtkWidget* widget, MoveSet* mset )
         }
         else if ( full_path_exists )
         {
-            if ( mset->is_dir || gtk_toggle_button_get_active( 
-                                    GTK_TOGGLE_BUTTON( mset->opt_new_folder ) ) )
+            if ( mset->is_dir )
             {
                 gtk_widget_set_sensitive( mset->next, FALSE );
                 gtk_label_set_markup_with_mnemonic( mset->label_full_path,
@@ -1011,7 +1037,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
                             GTK_RADIO_BUTTON(mode[MODE_FILENAME]), _("P_ath") );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( mode[mode_default] ), TRUE );
     gtk_box_pack_start( GTK_BOX( hbox ),
-                        gtk_label_new( _("Browse for") ), FALSE, TRUE, 2 );
+                        gtk_label_new( _("Insert as") ), FALSE, TRUE, 2 );
     for ( i = MODE_FILENAME; i <= MODE_PATH; i++ )
     {
         gtk_button_set_focus_on_click( GTK_BUTTON( mode[i] ), FALSE );
@@ -1927,7 +1953,8 @@ void update_new_display( const char* path )
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
-                                        int create_new, AutoOpenCreate* auto_open )
+                                        PtkRenameMode create_new,
+                                        AutoOpenCreate* auto_open )
 {   
     char* full_name;
     char* full_path;
@@ -1974,14 +2001,14 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         g_free( full_name );
         full_name = NULL;
     }
-    else if ( create_new == 3 && file ) // new link
+    else if ( create_new == PTK_RENAME_NEW_LINK && file )
     {
         full_name = g_strdup( vfs_file_info_get_disp_name( file ) );
         if ( !full_name )
             full_name = g_strdup( vfs_file_info_get_name( file ) );
         mset->full_path = g_build_filename( file_dir, full_name, NULL );
         mset->new_path = g_strdup( mset->full_path );
-        mset->is_dir = vfs_file_info_is_dir( file );
+        mset->is_dir = vfs_file_info_is_dir( file );  // is_dir is dynamic for create
         mset->is_link = vfs_file_info_is_symlink( file );
         mset->clip_copy = FALSE;
     }
@@ -1989,7 +2016,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     {
         mset->full_path = get_unique_name( file_dir, NULL );
         mset->new_path = g_strdup( mset->full_path );
-        mset->is_dir = FALSE;
+        mset->is_dir = FALSE;  // is_dir is dynamic for create
         mset->is_link = FALSE;
         mset->clip_copy = FALSE;
     }
@@ -2579,12 +2606,12 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_copy ), TRUE );
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_move ), FALSE );
     }
-    else if ( create_new == 2 )
+    else if ( create_new == PTK_RENAME_NEW_DIR )
     {
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_folder ), TRUE );
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_file ), FALSE );
     }
-    else if ( create_new == 3 )
+    else if ( create_new == PTK_RENAME_NEW_LINK )
     {
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_link ), TRUE );
         gtk_toggle_button_set_active ( GTK_TOGGLE_BUTTON( mset->opt_new_file ), FALSE );
@@ -3633,7 +3660,7 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
         vfs_file_info_get( file, file_path, NULL );
         file_dir = g_path_get_dirname( file_path );
         if ( !ptk_rename_file( desktop, file_browser, file_dir, file, cwd, !is_cut,
-                                                                    0, NULL ) )
+                                                        PTK_RENAME, NULL ) )
         {
             vfs_file_info_unref( file );
             g_free( file_dir );

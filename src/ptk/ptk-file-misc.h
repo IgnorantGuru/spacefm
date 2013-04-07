@@ -28,6 +28,13 @@ typedef struct _AutoOpenCreate
     gboolean open_file;
 }AutoOpenCreate;
 
+typedef enum {
+    PTK_RENAME,
+    PTK_RENAME_NEW_FILE,
+    PTK_RENAME_NEW_DIR,
+    PTK_RENAME_NEW_LINK
+} PtkRenameMode;
+
 void ptk_delete_files( GtkWindow* parent_win,
                        const char* cwd,
                        GList* sel_files,
@@ -36,7 +43,8 @@ void ptk_delete_files( GtkWindow* parent_win,
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
-                                        int create_new, AutoOpenCreate* auto_open );
+                                        PtkRenameMode create_new,
+                                        AutoOpenCreate* auto_open );
 
 gboolean ptk_create_new_file( GtkWindow* parent_win,
                           const char* cwd,
