@@ -492,6 +492,7 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
         sn_desc = vfs_app_desktop_get_disp_name( app );
         if( !sn_desc )
             sn_desc = exec;
+
         if( vfs_app_desktop_open_multiple_files( app ) )
         {
             cmd = translate_app_exec_to_command_line( app, file_paths );
@@ -522,13 +523,23 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
         }
         else
         {
-            GList* keep_next;
-            for( l = file_paths; l; l = l->next )
+            // app does not accept multiple files, so run multiple times
+            GList* single;
+            l = file_paths;
+            do
             {
-                keep_next = l->next;
-                l->next = NULL;
-                cmd = translate_app_exec_to_command_line( app, l );
-                l->next = keep_next;
+                if ( l )
+                {
+                    // just pass a single file path to translate
+                    single = g_list_append( NULL, l->data );
+                }
+                else
+                {
+                    // there are no files being passed, just run once
+                    single = NULL;
+                }
+                cmd = translate_app_exec_to_command_line( app, single );
+                g_list_free( single );
                 if ( cmd )
                 {
                     if ( vfs_app_desktop_open_in_terminal( app ) )
@@ -554,7 +565,7 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
                     }
                     g_free( cmd );
                 }
-            }
+            } while ( l = l ? l->next : NULL );
         }
         g_free( exec );
         return TRUE;
