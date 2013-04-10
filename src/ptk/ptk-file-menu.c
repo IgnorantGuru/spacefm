@@ -34,6 +34,7 @@
 #include "ptk-clipboard.h"
 #include "ptk-app-chooser.h"
 #include "settings.h"  //MOD
+#include "item-prop.h"  //MOD
 #include "main-window.h"
 #include "ptk-location-view.h"
 #include "ptk-file-list.h"  //sfm for sort extra

@@ -44,6 +44,7 @@
 #include "ptk-path-entry.h"
 
 #include "settings.h"
+#include "item-prop.h"
 #include "find-files.h"
 
 #ifdef HAVE_STATVFS
@@ -7312,7 +7313,8 @@ _invalid_get:
         if ( context && context->valid )
         {
             if ( !xset_get_b( "context_dlg" ) && 
-                        xset_context_test( set->context, FALSE ) != CONTEXT_SHOW )
+                        xset_context_test( context, set->context, FALSE ) != 
+                                                                CONTEXT_SHOW )
             {
                 *reply = g_strdup_printf( _("spacefm: menu '%s' context hidden or disabled\n"),
                                                                         argv[i] );

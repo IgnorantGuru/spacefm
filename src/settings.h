@@ -295,55 +295,6 @@ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
     "/usr/bin/sudo"
 };
 
-enum {
-    CONTEXT_SHOW,
-    CONTEXT_ENABLE,
-    CONTEXT_HIDE,
-    CONTEXT_DISABLE
-};
-
-enum {
-    CONTEXT_MIME,
-    CONTEXT_NAME,
-    CONTEXT_DIR,
-    CONTEXT_WRITE_ACCESS,
-    CONTEXT_IS_TEXT,
-    CONTEXT_IS_DIR,
-    CONTEXT_IS_LINK,
-    CONTEXT_IS_ROOT,
-    CONTEXT_MUL_SEL,
-    CONTEXT_CLIP_FILES,
-    CONTEXT_CLIP_TEXT,
-    CONTEXT_PANEL,
-    CONTEXT_PANEL_COUNT,
-    CONTEXT_TAB,
-    CONTEXT_TAB_COUNT,
-    CONTEXT_BOOKMARK,
-    CONTEXT_DEVICE,
-    CONTEXT_DEVICE_MOUNT_POINT,
-    CONTEXT_DEVICE_LABEL,
-    CONTEXT_DEVICE_FSTYPE,
-    CONTEXT_DEVICE_UDI,
-    CONTEXT_DEVICE_PROP,
-    CONTEXT_TASK_COUNT,
-    CONTEXT_TASK_DIR,
-    CONTEXT_TASK_TYPE,
-    CONTEXT_TASK_NAME,
-    CONTEXT_PANEL1_DIR,
-    CONTEXT_PANEL2_DIR,
-    CONTEXT_PANEL3_DIR,
-    CONTEXT_PANEL4_DIR,
-    CONTEXT_PANEL1_SEL,
-    CONTEXT_PANEL2_SEL,
-    CONTEXT_PANEL3_SEL,
-    CONTEXT_PANEL4_SEL,
-    CONTEXT_PANEL1_DEVICE,
-    CONTEXT_PANEL2_DEVICE,
-    CONTEXT_PANEL3_DEVICE,
-    CONTEXT_PANEL4_DEVICE,
-    CONTEXT_END
-};
-
 typedef struct
 {
     gboolean valid;
@@ -402,7 +353,6 @@ XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );
 XSet* xset_is( const char* name );
 XSet* xset_find_menu( const char* menu_name );
-int xset_context_test( char* rules, gboolean def_disable );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,

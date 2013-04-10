@@ -37,6 +37,7 @@
 #include "ptk-utils.h"
 
 #include "settings.h"
+#include "item-prop.h"
 #include "main-window.h"
 #include "pref-dialog.h"
 #include "ptk-file-browser.h"
