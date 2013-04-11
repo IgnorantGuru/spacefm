@@ -215,7 +215,7 @@ typedef struct
     char* parent;
     char* child;
     char* line;             // or help if lock
-    // x = line/script/custom
+    // x = line/script/app/bookmark
     // y = user
     // z = custom executable
     char task;
@@ -338,6 +338,8 @@ gboolean xset_get_b_set( XSet* set );
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
+char* xset_custom_get_script( XSet* set, gboolean create );
+gboolean have_rw_access( const char* path );
 
 XSet* xset_set( const char* name, const char* var, const char* value );
 XSet* xset_set_set( XSet* set, const char* var, const char* value );

@@ -4536,6 +4536,8 @@ gboolean have_x_access( const char* path )
 
 gboolean have_rw_access( const char* path )
 {
+    if ( !path )
+        return FALSE;
 #if defined(HAVE_EUIDACCESS)
     return ( euidaccess( path, R_OK | W_OK ) == 0 );
 #elif defined(HAVE_EACCESS)
