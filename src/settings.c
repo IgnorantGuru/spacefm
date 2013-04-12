@@ -113,6 +113,7 @@ static void save_color( FILE* file, const char* name,
                  GdkColor* color );
 void xset_free_all();
 void xset_custom_delete( XSet* set, gboolean delete_next );
+char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* deffont );
 void xset_default_keys();
 char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
 char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor );
@@ -10575,7 +10576,8 @@ void xset_defaults()
         xset_set_set( set, "icon", "gtk-preferences" );
         set->s = g_strdup( "arctype_rar arctype_zip" );  // default list of archive types
 
-    // Default Archive Types Defined Here
+    // Default Archive Types Defined Here - note that this is also
+    // maintained in ptk-file-archiver.c:restore_defaults
     set = xset_set( "arctype_rar", "label", _("RAR") );  // Name as it appears in list - translatable?
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-rar" );
