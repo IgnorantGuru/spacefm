@@ -138,7 +138,7 @@ void config_load_handler_settings( XSet* handler_xset,
         handler_xset = xset_get( handler_xset_name );
 
     // Fetching widget references
-    GtkWidget* chkbtn_handler_enabled = g_object_get_data( G_OBJECT( dlg ),
+    GtkWidget* chkbtn_handler_enabled = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_enabled" );
     GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                                 "entry_handler_name" );
@@ -284,13 +284,13 @@ void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     gchar* help_string;
 
     // Fetching widgets and basic handler details
-    GtkButton* btn_add = g_object_get_data( G_OBJECT( dlg ),
+    GtkButton* btn_add = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_add" );
-    GtkButton* btn_apply = g_object_get_data( G_OBJECT( dlg ),
+    GtkButton* btn_apply = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_apply" );
-    GtkTreeView* view_handlers = g_object_get_data( G_OBJECT( dlg ),
+    GtkTreeView* view_handlers = (GtkTreeView*)g_object_get_data( G_OBJECT( dlg ),
                                             "view_handlers" );
-    GtkWidget* chkbtn_handler_enabled = g_object_get_data(
+    GtkWidget* chkbtn_handler_enabled = (GtkWidget*)g_object_get_data(
                                             G_OBJECT( dlg ),
                                             "chkbtn_handler_enabled" );
     GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data(
@@ -1699,7 +1699,7 @@ void restore_defaults( GtkWidget* dlg )
 
     // Clearing and adding archive handlers to list (this also selects
     // the first handler and therefore populates the handler widgets)
-    GtkListStore* list = g_object_get_data( G_OBJECT( dlg ), "list" );
+    GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
     gtk_list_store_clear( GTK_LIST_STORE( list ) );
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
 }
