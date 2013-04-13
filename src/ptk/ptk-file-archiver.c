@@ -102,10 +102,10 @@ const ArchiveHandler handlers[]=
 
 
 // Function prototypes
-void restore_defaults( GtkWidget* dlg );
+static void restore_defaults( GtkWidget* dlg );
 
 
-XSet* add_new_arctype()
+static XSet* add_new_arctype()
 {
     // creates a new xset for a custom archive type
     XSet* set;
@@ -129,7 +129,7 @@ XSet* add_new_arctype()
 }
 
 // handler_xset_name optional if handler_xset passed
-void config_load_handler_settings( XSet* handler_xset,
+static void config_load_handler_settings( XSet* handler_xset,
                                     gchar* handler_xset_name,
                                     GtkWidget* dlg )
 {
@@ -278,7 +278,7 @@ void config_load_handler_settings( XSet* handler_xset,
     }
 }
 
-void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
+static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
     const char* dialog_title = _("Archive Handlers");
     gchar* help_string;
@@ -605,7 +605,8 @@ void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     }
 }
 
-void on_configure_changed( GtkTreeSelection* selection, GtkWidget* dlg )
+static void on_configure_changed( GtkTreeSelection* selection,
+                                  GtkWidget* dlg )
 {
     // This event is triggered when the selected row is changed through
     // the keyboard
@@ -637,8 +638,9 @@ void on_configure_changed( GtkTreeSelection* selection, GtkWidget* dlg )
     gtk_widget_grab_focus( entry_handler_name );*/
 }
 
-void on_configure_drag_end( GtkWidget* widget, GdkDragContext* drag_context,
-                               GtkListStore* list )
+static void on_configure_drag_end( GtkWidget* widget,
+                                   GdkDragContext* drag_context,
+                                   GtkListStore* list )
 {
     // Regenerating archive handlers list xset
     // Obtaining iterator pointing at first handler
@@ -687,8 +689,10 @@ void on_configure_drag_end( GtkWidget* widget, GdkDragContext* drag_context,
     g_free(archive_handlers);
 }
 
-void on_configure_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
-                                        GtkTreeViewColumn* col, GtkWidget* dlg )
+static void on_configure_row_activated( GtkTreeView* view,
+                                        GtkTreePath* tree_path,
+                                        GtkTreeViewColumn* col,
+                                        GtkWidget* dlg )
 {
     // This event is triggered when the selected row is changed by the
     // mouse
@@ -722,7 +726,7 @@ void on_configure_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
     gtk_widget_grab_focus( entry_handler_name );*/
 }
 
-void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
+static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 {
     // Fetching available archive handlers (literally gets member s from
     // the xset) - user-defined order has already been set
@@ -761,7 +765,8 @@ void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     g_strfreev( archive_handlers );
 }
 
-static void on_format_changed( GtkComboBox* combo, gpointer user_data )
+static void on_format_changed( GtkComboBox* combo,
+                                      gpointer user_data )
 {
     GtkFileChooser* dlg = GTK_FILE_CHOOSER(user_data);
 
@@ -1701,7 +1706,7 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
     return FALSE;
 }
 
-void restore_defaults( GtkWidget* dlg )
+static void restore_defaults( GtkWidget* dlg )
 {
     // Note that defaults are also maintained in settings.c:xset_defaults
 
