@@ -637,6 +637,56 @@ void on_configure_changed( GtkTreeSelection* selection, GtkWidget* dlg )
     gtk_widget_grab_focus( entry_handler_name );*/
 }
 
+void on_configure_drag_end( GtkWidget* widget, GdkDragContext* drag_context,
+                               GtkListStore* list )
+{
+    // Regenerating archive handlers list xset
+    // Obtaining iterator pointing at first handler
+    GtkTreeIter iter;
+    if (!gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter ))
+    {
+        // Failed to get iterator - warning user and exiting
+        g_warning("Drag'n'drop end event detected, but unable to get an"
+        " iterator to the start of the model!");
+        return;
+    }
+
+    // Looping for all handlers
+    gchar* handler_name_unused;  // Not actually used...
+    gchar* xset_name;
+    gchar* archive_handlers = g_strdup( "" );
+    gchar* archive_handlers_temp;
+    do
+    {
+        // Fetching data from the model based on the iterator. Note that
+        // this variable used for the G_STRING is defined on the stack,
+        // so should be freed for me
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            COL_HANDLER_NAME, &handler_name_unused,
+                            -1 );
+
+        archive_handlers_temp = archive_handlers;
+        if (g_strcmp0( archive_handlers, "" ) == 0)
+        {
+            archive_handlers = g_strdup( xset_name );
+        }
+        else
+        {
+            archive_handlers = g_strdup_printf( "%s %s",
+                archive_handlers, xset_name );
+        }
+        g_free(archive_handlers_temp);
+    }
+    while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
+
+    // Saving the new archive handlers list
+    xset_set( "arc_conf", "s", archive_handlers );
+
+    // Clearing up
+    g_free(archive_handlers);
+}
+
 void on_configure_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
                                         GtkTreeViewColumn* col, GtkWidget* dlg )
 {
@@ -875,13 +925,18 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                                         GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_scroll ), view_handlers );
 
+    // Enabling item reordering (GTK-handled drag'n'drop)
+    gtk_tree_view_set_reorderable( GTK_TREE_VIEW( view_handlers ), TRUE );
+
     // Connecting treeview callbacks
+    g_signal_connect( G_OBJECT( view_handlers ), "drag-end",
+                        G_CALLBACK( on_configure_drag_end ), GTK_LIST_STORE( list ) );
     g_signal_connect( G_OBJECT( view_handlers ), "row-activated",
-                        G_CALLBACK( on_configure_row_activated ), dlg );
+                        G_CALLBACK( on_configure_row_activated ), GTK_WIDGET( dlg ) );
     g_signal_connect( G_OBJECT( gtk_tree_view_get_selection(
                                     GTK_TREE_VIEW( view_handlers ) ) ),
                         "changed",
-                        G_CALLBACK( on_configure_changed ), dlg );
+                        G_CALLBACK( on_configure_changed ), GTK_WIDGET( dlg ) );
 
     // Adding column to the treeview
     GtkTreeViewColumn* col = gtk_tree_view_column_new();
@@ -1087,7 +1142,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Adding archive handlers to list
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
 
-    // TODO: set_reorderable TRUE?
     // TODO: Help text in label on right? below stuff of substitutions?
 
     // Rendering dialog - while loop is used to deal with standard
