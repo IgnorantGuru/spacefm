@@ -1690,6 +1690,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         g_free( choose_dir );
 }
 
+/*
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
                                                 gboolean extract )
 {
@@ -1717,6 +1718,87 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
         }
     }
     return FALSE;
+}
+*/
+
+gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
+                                                gboolean extract )
+{
+    // Fetching and validating MIME type
+    if (!mime) return FALSE;
+    const char* type = vfs_mime_type_get_type( mime );
+    if (!type) return FALSE;
+
+    // Fetching available archive handlers and splitting
+    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+
+    // Debug code
+    //g_message("archive_handlers_s: %s", archive_handlers_s);
+
+    // Looping for handlers (NULL-terminated list)
+    int i;
+    gboolean handler_found = FALSE;  // Flag variable used to ensure cleanup
+    for (i = 0; archive_handlers[i] != NULL; ++i)
+    {
+        // Fetching handler
+        XSet* handler_xset = xset_get( archive_handlers[i] );
+
+        // Checking it if its enabled
+        if (handler_xset && handler_xset->b == XSET_B_TRUE)
+        {
+            // Obtaining handled MIME types (colon-delimited)
+            gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
+
+            // Looping for handled MIME types (NULL-terminated list)
+            int r;
+            for (r = 0; mime_types[r] != NULL; ++r)
+            {
+                // Checking to see if the handler can deal with the
+                // current MIME type
+                if (g_strcmp0( mime_types[r], type ) == 0)
+                {
+                    // It can - checking if it can cope with the
+                    // requested operation
+                    if (extract)
+                    {
+                        if (handler_xset->z)
+                        {
+                            // It can - setting flag and breaking
+                            handler_found = TRUE;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        // Testing ability to compress
+                        if (handler_xset->y)
+                        {
+                            // It can - setting flag and breaking
+                            handler_found = TRUE;
+                            break;
+                        }
+                    }
+
+                    // Operation isn't checked by this function so
+                    // breaking
+                    break;
+                }
+            }
+
+            // Clearing up
+            g_strfreev( mime_types );
+        }
+
+        // Leaving overall loop if a handler has been found
+        if (handler_found) break;
+    }
+
+    // Clearing up archive_handlers
+    g_strfreev( archive_handlers );
+
+    // Returning result
+    return handler_found;
 }
 
 static void restore_defaults( GtkWidget* dlg )
