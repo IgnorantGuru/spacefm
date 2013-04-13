@@ -458,6 +458,19 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_mime );
             return;
         }
+        if (g_strstr_len(handler_mime, -1, " "))
+        {
+            // Handler MIME contains a space - warning user and exiting.
+            // Note that the created dialog does not have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("Please ensure the MIME"
+                                " content type for the '%s' handler "
+                                "contains no spaces before saving."),
+                                handler_name), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_mime );
+            return;
+        }
         if (g_strcmp0(handler_extension, "") <= 0 || *handler_extension != '.')
         {
             // Handler extension is either not set or does not start with
