@@ -40,6 +40,12 @@ enum {
     COL_HANDLER_NAME
 };
 
+// Archive creation handlers combobox model enum
+enum {
+    // COL_XSET_NAME
+    COL_HANDLER_EXTENSIONS = 1
+};
+
 const ArchiveHandler handlers[]=
     {
         {
@@ -126,6 +132,83 @@ static XSet* add_new_arctype()
     set = xset_get( name );
     g_free( name );
     return set;
+}
+
+static gchar* archive_handler_get_first_extension( XSet* handler_xset )
+{
+    // Function deals with the possibility that a handler is responsible
+    // for multiple MIME types and therefore file extensions. Functions
+    // like archive creation need only one extension
+    if (handler_xset)
+    {
+        // Obtaining first handled extension
+        gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
+        gchar* first_extension = g_strdup( extensions[0] );
+
+        // Clearing up
+        g_strfreev( extensions );
+
+        // Returning first extension
+        return first_extension;
+    }
+    else return g_strdup( "" );
+}
+
+static gboolean archive_handler_is_format_supported( XSet* handler_xset,
+                                                     const char* type,
+                                                     gboolean extract )
+{
+    // Supported flag to ensure cleanup
+    gboolean format_supported = FALSE;
+
+    // Checking it if its enabled
+    if (handler_xset && handler_xset->b == XSET_B_TRUE)
+    {
+        // Obtaining handled MIME types (colon-delimited)
+        gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
+
+        // Looping for handled MIME types (NULL-terminated list)
+        int i;
+        for (i = 0; mime_types[i] != NULL; ++i)
+        {
+            // Checking to see if the handler can deal with the
+            // current MIME type
+            if (g_strcmp0( mime_types[i], type ) == 0)
+            {
+                // It can - checking if it can cope with the
+                // requested operation
+                if (extract)
+                {
+                    if (handler_xset->z)
+                    {
+                        // It can - setting flag and breaking
+                        format_supported = TRUE;
+                        break;
+                    }
+                }
+                else
+                {
+                    // Testing ability to compress
+                    if (handler_xset->y)
+                    {
+                        // It can - setting flag and breaking
+                        format_supported = TRUE;
+                        break;
+                    }
+                }
+
+                // Operation isn't checked by this function so
+                // breaking
+                break;
+            }
+        }
+
+        // Clearing up
+        g_strfreev( mime_types );
+    }
+
+    // Returning result
+    return format_supported;
 }
 
 // handler_xset_name optional if handler_xset passed
@@ -778,6 +861,109 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     g_strfreev( archive_handlers );
 }
 
+static void on_format_changed( GtkComboBox* combo, gpointer user_data )
+{
+    int len;
+    char *path, *name, *new_name;
+
+    // Obtaining reference to dialog
+    GtkFileChooser* dlg = GTK_FILE_CHOOSER( user_data );
+
+    // Obtaining new archive filename
+    path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+    if( !path )
+        return;
+    name = g_path_get_basename( path );
+    g_free( path );
+
+    // Fetching the combo model
+    GtkListStore* list = g_object_get_data( G_OBJECT( dlg ),
+                                            "combo-model" );
+
+    // Attempting to detect and remove extension from any current archive
+    // handler - otherwise cycling through the handlers just appends
+    // extensions to the filename
+    // Obtaining iterator pointing at first handler
+    GtkTreeIter iter;
+    if (!gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter ))
+    {
+        // Failed to get iterator - warning user and exiting
+        g_warning("Unable to get an iterator to the start of the model "
+                  "associated with combobox!");
+        return;
+    }
+
+    // Loop through available handlers
+    XSet* handler_xset;
+    gchar* xset_name, *extensions, *extension;
+    do
+    {
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        handler_xset = xset_get( xset_name );
+
+        // Obtaining archive extension
+        extension = archive_handler_get_first_extension(handler_xset);
+
+        // Checking to see if the current archive filename has this
+        if (g_str_has_suffix( name, extension ))
+        {
+            // It does - crop and leave loop
+            len = strlen( name ) - strlen( extension );
+            name[len] = '\0';
+            break;
+        }
+    }
+    while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
+
+    // Clearing up
+    g_free(extension);
+
+    // Getting at currently selected archive handler
+    gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter );
+
+    // You have to fetch both items here
+    gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                        COL_XSET_NAME, &xset_name,
+                        COL_HANDLER_EXTENSIONS, &extensions,
+                        -1 );
+    handler_xset = xset_get( xset_name );
+
+    // Obtaining archive extension
+    extension = archive_handler_get_first_extension(handler_xset);
+
+    // Appending extension to original filename
+    new_name = g_strconcat( name, extension, NULL );
+
+    // Updating new archive filename
+    gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
+
+    // Cleaning up
+    g_free( name );
+    g_free( extension );
+    g_free( new_name );
+
+    // Fetching reference to entry in dialog
+    GtkEntry* entry = (GtkEntry*)g_object_get_data( G_OBJECT( dlg ), "entry" );
+
+    // Updating command
+    // Dealing with '+' representing running in terminal
+    gchar* compress_cmd;
+    if ( handler_xset->y && handler_xset->y[0] == '+' )
+    {
+        compress_cmd = g_strdup( handler_xset->y + 1 );
+    }
+    else
+    {
+        compress_cmd = g_strdup( handler_xset->y );
+    }
+    gtk_entry_set_text( GTK_ENTRY( entry ), compress_cmd );
+    g_free(compress_cmd);
+}
+
+/*
 static void on_format_changed( GtkComboBox* combo,
                                       gpointer user_data )
 {
@@ -819,6 +1005,7 @@ static void on_format_changed( GtkComboBox* combo,
     else
         gtk_entry_buffer_delete_text( gtk_entry_get_buffer( entry ), 0, -1 );
 }
+*/
 
 void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 {
@@ -1214,6 +1401,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     */
 }
 
+/*
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                                                 const char* cwd )
 {
@@ -1414,6 +1602,358 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     XSet* set = xset_get( "new_archive" );
     if ( set->icon )
         task->task->exec_icon = g_strdup( set->icon );
+    ptk_file_task_run( task );
+}
+*/
+
+void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
+                               const char* cwd )
+{
+    GList* l;
+    GtkWidget* combo, *dlg, *hbox;
+    GtkFileFilter* filter;
+    char* cmd, *desc, *dest_file, *ext, *s1, *str, *udest_file;
+    int i, n, format, res;
+
+    // Generating dialog
+    dlg = gtk_file_chooser_dialog_new( _("Save Archive"),
+                                       GTK_WINDOW( gtk_widget_get_toplevel(
+                                             GTK_WIDGET( file_browser ) ) ),
+                                       GTK_FILE_CHOOSER_ACTION_SAVE,
+                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                       GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL );
+    filter = gtk_file_filter_new();
+    hbox = gtk_hbox_new( FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX(hbox), gtk_label_new( _("Archive Format:") ),
+                        FALSE, TRUE, 2 );
+
+    // Generating a ComboBox with model behind, and saving model for use
+    // in callback - now that archive handlers are custom, can't rely on
+    // presence or a particular order
+    // Model is xset name then extensions the handler deals with
+    GtkListStore* list = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
+    combo = gtk_combo_box_new_with_model( GTK_TREE_MODEL( list ) );
+    g_object_set_data( G_OBJECT( dlg ), "combo-model", (gpointer)list );
+
+    // Need to manually create the combobox dropdown cells!! Mapping the
+    // extensions column from the model to the displayed cell
+    GtkCellRenderer* renderer = gtk_cell_renderer_text_new ();
+    gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), renderer,
+                                TRUE);
+    gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), renderer,
+                                    "text", COL_HANDLER_EXTENSIONS,
+                                    NULL);
+
+    // Fetching available archive handlers and splitting
+    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+
+    // Debug code
+    //g_message("archive_handlers_s: %s", archive_handlers_s);
+
+    // Looping for handlers (NULL-terminated list)
+    GtkTreeIter iter;
+    gchar* xset_name, *extensions;
+    XSet* handler_xset;
+    for (i = 0; archive_handlers[i] != NULL; ++i)
+    {
+        // Fetching handler
+        handler_xset = xset_get( archive_handlers[i] );
+
+        // Checking to see if handler is enabled and can cope with
+        // compression
+        if(handler_xset->b == XSET_B_TRUE && handler_xset->y
+           && g_strcmp0( handler_xset->y, "" ) != 0)
+        {
+            // It can - adding to filter so that only relevant archives
+            // are displayed when the user chooses an archive name to
+            // create. Note that the handler may be responsible for
+            // multiple MIME types and extensions
+            gtk_file_filter_add_mime_type( filter, handler_xset->s );
+
+            // Appending to combobox
+            // Obtaining appending iterator for model
+            gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
+
+            // Adding to model
+            xset_name = g_strdup( archive_handlers[i] );
+            extensions = g_strdup( handler_xset->x );
+            gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
+                                COL_XSET_NAME, xset_name,
+                                COL_HANDLER_EXTENSIONS, extensions,
+                                -1 );
+        }
+    }
+
+    // Clearing up archive_handlers
+    g_strfreev( archive_handlers );
+
+    // Applying filter
+    gtk_file_chooser_set_filter( GTK_FILE_CHOOSER( dlg ), filter );
+
+    // Restoring previous selected handler
+    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(
+                                            GTK_COMBO_BOX( combo )
+                                        ), NULL );
+    i = xset_get_int( "arc_dlg", "z" );
+    if ( i < 0 || i > n - 1 )
+        i = 0;
+    gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), i );
+
+    // Adding filter box to hbox and connecting callback
+    g_signal_connect( combo, "changed", G_CALLBACK( on_format_changed ),
+                      dlg );
+    gtk_box_pack_start( GTK_BOX( hbox ), combo, FALSE, FALSE, 2 );
+    gtk_box_pack_start( GTK_BOX( hbox ), gtk_label_new( _("Command:") ),
+                        FALSE, FALSE, 2 );
+
+    // Loading command for handler, based off the i'th handler
+    GtkEntry* entry = (GtkEntry*)gtk_entry_new();
+
+    // Obtaining iterator from string turned into a path into the model
+    gchar* compress_cmd;
+    if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
+                                    &iter, g_strdup_printf( "%d", i ) ))
+    {
+        // You have to fetch both items here
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        handler_xset = xset_get( xset_name );
+
+        // Dealing with '+' representing running in terminal
+        if ( handler_xset->y && handler_xset->y[0] == '+' )
+        {
+            compress_cmd = g_strdup( handler_xset->y + 1 );
+        }
+        else
+        {
+            compress_cmd = g_strdup( handler_xset->y );
+        }
+        gtk_entry_set_text( GTK_ENTRY( entry ), compress_cmd );
+        g_free(compress_cmd);
+        compress_cmd = NULL;
+    }
+    else
+    {
+        // Recording the fact getting the iter failed
+        g_warning( "Unable to fetch the iter from handler ordinal %d!", i );
+    };
+
+    // Adding options to hbox
+    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE,
+                        TRUE, 4 );
+    g_object_set_data( G_OBJECT( dlg ), "entry", entry );
+
+    // Adding hbox to dialog at bottom
+    gtk_widget_show_all( hbox );
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area (
+                                    GTK_DIALOG( dlg )
+                                ) ),
+                                hbox, FALSE, TRUE, 0 );
+
+    // Configuring dialog
+    gtk_file_chooser_set_action( GTK_FILE_CHOOSER( dlg ),
+                                 GTK_FILE_CHOOSER_ACTION_SAVE );
+    gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER( dlg ),
+                                                    TRUE );
+
+    // Populating name of archive and setting the correct directory
+    if( files )
+    {
+        // Fetching first extension handler deals with
+        ext = archive_handler_get_first_extension( handler_xset );
+        dest_file = g_strjoin( NULL,
+                        vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
+                        ext, NULL );
+        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ),
+                                           dest_file );
+        g_free( dest_file );
+        g_free( ext );
+
+    }
+    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dlg ), cwd );
+
+    // Setting dimension and position
+    int width = xset_get_int( "arc_dlg", "x" );
+    int height = xset_get_int( "arc_dlg", "y" );
+    if ( width && height )
+    {
+        // filechooser won't honor default size or size request ?
+        gtk_widget_show_all( dlg );
+        gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
+        gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+        while( gtk_events_pending() )
+            gtk_main_iteration();
+        gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
+    }
+
+    // Displaying dialog - looping to allow invalid command fixing by the
+    // user
+    gchar* command;
+    gboolean run_in_terminal;
+
+    while( res = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
+    {
+        if ( res == GTK_RESPONSE_OK )
+        {
+            // Dialog OK'd - fetching archive filename
+            dest_file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+
+            // Fetching archive handler selected
+            if(!gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ),
+                &iter ))
+            {
+                // Unable to fetch iter from combo box - warning user and
+                // exiting
+                g_warning( "Unable to fetch iter from combobox!" );
+                return;
+            }
+
+            // Fetching model data
+            gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                                COL_XSET_NAME, &xset_name,
+                                COL_HANDLER_EXTENSIONS, &extensions,
+                                -1 );
+            handler_xset = xset_get( xset_name );
+
+            // Fetching normal compression command and whether it should
+            // run in the terminal or not
+            if ( handler_xset->y && handler_xset->y[0] == '+' )
+            {
+                compress_cmd = g_strdup( handler_xset->y + 1 );
+                run_in_terminal = TRUE;
+            }
+            else
+            {
+                compress_cmd = g_strdup( handler_xset->y );
+                run_in_terminal = FALSE;
+            }
+
+            // Fetching user-selected handler data
+            format = gtk_combo_box_get_active( GTK_COMBO_BOX( combo ) );
+            command = g_strdup( gtk_entry_get_text( entry ) );
+
+            // Saving selected archive handler ordinal
+            str = g_strdup_printf( "%d", format );
+            xset_set( "arc_dlg", "z", str );
+            g_free( str );
+
+            // Checking to see if the archive handler compression command
+            // has been deleted
+            if (g_strcmp0( command, "" ) <= 0)
+            {
+                // It has - warning user
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                _("Save Archive"), NULL, FALSE,
+                                _("Please enter a valid command before "
+                                "attempting to create the archive."),
+                                NULL, NULL );
+                gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+
+                // Cleaning up and looping
+                g_free( compress_cmd );
+                compress_cmd = NULL;
+                g_free(command);
+                command = NULL;
+                continue;
+            }
+
+            // Checking to see if the archive handler compression command
+            // has changed
+            if (g_strcmp0( command, compress_cmd ) != 0)
+            {
+                // It has - saving, taking into account running in
+                // terminal
+                xset_set_set( handler_xset, "y",
+    (run_in_terminal) ? g_strconcat( "+", command, NULL ) : command );
+            }
+
+            // Cleaning up
+            g_free( compress_cmd );
+
+            // Exiting loop
+            break;
+        }
+        else
+        {
+            // Destroying dialog
+            gtk_widget_destroy( dlg );
+            return;
+        }
+    }
+
+    // Saving dialog dimensions
+    GtkAllocation allocation;
+    gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+    width = allocation.width;
+    height = allocation.height;
+    if ( width && height )
+    {
+        str = g_strdup_printf( "%d", width );
+        xset_set( "arc_dlg", "x", str );
+        g_free( str );
+        str = g_strdup_printf( "%d", height );
+        xset_set( "arc_dlg", "y", str );
+        g_free( str );
+    }
+
+    // Destroying dialog
+    gtk_widget_destroy( dlg );
+
+    // Obtaining valid UTF8 file name for archive to create
+    udest_file = g_filename_display_name( dest_file );
+    g_free( dest_file );
+
+    // Combining command and resulting archive name
+    char* udest_quote = bash_quote( udest_file );
+    cmd = g_strdup_printf( "%s %s", command, udest_quote );
+    g_free( udest_file );
+    g_free( udest_quote );
+
+    // Adding selected files to archive
+    for( l = files; l; l = l->next )
+    {
+        // FIXME: Maybe we should consider filename encoding here.
+        s1 = cmd;
+        desc = bash_quote( (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data ) );
+        cmd = g_strdup_printf( "%s %s", s1, desc );
+        g_free( desc );
+        g_free( s1 );
+    }
+
+    // Creating task
+    char* task_name = g_strdup_printf( _("Archive") );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
+                                            GTK_WIDGET( file_browser ),
+                                            file_browser->task_view );
+    g_free( task_name );
+    task->task->exec_browser = file_browser;
+
+    // Using terminals for certain formats
+    if (run_in_terminal)
+    {
+        task->task->exec_terminal = TRUE;
+        task->task->exec_sync = FALSE;
+        s1 = cmd;
+        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
+        g_free( s1 );
+    }
+    else
+    {
+        task->task->exec_sync = TRUE;
+    }
+
+    // Final configuration, setting custom icon
+    task->task->exec_command = cmd;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_export = TRUE;
+    XSet* set = xset_get( "new_archive" );
+    if ( set->icon )
+        task->task->exec_icon = g_strdup( set->icon );
+
+    // Running task
     ptk_file_task_run( task );
 }
 
@@ -1744,54 +2284,13 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
         // Fetching handler
         XSet* handler_xset = xset_get( archive_handlers[i] );
 
-        // Checking it if its enabled
-        if (handler_xset && handler_xset->b == XSET_B_TRUE)
+        // Checking to see if handler can cope with format and operation
+        if(archive_handler_is_format_supported( handler_xset, type, extract ))
         {
-            // Obtaining handled MIME types (colon-delimited)
-            gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
-
-            // Looping for handled MIME types (NULL-terminated list)
-            int r;
-            for (r = 0; mime_types[r] != NULL; ++r)
-            {
-                // Checking to see if the handler can deal with the
-                // current MIME type
-                if (g_strcmp0( mime_types[r], type ) == 0)
-                {
-                    // It can - checking if it can cope with the
-                    // requested operation
-                    if (extract)
-                    {
-                        if (handler_xset->z)
-                        {
-                            // It can - setting flag and breaking
-                            handler_found = TRUE;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        // Testing ability to compress
-                        if (handler_xset->y)
-                        {
-                            // It can - setting flag and breaking
-                            handler_found = TRUE;
-                            break;
-                        }
-                    }
-
-                    // Operation isn't checked by this function so
-                    // breaking
-                    break;
-                }
-            }
-
-            // Clearing up
-            g_strfreev( mime_types );
+            // It can - flagging and breaking
+            handler_found = TRUE;
+            break;
         }
-
-        // Leaving overall loop if a handler has been found
-        if (handler_found) break;
     }
 
     // Clearing up archive_handlers
