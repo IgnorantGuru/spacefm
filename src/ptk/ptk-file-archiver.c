@@ -176,10 +176,13 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
             if (g_strcmp0( mime_types[i], type ) == 0)
             {
                 // It can - checking if it can cope with the
-                // requested operation
+                // requested operation - deal with possibility of empty
+                // command set to run in terminal, therefore '+' stored
                 if (extract)
                 {
-                    if (handler_xset->z)
+                    if (handler_xset->z
+                        && g_strcmp0( handler_xset->z, "" ) != 0
+                        && g_strcmp0( handler_xset->z, "+" ) != 0)
                     {
                         // It can - setting flag and breaking
                         format_supported = TRUE;
@@ -189,7 +192,9 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                 else
                 {
                     // Testing ability to compress
-                    if (handler_xset->y)
+                    if (handler_xset->y
+                        && g_strcmp0( handler_xset->y, "" ) != 0
+                        && g_strcmp0( handler_xset->y, "+" ) != 0)
                     {
                         // It can - setting flag and breaking
                         format_supported = TRUE;
@@ -1661,9 +1666,11 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         handler_xset = xset_get( archive_handlers[i] );
 
         // Checking to see if handler is enabled and can cope with
-        // compression
+        // compression - dealing with empty command yet 'run in terminal'
+        // still ticked
         if(handler_xset->b == XSET_B_TRUE && handler_xset->y
-           && g_strcmp0( handler_xset->y, "" ) != 0)
+           && g_strcmp0( handler_xset->y, "" ) != 0
+           && g_strcmp0( handler_xset->y, "+" ) != 0)
         {
             // It can - adding to filter so that only relevant archives
             // are displayed when the user chooses an archive name to
