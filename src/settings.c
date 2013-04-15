@@ -4871,7 +4871,71 @@ void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor )
     }
 }
 
-gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* dlg )
+char* xset_get_keyname( XSet* set, int key_val, int key_mod )
+{
+    int keyval, keymod;
+    if ( set )
+    {
+        keyval = set->key;
+        keymod = set->keymod;
+    }
+    else
+    {
+        keyval = key_val;
+        keymod = key_mod;
+    }
+    if ( keyval <= 0 )
+        return g_strdup( _("( none )") );
+    char* mod = g_strdup( gdk_keyval_name( keyval ) );
+    if ( mod && mod[0] && !mod[1] && g_ascii_isalpha( mod[0] ) )
+        mod[0] = g_ascii_toupper( mod[0] );
+    else if ( !mod )
+        mod = g_strdup( "NA" );
+    char* str;
+    if ( keymod )
+    {
+        if ( keymod & GDK_SUPER_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Super+%s", str );
+            g_free( str );
+        }
+        if ( keymod & GDK_HYPER_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Hyper+%s", str );
+            g_free( str );
+        }
+        if ( keymod & GDK_META_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Meta+%s", str );
+            g_free( str );
+        }
+        if ( keymod & GDK_MOD1_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Alt+%s", str );
+            g_free( str );
+        }
+        if ( keymod & GDK_CONTROL_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Ctrl+%s", str );
+            g_free( str );
+        }
+        if ( keymod & GDK_SHIFT_MASK )
+        {
+            str = mod;
+            mod = g_strdup_printf( "Shift+%s", str );
+            g_free( str );
+        }
+    }
+    return mod;
+}
+
+gboolean on_set_key_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            GtkWidget* dlg )
 {
     GList* l;
     int* newkey = (int*)g_object_get_data( G_OBJECT(dlg), "newkey" );
@@ -4880,6 +4944,7 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
     XSet* set = (XSet*)g_object_get_data( G_OBJECT(dlg), "set" );
     XSet* set2;
     XSet* keyset = NULL;
+    char* keyname;
     
     int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
                  GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
@@ -4942,18 +5007,129 @@ gboolean xset_design_setkey( GtkWidget *widget, GdkEventKey *event, GtkWidget* d
             else
                 name = g_strdup( "( no name )" );
 
-            gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("    Keycode: %#4x  Modifier: %#x\n\nThis key combination is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."), event->keyval, keymod, name );
+            keyname = xset_get_keyname( NULL, event->keyval, keymod );
+            gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("\t%s\n\tKeycode: %#4x  Modifier: %#x\n\n%s is already assigned to '%s'.\n\nPress a different key or click Set to replace the current key assignment."), keyname,
+                                        event->keyval, keymod, keyname, name );
             g_free( name );
+            g_free( keyname );
             *newkey = event->keyval;
             *newkeymod = keymod;
             return TRUE;
         }
     }
-    gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ), _("    Keycode: %#4x  Modifier: %#x"),
-                                                            event->keyval, keymod );
+    keyname = xset_get_keyname( NULL, event->keyval, keymod );
+    gtk_message_dialog_format_secondary_text( GTK_MESSAGE_DIALOG( dlg ),
+                                    _("\t%s\n\tKeycode: %#4x  Modifier: %#x"),
+                                    keyname, event->keyval, keymod );
+    g_free( keyname );
     *newkey = event->keyval;
     *newkeymod = keymod;
     return TRUE;
+}
+
+void xset_set_key( GtkWidget* parent, XSet* set )
+{
+    char* name;
+    char* keymsg;
+    XSet* keyset;
+    int newkey = 0, newkeymod = 0;
+    GtkWidget* dlgparent = NULL;
+
+    if ( set->menu_label )
+        name = clean_label( set->menu_label, FALSE, TRUE );
+    else if ( g_str_has_prefix( set->name, "open_all_type_" ) )
+    {
+        keyset = xset_get( "open_all" );
+        name = clean_label( keyset->menu_label, FALSE, TRUE );
+        if ( set->shared_key )
+            g_free( set->shared_key );
+        set->shared_key = g_strdup( "open_all" );
+    }
+    else
+        name = g_strdup( "( no name )" );
+    keymsg = g_strdup_printf( _("Press your key combination for menu item '%s' then click Set.  To remove the current key assignment, click Unset."), name );
+    g_free( name );
+    if ( parent )
+        dlgparent = gtk_widget_get_toplevel( parent );
+    GtkWidget* dlg = gtk_message_dialog_new_with_markup( GTK_WINDOW( dlgparent ),
+                                  GTK_DIALOG_MODAL,
+                                  GTK_MESSAGE_QUESTION,
+                                  GTK_BUTTONS_NONE,
+                                  keymsg, NULL );
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+
+    GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
+    gtk_button_set_label( GTK_BUTTON( btn_cancel ), _("Cancel") );
+    gtk_button_set_image( GTK_BUTTON( btn_cancel ), xset_get_image( "GTK_STOCK_CANCEL",
+                                                    GTK_ICON_SIZE_BUTTON ) );
+    gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_cancel, GTK_RESPONSE_CANCEL);
+
+    GtkWidget* btn_unset = gtk_button_new_from_stock( GTK_STOCK_NO );
+    gtk_button_set_label( GTK_BUTTON( btn_unset ), _("Unset") );
+    gtk_button_set_image( GTK_BUTTON( btn_unset ), xset_get_image( "GTK_STOCK_REMOVE",
+                                                    GTK_ICON_SIZE_BUTTON ) );
+    gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_unset, GTK_RESPONSE_NO);
+
+    if ( set->shared_key )
+        keyset = xset_get( set->shared_key );
+    else
+        keyset = set;
+    if ( keyset->key <= 0 )
+        gtk_widget_set_sensitive( btn_unset, FALSE );
+
+    GtkWidget* btn = gtk_button_new_from_stock( GTK_STOCK_APPLY );
+    gtk_button_set_label( GTK_BUTTON( btn ), _("Set") );
+    gtk_button_set_image( GTK_BUTTON( btn ), xset_get_image( "GTK_STOCK_YES",
+                                                    GTK_ICON_SIZE_BUTTON ) );
+    gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn, GTK_RESPONSE_OK);
+    gtk_widget_set_sensitive( btn, FALSE );
+    
+    g_object_set_data( G_OBJECT(dlg), "set", set );
+    g_object_set_data( G_OBJECT(dlg), "newkey", &newkey );
+    g_object_set_data( G_OBJECT(dlg), "newkeymod", &newkeymod );
+    g_object_set_data( G_OBJECT(dlg), "btn", btn );
+    g_object_set_data( G_OBJECT(dlg), "btn_unset", btn_unset );
+    g_signal_connect ( dlg, "key_press_event",
+                               G_CALLBACK ( on_set_key_keypress ), dlg );
+    gtk_widget_show_all( dlg );
+    gtk_window_set_title( GTK_WINDOW( dlg ), _("Set Key") );
+    
+    int response = gtk_dialog_run( GTK_DIALOG( dlg ) );
+    gtk_widget_destroy( dlg );
+    if ( response == GTK_RESPONSE_OK || response == GTK_RESPONSE_NO )
+    {
+        if ( response == GTK_RESPONSE_OK && ( newkey || newkeymod ) )
+        {
+            // clear duplicate key assignments
+            GList* l;
+            XSet* set2;
+            for ( l = xsets; l; l = l->next )
+            {
+                set2 = l->data;
+                if ( set2 && set2->key > 0 && set2->key == newkey
+                                            && set2->keymod == newkeymod )
+                {
+                    set2->key = 0;
+                    set2->keymod = 0;
+                }
+            }
+        }
+        else if ( response == GTK_RESPONSE_NO )
+        {
+            newkey = -1;  // unset
+            newkeymod = 0;
+        }
+        // plugin? set shared_key to mirror if not
+        if ( set->plugin && !set->shared_key )
+            xset_get_plugin_mirror( set );
+        // set new key
+        if ( set->shared_key )
+            keyset = xset_get( set->shared_key );
+        else
+            keyset = set;
+        keyset->key = newkey;
+        keyset->keymod = newkeymod;
+    }
 }
 
 void xset_design_job( GtkWidget* item, XSet* set )
@@ -4991,101 +5167,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
 //printf("activate job %d %s\n", job, set->name);    
     switch ( job ) {
     case XSET_JOB_KEY:
-        if ( set->menu_label )
-            name = clean_label( set->menu_label, FALSE, TRUE );
-        else if ( g_str_has_prefix( set->name, "open_all_type_" ) )
-        {
-            keyset = xset_get( "open_all" );
-            name = clean_label( keyset->menu_label, FALSE, TRUE );
-            if ( set->shared_key )
-                g_free( set->shared_key );
-            set->shared_key = g_strdup( "open_all" );
-        }
-        else
-            name = g_strdup( "( no name )" );
-        keymsg = g_strdup_printf( _("Press your key combination for menu item '%s' then click Set.  To remove the current key assignment, click Unset."), name );
-        g_free( name );
-        if ( parent )
-            dlgparent = gtk_widget_get_toplevel( parent );
-        dlg = gtk_message_dialog_new_with_markup( GTK_WINDOW( dlgparent ),
-                                      GTK_DIALOG_MODAL,
-                                      GTK_MESSAGE_QUESTION,
-                                      GTK_BUTTONS_NONE,
-                                      keymsg, NULL );
-        xset_set_window_icon( GTK_WINDOW( dlg ) );
-
-        GtkWidget* btn_cancel = gtk_button_new_from_stock( GTK_STOCK_CANCEL );
-        gtk_button_set_label( GTK_BUTTON( btn_cancel ), _("Cancel") );
-        gtk_button_set_image( GTK_BUTTON( btn_cancel ), xset_get_image( "GTK_STOCK_CANCEL",
-                                                        GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_cancel, GTK_RESPONSE_CANCEL);
-
-        GtkWidget* btn_unset = gtk_button_new_from_stock( GTK_STOCK_NO );
-        gtk_button_set_label( GTK_BUTTON( btn_unset ), _("Unset") );
-        gtk_button_set_image( GTK_BUTTON( btn_unset ), xset_get_image( "GTK_STOCK_REMOVE",
-                                                        GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn_unset, GTK_RESPONSE_NO);
-
-        if ( set->shared_key )
-            keyset = xset_get( set->shared_key );
-        else
-            keyset = set;
-        if ( keyset->key <= 0 )
-            gtk_widget_set_sensitive( btn_unset, FALSE );
-
-        GtkWidget* btn = gtk_button_new_from_stock( GTK_STOCK_APPLY );
-        gtk_button_set_label( GTK_BUTTON( btn ), _("Set") );
-        gtk_button_set_image( GTK_BUTTON( btn ), xset_get_image( "GTK_STOCK_YES",
-                                                        GTK_ICON_SIZE_BUTTON ) );
-        gtk_dialog_add_action_widget( GTK_DIALOG( dlg ), btn, GTK_RESPONSE_OK);
-        gtk_widget_set_sensitive( btn, FALSE );
-        
-        g_object_set_data( G_OBJECT(dlg), "set", set );
-        g_object_set_data( G_OBJECT(dlg), "newkey", &newkey );
-        g_object_set_data( G_OBJECT(dlg), "newkeymod", &newkeymod );
-        g_object_set_data( G_OBJECT(dlg), "btn", btn );
-        g_object_set_data( G_OBJECT(dlg), "btn_unset", btn_unset );
-        g_signal_connect ( dlg, "key_press_event",
-                                   G_CALLBACK ( xset_design_setkey ), dlg );
-        gtk_widget_show_all( dlg );
-        gtk_window_set_title( GTK_WINDOW( dlg ), _("Set Key") );
-        
-        response = gtk_dialog_run( GTK_DIALOG( dlg ) );
-        gtk_widget_destroy( dlg );
-        if ( response == GTK_RESPONSE_OK || response == GTK_RESPONSE_NO )
-        {
-            if ( response == GTK_RESPONSE_OK && ( newkey || newkeymod ) )
-            {
-                // clear duplicate key assignments
-                GList* l;
-                XSet* set2;
-                for ( l = xsets; l; l = l->next )
-                {
-                    set2 = l->data;
-                    if ( set2 && set2->key > 0 && set2->key == newkey
-                                                && set2->keymod == newkeymod )
-                    {
-                        set2->key = 0;
-                        set2->keymod = 0;
-                    }
-                }
-            }
-            else if ( response == GTK_RESPONSE_NO )
-            {
-                newkey = -1;  // unset
-                newkeymod = 0;
-            }
-            // plugin? set shared_key to mirror if not
-            if ( set->plugin && !set->shared_key )
-                xset_get_plugin_mirror( set );
-            // set new key
-            if ( set->shared_key )
-                keyset = xset_get( set->shared_key );
-            else
-                keyset = set;
-            keyset->key = newkey;
-            keyset->keymod = newkeymod;
-        }
+        xset_set_key( parent, set );
         break;
     case XSET_JOB_ICON:
         mset = xset_get_plugin_mirror( set );

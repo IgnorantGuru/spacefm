@@ -10,7 +10,7 @@
         <property name="visible">True</property>
         <property name="spacing">12</property>
         <child>
-          <object class="GtkLabel" id="label4">
+          <object class="GtkLabel" id="label_command">
             <property name="visible">True</property>
             <property name="xpad">4</property>
             <property name="ypad">4</property>
@@ -128,7 +128,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="hbox_command">
             <property name="visible">True</property>
             <property name="border_width">4</property>
             <property name="spacing">12</property>

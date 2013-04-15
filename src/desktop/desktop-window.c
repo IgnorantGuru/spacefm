@@ -3931,7 +3931,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
     app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
-                                                 mime_type, TRUE, FALSE );
+                                        mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
         char* path = vfs_mime_type_locate_desktop_file( NULL, app );

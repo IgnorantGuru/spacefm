@@ -1556,7 +1556,7 @@ void open_file( const char* path )
         GList* files;
 
         app_name = (char *) ptk_choose_app_for_mime_type( NULL, mime_type,
-                                                          FALSE, FALSE );
+                                                    TRUE, TRUE, TRUE, FALSE );
         if ( app_name )
         {
             app = vfs_app_desktop_new( app_name );
