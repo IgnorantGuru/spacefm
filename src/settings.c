@@ -3088,7 +3088,7 @@ char* xset_custom_get_script( XSet* set, gboolean create )
             {
                 // write default script
                 fputs( script_default_head, file );
-                for ( i = 0; i < 26; i++ )
+                for ( i = 0; i < 14; i++ )
                     fputs( "\n", file );
                 fputs( script_default_tail, file );                
                 fclose( file );
@@ -9447,8 +9447,9 @@ void xset_defaults()
         xset_set_set( set, "icon", "gtk-select-font" );
         xset_set_set( set, "title", _("Task Popup Font (affects new tasks)") );
         xset_set_set( set, "desc", _("Example Output 0123456789") );
+        set->s = g_strdup( "Monospace 11" );
         set->line = g_strdup( "#tasks-menu-popfont" );
-
+    
     set = xset_set( "task_errors", "label", _("Err_ors") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_err_first task_err_any task_err_cont" );
@@ -9533,6 +9534,18 @@ void xset_defaults()
 
     set = xset_set( "desk_open", "label", _("_Desktop Folder") );
     xset_set_set( set, "icon", "gtk-open" );
+
+    // Menu Item Properties
+    set = xset_get( "sep_ctxt" );
+    set->menu_style = XSET_MENU_SEP;
+
+    set = xset_set( "context_dlg", "label", _("_Font") );
+    set->menu_style = XSET_MENU_FONTDLG;
+    xset_set_set( set, "icon", "gtk-select-font" );
+    xset_set_set( set, "title", _("Editor Font") );
+    xset_set_set( set, "desc", _("Example Input 0123456789") );
+    set->s = g_strdup( "Monospace 11" );
+    // set->b reserved for Ignore Context
 
     // PANELS COMMON
     set = xset_get( "sep_new" );

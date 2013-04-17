@@ -47,6 +47,7 @@ typedef struct
     GtkWidget* item_browse;
     
     // Context Page
+    GtkWidget* vbox_context;
     GtkWidget* view;
     GtkButton* btn_remove;
     GtkButton* btn_add;
@@ -63,6 +64,7 @@ typedef struct
     
     GtkWidget* hbox_match;
     GtkFrame* frame;
+    GtkWidget* ignore_context;
     
     // Command Page
     GtkWidget* cmd_opt_line;
@@ -451,9 +453,9 @@ void enable_context( ContextData* ctxt )
                         NULL, NULL );
     gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_remove ), is_sel );
     gtk_widget_set_sensitive( GTK_WIDGET( ctxt->btn_apply ), is_sel );
-    gtk_widget_set_sensitive( GTK_WIDGET( ctxt->hbox_match ),
-                        gtk_tree_model_get_iter_first( 
-                        gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) ), &it ) );
+    //gtk_widget_set_sensitive( GTK_WIDGET( ctxt->hbox_match ),
+    //                    gtk_tree_model_get_iter_first( 
+    //                    gtk_tree_view_get_model( GTK_TREE_VIEW( ctxt->view ) ), &it ) );
     if ( ctxt->context && ctxt->context->valid )
     {
         char* rules = context_build( ctxt );
@@ -857,6 +859,12 @@ void on_cmd_opt_toggled( GtkWidget* item, ContextData* ctxt )
         gtk_widget_grab_focus( ctxt->cmd_msg );
 }
 
+void on_ignore_context_toggled( GtkWidget* item, ContextData* ctxt )
+{
+    gtk_widget_set_sensitive( ctxt->vbox_context,
+                !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( item ) ) );    
+}
+
 void on_edit_button_press( GtkWidget* btn, ContextData* ctxt )
 {
     char* path;
@@ -1000,7 +1008,7 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
 
-        if ( job == 0 )
+        if ( job == ITEM_TYPE_BOOKMARK )
             gtk_label_set_text( GTK_LABEL( ctxt->target_label ),
                     _("Target (a semicolon-separated list of paths or URLs):") );
         else
@@ -1020,11 +1028,6 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
 
     }
 
-    // load bookmark/app data
-    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
-                                                    ctxt->item_target ) );
-    gtk_text_buffer_set_text( buf, ctxt->set->z ? ctxt->set->z : "", -1 );
-        
     // load command data
     XSet* rset = ctxt->set;
     XSet* mset = xset_get_plugin_mirror( rset );
@@ -1076,6 +1079,18 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     {
         // running as root
         gtk_widget_hide( ctxt->cmd_edit );
+    }
+    
+    // load bookmark/app data
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
+                                                    ctxt->item_target ) );
+    gtk_text_buffer_set_text( buf, "", -1 );
+        
+    // click Browse
+    if ( job < ITEM_TYPE_COMMAND )
+    {
+        // Bookmark or App
+        gtk_button_clicked( GTK_BUTTON( ctxt->item_browse ) );
     }
 }
 
@@ -1224,6 +1239,41 @@ void replace_item_props( ContextData* ctxt )
         mset->icon = g_strdup( gtk_entry_get_text(
                                             GTK_ENTRY( ctxt->item_icon ) ) );
     }
+
+    // Ignore Context
+    xset_set_b( "context_dlg",
+            gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( ctxt->ignore_context ) ) );
+}
+
+void on_script_font_change( GtkMenuItem* item, GtkTextView *input )
+{
+    char* fontname = xset_get_s( "context_dlg" );
+    if ( fontname )
+    {
+        PangoFontDescription* font_desc = pango_font_description_from_string(
+                                                                fontname );
+        gtk_widget_modify_font( GTK_WIDGET( input ), font_desc );
+        pango_font_description_free( font_desc );
+    }
+    else
+        gtk_widget_modify_font( GTK_WIDGET( input ), NULL );
+}
+
+void on_script_popup( GtkTextView *input, GtkMenu *menu, gpointer user_data )
+{
+    GtkAccelGroup* accel_group = gtk_accel_group_new();
+    XSet* set = xset_get( "sep_ctxt" );
+    set->menu_style = XSET_MENU_SEP;
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    set = xset_set_cb( "context_dlg", on_script_font_change, input );
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
 }
 
 void xset_context_dlg( XSetContext* context, XSet* set )
@@ -1255,7 +1305,9 @@ void xset_context_dlg( XSetContext* context, XSet* set )
     int height = xset_get_int( "context_dlg", "y" );
     if ( width && height )
         gtk_window_set_default_size( GTK_WINDOW( ctxt->dlg ), width, height );
-
+    else
+        gtk_window_set_default_size( GTK_WINDOW( ctxt->dlg ), 800, 600 );
+    
     gtk_button_set_focus_on_click( GTK_BUTTON( gtk_dialog_add_button( 
                                                 GTK_DIALOG( ctxt->dlg ),
                                                 GTK_STOCK_HELP,
@@ -1351,9 +1403,12 @@ void xset_context_dlg( XSetContext* context, XSet* set )
     gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
 
     // Context Page  =======================================================
-    vbox = gtk_vbox_new( FALSE, 4 );
+    align = gtk_alignment_new( 0, 0, 1, 1 );
+    gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 8, 0, 8, 8 );
+    vbox = gtk_vbox_new( FALSE, 0 );
+    gtk_container_add ( GTK_CONTAINER ( align ), vbox );
     gtk_notebook_append_page( GTK_NOTEBOOK( ctxt->notebook ),
-                              vbox, gtk_label_new_with_mnemonic( _("Con_text") ) );
+                        align, gtk_label_new_with_mnemonic( _("Con_text") ) );
 
     GtkListStore* list = gtk_list_store_new( 4, G_TYPE_STRING, G_TYPE_INT, 
                                                 G_TYPE_INT, G_TYPE_STRING );
@@ -1476,6 +1531,7 @@ void xset_context_dlg( XSetContext* context, XSet* set )
     //PACK
     gtk_container_set_border_width( GTK_CONTAINER ( ctxt->dlg ), 10 );
 
+    ctxt->vbox_context = gtk_vbox_new( FALSE, 0 );
     ctxt->hbox_match = gtk_hbox_new( FALSE, 4 );
     gtk_box_pack_start( GTK_BOX( ctxt->hbox_match ),
                         GTK_WIDGET( ctxt->box_action ), FALSE, TRUE, 0 );
@@ -1484,14 +1540,14 @@ void xset_context_dlg( XSetContext* context, XSet* set )
                                                                         TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( ctxt->hbox_match ),
                         GTK_WIDGET( ctxt->box_match ), FALSE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( vbox ),
+    gtk_box_pack_start( GTK_BOX( ctxt->vbox_context ),
                         GTK_WIDGET( ctxt->hbox_match ), FALSE, TRUE, 4 );
 
 //    GtkLabel* label = gtk_label_new( "Rules:" );
 //    gtk_misc_set_alignment( label, 0, 1 );
 //    gtk_box_pack_start( GTK_BOX( GTK_DIALOG( ctxt->dlg )->vbox ),
 //                        GTK_WIDGET( label ), FALSE, TRUE, 8 );
-    gtk_box_pack_start( GTK_BOX( vbox ),
+    gtk_box_pack_start( GTK_BOX( ctxt->vbox_context ),
                         GTK_WIDGET( scroll ), TRUE, TRUE, 4 );
 
     GtkWidget* hbox_btns = gtk_hbox_new( FALSE, 4 );
@@ -1505,7 +1561,7 @@ void xset_context_dlg( XSetContext* context, XSet* set )
                         GTK_WIDGET( ctxt->btn_apply ), FALSE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( hbox_btns ),
                         GTK_WIDGET( ctxt->test ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( vbox ),
+    gtk_box_pack_start( GTK_BOX( ctxt->vbox_context ),
                         GTK_WIDGET( hbox_btns ), FALSE, TRUE, 4 );
                         
     ctxt->frame = GTK_FRAME( gtk_frame_new( _("Edit Rule") ) );
@@ -1530,8 +1586,25 @@ void xset_context_dlg( XSetContext* context, XSet* set )
                         GTK_WIDGET( ctxt->current_value ), TRUE, TRUE, 2 );    
     gtk_box_pack_start( GTK_BOX( vbox_frame ),
                         GTK_WIDGET( hbox ), TRUE, TRUE, 4 );
-    gtk_box_pack_start( GTK_BOX( vbox ),
+    gtk_box_pack_start( GTK_BOX( ctxt->vbox_context ),
                         GTK_WIDGET( ctxt->frame ), FALSE, TRUE, 16 );
+    gtk_box_pack_start( GTK_BOX( vbox ),
+                        GTK_WIDGET( ctxt->vbox_context ), TRUE, TRUE, 0 );
+    
+    // Ignore Context
+    ctxt->ignore_context = gtk_check_button_new_with_mnemonic(
+                            _("_Ignore Context / Show All  (global setting)") );
+    gtk_box_pack_start( GTK_BOX( vbox ),
+                        GTK_WIDGET( ctxt->ignore_context ), FALSE, TRUE, 0 );
+    if ( xset_get_b( "context_dlg" ) )
+    {
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(
+                                            ctxt->ignore_context ), TRUE );
+        
+        gtk_widget_set_sensitive( ctxt->vbox_context, FALSE );
+    }
+    g_signal_connect( G_OBJECT( ctxt->ignore_context ), "toggled",
+                            G_CALLBACK( on_ignore_context_toggled ), ctxt );
     
     // plugin?
     XSet* mset;  // mirror set or set
@@ -1657,6 +1730,9 @@ void xset_context_dlg( XSetContext* context, XSet* set )
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->cmd_scroll_script ), -1, 50 );
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( ctxt->cmd_script ),
                                             GTK_WRAP_WORD_CHAR );
+    on_script_font_change( NULL, GTK_TEXT_VIEW( ctxt->cmd_script ) );
+    g_signal_connect_after( G_OBJECT( ctxt->cmd_script ), "populate-popup",
+                        G_CALLBACK( on_script_popup ), NULL );
     gtk_container_add ( GTK_CONTAINER ( ctxt->cmd_scroll_script ),  
                                             GTK_WIDGET( ctxt->cmd_script ) );
     gtk_box_pack_start( GTK_BOX( vbox ),
