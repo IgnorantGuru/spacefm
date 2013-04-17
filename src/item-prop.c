@@ -2000,14 +2000,26 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         gtk_widget_set_sensitive( ctxt->item_icon, FALSE );
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( set->line ) : NULL;
-    on_type_changed( GTK_COMBO_BOX( ctxt->item_type ), ctxt );
-    if ( rset->z )
+    if ( set->lock )
     {
-        GtkTextBuffer* buf = gtk_text_view_get_buffer(
-                                        GTK_TEXT_VIEW( ctxt->item_target ) );
-        gtk_text_buffer_set_text( buf, rset->z, -1 );
+        gtk_widget_hide( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
+        gtk_widget_hide( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
+        gtk_widget_hide( ctxt->target_label );
+        gtk_widget_hide( ctxt->item_target_scroll );
+        gtk_widget_hide( ctxt->item_browse );
     }
-
+    else
+    {
+        on_type_changed( GTK_COMBO_BOX( ctxt->item_type ), ctxt );
+        if ( rset->z )
+        {
+            GtkTextBuffer* buf = gtk_text_view_get_buffer(
+                                            GTK_TEXT_VIEW( ctxt->item_target ) );
+            gtk_text_buffer_set_text( buf, rset->z, -1 );
+        }
+    }
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
