@@ -848,6 +848,12 @@ void on_script_toggled( GtkWidget* item, ContextData* ctxt )
                                                         ctxt->cmd_script ) );
         load_command_script( ctxt, ctxt->set );
     }
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
+                                                    ctxt->cmd_script ) );
+    GtkTextIter siter;
+    gtk_text_buffer_get_start_iter( buf, &siter );
+    gtk_text_buffer_place_cursor( buf, &siter );
+    gtk_widget_grab_focus( ctxt->cmd_script );
 }
 
 void on_cmd_opt_toggled( GtkWidget* item, ContextData* ctxt )
@@ -1040,6 +1046,12 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         gtk_widget_hide( ctxt->cmd_line_label );
         load_command_script( ctxt, rset );
     }
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
+                                                    ctxt->cmd_script ) );
+    GtkTextIter siter;
+    gtk_text_buffer_get_start_iter( buf, &siter );
+    gtk_text_buffer_place_cursor( buf, &siter );
+
     // options
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_terminal ),
                                     mset->in_terminal == XSET_B_TRUE );
@@ -1081,15 +1093,13 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         gtk_widget_hide( ctxt->cmd_edit );
     }
     
-    // load bookmark/app data
-    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
-                                                    ctxt->item_target ) );
-    gtk_text_buffer_set_text( buf, "", -1 );
-        
-    // click Browse
     if ( job < ITEM_TYPE_COMMAND )
     {
         // Bookmark or App
+        buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( ctxt->item_target ) );
+        gtk_text_buffer_set_text( buf, "", -1 );
+        
+        // click Browse
         gtk_button_clicked( GTK_BUTTON( ctxt->item_browse ) );
     }
 }
@@ -1276,7 +1286,29 @@ void on_script_popup( GtkTextView *input, GtkMenu *menu, gpointer user_data )
     gtk_widget_show_all( GTK_WIDGET( menu ) );
 }
 
-void xset_context_dlg( XSetContext* context, XSet* set )
+static gboolean delayed_focus( GtkWidget* widget )
+{
+    if ( GTK_IS_WIDGET( widget ) )
+        gtk_widget_grab_focus( widget );
+    return FALSE;
+}
+
+void on_prop_notebook_switch_page( GtkNotebook *notebook,
+                                   GtkWidget *page,
+                                   guint page_num,
+                                   ContextData* ctxt )
+{
+    GtkWidget* widget;
+    if ( page_num == 0 )
+        widget = ctxt->set->plugin ? ctxt->item_icon : ctxt->item_name;
+    else if ( page_num == 2 )
+        widget = ctxt->cmd_script;
+    else
+        widget = NULL;
+    g_idle_add( (GSourceFunc)delayed_focus, widget );
+}
+
+void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 {
     GtkTreeViewColumn* col;
     GtkCellRenderer* renderer;
@@ -1969,7 +2001,13 @@ void xset_context_dlg( XSetContext* context, XSet* set )
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( set->line ) : NULL;
     on_type_changed( GTK_COMBO_BOX( ctxt->item_type ), ctxt );
-    
+    if ( rset->z )
+    {
+        GtkTextBuffer* buf = gtk_text_view_get_buffer(
+                                        GTK_TEXT_VIEW( ctxt->item_target ) );
+        gtk_text_buffer_set_text( buf, rset->z, -1 );
+    }
+
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
@@ -2012,9 +2050,19 @@ void xset_context_dlg( XSetContext* context, XSet* set )
                       G_CALLBACK( on_open_browser ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_type ), "changed",
                       G_CALLBACK( on_type_changed ), ctxt );
+    
+    g_signal_connect( ctxt->notebook, "switch-page",
+                        G_CALLBACK ( on_prop_notebook_switch_page ), ctxt );
 
     // run
     enable_context( ctxt );
+    if ( page && gtk_widget_is_sensitive( gtk_notebook_get_nth_page( 
+                                GTK_NOTEBOOK( ctxt->notebook ), page ) ) )
+        gtk_notebook_set_current_page( GTK_NOTEBOOK( ctxt->notebook ), page );
+    else
+        gtk_widget_grab_focus( ctxt->set->plugin ? ctxt->item_icon :
+                                                   ctxt->item_name );
+    
     int response;
     while ( response = gtk_dialog_run( GTK_DIALOG( ctxt->dlg ) ) )
     {

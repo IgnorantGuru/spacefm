@@ -761,7 +761,8 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     enable_toolbar( file_browser );
 }
 
-void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
+void ptk_file_browser_select_file( PtkFileBrowser* file_browser,
+                                                            const char* path )
 {
     GtkTreeIter it;
     GtkTreePath* tree_path;
@@ -5310,7 +5311,6 @@ void ptk_file_browser_open_selected_files( PtkFileBrowser* file_browser )
 
 void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser,
                                                     char* app_desktop )
-
 {
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
