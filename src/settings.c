@@ -4398,16 +4398,20 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
         // line
         if ( !set->line || set->line[0] == '\0' )
         {
-            if ( set->plugin )
-                return;
+            xset_item_prop_dlg( xset_context, set, 2 );
+            return;
+            /*
             if ( !xset_text_dialog( parent, _("Set Command Line"), NULL, TRUE,
                             _(enter_command_line), NULL, set->line, &set->line,
                                                 NULL, FALSE,
                                                 "#designmode-command-line" )
                              || !set->line || set->line[0] == '\0' )
                 return;
+            */
         }
-        command = replace_line_subs( set->line );
+        char* str = replace_line_subs( set->line );
+        command = replace_string( str, "\\n", "\n", FALSE );
+        g_free( str );
     }
     else if ( command_type == 1 )
     {
@@ -6201,7 +6205,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_EDIT;
+            job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -6992,7 +6996,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_EDIT;
+            job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
