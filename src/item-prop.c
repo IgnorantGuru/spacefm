@@ -1211,11 +1211,11 @@ void replace_item_props( ContextData* ctxt )
             rset->desc = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_msg ) );
         }
         // command line
-        g_free( mset->line );
+        g_free( rset->line );
         if ( x == 0 )
-            mset->line = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ) );
+            rset->line = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ) );
         else
-            mset->line = g_strdup( ctxt->temp_cmd_line );
+            rset->line = g_strdup( ctxt->temp_cmd_line );
 
         // run options
         mset->in_terminal = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
@@ -1253,8 +1253,12 @@ void replace_item_props( ContextData* ctxt )
          rset->menu_style != XSET_MENU_SEP )
     {
         g_free( mset->icon );
-        mset->icon = g_strdup( gtk_entry_get_text(
-                                            GTK_ENTRY( ctxt->item_icon ) ) );
+        const char* icon_name = gtk_entry_get_text(
+                                            GTK_ENTRY( ctxt->item_icon ) );
+        if ( icon_name && icon_name[0] )
+            mset->icon = g_strdup( icon_name );
+        else
+            mset->icon = NULL;
     }
 
     // Ignore Context
@@ -1313,6 +1317,11 @@ void on_prop_notebook_switch_page( GtkNotebook *notebook,
     else
         widget = NULL;
     g_idle_add( (GSourceFunc)delayed_focus, widget );
+}
+
+void on_entry_activate( GtkWidget* entry, ContextData* ctxt )
+{
+    gtk_button_clicked( GTK_BUTTON( ctxt->btn_ok ) );
 }
 
 void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
@@ -2001,14 +2010,15 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     else
         gtk_widget_set_sensitive( ctxt->item_key, FALSE );
     // icon
-    if ( mset->icon )
-        gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), mset->icon );
+    if ( rset->icon || mset->icon )
+        gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ),
+                                    mset->icon ? mset->icon : rset->icon );
     gtk_widget_set_sensitive( ctxt->item_icon,
                         rset->menu_style != XSET_MENU_CHECK &&
                         rset->menu_style != XSET_MENU_RADIO &&
                         rset->menu_style != XSET_MENU_SEP );
 
-    ctxt->temp_cmd_line = !set->lock ? g_strdup( set->line ) : NULL;
+    ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
     if ( set->lock )
     {
         gtk_widget_hide( gtk_notebook_get_nth_page(
@@ -2031,6 +2041,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
         gtk_widget_set_sensitive( ctxt->item_name, FALSE );
+        gtk_widget_set_sensitive( ctxt->item_target, FALSE );
+        gtk_widget_set_sensitive( ctxt->item_browse, FALSE );
         gtk_widget_set_sensitive( ctxt->cmd_opt_normal, FALSE );
         gtk_widget_set_sensitive( ctxt->cmd_opt_checkbox, FALSE );
         gtk_widget_set_sensitive( ctxt->cmd_opt_confirm, FALSE );
@@ -2061,14 +2073,18 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                 G_CALLBACK( on_script_toggled ), ctxt );
 
     g_signal_connect( G_OBJECT( ctxt->item_key ), "clicked",
-                          G_CALLBACK( on_key_button_clicked ), ctxt );
+                                G_CALLBACK( on_key_button_clicked ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_browse ), "clicked",
-                          G_CALLBACK( on_browse_button_clicked ), ctxt );
+                                G_CALLBACK( on_browse_button_clicked ), ctxt );
+    g_signal_connect( G_OBJECT( ctxt->item_name ), "activate",
+                                G_CALLBACK( on_entry_activate ), ctxt );
+    g_signal_connect( G_OBJECT( ctxt->item_icon ), "activate",
+                                G_CALLBACK( on_entry_activate ), ctxt );
 
     g_signal_connect( G_OBJECT( ctxt->open_browser ), "changed",
-                      G_CALLBACK( on_open_browser ), ctxt );
+                                G_CALLBACK( on_open_browser ), ctxt );
     g_signal_connect( G_OBJECT( ctxt->item_type ), "changed",
-                      G_CALLBACK( on_type_changed ), ctxt );
+                                G_CALLBACK( on_type_changed ), ctxt );
     
     g_signal_connect( ctxt->notebook, "switch-page",
                         G_CALLBACK ( on_prop_notebook_switch_page ), ctxt );
