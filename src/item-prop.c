@@ -657,7 +657,9 @@ void enable_options( ContextData* ctxt )
                                                 ctxt->cmd_opt_input ) ) );
     gtk_widget_set_sensitive( ctxt->item_icon,
                     !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
-                                                ctxt->cmd_opt_checkbox ) ) );
+                                                ctxt->cmd_opt_checkbox ) )
+                    && ctxt->set->menu_style != XSET_MENU_SEP
+                    && ctxt->set->menu_style != XSET_MENU_SUBMENU );
     
     if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
                                                 ctxt->cmd_opt_confirm ) ) )
@@ -2019,7 +2021,8 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                         rset->menu_style != XSET_MENU_SEP );
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
-    if ( set->lock )
+    if ( set->lock || rset->menu_style == XSET_MENU_SUBMENU ||
+                      rset->menu_style == XSET_MENU_SEP )
     {
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
