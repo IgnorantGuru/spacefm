@@ -655,6 +655,10 @@ void enable_options( ContextData* ctxt )
                                                 ctxt->cmd_opt_confirm ) ) ||
                     gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
                                                 ctxt->cmd_opt_input ) ) );
+    gtk_widget_set_sensitive( ctxt->item_icon,
+                    !gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
+                                                ctxt->cmd_opt_checkbox ) ) );
+    
     if ( gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
                                                 ctxt->cmd_opt_confirm ) ) )
     {
@@ -1997,15 +2001,12 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     else
         gtk_widget_set_sensitive( ctxt->item_key, FALSE );
     // icon
-    if ( rset->menu_style != XSET_MENU_CHECK &&
-         rset->menu_style != XSET_MENU_RADIO &&
-         rset->menu_style != XSET_MENU_SEP )
-    {
-        if ( mset->icon )
-            gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), mset->icon );
-    }
-    else
-        gtk_widget_set_sensitive( ctxt->item_icon, FALSE );
+    if ( mset->icon )
+        gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), mset->icon );
+    gtk_widget_set_sensitive( ctxt->item_icon,
+                        rset->menu_style != XSET_MENU_CHECK &&
+                        rset->menu_style != XSET_MENU_RADIO &&
+                        rset->menu_style != XSET_MENU_SEP );
 
     ctxt->temp_cmd_line = !set->lock ? g_strdup( set->line ) : NULL;
     if ( set->lock )
