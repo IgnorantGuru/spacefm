@@ -1107,7 +1107,9 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         // Bookmark or App
         buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( ctxt->item_target ) );
         gtk_text_buffer_set_text( buf, "", -1 );
-        
+        gtk_entry_set_text( GTK_ENTRY( ctxt->item_name ), "" );
+        gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ), "" );
+
         // click Browse
         gtk_button_clicked( GTK_BUTTON( ctxt->item_browse ) );
     }
@@ -1938,7 +1940,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     if ( rset->plugin )
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
-                                                        _("Plugin Dir") );
+                                        _("Plugin Dir  $fm_plugin_dir") );
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( ctxt->open_browser ), FALSE, TRUE, 8 );
     gtk_box_pack_start( GTK_BOX( vbox ),
@@ -1953,7 +1955,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     const char* item_type_str = NULL;
     if ( rset->menu_style == XSET_MENU_SUBMENU )
-        item_type_str = _("Sub Menu");
+        item_type_str = _("Submenu");
     else if  ( rset->menu_style == XSET_MENU_SEP )
         item_type_str = _("Separator");
     else if ( set->lock )
@@ -2113,7 +2115,25 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
             break;
         }
         else if ( response == GTK_RESPONSE_HELP )
-            xset_show_help( ctxt->dlg, NULL, "#designmode-style-context" );
+        {
+            const char* help;
+            switch ( gtk_notebook_get_current_page(
+                                        GTK_NOTEBOOK( ctxt->notebook ) ) ) {
+            case 1:
+                help = "#designmode-props-context";
+                break;
+            case 2:
+                help = "#designmode-props-command";
+                break;
+            case 3:
+                help = "#designmode-props-opts";
+                break;
+            default:
+                help = "#designmode-props";
+                break;
+            }
+            xset_show_help( ctxt->dlg, NULL, help );
+        }
         else
             break;
     }

@@ -3198,7 +3198,7 @@ char* xset_custom_get_help( XSet* set )
         if ( file )
         {
             // write default readme
-            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name: \n\nRelease Version and Date: \n\nPlugin Homepage or Download Link: \n\nAuthor's Contact Information or Feedback Instructions: \n\nDependencies or Requirements: \n\nDescription: \n\nInstructions For Use: \n\nCopyright and License Information:  (for example)\n\n   Copyright (C) YEAR AUTHOR <EMAIL>\n\n   This program is free software: you can redistribute it and/or modify\n      it under the terms of the GNU General Public License as published by\n      the Free Software Foundation, either version 2 of the License, or\n     (at your option) any later version.\n\n     This program is distributed in the hope that it will be useful,\n   but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n     GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n     along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
+            fputs( "README\n------\n\nFill this text file with detailed information about this command.  For\ncontext-sensitive help within SpaceFM, this file must be named README,\nREADME.txt, or README.mkd.\n\nIf you plan to distribute this command as a plugin, the following information\nis recommended:\n\n\nCommand Name:\n\nRelease Version and Date:\n\nPlugin Homepage or Download Link:\n\nAuthor's Contact Information or Feedback Instructions:\n\nDependencies or Requirements:\n\nDescription:\n\nInstructions For Use:\n\nCopyright and License Information:\n\n    Copyright (C) YEAR AUTHOR <EMAIL>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 2 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <http://www.gnu.org/licenses/>.\n\n", file );
             fclose( file );
         }
         chmod( path, S_IRUSR | S_IWUSR );
@@ -5792,6 +5792,9 @@ void xset_design_job( GtkWidget* item, XSet* set )
     case XSET_JOB_PROP:
         xset_item_prop_dlg( xset_context, set, 0 );
         break;
+    case XSET_JOB_PROP_CMD:
+        xset_item_prop_dlg( xset_context, set, 2 );
+        break;
     case XSET_JOB_IGNORE_CONTEXT:
         xset_set_b( "context_dlg", !xset_get_b( "context_dlg" ) );
         break;
@@ -6055,6 +6058,7 @@ gboolean xset_job_is_valid( XSet* set, int job )
     //case XSET_JOB_CONTEXT:
     //    return ( xset_context && xset_context->valid && !open_all );
     case XSET_JOB_PROP:
+    case XSET_JOB_PROP_CMD:
         return TRUE;
     case XSET_JOB_HELP:
         return ( !set->lock || ( set->lock && set->line ) );
@@ -6135,6 +6139,12 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             case XSET_JOB_EXPORT:
                 help = "#designmode-designmenu-export";
                 break;
+            case XSET_JOB_BOOKMARK:
+                help = "#designmode-designmenu-bookmark";
+                break;
+            case XSET_JOB_APP:
+                help = "#designmode-designmenu-app";
+                break;
             case XSET_JOB_NORMAL:
                 help = "#designmode-style-normal";
                 break;
@@ -6163,7 +6173,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 help = "#designmode-style";
                 break;
             case XSET_JOB_HELP_NEW:
-                help = "#designmode-command";
+                help = "#designmode-designmenu-bookmark";
+                break;
+            case XSET_JOB_PROP:
+                help = "#designmode-props";
                 break;
             case XSET_JOB_HELP_BROWSE:
                 help = "#designmode-command-browse";
@@ -6211,7 +6224,7 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP;
+            job = XSET_JOB_PROP_CMD;
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -6924,7 +6937,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
                 return TRUE;
             }
             else
-                job = XSET_JOB_EDIT;
+                job = XSET_JOB_PROP_CMD;
         }
         else if ( keymod == GDK_CONTROL_MASK )
         {
@@ -7002,7 +7015,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP;
+            job = XSET_JOB_PROP_CMD;
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7024,7 +7037,7 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 return TRUE;
             }
             else
-                job = XSET_JOB_EDIT;
+                job = XSET_JOB_PROP_CMD;
         }
         else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
