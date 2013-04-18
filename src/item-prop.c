@@ -912,6 +912,7 @@ void on_edit_button_press( GtkWidget* btn, ContextData* ctxt )
     else
     {
         // set to script
+        save_command_script( ctxt, FALSE );
         path = xset_custom_get_script( ctxt->set, !ctxt->set->plugin );
     }
     if ( path && mime_type_is_text_file( path, NULL ) )
@@ -1788,29 +1789,6 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_box_pack_start( GTK_BOX( vbox ),
                         GTK_WIDGET( frame ), FALSE, TRUE, 8 );
 
-    hbox = gtk_hbox_new( FALSE, 8 );
-    ctxt->opt_terminal = gtk_check_button_new_with_mnemonic( _("Run In Terminal") );
-    ctxt->opt_keep_term = gtk_check_button_new_with_mnemonic( _("Keep Terminal Open") );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( ctxt->opt_terminal ), FALSE, TRUE, 0 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( ctxt->opt_keep_term ), FALSE, TRUE, 6 );
-    gtk_box_pack_start( GTK_BOX( vbox_frame ),
-                        GTK_WIDGET( hbox ), FALSE, TRUE, 8 );
-    hbox = gtk_hbox_new( FALSE, 0 );
-    label = gtk_label_new( _("Run As User:") );
-    gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( label ), FALSE, TRUE, 0 );
-    ctxt->cmd_user = gtk_entry_new();
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( ctxt->cmd_user ), FALSE, TRUE, 8 );
-    label = gtk_label_new( _("( leave blank for current user )") );
-    gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
-    gtk_box_pack_start( GTK_BOX( hbox ),
-                        GTK_WIDGET( label ), FALSE, TRUE, 8 );
-    gtk_box_pack_start( GTK_BOX( vbox_frame ),
-                        GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
     ctxt->opt_task = gtk_check_button_new_with_mnemonic( _("Run As Task") );
     gtk_box_pack_start( GTK_BOX( vbox_frame ),
                         GTK_WIDGET( ctxt->opt_task ), FALSE, TRUE, 0 );
@@ -1829,6 +1807,31 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                         GTK_WIDGET( ctxt->opt_scroll ), FALSE, TRUE, 6 );
     gtk_box_pack_start( GTK_BOX( vbox_frame ),
                         GTK_WIDGET( ctxt->opt_hbox_task ), FALSE, TRUE, 8 );
+
+    hbox = gtk_hbox_new( FALSE, 8 );
+    ctxt->opt_terminal = gtk_check_button_new_with_mnemonic( _("Run In Terminal") );
+    ctxt->opt_keep_term = gtk_check_button_new_with_mnemonic( _("Keep Terminal Open") );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( ctxt->opt_terminal ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( ctxt->opt_keep_term ), FALSE, TRUE, 6 );
+    gtk_box_pack_start( GTK_BOX( vbox_frame ),
+                        GTK_WIDGET( hbox ), FALSE, TRUE, 0 );
+
+    hbox = gtk_hbox_new( FALSE, 0 );
+    label = gtk_label_new( _("Run As User:") );
+    gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( label ), FALSE, TRUE, 2 );
+    ctxt->cmd_user = gtk_entry_new();
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( ctxt->cmd_user ), FALSE, TRUE, 8 );
+    label = gtk_label_new( _("( leave blank for current user )") );
+    gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
+    gtk_box_pack_start( GTK_BOX( hbox ),
+                        GTK_WIDGET( label ), FALSE, TRUE, 8 );
+    gtk_box_pack_start( GTK_BOX( vbox_frame ),
+                        GTK_WIDGET( hbox ), FALSE, TRUE, 4 );
 
     frame = gtk_frame_new( _("Style") );
     align = gtk_alignment_new( 0, 0, 1, 1 );
