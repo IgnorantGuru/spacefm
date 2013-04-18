@@ -20,6 +20,8 @@
 
 #include "vfs-utils.h"  /* for vfs_load_icon */
 
+#include "ptk-file-task.h"  //sfm breaks vfs independence for exec_in_terminal
+
 const char desktop_entry_name[] = "Desktop Entry";
 
 /*
@@ -74,6 +76,8 @@ VFSAppDesktop* vfs_app_desktop_new( const char* file_name )
                                                 "Terminal", NULL );
         app->hidden = g_key_file_get_boolean( file, desktop_entry_name,
                                                 "NoDisplay", NULL );
+        app->path = g_key_file_get_string ( file, desktop_entry_name,
+                                                 "Path", NULL);
     }
 
     g_key_file_free( file );
@@ -87,6 +91,7 @@ static void vfs_app_desktop_free( VFSAppDesktop* app )
     g_free( app->comment );
     g_free( app->exec );
     g_free( app->icon_name );
+    g_free( app->path );
 
     g_slice_free( VFSAppDesktop, app );
 }
@@ -260,6 +265,11 @@ gboolean vfs_app_desktop_open_multiple_files( VFSAppDesktop* app )
     char* p;
     if( app->exec )
     {
+        if ( strstr( app->exec, "%U" ) || strstr( app->exec, "%F" ) ||
+             strstr( app->exec, "%N" ) || strstr( app->exec, "%D" ) )
+            return TRUE;
+        
+        /*  this is broken
         for( p = app->exec; *p; ++p )
         {
             if( *p == '%' )
@@ -278,6 +288,7 @@ gboolean vfs_app_desktop_open_multiple_files( VFSAppDesktop* app )
             }
             return TRUE;
         }
+        */
     }
     return FALSE;
 }
@@ -433,6 +444,21 @@ _finish:
     return g_string_free( cmd, FALSE );
 }
 
+void exec_in_terminal( const char* app_name, const char* cwd, const char* cmd )
+{
+    // task
+    PtkFileTask* task = ptk_file_exec_new( app_name, cwd, NULL, NULL );
+
+    task->task->exec_command = strdup( cmd );
+
+    task->task->exec_terminal = TRUE;
+    // task->task->exec_keep_terminal = TRUE;  // for test only
+    task->task->exec_sync = FALSE;
+    task->task->exec_export = FALSE;
+
+    ptk_file_task_run( task );
+}
+
 gboolean vfs_app_desktop_open_files( GdkScreen* screen,
                                      const char* working_dir,
                                      VFSAppDesktop* app,
@@ -466,43 +492,82 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
         sn_desc = vfs_app_desktop_get_disp_name( app );
         if( !sn_desc )
             sn_desc = exec;
+
         if( vfs_app_desktop_open_multiple_files( app ) )
         {
             cmd = translate_app_exec_to_command_line( app, file_paths );
             if ( cmd )
             {
-                /* g_debug( "Execute %s\n", cmd ); */
-                if( g_shell_parse_argv( cmd, &argc, &argv, NULL ) )
+                if ( vfs_app_desktop_open_in_terminal( app ) )
+                    exec_in_terminal( sn_desc,
+                                      app->path && app->path[0] ? app->path :
+                                                                  working_dir,
+                                      cmd );
+                else
                 {
-                    vfs_exec_on_screen( screen, NULL, argv, NULL,
-                                        sn_desc, VFS_EXEC_DEFAULT_FLAGS, err );
-                    g_strfreev( argv );
+                    /* g_debug( "Execute %s\n", cmd ); */
+                    if( g_shell_parse_argv( cmd, &argc, &argv, NULL ) )
+                    {
+                        vfs_exec_on_screen( screen,
+                                            app->path && app->path[0] ?
+                                                app->path : working_dir,
+                                            argv, NULL,
+                                            sn_desc,
+                                            VFS_EXEC_DEFAULT_FLAGS,
+                                            err );
+                        g_strfreev( argv );
+                    }
                 }
                 g_free( cmd );
             }
-            else
+        }
+        else
+        {
+            // app does not accept multiple files, so run multiple times
+            GList* single;
+            l = file_paths;
+            do
             {
-                for( l = file_paths; l; l = l->next )
+                if ( l )
                 {
-                    cmd = translate_app_exec_to_command_line( app, l );
-                    if ( cmd )
+                    // just pass a single file path to translate
+                    single = g_list_append( NULL, l->data );
+                }
+                else
+                {
+                    // there are no files being passed, just run once
+                    single = NULL;
+                }
+                cmd = translate_app_exec_to_command_line( app, single );
+                g_list_free( single );
+                if ( cmd )
+                {
+                    if ( vfs_app_desktop_open_in_terminal( app ) )
+                        exec_in_terminal( sn_desc, 
+                                          app->path && app->path[0] ? app->path
+                                                                    : working_dir,
+                                          cmd );
+                    else
                     {
                         /* g_debug( "Execute %s\n", cmd ); */
                         if( g_shell_parse_argv( cmd, &argc, &argv, NULL ) )
                         {
-                            vfs_exec_on_screen( screen, NULL,argv, NULL, sn_desc,
+                            vfs_exec_on_screen( screen,
+                                                app->path && app->path[0] ?
+                                                    app->path : working_dir,
+                                                argv, NULL, sn_desc,
                                                 G_SPAWN_SEARCH_PATH|
                                                 G_SPAWN_STDOUT_TO_DEV_NULL|
                                                 G_SPAWN_STDERR_TO_DEV_NULL,
                                     err );
                             g_strfreev( argv );
                         }
-                        g_free( cmd );
                     }
+                    g_free( cmd );
                 }
-            }
-            g_free( exec );
+            } while ( l = l ? l->next : NULL );
         }
+        g_free( exec );
         return TRUE;
     }
 

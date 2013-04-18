@@ -255,7 +255,7 @@ static void on_combo_change( GtkComboBox* combo, gpointer user_data )
             VFSMimeType* mime = (VFSMimeType*)user_data;
             parent = gtk_widget_get_toplevel( GTK_WIDGET( combo ) );
             action = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW(parent),
-                                                   mime, FALSE );
+                                                   mime, FALSE, TRUE );
             if( action )
             {
                 gboolean exist = FALSE;
@@ -458,9 +458,8 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
      * ,the selected file is a folder, or its type is unknown.
      */
     if( ! same_type ||
-          vfs_file_info_is_dir( file ) ||
           vfs_file_info_is_desktop_entry( file ) ||
-          vfs_file_info_is_unknown_type( file ) ||
+        /*  vfs_file_info_is_unknown_type( file ) || */
           vfs_file_info_is_executable( file, NULL ) )
     {
         /* if open with shouldn't show, destroy it. */

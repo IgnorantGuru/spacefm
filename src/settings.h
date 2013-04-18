@@ -66,11 +66,19 @@ typedef struct
     int desktop_sort_by;
     int desktop_sort_type;
     gboolean show_wm_menu;
+    gboolean desk_single_click;
+    gboolean desk_open_mime;
+    PangoFontDescription* desk_font;
     GdkColor desktop_bg1;
     GdkColor desktop_bg2;
     GdkColor desktop_text;
     GdkColor desktop_shadow;
-
+    int margin_top;
+    int margin_left;
+    int margin_right;
+    int margin_bottom;
+    int margin_pad;
+    
     /* Interface */
     gboolean always_show_tabs;
     gboolean hide_close_tab_buttons;
@@ -249,10 +257,6 @@ XSet* evt_device;
 // instance-wide command history
 GList* xset_cmd_history;
 
-// delayed session saving
-guint xset_autosave_timer;
-
-
 static const char* terminal_programs[] =  //for pref-dialog.c
 {
     "roxterm",
@@ -356,7 +360,8 @@ void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
 char* unescape( const char* t );
-void xset_autosave( PtkFileBrowser* file_browser );
+void xset_autosave( PtkFileBrowser* file_browser, gboolean force );
+void xset_autosave_cancel();
 
 void open_in_prog( const char* path );
 void xset_set_window_icon( GtkWindow* win );
@@ -408,6 +413,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
                             gboolean edit_care, const char* help );
 char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
                         const char* title, const char* deffolder, const char* deffile );
+char* xset_font_dialog( GtkWidget* parent, const char* title,
+                                    const char* preview, const char* deffont );
 void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboolean no_root );
 void xset_open_url( GtkWidget* parent, const char* url );
 void xset_add_toolbar( GtkWidget* parent, PtkFileBrowser* file_browser,

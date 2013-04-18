@@ -141,7 +141,7 @@ void get_working_area( GdkScreen* screen, GdkRectangle* area )
 	{
 		area->x = 0;
 		area->y = 0;
-		area->width = gdk_screen_width();
-		area->height = gdk_screen_height();
+		area->width = gdk_screen_get_width( screen );
+		area->height = gdk_screen_get_height( screen );
 	}
 }

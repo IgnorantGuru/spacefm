@@ -165,6 +165,9 @@ void update_volume_icons()
     VFSVolume* vol;
     int i;
 
+    if ( !model )
+        return;
+    
     //GtkListStore* list = GTK_LIST_STORE( model );
     icon_theme = gtk_icon_theme_get_default();
 
@@ -4082,6 +4085,9 @@ void update_bookmark_icons()
     GtkIconTheme* icon_theme;
     GtkTreeIter it;
     GdkPixbuf* icon = NULL;
+
+    if ( !bookmodel )
+        return;
 
     GtkListStore* list = GTK_LIST_STORE( bookmodel );
     icon_theme = gtk_icon_theme_get_default();

@@ -20,8 +20,9 @@ G_BEGIN_DECLS
 
 /* Let the user choose a application */
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
-                                           VFSMimeType* mime_type,
-                                           gboolean no_default );
+                                     VFSMimeType* mime_type,
+                                     gboolean no_default,
+                                     gboolean dir_default );
 
 
 /*

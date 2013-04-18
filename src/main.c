@@ -105,6 +105,7 @@ static gboolean custom_dialog = FALSE;  //sfm
 static gboolean socket_cmd = FALSE;     //sfm
 static gboolean version_opt = FALSE;     //sfm
 static gboolean sdebug = FALSE;         //sfm
+static gboolean socket_daemon_or_desktop = FALSE;  //sfm
 
 static int show_pref = 0;
 static int panel = -1;
@@ -226,7 +227,8 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
             panel = 0;
             reuse_tab = FALSE;
             no_tabs = FALSE;
-
+            socket_daemon_or_desktop = FALSE;
+            
             int argx = 0;
             if ( args->str[argx] == CMD_NO_TABS )
             {
@@ -275,11 +277,11 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 panel = 4;
                 break;
             case CMD_DAEMON_MODE:
-                daemon_mode = TRUE;
+                socket_daemon_or_desktop = daemon_mode = TRUE;
                 g_string_free( args, TRUE );
                 return TRUE;
             case CMD_DESKTOP:
-                desktop = TRUE;
+                socket_daemon_or_desktop = desktop = TRUE;
                 break;
             case CMD_PREF:
                 GDK_THREADS_ENTER();
@@ -317,6 +319,7 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
             }
             handle_parsed_commandline_args();
             app_settings.load_saved_tabs = TRUE;
+            socket_daemon_or_desktop = FALSE;
             
             GDK_THREADS_LEAVE();
         }
@@ -1189,11 +1192,7 @@ gboolean handle_parsed_commandline_args()
             g_free( app_settings.wallpaper );
             app_settings.wallpaper = file;
             app_settings.show_wallpaper = TRUE;
-            if ( xset_autosave_timer )
-            {
-                g_source_remove( xset_autosave_timer );
-                xset_autosave_timer = 0;
-            }
+            xset_autosave( NULL, TRUE );
             char* err_msg = save_settings( NULL );
             if ( err_msg )
                 printf( _("spacefm: Error: Unable to save session\n       %s\n"), err_msg );
@@ -1212,10 +1211,8 @@ gboolean handle_parsed_commandline_args()
 #endif
     else /* open files/folders */
     {
-        if( (daemon_mode || desktop) && ! desktop_or_deamon_initialized )
-        {
+        if ( ( daemon_mode || desktop ) && !desktop_or_deamon_initialized )
             init_desktop_or_daemon();
-        }
         else if ( files != default_files )
         {
             /* open files passed in command line arguments */
@@ -1259,7 +1256,7 @@ gboolean handle_parsed_commandline_args()
                 g_free( real_path );
             }
         }
-        else
+        else if ( !socket_daemon_or_desktop )
         {
             // no files specified, just create window with default tabs
             if( G_UNLIKELY( ! main_window ) )
@@ -1558,7 +1555,8 @@ void open_file( const char* path )
         VFSAppDesktop* app;
         GList* files;
 
-        app_name = (char *) ptk_choose_app_for_mime_type( NULL, mime_type, FALSE );
+        app_name = (char *) ptk_choose_app_for_mime_type( NULL, mime_type,
+                                                          FALSE, FALSE );
         if ( app_name )
         {
             app = vfs_app_desktop_new( app_name );

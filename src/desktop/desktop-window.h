@@ -79,8 +79,10 @@ struct _DesktopWindow
     GList* items;
 
     /* margins of the whole desktop window */
-    int x_margin;
-    int y_margin;
+    int margin_top;
+    int margin_left;
+    int margin_right;
+    int margin_bottom;
 
     /* padding oudside the bounding box of the whole item */
     int x_pad;
@@ -125,6 +127,8 @@ struct _DesktopWindow
 
     gint drag_start_x;  /* for drag & drop */
     gint drag_start_y;
+    gint drag_pending_x;
+    gint drag_pending_y;
     guint rubber_bending_x;
     guint rubber_bending_y;
 
@@ -150,6 +154,13 @@ struct _DesktopWindow
     GdkColor shadow;
 
     GdkRectangle wa;    /* working area */
+    
+    guint screen_index;     // screen index of this desktop window
+    guint box_count;        // number of boxes visible on the desktop
+    guint row_count;        // number of rows visible on the desktop
+    guint order_rows;       // number of rows from saved desktop layout
+    gpointer insert_item;   // item at which to insert dragged files
+    gboolean file_listed;   // TRUE once files are read
 };
 
 struct _DesktopWindowClass
@@ -179,7 +190,6 @@ void desktop_window_reload_icons( DesktopWindow* win );
 
 void desktop_window_sort_items( DesktopWindow* win, DWSortType sort_by, GtkSortType sort_type );
 
-GList* desktop_window_get_selected_items( DesktopWindow* win );
 GList* desktop_window_get_selected_files( DesktopWindow* win );
 
 gboolean desktop_write_exports( VFSFileTask* vtask, const char* value, FILE* file );
@@ -191,6 +201,11 @@ void desktop_window_select( DesktopWindow* self, DWSelectMode mode );
 void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
                                                 char* cwd, char* setname );
 void desktop_window_add_application( DesktopWindow* desktop );
+void desktop_window_insert_task_complete( VFSFileTask* task, DesktopWindow* self );
+void desktop_window_set_insert_item( DesktopWindow* self );
+void desktop_window_open_desktop_dir( GtkMenuItem *menuitem,
+                                                    DesktopWindow* desktop );
+
 
 G_END_DECLS
 

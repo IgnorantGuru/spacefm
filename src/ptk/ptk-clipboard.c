@@ -266,7 +266,8 @@ void ptk_clipboard_copy_file_list( char** path, gboolean copy )
 }
 
 void ptk_clipboard_paste_files( GtkWindow* parent_win,
-                                const char* dest_dir, GtkTreeView* task_view )
+                                const char* dest_dir, GtkTreeView* task_view,
+                                GFunc callback )
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -352,6 +353,9 @@ void ptk_clipboard_paste_files( GtkWindow* parent_win,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
                                   GTK_WIDGET( task_view ) );
+        if ( callback && parent_win )
+            ptk_file_task_set_complete_notify( task, callback,
+                                               (gpointer)parent_win );
         ptk_file_task_run( task );
     }
     gtk_selection_data_free( sel_data );
@@ -360,7 +364,8 @@ void ptk_clipboard_paste_files( GtkWindow* parent_win,
 
 void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                 const char* dest_dir,
-                                GtkTreeView* task_view )   //MOD added
+                                GtkTreeView* task_view,
+                                GFunc callback )   //MOD added
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -429,6 +434,9 @@ void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
                                   task_view ? GTK_WIDGET( task_view ) : NULL );
+        if ( callback && parent_win )
+            ptk_file_task_set_complete_notify( task, callback,
+                                               (gpointer)parent_win );
         ptk_file_task_run( task );
     }
     gtk_selection_data_free( sel_data );
@@ -436,7 +444,8 @@ void ptk_clipboard_paste_links( GtkWindow* parent_win,
 
 void ptk_clipboard_paste_targets( GtkWindow* parent_win,
                                 const char* dest_dir,
-                                GtkTreeView* task_view )   //MOD added
+                                GtkTreeView* task_view,
+                                GFunc callback )   //MOD added
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -523,6 +532,9 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
                                   dest_dir,
                                   GTK_WINDOW( parent_win ),
                                   GTK_WIDGET( task_view ) );
+        if ( callback && parent_win )
+            ptk_file_task_set_complete_notify( task, callback,
+                                               (gpointer)parent_win );
         ptk_file_task_run( task );
         
         if ( missing_targets > 0 )

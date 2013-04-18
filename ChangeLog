@@ -13,6 +13,24 @@
     add HAL unmount optical in addition to eject
     fix HAL duplicate devices listed
     Devices list and menu Mount and Unmount sensitivity
+    added desktop option Arrange Icons|Custom
+    single-click or right-click on desktop or unselected unselects
+    automatic desktop drag action
+    Desktop prefs added margins, desktop single click
+    add Open|Desktop Folder
+    desktop name sort natural icase
+    fix desktop center wallpaper larger than screen #296
+    new default desktop background colors
+    fix desktop shifted with panel #248
+    revert mouse buttons 6 7 as back/forward (for horz scrolling) #294
+    move packages to pkg branch
+    add desktop prefs option Open folders with MIME app
+    Open|Default on dir now uses MIME app
+    obey desktop file keys Path and Terminal (+full bash Exec) #232
+    execute separate commands on no desktop file Exec field code
+    fix crash on special escape chars on command line #302
+    add desktop pref font button
+    allow set default/assoc apps for application/octet-stream (unknown)
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
