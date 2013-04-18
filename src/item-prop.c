@@ -12,6 +12,7 @@
 #include <errno.h>
 
 #include <glib/gi18n.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "item-prop.h"
 #include "ptk-app-chooser.h"
@@ -41,8 +42,8 @@ typedef struct
     GtkWidget* item_name;
     GtkWidget* item_key;
     GtkWidget* item_icon;
+    GtkWidget* target_vbox;
     GtkWidget* target_label;
-    GtkWidget* item_target_scroll;
     GtkWidget* item_target;
     GtkWidget* item_browse;
     
@@ -863,6 +864,11 @@ void on_cmd_opt_toggled( GtkWidget* item, ContextData* ctxt )
                     gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( 
                                                 item ) ) )
         gtk_widget_grab_focus( ctxt->cmd_msg );
+    else if ( item == ctxt->opt_terminal &&
+                    gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( item ) ) )
+        // checking run in terminal unchecks run as task
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->opt_task ),
+                                                                FALSE );
 }
 
 void on_ignore_context_toggled( GtkWidget* item, ContextData* ctxt )
@@ -1007,9 +1013,7 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     if ( job < ITEM_TYPE_COMMAND )
     {
         // Bookmark or App        
-        gtk_widget_show( ctxt->target_label );
-        gtk_widget_show( ctxt->item_target_scroll );
-        gtk_widget_show( ctxt->item_browse );
+        gtk_widget_show( ctxt->target_vbox );
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
         gtk_widget_hide( gtk_notebook_get_nth_page(
@@ -1017,17 +1021,15 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
 
         if ( job == ITEM_TYPE_BOOKMARK )
             gtk_label_set_text( GTK_LABEL( ctxt->target_label ),
-                    _("Target (a semicolon-separated list of paths or URLs):") );
+                    _("Targets:  (a semicolon-separated list of paths or URLs)") );
         else
             gtk_label_set_text( GTK_LABEL( ctxt->target_label ),
-                    _("Target (a .desktop or executable file):") );
+                    _("Target:  (a .desktop or executable file)") );
     }
     else
     {
         // Command
-        gtk_widget_hide( ctxt->target_label );
-        gtk_widget_hide( ctxt->item_target_scroll );
-        gtk_widget_hide( ctxt->item_browse );
+        gtk_widget_hide( ctxt->target_vbox );
         gtk_widget_show( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
         gtk_widget_show( gtk_notebook_get_nth_page(
@@ -1358,7 +1360,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                  ctxt->notebook, TRUE, TRUE, 0 );
     
     // Menu Item Page  =====================================================
-    GtkWidget* align = gtk_alignment_new( 0, 0, 0.5, 1 );
+    GtkWidget* align = gtk_alignment_new( 0, 0, 0.4, 1 );
     gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 8, 0, 8, 8 );
     GtkWidget* vbox = gtk_vbox_new( FALSE, 4 );
     gtk_container_add ( GTK_CONTAINER ( align ), vbox );
@@ -1366,7 +1368,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                               align,
                               gtk_label_new_with_mnemonic( _("_Menu Item") ) );
     
-    GtkTable* table = GTK_TABLE( gtk_table_new( 9, 2, FALSE ) );
+    GtkTable* table = GTK_TABLE( gtk_table_new( 4, 2, FALSE ) );
     gtk_container_set_border_width( GTK_CONTAINER ( table ), 0 );
     gtk_table_set_row_spacings( table, 6 );
     gtk_table_set_col_spacings( table, 8 );
@@ -1390,7 +1392,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
     ctxt->item_name = gtk_entry_new();
     gtk_table_attach( table, ctxt->item_name, 1, 2, row, row + 1,
-                                    GTK_FILL, GTK_SHRINK, 0, 0 );
+                                    GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
     
     label = gtk_label_new_with_mnemonic( _("Key:") );
     gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
@@ -1399,7 +1401,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
     ctxt->item_key = gtk_button_new_with_label( " " );
     gtk_table_attach( table, ctxt->item_key, 1, 2, row, row + 1,
-                                    GTK_FILL, GTK_SHRINK, 0, 0 );
+                                    GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
 
     label = gtk_label_new_with_mnemonic( _("Icon:") );
     gtk_misc_set_alignment( GTK_MISC ( label ), 0, 0.5 );
@@ -1408,32 +1410,35 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                     GTK_FILL, GTK_SHRINK, 0, 0 );
     ctxt->item_icon = gtk_entry_new();
     gtk_table_attach( table, ctxt->item_icon, 1, 2, row, row + 1,
-                                    GTK_FILL, GTK_SHRINK, 0, 0 );
+                                    GTK_EXPAND | GTK_FILL, GTK_SHRINK, 0, 0 );
+
+    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
+
+    // Target
+    ctxt->target_vbox = gtk_vbox_new( FALSE, 0 );
 
     ctxt->target_label = gtk_label_new( NULL );
-    gtk_misc_set_alignment( GTK_MISC ( ctxt->target_label ), 0, 0 );
-    row++;
-    gtk_table_attach( table, ctxt->target_label, 0, 2, row, row + 1, 
-                                    GTK_FILL, GTK_FILL, 0, 0 );
+    gtk_misc_set_alignment( GTK_MISC ( ctxt->target_label ), 0, 0.5 );
 
-    ctxt->item_target_scroll = gtk_scrolled_window_new( NULL, NULL );
+    GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
     ctxt->item_target = GTK_WIDGET( multi_input_new( 
-                            GTK_SCROLLED_WINDOW( ctxt->item_target_scroll ),
-                                                            NULL, FALSE ) );
+                            GTK_SCROLLED_WINDOW( scroll ), NULL, FALSE ) );
     gtk_widget_set_size_request( GTK_WIDGET( ctxt->item_target ), -1, 100 );
-    gtk_widget_set_size_request( GTK_WIDGET( ctxt->item_target_scroll ), -1, 100 );
-    row++;
-    gtk_table_attach( table, ctxt->item_target_scroll, 1, 2, row, row + 3, 
-                        GTK_FILL | GTK_EXPAND, GTK_FILL | GTK_EXPAND, 0, 0 );
+    gtk_widget_set_size_request( GTK_WIDGET( scroll ), -1, 100 );
     
     ctxt->item_browse = gtk_button_new_with_mnemonic( _("_Browse") );
     align = gtk_alignment_new( 1, 0.5, 0.2, 1 );
     gtk_container_add ( GTK_CONTAINER ( align ), ctxt->item_browse );
-    row += 3;
-    gtk_table_attach( table, align, 1, 2, row, row + 1,
-                                    GTK_FILL | GTK_EXPAND, GTK_SHRINK, 0, 0 );
 
-    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( table ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( ctxt->target_vbox ),
+                        GTK_WIDGET( ctxt->target_label ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( ctxt->target_vbox ),
+                        GTK_WIDGET( scroll ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( ctxt->target_vbox ),
+                        GTK_WIDGET( align ), FALSE, TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( vbox ),
+                        GTK_WIDGET( ctxt->target_vbox ), FALSE, TRUE, 4 );
+
 
     // Context Page  =======================================================
     align = gtk_alignment_new( 0, 0, 1, 1 );
@@ -1452,7 +1457,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     exo_tree_view_set_single_click( (ExoTreeView*)ctxt->view, TRUE );
     gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( ctxt->view ), FALSE );
 
-    GtkWidget* scroll = gtk_scrolled_window_new( NULL, NULL );
+    scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( scroll ),
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( scroll ), ctxt->view );    
@@ -2009,9 +2014,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
-        gtk_widget_hide( ctxt->target_label );
-        gtk_widget_hide( ctxt->item_target_scroll );
-        gtk_widget_hide( ctxt->item_browse );
+        gtk_widget_hide( ctxt->target_vbox );
     }
     else
     {
