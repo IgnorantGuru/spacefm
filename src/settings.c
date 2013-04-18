@@ -4424,7 +4424,10 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     {
         // app or executable
         if ( !( set->z && set->z[0] ) )
+        {
+            xset_item_prop_dlg( xset_context, set, 0 );
             return;
+        }
         else if ( g_str_has_suffix( set->z, ".desktop" ) )
         {
             VFSAppDesktop* app = vfs_app_desktop_new( set->z );
@@ -4502,7 +4505,10 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     {
         // Bookmark
         if ( !( set->z && set->z[0] ) )
+        {
+            xset_item_prop_dlg( xset_context, set, 0 );
             return;
+        }
         if ( g_file_test( set->z, G_FILE_TEST_EXISTS ) )
             open_spec( set->browser, set->z,
                                 set->desktop || xset_get_b( "book_newtab" ) );
