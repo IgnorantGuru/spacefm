@@ -7,7 +7,7 @@
     <property name="program_name">SpaceFM</property>
     <property name="comments" translatable="yes">by IgnorantGuru</property>
     <property name="copyright" translatable="yes">Copyright (C) 2013    GPL3+</property>
-    <property name="website">http://ignorantguru.github.com/spacefm/</property>
+    <property name="website">http://ignorantguru.github.io/spacefm/</property>
     <property name="license" translatable="yes">SpaceFM - Copyright (C) 2013   GPL3+
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.

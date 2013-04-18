@@ -849,7 +849,7 @@ void show_socket_help()
     printf( "        md5sum \"${copied_files[@]}\"\n" );
     printf( "    fi\n" );
 
-    printf( "\n%s\n    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#sockets\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
+    printf( "\n%s\n    http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#sockets\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
 }
 
 FMMainWindow* create_main_window()

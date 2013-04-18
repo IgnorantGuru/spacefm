@@ -1,7 +1,7 @@
 README for SpaceFM v0.8.7+
 
 Homepage:
-    http://ignorantguru.github.com/spacefm/
+    http://ignorantguru.github.io/spacefm/
 
 Downloads:
     http://sourceforge.net/projects/spacefm/files/
@@ -44,7 +44,7 @@ PACKAGES
 
     NOTE: Enabling kernel polling is recommended after installing SpaceFM.  See
           the ENABLE KERNEL POLLING section below or visit:
-    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+    http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
 INSTALLER
@@ -69,7 +69,7 @@ INSTALLER
     To reinstall or upgrade, just run the latest installer again.
 
     NOTE: Enabling kernel polling is recommended after installing SpaceFM:
-    http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+    http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll
 
 
 BUILD GTK2
@@ -113,7 +113,7 @@ BUILD GTK2
        configure again before proceeding to make.
 
     b) Enabling kernel polling is recommended after installing SpaceFM:
-       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+       http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll
 
     c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
        To build with an additional custom su program ('/usr/bin/mysu' in this
@@ -171,7 +171,7 @@ spacefm-gtk3 packages for your users.
        configure again before proceeding to make.
 
     b) Enabling kernel polling is recommended after installing SpaceFM:
-       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+       http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll
 
     c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
        To build with an additional custom su program ('/usr/bin/mysu' in this
@@ -225,7 +225,7 @@ actively developed, yet please report any build problems.
        configure again before proceeding to make.
 
     b) Enabling kernel polling is recommended after installing SpaceFM:
-       http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll
+       http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll
 
     c) SpaceFM supports ktsuss, gksu, gksudo, gnomesu, kdesu, and xdg-su.
        To build with an additional custom su program ('/usr/bin/mysu' in this

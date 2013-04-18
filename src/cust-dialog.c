@@ -32,7 +32,7 @@
 #define DEFAULT_LARGE_HEIGHT 400
 #define MAX_LIST_COLUMNS 32
 #define BASH_VALID "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-#define DEFAULT_MANUAL "http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#dialog"
+#define DEFAULT_MANUAL "http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#dialog"
 
 static void update_element( CustomElement* el, GtkWidget* box, GSList** radio,
                                                                     int pad );

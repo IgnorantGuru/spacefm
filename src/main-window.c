@@ -2871,7 +2871,7 @@ void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 
 void on_news_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_open_url( GTK_WIDGET( main_window ), "http://ignorantguru.github.com/spacefm/news.html" );
+    xset_open_url( GTK_WIDGET( main_window ), "http://ignorantguru.github.io/spacefm/news.html" );
 }
 
 void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )

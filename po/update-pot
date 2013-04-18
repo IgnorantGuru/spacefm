@@ -22,7 +22,7 @@ if [ $? -ne 0 ] || [ ! -s spacefm.pot ]; then
 	echo "spacefm: update-pot: error creating spacefm.pot"
 	exit 2
 fi
-sed -i 's/# SOME DESCRIPTIVE TITLE\./# SpaceFM PO Template    http:\/\/ignorantguru.github.com\/spacefm\//' spacefm.pot
+sed -i 's/# SOME DESCRIPTIVE TITLE\./# SpaceFM PO Template    http:\/\/ignorantguru.github.io\/spacefm\//' spacefm.pot
 sed -i "/# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER/d" spacefm.pot
 sed -i 's/# This file is distributed under the same license as the PACKAGE package\./# This file is distributed under the same copyright and license as the SpaceFM\x0A# package./' spacefm.pot
 sed -i s/'"Project-Id-Version: PACKAGE VERSION\\n"'/"\"Project-Id-Version: spacefm ${ver}\\\n\""/ spacefm.pot

@@ -33,6 +33,7 @@
     allow set default/assoc apps for application/octet-stream (unknown)
     popup task compliance
     new design menu; Menu Item Properties dialog
+    update manual/homepage locations (github.io)
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
