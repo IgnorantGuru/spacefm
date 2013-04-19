@@ -113,7 +113,6 @@ static void save_color( FILE* file, const char* name,
                  GdkColor* color );
 void xset_free_all();
 void xset_custom_delete( XSet* set, gboolean delete_next );
-char* xset_font_dialog( GtkWidget* parent, char* title, char* preview, char* deffont );
 void xset_default_keys();
 char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp );
 char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor );
