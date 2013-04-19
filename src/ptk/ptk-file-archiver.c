@@ -576,7 +576,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Other settings are commands to run in different situations -
         // since different handlers may or may not need different
-        // commands, nothing further is mandated
+        // commands, empty commands are allowed but if something is given,
+        // relevant substitution characters should be in place
         // Prepending commands with '+' if they are to be ran in a
         // terminal. Declared outside the ifs to avoid the block scope...
         // g_strdup'd to avoid anal const compiler warning...
@@ -596,6 +597,28 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             handler_compress = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_compress ) ) );
         }
+        if (g_strcmp0(handler_compress, "") != 0 &&
+            g_strcmp0(handler_compress, "+") != 0 &&
+            (
+                !g_strstr_len(handler_compress, -1, "%a") ||
+                !g_strstr_len(handler_compress, -1, "%f")
+            ))
+        {
+            // Not all substitution characters are in place - warning
+            // user and exiting. Note that the created dialog does not
+            // have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("The following "
+                                "placeholders must be in the '%s' compression"
+                                " command before saving:\n\n%%%%a: "
+                                "Resulting archive\n%%%%f: Files/directories"
+                                " to archive"),
+                                handler_name), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_compress );
+            return;
+        }
+
         if (handler_extract_term)
         {
             handler_extract = g_strconcat( "+",
@@ -607,6 +630,28 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             handler_extract = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_extract ) ) );
         }
+        if (g_strcmp0(handler_extract, "") != 0 &&
+            g_strcmp0(handler_extract, "+") != 0 &&
+            (
+                !g_strstr_len(handler_extract, -1, "%a") ||
+                !g_strstr_len(handler_extract, -1, "%f")
+            ))
+        {
+            // Not all substitution characters are in place - warning
+            // user and exiting. Note that the created dialog does not
+            // have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("The following "
+                                "placeholders must be in the '%s' extraction"
+                                " command before saving:\n\n%%%%a: "
+                                "Archive to extract\n%%%%f: Extraction "
+                                "destination"),
+                                handler_name), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_extract );
+            return;
+        }
+
         if (handler_list_term)
         {
             handler_list = g_strconcat( "+",
@@ -617,6 +662,25 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         {
             handler_list = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_list ) ) );
+        }
+        if (g_strcmp0(handler_list, "") != 0 &&
+            g_strcmp0(handler_list, "+") != 0 &&
+            (
+                !g_strstr_len(handler_list, -1, "%a")
+            ))
+        {
+            // Not all substitution characters are in place  - warning
+            // user and exiting. Note that the created dialog does not
+            // have an icon set
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("The following "
+                                "placeholders must be in the '%s' list"
+                                " command before saving:\n\n%%%%a: "
+                                "Archive to list"),
+                                handler_name), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_list );
+            return;
         }
 
         // Determining current handler enabled state
