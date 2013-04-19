@@ -1991,6 +1991,29 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         gtk_combo_box_set_active( GTK_COMBO_BOX ( ctxt->item_type ), 0 );
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
     }
+
+    ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
+    if ( set->lock || rset->menu_style == XSET_MENU_SUBMENU ||
+                      rset->menu_style == XSET_MENU_SEP )
+    {
+        gtk_widget_hide( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
+        gtk_widget_hide( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
+        gtk_widget_hide( ctxt->target_vbox );
+    }
+    else
+    {
+        // load command values
+        on_type_changed( GTK_COMBO_BOX( ctxt->item_type ), ctxt );
+        if ( rset->z )
+        {
+            GtkTextBuffer* buf = gtk_text_view_get_buffer(
+                                            GTK_TEXT_VIEW( ctxt->item_target ) );
+            gtk_text_buffer_set_text( buf, rset->z, -1 );
+        }
+    }
+
     // name
     if ( rset->menu_style != XSET_MENU_SEP )
     {
@@ -2022,26 +2045,6 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                         rset->menu_style != XSET_MENU_RADIO &&
                         rset->menu_style != XSET_MENU_SEP );
 
-    ctxt->temp_cmd_line = !set->lock ? g_strdup( rset->line ) : NULL;
-    if ( set->lock || rset->menu_style == XSET_MENU_SUBMENU ||
-                      rset->menu_style == XSET_MENU_SEP )
-    {
-        gtk_widget_hide( gtk_notebook_get_nth_page(
-                                    GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
-        gtk_widget_hide( gtk_notebook_get_nth_page(
-                                    GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
-        gtk_widget_hide( ctxt->target_vbox );
-    }
-    else
-    {
-        on_type_changed( GTK_COMBO_BOX( ctxt->item_type ), ctxt );
-        if ( rset->z )
-        {
-            GtkTextBuffer* buf = gtk_text_view_get_buffer(
-                                            GTK_TEXT_VIEW( ctxt->item_target ) );
-            gtk_text_buffer_set_text( buf, rset->z, -1 );
-        }
-    }
     if ( set->plugin )
     {
         gtk_widget_set_sensitive( ctxt->item_type, FALSE );
