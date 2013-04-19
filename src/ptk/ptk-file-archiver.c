@@ -522,6 +522,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Validating data. Note that data straight from widgets shouldnt
         // be modified or stored
+        // Note that archive creation also allows for a command to be
+        // saved
         if (g_strcmp0(handler_name, "") <= 0)
         {
             // Handler name not set - warning user and exiting. Note
@@ -1911,15 +1913,23 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             xset_set( "arc_dlg", "z", str );
             g_free( str );
 
+            // This is duplicating GUI validation code but it is just
+            // not worth spinning out a series of validation functions
+            // for this
             // Checking to see if the archive handler compression command
-            // has been deleted
-            if (g_strcmp0( command, "" ) <= 0)
+            // has been deleted or is missing placeholders
+            if (g_strcmp0( command, "" ) <= 0 ||
+                !g_strstr_len(command, -1, "%a") ||
+                !g_strstr_len(command, -1, "%f"))
             {
-                // It has - warning user
+                // It has/is - warning user
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 _("Save Archive"), NULL, FALSE,
                                 _("Please enter a valid command before "
-                                "attempting to create the archive."),
+                                "attempting to create the archive - the "
+                                "following placeholders are required:\n\n"
+                                "%%%%a: Resulting archive\n%%%%f: "
+                                "Files/directories to archive"),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( entry ) );
 
@@ -1977,22 +1987,37 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     udest_file = g_filename_display_name( dest_file );
     g_free( dest_file );
 
-    // Combining command and resulting archive name
+    // Inserting archive name into appropriate place in command
     char* udest_quote = bash_quote( udest_file );
-    cmd = g_strdup_printf( "%s %s", command, udest_quote );
+    cmd = replace_string(command, "%a", udest_quote, FALSE );
     g_free( udest_file );
     g_free( udest_quote );
+    g_free( command );
 
-    // Adding selected files to archive
+    // Generating string of selected files/directories to archive
+    s1 = g_strdup( "" );
     for( l = files; l; l = l->next )
     {
         // FIXME: Maybe we should consider filename encoding here.
-        s1 = cmd;
+        str = s1;
         desc = bash_quote( (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data ) );
-        cmd = g_strdup_printf( "%s %s", s1, desc );
+        if (g_strcmp0( s1, "" ) <= 0)
+        {
+            s1 = g_strdup( desc );
+        }
+        else
+        {
+            s1 = g_strdup_printf( "%s %s", s1, desc );
+        }
         g_free( desc );
-        g_free( s1 );
+        g_free( str );
     }
+
+    // Inserting files to archive into appropriate place in command
+    command = cmd;
+    cmd = replace_string(cmd, "%f", s1, FALSE );
+    g_free( command );
+    g_free( s1 );
 
     // Creating task
     char* task_name = g_strdup_printf( _("Archive") );
