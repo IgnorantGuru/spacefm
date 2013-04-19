@@ -5541,7 +5541,10 @@ void xset_design_job( GtkWidget* item, XSet* set )
         else if ( job == XSET_JOB_APP )
         {
             VFSMimeType* mime_type = vfs_mime_type_get_from_type( 
-                                                        XDG_MIME_TYPE_UNKNOWN );
+                    xset_context &&
+                    xset_context->var[CONTEXT_MIME] &&
+                    xset_context->var[CONTEXT_MIME][0] ?
+                    xset_context->var[CONTEXT_MIME] : XDG_MIME_TYPE_UNKNOWN );
             file = (char*)ptk_choose_app_for_mime_type(
                             GTK_WINDOW( parent ),
                             mime_type, TRUE, FALSE, FALSE, FALSE );

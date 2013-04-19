@@ -1143,7 +1143,9 @@ void on_browse_button_clicked( GtkWidget* widget, ContextData* ctxt )
     {
         // Application
         VFSMimeType* mime_type = vfs_mime_type_get_from_type( 
-                                                    XDG_MIME_TYPE_UNKNOWN );
+                    ctxt->context->var[CONTEXT_MIME] &&
+                    ctxt->context->var[CONTEXT_MIME][0] ?
+                    ctxt->context->var[CONTEXT_MIME] : XDG_MIME_TYPE_UNKNOWN );
         char* app = (char*)ptk_choose_app_for_mime_type(
                         GTK_WINDOW( gtk_widget_get_toplevel( 
                                                 GTK_WIDGET( ctxt->dlg ) ) ),
@@ -1335,6 +1337,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     int i, x;
     char* str;
 
+    if ( !context || !set )
+        return;
+    
     ContextData* ctxt = g_slice_new0( ContextData );
     ctxt->context = context;
     ctxt->set = set;

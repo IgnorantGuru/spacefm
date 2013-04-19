@@ -1549,7 +1549,7 @@ Remove is used to remove any custom menu item.  It cannot be used on built-in it
 
 <p>Unless you have unchecked option <i>View|Preferences|Interface|Confirm delete/remove</i>, you will be presented with a confirmation dialog before the item is removed.
 
-<p>IMPORTANT:  When a custom item is removed, all files and settings are deleted, including any extra files you added to the <a href="#designmode-command-browse-files">command directory</a>, any files stored in the command's <a href="#designmode-command-browse-data">data directory</a>, and the <a href="#designmode-command-script">command script</a>.  When a plugin is uninstalled using Remove, the plugin is removed for all users, and all settings, files and <a href="#plugins-creationandfiles-data">plugin-data</a> for the plugin are deleted.
+<p>IMPORTANT:  When a custom menu item is removed, all files and settings are deleted, including any extra files you added to the <a href="#designmode-command-browse-files">command directory</a>, any files stored in the command's <a href="#designmode-command-browse-data">data directory</a>, and the <a href="#designmode-command-script">command script</a>.  When a plugin is uninstalled using Remove, the plugin is removed for all users, and all settings, files and <a href="#plugins-creationandfiles-data">plugin-data</a> for the plugin are deleted.
 
 <p>WHEN REMOVING A SUBMENU, all commands and submenus contained within it are deleted as described above.
 
@@ -2038,9 +2038,9 @@ If Popup Error is checked and the exit status of your command is not zero, a <a 
 <p>By default, Popup Error is checked in new commands.
 
 <p><a name="designmode-command-popout"><b>Popup Output</b></a><br>
-If Popup Output is checked, a <a href="#tasks-dlg">popup dialog</a> will be shown the first time the command produces output (even if the task runs so quickly that it is not shown in the <a href="#tasks-man">Task Manager</a>).
+If Popup Output is checked, a <a href="#tasks-dlg">popup dialog</a> will be shown the first time the command produces output (even if the task runs so quickly that it is not shown in the <a href="#tasks-man">Task Manager</a>).  Note that if you close the popup dialog while the command is still running, further output will NOT reopen it, but you can open it again by clicking on the task.
 
-<p>Popup Output can be used to alert you when your task has produced output.  By default, it is checked in new commands.  Note that if you then close then popup dialog, further output will NOT reopen it.
+<p>Popup Output can be used to alert you when your task has produced output.  By default, it is checked in new commands.
 
 <p><a name="designmode-command-scroll"><b>Scroll Output</b></a><br>
 The Scroll Output option, which is checked by default for new commands, determines the auto-scroll behavior of the <a href="#tasks-dlg">output monitor</a>.  If checked, the monitor will automatically scroll down to the end of the output (unless the user has moved the scrollbar up from the bottom position).  If unchecked, the output will not automatically scroll to the end.
@@ -2133,7 +2133,7 @@ Opens the <i>command directory</i> ($fm_cmd_dir).  The command directory contain
 
 <p>When exporting a Command menu item, all files in the command directory are included in the plugin file.  There are several special files:  'exec.sh' is the command script, if any.  'icon' is a custom icon file for the command or plugin - it will automatically be shown if no icon is set.  You can also include a 'README' file in this directory which describes your command or plugin.
 
-<p>All files in the command directory are deleted when the command or plugin is removed!
+<p>All files in the command directory are deleted when the menu item or plugin is removed!
 
 <p><a name="designmode-command-browse-data"><b>Data Dir  $fm_cmd_data</b></a><br>
 Command menu items may also have an associated <i>data directory</i> ($fm_cmd_data), which may or may not exist.  The data directory is used to store persistent settings or data used by the command or plugin.  The data directory's path for both normal menu items and plugins will typically be:<br>
@@ -2144,7 +2144,7 @@ Command menu items may also have an associated <i>data directory</i> ($fm_cmd_da
 
 <p>SpaceFM does not automatically store any files in this directory - it is entirely up to you or the plugin creator how it is used.  To see what persistent data a plugin is storing in your home folder, examine the Data Dir.
 
-<p>All files in the data directory are deleted when the command or plugin is removed!
+<p>All files in the data directory are deleted when the menu item or plugin is removed!
 
 <p><a name="designmode-command-browse-plugin"><b>Plugin Dir  $fm_plugin_dir</b></a><br>
 Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the top level of a plugin's directories ($fm_plugin_dir), so you can browse all its files (except its <a href="#designmode-command-browse-data">data directory</a>, which is stored in the user's home folder).  The plugin directory's path will typically be:<br>
@@ -2422,7 +2422,7 @@ Additional files required by your plugin can be added to the command directory, 
 <p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.
 
 <!-- # Data Files #data -->
-If necessary, your plugin can maintain changing, persistent data files in the user's home folder to store user preferences and other changing data.  Your script should store these files only in the data directory ("$fm_cmd_data", accessed via <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog).  Data files are NOT included when the command or plugin is exported, and they are deleted when the command or plugin is removed.  Each command or plugin has its own data directory.  If you need to populate the data directory with initial files, consider making your script copy them from the command directory when it is first run.  Because it is located in the user's home folder, you should always document what files you are storing in the data directory.  Most plugins do not require any data files.
+If necessary, your plugin can maintain changing, persistent data files in the user's home folder to store user preferences and other changing data.  Your script should store these files only in the data directory ("$fm_cmd_data", accessed via <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog).  Data files are NOT included when the command or plugin is exported, and they are deleted when the menu item or plugin is removed.  Each command or plugin has its own data directory.  If you need to populate the data directory with initial files, consider making your script copy them from the command directory when it is first run.  Because it is located in the user's home folder, you should always document what files you are storing in the data directory.  Most plugins do not require any data files.
 
 <p>Remember that the data directory may not exist, so make sure your script always creates it before attempting to use it.  Place this command in the initial part of your script:
 <pre>    mkdir -p "$fm_cmd_data"</pre>
