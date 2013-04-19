@@ -1249,6 +1249,12 @@ void replace_item_props( ContextData* ctxt )
     if ( rset->menu_style != XSET_MENU_SEP && !rset->plugin )
     {
         // name
+        if ( rset->lock && rset->in_terminal == XSET_B_UNSET &&
+                    g_strcmp0( rset->menu_label, gtk_entry_get_text(
+                                            GTK_ENTRY( ctxt->item_name ) ) ) )
+            // built-in label has been changed from default, save it
+            rset->in_terminal = XSET_B_TRUE;
+
         g_free( rset->menu_label );
         rset->menu_label = g_strdup( gtk_entry_get_text(
                                             GTK_ENTRY( ctxt->item_name ) ) );
@@ -1258,6 +1264,7 @@ void replace_item_props( ContextData* ctxt )
          rset->menu_style != XSET_MENU_RADIO &&
          rset->menu_style != XSET_MENU_SEP )
     {
+        char* old_icon = g_strdup( mset->icon );
         g_free( mset->icon );
         const char* icon_name = gtk_entry_get_text(
                                             GTK_ENTRY( ctxt->item_icon ) );
@@ -1265,6 +1272,12 @@ void replace_item_props( ContextData* ctxt )
             mset->icon = g_strdup( icon_name );
         else
             mset->icon = NULL;
+
+        if ( rset->lock && rset->keep_terminal == XSET_B_UNSET &&
+                                        g_strcmp0( old_icon, mset->icon ) )
+            // built-in icon has been changed from default, save it
+            rset->keep_terminal = XSET_B_TRUE;
+        g_free( old_icon );
     }
 
     // Ignore Context

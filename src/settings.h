@@ -225,8 +225,8 @@ typedef struct
     char task_pop;
     char task_err;
     char task_out;
-    char in_terminal;
-    char keep_terminal;
+    char in_terminal;       // or save menu_label if lock
+    char keep_terminal;     // or save icon if lock
     char scroll_lock;
     
     // Plugin (not saved at all)
