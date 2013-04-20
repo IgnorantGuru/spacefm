@@ -799,7 +799,7 @@ msgstr "选中区域的透明度"
 #: ../src/cust-dialog.c:394
 #, c-format
 msgid "Too many columns (>%d) in %s"
-msgstr "%s 中列太多 (>%d)"
+msgstr "(>%d) %s 中列太多"
 
 #: ../src/cust-dialog.c:631 ../src/cust-dialog.c:1643
 #: ../src/cust-dialog.c:1657 ../src/cust-dialog.c:1876 ../src/item-prop.c:768
