@@ -16,6 +16,7 @@
 
 #include "item-prop.h"
 #include "ptk-app-chooser.h"
+#include "main-window.h"
 
 const char* enter_command_use = N_("Enter program or bash command line(s):\n\nUse:\n\t%F\tselected files  or  %f first selected file\n\t%N\tselected filenames  or  %n first selected filename\n\t%d\tcurrent directory\n\t%v\tselected device (eg /dev/sda1)\n\t%m\tdevice mount point (eg /media/dvd);  %l device label\n\t%b\tselected bookmark\n\t%t\tselected task directory;  %p task pid\n\t%a\tmenu item value\n\t$fm_panel, $fm_tab, $fm_command, etc");
 
@@ -47,6 +48,7 @@ typedef struct
     GtkWidget* item_target;
     GtkWidget* item_choose;
     GtkWidget* item_browse;
+    GtkWidget* show_tool;
     
     // Context Page
     GtkWidget* vbox_context;
@@ -1317,6 +1319,23 @@ void replace_item_props( ContextData* ctxt )
     xset_set_b( "context_dlg",
             gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( ctxt->ignore_context ) ) );
+
+    // Show In Toolbar
+    if ( rset->tool )
+    {
+        int show_tool = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
+                                                            ctxt->show_tool ) )
+                                        ? XSET_B_TRUE : XSET_B_FALSE;
+        if ( show_tool != rset->tool )
+        {
+            rset->tool = show_tool;
+            if ( rset->browser )
+            {
+                rebuild_toolbar_all_windows( 0, rset->browser );
+                rebuild_toolbar_all_windows( 1, rset->browser );
+            }
+        }
+    }
 }
 
 void on_script_font_change( GtkMenuItem* item, GtkTextView *input )
@@ -1408,7 +1427,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         ctxt->parent = gtk_widget_get_toplevel( GTK_WIDGET( set->desktop ) );
 
     // Dialog
-    ctxt->dlg = gtk_dialog_new_with_buttons( _("Menu Item Properties"),
+    ctxt->dlg = gtk_dialog_new_with_buttons( 
+                                set->tool ? _("Toolbar Item Properties") : 
+                                            _("Menu Item Properties"),
                                 GTK_WINDOW( ctxt->parent ),
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL, NULL );
@@ -1445,7 +1466,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_container_add ( GTK_CONTAINER ( align ), vbox );
     gtk_notebook_append_page( GTK_NOTEBOOK( ctxt->notebook ),
                               align,
-                              gtk_label_new_with_mnemonic( _("_Menu Item") ) );
+                              gtk_label_new_with_mnemonic( 
+                              set->tool ? _("_Toolbar Item") :
+                                          _("_Menu Item") ) );
     
     GtkTable* table = GTK_TABLE( gtk_table_new( 4, 2, FALSE ) );
     gtk_container_set_border_width( GTK_CONTAINER ( table ), 0 );
@@ -1533,6 +1556,11 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 
     gtk_box_pack_start( GTK_BOX( vbox ),
                         GTK_WIDGET( ctxt->target_vbox ), FALSE, TRUE, 4 );
+
+    ctxt->show_tool = gtk_check_button_new_with_mnemonic(
+                                                    _("S_how In Toolbar") );
+    gtk_box_pack_start( GTK_BOX( vbox ),
+                        GTK_WIDGET( ctxt->show_tool ), FALSE, TRUE, 16 );
 
 
     // Context Page  =======================================================
@@ -2138,7 +2166,16 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         gtk_widget_set_sensitive( ctxt->cmd_opt_script, FALSE );
         gtk_widget_set_sensitive( ctxt->cmd_opt_line, FALSE );
     }
-
+    if ( set->tool )
+    {
+        gtk_widget_hide( gtk_notebook_get_nth_page(
+                                    GTK_NOTEBOOK( ctxt->notebook ), 1 ) );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( ctxt->show_tool ),
+                                      set->tool == XSET_B_TRUE );
+    }
+    else
+        gtk_widget_hide( ctxt->show_tool );
+    
     // signals
     g_signal_connect( G_OBJECT( ctxt->opt_terminal ), "toggled",
                                 G_CALLBACK( on_cmd_opt_toggled ), ctxt );
