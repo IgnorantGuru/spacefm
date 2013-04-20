@@ -4556,8 +4556,10 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
                 return;
             */
         }
-        char* str = replace_line_subs( set->line );
-        command = replace_string( str, "\\n", "\n", FALSE );
+        command = replace_line_subs( set->line );
+        char* str = replace_string( command, "\\n", "\n", FALSE );
+        g_free( command );
+        command = replace_string( str, "\\t", "\t", FALSE );
         g_free( str );
     }
     else if ( command_type == 1 )
