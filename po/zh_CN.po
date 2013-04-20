@@ -871,7 +871,7 @@ msgstr "管道 '%s' 的内容不是有效UTF-8编码"
 
 #: ../src/cust-dialog.c:1782 ../src/ptk/ptk-file-task.c:1372
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
-msgstr "[ 咔嚓 - 附加的输出已经从这个LOG中移除 ]\\n"
+msgstr "[ 咔嚓 - 附加的输出已经从这个LOG中移除 ]\n"
 
 #: ../src/cust-dialog.c:1887
 msgid "( file contents are not valid UTF-8 )"
@@ -899,7 +899,7 @@ msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
 "specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
-msgstr "SpaceFM 创建一个定制的GTK提示框，这个提示\\n\n框使用你在命令行提供的可视元素，根据可修改\\n\n元素的内部/外部命令来输出可计算/可解析的结果\\n"
+msgstr "SpaceFM 创建一个定制的GTK提示框，这个提示\\n\n框使用你在命令行提供的可视元素，根据可修改\\n\n元素的内部/外部命令来输出可计算/可解析的结果\n"
 
 #: ../src/cust-dialog.c:3688
 #, c-format
@@ -909,17 +909,17 @@ msgstr "用法:\\n\n"
 #: ../src/cust-dialog.c:3689
 #, c-format
 msgid "    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
-msgstr "spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\\n"
+msgstr "spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
 
 #: ../src/cust-dialog.c:3690
 #, c-format
 msgid "Example:\n"
-msgstr "例如:\\n"
+msgstr "例如:\n"
 
 #: ../src/cust-dialog.c:3691
 #, c-format
 msgid "    spacefm -g --label \"A message\" --button ok\n"
-msgstr "spacefm -g --label \"A message\" --button ok\\n"
+msgstr "spacefm -g --label \"A message\" --button ok\n"
 
 #: ../src/cust-dialog.c:3692
 #, c-format
