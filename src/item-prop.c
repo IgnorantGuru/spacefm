@@ -923,6 +923,15 @@ void on_edit_button_press( GtkWidget* btn, ContextData* ctxt )
             path = g_find_program_in_path( str );
             g_free( str );
         }
+        if ( !( path && mime_type_is_text_file( path, NULL ) ) )
+        {
+            xset_msg_dialog( GTK_WIDGET( ctxt->dlg ), GTK_MESSAGE_ERROR,
+                                _("Error"), NULL, 0, 
+                                _("The command line does not begin with a text file (script) to be opened, or the script was not found in your $PATH."), NULL,
+                                NULL );
+            g_free( path );
+            return;
+        }
     }
     else
     {
