@@ -963,9 +963,19 @@ void load_settings( char* config_dir )
             set->in_terminal = XSET_B_UNSET;
         }
     }
-    if ( ver < 18 ) // < 0.9.0
+    if ( ver < 18 ) // < 0.8.7+
     {
         app_settings.desk_single_click = app_settings.single_click;
+    }
+    if ( ver < 20 ) // < 0.9.0
+    {
+        set = xset_get( "plug_copy" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Copy" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Import") );
+            set->in_terminal = XSET_B_UNSET;
+        }
     }
 }
 
@@ -983,7 +993,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "19" );  // 0.9.0
+    xset_set( "config_version", "s", "20" );  // 0.9.0
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -3971,22 +3981,48 @@ void on_install_plugin_cb( VFSFileTask* task, PluginData* plugin_data )
             {
                 // copy
                 set->plugin_top = FALSE;  // don't show tmp plugin in Plugins menu
-                set_clipboard = set;
-                clipboard_is_cut = FALSE;
-                if ( xset_get_b( "plug_cverb" ) )
+                if ( plugin_data->set )
                 {
-                    char* label = clean_label( set->menu_label, FALSE, FALSE );
-                    if ( geteuid() == 0 )
-                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu."), label );
+                    // paste after insert_set (plugin_data->set)
+                    XSet* newset = xset_custom_copy( set, FALSE );
+                    newset->prev = g_strdup( plugin_data->set->name );
+                    newset->next = plugin_data->set->next;  //steal
+                    if ( plugin_data->set->next )
+                    {
+                        XSet* set_next = xset_get( plugin_data->set->next );
+                        g_free( set_next->prev );
+                        set_next->prev = g_strdup( newset->name );
+                    }
+                    plugin_data->set->next = g_strdup( newset->name );
+                    if ( plugin_data->set->tool )
+                    {
+                        newset->tool = XSET_B_TRUE;
+                        if ( !newset->icon )
+                            newset->icon = g_strdup_printf( "gtk-execute" );
+                    }
                     else
-                        msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
-                    g_free( label );
-                    GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
-                    xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
-                                                        0, "Copy Plugin",
-                                                        NULL, 0, msg, NULL, NULL );
-                    GDK_THREADS_LEAVE();
-                    g_free( msg );
+                        newset->tool = XSET_B_UNSET;
+                }
+                else
+                {
+                    // place on design clipboard
+                    set_clipboard = set;
+                    clipboard_is_cut = FALSE;
+                    if ( xset_get_b( "plug_cverb" ) )
+                    {
+                        char* label = clean_label( set->menu_label, FALSE, FALSE );
+                        if ( geteuid() == 0 )
+                            msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu."), label );
+                        else
+                            msg = g_strdup_printf( _("The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n\nBecause it has not been installed, this plugin will not appear in the Plugins menu, and its contents are not protected by root (once pasted it will be saved with normal ownership).\n\nIf this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."), label );
+                        g_free( label );
+                        GDK_THREADS_ENTER(); // due to dialog run causes low level thread lock
+                        xset_msg_dialog( GTK_WIDGET( plugin_data->main_window ),
+                                                            0, "Copy Plugin",
+                                                            NULL, 0, msg, NULL, NULL );
+                        GDK_THREADS_LEAVE();
+                        g_free( msg );
+                    }
                 }
             }
         }
@@ -4045,8 +4081,8 @@ void xset_remove_plugin( GtkWidget* parent, PtkFileBrowser* file_browser, XSet* 
     ptk_file_task_run( task );
 }
 
-void install_plugin_file( gpointer main_win, const char* path, const char* plug_dir,
-                                                            int type, int job )
+void install_plugin_file( gpointer main_win, const char* path,
+                    const char* plug_dir, int type, int job, XSet* insert_set )
 {
     char* wget;
     char* file_path;
@@ -4058,8 +4094,8 @@ void install_plugin_file( gpointer main_win, const char* path, const char* plug_
     FMMainWindow* main_window = (FMMainWindow*)main_win;
     // task
     PtkFileTask* task = ptk_file_exec_new( _("Install Plugin"), NULL,
-                                                        GTK_WIDGET( main_window ),
-                                                        main_window->task_view );
+                                main_win ? GTK_WIDGET( main_window ) : NULL,
+                                main_win ? main_window->task_view : NULL );
 
     char* plug_dir_q = bash_quote( plug_dir );
 
@@ -4121,6 +4157,7 @@ void install_plugin_file( gpointer main_win, const char* path, const char* plug_
     plugin_data->main_window = main_window;
     plugin_data->plug_dir = g_strdup( plug_dir );
     plugin_data->job = job;
+    plugin_data->set = insert_set;
     task->complete_notify = (GFunc)on_install_plugin_cb;
     task->user_data = plugin_data;
 
@@ -5787,6 +5824,64 @@ void xset_design_job( GtkWidget* item, XSet* set )
         if ( set->tool )
             newset->tool = XSET_B_TRUE;
         break;
+    case XSET_JOB_IMPORT_FILE:
+    case XSET_JOB_IMPORT_URL:
+        if ( job == XSET_JOB_IMPORT_FILE )
+        {
+            // get file path
+            XSet* save = xset_get( "plug_ifile" );
+            if ( save->s )  //&& g_file_test( save->s, G_FILE_TEST_IS_DIR )
+                folder = save->s;
+            else
+            {
+                if ( !( folder = xset_get_s( "go_set_default" ) ) )
+                    folder = "/";
+            }
+            file = xset_file_dialog( GTK_WIDGET( parent ),
+                                            GTK_FILE_CHOOSER_ACTION_OPEN,
+                                            _("Choose Plugin File"),
+                                            folder, NULL );
+            if ( !file )
+                break;
+            if ( save->s )
+                g_free( save->s );
+            save->s = g_path_get_dirname( file );
+        }
+        else
+        {
+            // Get URL
+            file = NULL;
+            if ( !xset_text_dialog( GTK_WIDGET( parent ), _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &file, NULL, FALSE, "#designmode-designmenu-import" ) || !file || file[0] == '\0' )
+                break;
+        }
+        // Make Plugin Dir
+        const char* user_tmp = xset_get_user_tmp_dir();
+        if ( !user_tmp )
+        {
+            xset_msg_dialog( GTK_WIDGET( parent ), GTK_MESSAGE_ERROR,
+                                _("Error Creating Temp Directory"), NULL, 0, 
+                                _("Unable to create temporary directory"), NULL,
+                                NULL );
+            g_free( file );
+            break;
+        }
+        char* hex8;
+        folder = NULL;
+        while ( !folder || ( folder && g_file_test( folder,
+                                                    G_FILE_TEST_EXISTS ) ) )
+        {
+            hex8 = randhex8();
+            if ( folder )
+                g_free( folder );
+            folder = g_build_filename( user_tmp, hex8, NULL );
+            g_free( hex8 );
+        }
+        install_plugin_file( set->browser ? set->browser->main_window : NULL,
+                             file, folder,
+                             job == XSET_JOB_IMPORT_FILE ? 0 : 1, 1, set );                             
+        g_free( file );
+        g_free( folder );
+        break;
     case XSET_JOB_CUT:
         set_clipboard = set;
         clipboard_is_cut = TRUE;
@@ -6246,6 +6341,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 break;
             case XSET_JOB_SEP:
                 help = "#designmode-designmenu-separator";
+                break;
+            case XSET_JOB_IMPORT_FILE:
+            case XSET_JOB_IMPORT_URL:
+                help = "#designmode-designmenu-import";
                 break;
             case XSET_JOB_CUT:
                 help = "#designmode-designmenu-cut";
@@ -6933,6 +7032,25 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // New > Separator
     newitem = xset_design_additem( submenu, _("S_eparator"),
                                 NULL, XSET_JOB_SEP, set );
+
+    // New > Import >
+    newitem = gtk_image_menu_item_new_with_mnemonic( _("_Import") );
+    submenu2 = gtk_menu_new();
+    gtk_menu_item_set_submenu( GTK_MENU_ITEM( newitem ), submenu2 );
+    //gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM( newitem ), 
+    //       gtk_image_new_from_stock( GTK_STOCK_ADD, GTK_ICON_SIZE_MENU ) );
+    gtk_container_add ( GTK_CONTAINER ( submenu ), newitem );
+    gtk_widget_set_sensitive( newitem, !set->plugin );
+    g_object_set_data( G_OBJECT( newitem ), "job",
+                                    GINT_TO_POINTER( XSET_JOB_IMPORT_FILE ) );
+    g_signal_connect( submenu2, "key_press_event",
+                      G_CALLBACK( xset_design_menu_keypress ), set );
+
+        newitem = xset_design_additem( submenu2, _("_File"),
+                                    NULL, XSET_JOB_IMPORT_FILE, set );
+
+        newitem = xset_design_additem( submenu2, _("_URL"),
+                                    NULL, XSET_JOB_IMPORT_URL, set );
 
     // Separator
     gtk_container_add ( GTK_CONTAINER ( design_menu ),
@@ -9667,22 +9785,22 @@ void xset_defaults()
     set = xset_get( "sep_p1" );
     set->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "plug_copy", "lbl", _("_Copy") );
+    set = xset_set( "plug_copy", "lbl", _("_Import") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "plug_cfile plug_curl sep_p1 plug_cverb" );
     xset_set_set( set, "icn", "gtk-copy" );
-    set->line = g_strdup( "#plugins-copy" );
+    set->line = g_strdup( "#plugins-import" );
 
         set = xset_set( "plug_cfile", "lbl", _("_File") );
         xset_set_set( set, "icn", "gtk-file" );
-        set->line = g_strdup( "#plugins-copy" );
+        set->line = g_strdup( "#plugins-import" );
         set = xset_set( "plug_curl", "lbl", _("_URL") );
         xset_set_set( set, "icn", "gtk-network" );
-        set->line = g_strdup( "#plugins-copy" );
+        set->line = g_strdup( "#plugins-import" );
         set = xset_set( "plug_cverb", "lbl", _("_Verbose") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
-        set->line = g_strdup( "#plugins-copy" );
+        set->line = g_strdup( "#plugins-import" );
         
     set = xset_set( "plug_browse", "lbl", _("_Browse") );
 

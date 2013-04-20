@@ -395,13 +395,13 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#context-help">How do I see help for a menu item?</a><br>
     <a href="#designmode">How do I set or change key shortcuts and icons?</a><br>
     How to I set or change the key to go Up a directory?<br>
-	<blockquote>Right-click on the file list, right-click on menu item Go|Up, and select Key.</blockquote>
+	<blockquote>Right-click on the file list, right-click on menu item Go|Up, and select Key Shortcut.</blockquote>
     <a href="#designmode-toolbars">How do I customize the toolbars?</a><br>
     <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
-    How do I create a custom menu command?<br>
+    How do I create a custom menu item?<br>
 	<blockquote>Use <a href="#designmode">Design Mode</a> to add a <a href="#designmode-designmenu-new">New</a> custom menu item.</blockquote>
     <a href="#designmode-designmenu-cut">How do I move a custom menu item to another menu or menu position?</a><br>
-    <a href="#designmode-designmenu-copy">How do I copy a plugin to another menu?</a><br>
+    <a href="#designmode-designmenu-import">How do I import a plugin to another menu?</a><br>
     How do I create a new tab in the current folder?<br>
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
     How do I make archives (tar.gz etc) open with an application?<br>
@@ -479,7 +479,7 @@ If you would like to use a custom handler for URLs within SpaceFM, right-click o
 
 <p><a href="#devices-menu-bookmark">Bookmarked</a> protocol URLs are also opened by the Protocol Handler.
 
-<p>When unmounting a network using <a href="#devices-menu-remove">Remove</a> or <a href="#devices-menu-unmount">Unmount</a> in the <a href="#devices-menu">Devices Menu</a>, the configured <a href="#devices-settings-ucmd">Unmount Command</a> is run.  If you want to be able to unmount custom or unusual protocols via the <a href="#devices-list">Devices List</a>, you can set the Unmount Command to a script which handles your protocols.  (It must also handle normal device unmounts for normal operation.)
+<p>When unmounting a network using <a href="#devices-menu-remove">Remove / Eject</a> or <a href="#devices-menu-unmount">Unmount</a> in the <a href="#devices-menu">Devices Menu</a>, the configured <a href="#devices-settings-ucmd">Unmount Command</a> is run.  If you want to be able to unmount custom or unusual protocols via the <a href="#devices-list">Devices List</a>, you can set the Unmount Command to a script which handles your protocols.  (It must also handle normal device unmounts for normal operation.)
 
 <!-- # Example Protocol Handler Script #protoscript -->
 Below is an example protocol handler script.  For example, you might save this script as a text file named 'myhandler', then install it as 'protocol-handler' (installing your script improves security):
@@ -657,7 +657,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>You can mount and open a device in the Devices list by simply left-clicking on it.  The behavior of a left-click will vary depending on options <a href="#devices-settings-newtab">New Tab</a> and <a href="#devices-settings-single">Single Click</a>.
 
-<p>Middle-clicking on a device is equivalent to right-clicking the device and selecting <a href="#devices-menu-remove">Remove</a>. Thus to quickly remove a device, just middle-click on it. 
+<p>Middle-clicking on a device is equivalent to right-clicking on the device and selecting <a href="#devices-menu-remove">Remove / Eject</a>. Thus to quickly remove a device, just middle-click on it. 
 
 <!-- @Devices @Menu -->
 
@@ -679,7 +679,7 @@ The 'Remove / Eject' item is used to remove a device and eject media.  When you 
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
 <!-- #Reload -->
-Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
+Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove / Eject</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
 
 
 <!-- #Unmount -->
@@ -1596,6 +1596,12 @@ New|Submenu adds a new submenu into the menu after the current menu item.  You w
 <!-- # New|Separator #separator -->
 New|Separator adds a new separator line into the menu after the current menu item.  Design Mode works on separators too - right-click on a separator to open its Design Menu, which allows you to remove it, change its context rules, or paste items after it.
 
+<!-- # New|Import #import -->
+The New|Import submenu allows you to import a plugin file or URL, inserting it as a new menu item after the current menu item.  This is similar to using <a href="#plugins-import">Plugins|Import</a>, except that the new menu item is inserted immediately rather than copied to the design clipboard.
+
+<p>When imported into other menus, a plugin loses root protection and becomes a normal custom menu item.
+
+
 <!-- # Help -->
 Help opens contextual help for a menu item.  For built-in items, the SpaceFM user's manual will be opened in your browser.  If no help is currently available, Help will be disabled.  [Note: Because the user's manual is still incomplete, not all menu items will have help available.]
 
@@ -1628,7 +1634,7 @@ Properties opens the <a href="#designmode-props">Menu Item Properties</a> dialog
 <!-- # Type -->
 The Menu Item page of the <a href="#designmode-props">Menu Item Properties</a> dialog provides basic settings for the menu item.
 
-<p>The Type drop-down list shows the current type of the menu item:  Built-In, <a href="#designmode-designmenu-bookmark">Bookmark</a>, <a href="#designmode-designmenu-app">Application</a>, <a href="#designmode-designmenu-new">Command</a>, <a href="#designmode-designmenu-submenu">Submenu</a>, or <a href="#designmode-designmenu-separator">Separator.</a>  If the type is Bookmark, Application or Command, you can change the type by selecting another type from the list.
+<p>The Type drop-down list shows the current type of the menu item:  Built-In Command, <a href="#designmode-designmenu-bookmark">Bookmark</a>, <a href="#designmode-designmenu-app">Application</a>, <a href="#designmode-designmenu-new">Command</a>, <a href="#designmode-designmenu-submenu">Submenu</a>, or <a href="#designmode-designmenu-separator">Separator.</a>  If the type is Bookmark, Application or Command, you can change the type by selecting another type from the list.
 
 <p>A menu item's type determines what properties you can view and change, and how the menu item appears and behaves.
 
@@ -2172,7 +2178,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>You can add custom menu items to these menus (and thus to the toolbars), but you cannot add submenus.  (There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.)
 
-<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> to and <a href="#designmode-designmenu-copy">copied</a> from the toolbar config menus.
+<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> to and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
 
 
 <!-- @Design Mode @Shortcuts -->
@@ -2374,22 +2380,21 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>When you make <a href="#designmode">Design Mode</a> changes to a plugin, you are not actually altering the plugin itself.  SpaceFM creates a skin for the plugin which holds your custom key shortcut, icon, etc.  Thus these changes made to a plugin by one user will not be seen by other users on the system.  This skin is retained in the SpaceFM <a href="#programfiles-home-session">session file</a> until the plugin is <a href="#designmode-designmenu-remove">removed</a>.
 
-<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-copy">Copy</a> on the Design Menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom menu item.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
+<p>If you want to make deeper changes to a plugin, you can copy it using <a href="#designmode-designmenu-import">Import</a> on the Design Menu, and <a href="#designmode-designmenu-paste">Paste</a> the copy into another menu.  The copy will be exactly like the plugin, except that its files will no longer be owned by root.  Thus you can make any changes to a copied plugin, just as with any custom menu item.  You can also <a href="#designmode-designmenu-export">export</a> the copy, then install it as a plugin again, either with a new name, or overwriting the old plugin.
 
 <p>You can also <a href="#designmode-designmenu-export">export</a> an installed plugin.  Unless you made changes to the plugin directory as root, the exported plugin file will essentially be a copy of the original plugin file.
 
 <p>NOTE:  Plugins created with SpaceFM versions 0.7.0 and later may not work correctly with prior versions due to changes in the file structure of plugins and commands.
 
-<!-- @Plugins @Copy -->
+<!-- @Plugins @Import -->
 
 <p>Instead of installing a plugin, you can import it into any SpaceFM menu which supports design mode.  When imported in this way, the plugin loses root protection and becomes a normal custom menu item.
 
-<p>To do so, use Plugins|Copy|File to import a plugin file, or Plugins|Copy|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the command into any location in any supported menu.  As with any commands, you cannot paste the command into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
+<p>To do so, use Plugins|Import|File to import a plugin file, or Plugins|Import|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the item into any location in any supported menu.  As with any custom menu items, you cannot paste the item into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
 
-<p>If option Plugins|Copy|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
+<p>If option Plugins|Import|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
 
-<p>IMPORTANT: Due to a problem in SpaceFM versions 0.7.2 and prior, copying an installed plugin to another menu may not copy all required plugin files. To avoid this problem, run the following command (this only needs to be done one time, and only when using SpaceFM <= 0.7.2):
-<pre>    mkdir -p ~/.config/spacefm/scripts</pre>
+<p>Alternatively, you can use <a href="#designmode-designmenu-import">New|Import</a> on the Design Menu to import and paste a plugin in one step.
 
 <!-- @Plugins @Uninstall -->
 
@@ -3565,7 +3570,7 @@ Usage: <code><b>--keypress KEYCODE MODIFIER COMMAND...</b></code>
 
 In the above example, "0x6b" is the KEYCODE for the 'k' key, and "0x4" is the MODIFIER for Ctrl.  When Ctrl+K is pressed, "# keypress1 0x6b 0x4" is written to the terminal.
 
-<p>Keycodes and modifiers may be obtained using SpaceFM's Design Mode <a href="#designmode-designmenu-key">Key</a> setting.  Right-click on a menu item in SpaceFM and select Key.  Press the desired key combination to see the keycode and modifier, then click Cancel.
+<p>Keycodes and modifiers may be obtained using SpaceFM's Design Mode <a href="#designmode-designmenu-key">Key Shortcut</a> setting.  Right-click on a menu item in SpaceFM and select Key Shortcut.  Press the desired key combination to see the keycode and modifier, then click Cancel.
 
 <p><b>Multiple --keypress elements can be added to a dialog.</b>
 
@@ -4442,7 +4447,7 @@ Usage: <b>spacefm -s emit-key [OPTIONS] KEYCODE [MODIFIER]</b>
 
 <p>The emit-key method activates the menu item with the given shortcut key, as if the user had pressed the key combination.
 
-<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on a menu item, selecting <a href="#designmode-designmenu-key">Key</a>, and pressing the key combination.
+<p>The KEYCODE and MODIFIER for a given key combination can be see by right-clicking on a menu item, selecting <a href="#designmode-designmenu-key">Key Shortcut</a>, and pressing the key combination.
 
 <p>For example, to activate the menu item associated with Ctrl+C (associated with Copy by default):
 <pre>    spacefm -s emit-key 0x63 0x4</pre>
@@ -4679,7 +4684,7 @@ A temporary bash script used to execute a command run in SpaceFM, which will be 
     source <i>ID</i>-tmp.sh</pre>
 
 <!-- # spacefm*.tmp/ID/ #dattmp-->
-A folder used to store temporary data, usually plugin data which has been copied via <a href="#plugins-copy">Plugins|Copy</a>, where ID is an eight digit hexadecimal number.
+A folder used to store temporary data, usually plugin data which has been copied via <a href="#plugins-import">Plugins|Import</a> or <a href="#designmode-designmenu-import">New|Import</a>, where ID is an eight digit hexadecimal number.
 
 
 <!-- @Program Files @/usr -->

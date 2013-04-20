@@ -158,6 +158,8 @@ enum {
     XSET_JOB_COMMAND,
     XSET_JOB_SUBMENU,
     XSET_JOB_SEP,
+    XSET_JOB_IMPORT_FILE,
+    XSET_JOB_IMPORT_URL,
     XSET_JOB_CUT,
     XSET_JOB_COPY,
     XSET_JOB_PASTE,
@@ -387,8 +389,8 @@ char* multi_input_get_text( GtkWidget* input );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );
-void install_plugin_file( gpointer main_win, const char* path, const char* plug_dir,
-                                                            int type, int job );
+void install_plugin_file( gpointer main_win, const char* path,
+                    const char* plug_dir, int type, int job, XSet* insert_set );
 XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );

@@ -439,7 +439,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     else
     {
         // get url
-        if ( !xset_text_dialog( GTK_WIDGET( main_window ), _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-copy" ) || !path || path[0] == '\0' )
+        if ( !xset_text_dialog( GTK_WIDGET( main_window ), _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-import" ) || !path || path[0] == '\0' )
             return;
         type = 1;  //url
     }
@@ -525,7 +525,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         }
     }
 
-    install_plugin_file( main_window, path, plug_dir, type, job );
+    install_plugin_file( main_window, path, plug_dir, type, job, NULL );
     g_free( path );
     g_free( plug_dir );
 }
