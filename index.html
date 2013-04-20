@@ -10,7 +10,7 @@
 <table cellspacing="0" cellpadding="0" align="center" width="90%">
  <tr> 
 	<td>
-		<div align="left"><a href="http://ignorantguru.github.com/spacefm/" border=0><img src="spacefm-logo.png" alt="SpaceFM Homepage" border=0></a></div>
+		<div align="left"><a href="http://ignorantguru.github.io/spacefm/" border=0><img src="spacefm-logo.png" alt="SpaceFM Homepage" border=0></a></div>
 	</td>
 	<td>
 		<div align="right"><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FF9Y4Q845CBCN"><img style="border:0;" src="donate_button.gif" alt="Make A Donation" /></a><br><small><a href="http://igurublog.wordpress.com/donate/">Tips &amp; Donation Info</a></small></div>
@@ -36,12 +36,12 @@
 <td>
 	SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
 	
-	<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is gaining popularity among novice and power users alike for its stability, speed, convenience and flexibility.
+	<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
 	
 	<ul>
-		<li><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-next-en.html#introduction-highlights">Highlights</a>
-		<li><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-next-en.html#introduction-history">History</a>
-		<li><a href="http://ignorantguru.github.com/spacefm/screenshots.html">Screenshots</a>
+		<li><a href="http://ignorantguru.github.io/spacefm/spacefm-manual-next-en.html#introduction-highlights">Highlights</a>
+		<li><a href="http://ignorantguru.github.io/spacefm/spacefm-manual-next-en.html#introduction-history">History</a>
+		<li><a href="http://ignorantguru.github.io/spacefm/screenshots.html">Screenshots</a>
 		<li><a href="#dev">Development</a>
 	</ul>
 </td>
@@ -58,7 +58,7 @@
 	</ul>
 	Optional:
 	<ul>
-		<li><a href="http://ignorantguru.github.com/udevil/">udevil</a> <i>or</i> udisks <i>or</i> pmount
+		<li><a href="http://ignorantguru.github.io/udevil/">udevil</a> <i>or</i> udisks <i>or</i> pmount
 		<li>startup-notification
 		<li>custom terminal emulators
 		<li>multiple su front-ends
@@ -73,7 +73,7 @@
 	<ul>
 		<li><a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">Packages for your distro</a>
 		<li>Use the <a href="#installer">Self-Extracting Installer</a>
-		<li>Download the source from <a href="http://sourceforge.net/projects/spacefm/files/">Sourceforge</a> or <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>
+		<li>Download the source from <a href="http://sourceforge.net/projects/spacefm/files/">Sourceforge</a> or <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Github</a>
 		<li>Add <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins/">plugins</a>
 	</ul>
 </td>
@@ -83,7 +83,7 @@
 <td valign="top"><b>Docs<b></td>
 <td>
 	<ul>
-		<li><b><a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html">User's Manual</a> - Still under construction but lots of info</b>
+		<li><b><a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html">User's Manual</a> - Still under construction but lots of info</b>
 		<li>Latest <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file
 		<li>Help <a href="https://github.com/IgnorantGuru/spacefm/wiki/Translate">Translate</a>
 		<li><a href="https://github.com/IgnorantGuru/spacefm/blob/master/COPYING">License</a> (GPL3+)
@@ -121,7 +121,7 @@
 <a name="installer">&nbsp;</a>
 <p><h3>Installer</h3>
 
-<p>If there are no <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">packages for your distro</a>, or you prefer to build SpaceFM with custom build options, a self-extracting installer is available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (click on a file and click View Raw to download).  The installer MUST be run in a terminal.  It automatically builds and installs, and should work with any recent distro.  Run it like this:
+<p>If there are no <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">packages for your distro</a>, or you prefer to build SpaceFM with custom build options, a self-extracting installer is available in <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a> (click on a file and click View Raw to download).  The installer MUST be run in a terminal.  It automatically builds and installs, and should work with any recent distro.  Run it like this:
 <p>
 <table bgcolor="#d0d4d7" width="100%" border="1"><tr><td><pre><font color="#000000">bash spacefm-x.x.x-installer.sh
 
@@ -133,7 +133,7 @@ bash spacefm-x.x.x-installer.sh --help
 <p>The installer requires the build dependencies listed in the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.  Build dependencies for the default GTK2 build include:  (package names may vary on your distro)
 <blockquote><i>autotools-dev bash build-essential dbus desktop-file-utils libc6 libcairo2 libdbus-1-3 libglib2.0-0 libgtk2.0-0 (>=2.18) libgtk2.0-bin libpango1.0-0 libstartup-notification0 libx11-6 shared-mime-info intltool pkg-config libgtk2.0-dev libglib2.0-dev fakeroot libstartup-notification0-dev libdbus-1-dev libudev0 (>=143) libudev-dev</i></blockquote>
 
-Also <b>recommended</b>: <i><a href="http://ignorantguru.github.com/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu</i>
+Also <b>recommended</b>: <i><a href="http://ignorantguru.github.io/udevil/">udevil</a>|pmount|udisks, eject, lsof, wget, ktsuss|gksu</i>
 
 <p>If any dependencies are missing, examine the error, install missing packages, and try again.
 
@@ -141,9 +141,9 @@ Also <b>recommended</b>: <i><a href="http://ignorantguru.github.com/udevil/">ude
 
 <p>For easy manual build instructions please see the <a href="https://github.com/IgnorantGuru/spacefm/blob/master/README">README</a> file.
 
-<p>To authenticate downloads see <a href="http://ignorantguru.github.com/spacefm/spacefm.SHA256.txt">authentication instructions</a>.
+<p>To authenticate downloads see <a href="http://ignorantguru.github.io/spacefm/spacefm.SHA256.txt">authentication instructions</a>.
 
-<p>NOTE: Enabling <a href="http://ignorantguru.github.com/spacefm/spacefm-manual-en.html#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
+<p>NOTE: Enabling <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
 </td></tr></table>
 <br><br>
@@ -190,7 +190,7 @@ SpaceFM Icons &amp; Logo by Goran Simovic (C) 2013<br>
 <table cellspacing="0" cellpadding="0" align="center" width="75%">
  <tr> 
 	<td>
-		<div align="left"><i>Updated 2013-03-26</i></div>
+		<div align="left"><i>Updated 2013-04-20</i></div>
 	</td>
 	<td>
 		<div align="right"><a href="http://igurublog.wordpress.com/contact-ignorantguru/">Contact</a></div>
