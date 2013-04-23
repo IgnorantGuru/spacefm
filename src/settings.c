@@ -121,6 +121,7 @@ GtkWidget* xset_design_additem( GtkWidget* menu, char* label, gchar* stock_icon,
 gboolean xset_design_cb( GtkWidget* item, GdkEventButton * event, XSet* set );
 gboolean on_autosave_timer( gpointer main_window );
 const char* icon_stock_to_id( const char* name );
+void xset_custom_activate( GtkWidget* item, XSet* set );
 
 const char* user_manual_url = "http://ignorantguru.github.io/spacefm/spacefm-manual-en.html";
 const char* homepage = "http://ignorantguru.github.io/spacefm/"; //also in aboutdlg.ui
@@ -993,7 +994,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "20" );  // 0.9.0
+    xset_set( "config_version", "s", "21" );  // 0.9.0
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -1876,6 +1877,7 @@ XSet* xset_new( const char* name )
     set->in_terminal = XSET_B_UNSET;
     set->keep_terminal = XSET_B_UNSET;
     set->scroll_lock = XSET_B_UNSET;
+    set->opener = 0;
     return set;
 }
 
@@ -2137,6 +2139,8 @@ static void xset_write_set( FILE* file, XSet* set )
             fprintf( file, "%s-keep=%d\n", set->name, set->keep_terminal );
         if ( set->scroll_lock != XSET_B_UNSET )
             fprintf( file, "%s-scroll=%d\n", set->name, set->scroll_lock );
+        if ( set->opener != 0 )
+            fprintf( file, "%s-op=%d\n", set->name, set->opener );
     }
 }
 
@@ -2445,6 +2449,8 @@ XSet* xset_set_set( XSet* set, const char* var, const char* value )
         else
             set->disable = FALSE;
     }
+    else if ( !strcmp( var, "op" ) )
+        set->opener = atoi( value );
     return set;
 }
 
@@ -2491,6 +2497,126 @@ XSet* xset_find_menu( const char* menu_name )
     }
     g_free( name );
     return NULL;
+}
+
+gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            char job )
+{   // find an opener for job
+    XSet* set, *mset, *open_all_set, *tset, *open_all_tset;
+    GList* l, *ll;
+    XSetContext* context = NULL;
+    int context_action;
+    gboolean found = FALSE;
+    char pinned;
+
+    for ( l = xsets; l; l = l->next )
+    {
+        if ( !((XSet*)l->data)->lock && ((XSet*)l->data)->opener == job &&
+                                !((XSet*)l->data)->tool &&
+                    ((XSet*)l->data)->menu_style != XSET_MENU_SUBMENU &&
+                    ((XSet*)l->data)->menu_style != XSET_MENU_SEP )
+        {
+            if ( ((XSet*)l->data)->desc && 
+                        !strcmp( ((XSet*)l->data)->desc, "@plugin@mirror@" ) )
+            {
+                // is a plugin mirror
+                mset = (XSet*)l->data;
+                set = xset_is( mset->shared_key );
+                if ( !set )
+                    continue;
+            }
+            else if ( ((XSet*)l->data)->plugin && ((XSet*)l->data)->shared_key )
+            {
+                // plugin with mirror - ignore to use mirror's context only
+                continue;
+            }
+            else
+                set = mset = (XSet*)l->data;
+            
+            if ( !context )
+            {
+                if ( !( context = xset_context_new() ) )
+                    return FALSE;
+                if ( file_browser )
+                    main_context_fill( file_browser, context );
+#ifdef DESKTOP_INTEGRATION
+                else if ( desktop )
+                    desktop_context_fill( desktop, context );
+#endif
+                else
+                    return FALSE;
+
+                if ( !context->valid )
+                    return FALSE;
+
+                // get mime type open_all_type set
+                char* open_all_name = g_strdup( context->var[CONTEXT_MIME] );
+                if ( !open_all_name )
+                    open_all_name = g_strdup( "" );
+                char* str = open_all_name;
+                open_all_name = replace_string( str, "-", "_", FALSE );
+                g_free( str );
+                str = replace_string( open_all_name, " ", "", FALSE );
+                g_free( open_all_name );
+                open_all_name = g_strdup_printf( "open_all_type_%s", str );
+                g_free( str );
+                open_all_set = xset_is( open_all_name );
+                g_free( open_all_name );                
+            }
+
+            // test context
+            if ( mset->context )
+            {
+                context_action = xset_context_test( context, mset->context,
+                                                             FALSE );
+                if ( context_action == CONTEXT_HIDE ||
+                                            context_action == CONTEXT_DISABLE )
+                    continue;
+            }
+            
+            // valid custom type?
+            int cmd_type = atoi( set->x );
+            if ( cmd_type != XSET_CMD_APP && cmd_type != XSET_CMD_LINE &&
+                 cmd_type != XSET_CMD_SCRIPT )
+                continue;
+
+            // is set pinned to open_all_type for pre-context?
+            pinned = 0;
+            for ( ll = xsets; ll && !pinned; ll = ll->next )
+            {
+                if ( ((XSet*)ll->data)->next && 
+                                g_str_has_prefix( ((XSet*)ll->data)->name,
+                                                        "open_all_type_" ) )
+                {
+                    tset = open_all_tset = (XSet*)ll->data;
+                    while ( tset->next )
+                    {
+                        if ( !strcmp( set->name, tset->next ) )
+                        {
+                            // found pinned to open_all_type
+                            if ( open_all_tset == open_all_set )
+                                // correct mime type
+                                pinned = 2;
+                            else
+                                // wrong mime type
+                                pinned = 1;
+                            break;
+                        }
+                        tset = xset_is( tset->next );
+                    }
+                }
+            }
+            if ( pinned == 1 )
+                continue;
+
+            // valid
+            found = TRUE;
+            set->browser = file_browser;
+            set->desktop = desktop;
+            xset_custom_activate( NULL, set );
+        }
+    }
+    return found;
 }
 
 void write_root_saver( FILE* file, const char* path, const char* name,
@@ -3719,6 +3845,7 @@ XSet* xset_get_plugin_mirror( XSet* set )
     newset->keep_terminal = set->keep_terminal;
     newset->scroll_lock = set->scroll_lock;
     newset->context = g_strdup( set->context );
+    newset->opener = set->opener;
     newset->b = set->b;
     newset->s = g_strdup( set->s );
     set->shared_key = g_strdup( newset->name );    

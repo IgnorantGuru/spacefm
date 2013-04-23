@@ -1667,6 +1667,9 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
+    if ( xset_opener( NULL, data->browser, 1 ) )
+        return;
+
     GList* sel_files;
 
     sel_files = data->sel_files;

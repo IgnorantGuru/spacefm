@@ -115,6 +115,13 @@ enum {
     XSET_B_FALSE
 };
 
+enum {
+    XSET_CMD_LINE,
+    XSET_CMD_SCRIPT,
+    XSET_CMD_APP,
+    XSET_CMD_BOOKMARK
+};
+
 enum {   // do not renumber - these values are saved in session files
     XSET_MENU_NORMAL,
     XSET_MENU_CHECK,
@@ -230,7 +237,8 @@ typedef struct
     char in_terminal;       // or save menu_label if lock
     char keep_terminal;     // or save icon if lock
     char scroll_lock;
-    
+    char opener;
+
     // Plugin (not saved at all)
     gboolean plugin;
     gboolean plugin_top;
@@ -395,6 +403,8 @@ XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
+gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            char job );
 
 
 

@@ -1752,6 +1752,18 @@ The Context page of the <a href="#designmode-props">Menu Item Properties</a> dia
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).
 
 
+<!-- # Use As Opener #opener -->
+Visible only for non-toolbar Command or Application items, the 'If enabled, use as opener for:' drop-down list is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its context rules, then this item will be run to open selected files, rather than the default MIME app.  This option is used to define an open handler for specific file types (or based on any context subjects).
+
+<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files are opened.
+
+<p>Note that custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added to Open|Default.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item, then select option 'use as opener for files'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
+
+<p>'Use as opener for' currently has no effect on files or devices opened from the SpaceFM desktop.
+
+<p>Ignore Context (below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
+
+
 <!-- # Ignore Context -->
 The 'Ignore Context / Show All (global setting)' option, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
 

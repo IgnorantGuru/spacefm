@@ -69,6 +69,8 @@ typedef struct
     GtkWidget* hbox_match;
     GtkFrame* frame;
     GtkWidget* ignore_context;
+    GtkWidget* hbox_opener;
+    GtkWidget* opener;
     
     // Command Page
     GtkWidget* cmd_opt_line;
@@ -1040,6 +1042,7 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         if ( job == ITEM_TYPE_BOOKMARK )
         {
             gtk_widget_hide( ctxt->item_choose );
+            gtk_widget_hide( ctxt->hbox_opener );
             gtk_button_set_image( GTK_BUTTON( ctxt->item_browse ),
                                   xset_get_image( GTK_STOCK_OPEN,
                                                   GTK_ICON_SIZE_BUTTON ) );
@@ -1049,6 +1052,7 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         else
         {
             gtk_widget_show( ctxt->item_choose );
+            gtk_widget_show( ctxt->hbox_opener );
             gtk_button_set_image( GTK_BUTTON( ctxt->item_browse ),
                                   xset_get_image( GTK_STOCK_EXECUTE,
                                                   GTK_ICON_SIZE_BUTTON ) );
@@ -1060,17 +1064,17 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     {
         // Command
         gtk_widget_hide( ctxt->target_vbox );
+        gtk_widget_show( ctxt->hbox_opener );
         gtk_widget_show( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 2 ) );
         gtk_widget_show( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
-
     }
 
     // load command data
     XSet* rset = ctxt->set;
     XSet* mset = xset_get_plugin_mirror( rset );
-    if ( atoi( rset->x ) == 0 )
+    if ( atoi( rset->x ) == XSET_CMD_LINE )
         load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
     else
     {
@@ -1137,6 +1141,17 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
         gtk_widget_grab_focus( ctxt->item_target );
         // click Browse
         //gtk_button_clicked( GTK_BUTTON( ctxt->item_browse ) );
+    }
+    
+    if ( job == ITEM_TYPE_COMMAND || job == ITEM_TYPE_APP )
+    {
+        // Opener
+        if ( mset->opener > 2 || mset->opener < 0 )
+            // forwards compat
+            gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->opener ), -1 );
+        else
+            gtk_combo_box_set_active( GTK_COMBO_BOX( ctxt->opener ),
+                                                        mset->opener );
     }
 }
 
@@ -1221,20 +1236,25 @@ void replace_item_props( ContextData* ctxt )
             if ( gtk_toggle_button_get_active(
                                     GTK_TOGGLE_BUTTON( ctxt->cmd_opt_line ) ) )
                 // line
-                x = 0;
+                x = XSET_CMD_LINE;
             else
             {
                 // script
-                x = 1;
+                x = XSET_CMD_SCRIPT;
                 save_command_script( ctxt, FALSE );
             }
         }
         else if ( item_type ==  ITEM_TYPE_APP)
-            x = 2;
-        else  // item_type == ITEM_TYPE_BOOKMARK
-            x = 3;
-        g_free( rset->x );
-        rset->x = g_strdup_printf( "%d", x );
+            x = XSET_CMD_APP;
+        else if ( item_type == ITEM_TYPE_BOOKMARK )
+            x = XSET_CMD_BOOKMARK;
+        else
+            x = -1;
+        if ( x >= 0 )
+        {
+            g_free( rset->x );
+            rset->x = g_strdup_printf( "%d", x );
+        }
         if ( !rset->plugin )
         {
             // target
@@ -1262,7 +1282,7 @@ void replace_item_props( ContextData* ctxt )
         }
         // command line
         g_free( rset->line );
-        if ( x == 0 )
+        if ( x == XSET_CMD_LINE )
             rset->line = get_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ) );
         else
             rset->line = g_strdup( ctxt->temp_cmd_line );
@@ -1289,6 +1309,18 @@ void replace_item_props( ContextData* ctxt )
         mset->scroll_lock = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON(
                                                     ctxt->opt_scroll ) ) ?
                             XSET_B_UNSET : XSET_B_TRUE;
+
+        // Opener
+        if ( ( item_type == ITEM_TYPE_COMMAND || item_type == ITEM_TYPE_APP ) )
+        {
+            if ( gtk_combo_box_get_active( GTK_COMBO_BOX( ctxt->opener ) ) > -1 )
+                mset->opener = gtk_combo_box_get_active( GTK_COMBO_BOX(
+                                                    ctxt->opener ) );
+            // otherwise don't change for forward compat
+        }
+        else
+            // reset if not applicable
+            mset->opener = 0;
     }
     if ( rset->menu_style != XSET_MENU_SEP && !rset->plugin )
     {
@@ -1761,6 +1793,24 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     gtk_box_pack_start( GTK_BOX( vbox ),
                         GTK_WIDGET( ctxt->vbox_context ), TRUE, TRUE, 0 );
     
+    // Opener
+    ctxt->hbox_opener = gtk_hbox_new( FALSE, 0 );
+    gtk_box_pack_start( GTK_BOX( ctxt->hbox_opener ),
+                        GTK_WIDGET( gtk_label_new( _("If enabled, use as opener for:") ) ),
+                        FALSE, TRUE, 0 );
+    ctxt->opener = gtk_combo_box_text_new();
+    gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->opener ), FALSE );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->opener ),
+                                                    _("none") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->opener ),
+                                                    _("files") );
+    gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->opener ),
+                                                    _("devices") );    
+    gtk_box_pack_start( GTK_BOX( ctxt->hbox_opener ),
+                        GTK_WIDGET( ctxt->opener ), FALSE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox ),
+                        GTK_WIDGET( ctxt->hbox_opener ), FALSE, TRUE, 0 );
+    
     // Ignore Context
     ctxt->ignore_context = gtk_check_button_new_with_mnemonic(
                             _("_Ignore Context / Show All  (global setting)") );
@@ -2088,12 +2138,14 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         if ( !rset->x )
             rset->x = g_strdup( "0" );
         x = atoi( rset->x );
-        if ( x < 2 )  // line or script
+        if ( x < XSET_CMD_APP )  // line or script
             item_type = ITEM_TYPE_COMMAND;
-        else if ( x == 2 )
+        else if ( x == XSET_CMD_APP )
             item_type = ITEM_TYPE_APP;
-        else  // x == 3
+        else if ( x == XSET_CMD_BOOKMARK )
             item_type = ITEM_TYPE_BOOKMARK;
+        else
+            item_type = -1;
         gtk_combo_box_set_active( GTK_COMBO_BOX ( ctxt->item_type ),
                                                             item_type );
         //g_signal_connect( G_OBJECT( ctxt->item_type ), "changed",
@@ -2116,6 +2168,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         gtk_widget_hide( gtk_notebook_get_nth_page(
                                     GTK_NOTEBOOK( ctxt->notebook ), 3 ) );
         gtk_widget_hide( ctxt->target_vbox );
+        gtk_widget_hide( ctxt->hbox_opener );
     }
     else
     {
