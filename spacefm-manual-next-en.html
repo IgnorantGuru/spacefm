@@ -2811,6 +2811,19 @@ The Context page of the <a href="#designmode-props">Menu Item Properties</a> dia
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).
 
 
+<!-- # Use As Opener #opener -->
+<p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Opener</b></a><br>
+Visible only for non-toolbar Command or Application items, the 'If enabled, use as opener for:' drop-down list is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its context rules, then this item will be run to open selected files, rather than the default MIME app.  This option is used to define an open handler for specific file types (or based on any context subjects).
+
+<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files are opened.
+
+<p>Note that custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added to Open|Default.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item, then select option 'use as opener for files'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
+
+<p>'Use opener for' currently has no effect on files or devices opened from the SpaceFM desktop.
+
+<p>Ignore Context (below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
+
+
 <!-- # Ignore Context -->
 <p><a name="designmode-props-ignorecontext"/><a href="#designmode-props-ignorecontext"><b>Ignore Context</b></a><br>
 The 'Ignore Context / Show All (global setting)' option, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
@@ -2872,7 +2885,7 @@ Shown only for menu items of type Command, the Command page of the <a href="#des
 <pre>    DISPLAY=:1 claws-mail</pre>
 
 <p><b>Open In Editor</b>
-<br>The Open In Editor button will examine the first part of the command line.  If the first part is a script, it will be opened in your editor.
+<br>The Open In Editor button will examine the first part of the command line.  If the first part is a text file (a script), it will be opened in your editor.
 
 <p>NOTE:  When exporting a Command menu item, the value of the command line will be exported with the plugin even if Command Line is no longer the selected command type, or if the menu item type is changed.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
@@ -3274,7 +3287,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>You can add custom menu items to these menus (and thus to the toolbars), but you cannot add submenus.  (There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.)
 
-<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> to and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
+<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
 
 
 <!-- @end designmode-toolbars-->
@@ -6707,7 +6720,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-04-20&nbsp;&nbsp;(SpaceFM version 0.8.7+)
+<p>Updated 2013-04-23&nbsp;&nbsp;(SpaceFM version 0.8.7+)
 <br><br>
 </center>
 </td></tr></table>
