@@ -2613,7 +2613,7 @@ gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             found = TRUE;
             set->browser = file_browser;
             set->desktop = desktop;
-            xset_custom_activate( NULL, set );
+            xset_menu_cb( NULL, set );  // also does custom activate
         }
     }
     return found;
