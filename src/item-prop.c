@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <fnmatch.h>
 
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
@@ -193,7 +194,9 @@ enum {
     CONTEXT_COMP_ENDS,
     CONTEXT_COMP_NENDS,
     CONTEXT_COMP_LESS,
-    CONTEXT_COMP_GREATER
+    CONTEXT_COMP_GREATER,
+    CONTEXT_COMP_MATCH,
+    CONTEXT_COMP_NMATCH
 };
 
 static const char* context_comp[] = 
@@ -207,7 +210,9 @@ static const char* context_comp[] =
     N_("ends with"),
     N_("doesn't end with"),
     N_("is less than"),
-    N_("is greater than")
+    N_("is greater than"),
+    N_("matches pattern"),
+    N_("doesn't match")
 };
 
 static const char* item_types[] = 
@@ -354,6 +359,25 @@ int xset_context_test( XSetContext* context, char* rules, gboolean def_disable )
                 break;
             case CONTEXT_COMP_GREATER:
                 test = atoi( context->var[sub] ) > atoi( eleval );
+                break;
+            case CONTEXT_COMP_MATCH:
+            case CONTEXT_COMP_NMATCH:
+                s = g_utf8_strdown( eleval, -1 );
+                if ( g_strcmp0( eleval, s ) )
+                {
+                    // pattern contains uppercase chars - test case sensitive
+                    test = fnmatch( eleval, context->var[sub], 0 );
+                }
+                else
+                {
+                    // case insensitive
+                    char* str = g_utf8_strdown( context->var[sub], -1 );
+                    test = fnmatch( s, str, 0 );
+                    g_free( str );
+                }
+                g_free( s );
+                if ( comp == CONTEXT_COMP_MATCH )
+                    test = !test;
                 break;
             default:
                 test = match == NANY || match == NALL;  //failsafe

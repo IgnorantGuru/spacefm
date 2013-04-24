@@ -35,6 +35,8 @@
     new design menu; Menu Item Properties dialog
     update manual/homepage locations (github.io)
     session dont save default menu labels and icons
+    add item prop Context Use as opener for option
+    add Context verb pattern matches for wildcards #214
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

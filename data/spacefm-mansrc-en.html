@@ -1696,80 +1696,86 @@ Clicking the Browse button will allow you to select a folder which will be added
 <!-- # Context -->
 The Context page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items.
 
-<p>Context refers to the state of the entire file browser window when the menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
+<p>Context refers to the state of the entire file browser window or desktop when a menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
 
 <p>By default, the top line of the context dialog reads "Show item if context matches any rule:", and is followed by an empty rule box.  When the rule box is empty, the item will always be shown regardless of context.
 
-<p>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are the most useful for most purposes.
-
-<p>As an initial example, we will add a rule which shows the current menu item when the selected file is an audio file.  Note that when determining the context, only the type and name of the <i>first</i> selected file is considered.  If multiple files are selected, this can be determined, but the type of each selected file cannot be individually tested.
-
-<p>Set the rule subject to 'MIME Type'.  The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  For this example, set the verb to 'begins with'.
-
-<p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value from the drop-down list.  Each subject chosen will have a different list of common values.  In this example, choose 'audio/' from the drop-down list.
-
-<p>Below the value box containing 'audio/' is a 'Value:' label, which may or may not show a value.  This label shows the subject's value in the <i>current context</i>.  When you opened the Design Menu, the file browser had a context - perhaps some files or a device were selected, the browser was in a particular directory, etc.  For example, if a file is selected and the subject is 'MIME Type', then the file's MIME type will currently appear next to 'Value:'.  If no file is selected, then 'Value:' will show nothing.  (Tip:  You can quickly copy a value into the value box by double-clicking it.)
-
-<p>Now the words in the Edit Rule box should read 'MIME Type... begins with... audio/'.  To add this rule to the rule box above, click the Add button.  'MIME Type begins with audio/' will be added to the list of rules.  For this rule to be satisfied, the MIME type of the first selected file must begin with the text "audio/".  Thus a file of type "audio/mpeg" (an MP3 file), or of type "audio/x-wav" (a WAV file) would match this rule, but a file of type "video/x-msvideo" (an AVI video file) would not.  (You can see the MIME type of any file by right-clicking on it in the file list and selecting Properties|Info.)  In this way, our rule will only match the context if the first selected file is an audio file.
-
-<p>The context dialog will let you know the result of the current set of rules.  Below the rules box to the right, you will see "Current: Show" or "Current: Hide", depending on the current context.  If the first selected file is an audio file, it will read "Current: Show", meaning that with the current context, this menu item will be shown in the menu.  If instead it reads "Current: Hide", then the menu item will be hidden from view for the current context - it will not appear in the menu.
-
-<p>The top line of the context dialog is also now enabled.  For example, we can change 'Show item if context matches any rule:' to 'Enable item if context matches any rule:'.  If the action is to 'Show', its opposite is to hide.  If the action is to 'Enable', then its opposite to disable.  Thus if we change the top line to read 'Enable item if context matches any rule:', then the menu item will be enabled or disabled depending on context, but will never be completely hidden from view in the menu.  Or, to reverse the logic, action can be set to 'Hide' or 'Disable' when any rule is matched.
+<p>You can change 'Show item if context matches any rule:' to 'Enable item if context matches any rule:'.  If the action is to 'Show', its opposite is to hide.  If the action is to 'Enable', then its opposite to disable.  Thus if we change the top line to read 'Enable item if context matches any rule:', then the menu item will be enabled or disabled depending on context, but will never be completely hidden from view in the menu.  Or, to reverse the logic, action can be set to 'Hide' or 'Disable' when any rule is matched.
 
 <p>The 'matches any rules:' box can also be changed so that it requires all rules to be matched instead of just one.  This is like putting an AND between the rules, instead of OR.  Or you can reverse the matching logic by choosing one of the 'doesn't match' options.
 
+<p><b>Composing Rules</b>
+<br>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are generally the most useful.
 
-<p>For this example, set the top line to read 'Enable item if context matches any rule:'.  We now have a context rule set which reads 'Enable item if context matches any rule: MIME Type begins with audio/'.
+<p>The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  In the case of "matches pattern" or "doesn't match", wildcards may be used (eg "Filename matches pattern *.jpg").  If the test pattern contains any uppercase characters, the test is case-sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
+
+<p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value.  Each subject chosen will have a different list of common values.
+
+<p>Below the value box is a 'Value:' label, which may or may not show a value.  This label shows the subject's value in the <i>current context</i>.  When you opened the Design Menu, the file browser had a context - perhaps some files or a device were selected, the browser was in a particular directory, etc.  For example, if a file is selected when you open the properties dialog, and the subject is set to 'MIME Type', then the selected file's MIME type will appear next to 'Value:'.  If no file is selected, then 'Value:' will show nothing.  (Tip:  You can quickly copy a value into the value box by double-clicking it.)
+
+<p>The context dialog will let you know the result of the current set of rules given the current context.  Below the rules box to the right, you will see a 'Current:' label.  For example if it reads "Current: Show", then for the current context and set of rules, this menu item will be shown in the menu.  If instead it reads "Current: Hide", then the menu item will be hidden from view for the current context - it will not appear in the menu.
+
+<p><b>An Example Set Of Rules</b>
+<br>As an example, we will add a rule which shows the current menu item when the selected file is an audio file.  Note that when determining the context, only the type and name of the <i>first</i> selected file is considered.  If multiple files are selected, this can be determined, but the type of each selected file cannot be individually tested.
+
+<p>For this example, set the rule subject to 'MIME Type' and set the verb (the box to the right of subject) to 'begins with'.  Below these, choose 'audio/' from the drop-down list of common values.
+
+<p>Now the words in the Edit Rule box should read 'MIME Type... begins with... audio/'.  To add this rule to the rule box above, click the Add button.  'MIME Type begins with audio/' will be added to the list of rules.  For this rule to be satisfied, the MIME type of the first selected file must begin with the text "audio/".  Thus a file of type "audio/mpeg" (an MP3 file), or of type "audio/x-wav" (a WAV file) would match this rule, but a file of type "video/x-msvideo" (an AVI video file) would not.  (You can see the MIME type of any file by right-clicking on it in the file list and selecting Properties|Info.)  In this example, our rule will only match the context if the first selected file is an audio file.
+
+<p>Now set the top line to read 'Enable item if context matches any rule:'.  We now have a context rule set which reads 'Enable item if context matches any rule: MIME Type begins with audio/'.
 
 <p>Click OK to accept this rule set.  Then select an audio file in the file browser's file list.  Open the menu where your item appears, and it will be enabled for use.  Next select another kind of file, such as a text or video file.  Open the menu again, and the menu item will be disabled.
 
-<p>In order to open the Design Menu again for this menu item, you must first select an audio file (you cannot open the Design Menu on a disabled menu item).  Or you can set Ignore Context (see below).
+<p>In order to open the Design Menu again for this menu item, you must first select an audio file (you cannot open the Design Menu on a disabled menu item).  Or you can temporarily check option <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) to access all menu items.
 
-<br>
-<p>The context dialog includes a few more features for editing rules.  To remove a rule, click the rule, then click the Remove button.  If all rules are removed and you click OK, the item will be shown regardless of context.
+<p><b>Additional Features</b><br>
+The context dialog includes a few more features for editing rules.  To remove a rule, click the rule, then click the Remove button.  If all rules are removed and you click OK, the item will be shown regardless of context.
 
 <p>To change a rule in the list, click the rule, then edit the rule using the Edit Rule box.  When the rule is how you want it to appear, click the Apply button to update the rule in the list.
 
 <p>The best way to learn to use the context rules is to practice with a file selected.  In this way you can use the 'Value:' and 'Current:' labels to see context values and observe the result of changing the rules.
 
-<p>Some context subjects are boolean - they will equal 'true' or 'false' (these words must be in english even if the rest of the rule is translated).  For example, the rule subject 'Multiple Selected' will always equal 'true' or 'false', depending on whether more than one file is selected in the file list of the current panel.  Thus if your custom menu item is designed to work with only one selected file, you might set a context rule to disable it if the user has selected multiple files.
+<p>Some context subjects are boolean - they will equal 'true' or 'false' (these words must be in English even if the rest of the rule is translated).  For example, the rule subject 'Multiple Selected' will always equal 'true' or 'false', depending on whether more than one file is selected in the file list of the current panel.  Thus if your custom menu item is designed to work with only one selected file, you might set a context rule to disable it if the user has selected multiple files.
 
 <p>Other context subjects, such as 'Panel Count', contain a number, and you can test whether they are equal to, less than, or greater than a value.  For example, the rule 'Panel Count is greater than 1' will only match if the user has multiple panels shown.
 
-<p>As a more advanced use, it's also possible to use || (or) or && (and) in the test value to provide a list of possibilities (use || or &&, but not both in the same rule).  For example, this rule:
+<p>As a more advanced use, it's also possible to use || (or) or &amp;&amp; (and) in the test value to provide a list of possibilities (use || or &amp;&amp;, but not both in the same rule).  For example, this rule:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;MIME Type begins with audio/ || video/
 
-<p>causes two tests to be performed.  If the MIME Type begins with 'audio/' OR the MIME Type begins with 'video/', then the rule matches.  Likewise, the rule:
-&nbsp;&nbsp;&nbsp;&nbsp;Device Properties contains dvd && blank
+<p>causes two tests to be performed.  If the MIME Type begins with 'audio/' OR the MIME Type begins with 'video/', then the rule matches.  Likewise, the rule:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Device Properties contains dvd &amp;&amp; blank
 
-<p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would tell you if the currently selected device contains a blank DVD.
+<p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would match if the currently selected device contained a blank DVD.
 
-<p>It is important to note that built-in menu items sometimes have a built-in context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+<p><b>Automatic Context</b>
+<br>It is important to note that built-in menu items sometimes have an automatic context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+
+<p>Also note that custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file type handler</a> (see below).
 
 <p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
 <p><b>Impossible Context</b>
-<br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).
+<br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
 
-
-<!-- # Use As Opener #opener -->
-Visible only for non-toolbar Command or Application items, the 'If enabled, use as opener for:' drop-down list is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its context rules, then this item will be run to open selected files, rather than the default MIME app.  This option is used to define an open handler for specific file types (or based on any context subjects).
+<!-- # Use As Opener For #opener -->
+Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as opener for</i>' drop-down list on the Context page is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define an open handler for specific file types (or based on any context rules).
 
 <p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files are opened.
 
-<p>Note that custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added to Open|Default.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item, then select option 'use as opener for files'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
+<p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as opener for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
 
-<p>'Use as opener for' currently has no effect on files or devices opened from the SpaceFM desktop.
+<p>'<i>Use as opener for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.
 
-<p>Ignore Context (below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
+<p>Ignore Context (see below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
 
 
 <!-- # Ignore Context -->
-The 'Ignore Context / Show All (global setting)' option, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
+The '<i>Ignore Context / Show All (global setting)</i>' option, if checked, causes all <a href="#designmode-props-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
 
-<p>If you need to change the context of an item you have disabled or hidden, you can either create the appropriate context so that the item is shown and enabled, or you can open the Design Menu for any other item and check 'Ignore Context'.  This will allow you to then access the Design Menu of the item and change its context.  When you are finished, you can uncheck 'Ignore Context'.
+<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Design Menu for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
 
-<p>Note that Ignore Context does not affect the built-in context of built-in items - for example, even with Ignore Context checked, the file list's Paste menu item will still be disabled if the clipboard is empty.
+<p>Note that <i>Ignore Context</i> does not affect the automatic context of built-in items - for example, even with <i>Ignore Context</i> checked, the file list's Paste menu item will always be disabled if the clipboard is empty.
+<br>
 
 <!-- # Command -->
 Shown only for menu items of type Command, the Command page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set command line(s) to be run by this menu item, or edit a command script, depending on which radio button is selected: Command Line or Script.
@@ -1981,7 +1987,7 @@ exit $?
 #   done
 </pre>
 
-<b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.  Note that your script will be run with bash, not sh.  (To use another kind of script, you can run your script as a command line, or use an <a href="#designmode-designmenu-app">Application</a> menu item type and set your script as the <a href="#designmode-props-target">target</a>.)
+<b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.
 
 <p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
 <pre>    md5sum "${fm_filenames[@]}"</pre>
