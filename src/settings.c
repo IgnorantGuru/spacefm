@@ -8710,7 +8710,7 @@ char* plain_ascii_name( const char* orig_name )
     return s;
 }
 
-char* clean_label( const char* menu_label, gboolean kill_special, gboolean convert_amp )
+char* clean_label( const char* menu_label, gboolean kill_special, gboolean escape )
 {
     char* s1;
     char* s2;
@@ -8722,9 +8722,9 @@ char* clean_label( const char* menu_label, gboolean kill_special, gboolean conve
         s1 = replace_string( s2, " ", "-", FALSE );
         g_free( s2 );
     }
-    else if ( convert_amp )
+    else if ( escape )
     {
-        s2 = replace_string( s1, "&", "&amp;", FALSE );
+        s2 = g_markup_escape_text( s1, -1 );
         g_free( s1 );
         s1 = s2;
     }
