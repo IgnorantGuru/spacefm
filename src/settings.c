@@ -6512,10 +6512,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 help = "#designmode-style-message";
                 break;
             //case XSET_JOB_CONTEXT:
-            //    help = "#designmode-style-context";
+            //    help = "#designmode-props-context";
             //    break;
             case XSET_JOB_IGNORE_CONTEXT:
-                help = "#designmode-style-ignorecontext";
+                help = "#designmode-props-ignorecontext";
                 break;
             case XSET_JOB_HELP:
                 help = "#designmode-designmenu-help";
@@ -9117,12 +9117,12 @@ void xset_defaults()
     
     set = xset_set( "dev_root_mount", "lbl", _("_Mount") );
     xset_set_set( set, "icn", "drive-removable-media" );
-    xset_set_set( set, "z", "/usr/bin/udisks --mount %v --mount-options %o" );
+    xset_set_set( set, "z", "/usr/bin/udevil mount -o %o %v" );
     set->line = g_strdup( "#devices-root-mount" );
    
     set = xset_set( "dev_root_unmount", "lbl", _("_Unmount") );
     xset_set_set( set, "icn", "gtk-remove" );
-    xset_set_set( set, "z", "/usr/bin/udisks --unmount %v" );
+    xset_set_set( set, "z", "/usr/bin/udevil umount %v" );
     set->line = g_strdup( "#devices-root-unmount" );
    
     set = xset_set( "dev_root_label", "lbl", _("_Label") );

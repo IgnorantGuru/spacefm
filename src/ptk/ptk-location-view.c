@@ -1086,6 +1086,7 @@ static void on_mount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( !options )
         options = g_strdup( "" );
     char* msg = g_strdup_printf( _("Enter mount command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%o\tvolume-specific mount options\n\t\t( %s )\n\nNote: fstab overrides some options\n\nEDIT WITH CARE   This command is run as root"), vol->device_file, options );
+
     if ( !set->s )
         set->s = g_strdup( set->z );
     char* old_set_s = g_strdup( set->s );
