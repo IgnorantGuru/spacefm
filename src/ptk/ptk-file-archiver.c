@@ -46,6 +46,13 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
+// Archive operations enum
+enum {
+    ARC_COMPRESS,
+    ARC_EXTRACT,
+    ARC_LIST
+};
+
 const ArchiveHandler handlers[]=
     {
         {
@@ -156,7 +163,7 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 
 static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                                                      const char* type,
-                                                     gboolean extract )
+                                                     int operation )
 {
     // Supported flag to ensure cleanup
     gboolean format_supported = FALSE;
@@ -178,33 +185,58 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                 // It can - checking if it can cope with the
                 // requested operation - deal with possibility of empty
                 // command set to run in terminal, therefore '+' stored
-                if (extract)
+                switch (operation)
                 {
-                    if (handler_xset->z
-                        && g_strcmp0( handler_xset->z, "" ) != 0
-                        && g_strcmp0( handler_xset->z, "+" ) != 0)
-                    {
-                        // It can - setting flag and breaking
-                        format_supported = TRUE;
+                    case ARC_COMPRESS:
+
+                        if (handler_xset->y
+                            && g_strcmp0( handler_xset->y, "" ) != 0
+                            && g_strcmp0( handler_xset->y, "+" ) != 0)
+                        {
+                            // Compression possible - setting flag and
+                            // breaking
+                            format_supported = TRUE;
+                        }
                         break;
-                    }
-                }
-                else
-                {
-                    // Testing ability to compress
-                    if (handler_xset->y
-                        && g_strcmp0( handler_xset->y, "" ) != 0
-                        && g_strcmp0( handler_xset->y, "+" ) != 0)
-                    {
-                        // It can - setting flag and breaking
-                        format_supported = TRUE;
+
+                    case ARC_EXTRACT:
+
+                        if (handler_xset->z
+                            && g_strcmp0( handler_xset->z, "" ) != 0
+                            && g_strcmp0( handler_xset->z, "+" ) != 0)
+                        {
+                            // Extraction possible - setting flag and
+                            // breaking
+                            format_supported = TRUE;
+                        }
                         break;
-                    }
+
+                    case ARC_LIST:
+
+                        if (handler_xset->context
+                        && g_strcmp0( handler_xset->context, "" ) != 0
+                        && g_strcmp0( handler_xset->context, "+" ) != 0)
+                        {
+                            // Listing possible - setting flag and
+                            // breaking
+                            format_supported = TRUE;
+                        }
+                        break;
+
+                    default:
+
+                        // Invalid archive operation passed - warning
+                        // user and exiting
+                        g_warning("archive_handler_is_format_supported "
+                        "was passed an invalid archive operation ('%d') "
+                        "on type '%s'!", operation, type);
+                        format_supported = FALSE;
+                        break;
                 }
 
-                // Operation isn't checked by this function so
-                // breaking
-                break;
+                // Breaking if the handler supports the MIME type
+                if (format_supported)
+                    break;
             }
         }
 
@@ -214,6 +246,42 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
 
     // Returning result
     return format_supported;
+}
+
+static gboolean archive_handler_run_in_term( XSet* handler_xset,
+                                             int operation )
+{
+    // Making sure a valid handler_xset has been passed
+    if (!handler_xset)
+    {
+        g_warning("archive_handler_run_in_term has been called with an "
+                  "invalid handler_xset!");
+        return FALSE;
+    }
+
+    // Dealing with different operations
+    switch (operation)
+    {
+        case ARC_COMPRESS:
+
+            return handler_xset->y && *handler_xset->y == '+';
+
+        case ARC_EXTRACT:
+
+            return handler_xset->z && *handler_xset->z == '+';
+
+        case ARC_LIST:
+
+            return handler_xset->context && *handler_xset->context == '+';
+
+        default:
+
+            // Invalid archive operation passed - warning user and
+            // exiting
+            g_warning("archive_handler_run_in_term was passed an invalid"
+            " archive operation ('%d')!", operation);
+            return FALSE;
+    }
 }
 
 // handler_xset_name optional if handler_xset passed
@@ -635,8 +703,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         if (g_strcmp0(handler_extract, "") != 0 &&
             g_strcmp0(handler_extract, "+") != 0 &&
             (
-                !g_strstr_len(handler_extract, -1, "%a") ||
-                !g_strstr_len(handler_extract, -1, "%f")
+                !g_strstr_len(handler_extract, -1, "%a")
             ))
         {
             // Not all substitution characters are in place - warning
@@ -647,8 +714,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 g_strdup_printf(_("The following "
                                 "placeholders must be in the '%s' extraction"
                                 " command before saving:\n\n%%%%a: "
-                                "Archive to extract\n%%%%f: Extraction "
-                                "destination"),
+                                "Archive to extract"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extract );
             return;
@@ -2027,7 +2093,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     g_free( task_name );
     task->task->exec_browser = file_browser;
 
-    // Using terminals for certain formats
+    // Using terminals for certain handlers
     if (run_in_terminal)
     {
         task->task->exec_terminal = TRUE;
@@ -2053,6 +2119,360 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     ptk_file_task_run( task );
 }
 
+void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
+                                            const char* cwd, const char* dest_dir )
+{
+    // Note that it seems this function is also used to list the contents
+    // of archives!
+
+    GtkWidget* dlg;
+    GtkWidget* dlgparent = NULL;
+    char* choose_dir = NULL;
+    gboolean create_parent, in_term, keep_term, write_access;
+    gboolean list_contents = FALSE;
+    VFSFileInfo* file;
+    VFSMimeType* mime;
+    const char* dest, *type;
+    GList* l;
+    char* dest_quote, *full_path, *full_quote, *mkparent, *perm, *prompt;
+    char* cmd, *str;
+    int i, n, j;
+    struct stat64 statbuf;
+
+    // Making sure files to act on have been passed
+    if( !files )
+        return;
+
+    // Determining parent of dialog
+    if ( file_browser )
+        dlgparent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+    //else if ( desktop )
+    //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
+
+    // Checking if destination directory hasn't been specified
+    if( !dest_dir )
+    {
+        // It hasn't - generating dialog to ask user. Only dealing with
+        // user-writable contents if the user isn't root
+        dlg = gtk_file_chooser_dialog_new( _("Extract To"),
+                                           GTK_WINDOW( dlgparent ),
+                                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+
+        GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
+        GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
+                                            _("Cre_ate subfolder(s)") );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
+                                              xset_get_b( "arc_dlg" ) );
+        gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
+        gtk_widget_show_all( hbox );
+        gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
+
+        // Setting dialog to current working directory
+        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
+
+        // Fetching saved dialog dimensions and applying
+        int width = xset_get_int( "arc_dlg", "x" );
+        int height = xset_get_int( "arc_dlg", "y" );
+        if ( width && height )
+        {
+            // filechooser won't honor default size or size request ?
+            gtk_widget_show_all( dlg );
+            gtk_window_set_position( GTK_WINDOW( dlg ),
+                                     GTK_WIN_POS_CENTER_ALWAYS );
+            gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+            while( gtk_events_pending() )
+                gtk_main_iteration();
+            gtk_window_set_position( GTK_WINDOW( dlg ),
+                                     GTK_WIN_POS_CENTER );
+        }
+
+        // Displaying dialog
+        if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
+        {
+            // User OK'd - saving dialog dimensions
+            GtkAllocation allocation;
+            gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+            width = allocation.width;
+            height = allocation.height;
+            if ( width && height )
+            {
+                str = g_strdup_printf( "%d", width );
+                xset_set( "arc_dlg", "x", str );
+                g_free( str );
+                str = g_strdup_printf( "%d", height );
+                xset_set( "arc_dlg", "y", str );
+                g_free( str );
+            }
+
+            // Fetching user-specified settings and saving
+            choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+            create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
+            xset_set_b( "arc_dlg", create_parent );
+        }
+
+        // Destroying dialog
+        gtk_widget_destroy( dlg );
+
+        // Exiting if user didnt choose an extraction directory
+        if( !choose_dir )
+            return;
+
+        // This DOES NOT need to be freed by me despite the documentation
+        // saying so! Otherwise enjoy ur double free
+        dest = choose_dir;
+    }
+    else
+    {
+        // Extraction directory specified - loading defaults
+        create_parent = xset_get_b( "arc_def_parent" );
+
+        // Detecting whether this function call is actually to list the
+        // contents of the archive or not...
+        list_contents = !strcmp( dest_dir, "////LIST" );
+
+        dest = dest_dir;
+    }
+
+    // Fetching available archive handlers and splitting
+    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+    XSet* handler_xset;
+
+    // Setting desired archive operation
+    int archive_operation = (list_contents) ? ARC_LIST : ARC_EXTRACT;
+
+    // Looping for all files to attempt to list/extract
+    for ( l = files; l; l = l->next )
+    {
+        gboolean format_supported = FALSE;
+
+        // Fetching file details
+        file = (VFSFileInfo*)l->data;
+        mime = vfs_file_info_get_mime_type( file );
+        type = vfs_mime_type_get_type( mime );
+
+        // Looping for handlers (NULL-terminated list)
+        for (i = 0; archive_handlers[i] != NULL; ++i)
+        {
+            // Fetching handler
+            handler_xset = xset_get( archive_handlers[i] );
+
+            // Checking to see if handler is enabled and can cope with
+            // extraction/listing
+            if(archive_handler_is_format_supported( handler_xset, type,
+                                                    archive_operation ))
+            {
+                // It can - setting flag and leaving loop
+                format_supported = TRUE;
+                break;
+            }
+        }
+
+        // Continuing to next file if a handler hasnt been found
+        if (!format_supported)
+            continue;
+
+        // Handler found - fetching the 'run in terminal' preference, if
+        // the operation is listing then the terminal should be kept
+        // open, otherwise the user should explicitly keep the terminal
+        // running via the handler's command
+        in_term = archive_handler_run_in_term( handler_xset,
+                                               archive_operation );
+        keep_term = list_contents;
+
+        // Generating prompt to keep terminal open after error if
+        // appropriate
+        if (in_term)
+            prompt = g_strdup_printf( "; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security */
+                    "[ Finished With Errors ]  Press Enter to close" );
+        else
+            prompt = g_strdup_printf( "" );
+
+        // Determining file paths
+        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
+                                      NULL );
+        full_quote = bash_quote( full_path );
+        dest_quote = bash_quote( dest );
+
+        // Checking if the operation is to list an archive(s)
+        if ( list_contents )
+        {
+            // It is - generating appropriate command, dealing with 'run
+            // in terminal'
+            cmd = replace_string( (*handler_xset->context == '+') ?
+                    handler_xset->context + 1 : handler_xset->context,
+                    "%a", full_quote, FALSE );
+        }
+        else
+        {
+            // An archive is to be extracted
+            // Obtaining filename minus the archive extension - this is
+            // needed if a parent directory must be created, and if the
+            // extraction target is a file without the handler extension
+            // filename is g_strdup'd to get rid of the const
+            gchar* filename = g_strdup( vfs_file_info_get_name( file ) );
+            gchar* filename_no_ext = NULL;
+
+            // Looping for all extensions registered with the current
+            // archive handler (NULL-terminated list)
+            gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
+            for (i = 0; extensions[i] != NULL; ++i)
+            {
+                // Debug code
+                //g_message( "extensions[i]: %s", extensions[i]);
+
+                // Checking if the current extension is being used
+                if (g_str_has_suffix( filename, extensions[i] ))
+                {
+                    // It is - determining filename without extension
+                    // and breaking
+                    n = strlen( filename ) - strlen( extensions[i] );
+                    filename[n] = '\0';
+                    filename_no_ext = g_strdup( filename );
+                    filename[n] = '.';
+                    break;
+                }
+            }
+
+            // Clearing up
+            g_strfreev( extensions );
+
+            // Making sure extension has been found, moving to next file
+            // otherwise
+            if (filename_no_ext == NULL)
+            {
+                g_warning( "Unable to process '%s' - does not use an "
+                           "extension registered with the '%s' archive "
+                           "handler!", filename, handler_xset->menu_label);
+
+                // Cleaning up
+                g_free( filename );
+                g_free( dest_quote );
+                g_free( full_quote );
+                g_free( full_path );
+                g_free( prompt );
+                continue;
+            }
+
+            // Cleaning up
+            g_free( filename );
+
+            // Dealing with creation of parent directory if needed
+            if(create_parent)
+            {
+                // Determining full path of parent directory to make
+                gchar* parent_path = g_build_filename( dest,
+                                                      filename_no_ext,
+                                                      NULL );
+                gchar* parent_orig = g_strdup( parent_path );
+                n = 1;
+
+                // Looping to find a path that doesnt exist
+                while ( lstat64( parent_path, &statbuf ) == 0 )
+                {
+                    g_free( parent_path );
+                    parent_path = g_strdup_printf( "%s-%s%d",
+                                                   parent_orig,
+                                                   _("copy"), ++n );
+                }
+                g_free( parent_orig );
+
+                // Generating shell command to make directory
+                char* parent_quote = bash_quote( parent_path );
+                mkparent = g_strdup_printf( "mkdir -p %s && cd %s && ",
+                                            parent_quote, parent_quote );
+
+                // Cleaning up
+                g_free( parent_path );
+                g_free( parent_quote );
+            }
+            else
+            {
+                // Parent directory doesn't need to be created. Making
+                mkparent = g_strdup( "" );
+            }
+
+            // Determining extraction command - dealing with 'run in
+            // terminal and placeholders
+            gchar* extract_cmd = replace_string(
+                (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
+                "%a", full_quote, FALSE );
+
+            // Debug code
+            //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
+
+            // Singular file extraction target (e.g. stdout-redirected
+            // gzip)
+            if (g_strstr_len( extract_cmd, -1, "%f" ))
+            {
+                // Creating extraction target, taking into account whether
+                // a parent directory has been created or not
+                gchar* extract_target = g_build_filename( dest,
+                                                          filename_no_ext,
+                                (create_parent) ? filename_no_ext : NULL,
+                                                          NULL );
+                gchar* extract_target_quote = bash_quote( extract_target );
+                gchar* old_extract_cmd = extract_cmd;
+                extract_cmd = replace_string( extract_cmd, "%f",
+                                              extract_target_quote, FALSE );
+                g_free( extract_target_quote );
+                g_free( old_extract_cmd );
+                g_free( extract_target );
+            }
+
+            // Finally constructing command to run
+            cmd = g_strdup_printf( "cd %s && %s%s %s", dest_quote,
+                                   mkparent, extract_cmd, prompt );
+
+            // Cleaning up
+            g_free( extract_cmd );
+            g_free( filename_no_ext );
+            g_free( mkparent );
+            g_free( prompt );
+        }
+
+        // Cleaning up
+        g_free( dest_quote );
+        g_free( full_quote );
+        g_free( full_path );
+
+        // Creating task
+        char* task_name = g_strdup_printf( _("Extract %s"),
+                                    vfs_file_info_get_name( file ) );
+        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
+                        file_browser ? file_browser->task_view : NULL );
+        g_free( task_name );
+
+        // Configuring task
+        task->task->exec_command = cmd;
+        task->task->exec_browser = file_browser;
+        task->task->exec_sync = !in_term;
+        task->task->exec_show_error = TRUE;
+        task->task->exec_show_output = in_term;
+        task->task->exec_terminal = in_term;
+        task->task->exec_keep_terminal = keep_term;
+        task->task->exec_export = FALSE;
+
+        // Setting custom icon
+        XSet* set = xset_get( "arc_extract" );
+        if ( set->icon )
+            task->task->exec_icon = g_strdup( set->icon );
+
+        // Running task
+        ptk_file_task_run( task );
+    }
+
+    // Clearing up archive_handlers
+    g_strfreev( archive_handlers );
+
+    // Cleaning up
+    if ( choose_dir )
+        g_free( choose_dir );
+}
+
+/*
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                             const char* cwd, const char* dest_dir )
 {
@@ -2272,7 +2692,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 // zip 7z rar in terminal for password & output
                 in_term = TRUE;  // run in terminal
                 keep_term = FALSE;
-                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security*/
+                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security*//*
                             "[ Finished With Errors ]  Press Enter to close" );
             }
             else
@@ -2325,6 +2745,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     if ( choose_dir )
         g_free( choose_dir );
 }
+*/
 
 /*
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
@@ -2381,7 +2802,8 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
         XSet* handler_xset = xset_get( archive_handlers[i] );
 
         // Checking to see if handler can cope with format and operation
-        if(archive_handler_is_format_supported( handler_xset, type, extract ))
+        if(archive_handler_is_format_supported( handler_xset, type,
+                                                ARC_EXTRACT ))
         {
             // It can - flagging and breaking
             handler_found = TRUE;
