@@ -1551,7 +1551,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     }
 
     // Clearing up dialog
-    // TODO: Does this handle strdup'd strings saved as g_object data?
     gtk_widget_destroy( dlg );
 }
 
