@@ -44,6 +44,7 @@
 #include "ptk-path-entry.h"
 
 #include "settings.h"
+#include "item-prop.h"
 #include "find-files.h"
 
 #ifdef HAVE_STATVFS
@@ -438,7 +439,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
     else
     {
         // get url
-        if ( !xset_text_dialog( GTK_WIDGET( main_window ), _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-copy" ) || !path || path[0] == '\0' )
+        if ( !xset_text_dialog( GTK_WIDGET( main_window ), _("Enter Plugin URL"), NULL, FALSE, _("Enter SpaceFM Plugin URL:\n\n(wget will be used to download the plugin file)"), NULL, NULL, &path, NULL, FALSE, job == 0 ? "#plugins-install" : "#plugins-import" ) || !path || path[0] == '\0' )
             return;
         type = 1;  //url
     }
@@ -524,7 +525,7 @@ void on_plugin_install( GtkMenuItem* item, FMMainWindow* main_window, XSet* set2
         }
     }
 
-    install_plugin_file( main_window, path, plug_dir, type, job );
+    install_plugin_file( main_window, path, plug_dir, type, job, NULL );
     g_free( path );
     g_free( plug_dir );
 }
@@ -2870,7 +2871,7 @@ void on_homepage_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 
 void on_news_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
-    xset_open_url( GTK_WIDGET( main_window ), "http://ignorantguru.github.com/spacefm/news.html" );
+    xset_open_url( GTK_WIDGET( main_window ), "http://ignorantguru.github.io/spacefm/news.html" );
 }
 
 void on_getplug_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
@@ -7312,7 +7313,8 @@ _invalid_get:
         if ( context && context->valid )
         {
             if ( !xset_get_b( "context_dlg" ) && 
-                        xset_context_test( set->context, FALSE ) != CONTEXT_SHOW )
+                        xset_context_test( context, set->context, FALSE ) != 
+                                                                CONTEXT_SHOW )
             {
                 *reply = g_strdup_printf( _("spacefm: menu '%s' context hidden or disabled\n"),
                                                                         argv[i] );

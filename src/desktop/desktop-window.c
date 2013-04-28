@@ -37,6 +37,7 @@
 #include "ptk-utils.h"
 
 #include "settings.h"
+#include "item-prop.h"
 #include "main-window.h"
 #include "pref-dialog.h"
 #include "ptk-file-browser.h"
@@ -1122,12 +1123,16 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
     }
 }
 
-static void open_clicked_item( DesktopItem* clicked_item )
+static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
     char* path = NULL;
 
     if ( !clicked_item->fi )
         return;
+    /* this won't work yet because desktop context_fill doesn't do selected 
+     * else if ( xset_opener( self, NULL, 1 ) )
+        return;
+    */
     else if ( vfs_file_info_is_dir( clicked_item->fi ) &&
                                                 !app_settings.desk_open_mime )
     {
@@ -1370,7 +1375,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     {
         if( clicked_item && evt->button == 1)   /* left double click */
         {
-            open_clicked_item( clicked_item );
+            open_clicked_item( self, clicked_item );
             goto out;
         }
     }
@@ -1412,7 +1417,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
         {
             if ( clicked_item )
             {
-                open_clicked_item( clicked_item );
+                open_clicked_item( self, clicked_item );
                 return TRUE;
             }
         }
@@ -2415,7 +2420,7 @@ _key_found:
         case GDK_KEY_Return:
         case GDK_KEY_space:
             if ( desktop->focus )
-                open_clicked_item( desktop->focus );
+                open_clicked_item( desktop, desktop->focus );
             return TRUE;
         case GDK_KEY_Down:
         case GDK_KEY_Up:
@@ -3930,7 +3935,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
     app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
-                                                 mime_type, TRUE, FALSE );
+                                        mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
         char* path = vfs_mime_type_locate_desktop_file( NULL, app );

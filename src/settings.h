@@ -115,6 +115,13 @@ enum {
     XSET_B_FALSE
 };
 
+enum {
+    XSET_CMD_LINE,
+    XSET_CMD_SCRIPT,
+    XSET_CMD_APP,
+    XSET_CMD_BOOKMARK
+};
+
 enum {   // do not renumber - these values are saved in session files
     XSET_MENU_NORMAL,
     XSET_MENU_CHECK,
@@ -153,9 +160,13 @@ enum {
     XSET_JOB_POP,
     XSET_JOB_ERR,
     XSET_JOB_OUT,
+    XSET_JOB_BOOKMARK,
+    XSET_JOB_APP,
     XSET_JOB_COMMAND,
     XSET_JOB_SUBMENU,
     XSET_JOB_SEP,
+    XSET_JOB_IMPORT_FILE,
+    XSET_JOB_IMPORT_URL,
     XSET_JOB_CUT,
     XSET_JOB_COPY,
     XSET_JOB_PASTE,
@@ -167,7 +178,8 @@ enum {
     XSET_JOB_MESSAGE,
     XSET_JOB_SHOW,
     XSET_JOB_COPYNAME,
-    XSET_JOB_CONTEXT,
+    XSET_JOB_PROP,
+    XSET_JOB_PROP_CMD,
     XSET_JOB_IGNORE_CONTEXT,
     XSET_JOB_SCROLL,
     XSET_JOB_EXPORT,
@@ -175,7 +187,7 @@ enum {
     XSET_JOB_BROWSE_DATA,
     XSET_JOB_BROWSE_PLUGIN,
     XSET_JOB_HELP,
-    XSET_JOB_HELP_COMMAND,
+    XSET_JOB_HELP_NEW,
     XSET_JOB_HELP_BROWSE,
     XSET_JOB_HELP_STYLE
 };
@@ -215,17 +227,18 @@ typedef struct
     char* parent;
     char* child;
     char* line;             // or help if lock
-    // x = line/script/custom
+    // x = line/script/app/bookmark
     // y = user
     // z = custom executable
     char task;
     char task_pop;
     char task_err;
     char task_out;
-    char in_terminal;
-    char keep_terminal;
+    char in_terminal;       // or save menu_label if lock
+    char keep_terminal;     // or save icon if lock
     char scroll_lock;
-    
+    char opener;
+
     // Plugin (not saved at all)
     gboolean plugin;
     gboolean plugin_top;
@@ -295,55 +308,6 @@ static const char* gsu_commands[] = // order and contents must match prefdlg.ui
     "/usr/bin/sudo"
 };
 
-enum {
-    CONTEXT_SHOW,
-    CONTEXT_ENABLE,
-    CONTEXT_HIDE,
-    CONTEXT_DISABLE
-};
-
-enum {
-    CONTEXT_MIME,
-    CONTEXT_NAME,
-    CONTEXT_DIR,
-    CONTEXT_WRITE_ACCESS,
-    CONTEXT_IS_TEXT,
-    CONTEXT_IS_DIR,
-    CONTEXT_IS_LINK,
-    CONTEXT_IS_ROOT,
-    CONTEXT_MUL_SEL,
-    CONTEXT_CLIP_FILES,
-    CONTEXT_CLIP_TEXT,
-    CONTEXT_PANEL,
-    CONTEXT_PANEL_COUNT,
-    CONTEXT_TAB,
-    CONTEXT_TAB_COUNT,
-    CONTEXT_BOOKMARK,
-    CONTEXT_DEVICE,
-    CONTEXT_DEVICE_MOUNT_POINT,
-    CONTEXT_DEVICE_LABEL,
-    CONTEXT_DEVICE_FSTYPE,
-    CONTEXT_DEVICE_UDI,
-    CONTEXT_DEVICE_PROP,
-    CONTEXT_TASK_COUNT,
-    CONTEXT_TASK_DIR,
-    CONTEXT_TASK_TYPE,
-    CONTEXT_TASK_NAME,
-    CONTEXT_PANEL1_DIR,
-    CONTEXT_PANEL2_DIR,
-    CONTEXT_PANEL3_DIR,
-    CONTEXT_PANEL4_DIR,
-    CONTEXT_PANEL1_SEL,
-    CONTEXT_PANEL2_SEL,
-    CONTEXT_PANEL3_SEL,
-    CONTEXT_PANEL4_SEL,
-    CONTEXT_PANEL1_DEVICE,
-    CONTEXT_PANEL2_DEVICE,
-    CONTEXT_PANEL3_DEVICE,
-    CONTEXT_PANEL4_DEVICE,
-    CONTEXT_END
-};
-
 typedef struct
 {
     gboolean valid;
@@ -387,6 +351,10 @@ gboolean xset_get_b_set( XSet* set );
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
+char* xset_custom_get_script( XSet* set, gboolean create );
+gboolean have_rw_access( const char* path );
+char* xset_get_keyname( XSet* set, int key_val, int key_mod );
+void xset_set_key( GtkWidget* parent, XSet* set );
 
 XSet* xset_set( const char* name, const char* var, const char* value );
 XSet* xset_set_set( XSet* set, const char* var, const char* value );
@@ -402,7 +370,6 @@ XSet* xset_set_ob1( XSet* set, const char* ob1, gpointer ob1_data );
 XSet* xset_set_ob2( XSet* set, const char* ob2, gpointer ob2_data );
 XSet* xset_is( const char* name );
 XSet* xset_find_menu( const char* menu_name );
-int xset_context_test( char* rules, gboolean def_disable );
 
 void xset_menu_cb( GtkWidget* item, XSet* set );
 gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
@@ -430,12 +397,14 @@ char* multi_input_get_text( GtkWidget* input );
 XSet* xset_custom_new();
 gboolean write_root_settings( FILE* file, const char* path );
 GList* xset_get_plugins( gboolean included );
-void install_plugin_file( gpointer main_win, const char* path, const char* plug_dir,
-                                                            int type, int job );
+void install_plugin_file( gpointer main_win, const char* path,
+                    const char* plug_dir, int type, int job, XSet* insert_set );
 XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
+gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            char job );
 
 
 

@@ -92,8 +92,7 @@ static void on_dir_file_listed( VFSDir* dir,
                                              gboolean is_cancelled,
                                              PtkFileBrowser* file_browser );
 
-void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser,
-                                                    char* app_desktop );
+void ptk_file_browser_open_selected_files( PtkFileBrowser* file_browser );
 
 static void
 ptk_file_browser_cut_or_copy( PtkFileBrowser* file_browser,
@@ -761,7 +760,8 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     enable_toolbar( file_browser );
 }
 
-void ptk_file_browser_select_file( PtkFileBrowser* file_browser, char* path )
+void ptk_file_browser_select_file( PtkFileBrowser* file_browser,
+                                                            const char* path )
 {
     GtkTreeIter it;
     GtkTreePath* tree_path;
@@ -3347,7 +3347,7 @@ on_folder_view_item_activated ( ExoIconView *iconview,
                                 GtkTreePath *path,
                                 PtkFileBrowser* file_browser )
 {
-    ptk_file_browser_open_selected_files_with_app( file_browser, NULL );
+    ptk_file_browser_open_selected_files( file_browser );
 }
 
 void
@@ -3357,7 +3357,7 @@ on_folder_view_row_activated ( GtkTreeView *tree_view,
                                PtkFileBrowser* file_browser )
 {
     //file_browser->button_press = FALSE;
-    ptk_file_browser_open_selected_files_with_app( file_browser, NULL );
+    ptk_file_browser_open_selected_files( file_browser );
 }
 
 gboolean on_folder_view_item_sel_change_idle( PtkFileBrowser* file_browser )
@@ -5303,14 +5303,8 @@ GList* ptk_file_browser_get_selected_files( PtkFileBrowser* file_browser )
     return file_list;
 }
 
-void ptk_file_browser_open_selected_files( PtkFileBrowser* file_browser )
-{
-    ptk_file_browser_open_selected_files_with_app( file_browser, NULL );
-}
-
 void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser,
                                                     char* app_desktop )
-
 {
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
@@ -5395,6 +5389,13 @@ _done:
     if ( mime_type )
         vfs_mime_type_unref( mime_type );
     vfs_file_info_list_free( sel_files );
+}
+
+void ptk_file_browser_open_selected_files( PtkFileBrowser* file_browser )
+{
+    if ( xset_opener( NULL, file_browser, 1 ) )
+        return;
+    ptk_file_browser_open_selected_files_with_app( file_browser, NULL );
 }
 
 /*

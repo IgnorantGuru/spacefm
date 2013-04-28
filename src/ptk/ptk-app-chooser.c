@@ -141,9 +141,17 @@ void on_view_row_activated ( GtkTreeView *tree_view,
 }
 
 GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
-                                                        gboolean no_default,
-                                                        gboolean dir_default )
+                                     gboolean focus_all_apps,
+                                     gboolean show_command,
+                                     gboolean show_default,
+                                     gboolean dir_default )
 {
+    /*
+    focus_all_apps      Focus All Apps tab by default
+    show_command        Show custom Command entry
+    show_default        Show 'Set as default' checkbox
+    dir_default         Show 'Set as default' also for type dir
+    */
     GtkBuilder* builder = _gtk_builder_new_from_file( PACKAGE_UI_DIR "/appchooserdlg.ui", NULL );
     GtkWidget * dlg = (GtkWidget*)gtk_builder_get_object( builder, "dlg" );
     GtkWidget* file_type = (GtkWidget*)gtk_builder_get_object( builder, "file_type" );
@@ -174,17 +182,29 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
         g_free( mime_desc );
     }
     /* Don't set default handler for directories and files with unknown type */
-    if ( no_default ||
+    if ( !show_default ||
        /*  0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_UNKNOWN ) || */
          ( 0 == strcmp( vfs_mime_type_get_type( mime_type ), XDG_MIME_TYPE_DIRECTORY ) &&
            !dir_default ) )
     {
-        gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder, "set_default" ) );
+        gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder,
+                                                            "set_default" ) );
     }
-
-    view = GTK_TREE_VIEW( (GtkWidget*)gtk_builder_get_object( builder, "recommended_apps" ) );
-    entry = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder, "cmdline" ) );
-    notebook = GTK_NOTEBOOK( (GtkWidget*)gtk_builder_get_object( builder, "notebook" ) );
+    if ( !show_command )
+    {
+        gtk_widget_hide( (GtkWidget*)gtk_builder_get_object( builder,
+                                                            "hbox_command" ) );
+        gtk_label_set_text( GTK_LABEL( gtk_builder_get_object( builder,
+                                                        "label_command" ) ),
+                            _("Please choose an application:") );
+    }
+    
+    view = GTK_TREE_VIEW( (GtkWidget*)gtk_builder_get_object(
+                                            builder, "recommended_apps" ) );
+    notebook = GTK_NOTEBOOK( (GtkWidget*)gtk_builder_get_object( builder,
+                                            "notebook" ) );
+    entry = GTK_ENTRY( (GtkWidget*)gtk_builder_get_object( builder,
+                                            "cmdline" ) );
 
     model = create_model_from_mime_type( mime_type );
     gtk_tree_view_set_model( view, model );
@@ -206,7 +226,7 @@ GtkWidget* app_chooser_dialog_new( GtkWindow* parent, VFSMimeType* mime_type,
 
     gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
     
-    if ( no_default )
+    if ( focus_all_apps )
     {
         // select All Apps tab
         gtk_widget_show( dlg );
@@ -412,7 +432,7 @@ static void on_dlg_response( GtkDialog* dlg, int id, gpointer user_data )
         task = (VFSAsyncTask*)g_object_get_data( G_OBJECT(dlg), "task" );
         if( task )
         {
-printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
+//printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
             // see note in vfs-async-task.c: vfs_async_task_real_cancel()
             GDK_THREADS_LEAVE(); 
             vfs_async_task_cancel( task );
@@ -426,16 +446,25 @@ printf("spacefm: app-chooser.c -> vfs_async_task_cancel\n");
 
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
                                      VFSMimeType* mime_type,
-                                     gboolean no_default,
+                                     gboolean focus_all_apps,
+                                     gboolean show_command,
+                                     gboolean show_default,
                                      gboolean dir_default )
 {
-    // if no_default don't show 'set as default' checkbox
-    // if dir_default, show 'set as default' checkbox for directory type
+    /*
+    focus_all_apps      Focus All Apps tab by default
+    show_command        Show custom Command entry
+    show_default        Show 'Set as default' checkbox
+    dir_default         Show 'Set as default' also for type dir
+    */
     GtkWidget * dlg;
     gchar* app = NULL;
     gchar* custom = NULL;
 
-    dlg = app_chooser_dialog_new( parent, mime_type, no_default, dir_default );
+    dlg = app_chooser_dialog_new( parent, mime_type, focus_all_apps,
+                                                     show_command,
+                                                     show_default,
+                                                     dir_default );
 
     g_signal_connect( dlg, "response",  G_CALLBACK(on_dlg_response), NULL );
 

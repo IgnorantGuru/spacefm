@@ -321,7 +321,12 @@ gboolean ptk_file_task_add_main( PtkFileTask* ptask )
     }
 
     if ( ptask->task->exec_popup || xset_get_b( "task_pop_all" ) )
+    {
+        // keep dlg if Popup Task is explicitly checked, otherwise close if no
+        // error
+        ptask->keep_dlg = ptask->keep_dlg || ptask->task->exec_popup;
         ptk_file_task_progress_open( ptask );
+    }
 
     if ( ptask->task->state_pause != VFS_FILE_TASK_RUNNING && !ptask->pause_change )
         ptask->pause_change = ptask->pause_change_view = TRUE;
@@ -1696,12 +1701,16 @@ void ptk_file_task_update( PtkFileTask* ptask )
         g_free( text );
         ptask->log_appended = TRUE;
 
-        if ( !ptask->progress_dlg && task->type == VFS_FILE_TASK_EXEC 
-                                                    && task->exec_show_output )
+        if ( task->type == VFS_FILE_TASK_EXEC && task->exec_show_output )
         {
-            task->exec_show_output = FALSE; // disable to open every time output occurs
-            ptask->keep_dlg = TRUE;
-            ptk_file_task_progress_open( ptask );
+            if ( !ptask->keep_dlg )
+                ptask->keep_dlg = TRUE;
+            if ( !ptask->progress_dlg )
+            {
+                // disable this line to open every time output occurs
+                task->exec_show_output = FALSE;
+                ptk_file_task_progress_open( ptask );
+            }
         }
     }
 

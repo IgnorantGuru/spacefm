@@ -116,7 +116,8 @@ spacefm_SOURCES = \
     pref-dialog.c pref-dialog.h \
     find-files.c find-files.h \
     go-dialog.c go-dialog.h \
-    cust-dialog.c cust-dialog.h
+    cust-dialog.c cust-dialog.h \
+    item-prop.c item-prop.h
 
 spacefm_CFLAGS = \
     @GTK_CFLAGS@ \

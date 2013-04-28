@@ -34,6 +34,7 @@
 #include "ptk-clipboard.h"
 #include "ptk-app-chooser.h"
 #include "settings.h"  //MOD
+#include "item-prop.h"  //MOD
 #include "main-window.h"
 #include "ptk-location-view.h"
 #include "ptk-file-list.h"  //sfm for sort extra
@@ -1647,14 +1648,14 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
     else
         parent_win = GTK_WIDGET( data->desktop );
     app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( parent_win ),
-                                            mime_type, FALSE, TRUE );
+                                        mime_type, FALSE, TRUE, TRUE, FALSE );
     if ( app )
     {
         GList* sel_files = data->sel_files;
         if( ! sel_files )
             sel_files = g_list_prepend( sel_files, data->info );
         ptk_open_files_with_app( data->cwd, sel_files,
-                                 app, data->browser, FALSE, FALSE ); //MOD
+                                app, data->browser, FALSE, FALSE );
         if( sel_files != data->sel_files )
             g_list_free( sel_files );
         g_free( app );
@@ -1664,6 +1665,9 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
+    if ( xset_opener( NULL, data->browser, 1 ) )
+        return;
+
     GList* sel_files;
 
     sel_files = data->sel_files;
@@ -1807,7 +1811,7 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                                 GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
                                                 GTK_WIDGET( data->browser ) :
                                                 GTK_WIDGET( data->desktop ) ) ),
-                                                mime_type, FALSE, TRUE );
+                                mime_type, FALSE, TRUE, TRUE, TRUE );
         // ptk_choose_app_for_mime_type returns either a bare command that 
         // was already set as default, or a (custom or shared) desktop file
         if ( path && g_str_has_suffix( path, ".desktop" ) && !strchr( path, '/' )

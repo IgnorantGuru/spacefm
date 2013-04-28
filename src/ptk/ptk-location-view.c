@@ -374,6 +374,9 @@ void on_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
     if ( !vol )
         return;
 
+    if ( xset_opener( NULL, file_browser, 2 ) )
+        return;
+    
 #ifndef HAVE_HAL
     if ( !vfs_volume_is_mounted( vol ) && vol->device_type == DEVICE_TYPE_BLOCK )
 #else
@@ -1083,6 +1086,7 @@ static void on_mount_root( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( !options )
         options = g_strdup( "" );
     char* msg = g_strdup_printf( _("Enter mount command:\n\nUse:\n\t%%%%v\tdevice file ( %s )\n\t%%%%o\tvolume-specific mount options\n\t\t( %s )\n\nNote: fstab overrides some options\n\nEDIT WITH CARE   This command is run as root"), vol->device_file, options );
+
     if ( !set->s )
         set->s = g_strdup( set->z );
     char* old_set_s = g_strdup( set->s );
@@ -3223,6 +3227,11 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     {
         // left-click - mount & open
 #ifndef HAVE_HAL
+        // device opener?  note that context may be based on devices list sel
+        // won't work for desktop because no DesktopWindow currently available
+        if ( file_browser && xset_opener( NULL, file_browser, 2 ) )
+            return;
+
         if ( file_browser )
             on_open_tab( NULL, vol, view );
         else
@@ -3405,6 +3414,18 @@ gboolean on_dev_menu_button_press( GtkWidget* item, GdkEventButton* event,
             // https://github.com/IgnorantGuru/spacefm/issues/228
             if ( menu )
                 gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+
+/*
+            GtkWidget* view = (GtkWidget*)g_object_get_data( G_OBJECT(menu), "parent" );
+            PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                            "file_browser" );
+printf("xxxxxxxxxxxxxxxxxxxx %p\n", file_browser);
+            if ( file_browser && xset_opener( NULL, file_browser, 2 ) )
+            {
+                printf("    TRUE\n");
+                return TRUE;
+            }
+*/
             gtk_menu_item_activate( GTK_MENU_ITEM( item ) );
             return TRUE;
         }

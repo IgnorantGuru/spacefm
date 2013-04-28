@@ -104,7 +104,7 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	main.c pcmanfm.h main-window.c main-window.h settings.c \
 	settings.h pref-dialog.c pref-dialog.h find-files.c \
 	find-files.h go-dialog.c go-dialog.h cust-dialog.c \
-	cust-dialog.h
+	cust-dialog.h item-prop.c item-prop.h
 am__objects_1 = spacefm-mime-type.$(OBJEXT) \
 	spacefm-mime-action.$(OBJEXT) spacefm-mime-cache.$(OBJEXT)
 am__objects_2 =
@@ -154,7 +154,7 @@ am_spacefm_OBJECTS = $(am__objects_1) $(am__objects_2) \
 	spacefm-main.$(OBJEXT) spacefm-main-window.$(OBJEXT) \
 	spacefm-settings.$(OBJEXT) spacefm-pref-dialog.$(OBJEXT) \
 	spacefm-find-files.$(OBJEXT) spacefm-go-dialog.$(OBJEXT) \
-	spacefm-cust-dialog.$(OBJEXT)
+	spacefm-cust-dialog.$(OBJEXT) spacefm-item-prop.$(OBJEXT)
 spacefm_OBJECTS = $(am_spacefm_OBJECTS)
 am__DEPENDENCIES_1 =
 spacefm_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -485,7 +485,8 @@ spacefm_SOURCES = \
     pref-dialog.c pref-dialog.h \
     find-files.c find-files.h \
     go-dialog.c go-dialog.h \
-    cust-dialog.c cust-dialog.h
+    cust-dialog.c cust-dialog.h \
+    item-prop.c item-prop.h
 
 spacefm_CFLAGS = \
     @GTK_CFLAGS@ \
@@ -654,6 +655,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-find-files.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-glib-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-go-dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-item-prop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-main-window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-md5.Po@am__quote@
@@ -1430,6 +1432,20 @@ spacefm-cust-dialog.obj: cust-dialog.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cust-dialog.c' object='spacefm-cust-dialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-cust-dialog.obj `if test -f 'cust-dialog.c'; then $(CYGPATH_W) 'cust-dialog.c'; else $(CYGPATH_W) '$(srcdir)/cust-dialog.c'; fi`
+
+spacefm-item-prop.o: item-prop.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-item-prop.o -MD -MP -MF $(DEPDIR)/spacefm-item-prop.Tpo -c -o spacefm-item-prop.o `test -f 'item-prop.c' || echo '$(srcdir)/'`item-prop.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-item-prop.Tpo $(DEPDIR)/spacefm-item-prop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='item-prop.c' object='spacefm-item-prop.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-item-prop.o `test -f 'item-prop.c' || echo '$(srcdir)/'`item-prop.c
+
+spacefm-item-prop.obj: item-prop.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-item-prop.obj -MD -MP -MF $(DEPDIR)/spacefm-item-prop.Tpo -c -o spacefm-item-prop.obj `if test -f 'item-prop.c'; then $(CYGPATH_W) 'item-prop.c'; else $(CYGPATH_W) '$(srcdir)/item-prop.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/spacefm-item-prop.Tpo $(DEPDIR)/spacefm-item-prop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='item-prop.c' object='spacefm-item-prop.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-item-prop.obj `if test -f 'item-prop.c'; then $(CYGPATH_W) 'item-prop.c'; else $(CYGPATH_W) '$(srcdir)/item-prop.c'; fi`
 
 xml_purge-xml-purge.o: xml-purge.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(xml_purge_CFLAGS) $(CFLAGS) -MT xml_purge-xml-purge.o -MD -MP -MF $(DEPDIR)/xml_purge-xml-purge.Tpo -c -o xml_purge-xml-purge.o `test -f 'xml-purge.c' || echo '$(srcdir)/'`xml-purge.c

@@ -39,3 +39,4 @@ src/vfs/vfs-volume-nohal.c
 src/desktop/desktop.c
 src/desktop/desktop-window.c
 src/find-files.c
+src/item-prop.c
