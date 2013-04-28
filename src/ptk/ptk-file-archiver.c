@@ -565,7 +565,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                             -1 );
 
         // Updating available archive handlers list
-        gchar* new_handlers_list = g_strdup_printf ( "%s %s",
+        gchar* new_handlers_list = g_strdup_printf( "%s %s",
                                                 xset_get_s( "arc_conf" ),
                                                 new_xset_name );
         xset_set( "arc_conf", "s", new_handlers_list );
@@ -592,7 +592,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         // be modified or stored
         // Note that archive creation also allows for a command to be
         // saved
-        if (g_strcmp0(handler_name, "") <= 0)
+        if (g_strcmp0( handler_name, "" ) <= 0)
         {
             // Handler name not set - warning user and exiting. Note
             // that the created dialog does not have an icon set
@@ -603,7 +603,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_name );
             return;
         }
-        if (g_strcmp0(handler_mime, "") <= 0)
+        if (g_strcmp0( handler_mime, "" ) <= 0)
         {
             // Handler MIME not set - warning user and exiting. Note
             // that the created dialog does not have an icon set
@@ -616,7 +616,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_mime );
             return;
         }
-        if (g_strstr_len(handler_mime, -1, " "))
+        if (g_strstr_len( handler_mime, -1, " " ))
         {
             // Handler MIME contains a space - warning user and exiting.
             // Note that the created dialog does not have an icon set
@@ -629,7 +629,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_mime );
             return;
         }
-        if (g_strcmp0(handler_extension, "") <= 0 || *handler_extension != '.')
+        if ( g_strcmp0(handler_extension, "" ) <= 0 || *handler_extension != '.')
         {
             // Handler extension is either not set or does not start with
             // a full stop - warning user and exiting. Note
@@ -667,26 +667,50 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             handler_compress = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_compress ) ) );
         }
-        if (g_strcmp0(handler_compress, "") != 0 &&
-            g_strcmp0(handler_compress, "+") != 0 &&
-            (
-                !g_strstr_len(handler_compress, -1, "%a") ||
-                !g_strstr_len(handler_compress, -1, "%f")
-            ))
+
+        /* Compression handler validation - remember to maintain this code
+         * in ptk_file_archiver_create too
+         * Checking if a compression command has been entered */
+        if (g_strcmp0( handler_compress, "" ) != 0 &&
+            g_strcmp0( handler_compress, "+" ) != 0)
         {
-            // Not all substitution characters are in place - warning
-            // user and exiting. Note that the created dialog does not
-            // have an icon set
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+            /* It has - making sure all substitution characters are in
+             * place */
+            if (!g_strstr_len( handler_compress, -1, "%a" ) ||
+                    (
+                        !g_strstr_len( handler_compress, -1, "%f" ) &&
+                        !g_strstr_len( handler_compress, -1, "%F" )
+                    )
+                )
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
                                 "placeholders must be in the '%s' compression"
                                 " command before saving:\n\n%%%%a: "
-                                "Resulting archive\n%%%%f: Files/directories"
-                                " to archive"),
+                                "Resulting archive\n\nEither of the following:"
+                                "\n\n%%%%f: Files/directories to archive "
+                                "together\n%%%%F: File/directory to archive"
+                                " - generate separate archive for each source "
+                                "file/directory"),
                                 handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_compress );
-            return;
+                gtk_widget_grab_focus( entry_handler_compress );
+                return;
+            }
+
+            // Making sure both %f and %F aren't used together
+            if (g_strstr_len( handler_compress, -1, "%f" ) &&
+                g_strstr_len( handler_compress, -1, "%F" ))
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                dialog_title, NULL, FALSE,
+                                g_strdup_printf(_("Please do not use both "
+                                "'%%%%f' and '%%%%F' in the '%s' compression"
+                                " command."),
+                                handler_name), NULL, NULL );
+                gtk_widget_grab_focus( entry_handler_compress );
+                return;
+            }
         }
 
         if (handler_extract_term)
@@ -700,10 +724,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             handler_extract = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_extract ) ) );
         }
-        if (g_strcmp0(handler_extract, "") != 0 &&
-            g_strcmp0(handler_extract, "+") != 0 &&
+        if (g_strcmp0( handler_extract, "" ) != 0 &&
+            g_strcmp0( handler_extract, "+" ) != 0 &&
             (
-                !g_strstr_len(handler_extract, -1, "%a")
+                !g_strstr_len( handler_extract, -1, "%a" )
             ))
         {
             // Not all substitution characters are in place - warning
@@ -731,10 +755,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             handler_list = g_strdup( gtk_entry_get_text(
                 GTK_ENTRY ( entry_handler_list ) ) );
         }
-        if (g_strcmp0(handler_list, "") != 0 &&
-            g_strcmp0(handler_list, "+") != 0 &&
+        if (g_strcmp0( handler_list, "" ) != 0 &&
+            g_strcmp0( handler_list, "+" ) != 0 &&
             (
-                !g_strstr_len(handler_list, -1, "%a")
+                !g_strstr_len( handler_list, -1, "%a" )
             ))
         {
             // Not all substitution characters are in place  - warning
@@ -777,9 +801,9 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( handler_xset, "cxt", handler_list );
 
         // Freeing strings
-        g_free(handler_compress);
-        g_free(handler_extract);
-        g_free(handler_list);
+        g_free( handler_compress );
+        g_free( handler_extract );
+        g_free( handler_list );
         return;
     }
     else
@@ -826,7 +850,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Clearing up
         g_strfreev( archive_handlers );
-        g_free(new_archive_handlers_s);
+        g_free( new_archive_handlers_s );
 
         // Deleting xset
         xset_custom_delete( handler_xset, FALSE );
@@ -1983,10 +2007,13 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             // not worth spinning out a series of validation functions
             // for this
             // Checking to see if the archive handler compression command
-            // has been deleted or is missing placeholders
+            // has been deleted or has invalid placeholders
             if (g_strcmp0( command, "" ) <= 0 ||
-                !g_strstr_len(command, -1, "%a") ||
-                !g_strstr_len(command, -1, "%f"))
+                !g_strstr_len( command, -1, "%a" ) ||
+                (
+                    !g_strstr_len( command, -1, "%f" ) &&
+                    !g_strstr_len( command, -1, "%F" )
+                ))
             {
                 // It has/is - warning user
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
@@ -1994,8 +2021,30 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                 _("Please enter a valid command before "
                                 "attempting to create the archive - the "
                                 "following placeholders are required:\n\n"
-                                "%%%%a: Resulting archive\n%%%%f: "
-                                "Files/directories to archive"),
+                                "%%a: Resulting archive\n\nEither of the "
+                                "following:\n\n%%f: Files/directories to "
+                                "archive together\n%%F: File/directory to "
+                                "archive - generate separate archive for "
+                                "each source file/directory"),
+                                NULL, NULL );
+                gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+
+                // Cleaning up and looping
+                g_free( compress_cmd );
+                compress_cmd = NULL;
+                g_free(command);
+                command = NULL;
+                continue;
+            }
+
+            // Making sure both %f and %F aren't used together
+            if (g_strstr_len( command, -1, "%f" ) &&
+                g_strstr_len( command, -1, "%F" ))
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                _("Save Archive"), NULL, FALSE,
+                                _("Please do not use both '%f' and "
+                                "'%F' in the archive creation command."),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( entry ) );
 
@@ -2054,69 +2103,118 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     g_free( dest_file );
 
     // Inserting archive name into appropriate place in command
+    // TODO: In %F mode, user's choice of archive name is irrelevant - fix this
     char* udest_quote = bash_quote( udest_file );
-    cmd = replace_string(command, "%a", udest_quote, FALSE );
+    cmd = replace_string( command, "%a", udest_quote, FALSE );
     g_free( udest_file );
     g_free( udest_quote );
     g_free( command );
 
-    // Generating string of selected files/directories to archive
-    s1 = g_strdup( "" );
-    for( l = files; l; l = l->next )
+    // Checking to see if the archive should contain all files ('%f') or
+    // a separate archive for each ('%F')
+    GList* command_list = NULL;
+    if (g_strstr_len( cmd, -1, "%F" ))
     {
-        // FIXME: Maybe we should consider filename encoding here.
-        str = s1;
-        desc = bash_quote( (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data ) );
-        if (g_strcmp0( s1, "" ) <= 0)
+        /* '%F' is present - the archiving command should be generated
+         * and ran for each individual file
+         * Looping for all files */
+        for( l = files; l; l = l->next )
         {
-            s1 = g_strdup( desc );
+            // FIXME: Maybe we should consider filename encoding here.
+            desc = bash_quote( (char *) vfs_file_info_get_name(
+                                            (VFSFileInfo*) l->data ) );
+
+            /* Inserting file to archive into appropriate place in command,
+             * prepending to command list (faster than append for multiple
+             * items) */
+            command_list = g_list_prepend( command_list,
+                                (gpointer)replace_string(cmd, "%F", desc,
+                                                         FALSE ) );
+            // Cleaning up
+            g_free( desc );
         }
-        else
-        {
-            s1 = g_strdup_printf( "%s %s", s1, desc );
-        }
-        g_free( desc );
-        g_free( str );
-    }
 
-    // Inserting files to archive into appropriate place in command
-    command = cmd;
-    cmd = replace_string(cmd, "%f", s1, FALSE );
-    g_free( command );
-    g_free( s1 );
+        // Command list complete - restoring correct order
+        command_list = g_list_reverse( command_list );
 
-    // Creating task
-    char* task_name = g_strdup_printf( _("Archive") );
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
-                                            GTK_WIDGET( file_browser ),
-                                            file_browser->task_view );
-    g_free( task_name );
-    task->task->exec_browser = file_browser;
-
-    // Using terminals for certain handlers
-    if (run_in_terminal)
-    {
-        task->task->exec_terminal = TRUE;
-        task->task->exec_sync = FALSE;
-        s1 = cmd;
-        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
-        g_free( s1 );
+        // Cleaning up
+        g_free( cmd );
     }
     else
     {
-        task->task->exec_sync = TRUE;
+        // '%F' isn't present - the normal single command is needed
+        // Generating string of selected files/directories to archive
+        s1 = g_strdup( "" );
+        for( l = files; l; l = l->next )
+        {
+            // FIXME: Maybe we should consider filename encoding here.
+            str = s1;
+            desc = bash_quote( (char *) vfs_file_info_get_name(
+                                            (VFSFileInfo*) l->data ) );
+            if (g_strcmp0( s1, "" ) <= 0)
+            {
+                s1 = g_strdup( desc );
+            }
+            else
+            {
+                s1 = g_strdup_printf( "%s %s", s1, desc );
+            }
+            g_free( desc );
+            g_free( str );
+        }
+
+        /* Inserting files to archive into appropriate place in command,
+         * appending to command list */
+        command_list = g_list_append( command_list,
+                                      (gpointer)replace_string(cmd,
+                                                    "%f", s1, FALSE ) );
+        // Cleaning up
+        g_free( cmd );
+        g_free( s1 );
     }
 
-    // Final configuration, setting custom icon
-    task->task->exec_command = cmd;
-    task->task->exec_show_error = TRUE;
-    task->task->exec_export = TRUE;
-    XSet* set = xset_get( "new_archive" );
-    if ( set->icon )
-        task->task->exec_icon = g_strdup( set->icon );
+    /* Looping for all archives to create */
+    for ( l = command_list; l; l = l->next )
+    {
+        // Creating task
+        char* task_name = g_strdup_printf( _("Archive") );
+        PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
+                                                GTK_WIDGET( file_browser ),
+                                                file_browser->task_view );
+        g_free( task_name );
+        task->task->exec_browser = file_browser;
 
-    // Running task
-    ptk_file_task_run( task );
+        // Using terminals for certain handlers
+        if (run_in_terminal)
+        {
+            task->task->exec_terminal = TRUE;
+            task->task->exec_sync = FALSE;
+            s1 = l->data;
+            l->data = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
+            g_free( s1 );
+        }
+        else
+        {
+            task->task->exec_sync = TRUE;
+        }
+
+        // Final configuration, setting custom icon
+        task->task->exec_command = l->data;
+        task->task->exec_show_error = TRUE;
+        task->task->exec_export = TRUE;
+        XSet* set = xset_get( "new_archive" );
+        if ( set->icon )
+            task->task->exec_icon = g_strdup( set->icon );
+
+        // Running task
+        ptk_file_task_run( task );
+
+        /* l->data appears to be cleared up elsewhere? Get a double-free
+         * if I do it here */
+    }
+
+    // Clearing up command list
+    g_list_free( command_list );
 }
 
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
