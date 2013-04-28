@@ -1024,7 +1024,7 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
-    int len;
+    int len = 0;
     char *path, *name, *new_name;
 
     // Obtaining reference to dialog
@@ -1071,13 +1071,20 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
         // Checking to see if the current archive filename has this
         if (g_str_has_suffix( name, extension ))
         {
-            // It does - crop and leave loop
-            len = strlen( name ) - strlen( extension );
-            name[len] = '\0';
-            break;
+            /* It does - recording its length if its the longest match
+             * yet, and continuing */
+            if (strlen( extension ) > len)
+                len = strlen( extension );
         }
     }
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
+
+    // Cropping current extension if found
+    if (len)
+    {
+        len = strlen( name ) - len;
+        name[len] = '\0';
+    }
 
     // Clearing up
     g_free(extension);
