@@ -1508,8 +1508,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Adding archive handlers to list
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
 
-    // TODO: Help text in label on right? below stuff of substitutions?
-
     // Rendering dialog - while loop is used to deal with standard
     // buttons that should not cause the dialog to exit
     gtk_widget_show_all( GTK_WIDGET( dlg ) );
@@ -1555,11 +1553,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Clearing up dialog
     // TODO: Does this handle strdup'd strings saved as g_object data?
     gtk_widget_destroy( dlg );
-
-    // Placeholder
-    /*xset_msg_dialog( NULL, GTK_MESSAGE_ERROR, _("Configure Unavailable"), NULL,
-                        0, "This feature is not yet available", NULL, NULL );
-    */
 }
 
 /*
