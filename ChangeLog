@@ -38,6 +38,7 @@
     add item prop Context Use as opener for option
     add Context verb pattern matches for wildcards #214
     default Root|U/Mount commands use udevil
+    remove translatable strings in exo view code
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

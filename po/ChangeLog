@@ -1,3 +1,8 @@
+2013-04-29 IgnorantGuru <ignorantguru@gmx.com>
+
+    * removed translable strings from exo-icon-view.c exo-tree-view.c
+    * removed exo-icon-view.c exo-tree-view.c from potfiles.in
+
 2013-02-13 IgnorantGuru <ignorantguru@gmx.com>
 
     * merged all po files for upload
