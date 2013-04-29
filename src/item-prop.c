@@ -211,7 +211,7 @@ static const char* context_comp[] =
     N_("doesn't end with"),
     N_("is less than"),
     N_("is greater than"),
-    N_("matches pattern"),
+    N_("matches"),
     N_("doesn't match")
 };
 
