@@ -816,7 +816,7 @@ void show_socket_help()
     printf( "%%w   %s\n", _("window ID") );
     printf( "%%p   %s\n", _("panel number (1-4)") );
     printf( "%%t   %s\n", _("tab number (1-...)") );
-    printf( "%%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
+    printf( "%%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...)") );
     printf( "%%k   %s\n", _("key code  (eg 0x63)") );
     printf( "%%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
     printf( "%%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
