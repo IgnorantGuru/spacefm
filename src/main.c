@@ -774,7 +774,7 @@ void show_socket_help()
     printf( "folder                          %s\n", _("text to show in Folder task column") );
     printf( "item                            %s\n", _("text to show in Item task column") );
     printf( "to                              %s\n", _("text to show in To task column") );
-    printf( "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
+    printf( "progress                        %s\n", _("progress percent (1..100) or '' to pulse") );
     printf( "total                           %s\n", _("text to show in Total task column") );
     printf( "curspeed                        %s\n", _("text to show in Current task column") );
     printf( "curremain                       %s\n", _("text to show in CRemain task column") );
