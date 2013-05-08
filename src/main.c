@@ -721,15 +721,15 @@ void show_socket_help()
     printf( "\n%s\n", _("PROPERTIES\n----------") );
     printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
 
-    printf( "\nwindow_size                     eg '800x600'\n" );
-    printf( "window_position                 eg '100x50'\n" );
+    printf( "\nwindow_size                     %s\n", _("eg '800x600'") );
+    printf( "window_position                 %s\n", _("eg '100x50'") );
     printf( "window_maximized                1|true|yes|0|false|no\n" );
     printf( "window_fullscreen               1|true|yes|0|false|no\n" );
-    printf( "screen_size                     eg '1024x768'  (read-only)\n" );
-    printf( "window_vslider_top              eg '100'\n" );
-    printf( "window_vslider_bottom           eg '100'\n" );
-    printf( "window_hslider                  eg '100'\n" );
-    printf( "window_tslider                  eg '100'\n" );
+    printf( "screen_size                     %s\n", _("eg '1024x768'  (read-only)") );
+    printf( "window_vslider_top              %s\n", _("eg '100'") );
+    printf( "window_vslider_bottom           %s\n", _("eg '100'") );
+    printf( "window_hslider                  %s\n", _("eg '100'") );
+    printf( "window_tslider                  %s\n", _("eg '100'") );
     printf( "focused_panel                   1|2|3|4|prev|next|hide\n" );
     printf( "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
     printf( "current_tab                     1|2|...|prev|next|close\n" );
@@ -745,9 +745,9 @@ void show_socket_help()
     printf( "panel2_visible                  1|true|yes|0|false|no\n" );
     printf( "panel3_visible                  1|true|yes|0|false|no\n" );
     printf( "panel4_visible                  1|true|yes|0|false|no\n" );
-    printf( "panel_hslider_top               eg '100'\n" );
-    printf( "panel_hslider_bottom            eg '100'\n" );
-    printf( "panel_vslider                   eg '100'\n" );
+    printf( "panel_hslider_top               %s\n", _("eg '100'") );
+    printf( "panel_hslider_bottom            %s\n", _("eg '100'") );
+    printf( "panel_vslider                   %s\n", _("eg '100'") );
     printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
     printf( "sort_by                         name|size|type|permission|owner|modified\n" );
     printf( "sort_ascend                     1|true|yes|0|false|no\n" );
