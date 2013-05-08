@@ -812,7 +812,7 @@ void show_socket_help()
     printf( "evt_device                      %s\n", _("Device change         %e %f %v") );
 
     printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
-    printf( "%%e   %s\n", _("event name (evt_start|evt_exit|...)") );
+    printf( "%%e   %s\n", _("event type (evt_start|evt_exit|...)") );
     printf( "%%w   %s\n", _("window ID") );
     printf( "%%p   %s\n", _("panel number (1-4)") );
     printf( "%%t   %s\n", _("tab number (1-...)") );
