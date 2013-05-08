@@ -7343,7 +7343,7 @@ _invalid_get:
         }
         if ( !( set = xset_is( argv[i] ) ) )
         {
-            *reply = g_strdup_printf( _("spacefm: invalid event name '%s'\n"),
+            *reply = g_strdup_printf( _("spacefm: invalid event type '%s'\n"),
                                                                         argv[i] );
             return 2;
         }
