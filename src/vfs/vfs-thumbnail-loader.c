@@ -374,15 +374,20 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     {
         if( thumbnail )
             g_object_unref( thumbnail );
-        /* create new thumbnail */
-        thumbnail = gdk_pixbuf_new_from_file_at_size( file_path, 128, 128, NULL );
-        if ( thumbnail )
+
+        /* images with aspect ratios below 0.02 are skipped because gdk resizing would fail */
+        if ( w == h || ( w > h && (float)h / (float)w >= 0.02f ) || ( h > w && (float)w / (float)h >= 0.02f ) )
         {
-            thumbnail = gdk_pixbuf_apply_embedded_orientation( thumbnail );
-            sprintf( mtime_str, "%lu", mtime );
-            gdk_pixbuf_save( thumbnail, thumbnail_file, "png", NULL,
-                             "tEXt::Thumb::URI", uri, "tEXt::Thumb::MTime", mtime_str, NULL );
-            chmod( thumbnail_file, 0600 );  /* only the owner can read it. */
+            /* create new thumbnail */
+            thumbnail = gdk_pixbuf_new_from_file_at_size( file_path, 128, 128, NULL );
+            if ( thumbnail )
+            {
+                thumbnail = gdk_pixbuf_apply_embedded_orientation( thumbnail );
+                sprintf( mtime_str, "%lu", mtime );
+                gdk_pixbuf_save( thumbnail, thumbnail_file, "png", NULL,
+                                 "tEXt::Thumb::URI", uri, "tEXt::Thumb::MTime", mtime_str, NULL );
+                chmod( thumbnail_file, 0600 );  /* only the owner can read it. */
+            }
         }
     }
 
