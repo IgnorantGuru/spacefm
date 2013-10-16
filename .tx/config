@@ -2,7 +2,6 @@
 host = https://www.transifex.com
 
 [spacefm.spacefmpot_1]
-file_filter = translations/spacefm.spacefmpot_1/<lang>.po
 source_file = po/spacefm.pot
 source_lang = en
 trans.af = po/af.po
@@ -40,15 +39,18 @@ trans.ps = po/ps.po
 trans.pt = po/pt.po
 trans.pt_BR = po/pt_BR.po
 trans.ru = po/ru.po
+trans.si_LK = po/si_LK.po
 trans.sk = po/sk.po
 trans.sl = po/sl.po
 trans.sr = po/sr.po
+trans.sr@latin = po/sr@latin.po
 trans.sv = po/sv.po
 trans.tr = po/tr.po
 trans.uk = po/uk.po
 trans.ur = po/ur.po
 trans.ur_PK = po/ur_PK.po
 trans.vi = po/vi.po
+trans.vi_VN = po/vi_VN.po
 trans.zh_CN = po/zh_CN.po
 trans.zh_TW = po/zh_TW.po
 
