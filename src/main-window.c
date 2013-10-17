@@ -5537,8 +5537,11 @@ void main_task_view_update_task( PtkFileTask* ptask )
                 status = _(job_titles[ ptask->task->type ]);
             else
             {
-                status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
-                       ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
+                status2 = g_strdup_printf( ngettext( _("%d error %s"),
+                                                     _("%d errors %s"),
+                                                     ptask->err_count ),
+                                           ptask->err_count,
+                                           _(job_titles[ ptask->task->type ]) );
                 status = status2;
             }
         }
