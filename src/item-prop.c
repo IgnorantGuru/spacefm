@@ -2117,6 +2117,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                             dir_has_files( path ) ? "" : _("(no files)") );
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
                                                                     str );
+    g_free( str );
     g_free( path );
 
     path = g_build_filename( xset_get_config_dir(), "plugin-data",
@@ -2125,6 +2126,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                             dir_has_files( path ) ? "" : _("(no files)") );
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
                                                                     str );
+    g_free( str );
     g_free( path );
 
     if ( rset->plugin )
@@ -2132,6 +2134,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         str = g_strdup_printf( "%s  $fm_plugin_dir", _("Plugin Dir") );
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
                                                                     str );
+        g_free( str );
     }
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( ctxt->open_browser ), FALSE, TRUE, 8 );
