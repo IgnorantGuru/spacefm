@@ -9782,7 +9782,7 @@ void xset_defaults()
         xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_win_click evt_win_key evt_win_close" );
         set->line = g_strdup( "#sockets-menu" );
 
-            set = xset_set( "evt_win_new", "lbl", _("_New") );
+            set = xset_set( "evt_win_new", "lbl", C_("View|Events|Window|", "_New") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set New Window Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n\t%%e\tevent type  (evt_win_new)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
@@ -9829,7 +9829,7 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n\t%%e\tevent type  (evt_pnl_focus)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-pnlfoc" );
 
-            set = xset_set( "evt_pnl_show", "lbl", _("_Show") );
+            set = xset_set( "evt_pnl_show", "lbl", C_("View|Events|Panel|", "_Show") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Show Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n\t%%e\tevent type  (evt_pnl_show)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\t%%f\tfocus  (element shown or hidden)\n\t%%v\tvisible  (1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
@@ -9858,7 +9858,7 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n\t%%e\tevent type  (evt_tab_focus)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-tabfoc" );
 
-            set = xset_set( "evt_tab_close", "lbl", _("_Close") );
+            set = xset_set( "evt_tab_close", "lbl", C_("View|Events|Tab|", "_Close") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Tab Close Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n\t%%e\tevent type  (evt_tab_close)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\tclosed tab") );
