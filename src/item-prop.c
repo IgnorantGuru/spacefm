@@ -792,7 +792,7 @@ void load_command_script( ContextData* ctxt, XSet* set )
         file = fopen( script, "r" );
         if ( !file )
             g_warning( _("error reading file %s: %s"), script,
-                                                g_strerror( errno ), NULL );
+                                                g_strerror( errno ) );
         else
         {
             // read file one line at a time to prevent splitting UTF-8 characters
@@ -804,7 +804,7 @@ void load_command_script( ContextData* ctxt, XSet* set )
                     gtk_text_buffer_set_text( buf, "", -1 );
                     modified = TRUE;
                     g_warning( _("file '%s' contents are not valid UTF-8"),
-                                                            script, NULL );
+                                                            script );
                     break;
                 }
                 gtk_text_buffer_insert_at_cursor( buf, line, -1 );
