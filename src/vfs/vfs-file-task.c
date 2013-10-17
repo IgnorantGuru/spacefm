@@ -27,7 +27,7 @@
 #include <glib/gi18n.h>
 
 #include <stdio.h>
-#include <stdlib.h> /* for mkstemp */
+#include <stdlib.h> /* for mkstemp, realpath */
 #include <string.h>
 #include <errno.h>
 
@@ -1397,6 +1397,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     GtkWidget* parent = NULL;
     gboolean success;
     int i;
+    char buf[ PATH_MAX + 1 ];
 
 //printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
@@ -1503,6 +1504,15 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
             goto _exit_with_error_lean;
+        }
+        // resolve x-terminal-emulator link (may be recursive link)
+        else if ( strstr( terminal, "x-terminal-emulator" ) &&
+                                        realpath( terminal, buf ) != NULL )
+        {
+            g_free( terminal );
+            g_free( terminalv[0] );
+            terminal = g_strdup( buf );
+            terminalv[0] = g_strdup( buf );
         }
     }
 

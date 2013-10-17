@@ -39,6 +39,8 @@
     add Context verb pattern matches for wildcards #214
     default Root|U/Mount commands use udevil
     remove translatable strings in exo view code
+    clear hal build warnings for debian build issue #363
+    x-terminal-emulator link resolved, added to terminals list #358
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
