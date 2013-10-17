@@ -2,6 +2,7 @@
 host = https://www.transifex.com
 
 [spacefm.spacefmpot_1]
+file_filter = translations/spacefm.spacefmpot_1/<lang>.po
 source_file = po/spacefm.pot
 source_lang = en
 trans.af = po/af.po
