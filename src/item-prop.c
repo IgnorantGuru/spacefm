@@ -2128,8 +2128,11 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     g_free( path );
 
     if ( rset->plugin )
+    {
+        str = g_strdup_printf( "%s  $fm_plugin_dir", _("Plugin Dir") );
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
-                                        _("Plugin Dir  $fm_plugin_dir") );
+                                                                    str );
+    }
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( ctxt->open_browser ), FALSE, TRUE, 8 );
     gtk_box_pack_start( GTK_BOX( vbox ),
