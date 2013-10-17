@@ -6773,6 +6773,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
         gtk_container_add ( GTK_CONTAINER (design_menu ), gtk_separator_menu_item_new() );
     }
 
+#if 0  // to prevent comment showing in pot file
     // Name
     /*
     newitem = xset_design_additem( design_menu, _("_Name"),
@@ -7089,6 +7090,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
 
     // Separator
     //gtk_container_add ( GTK_CONTAINER ( design_menu ), gtk_separator_menu_item_new() );
+
+#endif
 
     // Cut
     newitem = xset_design_additem( design_menu, _("Cu_t"),

@@ -664,9 +664,8 @@ int send_socket_command( int argc, char* argv[], char** reply )   //sfm
 
 void show_socket_help()
 {
-    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
-    printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  To handle events see View|Events in the main menu bar.") );
+    // TRANSLATOR:  These three lines should be limited to 80 chars each
+    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)\nto read and set GUI property values and execute methods inside running SpaceFM\nwindows.  To handle events see View|Events in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
