@@ -41,6 +41,7 @@
     remove translatable strings in exo view code
     clear hal build warnings for debian build issue #363
     x-terminal-emulator link resolved, added to terminals list #358
+    drag to same dir sets auto drag action copy #304 #336
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

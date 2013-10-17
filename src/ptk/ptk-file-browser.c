@@ -4664,27 +4664,45 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
             {
                 // We only want to update drag status, not really want to drop
                 dev_t dest_dev;
+                ino_t dest_inode;
                 struct stat statbuf;    // skip stat64
                 if( stat( dest_dir, &statbuf ) == 0 )
                 {
                     dest_dev = statbuf.st_dev;
+                    dest_inode = statbuf.st_ino;
                     if( 0 == file_browser->drag_source_dev )
                     {
                         file_browser->drag_source_dev = dest_dev;
                         for( ; *puri; ++puri )
                         {
                             file_path = g_filename_from_uri( *puri, NULL, NULL );
-                            if( stat( file_path, &statbuf ) == 0 && statbuf.st_dev != dest_dev )
+                            if( file_path && stat( file_path, &statbuf ) == 0 )
                             {
-                                file_browser->drag_source_dev = statbuf.st_dev;
-                                g_free( file_path );
-                                break;
+                                if ( statbuf.st_dev != dest_dev )
+                                {
+                                    // different devices - store source device
+                                    file_browser->drag_source_dev = statbuf.st_dev;
+                                    g_free( file_path );
+                                    break;
+                                }
+                                else if ( file_browser->drag_source_inode == 0 )
+                                {
+                                    // same device - store source parent inode
+                                    char* src_dir = g_path_get_dirname( file_path );
+                                    if ( src_dir && stat( src_dir, &statbuf ) == 0 )
+                                    {
+                                        file_browser->drag_source_inode = 
+                                                                statbuf.st_ino;
+                                    }
+                                    g_free( src_dir );
+                                }
                             }
                             g_free( file_path );
                         }
                     }
-                    if( file_browser->drag_source_dev != dest_dev )
-                        // src and dest are on different devices */
+                    if ( file_browser->drag_source_dev != dest_dev ||
+                           file_browser->drag_source_inode == dest_inode )
+                        // src and dest are on different devices or same dir
                         gdk_drag_status (drag_context, GDK_ACTION_COPY, time);
                     else
                         gdk_drag_status (drag_context, GDK_ACTION_MOVE, time);
@@ -5042,6 +5060,7 @@ gboolean on_folder_view_drag_leave ( GtkWidget *widget,
     g_signal_stop_emission_by_name( widget, "drag-leave" );
 
     file_browser->drag_source_dev = 0;
+    file_browser->drag_source_inode = 0;
 
     if ( folder_view_auto_scroll_timer )
     {
