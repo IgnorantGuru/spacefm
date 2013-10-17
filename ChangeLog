@@ -43,7 +43,7 @@
     x-terminal-emulator link resolved, added to terminals list #358
     drag to same dir sets auto drag action copy #304 #336
     Dialog fix segfault with --chooser filespec #320
-    Translation strings adjusted #322 #318
+    Translation strings adjusted #322 #318 #325 #326
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

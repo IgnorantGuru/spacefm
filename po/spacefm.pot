@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: spacefm 0.8.7+\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-17 18:44+0000\n"
+"POT-Creation-Date: 2013-10-17 19:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1398,7 +1398,7 @@ msgid ""
 msgstr ""
 
 #: ../src/main.c:789
-msgid "Run COMMAND as USER in DIR"
+msgid "Run COMMAND in DIR"
 msgstr ""
 
 #: ../src/main.c:791
@@ -1490,7 +1490,7 @@ msgid "Event COMMAND Substitution Variables:"
 msgstr ""
 
 #: ../src/main.c:814
-msgid "event name (evt_start|evt_exit|...)"
+msgid "event type (evt_start|evt_exit|...)"
 msgstr ""
 
 #: ../src/main.c:815
@@ -1506,7 +1506,7 @@ msgid "tab number (1-...)"
 msgstr ""
 
 #: ../src/main.c:818
-msgid "mouse button (0=double 1=left 2=middle 3=right ..."
+msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
 msgstr ""
 
 #: ../src/main.c:819
@@ -2152,7 +2152,7 @@ msgstr ""
 
 #: ../src/main-window.c:7346
 #, c-format
-msgid "spacefm: invalid event name '%s'\n"
+msgid "spacefm: invalid event type '%s'\n"
 msgstr ""
 
 #: ../src/main-window.c:7372
