@@ -391,7 +391,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
         if ( ! check_overwrite( task, dest_file,
                                 &dest_exists, &new_dest_file ) )
             goto _return_;
-
         if ( new_dest_file )
         {
             dest_file = new_dest_file;
@@ -421,7 +420,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     sub_src_file = g_build_filename( src_file, file_name, NULL );
                     sub_dest_file = g_build_filename( dest_file, file_name, NULL );
                     if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
-                                                                && !copy_fail )
+                                                        && !copy_fail )
                         copy_fail = TRUE;
                     g_free(sub_dest_file );
                     g_free(sub_src_file );
@@ -669,7 +668,9 @@ vfs_file_task_do_move ( VFSFileTask* task,
     gchar* new_dest_file = NULL;
     gboolean dest_exists;
     struct stat64 file_stat;
+    GDir* dir;
     int result;
+    GError* error;
 
     if ( should_abort( task ) )
         return 0;
@@ -704,7 +705,43 @@ vfs_file_task_do_move ( VFSFileTask* task,
         string_copy_free( &task->current_dest, dest_file );
         g_mutex_unlock( task->mutex );
     }
-    
+
+    if ( S_ISDIR( file_stat.st_mode ) && 
+                                g_file_test( dest_file, G_FILE_TEST_IS_DIR ) )
+    {
+        // moving a directory onto a directory that exists
+        error = NULL;
+        dir = g_dir_open( src_file, 0, &error );
+        if ( dir )
+        {
+            const gchar* file_name;
+            gchar* sub_src_file;
+            gchar* sub_dest_file;
+            while ( ( file_name = g_dir_read_name( dir ) ) )
+            {
+                if ( should_abort( task ) )
+                    break;
+                sub_src_file = g_build_filename( src_file, file_name, NULL );
+                sub_dest_file = g_build_filename( dest_file, file_name, NULL );
+                vfs_file_task_do_move( task, sub_src_file, sub_dest_file );
+                g_free( sub_dest_file );
+                g_free( sub_src_file );
+            }
+            g_dir_close( dir );
+            // remove moved src dir if empty
+            if ( !should_abort( task ) )
+                rmdir( src_file );
+        }
+        else if ( error )
+        {
+            char* msg = g_strdup_printf( "\n%s\n", error->message );
+            g_error_free( error );
+            vfs_file_task_exec_error( task, 0, msg );
+            g_free( msg );
+        }
+        return 0;
+    }
+
     result = rename( src_file, dest_file );
 
     if ( result != 0 )
@@ -776,12 +813,13 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
             /* g_print("not on the same dev: %s\n", src_file); */
             vfs_file_task_do_copy( task, src_file, dest_file );
         }
+        /*
         else if ( S_ISDIR( src_stat.st_mode ) && 
                                     g_file_test( dest_file, G_FILE_TEST_IS_DIR) )
         {
-            // moving a directory onto a directory that exists - overwrite
-            vfs_file_task_do_copy( task, src_file, dest_file );
+            // moving a directory onto a directory that exists
         }
+        */
         else
         {
             /* g_print("on the same dev: %s\n", src_file); */
@@ -2166,7 +2204,8 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->current_file = NULL;
     task->current_dest = NULL;
     
-    task->recursive = ( task->type == VFS_FILE_TASK_COPY || 
+    task->recursive = ( task->type == VFS_FILE_TASK_COPY ||
+                        task->type == VFS_FILE_TASK_MOVE || 
                         task->type == VFS_FILE_TASK_DELETE );
 
     task->err_count = 0;
