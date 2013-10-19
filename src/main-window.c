@@ -1202,7 +1202,7 @@ void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
             }
         }
     }
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( file_browser, FALSE, FALSE );
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -1239,7 +1239,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
         }
     }
     
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( file_browser, FALSE, FALSE );
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
@@ -1353,7 +1353,7 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
     
     PtkFileBrowser* file_browser = 
             (PtkFileBrowser*)fm_main_window_get_current_file_browser( main_window );
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( file_browser, FALSE, FALSE );
 }
 
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
@@ -2430,6 +2430,8 @@ _done_close:
             G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
 
     update_window_title( NULL, main_window );
+    if ( xset_get_b( "main_save_tabs" ) )
+        xset_autosave( file_browser, FALSE, TRUE );
 }
 
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
@@ -2515,6 +2517,8 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
         ptk_file_browser_select_last( file_browser );  //MOD restore last selections
         gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
     }
+    if ( xset_get_b( "main_save_tabs" ) )
+        xset_autosave( file_browser, FALSE, TRUE );
 }
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,

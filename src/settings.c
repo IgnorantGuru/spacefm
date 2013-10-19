@@ -1328,7 +1328,7 @@ const char* xset_get_user_tmp_dir()
 
 static gboolean idle_save_settings( gpointer main_window )
 {
-    //printf("AUTOSAVE idle save\n" );
+    //printf("AUTOSAVE *** idle_save_settings\n" );
     char* err_msg = save_settings( main_window );
     if ( err_msg )
     {
@@ -1338,11 +1338,16 @@ static gboolean idle_save_settings( gpointer main_window )
     return FALSE;
 }
 
-static void auto_save_settings( gpointer main_window )
+static void auto_save_start( gpointer main_window, gboolean delay )
 {
-    //printf("AUTOSAVE autosave\n" );
-    g_idle_add( ( GSourceFunc ) idle_save_settings, main_window );
-    xset_autosave_request = FALSE;
+    //printf("AUTOSAVE auto_save_start\n" );
+    if ( !delay )
+    {
+        g_idle_add( ( GSourceFunc ) idle_save_settings, main_window );
+        xset_autosave_request = FALSE;
+    }
+    else
+        xset_autosave_request = TRUE;
     if ( !xset_autosave_timer )
     {
         xset_autosave_timer = g_timeout_add_seconds( 10,
@@ -1360,11 +1365,11 @@ gboolean on_autosave_timer( gpointer main_window )
         xset_autosave_timer = 0;
     }
     if ( xset_autosave_request )
-        auto_save_settings( main_window );
+        auto_save_start( main_window, FALSE );
     return FALSE;
 }
 
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force )
+void xset_autosave( PtkFileBrowser* file_browser, gboolean force, gboolean delay )
 {
     if ( xset_autosave_timer && !force )
     {
@@ -1375,18 +1380,25 @@ void xset_autosave( PtkFileBrowser* file_browser, gboolean force )
     }
     else
     {
-        if ( xset_autosave_timer )
+        if ( xset_autosave_timer && force )
         {
             g_source_remove( xset_autosave_timer );
             xset_autosave_timer = 0;
         }
-        //if ( force ) printf("AUTOSAVE force\n" );
-        auto_save_settings( file_browser ? file_browser->main_window : NULL );
+        /* if ( force )
+            printf("AUTOSAVE force\n" );
+        else if ( delay )
+            printf("AUTOSAVE delay\n" );
+        else
+            printf("AUTOSAVE normal\n" ); */
+        auto_save_start( file_browser ? file_browser->main_window : NULL,
+                                                            !force && delay );
     }
 }
 
 void xset_autosave_cancel()
 {
+    //printf("AUTOSAVE cancel\n" );
     xset_autosave_request = FALSE;
     if ( xset_autosave_timer )
     {
@@ -1394,6 +1406,7 @@ void xset_autosave_cancel()
         xset_autosave_timer = 0;
     }
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 //MOD extra settings below
@@ -6326,7 +6339,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     //    main_window_on_plugins_change( NULL );
 
     // autosave
-    xset_autosave( set->browser, FALSE );
+    xset_autosave( set->browser, FALSE, FALSE );
 }
 
 void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
@@ -7632,7 +7645,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         xset_custom_activate( item, rset );
 
     if ( rset->menu_style )
-        xset_autosave( rset->browser, FALSE );
+        xset_autosave( rset->browser, FALSE, FALSE );
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,

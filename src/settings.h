@@ -325,7 +325,7 @@ void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
 char* unescape( const char* t );
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force );
+void xset_autosave( PtkFileBrowser* file_browser, gboolean force, gboolean delay );
 void xset_autosave_cancel();
 
 void open_in_prog( const char* path );
