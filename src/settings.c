@@ -968,7 +968,7 @@ void load_settings( char* config_dir )
     {
         app_settings.desk_single_click = app_settings.single_click;
     }
-    if ( ver < 21 ) // < 0.9.0
+    if ( ver < 22 ) // < 0.9.0
     {
         set = xset_get( "plug_copy" );
         if ( set->menu_label && !strcmp( set->menu_label, "_Copy" ) )
