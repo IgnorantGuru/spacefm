@@ -968,13 +968,20 @@ void load_settings( char* config_dir )
     {
         app_settings.desk_single_click = app_settings.single_click;
     }
-    if ( ver < 20 ) // < 0.9.0
+    if ( ver < 21 ) // < 0.9.0
     {
         set = xset_get( "plug_copy" );
         if ( set->menu_label && !strcmp( set->menu_label, "_Copy" ) )
         {
             g_free( set->menu_label );
             set->menu_label = g_strdup( _("_Import") );
+            set->in_terminal = XSET_B_UNSET;
+        }
+        set = xset_get( "main_tasks" );
+        if ( set->menu_label && !strcmp( set->menu_label, "_Tasks" ) )
+        {
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( _("_Task Manager") );
             set->in_terminal = XSET_B_UNSET;
         }
     }
@@ -994,7 +1001,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "21" );  // 0.9.0
+    xset_set( "config_version", "s", "22" );  // 0.9.0
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -10014,7 +10021,7 @@ void xset_defaults()
     set = xset_get( "sep_t6" );
     set->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "main_tasks", "lbl", _("_Tasks") );
+    set = xset_set( "main_tasks", "lbl", _("_Task Manager") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors task_queue" );
     set->line = g_strdup( "#tasks" );
