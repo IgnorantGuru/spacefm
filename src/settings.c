@@ -391,6 +391,23 @@ void load_conf()
         settings_tmp_dir = g_strdup( "/tmp" );
 }        
 
+void swap_menu_label( const char* set_name, const char* old_name,
+                                                        const char* new_name )
+{   // changes default menu label for older config files
+    XSet* set;
+
+    if ( set = xset_is( set_name ) )
+    {
+        if ( set->menu_label && !strcmp( set->menu_label, old_name ) )
+        {
+            // menu label has not been changed by user - change default
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( new_name );
+            set->in_terminal = XSET_B_UNSET;
+        }
+    }
+}
+
 void load_settings( char* config_dir )
 {
     FILE * file;
@@ -956,34 +973,26 @@ void load_settings( char* config_dir )
     }
     if ( ver < 16 ) // < 0.8.3
     {
-        set = xset_get( "dev_menu_remove" );
-        if ( set->menu_label && !strcmp( set->menu_label, "Remo_ve" ) )
-        {
-            g_free( set->menu_label );
-            set->menu_label = g_strdup( _("Remo_ve / Eject") );
-            set->in_terminal = XSET_B_UNSET;
-        }
+        swap_menu_label( "dev_menu_remove", "Remo_ve", _("Remo_ve / Eject") );
     }
     if ( ver < 18 ) // < 0.8.7+
     {
         app_settings.desk_single_click = app_settings.single_click;
     }
-    if ( ver < 22 ) // < 0.9.0
+    if ( ver < 23 ) // < 0.9.0
     {
-        set = xset_get( "plug_copy" );
-        if ( set->menu_label && !strcmp( set->menu_label, "_Copy" ) )
-        {
-            g_free( set->menu_label );
-            set->menu_label = g_strdup( _("_Import") );
-            set->in_terminal = XSET_B_UNSET;
-        }
-        set = xset_get( "main_tasks" );
-        if ( set->menu_label && !strcmp( set->menu_label, "_Tasks" ) )
-        {
-            g_free( set->menu_label );
-            set->menu_label = g_strdup( _("_Task Manager") );
-            set->in_terminal = XSET_B_UNSET;
-        }
+        // Note: this is the last config version which should require menu_label
+        //       changes of this nature due to defaults no longer being saved
+        //       in session file
+        swap_menu_label( "plug_copy", "_Copy", _("_Import") );
+        swap_menu_label( "main_tasks", "_Tasks", _("_Task Manager") );
+
+        // for rename dialog
+        swap_menu_label( "move_filename", "_Filename", _("F_ilename") );
+        swap_menu_label( "move_type", "_Type", _("Typ_e") );
+        swap_menu_label( "move_target", "_Target", _("Ta_rget") );
+        swap_menu_label( "move_template", "_Template", _("Te_mplate") );
+        swap_menu_label( "move_dlg_help", "T_ips", _("_Help") );
     }
 }
 
@@ -1001,7 +1010,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "22" );  // 0.9.0
+    xset_set( "config_version", "s", "23" );  // 0.9.0
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -9591,7 +9600,7 @@ void xset_defaults()
     set = xset_set( "move_name", "lbl", _("_Name") );
     set->menu_style = XSET_MENU_CHECK;
     
-    set = xset_set( "move_filename", "lbl", _("_Filename") );
+    set = xset_set( "move_filename", "lbl", _("F_ilename") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     
@@ -9602,15 +9611,15 @@ void xset_defaults()
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     
-    set = xset_set( "move_type", "lbl", _("_Type") );
+    set = xset_set( "move_type", "lbl", _("Typ_e") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
-    set = xset_set( "move_target", "lbl", _("_Target") );
+    set = xset_set( "move_target", "lbl", _("Ta_rget") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
-    set = xset_set( "move_template", "lbl", _("_Template") );
+    set = xset_set( "move_template", "lbl", _("Te_mplate") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
@@ -9642,7 +9651,7 @@ void xset_defaults()
     xset_set_set( set, "title", _("Move Dialog Font") );
     xset_set_set( set, "desc", _("/home/user/Example Filename.ext") );
 
-    set = xset_set( "move_dlg_help", "lbl", _("T_ips") );
+    set = xset_set( "move_dlg_help", "lbl", _("_Help") );
     xset_set_set( set, "icn", "gtk-help" );
 
     set = xset_set( "move_dlg_confirm_create", "lbl", _("_Confirm Create") );

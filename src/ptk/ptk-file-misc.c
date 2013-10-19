@@ -1128,7 +1128,8 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
 
 void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
+    xset_show_help( GTK_WIDGET( mset->dlg ), NULL,
+                        mset->create_new ? "#gui-newf" : "#gui-rename" );
 }
 
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
@@ -1950,6 +1951,17 @@ void update_new_display( const char* path )
     g_timeout_add( 1500, (GSourceFunc)update_new_display_delayed, g_strdup( path ) );
 }
 
+static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            MoveSet* mset )
+{
+    if ( event->keyval == GDK_KEY_F1 && event->state == 0 )
+    {
+        on_help_activate( NULL, mset );
+        return TRUE;
+    }
+    return FALSE;
+}
+
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
@@ -2676,6 +2688,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             G_CALLBACK( on_button_focus ), mset );
     g_signal_connect( G_OBJECT( mset->cancel ), "focus",
                             G_CALLBACK( on_button_focus ), mset );
+
+    g_signal_connect( G_OBJECT( mset->dlg ), "key-press-event",
+                            G_CALLBACK( on_dlg_keypress ), mset );
 
     // run
     int response;

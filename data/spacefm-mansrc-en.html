@@ -630,7 +630,27 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 
 
+<!-- @GUI @Rename Dialog #rename -->
 
+<P>SpaceFM's Rename Dialog, accessed by right-clicking on a file and selecting Rename, does much more than rename files.  It can move, copy, or create a link to the selected file or directory.  It can also copy the target of a selected link, or create a new link to the target.  By checking As Root, the function will be performed as the root user.
+
+<P>The Option button allows you to add and remove fields from the dialog.  The selected fields, which are extra-large for easy editing of long filenames, show different parts of the selected path, such as the name and extension, full filename, parent, or path.  As you edit the file's path, you will be advised if the entered path already exists.  If you use a path which doesn't exist, SpaceFM will create the necessary parents automatically.  The Confirm Create option determines if you will be prompted before parents are created.
+
+<P>The Browse button allows you to browse for a filename, parent, or path, and insert it into the dialog.
+
+<P>TIPS:  To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.  To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').  Multiple files can be selected in the file browser to rename a batch of files.
+
+
+
+<!-- @GUI @New File/Folder Dialog #newf -->
+
+<P>The New File/Folder Dialog is opened by right-clicking on the file list and selecting New|File, Folder, or Link.  This dialog works similarly to the <a href="#gui-rename">Rename Dialog</a>, allowing you to create files and folders in other paths, create as root, create relative links (eg a link to ../filename.txt), and create new files and folders using templates.
+
+<P>SpaceFM looks in $XDG_TEMPLATES_DIR/, ~/Templates/, or ~/.templates/ to find template files.  Templates are simply empty or partially filled files (of any type) used to create new files, so instead of an empty file you get a copy of the template file.  You can place any files or links to files in your Templates folder. Subfolders in the templates folder can also be used to create new folders pre-filled with a set of files, or to organize templates.
+
+<p>After you have finished entering the path for your new file or folder, you can press Create to create it, or the '&amp; Open' button to create and open the file or folder in one step.
+
+ 
 
 <!-- @Devices @Introduction -->
 
@@ -4660,8 +4680,14 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 <!-- # scripts/default-script #defscript -->
 This file, <i>if you create it</i>, is used as your default <a href="#designmode-command-script">command script</a> rather than the <a href="#exvar">automatically generated one</a>.  When you create a new custom command as a Script, ~/.config/spacefm/scripts/default-script will be copied to the <a href="#designmode-command-browse-files">command directory</a> as exec.sh.
 
+<p><b>Other locations in your home folder used by SpaceFM include:</b>
+
 <!-- # ~/.local/share/applications/ #localapps -->
 This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+
+<!-- # ~/.templates/ #tmpl -->
+The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and folder templates for use in the <a href="#gui-newf">New File/Folder Dialog</a>.
+
 
 <!-- @Program Files @/etc -->
 
