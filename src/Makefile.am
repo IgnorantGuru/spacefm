@@ -7,7 +7,6 @@ INCLUDES = \
     -I$(top_srcdir)/src/vfs \
     -I$(top_srcdir)/src/libmd5-rfc \
     -I$(top_srcdir)/src/desktop \
-    -I$(top_srcdir)/src/inotify \
     -I$(top_srcdir)/src/exo \
     -DPACKAGE_DATA_DIR=\""$(datadir)/spacefm"\" \
     -DPACKAGE_UI_DIR=\""$(datadir)/spacefm/ui"\" \
@@ -84,10 +83,6 @@ PTK_SOURCES = \
     ptk/ptk-file-properties.c ptk/ptk-file-properties.h \
     ptk/ptk-app-chooser.c ptk/ptk-app-chooser.h
 
-INOTIFY_SOURCES = \
-    inotify/inotify-syscalls.h \
-    inotify/linux-inotify.h
-
 EXO_SOURCES = \
     exo/exo-icon-view.c exo/exo-icon-view.h \
     exo/exo-tree-view.c exo/exo-tree-view.h \
@@ -102,7 +97,6 @@ COMPAT_SOURCES = \
 
 spacefm_SOURCES = \
     $(MIMETYE_SOURCES) \
-    $(INOTIFY_SOURCES) \
     $(VFS_SOURCES) \
     $(MD5_SOURCES) \
     $(COMPAT_SOURCES) \

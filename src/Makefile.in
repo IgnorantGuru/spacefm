@@ -68,7 +68,6 @@ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	mime-type/mime-action.c mime-type/mime-action.h \
 	mime-type/mime-cache.c mime-type/mime-cache.h \
-	inotify/inotify-syscalls.h inotify/linux-inotify.h \
 	vfs/vfs-file-monitor.c vfs/vfs-file-monitor.h \
 	vfs/vfs-mime-type.c vfs/vfs-mime-type.h vfs/vfs-file-info.c \
 	vfs/vfs-file-info.h vfs/vfs-dir.c vfs/vfs-dir.h \
@@ -107,23 +106,22 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	cust-dialog.h item-prop.c item-prop.h
 am__objects_1 = spacefm-mime-type.$(OBJEXT) \
 	spacefm-mime-action.$(OBJEXT) spacefm-mime-cache.$(OBJEXT)
-am__objects_2 =
-am__objects_3 = spacefm-vfs-volume-nohal.$(OBJEXT)
-am__objects_4 = spacefm-vfs-volume-hal.$(OBJEXT) \
+am__objects_2 = spacefm-vfs-volume-nohal.$(OBJEXT)
+am__objects_3 = spacefm-vfs-volume-hal.$(OBJEXT) \
 	spacefm-vfs-volume-hal-options.$(OBJEXT)
-@USE_HAL_FALSE@am__objects_5 = $(am__objects_3)
-@USE_HAL_TRUE@am__objects_5 = $(am__objects_4)
-am__objects_6 = spacefm-vfs-file-monitor.$(OBJEXT) \
+@USE_HAL_FALSE@am__objects_4 = $(am__objects_2)
+@USE_HAL_TRUE@am__objects_4 = $(am__objects_3)
+am__objects_5 = spacefm-vfs-file-monitor.$(OBJEXT) \
 	spacefm-vfs-mime-type.$(OBJEXT) \
 	spacefm-vfs-file-info.$(OBJEXT) spacefm-vfs-dir.$(OBJEXT) \
 	spacefm-vfs-app-desktop.$(OBJEXT) \
-	spacefm-vfs-file-task.$(OBJEXT) $(am__objects_5) \
+	spacefm-vfs-file-task.$(OBJEXT) $(am__objects_4) \
 	spacefm-vfs-execute.$(OBJEXT) spacefm-vfs-async-task.$(OBJEXT) \
 	spacefm-vfs-thumbnail-loader.$(OBJEXT) \
 	spacefm-vfs-utils.$(OBJEXT)
-am__objects_7 = spacefm-md5.$(OBJEXT)
-am__objects_8 = spacefm-glib-utils.$(OBJEXT)
-am__objects_9 = spacefm-ptk-file-browser.$(OBJEXT) \
+am__objects_6 = spacefm-md5.$(OBJEXT)
+am__objects_7 = spacefm-glib-utils.$(OBJEXT)
+am__objects_8 = spacefm-ptk-file-browser.$(OBJEXT) \
 	spacefm-ptk-file-list.$(OBJEXT) \
 	spacefm-ptk-path-entry.$(OBJEXT) \
 	spacefm-ptk-text-renderer.$(OBJEXT) \
@@ -141,20 +139,20 @@ am__objects_9 = spacefm-ptk-file-browser.$(OBJEXT) \
 	spacefm-ptk-file-misc.$(OBJEXT) \
 	spacefm-ptk-file-properties.$(OBJEXT) \
 	spacefm-ptk-app-chooser.$(OBJEXT)
-am__objects_10 = spacefm-exo-icon-view.$(OBJEXT) \
+am__objects_9 = spacefm-exo-icon-view.$(OBJEXT) \
 	spacefm-exo-tree-view.$(OBJEXT) spacefm-exo-private.$(OBJEXT) \
 	spacefm-exo-string.$(OBJEXT) spacefm-exo-marshal.$(OBJEXT)
-@DESKTOP_INTEGRATION_FALSE@am__objects_11 = spacefm-desktop.$(OBJEXT)
-@DESKTOP_INTEGRATION_TRUE@am__objects_11 =  \
+@DESKTOP_INTEGRATION_FALSE@am__objects_10 = spacefm-desktop.$(OBJEXT)
+@DESKTOP_INTEGRATION_TRUE@am__objects_10 =  \
 @DESKTOP_INTEGRATION_TRUE@	spacefm-desktop-window.$(OBJEXT) \
 @DESKTOP_INTEGRATION_TRUE@	spacefm-desktop.$(OBJEXT)
-am_spacefm_OBJECTS = $(am__objects_1) $(am__objects_2) \
+am_spacefm_OBJECTS = $(am__objects_1) $(am__objects_5) \
 	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
-	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
-	spacefm-main.$(OBJEXT) spacefm-main-window.$(OBJEXT) \
-	spacefm-settings.$(OBJEXT) spacefm-pref-dialog.$(OBJEXT) \
-	spacefm-find-files.$(OBJEXT) spacefm-go-dialog.$(OBJEXT) \
-	spacefm-cust-dialog.$(OBJEXT) spacefm-item-prop.$(OBJEXT)
+	$(am__objects_9) $(am__objects_10) spacefm-main.$(OBJEXT) \
+	spacefm-main-window.$(OBJEXT) spacefm-settings.$(OBJEXT) \
+	spacefm-pref-dialog.$(OBJEXT) spacefm-find-files.$(OBJEXT) \
+	spacefm-go-dialog.$(OBJEXT) spacefm-cust-dialog.$(OBJEXT) \
+	spacefm-item-prop.$(OBJEXT)
 spacefm_OBJECTS = $(am_spacefm_OBJECTS)
 am__DEPENDENCIES_1 =
 spacefm_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -384,7 +382,6 @@ INCLUDES = \
     -I$(top_srcdir)/src/vfs \
     -I$(top_srcdir)/src/libmd5-rfc \
     -I$(top_srcdir)/src/desktop \
-    -I$(top_srcdir)/src/inotify \
     -I$(top_srcdir)/src/exo \
     -DPACKAGE_DATA_DIR=\""$(datadir)/spacefm"\" \
     -DPACKAGE_UI_DIR=\""$(datadir)/spacefm/ui"\" \
@@ -453,10 +450,6 @@ PTK_SOURCES = \
     ptk/ptk-file-properties.c ptk/ptk-file-properties.h \
     ptk/ptk-app-chooser.c ptk/ptk-app-chooser.h
 
-INOTIFY_SOURCES = \
-    inotify/inotify-syscalls.h \
-    inotify/linux-inotify.h
-
 EXO_SOURCES = \
     exo/exo-icon-view.c exo/exo-icon-view.h \
     exo/exo-tree-view.c exo/exo-tree-view.h \
@@ -471,7 +464,6 @@ COMPAT_SOURCES = \
 
 spacefm_SOURCES = \
     $(MIMETYE_SOURCES) \
-    $(INOTIFY_SOURCES) \
     $(VFS_SOURCES) \
     $(MD5_SOURCES) \
     $(COMPAT_SOURCES) \
