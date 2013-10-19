@@ -2079,28 +2079,31 @@ static void xset_write_set( FILE* file, XSet* set )
         fprintf( file, "%s-key=%d\n", set->name, set->key );
     if ( set->keymod )
         fprintf( file, "%s-keymod=%d\n", set->name, set->keymod );
+    // menu label
     if ( set->menu_label )
     {
         if ( set->lock )
         {
-            if ( set->in_terminal == XSET_B_TRUE )
+            // built-in
+            if ( set->in_terminal == XSET_B_TRUE && set->menu_label[0] )
                 // only save lbl if menu_label was customized
                 fprintf( file, "%s-lbl=%s\n", set->name, set->menu_label );
         }
         else
+            // custom
             fprintf( file, "%s-label=%s\n", set->name, set->menu_label );
     }
-    if ( set->icon )
+    // icon
+    if ( set->lock )
     {
-        if ( set->lock )
-        {
-            if ( set->keep_terminal == XSET_B_TRUE )
-                // only save icn if icon was customized
-                fprintf( file, "%s-icn=%s\n", set->name, set->icon );
-        }
-        else
-            fprintf( file, "%s-icon=%s\n", set->name, set->icon );
+        // built-in            
+        if ( set->keep_terminal == XSET_B_TRUE )
+            // only save icn if icon was customized
+            fprintf( file, "%s-icn=%s\n", set->name, set->icon ? set->icon : "" );
     }
+    else if ( set->icon )
+        // custom
+        fprintf( file, "%s-icon=%s\n", set->name, set->icon );
     if ( set->next )
         fprintf( file, "%s-next=%s\n", set->name, set->next );
     if ( set->child )
