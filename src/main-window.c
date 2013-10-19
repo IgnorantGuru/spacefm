@@ -3600,6 +3600,8 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Delete  && keymod == 0 )
             || ( event->keyval == GDK_KEY_Tab     && keymod == 0 )
+            || ( keymod == 0 && ( event->keyval == GDK_KEY_Return || 
+                                  event->keyval == GDK_KEY_KP_Enter ) )
             || ( event->keyval == GDK_KEY_Left &&  ( keymod == 0 || 
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Right && ( keymod == 0 || 
