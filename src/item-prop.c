@@ -1098,6 +1098,11 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     // load command data
     XSet* rset = ctxt->set;
     XSet* mset = xset_get_plugin_mirror( rset );
+    if ( !rset->x || ( rset->x && atoi( rset->x ) > XSET_CMD_SCRIPT ) )
+    {
+        g_free( rset->x );
+        rset->x = g_strdup_printf( "%d", XSET_CMD_LINE );
+    }
     if ( atoi( rset->x ) == XSET_CMD_LINE )
         load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
     else

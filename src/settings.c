@@ -3132,7 +3132,9 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         }
         else if ( set->menu_style )
         {
-            if ( set->menu_style == XSET_MENU_CHECK )
+            if ( set->menu_style == XSET_MENU_CHECK &&
+                        !( !set->lock && set->x &&
+                           ( atoi( set->x ) > XSET_CMD_SCRIPT ) ) ) // app or book
             {
                 item = gtk_check_menu_item_new_with_mnemonic( set->menu_label );
                 gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
