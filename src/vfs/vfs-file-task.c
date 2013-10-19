@@ -2205,7 +2205,6 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->current_dest = NULL;
     
     task->recursive = ( task->type == VFS_FILE_TASK_COPY ||
-                        task->type == VFS_FILE_TASK_MOVE || 
                         task->type == VFS_FILE_TASK_DELETE );
 
     task->err_count = 0;
