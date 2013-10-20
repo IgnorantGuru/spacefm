@@ -60,6 +60,8 @@
 <ul>
     <a href="#gui-pathbar">Path Bar</a><br>
     <a href="#gui-find">Find-As-You-Type Search </a><br>
+    <a href="#gui-rename">Rename Dialog </a><br>
+    <a href="#gui-newf">New File/Folder Dialog </a><br>
 </ul>
 <a href="#devices">Devices</a>
 <ul>
@@ -900,6 +902,8 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <ul>
         <li>Path Bar
         <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -943,7 +947,7 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 	</tr>
 </table>
 
-<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
+<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Enter, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
 
 <!-- # Auto Seek #seek -->
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
@@ -1136,6 +1140,8 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <ul>
         <li><a href="#gui-pathbar">Path Bar</a>
         <li>Find-As-You-Type Search 
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1172,9 +1178,89 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 
 
-
-
 <!-- @end gui-find-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li>Rename Dialog 
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-rename"/><a href="#gui-rename"><font size=+2>Rename Dialog </font></a>
+<!-- @GUI @Rename Dialog #rename -->
+
+<P>SpaceFM's Rename Dialog, accessed by right-clicking on a file and selecting Rename, does much more than rename files.  It can move, copy, or create a link to the selected file or directory.  It can also copy the target of a selected link, or create a new link to the target.  By checking As Root, the function will be performed as the root user.
+
+<P>The Option button allows you to add and remove fields from the dialog.  The selected fields, which are extra-large for easy editing of long filenames, show different parts of the selected path, such as the name and extension, full filename, parent, or path.  As you edit the file's path, you will be advised if the entered path already exists.  If you use a path which doesn't exist, SpaceFM will create the necessary parents automatically.  The Confirm Create option determines if you will be prompted before parents are created.
+
+<P>The Browse button allows you to browse for a filename, parent, or path, and insert it into the dialog.
+
+<P>TIPS:  To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.  To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').  Multiple files can be selected in the file browser to rename a batch of files.
+
+
+
+<!-- @end gui-rename-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li>New File/Folder Dialog 
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-newf"/><a href="#gui-newf"><font size=+2>New File/Folder Dialog </font></a>
+<!-- @GUI @New File/Folder Dialog #newf -->
+
+<P>The New File/Folder Dialog is opened by right-clicking on the file list and selecting New|File, Folder, or Link.  This dialog works similarly to the <a href="#gui-rename">Rename Dialog</a>, allowing you to create files and folders in other paths, create as root, create relative links (eg a link to ../filename.txt), and create new files and folders using templates.
+
+<P>SpaceFM looks in $XDG_TEMPLATES_DIR/, ~/Templates/, or ~/.templates/ to find template files.  Templates are simply empty or partially filled files (of any type) used to create new files, so instead of an empty file you get a copy of the template file.  You can place any files or links to files in your Templates folder. Subfolders in the templates folder can also be used to create new folders pre-filled with a set of files, or to organize templates.
+
+<p>After you have finished entering the path for your new file or folder, you can press Create to create it, or the '&amp; Open' button to create and open the file or folder in one step.
+
+ 
+
+<!-- @end gui-newf-->
 <br><br></td></tr>
 
 
@@ -2766,7 +2852,7 @@ The Context page of the <a href="#designmode-props">Menu Item Properties</a> dia
 <p><b>Composing Rules</b>
 <br>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are generally the most useful.
 
-<p>The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  In the case of "matches pattern" or "doesn't match", wildcards may be used (eg "Filename matches pattern *.jpg").  If the test pattern contains any uppercase characters, the test is case-sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
+<p>The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  In the case of "matches" or "doesn't match", wildcards may be used (eg "Filename matches *.jpg").  If the test pattern contains any uppercase characters, the test is case-sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
 
 <p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value.  Each subject chosen will have a different list of common values.
 
@@ -6038,7 +6124,7 @@ Usage: <b>spacefm -s set-task [OPTIONS] TASKID TASKPROPERTY [VALUE...]</b>
                --window-close rm "$cmdpipe" -- close > /dev/null
     
     # cleanup
-    <b>spacefm -s -set-task $fm_my_task popup_handler</b>
+    <b>spacefm -s set-task $fm_my_task popup_handler</b>
     rm -f "$cmdpipe"
     exit
 </pre>
@@ -6505,9 +6591,16 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 <p><a name="programfiles-home-defscript"/><a href="#programfiles-home-defscript"><b>scripts/default-script</b></a><br>
 This file, <i>if you create it</i>, is used as your default <a href="#designmode-command-script">command script</a> rather than the <a href="#exvar">automatically generated one</a>.  When you create a new custom command as a Script, ~/.config/spacefm/scripts/default-script will be copied to the <a href="#designmode-command-browse-files">command directory</a> as exec.sh.
 
+<p><b>Other locations in your home folder used by SpaceFM include:</b>
+
 <!-- # ~/.local/share/applications/ #localapps -->
 <p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
 This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+
+<!-- # ~/.templates/ #tmpl -->
+<p><a name="programfiles-home-tmpl"/><a href="#programfiles-home-tmpl"><b>~/.templates/</b></a><br>
+The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and folder templates for use in the <a href="#gui-newf">New File/Folder Dialog</a>.
+
 
 <!-- @end programfiles-home-->
 <br><br></td></tr>
@@ -6726,7 +6819,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-04-24&nbsp;&nbsp;(SpaceFM version 0.8.7+)
+<p>Updated 2013-10-19&nbsp;&nbsp;(SpaceFM version 0.8.7+)
 <br><br>
 </center>
 </td></tr></table>
