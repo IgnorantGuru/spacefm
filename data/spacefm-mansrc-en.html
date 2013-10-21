@@ -608,7 +608,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
 <!-- @GUI @Find-As-You-Type Search #find -->
 
-<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  By default, SpaceFM conducts a case insensitive substring search.  This means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
+<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
 
 <p>In addition, Find-As-You-Type Search supports the following modes:
 
@@ -617,9 +617,10 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
-        <li>If the search key begins with a caret (^), the search will match names <i>beginning</i> with your key.  
+        <li>If the search key begins with a caret (^), <b>or</b> the search key is less than three characters, the search will match names <i>beginning</i> with your key.
+	<li>If the search key is longer than three characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
         <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
-        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are not supported in this mode.)
+        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are <b>not</b> supported in this mode.)
     </ul><br>
     <li>Anytime you use an uppercase letter anywhere in your search key, the search mode becomes <b>case sensitive</b>.<br><br>
 

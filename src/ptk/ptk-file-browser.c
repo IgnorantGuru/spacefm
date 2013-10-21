@@ -4119,12 +4119,15 @@ gboolean folder_view_search_equal( GtkTreeModel* model, gint col,
     }
     else
     {
-        gboolean start = ( key[0] == '^' );
         gboolean end = g_str_has_suffix( key, "$" );
+        gboolean start = !end && ( strlen( key ) < 3 );
         char* key2 = g_strdup( key );
         char* keyp = key2;
-        if ( start )
+        if ( key[0] == '^' )
+        {
             keyp++;
+            start = TRUE;
+        }
         if ( end )
             key2[strlen( key2 )-1] = '\0';
         if ( start && end )

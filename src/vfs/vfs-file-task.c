@@ -1664,7 +1664,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         }
         
         // build - command
-        printf("\nTASK_COMMAND=%s\n", task->exec_command );
+        printf("\nTASK_COMMAND(%p)=%s\n", task->exec_ptask, task->exec_command );
         result = fprintf( file, "%s\nfm_err=$?\n", task->exec_command );
         if ( result < 0 ) goto _exit_with_error;
 
