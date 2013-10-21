@@ -2672,6 +2672,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     on_opt_toggled( NULL, mset );
 
+    /* instead of using last used widget, just use first visible
     // last widget
     int last = xset_get_int( "move_dlg_font", "z" );
     if ( last == 1 )
@@ -2696,6 +2697,15 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
             mset->last_widget = mset->input_full_path;
     }
+    */
+    if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
+        mset->last_widget = mset->input_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
+        mset->last_widget = mset->input_full_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
+        mset->last_widget = mset->input_path;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
+        mset->last_widget = mset->input_full_path;
     
     // select last widget
     select_input( mset->last_widget, mset );
@@ -3194,7 +3204,8 @@ _continue_free:
         g_free( str );
     }
 
-    // save last_widget
+    // save last_widget - this is no longer used but save anyway
+    int last;
     if ( mset->last_widget == mset->input_name )
         last = 1;
     else if ( mset->last_widget == GTK_WIDGET( mset->entry_ext ) )

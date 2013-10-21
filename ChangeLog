@@ -49,6 +49,7 @@
     improved overwrite dir #330 #312
     support mips and other architectures - change to sys/inotify.h #311
     manual Rename and New File dialogs; adjust Options menu keys #268
+    rename/new dlgs always focus first entry
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation
