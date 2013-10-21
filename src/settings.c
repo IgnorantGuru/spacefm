@@ -6116,12 +6116,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
             name = g_strdup( _("( no name )") );
         if ( set->child && set->menu_style == XSET_MENU_SUBMENU )
         {
-            msg = g_strdup_printf( _("Permanently remove the '%s' SUBMENU AND ALL COMMANDS WITHIN IT?\n\nThis action will delete all settings and files associated with these items."), name );
+            msg = g_strdup_printf( _("Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n\nThis action will delete all settings and files associated with these items."), name );
             buttons = GTK_BUTTONS_YES_NO;
         }
         else
         {
-            msg = g_strdup_printf( _("Permanently remove the '%s' command?\n\nThis action will delete all settings and files associated with this command."), name );
+            msg = g_strdup_printf( _("Permanently remove the '%s' item?\n\nThis action will delete all settings and files associated with this item."), name );
             buttons = GTK_BUTTONS_OK_CANCEL;
         }
         g_free( name );

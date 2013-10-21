@@ -1098,20 +1098,15 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     // load command data
     XSet* rset = ctxt->set;
     XSet* mset = xset_get_plugin_mirror( rset );
-    if ( !rset->x || ( rset->x && atoi( rset->x ) > XSET_CMD_SCRIPT ) )
-    {
-        g_free( rset->x );
-        rset->x = g_strdup_printf( "%d", XSET_CMD_LINE );
-    }
-    if ( atoi( rset->x ) == XSET_CMD_LINE )
-        load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
-    else
+    if ( rset->x && atoi( rset->x ) == XSET_CMD_SCRIPT )
     {
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(
                                             ctxt->cmd_opt_script ), TRUE );
         gtk_widget_hide( ctxt->cmd_line_label );
         load_command_script( ctxt, rset );
     }
+    else
+        load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
                                                     ctxt->cmd_script ) );
     GtkTextIter siter;
