@@ -7682,7 +7682,8 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                                               action,
                                               buttons,
                                               msg1, NULL );
-    xset_set_window_icon( GTK_WINDOW( dlg ) );
+    if ( action == GTK_MESSAGE_INFO )
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
     gtk_window_set_role( GTK_WINDOW( dlg ), "msg_dialog" );
 
     if ( msg2 )
