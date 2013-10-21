@@ -1490,7 +1490,10 @@ static gboolean on_target_keypress( GtkWidget *widget, GdkEventKey *event,
 static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
                                                             ContextData* ctxt )
 {
-    if ( event->keyval == GDK_KEY_F1 && event->state == 0 )
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->keyval == GDK_KEY_F1 && keymod == 0 )
     {
         gtk_dialog_response( GTK_DIALOG( ctxt->dlg ), GTK_RESPONSE_HELP );
         return TRUE;

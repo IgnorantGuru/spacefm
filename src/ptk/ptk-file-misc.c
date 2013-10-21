@@ -211,7 +211,10 @@ void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event,
                                                                 MoveSet* mset )
 {
-    if ( event->state == 0 )
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
         if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
         {
@@ -231,7 +234,10 @@ static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event,
 static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event,
                                                                 MoveSet* mset )
 {
-    if ( event->state == 0 )
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
         if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
         {
