@@ -202,26 +202,49 @@ static void select_file_name_part( GtkEntry* entry )
     }
 }
 
-static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    xset_show_help( GTK_WIDGET( mset->dlg ), NULL,
+                        mset->create_new ? "#gui-newf" : "#gui-rename" );
+}
+
+static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
+{
+    if ( event->state == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
     return FALSE;
 }
 
-static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    if ( event->state == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
-    
     return FALSE;
 }
 
@@ -1126,12 +1149,6 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     gtk_widget_destroy( dlg );    
 }
 
-void on_help_activate( GtkMenuItem* item, MoveSet* mset )
-{
-    xset_show_help( GTK_WIDGET( mset->dlg ), NULL,
-                        mset->create_new ? "#gui-newf" : "#gui-rename" );
-}
-
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
 {
     PangoFontDescription* font_desc = NULL;
@@ -1951,6 +1968,7 @@ void update_new_display( const char* path )
     g_timeout_add( 1500, (GSourceFunc)update_new_display_delayed, g_strdup( path ) );
 }
 
+/*
 static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
                                                             MoveSet* mset )
 {
@@ -1961,6 +1979,7 @@ static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
     }
     return FALSE;
 }
+*/
 
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
@@ -2689,8 +2708,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     g_signal_connect( G_OBJECT( mset->cancel ), "focus",
                             G_CALLBACK( on_button_focus ), mset );
 
-    g_signal_connect( G_OBJECT( mset->dlg ), "key-press-event",
-                            G_CALLBACK( on_dlg_keypress ), mset );
+    // not used to speed keypress processing 
+    //g_signal_connect( G_OBJECT( mset->dlg ), "key-press-event",
+    //                        G_CALLBACK( on_dlg_keypress ), mset );
 
     // run
     int response;
