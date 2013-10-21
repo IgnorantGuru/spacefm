@@ -883,6 +883,22 @@ void on_script_toggled( GtkWidget* item, ContextData* ctxt )
         ctxt->temp_cmd_line = get_text_view( GTK_TEXT_VIEW(
                                                         ctxt->cmd_script ) );
         load_command_script( ctxt, ctxt->set );
+        
+        // update Open In Browser file count
+        char* path;
+        if ( ctxt->set->plugin )
+            path = g_build_filename( ctxt->set->plug_dir, ctxt->set->plug_name,
+                                                                NULL );
+        else
+            path = g_build_filename( xset_get_config_dir(), "scripts",
+                                                        ctxt->set->name, NULL );
+        char* str = g_strdup_printf( "%s  $fm_cmd_dir  %s", _("Command Dir"), 
+                                dir_has_files( path ) ? "" : _("(no files)") );
+        gtk_combo_box_text_remove( GTK_COMBO_BOX_TEXT( ctxt->open_browser ), 0);
+        gtk_combo_box_text_insert_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
+                                                                    0, str );
+        g_free( str );
+        g_free( path );
     }
     GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
                                                     ctxt->cmd_script ) );
