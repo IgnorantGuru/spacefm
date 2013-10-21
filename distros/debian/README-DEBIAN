@@ -2,6 +2,9 @@ The files in distros/debian/ may be used to build a binary deb package of
 SpaceFM for use on Debian-based distros (Lenny and later).  See the CREATE DEB
 PACKAGE section in ../../README for step-by-step instructions.
 
+Note that for newer systems that use libudev1, some adjustments to the control
+file dependencies may be necessary, or use official packages below.
+
 For official Debian packages, please see Debian repositories:
 http://packages.debian.org/search?keywords=spacefm&searchon=names&suite=all&section=all
 

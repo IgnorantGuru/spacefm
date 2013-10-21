@@ -353,6 +353,9 @@ To build a deb file of SpaceFM on your Debian-based distro:
 
         dpkg -i spacefm*.deb
 
+NOTE: For newer systems that use libudev1, some adjustments to the control
+file dependencies may be necessary, or use official Debian packages.
+
 
 UNINSTALL
 

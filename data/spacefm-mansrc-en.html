@@ -396,6 +396,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#designmode">How do I set or change key shortcuts and icons?</a><br>
     How to I set or change the key to go Up a directory?<br>
 	<blockquote>Right-click on the file list, right-click on menu item Go|Up, and select Key Shortcut.</blockquote>
+    <a href="#impcon">How do I hide a menu item?</a><br>
     <a href="#designmode-toolbars">How do I customize the toolbars?</a><br>
     <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
     How do I create a custom menu item?<br>
@@ -1155,7 +1156,7 @@ Mount Command opens a dialog which allows you to enter a custom mount command.  
 <p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pmount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
 
 <!-- #Unmount Command #ucmd -->
-Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting.  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
+Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting (including of network filesystems).  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
 
 <p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
 
@@ -1771,17 +1772,21 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <p><b>Automatic Context</b>
 <br>It is important to note that built-in menu items sometimes have an automatic context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
 
-<p>Also note that custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file type handler</a> (see below).
+<p>Custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file type handler</a> (see below).
 
+<p>Custom menu items added directly after <a href="#tasks-menu-showout">Show Output</a> in the Task Manager's context menu will also only appear for tasks with a custom popup handler.
+    
 <p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
-<p><b>Impossible Context</b>
+<p><a name="impcon"><b>Impossible Context</b></a>
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
 
 <!-- # Use As Opener For #opener -->
 Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as opener for</i>' drop-down list on the Context page is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define an open handler for specific file types (or based on any context rules).
 
-<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files are opened.
+<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the default mount command.
+
+<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files or devices are opened.
 
 <p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as opener for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
 
@@ -1855,9 +1860,7 @@ Shown only for menu items of type Command, the Command page of the <a href="#des
 <p>NOTE:  When exporting a Command menu item, the value of the command line will be exported with the plugin even if Command Line is no longer the selected command type, or if the menu item type is changed.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <p><a name="designmode-command-script"><b>Command Script</b></a>
-<br>When Script is selected on the Command page, a default bash script will be created for the command.  Similar to command lines, bash commands may be entered in the script.
-
-<p>Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  You can simply add your commands to this script, or open it in your editor and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-props">Properties</a> from the Design Menu to access the script of any Command menu item.
+<br>When Script is selected on the Command page, a default bash script will be created for the command.  Similar to command lines, bash commands may be entered in the script, or open it in your editor and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-props">Properties</a> from the Design Menu to access the script of any Command menu item.
 
 <p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  For more information on writing scripts, see the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a>.
 
@@ -1877,7 +1880,7 @@ $fm_import    # import file manager variables (scroll down for info)
 exit $?
 # Example variables available for use: (imported by $fm_import)
 # These variables represent the state of the file manager when command is run.
-# These variables can also be used in command lines and in the Path Bar.
+# These variables can also be used in command lines and in the <a href="#gui-pathbar-cmd">Path Bar</a>.
 
 # "${fm_files[@]}"          selected files              ( same as %F )
 # "$fm_file"                first selected file         ( same as %f )
@@ -1936,7 +1939,7 @@ exit $?
 # "$fm_command"             current command
 # "$fm_value"               menu item value             ( same as %a )
 # "$fm_user"                original user who ran this command
-# "$fm_my_task"             current task's id  (see '<a href="#sockets-methods-set-task">spacefm -s help</a>')
+# "$fm_my_task"             current task's id  (see '<a href="#sockets-invoc-help">spacefm -s help</a>')
 # "$fm_my_window"           current task's window id
 # "$fm_cmd_name"            menu name of current command
 # "$fm_cmd_dir"             command files directory (for read only)
@@ -4468,7 +4471,7 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <p><a name="run-task-edit"><a href="#run-task-edit">edit [--as-root] FILE</a></a>
 
-<p>The edit TASKTYPE opens FILE in the user's configured text editor (set in View|Preferences|Advanced).  Or, if the --as-root option is included, FILE is opened in the user's configered root editor.  This task type is always asynchronous (run and forgotten).  For example:
+<p>The edit TASKTYPE opens FILE in the user's configured text editor (set in View|Preferences|Advanced).  Or, if the --as-root option is included, FILE is opened in the user's configured root editor.  This task type is always asynchronous (run and forgotten).  For example:
 <pre>    spacefm -s run-task edit /etc/fstab</pre>
 
 <b>IMPORTANT:</b>  If sharing a plugin which does anything as root, please be sure to include this information clearly in the plugin's description.
@@ -4520,7 +4523,7 @@ Usage: <b>spacefm -s add-event EVENT COMMAND ...</b>
 
 <p>Note that COMMAND will continue to run anytime EVENT occurs during the lifetime of the current SpaceFM instance, so be sure to <a href="#sockets-methods-remove-event">remove the handler</a> when your script is finished using it.
 
-<p>In addition to adding dynamic event hanlders, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
+<p>In addition to adding dynamic event handlers, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
 
 <p>Note that a single SpaceFM instance may open multiple windows, so your handler will run when events occur in any window.  The handler can test for a specific window using the %w (window ID) substitution variable in the command (which will correspond to a task's $fm_my_window <a href="#exvar">bash variable</a>).
 
