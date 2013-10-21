@@ -19,7 +19,7 @@ Recommends:
 Suggests: udevil, pmount, eject, udisks, lsof, wget, ktsuss, gksu, dbus,
  libdbus-1-3, libdbus-1-dev, libstartup-notification0,
  libstartup-notification0-dev
-Conflicts: spacefm, spacefm-hal
+Conflicts: spacefm, spacefm-hal, spacefm-common
 Description: A multi-panel tabbed file manager with built-in VFS, udev-based
  device manager, customizable menu system, and bash integration.  GTK3 version.
 
