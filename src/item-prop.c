@@ -1471,6 +1471,17 @@ static gboolean on_target_keypress( GtkWidget *widget, GdkEventKey *event,
     return FALSE;
 }
 
+static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            ContextData* ctxt )
+{
+    if ( event->keyval == GDK_KEY_F1 && event->state == 0 )
+    {
+        gtk_dialog_response( GTK_DIALOG( ctxt->dlg ), GTK_RESPONSE_HELP );
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
 {
     GtkTreeViewColumn* col;
@@ -2307,6 +2318,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     
     g_signal_connect( ctxt->notebook, "switch-page",
                         G_CALLBACK ( on_prop_notebook_switch_page ), ctxt );
+
+    g_signal_connect( G_OBJECT( ctxt->dlg ), "key-press-event",
+                                G_CALLBACK( on_dlg_keypress ), ctxt );
 
     // run
     enable_context( ctxt );
