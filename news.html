@@ -30,20 +30,94 @@
 <center><h2>SpaceFM News</h2></center>
 
 <br>
-TIP: To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.
+TIP: To see the work being done on the upcoming release of SpaceFM, see <a href="https://github.com/IgnorantGuru/spacefm/commits/next">SpaceFM Next</a>.  You can build and help test this version using the BUILD NEXT instructions in the <a href="https://github.com/IgnorantGuru/spacefm/blob/next/README">README</a>.  This version is usually as stable as the release versions.
 <br>
 
 <p><br>
 
 
 
-<!-- --------------------------------------------------------------------- -->
-<br><a name="pmforum"></a>
-<big><b><a href="#pmforum">New Official SpaceFM Forum</a></b></big><br>
-2013-Mar-26
 
-<p>SpaceFM's official forum is now hosted on <a href="http://forums.partedmagic.com/viewforum.php?f=15">Parted Magic Forums</a> - much thanks to Patrick Verner.  Please see my <a href="http://forums.partedmagic.com/viewtopic.php?f=15&t=4816">announcement</a> for details on the new and old forums.
-<br><br><hr>
+
+
+
+<!-- --------------------------------------------------------------------- -->
+<br><a name="0.9.0"></a>
+<big><b><a href="#0.9.0">0.9.0 released</a></b></big><br>
+2013-Oct-22
+
+<p>SpaceFM 0.9.0 includes powerful features for those who like to create their own desktop environment, and some significant improvements to Design Mode, which is used to easily customize SpaceFM's menus and toolbars.
+<p>
+<ul>
+    <B>IMPORTANT UPGRADE INFORMATION:</b>  Due to Design Mode changes, making a backup of your SpaceFM session file prior to upgrading is recommended.  Note:  After upgrading and running SpaceFM 0.9.0, if you then run a prior version of SpaceFM (downgrade), any built-in menu item names or icons which you have customized will revert to their defaults.  This does not affect custom menu items.<br><br>
+    <li>SpaceFM's <b>session file</b> now only stores the names and icons of menu items which you have customized.  This makes the session file significantly smaller/faster, accommodates changes to defaults, and also allows you to see updated translations. The cost of this change is the above warning regarding downgrading.<br><br>
+    <li>The <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#invocation-desktopmanager">Desktop Manager</a> has the following new features:<br><br>
+    <ul>
+    <li><b>Moveable Icons</b>: New setting 'Arrange Icons|Custom' allows for arbitrary placement of icons.  There are some unusual aspects to how this works.  Icons can be dropped on top of other icons, and the icons beneath will shift out of the way.  The desktop is essentially a list of icons which is folded into columns.  When moving a group of icons, note that their relative geometry is not preserved - they will be packed into the list.<br><br>
+    <li><a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode">Design Mode</a> can now be used in all parts of the desktop's right-click menu, allowing you to add custom menu items in those menus, and to construct custom application and tool menus, commands, etc.  Parts of the desktop menu are now synchronized with the file browser menu.<br><br>
+    <li>New item <b>Open|Desktop Folder</b> has been added to the desktop's right-click menu.<br><br>
+    <li>New item <b>New|Desktop Application</b> has been added for adding an application shortcut on the desktop.<br><br>
+    <li>A left-click or right-click on the desktop or on an unselected item unselects all.<br><br>
+    <li>Drag action (move or copy) on the desktop is automatic.<br><br>
+    <li>Sorting on the desktop is now natural.<br><br>
+    <li>Removing a device via the Devices menu now shows progress dialog.<br><br>
+    <li>A problem centering wallpaper larger than the screen has been corrected.<br><br>
+    <li>A problem where the desktop was sometimes <b>shifted with the use of a panel</b> has been corrected.<br><br>
+    <li><b>New settings</b> have been added to the Desktop tab of the View|Preferences dialog:<br><br>
+    <ul>
+        <li>A <b>font</b> button to use a custom font for desktop icons<br><br>
+        <li><b>Margin and Padding</b> values to adjust placement of icons<br><br>
+        <li>'<b>Single click opens</b>', now separate from the file browser setting<br><br>
+        <li>'Open folders using associated MIME app'.  If checked, your MIME app is used instead of opening a SpaceFM file manager.<br><br>
+    </ul>
+    </ul>
+    <li>SpaceFM's <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-designmenu">design menu</a> (right-click on a menu item) has been redesigned.<br><br>
+    <li>A new <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-props">Menu Item Properties Dialog</a> has been added for setting a custom menu item's type, name, icon, command, and options, replacing the old design menu.  Commands and scripts may also now be edited in this dialog or opened in your editor.<br><br>
+    <li>Custom menu items (formerly called "custom commands") may now be of type <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-designmenu-bookmark">Bookmark</a>.  Custom Bookmark menu items can be used to bookmark one or more folders, files, or network URLs (they will open in multiple tabs - aka a tab group).  NOTE:  Custom item Bookmarks are not related to the bookmarks in the Bookmarks menu and side pane.  They may only be added to other menus.  (This is due to planned changes ahead.)<br><br>
+    <li>Custom menu items may also be of type <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-designmenu-app">Application</a> (add an application shortcut to any menu), <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-designmenu-new">Command</a> (for custom commands), Separator, Submenu.<br><br>
+    <li>Plugins may now be imported directly into a menu using the design menu's new <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-designmenu-import">New|Import</a> menu.<br><br>
+    <li>A custom menu item may now be set as a default opener for files or devices using the new <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-props-opener">Use as opener for:</a> setting on the <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-props-context">Context tab</a> of the Item Properties Dialog.  If the context enables the item, a file or device will be opened using the custom command or application instead of the associated MIME app or Mount program.<br><br>
+    <li>The verb list of the <b>Context</b> tab of the Item Properties Dialog now includes "match" and "doesn't match" for tests including <b>wildcards</b>.<br><br>
+    <li><a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#gui-find">Find-As-You-Type search</a> has changed:  If the search key is one or two characters, the search finds names that <i>start with</i> it.  If two characters or more, it is a substring search.  You may also include a caret (^) to force the former.<br><br>
+    <li>If Terminal is set to <b>x-terminal-emulator</b>, the link will be resolved, allowing the correct terminal command line arguments.<br><br>
+    <li>Dragging and dropping selected files to the current directory now copies rather than renames.<br><br>
+    <li><b>Mouse buttons 6 &amp; 7</b>, previously set to back/forward, have been reverted.  (These are used in GTK for horizontal scroll.)<br><br>
+    <li>Mount and Unmount menu items for devices (side pane and menu) are now context-sensitive (eg. if unmounted, Unmount will be grayed).<br><br>
+    <li>A left-click in the <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-menu">Devices Menu</a> (on the desktop and in the FM) activates <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-menu-open">Open</a>.<br><br>
+    <li>A middle-click in the Devices menu activates Remove/Eject.<br><br>
+    <li>Mount and Unmount have been added to the Devices menu's design menu (right-click on a device in the menu).<br><br>
+    <li>The file manager's Devices menu now includes and obeys option <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#devices-settings-newtab">Settings|New Tab</a>.<br><br>
+    <li>The <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#gui-rename">Rename/New File</a> dialog's Browse dialog now allows you to select File, Parent, or Path to determine what part of the selected path is inserted.<br><br>
+    <li>Open|Default used on a folder now opens the folder in the associated MIME app (rather than SpaceFM necessarily).<br><br>
+    <li>Missing file errors produced by the <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#sockets-methods-run-task">run-task</a> socket command are now shown in a task popup for the user rather than on stdout.<br><br>
+    <li><b>HAL build</b>:  Unmounted devices may now be ejected in addition to mounted devices.<br><br>
+    <li>HAL build:  Optical devices may now be unmounted in addition to ejected.<br><br>
+    <li>HAL build:  A very old problem causing duplicate devices to be listed has been corrected.<br><br>
+    <li>The <b>session file is now updated more often</b> if you change directories or open/close tabs, allowing better recovery in case of crash or halt.<br><br>
+    <li>When executing .desktop files, SpaceFM now obeys <b>Path and Terminal keys</b>.<br><br>
+    <li>When SpaceFM executes an <b>Exec=</b> line in a .desktop file, the line may contain bash commands (is treated <b>as a bash line</b>).<br><br>
+    <li>If a .desktop file does not contain an Exec field code, separate commands are issued for each selected file.<br><br>
+    <li>Default and associated MIME applications can now be set for MIME type <b>application/octet-stream</b> (unknown).  (eg. you can set them to open with your hex editor)<br><br>
+    <li>A problem when merging folders (moving a folder onto a folder which exists) which sometimes caused files to be unnecessarily copied instead of just moved has been corrected, improving efficiency.<br><br>
+    <li>Compliance to Design Mode's <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#designmode-props-opts">Popup Task</a> setting has been corrected.<br><br>
+    <li>SpaceFM should now build successfully on <b>MIPS (and other?) architectures</b>. <br><br>
+    <li>The <b>user's manual</b> has been updated to reflect the above changes, and the <A href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#gui-rename">Rename and New File/Folder dialogs</a> are now documented.<br><br>
+    <li>The <b>distributed tarball</b> and associated packages have been moved to a new packages branch in Github and out of the master branch.<br><br>
+    <li><b>New translations</b> have been added - thanks to all translators!  You too can <a href="https://github.com/IgnorantGuru/spacefm/wiki/Translate">help translate</a>.<br><br>
+</ul>
+
+<p>SpaceFM is now included in <a href="http://packages.debian.org/search?keywords=spacefm&searchon=names&suite=all&section=all">official Debian repositories</a> for unstable and testing - much thanks to Mateusz Łukasik and others who were part of this effort.  These are now recommended over IgnorantGuru's PPA packages, as those may no longer be compatible due to <b>the move from libudev0 to libudev1</b>.  For older Debian or the HAL build, <A href="http://igurublog.wordpress.com/downloads/ppa/">IgnorantGuru's PPA</a> may be used.
+
+<P>Mateusz Łukasik also now provides an <A href="https://launchpad.net/%7Emati75/+archive/spacefm">Ubuntu PPA</a> for SpaceFM and udevil, in addition to his <A href="https://launchpad.net/%7Emati75/+archive/lubuntu">Lubuntu PPA</a>.
+
+<p>SpaceFM's and udevil's shared <a href="https://sourceforge.net/p/spacefm/discussion/general/">official forum</a> has moved back to SourceForge.  Due to a crash on the old server, posts between March and October are lost.
+
+<p>The issue tracker (bugs, requests) is now sorted into <a href="https://github.com/IgnorantGuru/spacefm/issues/milestones">Milestones</a> to provide a view of current issue priorities.
+
+
+<br><br><br><hr>
+
+
 
 
 
