@@ -619,7 +619,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
         <li>If the search key begins with a caret (^), <b>or</b> the search key is less than three characters, the search will match names <i>beginning</i> with your key.
-	<li>If the search key is longer than three characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
+	<li>If the search key is longer than two characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
         <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
         <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are <b>not</b> supported in this mode.)
     </ul><br>
@@ -2314,7 +2314,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 <p>For more elaborate MIME adjustments, consider using a dedicated MIME editor.
 
 <!-- # How MIME Works #mimeworks -->
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database exclusively to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file opener commands</a> based on MIME type or browser context to bypass MIME associations.)
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 

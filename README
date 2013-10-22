@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.7+
+README for SpaceFM v0.9.0
 
 Homepage:
     http://ignorantguru.github.io/spacefm/
@@ -8,7 +8,7 @@ Downloads:
     https://github.com/IgnorantGuru/spacefm/tree/pkg
 
 Official Forum:
-    http://forums.partedmagic.com/viewforum.php?f=15
+    https://sourceforge.net/p/spacefm/discussion/general/
 
 
 CONTENTS
@@ -332,6 +332,9 @@ To build a deb file of SpaceFM on your Debian-based distro:
 
         mv distros/debian .
 
+    NOTE: For newer Debian versions, some adjustments to the control file
+    (dependencies) may be necessary, or use official Debian packages.
+
 4)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
@@ -352,9 +355,6 @@ To build a deb file of SpaceFM on your Debian-based distro:
 7)  To install the package you built:
 
         dpkg -i spacefm*.deb
-
-NOTE: For newer systems that use libudev1, some adjustments to the control
-file dependencies may be necessary, or use official Debian packages.
 
 
 UNINSTALL
