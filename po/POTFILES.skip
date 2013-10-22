@@ -1,4 +1,2 @@
-[encoding: UTF-8]
-# List of source files NOT containing translatable strings.
 src/exo/exo-icon-view.c
 src/exo/exo-tree-view.c
