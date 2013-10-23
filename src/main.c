@@ -367,6 +367,7 @@ gboolean single_instance_check()
 
     if ( ( sock = socket( AF_UNIX, SOCK_STREAM, 0 ) ) == -1 )
     {
+        fprintf( stderr, "spacefm: socket init failure\n" );
         ret = 1;
         goto _exit;
     }
@@ -381,7 +382,7 @@ gboolean single_instance_check()
 #endif
 
     /* try to connect to existing instance */
-    if ( connect( sock, ( struct sockaddr* ) & addr, addr_len ) == 0 )
+    if ( sock && connect( sock, ( struct sockaddr* ) & addr, addr_len ) == 0 )
     {
         /* connected successfully */
         char** file;
@@ -469,28 +470,7 @@ gboolean single_instance_check()
     }
 
     /* There is no existing server, and we are in the first instance. */
-    unlink( addr.sun_path ); /* delete old socket file if it exists. */
-    reuse = 1;
-    ret = setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
-    if ( bind( sock, ( struct sockaddr* ) & addr, addr_len ) == -1 )
-    {
-        ret = 1;
-        goto _exit;
-    }
 
-    io_channel = g_io_channel_unix_new( sock );
-    g_io_channel_set_encoding( io_channel, NULL, NULL );
-    g_io_channel_set_buffered( io_channel, FALSE );
-
-    g_io_add_watch( io_channel, G_IO_IN,
-                    ( GIOFunc ) on_socket_event, NULL );
-
-    if ( listen( sock, 5 ) == -1 )
-    {
-        ret = 1;
-        goto _exit;
-    }
-    
     // custom config-dir
     if ( config_dir && strpbrk( config_dir, " $%\\()&#|:;?<>{}[]*\"'" ) )
     {
@@ -498,6 +478,34 @@ gboolean single_instance_check()
         ret = 1;
         goto _exit;
     }
+
+    unlink( addr.sun_path ); /* delete old socket file if it exists. */
+    reuse = 1;
+    ret = setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
+    if ( bind( sock, ( struct sockaddr* ) & addr, addr_len ) == -1 )
+    {
+        g_warning( "could not create socket %s", addr.sun_path );
+        // can still run partially without this
+        //ret = 1;
+        //goto _exit;
+    }
+    else
+    {
+        io_channel = g_io_channel_unix_new( sock );
+        g_io_channel_set_encoding( io_channel, NULL, NULL );
+        g_io_channel_set_buffered( io_channel, FALSE );
+
+        g_io_add_watch( io_channel, G_IO_IN,
+                        ( GIOFunc ) on_socket_event, NULL );
+
+        if ( listen( sock, 5 ) == -1 )
+        {
+            g_warning( "could not listen to socket" );
+            //ret = 1;
+            //goto _exit;
+        }
+    }
+    
     return TRUE;
 
 _exit:
@@ -1490,7 +1498,7 @@ int main ( int argc, char *argv[] )
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
- 
+
     if( run )   /* run the main loop */
         gtk_main();
 
