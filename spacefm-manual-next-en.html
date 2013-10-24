@@ -9,7 +9,7 @@
 <td width="20%" valign="top">
 <font size=+2>SpaceFM</font><br><br>
 <a href="http://ignorantguru.github.io/spacefm/">Homepage</a><br>
-<a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a><br>
 <a href="http://ignorantguru.github.io/spacefm/news.html">News</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/wiki">Wiki</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/issues">Report Issues</a><br>
@@ -324,7 +324,7 @@
 
 <p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
-<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.
+<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Github</a>.
 
 <p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.io/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
@@ -367,7 +367,7 @@
 <a name="installation-installer"/><a href="#installation-installer"><font size=+2>Installer</font></a>
 <!-- @Installation @Installer -->
 
-<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
@@ -1167,7 +1167,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
         <li>If the search key begins with a caret (^), <b>or</b> the search key is less than three characters, the search will match names <i>beginning</i> with your key.
-	<li>If the search key is longer than three characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
+	<li>If the search key is longer than two characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
         <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
         <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are <b>not</b> supported in this mode.)
     </ul><br>
@@ -3542,7 +3542,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- # How MIME Works #mimeworks -->
 <p><a name="designmode-mime-mimeworks"/><a href="#designmode-mime-mimeworks"><b>How MIME Works</b></a><br>
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database exclusively to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file opener commands</a> based on MIME type or browser context to bypass MIME associations.)
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
@@ -6823,7 +6823,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-10-21&nbsp;&nbsp;(SpaceFM version 0.8.7+)
+<p>Updated 2013-10-24&nbsp;&nbsp;(SpaceFM version 0.9.0+)
 <br><br>
 </center>
 </td></tr></table>
