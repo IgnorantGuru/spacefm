@@ -7635,6 +7635,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
                                 rset->icon, &rset->icon,
                                 NULL, FALSE, NULL ) )
         {
+            if ( rset->lock )
+                rset->keep_terminal = TRUE;  // trigger save of changed icon
             if ( cb_func )
                 (*cb_func) ( item, cb_data );
         }
