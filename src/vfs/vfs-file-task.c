@@ -1746,6 +1746,11 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
                                 || strstr( terminal, "terminator" )
                                 || g_str_has_suffix( terminal, "/terminal" ) ) // xfce
             argv[a++] = g_strdup( "-x" );
+        else if ( strstr( terminal, "sakura" ) )
+        {
+            argv[a++] = g_strdup( "-x" );
+            single_arg = TRUE;
+        }
         else
             argv[a++] = g_strdup( "-e" );
         
