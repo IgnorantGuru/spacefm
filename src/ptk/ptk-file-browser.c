@@ -556,10 +556,13 @@ void on_toolbar_hide( GtkWidget* widget, PtkFileBrowser* file_browser,
         return;
 
     focus_folder_view( file_browser );
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window ? main_window->panel_context[p-1] : 0;
     if ( toolbar == file_browser->toolbar )
-        xset_set_b_panel( file_browser->mypanel, "show_toolbox", FALSE );
+        xset_set_b_panel_mode( p, "show_toolbox", mode, FALSE );
     else
-        xset_set_b_panel( file_browser->mypanel, "show_sidebar", FALSE );
+        xset_set_b_panel_mode( p, "show_sidebar", mode, FALSE );
     update_views_all_windows( NULL, file_browser );
 }
 
@@ -672,15 +675,20 @@ void on_toggle_sideview( GtkMenuItem* item, PtkFileBrowser* file_browser, int jo
         job = job2;
 //printf("on_toggle_sideview  %d\n", job);
     
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
+    const char* name;
     if ( job == 0 )
-        xset_set_b_panel( file_browser->mypanel, "show_dirtree", 
-                !xset_get_b_panel( file_browser->mypanel, "show_dirtree" ) );
+        name = "show_dirtree";
     else if ( job == 1 )
-        xset_set_b_panel( file_browser->mypanel, "show_book", 
-                !xset_get_b_panel( file_browser->mypanel, "show_book" ) );
+        name = "show_book";
     else if ( job == 2 )
-        xset_set_b_panel( file_browser->mypanel, "show_devmon", 
-                !xset_get_b_panel( file_browser->mypanel, "show_devmon" ) );
+        name = "show_devmon";
+    else
+        return;
+    XSet* set = xset_get_panel_mode( p, name, mode );
+    set->b = set->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
     update_views_all_windows( NULL, file_browser );
 }
 
@@ -711,19 +719,22 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
                                                     icon_size, set );
 
     // callbacks    
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
     set = xset_set_cb( "stool_dirtree", on_toggle_sideview, file_browser );
-        xset_set_b( "stool_dirtree", xset_get_b_panel( file_browser->mypanel,
-                                                                "show_dirtree" ) );
+        xset_set_b( "stool_dirtree", xset_get_b_panel_mode( p, "show_dirtree",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_book", on_toggle_sideview, file_browser );
-        xset_set_b( "stool_book", xset_get_b_panel( file_browser->mypanel,
-                                                                    "show_book" ) );
+        xset_set_b( "stool_book", xset_get_b_panel_mode( p, "show_book",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "stool_device", on_toggle_sideview, file_browser );
-        xset_set_b( "stool_device", xset_get_b_panel( file_browser->mypanel,
-                                                                "show_devmon" ) );
+        xset_set_b( "stool_device", xset_get_b_panel_mode( p, "show_devmon",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "stool_newtab", on_shortcut_new_tab_activate, file_browser );
@@ -773,7 +784,7 @@ void ptk_file_browser_rebuild_side_toolbox( GtkWidget* widget,
     file_browser->up_btn[2] = set->ob2_data;
 
     // show
-    if ( xset_get_b_panel( file_browser->mypanel, "show_sidebar" ) )
+    if ( xset_get_b_panel_mode( p, "show_sidebar", mode ) )
         gtk_widget_show_all( file_browser->side_toolbox );
     enable_toolbar( file_browser );
 }
@@ -1087,19 +1098,22 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
                                 file_browser->toolbar, icon_size, set );
 
     // callbacks    
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window ? main_window->panel_context[p-1] : 0;
     set = xset_set_cb( "tool_dirtree", on_toggle_sideview, file_browser );
-        xset_set_b( "tool_dirtree", xset_get_b_panel( file_browser->mypanel,
-                                                                "show_dirtree" ) );
+        xset_set_b( "tool_dirtree", xset_get_b_panel_mode( p, "show_dirtree",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_book", on_toggle_sideview, file_browser );
-        xset_set_b( "tool_book", xset_get_b_panel( file_browser->mypanel,
-                                                                "show_book" ) );
+        xset_set_b( "tool_book", xset_get_b_panel_mode( p, "show_book",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "tool_device", on_toggle_sideview, file_browser );
-        xset_set_b( "tool_device", xset_get_b_panel( file_browser->mypanel,
-                                                                "show_devmon" ) );
+        xset_set_b( "tool_device", xset_get_b_panel_mode( p, "show_devmon",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "tool_newtab", on_shortcut_new_tab_activate, file_browser );
@@ -1159,15 +1173,18 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
 
     // callbacks right
     set = xset_set_cb( "rtool_dirtree", on_toggle_sideview, file_browser );
-        xset_set_b( "rtool_dirtree", xset_get_b_panel( file_browser->mypanel, "show_dirtree" ) );
+        xset_set_b( "rtool_dirtree", xset_get_b_panel_mode( p, "show_dirtree",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 0 );
         set->ob2_data = NULL;
    set = xset_set_cb( "rtool_book", on_toggle_sideview, file_browser );
-        xset_set_b( "rtool_book", xset_get_b_panel( file_browser->mypanel, "show_book" ) );
+        xset_set_b( "rtool_book", xset_get_b_panel_mode( p, "show_book",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 1 );
         set->ob2_data = NULL;
     set = xset_set_cb( "rtool_device", on_toggle_sideview, file_browser );
-        xset_set_b( "rtool_device", xset_get_b_panel( file_browser->mypanel, "show_devmon" ) );
+        xset_set_b( "rtool_device", xset_get_b_panel_mode( p, "show_devmon",
+                                                            mode ) );
         xset_set_ob1_int( set, "job", 2 );
         set->ob2_data = NULL;
     xset_set_cb( "rtool_newtab", on_shortcut_new_tab_activate, file_browser );
@@ -1221,7 +1238,7 @@ void ptk_file_browser_rebuild_toolbox( GtkWidget* widget, PtkFileBrowser* file_b
     file_browser->up_btn[1] = set->ob2_data;
 
     // show
-    if ( xset_get_b_panel( file_browser->mypanel, "show_toolbox" ) )
+    if ( xset_get_b_panel_mode( p, "show_toolbox", mode ) )
         gtk_widget_show_all( file_browser->toolbox );
     enable_toolbar( file_browser );
 }
@@ -6720,37 +6737,40 @@ void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, in
     else
         job = job2;
 
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
     switch ( job )
     {
         case 0:
             // path bar
-            if ( !xset_get_b_panel( file_browser->mypanel, "show_pathbar" ) )
+            if ( !xset_get_b_panel_mode( p, "show_toolbox", mode ) )
             {
-                xset_set_panel( file_browser->mypanel, "show_pathbar", "b", "1" );
+                xset_set_b_panel_mode( p, "show_toolbox", mode, TRUE );
                 update_views_all_windows( NULL, file_browser );
             }
             widget = file_browser->path_bar;
             break;
         case 1:
-            if ( !xset_get_b_panel( file_browser->mypanel, "show_dirtree" ) )
+            if ( !xset_get_b_panel_mode( p, "show_dirtree", mode ) )
             {
-                xset_set_panel( file_browser->mypanel, "show_dirtree", "b", "1" );
+                xset_set_b_panel_mode( p, "show_dirtree", mode, TRUE );
                 update_views_all_windows( NULL, file_browser );
             }
             widget = file_browser->side_dir;
             break;
         case 2:
-            if ( !xset_get_b_panel( file_browser->mypanel, "show_book" ) )
+            if ( !xset_get_b_panel_mode( p, "show_book", mode ) )
             {
-                xset_set_panel( file_browser->mypanel, "show_book", "b", "1" );
+                xset_set_b_panel_mode( p, "show_book", mode, TRUE );
                 update_views_all_windows( NULL, file_browser );
             }
             widget = file_browser->side_book;
             break;
         case 3:
-            if ( !xset_get_b_panel( file_browser->mypanel, "show_devmon" ) )
+            if ( !xset_get_b_panel_mode( p, "show_devmon", mode ) )
             {
-                xset_set_panel( file_browser->mypanel, "show_devmon", "b", "1" );
+                xset_set_b_panel_mode( p, "show_devmon", mode, TRUE );
                 update_views_all_windows( NULL, file_browser );
             }
             widget = file_browser->side_dev;
@@ -6995,7 +7015,9 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     char* xname;
     int i;
     XSet* set = xset_get( setname );
-    
+    FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+    char mode = main_window->panel_context[browser->mypanel-1];
+
 //printf("ptk_file_browser_on_action\n");
 
     if ( g_str_has_prefix( set->name, "book_" ) )
@@ -7027,20 +7049,20 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
         
         if ( !strcmp( xname, "dirtree" ) )
         {
-            xset_set_b( set->name, xset_get_b_panel( browser->mypanel,
-                                                                "show_dirtree" ) );
+            xset_set_b( set->name, xset_get_b_panel_mode( browser->mypanel,
+                                                    "show_dirtree", mode ) );
             on_toggle_sideview( NULL, browser, 0 );
         }
         else if ( !strcmp( xname, "book" ) )
         {
-            xset_set_b( set->name, xset_get_b_panel( browser->mypanel,
-                                                                "show_book" ) );
+            xset_set_b( set->name, xset_get_b_panel_mode( browser->mypanel,
+                                                    "show_book", mode ) );
             on_toggle_sideview( NULL, browser, 1 );
         }
         else if ( !strcmp( xname, "device" ) )
         {
-            xset_set_b( set->name, xset_get_b_panel( browser->mypanel,
-                                                                "show_devmon" ) );
+            xset_set_b( set->name, xset_get_b_panel_mode( browser->mypanel,
+                                                    "show_devmon", mode ) );
             on_toggle_sideview( NULL, browser, 2 );
         }
         else if ( !strcmp( xname, "newtab" ) )
@@ -7195,9 +7217,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             else if ( g_str_has_prefix( xname, "detcol_" )  // shared key
                                 && browser->view_mode == PTK_FB_LIST_VIEW )
             {
-                FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
                 // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-                char mode = main_window->panel_context[browser->mypanel-1];
                 if ( mode == PANEL_BOTH )
                     mode = PANEL_HORIZ;
                 else if ( mode == PANEL_VERT )

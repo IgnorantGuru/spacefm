@@ -1375,7 +1375,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     gboolean horiz, vert;
     PtkFileBrowser* file_browser;
 
-    // save column widths of visible panels
+    // save column widths and side sliders of visible panels
     if ( main_window->panel_change )
     {
         for ( p = 1 ; p < 5; p++ )
@@ -1389,11 +1389,13 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                             GTK_NOTEBOOK( main_window->panel[p-1] ),
                                             cur_tabx ) );
-                    if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
+                    if ( file_browser )
                     {
-                        ptk_file_browser_save_column_widths(
+                        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+                            ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( file_browser->folder_view ),
                                     file_browser );
+                        ptk_file_browser_slider_release( NULL, NULL, file_browser );
                     }
                 }
             }
@@ -1456,10 +1458,11 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         // load dynamic slider positions for this panel context
         set = xset_get_panel_mode( p, "slider_positions",
                                      main_window->panel_context[p-1] );
-        main_window->panel_slide_x[i] = set->x ? atoi( set->x ) : 0;
-        main_window->panel_slide_y[i] = set->y ? atoi( set->y ) : 0;
-        main_window->panel_slide_s[i] = set->s ? atoi( set->s ) : 0;
-        
+        main_window->panel_slide_x[p-1] = set->x ? atoi( set->x ) : 0;
+        main_window->panel_slide_y[p-1] = set->y ? atoi( set->y ) : 0;
+        main_window->panel_slide_s[p-1] = set->s ? atoi( set->s ) : 0;
+//printf( "loaded panel %d: %d, %d, %d\n", p, 
+
         if ( show[p] )
         {
             // shown
@@ -6190,16 +6193,32 @@ _missing_arg:
         }
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
+            gboolean use_mode = FALSE;
             if ( g_str_has_prefix( argv[i], "devices_" ) )
+            {
                 str = "show_devmon";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "bookmarks_" ) )
+            {
                 str = "show_book";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "dirtree_" ) )
+            {
                 str = "show_dirtree";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "toolbar_" ) )
+            {
                 str = "show_toolbox";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "sidetoolbar_" ) )
+            {
                 str = "show_sidebar";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
             else if ( g_str_has_prefix( argv[i], "panel" ) )
@@ -6219,7 +6238,12 @@ _missing_arg:
                 str = NULL;
             if ( !str )
                 goto _invalid_set;
-            xset_set_b_panel( panel, str, bool( argv[i+1] ) );
+            if ( use_mode )
+                xset_set_b_panel_mode( panel, str,
+                                        main_window->panel_context[panel-1],
+                                        bool( argv[i+1] ) );
+            else
+                xset_set_b_panel( panel, str, bool( argv[i+1] ) );
             update_views_all_windows( NULL, file_browser );
         }
         else if ( !strcmp( argv[i], "panel_hslider_top" ) ||
@@ -6616,16 +6640,32 @@ _invalid_set:
         {}
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
+            gboolean use_mode = FALSE;
             if ( g_str_has_prefix( argv[i], "devices_" ) )
+            {
                 str = "show_devmon";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "bookmarks_" ) )
+            {
                 str = "show_book";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "dirtree_" ) )
+            {
                 str = "show_dirtree";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "toolbar_" ) )
+            {
                 str = "show_toolbox";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "sidetoolbar_" ) )
+            {
                 str = "show_sidebar";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
             else if ( g_str_has_prefix( argv[i], "panel" ) )
@@ -6644,7 +6684,12 @@ _invalid_set:
                 str = NULL;
             if ( !str )
                 goto _invalid_get;
-            *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel( panel, str ) );
+            if ( use_mode )
+                *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel_mode( panel,
+                                str, main_window->panel_context[panel-1] ) );
+            else
+                *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel( panel,
+                                                                    str ) );
         }
         else if ( !strcmp( argv[i], "panel_hslider_top" ) ||
                   !strcmp( argv[i], "panel_hslider_bottom" ) ||

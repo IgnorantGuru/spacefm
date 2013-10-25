@@ -429,6 +429,27 @@ void on_popup_detailed_column( GtkMenuItem *menuitem, PtkFileBrowser* file_brows
     }
 }
 
+void on_popup_toggle_view( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
+{
+    // get visiblity for correct mode
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
+    
+    XSet* set = xset_get_panel_mode( p, "show_toolbox", mode );
+    set->b = xset_get_panel( p, "show_toolbox" )->b;
+    set = xset_get_panel_mode( p, "show_devmon", mode );
+    set->b = xset_get_panel( p, "show_devmon" )->b;
+    set = xset_get_panel_mode( p, "show_dirtree", mode );
+    set->b = xset_get_panel( p, "show_dirtree" )->b;
+    set = xset_get_panel_mode( p, "show_book", mode );
+    set->b = xset_get_panel( p, "show_book" )->b;
+    set = xset_get_panel_mode( p, "show_sidebar", mode );
+    set->b = xset_get_panel( p, "show_sidebar" )->b;
+    
+    update_views_all_windows( NULL, file_browser );
+}
+
 void on_archive_default( GtkMenuItem *menuitem, XSet* set )
 {
     const char* arcname[] =
@@ -1293,44 +1314,60 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     // View >
     if ( browser )
     {
+        FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+        char mode = main_window->panel_context[p-1];
+
         gboolean show_side = FALSE;
         xset_set_cb( "view_refresh", ptk_file_browser_refresh, browser );
-        xset_set_cb_panel( p, "show_toolbox", update_views_all_windows, browser );
-        set = xset_set_cb_panel( p, "show_devmon", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_toolbox", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_toolbox", mode )->b;
+        set = xset_set_cb_panel( p, "show_devmon", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_devmon", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_dirtree", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_dirtree", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_dirtree", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_book", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_book", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_book", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_sidebar", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_sidebar", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_sidebar", mode )->b;
             set->disable = !show_side;
         xset_set_cb_panel( p, "show_hidden", on_popup_show_hidden, data );
         
         if ( browser->view_mode == PTK_FB_LIST_VIEW )
         {
-            FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
-
             // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-            char mode = main_window->panel_context[p-1];
             if ( mode == PANEL_BOTH )
                 mode = PANEL_HORIZ;
             else if ( mode == PANEL_VERT )
                 mode = PANEL_NEITHER;
             
-            set = xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column,
+                                                                browser );
             set->b = xset_get_panel_mode( p, "detcol_size", mode )->b;
-            set = xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column,
+                                                                browser );
             set->b = xset_get_panel_mode( p, "detcol_type", mode )->b;
-            set = xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column,
+                                                                browser );
             set->b = xset_get_panel_mode( p, "detcol_perm", mode )->b;
-            set = xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column,
+                                                                browser );
             set->b = xset_get_panel_mode( p, "detcol_owner", mode )->b;
-            set = xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column,
+                                                                browser );
             set->b = xset_get_panel_mode( p, "detcol_date", mode )->b;
  
             xset_set_cb( "view_reorder_col", on_reorder, browser );
             set = xset_set( "view_columns", "disable", "0" );
-            desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col", p, p, p, p, p );
+            desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col",
+                                                            p, p, p, p, p );
             xset_set_set( set, "desc", desc );
             g_free( desc );
             set = xset_set_cb( "rubberband", main_window_rubberband_all, NULL );
@@ -1342,49 +1379,59 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set( "rubberband", "disable", "1" );
         }
         
-        set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed, browser );
+        set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed,
+                                                                browser );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
         set = xset_set_cb_panel( p, "list_icons", on_popup_list_icons, browser );
             xset_set_ob2( set, NULL, set_radio );
-        set = xset_set_cb_panel( p, "list_compact", on_popup_list_compact, browser );
+        set = xset_set_cb_panel( p, "list_compact", on_popup_list_compact,
+                                                                browser );
             xset_set_ob2( set, NULL, set_radio );
 
         set = xset_set_cb( "sortby_name", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_NAME );
             xset_set_ob2( set, NULL, NULL );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
             set_radio = set;
         set = xset_set_cb( "sortby_size", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_SIZE );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_type", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_TYPE );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_perm", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_PERM );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_owner", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_OWNER );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_date", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_MTIME );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
 
         set = xset_set_cb( "sortby_ascend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -1 );
             xset_set_ob2( set, NULL, NULL );
-            set->b = browser->sort_type == GTK_SORT_ASCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_type == GTK_SORT_ASCENDING ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
             set_radio = set;
         set = xset_set_cb( "sortby_descend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -2 );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_type == GTK_SORT_DESCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_type == GTK_SORT_DESCENDING ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
 
         set = xset_set_cb( "sortx_natural", on_popup_sort_extra, browser );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_natural ? 

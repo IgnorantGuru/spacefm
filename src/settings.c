@@ -10913,7 +10913,7 @@ void xset_defaults()
 
 
     // PANELS
-    int p;
+    int p, i;
     for ( p = 1; p < 5; p++ )
     {
         set = xset_set_panel( p, "show_toolbox", "lbl", _("_Toolbar") );
@@ -10926,6 +10926,10 @@ void xset_defaults()
         set = xset_set_panel( p, "show_dirtree", "lbl", _("T_ree") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
+
+        // set visible for all panel context modes
+        for ( i = 0; i < 4; i++ )
+            xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
 
         set = xset_set_panel( p, "show_book", "lbl", _("_Bookmarks") );
         set->menu_style = XSET_MENU_CHECK;
