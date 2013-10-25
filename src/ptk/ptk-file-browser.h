@@ -106,9 +106,6 @@ struct _PtkFileBrowser
     GtkWidget* mynotebook;
     GtkWidget* task_view;
     gpointer main_window;
-    int* slide_x;
-    int* slide_y;
-    int* slide_s;
     GtkWidget* toolbox;
     GtkWidget* path_bar;
     GtkWidget* hpane;
@@ -172,11 +169,7 @@ GType ptk_file_browser_get_type ( void );
 
 GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
                                                     GtkWidget* task_view,
-                                                    gpointer main_window,
-                                                    int* slide_x,
-                                                    int* slide_y,
-                                                    int* slide_s );
-
+                                                    gpointer main_window );
 
 /*
 * folder_path should be encodede in on-disk encoding

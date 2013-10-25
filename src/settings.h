@@ -349,6 +349,13 @@ int xset_get_int_panel( int panel, const char* name, const char* var );
 XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value );
 XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data );
 gboolean xset_get_b_set( XSet* set );
+XSet* xset_get_panel_mode( int panel, const char* name, char mode );
+gboolean xset_get_b_panel_mode( int panel, const char* name, char mode );
+XSet* xset_set_panel_mode( int panel, const char* name, char mode,
+                                      const char* var, const char* value );
+XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
+                                                            gboolean bval );
+
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );

@@ -1365,7 +1365,9 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     char* end;
     char* tab_dir;
     char* tabs_add;
+    gboolean show[5];  //array starts at 1 for clarity
     gboolean tab_added;
+    gboolean horiz, vert;
     PtkFileBrowser* file_browser;
 
     // show panelbar
@@ -1387,9 +1389,50 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         xset_set_b_panel( 1, "show", TRUE );
 
     for ( p = 1 ; p < 5; p++ )
+        show[p] = xset_get_b_panel( p, "show" );
+    
+    for ( p = 1 ; p < 5; p++ )
     {
-        if ( xset_get_b_panel( p, "show" ) )
+        // panel context - how panels share horiz and vert space with other panels
+        if ( p == 1 )
         {
+            horiz = show[2];
+            vert = show[3] || show[4];
+        }
+        else if ( p == 2 )
+        {
+            horiz = show[1];
+            vert = show[3] || show[4];
+        }
+        else if ( p == 3 )
+        {
+            horiz = show[4];
+            vert = show[1] || show[2];
+        }
+        else
+        {
+            horiz = show[3];
+            vert = show[1] || show[2];
+        }
+        if ( horiz && vert )
+            main_window->panel_context[p-1] = PANEL_BOTH;
+        else if ( horiz )
+            main_window->panel_context[p-1] = PANEL_HORIZ;
+        else if ( vert )
+            main_window->panel_context[p-1] = PANEL_VERT;
+        else
+            main_window->panel_context[p-1] = PANEL_NEITHER;
+
+        // load dynamic slider positions for this panel context
+        set = xset_get_panel_mode( p, "slider_positions",
+                                     main_window->panel_context[p-1] );
+        main_window->panel_slide_x[i] = set->x ? atoi( set->x ) : 0;
+        main_window->panel_slide_y[i] = set->y ? atoi( set->y ) : 0;
+        main_window->panel_slide_s[i] = set->s ? atoi( set->s ) : 0;
+        
+        if ( show[p] )
+        {
+            // shown
             if ( !gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) ) )
             {
                 main_window->notebook = main_window->panel[p-1];
@@ -1498,6 +1541,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
         else
         {
+            // not shown
             if ( ( evt_pnl_show->s || evt_pnl_show->ob2_data ) && 
                     gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
                 main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
@@ -1517,15 +1561,15 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
             }
         }
     }
-    if ( xset_get_b_panel( 1, "show" ) || xset_get_b_panel( 2, "show" ) )
+    if ( show[1] || show[2] )
         gtk_widget_show( GTK_WIDGET( main_window->hpane_top ) );
     else
         gtk_widget_hide( GTK_WIDGET( main_window->hpane_top ) );
-    if ( xset_get_b_panel( 3, "show" ) || xset_get_b_panel( 4, "show" ) )
+    if ( show[3] || show[4] )
         gtk_widget_show( GTK_WIDGET( main_window->hpane_bottom ) );
     else
         gtk_widget_hide( GTK_WIDGET( main_window->hpane_bottom ) );
-    
+
     // current panel hidden?
     if ( !xset_get_b_panel( main_window->curpanel, "show" ) )
     {
@@ -1888,13 +1932,6 @@ void fm_main_window_init( FMMainWindow* main_window )
         gtk_notebook_set_scrollable ( GTK_NOTEBOOK( main_window->panel[i] ), TRUE );
         g_signal_connect ( main_window->panel[i], "switch-page",
                         G_CALLBACK ( on_folder_notebook_switch_pape ), main_window );
-        // create dynamic copies of panel slider positions
-        main_window->panel_slide_x[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "x" );
-        main_window->panel_slide_y[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "y" );
-        main_window->panel_slide_s[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "s" );
     }
 
     main_window->task_scroll = gtk_scrolled_window_new( NULL, NULL );
@@ -2713,10 +2750,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
     int i = main_window->curpanel -1;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)ptk_file_browser_new(
                                     main_window->curpanel, notebook,
-                                    main_window->task_view, main_window,
-                                    &main_window->panel_slide_x[i],
-                                    &main_window->panel_slide_y[i],
-                                    &main_window->panel_slide_s[i] );
+                                    main_window->task_view, main_window );
     if ( !file_browser )
         return;
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
@@ -5826,11 +5860,17 @@ char main_window_socket_command( char* argv[], char** reply )
     GList* l;
     int height, width;
     GtkWidget* widget;
-    // from ptk-file-browser.c on_folder_view_columns_changed titles[]
-    const char* col_titles[] =
+    // must match file-browser.c
+    const char* column_titles[] =
     {
         N_( "Name" ), N_( "Size" ), N_( "Type" ),
         N_( "Permission" ), N_( "Owner" ), N_( "Modified" )
+    };
+
+    const char* column_names[] =
+    {
+        "detcol_name", "detcol_size", "detcol_type",
+        "detcol_perm", "detcol_owner", "detcol_date"
     };
 
     *reply = NULL;
@@ -6166,22 +6206,22 @@ _missing_arg:
                     if ( !g_strcmp0( argv[i+1], str ) )
                         break;
                     if ( !g_strcmp0( argv[i+1], "name" ) && 
-                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                                        !g_strcmp0( str, _(column_titles[0]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "size" ) && 
-                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                                        !g_strcmp0( str, _(column_titles[1]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "type" ) && 
-                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                                        !g_strcmp0( str, _(column_titles[2]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "permission" ) && 
-                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                                        !g_strcmp0( str, _(column_titles[3]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "owner" ) && 
-                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                                        !g_strcmp0( str, _(column_titles[4]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "modified" ) && 
-                                                !g_strcmp0( str, _(col_titles[5]) ) )
+                                        !g_strcmp0( str, _(column_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
@@ -6573,22 +6613,22 @@ _invalid_set:
                     if ( !g_strcmp0( argv[i+1], str ) )
                         break;
                     if ( !g_strcmp0( argv[i+1], "name" ) && 
-                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                                        !g_strcmp0( str, _(column_titles[0]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "size" ) && 
-                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                                        !g_strcmp0( str, _(column_titles[1]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "type" ) && 
-                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                                        !g_strcmp0( str, _(column_titles[2]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "permission" ) && 
-                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                                        !g_strcmp0( str, _(column_titles[3]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "owner" ) && 
-                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                                        !g_strcmp0( str, _(column_titles[4]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "modified" ) && 
-                                                !g_strcmp0( str, _(col_titles[5]) ) )
+                                        !g_strcmp0( str, _(column_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
