@@ -315,7 +315,7 @@ void ptk_file_browser_grab_pathbar( GtkMenuItem *menuitem, PtkFileBrowser* file_
 void ptk_file_browser_go_tab( GtkMenuItem *item, PtkFileBrowser* file_browser,
                                                                         int t );
 void ptk_file_browser_focus( GtkMenuItem *item, PtkFileBrowser* file_browser, int job2 );
-void on_folder_view_columns_changed( GtkTreeView *view,
+void ptk_file_browser_save_column_widths( GtkTreeView *view,
                                                 PtkFileBrowser* file_browser );
 
 void ptk_file_browser_test_exec( GtkWidget* item, PtkFileBrowser* file_browser );

@@ -1212,8 +1212,11 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     PtkFileBrowser* a_browser;
     GtkWidget* notebook;
     int cur_tabx, p;
+    
 //printf("update_views_all_windows\n");
     // do this browser first
+    if ( !file_browser )
+        return;
     p = file_browser->mypanel;
     // PROBLEM: this may allow close events to destroy fb, so make sure its
     // still a widget after this
@@ -1341,9 +1344,11 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
     FMMainWindow* a_window;
 
     // do this window first
+    main_window->panel_change = TRUE;
     show_panels( NULL, main_window );
 
     // do other windows
+    main_window->panel_change = FALSE;  // don't save columns for other windows
     for ( l = all_windows; l; l = l->next )
     {
         a_window = (FMMainWindow*)l->data;
@@ -1370,6 +1375,31 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     gboolean horiz, vert;
     PtkFileBrowser* file_browser;
 
+    // save column widths of visible panels
+    if ( main_window->panel_change )
+    {
+        for ( p = 1 ; p < 5; p++ )
+        {
+            if ( gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
+            {
+                cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK(
+                                                    main_window->panel[p-1] ) );
+                if ( cur_tabx != -1 )
+                {
+                    file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ),
+                                            cur_tabx ) );
+                    if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
+                    {
+                        ptk_file_browser_save_column_widths(
+                                    GTK_TREE_VIEW( file_browser->folder_view ),
+                                    file_browser );
+                    }
+                }
+            }
+        }
+    }
+    
     // show panelbar
     if ( !!gtk_widget_get_visible( main_window->panelbar ) != !!xset_get_b( "main_pbar" ) )
     {
@@ -1597,6 +1627,24 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
     }
     set_panel_focus( main_window, NULL );
+
+    // update views all panels
+    for ( p = 1 ; p < 5; p++ )
+    {
+        if ( show[p] )
+        {
+            cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK(
+                                                main_window->panel[p-1] ) );
+            if ( cur_tabx != -1 )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                        GTK_NOTEBOOK( main_window->panel[p-1] ),
+                                        cur_tabx ) );
+                if ( file_browser )
+                    ptk_file_browser_update_views( NULL, file_browser );
+            }
+        }
+    }
 }
 
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window )
@@ -2030,6 +2078,7 @@ void fm_main_window_init( FMMainWindow* main_window )
 
     import_all_plugins( main_window );
     on_task_popup_show( NULL, main_window, NULL );
+    main_window->panel_change = FALSE;
     show_panels( NULL, main_window );
     main_window_root_bar_all();
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
@@ -2154,7 +2203,7 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                                                 GTK_NOTEBOOK( main_window->panel[p-1] ),
                                                 page_x ) );
                 if ( a_browser && a_browser->view_mode == PTK_FB_LIST_VIEW )
-                    on_folder_view_columns_changed( 
+                    ptk_file_browser_save_column_widths( 
                             GTK_TREE_VIEW( a_browser->folder_view ), a_browser );
             }
         }
@@ -2745,7 +2794,8 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
         // save sliders of current fb ( new tab while task manager is shown changes vals )
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
-        on_folder_view_columns_changed( GTK_TREE_VIEW( curfb->folder_view ), curfb );
+        ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
+                                                                    curfb );
     }
     int i = main_window->curpanel -1;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)ptk_file_browser_new(
@@ -2999,6 +3049,17 @@ on_new_window_activate ( GtkMenuItem *menuitem,
     XSet* set;
     
     FMMainWindow* main_window = FM_MAIN_WINDOW( user_data );
+
+    PtkFileBrowser* curfb = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser
+                                                                ( main_window ) );
+    if ( GTK_IS_WIDGET( curfb ) )
+    {
+        // save sliders of current fb ( new tab while task manager is shown changes vals )
+        ptk_file_browser_slider_release( NULL, NULL, curfb );
+        // save column widths of fb so new tab has same
+        ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
+                                                            curfb );
+    }
 
     save_settings( main_window );
 

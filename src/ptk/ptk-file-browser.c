@@ -1630,7 +1630,7 @@ void create_side_views( PtkFileBrowser* file_browser, int mode )
 void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browser )
 {
     int i;
-//printf("ptk_file_browser_update_views fb=%#x\n", file_browser );
+printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_browser->mypanel );
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     // hide/show browser widgets based on user settings
@@ -1880,7 +1880,50 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
     // List Styles
     if ( xset_get_b_panel( p, "list_detailed" ) )
+    {
         ptk_file_browser_view_as_list( file_browser );
+
+        // Set column widths for this panel context
+        GtkTreeViewColumn* col;
+        int j, width;
+        const char* title;
+        XSet* set;
+        // mode for columns is PANEL_NEITHER or PANEL_HORIZ
+        if ( mode == PANEL_BOTH )
+            mode = PANEL_HORIZ;
+        else if ( mode == PANEL_VERT )
+            mode = PANEL_NEITHER;
+
+        if ( GTK_IS_TREE_VIEW( file_browser->folder_view ) )
+        {
+//printf("    set widths   mode = %d\n", mode);
+            for ( i = 0; i < 6; i++ )
+            {
+                col = gtk_tree_view_get_column(
+                                GTK_TREE_VIEW( file_browser->folder_view ), i );
+                if ( !col )
+                    break;
+                title = gtk_tree_view_column_get_title( col );
+                for ( j = 0; j < 6; j++ )
+                {
+                    if ( !strcmp( title, _(column_titles[j]) ) )
+                        break;
+                }
+                if ( j != 6 )
+                {
+                    // get column width for this panel context
+                    set = xset_get_panel_mode( p, column_names[j], mode );
+                    width = set->y ? atoi( set->y ) : 0;
+//printf("        %d\t%s\n", width, title );
+                    if ( width )
+                        gtk_tree_view_column_set_fixed_width( col, width );
+                    // set column visibility
+                    gtk_tree_view_column_set_visible( col,
+                                            set->b == XSET_B_TRUE || j == 0 );
+                }
+            }
+        }
+    }
     else if ( xset_get_b_panel( p, "list_icons" ) )
         ptk_file_browser_view_as_icons( file_browser );
     else if ( xset_get_b_panel( p, "list_compact" ) )
@@ -1894,45 +1937,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     // Show Hidden
     ptk_file_browser_show_hidden_files( file_browser,
                             xset_get_b_panel( p, "show_hidden" ) );
-
-    // Set column widths for this panel context
-    GtkTreeViewColumn* col;
-    int j, width;
-    const char* title;
-    XSet* set;
-    // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-    if ( mode == PANEL_BOTH )
-        mode = PANEL_HORIZ;
-    else if ( mode == PANEL_VERT )
-        mode = PANEL_NEITHER;
-
-    for ( i = 0; i < 6; i++ )
-    {
-        col = gtk_tree_view_get_column(
-                                GTK_TREE_VIEW( file_browser->folder_view ), i );
-        if ( !col )
-            break;
-        title = gtk_tree_view_column_get_title( col );
-        for ( j = 0; j < 6; j++ )
-        {
-            if ( !strcmp( title, _(column_titles[j]) ) )
-                break;
-        }
-        if ( j != 6 )
-        {
-            // get column width for this panel context
-            set = xset_get_panel_mode( p, column_names[j], mode );
-            width = set->y ? atoi( set->y ) : 0;
-            if ( width )
-                gtk_tree_view_column_set_fixed_width( col, width );
-        }
-    }
     
-    // Set column visibility, save widths
-    if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        on_folder_view_columns_changed( GTK_TREE_VIEW( file_browser->folder_view ),
-                                                        file_browser );
-
 //printf("ptk_file_browser_update_views fb=%#x DONE\n", file_browser);
 }
 
@@ -4060,7 +4065,7 @@ static PtkMenuItemEntry shortcut_popup_menu[] =
     };
 */
 
-void on_folder_view_columns_changed( GtkTreeView *view,
+void ptk_file_browser_save_column_widths( GtkTreeView *view,
                                                 PtkFileBrowser* file_browser )
 {
     const char* title;
@@ -4074,7 +4079,8 @@ void on_folder_view_columns_changed( GtkTreeView *view,
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
 
-    gboolean fullscreen = xset_get_b( "main_full" );
+    if ( xset_get_b( "main_full" ) )
+        return;   // don't save columns in fullscreen mode
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
@@ -4085,6 +4091,47 @@ void on_folder_view_columns_changed( GtkTreeView *view,
         mode = PANEL_HORIZ;
     else if ( mode == PANEL_VERT )
         mode = PANEL_NEITHER;
+printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
+
+    for ( i = 0; i < 6; i++ )
+    {
+        col = gtk_tree_view_get_column( view, i );
+        if ( !col )
+            return;
+        title = gtk_tree_view_column_get_title( col );
+        for ( j = 0; j < 6; j++ )
+        {
+            if ( !strcmp( title, _(column_titles[j]) ) )
+                break;
+        }
+        if ( j != 6 )
+        {
+            // save column width for this panel context
+            set = xset_get_panel_mode( p, column_names[j], mode );
+            if ( width = gtk_tree_view_column_get_width( col ) )
+            {
+                g_free( set->y );
+                set->y = g_strdup_printf( "%d", width );
+//printf("        %d\t%s\n", width, title );
+            }
+        }
+    }
+}
+
+void on_folder_view_columns_changed( GtkTreeView *view,
+                                                PtkFileBrowser* file_browser )
+{
+    // user dragged a column to a different position - save positions
+    const char* title;
+    XSet* set = NULL;
+    int i, j, width;
+    GtkTreeViewColumn* col;
+    
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_TREE_VIEW( view ) ) )
+        return;
+        
+    if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
+        return;
 
     for ( i = 0; i < 6; i++ )
     {
@@ -4100,18 +4147,9 @@ void on_folder_view_columns_changed( GtkTreeView *view,
         if ( j != 6 )
         {
             // save column position
-            set = xset_get_panel( p, column_names[j] );
+            set = xset_get_panel( file_browser->mypanel, column_names[j] );
             g_free( set->x );
             set->x = g_strdup_printf( "%d", i );
-            // save column width for this panel context
-            set = xset_get_panel_mode( p, column_names[j], mode );
-            if ( !fullscreen && ( width = gtk_tree_view_column_get_width( col ) ) )
-            {
-                g_free( set->y );
-                set->y = g_strdup_printf( "%d", width );
-            }
-            // set column visibility
-            gtk_tree_view_column_set_visible( col, set->b == XSET_B_TRUE );
         }
     }
 }
@@ -4126,7 +4164,6 @@ void on_folder_view_destroy( GtkTreeView *view, PtkFileBrowser* file_browser )
         if ( hand )
             g_signal_handler_disconnect( ( gpointer ) view, hand );
     }
-    //on_folder_view_columns_changed( view, file_browser ); // save widths
 }
 
 gboolean folder_view_search_equal( GtkTreeModel* model, gint col,
@@ -7157,8 +7194,18 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
                 main_update_fonts( NULL, browser );
             else if ( g_str_has_prefix( xname, "detcol_" )  // shared key
                                 && browser->view_mode == PTK_FB_LIST_VIEW )
-                on_folder_view_columns_changed( GTK_TREE_VIEW( browser->folder_view ),
-                                                            browser );
+            {
+                FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+                // mode for columns is PANEL_NEITHER or PANEL_HORIZ
+                char mode = main_window->panel_context[browser->mypanel-1];
+                if ( mode == PANEL_BOTH )
+                    mode = PANEL_HORIZ;
+                else if ( mode == PANEL_VERT )
+                    mode = PANEL_NEITHER;
+                XSet* set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
+                set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
+                update_views_all_windows( NULL, browser );
+            }
             else if ( !strcmp( xname, "icon_status" ) )  // shared key
                 on_status_effect_change( NULL, browser );
             else if ( !strcmp( xname, "font_status" ) )  // shared key

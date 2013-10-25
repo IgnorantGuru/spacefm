@@ -403,8 +403,30 @@ void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int o
 void on_popup_detailed_column( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
 {
     if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        on_folder_view_columns_changed( GTK_TREE_VIEW( file_browser->folder_view ),
-                                                    file_browser );
+    {
+        // get visiblity for correct mode
+        FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+        int p = file_browser->mypanel;
+        // mode for columns is PANEL_NEITHER or PANEL_HORIZ
+        char mode = main_window->panel_context[p-1];
+        if ( mode == PANEL_BOTH )
+            mode = PANEL_HORIZ;
+        else if ( mode == PANEL_VERT )
+            mode = PANEL_NEITHER;
+        
+        XSet* set = xset_get_panel_mode( p, "detcol_size", mode );
+        set->b = xset_get_panel( p, "detcol_size" )->b;
+        set = xset_get_panel_mode( p, "detcol_type", mode );
+        set->b = xset_get_panel( p, "detcol_type" )->b;
+        set = xset_get_panel_mode( p, "detcol_perm", mode );
+        set->b = xset_get_panel( p, "detcol_perm" )->b;
+        set = xset_get_panel_mode( p, "detcol_owner", mode );
+        set->b = xset_get_panel( p, "detcol_owner" )->b;
+        set = xset_get_panel_mode( p, "detcol_date", mode );
+        set->b = xset_get_panel( p, "detcol_date" )->b;
+        
+        update_views_all_windows( NULL, file_browser );
+    }
 }
 
 void on_archive_default( GtkMenuItem *menuitem, XSet* set )
@@ -1286,11 +1308,26 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         
         if ( browser->view_mode == PTK_FB_LIST_VIEW )
         {
-            xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column, browser );
+            FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+
+            // mode for columns is PANEL_NEITHER or PANEL_HORIZ
+            char mode = main_window->panel_context[p-1];
+            if ( mode == PANEL_BOTH )
+                mode = PANEL_HORIZ;
+            else if ( mode == PANEL_VERT )
+                mode = PANEL_NEITHER;
+            
+            set = xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column, browser );
+            set->b = xset_get_panel_mode( p, "detcol_size", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column, browser );
+            set->b = xset_get_panel_mode( p, "detcol_type", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column, browser );
+            set->b = xset_get_panel_mode( p, "detcol_perm", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column, browser );
+            set->b = xset_get_panel_mode( p, "detcol_owner", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column, browser );
+            set->b = xset_get_panel_mode( p, "detcol_date", mode )->b;
+ 
             xset_set_cb( "view_reorder_col", on_reorder, browser );
             set = xset_set( "view_columns", "disable", "0" );
             desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col", p, p, p, p, p );
@@ -1383,7 +1420,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
-        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns rubberband sep_v6 panel%d_font_file",
+        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 rubberband sep_v6 panel%d_font_file",
                                         p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
@@ -1393,7 +1430,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_set( set, "desc", desc );
         g_free( desc );
         set = xset_get( "con_view" );
-        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style view_sortby sep_v8 view_refresh",
+        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style view_sortby view_columns sep_v8 view_refresh",
                                         p, p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );

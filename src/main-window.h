@@ -46,6 +46,7 @@ typedef struct _FMMainWindow
     int panel_slide_y[4];
     int panel_slide_s[4];
     char panel_context[4];
+    gboolean panel_change;
     GtkWidget* panelbar;
     GtkWidget* panel_btn[4];
     GtkWidget* panel_image[4];
