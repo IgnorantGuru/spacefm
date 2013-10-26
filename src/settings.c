@@ -11000,14 +11000,19 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;                   // visible
         set->x = g_strdup_printf( "%d", 0 );    // position
-        xset_set_b_panel_mode( p, "detcol_name", 1, TRUE );  // horiz context
         
         set = xset_set_panel( p, "detcol_size", "lbl", _("_Size") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 1 );
-        xset_set_b_panel_mode( p, "detcol_size", 1, TRUE );  // horiz context
 
+        // set visible for all panel context modes
+        for ( i = 0; i < 4; i++ )
+        {
+            xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
+            xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
+        }
+        
         set = xset_set_panel( p, "detcol_type", "lbl", _("_Type") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;

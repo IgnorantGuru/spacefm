@@ -1650,7 +1650,7 @@ void create_side_views( PtkFileBrowser* file_browser, int mode )
 void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browser )
 {
     int i;
-printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_browser->mypanel );
+//printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_browser->mypanel );
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     // hide/show browser widgets based on user settings
@@ -1866,12 +1866,13 @@ printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_
     // read each slider's pos from dynamic
     pos = main_window->panel_slide_x[p-1];
     if ( pos < 100 ) pos = -1;
-//printf( "    set slide_x = %d  ", pos );
-    gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
+//printf( "    set slide_x = %d  \n", pos );
+    if ( pos > 0 )
+        gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
 
 #if GTK_CHECK_VERSION (3, 0, 0)
 #else
-    // hack to let other sliders adjust
+    // hack to let other sliders adjust - only do this one for gtk < 3
     // FIXME: this may allow close events to destroy fb, so make sure its
     // still a widget after this - find a better way to do this
     while (gtk_events_pending ())
@@ -1922,11 +1923,6 @@ printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_
         int j, width;
         const char* title;
         XSet* set;
-        // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-        if ( mode == PANEL_BOTH )
-            mode = PANEL_HORIZ;
-        else if ( mode == PANEL_VERT )
-            mode = PANEL_NEITHER;
 
         if ( GTK_IS_TREE_VIEW( file_browser->folder_view ) )
         {
@@ -2060,7 +2056,7 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
     
     // PROBLEM: this may allow close events to destroy fb, so make sure its
     // still a widget after this
-    ptk_file_browser_update_views( NULL, file_browser );
+    //ptk_file_browser_update_views( NULL, file_browser );
    
     return GTK_IS_WIDGET( file_browser ) ? ( GtkWidget* ) file_browser : NULL;
 }
@@ -4118,13 +4114,7 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
-
-    // mode for columns is PANEL_NEITHER or PANEL_HORIZ
     char mode = main_window->panel_context[p-1];
-    if ( mode == PANEL_BOTH )
-        mode = PANEL_HORIZ;
-    else if ( mode == PANEL_VERT )
-        mode = PANEL_NEITHER;
 //printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
 
     for ( i = 0; i < 6; i++ )
@@ -4490,13 +4480,7 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
-
-    // mode for columns is PANEL_NEITHER or PANEL_HORIZ
     char mode = main_window->panel_context[p-1];
-    if ( mode == PANEL_BOTH )
-        mode = PANEL_HORIZ;
-    else if ( mode == PANEL_VERT )
-        mode = PANEL_NEITHER;
 
     for ( i = 0; i < G_N_ELEMENTS( cols ); i++ )
     {
@@ -7234,11 +7218,6 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             else if ( g_str_has_prefix( xname, "detcol_" )  // shared key
                                 && browser->view_mode == PTK_FB_LIST_VIEW )
             {
-                // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-                if ( mode == PANEL_BOTH )
-                    mode = PANEL_HORIZ;
-                else if ( mode == PANEL_VERT )
-                    mode = PANEL_NEITHER;
                 XSet* set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
                 set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
                 update_views_all_windows( NULL, browser );

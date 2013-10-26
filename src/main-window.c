@@ -1242,6 +1242,9 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
         }
     }
     
+    if ( !( GTK_IS_WIDGET( file_browser ) &&
+                            GTK_IS_PANED( file_browser->side_vpane_bottom ) ) )
+        return;
     xset_autosave( file_browser, FALSE, FALSE );
 }
 

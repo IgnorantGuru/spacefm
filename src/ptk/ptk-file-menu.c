@@ -407,12 +407,7 @@ void on_popup_detailed_column( GtkMenuItem *menuitem, PtkFileBrowser* file_brows
         // get visiblity for correct mode
         FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
         int p = file_browser->mypanel;
-        // mode for columns is PANEL_NEITHER or PANEL_HORIZ
         char mode = main_window->panel_context[p-1];
-        if ( mode == PANEL_BOTH )
-            mode = PANEL_HORIZ;
-        else if ( mode == PANEL_VERT )
-            mode = PANEL_NEITHER;
         
         XSet* set = xset_get_panel_mode( p, "detcol_size", mode );
         set->b = xset_get_panel( p, "detcol_size" )->b;
@@ -1342,12 +1337,6 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         
         if ( browser->view_mode == PTK_FB_LIST_VIEW )
         {
-            // mode for columns is PANEL_NEITHER or PANEL_HORIZ
-            if ( mode == PANEL_BOTH )
-                mode = PANEL_HORIZ;
-            else if ( mode == PANEL_VERT )
-                mode = PANEL_NEITHER;
-            
             set = xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column,
                                                                 browser );
             set->b = xset_get_panel_mode( p, "detcol_size", mode )->b;
