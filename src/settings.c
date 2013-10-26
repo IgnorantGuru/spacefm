@@ -10928,8 +10928,8 @@ void xset_defaults()
         set->b = XSET_B_TRUE;
 
         // set visible for all panel context modes
-        for ( i = 0; i < 4; i++ )
-            xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
+        //for ( i = 0; i < 4; i++ )
+        //    xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
 
         set = xset_set_panel( p, "show_book", "lbl", _("_Bookmarks") );
         set->menu_style = XSET_MENU_CHECK;
@@ -10939,13 +10939,13 @@ void xset_defaults()
 
         set = xset_set_panel( p, "list_detailed", "lbl", _("_Detailed") );
         set->menu_style = XSET_MENU_RADIO;
+        set->b = XSET_B_TRUE;
 
         set = xset_set_panel( p, "list_icons", "lbl", _("_Icons") );
         set->menu_style = XSET_MENU_RADIO;
 
         set = xset_set_panel( p, "list_compact", "lbl", _("_Compact") );
         set->menu_style = XSET_MENU_RADIO;
-        set->b = XSET_B_TRUE;
 
         set = xset_set_panel( p, "show_hidden", "lbl", _("_Hidden Files") );
         set->menu_style = XSET_MENU_CHECK;
@@ -11007,30 +11007,26 @@ void xset_defaults()
         set->x = g_strdup_printf( "%d", 1 );
 
         // set visible for all panel context modes
-        for ( i = 0; i < 4; i++ )
-        {
-            xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
-            xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
-        }
+        //for ( i = 0; i < 4; i++ )
+        //{
+        //    xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
+        //    xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
+        //}
         
         set = xset_set_panel( p, "detcol_type", "lbl", _("_Type") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 2 );
 
         set = xset_set_panel( p, "detcol_perm", "lbl", _("_Permission") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 3 );
 
         set = xset_set_panel( p, "detcol_owner", "lbl", _("_Owner") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 4 );
 
         set = xset_set_panel( p, "detcol_date", "lbl", _("_Modified") );
         set->menu_style = XSET_MENU_CHECK;
-        set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 5 );
 
         set = xset_get_panel( p, "sort_extra" );

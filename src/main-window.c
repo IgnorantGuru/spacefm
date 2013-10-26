@@ -1457,18 +1457,54 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
             main_window->panel_context[p-1] = PANEL_VERT;
         else
             main_window->panel_context[p-1] = PANEL_NEITHER;
-
-        // load dynamic slider positions for this panel context
-        set = xset_get_panel_mode( p, "slider_positions",
-                                     main_window->panel_context[p-1] );
-        main_window->panel_slide_x[p-1] = set->x ? atoi( set->x ) : 0;
-        main_window->panel_slide_y[p-1] = set->y ? atoi( set->y ) : 0;
-        main_window->panel_slide_s[p-1] = set->s ? atoi( set->s ) : 0;
-//printf( "loaded panel %d: %d, %d, %d\n", p, 
-
+        
         if ( show[p] )
         {
             // shown
+            // test if panel and mode exists
+            char* str = g_strdup_printf( "panel%d_slider_positions%d", p,
+                                                main_window->panel_context[p-1] );
+            if ( !( set = xset_is( str ) ) )
+            {
+                // no config exists for this panel and mode - copy
+                //printf ("no config for %d, %d\n", p, main_window->panel_context[p-1] );
+                XSet* set_old;
+                int mode = main_window->panel_context[p-1];
+                xset_set_b_panel_mode( p, "show_toolbox", mode,
+                                        xset_get_b_panel( p, "show_toolbox" ) );
+                xset_set_b_panel_mode( p, "show_devmon", mode,
+                                        xset_get_b_panel( p, "show_devmon" ) );
+                if ( xset_is( "show_dirtree" ) )
+                    xset_set_b_panel_mode( p, "show_dirtree", mode,
+                                        xset_get_b_panel( p, "show_dirtree" ) );
+                xset_set_b_panel_mode( p, "show_book", mode,
+                                        xset_get_b_panel( p, "show_book" ) );
+                xset_set_b_panel_mode( p, "show_sidebar", mode,
+                                        xset_get_b_panel( p, "show_sidebar" ) );
+                xset_set_b_panel_mode( p, "detcol_name", mode,
+                                        xset_get_b_panel( p, "detcol_name" ) );
+                xset_set_b_panel_mode( p, "detcol_size", mode,
+                                        xset_get_b_panel( p, "detcol_size" ) );
+                xset_set_b_panel_mode( p, "detcol_type", mode,
+                                        xset_get_b_panel( p, "detcol_type" ) );
+                xset_set_b_panel_mode( p, "detcol_perm", mode,
+                                        xset_get_b_panel( p, "detcol_perm" ) );
+                xset_set_b_panel_mode( p, "detcol_owner", mode,
+                                        xset_get_b_panel( p, "detcol_owner" ) );
+                xset_set_b_panel_mode( p, "detcol_date", mode,
+                                        xset_get_b_panel( p, "detcol_date" ) );
+                set_old = xset_get_panel( p, "slider_positions" );
+                set = xset_get_panel_mode( p, "slider_positions", mode );
+                set->x = g_strdup( set_old->x );
+                set->y = g_strdup( set_old->y );
+                set->s = g_strdup( set_old->s );
+            }
+            g_free( str );
+            // load dynamic slider positions for this panel context
+            main_window->panel_slide_x[p-1] = set->x ? atoi( set->x ) : 0;
+            main_window->panel_slide_y[p-1] = set->y ? atoi( set->y ) : 0;
+            main_window->panel_slide_s[p-1] = set->s ? atoi( set->s ) : 0;
+//printf( "loaded panel %d: %d, %d, %d\n", p, 
             if ( !gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) ) )
             {
                 main_window->notebook = main_window->panel[p-1];
