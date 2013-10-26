@@ -499,7 +499,6 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
                                       GdkEventButton *event,
                                       PtkFileBrowser* file_browser )
 {
-//printf("ptk_file_browser_slider_release fb=%#x\n", file_browser );
     int pos;
     gboolean fullscreen = xset_get_b( "main_full" );
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
@@ -517,9 +516,11 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
             set->x = g_strdup_printf( "%d", pos );
         }
         main_window->panel_slide_x[p-1] = pos;
+//printf("    slide_x = %d\n", pos );
     }
     else
     {
+//printf("ptk_file_browser_slider_release fb=%#x  (panel %d)  mode = %d\n", file_browser, p, mode );
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_top ) );
         if ( !fullscreen )
         {
@@ -527,6 +528,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
             set->y = g_strdup_printf( "%d", pos );
         }
         main_window->panel_slide_y[p-1] = pos;
+//printf("    slide_y = %d  ", pos );
 
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_bottom ) );
         if ( !fullscreen )
@@ -535,6 +537,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
             set->s = g_strdup_printf( "%d", pos );
         }
         main_window->panel_slide_s[p-1] = pos;
+//printf("slide_s = %d\n", pos );
     }
 //printf("SAVEPOS %d %d\n", xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" ),
 //          xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" )  );
@@ -1447,7 +1450,7 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
     // see https://github.com/BwackNinja/spacefm/issues/21
     gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_top ), 
                                                     file_browser->side_dev_scroll, 
-                                                    TRUE, FALSE );
+                                                    FALSE, FALSE );
     gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_top ),
                                                     file_browser->side_vpane_bottom, 
                                                     TRUE, FALSE );
@@ -1863,11 +1866,24 @@ printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_
     // read each slider's pos from dynamic
     pos = main_window->panel_slide_x[p-1];
     if ( pos < 100 ) pos = -1;
+//printf( "    set slide_x = %d  ", pos );
     gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
 
+#if GTK_CHECK_VERSION (3, 0, 0)
+#else
+    // hack to let other sliders adjust
+    // FIXME: this may allow close events to destroy fb, so make sure its
+    // still a widget after this - find a better way to do this
+    while (gtk_events_pending ())
+        gtk_main_iteration ();
+    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_PANED( file_browser->side_vpane_bottom ) ) )
+        return;
+#endif
+    
     //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" );
     pos = main_window->panel_slide_y[p-1];
     if ( pos < 20 ) pos = -1;
+//printf( "    slide_y = %d  ", pos );
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_top ), pos );
     
     // hack to let other sliders adjust
@@ -1881,6 +1897,7 @@ printf("ptk_file_browser_update_views fb=%#x  (panel %d)\n", file_browser, file_
     //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" );
     pos = main_window->panel_slide_s[p-1];
     if ( pos < 20 ) pos = -1;
+//printf( "slide_s = %d\n", pos );
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_bottom ), pos );
         
     // save slider positions (they change when set)
@@ -4108,7 +4125,7 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
         mode = PANEL_HORIZ;
     else if ( mode == PANEL_VERT )
         mode = PANEL_NEITHER;
-printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
+//printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
 
     for ( i = 0; i < 6; i++ )
     {

@@ -1395,7 +1395,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                             ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( file_browser->folder_view ),
                                     file_browser );
-                        ptk_file_browser_slider_release( NULL, NULL, file_browser );
+                        //ptk_file_browser_slider_release( NULL, NULL, file_browser );
                     }
                 }
             }
