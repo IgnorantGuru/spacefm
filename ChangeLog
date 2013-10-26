@@ -2,6 +2,7 @@
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
     sakura terminal use -x with single argument
+    fix crash in save_settings #369
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man

@@ -1014,40 +1014,43 @@ char* save_settings( gpointer main_window_ptr )
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
-    if ( main_window_ptr && save_tabs )
+    if ( GTK_IS_WIDGET( main_window_ptr ) && save_tabs )
     {
         main_window = (FMMainWindow*)main_window_ptr;
         for ( p = 1; p < 5; p++ )
         {
-            set = xset_get_panel( p, "show" );            
-            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) );
-            if ( pages )  // panel was shown
+            set = xset_get_panel( p, "show" );
+            if ( GTK_IS_NOTEBOOK( main_window->panel[p-1] ) )
             {
-                if ( set->s )
+                pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) );
+                if ( pages )  // panel was shown
                 {
-                    g_free( set->s );
-                    set->s = NULL;
-                }
-                tabs = g_strdup( "" );
-                for ( g = 0; g < pages; g++ )
-                {
-                    file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
-                                        GTK_NOTEBOOK( main_window->panel[p-1] ), g ) );
-                    old_tabs = tabs;
-                    tabs = g_strdup_printf( "%s///%s", old_tabs,
-                                        ptk_file_browser_get_cwd( file_browser ) );
-                    g_free( old_tabs );
-                }
-                if ( tabs[0] != '\0' )
-                    set->s = tabs;
-                else
-                    g_free( tabs );
+                    if ( set->s )
+                    {
+                        g_free( set->s );
+                        set->s = NULL;
+                    }
+                    tabs = g_strdup( "" );
+                    for ( g = 0; g < pages; g++ )
+                    {
+                        file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ), g ) );
+                        old_tabs = tabs;
+                        tabs = g_strdup_printf( "%s///%s", old_tabs,
+                                            ptk_file_browser_get_cwd( file_browser ) );
+                        g_free( old_tabs );
+                    }
+                    if ( tabs[0] != '\0' )
+                        set->s = tabs;
+                    else
+                        g_free( tabs );
 
-                // save current tab
-                if ( set->x )
-                    g_free( set->x );
-                set->x = g_strdup_printf( "%d", gtk_notebook_get_current_page(
-                                        GTK_NOTEBOOK( main_window->panel[p-1] ) ) );
+                    // save current tab
+                    if ( set->x )
+                        g_free( set->x );
+                    set->x = g_strdup_printf( "%d", gtk_notebook_get_current_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ) ) );
+                }
             }
         }
     }
