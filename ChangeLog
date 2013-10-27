@@ -3,6 +3,8 @@
     fix icon change not saved (bookmark, tab, devices, etc) #367
     sakura terminal use -x with single argument
     fix crash in save_settings #369
+    new panel config memory #372
+    fix build problem on gtk < 2.24 #368
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man

@@ -884,7 +884,9 @@ void on_script_toggled( GtkWidget* item, ContextData* ctxt )
                                                         ctxt->cmd_script ) );
         load_command_script( ctxt, ctxt->set );
         
-        // update Open In Browser file count
+#if GTK_CHECK_VERSION(2, 24, 0)
+        // update Open In Browser file count - cosmetic only
+        // should probably rebuild entire list on click to avoid gtk 2.24 dep
         char* path;
         if ( ctxt->set->plugin )
             path = g_build_filename( ctxt->set->plug_dir, ctxt->set->plug_name,
@@ -899,6 +901,7 @@ void on_script_toggled( GtkWidget* item, ContextData* ctxt )
                                                                     0, str );
         g_free( str );
         g_free( path );
+#endif
     }
     GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
                                                     ctxt->cmd_script ) );
