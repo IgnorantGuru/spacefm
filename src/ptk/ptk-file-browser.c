@@ -544,6 +544,32 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     return FALSE;
 }
 
+void on_toolbar_show( GtkWidget* widget, PtkFileBrowser* file_browser )
+{
+    XSet* set = NULL;
+    
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        return;
+
+    if ( widget )
+        set = (XSet*)g_object_get_data( G_OBJECT( widget ), "set" );
+    if ( !set )
+        return;
+
+    if ( !g_str_has_suffix( set->name, "_show_sidebar" ) && 
+                            !g_str_has_suffix( set->name, "_show_toolbox" ) )
+        return;
+
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
+
+    // copy menu item b value
+    XSet* set_mode = xset_get_panel_mode( p, set->name + 7 /* panelN_ */, mode );
+    set_mode->b = xset_get( set->name )->b;
+    update_views_all_windows( NULL, file_browser );
+}
+
 void on_toolbar_hide( GtkWidget* widget, PtkFileBrowser* file_browser,
                                                             GtkWidget* toolbar2 )
 {
@@ -628,10 +654,14 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
         return;
                 
     // Show/Hide Toolbars
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
     if ( toolbar == file_browser->toolbar )
     {
-        set = xset_set_cb_panel( file_browser->mypanel, "show_sidebar",
-                                            update_views_all_windows, file_browser );
+        set = xset_set_cb_panel( p, "show_sidebar", on_toolbar_show,
+                                                            file_browser );
+        set->b = xset_get_panel_mode( p, "show_sidebar", mode )->b;
         set->disable = ( !file_browser->side_dir && !file_browser->side_book
                                                     && !file_browser->side_dev );
         xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
@@ -640,8 +670,9 @@ void on_toolbar_config( GtkWidget* widget, PtkFileBrowser* file_browser )
     }
     else
     {
-        set = xset_set_cb_panel( file_browser->mypanel, "show_toolbox",
-                                            update_views_all_windows, file_browser );
+        set = xset_set_cb_panel( p, "show_toolbox", on_toolbar_show,
+                                                            file_browser );
+        set->b = xset_get_panel_mode( p, "show_toolbox", mode )->b;
         xset_add_menuitem( NULL, file_browser, popup, accel_group, set );
 
         set = xset_set_cb( "toolbar_hide_side", on_toolbar_hide, file_browser );
@@ -4132,7 +4163,8 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
         {
             // save column width for this panel context
             set = xset_get_panel_mode( p, column_names[j], mode );
-            if ( width = gtk_tree_view_column_get_width( col ) )
+            width = gtk_tree_view_column_get_width( col );
+            if ( width > 0 )
             {
                 g_free( set->y );
                 set->y = g_strdup_printf( "%d", width );
@@ -7016,6 +7048,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
     char* xname;
     int i;
     XSet* set = xset_get( setname );
+    XSet* set2;
     FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
     char mode = main_window->panel_context[browser->mypanel-1];
 
@@ -7205,7 +7238,11 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             else if ( !strcmp( xname, "show" ) ) // main View|Panel N
                 show_panels_all_windows( NULL, (FMMainWindow*)browser->main_window );
             else if ( g_str_has_prefix( xname, "show_" ) )  // shared key
+            {
+                set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
+                set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
                 update_views_all_windows( NULL, browser );
+            }
             else if ( !strcmp( xname, "list_detailed" ) )  // shared key
                 on_popup_list_detailed( NULL, browser );
             else if ( !strcmp( xname, "list_icons" ) )  // shared key
@@ -7218,7 +7255,7 @@ void ptk_file_browser_on_action( PtkFileBrowser* browser, char* setname )
             else if ( g_str_has_prefix( xname, "detcol_" )  // shared key
                                 && browser->view_mode == PTK_FB_LIST_VIEW )
             {
-                XSet* set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
+                set2 = xset_get_panel_mode( browser->mypanel, xname, mode );
                 set2->b = set2->b == XSET_B_TRUE ? XSET_B_UNSET : XSET_B_TRUE;
                 update_views_all_windows( NULL, browser );
             }
