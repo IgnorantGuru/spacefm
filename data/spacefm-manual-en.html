@@ -5684,7 +5684,7 @@ spacefm -s <a href="#sockets-methods-remove-event">remove-event</a> EVENT COMMAN
 spacefm -s help|--help
     Shows this help reference.
 
-<a href="#socket-options">OPTIONS</a>
+<a name="socket-options"><a href="#socket-options">OPTIONS</a></a>
 -------
 Add options after METHOD to specify a specific window, panel, and/or tab.
 Otherwise the current tab of the current panel in the last window is used.
@@ -5872,7 +5872,7 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
 <p>The set method sets a property to one or more values.  Different properties accept different kinds of values.  To see what values a property accepts, look the property up in the <a href="#socket-props">Help Reference</a>.
 
-<p><a name="socket-options">As</a> with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab OPTIONS.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
+<p>As with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab <a href="#socket-options">OPTIONS</a>.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
 <pre>
     spacefm -s set --window $fm_my_window --panel 3 --tab 2 pathbar_text "/"
 </pre>
@@ -6823,7 +6823,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-10-24&nbsp;&nbsp;(SpaceFM version 0.9.0+)
+<p>Updated 2013-10-27&nbsp;&nbsp;(SpaceFM version 0.9.0+)
 <br><br>
 </center>
 </td></tr></table>

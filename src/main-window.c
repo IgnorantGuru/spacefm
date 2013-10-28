@@ -2482,6 +2482,8 @@ void main_window_get_counts( PtkFileBrowser* file_browser, int* panel_count,
 
 void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
 {
+    PtkFileBrowser* a_browser;
+    
 //printf( "\n============== on_close_notebook_page fb=%#x\n", file_browser );
     if ( !GTK_IS_WIDGET( file_browser ) )
         return;
@@ -2501,8 +2503,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                                             GTK_WIDGET( file_browser ) ) + 1,
                             NULL, 0, 0, 0, FALSE );
     
-    // save slider positions of tab to be closed
+    // save solumns and slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
+    ptk_file_browser_save_column_widths( GTK_TREE_VIEW( file_browser->folder_view ),
+                                                                    file_browser );
 
     // without this signal blocked, on_close_notebook_page is called while
     // ptk_file_browser_update_views is still in progress causing segfault
@@ -2529,6 +2533,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                 path = "/";
         }
         fm_main_window_add_new_tab( main_window, path );
+        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                    GTK_NOTEBOOK( notebook ), 0 ) );
+        if ( GTK_IS_WIDGET( a_browser ) )
+            ptk_file_browser_update_views( NULL, a_browser );
         goto _done_close;
     }
 
@@ -2536,7 +2544,7 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     int cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->notebook ) );
     if ( cur_tabx != -1 )
     {
-        PtkFileBrowser* a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                     GTK_NOTEBOOK( notebook ), cur_tabx ) );
  
         // PROBLEM: this may allow close events to destroy fb, so make sure its
