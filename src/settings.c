@@ -1013,10 +1013,14 @@ char* save_settings( gpointer main_window_ptr )
     xset_set( "config_version", "s", "23" );  // 0.9.0
 
     // save tabs
-    gboolean save_tabs = xset_get_b( "main_save_tabs" );
-    if ( GTK_IS_WIDGET( main_window_ptr ) && save_tabs )
-    {
+    gboolean save_tabs = xset_get_b( "main_save_tabs" );    
+    if ( main_window_ptr )
         main_window = (FMMainWindow*)main_window_ptr;
+    else
+        main_window = fm_main_window_get_last_active();
+    
+    if ( GTK_IS_WIDGET( main_window ) && save_tabs )
+    {
         for ( p = 1; p < 5; p++ )
         {
             set = xset_get_panel( p, "show" );
@@ -1338,24 +1342,25 @@ const char* xset_get_user_tmp_dir()
     return settings_user_tmp_dir;
 }
 
-static gboolean idle_save_settings( gpointer main_window )
+static gboolean idle_save_settings( gpointer ptr )
 {
     //printf("AUTOSAVE *** idle_save_settings\n" );
-    char* err_msg = save_settings( main_window );
+    char* err_msg = save_settings( NULL );
     if ( err_msg )
     {
-        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"), err_msg );
+        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"),
+                                                                    err_msg );
         g_free( err_msg );
     }
     return FALSE;
 }
 
-static void auto_save_start( gpointer main_window, gboolean delay )
+static void auto_save_start( gboolean delay )
 {
     //printf("AUTOSAVE auto_save_start\n" );
     if ( !delay )
     {
-        g_idle_add( ( GSourceFunc ) idle_save_settings, main_window );
+        g_idle_add( ( GSourceFunc ) idle_save_settings, NULL );
         xset_autosave_request = FALSE;
     }
     else
@@ -1363,12 +1368,12 @@ static void auto_save_start( gpointer main_window, gboolean delay )
     if ( !xset_autosave_timer )
     {
         xset_autosave_timer = g_timeout_add_seconds( 10,
-                            ( GSourceFunc ) on_autosave_timer, main_window );
+                            ( GSourceFunc ) on_autosave_timer, NULL );
         //printf("AUTOSAVE timer started\n" );
     }
 }
 
-gboolean on_autosave_timer( gpointer main_window )
+gboolean on_autosave_timer( gpointer ptr )
 {
     //printf("AUTOSAVE timeout\n" );
     if ( xset_autosave_timer )
@@ -1377,11 +1382,11 @@ gboolean on_autosave_timer( gpointer main_window )
         xset_autosave_timer = 0;
     }
     if ( xset_autosave_request )
-        auto_save_start( main_window, FALSE );
+        auto_save_start( FALSE );
     return FALSE;
 }
 
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force, gboolean delay )
+void xset_autosave( gboolean force, gboolean delay )
 {
     if ( xset_autosave_timer && !force )
     {
@@ -1403,8 +1408,7 @@ void xset_autosave( PtkFileBrowser* file_browser, gboolean force, gboolean delay
             printf("AUTOSAVE delay\n" );
         else
             printf("AUTOSAVE normal\n" ); */
-        auto_save_start( file_browser ? file_browser->main_window : NULL,
-                                                            !force && delay );
+        auto_save_start( !force && delay );
     }
 }
 
@@ -6387,7 +6391,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     //    main_window_on_plugins_change( NULL );
 
     // autosave
-    xset_autosave( set->browser, FALSE, FALSE );
+    xset_autosave( FALSE, FALSE );
 }
 
 void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
@@ -7695,7 +7699,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         xset_custom_activate( item, rset );
 
     if ( rset->menu_style )
-        xset_autosave( rset->browser, FALSE, FALSE );
+        xset_autosave( FALSE, FALSE );
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
