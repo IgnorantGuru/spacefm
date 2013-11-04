@@ -794,7 +794,7 @@ void on_open_current_folder_as_root ( GtkMenuItem *menuitem,
     if ( !prog )
         prog = g_strdup( "spacefm" );
     char* cwd = bash_quote( ptk_file_browser_get_cwd( file_browser ) );
-    task->task->exec_command = g_strdup_printf( "%s %s", prog, cwd );
+    task->task->exec_command = g_strdup_printf( "HOME=/root %s %s", prog, cwd );
     g_free( prog );
     g_free( cwd );
     task->task->exec_as_user = g_strdup( "root" );
