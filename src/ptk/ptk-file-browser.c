@@ -4534,7 +4534,6 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
         else
         {
             // column width
-            gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
             gtk_tree_view_column_set_min_width( col, 50 );
             set = xset_get_panel_mode( p, column_names[j], mode );
             width = set->y ? atoi( set->y ) : 0;
@@ -4545,6 +4544,8 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
                                 && gtk_notebook_get_n_pages(
                                 GTK_NOTEBOOK( file_browser->mynotebook ) ) == 1 )
                 {
+                    // only if width so first run is not fixed
+                    gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
                     // when tabs are added, the width of the notebook decreases
                     // by a few pixels, meaning there is not enough space for
                     // all columns - this causes a horizontal scrollbar to 
