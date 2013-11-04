@@ -2091,8 +2091,6 @@ GtkWidget* ptk_file_browser_new( int curpanel, GtkWidget* notebook,
 
     gtk_widget_show_all( GTK_WIDGET( file_browser ) );
     
-    // PROBLEM: this may allow close events to destroy fb, so make sure its
-    // still a widget after this
     //ptk_file_browser_update_views( NULL, file_browser );
    
     return GTK_IS_WIDGET( file_browser ) ? ( GtkWidget* ) file_browser : NULL;
@@ -2639,8 +2637,6 @@ static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
     /* The folder itself was deleted */
     if( file == NULL )
     {
-        // Note: on_close_notebook_page calls ptk_file_browser_update_views
-        // which may destroy fb here
         on_close_notebook_page( NULL, file_browser );
         //ptk_file_browser_chdir( file_browser, g_get_home_dir(), PTK_FB_CHDIR_ADD_HISTORY);
     }
@@ -4538,12 +4534,12 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
         else
         {
             // column width
+            gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
+            gtk_tree_view_column_set_min_width( col, 50 );
             set = xset_get_panel_mode( p, column_names[j], mode );
             width = set->y ? atoi( set->y ) : 0;
             if ( width )
             {
-                gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
-                gtk_tree_view_column_set_min_width( col, 50 );
                 if ( cols[j] == COL_FILE_NAME && !app_settings.always_show_tabs
                                 && file_browser->view_mode == PTK_FB_LIST_VIEW
                                 && gtk_notebook_get_n_pages(

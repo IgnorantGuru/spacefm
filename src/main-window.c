@@ -1218,8 +1218,6 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     if ( !file_browser )
         return;
     p = file_browser->mypanel;
-    // PROBLEM: this may allow close events to destroy fb, so make sure its
-    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
 
     // do other windows
@@ -2541,8 +2539,6 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
         a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                     GTK_NOTEBOOK( notebook ), cur_tabx ) );
  
-        // PROBLEM: this may allow close events to destroy fb, so make sure its
-        // still a widget after this
         ptk_file_browser_update_views( NULL, a_browser );
         if ( GTK_IS_WIDGET( a_browser ) )
         {
@@ -3347,8 +3343,14 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
     PtkFileBrowser* curfb = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser
                                                     ( main_window ) );
     if ( curfb )
+    {
         ptk_file_browser_slider_release( NULL, NULL, curfb );
-
+        if ( curfb->view_mode == PTK_FB_LIST_VIEW )
+            ptk_file_browser_save_column_widths(
+                                    GTK_TREE_VIEW( curfb->folder_view ),
+                                    curfb );
+    }
+    
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );
 //printf("on_folder_notebook_switch_pape fb=%#x   panel=%d   page=%d\n", file_browser, file_browser->mypanel, page_num );
     main_window->curpanel = file_browser->mypanel;
@@ -3363,17 +3365,8 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
                                         main_window->curpanel,
                                         page_num + 1, NULL, 0, 0, 0, TRUE );
 
-    // block signal in case tab is being closed due to main iteration in update views
-//    g_signal_handlers_block_matched( main_window->panel[file_browser->mypanel - 1],
-//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-
-    // PROBLEM: this may allow close events to destroy fb, so make sure its
-    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
     
-//    g_signal_handlers_unblock_matched( main_window->panel[file_browser->mypanel - 1],
-//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-
     if ( GTK_IS_WIDGET( file_browser ) )
         g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
 }
@@ -4177,6 +4170,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
 
     // hack - Due to ptk_file_browser_update_views main iteration, fb tab may be destroyed
     // asynchronously - common if gui thread is blocked on stat
+    // NOTE:  this is no longer needed
     if ( !GTK_IS_WIDGET( file_browser ) )
         return;
         
