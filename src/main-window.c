@@ -1389,7 +1389,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
                             ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( file_browser->folder_view ),
-                                    file_browser );
+                                    file_browser, FALSE );
                         //ptk_file_browser_slider_release( NULL, NULL, file_browser );
                     }
                 }
@@ -2238,7 +2238,8 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                                                 page_x ) );
                 if ( a_browser && a_browser->view_mode == PTK_FB_LIST_VIEW )
                     ptk_file_browser_save_column_widths( 
-                            GTK_TREE_VIEW( a_browser->folder_view ), a_browser );
+                                    GTK_TREE_VIEW( a_browser->folder_view ),
+                                    a_browser, FALSE );
             }
         }
     }
@@ -2498,7 +2499,7 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     // save solumns and slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
     ptk_file_browser_save_column_widths( GTK_TREE_VIEW( file_browser->folder_view ),
-                                                                    file_browser );
+                                                        file_browser, FALSE );
 
     // without this signal blocked, on_close_notebook_page is called while
     // ptk_file_browser_update_views is still in progress causing segfault
@@ -2835,7 +2836,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
         ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
-                                                                    curfb );
+                                                                curfb, FALSE );
     }
     int i = main_window->curpanel -1;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)ptk_file_browser_new(
@@ -3098,7 +3099,7 @@ on_new_window_activate ( GtkMenuItem *menuitem,
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
         ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
-                                                            curfb );
+                                                            curfb, FALSE );
     }
 
     save_settings( main_window );
@@ -3194,8 +3195,15 @@ void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser )
 
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER(
+                                    fm_main_window_get_current_file_browser
+                                                            ( main_window ) );
     if ( xset_get_b( "main_full" ) )
     {
+        if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
+            ptk_file_browser_save_column_widths( 
+                                GTK_TREE_VIEW( file_browser->folder_view ),
+                                file_browser, TRUE );
         gtk_widget_hide( main_window->menu_bar );
         gtk_widget_hide( main_window->panelbar );
         gtk_window_fullscreen( GTK_WINDOW( main_window ) );
@@ -3206,6 +3214,9 @@ void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
         gtk_widget_show( main_window->menu_bar );
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( main_window->panelbar );
+        
+        if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
+            ptk_file_browser_update_views( NULL, file_browser );
     }
 }
 
@@ -3348,7 +3359,7 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
         if ( curfb->view_mode == PTK_FB_LIST_VIEW )
             ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( curfb->folder_view ),
-                                    curfb );
+                                    curfb, FALSE );
     }
     
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );

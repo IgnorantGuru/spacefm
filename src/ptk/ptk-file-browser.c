@@ -4129,7 +4129,7 @@ static PtkMenuItemEntry shortcut_popup_menu[] =
 */
 
 void ptk_file_browser_save_column_widths( GtkTreeView *view,
-                                                PtkFileBrowser* file_browser )
+                                PtkFileBrowser* file_browser, gboolean force )
 {
     const char* title;
     XSet* set = NULL;
@@ -4142,8 +4142,8 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
 
-    if ( xset_get_b( "main_full" ) )
-        return;   // don't save columns in fullscreen mode
+    if ( !force && xset_get_b( "main_full" ) )
+        return;   // don't save columns in fullscreen mode unless force
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
