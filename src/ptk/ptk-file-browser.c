@@ -539,8 +539,6 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
         main_window->panel_slide_s[p-1] = pos;
 //printf("slide_s = %d\n", pos );
     }
-//printf("SAVEPOS %d %d\n", xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" ),
-//          xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" )  );
     return FALSE;
 }
 
@@ -1443,6 +1441,48 @@ static gboolean on_status_bar_key_press( GtkWidget* widget, GdkEventKey* event,
 }
 */
 
+/*
+void on_side_vbox_allocate( GtkWidget* widget, GdkRectangle* allocation,
+                                                PtkFileBrowser* file_browser )
+{
+    //printf("side_vbox: %d, %d\n", allocation->width, allocation->height );
+    
+}
+
+void on_paned_allocate( GtkWidget* widget, GdkRectangle* allocation,
+                                                PtkFileBrowser* file_browser )
+{
+    int pos;
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+
+    if ( widget == file_browser->side_vpane_top )
+        pos = main_window->panel_slide_y[file_browser->mypanel-1];
+    else if ( widget == file_browser->side_vpane_bottom )
+        pos = main_window->panel_slide_s[file_browser->mypanel-1];
+    else
+        return;
+    
+    printf("paned: %d, %d -- %d\n", allocation->width, allocation->height, pos );
+
+    //gtk_paned_set_position( GTK_PANED(widget), pos );
+}
+
+gboolean on_slider_change( GtkWidget *widget, GdkEvent  *event, // correct?
+                                                PtkFileBrowser* file_browser )
+{
+    if ( !file_browser )
+        return;
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+
+    printf("slider_change\n");
+    main_window->panel_slide_y[file_browser->mypanel-1] = gtk_paned_get_position( 
+                                    GTK_PANED( file_browser->side_vpane_top ) );
+    main_window->panel_slide_s[file_browser->mypanel-1] = gtk_paned_get_position( 
+                                    GTK_PANED( file_browser->side_vpane_bottom ) );
+    return FALSE;
+}
+*/
+
 void ptk_file_browser_init( PtkFileBrowser* file_browser )
 {
     // toolbox
@@ -1487,20 +1527,20 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
                                                     TRUE, FALSE );
     gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_bottom ),
                                                     file_browser->side_book_scroll,
-                                                    TRUE, FALSE );
+                                                    FALSE, FALSE );
     gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_bottom ),
                                                     file_browser->side_dir_scroll, 
                                                     TRUE, FALSE );
 #else
     gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_top ), 
                                                     file_browser->side_dev_scroll, 
-                                                    TRUE, TRUE );
+                                                    FALSE, TRUE );
     gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_top ),
                                                     file_browser->side_vpane_bottom, 
                                                     TRUE, TRUE );
     gtk_paned_pack1 ( GTK_PANED( file_browser->side_vpane_bottom ),
                                                     file_browser->side_book_scroll,
-                                                    TRUE, TRUE );
+                                                    FALSE, TRUE );
     gtk_paned_pack2 ( GTK_PANED( file_browser->side_vpane_bottom ),
                                                     file_browser->side_dir_scroll, 
                                                     TRUE, TRUE );
@@ -1561,6 +1601,15 @@ void ptk_file_browser_init( PtkFileBrowser* file_browser )
                       G_CALLBACK( ptk_file_browser_slider_release ), file_browser );
     g_signal_connect( file_browser->side_vpane_bottom, "button-release-event",
                       G_CALLBACK( ptk_file_browser_slider_release ), file_browser );
+/*
+    g_signal_connect( file_browser->side_vbox, "size-allocate",
+                      G_CALLBACK( on_side_vbox_allocate ), file_browser );
+    g_signal_connect( file_browser->side_vpane_top, "size-allocate",
+                      G_CALLBACK( on_paned_allocate ), file_browser );
+    g_signal_connect( file_browser->side_vpane_bottom, "size-allocate",
+                      G_CALLBACK( on_paned_allocate ), file_browser );
+*/
+
 /*
     // these work but fire too often
     g_signal_connect( file_browser->hpane, "notify::position",
@@ -1881,69 +1930,26 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
     }
     
     // set slider positions
-
-/*
-    // don't need to block signals for release event method
-    g_signal_handlers_block_matched( file_browser->hpane, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     ptk_file_browser_slider_release, NULL );
-    g_signal_handlers_block_matched( file_browser->side_vpane_top, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     ptk_file_browser_slider_release, NULL );
-    g_signal_handlers_block_matched( file_browser->side_vpane_bottom, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                     ptk_file_browser_slider_release, NULL );
-*/
     int pos;
-
-    //int pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "x" );
-    // read each slider's pos from dynamic
+    // hpane
     pos = main_window->panel_slide_x[p-1];
     if ( pos < 100 ) pos = -1;
 //printf( "    set slide_x = %d  \n", pos );
     if ( pos > 0 )
         gtk_paned_set_position( GTK_PANED( file_browser->hpane ), pos );
 
-#if GTK_CHECK_VERSION (3, 0, 0)
-#else
-    // hack to let other sliders adjust - only do this one for gtk < 3
-    // FIXME: this may allow close events to destroy fb, so make sure its
-    // still a widget after this - find a better way to do this
-    while (gtk_events_pending ())
-        gtk_main_iteration ();
-    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_PANED( file_browser->side_vpane_bottom ) ) )
-        return;
-#endif
-    
-    //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "y" );
+    // side_vpane_top
     pos = main_window->panel_slide_y[p-1];
     if ( pos < 20 ) pos = -1;
 //printf( "    slide_y = %d  ", pos );
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_top ), pos );
     
-    // hack to let other sliders adjust
-    // FIXME: this may allow close events to destroy fb, so make sure its
-    // still a widget after this - find a better way to do this
-    while (gtk_events_pending ())
-        gtk_main_iteration ();
-    if ( !( GTK_IS_WIDGET( file_browser ) && GTK_IS_PANED( file_browser->side_vpane_bottom ) ) )
-        return;
-        
-    //pos = xset_get_int_panel( file_browser->mypanel, "slider_positions", "s" );
+    // side_vpane_bottom
     pos = main_window->panel_slide_s[p-1];
     if ( pos < 20 ) pos = -1;
 //printf( "slide_s = %d\n", pos );
     gtk_paned_set_position( GTK_PANED( file_browser->side_vpane_bottom ), pos );
         
-    // save slider positions (they change when set)
-    ptk_file_browser_slider_release( NULL, NULL, file_browser );
-    
-/*
-    g_signal_handlers_unblock_matched( file_browser->hpane, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       ptk_file_browser_slider_release, NULL );
-    g_signal_handlers_unblock_matched( file_browser->side_vpane_top, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       ptk_file_browser_slider_release, NULL );
-    g_signal_handlers_unblock_matched( file_browser->side_vpane_bottom, G_SIGNAL_MATCH_FUNC, 0, 0, NULL,
-                                       ptk_file_browser_slider_release, NULL );
-*/
-
     // List Styles
     if ( xset_get_b_panel( p, "list_detailed" ) )
     {
