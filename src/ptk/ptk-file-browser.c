@@ -4535,12 +4535,11 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
         {
             // column width
             gtk_tree_view_column_set_min_width( col, 50 );
+            gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
             set = xset_get_panel_mode( p, column_names[j], mode );
-            width = set->y ? atoi( set->y ) : 0;
+            width = set->y ? atoi( set->y ) : 100;
             if ( width )
             {
-                // only if width so first run is not fixed
-                gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
                 if ( cols[j] == COL_FILE_NAME && !app_settings.always_show_tabs
                                 && file_browser->view_mode == PTK_FB_LIST_VIEW
                                 && gtk_notebook_get_n_pages(
