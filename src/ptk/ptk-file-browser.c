@@ -4142,8 +4142,8 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
 
-    if ( !force && xset_get_b( "main_full" ) )
-        return;   // don't save columns in fullscreen mode unless force
+    if ( app_settings.maximized || ( !force && xset_get_b( "main_full" ) ) )
+        return;   // don't save columns in fullscreen mode unless force without max
 
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;

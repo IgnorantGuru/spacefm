@@ -2312,6 +2312,8 @@ static gboolean fm_main_window_window_state_event ( GtkWidget *widget,
                                                     GdkEventWindowState *event )
 {
     app_settings.maximized = ((event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) != 0);
+    if ( !app_settings.maximized )
+        show_panels( NULL, (FMMainWindow*)widget );  // restore columns
     return TRUE;
 }
 
@@ -3215,8 +3217,8 @@ void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( main_window->panelbar );
         
-        if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
-            ptk_file_browser_update_views( NULL, file_browser );
+        if ( !app_settings.maximized )
+            show_panels( NULL, main_window );  // restore columns
     }
 }
 
