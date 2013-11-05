@@ -11,6 +11,7 @@
     task man change default cols to current speed and remain
     fix identification of empty optical drive
     change default device icons
+    add lilyterm to emulators list
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man

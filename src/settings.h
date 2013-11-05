@@ -287,7 +287,8 @@ static const char* terminal_programs[] =  //for pref-dialog.c
     "terminator",
     "urxvt",
     "xterm",
-    "x-terminal-emulator"
+    "x-terminal-emulator",
+    "lilyterm"
 };
 
 static const char* su_commands[] = // order and contents must match prefdlg.ui
