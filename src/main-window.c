@@ -2056,9 +2056,23 @@ void fm_main_window_init( FMMainWindow* main_window )
     if ( pos < 200 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
 
-    pos = xset_get_int( "panel_sliders", "z" );
-    if ( pos < 200 ) pos = 300;
-    gtk_paned_set_position( GTK_PANED( main_window->task_vpane ), pos );
+    // initial task manager height
+    set = xset_get( "panel_sliders" );
+    pos = set->z ? atoi( set->z ) : 0;
+    if ( set->key == 0 )
+    {
+        // use pre-0.9.1 measured from top
+        if ( pos == 0 )
+            set->key = 200;
+        else
+            set->key = app_settings.height - pos;
+    }
+    if ( set->key > app_settings.height / 2 )
+        set->key = app_settings.height / 2;
+    if ( set->key < 200 )
+        set->key = 200;
+    gtk_paned_set_position( GTK_PANED( main_window->task_vpane ),
+                                            app_settings.height - set->key );
 
     main_window->notebook = main_window->panel[0];
     main_window->curpanel = 1;
@@ -2217,12 +2231,23 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                 g_free( posa );
             }
 
-            pos = gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) );
-            if ( pos )
+            if ( gtk_widget_is_visible( main_window->task_scroll ) )
             {
-                posa = g_strdup_printf( "%d", pos );
-                xset_set( "panel_sliders", "z", posa );
-                g_free( posa );
+                pos = gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) );
+                if ( pos )
+                {
+                    // save height for version < 0.9.1 (in case of downgrade)
+                    posa = g_strdup_printf( "%d", pos );
+                    XSet* set = xset_set( "panel_sliders", "z", posa );
+                    g_free( posa );
+                    // measurement from win bottom introduced v0.9.1
+                    //GtkAllocation alloc_vpane;                    
+                    //gtk_widget_get_allocation(
+                    //                    GTK_WIDGET( main_window->task_vpane ),
+                    //                    &alloc_vpane );
+                    set->key = allocation.height - pos;
+printf("TASKMAN  win %dx%d   win height %d   slider %d   height %d\n", app_settings.width, app_settings.height, allocation.height, pos, set->key );
+                }
             }
         }
 
@@ -5140,6 +5165,58 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
     main_task_start_queued( view, NULL );
 }
 
+void show_task_manager( FMMainWindow* main_window, gboolean show )
+{
+    XSet* set = xset_get( "panel_sliders" );
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation( GTK_WIDGET( main_window ),
+                                                            &allocation );
+
+    if ( show )
+    {
+        // restore height (in case window height changed)
+        if ( set->key > allocation.height / 2 )
+            set->key = allocation.height / 2;
+        if ( set->key < 1 )
+            set->key = 70;
+printf("SHOW  vpane height %d   man height %d   slider %d\n", allocation.height, set->key, allocation.height - set->key );
+        gtk_paned_set_position( GTK_PANED( main_window->task_vpane ),
+                                            allocation.height - set->key );
+        gtk_widget_show( main_window->task_scroll );
+    }
+    else
+    {
+        // save height
+        if ( gtk_widget_is_visible( GTK_WIDGET( main_window->task_scroll ) ) )
+        {
+            int pos = gtk_paned_get_position(
+                                        GTK_PANED( main_window->task_vpane ) );
+            if ( pos )
+            {
+                // save height for version < 0.9.1 (in case of downgrade)
+                g_free( set->z );
+                set->z = g_strdup_printf( "%d", pos );
+                // measurement from win bottom introduced v0.9.1
+                set->key = allocation.height - pos;
+printf("HIDE  vpane height %d   man height %d   slider %d\n", allocation.height, set->key, allocation.height - set->key );
+            }
+        }
+        // hide
+        gboolean tasks_has_focus = gtk_widget_is_focus( 
+                                    GTK_WIDGET( main_window->task_view ) );
+        gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+        if ( tasks_has_focus )
+        {
+            // focus the file list
+            PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                    fm_main_window_get_current_file_browser( main_window ) );   
+            if ( file_browser )
+                gtk_widget_grab_focus( file_browser->folder_view );
+        }
+    }
+}
+
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
 {
     GtkTreeModel* model = NULL;
@@ -5176,29 +5253,14 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
     }
     
     if ( xset_get_b( "task_show_manager" ) )
-        gtk_widget_show( main_window->task_scroll );
+        show_task_manager( main_window, TRUE );
     else
     {
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( main_window->task_view ) );
         if ( gtk_tree_model_get_iter_first( model, &it ) )
-            gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
-        else
-        {
-            if ( xset_get_b( "task_hide_manager" ) )
-            {
-                gboolean tasks_has_focus = gtk_widget_is_focus( 
-                                        GTK_WIDGET( main_window->task_view ) );
-                gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
-                if ( tasks_has_focus )
-                {
-                    // focus the file list
-                    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
-                            fm_main_window_get_current_file_browser( main_window ) );   
-                    if ( file_browser )
-                        gtk_widget_grab_focus( file_browser->folder_view );
-                }
-            }
-        }
+            show_task_manager( main_window, TRUE );
+        else if ( xset_get_b( "task_hide_manager" ) )
+            show_task_manager( main_window, FALSE );
     }
 }
 
