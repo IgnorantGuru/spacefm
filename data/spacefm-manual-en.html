@@ -62,6 +62,7 @@
     <a href="#gui-find">Find-As-You-Type Search </a><br>
     <a href="#gui-rename">Rename Dialog </a><br>
     <a href="#gui-newf">New File/Folder Dialog </a><br>
+    <a href="#gui-pan">Panels </a><br>
 </ul>
 <a href="#devices">Devices</a>
 <ul>
@@ -270,7 +271,7 @@
 <a name="introduction-history"/><a href="#introduction-history"><font size=+2>History</font></a>
 <!-- @Introduction @History -->
 
-<p>SpaceFM was developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed bugs, and kept the legacy version alive for those who prefered it for its light dependencies and added features.
+<p>SpaceFM was originally developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed bugs, and kept the legacy version alive for those who prefered it for its light dependencies and added features.
 
 <p>PCManFM-Mod was later used as a base for developing SpaceFM, which included an extensible user interface, multiple panel support, a new udev device manager, inotify support, and removed dependencies on fam/gamin and HAL.  Much of the internal virtual filesystem (VFS), which had been developed and debugged in legacy PCManFM and PCManFM-Mod, was retained and extended, providing SpaceFM with a reliable VFS to build upon.
 
@@ -278,7 +279,9 @@
 
 <p>With version 0.7.5 in April 2012, SpaceFM replaced udisks with direct udev support for device detection and information, and support for multiple mount solutions including <a href="http://ignorantguru.github.io/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1 or v2, or any program you specify.  When used with udevil or a custom protocol handler, this update also added support for network filesystems.
 
-<p>In October 2012, testing began for SpaceFM GTK3.  Rather than abandoning GTK2, users can choose what version of the GTK+ library (2.18 thru 3.x) they want to use with SpaceFM.
+<p>In October 2012, the GTK3 version of SpaceFM was introduced.  Rather than abandoning GTK2, users can choose what version of the GTK+ library (2.18 thru 3.x) they want to use with SpaceFM.
+
+<p>Recent improvements include extending the features of SpaceFM's Desktop Manager, a new Menu Item Properties dialog for adding and customizing menu items, socket commands for interacting with a running instance, and an improved panel configuration memory.
 
 
 
@@ -905,6 +908,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li><a href="#gui-rename">Rename Dialog </a>
         <li><a href="#gui-newf">New File/Folder Dialog </a>
+        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1143,6 +1147,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
         <li>Find-As-You-Type Search 
         <li><a href="#gui-rename">Rename Dialog </a>
         <li><a href="#gui-newf">New File/Folder Dialog </a>
+        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1198,6 +1203,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li>Rename Dialog 
         <li><a href="#gui-newf">New File/Folder Dialog </a>
+        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1240,6 +1246,7 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li><a href="#gui-rename">Rename Dialog </a>
         <li>New File/Folder Dialog 
+        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1260,9 +1267,68 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <p>After you have finished entering the path for your new file or folder, you can press Create to create it, or the '&amp; Open' button to create and open the file or folder in one step.
 
- 
+
 
 <!-- @end gui-newf-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
+        <li>Panels 
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-pan"/><a href="#gui-pan"><font size=+2>Panels </font></a>
+<!-- @GUI @Panels #pan -->
+
+<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents; side panes; toolbar; path bar; and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.  Panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.
+
+<!-- #Panel Memory #mem -->
+<p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
+<p>Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+
+<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's state.  The four states are:
+<ul>
+    <li>panel is shown by itself in the window<br>
+    <LI>panel has a horizonal neighboring panel<br>
+    <li>panel has a vertical neighboring panel<br>
+    <li>panel has both horizontal and vertical neighboring panels<br>
+</ul>
+
+<p>The four-state memory of each panel allows SpaceFM to remember how you configured each panel in combination with other panels.  This makes it easier to show and hide panels on the fly without having to readjust columns, side panes, etc.  SpaceFM will remember the selected columns (visibility), column widths, side pane visibility and sizes, and toolbar visibility for each state of each panel.
+
+<!-- #Focus Highlighting #foc -->
+<p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>
+SpaceFM is designed so that for most purposes, it is not necessary to know which panel has the focus.  By right-clicking in a panel, the context menu shown will be specific to that panel.  (Window level commands and settings are available via the main menu bar.)
+
+<p>However, sometimes it is necessary to know which panel has focus, such as when using keyboard shortcuts on selected files, or using a custom command or plugin in the main menus.  For this purpose, SpaceFM provides an icon at the right of each panel's status bar.  This icon will be enabled for the panel which has focus.
+
+<p>If you would like a more prominent reminder, it is possible to set custom highlight colors for the focused panel's status bar text and background.  To set highlight colors, right-click on the status bar of the panel and select Highlight Text or Highlight Bar.  Each panel may use different highlight colors, or the same.
+
+
+
+<!-- @end gui-pan-->
 <br><br></td></tr>
 
 
@@ -2910,7 +2976,9 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Opener For</b></a><br>
 Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as opener for</i>' drop-down list on the Context page is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define an open handler for specific file types (or based on any context rules).
 
-<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the default mount command.
+<p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
+
+<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the default mount command.  Variables %v, "$fm_device", or other variables may be used in your command.
 
 <p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files or devices are opened.
 
@@ -3168,7 +3236,7 @@ Shown only for menu items of type Command, the Options page of the <a href="#des
 <p><a name="designmode-command-task"><b>Run As Task</b></a><br>
 Run As Task</a>, which is enabled by default for new commands, changes several aspects of how your command is run.  If Run As Task is UNchecked, the command is run <i>asynchronously</i> - it is run and forgotten by SpaceFM.  This is useful for running a program such as Firefox, for example.  SpaceFM doesn't need to wait for Firefox to finish or monitor its output - it can be run and forgotten.  For commands which simply start applications or produce no output, you may want to uncheck Run As Task.
 
-<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's <a href="#tasks-man">Task Manager</a> will monitor the task, and if the task runs for longer than about one half second, the Task Manager will auto-show and the task will be listed.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
+<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's <a href="#tasks-man">Task Manager</a> will monitor the task, and if the task runs for longer than about one half second, the Task Manager will auto-show and the task will be listed.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.  (When a command is run from the desktop menu, no Task Manager is shown for the task, but a popup may be shown automatically.)
 
 <p>In addition, any output from the task (stdout and stderr), will be collected in an <a href="#tasks-dlg">output monitor</a>.  To raise this monitor, click on the task in the Task Manager.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)
 
@@ -6823,7 +6891,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-10-27&nbsp;&nbsp;(SpaceFM version 0.9.0+)
+<p>Updated 2013-11-05&nbsp;&nbsp;(SpaceFM version 0.9.0+)
 <br><br>
 </center>
 </td></tr></table>
