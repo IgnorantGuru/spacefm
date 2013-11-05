@@ -10923,36 +10923,50 @@ void xset_defaults()
         set = xset_set_panel( p, "show_toolbox", "lbl", _("_Toolbar") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
-
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_toolbox" );
+        
         set = xset_set_panel( p, "show_devmon", "lbl", _("_Devices") );
         set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_devmon" );
 
         set = xset_set_panel( p, "show_dirtree", "lbl", _("T_ree") );
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
-
-        // set visible for all panel context modes
-        //for ( i = 0; i < 4; i++ )
-        //    xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_dirtree" );
 
         set = xset_set_panel( p, "show_book", "lbl", _("_Bookmarks") );
         set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_book" );
 
         set = xset_set_panel( p, "show_sidebar", "lbl", _("_Side Toolbar") );
         set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_sidebar" );
 
         set = xset_set_panel( p, "list_detailed", "lbl", _("_Detailed") );
         set->menu_style = XSET_MENU_RADIO;
         set->b = XSET_B_TRUE;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_detailed" );
 
         set = xset_set_panel( p, "list_icons", "lbl", _("_Icons") );
         set->menu_style = XSET_MENU_RADIO;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_icons" );
 
         set = xset_set_panel( p, "list_compact", "lbl", _("_Compact") );
         set->menu_style = XSET_MENU_RADIO;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_compact" );
 
         set = xset_set_panel( p, "show_hidden", "lbl", _("_Hidden Files") );
         set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_hidden" );
 
         set = xset_set_panel( p, "font_file", "lbl", _("_Font") );
         set->menu_style = XSET_MENU_FONTDLG;
@@ -10995,10 +11009,14 @@ void xset_defaults()
         xset_set_set( set, "icn", "gtk-select-font" );
         set->title = g_strdup_printf( _("Status Bar Font (Panel %d)"), p );
         xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_font_status" );
 
         set = xset_set_panel( p, "icon_status", "lbl", _("_Icon") );
         set->menu_style = XSET_MENU_ICON;
         xset_set_set( set, "icn", "gtk-yes" );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_icon_status" );
         
         set = xset_set_panel( p, "detcol_name", "lbl", _("_Name") );
         set->menu_style = XSET_MENU_CHECK;
@@ -11009,29 +11027,32 @@ void xset_defaults()
         set->menu_style = XSET_MENU_CHECK;
         set->b = XSET_B_TRUE;
         set->x = g_strdup_printf( "%d", 1 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_size" );
 
-        // set visible for all panel context modes
-        //for ( i = 0; i < 4; i++ )
-        //{
-        //    xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
-        //    xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
-        //}
-        
         set = xset_set_panel( p, "detcol_type", "lbl", _("_Type") );
         set->menu_style = XSET_MENU_CHECK;
         set->x = g_strdup_printf( "%d", 2 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_type" );
 
         set = xset_set_panel( p, "detcol_perm", "lbl", _("_Permission") );
         set->menu_style = XSET_MENU_CHECK;
         set->x = g_strdup_printf( "%d", 3 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_perm" );
 
         set = xset_set_panel( p, "detcol_owner", "lbl", _("_Owner") );
         set->menu_style = XSET_MENU_CHECK;
         set->x = g_strdup_printf( "%d", 4 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_owner" );
 
         set = xset_set_panel( p, "detcol_date", "lbl", _("_Modified") );
         set->menu_style = XSET_MENU_CHECK;
         set->x = g_strdup_printf( "%d", 5 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_date" );
 
         set = xset_get_panel( p, "sort_extra" );
         set->b = XSET_B_TRUE;  //sort_natural
