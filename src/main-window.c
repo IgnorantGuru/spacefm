@@ -334,9 +334,11 @@ void show_bookmarks( GtkWidget* item, FMMainWindow* main_window )
                         fm_main_window_get_current_file_browser( main_window ) );
     if ( !file_browser )
         return;
+    int mode = main_window->panel_context[file_browser->mypanel-1];
+
     if ( !file_browser->side_book )
     {
-        xset_set_panel( file_browser->mypanel, "show_book", "b", "1" );
+        xset_set_b_panel_mode( file_browser->mypanel, "show_book", mode, TRUE );
         update_views_all_windows( NULL, file_browser );
     }
     if ( file_browser->side_book )
@@ -705,9 +707,11 @@ void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
                         fm_main_window_get_current_file_browser( main_window ) );
     if ( !file_browser )
         return;
+    int mode = main_window->panel_context[file_browser->mypanel-1];
+
     if ( !file_browser->side_dev )
     {
-        xset_set_panel( file_browser->mypanel, "show_devmon", "b", "1" );
+        xset_set_b_panel_mode( file_browser->mypanel, "show_devmon", mode, TRUE );
         update_views_all_windows( NULL, file_browser );
     }
     if ( file_browser->side_dev )
