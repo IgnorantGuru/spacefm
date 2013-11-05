@@ -5812,6 +5812,8 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     {
         col = gtk_tree_view_column_new();
         gtk_tree_view_column_set_resizable( col, TRUE );
+        gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
+        gtk_tree_view_column_set_min_width( col, 20 );
         
         // column order
         for ( j = 0; j < 13; j++ )
@@ -5823,13 +5825,11 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
             j = i; // failsafe
         else
         {
+            // column width
             width = xset_get_int( task_names[j], "y" );
-            if ( width )
-            {
-                gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
-                gtk_tree_view_column_set_min_width( col, 20 );
-                gtk_tree_view_column_set_fixed_width ( col, width );
-            }
+            if ( width == 0 )
+                width = 80;
+            gtk_tree_view_column_set_fixed_width ( col, width );
         }
         
         if ( cols[j] == TASK_COL_STATUS )
