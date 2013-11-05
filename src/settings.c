@@ -4467,9 +4467,6 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     char* deffile;
     char* s1;
     char* s2;
-
-    if ( !file_browser )
-        return;
         
     // get new plugin filename    
     XSet* save = xset_get( "plug_ifile" );
@@ -4569,7 +4566,7 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     // tar and delete tmp files
     // task
     PtkFileTask* task = ptk_file_exec_new( _("Export Plugin"), plug_dir, parent,
-                                            file_browser->task_view );
+                            file_browser ? file_browser->task_view : NULL );
     char* plug_dir_q = bash_quote( plug_dir );
     char* path_q = bash_quote( path );
     if ( !set->plugin )
