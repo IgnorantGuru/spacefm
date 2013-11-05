@@ -10148,24 +10148,24 @@ void xset_defaults()
     
     set = xset_set( "task_col_curspeed", "lbl", _("C_urrent Speed") );
     set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 9 );
     set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_curest", "lbl", _("Current Re_main") );
     set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 10 );
     set->line = g_strdup( "#tasks-menu-col" );
 
     set = xset_set( "task_col_avgspeed", "lbl", _("_Average Speed") );
     set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 11 );
     set->y = g_strdup( "60" );
     set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_avgest", "lbl", _("A_verage Remain") );
     set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 12 );
     set->y = g_strdup( "65" );
     set->line = g_strdup( "#tasks-menu-col" );

@@ -8,6 +8,7 @@
     new root window use HOME=/root incase no env reset
     fix Export from desktop menu
     man panel memory
+    task man change default cols to current speed and remain
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man
