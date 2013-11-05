@@ -9558,12 +9558,12 @@ void xset_defaults()
 
         set = xset_set( "dev_icon_optical_media", "lbl", _("Optical Has Media") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-cdrom" );
+        xset_set_set( set, "icn", "gtk-yes" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_optical_nomedia", "lbl", _("Optical No Media") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-cdrom" );
+        xset_set_set( set, "icn", "gtk-close" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_floppy_mounted", "lbl", _("Floppy Mounted") );
@@ -9578,17 +9578,17 @@ void xset_defaults()
 
         set = xset_set( "dev_icon_remove_mounted", "lbl", _("Removable Mounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-add" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_remove_unmounted", "lbl", _("Removable Unmounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-remove" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_internal_mounted", "lbl", _("Internal Mounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-open" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_internal_unmounted", "lbl", _("Internal Unmounted") );
