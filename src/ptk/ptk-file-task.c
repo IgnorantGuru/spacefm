@@ -153,6 +153,31 @@ void ptk_file_task_destroy_delayed( PtkFileTask* task )
 }
 */
 
+void save_progress_dialog_size( PtkFileTask* ptask )
+{
+    // save dialog size  - do this here now because as of GTK 3.8,
+    // allocation == 1,1 in destroy event
+    char* s;
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation ( GTK_WIDGET( ptask->progress_dlg ),
+                                                            &allocation );    
+
+    s = g_strdup_printf( "%d", allocation.width );
+    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
+        xset_set( "task_pop_top", "s", s );
+    else
+        xset_set( "task_pop_top", "x", s );
+    g_free( s );
+
+    s = g_strdup_printf( "%d", allocation.height );
+    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
+        xset_set( "task_pop_top", "z", s );
+    else
+        xset_set( "task_pop_top", "y", s );
+    g_free( s );
+}
+
 void ptk_file_task_destroy( PtkFileTask* ptask )
 {
 //printf("ptk_file_task_destroy ptask=%#x\n", ptask);
@@ -171,6 +196,7 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
     
     if ( ptask->progress_dlg )
     {
+        save_progress_dialog_size( ptask );
         if ( ptask->overwrite_combo )
             gtk_combo_box_popdown( GTK_COMBO_BOX( ptask->overwrite_combo ) );
         if ( ptask->error_combo )
@@ -618,11 +644,13 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
 gboolean on_progress_dlg_delete_event( GtkWidget *widget, GdkEvent *event,
                                                         PtkFileTask* ptask )
 {
+    save_progress_dialog_size( ptask );
     return !( ptask->complete || ptask->task_view );
 }
 
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
 {
+    save_progress_dialog_size( ptask );
     if ( response != GTK_RESPONSE_HELP && ptask->complete && !ptask->complete_notify )
     {
         ptk_file_task_destroy( ptask );
@@ -674,33 +702,6 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
 void on_progress_dlg_destroy( GtkDialog* dlg, PtkFileTask* ptask )
 {
     ptask->progress_dlg = NULL;
-}
-
-gboolean on_progress_configure_event( GtkWindow *window, 
-                                    GdkEvent *event, PtkFileTask* ptask )
-{
-    // save dialog size  - do this here now because as of GTK 3.8,
-    // allocation == 1,1 in destroy event
-    char* s;
-    GtkAllocation allocation;
-    
-    gtk_widget_get_allocation ( GTK_WIDGET( window ), &allocation );    
-
-    s = g_strdup_printf( "%d", allocation.width );
-    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
-        xset_set( "task_pop_top", "s", s );
-    else
-        xset_set( "task_pop_top", "x", s );
-    g_free( s );
-
-    s = g_strdup_printf( "%d", allocation.height );
-    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
-        xset_set( "task_pop_top", "z", s );
-    else
-        xset_set( "task_pop_top", "y", s );
-    g_free( s );
-
-    return FALSE;
 }
 
 void on_view_popup( GtkTextView *entry, GtkMenu *menu, gpointer user_data )
@@ -1125,8 +1126,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                       G_CALLBACK( on_progress_dlg_destroy ), ptask );
     g_signal_connect( ptask->progress_dlg, "delete-event",
                       G_CALLBACK( on_progress_dlg_delete_event ), ptask );
-    g_signal_connect( ptask->progress_dlg, "configure-event",
-                      G_CALLBACK( on_progress_configure_event ), ptask );
+    //g_signal_connect( ptask->progress_dlg, "configure-event",
+    //                  G_CALLBACK( on_progress_configure_event ), ptask );
 
     gtk_widget_show_all( ptask->progress_dlg );
     if ( ptask->overwrite_combo && !xset_get_b( "task_pop_over" ) )
