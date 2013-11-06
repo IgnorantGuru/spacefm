@@ -14,6 +14,7 @@
     add lilyterm to emulators list
     remove erroneous files from pkg branch
     README added wiki link Guidelines For Distributing Modifications
+    limit evt_win_move events to 5 per second #380
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man

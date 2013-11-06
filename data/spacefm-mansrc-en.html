@@ -41,7 +41,7 @@
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
     Inspired by the simplicity and clarity of PCManFM's interface, SpaceFM's GUI aims to be simple and uncluttered, while still providing extensive capabilities for power users and flexibility in window components, behavior, and appearance.
     <ul>
-	<li>Each window may contain up to four independently configured, interactive browser panels
+	<li>Each window may contain up to four independently configured, interactive browser panels <a href="#gui-pan">*</a>
 	<li>Each panel supports multiple folder tabs
 	<li>Optional side panes in each panel can show Devices, Bookmarks, and a Directory Tree
 	<li>How many panels you want displayed, how they are arranged and sized, what each panel contains, and what fonts and icons are used is largely up to you.  SpaceFM can be a window containing icons of a single folder's contents, or a multi-panel, tabbed arrangement of detailed file lists, devices, bookmarks, and folder trees.  <a href="http://ignorantguru.github.io/spacefm/screenshots.html">screenshots</a>
@@ -658,12 +658,17 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 <!-- @GUI @Panels #pan -->
 
-<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents; side panes; toolbar; path bar; and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.  Panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.
+<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
+
+<p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
 
 <!-- #Panel Memory #mem -->
-<p>Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+<p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
 
-<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's state.  The four states are:
+<p><b>How It Works</b><br>
+Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+
+<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's relationship to other panels in the window.  The four states are:
 <ul>
     <li>panel is shown by itself in the window<br>
     <LI>panel has a horizonal neighboring panel<br>
@@ -672,6 +677,9 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 </ul>
 
 <p>The four-state memory of each panel allows SpaceFM to remember how you configured each panel in combination with other panels.  This makes it easier to show and hide panels on the fly without having to readjust columns, side panes, etc.  SpaceFM will remember the selected columns (visibility), column widths, side pane visibility and sizes, and toolbar visibility for each state of each panel.
+
+<p>For more advanced users, note that <a href="#sockets">socket commands</a> can be used to adjust panel configurations from a command or script.  When set as <a href="#sockets-events">event handlers</a>, adjustments can be made automatically when GUI or other events occur, such as showing/hiding a panel or changing window size.
+
 
 <!-- #Focus Highlighting #foc -->
 SpaceFM is designed so that for most purposes, it is not necessary to know which panel has the focus.  By right-clicking in a panel, the context menu shown will be specific to that panel.  (Window level commands and settings are available via the main menu bar.)
@@ -4619,7 +4627,7 @@ Occurs whenever a new SpaceFM window is opened, including the initial window.
 Occurs whenever a SpaceFM window receives focus.  For example, if you switch to another window in your window manager, then switch back to a SpaceFM window, this event will occur.
 
 <!-- # evt_win_move (Window|Move) %e %w %p %t # winmov -->
-Occurs whenever a SpaceFM window is moved or resized.  Note that during resizing, any handler for this event may be run multiple times, so the handler command should handle this gracefully.
+Occurs whenever a SpaceFM window is moved or resized.  Note that during resizing, any handler for this event may be run multiple times (up to five times per second).
 
 <!-- # evt_win_click (Window|Click) %e %w %p %t %b %m %f # winclk -->
 Occurs when the user clicks the mouse in most areas of a SpaceFM window.  The mouse button pressed is available via the substitution variable %b, any key modifier (eg Ctrl+Click) via %m, and the window element which received the click via %f.

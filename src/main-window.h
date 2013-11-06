@@ -94,6 +94,7 @@ GtkCheckMenuItem* open_side_pane_menu;
 
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
+  guint configure_evt_timer;
 }FMMainWindow;
 
 typedef struct _FMMainWindowClass

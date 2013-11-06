@@ -234,12 +234,37 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     */
 }
 
+
+gboolean on_configure_evt_timer( FMMainWindow* main_window )
+{
+    // verify main_window still valid
+    GList* l;
+    for ( l = all_windows; l; l = l->next )
+    {
+        if ( (FMMainWindow*)l->data == main_window )
+            break;
+    }
+    if ( !l )
+        return FALSE;
+
+    if ( main_window->configure_evt_timer )
+    {
+        g_source_remove( main_window->configure_evt_timer );
+        main_window->configure_evt_timer = 0;
+    }
+    main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
+                                                    NULL, 0, 0, 0, TRUE );
+    return FALSE;
+}
+
 gboolean on_window_configure_event( GtkWindow *window, 
                                     GdkEvent *event, FMMainWindow* main_window )
 {
-    if ( evt_win_move->s || evt_win_move->ob2_data )
-        main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
-                                                    NULL, 0, 0, 0, TRUE );
+    // use timer to prevent rapid events during resize
+    if ( ( evt_win_move->s || evt_win_move->ob2_data ) &&
+                                        !main_window->configure_evt_timer )
+        main_window->configure_evt_timer = g_timeout_add( 200,
+                        ( GSourceFunc ) on_configure_evt_timer, main_window );
     return FALSE;
 }
 
@@ -1875,6 +1900,8 @@ void fm_main_window_init( FMMainWindow* main_window )
     int i;
     char* icon_name;
     XSet* set;
+    
+    main_window->configure_evt_timer = 0;
     
     /* this is used to limit the scope of gtk_grab and modal dialogs */
     main_window->wgroup = gtk_window_group_new();
