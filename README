@@ -449,7 +449,7 @@ TRANSLATE
 
     Just sign up for a free Transifex account.  For instructions visit:
         http://help.transifex.com/intro/translating.html#translating
-
+        
 
 LICENSE
 
@@ -476,3 +476,10 @@ LICENSE
 
     See COPYING and COPYING-LGPL files.
 
+
+DERIVATIVE WORKS
+
+    If you plan to publish a significant amount of or the full source to SpaceFM
+    with your modifications, please see the following wiki article:
+    
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications
