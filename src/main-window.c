@@ -2178,17 +2178,16 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
 //printf("fm_main_window_delete_event\n");
 
     FMMainWindow* main_window = (FMMainWindow*)widget;
-    
-    // store width/height + sliders
-    int pos;
-    char* posa;
-    GtkAllocation allocation;
-    
-    gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
-    
-    // fullscreen?
-    if ( !xset_get_b( "main_full" ) )
+
+    // max or fullscreen?
+    if ( !app_settings.maximized && !xset_get_b( "main_full" ) )
     {
+        // store width/height + sliders
+        int pos;
+        char* posa;
+        GtkAllocation allocation;
+
+        gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
         app_settings.width = allocation.width;
         app_settings.height = allocation.height;
         if ( GTK_IS_PANED( main_window->hpane_top ) )
@@ -4904,7 +4903,7 @@ void on_task_columns_changed( GtkWidget *view, gpointer user_data )
             pos = g_strdup_printf( "%d", i );
             xset_set_set( set, "x", pos );
             g_free( pos );
-            if ( !fullscreen )
+            if ( !app_settings.maximized && !fullscreen )
             {
                 width = gtk_tree_view_column_get_width( col );
                 if ( width )  // manager unshown, all widths are zero
