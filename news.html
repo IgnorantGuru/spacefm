@@ -42,6 +42,56 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.9.1"></a>
+<big><b><a href="#0.9.1">0.9.1 released</a></b></big><br>
+2013-Nov-06
+
+<p>SpaceFM 0.9.1 introduces a new memory system for multiple panel configurations and includes fixes for several minor problems.
+
+<ul>
+    <li>A <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#gui-pan">new panel memory system</a> remembers how panels are configured when shown alone or with other combinations of panels.<br><Br><b>Upgrade Notice:</b>  When upgrading, an effort is made to extend your old panel config into the new memory, yet some initial adjustment may be necessary.  The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear. Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc. Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.<br><Br><b>Downgrade Notice:</b> Panel configurations for 0.9.1 and later, versus 0.9.0 and earlier, are stored separately, so when downgrading you will not see the same panel configurations, but your settings for each version will remain intact.<br><Br>
+    
+    <li>A problem introduced in version 0.9.0 which caused some custom icons (bookmark icon, tab icon, devices icons) to not be saved has been corrected.  If you lost custom icon settings due to this problem, you will need to reconfigure them.<br><Br>
+    
+    <li>A problem which caused task popup dialogs to always open at their minimum size when used with GTK 3.8 and later has been corrected.<br><Br>
+    
+    <li>An old problem which caused SpaceFM to fail to detect an empty optical drive as optical has been corrected.  (This problem caused the wrong device icon to appear for empty optical drives.)<br><Br>
+    
+    <li>The default icons for devices have been changed to provide more information on the mounted state of the device.  These icons are limited to stock GTK icons by default, but may be changed by right-clicking on the Devices pane and selecting an icon in Settings|Icon.<br><Br>
+    
+    <li>Due to a change in the <b>sakura terminal</b> which replaced argument -e with -x, SpaceFM now uses -x to send commands to this terminal.  If you're using an older version of sakura you may need to upgrade for compatibility with SpaceFM 0.9.1.<br><Br>
+
+    <li><b>lilyterm</b> has been added as a recognized terminal.<br><Br>
+    
+    <li>A problem building SpaceFM 0.9.0 on <b>GTK < 2.24</b> has been corrected.<br><Br>
+
+    <li>When opening a new root window, SpaceFM now sets HOME=/root to ensure root's settings are saved in root's home.  (When upgrading on some systems, root's window configuration will appear to be new.)<br><Br>
+
+    <li>A problem (introduced in version 0.9.0?) which broke Export from the desktop menu's design menu has been corrected.<br><Br>
+
+    <li>The default speed and time remaining columns shown in the task manager now use current speed and estimate, rather than average.  (You can change this default by selecting <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#tasks-menu-col">visible columns</a> in the task manager.)<br><Br>
+
+    <li>The <a href="http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#sockets-events-winmov">evt_win_move</a> event is now emitted at most five times per second to reduce resource usage.<br><Br>
+    
+</ul>
+
+A new page has been added to the wiki for <a href="https://github.com/IgnorantGuru/spacefm/wiki/Screenshots">Screenshots &amp; Screencasts</a>.  Please update this page with additional links.
+
+<p>SpaceFM contributor OmegaPhil has added new page <a href="https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications">Guidelines For Distributing Modifications</a> to the wiki.
+
+<p><b>For Debian/Ubuntu users</b> interested in testing SpaceFM's next branch (which is generally quite stable and includes new features), Mateusz Łukasik has been updating <a href="https://launchpad.net/~mati75/+archive/spacefm/">his SpaceFM PPA</a> with +git builds in addition to release versions.
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.9.0"></a>
 <big><b><a href="#0.9.0">0.9.0 released</a></b></big><br>
 2013-Oct-22
