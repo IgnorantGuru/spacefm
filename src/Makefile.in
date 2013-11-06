@@ -132,48 +132,55 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	settings.h pref-dialog.c pref-dialog.h find-files.c \
 	find-files.h go-dialog.c go-dialog.h cust-dialog.c \
 	cust-dialog.h item-prop.c item-prop.h
-am__objects_1 = spacefm-mime-type.$(OBJEXT) \
-	spacefm-mime-action.$(OBJEXT) spacefm-mime-cache.$(OBJEXT)
-am__objects_2 = spacefm-vfs-volume-nohal.$(OBJEXT)
-am__objects_3 = spacefm-vfs-volume-hal.$(OBJEXT) \
-	spacefm-vfs-volume-hal-options.$(OBJEXT)
+am__dirstamp = $(am__leading_dot)dirstamp
+am__objects_1 = mime-type/spacefm-mime-type.$(OBJEXT) \
+	mime-type/spacefm-mime-action.$(OBJEXT) \
+	mime-type/spacefm-mime-cache.$(OBJEXT)
+am__objects_2 = vfs/spacefm-vfs-volume-nohal.$(OBJEXT)
+am__objects_3 = vfs/spacefm-vfs-volume-hal.$(OBJEXT) \
+	vfs/spacefm-vfs-volume-hal-options.$(OBJEXT)
 @USE_HAL_FALSE@am__objects_4 = $(am__objects_2)
 @USE_HAL_TRUE@am__objects_4 = $(am__objects_3)
-am__objects_5 = spacefm-vfs-file-monitor.$(OBJEXT) \
-	spacefm-vfs-mime-type.$(OBJEXT) \
-	spacefm-vfs-file-info.$(OBJEXT) spacefm-vfs-dir.$(OBJEXT) \
-	spacefm-vfs-app-desktop.$(OBJEXT) \
-	spacefm-vfs-file-task.$(OBJEXT) $(am__objects_4) \
-	spacefm-vfs-execute.$(OBJEXT) spacefm-vfs-async-task.$(OBJEXT) \
-	spacefm-vfs-thumbnail-loader.$(OBJEXT) \
-	spacefm-vfs-utils.$(OBJEXT)
-am__objects_6 = spacefm-md5.$(OBJEXT)
-am__objects_7 = spacefm-glib-utils.$(OBJEXT)
-am__objects_8 = spacefm-ptk-file-browser.$(OBJEXT) \
-	spacefm-ptk-file-list.$(OBJEXT) \
-	spacefm-ptk-path-entry.$(OBJEXT) \
-	spacefm-ptk-text-renderer.$(OBJEXT) \
-	spacefm-ptk-file-icon-renderer.$(OBJEXT) \
-	spacefm-ptk-utils.$(OBJEXT) spacefm-working-area.$(OBJEXT) \
-	spacefm-ptk-dir-tree-view.$(OBJEXT) \
-	spacefm-ptk-dir-tree.$(OBJEXT) \
-	spacefm-ptk-location-view.$(OBJEXT) \
-	spacefm-ptk-bookmarks.$(OBJEXT) \
-	spacefm-ptk-input-dialog.$(OBJEXT) \
-	spacefm-ptk-file-task.$(OBJEXT) \
-	spacefm-ptk-file-archiver.$(OBJEXT) \
-	spacefm-ptk-clipboard.$(OBJEXT) \
-	spacefm-ptk-file-menu.$(OBJEXT) \
-	spacefm-ptk-file-misc.$(OBJEXT) \
-	spacefm-ptk-file-properties.$(OBJEXT) \
-	spacefm-ptk-app-chooser.$(OBJEXT)
-am__objects_9 = spacefm-exo-icon-view.$(OBJEXT) \
-	spacefm-exo-tree-view.$(OBJEXT) spacefm-exo-private.$(OBJEXT) \
-	spacefm-exo-string.$(OBJEXT) spacefm-exo-marshal.$(OBJEXT)
-@DESKTOP_INTEGRATION_FALSE@am__objects_10 = spacefm-desktop.$(OBJEXT)
-@DESKTOP_INTEGRATION_TRUE@am__objects_10 =  \
-@DESKTOP_INTEGRATION_TRUE@	spacefm-desktop-window.$(OBJEXT) \
-@DESKTOP_INTEGRATION_TRUE@	spacefm-desktop.$(OBJEXT)
+am__objects_5 = vfs/spacefm-vfs-file-monitor.$(OBJEXT) \
+	vfs/spacefm-vfs-mime-type.$(OBJEXT) \
+	vfs/spacefm-vfs-file-info.$(OBJEXT) \
+	vfs/spacefm-vfs-dir.$(OBJEXT) \
+	vfs/spacefm-vfs-app-desktop.$(OBJEXT) \
+	vfs/spacefm-vfs-file-task.$(OBJEXT) $(am__objects_4) \
+	vfs/spacefm-vfs-execute.$(OBJEXT) \
+	vfs/spacefm-vfs-async-task.$(OBJEXT) \
+	vfs/spacefm-vfs-thumbnail-loader.$(OBJEXT) \
+	vfs/spacefm-vfs-utils.$(OBJEXT)
+am__objects_6 = libmd5-rfc/spacefm-md5.$(OBJEXT)
+am__objects_7 = compat/spacefm-glib-utils.$(OBJEXT)
+am__objects_8 = ptk/spacefm-ptk-file-browser.$(OBJEXT) \
+	ptk/spacefm-ptk-file-list.$(OBJEXT) \
+	ptk/spacefm-ptk-path-entry.$(OBJEXT) \
+	ptk/spacefm-ptk-text-renderer.$(OBJEXT) \
+	ptk/spacefm-ptk-file-icon-renderer.$(OBJEXT) \
+	ptk/spacefm-ptk-utils.$(OBJEXT) \
+	desktop/spacefm-working-area.$(OBJEXT) \
+	ptk/spacefm-ptk-dir-tree-view.$(OBJEXT) \
+	ptk/spacefm-ptk-dir-tree.$(OBJEXT) \
+	ptk/spacefm-ptk-location-view.$(OBJEXT) \
+	ptk/spacefm-ptk-bookmarks.$(OBJEXT) \
+	ptk/spacefm-ptk-input-dialog.$(OBJEXT) \
+	ptk/spacefm-ptk-file-task.$(OBJEXT) \
+	ptk/spacefm-ptk-file-archiver.$(OBJEXT) \
+	ptk/spacefm-ptk-clipboard.$(OBJEXT) \
+	ptk/spacefm-ptk-file-menu.$(OBJEXT) \
+	ptk/spacefm-ptk-file-misc.$(OBJEXT) \
+	ptk/spacefm-ptk-file-properties.$(OBJEXT) \
+	ptk/spacefm-ptk-app-chooser.$(OBJEXT)
+am__objects_9 = exo/spacefm-exo-icon-view.$(OBJEXT) \
+	exo/spacefm-exo-tree-view.$(OBJEXT) \
+	exo/spacefm-exo-private.$(OBJEXT) \
+	exo/spacefm-exo-string.$(OBJEXT) \
+	exo/spacefm-exo-marshal.$(OBJEXT)
+@DESKTOP_INTEGRATION_FALSE@am__objects_10 =  \
+@DESKTOP_INTEGRATION_FALSE@	desktop/spacefm-desktop.$(OBJEXT)
+@DESKTOP_INTEGRATION_TRUE@am__objects_10 = desktop/spacefm-desktop-window.$(OBJEXT) \
+@DESKTOP_INTEGRATION_TRUE@	desktop/spacefm-desktop.$(OBJEXT)
 am_spacefm_OBJECTS = $(am__objects_1) $(am__objects_5) \
 	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
 	$(am__objects_9) $(am__objects_10) spacefm-main.$(OBJEXT) \
@@ -661,6 +668,136 @@ clean-noinstPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
+mime-type/$(am__dirstamp):
+	@$(MKDIR_P) mime-type
+	@: > mime-type/$(am__dirstamp)
+mime-type/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) mime-type/$(DEPDIR)
+	@: > mime-type/$(DEPDIR)/$(am__dirstamp)
+mime-type/spacefm-mime-type.$(OBJEXT): mime-type/$(am__dirstamp) \
+	mime-type/$(DEPDIR)/$(am__dirstamp)
+mime-type/spacefm-mime-action.$(OBJEXT): mime-type/$(am__dirstamp) \
+	mime-type/$(DEPDIR)/$(am__dirstamp)
+mime-type/spacefm-mime-cache.$(OBJEXT): mime-type/$(am__dirstamp) \
+	mime-type/$(DEPDIR)/$(am__dirstamp)
+vfs/$(am__dirstamp):
+	@$(MKDIR_P) vfs
+	@: > vfs/$(am__dirstamp)
+vfs/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) vfs/$(DEPDIR)
+	@: > vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-file-monitor.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-mime-type.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-file-info.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-dir.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-app-desktop.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-file-task.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-volume-nohal.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-volume-hal.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-volume-hal-options.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-execute.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-async-task.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-thumbnail-loader.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+vfs/spacefm-vfs-utils.$(OBJEXT): vfs/$(am__dirstamp) \
+	vfs/$(DEPDIR)/$(am__dirstamp)
+libmd5-rfc/$(am__dirstamp):
+	@$(MKDIR_P) libmd5-rfc
+	@: > libmd5-rfc/$(am__dirstamp)
+libmd5-rfc/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) libmd5-rfc/$(DEPDIR)
+	@: > libmd5-rfc/$(DEPDIR)/$(am__dirstamp)
+libmd5-rfc/spacefm-md5.$(OBJEXT): libmd5-rfc/$(am__dirstamp) \
+	libmd5-rfc/$(DEPDIR)/$(am__dirstamp)
+compat/$(am__dirstamp):
+	@$(MKDIR_P) compat
+	@: > compat/$(am__dirstamp)
+compat/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) compat/$(DEPDIR)
+	@: > compat/$(DEPDIR)/$(am__dirstamp)
+compat/spacefm-glib-utils.$(OBJEXT): compat/$(am__dirstamp) \
+	compat/$(DEPDIR)/$(am__dirstamp)
+ptk/$(am__dirstamp):
+	@$(MKDIR_P) ptk
+	@: > ptk/$(am__dirstamp)
+ptk/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) ptk/$(DEPDIR)
+	@: > ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-browser.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-list.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-path-entry.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-text-renderer.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-icon-renderer.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-utils.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+desktop/$(am__dirstamp):
+	@$(MKDIR_P) desktop
+	@: > desktop/$(am__dirstamp)
+desktop/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) desktop/$(DEPDIR)
+	@: > desktop/$(DEPDIR)/$(am__dirstamp)
+desktop/spacefm-working-area.$(OBJEXT): desktop/$(am__dirstamp) \
+	desktop/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-dir-tree-view.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-dir-tree.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-location-view.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-bookmarks.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-input-dialog.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-task.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-archiver.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-clipboard.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-menu.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-misc.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-file-properties.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-app-chooser.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
+exo/$(am__dirstamp):
+	@$(MKDIR_P) exo
+	@: > exo/$(am__dirstamp)
+exo/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) exo/$(DEPDIR)
+	@: > exo/$(DEPDIR)/$(am__dirstamp)
+exo/spacefm-exo-icon-view.$(OBJEXT): exo/$(am__dirstamp) \
+	exo/$(DEPDIR)/$(am__dirstamp)
+exo/spacefm-exo-tree-view.$(OBJEXT): exo/$(am__dirstamp) \
+	exo/$(DEPDIR)/$(am__dirstamp)
+exo/spacefm-exo-private.$(OBJEXT): exo/$(am__dirstamp) \
+	exo/$(DEPDIR)/$(am__dirstamp)
+exo/spacefm-exo-string.$(OBJEXT): exo/$(am__dirstamp) \
+	exo/$(DEPDIR)/$(am__dirstamp)
+exo/spacefm-exo-marshal.$(OBJEXT): exo/$(am__dirstamp) \
+	exo/$(DEPDIR)/$(am__dirstamp)
+desktop/spacefm-desktop.$(OBJEXT): desktop/$(am__dirstamp) \
+	desktop/$(DEPDIR)/$(am__dirstamp)
+desktop/spacefm-desktop-window.$(OBJEXT): desktop/$(am__dirstamp) \
+	desktop/$(DEPDIR)/$(am__dirstamp)
 
 spacefm$(EXEEXT): $(spacefm_OBJECTS) $(spacefm_DEPENDENCIES) $(EXTRA_spacefm_DEPENDENCIES) 
 	@rm -f spacefm$(EXEEXT)
@@ -707,700 +844,710 @@ uninstall-binSCRIPTS:
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f compat/*.$(OBJEXT)
+	-rm -f desktop/*.$(OBJEXT)
+	-rm -f exo/*.$(OBJEXT)
+	-rm -f libmd5-rfc/*.$(OBJEXT)
+	-rm -f mime-type/*.$(OBJEXT)
+	-rm -f ptk/*.$(OBJEXT)
+	-rm -f vfs/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-cust-dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-desktop-window.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-desktop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-icon-view.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-marshal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-private.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-string.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-exo-tree-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-find-files.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-glib-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-go-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-item-prop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-main-window.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-md5.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-mime-action.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-mime-cache.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-mime-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-pref-dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-app-chooser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-bookmarks.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-clipboard.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-dir-tree-view.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-dir-tree.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-archiver.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-browser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-icon-renderer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-list.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-menu.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-misc.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-properties.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-file-task.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-input-dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-location-view.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-path-entry.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-text-renderer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-ptk-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-settings.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-app-desktop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-async-task.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-dir.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-execute.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-file-info.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-file-monitor.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-file-task.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-mime-type.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-thumbnail-loader.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-utils.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-volume-hal-options.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-volume-hal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-vfs-volume-nohal.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/spacefm-working-area.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xml_purge-xml-purge.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@compat/$(DEPDIR)/spacefm-glib-utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-desktop-window.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-desktop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@desktop/$(DEPDIR)/spacefm-working-area.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-icon-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-marshal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-private.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-string.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@exo/$(DEPDIR)/spacefm-exo-tree-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@libmd5-rfc/$(DEPDIR)/spacefm-md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@mime-type/$(DEPDIR)/spacefm-mime-action.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@mime-type/$(DEPDIR)/spacefm-mime-cache.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@mime-type/$(DEPDIR)/spacefm-mime-type.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-clipboard.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-browser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-list.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-menu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-properties.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-task.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-location-view.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-path-entry.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-async-task.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-dir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-execute.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-file-info.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-file-task.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-mime-type.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Po@am__quote@
 
 .c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .c.lo:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LTCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.lo$$||'`;\
+@am__fastdepCC_TRUE@	$(LTCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-spacefm-mime-type.o: mime-type/mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-type.o -MD -MP -MF $(DEPDIR)/spacefm-mime-type.Tpo -c -o spacefm-mime-type.o `test -f 'mime-type/mime-type.c' || echo '$(srcdir)/'`mime-type/mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-type.Tpo $(DEPDIR)/spacefm-mime-type.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-type.c' object='spacefm-mime-type.o' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-type.o: mime-type/mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-type.o -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-type.Tpo -c -o mime-type/spacefm-mime-type.o `test -f 'mime-type/mime-type.c' || echo '$(srcdir)/'`mime-type/mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-type.Tpo mime-type/$(DEPDIR)/spacefm-mime-type.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-type.c' object='mime-type/spacefm-mime-type.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-type.o `test -f 'mime-type/mime-type.c' || echo '$(srcdir)/'`mime-type/mime-type.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-type.o `test -f 'mime-type/mime-type.c' || echo '$(srcdir)/'`mime-type/mime-type.c
 
-spacefm-mime-type.obj: mime-type/mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-type.obj -MD -MP -MF $(DEPDIR)/spacefm-mime-type.Tpo -c -o spacefm-mime-type.obj `if test -f 'mime-type/mime-type.c'; then $(CYGPATH_W) 'mime-type/mime-type.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-type.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-type.Tpo $(DEPDIR)/spacefm-mime-type.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-type.c' object='spacefm-mime-type.obj' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-type.obj: mime-type/mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-type.obj -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-type.Tpo -c -o mime-type/spacefm-mime-type.obj `if test -f 'mime-type/mime-type.c'; then $(CYGPATH_W) 'mime-type/mime-type.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-type.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-type.Tpo mime-type/$(DEPDIR)/spacefm-mime-type.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-type.c' object='mime-type/spacefm-mime-type.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-type.obj `if test -f 'mime-type/mime-type.c'; then $(CYGPATH_W) 'mime-type/mime-type.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-type.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-type.obj `if test -f 'mime-type/mime-type.c'; then $(CYGPATH_W) 'mime-type/mime-type.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-type.c'; fi`
 
-spacefm-mime-action.o: mime-type/mime-action.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-action.o -MD -MP -MF $(DEPDIR)/spacefm-mime-action.Tpo -c -o spacefm-mime-action.o `test -f 'mime-type/mime-action.c' || echo '$(srcdir)/'`mime-type/mime-action.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-action.Tpo $(DEPDIR)/spacefm-mime-action.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-action.c' object='spacefm-mime-action.o' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-action.o: mime-type/mime-action.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-action.o -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-action.Tpo -c -o mime-type/spacefm-mime-action.o `test -f 'mime-type/mime-action.c' || echo '$(srcdir)/'`mime-type/mime-action.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-action.Tpo mime-type/$(DEPDIR)/spacefm-mime-action.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-action.c' object='mime-type/spacefm-mime-action.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-action.o `test -f 'mime-type/mime-action.c' || echo '$(srcdir)/'`mime-type/mime-action.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-action.o `test -f 'mime-type/mime-action.c' || echo '$(srcdir)/'`mime-type/mime-action.c
 
-spacefm-mime-action.obj: mime-type/mime-action.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-action.obj -MD -MP -MF $(DEPDIR)/spacefm-mime-action.Tpo -c -o spacefm-mime-action.obj `if test -f 'mime-type/mime-action.c'; then $(CYGPATH_W) 'mime-type/mime-action.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-action.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-action.Tpo $(DEPDIR)/spacefm-mime-action.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-action.c' object='spacefm-mime-action.obj' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-action.obj: mime-type/mime-action.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-action.obj -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-action.Tpo -c -o mime-type/spacefm-mime-action.obj `if test -f 'mime-type/mime-action.c'; then $(CYGPATH_W) 'mime-type/mime-action.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-action.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-action.Tpo mime-type/$(DEPDIR)/spacefm-mime-action.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-action.c' object='mime-type/spacefm-mime-action.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-action.obj `if test -f 'mime-type/mime-action.c'; then $(CYGPATH_W) 'mime-type/mime-action.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-action.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-action.obj `if test -f 'mime-type/mime-action.c'; then $(CYGPATH_W) 'mime-type/mime-action.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-action.c'; fi`
 
-spacefm-mime-cache.o: mime-type/mime-cache.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-cache.o -MD -MP -MF $(DEPDIR)/spacefm-mime-cache.Tpo -c -o spacefm-mime-cache.o `test -f 'mime-type/mime-cache.c' || echo '$(srcdir)/'`mime-type/mime-cache.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-cache.Tpo $(DEPDIR)/spacefm-mime-cache.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-cache.c' object='spacefm-mime-cache.o' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-cache.o: mime-type/mime-cache.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-cache.o -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-cache.Tpo -c -o mime-type/spacefm-mime-cache.o `test -f 'mime-type/mime-cache.c' || echo '$(srcdir)/'`mime-type/mime-cache.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-cache.Tpo mime-type/$(DEPDIR)/spacefm-mime-cache.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-cache.c' object='mime-type/spacefm-mime-cache.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-cache.o `test -f 'mime-type/mime-cache.c' || echo '$(srcdir)/'`mime-type/mime-cache.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-cache.o `test -f 'mime-type/mime-cache.c' || echo '$(srcdir)/'`mime-type/mime-cache.c
 
-spacefm-mime-cache.obj: mime-type/mime-cache.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-mime-cache.obj -MD -MP -MF $(DEPDIR)/spacefm-mime-cache.Tpo -c -o spacefm-mime-cache.obj `if test -f 'mime-type/mime-cache.c'; then $(CYGPATH_W) 'mime-type/mime-cache.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-cache.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-mime-cache.Tpo $(DEPDIR)/spacefm-mime-cache.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-cache.c' object='spacefm-mime-cache.obj' libtool=no @AMDEPBACKSLASH@
+mime-type/spacefm-mime-cache.obj: mime-type/mime-cache.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT mime-type/spacefm-mime-cache.obj -MD -MP -MF mime-type/$(DEPDIR)/spacefm-mime-cache.Tpo -c -o mime-type/spacefm-mime-cache.obj `if test -f 'mime-type/mime-cache.c'; then $(CYGPATH_W) 'mime-type/mime-cache.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-cache.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) mime-type/$(DEPDIR)/spacefm-mime-cache.Tpo mime-type/$(DEPDIR)/spacefm-mime-cache.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mime-type/mime-cache.c' object='mime-type/spacefm-mime-cache.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-mime-cache.obj `if test -f 'mime-type/mime-cache.c'; then $(CYGPATH_W) 'mime-type/mime-cache.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-cache.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o mime-type/spacefm-mime-cache.obj `if test -f 'mime-type/mime-cache.c'; then $(CYGPATH_W) 'mime-type/mime-cache.c'; else $(CYGPATH_W) '$(srcdir)/mime-type/mime-cache.c'; fi`
 
-spacefm-vfs-file-monitor.o: vfs/vfs-file-monitor.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-monitor.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-monitor.Tpo -c -o spacefm-vfs-file-monitor.o `test -f 'vfs/vfs-file-monitor.c' || echo '$(srcdir)/'`vfs/vfs-file-monitor.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-monitor.Tpo $(DEPDIR)/spacefm-vfs-file-monitor.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-monitor.c' object='spacefm-vfs-file-monitor.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-monitor.o: vfs/vfs-file-monitor.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-monitor.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Tpo -c -o vfs/spacefm-vfs-file-monitor.o `test -f 'vfs/vfs-file-monitor.c' || echo '$(srcdir)/'`vfs/vfs-file-monitor.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-monitor.c' object='vfs/spacefm-vfs-file-monitor.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-monitor.o `test -f 'vfs/vfs-file-monitor.c' || echo '$(srcdir)/'`vfs/vfs-file-monitor.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-monitor.o `test -f 'vfs/vfs-file-monitor.c' || echo '$(srcdir)/'`vfs/vfs-file-monitor.c
 
-spacefm-vfs-file-monitor.obj: vfs/vfs-file-monitor.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-monitor.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-monitor.Tpo -c -o spacefm-vfs-file-monitor.obj `if test -f 'vfs/vfs-file-monitor.c'; then $(CYGPATH_W) 'vfs/vfs-file-monitor.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-monitor.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-monitor.Tpo $(DEPDIR)/spacefm-vfs-file-monitor.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-monitor.c' object='spacefm-vfs-file-monitor.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-monitor.obj: vfs/vfs-file-monitor.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-monitor.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Tpo -c -o vfs/spacefm-vfs-file-monitor.obj `if test -f 'vfs/vfs-file-monitor.c'; then $(CYGPATH_W) 'vfs/vfs-file-monitor.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-monitor.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-monitor.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-monitor.c' object='vfs/spacefm-vfs-file-monitor.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-monitor.obj `if test -f 'vfs/vfs-file-monitor.c'; then $(CYGPATH_W) 'vfs/vfs-file-monitor.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-monitor.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-monitor.obj `if test -f 'vfs/vfs-file-monitor.c'; then $(CYGPATH_W) 'vfs/vfs-file-monitor.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-monitor.c'; fi`
 
-spacefm-vfs-mime-type.o: vfs/vfs-mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-mime-type.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-mime-type.Tpo -c -o spacefm-vfs-mime-type.o `test -f 'vfs/vfs-mime-type.c' || echo '$(srcdir)/'`vfs/vfs-mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-mime-type.Tpo $(DEPDIR)/spacefm-vfs-mime-type.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-mime-type.c' object='spacefm-vfs-mime-type.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-mime-type.o: vfs/vfs-mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-mime-type.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-mime-type.Tpo -c -o vfs/spacefm-vfs-mime-type.o `test -f 'vfs/vfs-mime-type.c' || echo '$(srcdir)/'`vfs/vfs-mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-mime-type.Tpo vfs/$(DEPDIR)/spacefm-vfs-mime-type.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-mime-type.c' object='vfs/spacefm-vfs-mime-type.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-mime-type.o `test -f 'vfs/vfs-mime-type.c' || echo '$(srcdir)/'`vfs/vfs-mime-type.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-mime-type.o `test -f 'vfs/vfs-mime-type.c' || echo '$(srcdir)/'`vfs/vfs-mime-type.c
 
-spacefm-vfs-mime-type.obj: vfs/vfs-mime-type.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-mime-type.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-mime-type.Tpo -c -o spacefm-vfs-mime-type.obj `if test -f 'vfs/vfs-mime-type.c'; then $(CYGPATH_W) 'vfs/vfs-mime-type.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-mime-type.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-mime-type.Tpo $(DEPDIR)/spacefm-vfs-mime-type.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-mime-type.c' object='spacefm-vfs-mime-type.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-mime-type.obj: vfs/vfs-mime-type.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-mime-type.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-mime-type.Tpo -c -o vfs/spacefm-vfs-mime-type.obj `if test -f 'vfs/vfs-mime-type.c'; then $(CYGPATH_W) 'vfs/vfs-mime-type.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-mime-type.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-mime-type.Tpo vfs/$(DEPDIR)/spacefm-vfs-mime-type.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-mime-type.c' object='vfs/spacefm-vfs-mime-type.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-mime-type.obj `if test -f 'vfs/vfs-mime-type.c'; then $(CYGPATH_W) 'vfs/vfs-mime-type.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-mime-type.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-mime-type.obj `if test -f 'vfs/vfs-mime-type.c'; then $(CYGPATH_W) 'vfs/vfs-mime-type.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-mime-type.c'; fi`
 
-spacefm-vfs-file-info.o: vfs/vfs-file-info.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-info.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-info.Tpo -c -o spacefm-vfs-file-info.o `test -f 'vfs/vfs-file-info.c' || echo '$(srcdir)/'`vfs/vfs-file-info.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-info.Tpo $(DEPDIR)/spacefm-vfs-file-info.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-info.c' object='spacefm-vfs-file-info.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-info.o: vfs/vfs-file-info.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-info.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-info.Tpo -c -o vfs/spacefm-vfs-file-info.o `test -f 'vfs/vfs-file-info.c' || echo '$(srcdir)/'`vfs/vfs-file-info.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-info.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-info.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-info.c' object='vfs/spacefm-vfs-file-info.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-info.o `test -f 'vfs/vfs-file-info.c' || echo '$(srcdir)/'`vfs/vfs-file-info.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-info.o `test -f 'vfs/vfs-file-info.c' || echo '$(srcdir)/'`vfs/vfs-file-info.c
 
-spacefm-vfs-file-info.obj: vfs/vfs-file-info.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-info.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-info.Tpo -c -o spacefm-vfs-file-info.obj `if test -f 'vfs/vfs-file-info.c'; then $(CYGPATH_W) 'vfs/vfs-file-info.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-info.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-info.Tpo $(DEPDIR)/spacefm-vfs-file-info.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-info.c' object='spacefm-vfs-file-info.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-info.obj: vfs/vfs-file-info.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-info.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-info.Tpo -c -o vfs/spacefm-vfs-file-info.obj `if test -f 'vfs/vfs-file-info.c'; then $(CYGPATH_W) 'vfs/vfs-file-info.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-info.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-info.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-info.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-info.c' object='vfs/spacefm-vfs-file-info.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-info.obj `if test -f 'vfs/vfs-file-info.c'; then $(CYGPATH_W) 'vfs/vfs-file-info.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-info.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-info.obj `if test -f 'vfs/vfs-file-info.c'; then $(CYGPATH_W) 'vfs/vfs-file-info.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-info.c'; fi`
 
-spacefm-vfs-dir.o: vfs/vfs-dir.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-dir.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-dir.Tpo -c -o spacefm-vfs-dir.o `test -f 'vfs/vfs-dir.c' || echo '$(srcdir)/'`vfs/vfs-dir.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-dir.Tpo $(DEPDIR)/spacefm-vfs-dir.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-dir.c' object='spacefm-vfs-dir.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-dir.o: vfs/vfs-dir.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-dir.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-dir.Tpo -c -o vfs/spacefm-vfs-dir.o `test -f 'vfs/vfs-dir.c' || echo '$(srcdir)/'`vfs/vfs-dir.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-dir.Tpo vfs/$(DEPDIR)/spacefm-vfs-dir.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-dir.c' object='vfs/spacefm-vfs-dir.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-dir.o `test -f 'vfs/vfs-dir.c' || echo '$(srcdir)/'`vfs/vfs-dir.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-dir.o `test -f 'vfs/vfs-dir.c' || echo '$(srcdir)/'`vfs/vfs-dir.c
 
-spacefm-vfs-dir.obj: vfs/vfs-dir.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-dir.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-dir.Tpo -c -o spacefm-vfs-dir.obj `if test -f 'vfs/vfs-dir.c'; then $(CYGPATH_W) 'vfs/vfs-dir.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-dir.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-dir.Tpo $(DEPDIR)/spacefm-vfs-dir.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-dir.c' object='spacefm-vfs-dir.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-dir.obj: vfs/vfs-dir.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-dir.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-dir.Tpo -c -o vfs/spacefm-vfs-dir.obj `if test -f 'vfs/vfs-dir.c'; then $(CYGPATH_W) 'vfs/vfs-dir.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-dir.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-dir.Tpo vfs/$(DEPDIR)/spacefm-vfs-dir.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-dir.c' object='vfs/spacefm-vfs-dir.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-dir.obj `if test -f 'vfs/vfs-dir.c'; then $(CYGPATH_W) 'vfs/vfs-dir.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-dir.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-dir.obj `if test -f 'vfs/vfs-dir.c'; then $(CYGPATH_W) 'vfs/vfs-dir.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-dir.c'; fi`
 
-spacefm-vfs-app-desktop.o: vfs/vfs-app-desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-app-desktop.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-app-desktop.Tpo -c -o spacefm-vfs-app-desktop.o `test -f 'vfs/vfs-app-desktop.c' || echo '$(srcdir)/'`vfs/vfs-app-desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-app-desktop.Tpo $(DEPDIR)/spacefm-vfs-app-desktop.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-app-desktop.c' object='spacefm-vfs-app-desktop.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-app-desktop.o: vfs/vfs-app-desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-app-desktop.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Tpo -c -o vfs/spacefm-vfs-app-desktop.o `test -f 'vfs/vfs-app-desktop.c' || echo '$(srcdir)/'`vfs/vfs-app-desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Tpo vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-app-desktop.c' object='vfs/spacefm-vfs-app-desktop.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-app-desktop.o `test -f 'vfs/vfs-app-desktop.c' || echo '$(srcdir)/'`vfs/vfs-app-desktop.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-app-desktop.o `test -f 'vfs/vfs-app-desktop.c' || echo '$(srcdir)/'`vfs/vfs-app-desktop.c
 
-spacefm-vfs-app-desktop.obj: vfs/vfs-app-desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-app-desktop.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-app-desktop.Tpo -c -o spacefm-vfs-app-desktop.obj `if test -f 'vfs/vfs-app-desktop.c'; then $(CYGPATH_W) 'vfs/vfs-app-desktop.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-app-desktop.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-app-desktop.Tpo $(DEPDIR)/spacefm-vfs-app-desktop.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-app-desktop.c' object='spacefm-vfs-app-desktop.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-app-desktop.obj: vfs/vfs-app-desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-app-desktop.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Tpo -c -o vfs/spacefm-vfs-app-desktop.obj `if test -f 'vfs/vfs-app-desktop.c'; then $(CYGPATH_W) 'vfs/vfs-app-desktop.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-app-desktop.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Tpo vfs/$(DEPDIR)/spacefm-vfs-app-desktop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-app-desktop.c' object='vfs/spacefm-vfs-app-desktop.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-app-desktop.obj `if test -f 'vfs/vfs-app-desktop.c'; then $(CYGPATH_W) 'vfs/vfs-app-desktop.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-app-desktop.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-app-desktop.obj `if test -f 'vfs/vfs-app-desktop.c'; then $(CYGPATH_W) 'vfs/vfs-app-desktop.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-app-desktop.c'; fi`
 
-spacefm-vfs-file-task.o: vfs/vfs-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-task.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-task.Tpo -c -o spacefm-vfs-file-task.o `test -f 'vfs/vfs-file-task.c' || echo '$(srcdir)/'`vfs/vfs-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-task.Tpo $(DEPDIR)/spacefm-vfs-file-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-task.c' object='spacefm-vfs-file-task.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-task.o: vfs/vfs-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-task.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-task.Tpo -c -o vfs/spacefm-vfs-file-task.o `test -f 'vfs/vfs-file-task.c' || echo '$(srcdir)/'`vfs/vfs-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-task.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-task.c' object='vfs/spacefm-vfs-file-task.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-task.o `test -f 'vfs/vfs-file-task.c' || echo '$(srcdir)/'`vfs/vfs-file-task.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-task.o `test -f 'vfs/vfs-file-task.c' || echo '$(srcdir)/'`vfs/vfs-file-task.c
 
-spacefm-vfs-file-task.obj: vfs/vfs-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-file-task.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-file-task.Tpo -c -o spacefm-vfs-file-task.obj `if test -f 'vfs/vfs-file-task.c'; then $(CYGPATH_W) 'vfs/vfs-file-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-task.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-file-task.Tpo $(DEPDIR)/spacefm-vfs-file-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-task.c' object='spacefm-vfs-file-task.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-file-task.obj: vfs/vfs-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-file-task.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-file-task.Tpo -c -o vfs/spacefm-vfs-file-task.obj `if test -f 'vfs/vfs-file-task.c'; then $(CYGPATH_W) 'vfs/vfs-file-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-task.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-file-task.Tpo vfs/$(DEPDIR)/spacefm-vfs-file-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-file-task.c' object='vfs/spacefm-vfs-file-task.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-file-task.obj `if test -f 'vfs/vfs-file-task.c'; then $(CYGPATH_W) 'vfs/vfs-file-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-task.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-file-task.obj `if test -f 'vfs/vfs-file-task.c'; then $(CYGPATH_W) 'vfs/vfs-file-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-file-task.c'; fi`
 
-spacefm-vfs-volume-nohal.o: vfs/vfs-volume-nohal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-nohal.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-nohal.Tpo -c -o spacefm-vfs-volume-nohal.o `test -f 'vfs/vfs-volume-nohal.c' || echo '$(srcdir)/'`vfs/vfs-volume-nohal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-nohal.Tpo $(DEPDIR)/spacefm-vfs-volume-nohal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-nohal.c' object='spacefm-vfs-volume-nohal.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-nohal.o: vfs/vfs-volume-nohal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-nohal.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Tpo -c -o vfs/spacefm-vfs-volume-nohal.o `test -f 'vfs/vfs-volume-nohal.c' || echo '$(srcdir)/'`vfs/vfs-volume-nohal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-nohal.c' object='vfs/spacefm-vfs-volume-nohal.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-nohal.o `test -f 'vfs/vfs-volume-nohal.c' || echo '$(srcdir)/'`vfs/vfs-volume-nohal.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-nohal.o `test -f 'vfs/vfs-volume-nohal.c' || echo '$(srcdir)/'`vfs/vfs-volume-nohal.c
 
-spacefm-vfs-volume-nohal.obj: vfs/vfs-volume-nohal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-nohal.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-nohal.Tpo -c -o spacefm-vfs-volume-nohal.obj `if test -f 'vfs/vfs-volume-nohal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-nohal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-nohal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-nohal.Tpo $(DEPDIR)/spacefm-vfs-volume-nohal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-nohal.c' object='spacefm-vfs-volume-nohal.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-nohal.obj: vfs/vfs-volume-nohal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-nohal.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Tpo -c -o vfs/spacefm-vfs-volume-nohal.obj `if test -f 'vfs/vfs-volume-nohal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-nohal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-nohal.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-nohal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-nohal.c' object='vfs/spacefm-vfs-volume-nohal.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-nohal.obj `if test -f 'vfs/vfs-volume-nohal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-nohal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-nohal.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-nohal.obj `if test -f 'vfs/vfs-volume-nohal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-nohal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-nohal.c'; fi`
 
-spacefm-vfs-volume-hal.o: vfs/vfs-volume-hal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-hal.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-hal.Tpo -c -o spacefm-vfs-volume-hal.o `test -f 'vfs/vfs-volume-hal.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-hal.Tpo $(DEPDIR)/spacefm-vfs-volume-hal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal.c' object='spacefm-vfs-volume-hal.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-hal.o: vfs/vfs-volume-hal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-hal.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Tpo -c -o vfs/spacefm-vfs-volume-hal.o `test -f 'vfs/vfs-volume-hal.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal.c' object='vfs/spacefm-vfs-volume-hal.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-hal.o `test -f 'vfs/vfs-volume-hal.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-hal.o `test -f 'vfs/vfs-volume-hal.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal.c
 
-spacefm-vfs-volume-hal.obj: vfs/vfs-volume-hal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-hal.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-hal.Tpo -c -o spacefm-vfs-volume-hal.obj `if test -f 'vfs/vfs-volume-hal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-hal.Tpo $(DEPDIR)/spacefm-vfs-volume-hal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal.c' object='spacefm-vfs-volume-hal.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-hal.obj: vfs/vfs-volume-hal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-hal.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Tpo -c -o vfs/spacefm-vfs-volume-hal.obj `if test -f 'vfs/vfs-volume-hal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-hal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal.c' object='vfs/spacefm-vfs-volume-hal.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-hal.obj `if test -f 'vfs/vfs-volume-hal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-hal.obj `if test -f 'vfs/vfs-volume-hal.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal.c'; fi`
 
-spacefm-vfs-volume-hal-options.o: vfs/vfs-volume-hal-options.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-hal-options.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo -c -o spacefm-vfs-volume-hal-options.o `test -f 'vfs/vfs-volume-hal-options.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal-options.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo $(DEPDIR)/spacefm-vfs-volume-hal-options.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal-options.c' object='spacefm-vfs-volume-hal-options.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-hal-options.o: vfs/vfs-volume-hal-options.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-hal-options.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo -c -o vfs/spacefm-vfs-volume-hal-options.o `test -f 'vfs/vfs-volume-hal-options.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal-options.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal-options.c' object='vfs/spacefm-vfs-volume-hal-options.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-hal-options.o `test -f 'vfs/vfs-volume-hal-options.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal-options.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-hal-options.o `test -f 'vfs/vfs-volume-hal-options.c' || echo '$(srcdir)/'`vfs/vfs-volume-hal-options.c
 
-spacefm-vfs-volume-hal-options.obj: vfs/vfs-volume-hal-options.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-volume-hal-options.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo -c -o spacefm-vfs-volume-hal-options.obj `if test -f 'vfs/vfs-volume-hal-options.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal-options.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal-options.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo $(DEPDIR)/spacefm-vfs-volume-hal-options.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal-options.c' object='spacefm-vfs-volume-hal-options.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-volume-hal-options.obj: vfs/vfs-volume-hal-options.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-volume-hal-options.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo -c -o vfs/spacefm-vfs-volume-hal-options.obj `if test -f 'vfs/vfs-volume-hal-options.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal-options.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal-options.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Tpo vfs/$(DEPDIR)/spacefm-vfs-volume-hal-options.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-volume-hal-options.c' object='vfs/spacefm-vfs-volume-hal-options.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-volume-hal-options.obj `if test -f 'vfs/vfs-volume-hal-options.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal-options.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal-options.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-volume-hal-options.obj `if test -f 'vfs/vfs-volume-hal-options.c'; then $(CYGPATH_W) 'vfs/vfs-volume-hal-options.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-volume-hal-options.c'; fi`
 
-spacefm-vfs-execute.o: vfs/vfs-execute.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-execute.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-execute.Tpo -c -o spacefm-vfs-execute.o `test -f 'vfs/vfs-execute.c' || echo '$(srcdir)/'`vfs/vfs-execute.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-execute.Tpo $(DEPDIR)/spacefm-vfs-execute.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-execute.c' object='spacefm-vfs-execute.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-execute.o: vfs/vfs-execute.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-execute.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-execute.Tpo -c -o vfs/spacefm-vfs-execute.o `test -f 'vfs/vfs-execute.c' || echo '$(srcdir)/'`vfs/vfs-execute.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-execute.Tpo vfs/$(DEPDIR)/spacefm-vfs-execute.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-execute.c' object='vfs/spacefm-vfs-execute.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-execute.o `test -f 'vfs/vfs-execute.c' || echo '$(srcdir)/'`vfs/vfs-execute.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-execute.o `test -f 'vfs/vfs-execute.c' || echo '$(srcdir)/'`vfs/vfs-execute.c
 
-spacefm-vfs-execute.obj: vfs/vfs-execute.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-execute.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-execute.Tpo -c -o spacefm-vfs-execute.obj `if test -f 'vfs/vfs-execute.c'; then $(CYGPATH_W) 'vfs/vfs-execute.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-execute.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-execute.Tpo $(DEPDIR)/spacefm-vfs-execute.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-execute.c' object='spacefm-vfs-execute.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-execute.obj: vfs/vfs-execute.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-execute.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-execute.Tpo -c -o vfs/spacefm-vfs-execute.obj `if test -f 'vfs/vfs-execute.c'; then $(CYGPATH_W) 'vfs/vfs-execute.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-execute.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-execute.Tpo vfs/$(DEPDIR)/spacefm-vfs-execute.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-execute.c' object='vfs/spacefm-vfs-execute.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-execute.obj `if test -f 'vfs/vfs-execute.c'; then $(CYGPATH_W) 'vfs/vfs-execute.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-execute.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-execute.obj `if test -f 'vfs/vfs-execute.c'; then $(CYGPATH_W) 'vfs/vfs-execute.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-execute.c'; fi`
 
-spacefm-vfs-async-task.o: vfs/vfs-async-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-async-task.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-async-task.Tpo -c -o spacefm-vfs-async-task.o `test -f 'vfs/vfs-async-task.c' || echo '$(srcdir)/'`vfs/vfs-async-task.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-async-task.Tpo $(DEPDIR)/spacefm-vfs-async-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-async-task.c' object='spacefm-vfs-async-task.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-async-task.o: vfs/vfs-async-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-async-task.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-async-task.Tpo -c -o vfs/spacefm-vfs-async-task.o `test -f 'vfs/vfs-async-task.c' || echo '$(srcdir)/'`vfs/vfs-async-task.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-async-task.Tpo vfs/$(DEPDIR)/spacefm-vfs-async-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-async-task.c' object='vfs/spacefm-vfs-async-task.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-async-task.o `test -f 'vfs/vfs-async-task.c' || echo '$(srcdir)/'`vfs/vfs-async-task.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-async-task.o `test -f 'vfs/vfs-async-task.c' || echo '$(srcdir)/'`vfs/vfs-async-task.c
 
-spacefm-vfs-async-task.obj: vfs/vfs-async-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-async-task.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-async-task.Tpo -c -o spacefm-vfs-async-task.obj `if test -f 'vfs/vfs-async-task.c'; then $(CYGPATH_W) 'vfs/vfs-async-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-async-task.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-async-task.Tpo $(DEPDIR)/spacefm-vfs-async-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-async-task.c' object='spacefm-vfs-async-task.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-async-task.obj: vfs/vfs-async-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-async-task.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-async-task.Tpo -c -o vfs/spacefm-vfs-async-task.obj `if test -f 'vfs/vfs-async-task.c'; then $(CYGPATH_W) 'vfs/vfs-async-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-async-task.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-async-task.Tpo vfs/$(DEPDIR)/spacefm-vfs-async-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-async-task.c' object='vfs/spacefm-vfs-async-task.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-async-task.obj `if test -f 'vfs/vfs-async-task.c'; then $(CYGPATH_W) 'vfs/vfs-async-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-async-task.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-async-task.obj `if test -f 'vfs/vfs-async-task.c'; then $(CYGPATH_W) 'vfs/vfs-async-task.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-async-task.c'; fi`
 
-spacefm-vfs-thumbnail-loader.o: vfs/vfs-thumbnail-loader.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-thumbnail-loader.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo -c -o spacefm-vfs-thumbnail-loader.o `test -f 'vfs/vfs-thumbnail-loader.c' || echo '$(srcdir)/'`vfs/vfs-thumbnail-loader.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo $(DEPDIR)/spacefm-vfs-thumbnail-loader.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-thumbnail-loader.c' object='spacefm-vfs-thumbnail-loader.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-thumbnail-loader.o: vfs/vfs-thumbnail-loader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-thumbnail-loader.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo -c -o vfs/spacefm-vfs-thumbnail-loader.o `test -f 'vfs/vfs-thumbnail-loader.c' || echo '$(srcdir)/'`vfs/vfs-thumbnail-loader.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-thumbnail-loader.c' object='vfs/spacefm-vfs-thumbnail-loader.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-thumbnail-loader.o `test -f 'vfs/vfs-thumbnail-loader.c' || echo '$(srcdir)/'`vfs/vfs-thumbnail-loader.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-thumbnail-loader.o `test -f 'vfs/vfs-thumbnail-loader.c' || echo '$(srcdir)/'`vfs/vfs-thumbnail-loader.c
 
-spacefm-vfs-thumbnail-loader.obj: vfs/vfs-thumbnail-loader.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-thumbnail-loader.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo -c -o spacefm-vfs-thumbnail-loader.obj `if test -f 'vfs/vfs-thumbnail-loader.c'; then $(CYGPATH_W) 'vfs/vfs-thumbnail-loader.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-thumbnail-loader.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo $(DEPDIR)/spacefm-vfs-thumbnail-loader.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-thumbnail-loader.c' object='spacefm-vfs-thumbnail-loader.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-thumbnail-loader.obj: vfs/vfs-thumbnail-loader.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-thumbnail-loader.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo -c -o vfs/spacefm-vfs-thumbnail-loader.obj `if test -f 'vfs/vfs-thumbnail-loader.c'; then $(CYGPATH_W) 'vfs/vfs-thumbnail-loader.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-thumbnail-loader.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Tpo vfs/$(DEPDIR)/spacefm-vfs-thumbnail-loader.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-thumbnail-loader.c' object='vfs/spacefm-vfs-thumbnail-loader.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-thumbnail-loader.obj `if test -f 'vfs/vfs-thumbnail-loader.c'; then $(CYGPATH_W) 'vfs/vfs-thumbnail-loader.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-thumbnail-loader.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-thumbnail-loader.obj `if test -f 'vfs/vfs-thumbnail-loader.c'; then $(CYGPATH_W) 'vfs/vfs-thumbnail-loader.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-thumbnail-loader.c'; fi`
 
-spacefm-vfs-utils.o: vfs/vfs-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-utils.o -MD -MP -MF $(DEPDIR)/spacefm-vfs-utils.Tpo -c -o spacefm-vfs-utils.o `test -f 'vfs/vfs-utils.c' || echo '$(srcdir)/'`vfs/vfs-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-utils.Tpo $(DEPDIR)/spacefm-vfs-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-utils.c' object='spacefm-vfs-utils.o' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-utils.o: vfs/vfs-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-utils.o -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-utils.Tpo -c -o vfs/spacefm-vfs-utils.o `test -f 'vfs/vfs-utils.c' || echo '$(srcdir)/'`vfs/vfs-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-utils.Tpo vfs/$(DEPDIR)/spacefm-vfs-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-utils.c' object='vfs/spacefm-vfs-utils.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-utils.o `test -f 'vfs/vfs-utils.c' || echo '$(srcdir)/'`vfs/vfs-utils.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-utils.o `test -f 'vfs/vfs-utils.c' || echo '$(srcdir)/'`vfs/vfs-utils.c
 
-spacefm-vfs-utils.obj: vfs/vfs-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-vfs-utils.obj -MD -MP -MF $(DEPDIR)/spacefm-vfs-utils.Tpo -c -o spacefm-vfs-utils.obj `if test -f 'vfs/vfs-utils.c'; then $(CYGPATH_W) 'vfs/vfs-utils.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-utils.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-vfs-utils.Tpo $(DEPDIR)/spacefm-vfs-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-utils.c' object='spacefm-vfs-utils.obj' libtool=no @AMDEPBACKSLASH@
+vfs/spacefm-vfs-utils.obj: vfs/vfs-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT vfs/spacefm-vfs-utils.obj -MD -MP -MF vfs/$(DEPDIR)/spacefm-vfs-utils.Tpo -c -o vfs/spacefm-vfs-utils.obj `if test -f 'vfs/vfs-utils.c'; then $(CYGPATH_W) 'vfs/vfs-utils.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-utils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) vfs/$(DEPDIR)/spacefm-vfs-utils.Tpo vfs/$(DEPDIR)/spacefm-vfs-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='vfs/vfs-utils.c' object='vfs/spacefm-vfs-utils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-vfs-utils.obj `if test -f 'vfs/vfs-utils.c'; then $(CYGPATH_W) 'vfs/vfs-utils.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-utils.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o vfs/spacefm-vfs-utils.obj `if test -f 'vfs/vfs-utils.c'; then $(CYGPATH_W) 'vfs/vfs-utils.c'; else $(CYGPATH_W) '$(srcdir)/vfs/vfs-utils.c'; fi`
 
-spacefm-md5.o: libmd5-rfc/md5.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-md5.o -MD -MP -MF $(DEPDIR)/spacefm-md5.Tpo -c -o spacefm-md5.o `test -f 'libmd5-rfc/md5.c' || echo '$(srcdir)/'`libmd5-rfc/md5.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-md5.Tpo $(DEPDIR)/spacefm-md5.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libmd5-rfc/md5.c' object='spacefm-md5.o' libtool=no @AMDEPBACKSLASH@
+libmd5-rfc/spacefm-md5.o: libmd5-rfc/md5.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT libmd5-rfc/spacefm-md5.o -MD -MP -MF libmd5-rfc/$(DEPDIR)/spacefm-md5.Tpo -c -o libmd5-rfc/spacefm-md5.o `test -f 'libmd5-rfc/md5.c' || echo '$(srcdir)/'`libmd5-rfc/md5.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libmd5-rfc/$(DEPDIR)/spacefm-md5.Tpo libmd5-rfc/$(DEPDIR)/spacefm-md5.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libmd5-rfc/md5.c' object='libmd5-rfc/spacefm-md5.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-md5.o `test -f 'libmd5-rfc/md5.c' || echo '$(srcdir)/'`libmd5-rfc/md5.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o libmd5-rfc/spacefm-md5.o `test -f 'libmd5-rfc/md5.c' || echo '$(srcdir)/'`libmd5-rfc/md5.c
 
-spacefm-md5.obj: libmd5-rfc/md5.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-md5.obj -MD -MP -MF $(DEPDIR)/spacefm-md5.Tpo -c -o spacefm-md5.obj `if test -f 'libmd5-rfc/md5.c'; then $(CYGPATH_W) 'libmd5-rfc/md5.c'; else $(CYGPATH_W) '$(srcdir)/libmd5-rfc/md5.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-md5.Tpo $(DEPDIR)/spacefm-md5.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libmd5-rfc/md5.c' object='spacefm-md5.obj' libtool=no @AMDEPBACKSLASH@
+libmd5-rfc/spacefm-md5.obj: libmd5-rfc/md5.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT libmd5-rfc/spacefm-md5.obj -MD -MP -MF libmd5-rfc/$(DEPDIR)/spacefm-md5.Tpo -c -o libmd5-rfc/spacefm-md5.obj `if test -f 'libmd5-rfc/md5.c'; then $(CYGPATH_W) 'libmd5-rfc/md5.c'; else $(CYGPATH_W) '$(srcdir)/libmd5-rfc/md5.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) libmd5-rfc/$(DEPDIR)/spacefm-md5.Tpo libmd5-rfc/$(DEPDIR)/spacefm-md5.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='libmd5-rfc/md5.c' object='libmd5-rfc/spacefm-md5.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-md5.obj `if test -f 'libmd5-rfc/md5.c'; then $(CYGPATH_W) 'libmd5-rfc/md5.c'; else $(CYGPATH_W) '$(srcdir)/libmd5-rfc/md5.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o libmd5-rfc/spacefm-md5.obj `if test -f 'libmd5-rfc/md5.c'; then $(CYGPATH_W) 'libmd5-rfc/md5.c'; else $(CYGPATH_W) '$(srcdir)/libmd5-rfc/md5.c'; fi`
 
-spacefm-glib-utils.o: compat/glib-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-glib-utils.o -MD -MP -MF $(DEPDIR)/spacefm-glib-utils.Tpo -c -o spacefm-glib-utils.o `test -f 'compat/glib-utils.c' || echo '$(srcdir)/'`compat/glib-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-glib-utils.Tpo $(DEPDIR)/spacefm-glib-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='compat/glib-utils.c' object='spacefm-glib-utils.o' libtool=no @AMDEPBACKSLASH@
+compat/spacefm-glib-utils.o: compat/glib-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT compat/spacefm-glib-utils.o -MD -MP -MF compat/$(DEPDIR)/spacefm-glib-utils.Tpo -c -o compat/spacefm-glib-utils.o `test -f 'compat/glib-utils.c' || echo '$(srcdir)/'`compat/glib-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) compat/$(DEPDIR)/spacefm-glib-utils.Tpo compat/$(DEPDIR)/spacefm-glib-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='compat/glib-utils.c' object='compat/spacefm-glib-utils.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-glib-utils.o `test -f 'compat/glib-utils.c' || echo '$(srcdir)/'`compat/glib-utils.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o compat/spacefm-glib-utils.o `test -f 'compat/glib-utils.c' || echo '$(srcdir)/'`compat/glib-utils.c
 
-spacefm-glib-utils.obj: compat/glib-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-glib-utils.obj -MD -MP -MF $(DEPDIR)/spacefm-glib-utils.Tpo -c -o spacefm-glib-utils.obj `if test -f 'compat/glib-utils.c'; then $(CYGPATH_W) 'compat/glib-utils.c'; else $(CYGPATH_W) '$(srcdir)/compat/glib-utils.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-glib-utils.Tpo $(DEPDIR)/spacefm-glib-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='compat/glib-utils.c' object='spacefm-glib-utils.obj' libtool=no @AMDEPBACKSLASH@
+compat/spacefm-glib-utils.obj: compat/glib-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT compat/spacefm-glib-utils.obj -MD -MP -MF compat/$(DEPDIR)/spacefm-glib-utils.Tpo -c -o compat/spacefm-glib-utils.obj `if test -f 'compat/glib-utils.c'; then $(CYGPATH_W) 'compat/glib-utils.c'; else $(CYGPATH_W) '$(srcdir)/compat/glib-utils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) compat/$(DEPDIR)/spacefm-glib-utils.Tpo compat/$(DEPDIR)/spacefm-glib-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='compat/glib-utils.c' object='compat/spacefm-glib-utils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-glib-utils.obj `if test -f 'compat/glib-utils.c'; then $(CYGPATH_W) 'compat/glib-utils.c'; else $(CYGPATH_W) '$(srcdir)/compat/glib-utils.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o compat/spacefm-glib-utils.obj `if test -f 'compat/glib-utils.c'; then $(CYGPATH_W) 'compat/glib-utils.c'; else $(CYGPATH_W) '$(srcdir)/compat/glib-utils.c'; fi`
 
-spacefm-ptk-file-browser.o: ptk/ptk-file-browser.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-browser.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-browser.Tpo -c -o spacefm-ptk-file-browser.o `test -f 'ptk/ptk-file-browser.c' || echo '$(srcdir)/'`ptk/ptk-file-browser.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-browser.Tpo $(DEPDIR)/spacefm-ptk-file-browser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-browser.c' object='spacefm-ptk-file-browser.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-browser.o: ptk/ptk-file-browser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-browser.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-browser.Tpo -c -o ptk/spacefm-ptk-file-browser.o `test -f 'ptk/ptk-file-browser.c' || echo '$(srcdir)/'`ptk/ptk-file-browser.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-browser.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-browser.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-browser.c' object='ptk/spacefm-ptk-file-browser.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-browser.o `test -f 'ptk/ptk-file-browser.c' || echo '$(srcdir)/'`ptk/ptk-file-browser.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-browser.o `test -f 'ptk/ptk-file-browser.c' || echo '$(srcdir)/'`ptk/ptk-file-browser.c
 
-spacefm-ptk-file-browser.obj: ptk/ptk-file-browser.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-browser.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-browser.Tpo -c -o spacefm-ptk-file-browser.obj `if test -f 'ptk/ptk-file-browser.c'; then $(CYGPATH_W) 'ptk/ptk-file-browser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-browser.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-browser.Tpo $(DEPDIR)/spacefm-ptk-file-browser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-browser.c' object='spacefm-ptk-file-browser.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-browser.obj: ptk/ptk-file-browser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-browser.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-browser.Tpo -c -o ptk/spacefm-ptk-file-browser.obj `if test -f 'ptk/ptk-file-browser.c'; then $(CYGPATH_W) 'ptk/ptk-file-browser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-browser.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-browser.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-browser.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-browser.c' object='ptk/spacefm-ptk-file-browser.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-browser.obj `if test -f 'ptk/ptk-file-browser.c'; then $(CYGPATH_W) 'ptk/ptk-file-browser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-browser.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-browser.obj `if test -f 'ptk/ptk-file-browser.c'; then $(CYGPATH_W) 'ptk/ptk-file-browser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-browser.c'; fi`
 
-spacefm-ptk-file-list.o: ptk/ptk-file-list.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-list.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-list.Tpo -c -o spacefm-ptk-file-list.o `test -f 'ptk/ptk-file-list.c' || echo '$(srcdir)/'`ptk/ptk-file-list.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-list.Tpo $(DEPDIR)/spacefm-ptk-file-list.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-list.c' object='spacefm-ptk-file-list.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-list.o: ptk/ptk-file-list.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-list.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-list.Tpo -c -o ptk/spacefm-ptk-file-list.o `test -f 'ptk/ptk-file-list.c' || echo '$(srcdir)/'`ptk/ptk-file-list.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-list.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-list.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-list.c' object='ptk/spacefm-ptk-file-list.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-list.o `test -f 'ptk/ptk-file-list.c' || echo '$(srcdir)/'`ptk/ptk-file-list.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-list.o `test -f 'ptk/ptk-file-list.c' || echo '$(srcdir)/'`ptk/ptk-file-list.c
 
-spacefm-ptk-file-list.obj: ptk/ptk-file-list.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-list.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-list.Tpo -c -o spacefm-ptk-file-list.obj `if test -f 'ptk/ptk-file-list.c'; then $(CYGPATH_W) 'ptk/ptk-file-list.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-list.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-list.Tpo $(DEPDIR)/spacefm-ptk-file-list.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-list.c' object='spacefm-ptk-file-list.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-list.obj: ptk/ptk-file-list.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-list.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-list.Tpo -c -o ptk/spacefm-ptk-file-list.obj `if test -f 'ptk/ptk-file-list.c'; then $(CYGPATH_W) 'ptk/ptk-file-list.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-list.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-list.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-list.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-list.c' object='ptk/spacefm-ptk-file-list.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-list.obj `if test -f 'ptk/ptk-file-list.c'; then $(CYGPATH_W) 'ptk/ptk-file-list.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-list.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-list.obj `if test -f 'ptk/ptk-file-list.c'; then $(CYGPATH_W) 'ptk/ptk-file-list.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-list.c'; fi`
 
-spacefm-ptk-path-entry.o: ptk/ptk-path-entry.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-path-entry.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-path-entry.Tpo -c -o spacefm-ptk-path-entry.o `test -f 'ptk/ptk-path-entry.c' || echo '$(srcdir)/'`ptk/ptk-path-entry.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-path-entry.Tpo $(DEPDIR)/spacefm-ptk-path-entry.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-path-entry.c' object='spacefm-ptk-path-entry.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-path-entry.o: ptk/ptk-path-entry.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-path-entry.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-path-entry.Tpo -c -o ptk/spacefm-ptk-path-entry.o `test -f 'ptk/ptk-path-entry.c' || echo '$(srcdir)/'`ptk/ptk-path-entry.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-path-entry.Tpo ptk/$(DEPDIR)/spacefm-ptk-path-entry.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-path-entry.c' object='ptk/spacefm-ptk-path-entry.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-path-entry.o `test -f 'ptk/ptk-path-entry.c' || echo '$(srcdir)/'`ptk/ptk-path-entry.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-path-entry.o `test -f 'ptk/ptk-path-entry.c' || echo '$(srcdir)/'`ptk/ptk-path-entry.c
 
-spacefm-ptk-path-entry.obj: ptk/ptk-path-entry.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-path-entry.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-path-entry.Tpo -c -o spacefm-ptk-path-entry.obj `if test -f 'ptk/ptk-path-entry.c'; then $(CYGPATH_W) 'ptk/ptk-path-entry.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-path-entry.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-path-entry.Tpo $(DEPDIR)/spacefm-ptk-path-entry.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-path-entry.c' object='spacefm-ptk-path-entry.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-path-entry.obj: ptk/ptk-path-entry.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-path-entry.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-path-entry.Tpo -c -o ptk/spacefm-ptk-path-entry.obj `if test -f 'ptk/ptk-path-entry.c'; then $(CYGPATH_W) 'ptk/ptk-path-entry.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-path-entry.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-path-entry.Tpo ptk/$(DEPDIR)/spacefm-ptk-path-entry.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-path-entry.c' object='ptk/spacefm-ptk-path-entry.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-path-entry.obj `if test -f 'ptk/ptk-path-entry.c'; then $(CYGPATH_W) 'ptk/ptk-path-entry.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-path-entry.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-path-entry.obj `if test -f 'ptk/ptk-path-entry.c'; then $(CYGPATH_W) 'ptk/ptk-path-entry.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-path-entry.c'; fi`
 
-spacefm-ptk-text-renderer.o: ptk/ptk-text-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-text-renderer.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-text-renderer.Tpo -c -o spacefm-ptk-text-renderer.o `test -f 'ptk/ptk-text-renderer.c' || echo '$(srcdir)/'`ptk/ptk-text-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-text-renderer.Tpo $(DEPDIR)/spacefm-ptk-text-renderer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-text-renderer.c' object='spacefm-ptk-text-renderer.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-text-renderer.o: ptk/ptk-text-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-text-renderer.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Tpo -c -o ptk/spacefm-ptk-text-renderer.o `test -f 'ptk/ptk-text-renderer.c' || echo '$(srcdir)/'`ptk/ptk-text-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Tpo ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-text-renderer.c' object='ptk/spacefm-ptk-text-renderer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-text-renderer.o `test -f 'ptk/ptk-text-renderer.c' || echo '$(srcdir)/'`ptk/ptk-text-renderer.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-text-renderer.o `test -f 'ptk/ptk-text-renderer.c' || echo '$(srcdir)/'`ptk/ptk-text-renderer.c
 
-spacefm-ptk-text-renderer.obj: ptk/ptk-text-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-text-renderer.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-text-renderer.Tpo -c -o spacefm-ptk-text-renderer.obj `if test -f 'ptk/ptk-text-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-text-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-text-renderer.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-text-renderer.Tpo $(DEPDIR)/spacefm-ptk-text-renderer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-text-renderer.c' object='spacefm-ptk-text-renderer.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-text-renderer.obj: ptk/ptk-text-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-text-renderer.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Tpo -c -o ptk/spacefm-ptk-text-renderer.obj `if test -f 'ptk/ptk-text-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-text-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-text-renderer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Tpo ptk/$(DEPDIR)/spacefm-ptk-text-renderer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-text-renderer.c' object='ptk/spacefm-ptk-text-renderer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-text-renderer.obj `if test -f 'ptk/ptk-text-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-text-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-text-renderer.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-text-renderer.obj `if test -f 'ptk/ptk-text-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-text-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-text-renderer.c'; fi`
 
-spacefm-ptk-file-icon-renderer.o: ptk/ptk-file-icon-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-icon-renderer.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo -c -o spacefm-ptk-file-icon-renderer.o `test -f 'ptk/ptk-file-icon-renderer.c' || echo '$(srcdir)/'`ptk/ptk-file-icon-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo $(DEPDIR)/spacefm-ptk-file-icon-renderer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-icon-renderer.c' object='spacefm-ptk-file-icon-renderer.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-icon-renderer.o: ptk/ptk-file-icon-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-icon-renderer.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo -c -o ptk/spacefm-ptk-file-icon-renderer.o `test -f 'ptk/ptk-file-icon-renderer.c' || echo '$(srcdir)/'`ptk/ptk-file-icon-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-icon-renderer.c' object='ptk/spacefm-ptk-file-icon-renderer.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-icon-renderer.o `test -f 'ptk/ptk-file-icon-renderer.c' || echo '$(srcdir)/'`ptk/ptk-file-icon-renderer.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-icon-renderer.o `test -f 'ptk/ptk-file-icon-renderer.c' || echo '$(srcdir)/'`ptk/ptk-file-icon-renderer.c
 
-spacefm-ptk-file-icon-renderer.obj: ptk/ptk-file-icon-renderer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-icon-renderer.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo -c -o spacefm-ptk-file-icon-renderer.obj `if test -f 'ptk/ptk-file-icon-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-file-icon-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-icon-renderer.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo $(DEPDIR)/spacefm-ptk-file-icon-renderer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-icon-renderer.c' object='spacefm-ptk-file-icon-renderer.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-icon-renderer.obj: ptk/ptk-file-icon-renderer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-icon-renderer.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo -c -o ptk/spacefm-ptk-file-icon-renderer.obj `if test -f 'ptk/ptk-file-icon-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-file-icon-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-icon-renderer.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-icon-renderer.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-icon-renderer.c' object='ptk/spacefm-ptk-file-icon-renderer.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-icon-renderer.obj `if test -f 'ptk/ptk-file-icon-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-file-icon-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-icon-renderer.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-icon-renderer.obj `if test -f 'ptk/ptk-file-icon-renderer.c'; then $(CYGPATH_W) 'ptk/ptk-file-icon-renderer.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-icon-renderer.c'; fi`
 
-spacefm-ptk-utils.o: ptk/ptk-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-utils.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-utils.Tpo -c -o spacefm-ptk-utils.o `test -f 'ptk/ptk-utils.c' || echo '$(srcdir)/'`ptk/ptk-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-utils.Tpo $(DEPDIR)/spacefm-ptk-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-utils.c' object='spacefm-ptk-utils.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-utils.o: ptk/ptk-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-utils.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-utils.Tpo -c -o ptk/spacefm-ptk-utils.o `test -f 'ptk/ptk-utils.c' || echo '$(srcdir)/'`ptk/ptk-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-utils.Tpo ptk/$(DEPDIR)/spacefm-ptk-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-utils.c' object='ptk/spacefm-ptk-utils.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-utils.o `test -f 'ptk/ptk-utils.c' || echo '$(srcdir)/'`ptk/ptk-utils.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-utils.o `test -f 'ptk/ptk-utils.c' || echo '$(srcdir)/'`ptk/ptk-utils.c
 
-spacefm-ptk-utils.obj: ptk/ptk-utils.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-utils.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-utils.Tpo -c -o spacefm-ptk-utils.obj `if test -f 'ptk/ptk-utils.c'; then $(CYGPATH_W) 'ptk/ptk-utils.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-utils.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-utils.Tpo $(DEPDIR)/spacefm-ptk-utils.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-utils.c' object='spacefm-ptk-utils.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-utils.obj: ptk/ptk-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-utils.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-utils.Tpo -c -o ptk/spacefm-ptk-utils.obj `if test -f 'ptk/ptk-utils.c'; then $(CYGPATH_W) 'ptk/ptk-utils.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-utils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-utils.Tpo ptk/$(DEPDIR)/spacefm-ptk-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-utils.c' object='ptk/spacefm-ptk-utils.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-utils.obj `if test -f 'ptk/ptk-utils.c'; then $(CYGPATH_W) 'ptk/ptk-utils.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-utils.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-utils.obj `if test -f 'ptk/ptk-utils.c'; then $(CYGPATH_W) 'ptk/ptk-utils.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-utils.c'; fi`
 
-spacefm-working-area.o: desktop/working-area.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-working-area.o -MD -MP -MF $(DEPDIR)/spacefm-working-area.Tpo -c -o spacefm-working-area.o `test -f 'desktop/working-area.c' || echo '$(srcdir)/'`desktop/working-area.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-working-area.Tpo $(DEPDIR)/spacefm-working-area.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/working-area.c' object='spacefm-working-area.o' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-working-area.o: desktop/working-area.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-working-area.o -MD -MP -MF desktop/$(DEPDIR)/spacefm-working-area.Tpo -c -o desktop/spacefm-working-area.o `test -f 'desktop/working-area.c' || echo '$(srcdir)/'`desktop/working-area.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-working-area.Tpo desktop/$(DEPDIR)/spacefm-working-area.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/working-area.c' object='desktop/spacefm-working-area.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-working-area.o `test -f 'desktop/working-area.c' || echo '$(srcdir)/'`desktop/working-area.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-working-area.o `test -f 'desktop/working-area.c' || echo '$(srcdir)/'`desktop/working-area.c
 
-spacefm-working-area.obj: desktop/working-area.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-working-area.obj -MD -MP -MF $(DEPDIR)/spacefm-working-area.Tpo -c -o spacefm-working-area.obj `if test -f 'desktop/working-area.c'; then $(CYGPATH_W) 'desktop/working-area.c'; else $(CYGPATH_W) '$(srcdir)/desktop/working-area.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-working-area.Tpo $(DEPDIR)/spacefm-working-area.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/working-area.c' object='spacefm-working-area.obj' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-working-area.obj: desktop/working-area.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-working-area.obj -MD -MP -MF desktop/$(DEPDIR)/spacefm-working-area.Tpo -c -o desktop/spacefm-working-area.obj `if test -f 'desktop/working-area.c'; then $(CYGPATH_W) 'desktop/working-area.c'; else $(CYGPATH_W) '$(srcdir)/desktop/working-area.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-working-area.Tpo desktop/$(DEPDIR)/spacefm-working-area.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/working-area.c' object='desktop/spacefm-working-area.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-working-area.obj `if test -f 'desktop/working-area.c'; then $(CYGPATH_W) 'desktop/working-area.c'; else $(CYGPATH_W) '$(srcdir)/desktop/working-area.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-working-area.obj `if test -f 'desktop/working-area.c'; then $(CYGPATH_W) 'desktop/working-area.c'; else $(CYGPATH_W) '$(srcdir)/desktop/working-area.c'; fi`
 
-spacefm-ptk-dir-tree-view.o: ptk/ptk-dir-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-dir-tree-view.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo -c -o spacefm-ptk-dir-tree-view.o `test -f 'ptk/ptk-dir-tree-view.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo $(DEPDIR)/spacefm-ptk-dir-tree-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree-view.c' object='spacefm-ptk-dir-tree-view.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-dir-tree-view.o: ptk/ptk-dir-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-dir-tree-view.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo -c -o ptk/spacefm-ptk-dir-tree-view.o `test -f 'ptk/ptk-dir-tree-view.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree-view.c' object='ptk/spacefm-ptk-dir-tree-view.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-dir-tree-view.o `test -f 'ptk/ptk-dir-tree-view.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree-view.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-dir-tree-view.o `test -f 'ptk/ptk-dir-tree-view.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree-view.c
 
-spacefm-ptk-dir-tree-view.obj: ptk/ptk-dir-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-dir-tree-view.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo -c -o spacefm-ptk-dir-tree-view.obj `if test -f 'ptk/ptk-dir-tree-view.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree-view.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo $(DEPDIR)/spacefm-ptk-dir-tree-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree-view.c' object='spacefm-ptk-dir-tree-view.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-dir-tree-view.obj: ptk/ptk-dir-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-dir-tree-view.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo -c -o ptk/spacefm-ptk-dir-tree-view.obj `if test -f 'ptk/ptk-dir-tree-view.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree-view.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Tpo ptk/$(DEPDIR)/spacefm-ptk-dir-tree-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree-view.c' object='ptk/spacefm-ptk-dir-tree-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-dir-tree-view.obj `if test -f 'ptk/ptk-dir-tree-view.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree-view.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-dir-tree-view.obj `if test -f 'ptk/ptk-dir-tree-view.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree-view.c'; fi`
 
-spacefm-ptk-dir-tree.o: ptk/ptk-dir-tree.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-dir-tree.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-dir-tree.Tpo -c -o spacefm-ptk-dir-tree.o `test -f 'ptk/ptk-dir-tree.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-dir-tree.Tpo $(DEPDIR)/spacefm-ptk-dir-tree.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree.c' object='spacefm-ptk-dir-tree.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-dir-tree.o: ptk/ptk-dir-tree.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-dir-tree.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Tpo -c -o ptk/spacefm-ptk-dir-tree.o `test -f 'ptk/ptk-dir-tree.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Tpo ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree.c' object='ptk/spacefm-ptk-dir-tree.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-dir-tree.o `test -f 'ptk/ptk-dir-tree.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-dir-tree.o `test -f 'ptk/ptk-dir-tree.c' || echo '$(srcdir)/'`ptk/ptk-dir-tree.c
 
-spacefm-ptk-dir-tree.obj: ptk/ptk-dir-tree.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-dir-tree.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-dir-tree.Tpo -c -o spacefm-ptk-dir-tree.obj `if test -f 'ptk/ptk-dir-tree.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-dir-tree.Tpo $(DEPDIR)/spacefm-ptk-dir-tree.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree.c' object='spacefm-ptk-dir-tree.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-dir-tree.obj: ptk/ptk-dir-tree.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-dir-tree.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Tpo -c -o ptk/spacefm-ptk-dir-tree.obj `if test -f 'ptk/ptk-dir-tree.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Tpo ptk/$(DEPDIR)/spacefm-ptk-dir-tree.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-dir-tree.c' object='ptk/spacefm-ptk-dir-tree.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-dir-tree.obj `if test -f 'ptk/ptk-dir-tree.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-dir-tree.obj `if test -f 'ptk/ptk-dir-tree.c'; then $(CYGPATH_W) 'ptk/ptk-dir-tree.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-dir-tree.c'; fi`
 
-spacefm-ptk-location-view.o: ptk/ptk-location-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-location-view.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-location-view.Tpo -c -o spacefm-ptk-location-view.o `test -f 'ptk/ptk-location-view.c' || echo '$(srcdir)/'`ptk/ptk-location-view.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-location-view.Tpo $(DEPDIR)/spacefm-ptk-location-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-location-view.c' object='spacefm-ptk-location-view.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-location-view.o: ptk/ptk-location-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-location-view.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-location-view.Tpo -c -o ptk/spacefm-ptk-location-view.o `test -f 'ptk/ptk-location-view.c' || echo '$(srcdir)/'`ptk/ptk-location-view.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-location-view.Tpo ptk/$(DEPDIR)/spacefm-ptk-location-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-location-view.c' object='ptk/spacefm-ptk-location-view.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-location-view.o `test -f 'ptk/ptk-location-view.c' || echo '$(srcdir)/'`ptk/ptk-location-view.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-location-view.o `test -f 'ptk/ptk-location-view.c' || echo '$(srcdir)/'`ptk/ptk-location-view.c
 
-spacefm-ptk-location-view.obj: ptk/ptk-location-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-location-view.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-location-view.Tpo -c -o spacefm-ptk-location-view.obj `if test -f 'ptk/ptk-location-view.c'; then $(CYGPATH_W) 'ptk/ptk-location-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-location-view.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-location-view.Tpo $(DEPDIR)/spacefm-ptk-location-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-location-view.c' object='spacefm-ptk-location-view.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-location-view.obj: ptk/ptk-location-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-location-view.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-location-view.Tpo -c -o ptk/spacefm-ptk-location-view.obj `if test -f 'ptk/ptk-location-view.c'; then $(CYGPATH_W) 'ptk/ptk-location-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-location-view.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-location-view.Tpo ptk/$(DEPDIR)/spacefm-ptk-location-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-location-view.c' object='ptk/spacefm-ptk-location-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-location-view.obj `if test -f 'ptk/ptk-location-view.c'; then $(CYGPATH_W) 'ptk/ptk-location-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-location-view.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-location-view.obj `if test -f 'ptk/ptk-location-view.c'; then $(CYGPATH_W) 'ptk/ptk-location-view.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-location-view.c'; fi`
 
-spacefm-ptk-bookmarks.o: ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-bookmarks.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-bookmarks.Tpo $(DEPDIR)/spacefm-ptk-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='spacefm-ptk-bookmarks.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-bookmarks.o: ptk/ptk-bookmarks.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-bookmarks.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o ptk/spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='ptk/spacefm-ptk-bookmarks.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-bookmarks.o `test -f 'ptk/ptk-bookmarks.c' || echo '$(srcdir)/'`ptk/ptk-bookmarks.c
 
-spacefm-ptk-bookmarks.obj: ptk/ptk-bookmarks.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-bookmarks.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-bookmarks.Tpo $(DEPDIR)/spacefm-ptk-bookmarks.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='spacefm-ptk-bookmarks.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-bookmarks.obj: ptk/ptk-bookmarks.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-bookmarks.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo -c -o ptk/spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Tpo ptk/$(DEPDIR)/spacefm-ptk-bookmarks.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-bookmarks.c' object='ptk/spacefm-ptk-bookmarks.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-bookmarks.obj `if test -f 'ptk/ptk-bookmarks.c'; then $(CYGPATH_W) 'ptk/ptk-bookmarks.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-bookmarks.c'; fi`
 
-spacefm-ptk-input-dialog.o: ptk/ptk-input-dialog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-input-dialog.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-input-dialog.Tpo -c -o spacefm-ptk-input-dialog.o `test -f 'ptk/ptk-input-dialog.c' || echo '$(srcdir)/'`ptk/ptk-input-dialog.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-input-dialog.Tpo $(DEPDIR)/spacefm-ptk-input-dialog.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-input-dialog.c' object='spacefm-ptk-input-dialog.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-input-dialog.o: ptk/ptk-input-dialog.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-input-dialog.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Tpo -c -o ptk/spacefm-ptk-input-dialog.o `test -f 'ptk/ptk-input-dialog.c' || echo '$(srcdir)/'`ptk/ptk-input-dialog.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Tpo ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-input-dialog.c' object='ptk/spacefm-ptk-input-dialog.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-input-dialog.o `test -f 'ptk/ptk-input-dialog.c' || echo '$(srcdir)/'`ptk/ptk-input-dialog.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-input-dialog.o `test -f 'ptk/ptk-input-dialog.c' || echo '$(srcdir)/'`ptk/ptk-input-dialog.c
 
-spacefm-ptk-input-dialog.obj: ptk/ptk-input-dialog.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-input-dialog.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-input-dialog.Tpo -c -o spacefm-ptk-input-dialog.obj `if test -f 'ptk/ptk-input-dialog.c'; then $(CYGPATH_W) 'ptk/ptk-input-dialog.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-input-dialog.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-input-dialog.Tpo $(DEPDIR)/spacefm-ptk-input-dialog.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-input-dialog.c' object='spacefm-ptk-input-dialog.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-input-dialog.obj: ptk/ptk-input-dialog.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-input-dialog.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Tpo -c -o ptk/spacefm-ptk-input-dialog.obj `if test -f 'ptk/ptk-input-dialog.c'; then $(CYGPATH_W) 'ptk/ptk-input-dialog.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-input-dialog.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Tpo ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-input-dialog.c' object='ptk/spacefm-ptk-input-dialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-input-dialog.obj `if test -f 'ptk/ptk-input-dialog.c'; then $(CYGPATH_W) 'ptk/ptk-input-dialog.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-input-dialog.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-input-dialog.obj `if test -f 'ptk/ptk-input-dialog.c'; then $(CYGPATH_W) 'ptk/ptk-input-dialog.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-input-dialog.c'; fi`
 
-spacefm-ptk-file-task.o: ptk/ptk-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-task.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-task.Tpo -c -o spacefm-ptk-file-task.o `test -f 'ptk/ptk-file-task.c' || echo '$(srcdir)/'`ptk/ptk-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-task.Tpo $(DEPDIR)/spacefm-ptk-file-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-task.c' object='spacefm-ptk-file-task.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-task.o: ptk/ptk-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-task.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-task.Tpo -c -o ptk/spacefm-ptk-file-task.o `test -f 'ptk/ptk-file-task.c' || echo '$(srcdir)/'`ptk/ptk-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-task.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-task.c' object='ptk/spacefm-ptk-file-task.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-task.o `test -f 'ptk/ptk-file-task.c' || echo '$(srcdir)/'`ptk/ptk-file-task.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-task.o `test -f 'ptk/ptk-file-task.c' || echo '$(srcdir)/'`ptk/ptk-file-task.c
 
-spacefm-ptk-file-task.obj: ptk/ptk-file-task.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-task.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-task.Tpo -c -o spacefm-ptk-file-task.obj `if test -f 'ptk/ptk-file-task.c'; then $(CYGPATH_W) 'ptk/ptk-file-task.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-task.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-task.Tpo $(DEPDIR)/spacefm-ptk-file-task.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-task.c' object='spacefm-ptk-file-task.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-task.obj: ptk/ptk-file-task.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-task.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-task.Tpo -c -o ptk/spacefm-ptk-file-task.obj `if test -f 'ptk/ptk-file-task.c'; then $(CYGPATH_W) 'ptk/ptk-file-task.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-task.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-task.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-task.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-task.c' object='ptk/spacefm-ptk-file-task.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-task.obj `if test -f 'ptk/ptk-file-task.c'; then $(CYGPATH_W) 'ptk/ptk-file-task.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-task.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-task.obj `if test -f 'ptk/ptk-file-task.c'; then $(CYGPATH_W) 'ptk/ptk-file-task.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-task.c'; fi`
 
-spacefm-ptk-file-archiver.o: ptk/ptk-file-archiver.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-archiver.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-archiver.Tpo -c -o spacefm-ptk-file-archiver.o `test -f 'ptk/ptk-file-archiver.c' || echo '$(srcdir)/'`ptk/ptk-file-archiver.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-archiver.Tpo $(DEPDIR)/spacefm-ptk-file-archiver.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-archiver.c' object='spacefm-ptk-file-archiver.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-archiver.o: ptk/ptk-file-archiver.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-archiver.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Tpo -c -o ptk/spacefm-ptk-file-archiver.o `test -f 'ptk/ptk-file-archiver.c' || echo '$(srcdir)/'`ptk/ptk-file-archiver.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-archiver.c' object='ptk/spacefm-ptk-file-archiver.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-archiver.o `test -f 'ptk/ptk-file-archiver.c' || echo '$(srcdir)/'`ptk/ptk-file-archiver.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-archiver.o `test -f 'ptk/ptk-file-archiver.c' || echo '$(srcdir)/'`ptk/ptk-file-archiver.c
 
-spacefm-ptk-file-archiver.obj: ptk/ptk-file-archiver.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-archiver.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-archiver.Tpo -c -o spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-archiver.Tpo $(DEPDIR)/spacefm-ptk-file-archiver.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-archiver.c' object='spacefm-ptk-file-archiver.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-archiver.obj: ptk/ptk-file-archiver.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-archiver.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Tpo -c -o ptk/spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-archiver.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-archiver.c' object='ptk/spacefm-ptk-file-archiver.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
 
-spacefm-ptk-clipboard.o: ptk/ptk-clipboard.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-clipboard.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-clipboard.Tpo $(DEPDIR)/spacefm-ptk-clipboard.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-clipboard.c' object='spacefm-ptk-clipboard.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-clipboard.o: ptk/ptk-clipboard.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-clipboard.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o ptk/spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-clipboard.Tpo ptk/$(DEPDIR)/spacefm-ptk-clipboard.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-clipboard.c' object='ptk/spacefm-ptk-clipboard.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c
 
-spacefm-ptk-clipboard.obj: ptk/ptk-clipboard.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-clipboard.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o spacefm-ptk-clipboard.obj `if test -f 'ptk/ptk-clipboard.c'; then $(CYGPATH_W) 'ptk/ptk-clipboard.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-clipboard.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-clipboard.Tpo $(DEPDIR)/spacefm-ptk-clipboard.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-clipboard.c' object='spacefm-ptk-clipboard.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-clipboard.obj: ptk/ptk-clipboard.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-clipboard.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o ptk/spacefm-ptk-clipboard.obj `if test -f 'ptk/ptk-clipboard.c'; then $(CYGPATH_W) 'ptk/ptk-clipboard.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-clipboard.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-clipboard.Tpo ptk/$(DEPDIR)/spacefm-ptk-clipboard.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-clipboard.c' object='ptk/spacefm-ptk-clipboard.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-clipboard.obj `if test -f 'ptk/ptk-clipboard.c'; then $(CYGPATH_W) 'ptk/ptk-clipboard.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-clipboard.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-clipboard.obj `if test -f 'ptk/ptk-clipboard.c'; then $(CYGPATH_W) 'ptk/ptk-clipboard.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-clipboard.c'; fi`
 
-spacefm-ptk-file-menu.o: ptk/ptk-file-menu.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-menu.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-menu.Tpo -c -o spacefm-ptk-file-menu.o `test -f 'ptk/ptk-file-menu.c' || echo '$(srcdir)/'`ptk/ptk-file-menu.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-menu.Tpo $(DEPDIR)/spacefm-ptk-file-menu.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-menu.c' object='spacefm-ptk-file-menu.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-menu.o: ptk/ptk-file-menu.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-menu.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-menu.Tpo -c -o ptk/spacefm-ptk-file-menu.o `test -f 'ptk/ptk-file-menu.c' || echo '$(srcdir)/'`ptk/ptk-file-menu.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-menu.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-menu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-menu.c' object='ptk/spacefm-ptk-file-menu.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-menu.o `test -f 'ptk/ptk-file-menu.c' || echo '$(srcdir)/'`ptk/ptk-file-menu.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-menu.o `test -f 'ptk/ptk-file-menu.c' || echo '$(srcdir)/'`ptk/ptk-file-menu.c
 
-spacefm-ptk-file-menu.obj: ptk/ptk-file-menu.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-menu.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-menu.Tpo -c -o spacefm-ptk-file-menu.obj `if test -f 'ptk/ptk-file-menu.c'; then $(CYGPATH_W) 'ptk/ptk-file-menu.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-menu.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-menu.Tpo $(DEPDIR)/spacefm-ptk-file-menu.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-menu.c' object='spacefm-ptk-file-menu.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-menu.obj: ptk/ptk-file-menu.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-menu.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-menu.Tpo -c -o ptk/spacefm-ptk-file-menu.obj `if test -f 'ptk/ptk-file-menu.c'; then $(CYGPATH_W) 'ptk/ptk-file-menu.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-menu.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-menu.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-menu.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-menu.c' object='ptk/spacefm-ptk-file-menu.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-menu.obj `if test -f 'ptk/ptk-file-menu.c'; then $(CYGPATH_W) 'ptk/ptk-file-menu.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-menu.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-menu.obj `if test -f 'ptk/ptk-file-menu.c'; then $(CYGPATH_W) 'ptk/ptk-file-menu.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-menu.c'; fi`
 
-spacefm-ptk-file-misc.o: ptk/ptk-file-misc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-misc.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-misc.Tpo -c -o spacefm-ptk-file-misc.o `test -f 'ptk/ptk-file-misc.c' || echo '$(srcdir)/'`ptk/ptk-file-misc.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-misc.Tpo $(DEPDIR)/spacefm-ptk-file-misc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-misc.c' object='spacefm-ptk-file-misc.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-misc.o: ptk/ptk-file-misc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-misc.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-misc.Tpo -c -o ptk/spacefm-ptk-file-misc.o `test -f 'ptk/ptk-file-misc.c' || echo '$(srcdir)/'`ptk/ptk-file-misc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-misc.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-misc.c' object='ptk/spacefm-ptk-file-misc.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-misc.o `test -f 'ptk/ptk-file-misc.c' || echo '$(srcdir)/'`ptk/ptk-file-misc.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-misc.o `test -f 'ptk/ptk-file-misc.c' || echo '$(srcdir)/'`ptk/ptk-file-misc.c
 
-spacefm-ptk-file-misc.obj: ptk/ptk-file-misc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-misc.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-misc.Tpo -c -o spacefm-ptk-file-misc.obj `if test -f 'ptk/ptk-file-misc.c'; then $(CYGPATH_W) 'ptk/ptk-file-misc.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-misc.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-misc.Tpo $(DEPDIR)/spacefm-ptk-file-misc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-misc.c' object='spacefm-ptk-file-misc.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-misc.obj: ptk/ptk-file-misc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-misc.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-misc.Tpo -c -o ptk/spacefm-ptk-file-misc.obj `if test -f 'ptk/ptk-file-misc.c'; then $(CYGPATH_W) 'ptk/ptk-file-misc.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-misc.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-misc.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-misc.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-misc.c' object='ptk/spacefm-ptk-file-misc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-misc.obj `if test -f 'ptk/ptk-file-misc.c'; then $(CYGPATH_W) 'ptk/ptk-file-misc.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-misc.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-misc.obj `if test -f 'ptk/ptk-file-misc.c'; then $(CYGPATH_W) 'ptk/ptk-file-misc.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-misc.c'; fi`
 
-spacefm-ptk-file-properties.o: ptk/ptk-file-properties.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-properties.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-properties.Tpo -c -o spacefm-ptk-file-properties.o `test -f 'ptk/ptk-file-properties.c' || echo '$(srcdir)/'`ptk/ptk-file-properties.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-properties.Tpo $(DEPDIR)/spacefm-ptk-file-properties.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-properties.c' object='spacefm-ptk-file-properties.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-properties.o: ptk/ptk-file-properties.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-properties.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-properties.Tpo -c -o ptk/spacefm-ptk-file-properties.o `test -f 'ptk/ptk-file-properties.c' || echo '$(srcdir)/'`ptk/ptk-file-properties.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-properties.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-properties.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-properties.c' object='ptk/spacefm-ptk-file-properties.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-properties.o `test -f 'ptk/ptk-file-properties.c' || echo '$(srcdir)/'`ptk/ptk-file-properties.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-properties.o `test -f 'ptk/ptk-file-properties.c' || echo '$(srcdir)/'`ptk/ptk-file-properties.c
 
-spacefm-ptk-file-properties.obj: ptk/ptk-file-properties.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-file-properties.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-file-properties.Tpo -c -o spacefm-ptk-file-properties.obj `if test -f 'ptk/ptk-file-properties.c'; then $(CYGPATH_W) 'ptk/ptk-file-properties.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-properties.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-file-properties.Tpo $(DEPDIR)/spacefm-ptk-file-properties.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-properties.c' object='spacefm-ptk-file-properties.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-file-properties.obj: ptk/ptk-file-properties.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-file-properties.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-file-properties.Tpo -c -o ptk/spacefm-ptk-file-properties.obj `if test -f 'ptk/ptk-file-properties.c'; then $(CYGPATH_W) 'ptk/ptk-file-properties.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-properties.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-file-properties.Tpo ptk/$(DEPDIR)/spacefm-ptk-file-properties.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-properties.c' object='ptk/spacefm-ptk-file-properties.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-file-properties.obj `if test -f 'ptk/ptk-file-properties.c'; then $(CYGPATH_W) 'ptk/ptk-file-properties.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-properties.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-properties.obj `if test -f 'ptk/ptk-file-properties.c'; then $(CYGPATH_W) 'ptk/ptk-file-properties.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-properties.c'; fi`
 
-spacefm-ptk-app-chooser.o: ptk/ptk-app-chooser.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-app-chooser.o -MD -MP -MF $(DEPDIR)/spacefm-ptk-app-chooser.Tpo -c -o spacefm-ptk-app-chooser.o `test -f 'ptk/ptk-app-chooser.c' || echo '$(srcdir)/'`ptk/ptk-app-chooser.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-app-chooser.Tpo $(DEPDIR)/spacefm-ptk-app-chooser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-app-chooser.c' object='spacefm-ptk-app-chooser.o' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-app-chooser.o: ptk/ptk-app-chooser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-app-chooser.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Tpo -c -o ptk/spacefm-ptk-app-chooser.o `test -f 'ptk/ptk-app-chooser.c' || echo '$(srcdir)/'`ptk/ptk-app-chooser.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Tpo ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-app-chooser.c' object='ptk/spacefm-ptk-app-chooser.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-app-chooser.o `test -f 'ptk/ptk-app-chooser.c' || echo '$(srcdir)/'`ptk/ptk-app-chooser.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-app-chooser.o `test -f 'ptk/ptk-app-chooser.c' || echo '$(srcdir)/'`ptk/ptk-app-chooser.c
 
-spacefm-ptk-app-chooser.obj: ptk/ptk-app-chooser.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-ptk-app-chooser.obj -MD -MP -MF $(DEPDIR)/spacefm-ptk-app-chooser.Tpo -c -o spacefm-ptk-app-chooser.obj `if test -f 'ptk/ptk-app-chooser.c'; then $(CYGPATH_W) 'ptk/ptk-app-chooser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-app-chooser.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-ptk-app-chooser.Tpo $(DEPDIR)/spacefm-ptk-app-chooser.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-app-chooser.c' object='spacefm-ptk-app-chooser.obj' libtool=no @AMDEPBACKSLASH@
+ptk/spacefm-ptk-app-chooser.obj: ptk/ptk-app-chooser.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-app-chooser.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Tpo -c -o ptk/spacefm-ptk-app-chooser.obj `if test -f 'ptk/ptk-app-chooser.c'; then $(CYGPATH_W) 'ptk/ptk-app-chooser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-app-chooser.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Tpo ptk/$(DEPDIR)/spacefm-ptk-app-chooser.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-app-chooser.c' object='ptk/spacefm-ptk-app-chooser.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-ptk-app-chooser.obj `if test -f 'ptk/ptk-app-chooser.c'; then $(CYGPATH_W) 'ptk/ptk-app-chooser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-app-chooser.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-app-chooser.obj `if test -f 'ptk/ptk-app-chooser.c'; then $(CYGPATH_W) 'ptk/ptk-app-chooser.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-app-chooser.c'; fi`
 
-spacefm-exo-icon-view.o: exo/exo-icon-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-icon-view.o -MD -MP -MF $(DEPDIR)/spacefm-exo-icon-view.Tpo -c -o spacefm-exo-icon-view.o `test -f 'exo/exo-icon-view.c' || echo '$(srcdir)/'`exo/exo-icon-view.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-icon-view.Tpo $(DEPDIR)/spacefm-exo-icon-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-icon-view.c' object='spacefm-exo-icon-view.o' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-icon-view.o: exo/exo-icon-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-icon-view.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-icon-view.Tpo -c -o exo/spacefm-exo-icon-view.o `test -f 'exo/exo-icon-view.c' || echo '$(srcdir)/'`exo/exo-icon-view.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-icon-view.Tpo exo/$(DEPDIR)/spacefm-exo-icon-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-icon-view.c' object='exo/spacefm-exo-icon-view.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-icon-view.o `test -f 'exo/exo-icon-view.c' || echo '$(srcdir)/'`exo/exo-icon-view.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-icon-view.o `test -f 'exo/exo-icon-view.c' || echo '$(srcdir)/'`exo/exo-icon-view.c
 
-spacefm-exo-icon-view.obj: exo/exo-icon-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-icon-view.obj -MD -MP -MF $(DEPDIR)/spacefm-exo-icon-view.Tpo -c -o spacefm-exo-icon-view.obj `if test -f 'exo/exo-icon-view.c'; then $(CYGPATH_W) 'exo/exo-icon-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-icon-view.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-icon-view.Tpo $(DEPDIR)/spacefm-exo-icon-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-icon-view.c' object='spacefm-exo-icon-view.obj' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-icon-view.obj: exo/exo-icon-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-icon-view.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-icon-view.Tpo -c -o exo/spacefm-exo-icon-view.obj `if test -f 'exo/exo-icon-view.c'; then $(CYGPATH_W) 'exo/exo-icon-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-icon-view.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-icon-view.Tpo exo/$(DEPDIR)/spacefm-exo-icon-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-icon-view.c' object='exo/spacefm-exo-icon-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-icon-view.obj `if test -f 'exo/exo-icon-view.c'; then $(CYGPATH_W) 'exo/exo-icon-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-icon-view.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-icon-view.obj `if test -f 'exo/exo-icon-view.c'; then $(CYGPATH_W) 'exo/exo-icon-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-icon-view.c'; fi`
 
-spacefm-exo-tree-view.o: exo/exo-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-tree-view.o -MD -MP -MF $(DEPDIR)/spacefm-exo-tree-view.Tpo -c -o spacefm-exo-tree-view.o `test -f 'exo/exo-tree-view.c' || echo '$(srcdir)/'`exo/exo-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-tree-view.Tpo $(DEPDIR)/spacefm-exo-tree-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-tree-view.c' object='spacefm-exo-tree-view.o' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-tree-view.o: exo/exo-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-tree-view.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-tree-view.Tpo -c -o exo/spacefm-exo-tree-view.o `test -f 'exo/exo-tree-view.c' || echo '$(srcdir)/'`exo/exo-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-tree-view.Tpo exo/$(DEPDIR)/spacefm-exo-tree-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-tree-view.c' object='exo/spacefm-exo-tree-view.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-tree-view.o `test -f 'exo/exo-tree-view.c' || echo '$(srcdir)/'`exo/exo-tree-view.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-tree-view.o `test -f 'exo/exo-tree-view.c' || echo '$(srcdir)/'`exo/exo-tree-view.c
 
-spacefm-exo-tree-view.obj: exo/exo-tree-view.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-tree-view.obj -MD -MP -MF $(DEPDIR)/spacefm-exo-tree-view.Tpo -c -o spacefm-exo-tree-view.obj `if test -f 'exo/exo-tree-view.c'; then $(CYGPATH_W) 'exo/exo-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-tree-view.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-tree-view.Tpo $(DEPDIR)/spacefm-exo-tree-view.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-tree-view.c' object='spacefm-exo-tree-view.obj' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-tree-view.obj: exo/exo-tree-view.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-tree-view.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-tree-view.Tpo -c -o exo/spacefm-exo-tree-view.obj `if test -f 'exo/exo-tree-view.c'; then $(CYGPATH_W) 'exo/exo-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-tree-view.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-tree-view.Tpo exo/$(DEPDIR)/spacefm-exo-tree-view.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-tree-view.c' object='exo/spacefm-exo-tree-view.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-tree-view.obj `if test -f 'exo/exo-tree-view.c'; then $(CYGPATH_W) 'exo/exo-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-tree-view.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-tree-view.obj `if test -f 'exo/exo-tree-view.c'; then $(CYGPATH_W) 'exo/exo-tree-view.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-tree-view.c'; fi`
 
-spacefm-exo-private.o: exo/exo-private.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-private.o -MD -MP -MF $(DEPDIR)/spacefm-exo-private.Tpo -c -o spacefm-exo-private.o `test -f 'exo/exo-private.c' || echo '$(srcdir)/'`exo/exo-private.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-private.Tpo $(DEPDIR)/spacefm-exo-private.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-private.c' object='spacefm-exo-private.o' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-private.o: exo/exo-private.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-private.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-private.Tpo -c -o exo/spacefm-exo-private.o `test -f 'exo/exo-private.c' || echo '$(srcdir)/'`exo/exo-private.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-private.Tpo exo/$(DEPDIR)/spacefm-exo-private.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-private.c' object='exo/spacefm-exo-private.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-private.o `test -f 'exo/exo-private.c' || echo '$(srcdir)/'`exo/exo-private.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-private.o `test -f 'exo/exo-private.c' || echo '$(srcdir)/'`exo/exo-private.c
 
-spacefm-exo-private.obj: exo/exo-private.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-private.obj -MD -MP -MF $(DEPDIR)/spacefm-exo-private.Tpo -c -o spacefm-exo-private.obj `if test -f 'exo/exo-private.c'; then $(CYGPATH_W) 'exo/exo-private.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-private.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-private.Tpo $(DEPDIR)/spacefm-exo-private.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-private.c' object='spacefm-exo-private.obj' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-private.obj: exo/exo-private.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-private.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-private.Tpo -c -o exo/spacefm-exo-private.obj `if test -f 'exo/exo-private.c'; then $(CYGPATH_W) 'exo/exo-private.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-private.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-private.Tpo exo/$(DEPDIR)/spacefm-exo-private.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-private.c' object='exo/spacefm-exo-private.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-private.obj `if test -f 'exo/exo-private.c'; then $(CYGPATH_W) 'exo/exo-private.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-private.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-private.obj `if test -f 'exo/exo-private.c'; then $(CYGPATH_W) 'exo/exo-private.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-private.c'; fi`
 
-spacefm-exo-string.o: exo/exo-string.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-string.o -MD -MP -MF $(DEPDIR)/spacefm-exo-string.Tpo -c -o spacefm-exo-string.o `test -f 'exo/exo-string.c' || echo '$(srcdir)/'`exo/exo-string.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-string.Tpo $(DEPDIR)/spacefm-exo-string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-string.c' object='spacefm-exo-string.o' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-string.o: exo/exo-string.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-string.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-string.Tpo -c -o exo/spacefm-exo-string.o `test -f 'exo/exo-string.c' || echo '$(srcdir)/'`exo/exo-string.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-string.Tpo exo/$(DEPDIR)/spacefm-exo-string.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-string.c' object='exo/spacefm-exo-string.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-string.o `test -f 'exo/exo-string.c' || echo '$(srcdir)/'`exo/exo-string.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-string.o `test -f 'exo/exo-string.c' || echo '$(srcdir)/'`exo/exo-string.c
 
-spacefm-exo-string.obj: exo/exo-string.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-string.obj -MD -MP -MF $(DEPDIR)/spacefm-exo-string.Tpo -c -o spacefm-exo-string.obj `if test -f 'exo/exo-string.c'; then $(CYGPATH_W) 'exo/exo-string.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-string.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-string.Tpo $(DEPDIR)/spacefm-exo-string.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-string.c' object='spacefm-exo-string.obj' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-string.obj: exo/exo-string.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-string.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-string.Tpo -c -o exo/spacefm-exo-string.obj `if test -f 'exo/exo-string.c'; then $(CYGPATH_W) 'exo/exo-string.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-string.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-string.Tpo exo/$(DEPDIR)/spacefm-exo-string.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-string.c' object='exo/spacefm-exo-string.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-string.obj `if test -f 'exo/exo-string.c'; then $(CYGPATH_W) 'exo/exo-string.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-string.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-string.obj `if test -f 'exo/exo-string.c'; then $(CYGPATH_W) 'exo/exo-string.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-string.c'; fi`
 
-spacefm-exo-marshal.o: exo/exo-marshal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-marshal.o -MD -MP -MF $(DEPDIR)/spacefm-exo-marshal.Tpo -c -o spacefm-exo-marshal.o `test -f 'exo/exo-marshal.c' || echo '$(srcdir)/'`exo/exo-marshal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-marshal.Tpo $(DEPDIR)/spacefm-exo-marshal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-marshal.c' object='spacefm-exo-marshal.o' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-marshal.o: exo/exo-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-marshal.o -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-marshal.Tpo -c -o exo/spacefm-exo-marshal.o `test -f 'exo/exo-marshal.c' || echo '$(srcdir)/'`exo/exo-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-marshal.Tpo exo/$(DEPDIR)/spacefm-exo-marshal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-marshal.c' object='exo/spacefm-exo-marshal.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-marshal.o `test -f 'exo/exo-marshal.c' || echo '$(srcdir)/'`exo/exo-marshal.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-marshal.o `test -f 'exo/exo-marshal.c' || echo '$(srcdir)/'`exo/exo-marshal.c
 
-spacefm-exo-marshal.obj: exo/exo-marshal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-exo-marshal.obj -MD -MP -MF $(DEPDIR)/spacefm-exo-marshal.Tpo -c -o spacefm-exo-marshal.obj `if test -f 'exo/exo-marshal.c'; then $(CYGPATH_W) 'exo/exo-marshal.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-marshal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-exo-marshal.Tpo $(DEPDIR)/spacefm-exo-marshal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-marshal.c' object='spacefm-exo-marshal.obj' libtool=no @AMDEPBACKSLASH@
+exo/spacefm-exo-marshal.obj: exo/exo-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT exo/spacefm-exo-marshal.obj -MD -MP -MF exo/$(DEPDIR)/spacefm-exo-marshal.Tpo -c -o exo/spacefm-exo-marshal.obj `if test -f 'exo/exo-marshal.c'; then $(CYGPATH_W) 'exo/exo-marshal.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-marshal.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) exo/$(DEPDIR)/spacefm-exo-marshal.Tpo exo/$(DEPDIR)/spacefm-exo-marshal.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='exo/exo-marshal.c' object='exo/spacefm-exo-marshal.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-exo-marshal.obj `if test -f 'exo/exo-marshal.c'; then $(CYGPATH_W) 'exo/exo-marshal.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-marshal.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o exo/spacefm-exo-marshal.obj `if test -f 'exo/exo-marshal.c'; then $(CYGPATH_W) 'exo/exo-marshal.c'; else $(CYGPATH_W) '$(srcdir)/exo/exo-marshal.c'; fi`
 
-spacefm-desktop.o: desktop/desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-desktop.o -MD -MP -MF $(DEPDIR)/spacefm-desktop.Tpo -c -o spacefm-desktop.o `test -f 'desktop/desktop.c' || echo '$(srcdir)/'`desktop/desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-desktop.Tpo $(DEPDIR)/spacefm-desktop.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop.c' object='spacefm-desktop.o' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-desktop.o: desktop/desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-desktop.o -MD -MP -MF desktop/$(DEPDIR)/spacefm-desktop.Tpo -c -o desktop/spacefm-desktop.o `test -f 'desktop/desktop.c' || echo '$(srcdir)/'`desktop/desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-desktop.Tpo desktop/$(DEPDIR)/spacefm-desktop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop.c' object='desktop/spacefm-desktop.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-desktop.o `test -f 'desktop/desktop.c' || echo '$(srcdir)/'`desktop/desktop.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-desktop.o `test -f 'desktop/desktop.c' || echo '$(srcdir)/'`desktop/desktop.c
 
-spacefm-desktop.obj: desktop/desktop.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-desktop.obj -MD -MP -MF $(DEPDIR)/spacefm-desktop.Tpo -c -o spacefm-desktop.obj `if test -f 'desktop/desktop.c'; then $(CYGPATH_W) 'desktop/desktop.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-desktop.Tpo $(DEPDIR)/spacefm-desktop.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop.c' object='spacefm-desktop.obj' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-desktop.obj: desktop/desktop.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-desktop.obj -MD -MP -MF desktop/$(DEPDIR)/spacefm-desktop.Tpo -c -o desktop/spacefm-desktop.obj `if test -f 'desktop/desktop.c'; then $(CYGPATH_W) 'desktop/desktop.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-desktop.Tpo desktop/$(DEPDIR)/spacefm-desktop.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop.c' object='desktop/spacefm-desktop.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-desktop.obj `if test -f 'desktop/desktop.c'; then $(CYGPATH_W) 'desktop/desktop.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-desktop.obj `if test -f 'desktop/desktop.c'; then $(CYGPATH_W) 'desktop/desktop.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop.c'; fi`
 
-spacefm-desktop-window.o: desktop/desktop-window.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-desktop-window.o -MD -MP -MF $(DEPDIR)/spacefm-desktop-window.Tpo -c -o spacefm-desktop-window.o `test -f 'desktop/desktop-window.c' || echo '$(srcdir)/'`desktop/desktop-window.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-desktop-window.Tpo $(DEPDIR)/spacefm-desktop-window.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop-window.c' object='spacefm-desktop-window.o' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-desktop-window.o: desktop/desktop-window.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-desktop-window.o -MD -MP -MF desktop/$(DEPDIR)/spacefm-desktop-window.Tpo -c -o desktop/spacefm-desktop-window.o `test -f 'desktop/desktop-window.c' || echo '$(srcdir)/'`desktop/desktop-window.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-desktop-window.Tpo desktop/$(DEPDIR)/spacefm-desktop-window.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop-window.c' object='desktop/spacefm-desktop-window.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-desktop-window.o `test -f 'desktop/desktop-window.c' || echo '$(srcdir)/'`desktop/desktop-window.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-desktop-window.o `test -f 'desktop/desktop-window.c' || echo '$(srcdir)/'`desktop/desktop-window.c
 
-spacefm-desktop-window.obj: desktop/desktop-window.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-desktop-window.obj -MD -MP -MF $(DEPDIR)/spacefm-desktop-window.Tpo -c -o spacefm-desktop-window.obj `if test -f 'desktop/desktop-window.c'; then $(CYGPATH_W) 'desktop/desktop-window.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop-window.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/spacefm-desktop-window.Tpo $(DEPDIR)/spacefm-desktop-window.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop-window.c' object='spacefm-desktop-window.obj' libtool=no @AMDEPBACKSLASH@
+desktop/spacefm-desktop-window.obj: desktop/desktop-window.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT desktop/spacefm-desktop-window.obj -MD -MP -MF desktop/$(DEPDIR)/spacefm-desktop-window.Tpo -c -o desktop/spacefm-desktop-window.obj `if test -f 'desktop/desktop-window.c'; then $(CYGPATH_W) 'desktop/desktop-window.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop-window.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) desktop/$(DEPDIR)/spacefm-desktop-window.Tpo desktop/$(DEPDIR)/spacefm-desktop-window.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desktop/desktop-window.c' object='desktop/spacefm-desktop-window.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o spacefm-desktop-window.obj `if test -f 'desktop/desktop-window.c'; then $(CYGPATH_W) 'desktop/desktop-window.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop-window.c'; fi`
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o desktop/spacefm-desktop-window.obj `if test -f 'desktop/desktop-window.c'; then $(CYGPATH_W) 'desktop/desktop-window.c'; else $(CYGPATH_W) '$(srcdir)/desktop/desktop-window.c'; fi`
 
 spacefm-main.o: main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT spacefm-main.o -MD -MP -MF $(DEPDIR)/spacefm-main.Tpo -c -o spacefm-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
@@ -1649,6 +1796,20 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f compat/$(DEPDIR)/$(am__dirstamp)
+	-rm -f compat/$(am__dirstamp)
+	-rm -f desktop/$(DEPDIR)/$(am__dirstamp)
+	-rm -f desktop/$(am__dirstamp)
+	-rm -f exo/$(DEPDIR)/$(am__dirstamp)
+	-rm -f exo/$(am__dirstamp)
+	-rm -f libmd5-rfc/$(DEPDIR)/$(am__dirstamp)
+	-rm -f libmd5-rfc/$(am__dirstamp)
+	-rm -f mime-type/$(DEPDIR)/$(am__dirstamp)
+	-rm -f mime-type/$(am__dirstamp)
+	-rm -f ptk/$(DEPDIR)/$(am__dirstamp)
+	-rm -f ptk/$(am__dirstamp)
+	-rm -f vfs/$(DEPDIR)/$(am__dirstamp)
+	-rm -f vfs/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1659,7 +1820,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool \
 	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) compat/$(DEPDIR) desktop/$(DEPDIR) exo/$(DEPDIR) libmd5-rfc/$(DEPDIR) mime-type/$(DEPDIR) ptk/$(DEPDIR) vfs/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1705,7 +1866,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
+	-rm -rf ./$(DEPDIR) compat/$(DEPDIR) desktop/$(DEPDIR) exo/$(DEPDIR) libmd5-rfc/$(DEPDIR) mime-type/$(DEPDIR) ptk/$(DEPDIR) vfs/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
