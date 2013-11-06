@@ -1,4 +1,4 @@
-0.9.0+
+0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
     sakura terminal use -x with single argument

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-21 12:50+0000\n"
-"PO-Revision-Date: 2013-10-21 13:12+0000\n"
+"POT-Creation-Date: 2013-10-31 11:39+0000\n"
+"PO-Revision-Date: 2013-11-04 16:13+0000\n"
 "Last-Translator: ignorantguru <ignorantguru@gmx.com>\n"
 "Language-Team: Serbian (http://www.transifex.com/projects/p/spacefm/language/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -83,10 +83,9 @@ msgid ""
 "\n"
 "Special thanks to:\n"
 "    OmegaPhil\n"
-"    Patrick Verner\n"
+"    Jean-Philippe Fleury\n"
 "    Hasufell\n"
 "    Vladimir Kudrya\n"
-"    Jean-Philippe Fleury\n"
 "\n"
 "SpaceFM is developed on geany, gcc, and git, with a little help from gdb.\n"
 "\n"
@@ -99,16 +98,16 @@ msgid ""
 " * Text and icon renderer uses code from Jonathan Blandford\n"
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
-msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nСарадници:\n    BwackNinja <BwackNinja@gmail.com>  (gtk misc, gtk3 port)\n\nДизајн:\n    SpaceFM иконе и лого је створио Горан Симовић\n\nЗахваљујемо SpaceFM корисницима на повратним информацијама и SpaceFM преводиоцима и пакетарима!\n\nПосебна захвалност за:\n    OmegaPhil\n    Patrick Verner\n    Hasufell\n    Vladimir Kudrya\n    Jean-Philippe Fleury\n\nSpaceFM је развијен на geany, gcc, и git, уз малу помоћ gdb.\n\nИзворни код је узет из других програма:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Working area detection: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * Text and icon renderer uses code from Jonathan Blandford\n * Desktop icons use code from Brian Tarricone\n * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
+msgstr ""
 
-#: ../data/ui/about-dlg.ui.h:41
+#: ../data/ui/about-dlg.ui.h:40
 msgid ""
 "SpaceFM icons and logo by Goran Simovic\n"
 "\n"
 "Additional icons were taken from the Tango Desktop Project icon set"
 msgstr "SpaceFM иконе и лого је створио Горан Симовић\n\nДодатне иконе су узете из пројекта Танго Десктоп"
 
-#: ../data/ui/about-dlg.ui.h:44
+#: ../data/ui/about-dlg.ui.h:43
 msgid "translator-credits"
 msgstr "Српски (sr):\n- miroslav_bmw <miroslav031@yandex.com>\n- Jay A. Fleming <tito.nehru.naser@gmail.com>"
 
@@ -136,8 +135,8 @@ msgstr "_Сви програми"
 msgid "_Command:"
 msgstr "_Наредба:"
 
-#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:9972
-#: ../src/ptk/ptk-file-misc.c:2116 ../src/item-prop.c:1640
+#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:10017
+#: ../src/ptk/ptk-file-misc.c:2122 ../src/item-prop.c:1646
 msgid "_Browse"
 msgstr "_Разгледај"
 
@@ -165,7 +164,7 @@ msgstr "<b>_Путања:</b>"
 msgid "<b>Link _Target:</b>"
 msgstr "<b>Веза _одредишта:</b>"
 
-#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2168
+#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2174
 msgid "<b>Type:</b>"
 msgstr "<b>Врста датотеке:</b>"
 
@@ -193,7 +192,7 @@ msgstr "<b>Последња _измена:</b>"
 msgid "<b>_Accessed:</b>"
 msgstr "<b>Последњи _приступ:</b>"
 
-#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10775
+#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10820
 msgid "_Info"
 msgstr "Оп_ште"
 
@@ -245,7 +244,7 @@ msgstr "Лепљиво"
 msgid "Recursive (apply changes to folders and their contents)"
 msgstr "Рекурзиво (примени радњу на поддиректоријумe и њихов садржај)"
 
-#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10778
+#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10823
 msgid "_Permissions"
 msgstr "_Дозволе"
 
@@ -295,7 +294,7 @@ msgid "Find Files"
 msgstr "Пронађи датотеке"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
-#: ../src/ptk/ptk-file-task.c:2326
+#: ../src/ptk/ptk-file-task.c:2337
 msgid "<b>Filename:</b>"
 msgstr "<b>Име датотеке:</b>"
 
@@ -704,7 +703,7 @@ msgstr "грешка при стварању датотеке %s: %s"
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr "pipe '%s' подаци нису исправан УТФ-8"
 
-#: ../src/cust-dialog.c:1787 ../src/ptk/ptk-file-task.c:1372
+#: ../src/cust-dialog.c:1787 ../src/ptk/ptk-file-task.c:1383
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr ""
 
@@ -1139,460 +1138,460 @@ msgstr "Прикажи информације о издању"
 msgid "[DIR | FILE | URL]..."
 msgstr "[ДИР | ДАТОТЕКА | УРЛ]..."
 
-#: ../src/main.c:464
+#: ../src/main.c:465
 msgid "Option --config-dir ignored - an instance is already running"
 msgstr "Опција --config-dir игнорисана - пример је већ покренут"
 
-#: ../src/main.c:497
+#: ../src/main.c:477
 msgid "Option --config-dir contains invalid chars - cannot start"
 msgstr "Опција --config-dir садржи неисправна слова - не може почети"
 
-#: ../src/main.c:593
+#: ../src/main.c:601
 #, c-format
 msgid "spacefm: --socket-cmd requires an argument\n"
 msgstr "spacefm: --улаз-cmd захтева аргумент\n"
 
-#: ../src/main.c:600
+#: ../src/main.c:608
 #, c-format
 msgid "spacefm: could not create socket\n"
 msgstr "spacefm: не могу да створим сокет\n"
 
-#: ../src/main.c:615
+#: ../src/main.c:623
 #, c-format
 msgid ""
 "spacefm: could not connect to socket (not running? or DISPLAY not set?)\n"
 msgstr "spacefm: не могу да се повежем на сокет (није покренут? или променљива „DISPLAY“ није постављена?)\n"
 
-#: ../src/main.c:658
+#: ../src/main.c:666
 #, c-format
 msgid "spacefm: invalid response from socket\n"
 msgstr "spacefm: неисправан одзив од улаза\n"
 
 #. TRANSLATOR:  These three lines should be limited to 80 chars each
-#: ../src/main.c:668
+#: ../src/main.c:676
 msgid ""
 "SpaceFM socket commands permit external processes (such as command scripts)\n"
 "to read and set GUI property values and execute methods inside running SpaceFM\n"
 "windows.  To handle events see View|Events in the main menu bar."
 msgstr ""
 
-#: ../src/main.c:670
+#: ../src/main.c:678
 msgid "Usage:"
 msgstr "Употреба:"
 
-#: ../src/main.c:672
+#: ../src/main.c:680
 msgid "Example:"
 msgstr "Нпр.:"
 
-#: ../src/main.c:675
+#: ../src/main.c:683
 msgid ""
 "METHODS\n"
 "-------"
 msgstr "MЕТОДИ\n-------"
 
-#: ../src/main.c:677
+#: ../src/main.c:685
 msgid "Sets a property"
 msgstr "Подеси особину"
 
-#: ../src/main.c:680
+#: ../src/main.c:688
 msgid "Gets a property"
 msgstr "Добави особину"
 
-#: ../src/main.c:683
+#: ../src/main.c:691
 msgid "Sets a task property"
 msgstr "Подеси особину задатка"
 
-#: ../src/main.c:686
+#: ../src/main.c:694
 msgid "Gets a task property"
 msgstr "Добави особину задатка"
 
-#: ../src/main.c:689
+#: ../src/main.c:697
 msgid "Starts a new task"
 msgstr "Покрени нови задатак"
 
-#: ../src/main.c:692
+#: ../src/main.c:700
 msgid "Activates a menu item by emitting its shortcut key"
 msgstr "Активирај ставку менија преко пречице"
 
-#: ../src/main.c:695
+#: ../src/main.c:703
 msgid "Shows custom submenu named MENUNAME as a popup menu"
 msgstr "Покажи прилагођени подмени као ИМЕ МЕНИЈА као искачући прозор"
 
-#: ../src/main.c:698
+#: ../src/main.c:706
 msgid "Add asynchronous handler COMMAND to EVENT"
 msgstr "Додај неусклађени модул НАРЕДБЕ ДОГАЂАЈУ"
 
-#: ../src/main.c:701
+#: ../src/main.c:709
 msgid "Add synchronous handler COMMAND to EVENT, replacing default handler"
 msgstr "Додај усклађени модул НАРЕДБЕ ДОГАЂАЈУ, мењајући подразумевани модул"
 
-#: ../src/main.c:704
+#: ../src/main.c:712
 msgid "Remove handler COMMAND from EVENT"
 msgstr "Растави модул НАРЕДБЕ од ДОГАЂАЈА"
 
-#: ../src/main.c:707
+#: ../src/main.c:715
 msgid "Shows this help reference.  (Also see manual link below.)"
 msgstr "Покажи ову референцу помоћи.  (Такође види линк корисничког упутства испод.)"
 
-#: ../src/main.c:709
+#: ../src/main.c:717
 msgid ""
 "OPTIONS\n"
 "-------"
 msgstr "ОПЦИЈЕ\n-------"
 
-#: ../src/main.c:710
+#: ../src/main.c:718
 msgid ""
 "Add options after METHOD to specify a specific window, panel, and/or tab."
 msgstr "Додајте опцију након МЕТОДЕ да наведете одређени прозор, пано, и / или језичак."
 
-#: ../src/main.c:711
+#: ../src/main.c:719
 msgid ""
 "Otherwise the current tab of the current panel in the last window is used."
 msgstr "Иначе, користиће се текући језичак, текућег паноа у последњем прозору."
 
-#: ../src/main.c:714
+#: ../src/main.c:722
 msgid "Specify window.  eg:"
 msgstr "Специфичан прозор.  пр:"
 
-#: ../src/main.c:716
+#: ../src/main.c:724
 msgid "Specify panel 1-4.  eg:"
 msgstr "Специфичан пано 1-4.  пр:"
 
-#: ../src/main.c:718
+#: ../src/main.c:726
 msgid "Specify tab 1-...  eg:"
 msgstr "Специфичан језичак 1-...  пр:"
 
-#: ../src/main.c:720
+#: ../src/main.c:728
 msgid ""
 "PROPERTIES\n"
 "----------"
 msgstr "СВОЈСТВА\n----------"
 
-#: ../src/main.c:721
+#: ../src/main.c:729
 msgid "Set properties with METHOD 'set', or get the value with 'get'."
 msgstr "Подесите својства са МЕТОДОМ 'set', или добијте вредност са 'get'."
 
-#: ../src/main.c:723
+#: ../src/main.c:731
 msgid "eg '800x600'"
 msgstr ""
 
-#: ../src/main.c:724
+#: ../src/main.c:732
 msgid "eg '100x50'"
 msgstr ""
 
-#: ../src/main.c:727
+#: ../src/main.c:735
 msgid "eg '1024x768'  (read-only)"
 msgstr ""
 
-#: ../src/main.c:728 ../src/main.c:729 ../src/main.c:730 ../src/main.c:731
-#: ../src/main.c:747 ../src/main.c:748 ../src/main.c:749
+#: ../src/main.c:736 ../src/main.c:737 ../src/main.c:738 ../src/main.c:739
+#: ../src/main.c:755 ../src/main.c:756 ../src/main.c:757
 msgid "eg '100'"
 msgstr ""
 
-#: ../src/main.c:736
+#: ../src/main.c:744
 msgid "Open DIR or default in a new tab"
 msgstr "Отвори ДИР или подразумевано у новом језичку"
 
-#: ../src/main.c:757
+#: ../src/main.c:765
 msgid "eg 'Current Status: Example'"
 msgstr "пр 'Тренутни статус: Пример'"
 
-#: ../src/main.c:759
+#: ../src/main.c:767
 msgid "DIR            eg '/etc'"
 msgstr "ДИР            пр '/etc'"
 
-#: ../src/main.c:760
+#: ../src/main.c:768
 msgid "[FILENAME...]"
 msgstr "[ИМЕ ДАТОТЕКЕ...]"
 
-#: ../src/main.c:761
+#: ../src/main.c:769
 msgid "[PATTERN]      eg '*.jpg'"
 msgstr "[ОБРАЗАЦ]      нпр '*.jpg'"
 
-#: ../src/main.c:762 ../src/main.c:763
+#: ../src/main.c:770 ../src/main.c:771
 msgid "eg 'Some\\nlines\\nof text'"
 msgstr "нпр 'неке\\nlines\\nof text'"
 
-#: ../src/main.c:764 ../src/main.c:765
+#: ../src/main.c:772 ../src/main.c:773
 msgid "eg '~/copy-file-contents-to-clipboard.txt'"
 msgstr "н.пр. '~/умножи-садржај-датотеке-у-оставу.txt'"
 
-#: ../src/main.c:766
+#: ../src/main.c:774
 msgid "FILE...  Files copied to clipboard"
 msgstr "ДАТОТЕКА...  Датотеке умножене у оставу"
 
-#: ../src/main.c:767
+#: ../src/main.c:775
 msgid "FILE...  Files cut to clipboard"
 msgstr "ДАТОТЕКА...  Датотеке исечене у оставу"
 
-#: ../src/main.c:769
+#: ../src/main.c:777
 msgid ""
 "TASK PROPERTIES\n"
 "---------------"
 msgstr "ЗАДАТАК ОСОБИНЕ\n---------------"
 
-#: ../src/main.c:770
+#: ../src/main.c:778
 msgid "contents of Status task column  (read-only)"
 msgstr "садржај колоне Статусни задатак  (само читање)"
 
-#: ../src/main.c:771
+#: ../src/main.c:779
 msgid "eg 'gtk-open'"
 msgstr "нпр 'gtk-open'"
 
-#: ../src/main.c:772
+#: ../src/main.c:780
 msgid "text to show in Count task column"
 msgstr "текст за показивање у колони задатак бројања"
 
-#: ../src/main.c:773
+#: ../src/main.c:781
 msgid "text to show in Folder task column"
 msgstr "текст за показивање у колони задатак директоријума"
 
-#: ../src/main.c:774
+#: ../src/main.c:782
 msgid "text to show in Item task column"
 msgstr "текст за показивање у колони задатак ставке"
 
-#: ../src/main.c:775
+#: ../src/main.c:783
 msgid "text to show in To task column"
 msgstr "текст за показивање у колони задатака"
 
-#: ../src/main.c:776
+#: ../src/main.c:784
 msgid "progress percent (1..100) or '' to pulse"
 msgstr ""
 
-#: ../src/main.c:777
+#: ../src/main.c:785
 msgid "text to show in Total task column"
 msgstr "текст за показивање у колони тотал задатака"
 
-#: ../src/main.c:778
+#: ../src/main.c:786
 msgid "text to show in Current task column"
 msgstr "текст за показивање у колони тренутни задатак"
 
-#: ../src/main.c:779
+#: ../src/main.c:787
 msgid "text to show in CRemain task column"
 msgstr "текст за показивање у колони преостали задаци"
 
-#: ../src/main.c:780
+#: ../src/main.c:788
 msgid "text to show in Average task column"
 msgstr "текст за показивање у колони просечан задатак"
 
-#: ../src/main.c:781
+#: ../src/main.c:789
 msgid "text to show in Remain task column"
 msgstr "текст за показивање у колони преостали задатак"
 
-#: ../src/main.c:782
+#: ../src/main.c:790
 msgid "contents of Elapsed task column (read-only)"
 msgstr "садржај колоне преостали задатак (само читање)"
 
-#: ../src/main.c:783
+#: ../src/main.c:791
 msgid "contents of Started task column (read-only)"
 msgstr "садржај колоне почети задатак (само читање)"
 
-#: ../src/main.c:785
+#: ../src/main.c:793
 msgid "COMMAND  command to show a custom task dialog\n"
 msgstr "НАРЕДБА  наредба за показивање прилагођеног дијалога задатка\n"
 
-#: ../src/main.c:787
+#: ../src/main.c:795
 msgid ""
 "TASK TYPES\n"
 "----------"
 msgstr "ТИПОВИ ЗАДАТКА\n----------"
 
-#: ../src/main.c:789
+#: ../src/main.c:797
 msgid "Run COMMAND in DIR"
 msgstr ""
 
-#: ../src/main.c:791
+#: ../src/main.c:799
 msgid "Copy|Move|Link FILE(s) or DIR(s) to TARGET dir"
 msgstr "Умножи|Премести|Повежи ДАТОТЕКУ(е) или ДИРЕКТОРИЈУМ(е) до ОДРЕДИШТА"
 
-#: ../src/main.c:792
+#: ../src/main.c:800
 msgid "Recursively delete FILE(s) or DIR(s)"
 msgstr "Рекурзивно уклони ДАТОТЕКУ(е) или ДИРЕКТОРИЈУМ(е)"
 
-#: ../src/main.c:793
+#: ../src/main.c:801
 msgid "Open FILE in user's or root's text editor"
 msgstr "Отвори ДАТОТЕКУ у корисничком или „root“ текст едитору"
 
-#: ../src/main.c:794
+#: ../src/main.c:802
 msgid "Open URL in user's web browser"
 msgstr "Отвори УРЛ у корисничком веб читачу"
 
-#: ../src/main.c:796
+#: ../src/main.c:804
 msgid ""
 "EVENTS\n"
 "------"
 msgstr "ДОГАЂАЈИ\n------"
 
-#: ../src/main.c:797
+#: ../src/main.c:805
 #, c-format
 msgid "Instance start        %e"
 msgstr "Пример почетка        %e"
 
-#: ../src/main.c:798
+#: ../src/main.c:806
 #, c-format
 msgid "Instance exit         %e"
 msgstr "Пример излаза         %e"
 
-#: ../src/main.c:799
+#: ../src/main.c:807
 msgid "Window new            %e %w %p %t"
 msgstr "Нови прозор            %e %w %p %t"
 
-#: ../src/main.c:800
+#: ../src/main.c:808
 msgid "Window focus          %e %w %p %t"
 msgstr "Фокус прозора          %e %w %p %t"
 
-#: ../src/main.c:801
+#: ../src/main.c:809
 msgid "Window move/resize    %e %w %p %t"
 msgstr "Прозор помери/промени величину    %e %w %p %t"
 
-#: ../src/main.c:802
+#: ../src/main.c:810
 msgid "Mouse click           %e %w %p %t %b %m %f"
 msgstr "Клик мишем           %e %w %p %t %b %m %f"
 
-#: ../src/main.c:803
+#: ../src/main.c:811
 msgid "Window keypress       %e %w %p %t %k %m"
 msgstr "Прозор притисак на тастер       %e %w %p %t %k %m"
 
-#: ../src/main.c:804
+#: ../src/main.c:812
 msgid "Window close          %e %w %p %t"
 msgstr "Прозор затвори          %e %w %p %t"
 
-#: ../src/main.c:805
+#: ../src/main.c:813
 msgid "Panel focus           %e %w %p %t"
 msgstr "Фокусирање паноа            %e %w %p %t"
 
-#: ../src/main.c:806
+#: ../src/main.c:814
 msgid "Panel show/hide       %e %w %p %t %f %v"
 msgstr "Пркажи/сакриј пано       %e %w %p %t %f %v"
 
-#: ../src/main.c:807
+#: ../src/main.c:815
 msgid "Selection changed     %e %w %p %t"
 msgstr "Избори промењен     %e %w %p %t"
 
-#: ../src/main.c:808
+#: ../src/main.c:816
 msgid "Tab new               %e %w %p %t"
 msgstr "Нови језичак               %e %w %p %t"
 
-#: ../src/main.c:809
+#: ../src/main.c:817
 msgid "Tab focus             %e %w %p %t"
 msgstr "Језичак у фокусу             %e %w %p %t"
 
-#: ../src/main.c:810
+#: ../src/main.c:818
 msgid "Tab close             %e %w %p %t"
 msgstr "Затвори језичак             %e %w %p %t"
 
-#: ../src/main.c:811
+#: ../src/main.c:819
 msgid "Device change         %e %f %v"
 msgstr "Уређај промењен         %e %f %v"
 
-#: ../src/main.c:813
+#: ../src/main.c:821
 msgid "Event COMMAND Substitution Variables:"
 msgstr ""
 
-#: ../src/main.c:814
+#: ../src/main.c:822
 msgid "event type (evt_start|evt_exit|...)"
 msgstr ""
 
-#: ../src/main.c:815
+#: ../src/main.c:823
 msgid "window ID"
 msgstr "прозор ID"
 
-#: ../src/main.c:816
+#: ../src/main.c:824
 msgid "panel number (1-4)"
 msgstr "број паноа (1-4)"
 
-#: ../src/main.c:817
+#: ../src/main.c:825
 msgid "tab number (1-...)"
 msgstr "број језичка (1-...)"
 
-#: ../src/main.c:818
+#: ../src/main.c:826
 msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
 msgstr ""
 
-#: ../src/main.c:819
+#: ../src/main.c:827
 msgid "key code  (eg 0x63)"
 msgstr "кључ кода  (пр 0x63)"
 
-#: ../src/main.c:820
+#: ../src/main.c:828
 msgid "modifier key (eg 0x4  used with clicks and keypresses)"
 msgstr ""
 
-#: ../src/main.c:821
+#: ../src/main.c:829
 msgid "focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)"
 msgstr "фокусирај елемент (паноN|листа датотека|уређаји|обележивачи|стабло|локација)"
 
-#: ../src/main.c:822
+#: ../src/main.c:830
 msgid "focus element is visible (0 or 1, or device state change)"
 msgstr "фокус елемента је видљив (0 или 1, или стање уређаја промењено)"
 
-#: ../src/main.c:824
+#: ../src/main.c:832
 msgid "Examples"
 msgstr "Примери"
 
-#: ../src/main.c:840
+#: ../src/main.c:848
 msgid "These files have been copied to the clipboard"
 msgstr "Ове датотеке су били копирани у клипборд"
 
-#: ../src/main.c:851
+#: ../src/main.c:859
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr "За потпуну документацију и примере погледајте SpaceFM корисничко упутство:"
 
-#: ../src/main.c:1197
+#: ../src/main.c:1205
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr "spacefm: Грешка: Онемогућено чување сесије\n       %s\n"
 
-#: ../src/main.c:1250
+#: ../src/main.c:1259
 msgid "File doesn't exist"
 msgstr "Датотека не постоји"
 
-#: ../src/main.c:1252 ../src/main.c:1328 ../src/main.c:1330 ../src/main.c:1454
-#: ../src/main.c:1456 ../src/main.c:1589 ../src/settings.c:4788
-#: ../src/settings.c:8037 ../src/ptk/ptk-file-browser.c:2239
-#: ../src/ptk/ptk-file-browser.c:2265 ../src/ptk/ptk-file-browser.c:5780
-#: ../src/ptk/ptk-file-browser.c:5787 ../src/ptk/ptk-console-output.c:232
-#: ../src/ptk/ptk-file-misc.c:2746 ../src/ptk/ptk-file-misc.c:3398
-#: ../src/ptk/ptk-file-misc.c:3478 ../src/ptk/ptk-file-misc.c:3572
-#: ../src/ptk/ptk-file-misc.c:3733 ../src/ptk/ptk-file-properties.c:891
+#: ../src/main.c:1261 ../src/main.c:1337 ../src/main.c:1339 ../src/main.c:1463
+#: ../src/main.c:1465 ../src/main.c:1598 ../src/settings.c:4831
+#: ../src/settings.c:8082 ../src/ptk/ptk-file-browser.c:2353
+#: ../src/ptk/ptk-file-browser.c:2379 ../src/ptk/ptk-file-browser.c:5914
+#: ../src/ptk/ptk-file-browser.c:5921 ../src/ptk/ptk-console-output.c:232
+#: ../src/ptk/ptk-file-misc.c:2752 ../src/ptk/ptk-file-misc.c:3404
+#: ../src/ptk/ptk-file-misc.c:3484 ../src/ptk/ptk-file-misc.c:3578
+#: ../src/ptk/ptk-file-misc.c:3739 ../src/ptk/ptk-file-properties.c:891
 #: ../src/ptk/ptk-file-properties.c:902 ../src/vfs/vfs-file-task.c:1511
-#: ../src/item-prop.c:971
+#: ../src/item-prop.c:974
 #, c-format
 msgid "Error"
 msgstr "Грешка"
 
-#: ../src/main.c:1328 ../src/main.c:1454
+#: ../src/main.c:1337 ../src/main.c:1463
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr "Грешка: Не могу да припремим пратилац промена датотеке „inotify“.\n\nИмате ли у кернелу подршку за „inotify“?"
 
-#: ../src/main.c:1330 ../src/main.c:1456
+#: ../src/main.c:1339 ../src/main.c:1465
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr "Грешка: Не могу се повезати са „FAM“ програмом.\n\nИмате ли инсталиране и покренуте „FAM“ или „Gamin“?"
 
-#: ../src/main.c:1382
+#: ../src/main.c:1391
 msgid "--dialog must be first option"
 msgstr "--dialog мора бити прва опција"
 
-#: ../src/main.c:1389
+#: ../src/main.c:1398
 msgid "--socket-cmd must be first option"
 msgstr "--socket-cmd мора бити прва опција"
 
-#: ../src/main.c:1397
+#: ../src/main.c:1406
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr "Ово је издање програма које не може да управља радним површима "
 
-#: ../src/main.c:1585
+#: ../src/main.c:1594
 msgid "Don't know how to open the file"
 msgstr "Не знам како да отворим ову датотеку"
 
-#: ../src/main.c:1587
+#: ../src/main.c:1596
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -1600,24 +1599,24 @@ msgid ""
 "%s"
 msgstr "Не могу да отворим датотеку:\n„%s“\n%s"
 
-#: ../src/main-window.c:376 ../src/settings.c:10023
+#: ../src/main-window.c:376 ../src/settings.c:10068
 msgid "_Show"
 msgstr "_Прикажи"
 
-#: ../src/main-window.c:377 ../src/item-prop.c:1704
+#: ../src/main-window.c:377 ../src/item-prop.c:1710
 msgid "_Add"
 msgstr "_Додај"
 
-#: ../src/main-window.c:431 ../src/settings.c:6005
+#: ../src/main-window.c:431 ../src/settings.c:6048
 msgid "Choose Plugin File"
 msgstr "Изабери датотеку додатка"
 
 #. get url
-#: ../src/main-window.c:442 ../src/settings.c:6017
+#: ../src/main-window.c:442 ../src/settings.c:6060
 msgid "Enter Plugin URL"
 msgstr "Унеси УРЛ додатка"
 
-#: ../src/main-window.c:442 ../src/settings.c:6017
+#: ../src/main-window.c:442 ../src/settings.c:6060
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
@@ -1647,11 +1646,11 @@ msgstr "Овај додатак је већ инсталиран '%s'.  Преб
 msgid "Overwrite Plugin ?"
 msgstr "Пребриши додатак?"
 
-#: ../src/main-window.c:510 ../src/settings.c:6025
+#: ../src/main-window.c:510 ../src/settings.c:6068
 msgid "Error Creating Temp Directory"
 msgstr "Грешка при стварању привременог директоријума"
 
-#: ../src/main-window.c:511 ../src/settings.c:6026
+#: ../src/main-window.c:511 ../src/settings.c:6069
 msgid "Unable to create temporary directory"
 msgstr "Не могу да створим привремени директоријум"
 
@@ -1699,52 +1698,53 @@ msgid ""
 "To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr "Дизајн мод дозвољава промену имена, пречице и икона у менију, приказује помоћ за ставке, и додаје ваше прилагођене наредбе у меније.\n\nЗа отварање дизајн менија, кликните десни клик на ставку менија.\n\nДа користите Дизајн мод на подменију, морате прво затворити подмени(кликом на њега). Обележивачи не подржавају Дизајн мод.\n\nЗа измену траке алата, кликните на најдаљу алатну икону за отварање менија траке алата и одаберите Помоћ."
 
-#: ../src/main-window.c:1705 ../src/settings.c:4682 ../src/settings.c:4984
-#: ../src/settings.c:5850 ../src/settings.c:5967
+#: ../src/main-window.c:1833 ../src/settings.c:4725 ../src/settings.c:5027
+#: ../src/settings.c:5893 ../src/settings.c:6010
 #, c-format
 msgid "New _Command"
 msgstr "Нова _наредба"
 
-#: ../src/main-window.c:1803
+#: ../src/main-window.c:1931
 #, c-format
 msgid "Show Panel %d"
 msgstr "Прикажи пано %d"
 
-#: ../src/main-window.c:1831 ../src/settings.c:7215 ../src/settings.c:9945
-#: ../src/settings.c:9961 ../src/settings.c:10458
+#: ../src/main-window.c:1959 ../src/settings.c:7258 ../src/settings.c:9990
+#: ../src/settings.c:10006 ../src/settings.c:10503
 msgid "_File"
 msgstr "_Датотеке"
 
-#: ../src/main-window.c:1834 ../src/settings.c:10544
+#: ../src/main-window.c:1962 ../src/settings.c:10589
 msgid "_View"
 msgstr "П_реглед"
 
-#: ../src/main-window.c:1837 ../src/settings.c:10882 ../src/settings.c:10996
-#: ../src/settings.c:11124 ../src/settings.c:11252
+#: ../src/main-window.c:1965 ../src/settings.c:10930
 msgid "_Devices"
 msgstr "_Уређаји"
 
-#: ../src/main-window.c:1841 ../src/settings.c:10315 ../src/settings.c:10520
-#: ../src/settings.c:10889 ../src/settings.c:11004 ../src/settings.c:11132
-#: ../src/settings.c:11260
+#. set visible for all panel context modes
+#. for ( i = 0; i < 4; i++ )
+#. xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
+#: ../src/main-window.c:1969 ../src/settings.c:10360 ../src/settings.c:10565
+#: ../src/settings.c:10941
 msgid "_Bookmarks"
 msgstr "О_бележивачи"
 
-#: ../src/main-window.c:1847
+#: ../src/main-window.c:1975
 msgid "_Plugins"
 msgstr "_Додаци"
 
-#: ../src/main-window.c:1851
+#: ../src/main-window.c:1979
 msgid "_Tools"
 msgstr "_Алатке"
 
 #. Help
-#: ../src/main-window.c:1854 ../src/settings.c:995 ../src/settings.c:7226
-#: ../src/settings.c:7698 ../src/settings.c:7979 ../src/settings.c:9655
+#: ../src/main-window.c:1982 ../src/settings.c:995 ../src/settings.c:7269
+#: ../src/settings.c:7743 ../src/settings.c:8024 ../src/settings.c:9700
 msgid "_Help"
 msgstr "_Помоћ"
 
-#: ../src/main-window.c:2131
+#: ../src/main-window.c:2253
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1752,61 +1752,61 @@ msgid ""
 "( %s )"
 msgstr "Грешка: Не могу да сачувам датотеку сесије. Желите ли да изађете без чувања?\n\n( %s )"
 
-#: ../src/main-window.c:2140
+#: ../src/main-window.c:2262
 msgid "SpaceFM Error"
 msgstr "SpaceFM грешка"
 
-#: ../src/main-window.c:2156
+#: ../src/main-window.c:2278
 msgid "Stop all tasks running in this window?"
 msgstr "Заустави све задатке покренуте у овом прозору?"
 
-#: ../src/main-window.c:2165
+#: ../src/main-window.c:2287
 msgid "Aborting tasks..."
 msgstr "Прекидамо задатке..."
 
-#: ../src/main-window.c:3332
+#: ../src/main-window.c:3471
 #, c-format
 msgid " %s free / %s   "
 msgstr "( %s доступно од %s )   "
 
-#: ../src/main-window.c:3385
+#: ../src/main-window.c:3524
 #, c-format
 msgid "   Link → %s"
 msgstr "   Link → %s"
 
-#: ../src/main-window.c:3387
+#: ../src/main-window.c:3526
 #, c-format
 msgid "   Link → %s/"
 msgstr "   Link → %s/"
 
-#: ../src/main-window.c:3390
+#: ../src/main-window.c:3529
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr "   !Link → %s/ (недостаје)"
 
-#: ../src/main-window.c:3398
+#: ../src/main-window.c:3537
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr "   Link → %s (%s)"
 
-#: ../src/main-window.c:3401
+#: ../src/main-window.c:3540
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr "   !Link → %s (недостаје)"
 
-#: ../src/main-window.c:3408
+#: ../src/main-window.c:3547
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr "   !Link → (грешка откривања одредишта)"
 
-#: ../src/main-window.c:3455
+#: ../src/main-window.c:3594
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] "скривена"
 msgstr[1] "скривене"
 msgstr[2] "скривених"
 
-#: ../src/main-window.c:3458
+#: ../src/main-window.c:3597
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
@@ -1814,7 +1814,7 @@ msgstr[0] "%s%d видљива (%s)   %s"
 msgstr[1] "%s%d видљиве (%s)   %s"
 msgstr[2] "%s%d видљивих (%s)   %s"
 
-#: ../src/main-window.c:3463
+#: ../src/main-window.c:3602
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
@@ -1822,359 +1822,355 @@ msgstr[0] "%s%d ставка   %s"
 msgstr[1] "%s%d ставке   %s"
 msgstr[2] "%s%d ставки   %s"
 
-#: ../src/main-window.c:3699
+#: ../src/main-window.c:3838
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr "Пречице за управљач уређаја су искључене у „HAL“ моду"
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:3912 ../src/main-window.c:5311
+#: ../src/main-window.c:4051 ../src/main-window.c:5450
 msgid "Status"
 msgstr "Стање"
 
-#: ../src/main-window.c:3912
+#: ../src/main-window.c:4051
 msgid "#"
 msgstr "#"
 
-#: ../src/main-window.c:3912 ../src/ptk/ptk-file-misc.c:2071
+#: ../src/main-window.c:4051 ../src/ptk/ptk-file-misc.c:2077
 #: ../src/find-files.c:918
 msgid "Folder"
 msgstr "Директоријум"
 
-#: ../src/main-window.c:3912
+#: ../src/main-window.c:4051
 msgid "Item"
 msgstr "Ставка"
 
-#: ../src/main-window.c:3913
+#: ../src/main-window.c:4052
 msgid "To"
 msgstr "За"
 
-#: ../src/main-window.c:3913
+#: ../src/main-window.c:4052
 msgid "Progress"
 msgstr "Напредак"
 
-#: ../src/main-window.c:3913
+#: ../src/main-window.c:4052
 msgid "Total"
 msgstr "Укупно"
 
-#: ../src/main-window.c:3914
+#: ../src/main-window.c:4053
 msgid "Started"
 msgstr "Покренуто"
 
-#: ../src/main-window.c:3914
+#: ../src/main-window.c:4053
 msgid "Elapsed"
 msgstr "Протекло"
 
-#: ../src/main-window.c:3914
+#: ../src/main-window.c:4053
 msgid "Current"
 msgstr "Тренутно"
 
-#: ../src/main-window.c:3914
+#: ../src/main-window.c:4053
 msgid "CRemain"
 msgstr "Остатак"
 
-#: ../src/main-window.c:3915
+#: ../src/main-window.c:4054
 msgid "Average"
 msgstr "Просек"
 
-#: ../src/main-window.c:3915
+#: ../src/main-window.c:4054
 msgid "Remain"
 msgstr "Остатак"
 
-#: ../src/main-window.c:3928
+#: ../src/main-window.c:4067
 msgid "Reorder Columns Help"
 msgstr "Поново промени колоне помоћи"
 
-#: ../src/main-window.c:3928
+#: ../src/main-window.c:4067
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr "Да би променили редослед колона, превуците заглавље колоне на жељену локацију."
 
-#: ../src/main-window.c:5434
+#: ../src/main-window.c:5573
 msgid "moving"
 msgstr "померање"
 
-#: ../src/main-window.c:5435
+#: ../src/main-window.c:5574
 msgid "copying"
 msgstr "копирање"
 
-#: ../src/main-window.c:5436
+#: ../src/main-window.c:5575
 msgid "trashing"
 msgstr "бацање"
 
-#: ../src/main-window.c:5437
+#: ../src/main-window.c:5576
 msgid "deleting"
 msgstr "уклањање"
 
-#: ../src/main-window.c:5438
+#: ../src/main-window.c:5577
 msgid "linking"
 msgstr "линковање"
 
-#: ../src/main-window.c:5439
+#: ../src/main-window.c:5578
 msgid "changing"
 msgstr "мењање"
 
-#: ../src/main-window.c:5440
+#: ../src/main-window.c:5579
 msgid "running"
 msgstr "покретање"
 
-#: ../src/main-window.c:5546
+#: ../src/main-window.c:5685
 #, c-format
 msgid "%d error %s"
 msgstr ""
 
-#: ../src/main-window.c:5547
+#: ../src/main-window.c:5686
 #, c-format
 msgid "%d errors %s"
 msgstr ""
 
-#: ../src/main-window.c:5563 ../src/ptk/ptk-file-task.c:1615
+#: ../src/main-window.c:5702 ../src/ptk/ptk-file-task.c:1626
 #, c-format
 msgid "paused"
 msgstr "паузирано"
 
-#: ../src/main-window.c:5565 ../src/ptk/ptk-file-task.c:1617
+#: ../src/main-window.c:5704 ../src/ptk/ptk-file-task.c:1628
 #, c-format
 msgid "queued"
 msgstr "на чеканју"
 
-#: ../src/main-window.c:5832 ../src/ptk/ptk-file-browser.c:4033
-#: ../src/ptk/ptk-file-browser.c:4377 ../src/edit-bookmarks.c:196
-#: ../src/find-files.c:903
+#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/edit-bookmarks.c:196 ../src/find-files.c:903
 msgid "Name"
 msgstr "Име"
 
-#: ../src/main-window.c:5832 ../src/ptk/ptk-file-browser.c:4033
-#: ../src/ptk/ptk-file-browser.c:4377 ../src/find-files.c:924
+#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/find-files.c:924
 msgid "Size"
 msgstr "Величина"
 
-#: ../src/main-window.c:5832 ../src/ptk/ptk-file-browser.c:4033
-#: ../src/ptk/ptk-file-browser.c:4377 ../src/find-files.c:928
+#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/find-files.c:928
 msgid "Type"
 msgstr "Врста"
 
-#: ../src/main-window.c:5833 ../src/ptk/ptk-file-browser.c:4034
-#: ../src/ptk/ptk-file-browser.c:4378
+#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
 msgid "Permission"
 msgstr "Дозволе"
 
-#: ../src/main-window.c:5833 ../src/ptk/ptk-file-browser.c:4034
-#: ../src/ptk/ptk-file-browser.c:4378
+#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
 msgid "Owner"
 msgstr "Власник"
 
-#: ../src/main-window.c:5833 ../src/ptk/ptk-file-browser.c:4034
-#: ../src/ptk/ptk-file-browser.c:4378
+#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
 msgid "Modified"
 msgstr "Измењено"
 
-#: ../src/main-window.c:5839
+#: ../src/main-window.c:5984
 msgid "spacefm: invalid socket command\n"
 msgstr "spacefm: неважећа улазна наредба\n"
 
-#: ../src/main-window.c:5868
+#: ../src/main-window.c:6013
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr "spacefm: неважећа опција '%s'\n"
 
-#: ../src/main-window.c:5871
+#: ../src/main-window.c:6016
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr "spacefm: опција %s захтева аргумент\n"
 
-#: ../src/main-window.c:5881
+#: ../src/main-window.c:6026
 msgid "spacefm: invalid window\n"
 msgstr "spacefm: неважећи прозор\n"
 
-#: ../src/main-window.c:5901
+#: ../src/main-window.c:6046
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr "spacefm: неважећи прозор %s\n"
 
-#: ../src/main-window.c:5911
+#: ../src/main-window.c:6056
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr "spacefm: неважећи пано %d\n"
 
-#: ../src/main-window.c:5918
+#: ../src/main-window.c:6063
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr "spacefm: пано %d није видљив\n"
 
-#: ../src/main-window.c:5931
+#: ../src/main-window.c:6076
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr "spacefm: неважећи језичак %d\n"
 
-#: ../src/main-window.c:5943
+#: ../src/main-window.c:6088
 msgid "spacefm: command set requires an argument\n"
 msgstr "spacefm: наредба захтева аргумент\n"
 
-#: ../src/main-window.c:5969 ../src/main-window.c:6255
+#: ../src/main-window.c:6114 ../src/main-window.c:6421
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr "spacefm: неисправна %s вредност\n"
 
-#: ../src/main-window.c:6002 ../src/main-window.c:6133
+#: ../src/main-window.c:6147 ../src/main-window.c:6299
 msgid "spacefm: invalid slider value\n"
 msgstr "spacefm: неисправан клизач вредности\n"
 
-#: ../src/main-window.c:6031
+#: ../src/main-window.c:6176
 msgid "spacefm: invalid panel number\n"
 msgstr "spacefm: неисправан број паноа\n"
 
-#: ../src/main-window.c:6072
+#: ../src/main-window.c:6217
 msgid "spacefm: invalid tab number\n"
 msgstr "spacefm: неисправан број језичка\n"
 
-#: ../src/main-window.c:6109 ../src/main-window.c:6424
-#: ../src/main-window.c:6535 ../src/main-window.c:6798
+#: ../src/main-window.c:6270 ../src/main-window.c:6590
+#: ../src/main-window.c:6717 ../src/main-window.c:6985
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr "spacefm: неисправна својства %s\n"
 
-#: ../src/main-window.c:6153
+#: ../src/main-window.c:6319
 msgid "spacefm: invalid column width\n"
 msgstr "spacefm: неисправна ширина колоне\n"
 
-#: ../src/main-window.c:6189 ../src/main-window.c:6216
-#: ../src/main-window.c:6596
+#: ../src/main-window.c:6355 ../src/main-window.c:6382
+#: ../src/main-window.c:6783
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr "spacefm: неисправно име колоне '%s'\n"
 
-#: ../src/main-window.c:6311
+#: ../src/main-window.c:6477
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr "spacefm: текст није исправан UTF-8\n"
 
-#: ../src/main-window.c:6328
+#: ../src/main-window.c:6494
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr "spacefm: %s захтефа путању до датотеке\n"
 
-#: ../src/main-window.c:6334
+#: ../src/main-window.c:6500
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr "spacefm: грешка приликом читања датотеке '%s'\n"
 
-#: ../src/main-window.c:6340
+#: ../src/main-window.c:6506
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr "spacefm: датотека '%s' не садржи исправан УТФ-8 текст\n"
 
-#: ../src/main-window.c:6381
+#: ../src/main-window.c:6547
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr "spacefm: %s захтева путању до директоријума\n"
 
-#: ../src/main-window.c:6387
+#: ../src/main-window.c:6553
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr "spacefm: директоријум '%s' не постоји\n"
 
-#: ../src/main-window.c:6433 ../src/main-window.c:7283
-#: ../src/main-window.c:7309
+#: ../src/main-window.c:6599 ../src/main-window.c:7470
+#: ../src/main-window.c:7496
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr "spacefm: наредба %s захтева аргумент\n"
 
-#: ../src/main-window.c:6806 ../src/main-window.c:6936
-#: ../src/main-window.c:7040 ../src/main-window.c:7097
-#: ../src/main-window.c:7148 ../src/main-window.c:7349
+#: ../src/main-window.c:6993 ../src/main-window.c:7123
+#: ../src/main-window.c:7227 ../src/main-window.c:7284
+#: ../src/main-window.c:7335 ../src/main-window.c:7536
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr "spacefm: %s захтева два аргумента\n"
 
-#: ../src/main-window.c:6834 ../src/main-window.c:6964
+#: ../src/main-window.c:7021 ../src/main-window.c:7151
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr "spacefm: неисправан задатак '%s'\n"
 
-#: ../src/main-window.c:6839
+#: ../src/main-window.c:7026
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr "spacefm: интерни задатак %s је само за читање\n"
 
-#: ../src/main-window.c:6891
+#: ../src/main-window.c:7078
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr "spacefm: задатак својства '%s' је само за читање\n"
 
-#: ../src/main-window.c:6908
+#: ../src/main-window.c:7095
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr "spacefm: неисправно стање_реда '%s'\n"
 
-#: ../src/main-window.c:6926 ../src/main-window.c:7027
+#: ../src/main-window.c:7113 ../src/main-window.c:7214
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr "spacefm: неисправан задатак својства '%s'\n"
 
-#: ../src/main-window.c:7083 ../src/main-window.c:7185
-#: ../src/main-window.c:7206
+#: ../src/main-window.c:7270 ../src/main-window.c:7372
+#: ../src/main-window.c:7393
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr "spacefm: нема таквог директоријума '%s'\n"
 
-#: ../src/main-window.c:7090 ../src/main-window.c:7141
-#: ../src/main-window.c:7192
+#: ../src/main-window.c:7277 ../src/main-window.c:7328
+#: ../src/main-window.c:7379
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr "spacefm: неважећа %s опција задатка '%s'\n"
 
-#: ../src/main-window.c:7157
+#: ../src/main-window.c:7344
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr "spacefm: датотека '%s' не постоји\n"
 
-#: ../src/main-window.c:7225
+#: ../src/main-window.c:7412
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr "spacefm: релативна путања '%s' захтева %s опцију --dir DIR\n"
 
-#: ../src/main-window.c:7249
+#: ../src/main-window.c:7436
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr "spacefm: задатак типа %s захтева ДАТОТЕКА аргумент(е)\n"
 
-#: ../src/main-window.c:7274
+#: ../src/main-window.c:7461
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr "spacefm: неуспео тип задатка '%s'\n"
 
-#: ../src/main-window.c:7298
+#: ../src/main-window.c:7485
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr "spacefm: неисправан код тастера „%s“\n"
 
-#: ../src/main-window.c:7316
+#: ../src/main-window.c:7503
 #, c-format
 msgid "spacefm: custom submenu '%s' not found\n"
 msgstr "spacefm: прилагођени подмени '%s' није пронађен\n"
 
-#: ../src/main-window.c:7328
+#: ../src/main-window.c:7515
 #, c-format
 msgid "spacefm: menu '%s' context hidden or disabled\n"
 msgstr "spacefm: мени '%s' садржај невидљив или искључен\n"
 
-#: ../src/main-window.c:7355
+#: ../src/main-window.c:7542
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr ""
 
-#: ../src/main-window.c:7381
+#: ../src/main-window.c:7568
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr "spacefm: руководилац догађаја није пронађен\n"
 
-#: ../src/main-window.c:7392
+#: ../src/main-window.c:7579
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr "spacefm: нисправан метод улаза '%s'\n"
 
-#: ../src/pref-dialog.c:159 ../src/pref-dialog.c:171 ../src/settings.c:8934
-#: ../src/settings.c:9004 ../src/settings.c:9072
+#: ../src/pref-dialog.c:159 ../src/pref-dialog.c:171 ../src/settings.c:8979
+#: ../src/settings.c:9049 ../src/settings.c:9117
 msgid "Default"
 msgstr "Подразумевано"
 
@@ -2248,52 +2244,52 @@ msgstr "прилагођени tmp_dir садри неисправна слов�
 msgid "custom tmp_dir does not exist - reverting to /tmp"
 msgstr "Путања за прилагођени „tmp_dir“ не постоји па је постављам га на „/tmp“"
 
-#: ../src/settings.c:861 ../src/settings.c:9366
+#: ../src/settings.c:861 ../src/settings.c:9411
 msgid "Ignore _Hide Policy"
 msgstr "занемарујући „_Hide Policy“"
 
-#: ../src/settings.c:868 ../src/settings.c:9449
+#: ../src/settings.c:868 ../src/settings.c:9494
 msgid "Ignore _No Policy"
 msgstr "занемарујући „_No Policy“"
 
-#: ../src/settings.c:878 ../src/settings.c:9991
+#: ../src/settings.c:878 ../src/settings.c:10036
 msgid "_FAQ"
 msgstr "_ЧПП (FAQ)"
 
-#: ../src/settings.c:888 ../src/settings.c:893 ../src/settings.c:10134
-#: ../src/settings.c:10154
+#: ../src/settings.c:888 ../src/settings.c:893 ../src/settings.c:10179
+#: ../src/settings.c:10199
 msgid "_Stop"
 msgstr "Зау_стави"
 
-#: ../src/settings.c:900 ../src/settings.c:10167
+#: ../src/settings.c:900 ../src/settings.c:10212
 msgid "Show _Manager"
 msgstr "_Управљач задатака"
 
-#: ../src/settings.c:907 ../src/settings.c:10172
+#: ../src/settings.c:907 ../src/settings.c:10217
 msgid "Auto-_Hide Manager"
 msgstr "Само_скривање „Управљача задатака“"
 
-#: ../src/settings.c:914 ../src/settings.c:10237
+#: ../src/settings.c:914 ../src/settings.c:10282
 msgid "Err_ors"
 msgstr "Гре_шке"
 
-#: ../src/settings.c:921 ../src/settings.c:10112
+#: ../src/settings.c:921 ../src/settings.c:10157
 msgid "Current Re_main"
 msgstr "Тренутно ос_тало"
 
-#: ../src/settings.c:928 ../src/settings.c:10124
+#: ../src/settings.c:928 ../src/settings.c:10169
 msgid "A_verage Remain"
 msgstr "П_росечно остало"
 
-#: ../src/settings.c:935 ../src/settings.c:10063
+#: ../src/settings.c:935 ../src/settings.c:10108
 msgid "_Folder"
 msgstr "_Директоријум"
 
-#: ../src/settings.c:965 ../src/settings.c:10214
+#: ../src/settings.c:965 ../src/settings.c:10259
 msgid "_Detailed Stats"
 msgstr "_Детаљна статистика"
 
-#: ../src/settings.c:976 ../src/settings.c:9105
+#: ../src/settings.c:976 ../src/settings.c:9150
 msgid "Remo_ve / Eject"
 msgstr "Укло_ни / Избаци"
 
@@ -2301,33 +2297,33 @@ msgstr "Укло_ни / Избаци"
 #. changes of this nature due to defaults no longer being saved
 #. in session file
 #. New > Import >
-#: ../src/settings.c:987 ../src/settings.c:7203 ../src/settings.c:9955
+#: ../src/settings.c:987 ../src/settings.c:7246 ../src/settings.c:10000
 msgid "_Import"
 msgstr "Увез_и"
 
-#: ../src/settings.c:988 ../src/settings.c:10047
+#: ../src/settings.c:988 ../src/settings.c:10092
 msgid "_Task Manager"
 msgstr ""
 
 #. for rename dialog
-#: ../src/settings.c:991 ../src/settings.c:9604
+#: ../src/settings.c:991 ../src/settings.c:9649
 msgid "F_ilename"
 msgstr ""
 
-#: ../src/settings.c:992 ../src/settings.c:9615
+#: ../src/settings.c:992 ../src/settings.c:9660
 msgid "Typ_e"
 msgstr ""
 
-#: ../src/settings.c:993 ../src/settings.c:9619
+#: ../src/settings.c:993 ../src/settings.c:9664
 msgid "Ta_rget"
 msgstr ""
 
-#: ../src/settings.c:994 ../src/settings.c:9623
+#: ../src/settings.c:994 ../src/settings.c:9668
 msgid "Te_mplate"
 msgstr ""
 
 #. General
-#: ../src/settings.c:1088
+#: ../src/settings.c:1095
 msgid ""
 "# SpaceFM Session File\n"
 "\n"
@@ -2337,30 +2333,30 @@ msgid ""
 "\n"
 msgstr "# Датотека сесије програма SpaceFM\n\n# ОВУ ДАТОТЕКУ НЕ МОЖЕТЕ МЕЊАТИ - она ће бити прочитана и ПРЕБРИСАНА\n\n# Ако уклоните све датотеке сесије*, SpaceFM ће их створити према подразумеваном подешавању.\n\n"
 
-#: ../src/settings.c:1260
+#: ../src/settings.c:1267
 #, c-format
 msgid "Error saving file"
 msgstr "Не могу да сачувам датотеку"
 
-#: ../src/settings.c:1344
+#: ../src/settings.c:1351
 #, c-format
 msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr "SpaceFM грешка: Аутоматско чување датотеке сесије ( %s ) није мочуће\n"
 
-#: ../src/settings.c:2741
+#: ../src/settings.c:2784
 msgid ""
 "Error reading root settings from /etc/spacefm/  Commands run as root may "
 "present a security risk"
 msgstr "Не могу да прочитам системске поставке из „/etc/spacefm/“, па наредбе покренуте са „root“ дозволама представљају сигурносни ризик"
 
-#: ../src/settings.c:2743
+#: ../src/settings.c:2786
 msgid ""
 "No root settings found in /etc/spacefm/  Setting a root editor in "
 "Preferences should remove this warning on startup.   Otherwise commands run "
 "as root may present a security risk."
 msgstr "Нема системских поставки у „/etc/spacefm/“. Постављањем „root“ уређивача у „Преглед|Поставке|Напредно“ ће уклонити ово упозорење при покретању програма. У супротном, наредбе покренуте са „root“ дозволама представљају сигурносни ризик."
 
-#: ../src/settings.c:3650
+#: ../src/settings.c:3693
 #, c-format
 msgid ""
 "An error occured copying command files\n"
@@ -2368,11 +2364,11 @@ msgid ""
 "%s"
 msgstr "Дошло је до грешке у умножавању наредбених датотека\n\n%s"
 
-#: ../src/settings.c:3652 ../src/settings.c:3687
+#: ../src/settings.c:3695 ../src/settings.c:3730
 msgid "Copy Command Error"
 msgstr "Умножи грешку наредбе"
 
-#: ../src/settings.c:3685
+#: ../src/settings.c:3728
 #, c-format
 msgid ""
 "An error occured copying command data files\n"
@@ -2380,12 +2376,12 @@ msgid ""
 "%s"
 msgstr "Дошло је до грешке у копирању наредбених података\n\n%s"
 
-#: ../src/settings.c:4058
+#: ../src/settings.c:4101
 #, c-format
 msgid "Error reading plugin file %s"
 msgstr "Дошло је до грешке при читању датотеке додатка %s"
 
-#: ../src/settings.c:4136
+#: ../src/settings.c:4179
 #, c-format
 msgid ""
 "The imported plugin folder does not contain a valid plugin.\n"
@@ -2393,7 +2389,7 @@ msgid ""
 "(%s/)"
 msgstr "Увежени директоријум додатка не садржи исправан додатак.\n\n(%s/)"
 
-#: ../src/settings.c:4176
+#: ../src/settings.c:4219
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2401,7 +2397,7 @@ msgid ""
 "Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr "Додатак „%s“ је умножен у оставу за дизајн.  Користите Преглед|Дизајн мод да би га убацили у мени.\n\nОвај додатак се неће појавити под ставком „Додаци“ док га не инсталирате."
 
-#: ../src/settings.c:4178
+#: ../src/settings.c:4221
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2411,7 +2407,7 @@ msgid ""
 "If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr "Додатак „%s“ је умножен у оставу за дизајн.  Користите Преглед|Дизајн мод да би га убацили у мени.\n\nОвај додатак се неће појавити под ставком „Додаци“ док га не инсталирате. По инсталацији ће имати дозволе обичног корисника (не администраторске).\n\nАко додтак садржи „su“ програм, пожељно је да се, системске безбедности ради, инсталира и покреће само из ставке менија „Додаци“."
 
-#: ../src/settings.c:4209
+#: ../src/settings.c:4252
 #, c-format
 msgid ""
 "Uninstall the '%s' plugin?\n"
@@ -2419,102 +2415,102 @@ msgid ""
 "( %s )"
 msgstr "Уклони '%s' додатак?\n\n( %s )"
 
-#: ../src/settings.c:4212 ../src/settings.c:4220
+#: ../src/settings.c:4255 ../src/settings.c:4263
 msgid "Uninstall Plugin"
 msgstr "Уклони додатак"
 
 #. task
-#: ../src/settings.c:4257
+#: ../src/settings.c:4300
 msgid "Install Plugin"
 msgstr "Инсталирај додатак"
 
-#: ../src/settings.c:4460
+#: ../src/settings.c:4503
 msgid "Save As Plugin File"
 msgstr "Сачувај као датотеку додатка"
 
 #. tar and delete tmp files
 #. task
-#: ../src/settings.c:4528
+#: ../src/settings.c:4571
 msgid "Export Plugin"
 msgstr "Извези додатак"
 
-#: ../src/settings.c:4562
+#: ../src/settings.c:4605
 msgid "Export Error"
 msgstr "Извези грешку"
 
-#: ../src/settings.c:4563
+#: ../src/settings.c:4606
 msgid "Unable to create temporary files"
 msgstr "Онемогући стварање привремене датотеке"
 
-#: ../src/settings.c:4684
+#: ../src/settings.c:4727
 msgid "Change Menu Name"
 msgstr "Именовање ставке менија"
 
-#: ../src/settings.c:5124
+#: ../src/settings.c:5167
 msgid "Editor Not Set"
 msgstr "Едитор није подешен"
 
-#: ../src/settings.c:5125
+#: ../src/settings.c:5168
 msgid "Please set your editor in View|Preferences|Advanced"
 msgstr "Подесите жељени уређивач у „Преглед|Поставке|Напредно“"
 
-#: ../src/settings.c:5135
+#: ../src/settings.c:5178
 msgid "Root Editor Not Set"
 msgstr "„Root“ едитор није подешен"
 
-#: ../src/settings.c:5136
+#: ../src/settings.c:5179
 msgid "Please set root's editor in View|Preferences|Advanced"
 msgstr "Подесите ваш „root“ уређивач у „Преглед|Подставке|Напредно“"
 
 #. task
-#: ../src/settings.c:5157
+#: ../src/settings.c:5200
 #, c-format
 msgid "Edit %s"
 msgstr "Измени %s"
 
-#: ../src/settings.c:5337
+#: ../src/settings.c:5380
 msgid "User's Manual Not Found"
 msgstr "Корисничко упутство није пронађено"
 
-#: ../src/settings.c:5339
+#: ../src/settings.c:5382
 msgid ""
 "Read the user's manual online?\n"
 "\n"
 "The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr "Читајте корисничко упутство преко мреже?\n\nУмножак SpaceFM корисничког упутства није пронађен на рачунару. Кликните „Да“ да би га читали преко мреже, или „Не“ али онда подесите исправну путању до њега (у Помоћ|Опција|Локација)."
 
-#: ../src/settings.c:5370
+#: ../src/settings.c:5413
 msgid "Help Not Available"
 msgstr "Помоћ није доступна"
 
-#: ../src/settings.c:5370
+#: ../src/settings.c:5413
 msgid "This plugin does not include a README file."
 msgstr "Прикључак не у укључује датотеку ПРОЧИТАЈ МЕ."
 
-#: ../src/settings.c:5372
+#: ../src/settings.c:5415
 msgid "Creation Failed"
 msgstr "Стварање није успело"
 
-#: ../src/settings.c:5372
+#: ../src/settings.c:5415
 msgid "An error occured creating a README file for this command."
 msgstr "Дошло је до грешке при стварању датотеке ПРОЧИТАЈ МЕ за ову наредбу"
 
-#: ../src/settings.c:5394
+#: ../src/settings.c:5437
 msgid "Manual Opened ?"
 msgstr "Упутство отворено?"
 
-#: ../src/settings.c:5394
+#: ../src/settings.c:5437
 msgid ""
 "The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr "SpaceFM корисничко упутство требало би да се отвори у вашем читачу. Ако се није отворило или ако користите другачији веб читач, подесите га у Помоћ|Oпције|Читач.\n\nОва порука се неће поновити."
 
-#: ../src/settings.c:5413
+#: ../src/settings.c:5456
 msgid "( none )"
 msgstr "(ништа)"
 
-#: ../src/settings.c:5536
+#: ../src/settings.c:5579
 #, c-format
 msgid ""
 "\t%s\n"
@@ -2525,61 +2521,61 @@ msgid ""
 "Press a different key or click Set to replace the current key assignment."
 msgstr ""
 
-#: ../src/settings.c:5547
+#: ../src/settings.c:5590
 #, c-format
 msgid ""
 "\t%s\n"
 "\tKeycode: %#4x  Modifier: %#x"
 msgstr "\t%s\n\tКод тастера: %#4x  Измењивач: %#x"
 
-#: ../src/settings.c:5575
+#: ../src/settings.c:5618
 #, c-format
 msgid ""
 "Press your key combination for menu item '%s' then click Set.  To remove the"
 " current key assignment, click Unset."
 msgstr "Притисните жељену комбинацију тастера да би поставили пречицу за ставку менија »%s«\nКликните на „Постави“ за постављање пречице или на „Уклони“ за њено уклањање."
 
-#: ../src/settings.c:5587
+#: ../src/settings.c:5630
 msgid "Cancel"
 msgstr "Откажи"
 
-#: ../src/settings.c:5593
+#: ../src/settings.c:5636
 msgid "Unset"
 msgstr "Уклони"
 
-#: ../src/settings.c:5606
+#: ../src/settings.c:5649
 msgid "Set"
 msgstr "Постави"
 
-#: ../src/settings.c:5620
+#: ../src/settings.c:5663
 msgid "Set Key"
 msgstr "Поставите пречицу са тастатуре"
 
-#: ../src/settings.c:5700
+#: ../src/settings.c:5743
 msgid "Change Icon"
 msgstr "Промени икону"
 
 #. line
-#: ../src/settings.c:5726 ../src/settings.c:5794
+#: ../src/settings.c:5769 ../src/settings.c:5837
 msgid "Edit Command Line"
 msgstr "Измени командну линију"
 
-#: ../src/settings.c:5820
+#: ../src/settings.c:5863
 msgid "Choose Custom Executable"
 msgstr "Изабери извршно"
 
-#: ../src/settings.c:5831
+#: ../src/settings.c:5874
 msgid "Run As User"
 msgstr "Покрени као корисник"
 
-#: ../src/settings.c:5831
+#: ../src/settings.c:5874
 msgid ""
 "Run this command as username:\n"
 "\n"
 "( Leave blank for current user )"
 msgstr "Покрени ову наредбу као корисничко_име:\n\n( Остави празно за текућег корисника )"
 
-#: ../src/settings.c:5839
+#: ../src/settings.c:5882
 #, c-format
 msgid ""
 "You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2587,19 +2583,19 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
-#: ../src/settings.c:5840
+#: ../src/settings.c:5883
 msgid "New Context Command"
 msgstr "Нова контекстна наредба"
 
-#: ../src/settings.c:5851
+#: ../src/settings.c:5894
 msgid "Set Menu Name"
 msgstr "Подеси име менија"
 
-#: ../src/settings.c:5887 ../src/item-prop.c:1206
+#: ../src/settings.c:5930 ../src/item-prop.c:1209
 msgid "Choose Folder"
 msgstr "Одаберите директоријум"
 
-#: ../src/settings.c:5933
+#: ../src/settings.c:5976
 #, c-format
 msgid ""
 "You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2607,30 +2603,30 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr ""
 
-#: ../src/settings.c:5933
+#: ../src/settings.c:5976
 msgid "(none)"
 msgstr "(ништа)"
 
-#: ../src/settings.c:5942
+#: ../src/settings.c:5985
 msgid "Set Submenu Name"
 msgstr "Подеси име подменија"
 
-#: ../src/settings.c:5942
+#: ../src/settings.c:5985
 msgid ""
 "Enter submenu name:\n"
 "\n"
 "Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr "Унесите име за подмени:\n\nСтављање подвлаке (_) испред карактера у имену наглашава пречицу до ставке по жељи."
 
-#: ../src/settings.c:5942
+#: ../src/settings.c:5985
 msgid "New _Submenu"
 msgstr "Нови _подмени"
 
-#: ../src/settings.c:6116
+#: ../src/settings.c:6159
 msgid "( no name )"
 msgstr "(безимен)"
 
-#: ../src/settings.c:6119
+#: ../src/settings.c:6162
 #, c-format
 msgid ""
 "Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n"
@@ -2638,7 +2634,7 @@ msgid ""
 "This action will delete all settings and files associated with these items."
 msgstr ""
 
-#: ../src/settings.c:6124
+#: ../src/settings.c:6167
 #, c-format
 msgid ""
 "Permanently remove the '%s' item?\n"
@@ -2646,19 +2642,19 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr ""
 
-#: ../src/settings.c:6138
+#: ../src/settings.c:6181
 msgid "Confirm Remove"
 msgstr "Потврдите уклањање"
 
-#: ../src/settings.c:6162 ../src/item-prop.c:700 ../src/item-prop.c:712
+#: ../src/settings.c:6205 ../src/item-prop.c:700 ../src/item-prop.c:712
 msgid "Are you sure?"
 msgstr "Да ли сте сигурни?"
 
-#: ../src/settings.c:6163 ../src/settings.c:6167 ../src/settings.c:6171
+#: ../src/settings.c:6206 ../src/settings.c:6210 ../src/settings.c:6214
 msgid "Dialog Message"
 msgstr "Дијалог поруке"
 
-#: ../src/settings.c:6163 ../src/settings.c:6167 ../src/settings.c:6171
+#: ../src/settings.c:6206 ../src/settings.c:6210 ../src/settings.c:6214
 msgid ""
 "Enter the message to be displayed in this dialog:\n"
 "\n"
@@ -2669,23 +2665,23 @@ msgstr "Унесите поруку за приказ у овом дијалог
 
 #. Show Tool
 #. dev settings
-#: ../src/settings.c:6799 ../src/settings.c:9332
+#: ../src/settings.c:6842 ../src/settings.c:9377
 msgid "S_how"
 msgstr "При_кажи"
 
 #. Cut
 #. EDIT
-#: ../src/settings.c:7131 ../src/settings.c:10624
+#: ../src/settings.c:7174 ../src/settings.c:10669
 msgid "Cu_t"
 msgstr "_Исеци"
 
 #. Copy
-#: ../src/settings.c:7138 ../src/settings.c:9631 ../src/settings.c:10627
+#: ../src/settings.c:7181 ../src/settings.c:9676 ../src/settings.c:10672
 msgid "_Copy"
 msgstr "_Умножи"
 
 #. Paste
-#: ../src/settings.c:7145 ../src/settings.c:10630
+#: ../src/settings.c:7188 ../src/settings.c:10675
 msgid "_Paste"
 msgstr "У_баци"
 
@@ -2694,96 +2690,95 @@ msgstr "У_баци"
 #. GDK_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 #. Remove
 #. list buttons
-#: ../src/settings.c:7155 ../src/ptk/ptk-file-menu.c:2127
-#: ../src/item-prop.c:1697
+#: ../src/settings.c:7198 ../src/ptk/ptk-file-menu.c:2200
+#: ../src/item-prop.c:1703
 msgid "_Remove"
 msgstr "_Уклони"
 
 #. Export
-#: ../src/settings.c:7162
+#: ../src/settings.c:7205
 msgid "E_xport"
 msgstr "И_звези"
 
 #. // New submenu
-#: ../src/settings.c:7168 ../src/settings.c:9574 ../src/settings.c:9887
-#: ../src/settings.c:10453
+#: ../src/settings.c:7211 ../src/settings.c:9619 ../src/settings.c:9932
+#: ../src/settings.c:10498
 msgid "_New"
 msgstr "_Ново"
 
 #. New > Bookmark
-#: ../src/settings.c:7181 ../src/settings.c:9137
+#: ../src/settings.c:7224 ../src/settings.c:9182
 msgid "_Bookmark"
 msgstr "О_бележивачи"
 
 #. New > Application
-#: ../src/settings.c:7185
+#: ../src/settings.c:7228
 msgid "_Application"
 msgstr "_Програм"
 
 #. New > Command
-#: ../src/settings.c:7189
+#: ../src/settings.c:7232
 msgid "_Command"
 msgstr "_Наредба"
 
 #. New > Submenu
-#: ../src/settings.c:7195
+#: ../src/settings.c:7238
 msgid "Sub_menu"
 msgstr "Под_мени"
 
 #. New > Separator
-#: ../src/settings.c:7199
+#: ../src/settings.c:7242
 msgid "S_eparator"
 msgstr "С_епаратор"
 
-#: ../src/settings.c:7218 ../src/settings.c:9948 ../src/settings.c:9964
+#: ../src/settings.c:7261 ../src/settings.c:9993 ../src/settings.c:10009
 msgid "_URL"
 msgstr "_места"
 
 #. Key
-#: ../src/settings.c:7233
+#: ../src/settings.c:7276
 msgid "_Key Shortcut"
 msgstr "Пречица на _тастатури"
 
 #. Properties
-#: ../src/settings.c:7241 ../src/settings.c:9323
+#: ../src/settings.c:7284 ../src/settings.c:9368
 msgid "_Properties"
 msgstr "_Особине"
 
-#: ../src/settings.c:7632
+#: ../src/settings.c:7675
 msgid "Set Icon"
 msgstr "Подеси икону"
 
-#: ../src/settings.c:7988 ../src/settings.c:9580 ../src/settings.c:10648
+#: ../src/settings.c:8033 ../src/settings.c:9625 ../src/settings.c:10693
 msgid "_Edit"
 msgstr "_Уреди"
 
-#: ../src/settings.c:7998 ../src/settings.c:8211 ../src/settings.c:10377
-#: ../src/settings.c:10502
+#: ../src/settings.c:8043 ../src/settings.c:8256 ../src/settings.c:10422
+#: ../src/settings.c:10547
 msgid "_Default"
 msgstr "_Подразумевано"
 
-#: ../src/settings.c:8038
+#: ../src/settings.c:8083
 msgid "Your input is invalid because it contains linefeeds"
 msgstr "Ваш улаз је оштећен јер садржи линије извора"
 
-#: ../src/settings.c:8214
+#: ../src/settings.c:8259
 msgid "_OK"
 msgstr "_ОК"
 
-#: ../src/settings.c:8350
+#: ../src/settings.c:8395
 msgid "_Unset"
 msgstr "_Измени подешавање"
 
-#: ../src/settings.c:8845
+#: ../src/settings.c:8890
 msgid "_Left Toolbar"
 msgstr "_Лева трака алата"
 
-#: ../src/settings.c:8849
+#: ../src/settings.c:8894
 msgid "_Right Toolbar"
 msgstr "_Десна трака алата"
 
-#: ../src/settings.c:8853 ../src/settings.c:10892 ../src/settings.c:11008
-#: ../src/settings.c:11136 ../src/settings.c:11264
+#: ../src/settings.c:8898 ../src/settings.c:10944
 msgid "_Side Toolbar"
 msgstr "_Бочна трака алата"
 
@@ -2792,187 +2787,187 @@ msgstr "_Бочна трака алата"
 #. xset_set( "panel_top", "lbl", _("_Top") );
 #. xset_set( "panel_bottom", "lbl", _("_Bottom") );
 #. 
-#: ../src/settings.c:8857 ../src/settings.c:8860 ../src/settings.c:9789
-#: ../src/settings.c:10748
+#: ../src/settings.c:8902 ../src/settings.c:8905 ../src/settings.c:9834
+#: ../src/settings.c:10793
 msgid "_Hide"
 msgstr "_Сакриј"
 
-#: ../src/settings.c:8863
+#: ../src/settings.c:8908
 msgid "Configure Toolbar"
 msgstr "Подеси траку алата"
 
-#: ../src/settings.c:8867
+#: ../src/settings.c:8912
 msgid "H_elp"
 msgstr "П_омоћ"
 
 #. toolitems left
 #. toolitems right
 #. toolitems side
-#: ../src/settings.c:8871 ../src/settings.c:8941 ../src/settings.c:9010
+#: ../src/settings.c:8916 ../src/settings.c:8986 ../src/settings.c:9055
 msgid "Tree"
 msgstr "Стабло"
 
-#: ../src/settings.c:8877 ../src/settings.c:8947 ../src/settings.c:9016
+#: ../src/settings.c:8922 ../src/settings.c:8992 ../src/settings.c:9061
 msgid "Bookmarks"
 msgstr "Обележивачи"
 
-#: ../src/settings.c:8883 ../src/settings.c:8953 ../src/settings.c:9022
+#: ../src/settings.c:8928 ../src/settings.c:8998 ../src/settings.c:9067
 msgid "Devices"
 msgstr "Уређаји"
 
-#: ../src/settings.c:8889 ../src/settings.c:8959 ../src/settings.c:9028
+#: ../src/settings.c:8934 ../src/settings.c:9004 ../src/settings.c:9073
 msgid "New Tab"
 msgstr "Нови лист"
 
-#: ../src/settings.c:8894 ../src/settings.c:8964 ../src/settings.c:9033
+#: ../src/settings.c:8939 ../src/settings.c:9009 ../src/settings.c:9078
 msgid "New Tab Here"
 msgstr "Нови језичак овде"
 
-#: ../src/settings.c:8899 ../src/settings.c:8969 ../src/settings.c:9038
+#: ../src/settings.c:8944 ../src/settings.c:9014 ../src/settings.c:9083
 msgid "Back"
 msgstr "Назад"
 
-#: ../src/settings.c:8904 ../src/settings.c:8974 ../src/settings.c:9043
+#: ../src/settings.c:8949 ../src/settings.c:9019 ../src/settings.c:9088
 msgid "Back Menu"
 msgstr "Назад мени"
 
-#: ../src/settings.c:8909 ../src/settings.c:8979 ../src/settings.c:9048
+#: ../src/settings.c:8954 ../src/settings.c:9024 ../src/settings.c:9093
 msgid "Forward"
 msgstr "Напред"
 
-#: ../src/settings.c:8914 ../src/settings.c:8984 ../src/settings.c:9053
+#: ../src/settings.c:8959 ../src/settings.c:9029 ../src/settings.c:9098
 msgid "Forward Menu"
 msgstr "Напред мени"
 
-#: ../src/settings.c:8919 ../src/settings.c:8989 ../src/settings.c:9058
+#: ../src/settings.c:8964 ../src/settings.c:9034 ../src/settings.c:9103
 msgid "Up"
 msgstr "Горе"
 
-#: ../src/settings.c:8924 ../src/settings.c:8994 ../src/settings.c:9063
+#: ../src/settings.c:8969 ../src/settings.c:9039 ../src/settings.c:9108
 msgid "Refresh"
 msgstr "Освежи"
 
-#: ../src/settings.c:8929 ../src/settings.c:8999 ../src/settings.c:9068
+#: ../src/settings.c:8974 ../src/settings.c:9044 ../src/settings.c:9113
 msgid "Home"
 msgstr "Почетна"
 
-#: ../src/settings.c:9077
+#: ../src/settings.c:9122
 msgid "Mount"
 msgstr "Монтирај"
 
-#: ../src/settings.c:9081
+#: ../src/settings.c:9126
 msgid "Mount & Open"
 msgstr "Монтирај и отвори"
 
-#: ../src/settings.c:9085
+#: ../src/settings.c:9130
 msgid "Remove"
 msgstr "Уклони"
 
-#: ../src/settings.c:9109 ../src/settings.c:9161
+#: ../src/settings.c:9154 ../src/settings.c:9206
 #: ../src/ptk/ptk-location-view.c:3046 ../src/ptk/ptk-location-view.c:3357
 msgid "_Unmount"
 msgstr "_Демонтирај"
 
-#: ../src/settings.c:9113
+#: ../src/settings.c:9158
 msgid "Re_load"
 msgstr "Поново _учитај"
 
-#: ../src/settings.c:9117
+#: ../src/settings.c:9162
 msgid "_Sync"
 msgstr "У_склади"
 
-#: ../src/settings.c:9121 ../src/settings.c:9586 ../src/settings.c:10361
+#: ../src/settings.c:9166 ../src/settings.c:9631 ../src/settings.c:10406
 #: ../src/find-files.c:275
 msgid "_Open"
 msgstr "_Отвори"
 
-#: ../src/settings.c:9125
+#: ../src/settings.c:9170
 msgctxt "Devices|Open|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:9129 ../src/settings.c:9156
+#: ../src/settings.c:9174 ../src/settings.c:9201
 #: ../src/ptk/ptk-location-view.c:3039 ../src/ptk/ptk-location-view.c:3351
 msgid "_Mount"
 msgstr "_Монтирај"
 
-#: ../src/settings.c:9133
+#: ../src/settings.c:9178
 msgid "Re_/mount"
 msgstr "Поново _/монтирај"
 
-#: ../src/settings.c:9150 ../src/settings.c:10813
+#: ../src/settings.c:9195 ../src/settings.c:10858
 msgid "_Root"
 msgstr "Као „_Root“..."
 
-#: ../src/settings.c:9166
+#: ../src/settings.c:9211
 msgid "_Label"
 msgstr "_Ознака"
 
-#: ../src/settings.c:9216
+#: ../src/settings.c:9261
 msgid "_Check"
 msgstr "_Провери"
 
-#: ../src/settings.c:9220
+#: ../src/settings.c:9265
 msgid "_Edit fstab"
 msgstr "Ур_еди „fstab“"
 
-#: ../src/settings.c:9224
+#: ../src/settings.c:9269
 msgid "Edit u_devil.conf"
 msgstr "Уреди „u_devil.conf“"
 
-#: ../src/settings.c:9228
+#: ../src/settings.c:9273
 msgid "_Format"
 msgstr "_Формат"
 
-#: ../src/settings.c:9288
+#: ../src/settings.c:9333
 msgid "_Backup"
 msgstr "_Резервна копија"
 
-#: ../src/settings.c:9310
+#: ../src/settings.c:9355
 msgid "_Restore"
 msgstr "_Поврати"
 
-#: ../src/settings.c:9315
+#: ../src/settings.c:9360
 msgid "_From File"
 msgstr "_Из датотеке"
 
-#: ../src/settings.c:9320 ../src/settings.c:9686
+#: ../src/settings.c:9365 ../src/settings.c:9731
 msgid "File _Info"
 msgstr "Подаци о _датотеци"
 
-#: ../src/settings.c:9326
+#: ../src/settings.c:9371
 msgid "Setti_ngs"
 msgstr "Подеша_вања..."
 
-#: ../src/settings.c:9337
+#: ../src/settings.c:9382
 msgid "_Internal Drives"
 msgstr "_унутрашње дискове"
 
-#: ../src/settings.c:9342
+#: ../src/settings.c:9387
 msgid "_Empty Drives"
 msgstr "_празне дискове"
 
-#: ../src/settings.c:9347
+#: ../src/settings.c:9392
 msgid "_Partition Tables"
 msgstr "_табеле партиција"
 
-#: ../src/settings.c:9351
+#: ../src/settings.c:9396
 msgid "Mounted _Networks"
 msgstr "монтиране _мреже"
 
-#: ../src/settings.c:9356
+#: ../src/settings.c:9401
 msgid "Mounted _Files"
 msgstr "монтиране _датотеке"
 
-#: ../src/settings.c:9361
+#: ../src/settings.c:9406
 msgid "_Volumes..."
 msgstr "_дискове..."
 
-#: ../src/settings.c:9362
+#: ../src/settings.c:9407
 msgid "Show/Hide Volumes"
 msgstr "Прикажи/Сакриј дискове"
 
-#: ../src/settings.c:9363
+#: ../src/settings.c:9408
 msgid ""
 "To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -2983,15 +2978,15 @@ msgid ""
 "\n"
 msgstr "Занемарвши остала подешавања, можете приказати/скрити медије наводећи уређај, ознаку медија или ИБ уређаја у размаком-одвојеној листи испод.\n\nНпр.:  +/dev/sdd1 -Ознака са размаком +ata-OCZ-part4\nКао резултат имамо: /dev/sdd1 и OCZ уређај ће се приказати, а медиј са ознаком \"Ознака са размаком\"  не.\n\nЗнак плус и минус морају бити непосредно пре уноса који, опет, морају бити раздвојени размаком. Величина слова у листи је важна.\n\n"
 
-#: ../src/settings.c:9370
+#: ../src/settings.c:9415
 msgid "_Display Name"
 msgstr "уређивач за приказ _имена"
 
-#: ../src/settings.c:9372
+#: ../src/settings.c:9417
 msgid "Set Display Name Format"
 msgstr "Подесите облик приказа имена"
 
-#: ../src/settings.c:9373
+#: ../src/settings.c:9418
 #, c-format
 msgid ""
 "Enter device display name format:\n"
@@ -3005,39 +3000,39 @@ msgid ""
 "\t%%i\tdevice ID\n"
 msgstr "Подесите облик приказа имена и особина уређаја.\n\nМожете користити:\n\t- %%v\tза име уређаја (нпр. sdd1)\n\t- %%s\tза укупну величину (нпр. 800G)\n\t- %%t\tза врсту система датотека (нпр. ext4)\n\t- %%l\tза ознаку медија (нпр. Ознака or [без медија])\n\t- %%m\tако је монтиран, за тачку монтирања, или ---\n\t- %%i\tИБ урећаја\n"
 
-#: ../src/settings.c:9379
+#: ../src/settings.c:9424
 msgid "_Auto Mount"
 msgstr "С_ам монтирај..."
 
-#: ../src/settings.c:9384
+#: ../src/settings.c:9429
 msgid "Mount _Optical"
 msgstr "_оптичке уређаје"
 
-#: ../src/settings.c:9389
+#: ../src/settings.c:9434
 msgid "_Mount Removable"
 msgstr "из_мењиве уређаје"
 
-#: ../src/settings.c:9394
+#: ../src/settings.c:9439
 msgid "Open _Tab"
 msgstr "и отвори у _језичку"
 
-#: ../src/settings.c:9399
+#: ../src/settings.c:9444
 msgid "_Unmount On Exit"
 msgstr "и _одмонтирај на излазу"
 
-#: ../src/settings.c:9407
+#: ../src/settings.c:9452
 msgid "Auto _Run"
 msgstr "Само-покрени..."
 
-#: ../src/settings.c:9413
+#: ../src/settings.c:9458
 msgid "On _Mount"
 msgstr "из_мењиве дискове..."
 
-#: ../src/settings.c:9415
+#: ../src/settings.c:9460
 msgid "Auto Run On Mount"
 msgstr "Само-покретање програма по само-монтирању измењивих дискова"
 
-#: ../src/settings.c:9416
+#: ../src/settings.c:9461
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
@@ -3048,15 +3043,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по само-монтирању измењивог диска или диска са подацима:\n\nМожете користити:\n\t%%v\tза уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9419
+#: ../src/settings.c:9464
 msgid "On _Audio CD"
 msgstr "_звучни диск..."
 
-#: ../src/settings.c:9421
+#: ../src/settings.c:9466
 msgid "Auto Run On Audio CD"
 msgstr "Само-покретање редродукције по убацивању звучног диска "
 
-#: ../src/settings.c:9422
+#: ../src/settings.c:9467
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
@@ -3067,15 +3062,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по убацивању звучног диска у погодан уређај:\n\nМожете користити:\n\t%%v\tза уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9425
+#: ../src/settings.c:9470
 msgid "On _Video DVD"
 msgstr "_видео диск..."
 
-#: ../src/settings.c:9427
+#: ../src/settings.c:9472
 msgid "Auto Run On Video DVD"
 msgstr "Само-покретање редродукције по убацивању видео диска"
 
-#: ../src/settings.c:9428
+#: ../src/settings.c:9473
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
@@ -3086,15 +3081,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по само-монтирању видео диска (ДВД и сл.):\n\nМожете користити:\n\t%%v\tза уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9431
+#: ../src/settings.c:9476
 msgid "On _Insert"
 msgstr "по _убацивању медија..."
 
-#: ../src/settings.c:9433
+#: ../src/settings.c:9478
 msgid "Auto Run On Insert"
 msgstr "Само-покретање по убацивању било ког медија"
 
-#: ../src/settings.c:9434
+#: ../src/settings.c:9479
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is inserted:\n"
@@ -3105,15 +3100,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по убацивању било ког медија у уређај:\n\nМожете користити:\n\t%%v\tза додат уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9437
+#: ../src/settings.c:9482
 msgid "On _Unmount"
 msgstr "по _демонтирању..."
 
-#: ../src/settings.c:9439
+#: ../src/settings.c:9484
 msgid "Auto Run On Unmount"
 msgstr "Само-покретање по демонтирању"
 
-#: ../src/settings.c:9440
+#: ../src/settings.c:9485
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
@@ -3124,15 +3119,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по демонтирању уређаја на било који начин:\n\nМожете користити:\n\t%%v\tза демонтиран уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9443
+#: ../src/settings.c:9488
 msgid "On _Remove"
 msgstr "по _уклањању..."
 
-#: ../src/settings.c:9445
+#: ../src/settings.c:9490
 msgid "Auto Run On Remove"
 msgstr "Само-покретање по уклањању"
 
-#: ../src/settings.c:9446
+#: ../src/settings.c:9491
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
@@ -3143,15 +3138,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по уклањању уређаја (не значи и избацивање медија):\n\nМожете користити:\n\t%%v\tза уклоњен уређај (нпр. /dev/sda1)\n\t%%l\tза ознаку уређаја\n\t%%m\tза тачку монтирања уређаја (нпр. /media/disk)"
 
-#: ../src/settings.c:9453
+#: ../src/settings.c:9498
 msgid "Mount _Volumes..."
 msgstr "_дискове..."
 
-#: ../src/settings.c:9454
+#: ../src/settings.c:9499
 msgid "Auto-Mount Volumes"
 msgstr "Само-монтирање дискова"
 
-#: ../src/settings.c:9455
+#: ../src/settings.c:9500
 msgid ""
 "To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3162,11 +3157,11 @@ msgid ""
 "\n"
 msgstr "Занемарвши остала подешавања, можете спречити само-монтирање неких медије наводећи уређај, ознаку медија или ИБ уређаја у размаком-одвојеној листи испод.\n\nНпр.:  +/dev/sdd1 -Ознака са размаком +ata-OCZ-part4\nКао резултат имамо: /dev/sdd1 и OCZ уређај ће бити само-монтиран по откривању, а медиј са ознаком \"Ознака са размаком\"  не.\n\nЗнак плус и минус морају бити непосредно пре уноса који, опет, морају бити раздвојени размаком. Величина слова у листи је важна.\n\n"
 
-#: ../src/settings.c:9458
+#: ../src/settings.c:9503
 msgid "_Mount Options"
 msgstr "_Опције монтирања"
 
-#: ../src/settings.c:9459
+#: ../src/settings.c:9504
 msgid ""
 "Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
@@ -3178,15 +3173,15 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Унесите испод запетом или размаком-раздвојен списак подразумеваних опција код монтирања (примениће се на сва монтирања).\n\n Осим уобичајених опција, можете постављати или уклањати опције за одређену врсту система датотека користећи образац: ОПЦИЈА+ВРСТА_СИСТЕМА_ДАТОТЕКА или ОПЦИЈА-ВРСТА_СИСТЕМА_ДАТОТЕКА.\n\nНпр.:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nЗа резултат имамо: „nosuid“ и „noatime“ се односи на све врсте система датотека, „sync“ само на vfat и ntfs, а на ext4 се не односи „noatime“.\nНАПОМЕНА:\nНеке опције (нпр. nosuid), могу бити додате од стране програма, чак и ако их нисте навели овде. Опције из „fstab“ датотеке имају предност, а програм „pmount“ игнорише опције постављене овде."
 
-#: ../src/settings.c:9461
+#: ../src/settings.c:9506
 msgid "Default Mount Options"
 msgstr "Подразумеване опције код монтирања"
 
-#: ../src/settings.c:9469
+#: ../src/settings.c:9514
 msgid "Re/mount With Options"
 msgstr "Поново/монтирај са опцијама"
 
-#: ../src/settings.c:9470
+#: ../src/settings.c:9515
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
@@ -3198,11 +3193,11 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "(Де)Монтираћу уређај примењујући доње опције.\n\nОсим уобичајених опција, можете постављати или уклањати опције за одређену врсту система датотека користећи образац: ОПЦИЈА+ВРСТА_СИСТЕМА_ДАТОТЕКА или ОПЦИЈА-ВРСТА_СИСТЕМА_ДАТОТЕКА.\n\nНпр.:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nЗа резултат имамо: „nosuid“ и „noatime“ се односи на све врсте система датотека, „sync“ само на vfat и ntfs, а на ext4 се не односи „noatime“.\nНАПОМЕНА:\nНеке опције (нпр. nosuid), могу бити додате од стране програма, чак и ако их нисте навели овде. Опције из „fstab“ датотеке имају предност, а програм „pmount“ игнорише опције постављене овде."
 
-#: ../src/settings.c:9474
+#: ../src/settings.c:9519
 msgid "Mount _Command"
 msgstr "Наредба за _монтирање"
 
-#: ../src/settings.c:9475
+#: ../src/settings.c:9520
 #, c-format
 msgid ""
 "Enter the command to mount a device:\n"
@@ -3219,15 +3214,15 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Унесите наредбу за монтирање уређаја:\n\nМожете користити:\n\t%%v\tза датотеку уређаја (нпр. /dev/sda5)\n\t%%o\tза медиј посебне опције монтирања\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nЗа подразумеване радње оставити празно."
 
-#: ../src/settings.c:9477
+#: ../src/settings.c:9522
 msgid "Mount Command"
 msgstr "Наредба за монтирање уређаја"
 
-#: ../src/settings.c:9481
+#: ../src/settings.c:9526
 msgid "_Unmount Command"
 msgstr "Наредба за _демонтирање"
 
-#: ../src/settings.c:9482
+#: ../src/settings.c:9527
 #, c-format
 msgid ""
 "Enter the command to unmount a device:\n"
@@ -3243,267 +3238,258 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Унесите наредбу за демонтирање уређаја:\n\nМожете користити:\n\t%%v\tза датотеку уређаја (нпр. /dev/sda5)\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nЗа подразумеване радње оставити празно."
 
-#: ../src/settings.c:9484
+#: ../src/settings.c:9529
 msgid "Unmount Command"
 msgstr "Наредба за демонтирање уређаја"
 
-#: ../src/settings.c:9501 ../src/settings.c:9596 ../src/settings.c:10940
-#: ../src/settings.c:10950 ../src/settings.c:11061 ../src/settings.c:11072
-#: ../src/settings.c:11189 ../src/settings.c:11200 ../src/settings.c:11317
-#: ../src/settings.c:11328
+#: ../src/settings.c:9546 ../src/settings.c:9641 ../src/settings.c:10992
+#: ../src/settings.c:11002
 msgid "_Icon"
 msgstr "_Икона"
 
-#: ../src/settings.c:9506
+#: ../src/settings.c:9551
 msgid "Audio CD"
 msgstr "Звучни ЦД"
 
-#: ../src/settings.c:9512
+#: ../src/settings.c:9557
 msgid "Optical Mounted"
 msgstr "Оптички диске је монтиран"
 
-#: ../src/settings.c:9517
+#: ../src/settings.c:9562
 msgid "Optical Has Media"
 msgstr "Садржи мултимедију"
 
-#: ../src/settings.c:9522
+#: ../src/settings.c:9567
 msgid "Optical No Media"
 msgstr "Не садржи мултимедију"
 
-#: ../src/settings.c:9527
+#: ../src/settings.c:9572
 msgid "Floppy Mounted"
 msgstr "Дискета је монтирана"
 
-#: ../src/settings.c:9532
+#: ../src/settings.c:9577
 msgid "Floppy Unmounted"
 msgstr "Дискета је демонтирана"
 
-#: ../src/settings.c:9537
+#: ../src/settings.c:9582
 msgid "Removable Mounted"
 msgstr "Измењиви диск је монтиран"
 
-#: ../src/settings.c:9542
+#: ../src/settings.c:9587
 msgid "Removable Unmounted"
 msgstr "Измењиви диск је демонтиран"
 
-#: ../src/settings.c:9547
+#: ../src/settings.c:9592
 msgid "Internal Mounted"
 msgstr "Унутрашњи диск је монтиран"
 
-#: ../src/settings.c:9552
+#: ../src/settings.c:9597
 msgid "Internal Unmounted"
 msgstr "Унутрашњи диск је демонтиран"
 
-#: ../src/settings.c:9557
+#: ../src/settings.c:9602
 msgid "Mounted Network"
 msgstr "Мрежа је монтирана"
 
-#: ../src/settings.c:9562
+#: ../src/settings.c:9607
 msgid "Mounted File"
 msgstr "Датотека је монтирана"
 
-#: ../src/settings.c:9577 ../src/settings.c:10633
-#: ../src/ptk/ptk-file-misc.c:695 ../src/ptk/ptk-file-misc.c:1231
-#: ../src/ptk/ptk-file-misc.c:2140
+#: ../src/settings.c:9622 ../src/settings.c:10678
+#: ../src/ptk/ptk-file-misc.c:701 ../src/ptk/ptk-file-misc.c:1237
+#: ../src/ptk/ptk-file-misc.c:2146
 msgid "_Rename"
 msgstr "П_реименуј"
 
-#: ../src/settings.c:9583
+#: ../src/settings.c:9628
 msgid "Re_move"
 msgstr "Ук_лони"
 
-#: ../src/settings.c:9589
+#: ../src/settings.c:9634
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:9592
+#: ../src/settings.c:9637
 msgid "_Settings"
 msgstr "_Поставке"
 
 #. do not set a default icon for book_icon
 #. Rename/Move Dialog
-#: ../src/settings.c:9601 ../src/settings.c:10573 ../src/settings.c:10954
-#: ../src/settings.c:11077 ../src/settings.c:11205 ../src/settings.c:11333
+#: ../src/settings.c:9646 ../src/settings.c:10618 ../src/settings.c:11006
 msgid "_Name"
 msgstr "_Име"
 
-#: ../src/settings.c:9608
+#: ../src/settings.c:9653
 msgid "_Parent"
 msgstr "Директоријум-_родитељ"
 
-#: ../src/settings.c:9611 ../src/ptk/ptk-file-misc.c:1060
+#: ../src/settings.c:9656 ../src/ptk/ptk-file-misc.c:1066
 msgid "P_ath"
 msgstr "П_утања"
 
-#: ../src/settings.c:9627
+#: ../src/settings.c:9672
 msgid "_Option"
 msgstr "_Опција"
 
-#: ../src/settings.c:9635 ../src/settings.c:10464
-#: ../src/ptk/ptk-file-misc.c:1241 ../src/ptk/ptk-file-misc.c:1252
+#: ../src/settings.c:9680 ../src/settings.c:10509
+#: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:1258
 msgid "_Link"
 msgstr "_Веза"
 
-#: ../src/settings.c:9639 ../src/ptk/ptk-file-misc.c:2491
+#: ../src/settings.c:9684 ../src/ptk/ptk-file-misc.c:2497
 msgid "Copy _Target"
 msgstr "_Умножи одредиште"
 
-#: ../src/settings.c:9642
+#: ../src/settings.c:9687
 msgid "Lin_k Target"
 msgstr "По_вежи одредиште"
 
-#: ../src/settings.c:9645
+#: ../src/settings.c:9690
 msgid "_As Root"
 msgstr "_Као „root“"
 
-#: ../src/settings.c:9649 ../src/settings.c:10177 ../src/settings.c:10229
-#: ../src/settings.c:10326 ../src/settings.c:10355 ../src/settings.c:10908
-#: ../src/settings.c:10914 ../src/settings.c:10921 ../src/settings.c:10927
-#: ../src/settings.c:10934 ../src/settings.c:10944 ../src/settings.c:11029
-#: ../src/settings.c:11035 ../src/settings.c:11042 ../src/settings.c:11048
-#: ../src/settings.c:11055 ../src/settings.c:11065 ../src/settings.c:11157
-#: ../src/settings.c:11163 ../src/settings.c:11170 ../src/settings.c:11176
-#: ../src/settings.c:11183 ../src/settings.c:11193 ../src/settings.c:11285
-#: ../src/settings.c:11291 ../src/settings.c:11298 ../src/settings.c:11304
-#: ../src/settings.c:11311 ../src/settings.c:11321
+#: ../src/settings.c:9694 ../src/settings.c:10222 ../src/settings.c:10274
+#: ../src/settings.c:10371 ../src/settings.c:10400 ../src/settings.c:10960
+#: ../src/settings.c:10966 ../src/settings.c:10973 ../src/settings.c:10979
+#: ../src/settings.c:10986 ../src/settings.c:10996
 msgid "_Font"
 msgstr "_Фонт"
 
-#: ../src/settings.c:9652
+#: ../src/settings.c:9697
 msgid "Move Dialog Font"
 msgstr "Премести фонта дијалога"
 
-#: ../src/settings.c:9653
+#: ../src/settings.c:9698
 msgid "/home/user/Example Filename.ext"
 msgstr "/личне_датотеке/корисник/пробна датотеке.еxt"
 
-#: ../src/settings.c:9658
+#: ../src/settings.c:9703
 msgid "_Confirm Create"
 msgstr "_Потврди стварање"
 
-#: ../src/settings.c:9666
+#: ../src/settings.c:9711
 msgid "Highlight _Bar"
 msgstr "Истакнута _трака"
 
-#: ../src/settings.c:9667
+#: ../src/settings.c:9712
 msgid "Status Bar Highlight Color"
 msgstr "Боја статусне траке"
 
-#: ../src/settings.c:9671
+#: ../src/settings.c:9716
 msgid "Highlight _Text"
 msgstr "Истакнути текст"
 
-#: ../src/settings.c:9672
+#: ../src/settings.c:9717
 msgid "Status Bar Text Highlight Color"
 msgstr "Боја текста статусне траке"
 
-#: ../src/settings.c:9676
+#: ../src/settings.c:9721
 msgid "_Middle Click"
 msgstr "_Средњи клик"
 
-#: ../src/settings.c:9680 ../src/settings.c:10653
+#: ../src/settings.c:9725 ../src/settings.c:10698
 msgid "Copy _Name"
 msgstr "Умножи _име ставке(и)"
 
-#: ../src/settings.c:9683 ../src/settings.c:10656
+#: ../src/settings.c:9728 ../src/settings.c:10701
 msgid "Copy _Path"
 msgstr "Умножи _путању до ставке(и)"
 
-#: ../src/settings.c:9690
+#: ../src/settings.c:9735
 msgid "_Hide Panel"
 msgstr "_Сакриј пано"
 
-#: ../src/settings.c:9706
+#: ../src/settings.c:9751
 msgid "New _Window"
 msgstr "Нови _прозор"
 
-#: ../src/settings.c:9709
+#: ../src/settings.c:9754
 msgid "R_oot Window"
 msgstr "_Отвори као администратор"
 
-#: ../src/settings.c:9712
+#: ../src/settings.c:9757
 msgid "_File Search"
 msgstr "Пре_трага датотека"
 
-#: ../src/settings.c:9715
+#: ../src/settings.c:9760
 msgid "_Terminal"
 msgstr "_Терминал"
 
 #. discovery notification
-#: ../src/settings.c:9718
+#: ../src/settings.c:9763
 msgid "_Root Terminal"
 msgstr "Отво_ри терминал као администратор"
 
-#: ../src/settings.c:9721
+#: ../src/settings.c:9766
 msgid "_Save Session"
 msgstr "_Сачувај сесију"
 
-#: ../src/settings.c:9724
+#: ../src/settings.c:9769
 msgid "Save Ta_bs"
 msgstr "Сачувај _језичке"
 
-#: ../src/settings.c:9728
+#: ../src/settings.c:9773
 msgid "E_xit"
 msgstr "И_злаз"
 
-#: ../src/settings.c:9759 ../src/settings.c:9790 ../src/settings.c:10403
-#: ../src/settings.c:10705 ../src/settings.c:10743
+#: ../src/settings.c:9804 ../src/settings.c:9835 ../src/settings.c:10448
+#: ../src/settings.c:10750 ../src/settings.c:10788
 msgid "Panel _1"
 msgstr "Пано _1"
 
-#: ../src/settings.c:9763 ../src/settings.c:9791 ../src/settings.c:10404
-#: ../src/settings.c:10706 ../src/settings.c:10744
+#: ../src/settings.c:9808 ../src/settings.c:9836 ../src/settings.c:10449
+#: ../src/settings.c:10751 ../src/settings.c:10789
 msgid "Panel _2"
 msgstr "Пано _2"
 
-#: ../src/settings.c:9766 ../src/settings.c:9792 ../src/settings.c:10405
-#: ../src/settings.c:10707 ../src/settings.c:10745
+#: ../src/settings.c:9811 ../src/settings.c:9837 ../src/settings.c:10450
+#: ../src/settings.c:10752 ../src/settings.c:10790
 msgid "Panel _3"
 msgstr "Пано _3"
 
-#: ../src/settings.c:9769 ../src/settings.c:9793 ../src/settings.c:10406
-#: ../src/settings.c:10708 ../src/settings.c:10746
+#: ../src/settings.c:9814 ../src/settings.c:9838 ../src/settings.c:10451
+#: ../src/settings.c:10753 ../src/settings.c:10791
 msgid "Panel _4"
 msgstr "Пано _4"
 
-#: ../src/settings.c:9772
+#: ../src/settings.c:9817
 msgid "Panel _Bar"
 msgstr "Прикажи _траку паноа"
 
-#: ../src/settings.c:9776 ../src/settings.c:10489
+#: ../src/settings.c:9821 ../src/settings.c:10534
 msgid "_Go"
 msgstr "_Иди"
 
-#: ../src/settings.c:9781 ../src/settings.c:10384 ../src/settings.c:10401
-#: ../src/settings.c:10529 ../src/settings.c:10686 ../src/settings.c:10703
-#: ../src/settings.c:10724 ../src/settings.c:10741
+#: ../src/settings.c:9826 ../src/settings.c:10429 ../src/settings.c:10446
+#: ../src/settings.c:10574 ../src/settings.c:10731 ../src/settings.c:10748
+#: ../src/settings.c:10769 ../src/settings.c:10786
 msgid "_Prev"
 msgstr "_Претходно"
 
-#: ../src/settings.c:9782 ../src/settings.c:10385 ../src/settings.c:10402
-#: ../src/settings.c:10530 ../src/settings.c:10687 ../src/settings.c:10704
-#: ../src/settings.c:10725 ../src/settings.c:10742
+#: ../src/settings.c:9827 ../src/settings.c:10430 ../src/settings.c:10447
+#: ../src/settings.c:10575 ../src/settings.c:10732 ../src/settings.c:10749
+#: ../src/settings.c:10770 ../src/settings.c:10787
 msgid "_Next"
 msgstr "_Следеће"
 
-#: ../src/settings.c:9795
+#: ../src/settings.c:9840
 msgid "_Events"
 msgstr "_Догађаји"
 
-#: ../src/settings.c:9801
+#: ../src/settings.c:9846
 msgid "_Instance"
 msgstr "_Пример"
 
-#: ../src/settings.c:9806
+#: ../src/settings.c:9851
 msgid "_Startup"
 msgstr "_Покретање"
 
-#: ../src/settings.c:9808
+#: ../src/settings.c:9853
 msgid "Set Instance Startup Command"
 msgstr "Подеси пример наредбе покретања"
 
-#: ../src/settings.c:9809
+#: ../src/settings.c:9854
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
@@ -3512,15 +3498,15 @@ msgid ""
 "\t%%e\tevent type  (evt_start)\n"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по покретању инстанце SpaceFM програма:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_start)\n"
 
-#: ../src/settings.c:9812
+#: ../src/settings.c:9857
 msgid "_Exit"
 msgstr "_Излаз"
 
-#: ../src/settings.c:9814
+#: ../src/settings.c:9859
 msgid "Set Instance Exit Command"
 msgstr "Подеси пример излазне наредбе"
 
-#: ../src/settings.c:9815
+#: ../src/settings.c:9860
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
@@ -3529,20 +3515,20 @@ msgid ""
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по заустављању инстанце SpaceFM програма:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_exit)\n"
 
-#: ../src/settings.c:9818
+#: ../src/settings.c:9863
 msgid "_Window"
 msgstr "_Прозор"
 
-#: ../src/settings.c:9823
+#: ../src/settings.c:9868
 msgctxt "View|Events|Window|"
 msgid "_New"
 msgstr "_Ново"
 
-#: ../src/settings.c:9825
+#: ../src/settings.c:9870
 msgid "Set New Window Command"
 msgstr "Подеси нову наредбу"
 
-#: ../src/settings.c:9826
+#: ../src/settings.c:9871
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
@@ -3556,15 +3542,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год се отвара нови SpaceFM прозор:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_new)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9829 ../src/settings.c:9864 ../src/settings.c:9893
+#: ../src/settings.c:9874 ../src/settings.c:9909 ../src/settings.c:9938
 msgid "_Focus"
 msgstr "_Фокус"
 
-#: ../src/settings.c:9831
+#: ../src/settings.c:9876
 msgid "Set Window Focus Command"
 msgstr "Подеси наредбу за фокус "
 
-#: ../src/settings.c:9832
+#: ../src/settings.c:9877
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
@@ -3578,15 +3564,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год је SpaceFM прозор у фокусу:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_focus)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9835
+#: ../src/settings.c:9880
 msgid "_Move/Resize"
 msgstr "_Помери/Промени величину"
 
-#: ../src/settings.c:9837
+#: ../src/settings.c:9882
 msgid "Set Window Move/Resize Command"
 msgstr "Подеси  Помери/Промени величину наредбу"
 
-#: ../src/settings.c:9838
+#: ../src/settings.c:9883
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
@@ -3602,15 +3588,15 @@ msgid ""
 "Note: This command may be run multiple times during resize."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год се SpaceFM прозор помера или му се мења величина:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_move)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби.\nНАПОМЕНА:\nОва команда ће се вишеструко покретати при промени величине прозора."
 
-#: ../src/settings.c:9841
+#: ../src/settings.c:9886
 msgid "_Click"
 msgstr "_Клик"
 
-#: ../src/settings.c:9843
+#: ../src/settings.c:9888
 msgid "Set Click Command"
 msgstr "Подеси клик наредбу"
 
-#: ../src/settings.c:9844
+#: ../src/settings.c:9889
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
@@ -3630,15 +3616,15 @@ msgid ""
 "*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год је притиснуто дугме миша (клик):\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_click)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\t%%b\tза дугме  (притиснуто је дугме миша)\n\t%%m\tmodifier  (modifier keys)\n\t%%f\tза фокус  (елемент на који је кликнуто)\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби ако се не користи звездица као префикс.\n\nКористите звездицу (*) пре команде и условно вратите вредност излазног статуса на 0 да би спречили подразумевани управљач. На пример:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nТочкић на мишу је био притиснут %%f\" --button ok &"
 
-#: ../src/settings.c:9847
+#: ../src/settings.c:9892
 msgid "_Keypress"
 msgstr "Притисак на тастер"
 
-#: ../src/settings.c:9849
+#: ../src/settings.c:9894
 msgid "Set Window Keypress Command"
 msgstr "Подеси наредбу за притисак за тастер"
 
-#: ../src/settings.c:9850
+#: ../src/settings.c:9895
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a key is pressed:\n"
@@ -3657,15 +3643,15 @@ msgid ""
 "*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год је притиснут неки тастер:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_key)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\t%%k\tза код тастера  (тастер је притиснуто)\n\t%%m\tmodifier  (modifier keys)\n\t%%f\tза фокус  (елемент на који је кликнуто)\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби ако се не користи звездица као префикс.\n\nКористите звездицу (*) пре команде и условно вратите вредност излазног статуса на 0 да би спречили подразумевани управљач. На пример:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nТастер F8 је био притиснут.\" --button ok &"
 
-#: ../src/settings.c:9853
+#: ../src/settings.c:9898
 msgid "Cl_ose"
 msgstr "За_твори"
 
-#: ../src/settings.c:9855
+#: ../src/settings.c:9900
 msgid "Set Window Close Command"
 msgstr "Подеси наредбу Затвори"
 
-#: ../src/settings.c:9856
+#: ../src/settings.c:9901
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
@@ -3679,15 +3665,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год се отвара нови SpaceFM прозор:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_win_new)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9859
+#: ../src/settings.c:9904
 msgid "_Panel"
 msgstr "_Пано"
 
-#: ../src/settings.c:9866
+#: ../src/settings.c:9911
 msgid "Set Panel Focus Command"
 msgstr "Подеси наредбу за фокусирање паноа"
 
-#: ../src/settings.c:9867
+#: ../src/settings.c:9912
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
@@ -3701,16 +3687,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год је пано у фокусу:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_pnl_focus)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9870
+#: ../src/settings.c:9915
 msgctxt "View|Events|Panel|"
 msgid "_Show"
 msgstr "_Прикажи"
 
-#: ../src/settings.c:9872
+#: ../src/settings.c:9917
 msgid "Set Panel Show Command"
 msgstr "Подеси наредбу за „Прикажи пано“"
 
-#: ../src/settings.c:9873
+#: ../src/settings.c:9918
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
@@ -3726,15 +3712,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год се пано или њ. елементи приказују или скривају:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_pnl_show)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\t%%f\tза фокус  (елеменат је приказан или скривен)\n\t%%v\tза видљивост  (1 or 0)\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9876
+#: ../src/settings.c:9921
 msgid "S_elect"
 msgstr "И_забери"
 
-#: ../src/settings.c:9878
+#: ../src/settings.c:9923
 msgid "Set Panel Select Command"
 msgstr "Подеси наредбу за „Изабери пано“"
 
-#: ../src/settings.c:9879
+#: ../src/settings.c:9924
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the file selection changes:\n"
@@ -3750,16 +3736,16 @@ msgid ""
 "Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену при промени избора датотеке:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_pnl_sel)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби.\n\nКористите звездицу (*) пре команде и условно вратите вредност излазног статуса на 0 да би спречили подразумевани управљач."
 
-#: ../src/settings.c:9882
+#: ../src/settings.c:9927
 msgctxt "View|Events|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:9889
+#: ../src/settings.c:9934
 msgid "Set New Tab Command"
 msgstr "Подеси наредбу за Нови језичак"
 
-#: ../src/settings.c:9890
+#: ../src/settings.c:9935
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
@@ -3773,11 +3759,11 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по отварању новог језичка:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_tab_new)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9895
+#: ../src/settings.c:9940
 msgid "Set Tab Focus Command"
 msgstr "Подеси наредбу за Фокусирање језичака"
 
-#: ../src/settings.c:9896
+#: ../src/settings.c:9941
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
@@ -3791,16 +3777,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Унесите име програма или линију наредбе које желите да се покрену кад год је језичак у фокусу:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_tab_focus)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза језичак\n\nПостављене „bash“ променљиве окружења (нпр. $fm_pwd, итд.) се могу употребити у овој наредби."
 
-#: ../src/settings.c:9899
+#: ../src/settings.c:9944
 msgctxt "View|Events|Tab|"
 msgid "_Close"
 msgstr "_Затвори"
 
-#: ../src/settings.c:9901
+#: ../src/settings.c:9946
 msgid "Set Tab Close Command"
 msgstr "Подеси наредбу за Затвори језичак"
 
-#: ../src/settings.c:9902
+#: ../src/settings.c:9947
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab is closed:\n"
@@ -3812,15 +3798,15 @@ msgid ""
 "\t%%t\tclosed tab"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену по затварању језичка:\n\nМожете користити:\n\t%%e\tза врсту догађаја  (evt_tab_close)\n\t%%w\tза ИБ прозора  (видите spacefm -s help)\n\t%%p\tза пано\n\t%%t\tза затворени језичак"
 
-#: ../src/settings.c:9905
+#: ../src/settings.c:9950
 msgid "_Device"
 msgstr "_Уређај"
 
-#: ../src/settings.c:9907
+#: ../src/settings.c:9952
 msgid "Set Device Command"
 msgstr "Подеси наредбе уређаја"
 
-#: ../src/settings.c:9908
+#: ../src/settings.c:9953
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a device state changes:\n"
@@ -3831,15 +3817,15 @@ msgid ""
 "\t%%v\tchange  (added|removed|changed)\n"
 msgstr "Унесите име програма или линију наредбе које желите да се покрену при промени стања уређаја:\n\nМожете користити:\n\t%%v\tза врсту догађаја (evt_device)\n\t%%l\tза датотеку уређаја\n\t%%m\tза промену  (додат|уклоњен|измењен)\n"
 
-#: ../src/settings.c:9911
+#: ../src/settings.c:9956
 msgid "Wi_ndow Title"
 msgstr "Наслов прозора"
 
-#: ../src/settings.c:9913
+#: ../src/settings.c:9958
 msgid "Set Window Title Format"
 msgstr "Подеси формат наслова прозора"
 
-#: ../src/settings.c:9914
+#: ../src/settings.c:9959
 #, c-format
 msgid ""
 "Set window title format:\n"
@@ -3854,15 +3840,15 @@ msgid ""
 "\t*\tasterisk shown if tasks running in window"
 msgstr ""
 
-#: ../src/settings.c:9918
+#: ../src/settings.c:9963
 msgid "_Window Icon"
 msgstr "_Икона прозора"
 
-#: ../src/settings.c:9920
+#: ../src/settings.c:9965
 msgid "Set Window Icon"
 msgstr "Подеси икону прозора"
 
-#: ../src/settings.c:9921
+#: ../src/settings.c:9966
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
@@ -3875,64 +3861,64 @@ msgid ""
 "For example: spacefm-48-pyramid-green"
 msgstr "Унесите име иконе, путању до датотеке иконе или име иконе из складишта икона:\n\nНеке иконе се можда неће приказати због разних проблема.\n\nДоступне су и додатне SpaceFM иконе:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nНа пример: spacefm-48-pyramid-green"
 
-#: ../src/settings.c:9923
+#: ../src/settings.c:9968
 msgid "_Fullscreen"
 msgstr "Користи _цео екран"
 
-#: ../src/settings.c:9926
+#: ../src/settings.c:9971
 msgid "_Design Mode"
 msgstr "_Дизајн мод"
 
-#: ../src/settings.c:9929
+#: ../src/settings.c:9974
 msgid "_Preferences"
 msgstr "Пос_тавке"
 
-#: ../src/settings.c:9932
+#: ../src/settings.c:9977
 msgid "_Tool"
 msgstr "_Алатке"
 
 #. Plugins
-#: ../src/settings.c:9939
+#: ../src/settings.c:9984
 msgid "_Install"
 msgstr "_Инсталирај из..."
 
-#: ../src/settings.c:9967
+#: ../src/settings.c:10012
 msgid "_Verbose"
 msgstr "_Детаљно"
 
-#: ../src/settings.c:9974
+#: ../src/settings.c:10019
 msgid "In_cluded"
 msgstr "Ук_ључен"
 
-#: ../src/settings.c:9988
+#: ../src/settings.c:10033
 msgid "_User's Manual"
 msgstr "_Корисничко упутство"
 
-#: ../src/settings.c:9994
+#: ../src/settings.c:10039
 msgid "_Homepage"
 msgstr "_Почетна страна"
 
-#: ../src/settings.c:9997
+#: ../src/settings.c:10042
 msgid "SpaceFM _News"
 msgstr "SpaceFM _Новости"
 
-#: ../src/settings.c:10000
+#: ../src/settings.c:10045
 msgid "_Get Plugins"
 msgstr "Преузмите _додатке"
 
-#: ../src/settings.c:10003
+#: ../src/settings.c:10048
 msgid "_Options"
 msgstr "_Опције"
 
-#: ../src/settings.c:10008
+#: ../src/settings.c:10053
 msgid "_Browser"
 msgstr "_Читач"
 
-#: ../src/settings.c:10010
+#: ../src/settings.c:10055
 msgid "Choose HTML Browser"
 msgstr "Одабери ХТМЛ читач"
 
-#: ../src/settings.c:10011
+#: ../src/settings.c:10056
 #, c-format
 msgid ""
 "Enter browser name or bash command line to be used to display HTML files and URLs:\n"
@@ -3943,510 +3929,511 @@ msgid ""
 "(Leave blank for automatic browser detection)"
 msgstr ""
 
-#: ../src/settings.c:10014
+#: ../src/settings.c:10059
 msgid "_Manual Location"
 msgstr "_Локација корисничког упутства"
 
-#: ../src/settings.c:10016
+#: ../src/settings.c:10061
 msgid "Choose User's Manual Location"
 msgstr "Изабери локацију за корисничко упутство"
 
-#: ../src/settings.c:10017
+#: ../src/settings.c:10062
 msgid ""
 "Enter local file path or remote URL for the SpaceFM User's Manual:\n"
 "\n"
 "(Leave blank for default)\n"
 msgstr "Унесите путању до локалне датотеке или УРЛ до SpaceFM корисничког упутства:\n\n(Оставите празно за подразумевано)\n"
 
-#: ../src/settings.c:10020
+#: ../src/settings.c:10065
 msgid "_About"
 msgstr "_О"
 
-#: ../src/settings.c:10052
+#: ../src/settings.c:10097
 msgid "_Status"
 msgstr "_Стање"
 
 #. column position
 #. column width
-#: ../src/settings.c:10058
+#: ../src/settings.c:10103
 msgid "_Count"
 msgstr "_Бројач"
 
-#: ../src/settings.c:10069
+#: ../src/settings.c:10114
 msgid "_Item"
 msgstr "_Ставка"
 
-#: ../src/settings.c:10075
+#: ../src/settings.c:10120
 msgid "_To"
 msgstr "_За"
 
-#: ../src/settings.c:10081
+#: ../src/settings.c:10126
 msgid "_Progress"
 msgstr "_Напредак"
 
-#: ../src/settings.c:10088
+#: ../src/settings.c:10133
 msgid "T_otal"
 msgstr "У_купно"
 
-#: ../src/settings.c:10095
+#: ../src/settings.c:10140
 msgid "Sta_rted"
 msgstr "Зап_очето"
 
-#: ../src/settings.c:10100
+#: ../src/settings.c:10145
 msgid "_Elapsed"
 msgstr "_Протекло"
 
-#: ../src/settings.c:10107
+#: ../src/settings.c:10152
 msgid "C_urrent Speed"
 msgstr "Т_екућа брзина"
 
-#: ../src/settings.c:10117
+#: ../src/settings.c:10162
 msgid "_Average Speed"
 msgstr "_Просечна брзина"
 
-#: ../src/settings.c:10131
+#: ../src/settings.c:10176
 msgid "Reor_der"
 msgstr "Преу_реди"
 
-#: ../src/settings.c:10137 ../src/settings.c:10157
-#: ../src/ptk/ptk-file-task.c:505 ../src/ptk/ptk-file-task.c:806
+#: ../src/settings.c:10182 ../src/settings.c:10202
+#: ../src/ptk/ptk-file-task.c:505 ../src/ptk/ptk-file-task.c:815
 msgid "Pa_use"
 msgstr "Пау_за"
 
-#: ../src/settings.c:10140 ../src/settings.c:10160
+#: ../src/settings.c:10185 ../src/settings.c:10205
 msgid "_Queue"
 msgstr "_Ред"
 
-#: ../src/settings.c:10143 ../src/settings.c:10163
+#: ../src/settings.c:10188 ../src/settings.c:10208
 msgid "_Resume"
 msgstr "_Поврати"
 
-#: ../src/settings.c:10146
+#: ../src/settings.c:10191
 msgid "Sho_w Output"
 msgstr "Прика_жи излаз"
 
-#: ../src/settings.c:10149
+#: ../src/settings.c:10194
 msgid "_All Tasks"
 msgstr "_Сви задаци"
 
-#: ../src/settings.c:10180
+#: ../src/settings.c:10225
 msgid "Task Manager Font"
 msgstr "Фонт менаџера задатака"
 
-#: ../src/settings.c:10181
+#: ../src/settings.c:10226
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
 msgstr "умножавање  датотеке  1:15  65.2 M  30.2 M/s"
 
-#: ../src/settings.c:10184
+#: ../src/settings.c:10229
 msgid "_Columns"
 msgstr "_Колоне"
 
-#: ../src/settings.c:10189
+#: ../src/settings.c:10234
 msgid "_Popups"
 msgstr "_Искачући прозори"
 
-#: ../src/settings.c:10194
+#: ../src/settings.c:10239
 msgid "Popup _All Tasks"
 msgstr "Искачући _прозори свих задатака"
 
-#: ../src/settings.c:10199
+#: ../src/settings.c:10244
 msgid "Stay On _Top"
 msgstr "Остани на _врху"
 
-#: ../src/settings.c:10204
+#: ../src/settings.c:10249
 msgid "A_bove Others"
 msgstr "Изнад других"
 
-#: ../src/settings.c:10209
+#: ../src/settings.c:10254
 msgid "All _Workspaces"
 msgstr "Све _радне површи"
 
-#: ../src/settings.c:10219
+#: ../src/settings.c:10264
 msgid "_Overwrite Option"
 msgstr "_Пребриши подешавања"
 
-#: ../src/settings.c:10224
+#: ../src/settings.c:10269
 msgid "_Error Option"
 msgstr "_Опције грешке"
 
-#: ../src/settings.c:10232
+#: ../src/settings.c:10277
 msgid "Task Popup Font (affects new tasks)"
 msgstr "За фонт искачућих прозора (утиче на нове задатке)"
 
-#: ../src/settings.c:10233
+#: ../src/settings.c:10278
 msgid "Example Output 0123456789"
 msgstr "Пример излаза 0123456789"
 
-#: ../src/settings.c:10242
+#: ../src/settings.c:10287
 msgid "Stop If _First"
 msgstr "Заустави код _прве"
 
-#: ../src/settings.c:10247
+#: ../src/settings.c:10292
 msgid "Stop On _Any"
 msgstr "Заустави код _било које"
 
-#: ../src/settings.c:10252
+#: ../src/settings.c:10297
 msgid "_Continue"
 msgstr "_Настави радњу"
 
-#: ../src/settings.c:10257
+#: ../src/settings.c:10302
 msgid "Qu_eue"
 msgstr "Р_едослед"
 
-#: ../src/settings.c:10262
+#: ../src/settings.c:10307
 msgid "_Queue New Tasks"
 msgstr "Поређај нове _задатке"
 
-#: ../src/settings.c:10267
+#: ../src/settings.c:10312
 msgid "_Smart Queue"
 msgstr "_Мудро поређај"
 
-#: ../src/settings.c:10272
+#: ../src/settings.c:10317
 msgid "_Pause On Error"
 msgstr "Заустави код _грешке"
 
-#: ../src/settings.c:10282
+#: ../src/settings.c:10327
 msgid "Arrange _Icons"
 msgstr "Сложи _иконе"
 
-#: ../src/settings.c:10287
+#: ../src/settings.c:10332
 msgid "By _Name"
 msgstr "По _имену"
 
-#: ../src/settings.c:10290
+#: ../src/settings.c:10335
 msgid "By _Type"
 msgstr "По _врсти"
 
-#: ../src/settings.c:10293
+#: ../src/settings.c:10338
 msgid "By _Date"
 msgstr "По _датуму"
 
-#: ../src/settings.c:10296
+#: ../src/settings.c:10341
 msgid "By _Size"
 msgstr "По _величини"
 
-#: ../src/settings.c:10299
+#: ../src/settings.c:10344
 msgid "_Custom"
 msgstr "Прилаго_ђено"
 
-#: ../src/settings.c:10302 ../src/settings.c:10585
+#: ../src/settings.c:10347 ../src/settings.c:10630
 msgid "_Ascending"
 msgstr "_Растуће"
 
-#: ../src/settings.c:10305
+#: ../src/settings.c:10350
 msgid "D_escending"
 msgstr "О_падајуће"
 
-#: ../src/settings.c:10308
+#: ../src/settings.c:10353
 msgid "Desktop _Settings"
 msgstr "Подешавања ра_дне површи"
 
-#: ../src/settings.c:10311 ../src/settings.c:10522
+#: ../src/settings.c:10356 ../src/settings.c:10567
 msgid "De_vices"
 msgstr "Ур_еђаји"
 
-#: ../src/settings.c:10319
+#: ../src/settings.c:10364
 msgid "_Desktop Folder"
 msgstr "_Директоријум Радне површи"
 
-#: ../src/settings.c:10329
+#: ../src/settings.c:10374
 msgid "Editor Font"
 msgstr "Фонт едитора"
 
-#: ../src/settings.c:10330 ../src/settings.c:10359
+#: ../src/settings.c:10375 ../src/settings.c:10404
 msgid "Example Input 0123456789"
 msgstr "Пример улаза 0123456789"
 
-#: ../src/settings.c:10358
+#: ../src/settings.c:10403
 msgid "Input Font"
 msgstr "Улазни фонт"
 
-#: ../src/settings.c:10365
+#: ../src/settings.c:10410
 msgid "E_xecute"
 msgstr "И_зврши"
 
-#: ../src/settings.c:10368
+#: ../src/settings.c:10413
 msgid "Edi_t"
 msgstr "Изме_ни"
 
-#: ../src/settings.c:10371
+#: ../src/settings.c:10416
 msgid "Edit As _Root"
 msgstr "Уре_ди као „root“"
 
-#: ../src/settings.c:10374
+#: ../src/settings.c:10419
 msgid "_Choose..."
 msgstr "_Изабери..."
 
 #. virtual
-#: ../src/settings.c:10379
+#: ../src/settings.c:10424
 msgid "In _Tab"
 msgstr "У _језичку"
 
-#: ../src/settings.c:10383
+#: ../src/settings.c:10428
 msgid "N_ew"
 msgstr "Н_ов"
 
-#: ../src/settings.c:10386 ../src/settings.c:10533 ../src/settings.c:10688
-#: ../src/settings.c:10726
+#: ../src/settings.c:10431 ../src/settings.c:10578 ../src/settings.c:10733
+#: ../src/settings.c:10771
 msgid "Tab _1"
 msgstr "Језичак _1"
 
-#: ../src/settings.c:10387 ../src/settings.c:10534 ../src/settings.c:10689
-#: ../src/settings.c:10727
+#: ../src/settings.c:10432 ../src/settings.c:10579 ../src/settings.c:10734
+#: ../src/settings.c:10772
 msgid "Tab _2"
 msgstr "Језичак _2"
 
-#: ../src/settings.c:10388 ../src/settings.c:10535 ../src/settings.c:10690
-#: ../src/settings.c:10728
+#: ../src/settings.c:10433 ../src/settings.c:10580 ../src/settings.c:10735
+#: ../src/settings.c:10773
 msgid "Tab _3"
 msgstr "Језичак _3"
 
-#: ../src/settings.c:10389 ../src/settings.c:10536 ../src/settings.c:10691
-#: ../src/settings.c:10729
+#: ../src/settings.c:10434 ../src/settings.c:10581 ../src/settings.c:10736
+#: ../src/settings.c:10774
 msgid "Tab _4"
 msgstr "Језичак _4"
 
-#: ../src/settings.c:10390 ../src/settings.c:10537 ../src/settings.c:10692
-#: ../src/settings.c:10730
+#: ../src/settings.c:10435 ../src/settings.c:10582 ../src/settings.c:10737
+#: ../src/settings.c:10775
 msgid "Tab _5"
 msgstr "Језичак _5"
 
-#: ../src/settings.c:10391 ../src/settings.c:10538 ../src/settings.c:10693
-#: ../src/settings.c:10731
+#: ../src/settings.c:10436 ../src/settings.c:10583 ../src/settings.c:10738
+#: ../src/settings.c:10776
 msgid "Tab _6"
 msgstr "Језичак _6"
 
-#: ../src/settings.c:10392 ../src/settings.c:10539 ../src/settings.c:10694
-#: ../src/settings.c:10732
+#: ../src/settings.c:10437 ../src/settings.c:10584 ../src/settings.c:10739
+#: ../src/settings.c:10777
 msgid "Tab _7"
 msgstr "Језичак _7"
 
-#: ../src/settings.c:10393 ../src/settings.c:10540 ../src/settings.c:10695
-#: ../src/settings.c:10733
+#: ../src/settings.c:10438 ../src/settings.c:10585 ../src/settings.c:10740
+#: ../src/settings.c:10778
 msgid "Tab _8"
 msgstr "Језичак _8"
 
-#: ../src/settings.c:10394 ../src/settings.c:10541 ../src/settings.c:10696
-#: ../src/settings.c:10734
+#: ../src/settings.c:10439 ../src/settings.c:10586 ../src/settings.c:10741
+#: ../src/settings.c:10779
 msgid "Tab _9"
 msgstr "Језичак _9"
 
-#: ../src/settings.c:10395 ../src/settings.c:10542 ../src/settings.c:10697
-#: ../src/settings.c:10735
+#: ../src/settings.c:10440 ../src/settings.c:10587 ../src/settings.c:10742
+#: ../src/settings.c:10780
 msgid "Tab 1_0"
 msgstr "Језичак 1_0"
 
-#: ../src/settings.c:10397
+#: ../src/settings.c:10442
 msgid "In _Panel"
 msgstr "У _паноу"
 
-#: ../src/settings.c:10408 ../src/settings.c:10427
+#: ../src/settings.c:10453 ../src/settings.c:10472
 msgid "_Extract"
 msgstr "_Распакуј"
 
-#: ../src/settings.c:10411 ../src/settings.c:10431
+#: ../src/settings.c:10456 ../src/settings.c:10476
 msgid "Extract _To"
 msgstr "Распакуј у..."
 
-#: ../src/settings.c:10414 ../src/settings.c:10434
+#: ../src/settings.c:10459 ../src/settings.c:10479
 msgid "_List Contents"
 msgstr "_Листа садржаја"
 
-#: ../src/settings.c:10420
+#: ../src/settings.c:10465
 msgid "_Archive Default"
 msgstr "_Подразумевано за архиву"
 
-#: ../src/settings.c:10424
+#: ../src/settings.c:10469
 msgid "_Open With App"
 msgstr "Отвори по_моћу"
 
-#: ../src/settings.c:10437
+#: ../src/settings.c:10482
 msgid "_Create Subfolder"
 msgstr "Створи под_директоријум"
 
-#: ../src/settings.c:10441
+#: ../src/settings.c:10486
 msgid "_Write Access"
 msgstr "Дозволе за у_писивање"
 
-#: ../src/settings.c:10444
+#: ../src/settings.c:10489
 msgid "_Mount ISO"
 msgstr "_Монтирај ИСО слику"
 
-#: ../src/settings.c:10447
+#: ../src/settings.c:10492
 msgid "_Auto-Mount ISO"
 msgstr "С_ам монтирај ИСО слику"
 
-#: ../src/settings.c:10461
+#: ../src/settings.c:10506
 msgid "Fol_der"
 msgstr "_Директоријум"
 
-#: ../src/settings.c:10467
+#: ../src/settings.c:10512
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "О_бележивач"
 
-#: ../src/settings.c:10471
+#: ../src/settings.c:10516
 msgid "_Archive"
 msgstr "_Архива"
 
-#: ../src/settings.c:10478
+#: ../src/settings.c:10523
 msgctxt "New|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:10480
+#: ../src/settings.c:10525
 msgid "Tab _Here"
 msgstr "Отвори у _језичку"
 
-#: ../src/settings.c:10483
+#: ../src/settings.c:10528
 msgid "_Desktop Application"
 msgstr "Програм ра_дне површи"
 
-#: ../src/settings.c:10494
+#: ../src/settings.c:10539
 msgid "_Back"
 msgstr "_Назад"
 
-#: ../src/settings.c:10496
+#: ../src/settings.c:10541
 msgid "_Forward"
 msgstr "_Напред"
 
-#: ../src/settings.c:10498
+#: ../src/settings.c:10543
 msgid "_Up"
 msgstr "_Горе"
 
-#: ../src/settings.c:10500
+#: ../src/settings.c:10545
 msgid "_Home"
 msgstr "_Почетна"
 
-#: ../src/settings.c:10505
+#: ../src/settings.c:10550
 msgid "_Set Default"
 msgstr "_Подеси подразумевано"
 
-#: ../src/settings.c:10508
+#: ../src/settings.c:10553
 msgid "Re_al Path"
 msgstr "Стварн_а путања"
 
-#: ../src/settings.c:10510
+#: ../src/settings.c:10555
 msgid "Fo_cus"
 msgstr "Фо_кус"
 
-#: ../src/settings.c:10514
+#: ../src/settings.c:10559
 msgid "_Path Bar"
 msgstr "_Места"
 
-#: ../src/settings.c:10516
+#: ../src/settings.c:10561
 msgid "_File List"
 msgstr "Листа _датотека"
 
-#: ../src/settings.c:10518
+#: ../src/settings.c:10563
 msgid "_Tree"
 msgstr "_Стабло"
 
-#: ../src/settings.c:10525
+#: ../src/settings.c:10570
 msgctxt "Go|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:10531
+#: ../src/settings.c:10576
 msgid "_Close"
 msgstr "_Затвори"
 
-#: ../src/settings.c:10548
+#: ../src/settings.c:10593
 msgid "Styl_e"
 msgstr "Изгл_ед"
 
-#: ../src/settings.c:10551
+#: ../src/settings.c:10596
 msgid "C_olumns"
 msgstr "К_олоне"
 
-#: ../src/settings.c:10554
+#: ../src/settings.c:10599
 msgid "_Reorder"
 msgstr "Пре_сложи"
 
-#: ../src/settings.c:10556
+#: ../src/settings.c:10601
 msgid "_Rubberband Select"
 msgstr "_Изабери „Rubberband“"
 
-#: ../src/settings.c:10569
+#: ../src/settings.c:10614
 msgid "_Sort"
 msgstr "_Сортирај"
 
 #. visible
 #. position
-#: ../src/settings.c:10575 ../src/settings.c:10959 ../src/settings.c:11082
-#: ../src/settings.c:11210 ../src/settings.c:11338
+#: ../src/settings.c:10620 ../src/settings.c:11011
 msgid "_Size"
 msgstr "_Величина"
 
-#: ../src/settings.c:10577 ../src/settings.c:10964 ../src/settings.c:11088
-#: ../src/settings.c:11216 ../src/settings.c:11344
+#. set visible for all panel context modes
+#. for ( i = 0; i < 4; i++ )
+#. {
+#. xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
+#. xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
+#. }
+#: ../src/settings.c:10622 ../src/settings.c:11023
 msgid "_Type"
 msgstr "_Врста"
 
-#: ../src/settings.c:10579 ../src/settings.c:10969 ../src/settings.c:11094
-#: ../src/settings.c:11222 ../src/settings.c:11350
+#: ../src/settings.c:10624 ../src/settings.c:11027
 msgid "_Permission"
 msgstr "_Дозволе"
 
-#: ../src/settings.c:10581 ../src/settings.c:10843 ../src/settings.c:10974
-#: ../src/settings.c:11100 ../src/settings.c:11228 ../src/settings.c:11356
+#: ../src/settings.c:10626 ../src/settings.c:10888 ../src/settings.c:11031
 msgid "_Owner"
 msgstr "_Власник"
 
-#: ../src/settings.c:10583 ../src/settings.c:10979 ../src/settings.c:11106
-#: ../src/settings.c:11234 ../src/settings.c:11362
+#: ../src/settings.c:10628 ../src/settings.c:11035
 msgid "_Modified"
 msgstr "_Измењено"
 
-#: ../src/settings.c:10587
+#: ../src/settings.c:10632
 msgid "_Descending"
 msgstr "_Опадајуће"
 
-#: ../src/settings.c:10590
+#: ../src/settings.c:10635
 msgid "Nat_ural"
 msgstr "При_родно"
 
-#: ../src/settings.c:10592
+#: ../src/settings.c:10637
 msgid "_Case Sensitive"
 msgstr "Осетљиво на величину _слова"
 
-#: ../src/settings.c:10594
+#: ../src/settings.c:10639
 msgid "Folders Fi_rst"
 msgstr "Најпре дире_кторијуми"
 
-#: ../src/settings.c:10596
+#: ../src/settings.c:10641
 msgid "F_iles First"
 msgstr "Нај_пре датотеке"
 
-#: ../src/settings.c:10598
+#: ../src/settings.c:10643
 msgid "Mi_xed"
 msgstr "Изме_шано"
 
-#: ../src/settings.c:10600
+#: ../src/settings.c:10645
 msgid "_Hidden First"
 msgstr "Скривене на _почетку"
 
-#: ../src/settings.c:10602
+#: ../src/settings.c:10647
 msgid "Hidden _Last"
 msgstr "Скривене на _крају"
 
-#: ../src/settings.c:10605
+#: ../src/settings.c:10650
 msgid "Re_fresh"
 msgstr "О_свежи"
 
-#: ../src/settings.c:10608
+#: ../src/settings.c:10653
 msgid "Auto See_k"
 msgstr "Сам раз_гледај"
 
-#: ../src/settings.c:10613
+#: ../src/settings.c:10658
 msgid "P_rotocol Handler..."
 msgstr "_Модул протокола..."
 
-#: ../src/settings.c:10615
+#: ../src/settings.c:10660
 msgid "Set Protocol Handler"
 msgstr "Подеси модул протокола"
 
-#: ../src/settings.c:10616
+#: ../src/settings.c:10661
 msgid ""
 "Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
@@ -4455,303 +4442,195 @@ msgid ""
 "TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr "Унесите наредбу за монтирање или отварање протокола (нпр. nfs://, smb://, и сл.):\n\nУколико ово није подешено, протоколи ће се отварати помођу „udevil mount“ наредбе.\nСавет:\nЗа демонтирање мрежа, инсталирајте „udevil“ или поставите „Наредбу за демонтирање“ у наредбу која управља мрежним протоколима.\n"
 
-#: ../src/settings.c:10620
+#: ../src/settings.c:10665
 msgid "Path Bar _Help"
 msgstr "Помоћ за _Места"
 
-#: ../src/settings.c:10636 ../src/settings.c:10766
+#: ../src/settings.c:10681 ../src/settings.c:10811
 msgid "_Delete"
 msgstr "_Обриши"
 
-#: ../src/settings.c:10659
+#: ../src/settings.c:10704
 msgid "Copy Pa_rent"
 msgstr "Умножи путању до дир._родитеља"
 
-#: ../src/settings.c:10662
+#: ../src/settings.c:10707
 msgid "Paste _Link"
 msgstr "Убаци _везу"
 
-#: ../src/settings.c:10665
+#: ../src/settings.c:10710
 msgid "Paste _Target"
 msgstr "Убаци _одредиште"
 
-#: ../src/settings.c:10668
+#: ../src/settings.c:10713
 msgid "Paste _As"
 msgstr "Убаци к_ао"
 
-#: ../src/settings.c:10674 ../src/settings.c:10764
+#: ../src/settings.c:10719 ../src/settings.c:10809
 msgid "_Copy To"
 msgstr "Умножи _у"
 
-#: ../src/settings.c:10678
+#: ../src/settings.c:10723
 msgid "L_ocation"
 msgstr "_Место..."
 
-#: ../src/settings.c:10679 ../src/settings.c:10718
+#: ../src/settings.c:10724 ../src/settings.c:10763
 msgid "L_ast Location"
 msgstr "_Последње место"
 
-#: ../src/settings.c:10682
+#: ../src/settings.c:10727
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:10699
+#: ../src/settings.c:10744
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
 msgstr "_Пано"
 
-#: ../src/settings.c:10713
+#: ../src/settings.c:10758
 msgid "_Move To"
 msgstr "Пре_мести у"
 
-#: ../src/settings.c:10717
+#: ../src/settings.c:10762
 msgid "_Location"
 msgstr "_Место..."
 
-#: ../src/settings.c:10720
+#: ../src/settings.c:10765
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
 msgstr "_Језичак"
 
-#: ../src/settings.c:10737
+#: ../src/settings.c:10782
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
 msgstr "_Пано"
 
-#: ../src/settings.c:10750
+#: ../src/settings.c:10795
 msgid "_Select All"
 msgstr "_Изабери све"
 
-#: ../src/settings.c:10753
+#: ../src/settings.c:10798
 msgid "_Unselect All"
 msgstr "_Одзначи све"
 
-#: ../src/settings.c:10755
+#: ../src/settings.c:10800
 msgid "_Invert Selection"
 msgstr "_Обрни избор"
 
-#: ../src/settings.c:10757
+#: ../src/settings.c:10802
 msgid "S_elect By Pattern"
 msgstr "Изабери _образац"
 
-#: ../src/settings.c:10759
+#: ../src/settings.c:10804
 msgid "R_oot"
 msgstr "_Root"
 
-#: ../src/settings.c:10765
+#: ../src/settings.c:10810
 msgid "Move _To"
 msgstr "Пре_мести у"
 
 #. Properties
-#: ../src/settings.c:10770
+#: ../src/settings.c:10815
 msgid "Propert_ies"
 msgstr "_Особине"
 
-#: ../src/settings.c:10781
+#: ../src/settings.c:10826
 msgid "_Quick"
 msgstr "_Брза промена дозвола"
 
-#: ../src/settings.c:10803 ../src/settings.c:10833 ../src/settings.c:10859
+#: ../src/settings.c:10848 ../src/settings.c:10878 ../src/settings.c:10904
 msgid "_Recursive"
 msgstr "_Рекурзивно"
 
-#. PANEL ONE
-#. sort_natural
-#. sort_case
-#. PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-#. sort_hidden_first
-#. PANEL TWO
-#. sort_natural
-#. sort_case
-#. PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-#. sort_hidden_first
-#. PANEL THREE
-#. sort_natural
-#. sort_case
-#. PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-#. sort_hidden_first
-#. PANEL FOUR
-#: ../src/settings.c:10878 ../src/settings.c:10991 ../src/settings.c:11119
-#: ../src/settings.c:11247
+#: ../src/settings.c:10926
 msgid "_Toolbar"
 msgstr "_Трака са алаткама"
 
-#: ../src/settings.c:10885 ../src/settings.c:11000 ../src/settings.c:11128
-#: ../src/settings.c:11256
+#: ../src/settings.c:10933
 msgid "T_ree"
 msgstr "С_табло директоријума"
 
-#: ../src/settings.c:10895 ../src/settings.c:11012 ../src/settings.c:11140
-#: ../src/settings.c:11268
+#: ../src/settings.c:10947
 msgid "_Detailed"
 msgstr "_Детаљно"
 
-#: ../src/settings.c:10898 ../src/settings.c:11016 ../src/settings.c:11144
-#: ../src/settings.c:11272
+#: ../src/settings.c:10951
 msgid "_Icons"
 msgstr "_Иконе"
 
-#: ../src/settings.c:10901 ../src/settings.c:11020 ../src/settings.c:11148
-#: ../src/settings.c:11276
+#: ../src/settings.c:10954
 msgid "_Compact"
 msgstr "_Компактно"
 
-#: ../src/settings.c:10905 ../src/settings.c:11025 ../src/settings.c:11153
-#: ../src/settings.c:11281
+#: ../src/settings.c:10957
 msgid "_Hidden Files"
 msgstr "_Сакривене датотеке"
 
-#: ../src/settings.c:10911
-msgid "File List Font (Panel 1)"
-msgstr "Фонт листе датотеке (Пано 1)"
+#: ../src/settings.c:10963
+#, c-format
+msgid "File List Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10912
+#: ../src/settings.c:10964
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
 msgstr "Пример  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
 
-#: ../src/settings.c:10917
-msgid "Devices Font (Panel 1)"
-msgstr "Фонт уређаја (Пано 1)"
+#: ../src/settings.c:10969
+#, c-format
+msgid "Devices Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10918 ../src/settings.c:11039 ../src/settings.c:11167
-#: ../src/settings.c:11295
+#: ../src/settings.c:10970
 msgid "sr0 [no media] :EXAMPLE"
 msgstr "sr0 [без медија] :ПРИМЕР"
 
-#: ../src/settings.c:10924
-msgid "Bookmarks Font (Panel 1)"
-msgstr "Фонт обележивача (Пано 1)"
+#: ../src/settings.c:10976
+#, c-format
+msgid "Bookmarks Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10925 ../src/settings.c:11046 ../src/settings.c:11174
-#: ../src/settings.c:11302
+#: ../src/settings.c:10977
 msgid "Example Bookmark Name"
 msgstr "Пример имене обележивача"
 
-#: ../src/settings.c:10930
-msgid "Path Bar Font (Panel 1)"
-msgstr "Фонт за Места (Пано 1)"
+#: ../src/settings.c:10982
+#, c-format
+msgid "Path Bar Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10931 ../src/settings.c:11052 ../src/settings.c:11180
-#: ../src/settings.c:11308
+#: ../src/settings.c:10983
 msgid "$ cat /home/user/example"
 msgstr "$ cat /home/user/пример"
 
-#: ../src/settings.c:10937
-msgid "Tab Font (Panel 1)"
-msgstr "Фонт језичка (Пано 1)"
+#: ../src/settings.c:10989
+#, c-format
+msgid "Tab Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10947
-msgid "Status Bar Font (Panel 1)"
-msgstr "Фонт статус бара (Пано 1)"
+#: ../src/settings.c:10999
+#, c-format
+msgid "Status Bar Font (Panel %d)"
+msgstr ""
 
-#: ../src/settings.c:10948 ../src/settings.c:11069 ../src/settings.c:11197
-#: ../src/settings.c:11325
+#: ../src/settings.c:11000
 msgid "12 G free / 200 G   52 items"
 msgstr "( 12 Г доступно од 200 Г )  52 ставке"
 
-#: ../src/settings.c:11032
-msgid "File List Font (Panel 2)"
-msgstr "Фонт листе датотеке (Пано 2)"
-
-#: ../src/settings.c:11033
-msgid "Example  2.2 M  file  -rwxr--r--  user:group  2011-02-02 02:22"
-msgstr "Нпр.  2.2 М  датотека  -rwxr--r--  корисник:група  2011-02-02 02:22"
-
-#: ../src/settings.c:11038
-msgid "Devices Font (Panel 2)"
-msgstr "Фонт уређаја (Пано 2)"
-
-#: ../src/settings.c:11045
-msgid "Bookmarks Font (Panel 2)"
-msgstr "Фонт обележивача (Пано 2)"
-
-#: ../src/settings.c:11051
-msgid "Path Bar Font (Panel 2)"
-msgstr "Фонт за Места (Пано 2)"
-
-#: ../src/settings.c:11058
-msgid "Tab Font (Panel 2)"
-msgstr "Фонт језичка (Пано 2)"
-
-#: ../src/settings.c:11068
-msgid "Status Bar Font (Panel 2)"
-msgstr "Фонт статус бара (Пано 2)"
-
-#: ../src/settings.c:11160
-msgid "File List Font (Panel 3)"
-msgstr "Фонт листе датотеке (Пано 3)"
-
-#: ../src/settings.c:11161
-msgid "Example  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33"
-msgstr "Пример  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33"
-
-#: ../src/settings.c:11166
-msgid "Devices Font (Panel 3)"
-msgstr "Фонт уређаја (Пано 3)"
-
-#: ../src/settings.c:11173
-msgid "Bookmarks Font (Panel 3)"
-msgstr "Фонт обележивача (Пано 3)"
-
-#: ../src/settings.c:11179
-msgid "Path Bar Font (Panel 3)"
-msgstr "Фонт за Места (Пано 3)"
-
-#: ../src/settings.c:11186
-msgid "Tab Font (Panel 3)"
-msgstr "Фонт језичка (Пано 3)"
-
-#: ../src/settings.c:11196
-msgid "Status Bar Font (Panel 3)"
-msgstr "Фонт статус бара (Пано 3)"
-
-#: ../src/settings.c:11288
-msgid "File List Font (Panel 4)"
-msgstr "Фонт листе датотеке (Пано 4)"
-
-#: ../src/settings.c:11289
-msgid "Example  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44"
-msgstr "Пример  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44"
-
-#: ../src/settings.c:11294
-msgid "Devices Font (Panel 4)"
-msgstr "Фонт уређаја (Пано 4)"
-
-#: ../src/settings.c:11301
-msgid "Bookmarks Font (Panel 4)"
-msgstr "Фонт обележивача (Пано 4)"
-
-#: ../src/settings.c:11307
-msgid "Path Bar Font (Panel 4)"
-msgstr "Фонт за Места (Пано 4)"
-
-#: ../src/settings.c:11314
-msgid "Tab Font (Panel 4)"
-msgstr "Фонт језичка (Пано 4)"
-
-#: ../src/settings.c:11324
-msgid "Status Bar Font (Panel 4)"
-msgstr "Фонт статус бара (Пано 4)"
-
-#. sort_natural
-#. sort_case
-#. PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-#. sort_hidden_first
 #. speed
-#: ../src/settings.c:11375 ../src/settings.c:11382
+#: ../src/settings.c:11047 ../src/settings.c:11054
 msgid "_New Tab"
 msgstr "_Нови језичак"
 
-#: ../src/settings.c:11378 ../src/settings.c:11387
+#: ../src/settings.c:11050 ../src/settings.c:11059
 msgid "_Single Click"
 msgstr "_Један клик"
 
-#: ../src/ptk/ptk-file-browser.c:550
+#: ../src/ptk/ptk-file-browser.c:600
 msgid "Toolbar Config Menu Help"
 msgstr "Помоћ за конфигурисање менија траке алата"
 
-#: ../src/ptk/ptk-file-browser.c:550
+#: ../src/ptk/ptk-file-browser.c:600
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
@@ -4760,7 +4639,7 @@ msgid ""
 "For more information, click the Help button below."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:2236
+#: ../src/ptk/ptk-file-browser.c:2350
 #, c-format
 msgid ""
 "Directory doesn't exist\n"
@@ -4768,7 +4647,7 @@ msgid ""
 "%s"
 msgstr "Директоријум не постоји\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:2261
+#: ../src/ptk/ptk-file-browser.c:2375
 #, c-format
 msgid ""
 "Unable to access %s\n"
@@ -4776,11 +4655,11 @@ msgid ""
 "%s"
 msgstr "Не могу да приступим %s\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:2210
+#: ../src/ptk/ptk-file-browser.c:3020 ../src/desktop/desktop-window.c:2210
 msgid "Select By Pattern"
 msgstr "Изабери образац"
 
-#: ../src/ptk/ptk-file-browser.c:2906 ../src/desktop/desktop-window.c:2210
+#: ../src/ptk/ptk-file-browser.c:3020 ../src/desktop/desktop-window.c:2210
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -4792,50 +4671,50 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5654 ../src/ptk/ptk-file-misc.c:3805
+#: ../src/ptk/ptk-file-browser.c:5788 ../src/ptk/ptk-file-misc.c:3811
 #: ../src/desktop/desktop-window.c:3211
 msgid "Choose Location"
 msgstr "Изабери локацију"
 
-#: ../src/ptk/ptk-file-browser.c:5687 ../src/ptk/ptk-file-browser.c:5719
+#: ../src/ptk/ptk-file-browser.c:5821 ../src/ptk/ptk-file-browser.c:5853
 #: ../src/desktop/desktop-window.c:3244 ../src/desktop/desktop-window.c:3276
 msgid "Invalid Destination"
 msgstr "Неважећа дестинација"
 
-#: ../src/ptk/ptk-file-browser.c:5688 ../src/desktop/desktop-window.c:3245
+#: ../src/ptk/ptk-file-browser.c:5822 ../src/desktop/desktop-window.c:3245
 msgid "Destination same as source"
 msgstr "Дестинација иста као извор"
 
-#: ../src/ptk/ptk-file-browser.c:5720 ../src/desktop/desktop-window.c:3277
+#: ../src/ptk/ptk-file-browser.c:5854 ../src/desktop/desktop-window.c:3277
 msgid "Invalid destination"
 msgstr "Неважећа дестинација"
 
-#: ../src/ptk/ptk-file-browser.c:5767
+#: ../src/ptk/ptk-file-browser.c:5901
 msgid "Hide File"
 msgstr "Сакриј датотеку"
 
-#: ../src/ptk/ptk-file-browser.c:5767
+#: ../src/ptk/ptk-file-browser.c:5901
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
 "To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr ""
 
-#: ../src/ptk/ptk-file-browser.c:5780
+#: ../src/ptk/ptk-file-browser.c:5914
 msgid "Error hiding files"
 msgstr "Не могу да сакријем датотеке"
 
-#: ../src/ptk/ptk-file-browser.c:5787
+#: ../src/ptk/ptk-file-browser.c:5921
 msgid "No files are selected"
 msgstr "Нема одабраних датотека"
 
-#: ../src/ptk/ptk-file-browser.c:6589 ../src/ptk/ptk-location-view.c:3726
-#: ../src/ptk/ptk-file-menu.c:472
+#: ../src/ptk/ptk-file-browser.c:6723 ../src/ptk/ptk-location-view.c:3726
+#: ../src/ptk/ptk-file-menu.c:510
 msgid "Bookmark Exists"
 msgstr "Постоји обележивач"
 
-#: ../src/ptk/ptk-file-browser.c:6590 ../src/ptk/ptk-location-view.c:3727
-#: ../src/ptk/ptk-file-menu.c:473
+#: ../src/ptk/ptk-file-browser.c:6724 ../src/ptk/ptk-location-view.c:3727
+#: ../src/ptk/ptk-file-menu.c:511
 msgid "Bookmark already exists"
 msgstr "Обележивач већ постоји"
 
@@ -5292,153 +5171,153 @@ msgstr "Заустави као остало"
 msgid "Cont As Other"
 msgstr "Настави као остало"
 
-#: ../src/ptk/ptk-file-task.c:766
+#: ../src/ptk/ptk-file-task.c:775
 msgid "Move: "
 msgstr "Премештам: "
 
-#: ../src/ptk/ptk-file-task.c:767
+#: ../src/ptk/ptk-file-task.c:776
 msgid "Copy: "
 msgstr "Умножавам: "
 
-#: ../src/ptk/ptk-file-task.c:768
+#: ../src/ptk/ptk-file-task.c:777
 msgid "Trash: "
 msgstr "Смеће"
 
-#: ../src/ptk/ptk-file-task.c:769
+#: ../src/ptk/ptk-file-task.c:778
 msgid "Delete: "
 msgstr "Бришем: "
 
-#: ../src/ptk/ptk-file-task.c:770
+#: ../src/ptk/ptk-file-task.c:779
 msgid "Link: "
 msgstr "Повезујем: "
 
-#: ../src/ptk/ptk-file-task.c:771
+#: ../src/ptk/ptk-file-task.c:780
 msgid "Change: "
 msgstr "Промени:"
 
-#: ../src/ptk/ptk-file-task.c:772
+#: ../src/ptk/ptk-file-task.c:781
 msgid "Run: "
 msgstr "Покренуто:"
 
-#: ../src/ptk/ptk-file-task.c:776
+#: ../src/ptk/ptk-file-task.c:785
 msgid "Moving..."
 msgstr "Премештање..."
 
-#: ../src/ptk/ptk-file-task.c:777
+#: ../src/ptk/ptk-file-task.c:786
 msgid "Copying..."
 msgstr "Умножавање..."
 
-#: ../src/ptk/ptk-file-task.c:778
+#: ../src/ptk/ptk-file-task.c:787
 msgid "Trashing..."
 msgstr "Бацање..."
 
-#: ../src/ptk/ptk-file-task.c:779
+#: ../src/ptk/ptk-file-task.c:788
 msgid "Deleting..."
 msgstr "Брисање..."
 
-#: ../src/ptk/ptk-file-task.c:780
+#: ../src/ptk/ptk-file-task.c:789
 msgid "Linking..."
 msgstr "Повезивање..."
 
-#: ../src/ptk/ptk-file-task.c:781
+#: ../src/ptk/ptk-file-task.c:790
 msgid "Changing..."
 msgstr "Промена..."
 
-#: ../src/ptk/ptk-file-task.c:782 ../src/ptk/ptk-file-task.c:952
-#: ../src/ptk/ptk-file-task.c:1482
+#: ../src/ptk/ptk-file-task.c:791 ../src/ptk/ptk-file-task.c:961
+#: ../src/ptk/ptk-file-task.c:1493
 #, c-format
 msgid "Running..."
 msgstr "Покретање..."
 
-#: ../src/ptk/ptk-file-task.c:868
+#: ../src/ptk/ptk-file-task.c:877
 msgid "From:"
 msgstr "Из:"
 
-#: ../src/ptk/ptk-file-task.c:885
+#: ../src/ptk/ptk-file-task.c:894
 msgid "To:"
 msgstr "У место:"
 
-#: ../src/ptk/ptk-file-task.c:903
+#: ../src/ptk/ptk-file-task.c:912
 msgid "Progress:  "
 msgstr "Напредак:"
 
-#: ../src/ptk/ptk-file-task.c:941
+#: ../src/ptk/ptk-file-task.c:950
 msgid "Status:  "
 msgstr "Стање:"
 
-#: ../src/ptk/ptk-file-task.c:948 ../src/ptk/ptk-file-task.c:1443
+#: ../src/ptk/ptk-file-task.c:957 ../src/ptk/ptk-file-task.c:1454
 #, c-format
 msgid "Paused"
 msgstr "Паузирано"
 
-#: ../src/ptk/ptk-file-task.c:950 ../src/ptk/ptk-file-task.c:1459
+#: ../src/ptk/ptk-file-task.c:959 ../src/ptk/ptk-file-task.c:1470
 #, c-format
 msgid "Queued"
 msgstr "На чекању"
 
-#: ../src/ptk/ptk-file-task.c:1011
+#: ../src/ptk/ptk-file-task.c:1020
 msgid "Ask"
 msgstr "Питај"
 
-#: ../src/ptk/ptk-file-task.c:1012
+#: ../src/ptk/ptk-file-task.c:1021
 msgid "Overwrite All"
 msgstr "Препиши све"
 
-#: ../src/ptk/ptk-file-task.c:1013
+#: ../src/ptk/ptk-file-task.c:1022
 msgid "Skip All"
 msgstr "Прескочи све"
 
-#: ../src/ptk/ptk-file-task.c:1014
+#: ../src/ptk/ptk-file-task.c:1023
 msgid "Auto Rename"
 msgstr "Аутоматско преименовање"
 
-#: ../src/ptk/ptk-file-task.c:1018
+#: ../src/ptk/ptk-file-task.c:1027
 msgid "Stop If Error First"
 msgstr "Заустави код прве грешке"
 
-#: ../src/ptk/ptk-file-task.c:1019
+#: ../src/ptk/ptk-file-task.c:1028
 msgid "Stop On Any Error"
 msgstr "Заустави на било коју грешку"
 
-#: ../src/ptk/ptk-file-task.c:1020
+#: ../src/ptk/ptk-file-task.c:1029
 msgid "Continue"
 msgstr "Настави"
 
-#: ../src/ptk/ptk-file-task.c:1181 ../src/ptk/ptk-file-task.c:1414
+#: ../src/ptk/ptk-file-task.c:1192 ../src/ptk/ptk-file-task.c:1425
 #, c-format
 msgid "Stopped"
 msgstr "Заустављено"
 
-#: ../src/ptk/ptk-file-task.c:1185
+#: ../src/ptk/ptk-file-task.c:1196
 msgid "Errors"
 msgstr "Грешке"
 
-#: ../src/ptk/ptk-file-task.c:1187 ../src/ptk/ptk-file-task.c:1426
-#: ../src/ptk/ptk-file-task.c:1436
+#: ../src/ptk/ptk-file-task.c:1198 ../src/ptk/ptk-file-task.c:1437
+#: ../src/ptk/ptk-file-task.c:1447
 #, c-format
 msgid "Done"
 msgstr "Готово"
 
-#: ../src/ptk/ptk-file-task.c:1342
+#: ../src/ptk/ptk-file-task.c:1353
 #, c-format
 msgid "%s  (%s)  %s remaining"
 msgstr "%s  (%s)  %s је преостало"
 
-#: ../src/ptk/ptk-file-task.c:1374
+#: ../src/ptk/ptk-file-task.c:1385
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
 msgstr "[ SNIP - додатне грешке изнад су из овог дневника ]\n"
 
-#: ../src/ptk/ptk-file-task.c:1404
+#: ../src/ptk/ptk-file-task.c:1415
 #, c-format
 msgid "Error  ( Stop If First )"
 msgstr "Грешка  (Заустави ако је прва)"
 
-#: ../src/ptk/ptk-file-task.c:1406
+#: ../src/ptk/ptk-file-task.c:1417
 #, c-format
 msgid "Error  ( Stop On Any )"
 msgstr "Грешка  (Заустави на било коју"
 
-#: ../src/ptk/ptk-file-task.c:1408
+#: ../src/ptk/ptk-file-task.c:1419
 #, c-format
 msgid "Stopped with %d error"
 msgid_plural "Stopped with %d errors"
@@ -5446,7 +5325,7 @@ msgstr[0] "Заустављено са %d грешком"
 msgstr[1] "Заустављено са %d грешке"
 msgstr[2] "Заустављено са %d грешака"
 
-#: ../src/ptk/ptk-file-task.c:1421
+#: ../src/ptk/ptk-file-task.c:1432
 #, c-format
 msgid "Finished with %d error"
 msgid_plural "Finished with %d errors"
@@ -5454,37 +5333,37 @@ msgstr[0] "Завршено са %d грешком"
 msgstr[1] "Завршено са %d грешке"
 msgstr[2] "Завршено са  %d грешака"
 
-#: ../src/ptk/ptk-file-task.c:1431
+#: ../src/ptk/ptk-file-task.c:1442
 #, c-format
 msgid "Finished with error  ( exit status %d )"
 msgstr "Завршено са грешком  (излазно стање %d)"
 
-#: ../src/ptk/ptk-file-task.c:1434
+#: ../src/ptk/ptk-file-task.c:1445
 #, c-format
 msgid "Finished with error"
 msgstr "Завршено са грешком"
 
-#: ../src/ptk/ptk-file-task.c:1447
+#: ../src/ptk/ptk-file-task.c:1458
 #, c-format
 msgid "Paused  ( pid %d )"
 msgstr "Паузирано  (pid %d)"
 
-#: ../src/ptk/ptk-file-task.c:1450
+#: ../src/ptk/ptk-file-task.c:1461
 #, c-format
 msgid "Paused  ( exit status %d )"
 msgstr "Паузирано (излазно стање %d)"
 
-#: ../src/ptk/ptk-file-task.c:1463
+#: ../src/ptk/ptk-file-task.c:1474
 #, c-format
 msgid "Queued  ( pid %d )"
 msgstr "На чекању  (pid %d)"
 
-#: ../src/ptk/ptk-file-task.c:1466
+#: ../src/ptk/ptk-file-task.c:1477
 #, c-format
 msgid "Queued  ( exit status %d )"
 msgstr "На чекању  (излазно стање %d)"
 
-#: ../src/ptk/ptk-file-task.c:1477
+#: ../src/ptk/ptk-file-task.c:1488
 #, c-format
 msgid "Running with %d error"
 msgid_plural "Running with %d errors"
@@ -5492,133 +5371,133 @@ msgstr[0] "Извршава се са %d грешком"
 msgstr[1] "Извршава се са %d грешке"
 msgstr[2] "Извршава се са %d грешака"
 
-#: ../src/ptk/ptk-file-task.c:1487
+#: ../src/ptk/ptk-file-task.c:1498
 #, c-format
 msgid "Running...  ( pid %d )"
 msgstr "Извршава се...  (pid %d)"
 
-#: ../src/ptk/ptk-file-task.c:1490
+#: ../src/ptk/ptk-file-task.c:1501
 #, c-format
 msgid "Running...  ( exit status %d )"
 msgstr "Извршава се...  (излазно стање %d)"
 
-#: ../src/ptk/ptk-file-task.c:1619 ../src/ptk/ptk-file-task.c:2385
+#: ../src/ptk/ptk-file-task.c:1630 ../src/ptk/ptk-file-task.c:2396
 #, c-format
 msgid "stalled"
 msgstr "у застоју"
 
-#: ../src/ptk/ptk-file-task.c:2044
+#: ../src/ptk/ptk-file-task.c:2055
 msgid "Moving from folder:"
 msgstr "Померање из директоријума:"
 
-#: ../src/ptk/ptk-file-task.c:2046
+#: ../src/ptk/ptk-file-task.c:2057
 msgid "Linking from folder:"
 msgstr "Повезивање из директоријума:"
 
-#: ../src/ptk/ptk-file-task.c:2048
+#: ../src/ptk/ptk-file-task.c:2059
 msgid "Copying from folder:"
 msgstr "Умножавање из директоријума:"
 
 #. Ask the user whether to overwrite dir content or not
-#: ../src/ptk/ptk-file-task.c:2064
+#: ../src/ptk/ptk-file-task.c:2075
 msgid "Folder Exists"
 msgstr "Директоријум постоји"
 
-#: ../src/ptk/ptk-file-task.c:2065
+#: ../src/ptk/ptk-file-task.c:2076
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
 msgstr "<b>Директоријум већ постоји.</b>  Преименујте га или одаберите другу радњу."
 
-#: ../src/ptk/ptk-file-task.c:2082 ../src/ptk/ptk-file-task.c:2086
+#: ../src/ptk/ptk-file-task.c:2093 ../src/ptk/ptk-file-task.c:2097
 msgid "\t<b>( link )</b>"
 msgstr "\t<b>(веза)</b>"
 
-#: ../src/ptk/ptk-file-task.c:2090
+#: ../src/ptk/ptk-file-task.c:2101
 msgid "\t<b>! overwrite file with link !</b>"
 msgstr "\t<b>! пребриши датотеку са симболичком везом!</b>"
 
-#: ../src/ptk/ptk-file-task.c:2095
+#: ../src/ptk/ptk-file-task.c:2106
 msgid "<b>( same size )</b>"
 msgstr "<b>(исте величине)</b>"
 
-#: ../src/ptk/ptk-file-task.c:2101 ../src/ptk/ptk-file-task.c:2124
+#: ../src/ptk/ptk-file-task.c:2112 ../src/ptk/ptk-file-task.c:2135
 #, c-format
 msgid "%s\t( %lu bytes )"
 msgstr "%s\t( %lu бајтова )"
 
-#: ../src/ptk/ptk-file-task.c:2103
+#: ../src/ptk/ptk-file-task.c:2114
 msgid "larger"
 msgstr "већи"
 
-#: ../src/ptk/ptk-file-task.c:2105
+#: ../src/ptk/ptk-file-task.c:2116
 msgid "smaller"
 msgstr "мањи"
 
-#: ../src/ptk/ptk-file-task.c:2109
+#: ../src/ptk/ptk-file-task.c:2120
 msgid "<b>( same time )</b>\t"
 msgstr "<b>(исто време)</b>\t"
 
-#: ../src/ptk/ptk-file-task.c:2119
+#: ../src/ptk/ptk-file-task.c:2130
 msgid "newer"
 msgstr "новији"
 
-#: ../src/ptk/ptk-file-task.c:2121
+#: ../src/ptk/ptk-file-task.c:2132
 msgid "older"
 msgstr "старији"
 
-#: ../src/ptk/ptk-file-task.c:2142
+#: ../src/ptk/ptk-file-task.c:2153
 msgid "Filename Exists"
 msgstr "Име датотеке постоји"
 
-#: ../src/ptk/ptk-file-task.c:2143 ../src/ptk/ptk-file-task.c:2158
+#: ../src/ptk/ptk-file-task.c:2154 ../src/ptk/ptk-file-task.c:2169
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr "<b>Име датотеке већ постоји.</b>  Преименујте је или одаберите другу радњу."
 
-#: ../src/ptk/ptk-file-task.c:2155
+#: ../src/ptk/ptk-file-task.c:2166
 msgid "Rename Required"
 msgstr "Преименовање је неопходно"
 
-#: ../src/ptk/ptk-file-task.c:2157
+#: ../src/ptk/ptk-file-task.c:2168
 msgid "In folder:"
 msgstr "У директоријуму:"
 
-#: ../src/ptk/ptk-file-task.c:2237
+#: ../src/ptk/ptk-file-task.c:2248
 msgid "_Overwrite"
 msgstr "_Пребриши"
 
-#: ../src/ptk/ptk-file-task.c:2238
+#: ../src/ptk/ptk-file-task.c:2249
 msgid "Overwrite _All"
 msgstr "Пребриши _све"
 
-#: ../src/ptk/ptk-file-task.c:2243
+#: ../src/ptk/ptk-file-task.c:2254
 msgid "_Pause"
 msgstr "_Пауза"
 
-#: ../src/ptk/ptk-file-task.c:2245
+#: ../src/ptk/ptk-file-task.c:2256
 msgid "_Skip"
 msgstr "_Прескочи"
 
-#: ../src/ptk/ptk-file-task.c:2246
+#: ../src/ptk/ptk-file-task.c:2257
 msgid "S_kip All"
 msgstr "П_рескочи све"
 
-#: ../src/ptk/ptk-file-task.c:2299
+#: ../src/ptk/ptk-file-task.c:2310
 msgid "To folder:"
 msgstr "У директоријум:"
 
-#: ../src/ptk/ptk-file-task.c:2326
+#: ../src/ptk/ptk-file-task.c:2337
 msgid "<b>Folder Name:</b>"
 msgstr "<b>Име директоријума:</b>"
 
 #. extra buttons
-#: ../src/ptk/ptk-file-task.c:2354
+#: ../src/ptk/ptk-file-task.c:2365
 msgid " _Rename "
 msgstr "_Преименуј"
 
-#: ../src/ptk/ptk-file-task.c:2358
+#: ../src/ptk/ptk-file-task.c:2369
 msgid " A_uto Rename "
 msgstr "С_ам преименуј"
 
-#: ../src/ptk/ptk-file-task.c:2362
+#: ../src/ptk/ptk-file-task.c:2373
 msgid " Auto Re_name All "
 msgstr "Сам пре_именуј све"
 
@@ -5653,7 +5532,7 @@ msgid "Make contents user-_writable"
 msgstr "Учини да садржај буде у_писив"
 
 #: ../src/ptk/ptk-file-archiver.c:589 ../src/ptk/ptk-file-archiver.c:628
-#: ../src/ptk/ptk-file-menu.c:2152 ../src/vfs/vfs-file-task.c:137
+#: ../src/ptk/ptk-file-menu.c:2225 ../src/vfs/vfs-file-task.c:137
 msgid "copy"
 msgstr "умножи"
 
@@ -5681,11 +5560,11 @@ msgstr "Систем датотека"
 msgid "( no subfolder )"
 msgstr "(без поддиректоријума)"
 
-#: ../src/ptk/ptk-file-menu.c:1770
+#: ../src/ptk/ptk-file-menu.c:1843
 msgid "Remove Text Type Association"
 msgstr "Уклоните тип текста"
 
-#: ../src/ptk/ptk-file-menu.c:1770
+#: ../src/ptk/ptk-file-menu.c:1843
 msgid ""
 "NOTE:  When compiling the list of applications to appear in the Open submenu"
 " for a text file, SpaceFM will include applications associated with the MIME"
@@ -5698,16 +5577,16 @@ msgid ""
 msgstr ""
 
 #. Set Default
-#: ../src/ptk/ptk-file-menu.c:2121
+#: ../src/ptk/ptk-file-menu.c:2194
 msgid "_Set As Default"
 msgstr "_Постави као подразумевано"
 
 #. Add
-#: ../src/ptk/ptk-file-menu.c:2131
+#: ../src/ptk/ptk-file-menu.c:2204
 msgid "_Add..."
 msgstr "_Додај"
 
-#: ../src/ptk/ptk-file-menu.c:2194 ../src/ptk/ptk-file-misc.c:1779
+#: ../src/ptk/ptk-file-menu.c:2267 ../src/ptk/ptk-file-misc.c:1785
 msgid "new"
 msgstr "ново"
 
@@ -5724,285 +5603,285 @@ msgstr[2] "Уклони %d изабраних ставки?"
 msgid "Confirm Delete"
 msgstr "Потврда уклањања"
 
-#: ../src/ptk/ptk-file-misc.c:608
+#: ../src/ptk/ptk-file-misc.c:614
 msgid "<b>P_ath:</b>   <i>original</i>"
 msgstr "<b>П_утања:</b>   <i>оригинал</i>"
 
-#: ../src/ptk/ptk-file-misc.c:610
+#: ../src/ptk/ptk-file-misc.c:616
 msgid "<b>_Name:</b>   <i>original</i>"
 msgstr "<b>_Име:</b>   <i>oригинал</i>"
 
-#: ../src/ptk/ptk-file-misc.c:612
+#: ../src/ptk/ptk-file-misc.c:618
 msgid "<b>_Filename:</b>   <i>original</i>"
 msgstr "<b>_Име датотеке:</b>   <i>oригинал</i>"
 
-#: ../src/ptk/ptk-file-misc.c:614
+#: ../src/ptk/ptk-file-misc.c:620
 msgid "<b>_Parent:</b>   <i>original</i>"
 msgstr "<b>_Матично:</b>   <i>oригинал</i>"
 
-#: ../src/ptk/ptk-file-misc.c:620
+#: ../src/ptk/ptk-file-misc.c:626
 msgid "<b>P_ath:</b>   <i>exists as folder</i>"
 msgstr "<b>П_утања:</b>   <i>постоји као директоријум</i>"
 
-#: ../src/ptk/ptk-file-misc.c:622
+#: ../src/ptk/ptk-file-misc.c:628
 msgid "<b>_Name:</b>   <i>exists as folder</i>"
 msgstr "<b>_Име:</b>   <i>постоји као директоријум</i>"
 
-#: ../src/ptk/ptk-file-misc.c:624
+#: ../src/ptk/ptk-file-misc.c:630
 msgid "<b>_Filename:</b>   <i>exists as folder</i>"
 msgstr "<b>_Име датотеке:</b>   <i>постоји као директоријум</i>"
 
-#: ../src/ptk/ptk-file-misc.c:625 ../src/ptk/ptk-file-misc.c:638
-#: ../src/ptk/ptk-file-misc.c:649 ../src/ptk/ptk-file-misc.c:686
-#: ../src/ptk/ptk-file-misc.c:2436
+#: ../src/ptk/ptk-file-misc.c:631 ../src/ptk/ptk-file-misc.c:644
+#: ../src/ptk/ptk-file-misc.c:655 ../src/ptk/ptk-file-misc.c:692
+#: ../src/ptk/ptk-file-misc.c:2442
 msgid "<b>_Parent:</b>"
 msgstr "<b>_Матично:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:633
+#: ../src/ptk/ptk-file-misc.c:639
 msgid "<b>P_ath:</b>   <i>exists as file</i>"
 msgstr "<b>П_утања:</b>   <i>постоји као датотека</i>"
 
-#: ../src/ptk/ptk-file-misc.c:635
+#: ../src/ptk/ptk-file-misc.c:641
 msgid "<b>_Name:</b>   <i>exists as file</i>"
 msgstr "<b>_Име:</b>   <i>постоји као датотека</i>"
 
-#: ../src/ptk/ptk-file-misc.c:637
+#: ../src/ptk/ptk-file-misc.c:643
 msgid "<b>_Filename:</b>   <i>exists as file</i>"
 msgstr "<b>_Име датотеке:</b>   <i>постоји као датотека</i>"
 
-#: ../src/ptk/ptk-file-misc.c:644
+#: ../src/ptk/ptk-file-misc.c:650
 msgid "<b>P_ath:</b>   <i>* overwrite existing file</i>"
 msgstr "<b>П_утања:</b>   <i>* пребриши постојећу датотеку</i>"
 
-#: ../src/ptk/ptk-file-misc.c:646
+#: ../src/ptk/ptk-file-misc.c:652
 msgid "<b>_Name:</b>   <i>* overwrite existing file</i>"
 msgstr "<b>_Име:</b>   <i>* пребриши постојећу датотеку</i>"
 
-#: ../src/ptk/ptk-file-misc.c:648
+#: ../src/ptk/ptk-file-misc.c:654
 msgid "<b>_Filename:</b>   <i>* overwrite existing file</i>"
 msgstr "<b>_Име датотеке:</b>   <i>* пребриши постојећу датотеку</i>"
 
-#: ../src/ptk/ptk-file-misc.c:656
+#: ../src/ptk/ptk-file-misc.c:662
 msgid "<b>P_ath:</b>   <i>parent exists as file</i>"
 msgstr "<b>П_утања:</b>   <i>матично постоји као датотека</i>"
 
-#: ../src/ptk/ptk-file-misc.c:658 ../src/ptk/ptk-file-misc.c:670
-#: ../src/ptk/ptk-file-misc.c:682 ../src/ptk/ptk-file-misc.c:2365
+#: ../src/ptk/ptk-file-misc.c:664 ../src/ptk/ptk-file-misc.c:676
+#: ../src/ptk/ptk-file-misc.c:688 ../src/ptk/ptk-file-misc.c:2371
 msgid "<b>_Name:</b>"
 msgstr "<b>_Име:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:660 ../src/ptk/ptk-file-misc.c:672
-#: ../src/ptk/ptk-file-misc.c:684 ../src/ptk/ptk-file-misc.c:2412
+#: ../src/ptk/ptk-file-misc.c:666 ../src/ptk/ptk-file-misc.c:678
+#: ../src/ptk/ptk-file-misc.c:690 ../src/ptk/ptk-file-misc.c:2418
 msgid "<b>_Filename:</b>"
 msgstr "<b>_Име датотеке:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:662
+#: ../src/ptk/ptk-file-misc.c:668
 msgid "<b>_Parent:</b>   <i>parent exists as file</i>"
 msgstr "<b>_Родитељ:</b>   <i>родитељ постоји као датотека</i>"
 
-#: ../src/ptk/ptk-file-misc.c:668
+#: ../src/ptk/ptk-file-misc.c:674
 msgid "<b>P_ath:</b>   <i>* create parent</i>"
 msgstr "<b>_Путања:</b>   <i>* створи родитеља</i>"
 
-#: ../src/ptk/ptk-file-misc.c:674
+#: ../src/ptk/ptk-file-misc.c:680
 msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr "<b>_Родитељ:</b>   <i>* створи родитеља</i>"
 
-#: ../src/ptk/ptk-file-misc.c:680 ../src/ptk/ptk-file-misc.c:2460
+#: ../src/ptk/ptk-file-misc.c:686 ../src/ptk/ptk-file-misc.c:2466
 msgid "<b>P_ath:</b>"
 msgstr "<b>_Путања:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:695 ../src/ptk/ptk-file-misc.c:1231
+#: ../src/ptk/ptk-file-misc.c:701 ../src/ptk/ptk-file-misc.c:1237
 msgid "_Move"
 msgstr "_Премести"
 
-#: ../src/ptk/ptk-file-misc.c:846
+#: ../src/ptk/ptk-file-misc.c:852
 msgid "Select Link Target"
 msgstr "Одабери везу одредишта"
 
-#: ../src/ptk/ptk-file-misc.c:862
+#: ../src/ptk/ptk-file-misc.c:868
 msgid "Select Template File"
 msgstr "Одаберите датотеку предлошка"
 
-#: ../src/ptk/ptk-file-misc.c:881
+#: ../src/ptk/ptk-file-misc.c:887
 msgid "Select Template Folder"
 msgstr "Одаберите директоријум са предлошцима"
 
 #. action create folder does not work properly so not used:
 #. it creates a folder by default with no way to stop it
 #. it gives 'folder already exists' error popup
-#: ../src/ptk/ptk-file-misc.c:1023
+#: ../src/ptk/ptk-file-misc.c:1029
 msgid "Browse"
 msgstr "Разгледај"
 
-#: ../src/ptk/ptk-file-misc.c:1056
+#: ../src/ptk/ptk-file-misc.c:1062
 msgid "Fil_ename"
 msgstr "Име_датотеке"
 
-#: ../src/ptk/ptk-file-misc.c:1058
+#: ../src/ptk/ptk-file-misc.c:1064
 msgid "Pa_rent"
 msgstr "Директоријум-_родитељ"
 
-#: ../src/ptk/ptk-file-misc.c:1063
+#: ../src/ptk/ptk-file-misc.c:1069
 msgid "Insert as"
 msgstr "Убаци као..."
 
-#: ../src/ptk/ptk-file-misc.c:1208
+#: ../src/ptk/ptk-file-misc.c:1214
 msgid "C_reate"
 msgstr "Ство_ри"
 
-#: ../src/ptk/ptk-file-misc.c:1209
+#: ../src/ptk/ptk-file-misc.c:1215
 msgctxt "Title|"
 msgid "Create New"
 msgstr "Створи нов"
 
-#: ../src/ptk/ptk-file-misc.c:1211
+#: ../src/ptk/ptk-file-misc.c:1217
 msgctxt "Title|CreateNew|"
 msgid "File"
 msgstr "Датотека"
 
-#: ../src/ptk/ptk-file-misc.c:1213
+#: ../src/ptk/ptk-file-misc.c:1219
 msgctxt "Title|CreateNew|"
 msgid "Folder"
 msgstr "Директоријум"
 
-#: ../src/ptk/ptk-file-misc.c:1215
+#: ../src/ptk/ptk-file-misc.c:1221
 msgctxt "Title|CreateNew|"
 msgid "Link"
 msgstr "Веза"
 
-#: ../src/ptk/ptk-file-misc.c:1232 ../src/ptk/ptk-file-misc.c:2100
+#: ../src/ptk/ptk-file-misc.c:1238 ../src/ptk/ptk-file-misc.c:2106
 msgid "Move"
 msgstr "Премести"
 
-#: ../src/ptk/ptk-file-misc.c:1236 ../src/ptk/ptk-file-misc.c:1246
+#: ../src/ptk/ptk-file-misc.c:1242 ../src/ptk/ptk-file-misc.c:1252
 msgid "C_opy"
 msgstr "_Умножи"
 
-#: ../src/ptk/ptk-file-misc.c:1237 ../src/ptk/ptk-file-misc.c:1247
+#: ../src/ptk/ptk-file-misc.c:1243 ../src/ptk/ptk-file-misc.c:1253
 msgid "Copy"
 msgstr "Умножи"
 
-#: ../src/ptk/ptk-file-misc.c:1242 ../src/ptk/ptk-file-misc.c:1253
+#: ../src/ptk/ptk-file-misc.c:1248 ../src/ptk/ptk-file-misc.c:1259
 msgid "Create Link To"
 msgstr "Створи везу до"
 
-#: ../src/ptk/ptk-file-misc.c:1248
+#: ../src/ptk/ptk-file-misc.c:1254
 msgid "Link Target"
 msgstr "Веза одредишта"
 
-#: ../src/ptk/ptk-file-misc.c:1254
+#: ../src/ptk/ptk-file-misc.c:1260
 msgid "Target"
 msgstr "Одредиште"
 
-#: ../src/ptk/ptk-file-misc.c:1259 ../src/ptk/ptk-file-misc.c:2791
+#: ../src/ptk/ptk-file-misc.c:1265 ../src/ptk/ptk-file-misc.c:2797
 msgid " As Root"
 msgstr "Као „root“"
 
-#: ../src/ptk/ptk-file-misc.c:2069
+#: ../src/ptk/ptk-file-misc.c:2075
 msgid "Link"
 msgstr "Веза"
 
-#: ../src/ptk/ptk-file-misc.c:2073
+#: ../src/ptk/ptk-file-misc.c:2079
 msgid "File"
 msgstr "Датотека"
 
 #. Buttons
-#: ../src/ptk/ptk-file-misc.c:2108
+#: ../src/ptk/ptk-file-misc.c:2114
 msgid "Opt_ions"
 msgstr "Опц_ије"
 
-#: ../src/ptk/ptk-file-misc.c:2124
+#: ../src/ptk/ptk-file-misc.c:2130
 msgid "Re_vert"
 msgstr "По_врати"
 
-#: ../src/ptk/ptk-file-misc.c:2144
+#: ../src/ptk/ptk-file-misc.c:2150
 msgid "& _Open"
 msgstr "& _Отвори"
 
-#: ../src/ptk/ptk-file-misc.c:2178
+#: ../src/ptk/ptk-file-misc.c:2184
 #, c-format
 msgid "Link-> %s"
 msgstr "Веза-> %s"
 
-#: ../src/ptk/ptk-file-misc.c:2181
+#: ../src/ptk/ptk-file-misc.c:2187
 #, c-format
 msgid "!Link-> %s (missing)"
 msgstr "!Веза-> %s (нестаје)"
 
-#: ../src/ptk/ptk-file-misc.c:2230
+#: ../src/ptk/ptk-file-misc.c:2236
 msgid "<b>_Target:</b>"
 msgstr "<b>_Одредиште:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2276
+#: ../src/ptk/ptk-file-misc.c:2282
 msgid "<b>_Template:</b>"
 msgstr "<b>_Предложак:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2292 ../src/ptk/ptk-file-misc.c:2895
+#: ../src/ptk/ptk-file-misc.c:2298 ../src/ptk/ptk-file-misc.c:2901
 msgid "Empty File"
 msgstr "Празна датотека"
 
-#: ../src/ptk/ptk-file-misc.c:2322 ../src/ptk/ptk-file-misc.c:2973
+#: ../src/ptk/ptk-file-misc.c:2328 ../src/ptk/ptk-file-misc.c:2979
 msgid "Empty Folder"
 msgstr "Празан директоријум"
 
-#: ../src/ptk/ptk-file-misc.c:2390
+#: ../src/ptk/ptk-file-misc.c:2396
 msgid "<b>E_xtension:</b>"
 msgstr "<b>П_роширења:</b>"
 
 #. Options
-#: ../src/ptk/ptk-file-misc.c:2485
+#: ../src/ptk/ptk-file-misc.c:2491
 msgid "Mov_e"
 msgstr "Пре_мести"
 
-#: ../src/ptk/ptk-file-misc.c:2487
+#: ../src/ptk/ptk-file-misc.c:2493
 msgid "Cop_y"
 msgstr "_Умножи"
 
-#: ../src/ptk/ptk-file-misc.c:2489
+#: ../src/ptk/ptk-file-misc.c:2495
 msgid "Lin_k"
 msgstr "_Веза"
 
-#: ../src/ptk/ptk-file-misc.c:2493
+#: ../src/ptk/ptk-file-misc.c:2499
 msgid "Link Tar_get"
 msgstr "_Одредиште везе"
 
-#: ../src/ptk/ptk-file-misc.c:2494
+#: ../src/ptk/ptk-file-misc.c:2500
 msgid "A_s Root"
 msgstr "Као »_Root«"
 
-#: ../src/ptk/ptk-file-misc.c:2496
+#: ../src/ptk/ptk-file-misc.c:2502
 msgctxt "New|Radio"
 msgid "Fil_e"
 msgstr "Дато_тека"
 
-#: ../src/ptk/ptk-file-misc.c:2498
+#: ../src/ptk/ptk-file-misc.c:2504
 msgctxt "New|Radio"
 msgid "Fol_der"
 msgstr "_Директоријум"
 
-#: ../src/ptk/ptk-file-misc.c:2500
+#: ../src/ptk/ptk-file-misc.c:2506
 msgctxt "New|Radio"
 msgid "_Link"
 msgstr "_Веза"
 
-#: ../src/ptk/ptk-file-misc.c:2603
+#: ../src/ptk/ptk-file-misc.c:2609
 msgid "New"
 msgstr "Нов"
 
-#: ../src/ptk/ptk-file-misc.c:2746
+#: ../src/ptk/ptk-file-misc.c:2752
 msgid "Path contains linefeeds"
 msgstr "Путања садржи линије извора"
 
-#: ../src/ptk/ptk-file-misc.c:2801
+#: ../src/ptk/ptk-file-misc.c:2807
 msgid "Create Parent Folder"
 msgstr "Створи директоријум-родитељ"
 
-#: ../src/ptk/ptk-file-misc.c:2803
+#: ../src/ptk/ptk-file-misc.c:2809
 msgid "The parent folder does not exist.  Create it?"
 msgstr "Директоријум-родитељ не постоји — Да ли да га створим?"
 
-#: ../src/ptk/ptk-file-misc.c:2816
+#: ../src/ptk/ptk-file-misc.c:2822
 #, c-format
 msgid ""
 "Error creating parent folder\n"
@@ -6010,72 +5889,72 @@ msgid ""
 "%s"
 msgstr "Грешка при стварању директоријума-родитеља\n\n%s"
 
-#: ../src/ptk/ptk-file-misc.c:2819
+#: ../src/ptk/ptk-file-misc.c:2825
 msgid "Mkdir Error"
 msgstr "„Mkdir“ грешка"
 
-#: ../src/ptk/ptk-file-misc.c:2832
+#: ../src/ptk/ptk-file-misc.c:2838
 msgid "Overwrite Existing File"
 msgstr "Пребриши постојећу датотеку"
 
-#: ../src/ptk/ptk-file-misc.c:2834
+#: ../src/ptk/ptk-file-misc.c:2840
 msgid "OVERWRITE WARNING"
 msgstr "УПОЗОРЕЊЕ О ПРЕБРИСАВАЊУ"
 
-#: ../src/ptk/ptk-file-misc.c:2834
+#: ../src/ptk/ptk-file-misc.c:2840
 msgid "The file path exists.  Overwrite existing file?"
 msgstr "Путања до датотеке постоји. Желите ли да пребришем постојећу датотеку?"
 
 #. new link task
 #. link task
-#: ../src/ptk/ptk-file-misc.c:2843 ../src/ptk/ptk-file-misc.c:3085
+#: ../src/ptk/ptk-file-misc.c:2849 ../src/ptk/ptk-file-misc.c:3091
 #, c-format
 msgid "Create Link%s"
 msgstr "Створи везу%s"
 
-#: ../src/ptk/ptk-file-misc.c:2905 ../src/ptk/ptk-file-misc.c:2983
+#: ../src/ptk/ptk-file-misc.c:2911 ../src/ptk/ptk-file-misc.c:2989
 msgid "Template Missing"
 msgstr "Недостаје предложак"
 
-#: ../src/ptk/ptk-file-misc.c:2906 ../src/ptk/ptk-file-misc.c:2984
+#: ../src/ptk/ptk-file-misc.c:2912 ../src/ptk/ptk-file-misc.c:2990
 msgid "The specified template does not exist"
 msgstr "Овај предложак не постоји"
 
-#: ../src/ptk/ptk-file-misc.c:2931
+#: ../src/ptk/ptk-file-misc.c:2937
 #, c-format
 msgid "Create New File%s"
 msgstr "Створи нову датотеку%s"
 
-#: ../src/ptk/ptk-file-misc.c:3004
+#: ../src/ptk/ptk-file-misc.c:3010
 #, c-format
 msgid "Create New Folder%s"
 msgstr "Створи нов директоријум%s"
 
 #. copy task
-#: ../src/ptk/ptk-file-misc.c:3035
+#: ../src/ptk/ptk-file-misc.c:3041
 #, c-format
 msgid "Copy%s"
 msgstr "Умножи%s"
 
-#: ../src/ptk/ptk-file-misc.c:3048
+#: ../src/ptk/ptk-file-misc.c:3054
 msgid "Copy Target Error"
 msgstr "Умножи грешку одредишта"
 
-#: ../src/ptk/ptk-file-misc.c:3049 ../src/ptk/ptk-file-misc.c:3097
+#: ../src/ptk/ptk-file-misc.c:3055 ../src/ptk/ptk-file-misc.c:3103
 msgid "Error determining link's target"
 msgstr "Грешка при одређивању одредишта везе"
 
-#: ../src/ptk/ptk-file-misc.c:3096
+#: ../src/ptk/ptk-file-misc.c:3102
 msgid "Link Target Error"
 msgstr "Грешка одредишта везе"
 
 #. move task
-#: ../src/ptk/ptk-file-misc.c:3129
+#: ../src/ptk/ptk-file-misc.c:3135
 #, c-format
 msgid "Move%s"
 msgstr "Премести%s"
 
-#: ../src/ptk/ptk-file-misc.c:3161
+#: ../src/ptk/ptk-file-misc.c:3167
 #, c-format
 msgid ""
 "Error renaming file\n"
@@ -6083,38 +5962,38 @@ msgid ""
 "%s"
 msgstr "Грешка при преименовању датотеке\n\n%s"
 
-#: ../src/ptk/ptk-file-misc.c:3164 ../src/desktop/desktop-window.c:2071
+#: ../src/ptk/ptk-file-misc.c:3170 ../src/desktop/desktop-window.c:2071
 msgid "Rename Error"
 msgstr "Грешка при преименовању"
 
-#: ../src/ptk/ptk-file-misc.c:3335 ../src/ptk/ptk-file-misc.c:3337
+#: ../src/ptk/ptk-file-misc.c:3341 ../src/ptk/ptk-file-misc.c:3343
 msgid "New Folder"
 msgstr "Нов директоријум"
 
-#: ../src/ptk/ptk-file-misc.c:3336
+#: ../src/ptk/ptk-file-misc.c:3342
 msgid "New folder name:"
 msgstr "Ново име директоријума:"
 
-#: ../src/ptk/ptk-file-misc.c:3342 ../src/ptk/ptk-file-misc.c:3344
+#: ../src/ptk/ptk-file-misc.c:3348 ../src/ptk/ptk-file-misc.c:3350
 msgid "New File"
 msgstr "Нова датотека"
 
-#: ../src/ptk/ptk-file-misc.c:3343
+#: ../src/ptk/ptk-file-misc.c:3349
 msgid "New filename:"
 msgstr "Ново име датотеке:"
 
-#: ../src/ptk/ptk-file-misc.c:3366
+#: ../src/ptk/ptk-file-misc.c:3372
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr "Име већ постоји.\n\nУнесите ново име:"
 
-#: ../src/ptk/ptk-file-misc.c:3399
+#: ../src/ptk/ptk-file-misc.c:3405
 msgid "The new file cannot be created"
 msgstr "Не могу да створим нову датотеку"
 
-#: ../src/ptk/ptk-file-misc.c:3613
+#: ../src/ptk/ptk-file-misc.c:3619
 #, c-format
 msgid ""
 "This symlink's target is missing or you do not have permission to access it:\n"
@@ -6123,11 +6002,11 @@ msgid ""
 "Target: %s"
 msgstr "Недостаје одредиште симболичке везе или немате дозволу да му приступите:\n%s\n\nОдредиште: %s"
 
-#: ../src/ptk/ptk-file-misc.c:3616
+#: ../src/ptk/ptk-file-misc.c:3622
 msgid "Broken Link"
 msgstr "Неисправна веза"
 
-#: ../src/ptk/ptk-file-misc.c:3781
+#: ../src/ptk/ptk-file-misc.c:3787
 #, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
@@ -6135,23 +6014,23 @@ msgstr[0] "Уклони %d изабрану ставку као „root“?"
 msgstr[1] "Уклони %d изабране ставке као „root“?"
 msgstr[2] "Уклони  %d изабраних ставки као „root“?"
 
-#: ../src/ptk/ptk-file-misc.c:3785
+#: ../src/ptk/ptk-file-misc.c:3791
 msgid "Confirm Delete As Root"
 msgstr "Потврди брисање као „root“"
 
-#: ../src/ptk/ptk-file-misc.c:3786
+#: ../src/ptk/ptk-file-misc.c:3792
 msgid "DELETE AS ROOT"
 msgstr "ОБРИШИ КАО „ROOT“"
 
-#: ../src/ptk/ptk-file-misc.c:3794
+#: ../src/ptk/ptk-file-misc.c:3800
 msgid "Delete As Root"
 msgstr "Обриши као „root“"
 
-#: ../src/ptk/ptk-file-misc.c:3813
+#: ../src/ptk/ptk-file-misc.c:3819
 msgid "Move As Root"
 msgstr "Премести као „root“"
 
-#: ../src/ptk/ptk-file-misc.c:3819
+#: ../src/ptk/ptk-file-misc.c:3825
 msgid "Copy As Root"
 msgstr "Умножи као „root“"
 
@@ -6321,7 +6200,7 @@ msgstr "Одредишна директоријум „%1$s“ се налази
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2077
+#: ../src/vfs/vfs-file-task.c:2082
 msgid "Accessing"
 msgstr "Приступање"
 
@@ -6385,26 +6264,26 @@ msgstr "Не могу створити привремен директорију
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr "Молим подесите исправан терминал програм у Преглед|Подешавање|Напредно"
 
-#: ../src/vfs/vfs-file-task.c:1807
+#: ../src/vfs/vfs-file-task.c:1812
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr "spacefm није пронађен у путањи - ово смањује вашу безбедност"
 
-#: ../src/vfs/vfs-file-task.c:1908
+#: ../src/vfs/vfs-file-task.c:1913
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr "Грешка при извршавању „%s“\nПогледајте „stdout“ (покрените „spacefm“ у терминалу) за додатне информације"
 
-#: ../src/vfs/vfs-file-task.c:1977
+#: ../src/vfs/vfs-file-task.c:1982
 msgid "Error writing temporary file"
 msgstr "Грешка при уписивању привремене датотеке"
 
-#: ../src/vfs/vfs-file-task.c:2161
+#: ../src/vfs/vfs-file-task.c:2166
 msgid "Timed out calculating total size\n"
 msgstr "Пауза у рачунању укупне величине\n"
 
-#: ../src/vfs/vfs-file-task.c:2492
+#: ../src/vfs/vfs-file-task.c:2497
 #, c-format
 msgid ""
 "\n"
@@ -7054,253 +6933,253 @@ msgid ""
 "Do you want to overwrite it?"
 msgstr "Измењена је скрипта наредби на диску .\n\nЖелите ли да препишете преко ње?"
 
-#: ../src/item-prop.c:895 ../src/item-prop.c:2143
+#: ../src/item-prop.c:897 ../src/item-prop.c:2149
 msgid "Command Dir"
 msgstr "Директоријум наредби"
 
-#: ../src/item-prop.c:896 ../src/item-prop.c:2144 ../src/item-prop.c:2153
+#: ../src/item-prop.c:898 ../src/item-prop.c:2150 ../src/item-prop.c:2159
 msgid "(no files)"
 msgstr "(без датотека)"
 
-#: ../src/item-prop.c:972
+#: ../src/item-prop.c:975
 msgid ""
 "The command line does not begin with a text file (script) to be opened, or "
 "the script was not found in your $PATH."
 msgstr ""
 
-#: ../src/item-prop.c:1090
+#: ../src/item-prop.c:1093
 msgid "Targets:  (a semicolon-separated list of paths or URLs)"
 msgstr "Одредишта:  (тачком и запетом раздвојен списак путања или УРЛ-ова)"
 
-#: ../src/item-prop.c:1100
+#: ../src/item-prop.c:1103
 msgid "Target:  (a .desktop or executable file)"
 msgstr "Одредишта:  (програм радне површи или извршна датотека)"
 
-#: ../src/item-prop.c:1251
+#: ../src/item-prop.c:1254
 msgid "Choose Executable"
 msgstr "Одааберите извршну датотеку"
 
-#: ../src/item-prop.c:1523
+#: ../src/item-prop.c:1529
 msgid "Toolbar Item Properties"
 msgstr "Особине ставке алатне траке"
 
-#: ../src/item-prop.c:1524
+#: ../src/item-prop.c:1530
 msgid "Menu Item Properties"
 msgstr "Особине ставке менија"
 
-#: ../src/item-prop.c:1562
+#: ../src/item-prop.c:1568
 msgid "_Toolbar Item"
 msgstr "Ставка алатне _траке"
 
-#: ../src/item-prop.c:1563
+#: ../src/item-prop.c:1569
 msgid "_Menu Item"
 msgstr "Ставка менија"
 
-#: ../src/item-prop.c:1571
+#: ../src/item-prop.c:1577
 msgid "Type:"
 msgstr "Врста:"
 
-#: ../src/item-prop.c:1582
+#: ../src/item-prop.c:1588
 msgid "Name:"
 msgstr "Име:"
 
-#: ../src/item-prop.c:1591
+#: ../src/item-prop.c:1597
 msgid "Key:"
 msgstr "Тастер:"
 
-#: ../src/item-prop.c:1600
+#: ../src/item-prop.c:1606
 msgid "Icon:"
 msgstr "Икона:"
 
-#: ../src/item-prop.c:1631
+#: ../src/item-prop.c:1637
 msgid "C_hoose"
 msgstr "Одабери_те"
 
-#: ../src/item-prop.c:1653
+#: ../src/item-prop.c:1659
 msgid "S_how In Toolbar"
 msgstr "При_кажи у траци алата"
 
-#: ../src/item-prop.c:1664
+#: ../src/item-prop.c:1670
 msgid "Con_text"
 msgstr "Кон_текст"
 
-#: ../src/item-prop.c:1711
+#: ../src/item-prop.c:1717
 msgid "A_pply"
 msgstr "_Примени"
 
-#: ../src/item-prop.c:1743
+#: ../src/item-prop.c:1749
 msgid "matches any rule:"
 msgstr "одговара било које правило:"
 
-#: ../src/item-prop.c:1745
+#: ../src/item-prop.c:1751
 msgid "matches all rules:"
 msgstr "одговарају сва правила:"
 
-#: ../src/item-prop.c:1747
+#: ../src/item-prop.c:1753
 msgid "doesn't match any rule:"
 msgstr "не одговара било које правило:"
 
-#: ../src/item-prop.c:1749
+#: ../src/item-prop.c:1755
 msgid "doesn't match all rules:"
 msgstr "не одговарају сва правила:"
 
-#: ../src/item-prop.c:1756
+#: ../src/item-prop.c:1762
 msgid "Show"
 msgstr "Прикажи"
 
-#: ../src/item-prop.c:1758
+#: ../src/item-prop.c:1764
 msgid "Enable"
 msgstr "Омогући"
 
-#: ../src/item-prop.c:1760
+#: ../src/item-prop.c:1766
 msgid "Hide"
 msgstr "Сакриј"
 
-#: ../src/item-prop.c:1762
+#: ../src/item-prop.c:1768
 msgid "Disable"
 msgstr "Онемогући"
 
-#: ../src/item-prop.c:1792
+#: ../src/item-prop.c:1798
 msgid "item if context"
 msgstr "ставка ако је у контексту"
 
-#: ../src/item-prop.c:1820
+#: ../src/item-prop.c:1826
 msgid "Edit Rule"
 msgstr "Измени правило"
 
-#: ../src/item-prop.c:1837
+#: ../src/item-prop.c:1843
 msgid "Value:"
 msgstr "Вредност:"
 
-#: ../src/item-prop.c:1850
+#: ../src/item-prop.c:1856
 msgid "If enabled, use as opener for:"
 msgstr "Ако је омогућено, користи за отварање:"
 
-#: ../src/item-prop.c:1855
+#: ../src/item-prop.c:1861
 msgid "none"
 msgstr "ништа"
 
-#: ../src/item-prop.c:1857
+#: ../src/item-prop.c:1863
 msgid "files"
 msgstr "датотеке"
 
-#: ../src/item-prop.c:1859
+#: ../src/item-prop.c:1865
 msgid "devices"
 msgstr "уређаји"
 
-#: ../src/item-prop.c:1867
+#: ../src/item-prop.c:1873
 msgid "_Ignore Context / Show All  (global setting)"
 msgstr "_Игнориши контекст /Прикажи све (глобално)"
 
-#: ../src/item-prop.c:1962
+#: ../src/item-prop.c:1968
 msgid "Comm_and"
 msgstr "Наредб_а"
 
-#: ../src/item-prop.c:1966
+#: ../src/item-prop.c:1972
 msgid "Command _Line"
 msgstr "_Линије наредбе"
 
-#: ../src/item-prop.c:1968
+#: ../src/item-prop.c:1974
 msgid "_Script"
 msgstr "_Скрипта"
 
-#: ../src/item-prop.c:1973
+#: ../src/item-prop.c:1979
 msgid "Open In _Editor"
 msgstr "Отвори у _уређивачу"
 
-#: ../src/item-prop.c:1979
+#: ../src/item-prop.c:1985
 msgid "_Root Editor"
 msgstr "„Root“ уређивач"
 
-#: ../src/item-prop.c:2019
+#: ../src/item-prop.c:2025
 msgid "Optio_ns"
 msgstr "_Опције"
 
-#: ../src/item-prop.c:2021
+#: ../src/item-prop.c:2027
 msgid "Run Options"
 msgstr "_Опције покретања"
 
-#: ../src/item-prop.c:2030
+#: ../src/item-prop.c:2036
 msgid "Run As Task"
 msgstr "Покрени као задатак"
 
-#: ../src/item-prop.c:2034
+#: ../src/item-prop.c:2040
 msgid "Popup Task"
 msgstr "Задатак у искачућем прозору"
 
-#: ../src/item-prop.c:2035
+#: ../src/item-prop.c:2041
 msgid "Popup Error"
 msgstr "Грешка у искачућем прозору"
 
-#: ../src/item-prop.c:2036
+#: ../src/item-prop.c:2042
 msgid "Popup Output"
 msgstr "Излаз у искачућем прозору"
 
-#: ../src/item-prop.c:2037
+#: ../src/item-prop.c:2043
 msgid "Scroll Output"
 msgstr "Клизећи излаз"
 
-#: ../src/item-prop.c:2050
+#: ../src/item-prop.c:2056
 msgid "Run In Terminal"
 msgstr "Покрени у терминалу"
 
-#: ../src/item-prop.c:2051
+#: ../src/item-prop.c:2057
 msgid "Keep Terminal Open"
 msgstr "Држи отворен прозор терминала"
 
-#: ../src/item-prop.c:2060
+#: ../src/item-prop.c:2066
 msgid "Run As User:"
 msgstr "Покрени као корисник:"
 
-#: ../src/item-prop.c:2067
+#: ../src/item-prop.c:2073
 msgid "( leave blank for current user )"
 msgstr "( Оставите празно за текућег корисника )"
 
-#: ../src/item-prop.c:2074
+#: ../src/item-prop.c:2080
 msgid "Style"
 msgstr "Стил"
 
-#: ../src/item-prop.c:2085
+#: ../src/item-prop.c:2091
 msgid "Normal"
 msgstr "Нормалан"
 
-#: ../src/item-prop.c:2088
+#: ../src/item-prop.c:2094
 msgid "Checkbox"
 msgstr "Поље за потврду"
 
-#: ../src/item-prop.c:2091
+#: ../src/item-prop.c:2097
 msgid "Confirmation"
 msgstr "Потврда"
 
-#: ../src/item-prop.c:2094
+#: ../src/item-prop.c:2100
 msgid "Input"
 msgstr "Улаз"
 
-#: ../src/item-prop.c:2108
+#: ../src/item-prop.c:2114
 msgid "Confirmation/Input Message:"
 msgstr "Потврда/Улазна порука:"
 
-#: ../src/item-prop.c:2130
+#: ../src/item-prop.c:2136
 msgid "Open In Browser:"
 msgstr "Отвори у прегледнику"
 
-#: ../src/item-prop.c:2152
+#: ../src/item-prop.c:2158
 msgid "Data Dir"
 msgstr "Директоријум података"
 
-#: ../src/item-prop.c:2161
+#: ../src/item-prop.c:2167
 msgid "Plugin Dir"
 msgstr ""
 
-#: ../src/item-prop.c:2180
+#: ../src/item-prop.c:2186
 msgid "Submenu"
 msgstr "Подмени"
 
-#: ../src/item-prop.c:2182
+#: ../src/item-prop.c:2188
 msgid "Separator"
 msgstr "Раздвајач"
 
 #. built-in
-#: ../src/item-prop.c:2186
+#: ../src/item-prop.c:2192
 msgid "Built-In Command"
 msgstr "Уграђена наредба"
