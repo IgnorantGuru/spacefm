@@ -1957,9 +1957,13 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
         // Set column widths for this panel context
         GtkTreeViewColumn* col;
+        GtkTreeViewColumn* name_col = NULL;
         int j, width;
+        int total_width = 0;
+        int minor_width = 0;
         const char* title;
         XSet* set;
+        GtkAllocation allocation;
 
         if ( GTK_IS_TREE_VIEW( file_browser->folder_view ) )
         {
@@ -1980,14 +1984,39 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                 {
                     // get column width for this panel context
                     set = xset_get_panel_mode( p, column_names[j], mode );
-                    width = set->y ? atoi( set->y ) : 0;
+                    width = set->y ? atoi( set->y ) : 100;
 //printf("        %d\t%s\n", width, title );
                     if ( width )
+                    {
                         gtk_tree_view_column_set_fixed_width( col, width );
+                        //printf("upd set_width %s %d\n", column_names[j], width );
+                        if ( set->b == XSET_B_TRUE )
+                        {
+                            total_width += width;
+                            if ( j != 0 )
+                                minor_width += width;
+                            else
+                                name_col = col;
+                        }
+                    }
                     // set column visibility
                     gtk_tree_view_column_set_visible( col,
                                             set->b == XSET_B_TRUE || j == 0 );
                 }
+            }
+            gtk_widget_get_allocation( file_browser->folder_view, &allocation );
+            //printf("list_view width %d\n", allocation.width );
+            if ( total_width < allocation.width && name_col )
+            {
+                // prevent Name column from auto-expanding
+                // If total column widths are less than treeview allocation width
+                // the Name column expands and won't allow user to downsize
+                gtk_tree_view_column_set_fixed_width( name_col,
+                                            allocation.width - minor_width );
+                set = xset_get_panel_mode( p, column_names[0], mode );
+                g_free( set->y );
+                set->y = g_strdup_printf( "%d", allocation.width - minor_width );
+                //printf("name col width reset %d\n", allocation.width - minor_width );
             }
         }
     }
@@ -4573,7 +4602,10 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
                     }
                 }
                 else
+                {
                     gtk_tree_view_column_set_fixed_width ( col, width );
+                    //printf("init set_width %s %d\n", column_names[j], width );
+                }
             }
         }
 
