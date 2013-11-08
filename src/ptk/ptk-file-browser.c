@@ -1957,13 +1957,13 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
         // Set column widths for this panel context
         GtkTreeViewColumn* col;
-        GtkTreeViewColumn* name_col = NULL;
+        //GtkTreeViewColumn* name_col = NULL;
         int j, width;
-        int total_width = 0;
-        int minor_width = 0;
+        //int total_width = 0;
+        //int minor_width = 0;
         const char* title;
         XSet* set;
-        GtkAllocation allocation;
+        //GtkAllocation allocation;
 
         if ( GTK_IS_TREE_VIEW( file_browser->folder_view ) )
         {
@@ -1990,6 +1990,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                     {
                         gtk_tree_view_column_set_fixed_width( col, width );
                         //printf("upd set_width %s %d\n", column_names[j], width );
+                        /*
                         if ( set->b == XSET_B_TRUE )
                         {
                             total_width += width;
@@ -1998,12 +1999,18 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                             else
                                 name_col = col;
                         }
+                        */
                     }
                     // set column visibility
                     gtk_tree_view_column_set_visible( col,
                                             set->b == XSET_B_TRUE || j == 0 );
                 }
             }
+            /* This breaks panel memory, eg:
+             * turn on panel 3, Name+Size cols, turn off 3, turn on 3, Size column goes to min
+             * panels 1+2 on, turn off 1, turn off 2, turn on 2, column widths in panel2 go to minimums
+             * Name column is expanding?
+
             gtk_widget_get_allocation( file_browser->folder_view, &allocation );
             //printf("list_view width %d\n", allocation.width );
             if ( total_width < allocation.width && name_col )
@@ -2018,6 +2025,7 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                 set->y = g_strdup_printf( "%d", allocation.width - minor_width );
                 //printf("name col width reset %d\n", allocation.width - minor_width );
             }
+            */
         }
     }
     else if ( xset_get_b_panel( p, "list_icons" ) )
