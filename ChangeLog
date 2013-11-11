@@ -1,4 +1,6 @@
 0.9.1+
+    README correct packages link
+    manual note full/max col widths not saved #382
 
 0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
