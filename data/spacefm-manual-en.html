@@ -58,11 +58,11 @@
 </ul>
 <a href="#gui">GUI</a>
 <ul>
+    <a href="#gui-pan">Panels </a><br>
     <a href="#gui-pathbar">Path Bar</a><br>
     <a href="#gui-find">Find-As-You-Type Search </a><br>
     <a href="#gui-rename">Rename Dialog </a><br>
     <a href="#gui-newf">New File/Folder Dialog </a><br>
-    <a href="#gui-pan">Panels </a><br>
 </ul>
 <a href="#devices">Devices</a>
 <ul>
@@ -904,11 +904,79 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li>Panels 
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-pan"/><a href="#gui-pan"><font size=+2>Panels </font></a>
+<!-- @GUI @Panels #pan -->
+
+<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
+
+<p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
+
+<!-- #Panel Memory #mem -->
+<p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
+<p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
+
+<p><b>How It Works</b><br>
+Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+
+<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's relationship to other panels in the window.  The four states are:
+<ul>
+    <li>panel is shown by itself in the window<br>
+    <LI>panel has a horizonal neighboring panel<br>
+    <li>panel has a vertical neighboring panel<br>
+    <li>panel has both horizontal and vertical neighboring panels<br>
+</ul>
+
+<p>The four-state memory of each panel allows SpaceFM to remember how you configured each panel in combination with other panels.  This makes it easier to show and hide panels on the fly without having to readjust columns, side panes, etc.  SpaceFM will remember the selected columns (visibility), column widths, side pane visibility and sizes, and toolbar visibility for each state of each panel.
+
+<p>For more advanced users, note that <a href="#sockets">socket commands</a> can be used to adjust panel configurations from a command or script.  When set as <a href="#sockets-events">event handlers</a>, adjustments can be made automatically when GUI or other events occur, such as showing/hiding a panel or changing window size.
+
+
+<!-- #Focus Highlighting #foc -->
+<p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>
+SpaceFM is designed so that for most purposes, it is not necessary to know which panel has the focus.  By right-clicking in a panel, the context menu shown will be specific to that panel.  (Window level commands and settings are available via the main menu bar.)
+
+<p>However, sometimes it is necessary to know which panel has focus, such as when using keyboard shortcuts on selected files, or using a custom command or plugin in the main menus.  For this purpose, SpaceFM provides an icon at the right of each panel's status bar.  This icon will be enabled for the panel which has focus.
+
+<p>If you would like a more prominent reminder, it is possible to set custom highlight colors for the focused panel's status bar text and background.  To set highlight colors, right-click on the status bar of the panel and select Highlight Text or Highlight Bar.  Each panel may use different highlight colors, or the same.
+
+
+
+
+<!-- @end gui-pan-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li>Path Bar
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li><a href="#gui-rename">Rename Dialog </a>
         <li><a href="#gui-newf">New File/Folder Dialog </a>
-        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1143,11 +1211,11 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li><a href="#gui-pathbar">Path Bar</a>
         <li>Find-As-You-Type Search 
         <li><a href="#gui-rename">Rename Dialog </a>
         <li><a href="#gui-newf">New File/Folder Dialog </a>
-        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1199,11 +1267,11 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li><a href="#gui-pathbar">Path Bar</a>
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li>Rename Dialog 
         <li><a href="#gui-newf">New File/Folder Dialog </a>
-        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1242,11 +1310,11 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li><a href="#gui-pathbar">Path Bar</a>
         <li><a href="#gui-find">Find-As-You-Type Search </a>
         <li><a href="#gui-rename">Rename Dialog </a>
         <li>New File/Folder Dialog 
-        <li><a href="#gui-pan">Panels </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1269,74 +1337,9 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 
 
+
+
 <!-- @end gui-newf-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li>GUI
-    <ul>
-        <li><a href="#gui-pathbar">Path Bar</a>
-        <li><a href="#gui-find">Find-As-You-Type Search </a>
-        <li><a href="#gui-rename">Rename Dialog </a>
-        <li><a href="#gui-newf">New File/Folder Dialog </a>
-        <li>Panels 
-    </ul>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="gui-pan"/><a href="#gui-pan"><font size=+2>Panels </font></a>
-<!-- @GUI @Panels #pan -->
-
-<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
-
-<p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
-
-<!-- #Panel Memory #mem -->
-<p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
-<p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
-
-<p><b>How It Works</b><br>
-Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
-
-<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's relationship to other panels in the window.  The four states are:
-<ul>
-    <li>panel is shown by itself in the window<br>
-    <LI>panel has a horizonal neighboring panel<br>
-    <li>panel has a vertical neighboring panel<br>
-    <li>panel has both horizontal and vertical neighboring panels<br>
-</ul>
-
-<p>The four-state memory of each panel allows SpaceFM to remember how you configured each panel in combination with other panels.  This makes it easier to show and hide panels on the fly without having to readjust columns, side panes, etc.  SpaceFM will remember the selected columns (visibility), column widths, side pane visibility and sizes, and toolbar visibility for each state of each panel.
-
-<p>For more advanced users, note that <a href="#sockets">socket commands</a> can be used to adjust panel configurations from a command or script.  When set as <a href="#sockets-events">event handlers</a>, adjustments can be made automatically when GUI or other events occur, such as showing/hiding a panel or changing window size.
-
-
-<!-- #Focus Highlighting #foc -->
-<p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>
-SpaceFM is designed so that for most purposes, it is not necessary to know which panel has the focus.  By right-clicking in a panel, the context menu shown will be specific to that panel.  (Window level commands and settings are available via the main menu bar.)
-
-<p>However, sometimes it is necessary to know which panel has focus, such as when using keyboard shortcuts on selected files, or using a custom command or plugin in the main menus.  For this purpose, SpaceFM provides an icon at the right of each panel's status bar.  This icon will be enabled for the panel which has focus.
-
-<p>If you would like a more prominent reminder, it is possible to set custom highlight colors for the focused panel's status bar text and background.  To set highlight colors, right-click on the status bar of the panel and select Highlight Text or Highlight Bar.  Each panel may use different highlight colors, or the same.
-
-
-
-<!-- @end gui-pan-->
 <br><br></td></tr>
 
 
@@ -3324,11 +3327,11 @@ Enabled by default when using <a href="#designmode-command-terminal">Run In Term
 <p><a name="designmode-command-user"><b>Run As User</b></a><br>
 If a username is entered in the Run As User field, when the command is run, your configured terminal or graphical su program will be used to run the command as this username, instead of as the current SpaceFM user.  Depending on the su program used, you will be prompted to enter either the user's password or root's password.
 
-<p>To run a command as root, "root" may be entered as the Run As User username.  However, <b>running commands as root in this way is generally NOT recommended</b>.  Because the command line or script is generally saved with normal user permissions, you are running a command which is not protected by root, as root.  This means that any intrusion into your normal user account could lead to this command's contents being modified.  You may then run this command as root not realizing it has been modified, which may compromise your system security at the root level.
+<p>To run a command as root, "root" may be entered as the Run As User username.  However, <b>running commands as root in this way is generally NOT recommended</b>.  Because the command line or script is generally saved with normal user permissions, you are running a command which is not protected by root, as root.  This may compromise your system security at the root level.
 
-<p>To run commands more safely as root, consider exporting the command and installing it as a plugin.  Plugins enjoy root protection from modification, so when they are run as root, you have more assurance that they have not been tampered with.
+<p>To run commands more safely as root, consider <a href="#designmode-designmenu-export">exporting the command</a> and <a href="#plugins-install">installing it as a plugin</a>.  Plugins enjoy root protection from modification, so when they are run as root, you have more assurance that they have not been tampered with.
 
-<p>Another option is to run SpaceFM itself as root when needed (select File|Root Window).  In this way, all commands and settings are stored in root's home (/root/.config/spacefm), and are protected by root.  Yet running SpaceFM as root puts much power at your fingertips - accidentally deleting a file or folder may render your system unusable!  When run as root, everything you do in the file browser is done as root, including opening applications.  At the very least, be sure to have an up-to-date system backup if running SpaceFM as root.  It is up to you to evaluate this option for your purposes.
+<p>Another option is to run SpaceFM itself as root when needed (select File|Root Window).  In this way, all commands and settings are stored in root's home (/root/.config/spacefm), and are protected by root.  Yet running SpaceFM as root puts much power at your fingertips - accidentally deleting a file or folder may render your system unusable!  When run as root, everything you do in the file browser is done as root, including opening applications.  At the very least, be sure to have an up-to-date system backup if running SpaceFM as root.  It is your responsibility to evaluate this option for your purposes.
 
 <p>When running a custom command as another non-root user, depending on the permissions of your SpaceFM config and scripts directories, this user may not have permission to access the command directory, including the command script.  To avoid this limitation, you can use a command line, or use a script which is in a mutually accessible directory.
 
@@ -6899,7 +6902,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-11-06&nbsp;&nbsp;(SpaceFM version 0.9.1)
+<p>Updated 2013-11-11&nbsp;&nbsp;(SpaceFM version 0.9.1+)
 <br><br>
 </center>
 </td></tr></table>

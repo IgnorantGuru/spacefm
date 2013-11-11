@@ -9801,26 +9801,33 @@ void xset_defaults()
     set = xset_set( "panel1_show", "lbl", _("Panel _1") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel2_show", "lbl", _("Panel _2") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel3_show", "lbl", _("Panel _3") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel4_show", "lbl", _("Panel _4") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_pbar", "lbl", _("Panel _Bar") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_focus_panel", "lbl", _("_Go") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "panel_prev panel_next panel_hide panel_1 panel_2 panel_3 panel_4" );
     xset_set_set( set, "icn", "gtk-go-forward" );
+    set->line = g_strdup( "#gui-pan" );
 
-        xset_set( "panel_prev", "lbl", _("_Prev") );
+        set = xset_set( "panel_prev", "lbl", _("_Prev") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_next", "lbl", _("_Next") );
         /*
         xset_set( "panel_left", "lbl", _("_Left") );
@@ -9829,7 +9836,8 @@ void xset_defaults()
         xset_set( "panel_bottom", "lbl", _("_Bottom") );
         */
         xset_set( "panel_hide", "lbl", _("_Hide") );
-        xset_set( "panel_1", "lbl", _("Panel _1") );
+        set = xset_set( "panel_1", "lbl", _("Panel _1") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_2", "lbl", _("Panel _2") );
         xset_set( "panel_3", "lbl", _("Panel _3") );
         xset_set( "panel_4", "lbl", _("Panel _4") );
@@ -10499,12 +10507,15 @@ void xset_defaults()
 
         set = xset_set( "new_file", "lbl", _("_File") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_folder", "lbl", _("Fol_der") );
         xset_set_set( set, "icn", "gtk-directory" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_link", "lbl", _("_Link") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_bookmark", "lbl", C_("New|", "_Bookmark") );
         xset_set_set( set, "shared_key", "book_new" );
@@ -10674,6 +10685,7 @@ void xset_defaults()
     
     set = xset_set( "edit_rename", "lbl", _("_Rename") );
     xset_set_set( set, "icn", "gtk-edit" );
+    set->line = g_strdup( "#gui-rename" );
     
     set = xset_set( "edit_delete", "lbl", _("_Delete") );
     xset_set_set( set, "icn", "gtk-delete" );
