@@ -2265,6 +2265,8 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
         // store fb columns
         int p, page_x;
         PtkFileBrowser* a_browser;
+        if ( main_window->maximized )
+            main_window->opened_maximized = TRUE;  // force save of columns
         for ( p = 1; p < 5; p++ )
         {
             page_x = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->panel[p-1] ) );
