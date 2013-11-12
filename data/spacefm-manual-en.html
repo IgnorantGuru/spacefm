@@ -931,10 +931,9 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
 <p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
 <p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
 
-<P>NOTE:  While the SpaceFM window is <b>maximized or fullscreen</b>, any changes to <b>column widths are not saved</b> (in any panel).  This means that you can change column widths while maximized or fullscreen, and when you return to an unmaximized window, your columns widths will revert to their original sizes.
-
-<p><b>How It Works</b><br>
-Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+<!-- #How It Works #how -->
+<p><a name="gui-pan-how"/><a href="#gui-pan-how"><b>How It Works</b></a><br>
+<p>Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
 
 <p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's relationship to other panels in the window.  The four states are:
 <ul>
@@ -948,6 +947,13 @@ Many settings in each panel are specific to that panel.  For example, a differen
 
 <p>For more advanced users, note that <a href="#sockets">socket commands</a> can be used to adjust panel configurations from a command or script.  When set as <a href="#sockets-events">event handlers</a>, adjustments can be made automatically when GUI or other events occur, such as showing/hiding a panel or changing window size.
 
+<!-- #Maximized &amp; Fullscreen #max -->
+<p><a name="gui-pan-max"/><a href="#gui-pan-max"><b>Maximized &amp; Fullscreen</b></a><br>
+<P>If you maximize the SpaceFM window, any changes to column widths are not remembered (in any panel or in the task manager).  This means that you can change column widths while maximized, and when you return to an unmaximized window state, your columns widths will revert to their original sizes.
+
+<p>However, if you exit SpaceFM while the window is maximized, your column widths <i>will</i> be saved.  When you restart SpaceFM it will open maximized, and any changes to column widths thereafter will be remembered while maximized (unless you unmaximize and maximize again).
+
+<p>In fullscreen mode, neither changes to column widths nor to side pane heights are remembered.  When you return to non-fullscreen mode, your columns widths and side panes will revert to their original sizes.
 
 <!-- #Focus Highlighting #foc -->
 <p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>

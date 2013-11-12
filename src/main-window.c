@@ -1418,7 +1418,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                         if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
                             ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( file_browser->folder_view ),
-                                    file_browser, FALSE );
+                                    file_browser );
                         //ptk_file_browser_slider_release( NULL, NULL, file_browser );
                     }
                 }
@@ -1427,7 +1427,8 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     }
     
     // show panelbar
-    if ( !!gtk_widget_get_visible( main_window->panelbar ) != !!xset_get_b( "main_pbar" ) )
+    if ( !!gtk_widget_get_visible( main_window->panelbar ) != 
+                !!( !main_window->fullscreen && xset_get_b( "main_pbar" ) ) )
     {
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( GTK_WIDGET( main_window->panelbar ) );
@@ -1902,7 +1903,9 @@ void fm_main_window_init( FMMainWindow* main_window )
     XSet* set;
     
     main_window->configure_evt_timer = 0;
-    
+    main_window->fullscreen = main_window->opened_maximized =
+                                            main_window->maximized = FALSE;
+
     /* this is used to limit the scope of gtk_grab and modal dialogs */
     main_window->wgroup = gtk_window_group_new();
     gtk_window_group_add_window( main_window->wgroup, (GtkWindow*)main_window );
@@ -2206,17 +2209,21 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
 
     FMMainWindow* main_window = (FMMainWindow*)widget;
 
-    // max or fullscreen?
-    if ( !app_settings.maximized && !xset_get_b( "main_full" ) )
+    // if the window is not fullscreen (is normal or maximized) save sliders
+    // and columns
+    if ( !main_window->fullscreen )
     {
         // store width/height + sliders
         int pos;
         char* posa;
         GtkAllocation allocation;
 
-        gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
-        app_settings.width = allocation.width;
-        app_settings.height = allocation.height;
+        if ( !main_window->maximized )
+        {
+            gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
+            app_settings.width = allocation.width;
+            app_settings.height = allocation.height;
+        }
         if ( GTK_IS_PANED( main_window->hpane_top ) )
         {
             pos = gtk_paned_get_position( GTK_PANED( main_window->hpane_top ) );
@@ -2269,12 +2276,13 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                 if ( a_browser && a_browser->view_mode == PTK_FB_LIST_VIEW )
                     ptk_file_browser_save_column_widths( 
                                     GTK_TREE_VIEW( a_browser->folder_view ),
-                                    a_browser, FALSE );
+                                    a_browser );
             }
         }
     }
 
     // save settings
+    app_settings.maximized = main_window->maximized;
     xset_autosave_cancel();
     char* err_msg = save_settings( main_window );
     if ( err_msg )
@@ -2341,9 +2349,16 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
 static gboolean fm_main_window_window_state_event ( GtkWidget *widget,
                                                     GdkEventWindowState *event )
 {
-    app_settings.maximized = ((event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) != 0);
-    if ( !app_settings.maximized )
-        show_panels( NULL, (FMMainWindow*)widget );  // restore columns
+    FMMainWindow* main_window = (FMMainWindow*)widget;
+    
+    main_window->maximized = 
+                ((event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) != 0);
+    if ( !main_window->maximized )
+    {
+        if ( main_window->opened_maximized )
+            main_window->opened_maximized = FALSE;
+        show_panels( NULL, main_window );  // restore columns
+    }
     return TRUE;
 }
 
@@ -2531,7 +2546,7 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     // save solumns and slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
     ptk_file_browser_save_column_widths( GTK_TREE_VIEW( file_browser->folder_view ),
-                                                        file_browser, FALSE );
+                                                        file_browser );
 
     // without this signal blocked, on_close_notebook_page is called while
     // ptk_file_browser_update_views is still in progress causing segfault
@@ -2868,7 +2883,7 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
         ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
-                                                                curfb, FALSE );
+                                                                curfb );
     }
     int i = main_window->curpanel -1;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)ptk_file_browser_new(
@@ -3104,12 +3119,29 @@ on_forward_btn_popup_menu ( GtkWidget *widget,
 void fm_main_window_add_new_window( FMMainWindow* main_window )
 {
     GtkWidget * new_win = fm_main_window_new();
-    GtkAllocation allocation;
+    int height, width;
     
-    gtk_widget_get_allocation ( GTK_WIDGET( main_window ), &allocation);
+    if ( main_window->maximized || main_window->fullscreen )
+    {
+        width = app_settings.width;
+        height = app_settings.height;
+    }
+    else
+    {
+        GtkAllocation allocation;
+        gtk_widget_get_allocation ( GTK_WIDGET( main_window ), &allocation);
+        width = allocation.width;
+        height = allocation.height;
+    }
     gtk_window_set_default_size( GTK_WINDOW( new_win ),
-                                 allocation.width,
-                                 allocation.height );
+                                 width,
+                                 height );
+    if ( main_window->maximized )
+    {
+        gtk_window_maximize( GTK_WINDOW( new_win ) );
+        ((FMMainWindow*)new_win)->opened_maximized =
+                                    ((FMMainWindow*)new_win)->maximized = TRUE;
+    }
     gtk_widget_show( new_win );
 }
 
@@ -3131,7 +3163,7 @@ on_new_window_activate ( GtkMenuItem *menuitem,
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
         ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
-                                                            curfb, FALSE );
+                                                            curfb );
     }
 
     save_settings( main_window );
@@ -3235,19 +3267,21 @@ void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
         if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
             ptk_file_browser_save_column_widths( 
                                 GTK_TREE_VIEW( file_browser->folder_view ),
-                                file_browser, TRUE );
+                                file_browser );
         gtk_widget_hide( main_window->menu_bar );
         gtk_widget_hide( main_window->panelbar );
         gtk_window_fullscreen( GTK_WINDOW( main_window ) );
+        main_window->fullscreen = TRUE;
     }
     else
     {
+        main_window->fullscreen = FALSE;
         gtk_window_unfullscreen( GTK_WINDOW( main_window ) );
         gtk_widget_show( main_window->menu_bar );
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( main_window->panelbar );
         
-        if ( !app_settings.maximized )
+        if ( !main_window->maximized )
             show_panels( NULL, main_window );  // restore columns
     }
 }
@@ -3391,7 +3425,7 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
         if ( curfb->view_mode == PTK_FB_LIST_VIEW )
             ptk_file_browser_save_column_widths(
                                     GTK_TREE_VIEW( curfb->folder_view ),
-                                    curfb, FALSE );
+                                    curfb );
     }
     
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );
@@ -3891,7 +3925,10 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                 else if ( !strcmp( xname, "exit" ) )
                     on_quit_activate( NULL, main_window );
                 else if ( !strcmp( xname, "full" ) )
+                {
+                    xset_set_b( "main_full", !main_window->fullscreen );
                     on_fullscreen_activate( NULL, main_window );
+                }
                 else if ( !strcmp( xname, "prefs" ) )
                     on_preference_activate( NULL, main_window );
                 else if ( !strcmp( xname, "design_mode" ) )
@@ -4909,8 +4946,8 @@ void on_task_columns_changed( GtkWidget *view, gpointer user_data )
     int i, j, width;
     GtkTreeViewColumn* col;
 
-    gboolean fullscreen = xset_get_b( "main_full" );
-    if ( !view )
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window || !view )
         return;
     for ( i = 0; i < 13; i++ )
     {
@@ -4930,7 +4967,10 @@ void on_task_columns_changed( GtkWidget *view, gpointer user_data )
             pos = g_strdup_printf( "%d", i );
             xset_set_set( set, "x", pos );
             g_free( pos );
-            if ( !app_settings.maximized && !fullscreen )
+            // if the window was opened maximized and stayed maximized, or the
+            // window is unmaximized and not fullscreen, save the columns
+            if ( ( !main_window->maximized || main_window->opened_maximized ) &&
+                                                !main_window->fullscreen )
             {
                 width = gtk_tree_view_column_get_width( col );
                 if ( width )  // manager unshown, all widths are zero
@@ -6647,11 +6687,11 @@ _invalid_set:
         }
         else if ( !strcmp( argv[i], "window_maximized" ) )
         {
-            *reply = g_strdup_printf( "%d\n", !!app_settings.maximized );
+            *reply = g_strdup_printf( "%d\n", !!main_window->maximized );
         }
         else if ( !strcmp( argv[i], "window_fullscreen" ) )
         {
-            *reply = g_strdup_printf( "%d\n", !!xset_get_b( "main_full" ) );
+            *reply = g_strdup_printf( "%d\n", !!main_window->fullscreen );
         }
         else if ( !strcmp( argv[i], "screen_size" ) )
         {

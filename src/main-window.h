@@ -95,6 +95,9 @@ GtkCheckMenuItem* open_side_pane_menu;
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
   guint configure_evt_timer;
+  gboolean maximized;
+  gboolean opened_maximized;
+  gboolean fullscreen;
 }FMMainWindow;
 
 typedef struct _FMMainWindowClass

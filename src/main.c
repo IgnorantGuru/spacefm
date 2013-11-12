@@ -867,6 +867,7 @@ FMMainWindow* create_main_window()
     if ( app_settings.maximized )
     {
         gtk_window_maximize( GTK_WINDOW( main_window ) );
+        main_window->opened_maximized = main_window->maximized = TRUE;
     }
     gtk_widget_show ( GTK_WIDGET( main_window ) );
     return main_window;

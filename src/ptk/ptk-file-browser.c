@@ -500,7 +500,6 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
                                       PtkFileBrowser* file_browser )
 {
     int pos;
-    gboolean fullscreen = xset_get_b( "main_full" );
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
     char mode = main_window->panel_context[p-1];
@@ -510,7 +509,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     if ( widget == file_browser->hpane )
     {
         pos = gtk_paned_get_position( GTK_PANED( file_browser->hpane ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->x );
             set->x = g_strdup_printf( "%d", pos );
@@ -522,7 +521,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     {
 //printf("ptk_file_browser_slider_release fb=%#x  (panel %d)  mode = %d\n", file_browser, p, mode );
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_top ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->y );
             set->y = g_strdup_printf( "%d", pos );
@@ -531,7 +530,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
 //printf("    slide_y = %d  ", pos );
 
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_bottom ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->s );
             set->s = g_strdup_printf( "%d", pos );
@@ -4166,7 +4165,7 @@ static PtkMenuItemEntry shortcut_popup_menu[] =
 */
 
 void ptk_file_browser_save_column_widths( GtkTreeView *view,
-                                PtkFileBrowser* file_browser, gboolean force )
+                                          PtkFileBrowser* file_browser )
 {
     const char* title;
     XSet* set = NULL;
@@ -4179,35 +4178,38 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
 
-    if ( app_settings.maximized || ( !force && xset_get_b( "main_full" ) ) )
-        return;   // don't save columns in fullscreen mode unless force without max
-
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
-    int p = file_browser->mypanel;
-    char mode = main_window->panel_context[p-1];
-//printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
 
-    for ( i = 0; i < 6; i++ )
+    // if the window was opened maximized and stayed maximized, or the window is
+    // unmaximized and not fullscreen, save the columns
+    if ( ( !main_window->maximized || main_window->opened_maximized ) &&
+                                                !main_window->fullscreen )
     {
-        col = gtk_tree_view_get_column( view, i );
-        if ( !col )
-            return;
-        title = gtk_tree_view_column_get_title( col );
-        for ( j = 0; j < 6; j++ )
+        int p = file_browser->mypanel;
+        char mode = main_window->panel_context[p-1];
+//printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, p, mode);
+        for ( i = 0; i < 6; i++ )
         {
-            if ( !strcmp( title, _(column_titles[j]) ) )
-                break;
-        }
-        if ( j != 6 )
-        {
-            // save column width for this panel context
-            set = xset_get_panel_mode( p, column_names[j], mode );
-            width = gtk_tree_view_column_get_width( col );
-            if ( width > 0 )
+            col = gtk_tree_view_get_column( view, i );
+            if ( !col )
+                return;
+            title = gtk_tree_view_column_get_title( col );
+            for ( j = 0; j < 6; j++ )
             {
-                g_free( set->y );
-                set->y = g_strdup_printf( "%d", width );
+                if ( !strcmp( title, _(column_titles[j]) ) )
+                    break;
+            }
+            if ( j != 6 )
+            {
+                // save column width for this panel context
+                set = xset_get_panel_mode( p, column_names[j], mode );
+                width = gtk_tree_view_column_get_width( col );
+                if ( width > 0 )
+                {
+                    g_free( set->y );
+                    set->y = g_strdup_printf( "%d", width );
 //printf("        %d\t%s\n", width, title );
+                }
             }
         }
     }
