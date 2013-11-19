@@ -2663,8 +2663,17 @@ static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
                                        PtkFileBrowser* file_browser )
 {
-     g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
-                file_browser );
+    if ( file == NULL )
+    {
+        // The current folder itself changed
+        if ( !g_file_test( ptk_file_browser_get_cwd( file_browser ),
+                                                    G_FILE_TEST_IS_DIR ) )
+            // current folder doesn't exist - was renamed
+            on_close_notebook_page( NULL, file_browser );
+    }
+    else
+        g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
+                                                            file_browser );
 }
 
 static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
