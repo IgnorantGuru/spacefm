@@ -2,6 +2,7 @@
     README correct packages link
     manual note full/max col widths not saved #382
     adjust maximized and fullscreen behavior #382
+    add su-to-root support
 0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
