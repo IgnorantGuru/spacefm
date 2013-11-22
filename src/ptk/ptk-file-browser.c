@@ -4837,14 +4837,15 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-received" );
 
-    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) && ( gtk_selection_data_get_format(sel_data) == 8 ) )
+    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) &&
+                            ( gtk_selection_data_get_format(sel_data) == 8 ) )
     {
-        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-            dest_dir = folder_view_get_drop_dir( file_browser, x, y );
-        else
-            // use stored x and y because exo_icon_view has no get_drag_dest_row
-            dest_dir = folder_view_get_drop_dir( file_browser,
-                                    file_browser->drag_x, file_browser->drag_y );
+        // (list view) use stored x and y because == 0 for update drag status
+        //             when is last row (gtk2&3 bug?)
+        // and because exo_icon_view has no get_drag_dest_row
+        dest_dir = folder_view_get_drop_dir( file_browser,
+                                             file_browser->drag_x,
+                                             file_browser->drag_y );
 //printf("FB dest_dir = %s\n", dest_dir );
         if ( dest_dir )
         {
@@ -5157,6 +5158,9 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     }
     else
     {
+        // store x and y because == 0 for update drag status when is last row
+        file_browser->drag_x = x;
+        file_browser->drag_y = y;
         if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( widget ), x, y,
                                             NULL, &col, NULL, NULL ) )
         {

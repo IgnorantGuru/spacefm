@@ -4,6 +4,7 @@
     adjust maximized and fullscreen behavior #382
     add su-to-root support
     detect rename of current folder and close tab #243
+    fix list view auto drag action on drop to last row #387
 0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
