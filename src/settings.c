@@ -6522,10 +6522,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 help = "#designmode-designmenu-name";
                 break;
             case XSET_JOB_EDIT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_EDIT_ROOT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_COPYNAME:
                 help = "#designmode-command-copy";

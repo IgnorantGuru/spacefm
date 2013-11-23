@@ -953,7 +953,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
 
 <p>However, if you exit SpaceFM while the window is maximized, your column widths <i>will</i> be saved.  When you restart SpaceFM it will open maximized, and any changes to column widths thereafter will be remembered while maximized (unless you unmaximize and maximize again).
 
-<p>In fullscreen mode, neither changes to column widths nor to side pane heights are remembered.  When you return to non-fullscreen mode, your columns widths and side panes will revert to their original sizes.
+<p>In fullscreen mode, neither changes to column widths nor to side pane heights are remembered.  When you return to non-fullscreen mode, these will revert to their original sizes.
 
 <!-- #Focus Highlighting #foc -->
 <p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>
@@ -2813,6 +2813,12 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
 
+<!-- # Edit Script #edit -->
+<p><a name="designmode-designmenu-edit"/><a href="#designmode-designmenu-edit"><b>Edit Script</b></a><br>
+Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a script, Edit Script opens the command script in your configured editor.
+
+<p>You can also edit an item's script using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
+
 <!-- # Properties #prop -->
 <p><a name="designmode-designmenu-prop"/><a href="#designmode-designmenu-prop"><b>Properties</b></a><br>
 Properties opens the <a href="#designmode-props">Menu Item Properties</a> dialog for the current menu item, allowing you to change properties for the item as detailed in Menu Item Properties below.
@@ -3247,6 +3253,8 @@ exit $?
 
 <p><b>Open In Editor &amp; Root Editor</b>
 <br>The Open In Editor button will save and open the command script in your editor.  Simply edit the script and save it in your editor.  The Root Editor button, if shown, can be used to open a root-owned script in root's editor.
+
+<p>You can also open the command script in your editor directly from the Design Menu with <a href="#designmode-designmenu-edit">Edit Script</a> or using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Run Options #opts -->
 <p><a name="designmode-props-opts"/><a href="#designmode-props-opts"><b>Run Options</b></a><br>
@@ -6910,7 +6918,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-11-11&nbsp;&nbsp;(SpaceFM version 0.9.1+)
+<p>Updated 2013-11-23&nbsp;&nbsp;(SpaceFM version 0.9.1+)
 <br><br>
 </center>
 </td></tr></table>
