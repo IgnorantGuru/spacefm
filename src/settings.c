@@ -5760,14 +5760,16 @@ void xset_design_job( GtkWidget* item, XSet* set )
         */
         break;
     case XSET_JOB_EDIT:
-        if ( atoi( set->x ) == 0 )
+        /*
+        if ( atoi( set->x ) == XSET_CMD_LINE )
         {
             // line
             xset_text_dialog( parent, _("Edit Command Line"), NULL, TRUE, 
                                     _(enter_command_line), NULL, set->line, &set->line,
                                     NULL, FALSE, "#designmode-command-line" );
         }
-        else if ( atoi( set->x ) == 1 )
+        else */
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5776,7 +5778,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, FALSE, TRUE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5785,10 +5788,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
                 xset_edit( parent, set->z, FALSE, TRUE );
             else
                 goto _XSET_JOB_CUSTOM;
-        }
+        )
+        */
         break;
     case XSET_JOB_EDIT_ROOT:
-        if ( atoi( set->x ) == 1 )
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5797,7 +5801,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, TRUE, FALSE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5807,6 +5812,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             else
                 goto _XSET_JOB_CUSTOM;
         }
+        */
         break;
     case XSET_JOB_COPYNAME:
         clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
@@ -6649,7 +6655,12 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7277,6 +7288,33 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+    // Edit (script)
+    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+    {
+        char* script = xset_custom_get_script( set, FALSE );
+        if ( script )
+        {
+            if ( geteuid() != 0 && have_rw_access( script ) )
+            {
+                // edit as user
+                newitem = xset_design_additem( design_menu, _("_Edit Script"),
+                                    GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
+                gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+            }
+            else
+            {
+                // edit as root
+                newitem = xset_design_additem( design_menu, _("E_dit As Root"),
+                                    GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
+                if ( geteuid() == 0 )
+                    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
+            }
+            g_free( script );
+        }
+    }
+    
     // Properties
     newitem = xset_design_additem( design_menu, _("_Properties"),
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
@@ -7384,7 +7422,12 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( keymod == GDK_CONTROL_MASK )
         {
@@ -7462,7 +7505,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7484,7 +7532,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
