@@ -1765,7 +1765,9 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         argv[a++] = g_strdup( use_su );
         if ( strcmp( task->exec_as_user, "root" ) )
         {
-            if ( strcmp( use_su, "/bin/su" ) )
+            if ( !strcmp( use_su, "/usr/bin/su-to-root" ) )
+                argv[a++] = g_strdup( "-p" );
+            else if ( strcmp( use_su, "/bin/su" ) )
                 argv[a++] = g_strdup( "-u" );
             argv[a++] = g_strdup( task->exec_as_user );
         }
@@ -1796,6 +1798,15 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         else if ( !strcmp( use_su, "/usr/bin/gnomesu" )
                                         || !strcmp( use_su, "/usr/bin/xdg-su" ) )
         {
+            // gnomesu
+            argv[a++] = g_strdup( "-c" );
+            single_arg = TRUE;
+        }
+        else if ( !strcmp( use_su, "/usr/bin/su-to-root" ) )
+        {
+            // su-to-root
+            if ( !terminal )
+                argv[a++] = g_strdup( "-X" );  // command is a X11 program
             argv[a++] = g_strdup( "-c" );
             single_arg = TRUE;
         }

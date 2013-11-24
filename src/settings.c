@@ -5760,14 +5760,16 @@ void xset_design_job( GtkWidget* item, XSet* set )
         */
         break;
     case XSET_JOB_EDIT:
-        if ( atoi( set->x ) == 0 )
+        /*
+        if ( atoi( set->x ) == XSET_CMD_LINE )
         {
             // line
             xset_text_dialog( parent, _("Edit Command Line"), NULL, TRUE, 
                                     _(enter_command_line), NULL, set->line, &set->line,
                                     NULL, FALSE, "#designmode-command-line" );
         }
-        else if ( atoi( set->x ) == 1 )
+        else */
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5776,7 +5778,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, FALSE, TRUE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5785,10 +5788,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
                 xset_edit( parent, set->z, FALSE, TRUE );
             else
                 goto _XSET_JOB_CUSTOM;
-        }
+        )
+        */
         break;
     case XSET_JOB_EDIT_ROOT:
-        if ( atoi( set->x ) == 1 )
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5797,7 +5801,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, TRUE, FALSE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5807,6 +5812,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             else
                 goto _XSET_JOB_CUSTOM;
         }
+        */
         break;
     case XSET_JOB_COPYNAME:
         clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
@@ -6516,10 +6522,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 help = "#designmode-designmenu-name";
                 break;
             case XSET_JOB_EDIT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_EDIT_ROOT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_COPYNAME:
                 help = "#designmode-command-copy";
@@ -6649,7 +6655,12 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7277,6 +7288,33 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+    // Edit (script)
+    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+    {
+        char* script = xset_custom_get_script( set, FALSE );
+        if ( script )
+        {
+            if ( geteuid() != 0 && have_rw_access( script ) )
+            {
+                // edit as user
+                newitem = xset_design_additem( design_menu, _("_Edit Script"),
+                                    GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
+                gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+            }
+            else
+            {
+                // edit as root
+                newitem = xset_design_additem( design_menu, _("E_dit As Root"),
+                                    GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
+                if ( geteuid() == 0 )
+                    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
+            }
+            g_free( script );
+        }
+    }
+    
     // Properties
     newitem = xset_design_additem( design_menu, _("_Properties"),
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
@@ -7384,7 +7422,12 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( keymod == GDK_CONTROL_MASK )
         {
@@ -7462,7 +7505,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7484,7 +7532,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
@@ -9801,26 +9854,33 @@ void xset_defaults()
     set = xset_set( "panel1_show", "lbl", _("Panel _1") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel2_show", "lbl", _("Panel _2") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel3_show", "lbl", _("Panel _3") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel4_show", "lbl", _("Panel _4") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_pbar", "lbl", _("Panel _Bar") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_focus_panel", "lbl", _("_Go") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "panel_prev panel_next panel_hide panel_1 panel_2 panel_3 panel_4" );
     xset_set_set( set, "icn", "gtk-go-forward" );
+    set->line = g_strdup( "#gui-pan" );
 
-        xset_set( "panel_prev", "lbl", _("_Prev") );
+        set = xset_set( "panel_prev", "lbl", _("_Prev") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_next", "lbl", _("_Next") );
         /*
         xset_set( "panel_left", "lbl", _("_Left") );
@@ -9829,7 +9889,8 @@ void xset_defaults()
         xset_set( "panel_bottom", "lbl", _("_Bottom") );
         */
         xset_set( "panel_hide", "lbl", _("_Hide") );
-        xset_set( "panel_1", "lbl", _("Panel _1") );
+        set = xset_set( "panel_1", "lbl", _("Panel _1") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_2", "lbl", _("Panel _2") );
         xset_set( "panel_3", "lbl", _("Panel _3") );
         xset_set( "panel_4", "lbl", _("Panel _4") );
@@ -10499,12 +10560,15 @@ void xset_defaults()
 
         set = xset_set( "new_file", "lbl", _("_File") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_folder", "lbl", _("Fol_der") );
         xset_set_set( set, "icn", "gtk-directory" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_link", "lbl", _("_Link") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_bookmark", "lbl", C_("New|", "_Bookmark") );
         xset_set_set( set, "shared_key", "book_new" );
@@ -10674,6 +10738,7 @@ void xset_defaults()
     
     set = xset_set( "edit_rename", "lbl", _("_Rename") );
     xset_set_set( set, "icn", "gtk-edit" );
+    set->line = g_strdup( "#gui-rename" );
     
     set = xset_set( "edit_delete", "lbl", _("_Delete") );
     xset_set_set( set, "icn", "gtk-delete" );

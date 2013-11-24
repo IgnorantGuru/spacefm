@@ -1,4 +1,13 @@
-0.9.0+
+0.9.1+
+    README correct packages link
+    manual note full/max col widths not saved #382
+    adjust maximized and fullscreen behavior #382
+    add su-to-root support
+    detect rename of current folder and close tab #243
+    fix list view auto drag action on drop to last row #387
+    add design menu Edit Script; F4 opens script in editor
+    task manager absolute height #380
+0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
     sakura terminal use -x with single argument
@@ -14,6 +23,7 @@
     add lilyterm to emulators list
     remove erroneous files from pkg branch
     README added wiki link Guidelines For Distributing Modifications
+    limit evt_win_move events to 5 per second #380
 0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man

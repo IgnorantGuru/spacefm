@@ -391,13 +391,12 @@ void vfs_dir_emit_file_changed( VFSDir* dir, const char* file_name,
     if ( !force && dir->avoid_changes )
         return;
 
-/*  Test not needed because file won't be found in list?
     if ( G_UNLIKELY( 0 == strcmp(file_name, dir->path) ) )
     {
         // Special Case: The directory itself was changed
+        g_signal_emit( dir, signals[ FILE_CHANGED_SIGNAL ], 0, NULL );
         return;
     }
-*/
 
     g_mutex_lock( dir->mutex );
 

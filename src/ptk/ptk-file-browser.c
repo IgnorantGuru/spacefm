@@ -500,7 +500,6 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
                                       PtkFileBrowser* file_browser )
 {
     int pos;
-    gboolean fullscreen = xset_get_b( "main_full" );
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
     int p = file_browser->mypanel;
     char mode = main_window->panel_context[p-1];
@@ -510,7 +509,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     if ( widget == file_browser->hpane )
     {
         pos = gtk_paned_get_position( GTK_PANED( file_browser->hpane ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->x );
             set->x = g_strdup_printf( "%d", pos );
@@ -522,7 +521,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
     {
 //printf("ptk_file_browser_slider_release fb=%#x  (panel %d)  mode = %d\n", file_browser, p, mode );
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_top ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->y );
             set->y = g_strdup_printf( "%d", pos );
@@ -531,7 +530,7 @@ gboolean ptk_file_browser_slider_release( GtkWidget *widget,
 //printf("    slide_y = %d  ", pos );
 
         pos = gtk_paned_get_position( GTK_PANED( file_browser->side_vpane_bottom ) );
-        if ( !fullscreen )
+        if ( !main_window->fullscreen )
         {
             g_free( set->s );
             set->s = g_strdup_printf( "%d", pos );
@@ -1957,9 +1956,13 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
 
         // Set column widths for this panel context
         GtkTreeViewColumn* col;
+        //GtkTreeViewColumn* name_col = NULL;
         int j, width;
+        //int total_width = 0;
+        //int minor_width = 0;
         const char* title;
         XSet* set;
+        //GtkAllocation allocation;
 
         if ( GTK_IS_TREE_VIEW( file_browser->folder_view ) )
         {
@@ -1980,15 +1983,48 @@ void ptk_file_browser_update_views( GtkWidget* item, PtkFileBrowser* file_browse
                 {
                     // get column width for this panel context
                     set = xset_get_panel_mode( p, column_names[j], mode );
-                    width = set->y ? atoi( set->y ) : 0;
+                    width = set->y ? atoi( set->y ) : 100;
 //printf("        %d\t%s\n", width, title );
                     if ( width )
+                    {
                         gtk_tree_view_column_set_fixed_width( col, width );
+                        //printf("upd set_width %s %d\n", column_names[j], width );
+                        /*
+                        if ( set->b == XSET_B_TRUE )
+                        {
+                            total_width += width;
+                            if ( j != 0 )
+                                minor_width += width;
+                            else
+                                name_col = col;
+                        }
+                        */
+                    }
                     // set column visibility
                     gtk_tree_view_column_set_visible( col,
                                             set->b == XSET_B_TRUE || j == 0 );
                 }
             }
+            /* This breaks panel memory, eg:
+             * turn on panel 3, Name+Size cols, turn off 3, turn on 3, Size column goes to min
+             * panels 1+2 on, turn off 1, turn off 2, turn on 2, column widths in panel2 go to minimums
+             * Name column is expanding?
+
+            gtk_widget_get_allocation( file_browser->folder_view, &allocation );
+            //printf("list_view width %d\n", allocation.width );
+            if ( total_width < allocation.width && name_col )
+            {
+                // prevent Name column from auto-expanding
+                // If total column widths are less than treeview allocation width
+                // the Name column expands and won't allow user to downsize
+                gtk_tree_view_column_set_fixed_width( name_col,
+                                            allocation.width - minor_width );
+                set = xset_get_panel_mode( p, column_names[0], mode );
+                g_free( set->y );
+                set->y = g_strdup_printf( "%d", allocation.width - minor_width );
+                //printf("name col width reset %d\n", allocation.width - minor_width );
+            }
+            */
         }
     }
     else if ( xset_get_b_panel( p, "list_icons" ) )
@@ -2627,8 +2663,17 @@ static gboolean ptk_file_browser_content_changed( PtkFileBrowser* file_browser )
 static void on_folder_content_changed( VFSDir* dir, VFSFileInfo* file,
                                        PtkFileBrowser* file_browser )
 {
-     g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
-                file_browser );
+    if ( file == NULL )
+    {
+        // The current folder itself changed
+        if ( !g_file_test( ptk_file_browser_get_cwd( file_browser ),
+                                                    G_FILE_TEST_IS_DIR ) )
+            // current folder doesn't exist - was renamed
+            on_close_notebook_page( NULL, file_browser );
+    }
+    else
+        g_idle_add( ( GSourceFunc ) ptk_file_browser_content_changed,
+                                                            file_browser );
 }
 
 static void on_file_deleted( VFSDir* dir, VFSFileInfo* file,
@@ -4129,7 +4174,7 @@ static PtkMenuItemEntry shortcut_popup_menu[] =
 */
 
 void ptk_file_browser_save_column_widths( GtkTreeView *view,
-                                PtkFileBrowser* file_browser, gboolean force )
+                                          PtkFileBrowser* file_browser )
 {
     const char* title;
     XSet* set = NULL;
@@ -4142,35 +4187,38 @@ void ptk_file_browser_save_column_widths( GtkTreeView *view,
     if ( file_browser->view_mode != PTK_FB_LIST_VIEW )
         return;
 
-    if ( app_settings.maximized || ( !force && xset_get_b( "main_full" ) ) )
-        return;   // don't save columns in fullscreen mode unless force without max
-
     FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
-    int p = file_browser->mypanel;
-    char mode = main_window->panel_context[p-1];
-//printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, file_browser->mypanel, mode);
 
-    for ( i = 0; i < 6; i++ )
+    // if the window was opened maximized and stayed maximized, or the window is
+    // unmaximized and not fullscreen, save the columns
+    if ( ( !main_window->maximized || main_window->opened_maximized ) &&
+                                                !main_window->fullscreen )
     {
-        col = gtk_tree_view_get_column( view, i );
-        if ( !col )
-            return;
-        title = gtk_tree_view_column_get_title( col );
-        for ( j = 0; j < 6; j++ )
+        int p = file_browser->mypanel;
+        char mode = main_window->panel_context[p-1];
+//printf("*** save_columns  fb=%#x (panel %d)  mode = %d\n", file_browser, p, mode);
+        for ( i = 0; i < 6; i++ )
         {
-            if ( !strcmp( title, _(column_titles[j]) ) )
-                break;
-        }
-        if ( j != 6 )
-        {
-            // save column width for this panel context
-            set = xset_get_panel_mode( p, column_names[j], mode );
-            width = gtk_tree_view_column_get_width( col );
-            if ( width > 0 )
+            col = gtk_tree_view_get_column( view, i );
+            if ( !col )
+                return;
+            title = gtk_tree_view_column_get_title( col );
+            for ( j = 0; j < 6; j++ )
             {
-                g_free( set->y );
-                set->y = g_strdup_printf( "%d", width );
+                if ( !strcmp( title, _(column_titles[j]) ) )
+                    break;
+            }
+            if ( j != 6 )
+            {
+                // save column width for this panel context
+                set = xset_get_panel_mode( p, column_names[j], mode );
+                width = gtk_tree_view_column_get_width( col );
+                if ( width > 0 )
+                {
+                    g_free( set->y );
+                    set->y = g_strdup_printf( "%d", width );
 //printf("        %d\t%s\n", width, title );
+                }
             }
         }
     }
@@ -4573,7 +4621,10 @@ void init_list_view( PtkFileBrowser* file_browser, GtkTreeView* list_view )
                     }
                 }
                 else
+                {
                     gtk_tree_view_column_set_fixed_width ( col, width );
+                    //printf("init set_width %s %d\n", column_names[j], width );
+                }
             }
         }
 
@@ -4786,14 +4837,15 @@ void on_folder_view_drag_data_received ( GtkWidget *widget,
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-data-received" );
 
-    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) && ( gtk_selection_data_get_format(sel_data) == 8 ) )
+    if ( ( gtk_selection_data_get_length(sel_data) >= 0 ) &&
+                            ( gtk_selection_data_get_format(sel_data) == 8 ) )
     {
-        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-            dest_dir = folder_view_get_drop_dir( file_browser, x, y );
-        else
-            // use stored x and y because exo_icon_view has no get_drag_dest_row
-            dest_dir = folder_view_get_drop_dir( file_browser,
-                                    file_browser->drag_x, file_browser->drag_y );
+        // (list view) use stored x and y because == 0 for update drag status
+        //             when is last row (gtk2&3 bug?)
+        // and because exo_icon_view has no get_drag_dest_row
+        dest_dir = folder_view_get_drop_dir( file_browser,
+                                             file_browser->drag_x,
+                                             file_browser->drag_y );
 //printf("FB dest_dir = %s\n", dest_dir );
         if ( dest_dir )
         {
@@ -5106,6 +5158,9 @@ gboolean on_folder_view_drag_motion ( GtkWidget *widget,
     }
     else
     {
+        // store x and y because == 0 for update drag status when is last row
+        file_browser->drag_x = x;
+        file_browser->drag_y = y;
         if ( gtk_tree_view_get_path_at_pos( GTK_TREE_VIEW( widget ), x, y,
                                             NULL, &col, NULL, NULL ) )
         {
