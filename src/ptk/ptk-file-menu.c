@@ -995,7 +995,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
-        else if ( file_path && mime_type && ( 
+        else if ( file_path && mime_type && !is_dir && ( 
                   !strcmp( vfs_mime_type_get_type( mime_type ),
                                             "application/x-cd-image" ) ||
                   !strcmp( vfs_mime_type_get_type( mime_type ),

@@ -1232,7 +1232,7 @@ static gboolean cb_exec_out_watch( GIOChannel *channel, GIOCondition cond,
 {
 
 /*
-printf("cb_exec_out_watch %d\n", channel);
+printf("cb_exec_out_watch %p\n", channel);
 if ( cond & G_IO_IN )
     printf("    G_IO_IN\n");
 if ( cond & G_IO_OUT )
