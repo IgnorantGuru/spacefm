@@ -7,6 +7,7 @@
     fix list view auto drag action on drop to last row #387
     add design menu Edit Script; F4 opens script in editor
     task manager absolute height #380
+    fix icon/compact dbl-click selects file in selected dir #218 #389
 0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367
