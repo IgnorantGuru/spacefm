@@ -612,7 +612,7 @@ In addition, a bash command line can be entered in the Path Bar.  This is a conv
 
 When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and a <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
 
-<p>In addition, the substitution variables defined in <a href="#designmode-command-line">Command|Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command|Script</a> may also be used in Path Bar command lines.
+<p>In addition, the substitution variables defined in <a href="#designmode-props-command">Command Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command Script</a> may also be used in Path Bar command lines.
 
 <p>For example, to open a dialog showing the path of the current directory:
 <pre>    $ echo Current Directory: %d</pre>
@@ -865,7 +865,7 @@ For example, to add a custom command which shows the size of the currently selec
 <p>The following functions are included:
 
 <!-- #Unmount -->
-By default, SpaceFM will use udisks to unmount as root, but you can change this to any command in the dialog, such as umount, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, or pumount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
+By default, SpaceFM will use <a href="http://ignorantguru.github.io/udevil/">udevil</a> to unmount as root, but you can change this to any unmount command, such as a udisks or pumount command.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the dialog.
 
 <!-- #Mount -->
 Mount works similarly to Unmount, except that the selected device is mounted as root.
@@ -4765,8 +4765,19 @@ This file is designed to be edited by the administrative user.  Currently, the o
 Be sure to use a temporary directory which is root-owned/protected and user-writable (see /tmp's permissions).  /dev/shm is usually a good choice too.  The temporary directory <b>may not contain spaces or other special characters</b> - keep it simple.  Because SpaceFM may run commands as other users (including root), the temporary directory must be accessible to all users.
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
-This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user when spacefm is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
-<pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
+This folder, if it exists, is used to copy a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> (eg ~/.config/spacefm) exists for the current user when SpaceFM is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+<pre>
+    sudo cp -r /home/USER/.config/spacefm /etc/xdg/spacefm
+    sudo chmod -R ugo+rX /etc/xdg/spacefm</pre>
+
+To test, start SpaceFM with a test config directory which doesn't exist:
+<pre>    
+    killall spacefm
+    rm -rf /tmp/spacefm-test-config
+    spacefm --config-dir /tmp/spacefm-test-config</pre>
+
+<p>If you want to install plugins by default, install them uncompressed to /usr/share/spacefm/plugins/, just as SpaceFM does when you select Plugins|Install. In the user's configuration, plugins can be copied to other menus as well.  Or you can simply import plugins into the user's menus before copying the config dir to /etc/xdg/spacefm.
+
 
 <!-- @Program Files @/tmp -->
 

@@ -2379,6 +2379,14 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
                     *path_end = '\0';
             }
         }
+        
+        // convert ~ to /home/user for smarter bookmarks
+        if ( g_str_has_prefix( path, "~/" ) )
+        {
+            msg = g_strdup_printf( "%s%s", g_get_home_dir(), path + 1 );
+            g_free( path );
+            path = msg;
+        }
     }
     else
         path = NULL;

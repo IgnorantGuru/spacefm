@@ -1566,6 +1566,14 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                         if ( tab_dir[0] != '\0' )
                         {
                             // open saved tab
+                            if ( g_str_has_prefix( tab_dir, "~/" ) )
+                            {
+                                // convert ~ to /home/user for hacked session files
+                                str = g_strdup_printf( "%s%s", g_get_home_dir(),
+                                                                tab_dir + 1 );
+                                g_free( tab_dir );
+                                tab_dir = str;
+                            }
                             if ( g_file_test( tab_dir, G_FILE_TEST_IS_DIR ) )
                                 folder_path = tab_dir;
                             else if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
