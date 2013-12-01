@@ -211,7 +211,7 @@ static const char* context_comp[] =
     N_("doesn't end with"),
     N_("is less than"),
     N_("is greater than"),
-    N_("matches pattern"),
+    N_("matches"),
     N_("doesn't match")
 };
 
@@ -792,7 +792,7 @@ void load_command_script( ContextData* ctxt, XSet* set )
         file = fopen( script, "r" );
         if ( !file )
             g_warning( _("error reading file %s: %s"), script,
-                                                g_strerror( errno ), NULL );
+                                                g_strerror( errno ) );
         else
         {
             // read file one line at a time to prevent splitting UTF-8 characters
@@ -804,7 +804,7 @@ void load_command_script( ContextData* ctxt, XSet* set )
                     gtk_text_buffer_set_text( buf, "", -1 );
                     modified = TRUE;
                     g_warning( _("file '%s' contents are not valid UTF-8"),
-                                                            script, NULL );
+                                                            script );
                     break;
                 }
                 gtk_text_buffer_insert_at_cursor( buf, line, -1 );
@@ -883,6 +883,25 @@ void on_script_toggled( GtkWidget* item, ContextData* ctxt )
         ctxt->temp_cmd_line = get_text_view( GTK_TEXT_VIEW(
                                                         ctxt->cmd_script ) );
         load_command_script( ctxt, ctxt->set );
+        
+#if GTK_CHECK_VERSION(2, 24, 0)
+        // update Open In Browser file count - cosmetic only
+        // should probably rebuild entire list on click to avoid gtk 2.24 dep
+        char* path;
+        if ( ctxt->set->plugin )
+            path = g_build_filename( ctxt->set->plug_dir, ctxt->set->plug_name,
+                                                                NULL );
+        else
+            path = g_build_filename( xset_get_config_dir(), "scripts",
+                                                        ctxt->set->name, NULL );
+        char* str = g_strdup_printf( "%s  $fm_cmd_dir  %s", _("Command Dir"), 
+                                dir_has_files( path ) ? "" : _("(no files)") );
+        gtk_combo_box_text_remove( GTK_COMBO_BOX_TEXT( ctxt->open_browser ), 0);
+        gtk_combo_box_text_insert_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
+                                                                    0, str );
+        g_free( str );
+        g_free( path );
+#endif
     }
     GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
                                                     ctxt->cmd_script ) );
@@ -1098,15 +1117,15 @@ void on_type_changed( GtkComboBox* box, ContextData* ctxt )
     // load command data
     XSet* rset = ctxt->set;
     XSet* mset = xset_get_plugin_mirror( rset );
-    if ( atoi( rset->x ) == XSET_CMD_LINE )
-        load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
-    else
+    if ( rset->x && atoi( rset->x ) == XSET_CMD_SCRIPT )
     {
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON(
                                             ctxt->cmd_opt_script ), TRUE );
         gtk_widget_hide( ctxt->cmd_line_label );
         load_command_script( ctxt, rset );
     }
+    else
+        load_text_view( GTK_TEXT_VIEW( ctxt->cmd_script ), rset->line );
     GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( 
                                                     ctxt->cmd_script ) );
     GtkTextIter siter;
@@ -1466,6 +1485,20 @@ static gboolean on_target_keypress( GtkWidget *widget, GdkEventKey *event,
     if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
     {
         gtk_button_clicked( GTK_BUTTON( ctxt->btn_ok ) );
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            ContextData* ctxt )
+{
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( event->keyval == GDK_KEY_F1 && keymod == 0 )
+    {
+        gtk_dialog_response( GTK_DIALOG( ctxt->dlg ), GTK_RESPONSE_HELP );
         return TRUE;
     }
     return FALSE;
@@ -2117,6 +2150,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                             dir_has_files( path ) ? "" : _("(no files)") );
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
                                                                     str );
+    g_free( str );
     g_free( path );
 
     path = g_build_filename( xset_get_config_dir(), "plugin-data",
@@ -2125,11 +2159,16 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
                             dir_has_files( path ) ? "" : _("(no files)") );
     gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
                                                                     str );
+    g_free( str );
     g_free( path );
 
     if ( rset->plugin )
+    {
+        str = g_strdup_printf( "%s  $fm_plugin_dir", _("Plugin Dir") );
         gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT( ctxt->open_browser ),
-                                        _("Plugin Dir  $fm_plugin_dir") );
+                                                                    str );
+        g_free( str );
+    }
     gtk_box_pack_start( GTK_BOX( hbox ),
                         GTK_WIDGET( ctxt->open_browser ), FALSE, TRUE, 8 );
     gtk_box_pack_start( GTK_BOX( vbox ),
@@ -2301,6 +2340,9 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     
     g_signal_connect( ctxt->notebook, "switch-page",
                         G_CALLBACK ( on_prop_notebook_switch_page ), ctxt );
+
+    g_signal_connect( G_OBJECT( ctxt->dlg ), "key-press-event",
+                                G_CALLBACK( on_dlg_keypress ), ctxt );
 
     // run
     enable_context( ctxt );

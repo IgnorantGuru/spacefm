@@ -10,6 +10,8 @@ po/*.gmo
 po/stamp-it
 po/Makefile.in
 src/.deps/
+src/*/.deps/
+src/*/.dirstamp
 src/spacefm
 src/xml-purge
 *.o

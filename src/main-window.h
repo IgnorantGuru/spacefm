@@ -14,6 +14,13 @@ G_BEGIN_DECLS
 #define FM_IS_MAIN_WINDOW_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass),  FM_TYPE_MAIN_WINDOW))
 #define FM_MAIN_WINDOW_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj),  FM_TYPE_MAIN_WINDOW, FMMainWindowClass))
 
+enum {   // how a panel shares vertical and horizontal space with other panels
+    PANEL_NEITHER,
+    PANEL_HORIZ,
+    PANEL_VERT,
+    PANEL_BOTH
+};
+
 typedef struct _FMMainWindow
 {
     /* Private */
@@ -38,6 +45,8 @@ typedef struct _FMMainWindow
     int panel_slide_x[4];
     int panel_slide_y[4];
     int panel_slide_s[4];
+    char panel_context[4];
+    gboolean panel_change;
     GtkWidget* panelbar;
     GtkWidget* panel_btn[4];
     GtkWidget* panel_image[4];
@@ -85,6 +94,10 @@ GtkCheckMenuItem* open_side_pane_menu;
 
   GtkWindowGroup* wgroup;
   int n_busy_tasks;
+  guint configure_evt_timer;
+  gboolean maximized;
+  gboolean opened_maximized;
+  gboolean fullscreen;
 }FMMainWindow;
 
 typedef struct _FMMainWindowClass

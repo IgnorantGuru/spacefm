@@ -3,6 +3,7 @@ SpaceFM Contributors
 Developer:      IgnorantGuru <ignorantguru@gmx.com>
 
 Contributors:   BwackNinja <BwackNinja@gmail.com>  (gtk misc, gtk3 port)
+                OmegaPhil <OmegaPhil+SpaceFM@gmail.com>
 
 Artwork:        SpaceFM icons and logo by Goran Simovic
                 Additional icons from the Tango Desktop Project icon set
@@ -12,11 +13,9 @@ packagers!
 
 Special thanks to:
 
-    OmegaPhil
-    Patrick Verner
+    Jean-Philippe Fleury
     Hasufell
     Vladimir Kudrya
-    Jean-Philippe Fleury
 
 SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
 

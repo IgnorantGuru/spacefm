@@ -391,6 +391,23 @@ void load_conf()
         settings_tmp_dir = g_strdup( "/tmp" );
 }        
 
+void swap_menu_label( const char* set_name, const char* old_name,
+                                                        const char* new_name )
+{   // changes default menu label for older config files
+    XSet* set;
+
+    if ( set = xset_is( set_name ) )
+    {
+        if ( set->menu_label && !strcmp( set->menu_label, old_name ) )
+        {
+            // menu label has not been changed by user - change default
+            g_free( set->menu_label );
+            set->menu_label = g_strdup( new_name );
+            set->in_terminal = XSET_B_UNSET;
+        }
+    }
+}
+
 void load_settings( char* config_dir )
 {
     FILE * file;
@@ -956,27 +973,26 @@ void load_settings( char* config_dir )
     }
     if ( ver < 16 ) // < 0.8.3
     {
-        set = xset_get( "dev_menu_remove" );
-        if ( set->menu_label && !strcmp( set->menu_label, "Remo_ve" ) )
-        {
-            g_free( set->menu_label );
-            set->menu_label = g_strdup( _("Remo_ve / Eject") );
-            set->in_terminal = XSET_B_UNSET;
-        }
+        swap_menu_label( "dev_menu_remove", "Remo_ve", _("Remo_ve / Eject") );
     }
     if ( ver < 18 ) // < 0.8.7+
     {
         app_settings.desk_single_click = app_settings.single_click;
     }
-    if ( ver < 20 ) // < 0.9.0
+    if ( ver < 23 ) // < 0.9.0
     {
-        set = xset_get( "plug_copy" );
-        if ( set->menu_label && !strcmp( set->menu_label, "_Copy" ) )
-        {
-            g_free( set->menu_label );
-            set->menu_label = g_strdup( _("_Import") );
-            set->in_terminal = XSET_B_UNSET;
-        }
+        // Note: this is the last config version which should require menu_label
+        //       changes of this nature due to defaults no longer being saved
+        //       in session file
+        swap_menu_label( "plug_copy", "_Copy", _("_Import") );
+        swap_menu_label( "main_tasks", "_Tasks", _("_Task Manager") );
+
+        // for rename dialog
+        swap_menu_label( "move_filename", "_Filename", _("F_ilename") );
+        swap_menu_label( "move_type", "_Type", _("Typ_e") );
+        swap_menu_label( "move_target", "_Target", _("Ta_rget") );
+        swap_menu_label( "move_template", "_Template", _("Te_mplate") );
+        swap_menu_label( "move_dlg_help", "T_ips", _("_Help") );
     }
 }
 
@@ -994,44 +1010,51 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "21" );  // 0.9.0
+    xset_set( "config_version", "s", "23" );  // 0.9.0
 
     // save tabs
-    gboolean save_tabs = xset_get_b( "main_save_tabs" );
-    if ( main_window_ptr && save_tabs )
-    {
+    gboolean save_tabs = xset_get_b( "main_save_tabs" );    
+    if ( main_window_ptr )
         main_window = (FMMainWindow*)main_window_ptr;
+    else
+        main_window = fm_main_window_get_last_active();
+    
+    if ( GTK_IS_WIDGET( main_window ) && save_tabs )
+    {
         for ( p = 1; p < 5; p++ )
         {
-            set = xset_get_panel( p, "show" );            
-            pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) );
-            if ( pages )  // panel was shown
+            set = xset_get_panel( p, "show" );
+            if ( GTK_IS_NOTEBOOK( main_window->panel[p-1] ) )
             {
-                if ( set->s )
+                pages = gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) );
+                if ( pages )  // panel was shown
                 {
-                    g_free( set->s );
-                    set->s = NULL;
-                }
-                tabs = g_strdup( "" );
-                for ( g = 0; g < pages; g++ )
-                {
-                    file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
-                                        GTK_NOTEBOOK( main_window->panel[p-1] ), g ) );
-                    old_tabs = tabs;
-                    tabs = g_strdup_printf( "%s///%s", old_tabs,
-                                        ptk_file_browser_get_cwd( file_browser ) );
-                    g_free( old_tabs );
-                }
-                if ( tabs[0] != '\0' )
-                    set->s = tabs;
-                else
-                    g_free( tabs );
+                    if ( set->s )
+                    {
+                        g_free( set->s );
+                        set->s = NULL;
+                    }
+                    tabs = g_strdup( "" );
+                    for ( g = 0; g < pages; g++ )
+                    {
+                        file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ), g ) );
+                        old_tabs = tabs;
+                        tabs = g_strdup_printf( "%s///%s", old_tabs,
+                                            ptk_file_browser_get_cwd( file_browser ) );
+                        g_free( old_tabs );
+                    }
+                    if ( tabs[0] != '\0' )
+                        set->s = tabs;
+                    else
+                        g_free( tabs );
 
-                // save current tab
-                if ( set->x )
-                    g_free( set->x );
-                set->x = g_strdup_printf( "%d", gtk_notebook_get_current_page(
-                                        GTK_NOTEBOOK( main_window->panel[p-1] ) ) );
+                    // save current tab
+                    if ( set->x )
+                        g_free( set->x );
+                    set->x = g_strdup_printf( "%d", gtk_notebook_get_current_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ) ) );
+                }
             }
         }
     }
@@ -1319,32 +1342,38 @@ const char* xset_get_user_tmp_dir()
     return settings_user_tmp_dir;
 }
 
-static gboolean idle_save_settings( gpointer main_window )
+static gboolean idle_save_settings( gpointer ptr )
 {
-    //printf("AUTOSAVE idle save\n" );
-    char* err_msg = save_settings( main_window );
+    //printf("AUTOSAVE *** idle_save_settings\n" );
+    char* err_msg = save_settings( NULL );
     if ( err_msg )
     {
-        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"), err_msg );
+        printf( _("SpaceFM Error: Unable to autosave session file ( %s )\n"),
+                                                                    err_msg );
         g_free( err_msg );
     }
     return FALSE;
 }
 
-static void auto_save_settings( gpointer main_window )
+static void auto_save_start( gboolean delay )
 {
-    //printf("AUTOSAVE autosave\n" );
-    g_idle_add( ( GSourceFunc ) idle_save_settings, main_window );
-    xset_autosave_request = FALSE;
+    //printf("AUTOSAVE auto_save_start\n" );
+    if ( !delay )
+    {
+        g_idle_add( ( GSourceFunc ) idle_save_settings, NULL );
+        xset_autosave_request = FALSE;
+    }
+    else
+        xset_autosave_request = TRUE;
     if ( !xset_autosave_timer )
     {
         xset_autosave_timer = g_timeout_add_seconds( 10,
-                            ( GSourceFunc ) on_autosave_timer, main_window );
+                            ( GSourceFunc ) on_autosave_timer, NULL );
         //printf("AUTOSAVE timer started\n" );
     }
 }
 
-gboolean on_autosave_timer( gpointer main_window )
+gboolean on_autosave_timer( gpointer ptr )
 {
     //printf("AUTOSAVE timeout\n" );
     if ( xset_autosave_timer )
@@ -1353,11 +1382,11 @@ gboolean on_autosave_timer( gpointer main_window )
         xset_autosave_timer = 0;
     }
     if ( xset_autosave_request )
-        auto_save_settings( main_window );
+        auto_save_start( FALSE );
     return FALSE;
 }
 
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force )
+void xset_autosave( gboolean force, gboolean delay )
 {
     if ( xset_autosave_timer && !force )
     {
@@ -1368,18 +1397,24 @@ void xset_autosave( PtkFileBrowser* file_browser, gboolean force )
     }
     else
     {
-        if ( xset_autosave_timer )
+        if ( xset_autosave_timer && force )
         {
             g_source_remove( xset_autosave_timer );
             xset_autosave_timer = 0;
         }
-        //if ( force ) printf("AUTOSAVE force\n" );
-        auto_save_settings( file_browser ? file_browser->main_window : NULL );
+        /* if ( force )
+            printf("AUTOSAVE force\n" );
+        else if ( delay )
+            printf("AUTOSAVE delay\n" );
+        else
+            printf("AUTOSAVE normal\n" ); */
+        auto_save_start( !force && delay );
     }
 }
 
 void xset_autosave_cancel()
 {
+    //printf("AUTOSAVE cancel\n" );
     xset_autosave_request = FALSE;
     if ( xset_autosave_timer )
     {
@@ -1387,6 +1422,7 @@ void xset_autosave_cancel()
         xset_autosave_timer = 0;
     }
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 //MOD extra settings below
@@ -1911,6 +1947,15 @@ XSet* xset_get_panel( int panel, const char* name )
     return set;
 }
 
+XSet* xset_get_panel_mode( int panel, const char* name, char mode )
+{
+    XSet* set;
+    char* fullname = g_strdup_printf( "panel%d_%s%d", panel, name, mode );
+    set = xset_get( fullname );
+    g_free( fullname );
+    return set;
+}
+
 char* xset_get_s( const char* name )
 {
     XSet* set = xset_get( name );
@@ -1937,6 +1982,14 @@ gboolean xset_get_b( const char* name )
 gboolean xset_get_b_panel( int panel, const char* name )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
+    gboolean b = xset_get_b( fullname );
+    g_free( fullname );
+    return b;
+}
+
+gboolean xset_get_b_panel_mode( int panel, const char* name, char mode )
+{
+    char* fullname = g_strdup_printf( "panel%d_%s%d", panel, name, mode );
     gboolean b = xset_get_b( fullname );
     g_free( fullname );
     return b;
@@ -1980,6 +2033,15 @@ XSet* xset_set_b( const char* name, gboolean bval )
 XSet* xset_set_b_panel( int panel, const char* name, gboolean bval )
 {
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
+    XSet* set = xset_set_b( fullname, bval );
+    g_free( fullname );
+    return set;
+}
+
+XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
+                                                            gboolean bval )
+{
+    char* fullname = g_strdup_printf( "panel%d_%s%d", panel, name, mode );
     XSet* set = xset_set_b( fullname, bval );
     g_free( fullname );
     return set;
@@ -2079,28 +2141,31 @@ static void xset_write_set( FILE* file, XSet* set )
         fprintf( file, "%s-key=%d\n", set->name, set->key );
     if ( set->keymod )
         fprintf( file, "%s-keymod=%d\n", set->name, set->keymod );
+    // menu label
     if ( set->menu_label )
     {
         if ( set->lock )
         {
-            if ( set->in_terminal == XSET_B_TRUE )
+            // built-in
+            if ( set->in_terminal == XSET_B_TRUE && set->menu_label[0] )
                 // only save lbl if menu_label was customized
                 fprintf( file, "%s-lbl=%s\n", set->name, set->menu_label );
         }
         else
+            // custom
             fprintf( file, "%s-label=%s\n", set->name, set->menu_label );
     }
-    if ( set->icon )
+    // icon
+    if ( set->lock )
     {
-        if ( set->lock )
-        {
-            if ( set->keep_terminal == XSET_B_TRUE )
-                // only save icn if icon was customized
-                fprintf( file, "%s-icn=%s\n", set->name, set->icon );
-        }
-        else
-            fprintf( file, "%s-icon=%s\n", set->name, set->icon );
+        // built-in            
+        if ( set->keep_terminal == XSET_B_TRUE )
+            // only save icn if icon was customized
+            fprintf( file, "%s-icn=%s\n", set->name, set->icon ? set->icon : "" );
     }
+    else if ( set->icon )
+        // custom
+        fprintf( file, "%s-icon=%s\n", set->name, set->icon );
     if ( set->next )
         fprintf( file, "%s-next=%s\n", set->name, set->next );
     if ( set->child )
@@ -2468,6 +2533,16 @@ XSet* xset_set_panel( int panel, const char* name, const char* var, const char* 
 {
     XSet* set;
     char* fullname = g_strdup_printf( "panel%d_%s", panel, name );
+    set = xset_set( fullname, var, value );
+    g_free( fullname );
+    return set;
+}
+
+XSet* xset_set_panel_mode( int panel, const char* name, char mode,
+                                      const char* var, const char* value )
+{
+    XSet* set;
+    char* fullname = g_strdup_printf( "panel%d_%s%d", panel, name, mode );
     set = xset_set( fullname, var, value );
     g_free( fullname );
     return set;
@@ -3132,7 +3207,9 @@ GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_brows
         }
         else if ( set->menu_style )
         {
-            if ( set->menu_style == XSET_MENU_CHECK )
+            if ( set->menu_style == XSET_MENU_CHECK &&
+                        !( !set->lock && set->x &&
+                           ( atoi( set->x ) > XSET_CMD_SCRIPT ) ) ) // app or book
             {
                 item = gtk_check_menu_item_new_with_mnemonic( set->menu_label );
                 gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM( item ),
@@ -4390,9 +4467,6 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     char* deffile;
     char* s1;
     char* s2;
-
-    if ( !file_browser )
-        return;
         
     // get new plugin filename    
     XSet* save = xset_get( "plug_ifile" );
@@ -4492,7 +4566,7 @@ void xset_custom_export( GtkWidget* parent, PtkFileBrowser* file_browser,
     // tar and delete tmp files
     // task
     PtkFileTask* task = ptk_file_exec_new( _("Export Plugin"), plug_dir, parent,
-                                            file_browser->task_view );
+                            file_browser ? file_browser->task_view : NULL );
     char* plug_dir_q = bash_quote( plug_dir );
     char* path_q = bash_quote( path );
     if ( !set->plugin )
@@ -5686,14 +5760,16 @@ void xset_design_job( GtkWidget* item, XSet* set )
         */
         break;
     case XSET_JOB_EDIT:
-        if ( atoi( set->x ) == 0 )
+        /*
+        if ( atoi( set->x ) == XSET_CMD_LINE )
         {
             // line
             xset_text_dialog( parent, _("Edit Command Line"), NULL, TRUE, 
                                     _(enter_command_line), NULL, set->line, &set->line,
                                     NULL, FALSE, "#designmode-command-line" );
         }
-        else if ( atoi( set->x ) == 1 )
+        else */
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5702,7 +5778,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, FALSE, TRUE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5711,10 +5788,11 @@ void xset_design_job( GtkWidget* item, XSet* set )
                 xset_edit( parent, set->z, FALSE, TRUE );
             else
                 goto _XSET_JOB_CUSTOM;
-        }
+        )
+        */
         break;
     case XSET_JOB_EDIT_ROOT:
-        if ( atoi( set->x ) == 1 )
+        if ( atoi( set->x ) == XSET_CMD_SCRIPT )
         {
             // script
             cscript = xset_custom_get_script( set, !set->plugin );
@@ -5723,7 +5801,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
             xset_edit( parent, cscript, TRUE, FALSE );
             g_free( cscript );
         }
-        else if ( atoi( set->x ) == 2 )
+        /*
+        else if ( atoi( set->x ) == XSET_CMD_APP )
         {
             // custom
             if ( !set->z || !g_file_test( set->z, G_FILE_TEST_EXISTS ) )
@@ -5733,6 +5812,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
             else
                 goto _XSET_JOB_CUSTOM;
         }
+        */
         break;
     case XSET_JOB_COPYNAME:
         clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
@@ -6082,12 +6162,12 @@ void xset_design_job( GtkWidget* item, XSet* set )
             name = g_strdup( _("( no name )") );
         if ( set->child && set->menu_style == XSET_MENU_SUBMENU )
         {
-            msg = g_strdup_printf( _("Permanently remove the '%s' SUBMENU AND ALL COMMANDS WITHIN IT?\n\nThis action will delete all settings and files associated with these items."), name );
+            msg = g_strdup_printf( _("Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n\nThis action will delete all settings and files associated with these items."), name );
             buttons = GTK_BUTTONS_YES_NO;
         }
         else
         {
-            msg = g_strdup_printf( _("Permanently remove the '%s' command?\n\nThis action will delete all settings and files associated with this command."), name );
+            msg = g_strdup_printf( _("Permanently remove the '%s' item?\n\nThis action will delete all settings and files associated with this item."), name );
             buttons = GTK_BUTTONS_OK_CANCEL;
         }
         g_free( name );
@@ -6314,7 +6394,7 @@ void xset_design_job( GtkWidget* item, XSet* set )
     //    main_window_on_plugins_change( NULL );
 
     // autosave
-    xset_autosave( set->browser, FALSE );
+    xset_autosave( FALSE, FALSE );
 }
 
 void on_design_radio_toggled( GtkCheckMenuItem* item, XSet* set )
@@ -6442,10 +6522,10 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 help = "#designmode-designmenu-name";
                 break;
             case XSET_JOB_EDIT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_EDIT_ROOT:
-                help = "#designmode-command-edit";
+                help = "#designmode-designmenu-edit";
                 break;
             case XSET_JOB_COPYNAME:
                 help = "#designmode-command-copy";
@@ -6575,7 +6655,12 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -6773,6 +6858,7 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
         gtk_container_add ( GTK_CONTAINER (design_menu ), gtk_separator_menu_item_new() );
     }
 
+#if 0  // to prevent comment showing in pot file
     // Name
     /*
     newitem = xset_design_additem( design_menu, _("_Name"),
@@ -7090,6 +7176,8 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     // Separator
     //gtk_container_add ( GTK_CONTAINER ( design_menu ), gtk_separator_menu_item_new() );
 
+#endif
+
     // Cut
     newitem = xset_design_additem( design_menu, _("Cu_t"),
                                 GTK_STOCK_CUT, XSET_JOB_CUT, set );
@@ -7200,6 +7288,33 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
     gtk_widget_add_accelerator( newitem, "activate", accel_group,
                             GDK_KEY_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
+    // Edit (script)
+    if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+    {
+        char* script = xset_custom_get_script( set, FALSE );
+        if ( script )
+        {
+            if ( geteuid() != 0 && have_rw_access( script ) )
+            {
+                // edit as user
+                newitem = xset_design_additem( design_menu, _("_Edit Script"),
+                                    GTK_STOCK_EDIT, XSET_JOB_EDIT, set );
+                gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+            }
+            else
+            {
+                // edit as root
+                newitem = xset_design_additem( design_menu, _("E_dit As Root"),
+                                    GTK_STOCK_DIALOG_WARNING, XSET_JOB_EDIT_ROOT, set );
+                if ( geteuid() == 0 )
+                    gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                                    GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);                
+            }
+            g_free( script );
+        }
+    }
+    
     // Properties
     newitem = xset_design_additem( design_menu, _("_Properties"),
                                 GTK_STOCK_PROPERTIES, XSET_JOB_PROP, set );
@@ -7307,7 +7422,12 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton* event, XSet* set )
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( keymod == GDK_CONTROL_MASK )
         {
@@ -7385,7 +7505,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
         else if ( event->keyval == GDK_KEY_F3 )
             job = XSET_JOB_PROP;
         else if ( event->keyval == GDK_KEY_F4 )
-            job = XSET_JOB_PROP_CMD;
+        {
+            if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                job = XSET_JOB_EDIT;
+            else
+                job = XSET_JOB_PROP_CMD;
+        }
         else if ( event->keyval == GDK_KEY_Delete )
             job = XSET_JOB_REMOVE;
         else if ( event->keyval == GDK_KEY_Insert )
@@ -7407,7 +7532,12 @@ gboolean xset_menu_keypress( GtkWidget* widget, GdkEventKey* event,
                 return TRUE;
             }
             else
-                job = XSET_JOB_PROP_CMD;
+            {
+                if ( set->x && atoi( set->x ) == XSET_CMD_SCRIPT )
+                    job = XSET_JOB_EDIT;
+                else
+                    job = XSET_JOB_PROP_CMD;
+            }
         }
         else if ( event->keyval == GDK_KEY_k )
             job = XSET_JOB_KEY;
@@ -7598,6 +7728,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
                                 rset->icon, &rset->icon,
                                 NULL, FALSE, NULL ) )
         {
+            if ( rset->lock )
+                rset->keep_terminal = TRUE;  // trigger save of changed icon
             if ( cb_func )
                 (*cb_func) ( item, cb_data );
         }
@@ -7617,7 +7749,7 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         xset_custom_activate( item, rset );
 
     if ( rset->menu_style )
-        xset_autosave( rset->browser, FALSE );
+        xset_autosave( FALSE, FALSE );
 }
 
 int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget* image,
@@ -7645,7 +7777,8 @@ int xset_msg_dialog( GtkWidget* parent, int action, const char* title, GtkWidget
                                               action,
                                               buttons,
                                               msg1, NULL );
-    xset_set_window_icon( GTK_WINDOW( dlg ) );
+    if ( action == GTK_MESSAGE_INFO )
+        xset_set_window_icon( GTK_WINDOW( dlg ) );
     gtk_window_set_role( GTK_WINDOW( dlg ), "msg_dialog" );
 
     if ( msg2 )
@@ -9478,12 +9611,12 @@ void xset_defaults()
 
         set = xset_set( "dev_icon_optical_media", "lbl", _("Optical Has Media") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-cdrom" );
+        xset_set_set( set, "icn", "gtk-yes" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_optical_nomedia", "lbl", _("Optical No Media") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-cdrom" );
+        xset_set_set( set, "icn", "gtk-close" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_floppy_mounted", "lbl", _("Floppy Mounted") );
@@ -9498,17 +9631,17 @@ void xset_defaults()
 
         set = xset_set( "dev_icon_remove_mounted", "lbl", _("Removable Mounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-add" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_remove_unmounted", "lbl", _("Removable Unmounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-remove" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_internal_mounted", "lbl", _("Internal Mounted") );
         set->menu_style = XSET_MENU_ICON;
-        xset_set_set( set, "icn", "gtk-harddisk" );
+        xset_set_set( set, "icn", "gtk-open" );
         set->line = g_strdup( "#devices-settings-icon" );
 
         set = xset_set( "dev_icon_internal_unmounted", "lbl", _("Internal Unmounted") );
@@ -9563,7 +9696,7 @@ void xset_defaults()
     set = xset_set( "move_name", "lbl", _("_Name") );
     set->menu_style = XSET_MENU_CHECK;
     
-    set = xset_set( "move_filename", "lbl", _("_Filename") );
+    set = xset_set( "move_filename", "lbl", _("F_ilename") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     
@@ -9574,15 +9707,15 @@ void xset_defaults()
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
     
-    set = xset_set( "move_type", "lbl", _("_Type") );
+    set = xset_set( "move_type", "lbl", _("Typ_e") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
-    set = xset_set( "move_target", "lbl", _("_Target") );
+    set = xset_set( "move_target", "lbl", _("Ta_rget") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
-    set = xset_set( "move_template", "lbl", _("_Template") );
+    set = xset_set( "move_template", "lbl", _("Te_mplate") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
 
@@ -9614,7 +9747,7 @@ void xset_defaults()
     xset_set_set( set, "title", _("Move Dialog Font") );
     xset_set_set( set, "desc", _("/home/user/Example Filename.ext") );
 
-    set = xset_set( "move_dlg_help", "lbl", _("T_ips") );
+    set = xset_set( "move_dlg_help", "lbl", _("_Help") );
     xset_set_set( set, "icn", "gtk-help" );
 
     set = xset_set( "move_dlg_confirm_create", "lbl", _("_Confirm Create") );
@@ -9721,26 +9854,33 @@ void xset_defaults()
     set = xset_set( "panel1_show", "lbl", _("Panel _1") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel2_show", "lbl", _("Panel _2") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel3_show", "lbl", _("Panel _3") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "panel4_show", "lbl", _("Panel _4") );
     set->menu_style = XSET_MENU_CHECK;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_pbar", "lbl", _("Panel _Bar") );
     set->menu_style = XSET_MENU_CHECK;
     set->b = XSET_B_TRUE;
+    set->line = g_strdup( "#gui-pan" );
 
     set = xset_set( "main_focus_panel", "lbl", _("_Go") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "panel_prev panel_next panel_hide panel_1 panel_2 panel_3 panel_4" );
     xset_set_set( set, "icn", "gtk-go-forward" );
+    set->line = g_strdup( "#gui-pan" );
 
-        xset_set( "panel_prev", "lbl", _("_Prev") );
+        set = xset_set( "panel_prev", "lbl", _("_Prev") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_next", "lbl", _("_Next") );
         /*
         xset_set( "panel_left", "lbl", _("_Left") );
@@ -9749,7 +9889,8 @@ void xset_defaults()
         xset_set( "panel_bottom", "lbl", _("_Bottom") );
         */
         xset_set( "panel_hide", "lbl", _("_Hide") );
-        xset_set( "panel_1", "lbl", _("Panel _1") );
+        set = xset_set( "panel_1", "lbl", _("Panel _1") );
+        set->line = g_strdup( "#gui-pan" );
         xset_set( "panel_2", "lbl", _("Panel _2") );
         xset_set( "panel_3", "lbl", _("Panel _3") );
         xset_set( "panel_4", "lbl", _("Panel _4") );
@@ -9782,7 +9923,7 @@ void xset_defaults()
         xset_set_set( set, "desc", "evt_win_new evt_win_focus evt_win_move evt_win_click evt_win_key evt_win_close" );
         set->line = g_strdup( "#sockets-menu" );
 
-            set = xset_set( "evt_win_new", "lbl", _("_New") );
+            set = xset_set( "evt_win_new", "lbl", C_("View|Events|Window|", "_New") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set New Window Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n\nUse:\n\t%%e\tevent type  (evt_win_new)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
@@ -9829,7 +9970,7 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel gets focus:\n\nUse:\n\t%%e\tevent type  (evt_pnl_focus)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-pnlfoc" );
 
-            set = xset_set( "evt_pnl_show", "lbl", _("_Show") );
+            set = xset_set( "evt_pnl_show", "lbl", C_("View|Events|Panel|", "_Show") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Panel Show Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n\nUse:\n\t%%e\tevent type  (evt_pnl_show)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\t%%f\tfocus  (element shown or hidden)\n\t%%v\tvisible  (1 or 0)\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
@@ -9858,7 +9999,7 @@ void xset_defaults()
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab gets focus:\n\nUse:\n\t%%e\tevent type  (evt_tab_focus)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\ttab\n\nExported bash variables (eg $fm_pwd, etc) can be used in this command.") );
             set->line = g_strdup( "#sockets-events-tabfoc" );
 
-            set = xset_set( "evt_tab_close", "lbl", _("_Close") );
+            set = xset_set( "evt_tab_close", "lbl", C_("View|Events|Tab|", "_Close") );
             set->menu_style = XSET_MENU_STRING;
             xset_set_set( set, "title", _("Set Tab Close Command") );
             xset_set_set( set, "desc", _("Enter program or bash command line to be run automatically whenever a tab is closed:\n\nUse:\n\t%%e\tevent type  (evt_tab_close)\n\t%%w\twindow id  (see spacefm -s help)\n\t%%p\tpanel\n\t%%t\tclosed tab") );
@@ -10006,7 +10147,7 @@ void xset_defaults()
     set = xset_get( "sep_t6" );
     set->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "main_tasks", "lbl", _("_Tasks") );
+    set = xset_set( "main_tasks", "lbl", _("_Task Manager") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "desc", "task_show_manager task_hide_manager sep_t1 task_columns task_popups task_errors task_queue" );
     set->line = g_strdup( "#tasks" );
@@ -10068,24 +10209,24 @@ void xset_defaults()
     
     set = xset_set( "task_col_curspeed", "lbl", _("C_urrent Speed") );
     set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 9 );
     set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_curest", "lbl", _("Current Re_main") );
     set->menu_style = XSET_MENU_CHECK;
+    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 10 );
     set->line = g_strdup( "#tasks-menu-col" );
 
     set = xset_set( "task_col_avgspeed", "lbl", _("_Average Speed") );
     set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 11 );
     set->y = g_strdup( "60" );
     set->line = g_strdup( "#tasks-menu-col" );
     
     set = xset_set( "task_col_avgest", "lbl", _("A_verage Remain") );
     set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
     set->x = g_strdup_printf( "%d", 12 );
     set->y = g_strdup( "65" );
     set->line = g_strdup( "#tasks-menu-col" );
@@ -10447,12 +10588,15 @@ void xset_defaults()
 
         set = xset_set( "new_file", "lbl", _("_File") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_folder", "lbl", _("Fol_der") );
         xset_set_set( set, "icn", "gtk-directory" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_link", "lbl", _("_Link") );
         xset_set_set( set, "icn", "gtk-file" );
+        set->line = g_strdup( "#gui-newf" );
 
         set = xset_set( "new_bookmark", "lbl", C_("New|", "_Bookmark") );
         xset_set_set( set, "shared_key", "book_new" );
@@ -10622,6 +10766,7 @@ void xset_defaults()
     
     set = xset_set( "edit_rename", "lbl", _("_Rename") );
     xset_set_set( set, "icn", "gtk-edit" );
+    set->line = g_strdup( "#gui-rename" );
     
     set = xset_set( "edit_delete", "lbl", _("_Delete") );
     xset_set_set( set, "icn", "gtk-delete" );
@@ -10864,503 +11009,151 @@ void xset_defaults()
 
 
 
-    // PANEL ONE
-    set = xset_set( "panel1_show_toolbox", "lbl", _("_Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
+    // PANELS
+    int p, i;
+    for ( p = 1; p < 5; p++ )
+    {
+        set = xset_set_panel( p, "show_toolbox", "lbl", _("_Toolbar") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_toolbox" );
+        
+        set = xset_set_panel( p, "show_devmon", "lbl", _("_Devices") );
+        set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_devmon" );
 
-    set = xset_set( "panel1_show_devmon", "lbl", _("_Devices") );
-    set->menu_style = XSET_MENU_CHECK;
+        set = xset_set_panel( p, "show_dirtree", "lbl", _("T_ree") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_dirtree" );
 
-    set = xset_set( "panel1_show_dirtree", "lbl", _("T_ree") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
+        set = xset_set_panel( p, "show_book", "lbl", _("_Bookmarks") );
+        set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_book" );
 
-    set = xset_set( "panel1_show_book", "lbl", _("_Bookmarks") );
-    set->menu_style = XSET_MENU_CHECK;
+        set = xset_set_panel( p, "show_sidebar", "lbl", _("_Side Toolbar") );
+        set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_sidebar" );
 
-    set = xset_set( "panel1_show_sidebar", "lbl", _("_Side Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
+        set = xset_set_panel( p, "list_detailed", "lbl", _("_Detailed") );
+        set->menu_style = XSET_MENU_RADIO;
+        set->b = XSET_B_TRUE;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_detailed" );
 
-    set = xset_set( "panel1_list_detailed", "lbl", _("_Detailed") );
-    set->menu_style = XSET_MENU_RADIO;
+        set = xset_set_panel( p, "list_icons", "lbl", _("_Icons") );
+        set->menu_style = XSET_MENU_RADIO;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_icons" );
 
-    set = xset_set( "panel1_list_icons", "lbl", _("_Icons") );
-    set->menu_style = XSET_MENU_RADIO;
+        set = xset_set_panel( p, "list_compact", "lbl", _("_Compact") );
+        set->menu_style = XSET_MENU_RADIO;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_list_compact" );
 
-    set = xset_set( "panel1_list_compact", "lbl", _("_Compact") );
-    set->menu_style = XSET_MENU_RADIO;
-    set->b = XSET_B_TRUE;
+        set = xset_set_panel( p, "show_hidden", "lbl", _("_Hidden Files") );
+        set->menu_style = XSET_MENU_CHECK;
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_show_hidden" );
 
-    set = xset_set( "panel1_show_hidden", "lbl", _("_Hidden Files") );
-    set->menu_style = XSET_MENU_CHECK;
+        set = xset_set_panel( p, "font_file", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("File List Font (Panel %d)"), p );
+        xset_set_set( set, "desc", _("Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11") );
 
-    set = xset_set( "panel1_font_file", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("File List Font (Panel 1)") );
-    xset_set_set( set, "desc", _("Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11") );
+        set = xset_set_panel( p, "font_dev", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("Devices Font (Panel %d)"), p );
+        xset_set_set( set, "desc", _("sr0 [no media] :EXAMPLE") );
+        set->line = g_strdup( "#devices-settings-font" );
 
-    set = xset_set( "panel1_font_dev", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Devices Font (Panel 1)") );
-    xset_set_set( set, "desc", _("sr0 [no media] :EXAMPLE") );
-    set->line = g_strdup( "#devices-settings-font" );
+        set = xset_set_panel( p, "font_book", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("Bookmarks Font (Panel %d)"), p );
+        xset_set_set( set, "desc", _("Example Bookmark Name") );
 
-    set = xset_set( "panel1_font_book", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Bookmarks Font (Panel 1)") );
-    xset_set_set( set, "desc", _("Example Bookmark Name") );
+        set = xset_set_panel( p, "font_path", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("Path Bar Font (Panel %d)"), p );
+        xset_set_set( set, "desc", _("$ cat /home/user/example") );
+        set->line = g_strdup( "#gui-pathbar-font" );
 
-    set = xset_set( "panel1_font_path", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Path Bar Font (Panel 1)") );
-    xset_set_set( set, "desc", _("$ cat /home/user/example") );
-    set->line = g_strdup( "#gui-pathbar-font" );
+        set = xset_set_panel( p, "font_tab", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("Tab Font (Panel %d)"), p );
+        xset_set_set( set, "desc", "/usr/bin" );
 
-    set = xset_set( "panel1_font_tab", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Tab Font (Panel 1)") );
-    xset_set_set( set, "desc", "/usr/bin" );
+        set = xset_set_panel( p, "icon_tab", "lbl", _("_Icon") );
+        set->menu_style = XSET_MENU_ICON;
+        xset_set_set( set, "icn", "gtk-directory" );
 
-    set = xset_set( "panel1_icon_tab", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-directory" );
+        set = xset_set_panel( p, "font_status", "lbl", _("_Font") );
+        set->menu_style = XSET_MENU_FONTDLG;
+        xset_set_set( set, "icn", "gtk-select-font" );
+        set->title = g_strdup_printf( _("Status Bar Font (Panel %d)"), p );
+        xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_font_status" );
 
-    set = xset_set( "panel1_font_status", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Status Bar Font (Panel 1)") );
-    xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
+        set = xset_set_panel( p, "icon_status", "lbl", _("_Icon") );
+        set->menu_style = XSET_MENU_ICON;
+        xset_set_set( set, "icn", "gtk-yes" );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_icon_status" );
+        
+        set = xset_set_panel( p, "detcol_name", "lbl", _("_Name") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;                   // visible
+        set->x = g_strdup_printf( "%d", 0 );    // position
+        
+        set = xset_set_panel( p, "detcol_size", "lbl", _("_Size") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
+        set->x = g_strdup_printf( "%d", 1 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_size" );
 
-    set = xset_set( "panel1_icon_status", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-yes" );
+        set = xset_set_panel( p, "detcol_type", "lbl", _("_Type") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->x = g_strdup_printf( "%d", 2 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_type" );
+
+        set = xset_set_panel( p, "detcol_perm", "lbl", _("_Permission") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->x = g_strdup_printf( "%d", 3 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_perm" );
+
+        set = xset_set_panel( p, "detcol_owner", "lbl", _("_Owner") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->x = g_strdup_printf( "%d", 4 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_owner" );
+
+        set = xset_set_panel( p, "detcol_date", "lbl", _("_Modified") );
+        set->menu_style = XSET_MENU_CHECK;
+        set->x = g_strdup_printf( "%d", 5 );
+        if ( p != 1 )
+            xset_set_set( set, "shared_key", "panel1_detcol_date" );
+
+        set = xset_get_panel( p, "sort_extra" );
+        set->b = XSET_B_TRUE;  //sort_natural
+        set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
+        set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
+        set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
+    }
     
-    set = xset_set( "panel1_detcol_name", "lbl", _("_Name") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;                   // visible
-    set->x = g_strdup_printf( "%d", 0 );    // position
-
-    set = xset_set( "panel1_detcol_size", "lbl", _("_Size") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 1 );
-
-    set = xset_set( "panel1_detcol_type", "lbl", _("_Type") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 2 );
-
-    set = xset_set( "panel1_detcol_perm", "lbl", _("_Permission") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 3 );
-
-    set = xset_set( "panel1_detcol_owner", "lbl", _("_Owner") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 4 );
-
-    set = xset_set( "panel1_detcol_date", "lbl", _("_Modified") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 5 );
-
-    set = xset_get( "panel1_sort_extra" );
-    set->b = XSET_B_TRUE;  //sort_natural
-    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
-    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
-    
-    // PANEL TWO
-    set = xset_set( "panel2_show_toolbox", "lbl", _("_Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_toolbox" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel2_show_devmon", "lbl", _("_Devices") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "panel2_show_dirtree", "lbl", _("T_ree") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "panel2_show_book", "lbl", _("_Bookmarks") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "panel2_show_sidebar", "lbl", _("_Side Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_sidebar" );
-
-    set = xset_set( "panel2_list_detailed", "lbl", _("_Detailed") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_detailed" );
-
-    set = xset_set( "panel2_list_icons", "lbl", _("_Icons") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_icons" );
-
-    set = xset_set( "panel2_list_compact", "lbl", _("_Compact") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_compact" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel2_show_hidden", "lbl", _("_Hidden Files") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_hidden" );
-
-    set = xset_set( "panel2_font_file", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("File List Font (Panel 2)") );
-    xset_set_set( set, "desc", _("Example  2.2 M  file  -rwxr--r--  user:group  2011-02-02 02:22") );
-
-    set = xset_set( "panel2_font_dev", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Devices Font (Panel 2)") );
-    xset_set_set( set, "desc", _("sr0 [no media] :EXAMPLE") );
-    set->line = g_strdup( "#devices-settings-font" );
-
-    set = xset_set( "panel2_font_book", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Bookmarks Font (Panel 2)") );
-    xset_set_set( set, "desc", _("Example Bookmark Name") );
-
-    set = xset_set( "panel2_font_path", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Path Bar Font (Panel 2)") );
-    xset_set_set( set, "desc", _("$ cat /home/user/example") );
-    set->line = g_strdup( "#gui-pathbar-font" );
-
-    set = xset_set( "panel2_font_tab", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Tab Font (Panel 2)") );
-    xset_set_set( set, "desc", "/usr/bin" );
-
-    set = xset_set( "panel2_icon_tab", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-directory" );
-
-    set = xset_set( "panel2_font_status", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Status Bar Font (Panel 2)") );
-    xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
-    xset_set_set( set, "shared_key", "panel1_font_status" );
-
-    set = xset_set( "panel2_icon_status", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-yes" );
-    xset_set_set( set, "shared_key", "panel1_icon_status" );
-
-    set = xset_set( "panel2_detcol_name", "lbl", _("_Name") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;                   // visible
-    set->x = g_strdup_printf( "%d", 0 );    // position
-
-    set = xset_set( "panel2_detcol_size", "lbl", _("_Size") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 1 );
-    xset_set_set( set, "shared_key", "panel1_detcol_size" );
-
-    set = xset_set( "panel2_detcol_type", "lbl", _("_Type") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 2 );
-    xset_set_set( set, "shared_key", "panel1_detcol_type" );
-
-    set = xset_set( "panel2_detcol_perm", "lbl", _("_Permission") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 3 );
-    xset_set_set( set, "shared_key", "panel1_detcol_perm" );
-
-    set = xset_set( "panel2_detcol_owner", "lbl", _("_Owner") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 4 );
-    xset_set_set( set, "shared_key", "panel1_detcol_owner" );
-
-    set = xset_set( "panel2_detcol_date", "lbl", _("_Modified") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 5 );
-    xset_set_set( set, "shared_key", "panel1_detcol_date" );
-
-    set = xset_get( "panel2_sort_extra" );
-    set->b = XSET_B_TRUE;  //sort_natural
-    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
-    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
-
-    // PANEL THREE
-    set = xset_set( "panel3_show_toolbox", "lbl", _("_Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_toolbox" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel3_show_devmon", "lbl", _("_Devices") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "panel3_show_dirtree", "lbl", _("T_ree") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "panel3_show_book", "lbl", _("_Bookmarks") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "panel3_show_sidebar", "lbl", _("_Side Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_sidebar" );
-
-    set = xset_set( "panel3_list_detailed", "lbl", _("_Detailed") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_detailed" );
-
-    set = xset_set( "panel3_list_icons", "lbl", _("_Icons") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_icons" );
-
-    set = xset_set( "panel3_list_compact", "lbl", _("_Compact") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_compact" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel3_show_hidden", "lbl", _("_Hidden Files") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_hidden" );
-
-    set = xset_set( "panel3_font_file", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("File List Font (Panel 3)") );
-    xset_set_set( set, "desc", _("Example  3.3 M  file  -rwxr--r--  user:group  2011-03-03 03:33") );
-
-    set = xset_set( "panel3_font_dev", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Devices Font (Panel 3)") );
-    xset_set_set( set, "desc", _("sr0 [no media] :EXAMPLE") );
-    set->line = g_strdup( "#devices-settings-font" );
-
-    set = xset_set( "panel3_font_book", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Bookmarks Font (Panel 3)") );
-    xset_set_set( set, "desc", _("Example Bookmark Name") );
-
-    set = xset_set( "panel3_font_path", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Path Bar Font (Panel 3)") );
-    xset_set_set( set, "desc", _("$ cat /home/user/example") );
-    set->line = g_strdup( "#gui-pathbar-font" );
-
-    set = xset_set( "panel3_font_tab", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Tab Font (Panel 3)") );
-    xset_set_set( set, "desc", "/usr/bin" );
-
-    set = xset_set( "panel3_icon_tab", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-directory" );
-
-    set = xset_set( "panel3_font_status", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Status Bar Font (Panel 3)") );
-    xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
-    xset_set_set( set, "shared_key", "panel1_font_status" );
-
-    set = xset_set( "panel3_icon_status", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-yes" );
-        xset_set_set( set, "shared_key", "panel1_icon_status" );
-
-    set = xset_set( "panel3_detcol_name", "lbl", _("_Name") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;                   // visible
-    set->x = g_strdup_printf( "%d", 0 );    // position
-
-    set = xset_set( "panel3_detcol_size", "lbl", _("_Size") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 1 );
-    xset_set_set( set, "shared_key", "panel1_detcol_size" );
-
-    set = xset_set( "panel3_detcol_type", "lbl", _("_Type") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 2 );
-    xset_set_set( set, "shared_key", "panel1_detcol_type" );
-
-    set = xset_set( "panel3_detcol_perm", "lbl", _("_Permission") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 3 );
-    xset_set_set( set, "shared_key", "panel1_detcol_perm" );
-
-    set = xset_set( "panel3_detcol_owner", "lbl", _("_Owner") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 4 );
-    xset_set_set( set, "shared_key", "panel1_detcol_owner" );
-
-    set = xset_set( "panel3_detcol_date", "lbl", _("_Modified") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 5 );
-    xset_set_set( set, "shared_key", "panel1_detcol_date" );
-
-    set = xset_get( "panel3_sort_extra" );
-    set->b = XSET_B_TRUE;  //sort_natural
-    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
-    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
-
-    // PANEL FOUR
-    set = xset_set( "panel4_show_toolbox", "lbl", _("_Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_toolbox" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel4_show_devmon", "lbl", _("_Devices") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_devmon" );
-
-    set = xset_set( "panel4_show_dirtree", "lbl", _("T_ree") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_dirtree" );
-
-    set = xset_set( "panel4_show_book", "lbl", _("_Bookmarks") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_book" );
-
-    set = xset_set( "panel4_show_sidebar", "lbl", _("_Side Toolbar") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_sidebar" );
-
-    set = xset_set( "panel4_list_detailed", "lbl", _("_Detailed") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_detailed" );
-
-    set = xset_set( "panel4_list_icons", "lbl", _("_Icons") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_icons" );
-
-    set = xset_set( "panel4_list_compact", "lbl", _("_Compact") );
-    set->menu_style = XSET_MENU_RADIO;
-    xset_set_set( set, "shared_key", "panel1_list_compact" );
-    set->b = XSET_B_TRUE;
-
-    set = xset_set( "panel4_show_hidden", "lbl", _("_Hidden Files") );
-    set->menu_style = XSET_MENU_CHECK;
-    xset_set_set( set, "shared_key", "panel1_show_hidden" );
-
-    set = xset_set( "panel4_font_file", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("File List Font (Panel 4)") );
-    xset_set_set( set, "desc", _("Example  4.4 M  file  -rwxr--r--  user:group  2011-04-04 04:44") );
-
-    set = xset_set( "panel4_font_dev", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Devices Font (Panel 4)") );
-    xset_set_set( set, "desc", _("sr0 [no media] :EXAMPLE") );
-    set->line = g_strdup( "#devices-settings-font" );
-
-    set = xset_set( "panel4_font_book", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Bookmarks Font (Panel 4)") );
-    xset_set_set( set, "desc", _("Example Bookmark Name") );
-
-    set = xset_set( "panel4_font_path", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Path Bar Font (Panel 4)") );
-    xset_set_set( set, "desc", _("$ cat /home/user/example") );
-    set->line = g_strdup( "#gui-pathbar-font" );
-
-    set = xset_set( "panel4_font_tab", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Tab Font (Panel 4)") );
-    xset_set_set( set, "desc", "/usr/bin" );
-
-    set = xset_set( "panel4_icon_tab", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-directory" );
-
-    set = xset_set( "panel4_font_status", "lbl", _("_Font") );
-    set->menu_style = XSET_MENU_FONTDLG;
-    xset_set_set( set, "icn", "gtk-select-font" );
-    xset_set_set( set, "title", _("Status Bar Font (Panel 4)") );
-    xset_set_set( set, "desc", _("12 G free / 200 G   52 items") );
-    xset_set_set( set, "shared_key", "panel1_font_status" );
-
-    set = xset_set( "panel4_icon_status", "lbl", _("_Icon") );
-    set->menu_style = XSET_MENU_ICON;
-    xset_set_set( set, "icn", "gtk-yes" );
-    xset_set_set( set, "shared_key", "panel1_icon_status" );
-
-    set = xset_set( "panel4_detcol_name", "lbl", _("_Name") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;                   // visible
-    set->x = g_strdup_printf( "%d", 0 );    // position
-
-    set = xset_set( "panel4_detcol_size", "lbl", _("_Size") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 1 );
-    xset_set_set( set, "shared_key", "panel1_detcol_size" );
-
-    set = xset_set( "panel4_detcol_type", "lbl", _("_Type") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 2 );
-    xset_set_set( set, "shared_key", "panel1_detcol_type" );
-
-    set = xset_set( "panel4_detcol_perm", "lbl", _("_Permission") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 3 );
-    xset_set_set( set, "shared_key", "panel1_detcol_perm" );
-
-    set = xset_set( "panel4_detcol_owner", "lbl", _("_Owner") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 4 );
-    xset_set_set( set, "shared_key", "panel1_detcol_owner" );
-
-    set = xset_set( "panel4_detcol_date", "lbl", _("_Modified") );
-    set->menu_style = XSET_MENU_CHECK;
-    set->b = XSET_B_TRUE;
-    set->x = g_strdup_printf( "%d", 5 );
-    xset_set_set( set, "shared_key", "panel1_detcol_date" );
-
-    set = xset_get( "panel4_sort_extra" );
-    set->b = XSET_B_TRUE;  //sort_natural
-    set->x = g_strdup_printf( "%d", XSET_B_FALSE );  // sort_case
-    set->y = g_strdup( "1" ); //PTK_LIST_SORT_DIR_FIRST from ptk-file-list.h
-    set->z = g_strdup_printf( "%d", XSET_B_TRUE );  // sort_hidden_first
-
     //speed
     set = xset_set( "book_newtab", "lbl", _("_New Tab") );
     set->menu_style = XSET_MENU_CHECK;

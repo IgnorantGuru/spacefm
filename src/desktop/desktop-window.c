@@ -1191,7 +1191,7 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
         {
             VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            if ( mime_type && ( 
+            if ( mime_type && !vfs_file_info_is_dir( file ) && (
                     !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
                     !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
                     g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||

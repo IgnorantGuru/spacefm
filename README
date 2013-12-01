@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.7+
+README for SpaceFM v0.9.1+
 
 Homepage:
     http://ignorantguru.github.io/spacefm/
@@ -8,7 +8,10 @@ Downloads:
     https://github.com/IgnorantGuru/spacefm/tree/pkg
 
 Official Forum:
-    http://forums.partedmagic.com/viewforum.php?f=15
+    https://sourceforge.net/p/spacefm/discussion/general/
+
+Guidelines For Distributing Modifications:
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications
 
 
 CONTENTS
@@ -50,7 +53,7 @@ PACKAGES
 INSTALLER
 
     A self-extracting installer is available (spacefm-x.x.x-installer.sh):
-        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+        https://github.com/IgnorantGuru/spacefm/tree/pkg
             (To save a file, click on its filename and click 'View Raw')
 
     The installer requires the build dependencies listed below in BUILD.  If
@@ -332,6 +335,9 @@ To build a deb file of SpaceFM on your Debian-based distro:
 
         mv distros/debian .
 
+    NOTE: For newer Debian versions, some adjustments to the control file
+    (dependencies) may be necessary, or use official Debian packages.
+
 4)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
@@ -443,7 +449,7 @@ TRANSLATE
 
     Just sign up for a free Transifex account.  For instructions visit:
         http://help.transifex.com/intro/translating.html#translating
-
+        
 
 LICENSE
 
@@ -470,3 +476,10 @@ LICENSE
 
     See COPYING and COPYING-LGPL files.
 
+
+DERIVATIVE WORKS
+
+    If you plan to publish a significant amount of or the full source to SpaceFM
+    with your modifications, please see the following wiki article:
+    
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications

@@ -27,7 +27,7 @@
 #include <glib/gi18n.h>
 
 #include <stdio.h>
-#include <stdlib.h> /* for mkstemp */
+#include <stdlib.h> /* for mkstemp, realpath */
 #include <string.h>
 #include <errno.h>
 
@@ -391,7 +391,6 @@ vfs_file_task_do_copy( VFSFileTask* task,
         if ( ! check_overwrite( task, dest_file,
                                 &dest_exists, &new_dest_file ) )
             goto _return_;
-
         if ( new_dest_file )
         {
             dest_file = new_dest_file;
@@ -421,7 +420,7 @@ vfs_file_task_do_copy( VFSFileTask* task,
                     sub_src_file = g_build_filename( src_file, file_name, NULL );
                     sub_dest_file = g_build_filename( dest_file, file_name, NULL );
                     if ( !vfs_file_task_do_copy( task, sub_src_file, sub_dest_file )
-                                                                && !copy_fail )
+                                                        && !copy_fail )
                         copy_fail = TRUE;
                     g_free(sub_dest_file );
                     g_free(sub_src_file );
@@ -669,7 +668,9 @@ vfs_file_task_do_move ( VFSFileTask* task,
     gchar* new_dest_file = NULL;
     gboolean dest_exists;
     struct stat64 file_stat;
+    GDir* dir;
     int result;
+    GError* error;
 
     if ( should_abort( task ) )
         return 0;
@@ -704,7 +705,43 @@ vfs_file_task_do_move ( VFSFileTask* task,
         string_copy_free( &task->current_dest, dest_file );
         g_mutex_unlock( task->mutex );
     }
-    
+
+    if ( S_ISDIR( file_stat.st_mode ) && 
+                                g_file_test( dest_file, G_FILE_TEST_IS_DIR ) )
+    {
+        // moving a directory onto a directory that exists
+        error = NULL;
+        dir = g_dir_open( src_file, 0, &error );
+        if ( dir )
+        {
+            const gchar* file_name;
+            gchar* sub_src_file;
+            gchar* sub_dest_file;
+            while ( ( file_name = g_dir_read_name( dir ) ) )
+            {
+                if ( should_abort( task ) )
+                    break;
+                sub_src_file = g_build_filename( src_file, file_name, NULL );
+                sub_dest_file = g_build_filename( dest_file, file_name, NULL );
+                vfs_file_task_do_move( task, sub_src_file, sub_dest_file );
+                g_free( sub_dest_file );
+                g_free( sub_src_file );
+            }
+            g_dir_close( dir );
+            // remove moved src dir if empty
+            if ( !should_abort( task ) )
+                rmdir( src_file );
+        }
+        else if ( error )
+        {
+            char* msg = g_strdup_printf( "\n%s\n", error->message );
+            g_error_free( error );
+            vfs_file_task_exec_error( task, 0, msg );
+            g_free( msg );
+        }
+        return 0;
+    }
+
     result = rename( src_file, dest_file );
 
     if ( result != 0 )
@@ -776,12 +813,13 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
             /* g_print("not on the same dev: %s\n", src_file); */
             vfs_file_task_do_copy( task, src_file, dest_file );
         }
+        /*
         else if ( S_ISDIR( src_stat.st_mode ) && 
                                     g_file_test( dest_file, G_FILE_TEST_IS_DIR) )
         {
-            // moving a directory onto a directory that exists - overwrite
-            vfs_file_task_do_copy( task, src_file, dest_file );
+            // moving a directory onto a directory that exists
         }
+        */
         else
         {
             /* g_print("on the same dev: %s\n", src_file); */
@@ -1194,7 +1232,7 @@ static gboolean cb_exec_out_watch( GIOChannel *channel, GIOCondition cond,
 {
 
 /*
-printf("cb_exec_out_watch %d\n", channel);
+printf("cb_exec_out_watch %p\n", channel);
 if ( cond & G_IO_IN )
     printf("    G_IO_IN\n");
 if ( cond & G_IO_OUT )
@@ -1397,6 +1435,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     GtkWidget* parent = NULL;
     gboolean success;
     int i;
+    char buf[ PATH_MAX + 1 ];
 
 //printf("vfs_file_task_exec\n");
 //task->exec_keep_tmp = TRUE;
@@ -1503,6 +1542,15 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
             xset_msg_dialog( parent, GTK_MESSAGE_ERROR,
                             _("Terminal Not Available"), NULL, 0, str, NULL, NULL );
             goto _exit_with_error_lean;
+        }
+        // resolve x-terminal-emulator link (may be recursive link)
+        else if ( strstr( terminal, "x-terminal-emulator" ) &&
+                                        realpath( terminal, buf ) != NULL )
+        {
+            g_free( terminal );
+            g_free( terminalv[0] );
+            terminal = g_strdup( buf );
+            terminalv[0] = g_strdup( buf );
         }
     }
 
@@ -1616,7 +1664,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         }
         
         // build - command
-        printf("\nTASK_COMMAND=%s\n", task->exec_command );
+        printf("\nTASK_COMMAND(%p)=%s\n", task->exec_ptask, task->exec_command );
         result = fprintf( file, "%s\nfm_err=$?\n", task->exec_command );
         if ( result < 0 ) goto _exit_with_error;
 
@@ -1698,6 +1746,11 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
                                 || strstr( terminal, "terminator" )
                                 || g_str_has_suffix( terminal, "/terminal" ) ) // xfce
             argv[a++] = g_strdup( "-x" );
+        else if ( strstr( terminal, "sakura" ) )
+        {
+            argv[a++] = g_strdup( "-x" );
+            single_arg = TRUE;
+        }
         else
             argv[a++] = g_strdup( "-e" );
         
@@ -1712,7 +1765,9 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         argv[a++] = g_strdup( use_su );
         if ( strcmp( task->exec_as_user, "root" ) )
         {
-            if ( strcmp( use_su, "/bin/su" ) )
+            if ( !strcmp( use_su, "/usr/bin/su-to-root" ) )
+                argv[a++] = g_strdup( "-p" );
+            else if ( strcmp( use_su, "/bin/su" ) )
                 argv[a++] = g_strdup( "-u" );
             argv[a++] = g_strdup( task->exec_as_user );
         }
@@ -1743,6 +1798,15 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         else if ( !strcmp( use_su, "/usr/bin/gnomesu" )
                                         || !strcmp( use_su, "/usr/bin/xdg-su" ) )
         {
+            // gnomesu
+            argv[a++] = g_strdup( "-c" );
+            single_arg = TRUE;
+        }
+        else if ( !strcmp( use_su, "/usr/bin/su-to-root" ) )
+        {
+            // su-to-root
+            if ( !terminal )
+                argv[a++] = g_strdup( "-X" );  // command is a X11 program
             argv[a++] = g_strdup( "-c" );
             single_arg = TRUE;
         }
@@ -2156,7 +2220,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->current_file = NULL;
     task->current_dest = NULL;
     
-    task->recursive = ( task->type == VFS_FILE_TASK_COPY || 
+    task->recursive = ( task->type == VFS_FILE_TASK_COPY ||
                         task->type == VFS_FILE_TASK_DELETE );
 
     task->err_count = 0;

@@ -169,6 +169,7 @@ void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window );
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window );
 static gboolean delayed_focus( GtkWidget* widget );
 static gboolean delayed_focus_file_browser( PtkFileBrowser* file_browser );
+static gboolean idle_set_task_height( FMMainWindow* main_window );
 
 
 static GtkWindowClass *parent_class = NULL;
@@ -234,12 +235,37 @@ void fm_main_window_class_init( FMMainWindowClass* klass )
     */
 }
 
+
+gboolean on_configure_evt_timer( FMMainWindow* main_window )
+{
+    // verify main_window still valid
+    GList* l;
+    for ( l = all_windows; l; l = l->next )
+    {
+        if ( (FMMainWindow*)l->data == main_window )
+            break;
+    }
+    if ( !l )
+        return FALSE;
+
+    if ( main_window->configure_evt_timer )
+    {
+        g_source_remove( main_window->configure_evt_timer );
+        main_window->configure_evt_timer = 0;
+    }
+    main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
+                                                    NULL, 0, 0, 0, TRUE );
+    return FALSE;
+}
+
 gboolean on_window_configure_event( GtkWindow *window, 
                                     GdkEvent *event, FMMainWindow* main_window )
 {
-    if ( evt_win_move->s || evt_win_move->ob2_data )
-        main_window_event( main_window, evt_win_move, "evt_win_move", 0, 0,
-                                                    NULL, 0, 0, 0, TRUE );
+    // use timer to prevent rapid events during resize
+    if ( ( evt_win_move->s || evt_win_move->ob2_data ) &&
+                                        !main_window->configure_evt_timer )
+        main_window->configure_evt_timer = g_timeout_add( 200,
+                        ( GSourceFunc ) on_configure_evt_timer, main_window );
     return FALSE;
 }
 
@@ -334,9 +360,11 @@ void show_bookmarks( GtkWidget* item, FMMainWindow* main_window )
                         fm_main_window_get_current_file_browser( main_window ) );
     if ( !file_browser )
         return;
+    int mode = main_window->panel_context[file_browser->mypanel-1];
+
     if ( !file_browser->side_book )
     {
-        xset_set_panel( file_browser->mypanel, "show_book", "b", "1" );
+        xset_set_b_panel_mode( file_browser->mypanel, "show_book", mode, TRUE );
         update_views_all_windows( NULL, file_browser );
     }
     if ( file_browser->side_book )
@@ -705,9 +733,11 @@ void on_devices_show( GtkMenuItem* item, FMMainWindow* main_window )
                         fm_main_window_get_current_file_browser( main_window ) );
     if ( !file_browser )
         return;
+    int mode = main_window->panel_context[file_browser->mypanel-1];
+
     if ( !file_browser->side_dev )
     {
-        xset_set_panel( file_browser->mypanel, "show_devmon", "b", "1" );
+        xset_set_b_panel_mode( file_browser->mypanel, "show_devmon", mode, TRUE );
         update_views_all_windows( NULL, file_browser );
     }
     if ( file_browser->side_dev )
@@ -794,7 +824,7 @@ void on_open_current_folder_as_root ( GtkMenuItem *menuitem,
     if ( !prog )
         prog = g_strdup( "spacefm" );
     char* cwd = bash_quote( ptk_file_browser_get_cwd( file_browser ) );
-    task->task->exec_command = g_strdup_printf( "%s %s", prog, cwd );
+    task->task->exec_command = g_strdup_printf( "HOME=/root %s %s", prog, cwd );
     g_free( prog );
     g_free( cwd );
     task->task->exec_as_user = g_strdup( "root" );
@@ -1202,7 +1232,7 @@ void rebuild_toolbar_all_windows( int job, PtkFileBrowser* file_browser )
             }
         }
     }
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( FALSE, FALSE );
 }
 
 void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
@@ -1212,11 +1242,12 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
     PtkFileBrowser* a_browser;
     GtkWidget* notebook;
     int cur_tabx, p;
+    
 //printf("update_views_all_windows\n");
     // do this browser first
+    if ( !file_browser )
+        return;
     p = file_browser->mypanel;
-    // PROBLEM: this may allow close events to destroy fb, so make sure its
-    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
 
     // do other windows
@@ -1238,8 +1269,7 @@ void update_views_all_windows( GtkWidget* item, PtkFileBrowser* file_browser )
             }
         }
     }
-    
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( FALSE, FALSE );
 }
 
 void focus_panel( GtkMenuItem* item, gpointer mw, int p )
@@ -1341,9 +1371,11 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
     FMMainWindow* a_window;
 
     // do this window first
+    main_window->panel_change = TRUE;
     show_panels( NULL, main_window );
 
     // do other windows
+    main_window->panel_change = FALSE;  // don't save columns for other windows
     for ( l = all_windows; l; l = l->next )
     {
         a_window = (FMMainWindow*)l->data;
@@ -1351,9 +1383,7 @@ void show_panels_all_windows( GtkMenuItem* item, FMMainWindow* main_window )
             show_panels( NULL, a_window );
     }
     
-    PtkFileBrowser* file_browser = 
-            (PtkFileBrowser*)fm_main_window_get_current_file_browser( main_window );
-    xset_autosave( file_browser, FALSE );
+    xset_autosave( FALSE, FALSE );
 }
 
 void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
@@ -1365,11 +1395,41 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
     char* end;
     char* tab_dir;
     char* tabs_add;
+    gboolean show[5];  //array starts at 1 for clarity
     gboolean tab_added;
+    gboolean horiz, vert;
     PtkFileBrowser* file_browser;
 
+    // save column widths and side sliders of visible panels
+    if ( main_window->panel_change )
+    {
+        for ( p = 1 ; p < 5; p++ )
+        {
+            if ( gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
+            {
+                cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK(
+                                                    main_window->panel[p-1] ) );
+                if ( cur_tabx != -1 )
+                {
+                    file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                            GTK_NOTEBOOK( main_window->panel[p-1] ),
+                                            cur_tabx ) );
+                    if ( file_browser )
+                    {
+                        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+                            ptk_file_browser_save_column_widths(
+                                    GTK_TREE_VIEW( file_browser->folder_view ),
+                                    file_browser );
+                        //ptk_file_browser_slider_release( NULL, NULL, file_browser );
+                    }
+                }
+            }
+        }
+    }
+    
     // show panelbar
-    if ( !!gtk_widget_get_visible( main_window->panelbar ) != !!xset_get_b( "main_pbar" ) )
+    if ( !!gtk_widget_get_visible( main_window->panelbar ) != 
+                !!( !main_window->fullscreen && xset_get_b( "main_pbar" ) ) )
     {
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( GTK_WIDGET( main_window->panelbar ) );
@@ -1387,9 +1447,87 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         xset_set_b_panel( 1, "show", TRUE );
 
     for ( p = 1 ; p < 5; p++ )
+        show[p] = xset_get_b_panel( p, "show" );
+    
+    for ( p = 1 ; p < 5; p++ )
     {
-        if ( xset_get_b_panel( p, "show" ) )
+        // panel context - how panels share horiz and vert space with other panels
+        if ( p == 1 )
         {
+            horiz = show[2];
+            vert = show[3] || show[4];
+        }
+        else if ( p == 2 )
+        {
+            horiz = show[1];
+            vert = show[3] || show[4];
+        }
+        else if ( p == 3 )
+        {
+            horiz = show[4];
+            vert = show[1] || show[2];
+        }
+        else
+        {
+            horiz = show[3];
+            vert = show[1] || show[2];
+        }
+        if ( horiz && vert )
+            main_window->panel_context[p-1] = PANEL_BOTH;
+        else if ( horiz )
+            main_window->panel_context[p-1] = PANEL_HORIZ;
+        else if ( vert )
+            main_window->panel_context[p-1] = PANEL_VERT;
+        else
+            main_window->panel_context[p-1] = PANEL_NEITHER;
+        
+        if ( show[p] )
+        {
+            // shown
+            // test if panel and mode exists
+            char* str = g_strdup_printf( "panel%d_slider_positions%d", p,
+                                                main_window->panel_context[p-1] );
+            if ( !( set = xset_is( str ) ) )
+            {
+                // no config exists for this panel and mode - copy
+                //printf ("no config for %d, %d\n", p, main_window->panel_context[p-1] );
+                XSet* set_old;
+                int mode = main_window->panel_context[p-1];
+                xset_set_b_panel_mode( p, "show_toolbox", mode,
+                                        xset_get_b_panel( p, "show_toolbox" ) );
+                xset_set_b_panel_mode( p, "show_devmon", mode,
+                                        xset_get_b_panel( p, "show_devmon" ) );
+                if ( xset_is( "show_dirtree" ) )
+                    xset_set_b_panel_mode( p, "show_dirtree", mode,
+                                        xset_get_b_panel( p, "show_dirtree" ) );
+                xset_set_b_panel_mode( p, "show_book", mode,
+                                        xset_get_b_panel( p, "show_book" ) );
+                xset_set_b_panel_mode( p, "show_sidebar", mode,
+                                        xset_get_b_panel( p, "show_sidebar" ) );
+                xset_set_b_panel_mode( p, "detcol_name", mode,
+                                        xset_get_b_panel( p, "detcol_name" ) );
+                xset_set_b_panel_mode( p, "detcol_size", mode,
+                                        xset_get_b_panel( p, "detcol_size" ) );
+                xset_set_b_panel_mode( p, "detcol_type", mode,
+                                        xset_get_b_panel( p, "detcol_type" ) );
+                xset_set_b_panel_mode( p, "detcol_perm", mode,
+                                        xset_get_b_panel( p, "detcol_perm" ) );
+                xset_set_b_panel_mode( p, "detcol_owner", mode,
+                                        xset_get_b_panel( p, "detcol_owner" ) );
+                xset_set_b_panel_mode( p, "detcol_date", mode,
+                                        xset_get_b_panel( p, "detcol_date" ) );
+                set_old = xset_get_panel( p, "slider_positions" );
+                set = xset_get_panel_mode( p, "slider_positions", mode );
+                set->x = g_strdup( set_old->x );
+                set->y = g_strdup( set_old->y );
+                set->s = g_strdup( set_old->s );
+            }
+            g_free( str );
+            // load dynamic slider positions for this panel context
+            main_window->panel_slide_x[p-1] = set->x ? atoi( set->x ) : 0;
+            main_window->panel_slide_y[p-1] = set->y ? atoi( set->y ) : 0;
+            main_window->panel_slide_s[p-1] = set->s ? atoi( set->s ) : 0;
+//printf( "loaded panel %d: %d, %d, %d\n", p, 
             if ( !gtk_notebook_get_n_pages( GTK_NOTEBOOK( main_window->panel[p-1] ) ) )
             {
                 main_window->notebook = main_window->panel[p-1];
@@ -1428,6 +1566,14 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                         if ( tab_dir[0] != '\0' )
                         {
                             // open saved tab
+                            if ( g_str_has_prefix( tab_dir, "~/" ) )
+                            {
+                                // convert ~ to /home/user for hacked session files
+                                str = g_strdup_printf( "%s%s", g_get_home_dir(),
+                                                                tab_dir + 1 );
+                                g_free( tab_dir );
+                                tab_dir = str;
+                            }
                             if ( g_file_test( tab_dir, G_FILE_TEST_IS_DIR ) )
                                 folder_path = tab_dir;
                             else if ( !( folder_path = xset_get_s( "go_set_default" ) ) )
@@ -1498,6 +1644,7 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
         else
         {
+            // not shown
             if ( ( evt_pnl_show->s || evt_pnl_show->ob2_data ) && 
                     gtk_widget_get_visible( GTK_WIDGET( main_window->panel[p-1] ) ) )
                 main_window_event( main_window, evt_pnl_show, "evt_pnl_show", p,
@@ -1517,15 +1664,15 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
             }
         }
     }
-    if ( xset_get_b_panel( 1, "show" ) || xset_get_b_panel( 2, "show" ) )
+    if ( show[1] || show[2] )
         gtk_widget_show( GTK_WIDGET( main_window->hpane_top ) );
     else
         gtk_widget_hide( GTK_WIDGET( main_window->hpane_top ) );
-    if ( xset_get_b_panel( 3, "show" ) || xset_get_b_panel( 4, "show" ) )
+    if ( show[3] || show[4] )
         gtk_widget_show( GTK_WIDGET( main_window->hpane_bottom ) );
     else
         gtk_widget_hide( GTK_WIDGET( main_window->hpane_bottom ) );
-    
+
     // current panel hidden?
     if ( !xset_get_b_panel( main_window->curpanel, "show" ) )
     {
@@ -1553,6 +1700,24 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
         }
     }
     set_panel_focus( main_window, NULL );
+
+    // update views all panels
+    for ( p = 1 ; p < 5; p++ )
+    {
+        if ( show[p] )
+        {
+            cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK(
+                                                main_window->panel[p-1] ) );
+            if ( cur_tabx != -1 )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                        GTK_NOTEBOOK( main_window->panel[p-1] ),
+                                        cur_tabx ) );
+                if ( file_browser )
+                    ptk_file_browser_update_views( NULL, file_browser );
+            }
+        }
+    }
 }
 
 void on_toggle_panelbar( GtkWidget* widget, FMMainWindow* main_window )
@@ -1620,7 +1785,7 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_design_mode", main_design_mode, main_window );
     xset_set_cb( "main_icon", on_main_icon, NULL );
     xset_set_cb( "main_title", update_window_title, main_window );
-    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks main_auto sep_v2 main_title main_icon sep_v3 main_full main_design_mode main_prefs" );
+    menu_elements = g_strdup_printf( "panel1_show panel2_show panel3_show panel4_show main_pbar main_focus_panel sep_v1 main_tasks main_auto sep_v2 main_title main_icon main_full sep_v3 main_design_mode main_prefs" );
     
     int p;
     int vis_count = 0;
@@ -1732,6 +1897,12 @@ void rebuild_menus( FMMainWindow* main_window )
 //printf("rebuild_menus  DONE\n");
 }
 
+void on_main_window_realize( GtkWidget* widget, FMMainWindow* main_window )
+{
+    // preset the task manager height for no double-resize on first show
+    idle_set_task_height( main_window );
+}
+
 void fm_main_window_init( FMMainWindow* main_window )
 {
     GtkWidget *bookmark_menu;
@@ -1746,6 +1917,10 @@ void fm_main_window_init( FMMainWindow* main_window )
     char* icon_name;
     XSet* set;
     
+    main_window->configure_evt_timer = 0;
+    main_window->fullscreen = main_window->opened_maximized =
+                                            main_window->maximized = FALSE;
+
     /* this is used to limit the scope of gtk_grab and modal dialogs */
     main_window->wgroup = gtk_window_group_new();
     gtk_window_group_add_window( main_window->wgroup, (GtkWindow*)main_window );
@@ -1888,13 +2063,6 @@ void fm_main_window_init( FMMainWindow* main_window )
         gtk_notebook_set_scrollable ( GTK_NOTEBOOK( main_window->panel[i] ), TRUE );
         g_signal_connect ( main_window->panel[i], "switch-page",
                         G_CALLBACK ( on_folder_notebook_switch_pape ), main_window );
-        // create dynamic copies of panel slider positions
-        main_window->panel_slide_x[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "x" );
-        main_window->panel_slide_y[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "y" );
-        main_window->panel_slide_s[i] = xset_get_int_panel( i + 1,
-                                                        "slider_positions", "s" );
     }
 
     main_window->task_scroll = gtk_scrolled_window_new( NULL, NULL );
@@ -1916,7 +2084,7 @@ void fm_main_window_init( FMMainWindow* main_window )
     gtk_paned_pack1( GTK_PANED(main_window->task_vpane), main_window->vpane,
                                                                     TRUE, TRUE );
     gtk_paned_pack2( GTK_PANED(main_window->task_vpane), main_window->task_scroll,
-                                                                    TRUE, TRUE );
+                                                                    FALSE, TRUE );
 
     gtk_box_pack_start ( GTK_BOX ( main_window->main_vbox ),
                                GTK_WIDGET( main_window->task_vpane ), TRUE, TRUE, 0 );
@@ -1932,10 +2100,6 @@ void fm_main_window_init( FMMainWindow* main_window )
     pos = xset_get_int( "panel_sliders", "s" );
     if ( pos < 200 ) pos = -1;
     gtk_paned_set_position( GTK_PANED( main_window->vpane ), pos );
-
-    pos = xset_get_int( "panel_sliders", "z" );
-    if ( pos < 200 ) pos = 300;
-    gtk_paned_set_position( GTK_PANED( main_window->task_vpane ), pos );
 
     main_window->notebook = main_window->panel[0];
     main_window->curpanel = 1;
@@ -1957,8 +2121,8 @@ void fm_main_window_init( FMMainWindow* main_window )
                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     main_window->task_view = main_task_view_new( main_window );
     gtk_container_add( GTK_CONTAINER( main_window->task_scroll ),
-                                            GTK_WIDGET( main_window->task_view ) );    
-
+                                            GTK_WIDGET( main_window->task_view ) );
+    
     gtk_window_set_role( GTK_WINDOW( main_window ), "file_manager" );
 
     gtk_widget_show_all( main_window->main_vbox );
@@ -1991,10 +2155,17 @@ void fm_main_window_init( FMMainWindow* main_window )
     g_signal_connect ( G_OBJECT(main_window), "button-press-event",
                       G_CALLBACK ( on_window_button_press_event ), main_window );
 
+    g_signal_connect ( G_OBJECT(main_window), "realize",
+                      G_CALLBACK ( on_main_window_realize ), main_window );
+
     import_all_plugins( main_window );
-    on_task_popup_show( NULL, main_window, NULL );
+    main_window->panel_change = FALSE;
     show_panels( NULL, main_window );
     main_window_root_bar_all();
+
+    gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+    on_task_popup_show( NULL, main_window, NULL );
+
     main_window_event( main_window, NULL, "evt_win_new", 0, 0, NULL, 0, 0, 0, TRUE );
 }
 
@@ -2054,19 +2225,22 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
 //printf("fm_main_window_delete_event\n");
 
     FMMainWindow* main_window = (FMMainWindow*)widget;
-    
-    // store width/height + sliders
-    int pos;
-    char* posa;
-    GtkAllocation allocation;
-    
-    gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
-    
-    // fullscreen?
-    if ( !xset_get_b( "main_full" ) )
+
+    // if the window is not fullscreen (is normal or maximized) save sliders
+    // and columns
+    if ( !main_window->fullscreen )
     {
-        app_settings.width = allocation.width;
-        app_settings.height = allocation.height;
+        // store width/height + sliders
+        int pos;
+        char* posa;
+        GtkAllocation allocation;
+        gtk_widget_get_allocation ( GTK_WIDGET( main_window ) , &allocation );
+
+        if ( !main_window->maximized )
+        {
+            app_settings.width = allocation.width;
+            app_settings.height = allocation.height;
+        }
         if ( GTK_IS_PANED( main_window->hpane_top ) )
         {
             pos = gtk_paned_get_position( GTK_PANED( main_window->hpane_top ) );
@@ -2093,12 +2267,19 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                 g_free( posa );
             }
 
-            pos = gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) );
-            if ( pos )
+            if ( gtk_widget_get_visible( main_window->task_scroll ) )
             {
-                posa = g_strdup_printf( "%d", pos );
-                xset_set( "panel_sliders", "z", posa );
-                g_free( posa );
+                pos = gtk_paned_get_position( GTK_PANED( main_window->task_vpane ) );
+                if ( pos )
+                {
+                    // save slider pos for version < 0.9.2 (in case of downgrade)
+                    posa = g_strdup_printf( "%d", pos );
+                    XSet* set = xset_set( "panel_sliders", "z", posa );
+                    g_free( posa );
+                    // save absolute height introduced v0.9.2
+                    set->key = allocation.height - pos;
+//printf("CLOS  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, pos );
+                }
             }
         }
 
@@ -2108,6 +2289,8 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
         // store fb columns
         int p, page_x;
         PtkFileBrowser* a_browser;
+        if ( main_window->maximized )
+            main_window->opened_maximized = TRUE;  // force save of columns
         for ( p = 1; p < 5; p++ )
         {
             page_x = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->panel[p-1] ) );
@@ -2117,13 +2300,15 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
                                                 GTK_NOTEBOOK( main_window->panel[p-1] ),
                                                 page_x ) );
                 if ( a_browser && a_browser->view_mode == PTK_FB_LIST_VIEW )
-                    on_folder_view_columns_changed( 
-                            GTK_TREE_VIEW( a_browser->folder_view ), a_browser );
+                    ptk_file_browser_save_column_widths( 
+                                    GTK_TREE_VIEW( a_browser->folder_view ),
+                                    a_browser );
             }
         }
     }
 
     // save settings
+    app_settings.maximized = main_window->maximized;
     xset_autosave_cancel();
     char* err_msg = save_settings( main_window );
     if ( err_msg )
@@ -2190,7 +2375,16 @@ gboolean fm_main_window_delete_event ( GtkWidget *widget,
 static gboolean fm_main_window_window_state_event ( GtkWidget *widget,
                                                     GdkEventWindowState *event )
 {
-    app_settings.maximized = ((event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) != 0);
+    FMMainWindow* main_window = (FMMainWindow*)widget;
+    
+    main_window->maximized = 
+                ((event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED) != 0);
+    if ( !main_window->maximized )
+    {
+        if ( main_window->opened_maximized )
+            main_window->opened_maximized = FALSE;
+        show_panels( NULL, main_window );  // restore columns
+    }
     return TRUE;
 }
 
@@ -2354,6 +2548,8 @@ void main_window_get_counts( PtkFileBrowser* file_browser, int* panel_count,
 
 void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
 {
+    PtkFileBrowser* a_browser;
+    
 //printf( "\n============== on_close_notebook_page fb=%#x\n", file_browser );
     if ( !GTK_IS_WIDGET( file_browser ) )
         return;
@@ -2373,8 +2569,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                                             GTK_WIDGET( file_browser ) ) + 1,
                             NULL, 0, 0, 0, FALSE );
     
-    // save slider positions of tab to be closed
+    // save solumns and slider positions of tab to be closed
     ptk_file_browser_slider_release( NULL, NULL, file_browser );
+    ptk_file_browser_save_column_widths( GTK_TREE_VIEW( file_browser->folder_view ),
+                                                        file_browser );
 
     // without this signal blocked, on_close_notebook_page is called while
     // ptk_file_browser_update_views is still in progress causing segfault
@@ -2401,6 +2599,10 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
                 path = "/";
         }
         fm_main_window_add_new_tab( main_window, path );
+        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+                                    GTK_NOTEBOOK( notebook ), 0 ) );
+        if ( GTK_IS_WIDGET( a_browser ) )
+            ptk_file_browser_update_views( NULL, a_browser );
         goto _done_close;
     }
 
@@ -2408,11 +2610,9 @@ void on_close_notebook_page( GtkButton* btn, PtkFileBrowser* file_browser )
     int cur_tabx = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->notebook ) );
     if ( cur_tabx != -1 )
     {
-        PtkFileBrowser* a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
+        a_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( 
                                     GTK_NOTEBOOK( notebook ), cur_tabx ) );
  
-        // PROBLEM: this may allow close events to destroy fb, so make sure its
-        // still a widget after this
         ptk_file_browser_update_views( NULL, a_browser );
         if ( GTK_IS_WIDGET( a_browser ) )
         {
@@ -2430,6 +2630,8 @@ _done_close:
             G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
 
     update_window_title( NULL, main_window );
+    if ( xset_get_b( "main_save_tabs" ) )
+        xset_autosave( FALSE, TRUE );
 }
 
 gboolean notebook_clicked (GtkWidget* widget, GdkEventButton * event,
@@ -2515,6 +2717,8 @@ void on_file_browser_after_chdir( PtkFileBrowser* file_browser,
         ptk_file_browser_select_last( file_browser );  //MOD restore last selections
         gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );  //MOD
     }
+    if ( xset_get_b( "main_save_tabs" ) )
+        xset_autosave( FALSE, TRUE );
 }
 
 GtkWidget* fm_main_window_create_tab_label( FMMainWindow* main_window,
@@ -2704,15 +2908,13 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
         // save sliders of current fb ( new tab while task manager is shown changes vals )
         ptk_file_browser_slider_release( NULL, NULL, curfb );
         // save column widths of fb so new tab has same
-        on_folder_view_columns_changed( GTK_TREE_VIEW( curfb->folder_view ), curfb );
+        ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
+                                                                curfb );
     }
     int i = main_window->curpanel -1;
     PtkFileBrowser* file_browser = (PtkFileBrowser*)ptk_file_browser_new(
                                     main_window->curpanel, notebook,
-                                    main_window->task_view, main_window,
-                                    &main_window->panel_slide_x[i],
-                                    &main_window->panel_slide_y[i],
-                                    &main_window->panel_slide_s[i] );
+                                    main_window->task_view, main_window );
     if ( !file_browser )
         return;
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
@@ -2943,12 +3145,29 @@ on_forward_btn_popup_menu ( GtkWidget *widget,
 void fm_main_window_add_new_window( FMMainWindow* main_window )
 {
     GtkWidget * new_win = fm_main_window_new();
-    GtkAllocation allocation;
+    int height, width;
     
-    gtk_widget_get_allocation ( GTK_WIDGET( main_window ), &allocation);
+    if ( main_window->maximized || main_window->fullscreen )
+    {
+        width = app_settings.width;
+        height = app_settings.height;
+    }
+    else
+    {
+        GtkAllocation allocation;
+        gtk_widget_get_allocation ( GTK_WIDGET( main_window ), &allocation);
+        width = allocation.width;
+        height = allocation.height;
+    }
     gtk_window_set_default_size( GTK_WINDOW( new_win ),
-                                 allocation.width,
-                                 allocation.height );
+                                 width,
+                                 height );
+    if ( main_window->maximized )
+    {
+        gtk_window_maximize( GTK_WINDOW( new_win ) );
+        ((FMMainWindow*)new_win)->opened_maximized =
+                                    ((FMMainWindow*)new_win)->maximized = TRUE;
+    }
     gtk_widget_show( new_win );
 }
 
@@ -2961,6 +3180,17 @@ on_new_window_activate ( GtkMenuItem *menuitem,
     XSet* set;
     
     FMMainWindow* main_window = FM_MAIN_WINDOW( user_data );
+
+    PtkFileBrowser* curfb = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser
+                                                                ( main_window ) );
+    if ( GTK_IS_WIDGET( curfb ) )
+    {
+        // save sliders of current fb ( new tab while task manager is shown changes vals )
+        ptk_file_browser_slider_release( NULL, NULL, curfb );
+        // save column widths of fb so new tab has same
+        ptk_file_browser_save_column_widths( GTK_TREE_VIEW( curfb->folder_view ),
+                                                            curfb );
+    }
 
     save_settings( main_window );
 
@@ -3055,18 +3285,30 @@ void set_panel_focus( FMMainWindow* main_window, PtkFileBrowser* file_browser )
 
 void on_fullscreen_activate ( GtkMenuItem *menuitem, FMMainWindow* main_window )
 {
+    PtkFileBrowser* file_browser = PTK_FILE_BROWSER(
+                                    fm_main_window_get_current_file_browser
+                                                            ( main_window ) );
     if ( xset_get_b( "main_full" ) )
     {
+        if ( file_browser && file_browser->view_mode == PTK_FB_LIST_VIEW )
+            ptk_file_browser_save_column_widths( 
+                                GTK_TREE_VIEW( file_browser->folder_view ),
+                                file_browser );
         gtk_widget_hide( main_window->menu_bar );
         gtk_widget_hide( main_window->panelbar );
         gtk_window_fullscreen( GTK_WINDOW( main_window ) );
+        main_window->fullscreen = TRUE;
     }
     else
     {
+        main_window->fullscreen = FALSE;
         gtk_window_unfullscreen( GTK_WINDOW( main_window ) );
         gtk_widget_show( main_window->menu_bar );
         if ( xset_get_b( "main_pbar" ) )
             gtk_widget_show( main_window->panelbar );
+        
+        if ( !main_window->maximized )
+            show_panels( NULL, main_window );  // restore columns
     }
 }
 
@@ -3204,8 +3446,14 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
     PtkFileBrowser* curfb = PTK_FILE_BROWSER( fm_main_window_get_current_file_browser
                                                     ( main_window ) );
     if ( curfb )
+    {
         ptk_file_browser_slider_release( NULL, NULL, curfb );
-
+        if ( curfb->view_mode == PTK_FB_LIST_VIEW )
+            ptk_file_browser_save_column_widths(
+                                    GTK_TREE_VIEW( curfb->folder_view ),
+                                    curfb );
+    }
+    
     file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page( notebook, page_num ) );
 //printf("on_folder_notebook_switch_pape fb=%#x   panel=%d   page=%d\n", file_browser, file_browser->mypanel, page_num );
     main_window->curpanel = file_browser->mypanel;
@@ -3220,17 +3468,8 @@ on_folder_notebook_switch_pape ( GtkNotebook *notebook,
                                         main_window->curpanel,
                                         page_num + 1, NULL, 0, 0, 0, TRUE );
 
-    // block signal in case tab is being closed due to main iteration in update views
-//    g_signal_handlers_block_matched( main_window->panel[file_browser->mypanel - 1],
-//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-
-    // PROBLEM: this may allow close events to destroy fb, so make sure its
-    // still a widget after this
     ptk_file_browser_update_views( NULL, file_browser );
     
-//    g_signal_handlers_unblock_matched( main_window->panel[file_browser->mypanel - 1],
-//            G_SIGNAL_MATCH_FUNC, 0, 0, NULL, on_folder_notebook_switch_pape, NULL );
-
     if ( GTK_IS_WIDGET( file_browser ) )
         g_idle_add( ( GSourceFunc ) delayed_focus, file_browser->folder_view );
 }
@@ -3596,6 +3835,8 @@ static gboolean on_main_window_keypress( FMMainWindow* main_window, GdkEventKey*
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Delete  && keymod == 0 )
             || ( event->keyval == GDK_KEY_Tab     && keymod == 0 )
+            || ( keymod == 0 && ( event->keyval == GDK_KEY_Return || 
+                                  event->keyval == GDK_KEY_KP_Enter ) )
             || ( event->keyval == GDK_KEY_Left &&  ( keymod == 0 || 
                                                      keymod == GDK_SHIFT_MASK ) )
             || ( event->keyval == GDK_KEY_Right && ( keymod == 0 || 
@@ -3710,7 +3951,10 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                 else if ( !strcmp( xname, "exit" ) )
                     on_quit_activate( NULL, main_window );
                 else if ( !strcmp( xname, "full" ) )
+                {
+                    xset_set_b( "main_full", !main_window->fullscreen );
                     on_fullscreen_activate( NULL, main_window );
+                }
                 else if ( !strcmp( xname, "prefs" ) )
                     on_preference_activate( NULL, main_window );
                 else if ( !strcmp( xname, "design_mode" ) )
@@ -4032,6 +4276,7 @@ void main_context_fill( PtkFileBrowser* file_browser, XSetContext* c )
 
     // hack - Due to ptk_file_browser_update_views main iteration, fb tab may be destroyed
     // asynchronously - common if gui thread is blocked on stat
+    // NOTE:  this is no longer needed
     if ( !GTK_IS_WIDGET( file_browser ) )
         return;
         
@@ -4727,8 +4972,8 @@ void on_task_columns_changed( GtkWidget *view, gpointer user_data )
     int i, j, width;
     GtkTreeViewColumn* col;
 
-    gboolean fullscreen = xset_get_b( "main_full" );
-    if ( !view )
+    FMMainWindow* main_window = get_task_view_window( view );
+    if ( !main_window || !view )
         return;
     for ( i = 0; i < 13; i++ )
     {
@@ -4748,7 +4993,10 @@ void on_task_columns_changed( GtkWidget *view, gpointer user_data )
             pos = g_strdup_printf( "%d", i );
             xset_set_set( set, "x", pos );
             g_free( pos );
-            if ( !fullscreen )
+            // if the window was opened maximized and stayed maximized, or the
+            // window is unmaximized and not fullscreen, save the columns
+            if ( ( !main_window->maximized || main_window->opened_maximized ) &&
+                                                !main_window->fullscreen )
             {
                 width = gtk_tree_view_column_get_width( col );
                 if ( width )  // manager unshown, all widths are zero
@@ -4984,6 +5232,80 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
     main_task_start_queued( view, NULL );
 }
 
+static gboolean idle_set_task_height( FMMainWindow* main_window )
+{
+    GtkAllocation allocation;
+
+    // restore height (in case window height changed)
+    gtk_widget_get_allocation( GTK_WIDGET( main_window ), &allocation );
+    XSet* set = xset_get( "panel_sliders" );
+    int pos = set->z ? atoi( set->z ) : 0;
+    if ( set->key == 0 )
+    {
+        // use pre-0.9.2 slider pos to calculate height
+        if ( pos == 0 )
+            set->key = 200;
+        else
+            set->key = allocation.height - pos;
+    }
+    if ( set->key > allocation.height / 2 )
+        set->key = allocation.height / 2;
+    if ( set->key < 1 )
+        set->key = 90;
+//printf("SHOW  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, allocation.height - set->key );
+    gtk_paned_set_position( GTK_PANED( main_window->task_vpane ),
+                                            allocation.height - set->key );
+    return FALSE;
+}
+
+void show_task_manager( FMMainWindow* main_window, gboolean show )
+{
+    XSet* set = xset_get( "panel_sliders" );
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation( GTK_WIDGET( main_window ), &allocation );
+
+    if ( show )
+    {
+        if ( !gtk_widget_get_visible( GTK_WIDGET( main_window->task_scroll ) ) )
+        {
+            gtk_widget_show( main_window->task_scroll );
+            // allow vpane to auto-adjust before setting new slider pos
+            g_idle_add( (GSourceFunc)idle_set_task_height, main_window );
+        }
+    }
+    else
+    {
+        // save height
+        if ( gtk_widget_get_visible( GTK_WIDGET( main_window->task_scroll ) ) )
+        {
+            int pos = gtk_paned_get_position(
+                                        GTK_PANED( main_window->task_vpane ) );
+            if ( pos )
+            {
+                // save slider pos for version < 0.9.2 (in case of downgrade)
+                g_free( set->z );
+                set->z = g_strdup_printf( "%d", pos );
+                // save absolute height introduced v0.9.2
+                set->key = allocation.height - pos;
+//printf("HIDE  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, allocation.height - set->key );
+            }
+        }
+        // hide
+        gboolean tasks_has_focus = gtk_widget_is_focus( 
+                                    GTK_WIDGET( main_window->task_view ) );
+        gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
+        if ( tasks_has_focus )
+        {
+            // focus the file list
+            PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
+                    fm_main_window_get_current_file_browser( main_window ) );   
+            if ( file_browser )
+                gtk_widget_grab_focus( file_browser->folder_view );
+        }
+    }
+}
+
 void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* name2 )
 {
     GtkTreeModel* model = NULL;
@@ -5020,29 +5342,14 @@ void on_task_popup_show( GtkMenuItem* item, FMMainWindow* main_window, char* nam
     }
     
     if ( xset_get_b( "task_show_manager" ) )
-        gtk_widget_show( main_window->task_scroll );
+        show_task_manager( main_window, TRUE );
     else
     {
         model = gtk_tree_view_get_model( GTK_TREE_VIEW( main_window->task_view ) );
         if ( gtk_tree_model_get_iter_first( model, &it ) )
-            gtk_widget_show( GTK_WIDGET( main_window->task_scroll ) );
-        else
-        {
-            if ( xset_get_b( "task_hide_manager" ) )
-            {
-                gboolean tasks_has_focus = gtk_widget_is_focus( 
-                                        GTK_WIDGET( main_window->task_view ) );
-                gtk_widget_hide( GTK_WIDGET( main_window->task_scroll ) );
-                if ( tasks_has_focus )
-                {
-                    // focus the file list
-                    PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
-                            fm_main_window_get_current_file_browser( main_window ) );   
-                    if ( file_browser )
-                        gtk_widget_grab_focus( file_browser->folder_view );
-                }
-            }
-        }
+            show_task_manager( main_window, TRUE );
+        else if ( xset_get_b( "task_hide_manager" ) )
+            show_task_manager( main_window, FALSE );
     }
 }
 
@@ -5392,18 +5699,7 @@ void main_task_view_remove_task( PtkFileTask* ptask )
     if ( !gtk_tree_model_get_iter_first( model, &it ) )
     {
         if ( xset_get_b( "task_hide_manager" ) )
-        {
-            gboolean tasks_has_focus = gtk_widget_is_focus( GTK_WIDGET( view ) );
-            gtk_widget_hide( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
-            if ( tasks_has_focus )
-            {
-                // focus the file list
-                PtkFileBrowser* file_browser = PTK_FILE_BROWSER( 
-                        fm_main_window_get_current_file_browser( main_window ) );   
-                if ( file_browser )
-                    gtk_widget_grab_focus( file_browser->folder_view );
-            }
-        }
+            show_task_manager( main_window, FALSE );
     }
     
     update_window_title( NULL, main_window );
@@ -5537,8 +5833,11 @@ void main_task_view_update_task( PtkFileTask* ptask )
                 status = _(job_titles[ ptask->task->type ]);
             else
             {
-                status2 = g_strdup_printf( "%d error%s %s", ptask->err_count,
-                       ptask->err_count > 1 ? "s" : "", _(job_titles[ ptask->task->type ]) );
+                status2 = g_strdup_printf( ngettext( _("%d error %s"),
+                                                     _("%d errors %s"),
+                                                     ptask->err_count ),
+                                           ptask->err_count,
+                                           _(job_titles[ ptask->task->type ]) );
                 status = status2;
             }
         }
@@ -5588,7 +5887,7 @@ void main_task_view_update_task( PtkFileTask* ptask )
         g_free( status3 );
 
         if ( !gtk_widget_get_visible( gtk_widget_get_parent( GTK_WIDGET( view ) ) ) )
-            gtk_widget_show( gtk_widget_get_parent( GTK_WIDGET( view ) ) );
+            show_task_manager( main_window, TRUE );
 
         update_window_title( NULL, main_window );
     }
@@ -5657,6 +5956,8 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
     {
         col = gtk_tree_view_column_new();
         gtk_tree_view_column_set_resizable( col, TRUE );
+        gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
+        gtk_tree_view_column_set_min_width( col, 20 );
         
         // column order
         for ( j = 0; j < 13; j++ )
@@ -5668,13 +5969,11 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
             j = i; // failsafe
         else
         {
+            // column width
             width = xset_get_int( task_names[j], "y" );
-            if ( width )
-            {
-                gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
-                gtk_tree_view_column_set_min_width( col, 20 );
-                gtk_tree_view_column_set_fixed_width ( col, width );
-            }
+            if ( width == 0 )
+                width = 80;
+            gtk_tree_view_column_set_fixed_width ( col, width );
         }
         
         if ( cols[j] == TASK_COL_STATUS )
@@ -5817,11 +6116,17 @@ char main_window_socket_command( char* argv[], char** reply )
     GList* l;
     int height, width;
     GtkWidget* widget;
-    // from ptk-file-browser.c on_folder_view_columns_changed titles[]
-    const char* col_titles[] =
+    // must match file-browser.c
+    const char* column_titles[] =
     {
         N_( "Name" ), N_( "Size" ), N_( "Type" ),
         N_( "Permission" ), N_( "Owner" ), N_( "Modified" )
+    };
+
+    const char* column_names[] =
+    {
+        "detcol_name", "detcol_size", "detcol_type",
+        "detcol_perm", "detcol_owner", "detcol_date"
     };
 
     *reply = NULL;
@@ -6080,16 +6385,32 @@ _missing_arg:
         }
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
+            gboolean use_mode = FALSE;
             if ( g_str_has_prefix( argv[i], "devices_" ) )
+            {
                 str = "show_devmon";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "bookmarks_" ) )
+            {
                 str = "show_book";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "dirtree_" ) )
+            {
                 str = "show_dirtree";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "toolbar_" ) )
+            {
                 str = "show_toolbox";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "sidetoolbar_" ) )
+            {
                 str = "show_sidebar";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
             else if ( g_str_has_prefix( argv[i], "panel" ) )
@@ -6109,7 +6430,12 @@ _missing_arg:
                 str = NULL;
             if ( !str )
                 goto _invalid_set;
-            xset_set_b_panel( panel, str, bool( argv[i+1] ) );
+            if ( use_mode )
+                xset_set_b_panel_mode( panel, str,
+                                        main_window->panel_context[panel-1],
+                                        bool( argv[i+1] ) );
+            else
+                xset_set_b_panel( panel, str, bool( argv[i+1] ) );
             update_views_all_windows( NULL, file_browser );
         }
         else if ( !strcmp( argv[i], "panel_hslider_top" ) ||
@@ -6157,22 +6483,22 @@ _missing_arg:
                     if ( !g_strcmp0( argv[i+1], str ) )
                         break;
                     if ( !g_strcmp0( argv[i+1], "name" ) && 
-                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                                        !g_strcmp0( str, _(column_titles[0]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "size" ) && 
-                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                                        !g_strcmp0( str, _(column_titles[1]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "type" ) && 
-                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                                        !g_strcmp0( str, _(column_titles[2]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "permission" ) && 
-                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                                        !g_strcmp0( str, _(column_titles[3]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "owner" ) && 
-                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                                        !g_strcmp0( str, _(column_titles[4]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "modified" ) && 
-                                                !g_strcmp0( str, _(col_titles[5]) ) )
+                                        !g_strcmp0( str, _(column_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
@@ -6435,11 +6761,11 @@ _invalid_set:
         }
         else if ( !strcmp( argv[i], "window_maximized" ) )
         {
-            *reply = g_strdup_printf( "%d\n", !!app_settings.maximized );
+            *reply = g_strdup_printf( "%d\n", !!main_window->maximized );
         }
         else if ( !strcmp( argv[i], "window_fullscreen" ) )
         {
-            *reply = g_strdup_printf( "%d\n", !!xset_get_b( "main_full" ) );
+            *reply = g_strdup_printf( "%d\n", !!main_window->fullscreen );
         }
         else if ( !strcmp( argv[i], "screen_size" ) )
         {
@@ -6506,16 +6832,32 @@ _invalid_set:
         {}
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
+            gboolean use_mode = FALSE;
             if ( g_str_has_prefix( argv[i], "devices_" ) )
+            {
                 str = "show_devmon";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "bookmarks_" ) )
+            {
                 str = "show_book";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "dirtree_" ) )
+            {
                 str = "show_dirtree";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "toolbar_" ) )
+            {
                 str = "show_toolbox";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "sidetoolbar_" ) )
+            {
                 str = "show_sidebar";
+                use_mode = TRUE;
+            }
             else if ( g_str_has_prefix( argv[i], "hidden_files_" ) )
                 str = "show_hidden";
             else if ( g_str_has_prefix( argv[i], "panel" ) )
@@ -6534,7 +6876,12 @@ _invalid_set:
                 str = NULL;
             if ( !str )
                 goto _invalid_get;
-            *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel( panel, str ) );
+            if ( use_mode )
+                *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel_mode( panel,
+                                str, main_window->panel_context[panel-1] ) );
+            else
+                *reply = g_strdup_printf( "%d\n", !!xset_get_b_panel( panel,
+                                                                    str ) );
         }
         else if ( !strcmp( argv[i], "panel_hslider_top" ) ||
                   !strcmp( argv[i], "panel_hslider_bottom" ) ||
@@ -6564,22 +6911,22 @@ _invalid_set:
                     if ( !g_strcmp0( argv[i+1], str ) )
                         break;
                     if ( !g_strcmp0( argv[i+1], "name" ) && 
-                                                !g_strcmp0( str, _(col_titles[0]) ) )
+                                        !g_strcmp0( str, _(column_titles[0]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "size" ) && 
-                                                !g_strcmp0( str, _(col_titles[1]) ) )
+                                        !g_strcmp0( str, _(column_titles[1]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "type" ) && 
-                                                !g_strcmp0( str, _(col_titles[2]) ) )
+                                        !g_strcmp0( str, _(column_titles[2]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "permission" ) && 
-                                                !g_strcmp0( str, _(col_titles[3]) ) )
+                                        !g_strcmp0( str, _(column_titles[3]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "owner" ) && 
-                                                !g_strcmp0( str, _(col_titles[4]) ) )
+                                        !g_strcmp0( str, _(column_titles[4]) ) )
                         break;
                     else if ( !g_strcmp0( argv[i+1], "modified" ) && 
-                                                !g_strcmp0( str, _(col_titles[5]) ) )
+                                        !g_strcmp0( str, _(column_titles[5]) ) )
                         break;
                 }
                 if ( j == 6 )
@@ -7343,7 +7690,7 @@ _invalid_get:
         }
         if ( !( set = xset_is( argv[i] ) ) )
         {
-            *reply = g_strdup_printf( _("spacefm: invalid event name '%s'\n"),
+            *reply = g_strdup_printf( _("spacefm: invalid event type '%s'\n"),
                                                                         argv[i] );
             return 2;
         }

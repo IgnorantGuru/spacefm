@@ -367,6 +367,7 @@ gboolean single_instance_check()
 
     if ( ( sock = socket( AF_UNIX, SOCK_STREAM, 0 ) ) == -1 )
     {
+        fprintf( stderr, "spacefm: socket init failure\n" );
         ret = 1;
         goto _exit;
     }
@@ -381,7 +382,7 @@ gboolean single_instance_check()
 #endif
 
     /* try to connect to existing instance */
-    if ( connect( sock, ( struct sockaddr* ) & addr, addr_len ) == 0 )
+    if ( sock && connect( sock, ( struct sockaddr* ) & addr, addr_len ) == 0 )
     {
         /* connected successfully */
         char** file;
@@ -469,28 +470,7 @@ gboolean single_instance_check()
     }
 
     /* There is no existing server, and we are in the first instance. */
-    unlink( addr.sun_path ); /* delete old socket file if it exists. */
-    reuse = 1;
-    ret = setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
-    if ( bind( sock, ( struct sockaddr* ) & addr, addr_len ) == -1 )
-    {
-        ret = 1;
-        goto _exit;
-    }
 
-    io_channel = g_io_channel_unix_new( sock );
-    g_io_channel_set_encoding( io_channel, NULL, NULL );
-    g_io_channel_set_buffered( io_channel, FALSE );
-
-    g_io_add_watch( io_channel, G_IO_IN,
-                    ( GIOFunc ) on_socket_event, NULL );
-
-    if ( listen( sock, 5 ) == -1 )
-    {
-        ret = 1;
-        goto _exit;
-    }
-    
     // custom config-dir
     if ( config_dir && strpbrk( config_dir, " $%\\()&#|:;?<>{}[]*\"'" ) )
     {
@@ -498,6 +478,34 @@ gboolean single_instance_check()
         ret = 1;
         goto _exit;
     }
+
+    unlink( addr.sun_path ); /* delete old socket file if it exists. */
+    reuse = 1;
+    ret = setsockopt( sock, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof( reuse ) );
+    if ( bind( sock, ( struct sockaddr* ) & addr, addr_len ) == -1 )
+    {
+        g_warning( "could not create socket %s", addr.sun_path );
+        // can still run partially without this
+        //ret = 1;
+        //goto _exit;
+    }
+    else
+    {
+        io_channel = g_io_channel_unix_new( sock );
+        g_io_channel_set_encoding( io_channel, NULL, NULL );
+        g_io_channel_set_buffered( io_channel, FALSE );
+
+        g_io_add_watch( io_channel, G_IO_IN,
+                        ( GIOFunc ) on_socket_event, NULL );
+
+        if ( listen( sock, 5 ) == -1 )
+        {
+            g_warning( "could not listen to socket" );
+            //ret = 1;
+            //goto _exit;
+        }
+    }
+    
     return TRUE;
 
 _exit:
@@ -664,9 +672,8 @@ int send_socket_command( int argc, char* argv[], char** reply )   //sfm
 
 void show_socket_help()
 {
-    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)") );
-    printf( "%s\n", _("to read and set GUI property values and execute methods inside running SpaceFM") );
-    printf( "%s\n", _("windows.  To handle events see View|Events in the main menu bar.") );
+    // TRANSLATOR:  These three lines should be limited to 80 chars each
+    printf( "%s\n", _("SpaceFM socket commands permit external processes (such as command scripts)\nto read and set GUI property values and execute methods inside running SpaceFM\nwindows.  To handle events see View|Events in the main menu bar.") );
 
     printf( "\n%s\n", _("Usage:") );
     printf( "    spacefm --socket-cmd|-s METHOD [OPTIONS] [ARGUMENT...]\n" );
@@ -721,15 +728,15 @@ void show_socket_help()
     printf( "\n%s\n", _("PROPERTIES\n----------") );
     printf( "%s\n", _("Set properties with METHOD 'set', or get the value with 'get'.") );
 
-    printf( "\nwindow_size                     eg '800x600'\n" );
-    printf( "window_position                 eg '100x50'\n" );
+    printf( "\nwindow_size                     %s\n", _("eg '800x600'") );
+    printf( "window_position                 %s\n", _("eg '100x50'") );
     printf( "window_maximized                1|true|yes|0|false|no\n" );
     printf( "window_fullscreen               1|true|yes|0|false|no\n" );
-    printf( "screen_size                     eg '1024x768'  (read-only)\n" );
-    printf( "window_vslider_top              eg '100'\n" );
-    printf( "window_vslider_bottom           eg '100'\n" );
-    printf( "window_hslider                  eg '100'\n" );
-    printf( "window_tslider                  eg '100'\n" );
+    printf( "screen_size                     %s\n", _("eg '1024x768'  (read-only)") );
+    printf( "window_vslider_top              %s\n", _("eg '100'") );
+    printf( "window_vslider_bottom           %s\n", _("eg '100'") );
+    printf( "window_hslider                  %s\n", _("eg '100'") );
+    printf( "window_tslider                  %s\n", _("eg '100'") );
     printf( "focused_panel                   1|2|3|4|prev|next|hide\n" );
     printf( "focused_pane                    filelist|devices|bookmarks|dirtree|pathbar\n" );
     printf( "current_tab                     1|2|...|prev|next|close\n" );
@@ -745,9 +752,9 @@ void show_socket_help()
     printf( "panel2_visible                  1|true|yes|0|false|no\n" );
     printf( "panel3_visible                  1|true|yes|0|false|no\n" );
     printf( "panel4_visible                  1|true|yes|0|false|no\n" );
-    printf( "panel_hslider_top               eg '100'\n" );
-    printf( "panel_hslider_bottom            eg '100'\n" );
-    printf( "panel_vslider                   eg '100'\n" );
+    printf( "panel_hslider_top               %s\n", _("eg '100'") );
+    printf( "panel_hslider_bottom            %s\n", _("eg '100'") );
+    printf( "panel_vslider                   %s\n", _("eg '100'") );
     printf( "column_width                    name|size|type|permission|owner|modified WIDTH\n" );
     printf( "sort_by                         name|size|type|permission|owner|modified\n" );
     printf( "sort_ascend                     1|true|yes|0|false|no\n" );
@@ -774,7 +781,7 @@ void show_socket_help()
     printf( "folder                          %s\n", _("text to show in Folder task column") );
     printf( "item                            %s\n", _("text to show in Item task column") );
     printf( "to                              %s\n", _("text to show in To task column") );
-    printf( "progress                        %s\n", _("Progress percent (1..100) or '' to pulse") );
+    printf( "progress                        %s\n", _("progress percent (1..100) or '' to pulse") );
     printf( "total                           %s\n", _("text to show in Total task column") );
     printf( "curspeed                        %s\n", _("text to show in Current task column") );
     printf( "curremain                       %s\n", _("text to show in CRemain task column") );
@@ -787,7 +794,7 @@ void show_socket_help()
 
     printf( "\n%s\n", _("TASK TYPES\n----------") );
     printf( "cmd [--task] [--popup] [--scroll] [--terminal] [--icon ICON] \\\n" );
-    printf( "    [--dir DIR] COMMAND...      %s\n", _("Run COMMAND as USER in DIR") );
+    printf( "    [--dir DIR] COMMAND...      %s\n", _("Run COMMAND in DIR") );
     printf( "copy|move|link [--dir DIR] FILE|DIR... TARGET\n" );
     printf( "                                %s\n", _("Copy|Move|Link FILE(s) or DIR(s) to TARGET dir") );
     printf( "delete [--dir DIR] FILE|DIR...  %s\n", _("Recursively delete FILE(s) or DIR(s)" ) );
@@ -812,11 +819,11 @@ void show_socket_help()
     printf( "evt_device                      %s\n", _("Device change         %e %f %v") );
 
     printf( "\n%s\n", _("Event COMMAND Substitution Variables:") );
-    printf( "%%e   %s\n", _("event name (evt_start|evt_exit|...)") );
+    printf( "%%e   %s\n", _("event type (evt_start|evt_exit|...)") );
     printf( "%%w   %s\n", _("window ID") );
     printf( "%%p   %s\n", _("panel number (1-4)") );
     printf( "%%t   %s\n", _("tab number (1-...)") );
-    printf( "%%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...") );
+    printf( "%%b   %s\n", _("mouse button (0=double 1=left 2=middle 3=right ...)") );
     printf( "%%k   %s\n", _("key code  (eg 0x63)") );
     printf( "%%m   %s\n", _("modifier key (eg 0x4  used with clicks and keypresses)") );
     printf( "%%f   %s\n", _("focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)") );
@@ -860,6 +867,7 @@ FMMainWindow* create_main_window()
     if ( app_settings.maximized )
     {
         gtk_window_maximize( GTK_WINDOW( main_window ) );
+        main_window->opened_maximized = main_window->maximized = TRUE;
     }
     gtk_widget_show ( GTK_WIDGET( main_window ) );
     return main_window;
@@ -1192,10 +1200,11 @@ gboolean handle_parsed_commandline_args()
             g_free( app_settings.wallpaper );
             app_settings.wallpaper = file;
             app_settings.show_wallpaper = TRUE;
-            xset_autosave( NULL, TRUE );
-            char* err_msg = save_settings( NULL );
+            //xset_autosave( TRUE, FALSE );
+            char* err_msg = save_settings( fm_main_window_get_last_active() );
             if ( err_msg )
-                printf( _("spacefm: Error: Unable to save session\n       %s\n"), err_msg );
+                printf( _("spacefm: Error: Unable to save session\n       %s\n"),
+                                                                    err_msg );
             if( desktop && app_settings.show_wallpaper )
             {
                 if( desktop_or_deamon_initialized )
@@ -1283,6 +1292,7 @@ gboolean handle_parsed_commandline_args()
         }
     }
 //printf("    handle_parsed_commandline_args mw = %p\n\n", main_window );
+
 
 out:
     if( files != default_files )
@@ -1490,7 +1500,7 @@ int main ( int argc, char *argv[] )
     /* handle the parsed result of command line args */
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
- 
+
     if( run )   /* run the main loop */
         gtk_main();
 

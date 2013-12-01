@@ -286,24 +286,28 @@ static const char* terminal_programs[] =  //for pref-dialog.c
     "sakura",
     "terminator",
     "urxvt",
-    "xterm"
+    "xterm",
+    "x-terminal-emulator",
+    "lilyterm"
 };
 
 static const char* su_commands[] = // order and contents must match prefdlg.ui
 {
     "/bin/su",
-    "/usr/bin/sudo"
+    "/usr/bin/sudo",
+    "/usr/bin/su-to-root"
 };
 
 static const char* gsu_commands[] = // order and contents must match prefdlg.ui
 {
-    "/usr/bin/ktsuss",
     "/usr/bin/gksu",
     "/usr/bin/gksudo",
     "/usr/bin/gnomesu",
     "/usr/bin/xdg-su",
     "/usr/bin/kdesu",   // may be translated to "$(kde4-config --path libexec)/kdesu"
     "/usr/bin/kdesudo",
+    "/usr/bin/ktsuss",
+    "/usr/bin/su-to-root",
     "/bin/su",
     "/usr/bin/sudo"
 };
@@ -324,7 +328,7 @@ void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
 char* unescape( const char* t );
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force );
+void xset_autosave( gboolean force, gboolean delay );
 void xset_autosave_cancel();
 
 void open_in_prog( const char* path );
@@ -348,6 +352,13 @@ int xset_get_int_panel( int panel, const char* name, const char* var );
 XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value );
 XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data );
 gboolean xset_get_b_set( XSet* set );
+XSet* xset_get_panel_mode( int panel, const char* name, char mode );
+gboolean xset_get_b_panel_mode( int panel, const char* name, char mode );
+XSet* xset_set_panel_mode( int panel, const char* name, char mode,
+                                      const char* var, const char* value );
+XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
+                                                            gboolean bval );
+
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );

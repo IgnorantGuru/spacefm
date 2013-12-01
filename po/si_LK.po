@@ -3,7 +3,6 @@
 # package.
 # 
 # Translators:
-# royaniva <royaniva@outlook.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
@@ -11,16 +10,16 @@ msgstr ""
 "POT-Creation-Date: 2013-10-31 11:39+0000\n"
 "PO-Revision-Date: 2013-11-04 16:13+0000\n"
 "Last-Translator: ignorantguru <ignorantguru@gmx.com>\n"
-"Language-Team: Persian (http://www.transifex.com/projects/p/spacefm/language/fa/)\n"
+"Language-Team: Sinhala (Sri Lanka) (http://www.transifex.com/projects/p/spacefm/language/si_LK/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fa\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: si_LK\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/spacefm-folder-handler.desktop.in.h:1
 msgid "SpaceFM Open Folder"
-msgstr "SpaceFM Open Folder"
+msgstr ""
 
 #: ../data/spacefm-folder-handler.desktop.in.h:2
 msgid "Open folder"
@@ -719,7 +718,7 @@ msgstr ""
 #: ../src/cust-dialog.c:2298 ../src/cust-dialog.c:3584
 #: ../src/cust-dialog.c:3639
 msgid "Pause"
-msgstr "توقف"
+msgstr ""
 
 #: ../src/cust-dialog.c:2978
 #, c-format
@@ -1176,11 +1175,11 @@ msgstr ""
 
 #: ../src/main.c:678
 msgid "Usage:"
-msgstr "طریقه استفاده:"
+msgstr ""
 
 #: ../src/main.c:680
 msgid "Example:"
-msgstr "به عنوان مثال:"
+msgstr ""
 
 #: ../src/main.c:683
 msgid ""
@@ -1525,7 +1524,7 @@ msgstr ""
 
 #: ../src/main.c:832
 msgid "Examples"
-msgstr "به عنوان مثال"
+msgstr ""
 
 #: ../src/main.c:848
 msgid "These files have been copied to the clipboard"
@@ -1558,7 +1557,7 @@ msgstr ""
 #: ../src/item-prop.c:974
 #, c-format
 msgid "Error"
-msgstr "خطا"
+msgstr ""
 
 #: ../src/main.c:1337 ../src/main.c:1463
 msgid ""
@@ -1613,7 +1612,7 @@ msgstr ""
 #. get url
 #: ../src/main-window.c:442 ../src/settings.c:6060
 msgid "Enter Plugin URL"
-msgstr "آدرس پلاگین را وارد کنید"
+msgstr ""
 
 #: ../src/main-window.c:442 ../src/settings.c:6060
 msgid ""
@@ -1643,15 +1642,15 @@ msgstr ""
 
 #: ../src/main-window.c:489
 msgid "Overwrite Plugin ?"
-msgstr "بازنویسی پلاگین؟"
+msgstr ""
 
 #: ../src/main-window.c:510 ../src/settings.c:6068
 msgid "Error Creating Temp Directory"
-msgstr "خطا در ایجاد دایرکتوری موقت"
+msgstr ""
 
 #: ../src/main-window.c:511 ../src/settings.c:6069
 msgid "Unable to create temporary directory"
-msgstr "امکان ایجاد دایرکتوری موقت نیست"
+msgstr ""
 
 #: ../src/main-window.c:755
 #, c-format
@@ -1663,16 +1662,16 @@ msgstr ""
 
 #: ../src/main-window.c:757
 msgid "Save Session Error"
-msgstr "ذخیره کردن خطای جلسه"
+msgstr ""
 
 #. root task
 #: ../src/main-window.c:788
 msgid "Open Root Window"
-msgstr "باز کردن پنجره ریشه"
+msgstr ""
 
 #: ../src/main-window.c:818 ../src/vfs/vfs-file-task.c:1543
 msgid "Terminal Not Available"
-msgstr "ترمینال در دسترس نیست"
+msgstr ""
 
 #: ../src/main-window.c:819
 msgid "Please set your terminal program in View|Preferences|Advanced"
@@ -1680,7 +1679,7 @@ msgstr ""
 
 #: ../src/main-window.c:830
 msgid "Open Terminal"
-msgstr "باز کردن ترمینال"
+msgstr ""
 
 #: ../src/main-window.c:1150
 msgid "Design Mode Help"
@@ -1701,7 +1700,7 @@ msgstr ""
 #: ../src/settings.c:5893 ../src/settings.c:6010
 #, c-format
 msgid "New _Command"
-msgstr "دستور_ جدید"
+msgstr ""
 
 #: ../src/main-window.c:1931
 #, c-format
@@ -1711,11 +1710,11 @@ msgstr ""
 #: ../src/main-window.c:1959 ../src/settings.c:7258 ../src/settings.c:9990
 #: ../src/settings.c:10006 ../src/settings.c:10503
 msgid "_File"
-msgstr "_فایل"
+msgstr ""
 
 #: ../src/main-window.c:1962 ../src/settings.c:10589
 msgid "_View"
-msgstr "_نمایش"
+msgstr ""
 
 #: ../src/main-window.c:1965 ../src/settings.c:10930
 msgid "_Devices"
@@ -1727,21 +1726,21 @@ msgstr ""
 #: ../src/main-window.c:1969 ../src/settings.c:10360 ../src/settings.c:10565
 #: ../src/settings.c:10941
 msgid "_Bookmarks"
-msgstr "_نشانک ها"
+msgstr ""
 
 #: ../src/main-window.c:1975
 msgid "_Plugins"
-msgstr "_افزونه"
+msgstr ""
 
 #: ../src/main-window.c:1979
 msgid "_Tools"
-msgstr "_تنظیمات"
+msgstr ""
 
 #. Help
 #: ../src/main-window.c:1982 ../src/settings.c:995 ../src/settings.c:7269
 #: ../src/settings.c:7743 ../src/settings.c:8024 ../src/settings.c:9700
 msgid "_Help"
-msgstr "_کمک"
+msgstr ""
 
 #: ../src/main-window.c:2253
 #, c-format
@@ -1753,7 +1752,7 @@ msgstr ""
 
 #: ../src/main-window.c:2262
 msgid "SpaceFM Error"
-msgstr "خطا در spacefm"
+msgstr ""
 
 #: ../src/main-window.c:2278
 msgid "Stop all tasks running in this window?"
@@ -1801,19 +1800,22 @@ msgstr ""
 #: ../src/main-window.c:3594
 msgid "hidden"
 msgid_plural "hidden"
-msgstr[0] "پنهان"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3597
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3602
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/main-window.c:3838
 msgid "Device manager key shortcuts are disabled in HAL mode"
@@ -1822,7 +1824,7 @@ msgstr ""
 #. If you change "Status", also change it in on_task_button_press_event
 #: ../src/main-window.c:4051 ../src/main-window.c:5450
 msgid "Status"
-msgstr "وضعیت"
+msgstr ""
 
 #: ../src/main-window.c:4051
 msgid "#"
@@ -1831,7 +1833,7 @@ msgstr ""
 #: ../src/main-window.c:4051 ../src/ptk/ptk-file-misc.c:2077
 #: ../src/find-files.c:918
 msgid "Folder"
-msgstr "فولدر"
+msgstr ""
 
 #: ../src/main-window.c:4051
 msgid "Item"
@@ -1875,7 +1877,7 @@ msgstr ""
 
 #: ../src/main-window.c:4067
 msgid "Reorder Columns Help"
-msgstr "دوباره مرتب ستون راهنما"
+msgstr ""
 
 #: ../src/main-window.c:4067
 msgid ""
@@ -1924,27 +1926,27 @@ msgstr ""
 #: ../src/main-window.c:5702 ../src/ptk/ptk-file-task.c:1626
 #, c-format
 msgid "paused"
-msgstr "متوقف شد"
+msgstr ""
 
 #: ../src/main-window.c:5704 ../src/ptk/ptk-file-task.c:1628
 #, c-format
 msgid "queued"
-msgstr "در صف"
+msgstr ""
 
 #: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
 #: ../src/edit-bookmarks.c:196 ../src/find-files.c:903
 msgid "Name"
-msgstr "نام"
+msgstr ""
 
 #: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
 #: ../src/find-files.c:924
 msgid "Size"
-msgstr "اندازه"
+msgstr ""
 
 #: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
 #: ../src/find-files.c:928
 msgid "Type"
-msgstr "نوع"
+msgstr ""
 
 #: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
 msgid "Permission"
@@ -5315,12 +5317,14 @@ msgstr ""
 msgid "Stopped with %d error"
 msgid_plural "Stopped with %d errors"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-task.c:1432
 #, c-format
 msgid "Finished with %d error"
 msgid_plural "Finished with %d errors"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-task.c:1442
 #, c-format
@@ -5357,6 +5361,7 @@ msgstr ""
 msgid "Running with %d error"
 msgid_plural "Running with %d errors"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-task.c:1498
 #, c-format
@@ -5582,6 +5587,7 @@ msgstr ""
 msgid "Delete %d selected item ?"
 msgid_plural "Delete %d selected items ?"
 msgstr[0] ""
+msgstr[1] ""
 
 #. MOD
 #: ../src/ptk/ptk-file-misc.c:160
@@ -5728,7 +5734,7 @@ msgstr ""
 #: ../src/ptk/ptk-file-misc.c:1219
 msgctxt "Title|CreateNew|"
 msgid "Folder"
-msgstr "فولدر"
+msgstr ""
 
 #: ../src/ptk/ptk-file-misc.c:1221
 msgctxt "Title|CreateNew|"
@@ -5996,6 +6002,7 @@ msgstr ""
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-misc.c:3791
 msgid "Confirm Delete As Root"
@@ -6027,18 +6034,21 @@ msgstr ""
 msgid "%d folder"
 msgid_plural "%d folders"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:183
 #, c-format
 msgid "%d file, %s"
 msgid_plural "%d files, %s"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:190
 #, c-format
 msgid "%d files"
 msgid_plural "%d files"
 msgstr[0] ""
+msgstr[1] ""
 
 #: ../src/ptk/ptk-file-properties.c:339
 msgid "( multiple files )"
@@ -6120,19 +6130,19 @@ msgstr ""
 
 #: ../src/edit-bookmarks.c:74
 msgid "New Item"
-msgstr "آیتم جدید"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:148
 msgid "Edit Bookmarks"
-msgstr "ویرایش نشانکها"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:205
 msgid "Path"
-msgstr "مسیر"
+msgstr ""
 
 #: ../src/edit-bookmarks.c:228
 msgid "Use drag & drop to sort the items"
-msgstr "استفاده از کشیدن و رها کردن برای مرتب کردن آیتم"
+msgstr ""
 
 #: ../src/ptk/ptk-app-chooser.c:199
 msgid "Please choose an application:"
@@ -6641,11 +6651,11 @@ msgstr ""
 
 #: ../src/find-files.c:773
 msgid "Select a folder"
-msgstr "پوشه را انتخاب کنید"
+msgstr ""
 
 #: ../src/find-files.c:822
 msgid "Browse..."
-msgstr "جستجو ..."
+msgstr ""
 
 #: ../src/find-files.c:846
 msgid "Local Volumes"

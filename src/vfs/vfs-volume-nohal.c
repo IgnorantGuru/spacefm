@@ -1314,7 +1314,10 @@ void info_optical_disc( device_t *device )
 {
     const char *cdrom_disc_state;
 
-    if ( udev_device_get_property_value( device->udevice, "ID_CDROM_MEDIA") )
+    const char* optical_state = udev_device_get_property_value( device->udevice,
+                                                    "ID_CDROM");
+
+    if ( optical_state && atoi( optical_state ) != 0 )
     {
         device->device_is_optical_disc = TRUE;
 

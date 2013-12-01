@@ -765,8 +765,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_COLUMN_SPACING,
                                    g_param_spec_int ("column-spacing",
-                                                     _("Column Spacing"),
-                                                     _("Space which is inserted between grid column"),
+                                                     "Column Spacing",
+                                                     "Space which is inserted between grid column",
                                                      0, G_MAXINT, 6,
                                                      EXO_PARAM_READWRITE));
 
@@ -782,8 +782,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_COLUMNS,
                                    g_param_spec_int ("columns",
-                                                     _("Number of columns"),
-                                                     _("Number of columns to display"),
+                                                     "Number of columns",
+                                                     "Number of columns to display",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
@@ -797,8 +797,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_ENABLE_SEARCH,
                                    g_param_spec_boolean ("enable-search",
-                                                         _("Enable Search"),
-                                                         _("View allows user to search through columns interactively"),
+                                                         "Enable Search",
+                                                         "View allows user to search through columns interactively",
                                                          TRUE,
                                                          EXO_PARAM_READWRITE));
 
@@ -815,8 +815,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_ITEM_WIDTH,
                                    g_param_spec_int ("item-width",
-                                                     _("Width for each item"),
-                                                     _("The width used for each item"),
+                                                     "Width for each item",
+                                                     "The width used for each item",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
@@ -834,8 +834,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_LAYOUT_MODE,
                                    g_param_spec_enum ("layout-mode",
-                                                      _("Layout mode"),
-                                                      _("The layout mode"),
+                                                      "Layout mode",
+                                                      "The layout mode",
                                                       EXO_TYPE_ICON_VIEW_LAYOUT_MODE,
                                                       EXO_ICON_VIEW_LAYOUT_ROWS,
                                                       EXO_PARAM_READWRITE));
@@ -851,8 +851,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_MARGIN,
                                    g_param_spec_int ("margin",
-                                                     _("Margin"),
-                                                     _("Space which is inserted at the edges of the icon view"),
+                                                     "Margin",
+                                                     "Space which is inserted at the edges of the icon view",
                                                      0, G_MAXINT, 6,
                                                      EXO_PARAM_READWRITE));
 
@@ -868,8 +868,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_MARKUP_COLUMN,
                                    g_param_spec_int ("markup-column",
-                                                     _("Markup column"),
-                                                     _("Model column used to retrieve the text if using Pango markup"),
+                                                     "Markup column",
+                                                     "Model column used to retrieve the text if using Pango markup",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
@@ -883,8 +883,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_MODEL,
                                    g_param_spec_object ("model",
-                                                        _("Icon View Model"),
-                                                        _("The model for the icon view"),
+                                                        "Icon View Model",
+                                                        "The model for the icon view",
                                                         GTK_TYPE_TREE_MODEL,
                                                         EXO_PARAM_READWRITE));
 
@@ -897,8 +897,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_ORIENTATION,
                                    g_param_spec_enum ("orientation",
-                                                      _("Orientation"),
-                                                      _("How the text and icon of each item are positioned relative to each other"),
+                                                      "Orientation",
+                                                      "How the text and icon of each item are positioned relative to each other",
                                                       GTK_TYPE_ORIENTATION,
                                                       GTK_ORIENTATION_VERTICAL,
                                                       EXO_PARAM_READWRITE));
@@ -914,8 +914,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_PIXBUF_COLUMN,
                                    g_param_spec_int ("pixbuf-column",
-                                                     _("Pixbuf column"),
-                                                     _("Model column used to retrieve the icon pixbuf from"),
+                                                     "Pixbuf column",
+                                                     "Model column used to retrieve the icon pixbuf from",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
@@ -930,8 +930,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_REORDERABLE,
                                    g_param_spec_boolean ("reorderable",
-                                                         _("Reorderable"),
-                                                         _("View is reorderable"),
+                                                         "Reorderable",
+                                                         "View is reorderable",
                                                          FALSE,
                                                          EXO_PARAM_READWRITE));
 
@@ -946,8 +946,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_ROW_SPACING,
                                    g_param_spec_int ("row-spacing",
-                                                     _("Row Spacing"),
-                                                     _("Space which is inserted between grid rows"),
+                                                     "Row Spacing",
+                                                     "Space which is inserted between grid rows",
                                                      0, G_MAXINT, 6,
                                                      EXO_PARAM_READWRITE));
 
@@ -961,8 +961,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SEARCH_COLUMN,
                                    g_param_spec_int ("search-column",
-                                                     _("Search Column"),
-                                                     _("Model column to search through when searching through item"),
+                                                     "Search Column",
+                                                     "Model column to search through when searching through item",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
@@ -976,8 +976,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SELECTION_MODE,
                                    g_param_spec_enum ("selection-mode",
-                                                      _("Selection mode"),
-                                                      _("The selection mode"),
+                                                      "Selection mode",
+                                                      "The selection mode",
                                                       GTK_TYPE_SELECTION_MODE,
                                                       GTK_SELECTION_SINGLE,
                                                       EXO_PARAM_READWRITE));
@@ -992,8 +992,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SINGLE_CLICK,
                                    g_param_spec_boolean ("single-click",
-                                                         _("Single Click"),
-                                                         _("Whether the items in the view can be activated with single clicks"),
+                                                         "Single Click",
+                                                         "Whether the items in the view can be activated with single clicks",
                                                          FALSE,
                                                          EXO_PARAM_READWRITE));
 
@@ -1009,8 +1009,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SINGLE_CLICK_TIMEOUT,
                                    g_param_spec_uint ("single-click-timeout",
-                                                      _("Single Click Timeout"),
-                                                      _("The amount of time after which the item under the mouse cursor will be selected automatically in single click mode"),
+                                                      "Single Click Timeout",
+                                                      "The amount of time after which the item under the mouse cursor will be selected automatically in single click mode",
                                                       0, G_MAXUINT, 0,
                                                       EXO_PARAM_READWRITE));
 
@@ -1025,8 +1025,8 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SPACING,
                                    g_param_spec_int ("spacing",
-                                                     _("Spacing"),
-                                                     _("Space which is inserted between cells of an item"),
+                                                     "Spacing",
+                                                     "Space which is inserted between cells of an item",
                                                      0, G_MAXINT, 0,
                                                      EXO_PARAM_READWRITE));
 
@@ -1041,23 +1041,23 @@ exo_icon_view_class_init (ExoIconViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_TEXT_COLUMN,
                                    g_param_spec_int ("text-column",
-                                                     _("Text column"),
-                                                     _("Model column used to retrieve the text from"),
+                                                     "Text column",
+                                                     "Model column used to retrieve the text from",
                                                      -1, G_MAXINT, -1,
                                                      EXO_PARAM_READWRITE));
 
 
   gtk_widget_class_install_style_property (gtkwidget_class,
                                            g_param_spec_boxed ("selection-box-color",
-                                                               _("Selection Box Color"),
-                                                               _("Color of the selection box"),
+                                                               "Selection Box Color",
+                                                               "Color of the selection box",
                                                                GDK_TYPE_COLOR,
                                                                EXO_PARAM_READABLE));
 
   gtk_widget_class_install_style_property (gtkwidget_class,
                                            g_param_spec_uchar ("selection-box-alpha",
-                                                               _("Selection Box Alpha"),
-                                                               _("Opacity of the selection box"),
+                                                               "Selection Box Alpha",
+                                                               "Opacity of the selection box",
                                                                0, 0xff,
                                                                0x40,
                                                                EXO_PARAM_READABLE));

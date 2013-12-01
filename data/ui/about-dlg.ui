@@ -20,7 +20,8 @@ You should have received a copy of the GNU General Public License and the GNU Le
 <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@gmx.com&gt;
 
 Contributors:
-    BwackNinja &lt;BwackNinja@gmail.com&gt;  (gtk misc, gtk3 port)
+    BwackNinja &lt;BwackNinja@gmail.com&gt;
+    OmegaPhil &lt;OmegaPhil+SpaceFM@gmail.com&gt;
 
 Artwork:
     SpaceFM icons and logo by Goran Simovic
@@ -29,11 +30,9 @@ Thanks to SpaceFM users for valuable feedback and to SpaceFM translators and
 packagers!
 
 Special thanks to:
-    OmegaPhil
-    Patrick Verner
+    Jean-Philippe Fleury
     Hasufell
     Vladimir Kudrya
-    Jean-Philippe Fleury
 
 SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
 

@@ -1598,6 +1598,8 @@ static void write_file_value( const char* path, const char* val )
     int f;
     int add = 0;
     
+    if ( !path )
+        return;
     if ( path[0] == '@' )
         add = 1;
 
@@ -1608,11 +1610,14 @@ static void write_file_value( const char* path, const char* val )
                                                     g_strerror( errno ) );
         return;
     }
-    if ( val && write( f, val, strlen( val ) ) < strlen( val ) )
-        dlg_warn( _("error writing file %s: %s"), path + add,
-                                                    g_strerror( errno ) );
-    if ( !strchr( val, '\n' ) )
-        write( f, "\n", 1 );
+    if ( val )
+    {
+        if ( write( f, val, strlen( val ) ) < strlen( val ) )
+            dlg_warn( _("error writing file %s: %s"), path + add,
+                                                        g_strerror( errno ) );
+        else if ( !strchr( val, '\n' ) )
+            write( f, "\n", 1 );
+    }
     close( f );
 }
 

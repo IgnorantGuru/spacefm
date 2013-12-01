@@ -27,8 +27,7 @@
 
 #ifdef USE_INOTIFY
 #include <unistd.h>
-#include "linux-inotify.h"
-#include "inotify-syscalls.h"
+#include <sys/inotify.h>
 #else /* Use FAM|gamin */
 #include <fam.h>
 #endif

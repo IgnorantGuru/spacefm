@@ -202,26 +202,55 @@ static void select_file_name_part( GtkEntry* entry )
     }
 }
 
-static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    xset_show_help( GTK_WIDGET( mset->dlg ), NULL,
+                        mset->create_new ? "#gui-newf" : "#gui-rename" );
+}
+
+static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
+{
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
     return FALSE;
 }
 
-static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
-    
     return FALSE;
 }
 
@@ -1126,11 +1155,6 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     gtk_widget_destroy( dlg );    
 }
 
-void on_help_activate( GtkMenuItem* item, MoveSet* mset )
-{
-    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
-}
-
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
 {
     PangoFontDescription* font_desc = NULL;
@@ -1950,6 +1974,19 @@ void update_new_display( const char* path )
     g_timeout_add( 1500, (GSourceFunc)update_new_display_delayed, g_strdup( path ) );
 }
 
+/*
+static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            MoveSet* mset )
+{
+    if ( event->keyval == GDK_KEY_F1 && event->state == 0 )
+    {
+        on_help_activate( NULL, mset );
+        return TRUE;
+    }
+    return FALSE;
+}
+*/
+
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
@@ -2641,6 +2678,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     on_opt_toggled( NULL, mset );
 
+    /* instead of using last used widget, just use first visible
     // last widget
     int last = xset_get_int( "move_dlg_font", "z" );
     if ( last == 1 )
@@ -2665,6 +2703,15 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
             mset->last_widget = mset->input_full_path;
     }
+    */
+    if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
+        mset->last_widget = mset->input_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
+        mset->last_widget = mset->input_full_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
+        mset->last_widget = mset->input_path;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
+        mset->last_widget = mset->input_full_path;
     
     // select last widget
     select_input( mset->last_widget, mset );
@@ -2676,6 +2723,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             G_CALLBACK( on_button_focus ), mset );
     g_signal_connect( G_OBJECT( mset->cancel ), "focus",
                             G_CALLBACK( on_button_focus ), mset );
+
+    // not used to speed keypress processing 
+    //g_signal_connect( G_OBJECT( mset->dlg ), "key-press-event",
+    //                        G_CALLBACK( on_dlg_keypress ), mset );
 
     // run
     int response;
@@ -3159,7 +3210,8 @@ _continue_free:
         g_free( str );
     }
 
-    // save last_widget
+    // save last_widget - this is no longer used but save anyway
+    int last;
     if ( mset->last_widget == mset->input_name )
         last = 1;
     else if ( mset->last_widget == GTK_WIDGET( mset->entry_ext ) )
