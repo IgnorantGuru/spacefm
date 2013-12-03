@@ -439,7 +439,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     const char* dialog_title = _("Archive Handlers");
     gchar* help_string;
 
-    // Fetching widgets and basic handler details
+    // Fetching widgets and handler details
     GtkButton* btn_add = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_add" );
     GtkButton* btn_apply = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
@@ -471,6 +471,49 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     const gchar* handler_name = gtk_entry_get_text( GTK_ENTRY ( entry_handler_name ) );
     const gchar* handler_mime = gtk_entry_get_text( GTK_ENTRY ( entry_handler_mime ) );
     const gchar* handler_extension = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extension ) );
+    const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
+    const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
+    const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+    gchar* handler_compress, *handler_extract, *handler_list;
+
+    // Commands are prefixed with '+' when they are to be ran in a
+    // terminal
+    // g_strdup'd to avoid anal const compiler warning...
+    if (handler_compress_term)
+    {
+        handler_compress = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) ),
+            NULL );
+    }
+    else
+    {
+        handler_compress = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_compress ) ) );
+    }
+
+    if (handler_extract_term)
+    {
+        handler_extract = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) ),
+            NULL );
+    }
+    else
+    {
+        handler_extract = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_extract ) ) );
+    }
+
+    if (handler_list_term)
+    {
+        handler_list = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) ),
+            NULL );
+    }
+    else
+    {
+        handler_list = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_list ) ) );
+    }
 
     // Fetching selection from treeview
     GtkTreeSelection* selection;
@@ -519,35 +562,23 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         {
             g_warning("Unable to fetch the xset for the archive handler"
             " '%s' - does it exist?", handler_name);
-            return;
+            goto cleanexit;
         }
     }
 
     if ( widget == btn_add )
     {
-        // Adding new placeholder handler, disabled
+        // Adding new handler as a copy of the current active handler
         XSet* new_handler_xset = add_new_arctype();
-        new_handler_xset->b = XSET_B_FALSE;
-
-        // Generating placeholder handler label (this is my 'name', but
-        // is separate from an actual internal xset name which has
-        // already been decided by add_new_arctype)
-        // Problem: Since the actual name isn't used, how do I determine
-        // which label is free?
-        // This isn't needed - name uniqueness would only be relevant if
-        // the label was the actual handler's name
-        /*gchar* new_handler_label;
-        for ( i = 0; i < 100 && new_handler_label = g_strdup_printf( "arctype_rar", xset_is( new_handler_name ); ++i; )
-        {
-
-        }
-        * */
-        xset_set_set( new_handler_xset, "label", "New Handler" );
-        xset_set_set( new_handler_xset, "s", "" );  // Mime Type(s)
-        xset_set_set( new_handler_xset, "x", "" );  // Extension(s)
-        xset_set_set( new_handler_xset, "y", "" );  // Compress command
-        xset_set_set( new_handler_xset, "z", "" );  // Extract command
-        xset_set_set( new_handler_xset, "cxt", "" );  // List command
+        new_handler_xset->b = gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( chkbtn_handler_enabled )
+                              ) ? XSET_B_TRUE : XSET_B_FALSE;
+        xset_set_set( new_handler_xset, "label", g_strdup( handler_name ) );
+        xset_set_set( new_handler_xset, "s", g_strdup( handler_mime ) );  // Mime Type(s)
+        xset_set_set( new_handler_xset, "x", g_strdup( handler_extension ) );  // Extension(s)
+        xset_set_set( new_handler_xset, "y", g_strdup( handler_compress ) );  // Compress command
+        xset_set_set( new_handler_xset, "z", g_strdup( handler_extract ) );  // Extract command
+        xset_set_set( new_handler_xset, "cxt", g_strdup( handler_list ) );  // List command
 
         // Fetching list store
         GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
@@ -557,7 +588,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
 
         // Adding handler to model
-        gchar* new_handler_name = g_strdup( "New Handler" );
+        gchar* new_handler_name = g_strdup( handler_name );
         gchar* new_xset_name = g_strdup( new_handler_xset->name );
         gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
                             COL_XSET_NAME, new_xset_name,
@@ -586,7 +617,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     else if ( widget == btn_apply )
     {
         // Exiting if apply has been pressed when no handlers are present
-        if (xset_name == NULL) return;
+        if (xset_name == NULL) goto cleanexit;
 
         // Validating data. Note that data straight from widgets shouldnt
         // be modified or stored
@@ -601,7 +632,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 _("Please enter a valid handler name "
                                 "before saving."), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_name );
-            return;
+            goto cleanexit;
         }
         if (g_strcmp0( handler_mime, "" ) <= 0)
         {
@@ -614,7 +645,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_mime );
-            return;
+            goto cleanexit;
         }
         if (g_strstr_len( handler_mime, -1, " " ))
         {
@@ -627,7 +658,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "contains no spaces before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_mime );
-            return;
+            goto cleanexit;
         }
         if ( g_strcmp0(handler_extension, "" ) <= 0 || *handler_extension != '.')
         {
@@ -641,32 +672,13 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extension );
-            return;
+            goto cleanexit;
         }
 
         // Other settings are commands to run in different situations -
         // since different handlers may or may not need different
         // commands, empty commands are allowed but if something is given,
         // relevant substitution characters should be in place
-        // Prepending commands with '+' if they are to be ran in a
-        // terminal. Declared outside the ifs to avoid the block scope...
-        // g_strdup'd to avoid anal const compiler warning...
-        const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
-        const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
-        const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
-        gchar* handler_compress, *handler_extract, *handler_list;
-
-        if (handler_compress_term)
-        {
-            handler_compress = g_strconcat( "+",
-                gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) ),
-                NULL );
-        }
-        else
-        {
-            handler_compress = g_strdup( gtk_entry_get_text(
-                GTK_ENTRY ( entry_handler_compress ) ) );
-        }
 
         /* Compression handler validation - remember to maintain this code
          * in ptk_file_archiver_create too
@@ -695,7 +707,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "file/directory"),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
-                return;
+                goto cleanexit;
             }
 
             // Making sure both %f and %F aren't used together
@@ -709,21 +721,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 " command."),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
-                return;
+                goto cleanexit;
             }
         }
 
-        if (handler_extract_term)
-        {
-            handler_extract = g_strconcat( "+",
-                gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) ),
-                NULL );
-        }
-        else
-        {
-            handler_extract = g_strdup( gtk_entry_get_text(
-                GTK_ENTRY ( entry_handler_extract ) ) );
-        }
         if (g_strcmp0( handler_extract, "" ) != 0 &&
             g_strcmp0( handler_extract, "+" ) != 0 &&
             (
@@ -733,6 +734,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             // Not all substitution characters are in place - warning
             // user and exiting. Note that the created dialog does not
             // have an icon set
+            // TODO: IG problem
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
@@ -741,20 +743,9 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "Archive to extract"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extract );
-            return;
+            goto cleanexit;
         }
 
-        if (handler_list_term)
-        {
-            handler_list = g_strconcat( "+",
-                gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) ),
-                NULL );
-        }
-        else
-        {
-            handler_list = g_strdup( gtk_entry_get_text(
-                GTK_ENTRY ( entry_handler_list ) ) );
-        }
         if (g_strcmp0( handler_list, "" ) != 0 &&
             g_strcmp0( handler_list, "+" ) != 0 &&
             (
@@ -764,6 +755,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             // Not all substitution characters are in place  - warning
             // user and exiting. Note that the created dialog does not
             // have an icon set
+            // TODO: Confirm if IG still has this problem
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
@@ -772,7 +764,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "Archive to list"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_list );
-            return;
+            goto cleanexit;
         }
 
         // Determining current handler enabled state
@@ -799,17 +791,11 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( handler_xset, "y", handler_compress );
         xset_set_set( handler_xset, "z", handler_extract );
         xset_set_set( handler_xset, "cxt", handler_list );
-
-        // Freeing strings
-        g_free( handler_compress );
-        g_free( handler_extract );
-        g_free( handler_list );
-        return;
     }
     else
     {
         // Exiting if remove has been pressed when no handlers are present
-        if (xset_name == NULL) return;
+        if (xset_name == NULL) goto cleanexit;
 
         // Updating available archive handlers list - fetching current
         // handlers
@@ -858,8 +844,14 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Removing handler from the list
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
-        return;
     }
+
+cleanexit:
+
+    // Freeing strings
+    g_free( handler_compress );
+    g_free( handler_extract );
+    g_free( handler_list );
 }
 
 static void on_configure_changed( GtkTreeSelection* selection,
