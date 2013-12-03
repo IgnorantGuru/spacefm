@@ -1235,6 +1235,10 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                     NULL );
     gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );
 
+    // Forcing dialog icon - WM breaks without this for IG, not needed
+    // for me
+    xset_set_window_icon( GTK_WINDOW( dlg ) );
+
     // Setting saved dialog size
     int width = xset_get_int( "arc_conf", "x" );
     int height = xset_get_int( "arc_conf", "y" );

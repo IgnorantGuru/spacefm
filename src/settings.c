@@ -8768,11 +8768,21 @@ void xset_set_window_icon( GtkWindow* win )
     GtkIconTheme* theme = gtk_icon_theme_get_default();
     if ( !theme )
         return;
-    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, name, 48, 0, NULL );
+    GError *error = NULL;
+    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, name, 48, 0, &error );
     if ( icon )
     {
         gtk_window_set_icon( GTK_WINDOW( win ), icon );
         g_object_unref( icon );
+    }
+    else
+    {
+        // An error occured on loading the icon
+        if (error != NULL)
+        {
+            fprintf( stderr, "spacefm: Unable to load the window icon "
+            "'%s' in - xset_set_window_icon - %s\n", name, error->message);
+        }
     }
 }
 
