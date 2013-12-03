@@ -169,6 +169,7 @@ struct _VFSFileTask
     char* exec_icon;
     GPid exec_pid;
     int exec_exit_status;
+    guint child_watch;
     gboolean exec_is_error;
     GIOChannel* exec_channel_out;
     GIOChannel* exec_channel_err;

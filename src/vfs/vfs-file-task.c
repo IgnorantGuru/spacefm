@@ -1194,6 +1194,7 @@ static void cb_exec_child_watch( GPid pid, gint status, VFSFileTask* task )
     gboolean bad_status = FALSE;
     g_spawn_close_pid( pid );
     task->exec_pid = 0;
+    task->child_watch = 0;
 
     if ( status )
     {
@@ -1948,7 +1949,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     task->exec_pid = pid;
 
     // catch termination (always is run in the main loop thread)
-    guint child_watch = g_child_watch_add( pid,
+    task->child_watch = g_child_watch_add( pid,
                                     (GChildWatchFunc)cb_exec_child_watch, task );
 
     // create channels for output
@@ -2246,6 +2247,7 @@ VFSFileTask* vfs_task_new ( VFSFileTaskType type,
     task->exec_browser = NULL;
     task->exec_desktop = NULL;
     task->exec_pid = 0;
+    task->child_watch = 0;
     task->exec_is_error = FALSE;
     task->exec_scroll_lock = FALSE;
     task->exec_write_root = FALSE;

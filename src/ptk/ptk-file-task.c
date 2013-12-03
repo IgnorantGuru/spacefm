@@ -215,6 +215,11 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
         if ( ptask->task->exec_channel_err )
             g_io_channel_shutdown( ptask->task->exec_channel_err, TRUE, NULL );
         ptask->task->exec_channel_out = ptask->task->exec_channel_err = 0;
+        if ( ptask->task->child_watch )
+        {
+            g_source_remove( ptask->task->child_watch );
+            ptask->task->child_watch = 0;
+        }
 //printf("    g_io_channel_shutdown DONE\n");
     }
 
@@ -480,6 +485,20 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                 ptask2->task->exec_browser = ptask->task->exec_browser;
                 ptk_file_task_run( ptask2 );                
             }
+
+            /*
+            // remove zombie - now done automatically in update
+            if ( ptask->task->exec_pid // may be reset in other thread on watch close
+                            && waitpid( ptask->task->exec_pid, NULL, WNOHANG ) )
+            {
+                // process is no longer running (defunct zombie)
+                // glib should detect this but sometimes process goes defunct
+                // with no watch callback, so remove it from task list
+                g_warning( "Removing zombie pid=%d on cancel", ptask->task->exec_pid );
+                ptask->task->exec_pid = 0;
+                ptask->complete = TRUE;
+            }
+            */
         }
         else
         {
@@ -1542,7 +1561,43 @@ void ptk_file_task_update( PtkFileTask* ptask )
     off64_t cur_speed;
     gdouble timer_elapsed = g_timer_elapsed( task->timer, NULL );
     
-    if ( task->type != VFS_FILE_TASK_EXEC )
+    if ( task->type == VFS_FILE_TASK_EXEC )
+    {
+        // test for zombie process
+        gint status = 0;
+        if ( !ptask->complete && task->exec_pid &&
+                        waitpid( task->exec_pid, &status, WNOHANG ) )
+        {
+            // process is no longer running (defunct zombie)
+            // glib should detect this but sometimes process goes defunct
+            // with no watch callback, so remove it from task list
+            if ( task->child_watch )
+            {
+                g_source_remove( task->child_watch );
+                task->child_watch = 0;
+            }
+            g_spawn_close_pid( task->exec_pid );
+            if ( task->exec_channel_out )
+                g_io_channel_shutdown( task->exec_channel_out, TRUE, NULL );
+            if ( task->exec_channel_err )
+                g_io_channel_shutdown( task->exec_channel_err, TRUE, NULL );
+            task->exec_channel_out = task->exec_channel_err = 0;
+            if ( status )
+            {
+                if ( WIFEXITED( status ) )
+                    task->exec_exit_status = WEXITSTATUS( status );
+                else
+                    task->exec_exit_status = -1;
+            }
+            else
+                task->exec_exit_status = 0;
+            printf( "child ZOMBIED  pid=%d exit_status=%d\n", task->exec_pid,
+						 task->exec_exit_status );
+            task->exec_pid = 0;
+            ptask->complete = TRUE;
+        }
+    }
+    else
     {
         //cur speed
         if ( task->state_pause == VFS_FILE_TASK_RUNNING )
