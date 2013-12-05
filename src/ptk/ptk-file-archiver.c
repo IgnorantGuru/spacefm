@@ -632,7 +632,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 _("Please enter a valid handler name "
                                 "before saving."), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_name );
-            goto cleanexit;
+            goto saveanyway;
         }
         if (g_strcmp0( handler_mime, "" ) <= 0)
         {
@@ -645,7 +645,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_mime );
-            goto cleanexit;
+            goto saveanyway;
         }
         if (g_strstr_len( handler_mime, -1, " " ))
         {
@@ -658,7 +658,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "contains no spaces before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_mime );
-            goto cleanexit;
+            goto saveanyway;
         }
         if ( g_strcmp0(handler_extension, "" ) <= 0 || *handler_extension != '.')
         {
@@ -672,7 +672,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extension );
-            goto cleanexit;
+            goto saveanyway;
         }
 
         // Other settings are commands to run in different situations -
@@ -698,8 +698,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
-                                "placeholders must be in the '%s' compression"
-                                " command before saving:\n\n%%%%a: "
+                                "placeholders should be in the '%s' compression"
+                                " command:\n\n%%%%a: "
                                 "Resulting archive\n\nEither of the following:"
                                 "\n\n%%%%f: Files/directories to archive "
                                 "together\n%%%%F: File/directory to archive"
@@ -707,7 +707,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "file/directory"),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
-                goto cleanexit;
+                goto saveanyway;
             }
 
             // Making sure both %f and %F aren't used together
@@ -721,7 +721,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 " command."),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
-                goto cleanexit;
+                goto saveanyway;
             }
         }
 
@@ -738,12 +738,12 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
-                                "placeholders must be in the '%s' extraction"
-                                " command before saving:\n\n%%%%a: "
+                                "placeholders should be in the '%s' extraction"
+                                " command:\n\n%%%%a: "
                                 "Archive to extract"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extract );
-            goto cleanexit;
+            goto saveanyway;
         }
 
         if (g_strcmp0( handler_list, "" ) != 0 &&
@@ -759,13 +759,16 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
-                                "placeholders must be in the '%s' list"
-                                " command before saving:\n\n%%%%a: "
+                                "placeholders should be in the '%s' list"
+                                " command:\n\n%%%%a: "
                                 "Archive to list"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_list );
-            goto cleanexit;
+            goto saveanyway;
         }
+
+        // Semicolon needed as C doesn't want a label by a declaration!!
+saveanyway: ;
 
         // Determining current handler enabled state
         gboolean handler_enabled = gtk_toggle_button_get_active(
@@ -782,8 +785,9 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                         -1 );
         }
 
-        // Saving archive handler
-        // Finally saving the archive handler parameters
+        /* Saving archive handler - IG wants the handler to be saved even
+         * with invalid commands
+         * Finally saving the archive handler parameters */
         handler_xset->b = handler_enabled;
         xset_set_set( handler_xset, "label", handler_name );
         xset_set_set( handler_xset, "s", handler_mime );
