@@ -7326,6 +7326,14 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
             g_free( script );
         }
     }
+    else if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_LINE )
+    {
+        // edit command line
+        newitem = xset_design_additem( design_menu, _("_Edit Command"),
+                            GTK_STOCK_EDIT, XSET_JOB_PROP_CMD, set );
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                            GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
+    }
     
     // Properties
     newitem = xset_design_additem( design_menu, _("_Properties"),
