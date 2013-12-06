@@ -6533,8 +6533,11 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             case XSET_JOB_LABEL:
                 help = "#designmode-designmenu-name";
                 break;
-            case XSET_JOB_EDIT:
+            case XSET_JOB_EDIT:      // edit script
                 help = "#designmode-designmenu-edit";
+                break;
+            case XSET_JOB_PROP_CMD:  // edit command line
+                help = "#designmode-designmenu-cedit";
                 break;
             case XSET_JOB_EDIT_ROOT:
                 help = "#designmode-designmenu-edit";
