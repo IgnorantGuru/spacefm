@@ -1014,11 +1014,6 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( ptask->error_view ), GTK_WRAP_WORD_CHAR );
     gtk_text_view_set_editable( GTK_TEXT_VIEW( ptask->error_view ), FALSE );
-    if ( !task->exec_scroll_lock )
-    {
-        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ), ptask->log_end,
-                                                            0.0, FALSE, 0, 0 );
-    }
     char* fontname = xset_get_s( "task_pop_font" );
     if ( fontname )
     {
@@ -1160,7 +1155,15 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     // icon
     set_progress_icon( ptask );
-    
+
+    // auto scroll - must be after show_all
+    if ( !task->exec_scroll_lock )
+    {
+        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
+                                                            ptask->log_end,
+                                                            0.0, FALSE, 0, 0 );
+    }
+
     ptask->progress_count = 50;  // trigger fast display
 //printf("ptk_file_task_progress_open DONE\n");
 }
@@ -1408,12 +1411,17 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         if ( !task->exec_scroll_lock )
         {
             //scroll to end if scrollbar is mostly down
-            GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment( ptask->scroll );
-            if (  gtk_adjustment_get_upper ( adj ) - gtk_adjustment_get_value ( adj ) < gtk_adjustment_get_page_size ( adj ) + 40 )
-                gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
-                                                            ptask->log_end,
-                                                            0.0, FALSE, 0, 0 );
+            GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment(
+                                                            ptask->scroll );
+            if (  gtk_adjustment_get_upper( adj ) - 
+                                    gtk_adjustment_get_value( adj ) <
+                                    gtk_adjustment_get_page_size( adj ) + 40 )
+                gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW(
+                                                        ptask->error_view ),
+                                              ptask->log_end,
+                                              0.0, FALSE, 0, 0 );
         }
+        ptask->log_appended = FALSE;
     }
 
     // icon
