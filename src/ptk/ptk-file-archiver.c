@@ -687,38 +687,34 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             g_strcmp0( handler_compress, "+" ) != 0)
         {
             /* It has - making sure all substitution characters are in
-             * place */
-            if (!g_strstr_len( handler_compress, -1, "%a" ) ||
-                    (
-                        !g_strstr_len( handler_compress, -1, "%f" ) &&
-                        !g_strstr_len( handler_compress, -1, "%F" )
-                    )
+             * place - not mandatory to only have one of the particular
+             * type */
+            if (
+                (
+                    !g_strstr_len( handler_compress, -1, "%o" ) &&
+                    !g_strstr_len( handler_compress, -1, "%O" )
                 )
+                ||
+                (
+                    !g_strstr_len( handler_compress, -1, "%f" ) &&
+                    !g_strstr_len( handler_compress, -1, "%F" )
+                )
+            )
             {
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
-                                "placeholders should be in the '%s' compression"
-                                " command:\n\n%%%%a: "
-                                "Resulting archive\n\nEither of the following:"
-                                "\n\n%%%%f: Files/directories to archive "
-                                "together\n%%%%F: File/directory to archive"
-                                " - generate separate archive for each source "
-                                "file/directory"),
-                                handler_name), NULL, NULL );
-                gtk_widget_grab_focus( entry_handler_compress );
-                goto saveanyway;
-            }
-
-            // Making sure both %f and %F aren't used together
-            if (g_strstr_len( handler_compress, -1, "%f" ) &&
-                g_strstr_len( handler_compress, -1, "%F" ))
-            {
-                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("Please do not use both "
-                                "'%%%%f' and '%%%%F' in the '%s' compression"
-                                " command."),
+                                "substitution variables should be in the"
+                                " '%s' compression command:\n\n"
+                                "One of the following:\n\n"
+                                "%%%%f: First selected file/directory to"
+                                " archive\n"
+                                "%%%%F: All selected files/directories to"
+                                " archive\n\n"
+                                "and one of the following:\n\n"
+                                "%%%%o: Resulting single archive\n"
+                                "%%%%O: Resulting archive per source "
+                                "file/directory (see %%f/%%F)"),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
                 goto saveanyway;
@@ -728,7 +724,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         if (g_strcmp0( handler_extract, "" ) != 0 &&
             g_strcmp0( handler_extract, "+" ) != 0 &&
             (
-                !g_strstr_len( handler_extract, -1, "%a" )
+                !g_strstr_len( handler_extract, -1, "%o" )
             ))
         {
             // Not all substitution characters are in place - warning
@@ -739,7 +735,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
                                 "placeholders should be in the '%s' extraction"
-                                " command:\n\n%%%%a: "
+                                " command:\n\n%%%%o: "
                                 "Archive to extract"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extract );
@@ -749,7 +745,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         if (g_strcmp0( handler_list, "" ) != 0 &&
             g_strcmp0( handler_list, "+" ) != 0 &&
             (
-                !g_strstr_len( handler_list, -1, "%a" )
+                !g_strstr_len( handler_list, -1, "%o" )
             ))
         {
             // Not all substitution characters are in place  - warning
@@ -760,7 +756,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("The following "
                                 "placeholders should be in the '%s' list"
-                                " command:\n\n%%%%a: "
+                                " command:\n\n%%%%o: "
                                 "Archive to list"),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_list );
@@ -1772,7 +1768,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     GList* l;
     GtkWidget* combo, *dlg, *hbox;
     GtkFileFilter* filter;
-    char* cmd, *desc, *dest_file, *ext, *s1, *str, *udest_file;
+    char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
+        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL;
     int i, n, format, res;
 
     // Generating dialog
@@ -2002,57 +1999,42 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             xset_set( "arc_dlg", "z", str );
             g_free( str );
 
-            // This is duplicating GUI validation code but it is just
-            // not worth spinning out a series of validation functions
-            // for this
-            // Checking to see if the archive handler compression command
-            // has been deleted or has invalid placeholders
+            /* This is duplicating GUI validation code but it is just
+             * not worth spinning out a series of validation functions
+             * for this
+             * Checking to see if the archive handler compression command
+             * has been deleted or has invalid placeholders - not
+             * required to only have one of the particular type */
             if (g_strcmp0( command, "" ) <= 0 ||
-                !g_strstr_len( command, -1, "%a" ) ||
+                (
+                    !g_strstr_len( command, -1, "%o" ) &&
+                    !g_strstr_len( command, -1, "%O" )
+                )
+                ||
                 (
                     !g_strstr_len( command, -1, "%f" ) &&
                     !g_strstr_len( command, -1, "%F" )
-                ))
+                )
+            )
             {
                 // It has/is - warning user
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 _("Save Archive"), NULL, FALSE,
-                                _("Please enter a valid command before "
-                                "attempting to create the archive - the "
-                                "following placeholders are required:\n\n"
-                                "%%a: Resulting archive\n\nEither of the "
-                                "following:\n\n%%f: Files/directories to "
-                                "archive together\n%%F: File/directory to "
-                                "archive - generate separate archive for "
-                                "each source file/directory"),
+                                _("The following substitution variables "
+                                "should be in the archive creation"
+                                " command:\n\n"
+                                "One of the following:\n\n"
+                                "%%%%f: First selected file/directory to"
+                                " archive\n"
+                                "%%%%F: All selected files/directories to"
+                                " archive\n\n"
+                                "and one of the following:\n\n"
+                                "%%%%o: Resulting single archive\n"
+                                "%%%%O: Resulting archive per source "
+                                "file/directory (see %%f/%%F)\n\n"
+                                "Continuing anyway"),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( entry ) );
-
-                // Cleaning up and looping
-                g_free( compress_cmd );
-                compress_cmd = NULL;
-                g_free(command);
-                command = NULL;
-                continue;
-            }
-
-            // Making sure both %f and %F aren't used together
-            if (g_strstr_len( command, -1, "%f" ) &&
-                g_strstr_len( command, -1, "%F" ))
-            {
-                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                _("Save Archive"), NULL, FALSE,
-                                _("Please do not use both '%f' and "
-                                "'%F' in the archive creation command."),
-                                NULL, NULL );
-                gtk_widget_grab_focus( GTK_WIDGET( entry ) );
-
-                // Cleaning up and looping
-                g_free( compress_cmd );
-                compress_cmd = NULL;
-                g_free(command);
-                command = NULL;
-                continue;
             }
 
             // Checking to see if the archive handler compression command
@@ -2097,80 +2079,124 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     // Destroying dialog
     gtk_widget_destroy( dlg );
 
-    // Obtaining valid UTF8 file name for archive to create
-    udest_file = g_filename_display_name( dest_file );
-    g_free( dest_file );
-
-    // Inserting archive name into appropriate place in command
-    // TODO: In %F mode, user's choice of archive name is irrelevant - fix this
-    char* udest_quote = bash_quote( udest_file );
-    cmd = replace_string( command, "%a", udest_quote, FALSE );
-    g_free( udest_file );
-    g_free( udest_quote );
-    g_free( command );
-
-    // Checking to see if the archive should contain all files ('%f') or
-    // a separate archive for each ('%F')
+    // Dealing with separate archives for each source file/directory ('%O')
     GList* command_list = NULL;
-    if (g_strstr_len( cmd, -1, "%F" ))
+    if (g_strstr_len( command, -1, "%O" ))
     {
-        /* '%F' is present - the archiving command should be generated
-         * and ran for each individual file
-         * Looping for all files */
-        for( l = files; l; l = l->next )
+        /* '%O' is present - the archiving command should be generated
+         * and ran for each individual file */
+
+        // Fetching extension
+        ext = archive_handler_get_first_extension( handler_xset );
+
+        /* Looping for all selected files/directories - all are used
+         * when '%F' is present, only the first otherwise */
+        for( i = 0, l = files; l && (
+             i == 0 || g_strstr_len( command, -1, "%F" )
+            ); l = l->next, ++i)
         {
             // FIXME: Maybe we should consider filename encoding here.
             desc = bash_quote( (char *) vfs_file_info_get_name(
                                             (VFSFileInfo*) l->data ) );
 
-            /* Inserting file to archive into appropriate place in command,
-             * prepending to command list (faster than append for multiple
-             * items) */
-            command_list = g_list_prepend( command_list,
-                                (gpointer)replace_string(cmd, "%F", desc,
-                                                         FALSE ) );
-            // Cleaning up
+            /* In %O mode, every source file is output to its own archive,
+             * so the resulting archive name is based on the filename and
+             * substituted every time */
+
+            // TODO: Not continuing this as I am supposed to be working on the main dialog only. %O archive name needs to include the extension
+            // Later on there are repeated bullshit errors on creation of the new task, segfault in memory allocation????
+            // Fetching first extension handler deals with
+            //archive_name = desc ext
+            cmd = replace_string( command, "%O", desc, FALSE );
+
+            // Detecting first run
+            if (i == 0)
+
+                // Replacing out %f with 1st file
+                s1 = cmd;
+                cmd = replace_string( cmd, "%f", desc, FALSE );
+                g_free(s1);
+
+                // Removing %f from command - its used up
+                s1 = command;
+                command = replace_string( command, "%f", "", FALSE );
+                g_free(s1);
+
+            // Replacing out %F with nth file (NOT ALL FILES)
+            cmd_to_run = replace_string(cmd, "%F", desc, FALSE );
+
+            // Add command to list
+            command_list = g_list_prepend( command_list, cmd_to_run );
+
+            /* Cleaning up - cmd_to_run does not need freeing, as this
+             * remains pointing to data in command_list */
             g_free( desc );
         }
 
         // Command list complete - restoring correct order
         command_list = g_list_reverse( command_list );
-
-        // Cleaning up
-        g_free( cmd );
     }
     else
     {
-        // '%F' isn't present - the normal single command is needed
-        // Generating string of selected files/directories to archive
-        s1 = g_strdup( "" );
-        for( l = files; l; l = l->next )
+        /* '%O' isn't present - the normal single command is needed
+         * Obtaining valid quoted UTF8 file name for archive to create */
+        udest_file = g_filename_display_name( dest_file );
+        g_free( dest_file );
+        char* udest_quote = bash_quote( udest_file );
+        g_free( udest_file );
+
+        // Inserting archive name into appropriate place in command
+        cmd = replace_string( command, "%o", udest_quote, FALSE );
+        g_free( udest_quote );
+
+        // Dealing with first selected file substitution
+        if (files)
         {
-            // FIXME: Maybe we should consider filename encoding here.
-            str = s1;
             desc = bash_quote( (char *) vfs_file_info_get_name(
-                                            (VFSFileInfo*) l->data ) );
-            if (g_strcmp0( s1, "" ) <= 0)
+                                            (VFSFileInfo*) files->data ) );
+            s1 = cmd;
+            cmd = replace_string( cmd, "%f", desc, FALSE );
+            g_free(s1);
+        }
+
+        /* Generating string of selected files/directories to archive if
+         * %F is present */
+        if (g_strstr_len( cmd, -1, "%F" ))
+        {
+            s1 = g_strdup( "" );
+            for( l = files; l; l = l->next)
             {
-                s1 = g_strdup( desc );
+                // FIXME: Maybe we should consider filename encoding here.
+                str = s1;
+                desc = bash_quote( (char *) vfs_file_info_get_name(
+                                                (VFSFileInfo*) l->data ) );
+                if (g_strcmp0( s1, "" ) <= 0)
+                {
+                    s1 = g_strdup( desc );
+                }
+                else
+                {
+                    s1 = g_strdup_printf( "%s %s", s1, desc );
+                }
+                g_free( desc );
+                g_free( str );
             }
-            else
-            {
-                s1 = g_strdup_printf( "%s %s", s1, desc );
-            }
-            g_free( desc );
+
+            str = cmd;
+            cmd = replace_string( cmd, "%F", s1, FALSE );
+
+            // Cleaning up
+            g_free( s1 );
             g_free( str );
         }
 
-        /* Inserting files to archive into appropriate place in command,
-         * appending to command list */
-        command_list = g_list_append( command_list,
-                                      (gpointer)replace_string(cmd,
-                                                    "%f", s1, FALSE ) );
-        // Cleaning up
-        g_free( cmd );
-        g_free( s1 );
+        // Appending to command list
+        command_list = g_list_append( command_list, cmd );
     }
+
+    /* Cleaning up - cmd does not need freeing, as this remains pointing
+     * to data in command_list */
+    g_free( command );
 
     /* Looping for all archives to create */
     for ( l = command_list; l; l = l->next )
@@ -2207,12 +2233,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
         // Running task
         ptk_file_task_run( task );
-
-        /* l->data appears to be cleared up elsewhere? Get a double-free
-         * if I do it here */
     }
 
-    // Clearing up command list
+    /* Clearing up command list - no need to free elements as the task
+     * code already does this on the relevant pointer */
     g_list_free( command_list );
 }
 
@@ -2400,20 +2424,20 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // in terminal'
             cmd = replace_string( (*handler_xset->context == '+') ?
                     handler_xset->context + 1 : handler_xset->context,
-                    "%a", full_quote, FALSE );
+                    "%o", full_quote, FALSE );
         }
         else
         {
-            // An archive is to be extracted
-            // Obtaining filename minus the archive extension - this is
-            // needed if a parent directory must be created, and if the
-            // extraction target is a file without the handler extension
-            // filename is g_strdup'd to get rid of the const
+            /* An archive is to be extracted
+             * Obtaining filename minus the archive extension - this is
+             * needed if a parent directory must be created, and if the
+             * extraction target is a file without the handler extension
+             * filename is g_strdup'd to get rid of the const */
             gchar* filename = g_strdup( vfs_file_info_get_name( file ) );
             gchar* filename_no_ext = NULL;
 
-            // Looping for all extensions registered with the current
-            // archive handler (NULL-terminated list)
+            /* Looping for all extensions registered with the current
+             * archive handler (NULL-terminated list) */
             gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
             for (i = 0; extensions[i] != NULL; ++i)
             {
