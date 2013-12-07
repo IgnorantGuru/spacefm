@@ -634,7 +634,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_name );
             goto saveanyway;
         }
-        if (g_strcmp0( handler_mime, "" ) <= 0)
+
+        // Empty MIME is allowed if extension is filled
+        if (g_strcmp0( handler_mime, "" ) <= 0 &&
+            g_strcmp0( handler_extension, "" ) <= 0)
         {
             // Handler MIME not set - warning user and exiting. Note
             // that the created dialog does not have an icon set
@@ -647,7 +650,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_mime );
             goto saveanyway;
         }
-        if (g_strstr_len( handler_mime, -1, " " ))
+        if (g_strstr_len( handler_mime, -1, " " ) &&
+            g_strcmp0( handler_extension, "" ) <= 0)
         {
             // Handler MIME contains a space - warning user and exiting.
             // Note that the created dialog does not have an icon set
@@ -660,7 +664,20 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             gtk_widget_grab_focus( entry_handler_mime );
             goto saveanyway;
         }
-        if ( g_strcmp0(handler_extension, "" ) <= 0 || *handler_extension != '.')
+
+        /* Empty extension is allowed if MIME type has been given, but if
+         * anything has been entered it must be valid */
+        if (
+            (
+                g_strcmp0( handler_extension, "" ) <= 0 &&
+                g_strcmp0( handler_mime, "" ) <= 0
+            )
+            ||
+            (
+                g_strcmp0( handler_extension, "" ) > 0 &&
+                *handler_extension != '.'
+            )
+        )
         {
             // Handler extension is either not set or does not start with
             // a full stop - warning user and exiting. Note
@@ -2907,6 +2924,8 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
     const char* type = vfs_mime_type_get_type( mime );
     if (!type) return FALSE;
 
+    // TODO: Now you are allowed to miss out an extension or a filetype, support this somehow
+    
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
