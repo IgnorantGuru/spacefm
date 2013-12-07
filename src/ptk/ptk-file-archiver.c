@@ -579,6 +579,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
     if ( widget == btn_add )
     {
+        // Exiting if there is no handler to add
+        if (g_strcmp0( handler_name, "" ) <= 0)
+            goto cleanexit;
+
         // Adding new handler as a copy of the current active handler
         XSet* new_handler_xset = add_new_arctype();
         new_handler_xset->b = gtk_toggle_button_get_active(
