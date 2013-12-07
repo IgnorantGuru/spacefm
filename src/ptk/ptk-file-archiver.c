@@ -314,6 +314,15 @@ static void config_load_handler_settings( XSet* handler_xset,
                                         "chkbtn_handler_extract_term" );
     GtkWidget* chkbtn_handler_list_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_list_term" );
+    GtkWidget* btn_remove = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "btn_remove" );
+    GtkWidget* btn_apply = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_apply" );
+
+    /* At this point a handler exists, so making remove and apply buttons
+     * sensitive */
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), TRUE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), TRUE );
 
     // Configuring widgets with handler settings. Only name, MIME and
     // extension warrant a warning
@@ -444,6 +453,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                             "btn_add" );
     GtkButton* btn_apply = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_apply" );
+    GtkButton* btn_remove = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_remove" );
     GtkTreeView* view_handlers = (GtkTreeView*)g_object_get_data( G_OBJECT( dlg ),
                                             "view_handlers" );
     GtkWidget* chkbtn_handler_enabled = (GtkWidget*)g_object_get_data(
@@ -613,6 +624,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         gtk_tree_view_set_cursor( GTK_TREE_VIEW( view_handlers ),
                                         new_handler_path, NULL, FALSE );
         gtk_tree_path_free( new_handler_path );
+
+        // Making sure the remove and apply buttons are sensitive
+        gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), TRUE );
+        gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), TRUE );
     }
     else if ( widget == btn_apply )
     {
@@ -851,16 +866,24 @@ saveanyway: ;
         // Finally updating handlers
         xset_set( "arc_conf", "s", new_archive_handlers_s );
 
-        // Clearing up
-        g_strfreev( archive_handlers );
-        g_free( new_archive_handlers_s );
-
         // Deleting xset
         xset_custom_delete( handler_xset, FALSE );
         handler_xset = NULL;
 
         // Removing handler from the list
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
+
+        /* Making remove and apply buttons insensitive if the last
+         * handler has been removed */
+        if (g_strcmp0( new_archive_handlers_s, "" ) <= 0)
+        {
+            gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
+            gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
+        }
+
+        // Clearing up
+        g_strfreev( archive_handlers );
+        g_free( new_archive_handlers_s );
     }
 
 cleanexit:
@@ -1347,6 +1370,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_button_set_image( btn_remove, xset_get_image( "GTK_STOCK_REMOVE",
                                                     GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( btn_remove, FALSE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
     g_signal_connect( G_OBJECT( btn_remove ), "clicked",
                         G_CALLBACK( on_configure_button_press ), dlg );
     g_object_set_data( G_OBJECT( dlg ), "btn_remove", GTK_BUTTON( btn_remove ) );
@@ -1363,6 +1387,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     gtk_button_set_image( btn_apply, xset_get_image( "GTK_STOCK_APPLY",
                                                 GTK_ICON_SIZE_BUTTON ) );
     gtk_button_set_focus_on_click( btn_apply, FALSE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
     g_signal_connect( G_OBJECT( btn_apply ), "clicked",
                         G_CALLBACK( on_configure_button_press ), dlg );
     g_object_set_data( G_OBJECT( dlg ), "btn_apply", GTK_BUTTON( btn_apply ) );
