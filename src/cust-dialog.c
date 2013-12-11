@@ -46,7 +46,6 @@ static void on_button_clicked( GtkButton *button, CustomElement* el );
 void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
 static gboolean press_last_button( GtkWidget* dlg );
-static void on_dlg_delete( GtkDialog* dlg );
 static gboolean on_progress_timer( CustomElement* el );
 
 GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
@@ -2269,12 +2268,6 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
     g_free( str );
 }
 
-static void on_dlg_delete( GtkDialog* dlg )
-{
-    write_source( GTK_WIDGET( dlg ), NULL, stdout );
-    destroy_dlg( GTK_WIDGET( dlg ) );
-}
-
 static gboolean on_progress_timer( CustomElement* el )
 {
     gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el->widgets->next->data ) );
@@ -2483,7 +2476,10 @@ gboolean on_window_delete( GtkWidget *widget, GdkEvent  *event, CustomElement* e
         run_command( el, el->cmd_args, NULL );
         return TRUE;
     }
-    return FALSE;  // allow window close
+    // close window
+    write_source( widget, NULL, stdout );
+    destroy_dlg( widget );
+    return FALSE;
 }
 
 static gboolean on_dlg_key_press( GtkWidget *entry, GdkEventKey* evt,
@@ -3556,6 +3552,7 @@ static void build_dialog( GList* elements )
     gboolean timeout_added = FALSE;
     gboolean is_sized = FALSE;
     gboolean is_large = FALSE;
+    gboolean has_delete_handler = FALSE;
     
     // create dialog
     dlg = gtk_dialog_new();
@@ -3567,8 +3564,6 @@ static void build_dialog( GList* elements )
     if ( pixbuf )
         gtk_window_set_icon( GTK_WINDOW( dlg ), pixbuf ); 
     g_object_set_data( G_OBJECT( dlg ), "elements", elements );
-    g_signal_connect( G_OBJECT( dlg ), "delete-event",
-                                        G_CALLBACK( on_dlg_delete ), NULL );
 
     // pack some boxes to create horizonal padding at edges of window
     GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
@@ -3622,8 +3617,13 @@ static void build_dialog( GList* elements )
         else if ( el->type == CDLG_WINDOW_CLOSE && el->args )
         {
             el->cmd_args = el->args;
-            g_signal_connect( G_OBJECT( dlg ), "delete-event",
-                                            G_CALLBACK( on_window_delete ), el );
+            if ( !has_delete_handler )
+            {
+                g_signal_connect( G_OBJECT( dlg ), "delete-event",
+                                                G_CALLBACK( on_window_delete ),
+                                                el );
+                has_delete_handler = TRUE;
+            }
         }
         else if ( el->type == CDLG_TIMEOUT && el->option && !el->widgets->next
                                                       && !timeout_added )
@@ -3646,6 +3646,11 @@ static void build_dialog( GList* elements )
             is_large = TRUE;
     }
     g_list_free( boxes );
+
+    // delete-event handler
+    if ( !has_delete_handler )
+        g_signal_connect( G_OBJECT( dlg ), "delete-event",
+                                        G_CALLBACK( on_window_delete ), NULL );
 
     // resize window
     if ( is_large && !is_sized )
