@@ -4606,6 +4606,9 @@ _export_error:
 static void open_spec( PtkFileBrowser* file_browser, const char* url,
                                                 gboolean in_new_tab )
 {
+    char* tilde_url = NULL;
+    const char* use_url;
+    
     gboolean new_window = FALSE;
     if ( !file_browser )
     {
@@ -4625,29 +4628,36 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
     }
     gboolean new_tab = !new_window && in_new_tab;
 
-    if ( ( url[0] != '/' && strstr( url, ":/" ) ) ||
-                                            g_str_has_prefix( url, "//" ) )
+    // convert ~ to /home/user for smarter bookmarks
+    if ( g_str_has_prefix( url, "~/" ) || !g_strcmp0( url, "~" ) )
+        use_url = tilde_url = g_strdup_printf( "%s%s", g_get_home_dir(),
+                                                                    url + 1 );
+    else
+        use_url = url;
+
+    if ( ( use_url[0] != '/' && strstr( use_url, ":/" ) ) ||
+                                        g_str_has_prefix( use_url, "//" ) )
     {
         // network
         if ( file_browser )
-            mount_network( file_browser, url, new_tab );
+            mount_network( file_browser, use_url, new_tab );
         else
-            open_in_prog( url );
+            open_in_prog( use_url );
     }
-    else if ( g_file_test( url, G_FILE_TEST_IS_DIR ) )
+    else if ( g_file_test( use_url, G_FILE_TEST_IS_DIR ) )
     {
         // dir
         if ( file_browser )
-            ptk_file_browser_emit_open( file_browser, url,
+            ptk_file_browser_emit_open( file_browser, use_url,
                                         new_tab ?
                                             PTK_OPEN_NEW_TAB : PTK_OPEN_DIR );
         else
-            open_in_prog( url );
+            open_in_prog( use_url );
     }
-    else if ( g_file_test( url, G_FILE_TEST_EXISTS ) )
+    else if ( g_file_test( use_url, G_FILE_TEST_EXISTS ) )
     {
         // file - open dir and select file
-        char* dir = g_path_get_dirname( url );
+        char* dir = g_path_get_dirname( use_url );
         if ( dir && g_file_test( dir, G_FILE_TEST_IS_DIR ) )
         {
             if ( file_browser )
@@ -4655,13 +4665,13 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
                 if ( !new_tab && !strcmp( dir,
                                 ptk_file_browser_get_cwd( file_browser ) ) )
                 {
-                    ptk_file_browser_select_file( file_browser, url );
+                    ptk_file_browser_select_file( file_browser, use_url );
                     gtk_widget_grab_focus( GTK_WIDGET(
                                             file_browser->folder_view ) );
                 }
                 else
                 {
-                    file_browser->select_path = strdup( url );
+                    file_browser->select_path = strdup( use_url );
                     ptk_file_browser_emit_open( file_browser, dir,
                                                 new_tab ?
                                             PTK_OPEN_NEW_TAB : PTK_OPEN_DIR );
@@ -4676,9 +4686,10 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
                         if ( file_browser )
                         {
                             // select path in new browser
-                            file_browser->select_path = strdup( url );
+                            file_browser->select_path = strdup( use_url );
                             // usually this is not ready but try anyway
-                            ptk_file_browser_select_file( file_browser, url );
+                            ptk_file_browser_select_file( file_browser,
+                                                                    use_url );
                         }
                     }
                 }
@@ -4688,6 +4699,7 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
         }
         g_free( dir );
     }
+    g_free( tilde_url );
 }
 
 void xset_custom_activate( GtkWidget* item, XSet* set )
@@ -6521,8 +6533,11 @@ gboolean xset_design_menu_keypress( GtkWidget* widget, GdkEventKey* event,
             case XSET_JOB_LABEL:
                 help = "#designmode-designmenu-name";
                 break;
-            case XSET_JOB_EDIT:
+            case XSET_JOB_EDIT:      // edit script
                 help = "#designmode-designmenu-edit";
+                break;
+            case XSET_JOB_PROP_CMD:  // edit command line
+                help = "#designmode-designmenu-cedit";
                 break;
             case XSET_JOB_EDIT_ROOT:
                 help = "#designmode-designmenu-edit";
@@ -7313,6 +7328,14 @@ static void xset_design_show_menu( GtkWidget* menu, XSet* set, guint button, gui
             }
             g_free( script );
         }
+    }
+    else if ( !set->lock && set->x && atoi( set->x ) == XSET_CMD_LINE )
+    {
+        // edit command line
+        newitem = xset_design_additem( design_menu, _("_Edit Command"),
+                            GTK_STOCK_EDIT, XSET_JOB_PROP_CMD, set );
+        gtk_widget_add_accelerator( newitem, "activate", accel_group,
+                            GDK_KEY_F4, 0, GTK_ACCEL_VISIBLE);
     }
     
     // Properties

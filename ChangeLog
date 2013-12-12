@@ -1,4 +1,7 @@
-0.9.1+
+0.9.2+
+    fix memory leak on draw selection rectangle on desktop #397
+    [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
+0.9.2   2013-12-06:
     README correct packages link
     manual note full/max col widths not saved #382
     adjust maximized and fullscreen behavior #382
@@ -10,6 +13,9 @@
     fix icon/compact dbl-click selects file in selected dir #218 #389
     fix open foldername.iso as automount iso
     allow ~/ prefix in bookmarks and hacked session files
+    fix task auto scroll first show
+    add design menu Edit Command
+    update changed translations
 0.9.1   2013-11-06:
     [gtk 3.8] fix run dialog reverts to minimum size
     fix icon change not saved (bookmark, tab, devices, etc) #367

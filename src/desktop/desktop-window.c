@@ -1074,23 +1074,28 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     cairo_stroke( cr );
 
     gdk_color_free (clr);
+    cairo_destroy( cr );
 }
 
 static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gboolean add )
 {
     GList* l;
     GdkRectangle old_rect, new_rect;
+/*
 #if GTK_CHECK_VERSION (3, 0, 0)
     cairo_region_t *region;
 #else
     GdkRegion *region;
 #endif
-
+*/
+    // Calc new region
     calc_rubber_banding_rect(self, self->rubber_bending_x, self->rubber_bending_y, &old_rect );
     calc_rubber_banding_rect(self, newx, newy, &new_rect );
 
+    // Trigger redraw of region
     gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &old_rect, FALSE );
     gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &new_rect, FALSE );
+
 //    gdk_window_clear_area(((GtkWidget*)self)->window, new_rect.x, new_rect.y, new_rect.width, new_rect.height );
 /*
     region = gdk_region_rectangle( &old_rect );

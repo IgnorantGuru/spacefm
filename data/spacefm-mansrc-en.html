@@ -33,9 +33,7 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
-
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.  SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -113,7 +111,7 @@
     Run SpaceFM in the background as a daemon to auto-mount and auto-open devices, and quickly open browser windows on demand. <a href="#invocation-daemonmode">*</a><br><br>
 
     <li><b>Network Support</b> - <i>Mounts network filesystems and ISO files</i><br>
-    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a> <br><br>    
+    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a>  NOTE:  Network share support in SpaceFM is ad hoc by design.  This means there aren't many built-in functions pertaining to networks, and SpaceFM does not make network connections itself.  Network discovery and other functions are handled via plugins and your custom commands.<br><br>    
 </ul>
 
 
@@ -735,7 +733,7 @@ In addition, SpaceFM's main menu bar and the desktop menu include Devices menus 
 <p>The Devices List context menu includes:
 
 <!-- #Remove / Eject #remove -->
-The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a full sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)  Note that if all other filesystems don't sync immediately, this may prolong the Remove command.  In that case, you can use <a href="#devices-menu-unmount">Unmount</a> instead, which only does a filesystem-specific sync.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
@@ -745,12 +743,15 @@ The 'Remove / Eject' item is used to remove a device and eject media.  When you 
 
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
+<p>NOTE:  SpaceFM does NOT disable or power-down usb ports or spin down disks when removing a device, it merely performs a sync to ensure data is written.  Usually this is sufficient to prevent data loss.  If powering down is required for your device, you must add a custom command to the Devices menu, or add the applicable command or option to the general <A href="#devices-settings-ucmd">Unmount Command</a>.
+
+
 <!-- #Reload -->
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove / Eject</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
 
 
 <!-- #Unmount -->
-Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No general sync is performed (but a filesystem-specific sync is performed by umount).  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Unmount' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
 <!-- #Sync -->
 Sync merely runs a sync command to commit all data to all devices.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Sync command will be listed until finished.
@@ -1688,6 +1689,11 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 <p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
 
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
+
+<!-- # Edit Command #cedit -->
+Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a command line, Edit Command opens the Menu Item Properties dialog to the Command page.
+
+<p>You can also edit an item's command line using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Edit Script #edit -->
 Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a script, Edit Script opens the command script in your configured editor.

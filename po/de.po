@@ -18,9 +18,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-31 11:39+0000\n"
-"PO-Revision-Date: 2013-11-04 16:13+0000\n"
-"Last-Translator: ignorantguru <ignorantguru@gmx.com>\n"
+"POT-Creation-Date: 2013-11-23 16:06+0000\n"
+"PO-Revision-Date: 2013-12-01 17:30+0000\n"
+"Last-Translator: delix\n"
 "Language-Team: German (http://www.transifex.com/projects/p/spacefm/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,8 @@ msgid ""
 "IgnorantGuru <ignorantguru@gmx.com>\n"
 "\n"
 "Contributors:\n"
-"    BwackNinja <BwackNinja@gmail.com>  (gtk misc, gtk3 port)\n"
+"    BwackNinja <BwackNinja@gmail.com>\n"
+"    OmegaPhil <OmegaPhil+SpaceFM@gmail.com>\n"
 "\n"
 "Artwork:\n"
 "    SpaceFM icons and logo by Goran Simovic\n"
@@ -91,7 +92,6 @@ msgid ""
 "packagers!\n"
 "\n"
 "Special thanks to:\n"
-"    OmegaPhil\n"
 "    Jean-Philippe Fleury\n"
 "    Hasufell\n"
 "    Vladimir Kudrya\n"
@@ -107,7 +107,7 @@ msgid ""
 " * Text and icon renderer uses code from Jonathan Blandford\n"
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
-msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nMitwirkende:\n    BwackNinja <BwackNinja@gmail.com>  (gtk misc, gtk3 port)\n\nArtwork:\n    SpaceFM Symbole und Logo : Goran Simovic\n\nDank an die Nutzer für's Feedback und an die Übersetzer und\nPaketbauer!\n\nBesonderer Dank an:\n    OmegaPhil\n    Jean-Philippe Fleury\n    Hasufell\n    Vladimir Kudrya\n\nSpaceFM iwir entwickelt unter geany, gcc, und git, mit etwas Hilfe von gdb.\n\nQuellcode aus anderen Projekten:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Detektierung des Arbeitsbereichs: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * Text- und Symbolrenderer benutzen Code von Jonathan Blandford\n * Schreibtishsymbole benutzen Code von Brian Tarricone\n * HAL support (veraltet): gnome-vfs, thunar-vfs, libexo, gnome-mount"
+msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nContributors:\n    BwackNinja <BwackNinja@gmail.com>\n    OmegaPhil <OmegaPhil+SpaceFM@gmail.com>\n\nArtwork:\n    SpaceFM icons and logo by Goran Simovic\n\nThanks to SpaceFM users for valuable feedback and to SpaceFM translators and\npackagers!\n\nSpecial thanks to:\n    Jean-Philippe Fleury\n    Hasufell\n    Vladimir Kudrya\n\nSpaceFM is developed on geany, gcc, and git, with a little help from gdb.\n\nSource code taken from other projects:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Working area detection: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * Text and icon renderer uses code from Jonathan Blandford\n * Desktop icons use code from Brian Tarricone\n * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
 #: ../data/ui/about-dlg.ui.h:40
 msgid ""
@@ -144,7 +144,7 @@ msgstr "A_lle Anwendungen"
 msgid "_Command:"
 msgstr "_Befehl:"
 
-#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:10017
+#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:10075
 #: ../src/ptk/ptk-file-misc.c:2122 ../src/item-prop.c:1646
 msgid "_Browse"
 msgstr "_Durchsuchen"
@@ -201,7 +201,7 @@ msgstr "<b>_Geändert:</b>"
 msgid "<b>_Accessed:</b>"
 msgstr "<b>_Aufgerufen:</b>"
 
-#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10820
+#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10882
 msgid "_Info"
 msgstr "_Info"
 
@@ -253,7 +253,7 @@ msgstr "Sticky"
 msgid "Recursive (apply changes to folders and their contents)"
 msgstr "Rekursiv (Änderungen wirken sich auf Ordner und deren Inhalt aus)"
 
-#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10823
+#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10885
 msgid "_Permissions"
 msgstr "_Zugriffsrechte"
 
@@ -303,7 +303,7 @@ msgid "Find Files"
 msgstr "Dateisuche"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
-#: ../src/ptk/ptk-file-task.c:2337
+#: ../src/ptk/ptk-file-task.c:2338
 msgid "<b>Filename:</b>"
 msgstr "<b>Dateiname:</b>"
 
@@ -712,7 +712,7 @@ msgstr "Fehler beim Erzeugen der Datei %s: %s"
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr "Befehlskette »%s« entspricht nicht UTF-8-Norm"
 
-#: ../src/cust-dialog.c:1787 ../src/ptk/ptk-file-task.c:1383
+#: ../src/cust-dialog.c:1787 ../src/ptk/ptk-file-task.c:1384
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr "[ SNIP - obige zusätzliche Ausgabe wurde von dieser in verbesserter Form übernommen ]\n"
 
@@ -1545,22 +1545,22 @@ msgstr "diese Dateien wurden in die Zwischenablage kopiert"
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr "ausführliche Dokumentation und Beispiele gibt es im SpaceFM Benutzerhandbuch:"
 
-#: ../src/main.c:1205
+#: ../src/main.c:1206
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr "spacefm: Fehler: Sitzung kann nicht gespeichert werden\n       %s\n"
 
-#: ../src/main.c:1259
+#: ../src/main.c:1260
 msgid "File doesn't exist"
 msgstr "Die Datei existiert nicht"
 
-#: ../src/main.c:1261 ../src/main.c:1337 ../src/main.c:1339 ../src/main.c:1463
-#: ../src/main.c:1465 ../src/main.c:1598 ../src/settings.c:4831
-#: ../src/settings.c:8082 ../src/ptk/ptk-file-browser.c:2353
-#: ../src/ptk/ptk-file-browser.c:2379 ../src/ptk/ptk-file-browser.c:5914
-#: ../src/ptk/ptk-file-browser.c:5921 ../src/ptk/ptk-console-output.c:232
+#: ../src/main.c:1262 ../src/main.c:1338 ../src/main.c:1340 ../src/main.c:1464
+#: ../src/main.c:1466 ../src/main.c:1599 ../src/settings.c:4828
+#: ../src/settings.c:8132 ../src/ptk/ptk-file-browser.c:2393
+#: ../src/ptk/ptk-file-browser.c:2419 ../src/ptk/ptk-file-browser.c:5971
+#: ../src/ptk/ptk-file-browser.c:5978 ../src/ptk/ptk-console-output.c:232
 #: ../src/ptk/ptk-file-misc.c:2752 ../src/ptk/ptk-file-misc.c:3404
 #: ../src/ptk/ptk-file-misc.c:3484 ../src/ptk/ptk-file-misc.c:3578
 #: ../src/ptk/ptk-file-misc.c:3739 ../src/ptk/ptk-file-properties.c:891
@@ -1570,37 +1570,37 @@ msgstr "Die Datei existiert nicht"
 msgid "Error"
 msgstr "Fehler"
 
-#: ../src/main.c:1337 ../src/main.c:1463
+#: ../src/main.c:1338 ../src/main.c:1464
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr "Fehler: inotify Dateiänderungsmonitor kann nicht initialisiert werden.\n\nBietet der Kernel inotify-Unterstützung?  "
 
-#: ../src/main.c:1339 ../src/main.c:1465
+#: ../src/main.c:1340 ../src/main.c:1466
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr "Fehler: Es konnte keine Verbindung zu FAM hergestellt werden.\n\nSind »FAM« oder »Gamin« installiert und aktiv?"
 
-#: ../src/main.c:1391
+#: ../src/main.c:1392
 msgid "--dialog must be first option"
 msgstr "--dialog muss die erste Option sein"
 
-#: ../src/main.c:1398
+#: ../src/main.c:1399
 msgid "--socket-cmd must be first option"
 msgstr "--socket-cmd muss die erste Option sein"
 
-#: ../src/main.c:1406
+#: ../src/main.c:1407
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr "Bei dieser SpaceFM-Version ist die Integration des Schreibtisch abgeschaltet"
 
-#: ../src/main.c:1594
+#: ../src/main.c:1595
 msgid "Don't know how to open the file"
 msgstr "Die Datei konnte nicht angezeigt werden"
 
-#: ../src/main.c:1596
+#: ../src/main.c:1597
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -1608,42 +1608,42 @@ msgid ""
 "%s"
 msgstr "Folgende Datei konnte nicht geöffnet werden:\n»%s«\n%s"
 
-#: ../src/main-window.c:376 ../src/settings.c:10068
+#: ../src/main-window.c:403 ../src/settings.c:10126
 msgid "_Show"
 msgstr "_Anzeigen"
 
-#: ../src/main-window.c:377 ../src/item-prop.c:1710
+#: ../src/main-window.c:404 ../src/item-prop.c:1710
 msgid "_Add"
 msgstr "_Hinzufügen"
 
-#: ../src/main-window.c:431 ../src/settings.c:6048
+#: ../src/main-window.c:458 ../src/settings.c:6051
 msgid "Choose Plugin File"
 msgstr "Plugin-Datei auswählen"
 
 #. get url
-#: ../src/main-window.c:442 ../src/settings.c:6060
+#: ../src/main-window.c:469 ../src/settings.c:6063
 msgid "Enter Plugin URL"
 msgstr "Plugin-URL eingeben"
 
-#: ../src/main-window.c:442 ../src/settings.c:6060
+#: ../src/main-window.c:469 ../src/settings.c:6063
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
 "(wget will be used to download the plugin file)"
 msgstr "SpaceFM Plugin-URL eingeben:\n\n(die Plugin-Datei wird mit wget heruntergeladen)"
 
-#: ../src/main-window.c:462
+#: ../src/main-window.c:489
 #, c-format
 msgid ""
 "This plugin's filename is invalid.  Please rename it using alpha-numeric "
 "ASCII characters and try again."
 msgstr "Ungültiger Plugin-Name. Bitte umbenennen (nur alphnumerische ASCII-Zeichen !) und noch einmal versuchen."
 
-#: ../src/main-window.c:464
+#: ../src/main-window.c:491
 msgid "Invalid Plugin Filename"
 msgstr "Der Dateiname des Plugins ist ungültig"
 
-#: ../src/main-window.c:487
+#: ../src/main-window.c:514
 #, c-format
 msgid ""
 "There is already a plugin installed as '%s'.  Overwrite ?\n"
@@ -1651,19 +1651,19 @@ msgid ""
 "Tip: You can also rename this plugin file to install it under a different name."
 msgstr "Ein Plugin »%s« ist bereits installiert. Überschreiben?\n\nTipp: Auch ein Umbenennen dieser Plugin-Datei und Speichern unter anderem Namen ist möglich. "
 
-#: ../src/main-window.c:489
+#: ../src/main-window.c:516
 msgid "Overwrite Plugin ?"
 msgstr "Plugin überschreiben?"
 
-#: ../src/main-window.c:510 ../src/settings.c:6068
+#: ../src/main-window.c:537 ../src/settings.c:6071
 msgid "Error Creating Temp Directory"
 msgstr "Fehler beim Erstellen des temporären Ordners"
 
-#: ../src/main-window.c:511 ../src/settings.c:6069
+#: ../src/main-window.c:538 ../src/settings.c:6072
 msgid "Unable to create temporary directory"
 msgstr "Temporärer Ordner kann nicht erstellt werden"
 
-#: ../src/main-window.c:755
+#: ../src/main-window.c:784
 #, c-format
 msgid ""
 "Error: Unable to save session file\n"
@@ -1671,32 +1671,32 @@ msgid ""
 "( %s )"
 msgstr "Fehler: Speichern der Datei mit Sitzungsdaten nicht möglich\n\n( %s )"
 
-#: ../src/main-window.c:757
+#: ../src/main-window.c:786
 msgid "Save Session Error"
 msgstr "Benutzersitzung speichern"
 
 #. root task
-#: ../src/main-window.c:788
+#: ../src/main-window.c:817
 msgid "Open Root Window"
 msgstr "Root-Fenster öffnen"
 
-#: ../src/main-window.c:818 ../src/vfs/vfs-file-task.c:1543
+#: ../src/main-window.c:847 ../src/vfs/vfs-file-task.c:1543
 msgid "Terminal Not Available"
 msgstr "Terminal nicht verfügbar"
 
-#: ../src/main-window.c:819
+#: ../src/main-window.c:848
 msgid "Please set your terminal program in View|Preferences|Advanced"
 msgstr "Bitte Terminalprogramm in Ansicht|Einstellungen|Erweitert festlegen"
 
-#: ../src/main-window.c:830
+#: ../src/main-window.c:859
 msgid "Open Terminal"
 msgstr "Terminal öffnen"
 
-#: ../src/main-window.c:1150
+#: ../src/main-window.c:1179
 msgid "Design Mode Help"
 msgstr "Hilfe zum Design-Modus"
 
-#: ../src/main-window.c:1150
+#: ../src/main-window.c:1179
 msgid ""
 "Design Mode allows you to change the name, shortcut key and icon of menu items, show help for an item, and add your own custom commands to most menus.\n"
 "\n"
@@ -1707,53 +1707,50 @@ msgid ""
 "To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr "Der Design-Modus ermöglicht das Ändern von Name, Tastaturkürzel und Symbol einzelner Menüpunkte, das Anzeigen von Hilfetexten für einen Menüpunkt und das Hinzufügen von selbsterstellten Befehlen zu den meisten Menüs.\n\nZum Öffnen des Designmenüs genügt ein Rechtklick auf einen Menüpunkt.\n\nUm den Designmodus auf ein Untermenü anwenden zu können, muss dieses zuerst geschlossen werden (durch Anklicken). Für das Lesezeichenmenü\n funktioniert der Designmodus nicht.\nZum Bearbeiten einer Werkzeugleiste das Werkzeugsymbol ganz links in der Leiste anklicken und »Hilfe« auswählen."
 
-#: ../src/main-window.c:1833 ../src/settings.c:4725 ../src/settings.c:5027
-#: ../src/settings.c:5893 ../src/settings.c:6010
+#: ../src/main-window.c:1861 ../src/settings.c:4722 ../src/settings.c:5024
+#: ../src/settings.c:5896 ../src/settings.c:6013
 #, c-format
 msgid "New _Command"
 msgstr "Neuer _Befehl"
 
-#: ../src/main-window.c:1931
+#: ../src/main-window.c:1963
 #, c-format
 msgid "Show Panel %d"
 msgstr "Panel %d anzeigen"
 
-#: ../src/main-window.c:1959 ../src/settings.c:7258 ../src/settings.c:9990
-#: ../src/settings.c:10006 ../src/settings.c:10503
+#: ../src/main-window.c:1991 ../src/settings.c:7266 ../src/settings.c:10048
+#: ../src/settings.c:10064 ../src/settings.c:10561
 msgid "_File"
 msgstr "_Datei"
 
-#: ../src/main-window.c:1962 ../src/settings.c:10589
+#: ../src/main-window.c:1994 ../src/settings.c:10650
 msgid "_View"
 msgstr "_Ansicht"
 
-#: ../src/main-window.c:1965 ../src/settings.c:10930
+#: ../src/main-window.c:1997 ../src/settings.c:10994
 msgid "_Devices"
 msgstr "_Geräte"
 
-#. set visible for all panel context modes
-#. for ( i = 0; i < 4; i++ )
-#. xset_set_b_panel_mode( p, "show_toolbox", i, TRUE );
-#: ../src/main-window.c:1969 ../src/settings.c:10360 ../src/settings.c:10565
-#: ../src/settings.c:10941
+#: ../src/main-window.c:2001 ../src/settings.c:10418 ../src/settings.c:10626
+#: ../src/settings.c:11005
 msgid "_Bookmarks"
 msgstr "_Lesezeichen"
 
-#: ../src/main-window.c:1975
+#: ../src/main-window.c:2007
 msgid "_Plugins"
 msgstr "_Plugins"
 
-#: ../src/main-window.c:1979
+#: ../src/main-window.c:2011
 msgid "_Tools"
 msgstr "_Werkzeuge"
 
 #. Help
-#: ../src/main-window.c:1982 ../src/settings.c:995 ../src/settings.c:7269
-#: ../src/settings.c:7743 ../src/settings.c:8024 ../src/settings.c:9700
+#: ../src/main-window.c:2014 ../src/settings.c:995 ../src/settings.c:7277
+#: ../src/settings.c:7793 ../src/settings.c:8074 ../src/settings.c:9750
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: ../src/main-window.c:2253
+#: ../src/main-window.c:2292
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1761,422 +1758,422 @@ msgid ""
 "( %s )"
 msgstr "Fehler: Speichern der Datei mit Sitzungsdaten nicht möglich. Beenden ohne zu speichern?\n\n( %s )"
 
-#: ../src/main-window.c:2262
+#: ../src/main-window.c:2301
 msgid "SpaceFM Error"
 msgstr "SpaceFM Fehler"
 
-#: ../src/main-window.c:2278
+#: ../src/main-window.c:2317
 msgid "Stop all tasks running in this window?"
 msgstr "Alle in diesem Fenster laufenden Aufgaben beenden?"
 
-#: ../src/main-window.c:2287
+#: ../src/main-window.c:2326
 msgid "Aborting tasks..."
 msgstr "Aufgaben werden abgebrochen …"
 
-#: ../src/main-window.c:3471
+#: ../src/main-window.c:3543
 #, c-format
 msgid " %s free / %s   "
 msgstr "%s frei / %s"
 
-#: ../src/main-window.c:3524
+#: ../src/main-window.c:3596
 #, c-format
 msgid "   Link → %s"
 msgstr "   Link → %s"
 
-#: ../src/main-window.c:3526
+#: ../src/main-window.c:3598
 #, c-format
 msgid "   Link → %s/"
 msgstr "   Link → %s/"
 
-#: ../src/main-window.c:3529
+#: ../src/main-window.c:3601
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr "   !Link → %s/ (fehlt)"
 
-#: ../src/main-window.c:3537
+#: ../src/main-window.c:3609
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr "   Link → %s (%s)"
 
-#: ../src/main-window.c:3540
+#: ../src/main-window.c:3612
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr "   !Link → %s (fehlt)"
 
-#: ../src/main-window.c:3547
+#: ../src/main-window.c:3619
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr "   !Link → ( Fehler beim Lesen des Ziels )"
 
-#: ../src/main-window.c:3594
+#: ../src/main-window.c:3666
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] "verborgen"
 msgstr[1] "verborgen"
 
-#: ../src/main-window.c:3597
+#: ../src/main-window.c:3669
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
 msgstr[0] "%s%d sichtbar (%s)   %s"
 msgstr[1] "%s%d sichtbar (%s)   %s"
 
-#: ../src/main-window.c:3602
+#: ../src/main-window.c:3674
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
 msgstr[0] "%s%d Objekt   %s"
 msgstr[1] "%s%d Objekte   %s"
 
-#: ../src/main-window.c:3838
+#: ../src/main-window.c:3910
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr "Die Tastaturkürzel der Geräteverwaltung sind im HAL-Modus abgeschaltet"
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4051 ../src/main-window.c:5450
+#: ../src/main-window.c:4126 ../src/main-window.c:5529
 msgid "Status"
 msgstr "Status"
 
-#: ../src/main-window.c:4051
+#: ../src/main-window.c:4126
 msgid "#"
 msgstr "#"
 
-#: ../src/main-window.c:4051 ../src/ptk/ptk-file-misc.c:2077
+#: ../src/main-window.c:4126 ../src/ptk/ptk-file-misc.c:2077
 #: ../src/find-files.c:918
 msgid "Folder"
 msgstr "Ordner"
 
-#: ../src/main-window.c:4051
+#: ../src/main-window.c:4126
 msgid "Item"
 msgstr "Objekt"
 
-#: ../src/main-window.c:4052
+#: ../src/main-window.c:4127
 msgid "To"
 msgstr "Nach"
 
-#: ../src/main-window.c:4052
+#: ../src/main-window.c:4127
 msgid "Progress"
 msgstr "Fortschritt"
 
-#: ../src/main-window.c:4052
+#: ../src/main-window.c:4127
 msgid "Total"
 msgstr "Total"
 
-#: ../src/main-window.c:4053
+#: ../src/main-window.c:4128
 msgid "Started"
 msgstr "Gestartet"
 
-#: ../src/main-window.c:4053
+#: ../src/main-window.c:4128
 msgid "Elapsed"
 msgstr "Abgelaufen"
 
-#: ../src/main-window.c:4053
+#: ../src/main-window.c:4128
 msgid "Current"
 msgstr "Aktuell"
 
-#: ../src/main-window.c:4053
+#: ../src/main-window.c:4128
 msgid "CRemain"
 msgstr "CRemain"
 
-#: ../src/main-window.c:4054
+#: ../src/main-window.c:4129
 msgid "Average"
 msgstr "Durchschnitt"
 
-#: ../src/main-window.c:4054
+#: ../src/main-window.c:4129
 msgid "Remain"
 msgstr "Verbleibend"
 
-#: ../src/main-window.c:4067
+#: ../src/main-window.c:4142
 msgid "Reorder Columns Help"
 msgstr "Hilfe zur Spaltenumordnung"
 
-#: ../src/main-window.c:4067
+#: ../src/main-window.c:4142
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr "Zum Ändern der Spaltenreihefolge ziehen Sie den Spaltenkopf an die gewünschte Stelle."
 
-#: ../src/main-window.c:5573
+#: ../src/main-window.c:5652
 msgid "moving"
 msgstr "wird verschoben"
 
-#: ../src/main-window.c:5574
+#: ../src/main-window.c:5653
 msgid "copying"
 msgstr "wird kopiert"
 
-#: ../src/main-window.c:5575
+#: ../src/main-window.c:5654
 msgid "trashing"
 msgstr "wird in Papierkorb verschoben"
 
-#: ../src/main-window.c:5576
+#: ../src/main-window.c:5655
 msgid "deleting"
 msgstr "wird gelöscht"
 
-#: ../src/main-window.c:5577
+#: ../src/main-window.c:5656
 msgid "linking"
 msgstr "wird verknüpft"
 
-#: ../src/main-window.c:5578
+#: ../src/main-window.c:5657
 msgid "changing"
 msgstr "wird geändert"
 
-#: ../src/main-window.c:5579
+#: ../src/main-window.c:5658
 msgid "running"
 msgstr "wird ausgeführt"
 
-#: ../src/main-window.c:5685
+#: ../src/main-window.c:5764
 #, c-format
 msgid "%d error %s"
 msgstr "%d Fehler %s"
 
-#: ../src/main-window.c:5686
+#: ../src/main-window.c:5765
 #, c-format
 msgid "%d errors %s"
 msgstr "%d Fehler %s"
 
-#: ../src/main-window.c:5702 ../src/ptk/ptk-file-task.c:1626
+#: ../src/main-window.c:5781 ../src/ptk/ptk-file-task.c:1627
 #, c-format
 msgid "paused"
 msgstr "pausiert"
 
-#: ../src/main-window.c:5704 ../src/ptk/ptk-file-task.c:1628
+#: ../src/main-window.c:5783 ../src/ptk/ptk-file-task.c:1629
 #, c-format
 msgid "queued"
 msgstr "in der Warteschlange"
 
-#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/main-window.c:6050 ../src/ptk/ptk-file-browser.c:295
 #: ../src/edit-bookmarks.c:196 ../src/find-files.c:903
 msgid "Name"
 msgstr "Name"
 
-#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/main-window.c:6050 ../src/ptk/ptk-file-browser.c:295
 #: ../src/find-files.c:924
 msgid "Size"
 msgstr "Größe"
 
-#: ../src/main-window.c:5971 ../src/ptk/ptk-file-browser.c:295
+#: ../src/main-window.c:6050 ../src/ptk/ptk-file-browser.c:295
 #: ../src/find-files.c:928
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6051 ../src/ptk/ptk-file-browser.c:296
 msgid "Permission"
 msgstr "Berechtigung"
 
-#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6051 ../src/ptk/ptk-file-browser.c:296
 msgid "Owner"
 msgstr "Besitzer"
 
-#: ../src/main-window.c:5972 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6051 ../src/ptk/ptk-file-browser.c:296
 msgid "Modified"
 msgstr "Geändert"
 
-#: ../src/main-window.c:5984
+#: ../src/main-window.c:6063
 msgid "spacefm: invalid socket command\n"
 msgstr "spacefm: ungültiger Socket-Befehl\n"
 
-#: ../src/main-window.c:6013
+#: ../src/main-window.c:6092
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr "spacefm: ungültige Option »%s«\n"
 
-#: ../src/main-window.c:6016
+#: ../src/main-window.c:6095
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr "spacefm: Option %s benötigt ein Argument\n"
 
-#: ../src/main-window.c:6026
+#: ../src/main-window.c:6105
 msgid "spacefm: invalid window\n"
 msgstr "spacefm: ungültiges Fenster\n"
 
-#: ../src/main-window.c:6046
+#: ../src/main-window.c:6125
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr "spacefm: ungültiges Fenster %s\n"
 
-#: ../src/main-window.c:6056
+#: ../src/main-window.c:6135
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr "spacefm: ungültiges Panel %d\n"
 
-#: ../src/main-window.c:6063
+#: ../src/main-window.c:6142
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr "spacefm: Panel %d ist nicht sichtbar\n"
 
-#: ../src/main-window.c:6076
+#: ../src/main-window.c:6155
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr "spacefm: ungültiger Reiter %d\n"
 
-#: ../src/main-window.c:6088
+#: ../src/main-window.c:6167
 msgid "spacefm: command set requires an argument\n"
 msgstr "spacefm: Befehl set benötigt ein Argument\n"
 
-#: ../src/main-window.c:6114 ../src/main-window.c:6421
+#: ../src/main-window.c:6193 ../src/main-window.c:6500
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr "spacefm: ungültiger Wert %s\n"
 
-#: ../src/main-window.c:6147 ../src/main-window.c:6299
+#: ../src/main-window.c:6226 ../src/main-window.c:6378
 msgid "spacefm: invalid slider value\n"
 msgstr "spacefm: ungültiger Schieberegler-Wert\n"
 
-#: ../src/main-window.c:6176
+#: ../src/main-window.c:6255
 msgid "spacefm: invalid panel number\n"
 msgstr "spacefm: ungültige Panelnummer\n"
 
-#: ../src/main-window.c:6217
+#: ../src/main-window.c:6296
 msgid "spacefm: invalid tab number\n"
 msgstr "spacefm: ungültige Reiternummer\n"
 
-#: ../src/main-window.c:6270 ../src/main-window.c:6590
-#: ../src/main-window.c:6717 ../src/main-window.c:6985
+#: ../src/main-window.c:6349 ../src/main-window.c:6669
+#: ../src/main-window.c:6796 ../src/main-window.c:7064
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr "spacefm: ungültige Eigenschaft %s\n"
 
-#: ../src/main-window.c:6319
+#: ../src/main-window.c:6398
 msgid "spacefm: invalid column width\n"
 msgstr "spacefm: ungültige Spaltenbreite\n"
 
-#: ../src/main-window.c:6355 ../src/main-window.c:6382
-#: ../src/main-window.c:6783
+#: ../src/main-window.c:6434 ../src/main-window.c:6461
+#: ../src/main-window.c:6862
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr "spacefm: ungültiger Spaltenname »%s«\n"
 
-#: ../src/main-window.c:6477
+#: ../src/main-window.c:6556
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr "spacefm: Text entspricht nicht UTF-8-Norm\n"
 
-#: ../src/main-window.c:6494
+#: ../src/main-window.c:6573
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr "spacefm: %s benötigt einen Dateipfad\n"
 
-#: ../src/main-window.c:6500
+#: ../src/main-window.c:6579
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr "spacefm: Fehler beim Lesen von Datei »%s«\n"
 
-#: ../src/main-window.c:6506
+#: ../src/main-window.c:6585
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr "spacefm: Datei »%s« enthält keinen Text nach UTF-8-Norm\n"
 
-#: ../src/main-window.c:6547
+#: ../src/main-window.c:6626
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr "spacefm: %s benötigt einen Ordnerpfad\n"
 
-#: ../src/main-window.c:6553
+#: ../src/main-window.c:6632
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr "spacefm: Ordner »%s« existiert nicht\n"
 
-#: ../src/main-window.c:6599 ../src/main-window.c:7470
-#: ../src/main-window.c:7496
+#: ../src/main-window.c:6678 ../src/main-window.c:7549
+#: ../src/main-window.c:7575
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr "spacefm: Befehl %s benötigt ein Argument\n"
 
-#: ../src/main-window.c:6993 ../src/main-window.c:7123
-#: ../src/main-window.c:7227 ../src/main-window.c:7284
-#: ../src/main-window.c:7335 ../src/main-window.c:7536
+#: ../src/main-window.c:7072 ../src/main-window.c:7202
+#: ../src/main-window.c:7306 ../src/main-window.c:7363
+#: ../src/main-window.c:7414 ../src/main-window.c:7615
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr "spacefm: %s benötigt 2 Argumente\n"
 
-#: ../src/main-window.c:7021 ../src/main-window.c:7151
+#: ../src/main-window.c:7100 ../src/main-window.c:7230
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr "spacefm: ungültige Aufgabe »%s«\n"
 
-#: ../src/main-window.c:7026
+#: ../src/main-window.c:7105
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr "spacefm: bei interner Aufgabe %s sind nur Leserechte vorhanden\n"
 
-#: ../src/main-window.c:7078
+#: ../src/main-window.c:7157
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr "spacefm: bei Aufgabeneigenschaft »%s« sind nur Leserechte vorhanden\n"
 
-#: ../src/main-window.c:7095
+#: ../src/main-window.c:7174
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr "spacefm: ungültiger Verkettungsstatus »%s«\n"
 
-#: ../src/main-window.c:7113 ../src/main-window.c:7214
+#: ../src/main-window.c:7192 ../src/main-window.c:7293
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr "spacefm: ungültige Aufgabeneigenschaft »%s«\n"
 
-#: ../src/main-window.c:7270 ../src/main-window.c:7372
-#: ../src/main-window.c:7393
+#: ../src/main-window.c:7349 ../src/main-window.c:7451
+#: ../src/main-window.c:7472
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr "spacefm: kein Ordner »%s« vorhanden\n"
 
-#: ../src/main-window.c:7277 ../src/main-window.c:7328
-#: ../src/main-window.c:7379
+#: ../src/main-window.c:7356 ../src/main-window.c:7407
+#: ../src/main-window.c:7458
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr "spacefm: ungültige Option »%s« bei Aufgabe %s\n"
 
-#: ../src/main-window.c:7344
+#: ../src/main-window.c:7423
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr "spacefm: Datei »%s« nicht vorhanden\n"
 
-#: ../src/main-window.c:7412
+#: ../src/main-window.c:7491
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr "spacefm: relativer Pfad »%s« benötigt %s Option --dir DIR\n"
 
-#: ../src/main-window.c:7436
+#: ../src/main-window.c:7515
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr "spacefm: Aufgabentyp %s benötigt DATEI-Argument(e)\n"
 
-#: ../src/main-window.c:7461
+#: ../src/main-window.c:7540
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr "spacefm: ungültiger Aufgabentyp »%s«\n"
 
-#: ../src/main-window.c:7485
+#: ../src/main-window.c:7564
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr "spacefm: ungültiger Tastencode »%s«\n"
 
-#: ../src/main-window.c:7503
+#: ../src/main-window.c:7582
 #, c-format
 msgid "spacefm: custom submenu '%s' not found\n"
 msgstr "spacefm: benutzerdefiniertes Untermenü »%s« nicht gefunden\n"
 
-#: ../src/main-window.c:7515
+#: ../src/main-window.c:7594
 #, c-format
 msgid "spacefm: menu '%s' context hidden or disabled\n"
 msgstr "spacefm: Kontext bei Menü »%s« verborgen oder abgeschaltet\n"
 
-#: ../src/main-window.c:7542
+#: ../src/main-window.c:7621
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr "spacefm: ungültiger Ereignistyp '%s'\n"
 
-#: ../src/main-window.c:7568
+#: ../src/main-window.c:7647
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr "spacefm: Ereignisverwaltung nicht gefunden\n"
 
-#: ../src/main-window.c:7579
+#: ../src/main-window.c:7658
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr "spacefm: ungültige Socketmethode »%s«\n"
 
-#: ../src/pref-dialog.c:159 ../src/pref-dialog.c:171 ../src/settings.c:8979
-#: ../src/settings.c:9049 ../src/settings.c:9117
+#: ../src/pref-dialog.c:159 ../src/pref-dialog.c:171 ../src/settings.c:9029
+#: ../src/settings.c:9099 ../src/settings.c:9167
 msgid "Default"
 msgstr "Voreinstellung"
 
@@ -2250,52 +2247,52 @@ msgstr "Benutzerdefiniertes tmp_dir enthält ungültige Zeichen - wechsele zurü
 msgid "custom tmp_dir does not exist - reverting to /tmp"
 msgstr "Benutzerdefiniertes tmp_dir existiert nicht - wechsele zurück auf /tmp"
 
-#: ../src/settings.c:861 ../src/settings.c:9411
+#: ../src/settings.c:861 ../src/settings.c:9461
 msgid "Ignore _Hide Policy"
 msgstr "Anweisungen zum _Verbergen ignorieren"
 
-#: ../src/settings.c:868 ../src/settings.c:9494
+#: ../src/settings.c:868 ../src/settings.c:9544
 msgid "Ignore _No Policy"
 msgstr "Anweisungen zum _Ausschluss ignorieren"
 
-#: ../src/settings.c:878 ../src/settings.c:10036
+#: ../src/settings.c:878 ../src/settings.c:10094
 msgid "_FAQ"
 msgstr "_FAQ"
 
-#: ../src/settings.c:888 ../src/settings.c:893 ../src/settings.c:10179
-#: ../src/settings.c:10199
+#: ../src/settings.c:888 ../src/settings.c:893 ../src/settings.c:10237
+#: ../src/settings.c:10257
 msgid "_Stop"
 msgstr "_Stopp"
 
-#: ../src/settings.c:900 ../src/settings.c:10212
+#: ../src/settings.c:900 ../src/settings.c:10270
 msgid "Show _Manager"
 msgstr "Verwaltungsprogra_mm anzeigen"
 
-#: ../src/settings.c:907 ../src/settings.c:10217
+#: ../src/settings.c:907 ../src/settings.c:10275
 msgid "Auto-_Hide Manager"
 msgstr "Verwaltungsprogramm automatisch _verbergen"
 
-#: ../src/settings.c:914 ../src/settings.c:10282
+#: ../src/settings.c:914 ../src/settings.c:10340
 msgid "Err_ors"
 msgstr "_Fehler"
 
-#: ../src/settings.c:921 ../src/settings.c:10157
+#: ../src/settings.c:921 ../src/settings.c:10216
 msgid "Current Re_main"
 msgstr "Aktuell _verbleiben"
 
-#: ../src/settings.c:928 ../src/settings.c:10169
+#: ../src/settings.c:928 ../src/settings.c:10228
 msgid "A_verage Remain"
 msgstr "_Durchschnittlich verbleiben"
 
-#: ../src/settings.c:935 ../src/settings.c:10108
+#: ../src/settings.c:935 ../src/settings.c:10166
 msgid "_Folder"
 msgstr "_Ordner"
 
-#: ../src/settings.c:965 ../src/settings.c:10259
+#: ../src/settings.c:965 ../src/settings.c:10317
 msgid "_Detailed Stats"
 msgstr "_Detaillierte Statistik"
 
-#: ../src/settings.c:976 ../src/settings.c:9150
+#: ../src/settings.c:976 ../src/settings.c:9200
 msgid "Remo_ve / Eject"
 msgstr "Ent_fernen/Auswerfen"
 
@@ -2303,28 +2300,28 @@ msgstr "Ent_fernen/Auswerfen"
 #. changes of this nature due to defaults no longer being saved
 #. in session file
 #. New > Import >
-#: ../src/settings.c:987 ../src/settings.c:7246 ../src/settings.c:10000
+#: ../src/settings.c:987 ../src/settings.c:7254 ../src/settings.c:10058
 msgid "_Import"
 msgstr "_Importieren"
 
-#: ../src/settings.c:988 ../src/settings.c:10092
+#: ../src/settings.c:988 ../src/settings.c:10150
 msgid "_Task Manager"
 msgstr "Aufgabenverwal_tung"
 
 #. for rename dialog
-#: ../src/settings.c:991 ../src/settings.c:9649
+#: ../src/settings.c:991 ../src/settings.c:9699
 msgid "F_ilename"
 msgstr "Date_iname"
 
-#: ../src/settings.c:992 ../src/settings.c:9660
+#: ../src/settings.c:992 ../src/settings.c:9710
 msgid "Typ_e"
 msgstr "Typ_e"
 
-#: ../src/settings.c:993 ../src/settings.c:9664
+#: ../src/settings.c:993 ../src/settings.c:9714
 msgid "Ta_rget"
 msgstr "Ziel"
 
-#: ../src/settings.c:994 ../src/settings.c:9668
+#: ../src/settings.c:994 ../src/settings.c:9718
 msgid "Te_mplate"
 msgstr "Vorlage"
 
@@ -2430,93 +2427,93 @@ msgstr "Plugin deinstallieren"
 msgid "Install Plugin"
 msgstr "Plugin installieren"
 
-#: ../src/settings.c:4503
+#: ../src/settings.c:4500
 msgid "Save As Plugin File"
 msgstr "Speichern als Plugin-Datei"
 
 #. tar and delete tmp files
 #. task
-#: ../src/settings.c:4571
+#: ../src/settings.c:4568
 msgid "Export Plugin"
 msgstr "Plugin exportieren"
 
-#: ../src/settings.c:4605
+#: ../src/settings.c:4602
 msgid "Export Error"
 msgstr "Fehler beim Exportieren"
 
-#: ../src/settings.c:4606
+#: ../src/settings.c:4603
 msgid "Unable to create temporary files"
 msgstr "Fehler beim Erstellen der temporären Dateien"
 
-#: ../src/settings.c:4727
+#: ../src/settings.c:4724
 msgid "Change Menu Name"
 msgstr "Menüname ändern"
 
-#: ../src/settings.c:5167
+#: ../src/settings.c:5164
 msgid "Editor Not Set"
 msgstr "Editor ist nicht gesetzt"
 
-#: ../src/settings.c:5168
+#: ../src/settings.c:5165
 msgid "Please set your editor in View|Preferences|Advanced"
 msgstr "Bitte Editor in Ansicht|Einstellungen|Erweitert angeben"
 
-#: ../src/settings.c:5178
+#: ../src/settings.c:5175
 msgid "Root Editor Not Set"
 msgstr "Editor für Root nicht angegeben"
 
-#: ../src/settings.c:5179
+#: ../src/settings.c:5176
 msgid "Please set root's editor in View|Preferences|Advanced"
 msgstr "Bitte Editor für Root in Ansicht|Einstellungen|Erweitert angeben"
 
 #. task
-#: ../src/settings.c:5200
+#: ../src/settings.c:5197
 #, c-format
 msgid "Edit %s"
 msgstr "%s bearbeiten"
 
-#: ../src/settings.c:5380
+#: ../src/settings.c:5377
 msgid "User's Manual Not Found"
 msgstr "Handbuch nicht gefunden"
 
-#: ../src/settings.c:5382
+#: ../src/settings.c:5379
 msgid ""
 "Read the user's manual online?\n"
 "\n"
 "The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr "Handbuch online lesen?\n\nEs konnte kein Handbuch im lokalen System gefunden werden.  Ja klicken zum online Lesen oder Nein klicken und dann den korrekten Ort für das Handbuch in Hilfe|Optionen|Handbuch Ort setzen."
 
-#: ../src/settings.c:5413
+#: ../src/settings.c:5410
 msgid "Help Not Available"
 msgstr "Hilfe nicht verfügbar"
 
-#: ../src/settings.c:5413
+#: ../src/settings.c:5410
 msgid "This plugin does not include a README file."
 msgstr "Dieses Plugin enthält keine README-Datei."
 
-#: ../src/settings.c:5415
+#: ../src/settings.c:5412
 msgid "Creation Failed"
 msgstr "Erzeugen gescheitert"
 
-#: ../src/settings.c:5415
+#: ../src/settings.c:5412
 msgid "An error occured creating a README file for this command."
 msgstr "Fehler beim Erzeugen einer README-Datei für diesen Befehl."
 
-#: ../src/settings.c:5437
+#: ../src/settings.c:5434
 msgid "Manual Opened ?"
 msgstr "Ist das Handbuch geöffnet?"
 
-#: ../src/settings.c:5437
+#: ../src/settings.c:5434
 msgid ""
 "The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr "Das SpaceFM-Handbuch sollte im Browser erscheinen. Falls nicht, oder ein anderer Browser gewünscht wird, kann der Browser in Hilfe|Optionen|Browser angegeben werden.\n\nDiese Meldung wird nicht wiederholt."
 
-#: ../src/settings.c:5456
+#: ../src/settings.c:5453
 msgid "( none )"
 msgstr "( nenhum )"
 
-#: ../src/settings.c:5579
+#: ../src/settings.c:5576
 #, c-format
 msgid ""
 "\t%s\n"
@@ -2527,61 +2524,60 @@ msgid ""
 "Press a different key or click Set to replace the current key assignment."
 msgstr "\t%s\n\tTastencode: %#4x  Zusatztaste: %#x\n\n%s ist bereits »%s« zugewiesen.\n\nAndere Taste drücken oder oder auf »Setzen« klicken, um die derzeitige Tastaturzuweisung zu ändern."
 
-#: ../src/settings.c:5590
+#: ../src/settings.c:5587
 #, c-format
 msgid ""
 "\t%s\n"
 "\tKeycode: %#4x  Modifier: %#x"
 msgstr "\t%s\n\tTastencode: %#4x  Zusatztaste: %#x"
 
-#: ../src/settings.c:5618
+#: ../src/settings.c:5615
 #, c-format
 msgid ""
 "Press your key combination for menu item '%s' then click Set.  To remove the"
 " current key assignment, click Unset."
 msgstr "Neue Tastenkombination für Menüpunkt »%s« drücken und auf »Setzen« klicken. Ein Klick auf Unset macht die Zuweisung rückgängig."
 
-#: ../src/settings.c:5630
+#: ../src/settings.c:5627
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../src/settings.c:5636
+#: ../src/settings.c:5633
 msgid "Unset"
 msgstr "Zurücknehmen"
 
-#: ../src/settings.c:5649
+#: ../src/settings.c:5646
 msgid "Set"
 msgstr "Setzen"
 
-#: ../src/settings.c:5663
+#: ../src/settings.c:5660
 msgid "Set Key"
 msgstr "Taste setzen"
 
-#: ../src/settings.c:5743
+#: ../src/settings.c:5740
 msgid "Change Icon"
 msgstr "Symbol ändern"
 
-#. line
-#: ../src/settings.c:5769 ../src/settings.c:5837
+#: ../src/settings.c:5840
 msgid "Edit Command Line"
 msgstr "Befehlszeile bearbeiten"
 
-#: ../src/settings.c:5863
+#: ../src/settings.c:5866
 msgid "Choose Custom Executable"
 msgstr "Benutzerdefinierte ausführbare Datei auswählen"
 
-#: ../src/settings.c:5874
+#: ../src/settings.c:5877
 msgid "Run As User"
 msgstr "Mit Benutzerrechten ausführen"
 
-#: ../src/settings.c:5874
+#: ../src/settings.c:5877
 msgid ""
 "Run this command as username:\n"
 "\n"
 "( Leave blank for current user )"
 msgstr "Diesen Befehl ausführen als Benutzer:\n\n( leere Eingabe für den aktuellen Benutzer )"
 
-#: ../src/settings.c:5882
+#: ../src/settings.c:5885
 #, c-format
 msgid ""
 "You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2589,19 +2585,19 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Sie sind im Begriff, einen benutzerdefinierten Befehl zu einem vorbelegten Menüpunkt hinzuzufügen. Dieser Menüpunkt hat danach eine automatische Kontextbeschränkung -- er erscheint nur, wenn der MIME-Typ der ersten ausgewählten Datei mit dem aktuellen Typ »%s« übereinstimmt.\n\nFügen Sie hier nur Befehle oder Menüs hinzu, die ausschließlich bei diesem MIME-Typ erscheinen sollen."
 
-#: ../src/settings.c:5883
+#: ../src/settings.c:5886
 msgid "New Context Command"
 msgstr "Neuer Kontextbefehl"
 
-#: ../src/settings.c:5894
+#: ../src/settings.c:5897
 msgid "Set Menu Name"
 msgstr "Menüname setzen"
 
-#: ../src/settings.c:5930 ../src/item-prop.c:1209
+#: ../src/settings.c:5933 ../src/item-prop.c:1209
 msgid "Choose Folder"
 msgstr "Ordner wählen"
 
-#: ../src/settings.c:5976
+#: ../src/settings.c:5979
 #, c-format
 msgid ""
 "You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2609,30 +2605,30 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Sie sind im Begriff, ein benutzerdefiniertes Untermenü zu einem vorbelegten Menüpunkt hinzuzufügen. Dieser Menüpunkt hat danach eine automatische Kontextbeschränkung -- er erscheint nur, wenn der MIME-Typ der ersten ausgewählten Datei mit dem aktuellen Typ »%s« übereinstimmt.\n\nFügen Sie hier nur Befehle oder Menüs hinzu, die ausschließlich bei diesem MIME-Typ erscheinen sollen."
 
-#: ../src/settings.c:5976
+#: ../src/settings.c:5979
 msgid "(none)"
 msgstr "(nichts)"
 
-#: ../src/settings.c:5985
+#: ../src/settings.c:5988
 msgid "Set Submenu Name"
 msgstr "Untermenüname setzen"
 
-#: ../src/settings.c:5985
+#: ../src/settings.c:5988
 msgid ""
 "Enter submenu name:\n"
 "\n"
 "Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr "Untermenüname eingeben:\n\nEin Buchstabe kann als Tastaturkürzel gekennzeichnet werden durch Voranstellen eines Strichs (_)."
 
-#: ../src/settings.c:5985
+#: ../src/settings.c:5988
 msgid "New _Submenu"
 msgstr "Neue_s Untermenü"
 
-#: ../src/settings.c:6159
+#: ../src/settings.c:6162
 msgid "( no name )"
 msgstr "( kein Name )"
 
-#: ../src/settings.c:6162
+#: ../src/settings.c:6165
 #, c-format
 msgid ""
 "Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n"
@@ -2640,7 +2636,7 @@ msgid ""
 "This action will delete all settings and files associated with these items."
 msgstr "UNTERMENÜ '%s' UND ALLE OBJEKTS DARIN vollständig löschen?\n\nDiese Aktion löscht alle Einstellungen und Dateien, die mit dem Objekt verknüpft sind."
 
-#: ../src/settings.c:6167
+#: ../src/settings.c:6170
 #, c-format
 msgid ""
 "Permanently remove the '%s' item?\n"
@@ -2648,19 +2644,19 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr "Objekt '%s' vollständig löschen?\n\nDiese Aktion löscht alle Einstellungen und Dateien, die mit dem Objekt verknüpft sind."
 
-#: ../src/settings.c:6181
+#: ../src/settings.c:6184
 msgid "Confirm Remove"
 msgstr "Entfernen bestätigen"
 
-#: ../src/settings.c:6205 ../src/item-prop.c:700 ../src/item-prop.c:712
+#: ../src/settings.c:6208 ../src/item-prop.c:700 ../src/item-prop.c:712
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
-#: ../src/settings.c:6206 ../src/settings.c:6210 ../src/settings.c:6214
+#: ../src/settings.c:6209 ../src/settings.c:6213 ../src/settings.c:6217
 msgid "Dialog Message"
 msgstr "Dialognachricht"
 
-#: ../src/settings.c:6206 ../src/settings.c:6210 ../src/settings.c:6214
+#: ../src/settings.c:6209 ../src/settings.c:6213 ../src/settings.c:6217
 msgid ""
 "Enter the message to be displayed in this dialog:\n"
 "\n"
@@ -2671,23 +2667,23 @@ msgstr "Eingabe der in diesem Dialog anzuzeigenden Nachricht:\n\nBenutzung:\n\t\
 
 #. Show Tool
 #. dev settings
-#: ../src/settings.c:6842 ../src/settings.c:9377
+#: ../src/settings.c:6850 ../src/settings.c:9427
 msgid "S_how"
 msgstr "_Anzeigen"
 
 #. Cut
 #. EDIT
-#: ../src/settings.c:7174 ../src/settings.c:10669
+#: ../src/settings.c:7182 ../src/settings.c:10730
 msgid "Cu_t"
 msgstr "Aus_schneiden"
 
 #. Copy
-#: ../src/settings.c:7181 ../src/settings.c:9676 ../src/settings.c:10672
+#: ../src/settings.c:7189 ../src/settings.c:9726 ../src/settings.c:10733
 msgid "_Copy"
 msgstr "_Kopieren"
 
 #. Paste
-#: ../src/settings.c:7188 ../src/settings.c:10675
+#: ../src/settings.c:7196 ../src/settings.c:10736
 msgid "_Paste"
 msgstr "Ein_fügen"
 
@@ -2696,95 +2692,105 @@ msgstr "Ein_fügen"
 #. GDK_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 #. Remove
 #. list buttons
-#: ../src/settings.c:7198 ../src/ptk/ptk-file-menu.c:2200
+#: ../src/settings.c:7206 ../src/ptk/ptk-file-menu.c:2200
 #: ../src/item-prop.c:1703
 msgid "_Remove"
 msgstr "Entfe_rnen"
 
 #. Export
-#: ../src/settings.c:7205
+#: ../src/settings.c:7213
 msgid "E_xport"
 msgstr "E_xportieren"
 
 #. // New submenu
-#: ../src/settings.c:7211 ../src/settings.c:9619 ../src/settings.c:9932
-#: ../src/settings.c:10498
+#: ../src/settings.c:7219 ../src/settings.c:9669 ../src/settings.c:9990
+#: ../src/settings.c:10556
 msgid "_New"
 msgstr "_Neu"
 
 #. New > Bookmark
-#: ../src/settings.c:7224 ../src/settings.c:9182
+#: ../src/settings.c:7232 ../src/settings.c:9232
 msgid "_Bookmark"
 msgstr "_Lesezeichen"
 
 #. New > Application
-#: ../src/settings.c:7228
+#: ../src/settings.c:7236
 msgid "_Application"
 msgstr "_Anwendung"
 
 #. New > Command
-#: ../src/settings.c:7232
+#: ../src/settings.c:7240
 msgid "_Command"
 msgstr "_Befehl"
 
 #. New > Submenu
-#: ../src/settings.c:7238
+#: ../src/settings.c:7246
 msgid "Sub_menu"
 msgstr "Unter_menü"
 
 #. New > Separator
-#: ../src/settings.c:7242
+#: ../src/settings.c:7250
 msgid "S_eparator"
 msgstr "Tr_enner"
 
-#: ../src/settings.c:7261 ../src/settings.c:9993 ../src/settings.c:10009
+#: ../src/settings.c:7269 ../src/settings.c:10051 ../src/settings.c:10067
 msgid "_URL"
 msgstr "_URL"
 
 #. Key
-#: ../src/settings.c:7276
+#: ../src/settings.c:7284
 msgid "_Key Shortcut"
 msgstr "Tasten_kürzel"
 
+#. edit as user
+#: ../src/settings.c:7300
+msgid "_Edit Script"
+msgstr "Skript _editieren"
+
+#. edit as root
+#: ../src/settings.c:7308
+msgid "E_dit As Root"
+msgstr "Editieren als Root"
+
 #. Properties
-#: ../src/settings.c:7284 ../src/settings.c:9368
+#: ../src/settings.c:7319 ../src/settings.c:9418
 msgid "_Properties"
 msgstr "Eigen_schaften"
 
-#: ../src/settings.c:7675
+#: ../src/settings.c:7725
 msgid "Set Icon"
 msgstr "Symbol festlegen"
 
-#: ../src/settings.c:8033 ../src/settings.c:9625 ../src/settings.c:10693
+#: ../src/settings.c:8083 ../src/settings.c:9675 ../src/settings.c:10755
 msgid "_Edit"
 msgstr "_Bearbeiten"
 
-#: ../src/settings.c:8043 ../src/settings.c:8256 ../src/settings.c:10422
-#: ../src/settings.c:10547
+#: ../src/settings.c:8093 ../src/settings.c:8306 ../src/settings.c:10480
+#: ../src/settings.c:10608
 msgid "_Default"
 msgstr "_Voreinstellung"
 
-#: ../src/settings.c:8083
+#: ../src/settings.c:8133
 msgid "Your input is invalid because it contains linefeeds"
 msgstr "Die Eingabe ist ungültig, da sie Zeilenvorschübe enthält"
 
-#: ../src/settings.c:8259
+#: ../src/settings.c:8309
 msgid "_OK"
 msgstr "_OK"
 
-#: ../src/settings.c:8395
+#: ../src/settings.c:8445
 msgid "_Unset"
 msgstr "Festlegung a_ufheben"
 
-#: ../src/settings.c:8890
+#: ../src/settings.c:8940
 msgid "_Left Toolbar"
 msgstr "Werkzeugleiste _links"
 
-#: ../src/settings.c:8894
+#: ../src/settings.c:8944
 msgid "_Right Toolbar"
 msgstr "Werkzeugleiste _rechts"
 
-#: ../src/settings.c:8898 ../src/settings.c:10944
+#: ../src/settings.c:8948 ../src/settings.c:11010
 msgid "_Side Toolbar"
 msgstr "Werkzeugleiste _Seite"
 
@@ -2793,187 +2799,187 @@ msgstr "Werkzeugleiste _Seite"
 #. xset_set( "panel_top", "lbl", _("_Top") );
 #. xset_set( "panel_bottom", "lbl", _("_Bottom") );
 #. 
-#: ../src/settings.c:8902 ../src/settings.c:8905 ../src/settings.c:9834
-#: ../src/settings.c:10793
+#: ../src/settings.c:8952 ../src/settings.c:8955 ../src/settings.c:9891
+#: ../src/settings.c:10855
 msgid "_Hide"
 msgstr "Ver_bergen"
 
-#: ../src/settings.c:8908
+#: ../src/settings.c:8958
 msgid "Configure Toolbar"
 msgstr "Werkzeugleiste konfigurieren"
 
-#: ../src/settings.c:8912
+#: ../src/settings.c:8962
 msgid "H_elp"
 msgstr "_Hilfe"
 
 #. toolitems left
 #. toolitems right
 #. toolitems side
-#: ../src/settings.c:8916 ../src/settings.c:8986 ../src/settings.c:9055
+#: ../src/settings.c:8966 ../src/settings.c:9036 ../src/settings.c:9105
 msgid "Tree"
 msgstr "Baumstruktur"
 
-#: ../src/settings.c:8922 ../src/settings.c:8992 ../src/settings.c:9061
+#: ../src/settings.c:8972 ../src/settings.c:9042 ../src/settings.c:9111
 msgid "Bookmarks"
 msgstr "Lesezeichen"
 
-#: ../src/settings.c:8928 ../src/settings.c:8998 ../src/settings.c:9067
+#: ../src/settings.c:8978 ../src/settings.c:9048 ../src/settings.c:9117
 msgid "Devices"
 msgstr "Geräte"
 
-#: ../src/settings.c:8934 ../src/settings.c:9004 ../src/settings.c:9073
+#: ../src/settings.c:8984 ../src/settings.c:9054 ../src/settings.c:9123
 msgid "New Tab"
 msgstr "Neuer Reiter"
 
-#: ../src/settings.c:8939 ../src/settings.c:9009 ../src/settings.c:9078
+#: ../src/settings.c:8989 ../src/settings.c:9059 ../src/settings.c:9128
 msgid "New Tab Here"
 msgstr "Neuer Reiter hier"
 
-#: ../src/settings.c:8944 ../src/settings.c:9014 ../src/settings.c:9083
+#: ../src/settings.c:8994 ../src/settings.c:9064 ../src/settings.c:9133
 msgid "Back"
 msgstr "Zurück"
 
-#: ../src/settings.c:8949 ../src/settings.c:9019 ../src/settings.c:9088
+#: ../src/settings.c:8999 ../src/settings.c:9069 ../src/settings.c:9138
 msgid "Back Menu"
 msgstr "Menü zurück"
 
-#: ../src/settings.c:8954 ../src/settings.c:9024 ../src/settings.c:9093
+#: ../src/settings.c:9004 ../src/settings.c:9074 ../src/settings.c:9143
 msgid "Forward"
 msgstr "Vorwärts"
 
-#: ../src/settings.c:8959 ../src/settings.c:9029 ../src/settings.c:9098
+#: ../src/settings.c:9009 ../src/settings.c:9079 ../src/settings.c:9148
 msgid "Forward Menu"
 msgstr "Menü vor"
 
-#: ../src/settings.c:8964 ../src/settings.c:9034 ../src/settings.c:9103
+#: ../src/settings.c:9014 ../src/settings.c:9084 ../src/settings.c:9153
 msgid "Up"
 msgstr "Aufwärts"
 
-#: ../src/settings.c:8969 ../src/settings.c:9039 ../src/settings.c:9108
+#: ../src/settings.c:9019 ../src/settings.c:9089 ../src/settings.c:9158
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: ../src/settings.c:8974 ../src/settings.c:9044 ../src/settings.c:9113
+#: ../src/settings.c:9024 ../src/settings.c:9094 ../src/settings.c:9163
 msgid "Home"
 msgstr "Startpunkt"
 
-#: ../src/settings.c:9122
+#: ../src/settings.c:9172
 msgid "Mount"
 msgstr "Einhängen"
 
-#: ../src/settings.c:9126
+#: ../src/settings.c:9176
 msgid "Mount & Open"
 msgstr "Einhängen und Öffnen"
 
-#: ../src/settings.c:9130
+#: ../src/settings.c:9180
 msgid "Remove"
 msgstr "Entfernen"
 
-#: ../src/settings.c:9154 ../src/settings.c:9206
+#: ../src/settings.c:9204 ../src/settings.c:9256
 #: ../src/ptk/ptk-location-view.c:3046 ../src/ptk/ptk-location-view.c:3357
 msgid "_Unmount"
 msgstr "A_ushängen"
 
-#: ../src/settings.c:9158
+#: ../src/settings.c:9208
 msgid "Re_load"
 msgstr "Neu _laden"
 
-#: ../src/settings.c:9162
+#: ../src/settings.c:9212
 msgid "_Sync"
 msgstr "Ab_gleich"
 
-#: ../src/settings.c:9166 ../src/settings.c:9631 ../src/settings.c:10406
+#: ../src/settings.c:9216 ../src/settings.c:9681 ../src/settings.c:10464
 #: ../src/find-files.c:275
 msgid "_Open"
 msgstr "Ö_ffnen"
 
-#: ../src/settings.c:9170
+#: ../src/settings.c:9220
 msgctxt "Devices|Open|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:9174 ../src/settings.c:9201
+#: ../src/settings.c:9224 ../src/settings.c:9251
 #: ../src/ptk/ptk-location-view.c:3039 ../src/ptk/ptk-location-view.c:3351
 msgid "_Mount"
 msgstr "Ein_hängen"
 
-#: ../src/settings.c:9178
+#: ../src/settings.c:9228
 msgid "Re_/mount"
 msgstr "Neu ein_hängen"
 
-#: ../src/settings.c:9195 ../src/settings.c:10858
+#: ../src/settings.c:9245 ../src/settings.c:10920
 msgid "_Root"
 msgstr "_Root"
 
-#: ../src/settings.c:9211
+#: ../src/settings.c:9261
 msgid "_Label"
 msgstr "_Bezeichnung"
 
-#: ../src/settings.c:9261
+#: ../src/settings.c:9311
 msgid "_Check"
 msgstr "_Überprüfen"
 
-#: ../src/settings.c:9265
+#: ../src/settings.c:9315
 msgid "_Edit fstab"
 msgstr "fstab b_earbeiten"
 
-#: ../src/settings.c:9269
+#: ../src/settings.c:9319
 msgid "Edit u_devil.conf"
 msgstr "u_devil.conf bearbeiten"
 
-#: ../src/settings.c:9273
+#: ../src/settings.c:9323
 msgid "_Format"
 msgstr "_Formatieren"
 
-#: ../src/settings.c:9333
+#: ../src/settings.c:9383
 msgid "_Backup"
 msgstr "_Sichern"
 
-#: ../src/settings.c:9355
+#: ../src/settings.c:9405
 msgid "_Restore"
 msgstr "_Wiederherstellen"
 
-#: ../src/settings.c:9360
+#: ../src/settings.c:9410
 msgid "_From File"
 msgstr "_Aus Datei"
 
-#: ../src/settings.c:9365 ../src/settings.c:9731
+#: ../src/settings.c:9415 ../src/settings.c:9781
 msgid "File _Info"
 msgstr "Date_iinfo"
 
-#: ../src/settings.c:9371
+#: ../src/settings.c:9421
 msgid "Setti_ngs"
 msgstr "Einstellungen"
 
-#: ../src/settings.c:9382
+#: ../src/settings.c:9432
 msgid "_Internal Drives"
 msgstr "_Interne Laufwerke"
 
-#: ../src/settings.c:9387
+#: ../src/settings.c:9437
 msgid "_Empty Drives"
 msgstr "L_eere Laufwerke"
 
-#: ../src/settings.c:9392
+#: ../src/settings.c:9442
 msgid "_Partition Tables"
 msgstr "_Partitionstabellen"
 
-#: ../src/settings.c:9396
+#: ../src/settings.c:9446
 msgid "Mounted _Networks"
 msgstr "Eingebundene _Netzwerke"
 
-#: ../src/settings.c:9401
+#: ../src/settings.c:9451
 msgid "Mounted _Files"
 msgstr "Eingebundene _Dateien"
 
-#: ../src/settings.c:9406
+#: ../src/settings.c:9456
 msgid "_Volumes..."
 msgstr "_Datenträger …"
 
-#: ../src/settings.c:9407
+#: ../src/settings.c:9457
 msgid "Show/Hide Volumes"
 msgstr "Datenträger anzeigen/verbergen"
 
-#: ../src/settings.c:9408
+#: ../src/settings.c:9458
 msgid ""
 "To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -2984,15 +2990,15 @@ msgid ""
 "\n"
 msgstr "Um das Anzeigen oder Verbergen einzelner Partitionen bei anderslautenden Voreinstellungen zu erzwingen bitte Geräte, Partitonsbezeichnung oder Geräte-IDs in der untenstehenden Liste angeben (Trennzeichen in der Liste ist ein Leerzeichen).\n\nBeispiel:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\ndadurch würde /dev/sdd1 und das OCZ Gerät angezeigt und die Partition mit der Bezeichnung \"Label With Space\" verborgen.\n\nZwischen den Einträgen muss ein Leerzeichen und direkt vor jedem Eintrag ein Plus- oder Minuszeichen stehen. Die Liste beachtet Groß- und Kleinschreibung.\n\n"
 
-#: ../src/settings.c:9415
+#: ../src/settings.c:9465
 msgid "_Display Name"
 msgstr "Anzeige_name"
 
-#: ../src/settings.c:9417
+#: ../src/settings.c:9467
 msgid "Set Display Name Format"
 msgstr "Format des Namens für die Anzeige festlegen"
 
-#: ../src/settings.c:9418
+#: ../src/settings.c:9468
 #, c-format
 msgid ""
 "Enter device display name format:\n"
@@ -3006,39 +3012,39 @@ msgid ""
 "\t%%i\tdevice ID\n"
 msgstr "Eingabe des Formats für die Anzeige:\n\nBenutzung:\n\t%%v\tGerät Dateiname (z.B. sdd1)\n\t%%s\tGesamtgröße (z.B. 800G)\n\t%%t\tFStyp (z.B. ext4)\n\t%%l\tPartitionsbezeichnung (z.B. Label oder [no media])\n\t%%m\tEinhängepunkt falls eingehängt oder ---\n\t%%i\tGeräte ID\n"
 
-#: ../src/settings.c:9424
+#: ../src/settings.c:9474
 msgid "_Auto Mount"
 msgstr "_Automatisch einhängen"
 
-#: ../src/settings.c:9429
+#: ../src/settings.c:9479
 msgid "Mount _Optical"
 msgstr "Einbinden optisch"
 
-#: ../src/settings.c:9434
+#: ../src/settings.c:9484
 msgid "_Mount Removable"
 msgstr "Einbinden entfernbar"
 
-#: ../src/settings.c:9439
+#: ../src/settings.c:9489
 msgid "Open _Tab"
 msgstr "Rei_ter öffnen"
 
-#: ../src/settings.c:9444
+#: ../src/settings.c:9494
 msgid "_Unmount On Exit"
 msgstr "Beim Beenden a_ushängen"
 
-#: ../src/settings.c:9452
+#: ../src/settings.c:9502
 msgid "Auto _Run"
 msgstr "Automatisch sta_rten"
 
-#: ../src/settings.c:9458
+#: ../src/settings.c:9508
 msgid "On _Mount"
 msgstr "Bei_m Einhängen"
 
-#: ../src/settings.c:9460
+#: ../src/settings.c:9510
 msgid "Auto Run On Mount"
 msgstr "Automatisch starten beim Einhängen"
 
-#: ../src/settings.c:9461
+#: ../src/settings.c:9511
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
@@ -3049,15 +3055,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem automatischen Einbinden eines externen Laufwerks oder Datenträgers ausgeführt werden soll:\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9464
+#: ../src/settings.c:9514
 msgid "On _Audio CD"
 msgstr "Auf _Audio-CD"
 
-#: ../src/settings.c:9466
+#: ../src/settings.c:9516
 msgid "Auto Run On Audio CD"
 msgstr "Automatisch ausführen auf Audio-CD"
 
-#: ../src/settings.c:9467
+#: ../src/settings.c:9517
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
@@ -3068,15 +3074,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem Einlegen einer Audio-CD in ein geeignetes Laufwerk ausgeführt werden soll:\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9470
+#: ../src/settings.c:9520
 msgid "On _Video DVD"
 msgstr "Auf _Video-DVD"
 
-#: ../src/settings.c:9472
+#: ../src/settings.c:9522
 msgid "Auto Run On Video DVD"
 msgstr "Automatisch ausführen auf Video-DVD"
 
-#: ../src/settings.c:9473
+#: ../src/settings.c:9523
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
@@ -3087,15 +3093,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem automatischen Einhängen einer Video-DVD ausgeführt werden soll:\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9476
+#: ../src/settings.c:9526
 msgid "On _Insert"
 msgstr "Nach E_inlegen"
 
-#: ../src/settings.c:9478
+#: ../src/settings.c:9528
 msgid "Auto Run On Insert"
 msgstr "Automatisch ausführen nach Einlegen"
 
-#: ../src/settings.c:9479
+#: ../src/settings.c:9529
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is inserted:\n"
@@ -3106,15 +3112,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem Einlegen eines beliebigen Datenträgers ausgeführt werden soll:\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9482
+#: ../src/settings.c:9532
 msgid "On _Unmount"
 msgstr "Nach A_ushängen"
 
-#: ../src/settings.c:9484
+#: ../src/settings.c:9534
 msgid "Auto Run On Unmount"
 msgstr "Automatisch ausführen nach Aushängen"
 
-#: ../src/settings.c:9485
+#: ../src/settings.c:9535
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
@@ -3125,15 +3131,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem Aushängen eines Geräts ausgeführt werden soll:\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9488
+#: ../src/settings.c:9538
 msgid "On _Remove"
 msgstr "Nach Entfe_rnen"
 
-#: ../src/settings.c:9490
+#: ../src/settings.c:9540
 msgid "Auto Run On Remove"
 msgstr "Automatisch ausführen nach Entfernen"
 
-#: ../src/settings.c:9491
+#: ../src/settings.c:9541
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
@@ -3144,15 +3150,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Eingabe eines Programms oder Befehlszeile, das automatisch nach dem Entfernen eines beliebigen Geräts ausgeführt werden soll (Auswerfen eines Datenträgers reicht NICHT aus):\n\nAufruf:\n\t%%v\tGerät (z.B. /dev/sda1)\n\t%%l\tGerät Bezeichnung\n\t%%m\tGerät Einhängepunkt(z.B. /media/disk)"
 
-#: ../src/settings.c:9498
+#: ../src/settings.c:9548
 msgid "Mount _Volumes..."
 msgstr "Datenträger _einhängen …"
 
-#: ../src/settings.c:9499
+#: ../src/settings.c:9549
 msgid "Auto-Mount Volumes"
 msgstr "Automatisches Einbinden von Datenträgern"
 
-#: ../src/settings.c:9500
+#: ../src/settings.c:9550
 msgid ""
 "To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3163,11 +3169,11 @@ msgid ""
 "\n"
 msgstr "Um das automatische Einhängen einiger Datenträger bei anderslautenden Voreinstellungen zu erzwingen oder zu verhindern bitte Geräte, Datenträgerbezeichnung oder Geräte-IDs in der untenstehenden Liste angeben (Trennzeichen in der Liste ist ein Leerzeichen).\n\nBeispiel:  +/dev/sdd1 -Label With Space +ata-OCZ-part4\ndadurch würde /dev/sdd1 und das OCZ Gerät automatisch eingebunden und die Partition mit der Bezeichnung \"Label With Space\" verborgen.\n\nZwischen den Einträgen muß ein Leerzeichen und direkt vor jedem Eintrag ein Plus- oder Minuszeichen stehen. Die Liste beachtet Groß- und Kleinschreibung.\n\n"
 
-#: ../src/settings.c:9503
+#: ../src/settings.c:9553
 msgid "_Mount Options"
 msgstr "Ein_hängeoptionen"
 
-#: ../src/settings.c:9504
+#: ../src/settings.c:9554
 msgid ""
 "Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
@@ -3179,15 +3185,15 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Eingabe einer Liste (Trennzeichen Komma oder Leerzeichen) von voreingestellten Einhängeoptionen (wird dann bei allen Einhängevorgängen verwendet).\n\nZusätzlich zu regulären Optionen können Optionen für spezifische Dateisystemtypen hinzugefügt oder entfernt werden durch Verwendung der Eingabeform OPTION+DATEISYSTEM oder OPTION+DATEISYSTEMTYP.\n\nBeispiele:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nDamit wird nosuid und noatime zu allen Dateisystemtypen hinzugefügt, sync nur zu vfat und ntfs hinzugefügt, und noatime für ext4 entfernt.\n\nBemerkungen: einige Option wie etwa nosuid können durch den Einhängebefehl hinzugefügt werden auch ohne explizite Auflistung.  Optionen in fstab haben Vorrang.  pmount ignoriert die hier festgelegten Optionen."
 
-#: ../src/settings.c:9506
+#: ../src/settings.c:9556
 msgid "Default Mount Options"
 msgstr "Voreingestellte Einhängeoptionen"
 
-#: ../src/settings.c:9514
+#: ../src/settings.c:9564
 msgid "Re/mount With Options"
 msgstr "Einhängen mit Optionen wiederholen"
 
-#: ../src/settings.c:9515
+#: ../src/settings.c:9565
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
@@ -3199,11 +3205,11 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Gerät wird (nochmals) eingehängt unter Verwendung folgender Optionen.\n\nZusätzlich zu regulären Optionen können Optionen für spezifische Dateisystemtypen hinzugefügt oder entfernt werden durch Verwendung der Eingabeform OPTION+DATEISYSTEM oder OPTION+DATEISYSTEMTYP.\n\nBeispiele:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nDamit wird nosuid und noatime zu allen Dateisystemtypen hinzugefügt, sync nur zu vfat und ntfs hinzugefügt, und noatime für ext4 entfernt.\n\nBemerkungen: einige Option wie etwa nosuid können durch den Einhängebefehl hinzugefügt werden auch ohne explizite Auflistung.  Optionen in fstab haben Vorrang.  pmount ignoriert die hier festgelegten Optionen."
 
-#: ../src/settings.c:9519
+#: ../src/settings.c:9569
 msgid "Mount _Command"
 msgstr "Ein_hängebefehl"
 
-#: ../src/settings.c:9520
+#: ../src/settings.c:9570
 #, c-format
 msgid ""
 "Enter the command to mount a device:\n"
@@ -3220,15 +3226,15 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Eingabe des Einhängebefehls für ein Gerät:\n\nAufruf:\n\t%%v\tGerät ( z.B. /dev/sda5 )\n\t%%o\tpartitionsspezifische Einhängeoptionen\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nfür Autodetektion leer lassen."
 
-#: ../src/settings.c:9522
+#: ../src/settings.c:9572
 msgid "Mount Command"
 msgstr "Einhängebefehl"
 
-#: ../src/settings.c:9526
+#: ../src/settings.c:9576
 msgid "_Unmount Command"
 msgstr "A_ushängebefehl"
 
-#: ../src/settings.c:9527
+#: ../src/settings.c:9577
 #, c-format
 msgid ""
 "Enter the command to unmount a device:\n"
@@ -3244,258 +3250,258 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Eingabe des Aushängebefehls für ein Gerät:\n\nAufruf:\n\t%%v\tGerät ( z.B. /dev/sda5 )\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nfür Autodetektion leer lassen."
 
-#: ../src/settings.c:9529
+#: ../src/settings.c:9579
 msgid "Unmount Command"
 msgstr "Aushängebefehl"
 
-#: ../src/settings.c:9546 ../src/settings.c:9641 ../src/settings.c:10992
-#: ../src/settings.c:11002
+#: ../src/settings.c:9596 ../src/settings.c:9691 ../src/settings.c:11068
+#: ../src/settings.c:11080
 msgid "_Icon"
 msgstr "_Symbol"
 
-#: ../src/settings.c:9551
+#: ../src/settings.c:9601
 msgid "Audio CD"
 msgstr "Audio-CD"
 
-#: ../src/settings.c:9557
+#: ../src/settings.c:9607
 msgid "Optical Mounted"
 msgstr "CD/DVD-Laufwerk eingehängt"
 
-#: ../src/settings.c:9562
+#: ../src/settings.c:9612
 msgid "Optical Has Media"
 msgstr "Datenträger im CD/DVD-Laufwerk vorhanden"
 
-#: ../src/settings.c:9567
+#: ../src/settings.c:9617
 msgid "Optical No Media"
 msgstr "Kein Datenträger im CD/DVD-Laufwerk vorhanden"
 
-#: ../src/settings.c:9572
+#: ../src/settings.c:9622
 msgid "Floppy Mounted"
 msgstr "Floppy eingehängt"
 
-#: ../src/settings.c:9577
+#: ../src/settings.c:9627
 msgid "Floppy Unmounted"
 msgstr "Floppy ausgehängt"
 
-#: ../src/settings.c:9582
+#: ../src/settings.c:9632
 msgid "Removable Mounted"
 msgstr "Externes Laufwerk eingehängt"
 
-#: ../src/settings.c:9587
+#: ../src/settings.c:9637
 msgid "Removable Unmounted"
 msgstr "Externes Laufwerk ausgehängt"
 
-#: ../src/settings.c:9592
+#: ../src/settings.c:9642
 msgid "Internal Mounted"
 msgstr "Internes Laufwerk eingehängt"
 
-#: ../src/settings.c:9597
+#: ../src/settings.c:9647
 msgid "Internal Unmounted"
 msgstr "Internes Laufwerk ausgehängt"
 
-#: ../src/settings.c:9602
+#: ../src/settings.c:9652
 msgid "Mounted Network"
 msgstr "Netzwerklaufwerk eingehängt"
 
-#: ../src/settings.c:9607
+#: ../src/settings.c:9657
 msgid "Mounted File"
 msgstr "Datei eingehängt"
 
-#: ../src/settings.c:9622 ../src/settings.c:10678
+#: ../src/settings.c:9672 ../src/settings.c:10739
 #: ../src/ptk/ptk-file-misc.c:701 ../src/ptk/ptk-file-misc.c:1237
 #: ../src/ptk/ptk-file-misc.c:2146
 msgid "_Rename"
 msgstr "_Umbenennen"
 
-#: ../src/settings.c:9628
+#: ../src/settings.c:9678
 msgid "Re_move"
 msgstr "_Entfernen"
 
-#: ../src/settings.c:9634
+#: ../src/settings.c:9684
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:9637
+#: ../src/settings.c:9687
 msgid "_Settings"
 msgstr "Ein_stellungen"
 
 #. do not set a default icon for book_icon
 #. Rename/Move Dialog
-#: ../src/settings.c:9646 ../src/settings.c:10618 ../src/settings.c:11006
+#: ../src/settings.c:9696 ../src/settings.c:10679 ../src/settings.c:11086
 msgid "_Name"
 msgstr "_Name"
 
-#: ../src/settings.c:9653
+#: ../src/settings.c:9703
 msgid "_Parent"
 msgstr "Abs_tammung"
 
-#: ../src/settings.c:9656 ../src/ptk/ptk-file-misc.c:1066
+#: ../src/settings.c:9706 ../src/ptk/ptk-file-misc.c:1066
 msgid "P_ath"
 msgstr "Pf_ad"
 
-#: ../src/settings.c:9672
+#: ../src/settings.c:9722
 msgid "_Option"
 msgstr "_Option"
 
-#: ../src/settings.c:9680 ../src/settings.c:10509
+#: ../src/settings.c:9730 ../src/settings.c:10569
 #: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:1258
 msgid "_Link"
 msgstr "_Verknüpfung"
 
-#: ../src/settings.c:9684 ../src/ptk/ptk-file-misc.c:2497
+#: ../src/settings.c:9734 ../src/ptk/ptk-file-misc.c:2497
 msgid "Copy _Target"
 msgstr "Ziel _kopieren"
 
-#: ../src/settings.c:9687
+#: ../src/settings.c:9737
 msgid "Lin_k Target"
 msgstr "Verknüpfungs_ziel"
 
-#: ../src/settings.c:9690
+#: ../src/settings.c:9740
 msgid "_As Root"
 msgstr "_Als Root"
 
-#: ../src/settings.c:9694 ../src/settings.c:10222 ../src/settings.c:10274
-#: ../src/settings.c:10371 ../src/settings.c:10400 ../src/settings.c:10960
-#: ../src/settings.c:10966 ../src/settings.c:10973 ../src/settings.c:10979
-#: ../src/settings.c:10986 ../src/settings.c:10996
+#: ../src/settings.c:9744 ../src/settings.c:10280 ../src/settings.c:10332
+#: ../src/settings.c:10429 ../src/settings.c:10458 ../src/settings.c:11036
+#: ../src/settings.c:11042 ../src/settings.c:11049 ../src/settings.c:11055
+#: ../src/settings.c:11062 ../src/settings.c:11072
 msgid "_Font"
 msgstr "_Schrift"
 
-#: ../src/settings.c:9697
+#: ../src/settings.c:9747
 msgid "Move Dialog Font"
 msgstr "Schrift für Dialog verschieben"
 
-#: ../src/settings.c:9698
+#: ../src/settings.c:9748
 msgid "/home/user/Example Filename.ext"
 msgstr "/home/user/Beispiele Dateiname.ext"
 
-#: ../src/settings.c:9703
+#: ../src/settings.c:9753
 msgid "_Confirm Create"
 msgstr "Erzeugen _bestätigen"
 
-#: ../src/settings.c:9711
+#: ../src/settings.c:9761
 msgid "Highlight _Bar"
 msgstr "Leiste _hervorheben"
 
-#: ../src/settings.c:9712
+#: ../src/settings.c:9762
 msgid "Status Bar Highlight Color"
 msgstr "Farbe der hervorgehobenen Statusleiste"
 
-#: ../src/settings.c:9716
+#: ../src/settings.c:9766
 msgid "Highlight _Text"
 msgstr "_Text hervorheben"
 
-#: ../src/settings.c:9717
+#: ../src/settings.c:9767
 msgid "Status Bar Text Highlight Color"
 msgstr "Farbe des hervorgehobenen Statusleistentexts"
 
-#: ../src/settings.c:9721
+#: ../src/settings.c:9771
 msgid "_Middle Click"
 msgstr "Klick mit der _mittleren Maustaste"
 
-#: ../src/settings.c:9725 ../src/settings.c:10698
+#: ../src/settings.c:9775 ../src/settings.c:10760
 msgid "Copy _Name"
 msgstr "_Name kopieren"
 
-#: ../src/settings.c:9728 ../src/settings.c:10701
+#: ../src/settings.c:9778 ../src/settings.c:10763
 msgid "Copy _Path"
 msgstr "_Pfad kopieren"
 
-#: ../src/settings.c:9735
+#: ../src/settings.c:9785
 msgid "_Hide Panel"
 msgstr "Panel ver_bergen"
 
-#: ../src/settings.c:9751
+#: ../src/settings.c:9801
 msgid "New _Window"
 msgstr "Neues _Fenster"
 
-#: ../src/settings.c:9754
+#: ../src/settings.c:9804
 msgid "R_oot Window"
 msgstr "R_oot-Fenster"
 
-#: ../src/settings.c:9757
+#: ../src/settings.c:9807
 msgid "_File Search"
 msgstr "Datei_suche"
 
-#: ../src/settings.c:9760
+#: ../src/settings.c:9810
 msgid "_Terminal"
 msgstr "_Terminal"
 
 #. discovery notification
-#: ../src/settings.c:9763
+#: ../src/settings.c:9813
 msgid "_Root Terminal"
 msgstr "_Root-Terminal"
 
-#: ../src/settings.c:9766
+#: ../src/settings.c:9816
 msgid "_Save Session"
 msgstr "Sitzung _speichern"
 
-#: ../src/settings.c:9769
+#: ../src/settings.c:9819
 msgid "Save Ta_bs"
 msgstr "Reiter s_peichern"
 
-#: ../src/settings.c:9773
+#: ../src/settings.c:9823
 msgid "E_xit"
 msgstr "_Beenden"
 
-#: ../src/settings.c:9804 ../src/settings.c:9835 ../src/settings.c:10448
-#: ../src/settings.c:10750 ../src/settings.c:10788
+#: ../src/settings.c:9854 ../src/settings.c:9892 ../src/settings.c:10506
+#: ../src/settings.c:10812 ../src/settings.c:10850
 msgid "Panel _1"
 msgstr "Panel _1"
 
-#: ../src/settings.c:9808 ../src/settings.c:9836 ../src/settings.c:10449
-#: ../src/settings.c:10751 ../src/settings.c:10789
+#: ../src/settings.c:9859 ../src/settings.c:9894 ../src/settings.c:10507
+#: ../src/settings.c:10813 ../src/settings.c:10851
 msgid "Panel _2"
 msgstr "Panel _2"
 
-#: ../src/settings.c:9811 ../src/settings.c:9837 ../src/settings.c:10450
-#: ../src/settings.c:10752 ../src/settings.c:10790
+#: ../src/settings.c:9863 ../src/settings.c:9895 ../src/settings.c:10508
+#: ../src/settings.c:10814 ../src/settings.c:10852
 msgid "Panel _3"
 msgstr "Panel _3"
 
-#: ../src/settings.c:9814 ../src/settings.c:9838 ../src/settings.c:10451
-#: ../src/settings.c:10753 ../src/settings.c:10791
+#: ../src/settings.c:9867 ../src/settings.c:9896 ../src/settings.c:10509
+#: ../src/settings.c:10815 ../src/settings.c:10853
 msgid "Panel _4"
 msgstr "Panel _4"
 
-#: ../src/settings.c:9817
+#: ../src/settings.c:9871
 msgid "Panel _Bar"
 msgstr "Pane_lleiste"
 
-#: ../src/settings.c:9821 ../src/settings.c:10534
+#: ../src/settings.c:9876 ../src/settings.c:10595
 msgid "_Go"
 msgstr "_Gehe zu"
 
-#: ../src/settings.c:9826 ../src/settings.c:10429 ../src/settings.c:10446
-#: ../src/settings.c:10574 ../src/settings.c:10731 ../src/settings.c:10748
-#: ../src/settings.c:10769 ../src/settings.c:10786
+#: ../src/settings.c:9882 ../src/settings.c:10487 ../src/settings.c:10504
+#: ../src/settings.c:10635 ../src/settings.c:10793 ../src/settings.c:10810
+#: ../src/settings.c:10831 ../src/settings.c:10848
 msgid "_Prev"
 msgstr "_Vorheriges"
 
-#: ../src/settings.c:9827 ../src/settings.c:10430 ../src/settings.c:10447
-#: ../src/settings.c:10575 ../src/settings.c:10732 ../src/settings.c:10749
-#: ../src/settings.c:10770 ../src/settings.c:10787
+#: ../src/settings.c:9884 ../src/settings.c:10488 ../src/settings.c:10505
+#: ../src/settings.c:10636 ../src/settings.c:10794 ../src/settings.c:10811
+#: ../src/settings.c:10832 ../src/settings.c:10849
 msgid "_Next"
 msgstr "_Nächstes"
 
-#: ../src/settings.c:9840
+#: ../src/settings.c:9898
 msgid "_Events"
 msgstr "_Ereignisse"
 
-#: ../src/settings.c:9846
+#: ../src/settings.c:9904
 msgid "_Instance"
 msgstr "_Instanz"
 
-#: ../src/settings.c:9851
+#: ../src/settings.c:9909
 msgid "_Startup"
 msgstr "_Start"
 
-#: ../src/settings.c:9853
+#: ../src/settings.c:9911
 msgid "Set Instance Startup Command"
 msgstr "Instanzstartbefehl festlegen"
 
-#: ../src/settings.c:9854
+#: ../src/settings.c:9912
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
@@ -3504,15 +3510,15 @@ msgid ""
 "\t%%e\tevent type  (evt_start)\n"
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird beim Start einer SpaceFM-Instanz:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_start)\n"
 
-#: ../src/settings.c:9857
+#: ../src/settings.c:9915
 msgid "_Exit"
 msgstr "B_eenden"
 
-#: ../src/settings.c:9859
+#: ../src/settings.c:9917
 msgid "Set Instance Exit Command"
 msgstr "Befehl beim Beenden der Instanz festlegen"
 
-#: ../src/settings.c:9860
+#: ../src/settings.c:9918
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
@@ -3521,20 +3527,20 @@ msgid ""
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird beim Beenden eine SpaceFM-Instanz:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_exit)\n"
 
-#: ../src/settings.c:9863
+#: ../src/settings.c:9921
 msgid "_Window"
 msgstr "Fe_nster"
 
-#: ../src/settings.c:9868
+#: ../src/settings.c:9926
 msgctxt "View|Events|Window|"
 msgid "_New"
 msgstr "_Neu"
 
-#: ../src/settings.c:9870
+#: ../src/settings.c:9928
 msgid "Set New Window Command"
 msgstr "Befehl bei neuem Fenster festlegen"
 
-#: ../src/settings.c:9871
+#: ../src/settings.c:9929
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
@@ -3548,15 +3554,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald ein SpaceFM-Fenster geöffnet wird:\n\nAufruf:\n\t%%e\tEventtyp  (evt_win_new)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9874 ../src/settings.c:9909 ../src/settings.c:9938
+#: ../src/settings.c:9932 ../src/settings.c:9967 ../src/settings.c:9996
 msgid "_Focus"
 msgstr "_Fokus"
 
-#: ../src/settings.c:9876
+#: ../src/settings.c:9934
 msgid "Set Window Focus Command"
 msgstr "Befehl bei Fensterfokusierung festlegen"
 
-#: ../src/settings.c:9877
+#: ../src/settings.c:9935
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
@@ -3570,15 +3576,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald der Fokus auf ein SpaceFM-Fenster gesetzt wird:\n\nAufruf:\n\t%%e\tEventtyp  (evt_win_new)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9880
+#: ../src/settings.c:9938
 msgid "_Move/Resize"
 msgstr "_Verschieben/Größenänderung"
 
-#: ../src/settings.c:9882
+#: ../src/settings.c:9940
 msgid "Set Window Move/Resize Command"
 msgstr "Befehl bei Verschieben/Größenänderung eines Fensters festlegen"
 
-#: ../src/settings.c:9883
+#: ../src/settings.c:9941
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
@@ -3594,15 +3600,15 @@ msgid ""
 "Note: This command may be run multiple times during resize."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald ein SpaceFM-Fenster verschoben oder in der Größe geändert wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_win_move)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden.\n\nBemerkung: dieser Befehl kann bei Größenänderung mehrmals ausgeführt werden."
 
-#: ../src/settings.c:9886
+#: ../src/settings.c:9944
 msgid "_Click"
 msgstr "_Klick"
 
-#: ../src/settings.c:9888
+#: ../src/settings.c:9946
 msgid "Set Click Command"
 msgstr "Befehl bei Mausklick festlegen"
 
-#: ../src/settings.c:9889
+#: ../src/settings.c:9947
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
@@ -3622,15 +3628,15 @@ msgid ""
 "*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei einem Mausklick automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_win_click)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\t%%b\tMaustaste  (gedrückte Maustaste)\n\t%%m\tZusatztaste  (Zusatztaste)\n\t%%f\tFokus  (angeklicktes Elemet)\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden falls kein Asterisk vorangestellt ist.\n\nVoranstellen eines Asterisk (*) oder bedingte Rückgabe eines Exitstatus 0 verhindert die voreingestellte Handhabung. Besipiel:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMittlere Maustaste gedrückt in %%f\" --button ok &"
 
-#: ../src/settings.c:9892
+#: ../src/settings.c:9950
 msgid "_Keypress"
 msgstr "_Tastendruck"
 
-#: ../src/settings.c:9894
+#: ../src/settings.c:9952
 msgid "Set Window Keypress Command"
 msgstr "Befehl bei Tastendruck festlegen"
 
-#: ../src/settings.c:9895
+#: ../src/settings.c:9953
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a key is pressed:\n"
@@ -3649,15 +3655,15 @@ msgid ""
 "*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei einem Mausklick automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_win_key)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\t%%k\tTastenkürzel  (gedrückte Taste)\n\t%%m\tZusatztaste  (Zusatztaste)\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden falls kein Asterisk vorangestellt ist.\n\nVoranstellen eines Asterisk (*) oder bedingte Rückgabe eines Exitstatus 0 verhindert die voreingestellte Handhabung. Besipiel:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nTaste F8 gedrückt.\" --button ok &"
 
-#: ../src/settings.c:9898
+#: ../src/settings.c:9956
 msgid "Cl_ose"
 msgstr "S_chließen"
 
-#: ../src/settings.c:9900
+#: ../src/settings.c:9958
 msgid "Set Window Close Command"
 msgstr "Befehl bei Fensterschließen festlegen"
 
-#: ../src/settings.c:9901
+#: ../src/settings.c:9959
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
@@ -3671,15 +3677,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald ein SpaceFM-Fenster geschlossen wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_win_close)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9904
+#: ../src/settings.c:9962
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:9911
+#: ../src/settings.c:9969
 msgid "Set Panel Focus Command"
 msgstr "Befehl bei Pameelfokusierung festlegen"
 
-#: ../src/settings.c:9912
+#: ../src/settings.c:9970
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
@@ -3693,16 +3699,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald der Fokus auf ein Panel gesetzt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_pnl_focus)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9915
+#: ../src/settings.c:9973
 msgctxt "View|Events|Panel|"
 msgid "_Show"
 msgstr "_Anzeigen"
 
-#: ../src/settings.c:9917
+#: ../src/settings.c:9975
 msgid "Set Panel Show Command"
 msgstr "Befehl bei Panelanzeige festlegen"
 
-#: ../src/settings.c:9918
+#: ../src/settings.c:9976
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
@@ -3718,15 +3724,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das automatisch ausgeführt wird, sobald ein Panel angezeigt oder verborgen wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_pnl_show)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\t%%f\tFokus  (angezeigtes oder verstecktes Element)\n\t%%v\tsichtbar  (1 oder 0)\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9921
+#: ../src/settings.c:9979
 msgid "S_elect"
 msgstr "Ausw_ahl"
 
-#: ../src/settings.c:9923
+#: ../src/settings.c:9981
 msgid "Set Panel Select Command"
 msgstr "Befehl bei Panelauswahl festlegen"
 
-#: ../src/settings.c:9924
+#: ../src/settings.c:9982
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the file selection changes:\n"
@@ -3742,16 +3748,16 @@ msgid ""
 "Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei Änderung der Panelauswahl automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_pnl_sel)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariablen (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden.\n\nVoranstellen eines Asterisk (*) oder bedingte Rückgabe eines Exitstatus 0 verhindert die voreingestellte Handhabung."
 
-#: ../src/settings.c:9927
+#: ../src/settings.c:9985
 msgctxt "View|Events|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:9934
+#: ../src/settings.c:9992
 msgid "Set New Tab Command"
 msgstr "Befehl bei neuem Reiter festlegen"
 
-#: ../src/settings.c:9935
+#: ../src/settings.c:9993
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
@@ -3765,11 +3771,11 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei Öffnen eines neuen Reiters automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_tab_new)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9940
+#: ../src/settings.c:9998
 msgid "Set Tab Focus Command"
 msgstr "Befehl bei Reiterfokusierung festlegen"
 
-#: ../src/settings.c:9941
+#: ../src/settings.c:9999
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
@@ -3783,16 +3789,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei Fokusierung auf einen Reiter automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_tab_focus)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tReiter\n\nExportierte Bashvariable (z.B. $fm_pwd, etc) können in diesem Befehl verwendet werden."
 
-#: ../src/settings.c:9944
+#: ../src/settings.c:10002
 msgctxt "View|Events|Tab|"
 msgid "_Close"
 msgstr "S_chließen"
 
-#: ../src/settings.c:9946
+#: ../src/settings.c:10004
 msgid "Set Tab Close Command"
 msgstr "Befehl bei Reiterschließen festlegen"
 
-#: ../src/settings.c:9947
+#: ../src/settings.c:10005
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab is closed:\n"
@@ -3804,15 +3810,15 @@ msgid ""
 "\t%%t\tclosed tab"
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei Schließen eines Reiters automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_tab_close)\n\t%%w\tFenster id  (siehe spacefm -s help)\n\t%%p\tPanel\n\t%%t\tgeschlossener Reiter"
 
-#: ../src/settings.c:9950
+#: ../src/settings.c:10008
 msgid "_Device"
 msgstr "Gerä_t"
 
-#: ../src/settings.c:9952
+#: ../src/settings.c:10010
 msgid "Set Device Command"
 msgstr "Gerätebefehl festlegen"
 
-#: ../src/settings.c:9953
+#: ../src/settings.c:10011
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a device state changes:\n"
@@ -3823,15 +3829,15 @@ msgid ""
 "\t%%v\tchange  (added|removed|changed)\n"
 msgstr "Eingabe eines Programms oder Bashbefehls, das bei Änderung eines Gerätestatus automatisch ausgeführt wird:\n\nAufruf:\n\t%%e\tEreignistyp  (evt_device)\n\t%%f\tGerät\n\t%%v\tÄnderung  (hinzugefügt|entfernt|geändert)\n"
 
-#: ../src/settings.c:9956
+#: ../src/settings.c:10014
 msgid "Wi_ndow Title"
 msgstr "Fe_nstertitel"
 
-#: ../src/settings.c:9958
+#: ../src/settings.c:10016
 msgid "Set Window Title Format"
 msgstr "Format des Fenstertitels festlegen"
 
-#: ../src/settings.c:9959
+#: ../src/settings.c:10017
 #, c-format
 msgid ""
 "Set window title format:\n"
@@ -3846,15 +3852,15 @@ msgid ""
 "\t*\tasterisk shown if tasks running in window"
 msgstr "Format des Fenstertitels festlegen:\\nAufruf:\\t%%n\taktueller Ordnername (z.B. bin)\n\t%%d\taktueller Ordnerpfad (z.B. /usr/bin)\n\t%%p\taktuelle Panelnummer (1-4)\n\t%%t\taktuelle Reiternummer\n\t%%P\tGesamtzahl der sichtbaren Panels\n\t%%T\tGesamtzahl der Reiter im aktuellen Panel\n\t*\tAsterisk anzeigen falls im Fenster Aufgaben laufen"
 
-#: ../src/settings.c:9963
+#: ../src/settings.c:10021
 msgid "_Window Icon"
 msgstr "_Fenstersymbol"
 
-#: ../src/settings.c:9965
+#: ../src/settings.c:10023
 msgid "Set Window Icon"
 msgstr "Fenstersymbol festlegen"
 
-#: ../src/settings.c:9966
+#: ../src/settings.c:10024
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
@@ -3867,64 +3873,64 @@ msgid ""
 "For example: spacefm-48-pyramid-green"
 msgstr "Eingabe eines Symbolnamens, eines Pfads zu einer Symboldatei oder eines Inventarnamens:\n\naus unterschiedlichen Gründen sind nicht alle Symbole verwendbar.\n\nin diesem Fall alternative SpaceFM-Symbole zur Verfügung stellen:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nBeispiel: spacefm-48-pyramid-green"
 
-#: ../src/settings.c:9968
+#: ../src/settings.c:10026
 msgid "_Fullscreen"
 msgstr "_Vollbild"
 
-#: ../src/settings.c:9971
+#: ../src/settings.c:10029
 msgid "_Design Mode"
 msgstr "_Designmodus"
 
-#: ../src/settings.c:9974
+#: ../src/settings.c:10032
 msgid "_Preferences"
 msgstr "_Einstellungen"
 
-#: ../src/settings.c:9977
+#: ../src/settings.c:10035
 msgid "_Tool"
 msgstr "_Werkzeug"
 
 #. Plugins
-#: ../src/settings.c:9984
+#: ../src/settings.c:10042
 msgid "_Install"
 msgstr "_Installieren"
 
-#: ../src/settings.c:10012
+#: ../src/settings.c:10070
 msgid "_Verbose"
 msgstr "_Ausführlich"
 
-#: ../src/settings.c:10019
+#: ../src/settings.c:10077
 msgid "In_cluded"
 msgstr "_Enthalten"
 
-#: ../src/settings.c:10033
+#: ../src/settings.c:10091
 msgid "_User's Manual"
 msgstr "Ben_utzerhandbuch"
 
-#: ../src/settings.c:10039
+#: ../src/settings.c:10097
 msgid "_Homepage"
 msgstr "_Internetseite"
 
-#: ../src/settings.c:10042
+#: ../src/settings.c:10100
 msgid "SpaceFM _News"
 msgstr "SpaceFM _Nachrichten"
 
-#: ../src/settings.c:10045
+#: ../src/settings.c:10103
 msgid "_Get Plugins"
 msgstr "Plu_gins holen"
 
-#: ../src/settings.c:10048
+#: ../src/settings.c:10106
 msgid "_Options"
 msgstr "_Optionen"
 
-#: ../src/settings.c:10053
+#: ../src/settings.c:10111
 msgid "_Browser"
 msgstr "_Browser"
 
-#: ../src/settings.c:10055
+#: ../src/settings.c:10113
 msgid "Choose HTML Browser"
 msgstr "HTML Browser auswählen"
 
-#: ../src/settings.c:10056
+#: ../src/settings.c:10114
 #, c-format
 msgid ""
 "Enter browser name or bash command line to be used to display HTML files and URLs:\n"
@@ -3935,511 +3941,505 @@ msgid ""
 "(Leave blank for automatic browser detection)"
 msgstr "Eingabe eines Browsers oder einer Bashbefehlszeile zur Anzeige von HTML-Dateien und URLs:\n\nAufruf:\n\t%%u\turl\n\n(leer lassen für automatische Browsererkennung)"
 
-#: ../src/settings.c:10059
+#: ../src/settings.c:10117
 msgid "_Manual Location"
 msgstr "_Ort des Handbuchs"
 
-#: ../src/settings.c:10061
+#: ../src/settings.c:10119
 msgid "Choose User's Manual Location"
 msgstr "Ablageplatz des Handbuchs auswählen"
 
-#: ../src/settings.c:10062
+#: ../src/settings.c:10120
 msgid ""
 "Enter local file path or remote URL for the SpaceFM User's Manual:\n"
 "\n"
 "(Leave blank for default)\n"
 msgstr "Eingabe des lokalen Dateipfads oder der entfernten URL für das SpaceFM Handbuch:\n\n(leer lassen für Verwendung der Voreinstllung)\n"
 
-#: ../src/settings.c:10065
+#: ../src/settings.c:10123
 msgid "_About"
 msgstr "_Info"
 
-#: ../src/settings.c:10097
+#: ../src/settings.c:10155
 msgid "_Status"
 msgstr "_Status"
 
 #. column position
 #. column width
-#: ../src/settings.c:10103
+#: ../src/settings.c:10161
 msgid "_Count"
 msgstr "_Zähler"
 
-#: ../src/settings.c:10114
+#: ../src/settings.c:10172
 msgid "_Item"
 msgstr "Ob_jekt"
 
-#: ../src/settings.c:10120
+#: ../src/settings.c:10178
 msgid "_To"
 msgstr "Na_ch"
 
-#: ../src/settings.c:10126
+#: ../src/settings.c:10184
 msgid "_Progress"
 msgstr "_Fortschritt"
 
-#: ../src/settings.c:10133
+#: ../src/settings.c:10191
 msgid "T_otal"
 msgstr "G_esamt"
 
-#: ../src/settings.c:10140
+#: ../src/settings.c:10198
 msgid "Sta_rted"
 msgstr "Gesta_rted"
 
-#: ../src/settings.c:10145
+#: ../src/settings.c:10203
 msgid "_Elapsed"
 msgstr "Abg_elaufen"
 
-#: ../src/settings.c:10152
+#: ../src/settings.c:10210
 msgid "C_urrent Speed"
 msgstr "Akt_uelle Geschwindigkeit"
 
-#: ../src/settings.c:10162
+#: ../src/settings.c:10222
 msgid "_Average Speed"
 msgstr "_Durchschnittliche Geschwindigkeit"
 
-#: ../src/settings.c:10176
+#: ../src/settings.c:10234
 msgid "Reor_der"
 msgstr "Umor_dnen"
 
-#: ../src/settings.c:10182 ../src/settings.c:10202
-#: ../src/ptk/ptk-file-task.c:505 ../src/ptk/ptk-file-task.c:815
+#: ../src/settings.c:10240 ../src/settings.c:10260
+#: ../src/ptk/ptk-file-task.c:531 ../src/ptk/ptk-file-task.c:816
 msgid "Pa_use"
 msgstr "Pa_use"
 
-#: ../src/settings.c:10185 ../src/settings.c:10205
+#: ../src/settings.c:10243 ../src/settings.c:10263
 msgid "_Queue"
 msgstr "_Warteschlange"
 
-#: ../src/settings.c:10188 ../src/settings.c:10208
+#: ../src/settings.c:10246 ../src/settings.c:10266
 msgid "_Resume"
 msgstr "Wiede_raufnehmen"
 
-#: ../src/settings.c:10191
+#: ../src/settings.c:10249
 msgid "Sho_w Output"
 msgstr "A_usgabe anzeigen"
 
-#: ../src/settings.c:10194
+#: ../src/settings.c:10252
 msgid "_All Tasks"
 msgstr "_Alle Aufgaben"
 
-#: ../src/settings.c:10225
+#: ../src/settings.c:10283
 msgid "Task Manager Font"
 msgstr "Schrift Aufgabenverwaltung"
 
-#: ../src/settings.c:10226
+#: ../src/settings.c:10284
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
 msgstr "Datei wird kopiert 1:15  65.2 M  30.2 M/s"
 
-#: ../src/settings.c:10229
+#: ../src/settings.c:10287
 msgid "_Columns"
 msgstr "_Spalten"
 
-#: ../src/settings.c:10234
+#: ../src/settings.c:10292
 msgid "_Popups"
 msgstr "_Popups"
 
-#: ../src/settings.c:10239
+#: ../src/settings.c:10297
 msgid "Popup _All Tasks"
 msgstr "_Alle Aufgaben aufploppen lassen"
 
-#: ../src/settings.c:10244
+#: ../src/settings.c:10302
 msgid "Stay On _Top"
 msgstr "Auf oberster Ebene hal_ten"
 
-#: ../src/settings.c:10249
+#: ../src/settings.c:10307
 msgid "A_bove Others"
 msgstr "Ü_ber andere stellen"
 
-#: ../src/settings.c:10254
+#: ../src/settings.c:10312
 msgid "All _Workspaces"
 msgstr "Alle A_rbeitsflächen"
 
-#: ../src/settings.c:10264
+#: ../src/settings.c:10322
 msgid "_Overwrite Option"
 msgstr "_Option überschreiben"
 
-#: ../src/settings.c:10269
+#: ../src/settings.c:10327
 msgid "_Error Option"
 msgstr "_Fehler Option"
 
-#: ../src/settings.c:10277
+#: ../src/settings.c:10335
 msgid "Task Popup Font (affects new tasks)"
 msgstr "Font Aufgaben-Popup (betrifft neue Aufgaben)"
 
-#: ../src/settings.c:10278
+#: ../src/settings.c:10336
 msgid "Example Output 0123456789"
 msgstr "Beispiel Ausgabe 0123456789"
 
-#: ../src/settings.c:10287
+#: ../src/settings.c:10345
 msgid "Stop If _First"
 msgstr "Stopp falls Erster"
 
-#: ../src/settings.c:10292
+#: ../src/settings.c:10350
 msgid "Stop On _Any"
 msgstr "Stopp bei allen"
 
-#: ../src/settings.c:10297
+#: ../src/settings.c:10355
 msgid "_Continue"
 msgstr "_Fortsetzen"
 
-#: ../src/settings.c:10302
+#: ../src/settings.c:10360
 msgid "Qu_eue"
 msgstr "Wart_eschlange"
 
-#: ../src/settings.c:10307
+#: ../src/settings.c:10365
 msgid "_Queue New Tasks"
 msgstr "Neue Aufgaben in _Warteschlange aufnehmen"
 
-#: ../src/settings.c:10312
+#: ../src/settings.c:10370
 msgid "_Smart Queue"
 msgstr "_Smart-Warteschlange"
 
-#: ../src/settings.c:10317
+#: ../src/settings.c:10375
 msgid "_Pause On Error"
 msgstr "_Pause bei Fehler"
 
-#: ../src/settings.c:10327
+#: ../src/settings.c:10385
 msgid "Arrange _Icons"
 msgstr "Symbole _anordnen"
 
-#: ../src/settings.c:10332
+#: ../src/settings.c:10390
 msgid "By _Name"
 msgstr "Nach _Name"
 
-#: ../src/settings.c:10335
+#: ../src/settings.c:10393
 msgid "By _Type"
 msgstr "Nach _Typ"
 
-#: ../src/settings.c:10338
+#: ../src/settings.c:10396
 msgid "By _Date"
 msgstr "Nach _Datum"
 
-#: ../src/settings.c:10341
+#: ../src/settings.c:10399
 msgid "By _Size"
 msgstr "Nach _Größe"
 
-#: ../src/settings.c:10344
+#: ../src/settings.c:10402
 msgid "_Custom"
 msgstr "_Benutzerdefiniert"
 
-#: ../src/settings.c:10347 ../src/settings.c:10630
+#: ../src/settings.c:10405 ../src/settings.c:10691
 msgid "_Ascending"
 msgstr "_Aufsteigend"
 
-#: ../src/settings.c:10350
+#: ../src/settings.c:10408
 msgid "D_escending"
 msgstr "Ab_steigend"
 
-#: ../src/settings.c:10353
+#: ../src/settings.c:10411
 msgid "Desktop _Settings"
 msgstr "Schreibtischein_stellungen"
 
-#: ../src/settings.c:10356 ../src/settings.c:10567
+#: ../src/settings.c:10414 ../src/settings.c:10628
 msgid "De_vices"
 msgstr "Ge_räte"
 
-#: ../src/settings.c:10364
+#: ../src/settings.c:10422
 msgid "_Desktop Folder"
 msgstr "Schreibtischor_dner"
 
-#: ../src/settings.c:10374
+#: ../src/settings.c:10432
 msgid "Editor Font"
 msgstr "Editor-Schrift"
 
-#: ../src/settings.c:10375 ../src/settings.c:10404
+#: ../src/settings.c:10433 ../src/settings.c:10462
 msgid "Example Input 0123456789"
 msgstr "Beispiel Eingabe 0123456789"
 
-#: ../src/settings.c:10403
+#: ../src/settings.c:10461
 msgid "Input Font"
 msgstr "Schrift für Eingaben"
 
-#: ../src/settings.c:10410
+#: ../src/settings.c:10468
 msgid "E_xecute"
 msgstr "Ausführen"
 
-#: ../src/settings.c:10413
+#: ../src/settings.c:10471
 msgid "Edi_t"
 msgstr "Bearbei_ten"
 
-#: ../src/settings.c:10416
+#: ../src/settings.c:10474
 msgid "Edit As _Root"
 msgstr "Bearbeiten als _Root"
 
-#: ../src/settings.c:10419
+#: ../src/settings.c:10477
 msgid "_Choose..."
 msgstr "Aus_wählen …"
 
 #. virtual
-#: ../src/settings.c:10424
+#: ../src/settings.c:10482
 msgid "In _Tab"
 msgstr "Im Rei_ter"
 
-#: ../src/settings.c:10428
+#: ../src/settings.c:10486
 msgid "N_ew"
 msgstr "N_eu"
 
-#: ../src/settings.c:10431 ../src/settings.c:10578 ../src/settings.c:10733
-#: ../src/settings.c:10771
+#: ../src/settings.c:10489 ../src/settings.c:10639 ../src/settings.c:10795
+#: ../src/settings.c:10833
 msgid "Tab _1"
 msgstr "Reiter _1"
 
-#: ../src/settings.c:10432 ../src/settings.c:10579 ../src/settings.c:10734
-#: ../src/settings.c:10772
+#: ../src/settings.c:10490 ../src/settings.c:10640 ../src/settings.c:10796
+#: ../src/settings.c:10834
 msgid "Tab _2"
 msgstr "Reiter _2"
 
-#: ../src/settings.c:10433 ../src/settings.c:10580 ../src/settings.c:10735
-#: ../src/settings.c:10773
+#: ../src/settings.c:10491 ../src/settings.c:10641 ../src/settings.c:10797
+#: ../src/settings.c:10835
 msgid "Tab _3"
 msgstr "Reiter _3"
 
-#: ../src/settings.c:10434 ../src/settings.c:10581 ../src/settings.c:10736
-#: ../src/settings.c:10774
+#: ../src/settings.c:10492 ../src/settings.c:10642 ../src/settings.c:10798
+#: ../src/settings.c:10836
 msgid "Tab _4"
 msgstr "Reiter _4"
 
-#: ../src/settings.c:10435 ../src/settings.c:10582 ../src/settings.c:10737
-#: ../src/settings.c:10775
+#: ../src/settings.c:10493 ../src/settings.c:10643 ../src/settings.c:10799
+#: ../src/settings.c:10837
 msgid "Tab _5"
 msgstr "Reiter _5"
 
-#: ../src/settings.c:10436 ../src/settings.c:10583 ../src/settings.c:10738
-#: ../src/settings.c:10776
+#: ../src/settings.c:10494 ../src/settings.c:10644 ../src/settings.c:10800
+#: ../src/settings.c:10838
 msgid "Tab _6"
 msgstr "Reiter _6"
 
-#: ../src/settings.c:10437 ../src/settings.c:10584 ../src/settings.c:10739
-#: ../src/settings.c:10777
+#: ../src/settings.c:10495 ../src/settings.c:10645 ../src/settings.c:10801
+#: ../src/settings.c:10839
 msgid "Tab _7"
 msgstr "Reiter _7"
 
-#: ../src/settings.c:10438 ../src/settings.c:10585 ../src/settings.c:10740
-#: ../src/settings.c:10778
+#: ../src/settings.c:10496 ../src/settings.c:10646 ../src/settings.c:10802
+#: ../src/settings.c:10840
 msgid "Tab _8"
 msgstr "Reiter _8"
 
-#: ../src/settings.c:10439 ../src/settings.c:10586 ../src/settings.c:10741
-#: ../src/settings.c:10779
+#: ../src/settings.c:10497 ../src/settings.c:10647 ../src/settings.c:10803
+#: ../src/settings.c:10841
 msgid "Tab _9"
 msgstr "Reiter _9"
 
-#: ../src/settings.c:10440 ../src/settings.c:10587 ../src/settings.c:10742
-#: ../src/settings.c:10780
+#: ../src/settings.c:10498 ../src/settings.c:10648 ../src/settings.c:10804
+#: ../src/settings.c:10842
 msgid "Tab 1_0"
 msgstr "Reiter 1_0"
 
-#: ../src/settings.c:10442
+#: ../src/settings.c:10500
 msgid "In _Panel"
 msgstr "Im _Panel"
 
-#: ../src/settings.c:10453 ../src/settings.c:10472
+#: ../src/settings.c:10511 ../src/settings.c:10530
 msgid "_Extract"
 msgstr "_Entpacken"
 
-#: ../src/settings.c:10456 ../src/settings.c:10476
+#: ../src/settings.c:10514 ../src/settings.c:10534
 msgid "Extract _To"
 msgstr "Entpacken _nach"
 
-#: ../src/settings.c:10459 ../src/settings.c:10479
+#: ../src/settings.c:10517 ../src/settings.c:10537
 msgid "_List Contents"
 msgstr "Inha_lt anzeigen"
 
-#: ../src/settings.c:10465
+#: ../src/settings.c:10523
 msgid "_Archive Default"
 msgstr "Voreinstellung für _Archiv"
 
-#: ../src/settings.c:10469
+#: ../src/settings.c:10527
 msgid "_Open With App"
 msgstr "Öffnen mit Pr_ogramm"
 
-#: ../src/settings.c:10482
+#: ../src/settings.c:10540
 msgid "_Create Subfolder"
 msgstr "_Unterordner anlegen"
 
-#: ../src/settings.c:10486
+#: ../src/settings.c:10544
 msgid "_Write Access"
 msgstr "Schreib_zugriff"
 
-#: ../src/settings.c:10489
+#: ../src/settings.c:10547
 msgid "_Mount ISO"
 msgstr "ISO _einhängen"
 
-#: ../src/settings.c:10492
+#: ../src/settings.c:10550
 msgid "_Auto-Mount ISO"
 msgstr "ISO _automatisch einhängen"
 
-#: ../src/settings.c:10506
+#: ../src/settings.c:10565
 msgid "Fol_der"
 msgstr "Or_dner"
 
-#: ../src/settings.c:10512
+#: ../src/settings.c:10573
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "_Lesezeichen"
 
-#: ../src/settings.c:10516
+#: ../src/settings.c:10577
 msgid "_Archive"
 msgstr "_Archiv"
 
-#: ../src/settings.c:10523
+#: ../src/settings.c:10584
 msgctxt "New|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:10525
+#: ../src/settings.c:10586
 msgid "Tab _Here"
 msgstr "_Hier Reiter"
 
-#: ../src/settings.c:10528
+#: ../src/settings.c:10589
 msgid "_Desktop Application"
 msgstr "Schreibtischanwen_dung"
 
-#: ../src/settings.c:10539
+#: ../src/settings.c:10600
 msgid "_Back"
 msgstr "_Zurück"
 
-#: ../src/settings.c:10541
+#: ../src/settings.c:10602
 msgid "_Forward"
 msgstr "_Vorwärts"
 
-#: ../src/settings.c:10543
+#: ../src/settings.c:10604
 msgid "_Up"
 msgstr "Nach _oben"
 
-#: ../src/settings.c:10545
+#: ../src/settings.c:10606
 msgid "_Home"
 msgstr "_Startseite"
 
-#: ../src/settings.c:10550
+#: ../src/settings.c:10611
 msgid "_Set Default"
 msgstr "Als _Voreinstellung festlegen"
 
-#: ../src/settings.c:10553
+#: ../src/settings.c:10614
 msgid "Re_al Path"
 msgstr "T_atsächlicher Pfad"
 
-#: ../src/settings.c:10555
+#: ../src/settings.c:10616
 msgid "Fo_cus"
 msgstr "Fo_kus"
 
-#: ../src/settings.c:10559
+#: ../src/settings.c:10620
 msgid "_Path Bar"
 msgstr "_Pfadleiste"
 
-#: ../src/settings.c:10561
+#: ../src/settings.c:10622
 msgid "_File List"
 msgstr "_Dateiliste"
 
-#: ../src/settings.c:10563
+#: ../src/settings.c:10624
 msgid "_Tree"
 msgstr "_Ordnerbaum"
 
-#: ../src/settings.c:10570
+#: ../src/settings.c:10631
 msgctxt "Go|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:10576
+#: ../src/settings.c:10637
 msgid "_Close"
 msgstr "S_chließen"
 
-#: ../src/settings.c:10593
+#: ../src/settings.c:10654
 msgid "Styl_e"
 msgstr "Sti_l"
 
-#: ../src/settings.c:10596
+#: ../src/settings.c:10657
 msgid "C_olumns"
 msgstr "_Spalten"
 
-#: ../src/settings.c:10599
+#: ../src/settings.c:10660
 msgid "_Reorder"
 msgstr "Umo_rdnen"
 
-#: ../src/settings.c:10601
+#: ../src/settings.c:10662
 msgid "_Rubberband Select"
 msgstr "_Rubberband Select"
 
-#: ../src/settings.c:10614
+#: ../src/settings.c:10675
 msgid "_Sort"
 msgstr "_Sortieren"
 
 #. visible
 #. position
-#: ../src/settings.c:10620 ../src/settings.c:11011
+#: ../src/settings.c:10681 ../src/settings.c:11091
 msgid "_Size"
 msgstr "_Größe"
 
-#. set visible for all panel context modes
-#. for ( i = 0; i < 4; i++ )
-#. {
-#. xset_set_b_panel_mode( p, "detcol_name", i, TRUE );
-#. xset_set_b_panel_mode( p, "detcol_size", i, TRUE );
-#. }
-#: ../src/settings.c:10622 ../src/settings.c:11023
+#: ../src/settings.c:10683 ../src/settings.c:11098
 msgid "_Type"
 msgstr "_Typ"
 
-#: ../src/settings.c:10624 ../src/settings.c:11027
+#: ../src/settings.c:10685 ../src/settings.c:11104
 msgid "_Permission"
 msgstr "_Zugriffsrechte"
 
-#: ../src/settings.c:10626 ../src/settings.c:10888 ../src/settings.c:11031
+#: ../src/settings.c:10687 ../src/settings.c:10950 ../src/settings.c:11110
 msgid "_Owner"
 msgstr "_Besitzer"
 
-#: ../src/settings.c:10628 ../src/settings.c:11035
+#: ../src/settings.c:10689 ../src/settings.c:11116
 msgid "_Modified"
 msgstr "_Geändert"
 
-#: ../src/settings.c:10632
+#: ../src/settings.c:10693
 msgid "_Descending"
 msgstr "Absteigen_d"
 
-#: ../src/settings.c:10635
+#: ../src/settings.c:10696
 msgid "Nat_ural"
 msgstr "_Natürlich"
 
-#: ../src/settings.c:10637
+#: ../src/settings.c:10698
 msgid "_Case Sensitive"
 msgstr "_Groß-/Kleinschreibung"
 
-#: ../src/settings.c:10639
+#: ../src/settings.c:10700
 msgid "Folders Fi_rst"
 msgstr "Ordner zue_rst"
 
-#: ../src/settings.c:10641
+#: ../src/settings.c:10702
 msgid "F_iles First"
 msgstr "Date_ien zuerst"
 
-#: ../src/settings.c:10643
+#: ../src/settings.c:10704
 msgid "Mi_xed"
 msgstr "Gemis_cht"
 
-#: ../src/settings.c:10645
+#: ../src/settings.c:10706
 msgid "_Hidden First"
 msgstr "Ver_borgene zuerst"
 
-#: ../src/settings.c:10647
+#: ../src/settings.c:10708
 msgid "Hidden _Last"
 msgstr "Verborgene zu_letzt"
 
-#: ../src/settings.c:10650
+#: ../src/settings.c:10711
 msgid "Re_fresh"
 msgstr "Neu _laden"
 
-#: ../src/settings.c:10653
+#: ../src/settings.c:10714
 msgid "Auto See_k"
 msgstr "Automatisch _suchen"
 
-#: ../src/settings.c:10658
+#: ../src/settings.c:10719
 msgid "P_rotocol Handler..."
 msgstr "P_rotokollhandhabung …"
 
-#: ../src/settings.c:10660
+#: ../src/settings.c:10721
 msgid "Set Protocol Handler"
 msgstr "Protokollhandhabung festlegen"
 
-#: ../src/settings.c:10661
+#: ../src/settings.c:10722
 msgid ""
 "Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
@@ -4448,195 +4448,195 @@ msgid ""
 "TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr "Eingabe eines Befehls zum Einhängen oder Öffnen von Protokollen (z.B. nfs://, smb://, etc):\n\nFalls diese Einstellung nicht gesetzt ist, öffnet SpaceFM die Protokolle mit 'udevil mount'.\n\nTIP:  zum Aushängen von Netzwerken udevil installieren oder einen Aushängebefehl für ein Programm festlegen, das mit Netzwerkprotokollen hantiert .\n"
 
-#: ../src/settings.c:10665
+#: ../src/settings.c:10726
 msgid "Path Bar _Help"
 msgstr "Pfadleiste _Hilfe"
 
-#: ../src/settings.c:10681 ../src/settings.c:10811
+#: ../src/settings.c:10743 ../src/settings.c:10873
 msgid "_Delete"
 msgstr "_Löschen"
 
-#: ../src/settings.c:10704
+#: ../src/settings.c:10766
 msgid "Copy Pa_rent"
 msgstr "Abstammung kopie_ren"
 
-#: ../src/settings.c:10707
+#: ../src/settings.c:10769
 msgid "Paste _Link"
 msgstr "Ver_knüpfung einfügen"
 
-#: ../src/settings.c:10710
+#: ../src/settings.c:10772
 msgid "Paste _Target"
 msgstr "Ziel _einfügen"
 
-#: ../src/settings.c:10713
+#: ../src/settings.c:10775
 msgid "Paste _As"
 msgstr "Einfügen _als"
 
-#: ../src/settings.c:10719 ../src/settings.c:10809
+#: ../src/settings.c:10781 ../src/settings.c:10871
 msgid "_Copy To"
 msgstr "_Kopieren nach"
 
-#: ../src/settings.c:10723
+#: ../src/settings.c:10785
 msgid "L_ocation"
 msgstr "_Ort"
 
-#: ../src/settings.c:10724 ../src/settings.c:10763
+#: ../src/settings.c:10786 ../src/settings.c:10825
 msgid "L_ast Location"
 msgstr "_Letzter Ort"
 
-#: ../src/settings.c:10727
+#: ../src/settings.c:10789
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:10744
+#: ../src/settings.c:10806
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:10758
+#: ../src/settings.c:10820
 msgid "_Move To"
 msgstr "Verschieben _nach"
 
-#: ../src/settings.c:10762
+#: ../src/settings.c:10824
 msgid "_Location"
 msgstr "Platz im _Ordnerbaum"
 
-#: ../src/settings.c:10765
+#: ../src/settings.c:10827
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
 msgstr "Rei_ter"
 
-#: ../src/settings.c:10782
+#: ../src/settings.c:10844
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
 msgstr "_Panel"
 
-#: ../src/settings.c:10795
+#: ../src/settings.c:10857
 msgid "_Select All"
 msgstr "_Alles auswählen"
 
-#: ../src/settings.c:10798
+#: ../src/settings.c:10860
 msgid "_Unselect All"
 msgstr "Alle ab_wählen"
 
-#: ../src/settings.c:10800
+#: ../src/settings.c:10862
 msgid "_Invert Selection"
 msgstr "Auswahl _umkehren"
 
-#: ../src/settings.c:10802
+#: ../src/settings.c:10864
 msgid "S_elect By Pattern"
 msgstr "Auswahl nach Must_er"
 
-#: ../src/settings.c:10804
+#: ../src/settings.c:10866
 msgid "R_oot"
 msgstr "R_oot"
 
-#: ../src/settings.c:10810
+#: ../src/settings.c:10872
 msgid "Move _To"
 msgstr "Verschieben _nach"
 
 #. Properties
-#: ../src/settings.c:10815
+#: ../src/settings.c:10877
 msgid "Propert_ies"
 msgstr "E_igenschaften"
 
-#: ../src/settings.c:10826
+#: ../src/settings.c:10888
 msgid "_Quick"
 msgstr "_Schnell"
 
-#: ../src/settings.c:10848 ../src/settings.c:10878 ../src/settings.c:10904
+#: ../src/settings.c:10910 ../src/settings.c:10940 ../src/settings.c:10966
 msgid "_Recursive"
 msgstr "_Rekursiv"
 
-#: ../src/settings.c:10926
+#: ../src/settings.c:10988
 msgid "_Toolbar"
 msgstr "Werkzeugleis_te"
 
-#: ../src/settings.c:10933
+#: ../src/settings.c:10999
 msgid "T_ree"
 msgstr "O_rdnerbaum"
 
-#: ../src/settings.c:10947
+#: ../src/settings.c:11015
 msgid "_Detailed"
 msgstr "_Detailliert"
 
-#: ../src/settings.c:10951
+#: ../src/settings.c:11021
 msgid "_Icons"
 msgstr "_Symbole"
 
-#: ../src/settings.c:10954
+#: ../src/settings.c:11026
 msgid "_Compact"
 msgstr "_Kompakt"
 
-#: ../src/settings.c:10957
+#: ../src/settings.c:11031
 msgid "_Hidden Files"
 msgstr "_Verborgene Dateien"
 
-#: ../src/settings.c:10963
+#: ../src/settings.c:11039
 #, c-format
 msgid "File List Font (Panel %d)"
-msgstr ""
+msgstr "Font Dateiliste (Paneel %d)"
 
-#: ../src/settings.c:10964
+#: ../src/settings.c:11040
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
 msgstr "Beispiel  1.1 M  Datei  -rwxr--r--  user:group  2011-01-01 01:11"
 
-#: ../src/settings.c:10969
+#: ../src/settings.c:11045
 #, c-format
 msgid "Devices Font (Panel %d)"
-msgstr ""
+msgstr "Font Geräte (Paneel %d)"
 
-#: ../src/settings.c:10970
+#: ../src/settings.c:11046
 msgid "sr0 [no media] :EXAMPLE"
 msgstr "sr0 [no media] :BEISPIEL"
 
-#: ../src/settings.c:10976
+#: ../src/settings.c:11052
 #, c-format
 msgid "Bookmarks Font (Panel %d)"
-msgstr ""
+msgstr "Font Lesezeichen (Paneel %d)"
 
-#: ../src/settings.c:10977
+#: ../src/settings.c:11053
 msgid "Example Bookmark Name"
 msgstr "Beispiel für Lesezeichenname"
 
-#: ../src/settings.c:10982
+#: ../src/settings.c:11058
 #, c-format
 msgid "Path Bar Font (Panel %d)"
-msgstr ""
+msgstr "Font Pfadleiste (Paneel %d)"
 
-#: ../src/settings.c:10983
+#: ../src/settings.c:11059
 msgid "$ cat /home/user/example"
 msgstr "$ cat /home/user/Beispiel"
 
-#: ../src/settings.c:10989
+#: ../src/settings.c:11065
 #, c-format
 msgid "Tab Font (Panel %d)"
-msgstr ""
+msgstr "Font Reiter (Paneel %d)"
 
-#: ../src/settings.c:10999
+#: ../src/settings.c:11075
 #, c-format
 msgid "Status Bar Font (Panel %d)"
-msgstr ""
+msgstr "Font Statusleiste (Paneel %d)"
 
-#: ../src/settings.c:11000
+#: ../src/settings.c:11076
 msgid "12 G free / 200 G   52 items"
 msgstr "12 G frei / 200 G   52 Elemente"
 
 #. speed
-#: ../src/settings.c:11047 ../src/settings.c:11054
+#: ../src/settings.c:11130 ../src/settings.c:11137
 msgid "_New Tab"
 msgstr "_Neuer Reiter"
 
-#: ../src/settings.c:11050 ../src/settings.c:11059
+#: ../src/settings.c:11133 ../src/settings.c:11142
 msgid "_Single Click"
 msgstr "Ein_zelklick"
 
-#: ../src/ptk/ptk-file-browser.c:600
+#: ../src/ptk/ptk-file-browser.c:597
 msgid "Toolbar Config Menu Help"
 msgstr "Hilfe Werkzeugleistenkonfigurationsmenü"
 
-#: ../src/ptk/ptk-file-browser.c:600
+#: ../src/ptk/ptk-file-browser.c:597
 msgid ""
 "These toolbar config menus allow you to customize the toolbars.\n"
 "\n"
@@ -4645,7 +4645,7 @@ msgid ""
 "For more information, click the Help button below."
 msgstr "Diese Werkzeugleistenkonfigurationsmenüs ermöglichen die Personalisierung der Werkzeugleisten.\n\nEingabe von Untermenü Werkzeugleiste Links, Werkzeugleiste Rechts oder Werkzeugleiste Seite und dann ein Rechtsklick, um diese anzuzeigen oder zu verbergen, das Symbol zu ändern oder eigene Werkzeuge hinzuzufügen.\n\nein Klick auf die Hilfe unten liefert mehr Informationen."
 
-#: ../src/ptk/ptk-file-browser.c:2350
+#: ../src/ptk/ptk-file-browser.c:2390
 #, c-format
 msgid ""
 "Directory doesn't exist\n"
@@ -4653,7 +4653,7 @@ msgid ""
 "%s"
 msgstr "Ordner existiert nicht\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:2375
+#: ../src/ptk/ptk-file-browser.c:2415
 #, c-format
 msgid ""
 "Unable to access %s\n"
@@ -4661,11 +4661,11 @@ msgid ""
 "%s"
 msgstr "Zugriff nicht möglich auf  %s\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:3020 ../src/desktop/desktop-window.c:2210
+#: ../src/ptk/ptk-file-browser.c:3067 ../src/desktop/desktop-window.c:2210
 msgid "Select By Pattern"
 msgstr "Auswahl nach Muster"
 
-#: ../src/ptk/ptk-file-browser.c:3020 ../src/desktop/desktop-window.c:2210
+#: ../src/ptk/ptk-file-browser.c:3067 ../src/desktop/desktop-window.c:2210
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -4677,49 +4677,49 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr "Mustereingabe zur Auswahl von Dateien und Ordner:\n\nDie Übereinstimmungen beachten Groß-/Kleinschreibung, falls im Muster Großbuchstaben vorkommen.\n\nBeispiel: *sp*e?m*\n\nTIP: alternativ kann auch ein '%% MUSTER' in der Pfadliste eingegeben werden."
 
-#: ../src/ptk/ptk-file-browser.c:5788 ../src/ptk/ptk-file-misc.c:3811
+#: ../src/ptk/ptk-file-browser.c:5845 ../src/ptk/ptk-file-misc.c:3811
 #: ../src/desktop/desktop-window.c:3211
 msgid "Choose Location"
 msgstr "Ort auswählen"
 
-#: ../src/ptk/ptk-file-browser.c:5821 ../src/ptk/ptk-file-browser.c:5853
+#: ../src/ptk/ptk-file-browser.c:5878 ../src/ptk/ptk-file-browser.c:5910
 #: ../src/desktop/desktop-window.c:3244 ../src/desktop/desktop-window.c:3276
 msgid "Invalid Destination"
 msgstr "Ungültige Zielortangabe"
 
-#: ../src/ptk/ptk-file-browser.c:5822 ../src/desktop/desktop-window.c:3245
+#: ../src/ptk/ptk-file-browser.c:5879 ../src/desktop/desktop-window.c:3245
 msgid "Destination same as source"
 msgstr "Zielort entspricht Quellort"
 
-#: ../src/ptk/ptk-file-browser.c:5854 ../src/desktop/desktop-window.c:3277
+#: ../src/ptk/ptk-file-browser.c:5911 ../src/desktop/desktop-window.c:3277
 msgid "Invalid destination"
 msgstr "Ungültige Zielortangabe"
 
-#: ../src/ptk/ptk-file-browser.c:5901
+#: ../src/ptk/ptk-file-browser.c:5958
 msgid "Hide File"
 msgstr "Datei verbergen"
 
-#: ../src/ptk/ptk-file-browser.c:5901
+#: ../src/ptk/ptk-file-browser.c:5958
 msgid ""
 "The names of the selected files will be added to the '.hidden' file located in this folder, which will hide them from view in SpaceFM.  You may need to refresh the view or restart SpaceFM for the files to disappear.\n"
 "\n"
 "To unhide a file, open the .hidden file in your text editor, remove the name of the file, and refresh."
 msgstr "Die Namen der ausgewählten Dateien werden zur '.hidden' Datei in diesem Ordner hinzugefügt, wodurch sie in SpaceFM nicht mehr angezeigt werden. Eventuell ist ein Neuladen der Ansicht oder ein Neustart von SpaceFM notwendig, damit die Dateien nicht mehr angezeigt werden.\n\nUm eine Datei wieder anzuzeigen, bitte .hidden Datei im Editor öffnen, Dateiname dort löschen und Ansicht neu laden."
 
-#: ../src/ptk/ptk-file-browser.c:5914
+#: ../src/ptk/ptk-file-browser.c:5971
 msgid "Error hiding files"
 msgstr "Fehler beim Verbergen von Dateien"
 
-#: ../src/ptk/ptk-file-browser.c:5921
+#: ../src/ptk/ptk-file-browser.c:5978
 msgid "No files are selected"
 msgstr "Keine Dateien ausgewählt"
 
-#: ../src/ptk/ptk-file-browser.c:6723 ../src/ptk/ptk-location-view.c:3726
+#: ../src/ptk/ptk-file-browser.c:6780 ../src/ptk/ptk-location-view.c:3726
 #: ../src/ptk/ptk-file-menu.c:510
 msgid "Bookmark Exists"
 msgstr "Lesezeichen existiert"
 
-#: ../src/ptk/ptk-file-browser.c:6724 ../src/ptk/ptk-location-view.c:3727
+#: ../src/ptk/ptk-file-browser.c:6781 ../src/ptk/ptk-location-view.c:3727
 #: ../src/ptk/ptk-file-menu.c:511
 msgid "Bookmark already exists"
 msgstr "Lesezeichen existiert bereits"
@@ -5157,350 +5157,350 @@ msgstr "Geben Sie einen neuen Ordner für das Lesezeichen »%s« ein:"
 msgid "Edit Bookmark Location"
 msgstr "Lesezeichenort bearbeiten"
 
-#: ../src/ptk/ptk-file-task.c:449
+#: ../src/ptk/ptk-file-task.c:475
 msgid "Kill As Other"
 msgstr "Abbrechen als anderer"
 
-#: ../src/ptk/ptk-file-task.c:493
+#: ../src/ptk/ptk-file-task.c:519
 msgid "Q_ueue"
 msgstr "_Warteschlange"
 
-#: ../src/ptk/ptk-file-task.c:499
+#: ../src/ptk/ptk-file-task.c:525
 msgid "Res_ume"
 msgstr "Wie_deraufnehmen"
 
-#: ../src/ptk/ptk-file-task.c:580
+#: ../src/ptk/ptk-file-task.c:606
 msgid "Stop As Other"
 msgstr "Stoppen als anderer"
 
-#: ../src/ptk/ptk-file-task.c:580
+#: ../src/ptk/ptk-file-task.c:606
 msgid "Cont As Other"
 msgstr "Zählen als anderer"
 
-#: ../src/ptk/ptk-file-task.c:775
+#: ../src/ptk/ptk-file-task.c:776
 msgid "Move: "
 msgstr "Verschieben:"
 
-#: ../src/ptk/ptk-file-task.c:776
+#: ../src/ptk/ptk-file-task.c:777
 msgid "Copy: "
 msgstr "Kopieren:"
 
-#: ../src/ptk/ptk-file-task.c:777
+#: ../src/ptk/ptk-file-task.c:778
 msgid "Trash: "
 msgstr "Papierkorb:"
 
-#: ../src/ptk/ptk-file-task.c:778
+#: ../src/ptk/ptk-file-task.c:779
 msgid "Delete: "
 msgstr "Löschen:"
 
-#: ../src/ptk/ptk-file-task.c:779
+#: ../src/ptk/ptk-file-task.c:780
 msgid "Link: "
 msgstr "Verknüpfen:"
 
-#: ../src/ptk/ptk-file-task.c:780
+#: ../src/ptk/ptk-file-task.c:781
 msgid "Change: "
 msgstr "Änderung:"
 
-#: ../src/ptk/ptk-file-task.c:781
+#: ../src/ptk/ptk-file-task.c:782
 msgid "Run: "
 msgstr "Ausführen:"
 
-#: ../src/ptk/ptk-file-task.c:785
+#: ../src/ptk/ptk-file-task.c:786
 msgid "Moving..."
 msgstr "Wird verschoben …"
 
-#: ../src/ptk/ptk-file-task.c:786
+#: ../src/ptk/ptk-file-task.c:787
 msgid "Copying..."
 msgstr "Wird kopiert …"
 
-#: ../src/ptk/ptk-file-task.c:787
+#: ../src/ptk/ptk-file-task.c:788
 msgid "Trashing..."
 msgstr "Wird in Papierkorb verschoben …"
 
-#: ../src/ptk/ptk-file-task.c:788
+#: ../src/ptk/ptk-file-task.c:789
 msgid "Deleting..."
 msgstr "Wird gelöscht …"
 
-#: ../src/ptk/ptk-file-task.c:789
+#: ../src/ptk/ptk-file-task.c:790
 msgid "Linking..."
 msgstr "Wird verknüpft …"
 
-#: ../src/ptk/ptk-file-task.c:790
+#: ../src/ptk/ptk-file-task.c:791
 msgid "Changing..."
 msgstr "Wird geändert …"
 
-#: ../src/ptk/ptk-file-task.c:791 ../src/ptk/ptk-file-task.c:961
-#: ../src/ptk/ptk-file-task.c:1493
+#: ../src/ptk/ptk-file-task.c:792 ../src/ptk/ptk-file-task.c:962
+#: ../src/ptk/ptk-file-task.c:1494
 #, c-format
 msgid "Running..."
 msgstr "Wird ausgeführt …"
 
-#: ../src/ptk/ptk-file-task.c:877
+#: ../src/ptk/ptk-file-task.c:878
 msgid "From:"
 msgstr "Von:"
 
-#: ../src/ptk/ptk-file-task.c:894
+#: ../src/ptk/ptk-file-task.c:895
 msgid "To:"
 msgstr "Nach:"
 
-#: ../src/ptk/ptk-file-task.c:912
+#: ../src/ptk/ptk-file-task.c:913
 msgid "Progress:  "
 msgstr "Fortschritt:"
 
-#: ../src/ptk/ptk-file-task.c:950
+#: ../src/ptk/ptk-file-task.c:951
 msgid "Status:  "
 msgstr "Status:  "
 
-#: ../src/ptk/ptk-file-task.c:957 ../src/ptk/ptk-file-task.c:1454
+#: ../src/ptk/ptk-file-task.c:958 ../src/ptk/ptk-file-task.c:1455
 #, c-format
 msgid "Paused"
 msgstr "Pausiert"
 
-#: ../src/ptk/ptk-file-task.c:959 ../src/ptk/ptk-file-task.c:1470
+#: ../src/ptk/ptk-file-task.c:960 ../src/ptk/ptk-file-task.c:1471
 #, c-format
 msgid "Queued"
 msgstr "Zur Warteschlange hinzugefügt"
 
-#: ../src/ptk/ptk-file-task.c:1020
+#: ../src/ptk/ptk-file-task.c:1021
 msgid "Ask"
 msgstr "Nachfragen"
 
-#: ../src/ptk/ptk-file-task.c:1021
+#: ../src/ptk/ptk-file-task.c:1022
 msgid "Overwrite All"
 msgstr "Alles überschreiben"
 
-#: ../src/ptk/ptk-file-task.c:1022
+#: ../src/ptk/ptk-file-task.c:1023
 msgid "Skip All"
 msgstr "Alles überspringen"
 
-#: ../src/ptk/ptk-file-task.c:1023
+#: ../src/ptk/ptk-file-task.c:1024
 msgid "Auto Rename"
 msgstr "Automatisches Umbenennen"
 
-#: ../src/ptk/ptk-file-task.c:1027
+#: ../src/ptk/ptk-file-task.c:1028
 msgid "Stop If Error First"
 msgstr "Stop falls Fehler zuerst"
 
-#: ../src/ptk/ptk-file-task.c:1028
+#: ../src/ptk/ptk-file-task.c:1029
 msgid "Stop On Any Error"
 msgstr "Stop bei beliebigem Fehler"
 
-#: ../src/ptk/ptk-file-task.c:1029
+#: ../src/ptk/ptk-file-task.c:1030
 msgid "Continue"
 msgstr "Fortsetzen"
 
-#: ../src/ptk/ptk-file-task.c:1192 ../src/ptk/ptk-file-task.c:1425
+#: ../src/ptk/ptk-file-task.c:1193 ../src/ptk/ptk-file-task.c:1426
 #, c-format
 msgid "Stopped"
 msgstr "Gestoppt"
 
-#: ../src/ptk/ptk-file-task.c:1196
+#: ../src/ptk/ptk-file-task.c:1197
 msgid "Errors"
 msgstr "Fehler"
 
-#: ../src/ptk/ptk-file-task.c:1198 ../src/ptk/ptk-file-task.c:1437
-#: ../src/ptk/ptk-file-task.c:1447
+#: ../src/ptk/ptk-file-task.c:1199 ../src/ptk/ptk-file-task.c:1438
+#: ../src/ptk/ptk-file-task.c:1448
 #, c-format
 msgid "Done"
 msgstr "Fertig"
 
-#: ../src/ptk/ptk-file-task.c:1353
+#: ../src/ptk/ptk-file-task.c:1354
 #, c-format
 msgid "%s  (%s)  %s remaining"
 msgstr "%s  (%s)  %s verbleibend"
 
-#: ../src/ptk/ptk-file-task.c:1385
+#: ../src/ptk/ptk-file-task.c:1386
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
 msgstr "[ SNIP - zusätzliche Fehler oben wurden für dieses Log passend gemacht]\n"
 
-#: ../src/ptk/ptk-file-task.c:1415
+#: ../src/ptk/ptk-file-task.c:1416
 #, c-format
 msgid "Error  ( Stop If First )"
 msgstr "Fehler (Stop falls zuerst)"
 
-#: ../src/ptk/ptk-file-task.c:1417
+#: ../src/ptk/ptk-file-task.c:1418
 #, c-format
 msgid "Error  ( Stop On Any )"
 msgstr "Fehler (Stop bei beliebigem)"
 
-#: ../src/ptk/ptk-file-task.c:1419
+#: ../src/ptk/ptk-file-task.c:1420
 #, c-format
 msgid "Stopped with %d error"
 msgid_plural "Stopped with %d errors"
 msgstr[0] "gestoppt mit Fehler %d"
 msgstr[1] "gestoppt mit Fehler %d"
 
-#: ../src/ptk/ptk-file-task.c:1432
+#: ../src/ptk/ptk-file-task.c:1433
 #, c-format
 msgid "Finished with %d error"
 msgid_plural "Finished with %d errors"
 msgstr[0] "beendet mit Fehler %d"
 msgstr[1] "beendet mit Fehler %d"
 
-#: ../src/ptk/ptk-file-task.c:1442
+#: ../src/ptk/ptk-file-task.c:1443
 #, c-format
 msgid "Finished with error  ( exit status %d )"
 msgstr "beendet mit Fehler  ( Exitstatus %d )"
 
-#: ../src/ptk/ptk-file-task.c:1445
+#: ../src/ptk/ptk-file-task.c:1446
 #, c-format
 msgid "Finished with error"
 msgstr "beendet mit Fehler"
 
-#: ../src/ptk/ptk-file-task.c:1458
+#: ../src/ptk/ptk-file-task.c:1459
 #, c-format
 msgid "Paused  ( pid %d )"
 msgstr "Pausiert  ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1461
+#: ../src/ptk/ptk-file-task.c:1462
 #, c-format
 msgid "Paused  ( exit status %d )"
 msgstr "Pausiert  ( Exitstatus %d )"
 
-#: ../src/ptk/ptk-file-task.c:1474
+#: ../src/ptk/ptk-file-task.c:1475
 #, c-format
 msgid "Queued  ( pid %d )"
 msgstr "In Warteschlange ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1477
+#: ../src/ptk/ptk-file-task.c:1478
 #, c-format
 msgid "Queued  ( exit status %d )"
 msgstr "In Warteschlange  ( Exitstatus %d )"
 
-#: ../src/ptk/ptk-file-task.c:1488
+#: ../src/ptk/ptk-file-task.c:1489
 #, c-format
 msgid "Running with %d error"
 msgid_plural "Running with %d errors"
 msgstr[0] "Wird ausgeführt - mit %d Fehler"
 msgstr[1] "Wird ausgeführt - mit %d Fehlern"
 
-#: ../src/ptk/ptk-file-task.c:1498
+#: ../src/ptk/ptk-file-task.c:1499
 #, c-format
 msgid "Running...  ( pid %d )"
 msgstr "Wird ausgeführt … ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1501
+#: ../src/ptk/ptk-file-task.c:1502
 #, c-format
 msgid "Running...  ( exit status %d )"
 msgstr "Wird ausgeführt …  ( Exitstatus %d )"
 
-#: ../src/ptk/ptk-file-task.c:1630 ../src/ptk/ptk-file-task.c:2396
+#: ../src/ptk/ptk-file-task.c:1631 ../src/ptk/ptk-file-task.c:2397
 #, c-format
 msgid "stalled"
 msgstr "unterbrochen"
 
-#: ../src/ptk/ptk-file-task.c:2055
+#: ../src/ptk/ptk-file-task.c:2056
 msgid "Moving from folder:"
 msgstr "Verschieben aus Ordner:"
 
-#: ../src/ptk/ptk-file-task.c:2057
+#: ../src/ptk/ptk-file-task.c:2058
 msgid "Linking from folder:"
 msgstr "Verknüpfen aus Ordner:"
 
-#: ../src/ptk/ptk-file-task.c:2059
+#: ../src/ptk/ptk-file-task.c:2060
 msgid "Copying from folder:"
 msgstr "Kopieren aus Ordner:"
 
 #. Ask the user whether to overwrite dir content or not
-#: ../src/ptk/ptk-file-task.c:2075
+#: ../src/ptk/ptk-file-task.c:2076
 msgid "Folder Exists"
 msgstr "Ordner existiert"
 
-#: ../src/ptk/ptk-file-task.c:2076
+#: ../src/ptk/ptk-file-task.c:2077
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
 msgstr "<b>Der Ordner existiert bereits.</b>  Bitte umbenennen oder Aktion auswählen."
 
-#: ../src/ptk/ptk-file-task.c:2093 ../src/ptk/ptk-file-task.c:2097
+#: ../src/ptk/ptk-file-task.c:2094 ../src/ptk/ptk-file-task.c:2098
 msgid "\t<b>( link )</b>"
 msgstr "\t<b>( link )</b>"
 
-#: ../src/ptk/ptk-file-task.c:2101
+#: ../src/ptk/ptk-file-task.c:2102
 msgid "\t<b>! overwrite file with link !</b>"
 msgstr "\t<b>! Datei wird mit Verknüpfung überschrieben !</b>"
 
-#: ../src/ptk/ptk-file-task.c:2106
+#: ../src/ptk/ptk-file-task.c:2107
 msgid "<b>( same size )</b>"
 msgstr "<b>( selbe Größe )</b>"
 
-#: ../src/ptk/ptk-file-task.c:2112 ../src/ptk/ptk-file-task.c:2135
+#: ../src/ptk/ptk-file-task.c:2113 ../src/ptk/ptk-file-task.c:2136
 #, c-format
 msgid "%s\t( %lu bytes )"
 msgstr "%s\t( %lu Bytes )"
 
-#: ../src/ptk/ptk-file-task.c:2114
+#: ../src/ptk/ptk-file-task.c:2115
 msgid "larger"
 msgstr "größer"
 
-#: ../src/ptk/ptk-file-task.c:2116
+#: ../src/ptk/ptk-file-task.c:2117
 msgid "smaller"
 msgstr "kleiner"
 
-#: ../src/ptk/ptk-file-task.c:2120
+#: ../src/ptk/ptk-file-task.c:2121
 msgid "<b>( same time )</b>\t"
 msgstr "<b>( selbe Zeit )</b>\t"
 
-#: ../src/ptk/ptk-file-task.c:2130
+#: ../src/ptk/ptk-file-task.c:2131
 msgid "newer"
 msgstr "neuer"
 
-#: ../src/ptk/ptk-file-task.c:2132
+#: ../src/ptk/ptk-file-task.c:2133
 msgid "older"
 msgstr "älter"
 
-#: ../src/ptk/ptk-file-task.c:2153
+#: ../src/ptk/ptk-file-task.c:2154
 msgid "Filename Exists"
 msgstr "Dateiname existiert"
 
-#: ../src/ptk/ptk-file-task.c:2154 ../src/ptk/ptk-file-task.c:2169
+#: ../src/ptk/ptk-file-task.c:2155 ../src/ptk/ptk-file-task.c:2170
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr "<b>Dateiname existiert bereits.</b>  Bitte umbenennen oder Aktion auswählen."
 
-#: ../src/ptk/ptk-file-task.c:2166
+#: ../src/ptk/ptk-file-task.c:2167
 msgid "Rename Required"
 msgstr "Umbenennung erforderlich"
 
-#: ../src/ptk/ptk-file-task.c:2168
+#: ../src/ptk/ptk-file-task.c:2169
 msgid "In folder:"
 msgstr "In Ordner:"
 
-#: ../src/ptk/ptk-file-task.c:2248
+#: ../src/ptk/ptk-file-task.c:2249
 msgid "_Overwrite"
 msgstr "_Überschreiben"
 
-#: ../src/ptk/ptk-file-task.c:2249
+#: ../src/ptk/ptk-file-task.c:2250
 msgid "Overwrite _All"
 msgstr "_Alle überschreiben"
 
-#: ../src/ptk/ptk-file-task.c:2254
+#: ../src/ptk/ptk-file-task.c:2255
 msgid "_Pause"
 msgstr "_Pause"
 
-#: ../src/ptk/ptk-file-task.c:2256
+#: ../src/ptk/ptk-file-task.c:2257
 msgid "_Skip"
 msgstr "Über_springen"
 
-#: ../src/ptk/ptk-file-task.c:2257
+#: ../src/ptk/ptk-file-task.c:2258
 msgid "S_kip All"
 msgstr "Alles ü_berspringen"
 
-#: ../src/ptk/ptk-file-task.c:2310
+#: ../src/ptk/ptk-file-task.c:2311
 msgid "To folder:"
 msgstr "Nach Ordner:"
 
-#: ../src/ptk/ptk-file-task.c:2337
+#: ../src/ptk/ptk-file-task.c:2338
 msgid "<b>Folder Name:</b>"
 msgstr "<b>Ordnername:</b>"
 
 #. extra buttons
-#: ../src/ptk/ptk-file-task.c:2365
+#: ../src/ptk/ptk-file-task.c:2366
 msgid " _Rename "
 msgstr "_Umbenennen"
 
-#: ../src/ptk/ptk-file-task.c:2369
+#: ../src/ptk/ptk-file-task.c:2370
 msgid " A_uto Rename "
 msgstr "A_utomatisch umbenennen"
 
-#: ../src/ptk/ptk-file-task.c:2373
+#: ../src/ptk/ptk-file-task.c:2374
 msgid " Auto Re_name All "
 msgstr "Alle automatisch umbe_nennen"
 
@@ -6198,7 +6198,7 @@ msgstr "Der Zielordner »%1$s« befindet sich im Quellordner »%2$s«"
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2082
+#: ../src/vfs/vfs-file-task.c:2093
 msgid "Accessing"
 msgstr "Zugriff"
 
@@ -6262,26 +6262,26 @@ msgstr "Temporärer Ordner kann nicht angelegt werden"
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr "Bitte gültiges Terminalprogramm in Ansicht|Einstellungen|Erweitert festlegen"
 
-#: ../src/vfs/vfs-file-task.c:1812
+#: ../src/vfs/vfs-file-task.c:1823
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr "spacefm-auth im Pfad nicht gefunden - das reduziert die Systemsicherheit"
 
-#: ../src/vfs/vfs-file-task.c:1913
+#: ../src/vfs/vfs-file-task.c:1924
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr "Fehler beim Ausführen von »%s«\nSiehe stdout (spacefm in einem Terminal ausführen) für Infos zur Fehlerbehebung"
 
-#: ../src/vfs/vfs-file-task.c:1982
+#: ../src/vfs/vfs-file-task.c:1993
 msgid "Error writing temporary file"
 msgstr "Fehler beim Schreiben der temporären Datei"
 
-#: ../src/vfs/vfs-file-task.c:2166
+#: ../src/vfs/vfs-file-task.c:2177
 msgid "Timed out calculating total size\n"
 msgstr "Zeitüberschreitung beim Berechnen der Gesamtgröße\n"
 
-#: ../src/vfs/vfs-file-task.c:2497
+#: ../src/vfs/vfs-file-task.c:2508
 #, c-format
 msgid ""
 "\n"
@@ -6548,94 +6548,94 @@ msgid ""
 "Audio CDs cannot be mounted, use music players to play the audio tracks"
 msgstr "Audio-CDs können nicht eingebunden werden. Verwenden Sie Ihr Musikwiedergabeprogramm, um Musik abzuspielen."
 
-#: ../src/vfs/vfs-volume-nohal.c:2313
+#: ../src/vfs/vfs-volume-nohal.c:2316
 #, c-format
 msgid ":floppy"
 msgstr ":Floppy"
 
-#: ../src/vfs/vfs-volume-nohal.c:2334
+#: ../src/vfs/vfs-volume-nohal.c:2337
 #, c-format
 msgid ":optical"
 msgstr ":optisches Medium"
 
-#: ../src/vfs/vfs-volume-nohal.c:2379
+#: ../src/vfs/vfs-volume-nohal.c:2382
 #, c-format
 msgid "[blank]"
 msgstr "[leer]"
 
-#: ../src/vfs/vfs-volume-nohal.c:2383
+#: ../src/vfs/vfs-volume-nohal.c:2386
 #, c-format
 msgid "[audio]"
 msgstr "[Audio]"
 
-#: ../src/vfs/vfs-volume-nohal.c:2397
+#: ../src/vfs/vfs-volume-nohal.c:2400
 #, c-format
 msgid "[no media]"
 msgstr "[kein Medium]"
 
-#: ../src/vfs/vfs-volume-nohal.c:3198
+#: ../src/vfs/vfs-volume-nohal.c:3201
 #, c-format
 msgid "( udev was unavailable at startup )"
 msgstr "( udev war beim Starten nicht verfügbar )"
 
-#: ../src/vfs/vfs-volume-nohal.c:3203
+#: ../src/vfs/vfs-volume-nohal.c:3206
 #, c-format
 msgid "( cannot stat device file )"
 msgstr "( Anzeige von Statistiken zum Gerät nicht möglich ) "
 
-#: ../src/vfs/vfs-volume-nohal.c:3208
+#: ../src/vfs/vfs-volume-nohal.c:3211
 #, c-format
 msgid "( not a block device )"
 msgstr "( kein Blockgerät )"
 
-#: ../src/vfs/vfs-volume-nohal.c:3216
+#: ../src/vfs/vfs-volume-nohal.c:3219
 #, c-format
 msgid "( no udev device )"
 msgstr "( kein udev-Gerät )"
 
-#: ../src/vfs/vfs-volume-nohal.c:3459
+#: ../src/vfs/vfs-volume-nohal.c:3462
 #, c-format
 msgid ""
 "\n"
 "Autoexec: %s\n"
 msgstr "\nAutomatisch ausführen: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3506
+#: ../src/vfs/vfs-volume-nohal.c:3509
 #, c-format
 msgid ""
 "\n"
 "Auto Open Tab for %s in %s\n"
 msgstr "\nReiter automatisch öffnen für %s in %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3552 ../src/vfs/vfs-volume-nohal.c:3799
+#: ../src/vfs/vfs-volume-nohal.c:3555 ../src/vfs/vfs-volume-nohal.c:3802
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: %s\n"
 msgstr "\nAutomatisch aushängen: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3557
+#: ../src/vfs/vfs-volume-nohal.c:3560
 #, c-format
 msgid ""
 "\n"
 "Auto-Unmount: error: no unmount program available\n"
 msgstr "\nAutomatisch aushängen: Fehler: kein Programm zum Aushängen verfügbar\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3574
+#: ../src/vfs/vfs-volume-nohal.c:3577
 #, c-format
 msgid ""
 "\n"
 "Automount: %s\n"
 msgstr "\nAutomatisch einhängen: %s\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3579
+#: ../src/vfs/vfs-volume-nohal.c:3582
 #, c-format
 msgid ""
 "\n"
 "Automount: error: no mount program available\n"
 msgstr "\nAutomatisch einhängen: Fehler: kein Programm zum Einhängen verfügbar\n"
 
-#: ../src/vfs/vfs-volume-nohal.c:3784
+#: ../src/vfs/vfs-volume-nohal.c:3787
 #, c-format
 msgid "Unmount-If-Mounted: %s\n"
 msgstr "Aushängen falls eingehängt: %s\n"
