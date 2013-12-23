@@ -110,18 +110,21 @@ static void add_list_item( GtkListStore* list, VFSAppDesktop* desktop )
         while ( gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &it ) );
     }
 
+    // tooltip
+    char* tooltip = g_markup_printf_escaped( "%s\nName=%s\nExec=%s%s",
+                                     desktop->full_path,
+                                     vfs_app_desktop_get_disp_name( desktop ),
+                                     desktop->exec,
+                                     desktop->terminal ? "\nTerminal=true" : "" );
+
     icon = vfs_app_desktop_get_icon( desktop, 20, TRUE );
     gtk_list_store_append( list, &it );
-    char* esc_full = g_markup_escape_text( desktop->full_path ?
-                                            desktop->full_path : "",
-                                           desktop->full_path ? 
-                                            strlen( desktop->full_path ) : 0 );
     gtk_list_store_set( list, &it, COL_APP_ICON, icon,
                         COL_APP_NAME, vfs_app_desktop_get_disp_name( desktop ),
                         COL_DESKTOP_FILE, vfs_app_desktop_get_name( desktop ),
-                        COL_FULL_PATH, esc_full,
+                        COL_FULL_PATH, tooltip,
                         -1 );
-    g_free( esc_full );
+    g_free( tooltip );
     if ( icon )
         g_object_unref( icon );
 }
