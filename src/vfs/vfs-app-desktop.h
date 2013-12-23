@@ -27,7 +27,8 @@ struct _VFSAppDesktop
     char* comment;
     char* exec;
     char* icon_name;
-    char* path;   // working dir
+    char* path;         // working dir
+    char* full_path;    // path of desktop file
     gboolean terminal : 1;
     gboolean hidden : 1;
 

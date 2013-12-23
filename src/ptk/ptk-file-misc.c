@@ -3476,6 +3476,8 @@ static gboolean open_files_with_app( const char* cwd,
     else
         screen = gdk_screen_get_default();
 
+    printf("EXEC(%s)=%s\n", app->full_path ? app->full_path : app_desktop,
+                                                                app->exec );
     if ( ! vfs_app_desktop_open_files( screen, cwd, app, files, &err ) )
     {
         GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
