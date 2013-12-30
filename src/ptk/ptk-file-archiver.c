@@ -1883,10 +1883,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     // extensions column from the model to the displayed cell
     GtkCellRenderer* renderer = gtk_cell_renderer_text_new ();
     gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), renderer,
-                                TRUE);
+                                TRUE );
     gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), renderer,
                                     "text", COL_HANDLER_EXTENSIONS,
-                                    NULL);
+                                    NULL );
 
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf" );
@@ -1923,7 +1923,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Adding to model
             xset_name = g_strdup( archive_handlers[i] );
-            extensions = g_strdup( handler_xset->x );
+            extensions = g_strconcat( handler_xset->menu_label, " (",
+                                      handler_xset->x, ")", NULL );
             gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
                                 COL_XSET_NAME, xset_name,
                                 COL_HANDLER_EXTENSIONS, extensions,
