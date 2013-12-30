@@ -2611,11 +2611,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 mkparent = g_strdup( "" );
             }
 
-            // Determining extraction command - dealing with 'run in
-            // terminal and placeholders
+            /* Determining extraction command - dealing with 'run in
+             * terminal' and placeholders */
             gchar* extract_cmd = replace_string(
                 (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
-                "%a", full_quote, FALSE );
+                "%o", full_quote, FALSE );
 
             // Debug code
             //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
