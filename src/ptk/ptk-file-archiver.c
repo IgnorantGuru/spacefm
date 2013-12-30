@@ -1855,7 +1855,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     GtkWidget* combo, *dlg, *hbox;
     GtkFileFilter* filter;
     char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
-        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL;
+        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
+        *archive_name = NULL;
     int i, n, format, res;
 
     // Generating dialog
@@ -2182,22 +2183,28 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             ); l = l->next, ++i)
         {
             // FIXME: Maybe we should consider filename encoding here.
-            desc = bash_quote( (char *) vfs_file_info_get_name(
-                                            (VFSFileInfo*) l->data ) );
+            desc = (char *) vfs_file_info_get_name(
+                                            (VFSFileInfo*) l->data );
 
             /* In %O mode, every source file is output to its own archive,
              * so the resulting archive name is based on the filename and
              * substituted every time */
 
-            // TODO: Not continuing this as I am supposed to be working on the main dialog only. %O archive name needs to include the extension
-            // Later on there are repeated bullshit errors on creation of the new task, segfault in memory allocation????
-            // Fetching first extension handler deals with
-            //archive_name = desc ext
-            cmd = replace_string( command, "%O", desc, FALSE );
+            // Obtaining archive name, quoting and substituting
+            archive_name = g_strconcat( desc, ext, NULL );
+            s1 = archive_name;
+            archive_name = bash_quote( archive_name );
+            g_free(s1);
+            cmd = replace_string( command, "%O", archive_name, FALSE );
+            g_free(archive_name);
+
+            /* Bash quoting desc - desc original value comes from the
+             * VFSFileInfo struct and therefore should not be freed */
+            desc = bash_quote( desc );
 
             // Detecting first run
             if (i == 0)
-
+            {
                 // Replacing out %f with 1st file
                 s1 = cmd;
                 cmd = replace_string( cmd, "%f", desc, FALSE );
@@ -2207,9 +2214,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 s1 = command;
                 command = replace_string( command, "%f", "", FALSE );
                 g_free(s1);
+            }
 
             // Replacing out %F with nth file (NOT ALL FILES)
-            cmd_to_run = replace_string(cmd, "%F", desc, FALSE );
+            cmd_to_run = replace_string( cmd, "%F", desc, FALSE );
 
             // Add command to list
             command_list = g_list_prepend( command_list, cmd_to_run );
@@ -2217,6 +2225,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             /* Cleaning up - cmd_to_run does not need freeing, as this
              * remains pointing to data in command_list */
             g_free( desc );
+            g_free( cmd );
         }
 
         // Command list complete - restoring correct order
