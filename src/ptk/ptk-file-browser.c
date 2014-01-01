@@ -5532,7 +5532,7 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
 {
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
-    char* path = NULL;
+    char *path = NULL, *extension = NULL, *name = NULL;
     VFSMimeType* mime_type = NULL;
 
     // archive?
@@ -5540,10 +5540,13 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
     {
         VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
         mime_type = vfs_file_info_get_mime_type( file );
+        name = get_name_extension( (char*)vfs_file_info_get_name( file ), FALSE,
+                                   &extension );
         path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                             vfs_file_info_get_name( file ), NULL );
         vfs_file_info_unref( file );    
-        if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        if ( ptk_file_archiver_is_format_supported( mime_type, extension,
+                                                    TRUE ) )
         {
             
 int no_write_access = 0;
@@ -5610,6 +5613,8 @@ int no_write_access = 0;
                          sel_files, app_desktop, file_browser, FALSE, FALSE );
 _done:
     g_free( path );
+    g_free( name );
+    g_free( extension );
     if ( mime_type )
         vfs_mime_type_unref( mime_type );
     vfs_file_info_list_free( sel_files );

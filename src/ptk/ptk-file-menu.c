@@ -950,7 +950,16 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
 
-        if ( mime_type && ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        // Obtaining file extension
+        char *not_used = NULL, *extension = NULL;
+        if (info)
+            not_used = get_name_extension(
+                (char*)vfs_file_info_get_name( info ), FALSE,
+                &extension );
+
+        // Archive commands
+        if ( ptk_file_archiver_is_format_supported( mime_type, extension,
+                                                    TRUE ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
@@ -1015,6 +1024,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
+
+        // Cleaning up
+        g_free( not_used );
+        g_free( extension );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( desktop )

@@ -1130,7 +1130,7 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
 
 static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
-    char* path = NULL;
+    char *path = NULL, *name = NULL, *extension = NULL;
 
     if ( !clicked_item->fi )
         return;
@@ -1157,10 +1157,13 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
         {
             VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
+            name = get_name_extension( (char*)vfs_file_info_get_name( file ),
+                                       FALSE, &extension );
             path = g_build_filename( vfs_get_desktop_dir(),
                                             vfs_file_info_get_name( file ), NULL );
             vfs_file_info_unref( file );    
-            if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+            if ( ptk_file_archiver_is_format_supported( mime_type,
+                                                    extension, TRUE ) )
             {
                 int no_write_access = ptk_file_browser_no_access ( 
                                                     vfs_get_desktop_dir(), NULL );
@@ -1221,6 +1224,8 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                                                             TRUE, FALSE ); //MOD
 _done:
         g_free( path );
+        g_free( name );
+        g_free( extension );
         g_list_free( sel_files );
     }
 }

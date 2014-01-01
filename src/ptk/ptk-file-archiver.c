@@ -163,16 +163,27 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 
 static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                                                      const char* type,
+                                                     const char* extension,
                                                      int operation )
 {
-    // Supported flag to ensure cleanup
-    gboolean format_supported = FALSE;
+    gboolean format_supported = FALSE, mime_or_extension_support = FALSE;
+    gchar *ext = NULL;
+
+    /* If one was passed, ensuring an extension starts with '.' (
+     * get_name_extension does not provide this) */
+    if (extension && extension[0] != '.')
+    {
+        ext = g_strconcat( ".", extension, NULL );
+    }
+    else ext = g_strdup( "" );
 
     // Checking it if its enabled
     if (handler_xset && handler_xset->b == XSET_B_TRUE)
     {
-        // Obtaining handled MIME types (colon-delimited)
+        /* Obtaining handled MIME types and file extensions
+         * (colon-delimited) */
         gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
+        gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
 
         // Looping for handled MIME types (NULL-terminated list)
         int i;
@@ -182,67 +193,90 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
             // current MIME type
             if (g_strcmp0( mime_types[i], type ) == 0)
             {
-                // It can - checking if it can cope with the
-                // requested operation - deal with possibility of empty
-                // command set to run in terminal, therefore '+' stored
-                switch (operation)
+                // It can - flagging and breaking
+                mime_or_extension_support = TRUE;
+                break;
+            }
+        }
+
+        // Looping for handled extensions if mime type wasn't supported
+        if (!mime_or_extension_support)
+        {
+            for (i = 0; extensions[i] != NULL; ++i)
+            {
+                // Checking to see if the handler can deal with the
+                // current extension
+                if (g_strcmp0( extensions[i], ext ) == 0)
                 {
-                    case ARC_COMPRESS:
-
-                        if (handler_xset->y
-                            && g_strcmp0( handler_xset->y, "" ) != 0
-                            && g_strcmp0( handler_xset->y, "+" ) != 0)
-                        {
-                            // Compression possible - setting flag and
-                            // breaking
-                            format_supported = TRUE;
-                        }
-                        break;
-
-                    case ARC_EXTRACT:
-
-                        if (handler_xset->z
-                            && g_strcmp0( handler_xset->z, "" ) != 0
-                            && g_strcmp0( handler_xset->z, "+" ) != 0)
-                        {
-                            // Extraction possible - setting flag and
-                            // breaking
-                            format_supported = TRUE;
-                        }
-                        break;
-
-                    case ARC_LIST:
-
-                        if (handler_xset->context
-                        && g_strcmp0( handler_xset->context, "" ) != 0
-                        && g_strcmp0( handler_xset->context, "+" ) != 0)
-                        {
-                            // Listing possible - setting flag and
-                            // breaking
-                            format_supported = TRUE;
-                        }
-                        break;
-
-                    default:
-
-                        // Invalid archive operation passed - warning
-                        // user and exiting
-                        g_warning("archive_handler_is_format_supported "
-                        "was passed an invalid archive operation ('%d') "
-                        "on type '%s'!", operation, type);
-                        format_supported = FALSE;
-                        break;
+                    // It can - flagging and breaking
+                    mime_or_extension_support = TRUE;
+                    break;
                 }
+            }
+        }
 
-                // Breaking if the handler supports the MIME type
-                if (format_supported)
+        /* Checking if a found handler can cope with the requested
+         * operation - deal with possibility of empty command set to run
+         * in terminal, therefore '+' stored */
+        if (mime_or_extension_support)
+        {
+            switch (operation)
+            {
+                case ARC_COMPRESS:
+
+                    if (handler_xset->y
+                        && g_strcmp0( handler_xset->y, "" ) != 0
+                        && g_strcmp0( handler_xset->y, "+" ) != 0)
+                    {
+                        /* Compression possible - setting flag and
+                         * breaking */
+                        format_supported = TRUE;
+                    }
+                    break;
+
+                case ARC_EXTRACT:
+
+                    if (handler_xset->z
+                        && g_strcmp0( handler_xset->z, "" ) != 0
+                        && g_strcmp0( handler_xset->z, "+" ) != 0)
+                    {
+                        /* Extraction possible - setting flag and
+                         * breaking */
+                        format_supported = TRUE;
+                    }
+                    break;
+
+                case ARC_LIST:
+
+                    if (handler_xset->context
+                    && g_strcmp0( handler_xset->context, "" ) != 0
+                    && g_strcmp0( handler_xset->context, "+" ) != 0)
+                    {
+                        /* Listing possible - setting flag and
+                         * breaking */
+                        format_supported = TRUE;
+                    }
+                    break;
+
+                default:
+
+                    /* Invalid archive operation passed - warning
+                     * user and exiting */
+                    g_warning("archive_handler_is_format_supported "
+                    "was passed an invalid archive operation ('%d') "
+                    "on type '%s'!", operation, type);
+                    format_supported = FALSE;
                     break;
             }
         }
 
         // Clearing up
         g_strfreev( mime_types );
+        g_strfreev( extensions );
     }
+
+    // Clearing up
+    g_free( ext );
 
     // Returning result
     return format_supported;
@@ -2351,7 +2385,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     VFSMimeType* mime;
     const char* dest, *type;
     GList* l;
-    char* dest_quote, *full_path, *full_quote, *mkparent, *perm, *prompt;
+    char *dest_quote, *full_path, *full_quote, *mkparent, *perm, *prompt,
+        *name, *extension;
     char* cmd, *str;
     int i, n, j;
     struct stat64 statbuf;
@@ -2469,6 +2504,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         file = (VFSFileInfo*)l->data;
         mime = vfs_file_info_get_mime_type( file );
         type = vfs_mime_type_get_type( mime );
+        name = get_name_extension( (char*)vfs_file_info_get_name( file ),
+                                   FALSE, &extension );
 
         // Looping for handlers (NULL-terminated list)
         for (i = 0; archive_handlers[i] != NULL; ++i)
@@ -2479,6 +2516,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Checking to see if handler is enabled and can cope with
             // extraction/listing
             if(archive_handler_is_format_supported( handler_xset, type,
+                                                    extension,
                                                     archive_operation ))
             {
                 // It can - setting flag and leaving loop
@@ -2486,6 +2524,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 break;
             }
         }
+
+        // Cleaning up
+        g_free( name );
+        g_free( extension );
 
         // Continuing to next file if a handler hasnt been found
         if (!format_supported)
@@ -2996,21 +3038,25 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 */
 
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
+                                                char* extension,
                                                 gboolean extract )
 {
-    // Fetching and validating MIME type
-    if (!mime) return FALSE;
-    const char* type = vfs_mime_type_get_type( mime );
-    if (!type) return FALSE;
-
-    // TODO: Now you are allowed to miss out an extension or a filetype, support this somehow
+    // Exiting if nothing was passed
+    if (!mime && !extension)
+        return FALSE;
     
+    // Fetching and validating MIME type if provided
+    char *type = NULL;
+    if (mime)
+        type = (char*)vfs_mime_type_get_type( mime );
+
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
-    //g_message("archive_handlers_s: %s", archive_handlers_s);
+    /*g_message("archive_handlers_s: %s\nextension: %s", archive_handlers_s,
+              extension);*/
 
     // Looping for handlers (NULL-terminated list)
     int i;
@@ -3022,7 +3068,7 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 
         // Checking to see if handler can cope with format and operation
         if(archive_handler_is_format_supported( handler_xset, type,
-                                                ARC_EXTRACT ))
+                                                extension, ARC_EXTRACT ))
         {
             // It can - flagging and breaking
             handler_found = TRUE;
