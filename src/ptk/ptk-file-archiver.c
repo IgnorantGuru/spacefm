@@ -1897,9 +1897,31 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     dlg = gtk_file_chooser_dialog_new( _("Save Archive"),
                                        GTK_WINDOW( gtk_widget_get_toplevel(
                                              GTK_WIDGET( file_browser ) ) ),
-                                       GTK_FILE_CHOOSER_ACTION_SAVE,
-                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                       GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL );
+                                       GTK_FILE_CHOOSER_ACTION_SAVE, NULL );
+
+    /* Adding standard buttons and saving references in the dialog
+     * (GTK doesnt provide a trivial way to reference child widgets from
+     * the window!!)
+     * 'Configure' button has custom text but a stock image */
+    GtkButton* btn_configure = GTK_BUTTON( gtk_dialog_add_button(
+                                                GTK_DIALOG( dlg ),
+                                                _("Configure"),
+                                                GTK_RESPONSE_NONE ) );
+    GtkWidget* btn_configure_image = xset_get_image( "GTK_STOCK_PREFERENCES",
+                                                GTK_ICON_SIZE_BUTTON );
+    gtk_button_set_image( GTK_BUTTON( btn_configure ),
+                          GTK_WIDGET ( btn_configure_image ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_configure",
+                       GTK_BUTTON( btn_configure ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_cancel",
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_CANCEL,
+                                                GTK_RESPONSE_CANCEL ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_ok",
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_OK,
+                                                GTK_RESPONSE_OK ) );
+
     filter = gtk_file_filter_new();
     hbox = gtk_hbox_new( FALSE, 4 );
     gtk_box_pack_start( GTK_BOX(hbox), gtk_label_new( _("Archive Format:") ),
@@ -2070,8 +2092,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
     }
 
-    // Displaying dialog - looping to allow invalid command fixing by the
-    // user
+    // Displaying dialog - loop isn't needed currently??
     gchar* command;
     gboolean run_in_terminal;
 
@@ -2174,6 +2195,15 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Exiting loop
             break;
+        }
+        else if ( res == GTK_RESPONSE_NONE )
+        {
+            /* User wants to configure archive handlers - call up the
+             * config dialog then exit, as this dialog would need to be
+             * reconstructed if changes occur */
+            gtk_widget_destroy( dlg );
+            ptk_file_archiver_config( file_browser );
+            return;
         }
         else
         {
