@@ -1370,7 +1370,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // the window!!)
     // 'Restore defaults' button has custom text but a stock image
     GtkButton* btn_defaults = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( dlg ),
-                                                "Restore Defaults",
+                                                _("Restore Defaults"),
                                                 GTK_RESPONSE_NONE ) );
     GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_CLEAR",
                                                 GTK_ICON_SIZE_BUTTON );
