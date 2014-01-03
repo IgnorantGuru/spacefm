@@ -2284,6 +2284,11 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             // Replacing out %F with nth file (NOT ALL FILES)
             cmd_to_run = replace_string( cmd, "%F", desc, FALSE );
 
+            // Dealing with remaining standard SpaceFM substitutions
+            s1 = cmd_to_run;
+            cmd_to_run = replace_line_subs( cmd_to_run );
+            g_free(s1);
+
             // Add command to list
             command_list = g_list_prepend( command_list, cmd_to_run );
 
@@ -2350,6 +2355,11 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             g_free( str );
         }
 
+        // Dealing with remaining standard SpaceFM substitutions
+        s1 = cmd;
+        cmd = replace_line_subs( cmd );
+        g_free(s1);
+
         // Appending to command list
         command_list = g_list_append( command_list, cmd );
     }
@@ -2386,7 +2396,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         // Final configuration, setting custom icon
         task->task->exec_command = l->data;
         task->task->exec_show_error = TRUE;
-        task->task->exec_export = TRUE;
+        task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
         XSet* set = xset_get( "new_archive" );
         if ( set->icon )
             task->task->exec_icon = g_strdup( set->icon );
@@ -2403,8 +2413,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                             const char* cwd, const char* dest_dir )
 {
-    // Note that it seems this function is also used to list the contents
-    // of archives!
+    /* Note that it seems this function is also used to list the contents
+     * of archives! */
 
     GtkWidget* dlg;
     GtkWidget* dlgparent = NULL;
@@ -2722,6 +2732,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             g_free( prompt );
         }
 
+        // Dealing with standard SpaceFM substitutions
+        str = cmd;
+        cmd = replace_line_subs( cmd );
+        g_free(str);
+
         // Cleaning up
         g_free( dest_quote );
         g_free( full_quote );
@@ -2742,7 +2757,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         task->task->exec_show_output = in_term;
         task->task->exec_terminal = in_term;
         task->task->exec_keep_terminal = keep_term;
-        task->task->exec_export = FALSE;
+        task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
 
         // Setting custom icon
         XSet* set = xset_get( "arc_extract" );
