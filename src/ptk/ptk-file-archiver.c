@@ -1885,12 +1885,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                const char* cwd )
 {
-    GList* l;
+    GList *l;
     GtkWidget* combo, *dlg, *hbox;
     GtkFileFilter* filter;
     char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
         *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
-        *archive_name = NULL;
+        *archive_name = NULL, *final_command = NULL;
     int i, n, format, res;
 
     // Generating dialog
@@ -2232,7 +2232,6 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_widget_destroy( dlg );
 
     // Dealing with separate archives for each source file/directory ('%O')
-    GList* command_list = NULL;
     if (g_strstr_len( command, -1, "%O" ))
     {
         /* '%O' is present - the archiving command should be generated
@@ -2243,9 +2242,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
         /* Looping for all selected files/directories - all are used
          * when '%F' is present, only the first otherwise */
-        for( i = 0, l = files; l && (
-             i == 0 || g_strstr_len( command, -1, "%F" )
-            ); l = l->next, ++i)
+        for( i = 0, l = files;
+             l && ( i == 0 || g_strstr_len( command, -1, "%F" ) );
+             l = l->next, ++i)
         {
             // FIXME: Maybe we should consider filename encoding here.
             desc = (char *) vfs_file_info_get_name(
@@ -2289,17 +2288,22 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             cmd_to_run = replace_line_subs( cmd_to_run );
             g_free(s1);
 
-            // Add command to list
-            command_list = g_list_prepend( command_list, cmd_to_run );
+            // Appending to final command as appropriate
+            if (i == 0)
+                final_command = g_strdup( cmd_to_run );
+            else
+            {
+                s1 = final_command;
+                final_command = g_strconcat( final_command, " && ",
+                                             cmd_to_run, NULL );
+                g_free(s1);
+            }
 
-            /* Cleaning up - cmd_to_run does not need freeing, as this
-             * remains pointing to data in command_list */
+            // Cleaning up
             g_free( desc );
             g_free( cmd );
+            g_free( cmd_to_run );
         }
-
-        // Command list complete - restoring correct order
-        command_list = g_list_reverse( command_list );
     }
     else
     {
@@ -2311,103 +2315,101 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         g_free( udest_file );
 
         // Inserting archive name into appropriate place in command
-        cmd = replace_string( command, "%o", udest_quote, FALSE );
+        final_command = replace_string( command, "%o", udest_quote,
+                                        FALSE );
         g_free( udest_quote );
 
-        // Dealing with first selected file substitution
         if (files)
         {
             desc = bash_quote( (char *) vfs_file_info_get_name(
                                             (VFSFileInfo*) files->data ) );
-            s1 = cmd;
-            cmd = replace_string( cmd, "%f", desc, FALSE );
-            g_free(s1);
-        }
 
-        /* Generating string of selected files/directories to archive if
-         * %F is present */
-        if (g_strstr_len( cmd, -1, "%F" ))
-        {
-            s1 = g_strdup( "" );
-            for( l = files; l; l = l->next)
+            // Dealing with first selected file substitution
+            s1 = final_command;
+            final_command = replace_string( final_command, "%f", desc,
+                                            FALSE );
+            g_free(s1);
+
+            /* Generating string of selected files/directories to archive if
+             * %F is present */
+            if (g_strstr_len( final_command, -1, "%F" ))
             {
-                // FIXME: Maybe we should consider filename encoding here.
-                str = s1;
-                desc = bash_quote( (char *) vfs_file_info_get_name(
-                                                (VFSFileInfo*) l->data ) );
-                if (g_strcmp0( s1, "" ) <= 0)
+                s1 = g_strdup( "" );
+                for( l = files; l; l = l->next)
                 {
-                    s1 = g_strdup( desc );
+                    // FIXME: Maybe we should consider filename encoding here.
+                    str = s1;
+                    desc = bash_quote( (char *) vfs_file_info_get_name(
+                                                    (VFSFileInfo*) l->data ) );
+                    if (g_strcmp0( s1, "" ) <= 0)
+                    {
+                        s1 = g_strdup( desc );
+                    }
+                    else
+                    {
+                        s1 = g_strdup_printf( "%s %s", s1, desc );
+                    }
+                    g_free( desc );
+                    g_free( str );
                 }
-                else
-                {
-                    s1 = g_strdup_printf( "%s %s", s1, desc );
-                }
-                g_free( desc );
+
+                str = final_command;
+                final_command = replace_string( final_command, "%F", s1,
+                                                FALSE );
+
+                // Cleaning up
+                g_free( s1 );
                 g_free( str );
             }
-
-            str = cmd;
-            cmd = replace_string( cmd, "%F", s1, FALSE );
-
-            // Cleaning up
-            g_free( s1 );
-            g_free( str );
         }
 
         // Dealing with remaining standard SpaceFM substitutions
-        s1 = cmd;
-        cmd = replace_line_subs( cmd );
+        s1 = final_command;
+        final_command = replace_line_subs( final_command );
         g_free(s1);
-
-        // Appending to command list
-        command_list = g_list_append( command_list, cmd );
     }
 
-    /* Cleaning up - cmd does not need freeing, as this remains pointing
-     * to data in command_list */
+    /* Cleaning up - final_command does not need freeing, as this
+     * remains pointing to data in the task */
     g_free( command );
 
-    /* Looping for all archives to create */
-    for ( l = command_list; l; l = l->next )
+    /* When ran in a terminal, adding code to warn user on failure and
+     * to keep the terminal open */
+    if (run_in_terminal)
     {
-        // Creating task
-        char* task_name = g_strdup_printf( _("Archive") );
-        PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
-                                                GTK_WIDGET( file_browser ),
-                                                file_browser->task_view );
-        g_free( task_name );
-        task->task->exec_browser = file_browser;
-
-        // Using terminals for certain handlers
-        if (run_in_terminal)
-        {
-            task->task->exec_terminal = TRUE;
-            task->task->exec_sync = FALSE;
-            s1 = l->data;
-            l->data = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
-            g_free( s1 );
-        }
-        else
-        {
-            task->task->exec_sync = TRUE;
-        }
-
-        // Final configuration, setting custom icon
-        task->task->exec_command = l->data;
-        task->task->exec_show_error = TRUE;
-        task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
-        XSet* set = xset_get( "new_archive" );
-        if ( set->icon )
-            task->task->exec_icon = g_strdup( set->icon );
-
-        // Running task
-        ptk_file_task_run( task );
+        s1 = final_command;
+        final_command = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi",
+                                         s1,
+                                         "[ Finished With Errors ]  Press Enter to close" );
+        g_free( s1 );
     }
 
-    /* Clearing up command list - no need to free elements as the task
-     * code already does this on the relevant pointer */
-    g_list_free( command_list );
+    // Creating task
+    char* task_name = g_strdup_printf( _("Archive") );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
+                                           GTK_WIDGET( file_browser ),
+                                           file_browser->task_view );
+    g_free( task_name );
+    task->task->exec_browser = file_browser;
+
+    // Using terminals for certain handlers
+    if (run_in_terminal)
+    {
+        task->task->exec_terminal = TRUE;
+        task->task->exec_sync = FALSE;
+    }
+    else task->task->exec_sync = TRUE;
+
+    // Final configuration, setting custom icon
+    task->task->exec_command = final_command;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
+    XSet* set = xset_get( "new_archive" );
+    if ( set->icon )
+        task->task->exec_icon = g_strdup( set->icon );
+
+    // Running task
+    ptk_file_task_run( task );
 }
 
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
@@ -2423,11 +2425,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     gboolean list_contents = FALSE;
     VFSFileInfo* file;
     VFSMimeType* mime;
-    const char* dest, *type;
+    const char *dest, *type;
     GList* l;
-    char *dest_quote, *full_path, *full_quote, *mkparent, *perm, *prompt,
-        *name, *extension;
-    char* cmd, *str;
+    char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
+        *mkparent = NULL, *perm = NULL, *prompt = NULL, *name = NULL,
+        *extension = NULL, *cmd = NULL, *str = NULL, *final_command = NULL;
     int i, n, j;
     struct stat64 statbuf;
 
@@ -2737,41 +2739,51 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         cmd = replace_line_subs( cmd );
         g_free(str);
 
+        // Building up final_command
+        if (!final_command)
+            final_command = g_strdup( cmd );
+        else
+        {
+            str = final_command;
+            final_command = g_strconcat( final_command, " && ", cmd, NULL );
+            g_free( str );
+        }
+
         // Cleaning up
         g_free( dest_quote );
         g_free( full_quote );
         g_free( full_path );
-
-        // Creating task
-        char* task_name = g_strdup_printf( _("Extract %s"),
-                                    vfs_file_info_get_name( file ) );
-        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
-                        file_browser ? file_browser->task_view : NULL );
-        g_free( task_name );
-
-        // Configuring task
-        task->task->exec_command = cmd;
-        task->task->exec_browser = file_browser;
-        task->task->exec_sync = !in_term;
-        task->task->exec_show_error = TRUE;
-        task->task->exec_show_output = in_term;
-        task->task->exec_terminal = in_term;
-        task->task->exec_keep_terminal = keep_term;
-        task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
-
-        // Setting custom icon
-        XSet* set = xset_get( "arc_extract" );
-        if ( set->icon )
-            task->task->exec_icon = g_strdup( set->icon );
-
-        // Running task
-        ptk_file_task_run( task );
+        g_free( cmd );
     }
 
-    // Clearing up archive_handlers
-    g_strfreev( archive_handlers );
+    // Creating task
+    char* task_name = g_strdup_printf( _("Extract %s"),
+                                vfs_file_info_get_name( file ) );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
+                    file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
 
-    // Cleaning up
+    // Configuring task
+    task->task->exec_command = final_command;
+    task->task->exec_browser = file_browser;
+    task->task->exec_sync = !in_term;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_show_output = in_term;
+    task->task->exec_terminal = in_term;
+    task->task->exec_keep_terminal = keep_term;
+    task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
+
+    // Setting custom icon
+    XSet* set = xset_get( "arc_extract" );
+    if ( set->icon )
+        task->task->exec_icon = g_strdup( set->icon );
+
+    // Running task
+    ptk_file_task_run( task );
+
+    /* Clearing up - final_command does not need freeing, as this
+     * remains pointing to data in the task */
+    g_strfreev( archive_handlers );
     if ( choose_dir )
         g_free( choose_dir );
 }
