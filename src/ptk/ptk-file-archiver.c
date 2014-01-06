@@ -2294,7 +2294,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             else
             {
                 s1 = final_command;
-                final_command = g_strconcat( final_command, " && ",
+                final_command = g_strconcat( final_command, " && echo && ",
                                              cmd_to_run, NULL );
                 g_free(s1);
             }
@@ -2745,7 +2745,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         else
         {
             str = final_command;
-            final_command = g_strconcat( final_command, " && ", cmd, NULL );
+            final_command = g_strconcat( final_command, " && echo && ",
+                                         cmd, NULL );
             g_free( str );
         }
 
