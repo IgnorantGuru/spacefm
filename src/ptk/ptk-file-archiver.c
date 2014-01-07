@@ -3148,42 +3148,40 @@ static void restore_defaults( GtkWidget* dlg )
     // Exiting if the user doesn't really want to restore defaults
     if (xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                         _("Archive Handlers - Restore Defaults"), NULL,
-                        GTK_BUTTONS_OK_CANCEL, _("Are you sure you want "
-                        "to reset archive handlers to their default "
-                        "settings?"),
-                        NULL, NULL) != GTK_RESPONSE_OK) return;
-
-    // Removing current archive handlers
-    char* archive_handlers_s = xset_get_s( "arc_conf" );
-    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
-
-    // Looping for handlers (NULL-terminated list)
-    int i;
-    XSet* handler_xset;
-    for (i = 0; archive_handlers[i] != NULL; ++i)
-    {
-        // Deleting handler
-        handler_xset = xset_get( archive_handlers[i] );
-        xset_custom_delete( handler_xset, FALSE );
-    }
-
-    // Clearing up
-    g_strfreev( archive_handlers );
+                        GTK_BUTTONS_YES_NO, _("Do you want to overwrite"
+                        " all existing default handlers?"),
+                        NULL, NULL) != GTK_RESPONSE_YES) return;
 
     // Restoring xsets back to their default state
-    // Main list of archive handlers
-    xset_set( "arc_conf", "s", "arctype_rar arctype_zip" );
-
-    // Individual archive handlers
-    XSet* set = xset_set( "arctype_rar", "label", _("RAR") );  // Name as it appears in list - translatable?
+    char *handlers_to_add = NULL, *str = NULL;
+    XSet* set = xset_is( "arctype_rar" );
+    if (!set)
+    {
+        set = xset_set( "arctype_rar", "label", "RAR" );
+        handlers_to_add = g_strdup( "arctype_rar" );
+    }
+    set->menu_label = g_strdup( "RAR" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-rar" );
     set->x = g_strdup( ".rar" );
-    //set->y = NULL;                   // compress command
+    //set->y = NULL;                 // compress command
     set->z = g_strdup( "unrar" );    // extract command
     set->context = g_strdup( "" );   // list command
 
-    set = xset_set( "arctype_zip", "label", ("Zip") );  // Name as it appears in list - translatable?
+    set = xset_is( "arctype_zip" );
+    if (!set)
+    {
+        set = xset_set( "arctype_zip", "label", "Zip" );
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_zip" );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_zip" );
+    }
+    set->menu_label = g_strdup( "Zip" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-zip" );
     set->x = g_strdup( ".zip" );
@@ -3191,8 +3189,18 @@ static void restore_defaults( GtkWidget* dlg )
     set->z = g_strdup( "unzip" );    // extract command
     set->context = g_strdup( "" );   // list command
 
-    // Clearing and adding archive handlers to list (this also selects
-    // the first handler and therefore populates the handler widgets)
+    // Updating list of archive handlers
+    if (handlers_to_add)
+    {
+        char *handlers = xset_get_s( "arc_conf" );
+        handlers = g_strconcat( handlers, " ", handlers_to_add );
+        g_free( handlers_to_add );
+        xset_set( "arc_conf", "s", handlers );
+        g_free( handlers );
+    }
+
+    /* Clearing and adding archive handlers to list (this also selects
+     * the first handler and therefore populates the handler widgets) */
     GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
     gtk_list_store_clear( GTK_LIST_STORE( list ) );
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
