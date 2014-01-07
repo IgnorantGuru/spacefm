@@ -2661,12 +2661,13 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             g_free( filename );
 
             // Dealing with creation of parent directory if needed
+            gchar* parent_path = NULL;
             if(create_parent)
             {
-                // Determining full path of parent directory to make
-                gchar* parent_path = g_build_filename( dest,
-                                                      filename_no_ext,
-                                                      NULL );
+                /* Determining full path of parent directory to make
+                 * (also used later in %f substitution) */
+                parent_path = g_build_filename( dest, filename_no_ext,
+                                                NULL );
                 gchar* parent_orig = g_strdup( parent_path );
                 n = 1;
 
@@ -2685,14 +2686,14 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 mkparent = g_strdup_printf( "mkdir -p %s && cd %s && ",
                                             parent_quote, parent_quote );
 
-                // Cleaning up
-                g_free( parent_path );
+                // Cleaning up (parent_path is used later)
                 g_free( parent_quote );
             }
             else
             {
-                // Parent directory doesn't need to be created. Making
+                // Parent directory doesn't need to be created
                 mkparent = g_strdup( "" );
+                parent_path = g_strdup( "" );
             }
 
             /* Determining extraction command - dealing with 'run in
@@ -2704,15 +2705,15 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Debug code
             //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
 
-            // Singular file extraction target (e.g. stdout-redirected
-            // gzip)
+            /* Singular file extraction target (e.g. stdout-redirected
+             * gzip) */
             if (g_strstr_len( extract_cmd, -1, "%f" ))
             {
-                // Creating extraction target, taking into account whether
-                // a parent directory has been created or not
-                gchar* extract_target = g_build_filename( dest,
+                /* Creating extraction target, taking into account whether
+                 * a parent directory has been created or not */
+                gchar* extract_target = g_build_filename(
+                                     (create_parent) ? parent_path : dest,
                                                           filename_no_ext,
-                                (create_parent) ? filename_no_ext : NULL,
                                                           NULL );
                 gchar* extract_target_quote = bash_quote( extract_target );
                 gchar* old_extract_cmd = extract_cmd;
@@ -2731,6 +2732,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             g_free( extract_cmd );
             g_free( filename_no_ext );
             g_free( mkparent );
+            g_free( parent_path );
             g_free( prompt );
         }
 
