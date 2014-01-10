@@ -2459,6 +2459,12 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                             _("Cre_ate subfolder(s)") );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
                                               xset_get_b( "arc_dlg" ) );
+        GtkWidget* chk_write = gtk_check_button_new_with_mnemonic(
+                                                    _("Make contents "
+                                                    "user-_writable") );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_write ),
+                                xset_get_int( "arc_dlg", "s" ) == 1 &&
+                                geteuid() != 0 );
         gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
         gtk_widget_show_all( hbox );
         gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
@@ -2503,8 +2509,12 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Fetching user-specified settings and saving
             choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
             create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
+            write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
             xset_set_b( "arc_dlg", create_parent );
-        }
+            str = g_strdup_printf( "%d", write_access ? 1 : 0 );
+            xset_set( "arc_dlg", "s", str );
+            g_free( str );
+          }
 
         // Destroying dialog
         gtk_widget_destroy( dlg );
@@ -2521,6 +2531,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     {
         // Extraction directory specified - loading defaults
         create_parent = xset_get_b( "arc_def_parent" );
+        write_access = xset_get_b( "arc_def_write" );
 
         // Detecting whether this function call is actually to list the
         // contents of the archive or not...
@@ -2662,7 +2673,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             // Dealing with creation of parent directory if needed
             gchar* parent_path = NULL;
-            if(create_parent)
+            if (create_parent)
             {
                 /* Determining full path of parent directory to make
                  * (also used later in %f substitution) */
@@ -2696,6 +2707,16 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 parent_path = g_strdup( "" );
             }
 
+            /* Dealing with the need to make extracted files writable if
+             * desired (e.g. a tar of files originally archived from a CD
+             * will be readonly). Root users don't obey such access
+             * permissions and making such owned files writeablemay be
+             * a security issue */
+            if (write_access && geteuid() != 0)
+                perm = g_strdup_printf( " && chmod -R u+rwX %s/*",
+                                        dest_quote );
+            else perm = g_strdup( "" );
+
             /* Determining extraction command - dealing with 'run in
              * terminal' and placeholders */
             gchar* extract_cmd = replace_string(
@@ -2725,13 +2746,14 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             }
 
             // Finally constructing command to run
-            cmd = g_strdup_printf( "cd %s && %s%s %s", dest_quote,
-                                   mkparent, extract_cmd, prompt );
+            cmd = g_strdup_printf( "cd %s && %s%s%s %s", dest_quote,
+                                   mkparent, extract_cmd, perm, prompt );
 
             // Cleaning up
             g_free( extract_cmd );
             g_free( filename_no_ext );
             g_free( mkparent );
+            g_free( perm );
             g_free( parent_path );
             g_free( prompt );
         }
