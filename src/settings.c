@@ -10583,28 +10583,73 @@ void xset_defaults()
 
         set = xset_set( "arc_conf", "label", _("Co_nfigure") );
         xset_set_set( set, "icon", "gtk-preferences" );
-        set->s = g_strdup( "arctype_rar arctype_zip" );  // default list of archive types
+        set->s = g_strdup( "arctype_7z arctype_gz arctype_rar arctype_tar arctype_tar_bz2 arctype_tar_gz arctype_tar_xz arctype_zip" );  // default list of archive types
 
-    // Default Archive Types Defined Here - note that this is also
-    // maintained in ptk-file-archiver.c:restore_defaults
-    set = xset_set( "arctype_rar", "label", _("RAR") );  // Name as it appears in list - translatable?
+    /* Default Archive Types Defined Here - note that this is also
+     * maintained in ptk-file-archiver.c:restore_defaults */
+    set = xset_set( "arctype_7z", "label", "7-Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-7z-compressed" );
+    set->x = g_strdup( ".7z" );
+    set->y = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" a %o %F" );     // compress command
+    set->z = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" x %o" );        // extract command
+    set->context = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" l %o" );  // list command
+
+    set = xset_set( "arctype_gz", "label", "Gzip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-gzip:application/x-gzpdf" );
+    set->x = g_strdup( ".gz" );
+    set->y = g_strdup( "gzip -c %F > %O" );      // compress command
+    set->z = g_strdup( "gzip -cd %o > %f" );     // extract command
+    set->context = g_strdup( "+gunzip -l %o" );  // list command
+
+    set = xset_set( "arctype_rar", "label", "RAR" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-rar" );
     set->x = g_strdup( ".rar" );
-    //set->y = NULL;                   // compress command
-    set->z = g_strdup( "unrar" );    // extract command
-    set->context = g_strdup( "" );   // list command
+    set->y = g_strdup( "+rar a -r %o %F" );     // compress command
+    set->z = g_strdup( "+unrar -o- x %o" );     // extract command
+    set->context = g_strdup( "+unrar lt %o" );  // list command
 
-    set = xset_set( "arctype_zip", "label", ("Zip") );  // Name as it appears in list - translatable?
+    set = xset_set( "arctype_tar", "label", "Tar" );
     set->b = XSET_B_TRUE;
-    set->s = g_strdup( "application/x-zip" );
+    set->s = g_strdup( "application/x-tar" );
+    set->x = g_strdup( ".tar" );
+    set->y = g_strdup( "tar -cvf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );   // list command
+
+    set = xset_set( "arctype_tar_bz2", "label", "Tar (bzip2)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-bzip-compressed-tar" );
+    set->x = g_strdup( ".tar.bz2" );
+    set->y = g_strdup( "tar -cvjf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvjf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_tar_gz", "label", "Tar (gzip)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-compressed-tar" );
+    set->x = g_strdup( ".tar.gz" );
+    set->y = g_strdup( "tar -cvzf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvzf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_tar_xz", "label", "Tar (xz)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-xz-compressed-tar" );
+    set->x = g_strdup( ".tar.xz" );
+    set->y = g_strdup( "tar -cvJf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvJf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_zip", "label", "Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-zip:application/zip" );
     set->x = g_strdup( ".zip" );
-    set->y = g_strdup( "zip" );      // compress command
-    set->z = g_strdup( "unzip" );    // extract command
-    set->context = g_strdup( "" );   // list command
-
-    // add additional default archive types here
-
+    set->y = g_strdup( "+zip -r %o %F" );       // compress command
+    set->z = g_strdup( "+unzip %o" );           // extract command
+    set->context = g_strdup( "+unzip -l %o" );  // list command
 
     set = xset_set( "iso_mount", "label", _("_Mount ISO") );
     xset_set_set( set, "icon", "gtk-cdrom" );

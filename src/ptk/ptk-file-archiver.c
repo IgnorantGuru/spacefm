@@ -3154,48 +3154,211 @@ static void restore_defaults( GtkWidget* dlg )
                         " all existing default handlers?"),
                         NULL, NULL) != GTK_RESPONSE_YES) return;
 
-    // Restoring xsets back to their default state
     char *handlers_to_add = NULL, *str = NULL;
-    XSet* set = xset_is( "arctype_rar" );
-    if (!set)
-    {
-        set = xset_set( "arctype_rar", "label", "RAR" );
-        handlers_to_add = g_strdup( "arctype_rar" );
-    }
-    set->menu_label = g_strdup( "RAR" );
-    set->b = XSET_B_TRUE;
-    set->s = g_strdup( "application/x-rar" );
-    set->x = g_strdup( ".rar" );
-    //set->y = NULL;                 // compress command
-    set->z = g_strdup( "unrar" );    // extract command
-    set->context = g_strdup( "" );   // list command
 
-    set = xset_is( "arctype_zip" );
+    /* Fetching current list of archive handlers, and constructing a
+     * searchable version ensuring that a unique handler can be specified */
+    char *handlers = xset_get_s( "arc_conf" );
+    char *handlers_search = g_strconcat( " ", handlers, " ", NULL );
+
+    XSet* set = xset_is( "arctype_7z" );
     if (!set)
+        set = xset_set( "arctype_7z", "label", "7-Zip" );
+    set->menu_label = g_strdup( "7-Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-7z-compressed" );
+    set->x = g_strdup( ".7z" );
+    set->y = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" a %o %F" );     // compress command
+    set->z = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" x %o" );        // extract command
+    set->context = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" l %o" );  // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_7z " ))
+        handlers_to_add = g_strdup( "arctype_7z" );
+
+    set = xset_is( "arctype_gz" );
+    if (!set)
+        set = xset_set( "arctype_gz", "label", "Gzip" );
+    set->menu_label = g_strdup( "Gzip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-gzip:application/x-gzpdf" );
+    set->x = g_strdup( ".gz" );
+    set->y = g_strdup( "gzip -c %F > %O" );     // compress command
+    set->z = g_strdup( "gzip -cd %o > %f" );    // extract command
+    set->context = g_strdup( "+gunzip -l %o" );  // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_gz " ))
     {
-        set = xset_set( "arctype_zip", "label", "Zip" );
         if (handlers_to_add)
         {
             str = handlers_to_add;
             handlers_to_add = g_strconcat( handlers_to_add,
-                                           " arctype_zip" );
+                                           " arctype_gz", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_gz" );
+    }
+
+    set = xset_is( "arctype_rar" );
+    if (!set)
+        set = xset_set( "arctype_rar", "label", "RAR" );
+    set->menu_label = g_strdup( "RAR" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-rar" );
+    set->x = g_strdup( ".rar" );
+    set->y = g_strdup( "+rar a -r %o %F" );     // compress command
+    set->z = g_strdup( "+unrar -o- x %o" );     // extract command
+    set->context = g_strdup( "+unrar lt %o" );  // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_rar " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_rar", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_rar" );
+    }
+
+    set = xset_is( "arctype_tar" );
+    if (!set)
+        set = xset_set( "arctype_tar", "label", "Tar" );
+    set->menu_label = g_strdup( "Tar" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-tar" );
+    set->x = g_strdup( ".tar" );
+    set->y = g_strdup( "tar -cvf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );   // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_tar " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_tar", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_tar" );
+    }
+
+    set = xset_is( "arctype_tar_bz2" );
+    if (!set)
+        set = xset_set( "arctype_tar_bz2", "label", "Tar (bzip2)" );
+    set->menu_label = g_strdup( "Tar (bzip2)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-bzip-compressed-tar" );
+    set->x = g_strdup( ".tar.bz2" );
+    set->y = g_strdup( "tar -cvjf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvjf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_tar_bz2 " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_tar_bz2", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_tar_bz2" );
+    }
+
+    set = xset_is( "arctype_tar_gz" );
+    if (!set)
+        set = xset_set( "arctype_tar_gz", "label", "Tar (gzip)" );
+    set->menu_label = g_strdup( "Tar (gzip)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-compressed-tar" );
+    set->x = g_strdup( ".tar.gz" );
+    set->y = g_strdup( "tar -cvzf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvzf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_tar_gz " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_tar_gz", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_tar_gz" );
+    }
+
+    set = xset_is( "arctype_tar_xz" );
+    if (!set)
+        set = xset_set( "arctype_tar_xz", "label", "Tar (xz)" );
+    set->menu_label = g_strdup( "Tar (xz)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-xz-compressed-tar" );
+    set->x = g_strdup( ".tar.xz" );
+    set->y = g_strdup( "tar -cvJf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvJf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_tar_xz " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_tar_xz", NULL );
+            g_free( str );
+        }
+        else handlers_to_add = g_strdup( "arctype_tar_xz" );
+    }
+
+    set = xset_is( "arctype_zip" );
+    if (!set)
+        set = xset_set( "arctype_zip", "label", "Zip" );
+    set->menu_label = g_strdup( "Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-zip:application/zip" );
+    set->x = g_strdup( ".zip" );
+    set->y = g_strdup( "+zip -r %o %F" );       // compress command
+    set->z = g_strdup( "+unzip %o" );           // extract command
+    set->context = g_strdup( "+unzip -l %o" );  // list command
+
+    /* Archive handler list check is separate as the XSet may exist but
+     * the handler may not be in the list */
+    if (!g_strstr_len( handlers_search, -1, " arctype_zip " ))
+    {
+        if (handlers_to_add)
+        {
+            str = handlers_to_add;
+            handlers_to_add = g_strconcat( handlers_to_add,
+                                           " arctype_zip", NULL );
             g_free( str );
         }
         else handlers_to_add = g_strdup( "arctype_zip" );
     }
-    set->menu_label = g_strdup( "Zip" );
-    set->b = XSET_B_TRUE;
-    set->s = g_strdup( "application/x-zip" );
-    set->x = g_strdup( ".zip" );
-    set->y = g_strdup( "zip" );      // compress command
-    set->z = g_strdup( "unzip" );    // extract command
-    set->context = g_strdup( "" );   // list command
+
+    // Clearing up
+    g_free( handlers_search );
 
     // Updating list of archive handlers
     if (handlers_to_add)
     {
-        char *handlers = xset_get_s( "arc_conf" );
-        handlers = g_strconcat( handlers, " ", handlers_to_add );
+        handlers = g_strconcat( handlers, " ", handlers_to_add, NULL );
         g_free( handlers_to_add );
         xset_set( "arc_conf", "s", handlers );
         g_free( handlers );
