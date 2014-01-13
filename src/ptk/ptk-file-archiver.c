@@ -2671,9 +2671,18 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Cleaning up
             g_free( filename );
 
-            // Dealing with creation of parent directory if needed
+            /* Determining extraction command - dealing with 'run in
+             * terminal' and placeholders. Doing this here as parent
+             * directory creation needs access to the command */
+            gchar* extract_cmd = replace_string(
+                (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
+                "%o", full_quote, FALSE );
+
+            /* Dealing with creation of parent directory if needed -
+             * never create a parent directory if %F is used - this is
+             * an override substitution for the sake of gzip */
             gchar* parent_path = NULL;
-            if (create_parent)
+            if (create_parent && !g_strstr_len( extract_cmd, -1, "%F" ))
             {
                 /* Determining full path of parent directory to make
                  * (also used later in %f substitution) */
@@ -2705,6 +2714,13 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 // Parent directory doesn't need to be created
                 mkparent = g_strdup( "" );
                 parent_path = g_strdup( "" );
+
+                /* Making sure any '%F's turn into normal '%f's now
+                 * they've played their role */
+                gchar* old_extract_cmd = extract_cmd;
+                extract_cmd = replace_string( extract_cmd, "%F", "%f",
+                                               FALSE );
+                g_free( old_extract_cmd );
             }
 
             /* Dealing with the need to make extracted files writable if
@@ -2716,12 +2732,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 perm = g_strdup_printf( " && chmod -R u+rwX %s/*",
                                         dest_quote );
             else perm = g_strdup( "" );
-
-            /* Determining extraction command - dealing with 'run in
-             * terminal' and placeholders */
-            gchar* extract_cmd = replace_string(
-                (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
-                "%o", full_quote, FALSE );
 
             // Debug code
             //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
