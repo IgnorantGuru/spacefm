@@ -31,6 +31,7 @@ enum{
     COL_APP_ICON = 0,
     COL_APP_NAME,
     COL_DESKTOP_FILE,
+    COL_FULL_PATH,
     N_COLS
 };
 extern gboolean is_my_lock;
@@ -54,6 +55,9 @@ static void init_list_view( GtkTreeView* view )
                                          COL_APP_NAME, NULL );
 
     gtk_tree_view_append_column ( view, col );
+    
+    // add tooltip
+    gtk_tree_view_set_tooltip_column( view, COL_FULL_PATH );
 }
 
 static gint sort_by_name( GtkTreeModel *model,
@@ -69,7 +73,7 @@ static gint sort_by_name( GtkTreeModel *model,
         gtk_tree_model_get( model, b, COL_APP_NAME, &name_b, -1 );
         if ( name_b )
         {
-            ret = strcmp( name_a, name_b );
+            ret = g_ascii_strcasecmp( name_a, name_b );
             g_free( name_b );
         }
         g_free( name_a );
@@ -81,12 +85,46 @@ static void add_list_item( GtkListStore* list, VFSAppDesktop* desktop )
 {
     GtkTreeIter it;
     GdkPixbuf* icon = NULL;
+    char* file;
+    const char* name = vfs_app_desktop_get_name( desktop );
+    
+    // desktop file already in list?
+    if ( gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &it ) )
+    {
+        do
+        {
+            file = NULL;
+            gtk_tree_model_get( GTK_TREE_MODEL( list ), &it, COL_DESKTOP_FILE,
+                                                            &file, -1 );
+            if ( file )
+            {
+                if ( !g_strcmp0( file, name ) )
+                {
+                    // already exists
+                    g_free( file );
+                    return;
+                }
+                g_free( file );
+            }
+        }
+        while ( gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &it ) );
+    }
+
+    // tooltip
+    char* tooltip = g_markup_printf_escaped( "%s\nName=%s\nExec=%s%s",
+                                     desktop->full_path,
+                                     vfs_app_desktop_get_disp_name( desktop ),
+                                     desktop->exec,
+                                     desktop->terminal ? "\nTerminal=true" : "" );
 
     icon = vfs_app_desktop_get_icon( desktop, 20, TRUE );
     gtk_list_store_append( list, &it );
     gtk_list_store_set( list, &it, COL_APP_ICON, icon,
                         COL_APP_NAME, vfs_app_desktop_get_disp_name( desktop ),
-                        COL_DESKTOP_FILE, vfs_app_desktop_get_name( desktop ), -1 );
+                        COL_DESKTOP_FILE, vfs_app_desktop_get_name( desktop ),
+                        COL_FULL_PATH, tooltip,
+                        -1 );
+    g_free( tooltip );
     if ( icon )
         g_object_unref( icon );
 }
@@ -96,7 +134,9 @@ static GtkTreeModel* create_model_from_mime_type( VFSMimeType* mime_type )
     char** apps, **app;
     const char *type;
     GtkListStore* list = gtk_list_store_new( N_COLS, GDK_TYPE_PIXBUF,
-                                                    G_TYPE_STRING, G_TYPE_STRING );
+                                                     G_TYPE_STRING,
+                                                     G_TYPE_STRING,
+                                                     G_TYPE_STRING );
     if ( mime_type )
     {
         apps = vfs_mime_type_get_actions( mime_type );
@@ -287,7 +327,7 @@ on_notebook_switch_page ( GtkNotebook *notebook,
             gdk_cursor_unref( busy );
 
             list = gtk_list_store_new( N_COLS, GDK_TYPE_PIXBUF,
-                                       G_TYPE_STRING, G_TYPE_STRING );
+                                       G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING );
             task = vfs_async_task_new( (VFSAsyncFunc) load_all_known_apps_thread, list );
             g_object_set_data( G_OBJECT(task), "view", view );
             g_object_set_data( G_OBJECT(dlg), "task", task );

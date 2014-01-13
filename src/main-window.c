@@ -2068,16 +2068,16 @@ void fm_main_window_init( FMMainWindow* main_window )
     main_window->task_scroll = gtk_scrolled_window_new( NULL, NULL );
     
     gtk_paned_pack1( GTK_PANED(main_window->hpane_top), main_window->panel[0],
-                                                                    TRUE, TRUE );
+                                                                    FALSE, TRUE );
     gtk_paned_pack2( GTK_PANED(main_window->hpane_top), main_window->panel[1],
                                                                     TRUE, TRUE );
     gtk_paned_pack1( GTK_PANED(main_window->hpane_bottom), main_window->panel[2],
-                                                                    TRUE, TRUE );
+                                                                    FALSE, TRUE );
     gtk_paned_pack2( GTK_PANED(main_window->hpane_bottom), main_window->panel[3],
                                                                     TRUE, TRUE );
 
     gtk_paned_pack1( GTK_PANED(main_window->vpane), main_window->hpane_top,
-                                                                    TRUE, TRUE );
+                                                                    FALSE, TRUE );
     gtk_paned_pack2( GTK_PANED(main_window->vpane), main_window->hpane_bottom,
                                                                     TRUE, TRUE );
 
