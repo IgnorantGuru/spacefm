@@ -646,9 +646,9 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Updating available archive handlers list
         gchar* new_handlers_list = g_strdup_printf( "%s %s",
-                                                xset_get_s( "arc_conf" ),
+                                                xset_get_s( "arc_conf2" ),
                                                 new_xset_name );
-        xset_set( "arc_conf", "s", new_handlers_list );
+        xset_set( "arc_conf2", "s", new_handlers_list );
 
         // Freeing strings
         g_free(new_handler_name);
@@ -869,7 +869,7 @@ saveanyway: ;
 
         // Updating available archive handlers list - fetching current
         // handlers
-        char* archive_handlers_s = xset_get_s( "arc_conf" );
+        char* archive_handlers_s = xset_get_s( "arc_conf2" );
         gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
         gchar* new_archive_handlers_s = g_strdup( "" );
         gchar* new_archive_handlers_s_temp;
@@ -902,7 +902,7 @@ saveanyway: ;
         }
 
         // Finally updating handlers
-        xset_set( "arc_conf", "s", new_archive_handlers_s );
+        xset_set( "arc_conf2", "s", new_archive_handlers_s );
 
         // Deleting xset
         xset_custom_delete( handler_xset, FALSE );
@@ -1010,7 +1010,7 @@ static void on_configure_drag_end( GtkWidget* widget,
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
 
     // Saving the new archive handlers list
-    xset_set( "arc_conf", "s", archive_handlers );
+    xset_set( "arc_conf2", "s", archive_handlers );
 
     // Clearing up
     g_free(archive_handlers);
@@ -1096,7 +1096,7 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 {
     // Fetching available archive handlers (literally gets member s from
     // the xset) - user-defined order has already been set
-    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -1299,7 +1299,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 
     Configure menu item is used to store some dialog data:
         get this set with:
-            set = xset_get( "arc_conf" );
+            set = xset_get( "arc_conf2" );
         set->x          dialog width  (string)
         set->y          dialog height (string)
         set->s          space separated list of xset names (archive types)
@@ -1349,8 +1349,8 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     // Setting saved dialog size
-    int width = xset_get_int( "arc_conf", "x" );
-    int height = xset_get_int( "arc_conf", "y" );
+    int width = xset_get_int( "arc_conf2", "x" );
+    int height = xset_get_int( "arc_conf2", "y" );
     if ( width && height )
         gtk_window_set_default_size( GTK_WINDOW( dlg ), width, height );
 
@@ -1666,10 +1666,10 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     {
         // They are - saving
         char* str = g_strdup_printf( "%d", width );
-        xset_set( "arc_conf", "x", str );
+        xset_set( "arc_conf2", "x", str );
         g_free( str );
         str = g_strdup_printf( "%d", height );
-        xset_set( "arc_conf", "y", str );
+        xset_set( "arc_conf2", "y", str );
         g_free( str );
     }
 
@@ -1945,7 +1945,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                     NULL );
 
     // Fetching available archive handlers and splitting
-    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -2541,7 +2541,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     }
 
     // Fetching available archive handlers and splitting
-    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
     XSet* handler_xset;
 
@@ -3133,7 +3133,7 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
         type = (char*)vfs_mime_type_get_type( mime );
 
     // Fetching available archive handlers and splitting
-    char* archive_handlers_s = xset_get_s( "arc_conf" );
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -3180,7 +3180,7 @@ static void restore_defaults( GtkWidget* dlg )
 
     /* Fetching current list of archive handlers, and constructing a
      * searchable version ensuring that a unique handler can be specified */
-    char *handlers = xset_get_s( "arc_conf" );
+    char *handlers = xset_get_s( "arc_conf2" );
     char *handlers_search = g_strconcat( " ", handlers, " ", NULL );
 
     XSet* set = xset_is( "arctype_7z" );
@@ -3382,7 +3382,7 @@ static void restore_defaults( GtkWidget* dlg )
     {
         handlers = g_strconcat( handlers, " ", handlers_to_add, NULL );
         g_free( handlers_to_add );
-        xset_set( "arc_conf", "s", handlers );
+        xset_set( "arc_conf2", "s", handlers );
         g_free( handlers );
     }
 

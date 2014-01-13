@@ -994,6 +994,22 @@ void load_settings( char* config_dir )
         swap_menu_label( "move_template", "_Template", _("Te_mplate") );
         swap_menu_label( "move_dlg_help", "T_ips", _("_Help") );
     }
+    if ( ver >= 24 ) // >= 0.9.3
+    {
+        /* Archive handlers are now user configurable using a new
+         * xset - copying over settings from the old xset */
+        if (xset_get_int( "arc_conf2", "x" ) == 0)
+        {
+            int width = xset_get_int( "arc_conf", "x" );
+            str = g_strdup_printf( "%d", width );
+            xset_set( "arc_conf2", "x", str );
+            g_free( str );
+            int height = xset_get_int( "arc_conf", "y" );
+            str = g_strdup_printf( "%d", height );
+            xset_set( "arc_conf2", "y", str );
+            g_free( str );
+        }
+    }
 }
 
 
@@ -1010,10 +1026,10 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "23" );  // 0.9.0
+    xset_set( "config_version", "s", "24" );  // 0.9.3
 
     // save tabs
-    gboolean save_tabs = xset_get_b( "main_save_tabs" );    
+    gboolean save_tabs = xset_get_b( "main_save_tabs" );
     if ( main_window_ptr )
         main_window = (FMMainWindow*)main_window_ptr;
     else
@@ -10559,7 +10575,7 @@ void xset_defaults()
     set = xset_set( "arc_default", "lbl", _("_Archive Default") );
 
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write sep_arc2 arc_conf" );
+    xset_set_set( set, "desc", "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write sep_arc2 arc_conf2" );
 
         set = xset_set( "arc_def_open", "lbl", _("_Open With App") );
         set->menu_style = XSET_MENU_RADIO;
@@ -10581,7 +10597,7 @@ void xset_defaults()
         set = xset_set( "arc_def_write", "lbl", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
 
-        set = xset_set( "arc_conf", "label", _("Co_nfigure") );
+        set = xset_set( "arc_conf2", "label", _("Co_nfigure") );
         xset_set_set( set, "icon", "gtk-preferences" );
         set->s = g_strdup( "arctype_7z arctype_gz arctype_rar arctype_tar arctype_tar_bz2 arctype_tar_gz arctype_tar_xz arctype_zip" );  // default list of archive types
 

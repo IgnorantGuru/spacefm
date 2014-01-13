@@ -997,7 +997,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 set->disable = TRUE;
             }
             
-            xset_set_cb( "arc_conf", ptk_file_archiver_config, browser );
+            xset_set_cb( "arc_conf2", ptk_file_archiver_config, browser );
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
