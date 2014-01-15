@@ -2540,13 +2540,19 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         dest = dest_dir;
     }
 
+    /* Quoting destination directory (doing this outside of the later
+     * loop as its needed after the selected files loop completes) */
+    dest_quote = bash_quote( dest );
+
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
     XSet* handler_xset;
 
-    // Setting desired archive operation
+    /* Setting desired archive operation and keeping in terminal while
+     * listing */
     int archive_operation = (list_contents) ? ARC_LIST : ARC_EXTRACT;
+    keep_term = list_contents;
 
     // Looping for all files to attempt to list/extract
     for ( l = files; l; l = l->next )
@@ -2586,27 +2592,21 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         if (!format_supported)
             continue;
 
-        // Handler found - fetching the 'run in terminal' preference, if
-        // the operation is listing then the terminal should be kept
-        // open, otherwise the user should explicitly keep the terminal
-        // running via the handler's command
-        in_term = archive_handler_run_in_term( handler_xset,
-                                               archive_operation );
-        keep_term = list_contents;
-
-        // Generating prompt to keep terminal open after error if
-        // appropriate
-        if (in_term)
-            prompt = g_strdup_printf( "; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security */
-                    "[ Finished With Errors ]  Press Enter to close" );
-        else
-            prompt = g_strdup_printf( "" );
+        /* Handler found - fetching the 'run in terminal' preference, if
+         * the operation is listing then the terminal should be kept
+         * open, otherwise the user should explicitly keep the terminal
+         * running via the handler's command
+         * Since multiple commands are now batched together, only one
+         * of the handlers needing to run in a terminal will cause all of
+         * them to */
+        if (!in_term)
+            in_term = archive_handler_run_in_term( handler_xset,
+                                                   archive_operation );
 
         // Determining file paths
         full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
                                       NULL );
         full_quote = bash_quote( full_path );
-        dest_quote = bash_quote( dest );
 
         // Checking if the operation is to list an archive(s)
         if ( list_contents )
@@ -2661,10 +2661,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
                 // Cleaning up
                 g_free( filename );
-                g_free( dest_quote );
                 g_free( full_quote );
                 g_free( full_path );
-                g_free( prompt );
                 continue;
             }
 
@@ -2723,16 +2721,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 g_free( old_extract_cmd );
             }
 
-            /* Dealing with the need to make extracted files writable if
-             * desired (e.g. a tar of files originally archived from a CD
-             * will be readonly). Root users don't obey such access
-             * permissions and making such owned files writeablemay be
-             * a security issue */
-            if (write_access && geteuid() != 0)
-                perm = g_strdup_printf( " && chmod -R u+rwX %s/*",
-                                        dest_quote );
-            else perm = g_strdup( "" );
-
             // Debug code
             //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
 
@@ -2756,22 +2744,15 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             }
 
             // Finally constructing command to run
-            cmd = g_strdup_printf( "cd %s && %s%s%s %s", dest_quote,
-                                   mkparent, extract_cmd, perm, prompt );
+            cmd = g_strdup_printf( "cd %s && %s%s", dest_quote,
+                                   mkparent, extract_cmd );
 
             // Cleaning up
             g_free( extract_cmd );
             g_free( filename_no_ext );
             g_free( mkparent );
-            g_free( perm );
             g_free( parent_path );
-            g_free( prompt );
         }
-
-        // Dealing with standard SpaceFM substitutions
-        str = cmd;
-        cmd = replace_line_subs( cmd );
-        g_free(str);
 
         // Building up final_command
         if (!final_command)
@@ -2785,11 +2766,41 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         }
 
         // Cleaning up
-        g_free( dest_quote );
         g_free( full_quote );
         g_free( full_path );
         g_free( cmd );
     }
+
+    // Dealing with standard SpaceFM substitutions
+    str = final_command;
+    final_command = replace_line_subs( final_command );
+    g_free(str);
+
+    /* Generating prompt to keep terminal open after error if
+     * appropriate */
+    if (in_term)
+        prompt = g_strdup_printf( "; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security */
+                "[ Finished With Errors ]  Press Enter to close" );
+    else
+        prompt = g_strdup_printf( "" );
+
+    /* Dealing with the need to make extracted files writable if
+     * desired (e.g. a tar of files originally archived from a CD
+     * will be readonly). Root users don't obey such access
+     * permissions and making such owned files writeable may be a
+     * security issue */
+    if (!list_contents && write_access && geteuid() != 0)
+        perm = g_strdup_printf( " && chmod -R u+rwX %s/*",
+                                dest_quote );
+    else perm = g_strdup( "" );
+
+    // Finally constructing command to run
+    str = final_command;
+    final_command = g_strconcat( final_command, perm, prompt, NULL );
+    g_free( str );
+    g_free( perm );
+    g_free( prompt );
+    g_free( dest_quote );
 
     // Creating task
     char* task_name = g_strdup_printf( _("Extract %s"),
