@@ -6037,7 +6037,9 @@ GtkWidget* main_task_view_new( FMMainWindow* main_window )
         {
             gtk_tree_view_column_set_sizing( col, GTK_TREE_VIEW_COLUMN_FIXED );
             gtk_tree_view_column_set_min_width( col, 20 );
-            gtk_tree_view_column_set_expand ( col, TRUE );
+            // If set_expand is TRUE, columns flicker and adjustment is
+            // difficult during high i/o load on some systems
+            gtk_tree_view_column_set_expand ( col, FALSE );
         }
     }
     
