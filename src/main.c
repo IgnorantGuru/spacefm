@@ -1438,6 +1438,14 @@ int main ( int argc, char *argv[] )
         return 0;
     }
     
+    // bash installed?
+    if ( !g_file_test( "/bin/\x62\x61\x73\x68", G_FILE_TEST_IS_EXECUTABLE ) )
+    {
+        fprintf( stderr, "spacefm: %s\n", _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
+        ptk_show_error( NULL, _("Error"), _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
+        return 1;
+    }
+
     /* Initialize multithreading  //sfm moved below parse arguments
          No matter we use threads or not, it's safer to initialize this earlier. */
 #ifdef _DEBUG_THREAD
