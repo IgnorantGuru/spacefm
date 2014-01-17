@@ -41,6 +41,46 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.9.3"></a>
+<big><b><a href="#0.9.3">0.9.3 released</a></b></big><br>
+2014-Jan-17
+
+<p>See the <a href="http://igurublog.wordpress.com/2014/01/17/happy-birthday-spacefm-0-9-3-released">release announcement</a> for a general update on SpaceFM development.
+
+<p>This maintenance release includes the following changes:
+
+<ul>
+    <li><b>Task Manager columns</b> are no longer set to expand as the window or other columns change size.  This is to correct a problem which caused the columns to be hard to adjust during i/o load on some systems.  This change should make the columns easier to adjust, but they will be less smart in terms of autosizing when the window size is changed.<br><br>
+    
+    <li>The <b>application chooser now includes tooltips</b> for each listed application showing relevant lines from the .desktop file.  Also, sorting is case-insensitive and duplication of listed apps has been corrected.<br><br>
+
+    <li>SpaceFM now looks in /usr/share/applications subdirs for .desktop files when starting apps, helping to prevent 'command not found' errors.<br><br>
+
+    <li>A new method (udev rule) has been added to the <a href="spacefm-manual-en.html#devices-kernpoll">kernel polling instructions</a>.  (Because udisks2 also requires kernel polling, this should be already enabled on many systems in the near future.)<br><br>
+
+    <li>A memory leak triggered by drawing a rectangle (rubberbanding) on the desktop has been corrected.<br><br>
+    
+    <li>A problem which caused SpaceFM Dialog to return windowsize=1x1 due to changes in GTK3.8+ has been corrected.<br><br>
+    
+    <li>A problem which caused the position of the sliders between panels to not be restored correctly on startup when the SpaceFM window was maximized has been corrected.<br><br>
+    
+    <li>SpaceFM now tests to ensure that /bin/bash is installed on startup.  Note that SpaceFM has a <b>required</b> dependency on bash v4.  Other shells are not equivalent.  bash doesn't need to be the default login shell, but it must be installed.<br><br>
+    
+    <li>Multiple translations have been updated - thanks to translators for their continuing work!<br><br>
+</ul>
+
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.9.2"></a>
 <big><b><a href="#0.9.2">0.9.2 released</a></b></big><br>
 2013-Dec-06

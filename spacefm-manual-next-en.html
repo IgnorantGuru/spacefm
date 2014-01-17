@@ -157,9 +157,7 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
-
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.  SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
@@ -237,7 +235,7 @@
     Run SpaceFM in the background as a daemon to auto-mount and auto-open devices, and quickly open browser windows on demand. <a href="#invocation-daemonmode">*</a><br><br>
 
     <li><b>Network Support</b> - <i>Mounts network filesystems and ISO files</i><br>
-    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a> <br><br>    
+    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a>  NOTE:  Network share support in SpaceFM is ad hoc by design.  This means there aren't many built-in functions pertaining to networks, and SpaceFM does not make network connections itself.  Network discovery and other functions are handled via plugins and your custom commands.<br><br>    
 </ul>
 
 
@@ -1163,7 +1161,7 @@ In addition, a bash command line can be entered in the Path Bar.  This is a conv
 
 When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and a <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
 
-<p>In addition, the substitution variables defined in <a href="#designmode-command-line">Command|Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command|Script</a> may also be used in Path Bar command lines.
+<p>In addition, the substitution variables defined in <a href="#designmode-props-command">Command Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command Script</a> may also be used in Path Bar command lines.
 
 <p>For example, to open a dialog showing the path of the current directory:
 <pre>    $ echo Current Directory: %d</pre>
@@ -1485,7 +1483,7 @@ In addition, SpaceFM's main menu bar and the desktop menu include Devices menus 
 
 <!-- #Remove / Eject #remove -->
 <p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove / Eject</b></a><br>
-The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a full sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)  Note that if all other filesystems don't sync immediately, this may prolong the Remove command.  In that case, you can use <a href="#devices-menu-unmount">Unmount</a> instead, which only does a filesystem-specific sync.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
@@ -1495,6 +1493,9 @@ The 'Remove / Eject' item is used to remove a device and eject media.  When you 
 
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
+<p>NOTE:  SpaceFM does NOT disable or power-down usb ports or spin down disks when removing a device, it merely performs a sync to ensure data is written.  Usually this is sufficient to prevent data loss.  If powering down is required for your device, you must add a custom command to the Devices menu, or add the applicable command or option to the general <A href="#devices-settings-ucmd">Unmount Command</a>.
+
+
 <!-- #Reload -->
 <p><a name="devices-menu-reload"/><a href="#devices-menu-reload"><b>Reload</b></a><br>
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove / Eject</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
@@ -1502,7 +1503,7 @@ Reload is used to unmount, eject if necessary, and reload a device's media tray 
 
 <!-- #Unmount -->
 <p><a name="devices-menu-unmount"/><a href="#devices-menu-unmount"><b>Unmount</b></a><br>
-Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No general sync is performed (but a filesystem-specific sync is performed by umount).  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Unmount' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
 <!-- #Sync -->
 <p><a name="devices-menu-sync"/><a href="#devices-menu-sync"><b>Sync</b></a><br>
@@ -1660,7 +1661,7 @@ For example, to add a custom command which shows the size of the currently selec
 
 <!-- #Unmount -->
 <p><a name="devices-root-unmount"/><a href="#devices-root-unmount"><b>Unmount</b></a><br>
-By default, SpaceFM will use udisks to unmount as root, but you can change this to any command in the dialog, such as umount, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, or pumount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
+By default, SpaceFM will use <a href="http://ignorantguru.github.io/udevil/">udevil</a> to unmount as root, but you can change this to any unmount command, such as a udisks or pumount command.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the dialog.
 
 <!-- #Mount -->
 <p><a name="devices-root-mount"/><a href="#devices-root-mount"><b>Mount</b></a><br>
@@ -2117,48 +2118,54 @@ Font opens a font selection dialog which allows you to select the font to be use
 <td valign="top">
 <a name="devices-kernpoll"/><a href="#devices-kernpoll"><font size=+2>How To Enable Kernel Polling </font></a>
 <!-- @Devices @How To Enable Kernel Polling #kernpoll -->
-<p>When using SpaceFM without udisks, and without the udisks-daemon running, you may need to enable kernel polling for device media changes to be detected.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
+<p>You may need to enable kernel polling for device media changes to be detected by SpaceFM.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
 
-<p>Kernel polling is a new feature of the Linux kernel and udev, so most distros don't yet have it enabled.  Even if you are using udisks, enabling kernel polling is recommended to eliminate the need for udisks to do userspace polling.  Kernel polling also corrects a common issue where the eject button on a drive won't respond with the newer udev when udisks is not used.
+<p>Kernel polling is a newer feature of the Linux kernel and udev, so some distros don't yet have it enabled by default.  To use kernel polling, your Linux kernel may need to be <b>2.6.38 or newer</b>, and udev may need to be <b>version 173</b> or newer.
 
-<p>To use kernel polling, your Linux kernel needs to be <b>2.6.38 or newer</b>, and udev must be <b>version 173</b> or newer.
-
-<p>You can deterime if kernel polling is enabled by running these commands:
+<p>To determine if kernel polling is enabled:
 <pre>
     cat /sys/module/block/parameters/events_dfl_poll_msecs
     cat /sys/block/sr0/events_poll_msecs
 </pre>
 
-If you get 0 or -1 from those commands, then it's probably disabled.
+If you get 0 or -1 from both of those commands, kernel polling may be disabled.
 
-<p><b>To enable kernel polling temporarily</b>, enable common polling for the block module:
+<p><b>To enable kernel polling permanently</b> (survives a reboot), add the following command to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file):
 <pre>
-    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
 </pre>
 
 Any number between 2000 and 5000 (milliseconds) should be reasonable - the higher 5000 means poll every 5 seconds, which is less overhead but a little slower.
+
+<p><b>OR</b> pass this option to the kernel boot command line in grub:
+<blockquote>
+    <i>block.events_dfl_poll_msecs=2000</i>
+</blockquote>
+
+<p><b>OR</b> add a udev rule to enable kernel polling on removable devices:<br>
+<blockquote><code>
+    echo 'ACTION=="add", ATTR{removable}=="1", ATTR{events_poll_msecs}=="-1", ATTR{events_poll_msecs}="2000"' > /etc/udev/rules.d/61-removable-storage-polling.rules
+</code></blockquote>
+
+<p>A reboot will be required for the above changes to take effect, or...
+
+<p><b>To enable kernel polling temporarily and immediately</b>, enable common polling for the block module:
+<pre>
+    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+</pre>
 
 <p><b>OR</b> you can enable polling just for a single device like this (/dev/sr0 in this example):
 <pre>
     sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
 </pre>
 
-The change should be immediate - media will be detected and the eject button on the drive should work normally again.  However, the above changes will be lost when you reboot.
+This change should be immediate - media will be detected.  However, the above change will be lost when you reboot.
 
-<p><b>To make polling permanent</b> (survives a reboot), add one of the above commands to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file), like this (without the sudo):
-<pre>
-    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
-</pre>
-
-<b>OR</b> you can pass this option to the kernel boot command line in grub:
-<blockquote>
-    <i>block.events_dfl_poll_msecs=2000</i>
-</blockquote>
-
-References:<br>
-<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org/msg15714.html</a><br>
+<p>References:<br>
+<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org</a><br>
 <a href="http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/">uam-can-now-mount-cds-and-dvds</a><br>
 <a href="https://bugs.archlinux.org/task/25609">bugs.archlinux.org</a><br>
+<a href="http://unix.stackexchange.com/questions/38582/udev-triggers-are-not-firing-on-insert-of-cf-card-into-usb-card-reader-anymore">unix.stackexchange.com</a><br>
 
 
 
@@ -2811,7 +2818,15 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
+<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
+
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
+
+<!-- # Edit Command #cedit -->
+<p><a name="designmode-designmenu-cedit"/><a href="#designmode-designmenu-cedit"><b>Edit Command</b></a><br>
+Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a command line, Edit Command opens the Menu Item Properties dialog to the Command page.
+
+<p>You can also edit an item's command line using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Edit Script #edit -->
 <p><a name="designmode-designmenu-edit"/><a href="#designmode-designmenu-edit"><b>Edit Script</b></a><br>
@@ -3018,7 +3033,7 @@ Visible only for non-toolbar Command or Application items, the '<i>If enabled, u
 <p><a name="designmode-props-ignorecontext"/><a href="#designmode-props-ignorecontext"><b>Ignore Context</b></a><br>
 The '<i>Ignore Context / Show All (global setting)</i>' option, if checked, causes all <a href="#designmode-props-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
 
-<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Design Menu for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
+<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Menu Item Properties dialog for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
 
 <p>Note that <i>Ignore Context</i> does not affect the automatic context of built-in items - for example, even with <i>Ignore Context</i> checked, the file list's Paste menu item will always be disabled if the clipboard is empty.
 <br>
@@ -6750,8 +6765,19 @@ Be sure to use a temporary directory which is root-owned/protected and user-writ
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
 <p><a name="programfiles-etc-xdg"/><a href="#programfiles-etc-xdg"><b>/etc/xdg/spacefm/</b></a><br>
-This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user when spacefm is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
-<pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
+This folder, if it exists, is used to copy a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> (eg ~/.config/spacefm) exists for the current user when SpaceFM is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+<pre>
+    sudo cp -r /home/USER/.config/spacefm /etc/xdg/spacefm
+    sudo chmod -R ugo+rX /etc/xdg/spacefm</pre>
+
+To test, start SpaceFM with a test config directory which doesn't exist:
+<pre>    
+    killall spacefm
+    rm -rf /tmp/spacefm-test-config
+    spacefm --config-dir /tmp/spacefm-test-config</pre>
+
+<p>If you want to install plugins by default, install them uncompressed to /usr/share/spacefm/plugins/, just as SpaceFM does when you select Plugins|Install. In the user's configuration, plugins can be copied to other menus as well.  Or you can simply import plugins into the user's menus before copying the config dir to /etc/xdg/spacefm.
+
 
 <!-- @end programfiles-etc-->
 <br><br></td></tr>
@@ -6914,11 +6940,11 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <center>
 <p><b>This document is under construction and incomplete.</b>
 
-<p>Copyright (C) 2013
+<p>Copyright (C) 2014
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-11-23&nbsp;&nbsp;(SpaceFM version 0.9.1+)
+<p>Updated 2014-01-17&nbsp;&nbsp;(SpaceFM version 0.9.2+)
 <br><br>
 </center>
 </td></tr></table>
