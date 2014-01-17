@@ -1370,7 +1370,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // the window!!)
     // 'Restore defaults' button has custom text but a stock image
     GtkButton* btn_defaults = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( dlg ),
-                                                _("Restore Defaults"),
+                                                _("Re_store Defaults"),
                                                 GTK_RESPONSE_NONE ) );
     GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_CLEAR",
                                                 GTK_ICON_SIZE_BUTTON );
@@ -1475,20 +1475,29 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                 G_CALLBACK ( on_configure_handler_enabled_check ), dlg );
     g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_enabled",
                         GTK_CHECK_BUTTON( chkbtn_handler_enabled ) );
-    GtkWidget* lbl_handler_name = gtk_label_new( _("Name:") );
+    GtkWidget* lbl_handler_name = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_name ),
+                                        _("_Name:") ),
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_name ), 0, 0.5 );
-    GtkWidget* lbl_handler_mime = gtk_label_new( _("MIME Type:") );
+    GtkWidget* lbl_handler_mime = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_mime ),
+                                        _("MIME _Type:") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_mime ), 0, 0.5 );
-    GtkWidget* lbl_handler_extension = gtk_label_new( _("Extension:") );
+    GtkWidget* lbl_handler_extension = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_extension ),
+                                        _("E_xtension:") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_extension ), 0, 0.5 );
     GtkWidget* lbl_handler_compress = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lbl_handler_compress ), _("<b>Compress:</b>") );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_compress ),
+                                        _("<b>Co_mpress:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_compress ), 0, 0.5 );
     GtkWidget* lbl_handler_extract = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lbl_handler_extract ), _("<b>Extract:</b>") );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_extract ),
+                                        _("<b>_Extract:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_extract ), 0, 0.5 );
     GtkWidget* lbl_handler_list = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lbl_handler_list ), _("<b>List:</b>") );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_list ),
+                                        _("<b>_List:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
     GtkWidget* entry_handler_name = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",
@@ -1508,6 +1517,21 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     GtkWidget* entry_handler_list = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_list",
                         GTK_ENTRY( entry_handler_list ) );
+
+    // Setting widgets to be activated associated with label mnemonics
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_name ),
+                                   entry_handler_name );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_mime ),
+                                   entry_handler_mime );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_extension ),
+                                   entry_handler_extension );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_compress ),
+                                   entry_handler_compress );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_extract ),
+                                   entry_handler_extract );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_list ),
+                                   entry_handler_list );
+
     GtkWidget* chkbtn_handler_compress_term =
                 gtk_check_button_new_with_label( _("Run In Terminal") );
     g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_compress_term",
@@ -1905,7 +1929,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
      * 'Configure' button has custom text but a stock image */
     GtkButton* btn_configure = GTK_BUTTON( gtk_dialog_add_button(
                                                 GTK_DIALOG( dlg ),
-                                                _("Configure"),
+                                                _("Conf_igure"),
                                                 GTK_RESPONSE_NONE ) );
     GtkWidget* btn_configure_image = xset_get_image( "GTK_STOCK_PREFERENCES",
                                                 GTK_ICON_SIZE_BUTTON );
@@ -1924,7 +1948,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
     filter = gtk_file_filter_new();
     hbox = gtk_hbox_new( FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX(hbox), gtk_label_new( _("Archive Format:") ),
+    GtkWidget* lbl_archive_format = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_archive_format ),
+                                         _("_Archive Format:") );
+    gtk_box_pack_start( GTK_BOX(hbox), lbl_archive_format,
                         FALSE, TRUE, 2 );
 
     // Generating a ComboBox with model behind, and saving model for use
@@ -2006,9 +2033,11 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     // Adding filter box to hbox and connecting callback
     g_signal_connect( combo, "changed", G_CALLBACK( on_format_changed ),
                       dlg );
+    GtkWidget *lbl_command = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_command ),
+                                        _("Co_mmand:") );
     gtk_box_pack_start( GTK_BOX( hbox ), combo, FALSE, FALSE, 2 );
-    gtk_box_pack_start( GTK_BOX( hbox ), gtk_label_new( _("Command:") ),
-                        FALSE, FALSE, 2 );
+    gtk_box_pack_start( GTK_BOX( hbox ), lbl_command, FALSE, FALSE, 2 );
 
     // Loading command for handler, based off the i'th handler
     GtkEntry* entry = (GtkEntry*)gtk_entry_new();
@@ -2043,6 +2072,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         // Recording the fact getting the iter failed
         g_warning( "Unable to fetch the iter from handler ordinal %d!", i );
     };
+
+    // Mnemonically attaching widgets to labels
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_archive_format ),
+                                   combo );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_command ),
+                                   GTK_WIDGET( entry ) );
 
     // Adding options to hbox
     gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE,
