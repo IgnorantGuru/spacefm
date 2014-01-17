@@ -3202,7 +3202,11 @@ static void restore_defaults( GtkWidget* dlg )
     /* Fetching current list of archive handlers, and constructing a
      * searchable version ensuring that a unique handler can be specified */
     char *handlers = xset_get_s( "arc_conf2" );
-    char *handlers_search = g_strconcat( " ", handlers, " ", NULL );
+    char *handlers_search = NULL;
+    if (g_strcmp0( handlers, "" ) <= 0)
+        handlers_search = g_strdup( "" );
+    else
+        handlers_search = g_strconcat( " ", handlers, " ", NULL );
 
     XSet* set = xset_is( "arctype_7z" );
     if (!set)
@@ -3401,8 +3405,13 @@ static void restore_defaults( GtkWidget* dlg )
     // Updating list of archive handlers
     if (handlers_to_add)
     {
-        handlers = g_strconcat( handlers, " ", handlers_to_add, NULL );
-        g_free( handlers_to_add );
+        if (g_strcmp0( handlers, "" ) <= 0)
+            handlers = handlers_to_add;
+        else
+        {
+            handlers = g_strconcat( handlers, " ", handlers_to_add, NULL );
+            g_free( handlers_to_add );
+        }
         xset_set( "arc_conf2", "s", handlers );
         g_free( handlers );
     }
