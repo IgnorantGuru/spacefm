@@ -1918,7 +1918,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     int i, n, format, res;
 
     // Generating dialog
-    dlg = gtk_file_chooser_dialog_new( _("Save Archive"),
+    dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
                                        GTK_WINDOW( gtk_widget_get_toplevel(
                                              GTK_WIDGET( file_browser ) ) ),
                                        GTK_FILE_CHOOSER_ACTION_SAVE, NULL );
@@ -2210,7 +2210,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             {
                 // It has/is - warning user
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                _("Save Archive"), NULL, FALSE,
+                                _("Create Archive"), NULL, FALSE,
                                 _("The following substitution variables "
                                 "should be in the archive creation"
                                 " command:\n\n"
