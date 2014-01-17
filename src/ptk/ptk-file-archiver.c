@@ -1946,6 +1946,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                                 GTK_STOCK_OK,
                                                 GTK_RESPONSE_OK ) );
 
+    /* Adding the help button but preventing it from taking the focus on
+     * click */
+    gtk_button_set_focus_on_click(
+                                    GTK_BUTTON(
+                                        gtk_dialog_add_button(
+                                            GTK_DIALOG( dlg ),
+                                            GTK_STOCK_HELP,
+                                            GTK_RESPONSE_HELP
+                                        )
+                                    ),
+                                    FALSE );
+
     filter = gtk_file_filter_new();
     hbox = gtk_hbox_new( FALSE, 4 );
     GtkWidget* lbl_archive_format = gtk_label_new( NULL );
@@ -2128,7 +2140,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
     }
 
-    // Displaying dialog - loop isn't needed currently??
+    // Displaying dialog
     gchar* command;
     gboolean run_in_terminal;
 
@@ -2240,6 +2252,11 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             gtk_widget_destroy( dlg );
             ptk_file_archiver_config( file_browser );
             return;
+        }
+        else if ( res == GTK_RESPONSE_HELP )
+        {
+            // TODO: Sort out proper help
+            xset_show_help( dlg, NULL, "#designmode-style-context" );
         }
         else
         {
