@@ -3285,7 +3285,7 @@ static void restore_defaults( GtkWidget* dlg )
     set->s = g_strdup( "application/x-gzip:application/x-gzpdf" );
     set->x = g_strdup( ".gz" );
     set->y = g_strdup( "gzip -c %F > %O" );     // compress command
-    set->z = g_strdup( "gzip -cd %o > %f" );    // extract command
+    set->z = g_strdup( "gzip -cd %o > %F" );    // extract command
     set->context = g_strdup( "+gunzip -l %o" );  // list command
 
     /* Archive handler list check is separate as the XSet may exist but
