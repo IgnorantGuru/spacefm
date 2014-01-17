@@ -697,8 +697,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("Please enter a valid "
-                                "MIME content type for the '%s' handler "
-                                "before saving."),
+                                "MIME content type OR extension for the "
+                                "'%s' handler before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_mime );
             goto saveanyway;
@@ -738,8 +738,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 dialog_title, NULL, FALSE,
                                 g_strdup_printf(_("Please enter a valid "
-                                "file extension for the '%s' handler "
-                                "before saving."),
+                                "file extension OR MIME content type for"
+                                " the '%s' handler before saving."),
                                 handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_extension );
             goto saveanyway;
