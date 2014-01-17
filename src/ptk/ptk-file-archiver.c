@@ -3337,7 +3337,7 @@ static void restore_defaults( GtkWidget* dlg )
     set = xset_is( "arctype_tar_bz2" );
     if (!set)
         set = xset_set( "arctype_tar_bz2", "label", "Tar (bzip2)" );
-    set->menu_label = g_strdup( "Tar (bzip2)" );
+    set->menu_label = g_strdup( "Tar bzip2" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-bzip-compressed-tar" );
     set->x = g_strdup( ".tar.bz2" );
@@ -3362,7 +3362,7 @@ static void restore_defaults( GtkWidget* dlg )
     set = xset_is( "arctype_tar_gz" );
     if (!set)
         set = xset_set( "arctype_tar_gz", "label", "Tar (gzip)" );
-    set->menu_label = g_strdup( "Tar (gzip)" );
+    set->menu_label = g_strdup( "Tar Gzip" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-compressed-tar" );
     set->x = g_strdup( ".tar.gz" );
@@ -3387,7 +3387,7 @@ static void restore_defaults( GtkWidget* dlg )
     set = xset_is( "arctype_tar_xz" );
     if (!set)
         set = xset_set( "arctype_tar_xz", "label", "Tar (xz)" );
-    set->menu_label = g_strdup( "Tar (xz)" );
+    set->menu_label = g_strdup( "Tar xz" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-xz-compressed-tar" );
     set->x = g_strdup( ".tar.xz" );

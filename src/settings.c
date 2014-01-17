@@ -10635,7 +10635,7 @@ void xset_defaults()
     set->z = g_strdup( "tar -xvf %o" );          // extract command
     set->context = g_strdup( "+tar -tvf %o" );   // list command
 
-    set = xset_set( "arctype_tar_bz2", "label", "Tar (bzip2)" );
+    set = xset_set( "arctype_tar_bz2", "label", "Tar bzip2" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-bzip-compressed-tar" );
     set->x = g_strdup( ".tar.bz2" );
@@ -10643,7 +10643,7 @@ void xset_defaults()
     set->z = g_strdup( "tar -xvjf %o" );          // extract command
     set->context = g_strdup( "+tar -tvf %o" );    // list command
 
-    set = xset_set( "arctype_tar_gz", "label", "Tar (gzip)" );
+    set = xset_set( "arctype_tar_gz", "label", "Tar Gzip)" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-compressed-tar" );
     set->x = g_strdup( ".tar.gz" );
@@ -10651,7 +10651,7 @@ void xset_defaults()
     set->z = g_strdup( "tar -xvzf %o" );          // extract command
     set->context = g_strdup( "+tar -tvf %o" );    // list command
 
-    set = xset_set( "arctype_tar_xz", "label", "Tar (xz)" );
+    set = xset_set( "arctype_tar_xz", "label", "Tar xz" );
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-xz-compressed-tar" );
     set->x = g_strdup( ".tar.xz" );
