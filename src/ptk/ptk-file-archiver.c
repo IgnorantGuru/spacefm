@@ -3211,9 +3211,9 @@ static void restore_defaults( GtkWidget* dlg )
     set->b = XSET_B_TRUE;
     set->s = g_strdup( "application/x-7z-compressed" );
     set->x = g_strdup( ".7z" );
-    set->y = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" a %o %F" );     // compress command
-    set->z = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" x %o" );        // extract command
-    set->context = g_strdup( "+prog=\"$(which 7za || which 7zr)\"; \"$prog\" l %o" );  // list command
+    set->y = g_strdup( "+\"$(which 7za || echo 7zr)\" a %o %F" );  // compress command
+    set->z = g_strdup( "+\"$(which 7za || echo 7zr)\" x %o" );     // extract command
+    set->context = g_strdup( "+\"$(which 7za || echo 7zr)\" l %o" );  // list command
 
     /* Archive handler list check is separate as the XSet may exist but
      * the handler may not be in the list */
