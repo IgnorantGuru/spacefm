@@ -1987,17 +1987,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         // Fetching handler
         handler_xset = xset_get( archive_handlers[i] );
 
-        // Checking to see if handler is enabled and can cope with
-        // compression - dealing with empty command yet 'run in terminal'
-        // still ticked
+        /* Checking to see if handler is enabled, can cope with
+         * compression and the extension is set - dealing with empty
+         * command yet 'run in terminal' still ticked */
         if(handler_xset->b == XSET_B_TRUE && handler_xset->y
            && g_strcmp0( handler_xset->y, "" ) != 0
-           && g_strcmp0( handler_xset->y, "+" ) != 0)
+           && g_strcmp0( handler_xset->y, "+" ) != 0
+           && g_strcmp0( handler_xset->x, "" ) != 0)
         {
-            // It can - adding to filter so that only relevant archives
-            // are displayed when the user chooses an archive name to
-            // create. Note that the handler may be responsible for
-            // multiple MIME types and extensions
+            /* It can - adding to filter so that only relevant archives
+             * are displayed when the user chooses an archive name to
+             * create. Note that the handler may be responsible for
+             * multiple MIME types and extensions */
             gtk_file_filter_add_mime_type( filter, handler_xset->s );
 
             // Appending to combobox
