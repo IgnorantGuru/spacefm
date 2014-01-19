@@ -2051,8 +2051,25 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                     "text", COL_HANDLER_EXTENSIONS,
                                     NULL );
 
-    // Fetching available archive handlers and splitting
+    // Fetching available archive handlers
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
+
+    // Dealing with possibility of no handlers
+    if (g_strcmp0( archive_handlers_s, "" ) <= 0)
+    {
+        /* Telling user to ensure handlers are available and bringing
+         * up configuration */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                        _("Archive Handlers - Create Archive"), NULL,
+                        GTK_BUTTONS_OK, _("No archive handlers "
+                        "configured. You must add a handler before "
+                        "creating an archive."),
+                        NULL, NULL);
+        ptk_file_archiver_config( file_browser );
+        return;
+    }
+
+    // Splitting archive handlers
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
