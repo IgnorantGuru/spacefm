@@ -972,12 +972,21 @@ saveanyway: ;
         // Removing handler from the list
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
 
-        /* Making remove and apply buttons insensitive if the last
-         * handler has been removed */
         if (g_strcmp0( new_archive_handlers_s, "" ) <= 0)
         {
+            /* Making remove and apply buttons insensitive if the last
+             * handler has been removed */
             gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
             gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
+        }
+        else
+        {
+            /* Still remaining handlers - selecting the first one,
+             * otherwise nothing is now selected */
+            GtkTreePath *new_path = gtk_tree_path_new_first();
+            gtk_tree_selection_select_path( GTK_TREE_SELECTION( selection ),
+                                    new_path );
+            gtk_tree_path_free( new_path );
         }
 
         // Clearing up
@@ -1076,9 +1085,15 @@ static void on_configure_drag_end( GtkWidget* widget,
 
     // Saving the new archive handlers list
     xset_set( "arc_conf2", "s", archive_handlers );
-
-    // Clearing up
     g_free(archive_handlers);
+
+    // Ensuring first handler is selected (otherwise none are)
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(
+                                        GTK_TREE_VIEW( widget ) );
+    GtkTreePath *new_path = gtk_tree_path_new_first();
+    gtk_tree_selection_select_path( GTK_TREE_SELECTION( selection ),
+                            new_path );
+    gtk_tree_path_free( new_path );
 }
 
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
