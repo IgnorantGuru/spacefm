@@ -116,6 +116,9 @@ const ArchiveHandler handlers[]=
 
 // Function prototypes
 static void restore_defaults( GtkWidget* dlg );
+static void on_configure_handler_enabled_check(
+    GtkToggleButton *togglebutton,
+    gpointer user_data );
 
 
 static XSet* add_new_arctype()
@@ -354,9 +357,10 @@ static void config_load_handler_settings( XSet* handler_xset,
                                             "btn_apply" );
 
     /* At this point a handler exists, so making remove and apply buttons
-     * sensitive */
+     * sensitive as well as the enabled checkbutton */
     gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), TRUE );
     gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), TRUE );
+    gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_enabled ), TRUE );
 
     // Configuring widgets with handler settings. Only name, MIME and
     // extension warrant a warning
@@ -364,7 +368,7 @@ static void config_load_handler_settings( XSet* handler_xset,
     gboolean check_value = handler_xset->b != XSET_B_TRUE ? FALSE : TRUE;
     int start;
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
-                                    check_value);
+                                    check_value );
     if (!handler_xset->menu_label)
     {
         // Handler name is NULL - fall back to null-length string and
@@ -475,6 +479,63 @@ static void config_load_handler_settings( XSet* handler_xset,
                                             FALSE);
         }
     }
+}
+
+static void config_unload_handler_settings( GtkWidget* dlg )
+{
+    // Fetching widget references
+    GtkWidget* chkbtn_handler_enabled = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_enabled" );
+    GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_name" );
+    GtkWidget* entry_handler_mime = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_mime" );
+    GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extension" );
+    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_compress" );
+    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extract" );
+    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_list" );
+    GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_compress_term" );
+    GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_extract_term" );
+    GtkWidget* chkbtn_handler_list_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_list_term" );
+    GtkWidget* btn_remove = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "btn_remove" );
+    GtkWidget* btn_apply = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_apply" );
+
+    // Disabling main change buttons
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
+
+    // Unchecking handler if enabled (this disables all handler widgets)
+    if (gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_enabled ) ))
+    {
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
+                                      FALSE);
+        on_configure_handler_enabled_check( GTK_TOGGLE_BUTTON ( chkbtn_handler_enabled ),
+                                            dlg );
+    }
+    gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_enabled ), FALSE );
+
+    // Resetting all widgets
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_name ), g_strdup( "" ) );
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ), g_strdup( "" ) );
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ), g_strdup( "" ) );
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ), g_strdup( "" ) );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
+                                  FALSE);
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ), g_strdup( "" ) );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
+                                  FALSE);
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_list ), g_strdup( "" ) );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
+                                  FALSE);
 }
 
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
@@ -935,18 +996,22 @@ cleanexit:
 static void on_configure_changed( GtkTreeSelection* selection,
                                   GtkWidget* dlg )
 {
-    // This event is triggered when the selected row is changed through
-    // the keyboard
+    /* This event is triggered when the selected row is changed through
+     * the keyboard, or no row is selected at all */
 
     // Fetching the model and iter from the selection
     GtkTreeIter it;
     GtkTreeModel* model;
     if ( !gtk_tree_selection_get_selected( selection, &model, &it ) )
+    {
+        // User has unselected all rows - removing loaded handler
+        config_unload_handler_settings( dlg );
         return;
+    }
 
-    // Fetching data from the model based on the iterator. Note that this
-    // variable used for the G_STRING is defined on the stack, so should
-    // be freed for me
+    /* Fetching data from the model based on the iterator. Note that this
+     * variable used for the G_STRING is defined on the stack, so should
+     * be freed for me */
     gchar* handler_name;  // Not actually used...
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
@@ -957,9 +1022,9 @@ static void on_configure_changed( GtkTreeSelection* selection,
     // Loading new archive handler values
     config_load_handler_settings( NULL, xset_name, dlg );
 
-    // Focussing archive handler name
-    // Selects the text rather than just placing the cursor at the start
-    // of the text...
+    /* Focussing archive handler name
+     * Selects the text rather than just placing the cursor at the start
+     * of the text... */
     /*GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                                 "entry_handler_name" );
     gtk_widget_grab_focus( entry_handler_name );*/
@@ -1416,13 +1481,16 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
 
     // Connecting treeview callbacks
     g_signal_connect( G_OBJECT( view_handlers ), "drag-end",
-                        G_CALLBACK( on_configure_drag_end ), GTK_LIST_STORE( list ) );
+                        G_CALLBACK( on_configure_drag_end ),
+                        GTK_LIST_STORE( list ) );
     g_signal_connect( G_OBJECT( view_handlers ), "row-activated",
-                        G_CALLBACK( on_configure_row_activated ), GTK_WIDGET( dlg ) );
+                        G_CALLBACK( on_configure_row_activated ),
+                        GTK_WIDGET( dlg ) );
     g_signal_connect( G_OBJECT( gtk_tree_view_get_selection(
                                     GTK_TREE_VIEW( view_handlers ) ) ),
                         "changed",
-                        G_CALLBACK( on_configure_changed ), GTK_WIDGET( dlg ) );
+                        G_CALLBACK( on_configure_changed ),
+                        GTK_WIDGET( dlg ) );
 
     // Adding column to the treeview
     GtkTreeViewColumn* col = gtk_tree_view_column_new();
