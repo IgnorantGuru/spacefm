@@ -845,7 +845,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 "and one of the following:\n\n"
                                 "%%%%o: Resulting single archive\n"
                                 "%%%%O: Resulting archive per source "
-                                "file/directory (see %%f/%%F)"),
+                                "file/directory (see %%%%f/%%%%F)"),
                                 handler_name), NULL, NULL );
                 gtk_widget_grab_focus( entry_handler_compress );
                 goto saveanyway;
@@ -2290,7 +2290,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                 "and one of the following:\n\n"
                                 "%%%%o: Resulting single archive\n"
                                 "%%%%O: Resulting archive per source "
-                                "file/directory (see %%f/%%F)\n\n"
+                                "file/directory (see %%%%f/%%%%F)\n\n"
                                 "Continuing anyway"),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( entry ) );
