@@ -2620,7 +2620,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
              * extraction target is a file without the handler extension
              * filename is g_strdup'd to get rid of the const */
             gchar* filename = g_strdup( vfs_file_info_get_name( file ) );
-            gchar* filename_no_ext = NULL;
+            gchar* filename_no_archive_ext = NULL;
 
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
@@ -2637,7 +2637,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                     // and breaking
                     n = strlen( filename ) - strlen( extensions[i] );
                     filename[n] = '\0';
-                    filename_no_ext = g_strdup( filename );
+                    filename_no_archive_ext = g_strdup( filename );
                     filename[n] = '.';
                     break;
                 }
@@ -2648,7 +2648,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             // Making sure extension has been found, moving to next file
             // otherwise
-            if (filename_no_ext == NULL)
+            if (filename_no_archive_ext == NULL)
             {
                 g_warning( "Unable to process '%s' - does not use an "
                            "extension registered with the '%s' archive "
@@ -2660,6 +2660,12 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 g_free( full_path );
                 continue;
             }
+
+            /* Now the extraction filename is obtained, determine the
+             * normal filename without the extension */
+            gchar *filename_no_ext = get_name_extension( filename_no_archive_ext,
+                                                         FALSE,
+                                                         &extension );
 
             // Cleaning up
             g_free( filename );
@@ -2679,7 +2685,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             {
                 /* Determining full path of parent directory to make
                  * (also used later in %f substitution) */
-                parent_path = g_build_filename( dest, filename_no_ext,
+                parent_path = g_build_filename( dest, filename_no_archive_ext,
                                                 NULL );
                 gchar* parent_orig = g_strdup( parent_path );
                 n = 1;
@@ -2724,11 +2730,27 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             if (g_strstr_len( extract_cmd, -1, "%f" ))
             {
                 /* Creating extraction target, taking into account whether
-                 * a parent directory has been created or not */
+                 * a parent directory has been created or not - target is
+                 * guaranteed not to exist so as to avoid overwriting */
                 gchar* extract_target = g_build_filename(
                                      (create_parent) ? parent_path : dest,
-                                                          filename_no_ext,
-                                                          NULL );
+                                                filename_no_archive_ext,
+                                                NULL );
+                n = 1;
+
+                // Looping to find a path that doesnt exist
+                while ( lstat64( extract_target, &statbuf ) == 0 )
+                {
+                    g_free( extract_target );
+                    str = g_strdup_printf( "%s-%s%d%s%s", filename_no_ext,
+                                           _("copy"), ++n, ".", extension );
+                    extract_target = g_build_filename(
+                                    (create_parent) ? parent_path : dest,
+                                    str, NULL );
+                    g_free( str );
+                }
+
+                // Quoting and substituting command
                 gchar* extract_target_quote = bash_quote( extract_target );
                 gchar* old_extract_cmd = extract_cmd;
                 extract_cmd = replace_string( extract_cmd, "%f",
@@ -2744,7 +2766,9 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             // Cleaning up
             g_free( extract_cmd );
+            g_free( filename_no_archive_ext );
             g_free( filename_no_ext );
+            g_free( extension );
             g_free( mkparent );
             g_free( parent_path );
         }
