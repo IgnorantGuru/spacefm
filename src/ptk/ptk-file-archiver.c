@@ -115,10 +115,11 @@ const ArchiveHandler handlers[]=
 
 
 // Function prototypes
-static void restore_defaults( GtkWidget* dlg );
 static void on_configure_handler_enabled_check(
     GtkToggleButton *togglebutton,
     gpointer user_data );
+static void restore_defaults( GtkWidget* dlg );
+static gboolean validate_handler( GtkWidget* dlg );
 
 
 static XSet* add_new_arctype()
@@ -541,7 +542,6 @@ static void config_unload_handler_settings( GtkWidget* dlg )
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
     const char* dialog_title = _("Archive Handlers");
-    gchar* help_string;
 
     // Fetching widgets and handler details
     GtkButton* btn_add = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
@@ -727,175 +727,19 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         // Making sure the remove and apply buttons are sensitive
         gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), TRUE );
         gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), TRUE );
+
+        /* Validating - remember that IG wants the handler to be saved
+         * even with invalid commands */
+        validate_handler( dlg );
     }
     else if ( widget == btn_apply )
     {
         // Exiting if apply has been pressed when no handlers are present
         if (xset_name == NULL) goto cleanexit;
 
-        // Validating data. Note that data straight from widgets shouldnt
-        // be modified or stored
-        // Note that archive creation also allows for a command to be
-        // saved
-        if (g_strcmp0( handler_name, "" ) <= 0)
-        {
-            // Handler name not set - warning user and exiting. Note
-            // that the created dialog does not have an icon set
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                _("Please enter a valid handler name "
-                                "before saving."), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_name );
-            goto saveanyway;
-        }
-
-        // Empty MIME is allowed if extension is filled
-        if (g_strcmp0( handler_mime, "" ) <= 0 &&
-            g_strcmp0( handler_extension, "" ) <= 0)
-        {
-            // Handler MIME not set - warning user and exiting. Note
-            // that the created dialog does not have an icon set
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("Please enter a valid "
-                                "MIME content type OR extension for the "
-                                "'%s' handler before saving."),
-                                handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_mime );
-            goto saveanyway;
-        }
-        if (g_strstr_len( handler_mime, -1, " " ) &&
-            g_strcmp0( handler_extension, "" ) <= 0)
-        {
-            // Handler MIME contains a space - warning user and exiting.
-            // Note that the created dialog does not have an icon set
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("Please ensure the MIME"
-                                " content type for the '%s' handler "
-                                "contains no spaces before saving."),
-                                handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_mime );
-            goto saveanyway;
-        }
-
-        /* Empty extension is allowed if MIME type has been given, but if
-         * anything has been entered it must be valid */
-        if (
-            (
-                g_strcmp0( handler_extension, "" ) <= 0 &&
-                g_strcmp0( handler_mime, "" ) <= 0
-            )
-            ||
-            (
-                g_strcmp0( handler_extension, "" ) > 0 &&
-                *handler_extension != '.'
-            )
-        )
-        {
-            // Handler extension is either not set or does not start with
-            // a full stop - warning user and exiting. Note
-            // that the created dialog does not have an icon set
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("Please enter a valid "
-                                "file extension OR MIME content type for"
-                                " the '%s' handler before saving."),
-                                handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_extension );
-            goto saveanyway;
-        }
-
-        // Other settings are commands to run in different situations -
-        // since different handlers may or may not need different
-        // commands, empty commands are allowed but if something is given,
-        // relevant substitution characters should be in place
-
-        /* Compression handler validation - remember to maintain this code
-         * in ptk_file_archiver_create too
-         * Checking if a compression command has been entered */
-        if (g_strcmp0( handler_compress, "" ) != 0 &&
-            g_strcmp0( handler_compress, "+" ) != 0)
-        {
-            /* It has - making sure all substitution characters are in
-             * place - not mandatory to only have one of the particular
-             * type */
-            if (
-                (
-                    !g_strstr_len( handler_compress, -1, "%o" ) &&
-                    !g_strstr_len( handler_compress, -1, "%O" )
-                )
-                ||
-                (
-                    !g_strstr_len( handler_compress, -1, "%f" ) &&
-                    !g_strstr_len( handler_compress, -1, "%F" )
-                )
-            )
-            {
-                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("The following "
-                                "substitution variables should be in the"
-                                " '%s' compression command:\n\n"
-                                "One of the following:\n\n"
-                                "%%%%f: First selected file/directory to"
-                                " archive\n"
-                                "%%%%F: All selected files/directories to"
-                                " archive\n\n"
-                                "and one of the following:\n\n"
-                                "%%%%o: Resulting single archive\n"
-                                "%%%%O: Resulting archive per source "
-                                "file/directory (see %%%%f/%%%%F)"),
-                                handler_name), NULL, NULL );
-                gtk_widget_grab_focus( entry_handler_compress );
-                goto saveanyway;
-            }
-        }
-
-        if (g_strcmp0( handler_extract, "" ) != 0 &&
-            g_strcmp0( handler_extract, "+" ) != 0 &&
-            (
-                !g_strstr_len( handler_extract, -1, "%o" )
-            ))
-        {
-            // Not all substitution characters are in place - warning
-            // user and exiting. Note that the created dialog does not
-            // have an icon set
-            // TODO: IG problem
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("The following "
-                                "placeholders should be in the '%s' extraction"
-                                " command:\n\n%%%%o: "
-                                "Archive to extract"),
-                                handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_extract );
-            goto saveanyway;
-        }
-
-        if (g_strcmp0( handler_list, "" ) != 0 &&
-            g_strcmp0( handler_list, "+" ) != 0 &&
-            (
-                !g_strstr_len( handler_list, -1, "%o" )
-            ))
-        {
-            // Not all substitution characters are in place  - warning
-            // user and exiting. Note that the created dialog does not
-            // have an icon set
-            // TODO: Confirm if IG still has this problem
-            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                                dialog_title, NULL, FALSE,
-                                g_strdup_printf(_("The following "
-                                "placeholders should be in the '%s' list"
-                                " command:\n\n%%%%o: "
-                                "Archive to list"),
-                                handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_list );
-            goto saveanyway;
-        }
-
-        // Semicolon needed as C doesn't want a label by a declaration!!
-saveanyway: ;
+        /* Validating - remember that IG wants the handler to be saved
+         * even with invalid commands */
+        validate_handler( dlg );
 
         // Determining current handler enabled state
         gboolean handler_enabled = gtk_toggle_button_get_active(
@@ -912,9 +756,7 @@ saveanyway: ;
                         -1 );
         }
 
-        /* Saving archive handler - IG wants the handler to be saved even
-         * with invalid commands
-         * Finally saving the archive handler parameters */
+        // Saving archive handler
         handler_xset->b = handler_enabled;
         xset_set_set( handler_xset, "label", handler_name );
         xset_set_set( handler_xset, "s", handler_mime );
@@ -3634,4 +3476,240 @@ static void restore_defaults( GtkWidget* dlg )
     GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
     gtk_list_store_clear( GTK_LIST_STORE( list ) );
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
+}
+
+static gboolean validate_handler( GtkWidget* dlg )
+{
+    const char* dialog_title = _("Archive Handlers");
+
+    // Fetching widgets and handler details
+    GtkWidget* entry_handler_name = (GtkWidget*)g_object_get_data(
+                                            G_OBJECT( dlg ),
+                                                "entry_handler_name" );
+    GtkWidget* entry_handler_mime = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_mime" );
+    GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extension" );
+    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_compress" );
+    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "entry_handler_extract" );
+    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "entry_handler_list" );
+    GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_compress_term" );
+    GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                        "chkbtn_handler_extract_term" );
+    GtkWidget* chkbtn_handler_list_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "chkbtn_handler_list_term" );
+    const gchar* handler_name = gtk_entry_get_text( GTK_ENTRY ( entry_handler_name ) );
+    const gchar* handler_mime = gtk_entry_get_text( GTK_ENTRY ( entry_handler_mime ) );
+    const gchar* handler_extension = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extension ) );
+    const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
+    const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
+    const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+    gchar* handler_compress, *handler_extract, *handler_list;
+
+    /* Commands are prefixed with '+' when they are to be ran in a
+     * terminal
+     * g_strdup'd to avoid anal const compiler warning... */
+    if (handler_compress_term)
+    {
+        handler_compress = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) ),
+            NULL );
+    }
+    else
+    {
+        handler_compress = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_compress ) ) );
+    }
+
+    if (handler_extract_term)
+    {
+        handler_extract = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) ),
+            NULL );
+    }
+    else
+    {
+        handler_extract = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_extract ) ) );
+    }
+
+    if (handler_list_term)
+    {
+        handler_list = g_strconcat( "+",
+            gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) ),
+            NULL );
+    }
+    else
+    {
+        handler_list = g_strdup( gtk_entry_get_text(
+            GTK_ENTRY ( entry_handler_list ) ) );
+    }
+
+    /* Validating data. Note that data straight from widgets shouldnt
+     * be modified or stored
+     * Note that archive creation also allows for a command to be
+     * saved */
+    if (g_strcmp0( handler_name, "" ) <= 0)
+    {
+        /* Handler name not set - warning user and exiting. Note
+         * that the created dialog does not have an icon set */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            _("Please enter a valid handler name "
+                            "before saving."), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_name );
+        return FALSE;
+    }
+
+    // Empty MIME is allowed if extension is filled
+    if (g_strcmp0( handler_mime, "" ) <= 0 &&
+        g_strcmp0( handler_extension, "" ) <= 0)
+    {
+        /* Handler MIME not set - warning user and exiting. Note
+         * that the created dialog does not have an icon set */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("Please enter a valid "
+                            "MIME content type OR extension for the "
+                            "'%s' handler before saving."),
+                            handler_name), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_mime );
+        return FALSE;
+    }
+    if (g_strstr_len( handler_mime, -1, " " ) &&
+        g_strcmp0( handler_extension, "" ) <= 0)
+    {
+        /* Handler MIME contains a space - warning user and exiting.
+         * Note that the created dialog does not have an icon set */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("Please ensure the MIME"
+                            " content type for the '%s' handler "
+                            "contains no spaces before saving."),
+                            handler_name), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_mime );
+        return FALSE;
+    }
+
+    /* Empty extension is allowed if MIME type has been given, but if
+     * anything has been entered it must be valid */
+    if (
+        (
+            g_strcmp0( handler_extension, "" ) <= 0 &&
+            g_strcmp0( handler_mime, "" ) <= 0
+        )
+        ||
+        (
+            g_strcmp0( handler_extension, "" ) > 0 &&
+            *handler_extension != '.'
+        )
+    )
+    {
+        /* Handler extension is either not set or does not start with
+         * a full stop - warning user and exiting. Note that the created
+         * dialog does not have an icon set */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("Please enter a valid "
+                            "file extension OR MIME content type for"
+                            " the '%s' handler before saving."),
+                            handler_name), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_extension );
+        return FALSE;
+    }
+
+    /* Other settings are commands to run in different situations -
+     * since different handlers may or may not need different
+     * commands, empty commands are allowed but if something is given,
+     * relevant substitution characters should be in place */
+
+    /* Compression handler validation - remember to maintain this code
+     * in ptk_file_archiver_create too
+     * Checking if a compression command has been entered */
+    if (g_strcmp0( handler_compress, "" ) != 0 &&
+        g_strcmp0( handler_compress, "+" ) != 0)
+    {
+        /* It has - making sure all substitution characters are in
+         * place - not mandatory to only have one of the particular
+         * type */
+        if (
+            (
+                !g_strstr_len( handler_compress, -1, "%o" ) &&
+                !g_strstr_len( handler_compress, -1, "%O" )
+            )
+            ||
+            (
+                !g_strstr_len( handler_compress, -1, "%f" ) &&
+                !g_strstr_len( handler_compress, -1, "%F" )
+            )
+        )
+        {
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("The following "
+                            "substitution variables should be in the"
+                            " '%s' compression command:\n\n"
+                            "One of the following:\n\n"
+                            "%%%%f: First selected file/directory to"
+                            " archive\n"
+                            "%%%%F: All selected files/directories to"
+                            " archive\n\n"
+                            "and one of the following:\n\n"
+                            "%%%%o: Resulting single archive\n"
+                            "%%%%O: Resulting archive per source "
+                            "file/directory (see %%%%f/%%%%F)"),
+                            handler_name), NULL, NULL );
+            gtk_widget_grab_focus( entry_handler_compress );
+            return FALSE;
+        }
+    }
+
+    if (g_strcmp0( handler_extract, "" ) != 0 &&
+        g_strcmp0( handler_extract, "+" ) != 0 &&
+        (
+            !g_strstr_len( handler_extract, -1, "%o" )
+        ))
+    {
+        /* Not all substitution characters are in place - warning
+         * user and exiting. Note that the created dialog does not
+         * have an icon set
+         * TODO: IG problem */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("The following "
+                            "placeholders should be in the '%s' extraction"
+                            " command:\n\n%%%%o: "
+                            "Archive to extract"),
+                            handler_name), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_extract );
+        return FALSE;
+    }
+
+    if (g_strcmp0( handler_list, "" ) != 0 &&
+        g_strcmp0( handler_list, "+" ) != 0 &&
+        (
+            !g_strstr_len( handler_list, -1, "%o" )
+        ))
+    {
+        /* Not all substitution characters are in place  - warning
+         * user and exiting. Note that the created dialog does not
+         * have an icon set
+         * TODO: Confirm if IG still has this problem */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            dialog_title, NULL, FALSE,
+                            g_strdup_printf(_("The following "
+                            "placeholders should be in the '%s' list"
+                            " command:\n\n%%%%o: "
+                            "Archive to list"),
+                            handler_name), NULL, NULL );
+        gtk_widget_grab_focus( entry_handler_list );
+        return FALSE;
+    }
+
+    // Validation passed
+    return TRUE;
 }
