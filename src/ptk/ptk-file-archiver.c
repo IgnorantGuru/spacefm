@@ -2461,6 +2461,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                 xset_get_int( "arc_dlg", "s" ) == 1 &&
                                 geteuid() != 0 );
         gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
+        gtk_box_pack_start( GTK_BOX(hbox), chk_write, FALSE, FALSE, 6 );
         gtk_widget_show_all( hbox );
         gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
 
