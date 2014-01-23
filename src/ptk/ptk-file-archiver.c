@@ -2714,6 +2714,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 // Parent directory doesn't need to be created
                 mkparent = g_strdup( "" );
                 parent_path = g_strdup( "" );
+                create_parent = FALSE;
 
                 /* Making sure any '%F's turn into normal '%f's now
                  * they've played their role */
@@ -2734,7 +2735,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                  * a parent directory has been created or not - target is
                  * guaranteed not to exist so as to avoid overwriting */
                 gchar* extract_target = g_build_filename(
-                                     (create_parent) ? parent_path : dest,
+                                    (create_parent) ? parent_path : dest,
                                                 filename_no_archive_ext,
                                                 NULL );
                 n = 1;
