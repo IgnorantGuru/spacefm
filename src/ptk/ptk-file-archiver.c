@@ -2668,6 +2668,17 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                                          FALSE,
                                                          &extension );
 
+            /* 'Completing' the extension and dealing with files with
+             * no extension */
+            if (!extension)
+                extension = g_strdup( "" );
+            else
+            {
+                str = extension;
+                extension = g_strconcat( ".", extension, NULL );
+                g_free( str );
+            }
+
             // Cleaning up
             g_free( filename );
 
@@ -2744,8 +2755,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 while ( lstat64( extract_target, &statbuf ) == 0 )
                 {
                     g_free( extract_target );
-                    str = g_strdup_printf( "%s-%s%d%s%s", filename_no_ext,
-                                           _("copy"), ++n, ".", extension );
+                    str = g_strdup_printf( "%s-%s%d%s", filename_no_ext,
+                                           _("copy"), ++n, extension );
                     extract_target = g_build_filename(
                                     (create_parent) ? parent_path : dest,
                                     str, NULL );
