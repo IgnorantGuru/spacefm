@@ -46,13 +46,6 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
-// Archive operations enum
-enum {
-    ARC_COMPRESS,
-    ARC_EXTRACT,
-    ARC_LIST
-};
-
 const ArchiveHandler handlers[]=
     {
         {
@@ -3174,11 +3167,14 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
                                                 char* extension,
-                                                gboolean extract )
+                                                int operation )
 {
     // Exiting if nothing was passed
     if (!mime && !extension)
         return FALSE;
+
+    /* Operation doesnt need validation here - archive_handler_is_format_supported
+     * takes care of this */
     
     // Fetching and validating MIME type if provided
     char *type = NULL;
@@ -3203,7 +3199,8 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 
         // Checking to see if handler can cope with format and operation
         if(archive_handler_is_format_supported( handler_xset, type,
-                                                extension, ARC_EXTRACT ))
+                                                extension,
+                                                operation ))
         {
             // It can - flagging and breaking
             handler_found = TRUE;

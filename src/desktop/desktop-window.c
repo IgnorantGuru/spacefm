@@ -1161,9 +1161,16 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                                        FALSE, &extension );
             path = g_build_filename( vfs_get_desktop_dir(),
                                             vfs_file_info_get_name( file ), NULL );
-            vfs_file_info_unref( file );    
+            vfs_file_info_unref( file );
+
+            // Must be able to both extract and list the format
             if ( ptk_file_archiver_is_format_supported( mime_type,
-                                                    extension, TRUE ) )
+                                                        extension,
+                                                        ARC_EXTRACT )
+                &&
+                ptk_file_archiver_is_format_supported( mime_type,
+                                                        extension,
+                                                        ARC_LIST ) )
             {
                 int no_write_access = ptk_file_browser_no_access ( 
                                                     vfs_get_desktop_dir(), NULL );

@@ -5544,12 +5544,19 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
                                    &extension );
         path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                             vfs_file_info_get_name( file ), NULL );
-        vfs_file_info_unref( file );    
-        if ( ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                    TRUE ) )
+        vfs_file_info_unref( file );
+
+        // Must be able to both extract and list the format
+        if ( ptk_file_archiver_is_format_supported( mime_type,
+                                                    extension,
+                                                    ARC_EXTRACT )
+            &&
+            ptk_file_archiver_is_format_supported( mime_type,
+                                                   extension,
+                                                   ARC_LIST ) )
         {
+            int no_write_access = 0;
             
-int no_write_access = 0;
 #if defined(HAVE_EUIDACCESS)
     no_write_access = euidaccess( ptk_file_browser_get_cwd( file_browser ), W_OK );
 #elif defined(HAVE_EACCESS)

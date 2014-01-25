@@ -959,7 +959,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         // Archive commands
         if ( ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                    TRUE ) )
+                                                    ARC_EXTRACT )
+            &&
+            ptk_file_archiver_is_format_supported( mime_type, extension,
+                                                   ARC_LIST ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
