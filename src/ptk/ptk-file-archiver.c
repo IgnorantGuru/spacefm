@@ -831,6 +831,9 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
 cleanexit:
 
+    // Saving settings
+    save_settings( NULL );
+
     // Freeing strings
     g_free( handler_compress );
     g_free( handler_extract );
@@ -921,6 +924,9 @@ static void on_configure_drag_end( GtkWidget* widget,
     // Saving the new archive handlers list
     xset_set( "arc_conf2", "s", archive_handlers );
     g_free(archive_handlers);
+
+    // Saving settings
+    save_settings( NULL );
 
     // Ensuring first handler is selected (otherwise none are)
     GtkTreeSelection *selection = gtk_tree_view_get_selection(
@@ -2171,6 +2177,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 // terminal
                 xset_set_set( handler_xset, "y",
     (run_in_terminal) ? g_strconcat( "+", command, NULL ) : command );
+
+                // Saving settings
+                save_settings( NULL );
             }
 
             // Cleaning up
