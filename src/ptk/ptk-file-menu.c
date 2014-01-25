@@ -958,33 +958,42 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 &extension );
 
         // Archive commands
-        if ( ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                    ARC_EXTRACT ) )
+        gboolean can_extract = ptk_file_archiver_is_format_supported(
+                                    mime_type, extension, ARC_EXTRACT );
+        gboolean can_list = ptk_file_archiver_is_format_supported( mime_type,
+                                                  extension, ARC_LIST );
+        if ( can_extract || can_list )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "arc_extract", on_popup_extract_here_activate, data );
             xset_set_ob1( set, "set", set );
-            set->disable = no_write_access;
+
+            /* Disabling extraction if archive handler can't cope or
+             * there is no write access to the current directory - this
+             * is a semi-permanent setting so need to explicitly flip
+             * back to false otherwise */
+            if (can_extract)
+                set->disable = no_write_access;
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_extractto", on_popup_extract_to_activate, data );
             xset_set_ob1( set, "set", set );
+            if (can_extract)
+                set->disable = FALSE;
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_list", on_popup_extract_list_activate, data );
             xset_set_ob1( set, "set", set );
-
-            /* Disabling list ability if archive handler can't cope -
-             * this is a semi-permanent setting so need to explicitly
-             * flip back to false otherwise */
-            if (!ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                        ARC_LIST ) )
-                set->disable = TRUE;
-            else
+            if (can_list)
                 set->disable = FALSE;
-
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_def_open", on_archive_default, set );
