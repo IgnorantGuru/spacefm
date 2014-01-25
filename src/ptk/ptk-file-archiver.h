@@ -21,8 +21,7 @@
 
 G_BEGIN_DECLS
 
-/* Archive operations enum - any changes to this, remember to update
- * ptk_file_archiver_is_format_supported validation code */
+// Archive operations enum
 enum {
     ARC_COMPRESS,
     ARC_EXTRACT,

@@ -5546,14 +5546,9 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
                                             vfs_file_info_get_name( file ), NULL );
         vfs_file_info_unref( file );
 
-        // Must be able to both extract and list the format
         if ( ptk_file_archiver_is_format_supported( mime_type,
                                                     extension,
-                                                    ARC_EXTRACT )
-            &&
-            ptk_file_archiver_is_format_supported( mime_type,
-                                                   extension,
-                                                   ARC_LIST ) )
+                                                    ARC_EXTRACT ) )
         {
             int no_write_access = 0;
             
@@ -5580,9 +5575,16 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
                                 ptk_file_browser_get_cwd( file_browser ), NULL );
                 goto _done;
             }
-            else if ( xset_get_b( "arc_def_list" ) &&  
-                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) )
+            else if ( xset_get_b( "arc_def_list" )
+                      &&
+                      ptk_file_archiver_is_format_supported( mime_type,
+                                                   extension,
+                                                   ARC_LIST )
+                      && !(
+                        g_str_has_suffix( path, ".gz" )
+                        && !g_str_has_suffix( path, ".tar.gz" )
+                      )
+            )
             {
                 ptk_file_archiver_extract( file_browser, sel_files,
                             ptk_file_browser_get_cwd( file_browser ), "////LIST" );

@@ -616,7 +616,7 @@ static void ptk_file_menu_free( PtkFileMenu *data )
     g_slice_free( PtkFileMenu, data );
 }
 
-/* Retrive popup menu for selected file(s) */
+/* Retrieve popup menu for selected file(s) */
 GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* file_path, VFSFileInfo* info,
                                 const char* cwd, GList* sel_files )
@@ -959,10 +959,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         // Archive commands
         if ( ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                    ARC_EXTRACT )
-            &&
-            ptk_file_archiver_is_format_supported( mime_type, extension,
-                                                   ARC_LIST ) )
+                                                    ARC_EXTRACT ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
@@ -978,6 +975,16 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
             set = xset_set_cb( "arc_list", on_popup_extract_list_activate, data );
             xset_set_ob1( set, "set", set );
+
+            /* Disabling list ability if archive handler can't cope -
+             * this is a semi-permanent setting so need to explicitly
+             * flip back to false otherwise */
+            if (!ptk_file_archiver_is_format_supported( mime_type, extension,
+                                                        ARC_LIST ) )
+                set->disable = TRUE;
+            else
+                set->disable = FALSE;
+
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_def_open", on_archive_default, set );
