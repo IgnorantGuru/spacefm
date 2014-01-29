@@ -4,7 +4,8 @@
 * Description: File alteration monitor
 *
 *
-* Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
+* Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+* Original Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
 *
 * Copyright: See COPYING file that comes with this distribution
 *
@@ -208,9 +209,36 @@ VFSFileMonitor* vfs_file_monitor_add( char* path,
                                           IN_MOVE_SELF | IN_UNMOUNT | IN_ATTRIB );
         if ( monitor->wd < 0 )
         {
-            g_warning ( "Failed to add monitor on '%s' ('%s'): %s",
-                        real_path, path, 
-                        g_strerror ( errno ) );
+            char* msg;
+            switch ( errno )
+            {
+            case EACCES:
+                msg = "EACCES Read access to the given directory is not permitted.";
+                break;
+            case EBADF:
+                msg = "EBADF The given file descriptor is not valid.";
+                break;
+            case EFAULT:
+                msg = "EFAULT Pathname points outside of the process's accessible address space.";
+                break;
+            case EINVAL:
+                msg = "EINVAL The given event mask contains no valid events; or fd is not an inotify file descriptor.";
+                break;
+            case ENOENT:
+                msg = "ENOENT A directory component in pathname does not exist or is a dangling symbolic link.";
+                break;
+            case ENOMEM:
+                msg = "ENOMEM Insufficient kernel memory was available.";
+                break;
+            case ENOSPC:
+                msg = "ENOSPC The user limit on the total number of inotify watches (cat /proc/sys/fs/inotify/max_user_watches) was reached or the kernel failed to allocate a needed resource.";
+                break;
+            default:
+                msg = "??? Unknown error.";
+                break;
+            }
+            g_warning ( "Failed to add watch on '%s' ('%s'): inotify_add_watch errno %d %s",
+                        real_path, path, errno, msg );
             return NULL;
         }
 //printf("vfs_file_monitor_add  %s (%s) %d\n", real_path, path, monitor->wd );

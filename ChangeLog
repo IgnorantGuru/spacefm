@@ -1,5 +1,5 @@
 0.9.3+
-
+    improve inotify error messages
 0.9.3   2014-01-17:
     fix memory leak on draw selection rectangle on desktop #397
     [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
