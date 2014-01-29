@@ -618,7 +618,8 @@ GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
                 files = g_list_prepend( files, file_path );
             }
             else
-                *missing_targets++;
+                // no *missing_targets++ here to avoid -Wunused-value compiler warning
+                *missing_targets = *missing_targets + 1;
         }
         ++puri;
     }

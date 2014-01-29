@@ -58,10 +58,10 @@ else
 fi
 AC_SUBST([GTK_CFLAGS])
 AC_SUBST([GTK_LIBS])
-if test x"$with_gtk3" = x"yes"; then
-    # disabled deprecated warnings for retained GTK2 functions
-    CPPFLAGS="$CPPFLAGS -Wno-deprecated-declarations"
-fi
+
+# Default make options
+# disable deprecated warnings for now due to GTK2/GTK3 build compat
+CPPFLAGS="$CPPFLAGS -Wno-deprecated-declarations -Wformat -Wformat-security -Wreturn-type -Wunused-value"
 
 # start-notification is optional - will be used if installed and no --disable
 AC_ARG_ENABLE(

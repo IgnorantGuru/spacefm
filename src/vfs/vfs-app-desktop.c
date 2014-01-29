@@ -583,8 +583,7 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
         return TRUE;
     }
 
-    cmd = g_strdup_printf( "%s\n\n%s", _("Command not found"), app->file_name );
-    g_set_error( err, G_SPAWN_ERROR, G_SPAWN_ERROR_FAILED, cmd );
-    g_free( cmd );
+    g_set_error( err, G_SPAWN_ERROR, G_SPAWN_ERROR_FAILED, "%s\n\n%s",
+                                    _("Command not found"), app->file_name );
     return FALSE;
 }
