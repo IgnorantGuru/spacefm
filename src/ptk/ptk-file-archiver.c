@@ -1255,15 +1255,19 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Archive handlers dialog, attaching to top-level window (in GTK,
     // everything is a 'widget') - no buttons etc added as everything is
     // custom...
-    GtkWidget* dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
-                    GTK_WINDOW(
-                        gtk_widget_get_toplevel(
-                            GTK_WIDGET( file_browser )
-                        )
-                    ),
+    GtkWidget *top_level = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+    if (!gtk_widget_is_toplevel( top_level ))
+        g_warning( _("Unable to get the top level window to parent the "
+                     "archive handler dialog to!") );
+
+    GtkWidget *dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
+                    GTK_WINDOW( top_level ),
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                     NULL );
     gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );
+
+    // Debug code
+    //g_message( "Parent window title: %s", gtk_window_get_title( GTK_WINDOW( top_level ) ) );
 
     // Forcing dialog icon - WM breaks without this for IG, not needed
     // for me
