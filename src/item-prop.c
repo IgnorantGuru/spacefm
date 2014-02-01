@@ -1379,9 +1379,10 @@ void replace_item_props( ContextData* ctxt )
                                             GTK_ENTRY( ctxt->item_name ) ) );
     }
     // icon
-    if ( rset->menu_style != XSET_MENU_CHECK &&
-         rset->menu_style != XSET_MENU_RADIO &&
-         rset->menu_style != XSET_MENU_SEP )
+    if ( rset->menu_style != XSET_MENU_RADIO &&
+         rset->menu_style != XSET_MENU_SEP &&
+         // toolbar checkbox items have icon
+         ( rset->menu_style != XSET_MENU_CHECK || rset->tool ) )
     {
         char* old_icon = g_strdup( mset->icon );
         g_free( mset->icon );
@@ -2272,9 +2273,10 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
         gtk_entry_set_text( GTK_ENTRY( ctxt->item_icon ),
                                     mset->icon ? mset->icon : rset->icon );
     gtk_widget_set_sensitive( ctxt->item_icon,
-                        rset->menu_style != XSET_MENU_CHECK &&
-                        rset->menu_style != XSET_MENU_RADIO &&
-                        rset->menu_style != XSET_MENU_SEP );
+                    rset->menu_style != XSET_MENU_RADIO &&
+                    rset->menu_style != XSET_MENU_SEP &&
+                    // toolbar checkbox items have icon
+                    ( rset->menu_style != XSET_MENU_CHECK || rset->tool ) );
 
     if ( set->plugin )
     {
