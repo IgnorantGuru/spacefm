@@ -175,6 +175,7 @@ gboolean main_window_event( gpointer mw, XSet* preset, const char* event,
                             int panel, int tab, const char* focus, 
                             int keyval, int button, int state,
                             gboolean visible );
+void fm_main_window_store_positions( FMMainWindow* main_window );
 
 
 G_END_DECLS

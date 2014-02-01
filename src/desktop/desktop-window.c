@@ -3559,10 +3559,12 @@ void open_folders( GList* folders )
     {
         main_window = FM_MAIN_WINDOW(fm_main_window_new());
         //FM_MAIN_WINDOW( main_window ) ->splitter_pos = app_settings.splitter_pos;
+        /*  now done in fm_main_window_new
         gtk_window_set_default_size( GTK_WINDOW( main_window ),
                                      app_settings.width,
                                      app_settings.height );
         gtk_widget_show( GTK_WIDGET(main_window) );
+        */
         new_window = !xset_get_b( "main_save_tabs" );
     }
     
@@ -3616,10 +3618,12 @@ void desktop_window_open_desktop_dir( GtkMenuItem *menuitem,
     if ( !main_window )
     {
         main_window = FM_MAIN_WINDOW( fm_main_window_new() );
+        /*  now done in fm_main_window_new
         gtk_window_set_default_size( GTK_WINDOW( main_window ),
                                      app_settings.width,
                                      app_settings.height );
         gtk_widget_show( GTK_WIDGET(main_window) );
+        */
         new_window = !xset_get_b( "main_save_tabs" );
     }
     

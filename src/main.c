@@ -172,7 +172,6 @@ static void check_icon_theme();
 
 static gboolean handle_parsed_commandline_args();
 
-static FMMainWindow* create_main_window();
 static void open_file( const char* path );
 
 static GList* get_file_info_list( char** files );
@@ -859,19 +858,6 @@ void show_socket_help()
     printf( "\n%s\n    http://ignorantguru.github.io/spacefm/spacefm-manual-en.html#sockets\n", _("For full documentation and examples see the SpaceFM User's Manual:") );
 }
 
-FMMainWindow* create_main_window()
-{
-    FMMainWindow * main_window = FM_MAIN_WINDOW(fm_main_window_new ());
-    gtk_window_set_default_size( GTK_WINDOW( main_window ),
-                                 app_settings.width, app_settings.height );
-    if ( app_settings.maximized )
-    {
-        gtk_window_maximize( GTK_WINDOW( main_window ) );
-        main_window->opened_maximized = main_window->maximized = TRUE;
-    }
-    gtk_widget_show ( GTK_WIDGET( main_window ) );
-    return main_window;
-}
 /*
 void check_icon_theme()
 {
@@ -1088,7 +1074,8 @@ static void open_in_tab( FMMainWindow** main_window, const char* real_path )
         set->b = XSET_B_TRUE;
 
         // create new window
-        *main_window = create_main_window();
+        fm_main_window_store_positions( NULL );
+        *main_window = FM_MAIN_WINDOW( fm_main_window_new() );
     }
     else
     {
@@ -1273,9 +1260,11 @@ gboolean handle_parsed_commandline_args()
                 // initialize things required by folder view
                 if( G_UNLIKELY( ! daemon_mode ) )
                     init_folder();
-                main_window = create_main_window();
+                fm_main_window_store_positions( NULL );
+                main_window = FM_MAIN_WINDOW( fm_main_window_new() );
             }
             gtk_window_present( GTK_WINDOW( main_window ) );
+
 
             if ( panel > 0 && panel < 5 )
             {

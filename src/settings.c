@@ -515,7 +515,9 @@ void load_settings( char* config_dir )
         g_free( command );
         chmod( settings_config_dir, S_IRWXU );
     }
-    
+    if ( !g_file_test( settings_config_dir, G_FILE_TEST_EXISTS ) )
+        g_mkdir_with_parents( settings_config_dir, 0700 );
+
     // load session
     int x = 0;
     do
