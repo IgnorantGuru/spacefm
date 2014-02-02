@@ -2281,11 +2281,13 @@ void fm_main_window_store_positions( FMMainWindow* main_window )
                 {
                     // save slider pos for version < 0.9.2 (in case of downgrade)
                     posa = g_strdup_printf( "%d", pos );
-                    XSet* set = xset_set( "panel_sliders", "z", posa );
+                    xset_set( "panel_sliders", "z", posa );
                     g_free( posa );
                     // save absolute height introduced v0.9.2
-                    set->key = allocation.height - pos;
-//printf("CLOS  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, pos );
+                    posa = g_strdup_printf( "%d", allocation.height - pos );
+                    xset_set( "task_show_manager", "x", posa );
+                    g_free( posa );
+//printf("CLOS  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, allocation.height - pos, pos );
                 }
             }
         }
@@ -5227,32 +5229,32 @@ void on_task_stop( GtkMenuItem* item, GtkWidget* view, XSet* set2,
 static gboolean idle_set_task_height( FMMainWindow* main_window )
 {
     GtkAllocation allocation;
-
+    int pos, taskh;
+    
     // restore height (in case window height changed)
     gtk_widget_get_allocation( GTK_WIDGET( main_window ), &allocation );
-    XSet* set = xset_get( "panel_sliders" );
-    int pos = set->z ? atoi( set->z ) : 0;
-    if ( set->key == 0 )
+    taskh = xset_get_int( "task_show_manager", "x" ); // task height >=0.9.2
+    if ( taskh == 0 )
     {
         // use pre-0.9.2 slider pos to calculate height
+        pos = xset_get_int( "panel_sliders", "z" );       // < 0.9.2 slider pos
         if ( pos == 0 )
-            set->key = 200;
+            taskh = 200;
         else
-            set->key = allocation.height - pos;
+            taskh = allocation.height - pos;
     }
-    if ( set->key > allocation.height / 2 )
-        set->key = allocation.height / 2;
-    if ( set->key < 1 )
-        set->key = 90;
-//printf("SHOW  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, allocation.height - set->key );
+    if ( taskh > allocation.height / 2 )
+        taskh = allocation.height / 2;
+    if ( taskh < 1 )
+        taskh = 90;
+//printf("SHOW  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, taskh, allocation.height - taskh );
     gtk_paned_set_position( GTK_PANED( main_window->task_vpane ),
-                                            allocation.height - set->key );
+                                            allocation.height - taskh );
     return FALSE;
 }
 
 void show_task_manager( FMMainWindow* main_window, gboolean show )
 {
-    XSet* set = xset_get( "panel_sliders" );
     GtkAllocation allocation;
     
     gtk_widget_get_allocation( GTK_WIDGET( main_window ), &allocation );
@@ -5276,11 +5278,14 @@ void show_task_manager( FMMainWindow* main_window, gboolean show )
             if ( pos )
             {
                 // save slider pos for version < 0.9.2 (in case of downgrade)
-                g_free( set->z );
-                set->z = g_strdup_printf( "%d", pos );
+                char* posa = g_strdup_printf( "%d", pos );
+                xset_set( "panel_sliders", "z", posa );
+                g_free( posa );
                 // save absolute height introduced v0.9.2
-                set->key = allocation.height - pos;
-//printf("HIDE  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, set->key, allocation.height - set->key );
+                posa = g_strdup_printf( "%d", allocation.height - pos );
+                xset_set( "task_show_manager", "x", posa );
+                g_free( posa );
+//printf("HIDE  win %dx%d    task height %d   slider %d\n", allocation.width, allocation.height, allocation.height - pos, pos );
             }
         }
         // hide

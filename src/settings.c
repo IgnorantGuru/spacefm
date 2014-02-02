@@ -996,6 +996,18 @@ void load_settings( char* config_dir )
         swap_menu_label( "move_template", "_Template", _("Te_mplate") );
         swap_menu_label( "move_dlg_help", "T_ips", _("_Help") );
     }
+    if ( ver < 24 ) // < 0.9.4
+    {
+        // don't use panel_sliders-key - introduced in 0.9.2 as task man height
+        set = xset_get( "panel_sliders" );
+        if ( set->key != 0 )
+        {
+            str = g_strdup_printf( "%d", set->key );
+            set->key = 0;
+            xset_set( "task_show_manager", "x", str );
+            g_free( str );
+        }
+    }
 }
 
 
@@ -1012,7 +1024,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "23" );  // 0.9.0
+    xset_set( "config_version", "s", "24" );  // 0.9.4
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );    
@@ -10296,7 +10308,8 @@ void xset_defaults()
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_FALSE;
     set->line = g_strdup( "#tasks-menu-show" );
-
+    //set->x  used for task man height >=0.9.4
+    
     set = xset_set( "task_hide_manager", "lbl", _("Auto-_Hide Manager") );
     set->menu_style = XSET_MENU_RADIO;
     set->b = XSET_B_TRUE;

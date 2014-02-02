@@ -202,9 +202,9 @@ typedef struct
     char* z;                // for menu_string locked, stores default
     gboolean disable;       // not saved, default false
     char* menu_label;
-    int menu_style;         // not saved/read if locked
+    int menu_style;         // not saved or read if locked
     char* icon;
-    void (*cb_func) ();      // not saved
+    void (*cb_func) ();     // not saved
     gpointer cb_data;       // not saved
     char* ob1;              // not saved
     gpointer ob1_data;      // not saved
@@ -215,12 +215,12 @@ typedef struct
     int key;
     int keymod;
     char* shared_key;       // not saved
-    char* desc;             // not saved/read if locked
-    char* title;            // not saved/read if locked
+    char* desc;             // not saved or read if locked
+    char* title;            // not saved or read if locked
     char* next;
     char* context;
     char tool;              // 0=not 1=true 2=false
-    gboolean lock;      // not saved, default true
+    gboolean lock;          // not saved, default true
     
     // Custom Command ( !lock )
     char* prev;
