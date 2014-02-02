@@ -337,6 +337,8 @@ gboolean on_progress_timer( PtkFileTask* ptask )
 //printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
             return FALSE;
         }
+        else if ( ptask->progress_dlg && ptask->err_count )
+            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
     }
 //printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
     return !ptask->complete;
@@ -1813,7 +1815,10 @@ void ptk_file_task_update( PtkFileTask* ptask )
                                     && ptask->err_count != task->err_count )
         {
             ptask->keep_dlg = TRUE;
-            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
+            if ( ptask->complete || ptask->err_mode == PTASK_ERROR_ANY ||
+                                    ( task->error_first &&
+                                      ptask->err_mode == PTASK_ERROR_FIRST ) )
+                gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
         }
         else if ( task->type == VFS_FILE_TASK_EXEC
                                     && ptask->err_count != task->err_count )
