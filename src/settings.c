@@ -4148,7 +4148,7 @@ XSet* xset_import_plugin( const char* plug_dir )
                             && !strcmp( plug_dir, ((XSet*)l->data)->plug_dir ) )
         {
             set = (XSet*)l->data;
-            set->key = set->keymod = set->tool = 0;
+            set->key = set->keymod = set->tool = set->opener = 0;
             xset_set_plugin_mirror( set );
             if ( set->plugin_top = top )
             {
