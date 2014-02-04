@@ -616,7 +616,7 @@ static void ptk_file_menu_free( PtkFileMenu *data )
     g_slice_free( PtkFileMenu, data );
 }
 
-/* Retrive popup menu for selected file(s) */
+/* Retrieve popup menu for selected file(s) */
 GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* file_path, VFSFileInfo* info,
                                 const char* cwd, GList* sel_files )
@@ -950,47 +950,73 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
 
-        if ( mime_type && ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        // Obtaining file extension
+        char *not_used = NULL, *extension = NULL;
+        if (info)
+            not_used = get_name_extension(
+                (char*)vfs_file_info_get_name( info ), FALSE,
+                &extension );
+
+        // Archive commands
+        gboolean can_extract = ptk_file_archiver_is_format_supported(
+                                    mime_type, extension, ARC_EXTRACT );
+        gboolean can_list = ptk_file_archiver_is_format_supported( mime_type,
+                                                  extension, ARC_LIST );
+        if ( can_extract || can_list )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "arc_extract", on_popup_extract_here_activate, data );
             xset_set_ob1( set, "set", set );
-            set->disable = no_write_access;
+
+            /* Disabling extraction if archive handler can't cope or
+             * there is no write access to the current directory - this
+             * is a semi-permanent setting so need to explicitly flip
+             * back to false otherwise */
+            if (can_extract)
+                set->disable = no_write_access;
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_extractto", on_popup_extract_to_activate, data );
             xset_set_ob1( set, "set", set );
+            if (can_extract)
+                set->disable = FALSE;
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_list", on_popup_extract_list_activate, data );
             xset_set_ob1( set, "set", set );
+            if (can_list)
+                set->disable = FALSE;
+            else
+                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
-            set = xset_get( "arc_def_open" );
-            xset_set_cb( "arc_def_open", on_archive_default, set );
+            set = xset_set_cb( "arc_def_open", on_archive_default, set );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
 
-            set = xset_get( "arc_def_ex" );
-            xset_set_cb( "arc_def_ex", on_archive_default, set );
+            set = xset_set_cb( "arc_def_ex", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
             
-            set = xset_get( "arc_def_exto" );
-            xset_set_cb( "arc_def_exto", on_archive_default, set );
+            set = xset_set_cb( "arc_def_exto", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_get( "arc_def_list" );
-            xset_set_cb( "arc_def_list", on_archive_default, set );
+            set = xset_set_cb( "arc_def_list", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_get( "arc_def_write" );
             if ( geteuid() == 0 )
             {
+                set = xset_get( "arc_def_write" );
                 set->b = XSET_B_FALSE;
                 set->disable = TRUE;
             }
+            
+            xset_set_cb( "arc_conf2", ptk_file_archiver_config, browser );
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
@@ -1017,6 +1043,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         }
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
+
+        // Cleaning up
+        g_free( not_used );
+        g_free( extension );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( desktop )
@@ -3006,6 +3036,8 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
             on_popup_extract_to_activate( NULL, data );
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
+        else if ( !strcmp( xname, "conf" ) )
+            ptk_file_archiver_config( browser );
     }
     else if ( g_str_has_prefix( set->name, "iso_" ) )
     {

@@ -5532,7 +5532,7 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
 {
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
-    char* path = NULL;
+    char *path = NULL, *extension = NULL, *name = NULL;
     VFSMimeType* mime_type = NULL;
 
     // archive?
@@ -5540,13 +5540,21 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
     {
         VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
         mime_type = vfs_file_info_get_mime_type( file );
+        name = get_name_extension( (char*)vfs_file_info_get_name( file ), FALSE,
+                                   &extension );
         path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                             vfs_file_info_get_name( file ), NULL );
-        vfs_file_info_unref( file );    
-        if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        vfs_file_info_unref( file );
+
+/*igcr same logic problem as desktop-window.c - will only do ARC_LIST if
+ * ARC_EXTRACT supported better how you did in ptk-file-menu.c.  Also, why is
+ * .gz and .tar.gz handled specially? (I can't remember) */
+        if ( ptk_file_archiver_is_format_supported( mime_type,
+                                                    extension,
+                                                    ARC_EXTRACT ) )
         {
-            
-int no_write_access = 0;
+            int no_write_access = 0;
+
 #if defined(HAVE_EUIDACCESS)
     no_write_access = euidaccess( ptk_file_browser_get_cwd( file_browser ), W_OK );
 #elif defined(HAVE_EACCESS)
@@ -5570,9 +5578,16 @@ int no_write_access = 0;
                                 ptk_file_browser_get_cwd( file_browser ), NULL );
                 goto _done;
             }
-            else if ( xset_get_b( "arc_def_list" ) &&  
-                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) )
+            else if ( xset_get_b( "arc_def_list" )
+                      &&
+                      ptk_file_archiver_is_format_supported( mime_type,
+                                                   extension,
+                                                   ARC_LIST )
+                      && !(
+                        g_str_has_suffix( path, ".gz" )
+                        && !g_str_has_suffix( path, ".tar.gz" )
+                      )
+            )
             {
                 ptk_file_archiver_extract( file_browser, sel_files,
                             ptk_file_browser_get_cwd( file_browser ), "////LIST" );
@@ -5610,6 +5625,8 @@ int no_write_access = 0;
                          sel_files, app_desktop, file_browser, FALSE, FALSE );
 _done:
     g_free( path );
+    g_free( name );
+    g_free( extension );
     if ( mime_type )
         vfs_mime_type_unref( mime_type );
     vfs_file_info_list_free( sel_files );

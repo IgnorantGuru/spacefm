@@ -1008,6 +1008,24 @@ void load_settings( char* config_dir )
             g_free( str );
         }
     }
+#if 0
+    if ( ver >= 99 ) // enable when ready
+    {
+        /* Archive handlers are now user configurable using a new
+         * xset - copying over settings from the old xset */
+        if (xset_get_int( "arc_conf2", "x" ) == 0)
+        {
+            int width = xset_get_int( "arc_conf", "x" );
+            str = g_strdup_printf( "%d", width );
+            xset_set( "arc_conf2", "x", str );
+            g_free( str );
+            int height = xset_get_int( "arc_conf", "y" );
+            str = g_strdup_printf( "%d", height );
+            xset_set( "arc_conf2", "y", str );
+            g_free( str );
+        }
+    }
+#endif
 }
 
 
@@ -1027,7 +1045,7 @@ char* save_settings( gpointer main_window_ptr )
     xset_set( "config_version", "s", "24" );  // 0.9.4
 
     // save tabs
-    gboolean save_tabs = xset_get_b( "main_save_tabs" );    
+    gboolean save_tabs = xset_get_b( "main_save_tabs" );
     if ( main_window_ptr )
         main_window = (FMMainWindow*)main_window_ptr;
     else
@@ -8782,12 +8800,21 @@ void xset_set_window_icon( GtkWindow* win )
     GtkIconTheme* theme = gtk_icon_theme_get_default();
     if ( !theme )
         return;
-    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, name, 48, 0, NULL );
+    GError *error = NULL;
+    GdkPixbuf* icon = gtk_icon_theme_load_icon( theme, name, 48, 0, &error );
     if ( icon )
     {
         gtk_window_set_icon( GTK_WINDOW( win ), icon );
         g_object_unref( icon );
     }
+    else if ( error )
+    {   
+        // An error occured on loading the icon
+        fprintf( stderr, "spacefm: Unable to load the window icon "
+        "'%s' in - xset_set_window_icon - %s\n", name, error->message);
+    }
+/*igcr info: was memory leak without g_free_error */
+    g_free_error( error );
 }
 
 char *replace_string( const char* orig, const char* str, const char* replace,
@@ -10558,9 +10585,13 @@ void xset_defaults()
     set = xset_get( "sep_arc1" );
     set->menu_style = XSET_MENU_SEP;
 
+    set = xset_get( "sep_arc2" );
+    set->menu_style = XSET_MENU_SEP;
+
     set = xset_set( "arc_default", "lbl", _("_Archive Default") );
+
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write" );
+    xset_set_set( set, "desc", "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write sep_arc2 arc_conf2" );
 
         set = xset_set( "arc_def_open", "lbl", _("_Open With App") );
         set->menu_style = XSET_MENU_RADIO;
@@ -10582,8 +10613,81 @@ void xset_defaults()
         set = xset_set( "arc_def_write", "lbl", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
 
-    set = xset_set( "iso_mount", "lbl", _("_Mount ISO") );
-    xset_set_set( set, "icn", "gtk-cdrom" );
+        set = xset_set( "arc_conf2", "label", _("Co_nfigure") );
+        xset_set_set( set, "icon", "gtk-preferences" );
+        set->s = g_strdup( "arctype_7z arctype_gz arctype_rar arctype_tar arctype_tar_bz2 arctype_tar_gz arctype_tar_xz arctype_zip" );  // default list of archive types
+
+    /* Default Archive Types Defined Here - note that this is also
+     * maintained in ptk-file-archiver.c:restore_defaults */
+/*igcr I don't like how this is maintained in two places.  Maybe call
+ * restore_defaults from here with a special mode.  Or add xset_arc_defaults
+ * function to this file and call from ptk-file-archiver.c ? */
+    set = xset_set( "arctype_7z", "label", "7-Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-7z-compressed" );
+    set->x = g_strdup( ".7z" );
+    set->y = g_strdup( "+\"$(which 7za || echo 7zr)\" a %o %F" );     // compress command
+    set->z = g_strdup( "+\"$(which 7za || echo 7zr)\" x %o" );        // extract command
+    set->context = g_strdup( "+\"$(which 7za || echo 7zr)\" l %o" );  // list command
+
+    set = xset_set( "arctype_gz", "label", "Gzip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-gzip:application/x-gzpdf" );
+    set->x = g_strdup( ".gz" );
+    set->y = g_strdup( "gzip -c %F > %O" );      // compress command
+    set->z = g_strdup( "gzip -cd %o > %F" );     // extract command
+    set->context = g_strdup( "+gunzip -l %o" );  // list command
+
+    set = xset_set( "arctype_rar", "label", "RAR" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-rar" );
+    set->x = g_strdup( ".rar" );
+    set->y = g_strdup( "+rar a -r %o %F" );     // compress command
+    set->z = g_strdup( "+unrar -o- x %o" );     // extract command
+    set->context = g_strdup( "+unrar lt %o" );  // list command
+
+    set = xset_set( "arctype_tar", "label", "Tar" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-tar" );
+    set->x = g_strdup( ".tar" );
+    set->y = g_strdup( "tar -cvf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );   // list command
+
+    set = xset_set( "arctype_tar_bz2", "label", "Tar bzip2" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-bzip-compressed-tar" );
+    set->x = g_strdup( ".tar.bz2" );
+    set->y = g_strdup( "tar -cvjf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvjf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_tar_gz", "label", "Tar Gzip)" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-compressed-tar" );
+    set->x = g_strdup( ".tar.gz" );
+    set->y = g_strdup( "tar -cvzf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvzf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_tar_xz", "label", "Tar xz" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-xz-compressed-tar" );
+    set->x = g_strdup( ".tar.xz" );
+    set->y = g_strdup( "tar -cvJf %o %F" );       // compress command
+    set->z = g_strdup( "tar -xvJf %o" );          // extract command
+    set->context = g_strdup( "+tar -tvf %o" );    // list command
+
+    set = xset_set( "arctype_zip", "label", "Zip" );
+    set->b = XSET_B_TRUE;
+    set->s = g_strdup( "application/x-zip:application/zip" );
+    set->x = g_strdup( ".zip" );
+    set->y = g_strdup( "+zip -r %o %F" );       // compress command
+    set->z = g_strdup( "+unzip %o" );           // extract command
+    set->context = g_strdup( "+unzip -l %o" );  // list command
+
+    set = xset_set( "iso_mount", "label", _("_Mount ISO") );
+    xset_set_set( set, "icon", "gtk-cdrom" );
 
     set = xset_set( "iso_auto", "lbl", _("_Auto-Mount ISO") );
     set->menu_style = XSET_MENU_CHECK;

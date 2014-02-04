@@ -1142,6 +1142,7 @@ void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
 {
     GdkPixbuf* icon;
     char* name;
+    GError *error = NULL;
 
     XSet* set = xset_get( "main_icon" );
     if ( set->icon )
@@ -1151,12 +1152,20 @@ void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
     else
         name = "spacefm";
     
-    icon = gtk_icon_theme_load_icon( theme, name, 48, 0, NULL );
+    icon = gtk_icon_theme_load_icon( theme, name, 48, 0, &error );
     if ( icon )
     {
         gtk_window_set_icon( window, icon );
         g_object_unref( icon );
     }
+    else if ( error != NULL )
+    {
+        // An error occured on loading the icon
+        fprintf( stderr, "spacefm: Unable to load the window icon "
+        "'%s' in - update_window_icon - %s\n", name, error->message);
+    }
+/*igcr info: was memory leak without g_error_free */
+    g_error_free( error );
 }
 
 static void update_window_icons( GtkIconTheme* theme, GtkWindow* window )

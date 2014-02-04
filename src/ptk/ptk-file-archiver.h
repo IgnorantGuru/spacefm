@@ -21,12 +21,24 @@
 
 G_BEGIN_DECLS
 
+// Archive operations enum
+enum {
+    ARC_COMPRESS,
+    ARC_EXTRACT,
+    ARC_LIST
+};
+
+void ptk_file_archiver_config( PtkFileBrowser* file_browser );
+
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 											const char* cwd );
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                             const char* cwd, const char* dest_dir );
+
+// At least a mime type or extension is required - mime type preferred
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
-                                            gboolean extract );
+                                                char* extension,
+                                                int operation );
 
 G_END_DECLS
 #endif
