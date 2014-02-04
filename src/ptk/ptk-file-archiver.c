@@ -46,6 +46,7 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
+/*igcr why are these still here?  also why typedef struct _ArchiveHandler? */
 const ArchiveHandler handlers[]=
     {
         {
@@ -108,9 +109,8 @@ const ArchiveHandler handlers[]=
 
 
 // Function prototypes
-static void on_configure_handler_enabled_check(
-    GtkToggleButton *togglebutton,
-    gpointer user_data );
+static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
+                                                gpointer user_data );
 static void restore_defaults( GtkWidget* dlg );
 static gboolean validate_handler( GtkWidget* dlg );
 
@@ -260,8 +260,8 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                     /* Invalid archive operation passed - warning
                      * user and exiting */
                     g_warning("archive_handler_is_format_supported "
-                    "was passed an invalid archive operation ('%d') "
-                    "on type '%s'!", operation, type);
+                            "was passed an invalid archive operation ('%d') "
+                            "on type '%s'!", operation, type);
                     format_supported = FALSE;
                     break;
             }
@@ -317,13 +317,16 @@ static gboolean archive_handler_run_in_term( XSet* handler_xset,
 
 // handler_xset_name optional if handler_xset passed
 static void config_load_handler_settings( XSet* handler_xset,
-                                    gchar* handler_xset_name,
-                                    GtkWidget* dlg )
+                                          gchar* handler_xset_name,
+                                          GtkWidget* dlg )
 {
     // Fetching actual xset if only the name has been passed
     if ( !handler_xset )
         handler_xset = xset_get( handler_xset_name );
 
+/*igcr this code is repeated in several places in this file.  Would be more
+ * efficient to create a struct and just pass that (or set it as a single
+ * object) - see ptk-file-misc.c MoveSet typedef */
     // Fetching widget references
     GtkWidget* chkbtn_handler_enabled = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_enabled" );
@@ -363,44 +366,20 @@ static void config_load_handler_settings( XSet* handler_xset,
     int start;
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
                                     check_value );
-    if (!handler_xset->menu_label)
-    {
-        // Handler name is NULL - fall back to null-length string and
-        // warn user
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
-                            g_strdup( "" ) );
-        g_warning("Archive handler associated with xset '%s' has no name",
-                    handler_xset->name);
-    }
-    else
-    {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
-                            g_strdup( handler_xset->menu_label ) );
-    }
-    if (!handler_xset->s)
-    {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ),
-                            g_strdup( "" ) );
-        g_warning("Archive handler '%s' has no configured MIME type",
-                    handler_xset->menu_label);
-    }
-    else
-    {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ),
-                            g_strdup( handler_xset->s ) );
-    }
-    if (!handler_xset->x)
-    {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
-                            g_strdup( "" ) );
-        g_warning("Archive handler '%s' has no configured extension",
-                    handler_xset->menu_label);
-    }
-    else
-    {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
-                            g_strdup( handler_xset->x ) );
-    }
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
+                                    handler_xset->menu_label ?
+                                    handler_xset->menu_label : "" );
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ),
+                                    handler_xset->s ?
+                                    handler_xset->s : "" );
+    gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
+                                    handler_xset->x ?
+                                    handler_xset->x : "" );
+/*igcr  all places below in this file where you use:
+ *          gtk_entry_set_text( ..., g_strdup( ... ) )
+ * and similar are memory leaks.  Don't use the g_strdup - set_text merely
+ * copies the const string passed - see corrected example above.
+ * Also, I didn't want the warnings above so removed them */
     if (!handler_xset->y)
     {
         gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
@@ -569,10 +548,14 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                             "chkbtn_handler_list_term" );
     const gchar* handler_name = gtk_entry_get_text( GTK_ENTRY ( entry_handler_name ) );
     const gchar* handler_mime = gtk_entry_get_text( GTK_ENTRY ( entry_handler_mime ) );
-    const gchar* handler_extension = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extension ) );
-    const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
-    const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
-    const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+    const gchar* handler_extension = gtk_entry_get_text(
+                        GTK_ENTRY ( entry_handler_extension ) );
+    const gboolean handler_compress_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
+    const gboolean handler_extract_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
+    const gboolean handler_list_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
     gchar* handler_compress, *handler_extract, *handler_list;
 
     // Commands are prefixed with '+' when they are to be ran in a
@@ -648,34 +631,42 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         // Fetching data from the model based on the iterator. Note that
         // this variable used for the G_STRING is defined on the stack,
         // so should be freed for me
+/*igcr  memory leak - xset_name and handler_name_from_model must be freed
+ * by you.  See https://developer.gnome.org/gtk3/stable/GtkTreeModel.html#gtk-tree-model-get */
         gtk_tree_model_get( model, &it,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_NAME, &handler_name_from_model,
                             -1 );
 
         // Fetching the xset now I have the xset name
+/*igcr xset_get always returns a valid xset as it will create it if it doesn't
+ * exist, so it looks like you want to use xset_is here instead to just fetch
+ * an xset only if it exists. */
         handler_xset = xset_get(xset_name);
 
         // Making sure it has been fetched
         if (!handler_xset)
         {
-            g_warning("Unable to fetch the xset for the archive handler"
-            " '%s' - does it exist?", handler_name);
-            goto cleanexit;
+            g_warning("Unable to fetch the xset for the archive handler '%s'",
+                                                            handler_name);
+            goto _clean_exit;
         }
     }
 
     if ( widget == btn_add )
     {
         // Exiting if there is no handler to add
-        if (g_strcmp0( handler_name, "" ) <= 0)
-            goto cleanexit;
+/*igcr don't use strcmp <= , just == 0 for match, or test for null character in [0] */
+        if ( !handler_name[0] )
+            goto _clean_exit;
 
         // Adding new handler as a copy of the current active handler
         XSet* new_handler_xset = add_new_arctype();
         new_handler_xset->b = gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( chkbtn_handler_enabled )
                               ) ? XSET_B_TRUE : XSET_B_FALSE;
+
+/*igcr memory leaks - don't pass g_strdup, just the const str */
         xset_set_set( new_handler_xset, "label", g_strdup( handler_name ) );
         xset_set_set( new_handler_xset, "s", g_strdup( handler_mime ) );  // Mime Type(s)
         xset_set_set( new_handler_xset, "x", g_strdup( handler_extension ) );  // Extension(s)
@@ -684,6 +675,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( new_handler_xset, "cxt", g_strdup( handler_list ) );  // List command
 
         // Fetching list store
+/*igcr jfyi shouldn't need an object for this - can get list store from list */
         GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
 
         // Obtaining appending iterator for treeview model
@@ -691,6 +683,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
 
         // Adding handler to model
+/*igcr you don't need to copy these two strings, just pass them */
         gchar* new_handler_name = g_strdup( handler_name );
         gchar* new_xset_name = g_strdup( new_handler_xset->name );
         gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
@@ -728,7 +721,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     else if ( widget == btn_apply )
     {
         // Exiting if apply has been pressed when no handlers are present
-        if (xset_name == NULL) goto cleanexit;
+        if (xset_name == NULL) goto _clean_exit;
 
         /* Validating - remember that IG wants the handler to be saved
          * even with invalid commands */
@@ -758,14 +751,16 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( handler_xset, "z", handler_extract );
         xset_set_set( handler_xset, "cxt", handler_list );
     }
-    else
+    else if ( widget == btn_remove )
     {
         // Exiting if remove has been pressed when no handlers are present
-        if (xset_name == NULL) goto cleanexit;
+        if (xset_name == NULL) goto _clean_exit;
 
         // Updating available archive handlers list - fetching current
         // handlers
-        char* archive_handlers_s = xset_get_s( "arc_conf2" );
+        const char* archive_handlers_s = xset_get_s( "arc_conf2" );
+/*igcr considered that archive_handlers_s may == NULL ? thus archive_handlers
+ * may == NULL   should confirm !NULL before access  - potential segfault on for loop */
         gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
         gchar* new_archive_handlers_s = g_strdup( "" );
         gchar* new_archive_handlers_s_temp;
@@ -791,7 +786,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                 else
                 {
                     new_archive_handlers_s = g_strdup_printf( "%s %s",
-                        new_archive_handlers_s, archive_handlers[i] );
+                                new_archive_handlers_s, archive_handlers[i] );
                 }
                 g_free(new_archive_handlers_s_temp);
             }
@@ -807,7 +802,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         // Removing handler from the list
         gtk_list_store_remove( GTK_LIST_STORE( model ), &it );
 
-        if (g_strcmp0( new_archive_handlers_s, "" ) <= 0)
+        if (g_strcmp0( new_archive_handlers_s, "" ) == 0)
         {
             /* Making remove and apply buttons insensitive if the last
              * handler has been removed */
@@ -829,10 +824,10 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         g_free( new_archive_handlers_s );
     }
 
-cleanexit:
+_clean_exit:
 
     // Saving settings
-    save_settings( NULL );
+    xset_autosave( FALSE, FALSE );
 
     // Freeing strings
     g_free( handler_compress );
@@ -859,6 +854,7 @@ static void on_configure_changed( GtkTreeSelection* selection,
     /* Fetching data from the model based on the iterator. Note that this
      * variable used for the G_STRING is defined on the stack, so should
      * be freed for me */
+/*igcr memory leak - free these */
     gchar* handler_name;  // Not actually used...
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
@@ -902,6 +898,7 @@ static void on_configure_drag_end( GtkWidget* widget,
         // Fetching data from the model based on the iterator. Note that
         // this variable used for the G_STRING is defined on the stack,
         // so should be freed for me
+/*igcr memory leak - free these */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_NAME, &handler_name_unused,
@@ -921,12 +918,15 @@ static void on_configure_drag_end( GtkWidget* widget,
     }
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
 
+/*igcr how can you be saving the list - what if the user presses cancel?
+ * also, is it necessary to update the handlers list on reorder?  or can
+ * it wait until dialog closes? */
     // Saving the new archive handlers list
     xset_set( "arc_conf2", "s", archive_handlers );
     g_free(archive_handlers);
 
     // Saving settings
-    save_settings( NULL );
+    xset_autosave( FALSE, FALSE );
 
     // Ensuring first handler is selected (otherwise none are)
     GtkTreeSelection *selection = gtk_tree_view_get_selection(
@@ -938,7 +938,7 @@ static void on_configure_drag_end( GtkWidget* widget,
 }
 
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
-    gpointer user_data )
+                                                gpointer user_data )
 {
     // Fetching current status
     gboolean enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( togglebutton ) );
@@ -1260,6 +1260,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
         g_warning( _("Unable to get the top level window to parent the "
                      "archive handler dialog to!") );
 
+/*igcr ptk/ptk-file-archiver.c:1261:21: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
     GtkWidget *dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
                     GTK_WINDOW( top_level ),
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1846,6 +1847,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     int i, n, format, res;
 
     // Generating dialog
+/*igcr ptk/ptk-file-archiver.c:1847:40: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
     dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
                                        GTK_WINDOW( gtk_widget_get_toplevel(
                                              GTK_WIDGET( file_browser ) ) ),
@@ -2820,7 +2822,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         prompt = g_strdup_printf( "; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security */
                 "[ Finished With Errors ]  Press Enter to close" );
     else
-        prompt = g_strdup_printf( "" );
+        prompt = g_strdup( "" );
 
     /* Dealing with the need to make extracted files writable if
      * desired (e.g. a tar of files originally archived from a CD
