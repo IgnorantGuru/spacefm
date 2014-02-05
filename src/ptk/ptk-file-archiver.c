@@ -1272,21 +1272,21 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     /* Archive handlers dialog, attaching to top-level window (in GTK,
      * everything is a 'widget') - no buttons etc added as everything is
      * custom...
+     * Extra NULL on the NULL-terminated list to placate an irrelevant
+     * compilation warning
      * TODO: The below fails - file_browser->main_window is not a valid
      * widget when this function is called in a normal fashion, it is
      * when called via a keyboard shortcut. file_browser on its own
-     * reports as a valid widget, but only broken modal behaviour results */
+     * reports as a valid widget, but only broken modal behaviour results
+     */
 /*igcr file_browser may be null if desktop use later accomodated */
     GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
                                 NULL;
-
-/*igcr ptk/ptk-file-archiver.c:1261:21: warning: not enough variable arguments to fit a sentinel [-Wformat=]
- * Not happy with this - there are no buttons to be created here, so my NULL is correct? Shouldnt have to use two NULLs, it is one list, terminated with a NULL... */
     GtkWidget *dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
                     top_level ? GTK_WINDOW( top_level ) : NULL,
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                    NULL );
+                    NULL, NULL );
     gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );
 
     // Debug code
@@ -1869,13 +1869,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         *archive_name = NULL, *final_command = NULL;
     int i, n, format, res;
 
-    // Generating dialog
-/*igcr ptk/ptk-file-archiver.c:1847:40: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
+    /* Generating dialog - extra NULL on the NULL-terminated list to
+     * placate an irrelevant compilation warning */
 /*igcr file_browser may be NULL - check this entire function for uses */
     dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
                                        GTK_WINDOW( gtk_widget_get_toplevel(
                                              GTK_WIDGET( file_browser ) ) ),
-                                       GTK_FILE_CHOOSER_ACTION_SAVE, NULL );
+                                       GTK_FILE_CHOOSER_ACTION_SAVE, NULL,
+                                       NULL );
 
     /* Adding standard buttons and saving references in the dialog
      * 'Configure' button has custom text but a stock image */
