@@ -146,6 +146,7 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     if (handler_xset)
     {
         // Obtaining first handled extension
+/*igcr very inefficient to copy all these strings */
         gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
         gchar* first_extension = g_strdup( extensions[0] );
 
@@ -179,6 +180,10 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
     {
         /* Obtaining handled MIME types and file extensions
          * (colon-delimited) */
+/*igcr copying all these strings is an inefficient way to do this.  This 
+ * function in particular needs to be fast because it's used by menus, so this
+ * should be rewritten to parse the strings without copying.  (memory writes
+ * are slower than reads) */
         gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
         gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
 
@@ -761,6 +766,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         const char* archive_handlers_s = xset_get_s( "arc_conf2" );
 /*igcr considered that archive_handlers_s may == NULL ? thus archive_handlers
  * may == NULL   should confirm !NULL before access  - potential segfault on for loop */
+/*igcr also inefficient to copy all these strings  - although may be fast
+ * enough for this function - could use strstr to find deleted handler */
         gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
         gchar* new_archive_handlers_s = g_strdup( "" );
         gchar* new_archive_handlers_s_temp;
@@ -976,6 +983,10 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_list_term ), enabled );
 }
 
+/*igcr some duplication here with on_configure_changed() - can you call
+ * on_configure_changed(), or can a single event be used for selection
+ * changed?  row-activated is when a row is activated by clicking
+ * or double-clicking, or via keypress space/enter, not merely selected.  */
 static void on_configure_row_activated( GtkTreeView* view,
                                         GtkTreePath* tree_path,
                                         GtkTreeViewColumn* col,
@@ -995,6 +1006,7 @@ static void on_configure_row_activated( GtkTreeView* view,
     // Fetching data from the model based on the iterator. Note that this
     // variable used for the G_STRING is defined on the stack, so should
     // be freed for me
+/*igcr memory leaks - free these */
     gchar* handler_name;  // Not actually used...
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
@@ -1018,6 +1030,7 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     // Fetching available archive handlers (literally gets member s from
     // the xset) - user-defined order has already been set
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
+/*igcr copying all these strings is inefficient, just need to parse */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -1033,8 +1046,9 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 
         // Fetching handler
         XSet* handler_xset = xset_get( archive_handlers[i] );
-
+/*igcr should verify arctype_ prefix in xset name before loading? */
         // Adding handler to model
+/*igcr memory leak - don't copy these strings, just pass them */
         gchar* handler_name = g_strdup( handler_xset->menu_label );
         gchar* xset_name = g_strdup( archive_handlers[i] );
         gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
@@ -1099,6 +1113,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
         extension = archive_handler_get_first_extension(handler_xset);
 
         // Checking to see if the current archive filename has this
+/*igcr dot handled properly here with has_suffix? does extension contain dot? */
         if (g_str_has_suffix( name, extension ))
         {
             /* It does - recording its length if its the longest match
@@ -1123,6 +1138,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter );
 
     // You have to fetch both items here
+/*igcr memory leaks - free xset_name extensions */
     gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                         COL_XSET_NAME, &xset_name,
                         COL_HANDLER_EXTENSIONS, &extensions,
@@ -1155,6 +1171,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     }
     else
     {
+/*igcr compress_cmd will be NULL now if !handler_xset->y  ok? */
         compress_cmd = g_strdup( handler_xset->y );
     }
     gtk_entry_set_text( GTK_ENTRY( entry ), compress_cmd );
@@ -1255,14 +1272,14 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Archive handlers dialog, attaching to top-level window (in GTK,
     // everything is a 'widget') - no buttons etc added as everything is
     // custom...
-    GtkWidget *top_level = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-    if (!gtk_widget_is_toplevel( top_level ))
-        g_warning( _("Unable to get the top level window to parent the "
-                     "archive handler dialog to!") );
+/*igcr file_browser may be null if desktop use later accomodated */
+    GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
+                                GTK_WIDGET( file_browser->main_window ) ) :
+                                NULL;
 
 /*igcr ptk/ptk-file-archiver.c:1261:21: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
     GtkWidget *dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
-                    GTK_WINDOW( top_level ),
+                    top_level ? GTK_WINDOW( top_level ) : NULL,
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                     NULL );
     gtk_container_set_border_width( GTK_CONTAINER ( dlg ), 5 );
@@ -1270,8 +1287,7 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // Debug code
     //g_message( "Parent window title: %s", gtk_window_get_title( GTK_WINDOW( top_level ) ) );
 
-    // Forcing dialog icon - WM breaks without this for IG, not needed
-    // for me
+    // Forcing dialog icon
     xset_set_window_icon( GTK_WINDOW( dlg ) );
 
     // Setting saved dialog size
@@ -1292,8 +1308,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                                     FALSE );
 
     // Adding standard buttons and saving references in the dialog
-    // (GTK doesnt provide a trivial way to reference child widgets from
-    // the window!!)
     // 'Restore defaults' button has custom text but a stock image
     GtkButton* btn_defaults = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( dlg ),
                                                 _("Re_store Defaults"),
@@ -1326,6 +1340,8 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // for doing an action)
     GtkWidget* view_handlers = exo_tree_view_new();
     gtk_tree_view_set_model( GTK_TREE_VIEW( view_handlers ), GTK_TREE_MODEL( list ) );
+/*igcr probably doesn't need to be single click, as you're not using row
+ * activation, only selection changed? */
     exo_tree_view_set_single_click( (ExoTreeView*)view_handlers, TRUE );
     gtk_tree_view_set_headers_visible( GTK_TREE_VIEW( view_handlers ), FALSE );
     g_object_set_data( G_OBJECT( dlg ), "view_handlers", view_handlers );
@@ -1841,6 +1857,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     GList *l;
     GtkWidget* combo, *dlg, *hbox;
     GtkFileFilter* filter;
+/*igcr lots of strings in this function - should double-check usage of each
+ * and verify no leaks */
     char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
         *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
         *archive_name = NULL, *final_command = NULL;
@@ -1848,14 +1866,13 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
     // Generating dialog
 /*igcr ptk/ptk-file-archiver.c:1847:40: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
+/*igcr file_browser may be NULL - check this entire function for uses */
     dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
                                        GTK_WINDOW( gtk_widget_get_toplevel(
                                              GTK_WIDGET( file_browser ) ) ),
                                        GTK_FILE_CHOOSER_ACTION_SAVE, NULL );
 
     /* Adding standard buttons and saving references in the dialog
-     * (GTK doesnt provide a trivial way to reference child widgets from
-     * the window!!)
      * 'Configure' button has custom text but a stock image */
     GtkButton* btn_configure = GTK_BUTTON( gtk_dialog_add_button(
                                                 GTK_DIALOG( dlg ),
@@ -1917,7 +1934,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
 
     // Dealing with possibility of no handlers
-    if (g_strcmp0( archive_handlers_s, "" ) <= 0)
+    if (g_strcmp0( archive_handlers_s, "" ) == 0)
     {
         /* Telling user to ensure handlers are available and bringing
          * up configuration */
@@ -1932,6 +1949,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     }
 
     // Splitting archive handlers
+/*igcr inefficient to copy all these strings instead of parsing though perhaps
+ * fast enough here */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -1949,10 +1968,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         /* Checking to see if handler is enabled, can cope with
          * compression and the extension is set - dealing with empty
          * command yet 'run in terminal' still ticked */
-        if(handler_xset->b == XSET_B_TRUE && handler_xset->y
-           && g_strcmp0( handler_xset->y, "" ) != 0
-           && g_strcmp0( handler_xset->y, "+" ) != 0
-           && g_strcmp0( handler_xset->x, "" ) != 0)
+        if (handler_xset->b == XSET_B_TRUE && handler_xset->y
+                                   && g_strcmp0( handler_xset->y, "" ) != 0
+                                   && g_strcmp0( handler_xset->y, "+" ) != 0
+                                   && g_strcmp0( handler_xset->x, "" ) != 0)
         {
             /* It can - adding to filter so that only relevant archives
              * are displayed when the user chooses an archive name to
@@ -1965,6 +1984,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
 
             // Adding to model
+/*igcr memory leaks - free these */
             xset_name = g_strdup( archive_handlers[i] );
             extensions = g_strconcat( handler_xset->menu_label, " (",
                                       handler_xset->x, ")", NULL );
@@ -2004,10 +2024,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
     // Obtaining iterator from string turned into a path into the model
     gchar* compress_cmd;
+/*igcr memory leak - g_strdup_printf passed */
     if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
                                     &iter, g_strdup_printf( "%d", i ) ))
     {
         // You have to fetch both items here
+/*igcr memory leaks - free these */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_EXTENSIONS, &extensions,
@@ -2088,7 +2110,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     }
 
     // Displaying dialog
-    gchar* command;
+    gchar* command = NULL;
     gboolean run_in_terminal;
 
     while( res = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
@@ -2096,6 +2118,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         if ( res == GTK_RESPONSE_OK )
         {
             // Dialog OK'd - fetching archive filename
+/*igcr dest_file freed? */
             dest_file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
 
             // Fetching archive handler selected
@@ -2105,14 +2128,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 // Unable to fetch iter from combo box - warning user and
                 // exiting
                 g_warning( "Unable to fetch iter from combobox!" );
+/*igcr need to destroy dlg, free dest_file, etc, or goto */
                 return;
             }
 
             // Fetching model data
+/*igcr memory leaks - free these */
             gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                                 COL_XSET_NAME, &xset_name,
                                 COL_HANDLER_EXTENSIONS, &extensions,
                                 -1 );
+/*igcr use xset_is instead and test for non-NULL handler_xset ? in the event
+ * of model corruption this would avoid junk being added to session file */
             handler_xset = xset_get( xset_name );
 
             // Fetching normal compression command and whether it should
@@ -2124,6 +2151,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             }
             else
             {
+/*igcr compress_cmd may be set NULL here if !handler_xset->y ok? */
                 compress_cmd = g_strdup( handler_xset->y );
                 run_in_terminal = FALSE;
             }
@@ -2143,7 +2171,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
              * Checking to see if the archive handler compression command
              * has been deleted or has invalid placeholders - not
              * required to only have one of the particular type */
-            if (g_strcmp0( command, "" ) <= 0 ||
+            if (g_strcmp0( command, "" ) == 0 ||
                 (
                     !g_strstr_len( command, -1, "%o" ) &&
                     !g_strstr_len( command, -1, "%O" )
@@ -2156,6 +2184,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             )
             {
                 // It has/is - warning user
+/*igcr this looks like a very tall dialog - will fit on smaller (600) screens? */
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 _("Create Archive"), NULL, FALSE,
                                 _("The following substitution variables "
@@ -2181,11 +2210,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             {
                 // It has - saving, taking into account running in
                 // terminal
-                xset_set_set( handler_xset, "y",
-    (run_in_terminal) ? g_strconcat( "+", command, NULL ) : command );
+/*igcr memory leak here - passing g_strconcat */
+                xset_set_set( handler_xset, "y", run_in_terminal ? 
+                                g_strconcat( "+", command, NULL ) : command );
 
                 // Saving settings
-                save_settings( NULL );
+                xset_autosave( FALSE, FALSE );
             }
 
             // Cleaning up
@@ -2287,6 +2317,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             cmd_to_run = replace_string( cmd, "%F", desc, FALSE );
 
             // Dealing with remaining standard SpaceFM substitutions
+/*igcr the way you're doing this in two steps, what happens if a filename
+ * contains eg "%d" ?  */
             s1 = cmd_to_run;
             cmd_to_run = replace_line_subs( cmd_to_run );
             g_free(s1);
@@ -2312,7 +2344,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     {
         /* '%O' isn't present - the normal single command is needed
          * Obtaining valid quoted UTF8 file name for archive to create */
+/*igcr dest_file may be NULL */
         udest_file = g_filename_display_name( dest_file );
+/*igcr dest_file should be freed at function end or it won't be freed unless
+ * this else block is run ? */
         g_free( dest_file );
         char* udest_quote = bash_quote( udest_file );
         g_free( udest_file );
@@ -2344,7 +2379,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                     str = s1;
                     desc = bash_quote( (char *) vfs_file_info_get_name(
                                                     (VFSFileInfo*) l->data ) );
-                    if (g_strcmp0( s1, "" ) <= 0)
+                    if (g_strcmp0( s1, "" ) == 0)
                     {
                         s1 = g_strdup( desc );
                     }
@@ -2368,12 +2403,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
         // Dealing with remaining standard SpaceFM substitutions
         s1 = final_command;
+/*igcr the way you're doing this in two steps, what happens if a filename
+ * contains eg "%d" ?  */
         final_command = replace_line_subs( final_command );
         g_free(s1);
     }
 
     /* Cleaning up - final_command does not need freeing, as this
-     * remains pointing to data in the task */
+     * is freed by the task */
     g_free( command );
 
     /* When ran in a terminal, adding code to warn user on failure and
@@ -2442,7 +2479,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     // Determining parent of dialog
     if ( file_browser )
-        dlgparent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+        dlgparent = gtk_widget_get_toplevel(
+                                    GTK_WIDGET( file_browser->main_window ) );
     //else if ( desktop )
     //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
 
@@ -2452,7 +2490,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         // It hasn't - generating dialog to ask user. Only dealing with
         // user-writable contents if the user isn't root
         dlg = gtk_file_chooser_dialog_new( _("Extract To"),
-                                           GTK_WINDOW( dlgparent ),
+                                dlgparent? GTK_WINDOW( dlgparent ) : NULL,
                                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                 GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
@@ -2495,21 +2533,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         // Displaying dialog
         if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
         {
-            // User OK'd - saving dialog dimensions
-            GtkAllocation allocation;
-            gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
-            width = allocation.width;
-            height = allocation.height;
-            if ( width && height )
-            {
-                str = g_strdup_printf( "%d", width );
-                xset_set( "arc_dlg", "x", str );
-                g_free( str );
-                str = g_strdup_printf( "%d", height );
-                xset_set( "arc_dlg", "y", str );
-                g_free( str );
-            }
-
             // Fetching user-specified settings and saving
             choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
             create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
@@ -2518,7 +2541,22 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             str = g_strdup_printf( "%d", write_access ? 1 : 0 );
             xset_set( "arc_dlg", "s", str );
             g_free( str );
-          }
+        }
+
+        // saving dialog dimensions
+        GtkAllocation allocation;
+        gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+        width = allocation.width;
+        height = allocation.height;
+        if ( width && height )
+        {
+            str = g_strdup_printf( "%d", width );
+            xset_set( "arc_dlg", "x", str );
+            g_free( str );
+            str = g_strdup_printf( "%d", height );
+            xset_set( "arc_dlg", "y", str );
+            g_free( str );
+        }
 
         // Destroying dialog
         gtk_widget_destroy( dlg );
@@ -2527,6 +2565,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         if( !choose_dir )
             return;
 
+/*igcr choose_dir does need to be freed, but not dest_dir.  Free choose_dir after
+ * dest is used */
         // This DOES NOT need to be freed by me despite the documentation
         // saying so! Otherwise enjoy ur double free
         dest = choose_dir;
@@ -2550,12 +2590,13 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
+/*igcr these strings don't need to be copied for parse  - maybe ok here */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
     XSet* handler_xset;
 
     /* Setting desired archive operation and keeping in terminal while
      * listing */
-    int archive_operation = (list_contents) ? ARC_LIST : ARC_EXTRACT;
+    int archive_operation = list_contents ? ARC_LIST : ARC_EXTRACT;
     keep_term = list_contents;
 
     // Looping for all files to attempt to list/extract
@@ -2574,6 +2615,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         for (i = 0; archive_handlers[i] != NULL; ++i)
         {
             // Fetching handler
+/*igcr probably should validate with xset_is */
             handler_xset = xset_get( archive_handlers[i] );
 
             // Checking to see if handler is enabled and can cope with
@@ -2593,6 +2635,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
         g_free( extension );
 
         // Continuing to next file if a handler hasnt been found
+/*igcr a g_warning may be appropriate here for debugging why file ignored */
         if (!format_supported)
             continue;
 
@@ -2633,6 +2676,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
+/*igcr shouldn't need to copy strings to parse */
             gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
             for (i = 0; extensions[i] != NULL; ++i)
             {
@@ -2640,6 +2684,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 //g_message( "extensions[i]: %s", extensions[i]);
 
                 // Checking if the current extension is being used
+/*igcr dot handled correctly? */
                 if (g_str_has_suffix( filename, extensions[i] ))
                 {
                     // It is - determining filename without extension
@@ -2693,6 +2738,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             /* Determining extraction command - dealing with 'run in
              * terminal' and placeholders. Doing this here as parent
              * directory creation needs access to the command */
+/*igcr segfault if !handler_xset->z due to unconditional use of *handler_xset->z ? */
             gchar* extract_cmd = replace_string(
                 (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
                 "%o", full_quote, FALSE );
@@ -2754,7 +2800,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                  * a parent directory has been created or not - target is
                  * guaranteed not to exist so as to avoid overwriting */
                 gchar* extract_target = g_build_filename(
-                                    (create_parent) ? parent_path : dest,
+                                    create_parent ? parent_path : dest,
                                                 filename_no_archive_ext,
                                                 NULL );
                 n = 1;
@@ -2766,7 +2812,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                     str = g_strdup_printf( "%s-%s%d%s", filename_no_ext,
                                            _("copy"), ++n, extension );
                     extract_target = g_build_filename(
-                                    (create_parent) ? parent_path : dest,
+                                    create_parent ? parent_path : dest,
                                     str, NULL );
                     g_free( str );
                 }
@@ -2813,6 +2859,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     // Dealing with standard SpaceFM substitutions
     str = final_command;
+/*igcr the way you're doing this in two steps, what happens if a filename
+ * contains eg "%d" ?  */
     final_command = replace_line_subs( final_command );
     g_free(str);
 
@@ -2854,6 +2902,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     task->task->exec_browser = file_browser;
     task->task->exec_sync = !in_term;
     task->task->exec_show_error = TRUE;
+/*igcr exec_show_output = in_term correct? or !in_term ? */
     task->task->exec_show_output = in_term;
     task->task->exec_terminal = in_term;
     task->task->exec_keep_terminal = keep_term;
@@ -2868,10 +2917,9 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     ptk_file_task_run( task );
 
     /* Clearing up - final_command does not need freeing, as this
-     * remains pointing to data in the task */
+     * is freed by the task */
     g_strfreev( archive_handlers );
-    if ( choose_dir )
-        g_free( choose_dir );
+    g_free( choose_dir );
 }
 
 /*
@@ -3234,6 +3282,7 @@ static void restore_defaults( GtkWidget* dlg )
 {
     // Note that defaults are also maintained in settings.c:xset_defaults
 
+/*igcr also add a cancel button? */
     // Exiting if the user doesn't really want to restore defaults
     gboolean overwrite_handlers;
     if (xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
@@ -3509,7 +3558,7 @@ static void restore_defaults( GtkWidget* dlg )
     // Updating list of archive handlers
     if (handlers_to_add)
     {
-        if (g_strcmp0( handlers, "" ) <= 0)
+        if (g_strcmp0( handlers, "" ) == 0)
             handlers = handlers_to_add;
         else
         {
@@ -3554,9 +3603,12 @@ static gboolean validate_handler( GtkWidget* dlg )
     const gchar* handler_name = gtk_entry_get_text( GTK_ENTRY ( entry_handler_name ) );
     const gchar* handler_mime = gtk_entry_get_text( GTK_ENTRY ( entry_handler_mime ) );
     const gchar* handler_extension = gtk_entry_get_text( GTK_ENTRY ( entry_handler_extension ) );
-    const gboolean handler_compress_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
-    const gboolean handler_extract_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
-    const gboolean handler_list_term = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+    const gboolean handler_compress_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_compress_term ) );
+    const gboolean handler_extract_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
+    const gboolean handler_list_term = gtk_toggle_button_get_active(
+                        GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
     gchar* handler_compress, *handler_extract, *handler_list;
 
     /* Commands are prefixed with '+' when they are to be ran in a
@@ -3602,7 +3654,7 @@ static gboolean validate_handler( GtkWidget* dlg )
      * be modified or stored
      * Note that archive creation also allows for a command to be
      * saved */
-    if (g_strcmp0( handler_name, "" ) <= 0)
+    if (g_strcmp0( handler_name, "" ) == 0)
     {
         /* Handler name not set - warning user and exiting. Note
          * that the created dialog does not have an icon set */
@@ -3615,11 +3667,12 @@ static gboolean validate_handler( GtkWidget* dlg )
     }
 
     // Empty MIME is allowed if extension is filled
-    if (g_strcmp0( handler_mime, "" ) <= 0 &&
-        g_strcmp0( handler_extension, "" ) <= 0)
+    if (g_strcmp0( handler_mime, "" ) == 0 &&
+        g_strcmp0( handler_extension, "" ) == 0)
     {
         /* Handler MIME not set - warning user and exiting. Note
          * that the created dialog does not have an icon set */
+/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("Please enter a valid "
@@ -3630,10 +3683,11 @@ static gboolean validate_handler( GtkWidget* dlg )
         return FALSE;
     }
     if (g_strstr_len( handler_mime, -1, " " ) &&
-        g_strcmp0( handler_extension, "" ) <= 0)
+        g_strcmp0( handler_extension, "" ) == 0)
     {
         /* Handler MIME contains a space - warning user and exiting.
          * Note that the created dialog does not have an icon set */
+/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("Please ensure the MIME"
@@ -3648,19 +3702,20 @@ static gboolean validate_handler( GtkWidget* dlg )
      * anything has been entered it must be valid */
     if (
         (
-            g_strcmp0( handler_extension, "" ) <= 0 &&
-            g_strcmp0( handler_mime, "" ) <= 0
+            g_strcmp0( handler_extension, "" ) == 0 &&
+            g_strcmp0( handler_mime, "" ) == 0
         )
         ||
         (
-            g_strcmp0( handler_extension, "" ) > 0 &&
-            *handler_extension != '.'
+            g_strcmp0( handler_extension, "" ) != 0 &&
+            handler_extension && *handler_extension != '.'
         )
     )
     {
         /* Handler extension is either not set or does not start with
          * a full stop - warning user and exiting. Note that the created
          * dialog does not have an icon set */
+/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("Please enter a valid "
@@ -3697,6 +3752,7 @@ static gboolean validate_handler( GtkWidget* dlg )
             )
         )
         {
+/*igcr memory leak - passing g_strdup_printf - also fits on small screen? */
             xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("The following "
@@ -3727,6 +3783,7 @@ static gboolean validate_handler( GtkWidget* dlg )
          * user and exiting. Note that the created dialog does not
          * have an icon set
          * TODO: IG problem */
+/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("The following "
@@ -3748,6 +3805,7 @@ static gboolean validate_handler( GtkWidget* dlg )
          * user and exiting. Note that the created dialog does not
          * have an icon set
          * TODO: Confirm if IG still has this problem */
+/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("The following "

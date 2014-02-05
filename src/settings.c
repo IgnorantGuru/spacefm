@@ -1008,8 +1008,7 @@ void load_settings( char* config_dir )
             g_free( str );
         }
     }
-#if 0
-    if ( ver >= 99 ) // enable when ready
+    if ( ver < 25 ) // < hand
     {
         /* Archive handlers are now user configurable using a new
          * xset - copying over settings from the old xset */
@@ -1025,7 +1024,6 @@ void load_settings( char* config_dir )
             g_free( str );
         }
     }
-#endif
 }
 
 
@@ -1042,7 +1040,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "24" );  // 0.9.4
+    xset_set( "config_version", "s", "25" );  // 0.9.4
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
