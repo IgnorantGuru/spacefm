@@ -1269,9 +1269,13 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
     // nm don't have that branch handy.  But you function can accept both file_browser and desktop and use whichever is non-NULL for the parent
     // If that doesn't make sense now, ask me later or I can hack it in.  That archive menu appears when right-clicking a desktop item
 
-    // Archive handlers dialog, attaching to top-level window (in GTK,
-    // everything is a 'widget') - no buttons etc added as everything is
-    // custom...
+    /* Archive handlers dialog, attaching to top-level window (in GTK,
+     * everything is a 'widget') - no buttons etc added as everything is
+     * custom...
+     * TODO: The below fails - file_browser->main_window is not a valid
+     * widget when this function is called in a normal fashion, it is
+     * when called via a keyboard shortcut. file_browser on its own
+     * reports as a valid widget, but only broken modal behaviour results */
 /*igcr file_browser may be null if desktop use later accomodated */
     GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
