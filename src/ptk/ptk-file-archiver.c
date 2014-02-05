@@ -1277,7 +1277,8 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                                 GTK_WIDGET( file_browser->main_window ) ) :
                                 NULL;
 
-/*igcr ptk/ptk-file-archiver.c:1261:21: warning: not enough variable arguments to fit a sentinel [-Wformat=] */
+/*igcr ptk/ptk-file-archiver.c:1261:21: warning: not enough variable arguments to fit a sentinel [-Wformat=]
+ * Not happy with this - there are no buttons to be created here, so my NULL is correct? Shouldnt have to use two NULLs, it is one list, terminated with a NULL... */
     GtkWidget *dlg = gtk_dialog_new_with_buttons( _("Archive Handlers"),
                     top_level ? GTK_WINDOW( top_level ) : NULL,
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
