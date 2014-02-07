@@ -697,15 +697,26 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                             -1 );
 
         // Updating available archive handlers list
-        gchar* new_handlers_list = g_strdup_printf( "%s %s",
-                                                xset_get_s( "arc_conf2" ),
-                                                new_xset_name );
-        xset_set( "arc_conf2", "s", new_handlers_list );
+        if (g_strcmp0( xset_get_s( "arc_conf2" ), "" ) <= 0)
+        {
+            // No handlers present - adding new handler
+            xset_set( "arc_conf2", "s", new_xset_name );
+        }
+        else
+        {
+            // Adding new handler to handlers
+            gchar* new_handlers_list = g_strdup_printf( "%s %s",
+                                                    xset_get_s( "arc_conf2" ),
+                                                    new_xset_name );
+            xset_set( "arc_conf2", "s", new_handlers_list );
 
-        // Freeing strings
+            // Clearing up
+            g_free(new_handlers_list);
+        }
+
+        // Clearing up
         g_free(new_handler_name);
         g_free(new_xset_name);
-        g_free(new_handlers_list);
 
         // Activating the new handler - the normal loading code
         // automatically kicks in
