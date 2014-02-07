@@ -491,15 +491,9 @@ static void config_unload_handler_settings( GtkWidget* dlg )
     gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
     gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
 
-    // Unchecking handler if enabled (this disables all handler widgets)
-    if (gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( chkbtn_handler_enabled ) ))
-    {
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
-                                      FALSE);
-        on_configure_handler_enabled_check( GTK_TOGGLE_BUTTON ( chkbtn_handler_enabled ),
-                                            dlg );
-    }
-    gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_enabled ), FALSE );
+    // Unchecking handler
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
+                                  FALSE);
 
     // Resetting all widgets
     gtk_entry_set_text( GTK_ENTRY( entry_handler_name ), g_strdup( "" ) );
@@ -981,6 +975,23 @@ static void on_configure_drag_end( GtkWidget* widget,
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data )
 {
+    /* When no handler is selected (i.e. the user selects outside of the
+     * populated handlers list), the enabled checkbox might be checked
+     * off - however the widgets must not be set insensitive when this
+     * happens */
+    GtkTreeView* view_handlers = (GtkTreeView*)g_object_get_data( G_OBJECT( user_data ),
+                                            "view_handlers" );
+
+    // Fetching selection from treeview
+    GtkTreeSelection* selection;
+    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
+    
+    // Exiting if no handler is selected
+    GtkTreeIter it;
+    GtkTreeModel* model;
+    if ( !gtk_tree_selection_get_selected( selection, &model, &it ) )
+        return;
+
     // Fetching current status
     gboolean enabled = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON ( togglebutton ) );
 
