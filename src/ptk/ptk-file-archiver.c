@@ -2225,8 +2225,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 )
                 ||
                 (
-                    !g_strstr_len( command, -1, "%f" ) &&
-                    !g_strstr_len( command, -1, "%F" )
+                    !g_strstr_len( command, -1, "%n" ) &&
+                    !g_strstr_len( command, -1, "%N" )
                 )
             )
             {
@@ -2238,14 +2238,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                 "should be in the archive creation"
                                 " command:\n\n"
                                 "One of the following:\n\n"
-                                "%%%%f: First selected file/directory to"
+                                "%%%%n: First selected file/directory to"
                                 " archive\n"
-                                "%%%%F: All selected files/directories to"
+                                "%%%%N: All selected files/directories to"
                                 " archive\n\n"
                                 "and one of the following:\n\n"
                                 "%%%%o: Resulting single archive\n"
                                 "%%%%O: Resulting archive per source "
-                                "file/directory (see %%%%f/%%%%F)\n\n"
+                                "file/directory (see %%%%n/%%%%N)\n\n"
                                 "Continuing anyway"),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( entry ) );
@@ -2321,9 +2321,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         ext = archive_handler_get_first_extension( handler_xset );
 
         /* Looping for all selected files/directories - all are used
-         * when '%F' is present, only the first otherwise */
+         * when '%N' is present, only the first otherwise */
         for( i = 0, l = files;
-             l && ( i == 0 || g_strstr_len( command, -1, "%F" ) );
+             l && ( i == 0 || g_strstr_len( command, -1, "%N" ) );
              l = l->next, ++i)
         {
             // FIXME: Maybe we should consider filename encoding here.
@@ -2349,19 +2349,19 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             // Detecting first run
             if (i == 0)
             {
-                // Replacing out %f with 1st file
+                // Replacing out '%n' with 1st file
                 s1 = cmd;
-                cmd = replace_string( cmd, "%f", desc, FALSE );
+                cmd = replace_string( cmd, "%n", desc, FALSE );
                 g_free(s1);
 
-                // Removing %f from command - its used up
+                // Removing '%n' from command - its used up
                 s1 = command;
-                command = replace_string( command, "%f", "", FALSE );
+                command = replace_string( command, "%n", "", FALSE );
                 g_free(s1);
             }
 
-            // Replacing out %F with nth file (NOT ALL FILES)
-            cmd_to_run = replace_string( cmd, "%F", desc, FALSE );
+            // Replacing out '%N' with nth file (NOT ALL FILES)
+            cmd_to_run = replace_string( cmd, "%N", desc, FALSE );
 
             // Dealing with remaining standard SpaceFM substitutions
 /*igcr the way you're doing this in two steps, what happens if a filename
@@ -2411,13 +2411,13 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Dealing with first selected file substitution
             s1 = final_command;
-            final_command = replace_string( final_command, "%f", desc,
+            final_command = replace_string( final_command, "%n", desc,
                                             FALSE );
             g_free(s1);
 
             /* Generating string of selected files/directories to archive if
-             * %F is present */
-            if (g_strstr_len( final_command, -1, "%F" ))
+             * '%N' is present */
+            if (g_strstr_len( final_command, -1, "%N" ))
             {
                 s1 = g_strdup( "" );
                 for( l = files; l; l = l->next)
@@ -2439,7 +2439,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 }
 
                 str = final_command;
-                final_command = replace_string( final_command, "%F", s1,
+                final_command = replace_string( final_command, "%N", s1,
                                                 FALSE );
 
                 // Cleaning up
@@ -2709,7 +2709,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // in terminal'
             cmd = replace_string( (*handler_xset->context == '+') ?
                     handler_xset->context + 1 : handler_xset->context,
-                    "%o", full_quote, FALSE );
+                    "%x", full_quote, FALSE );
         }
         else
         {
@@ -2788,16 +2788,16 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 /*igcr segfault if !handler_xset->z due to unconditional use of *handler_xset->z ? */
             gchar* extract_cmd = replace_string(
                 (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
-                "%o", full_quote, FALSE );
+                "%x", full_quote, FALSE );
 
             /* Dealing with creation of parent directory if needed -
-             * never create a parent directory if %F is used - this is
+             * never create a parent directory if '%G' is used - this is
              * an override substitution for the sake of gzip */
             gchar* parent_path = NULL;
-            if (create_parent && !g_strstr_len( extract_cmd, -1, "%F" ))
+            if (create_parent && !g_strstr_len( extract_cmd, -1, "%G" ))
             {
                 /* Determining full path of parent directory to make
-                 * (also used later in %f substitution) */
+                 * (also used later in '%g' substitution) */
                 parent_path = g_build_filename( dest, filename_no_archive_ext,
                                                 NULL );
                 gchar* parent_orig = g_strdup( parent_path );
@@ -2828,10 +2828,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 parent_path = g_strdup( "" );
                 create_parent = FALSE;
 
-                /* Making sure any '%F's turn into normal '%f's now
+                /* Making sure any '%G's turn into normal '%g's now
                  * they've played their role */
                 gchar* old_extract_cmd = extract_cmd;
-                extract_cmd = replace_string( extract_cmd, "%F", "%f",
+                extract_cmd = replace_string( extract_cmd, "%G", "%g",
                                                FALSE );
                 g_free( old_extract_cmd );
             }
@@ -2841,7 +2841,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             /* Singular file extraction target (e.g. stdout-redirected
              * gzip) */
-            if (g_strstr_len( extract_cmd, -1, "%f" ))
+            if (g_strstr_len( extract_cmd, -1, "%g" ))
             {
                 /* Creating extraction target, taking into account whether
                  * a parent directory has been created or not - target is
@@ -2867,7 +2867,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 // Quoting and substituting command
                 gchar* extract_target_quote = bash_quote( extract_target );
                 gchar* old_extract_cmd = extract_cmd;
-                extract_cmd = replace_string( extract_cmd, "%f",
+                extract_cmd = replace_string( extract_cmd, "%g",
                                               extract_target_quote, FALSE );
                 g_free( extract_target_quote );
                 g_free( old_extract_cmd );
@@ -3365,9 +3365,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-7z-compressed" );
         set->x = g_strdup( ".7z" );
-        set->y = g_strdup( "+\"$(which 7za || echo 7zr)\" a %o %F" );  // compress command
-        set->z = g_strdup( "+\"$(which 7za || echo 7zr)\" x %o" );     // extract command
-        set->context = g_strdup( "+\"$(which 7za || echo 7zr)\" l %o" );  // list command
+        set->y = g_strdup( "+\"$(which 7za || echo 7zr)\" a %o %N" );  // compress command
+        set->z = g_strdup( "+\"$(which 7za || echo 7zr)\" x %x" );     // extract command
+        set->context = g_strdup( "+\"$(which 7za || echo 7zr)\" l %x" );  // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3388,9 +3388,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-gzip:application/x-gzpdf" );
         set->x = g_strdup( ".gz" );
-        set->y = g_strdup( "gzip -c %F > %O" );     // compress command
-        set->z = g_strdup( "gzip -cd %o > %F" );    // extract command
-        set->context = g_strdup( "+gunzip -l %o" );  // list command
+        set->y = g_strdup( "gzip -c %N > %O" );     // compress command
+        set->z = g_strdup( "gzip -cd %x > %G" );    // extract command
+        set->context = g_strdup( "+gunzip -l %x" );  // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3420,9 +3420,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-rar" );
         set->x = g_strdup( ".rar" );
-        set->y = g_strdup( "+rar a -r %o %F" );     // compress command
-        set->z = g_strdup( "+unrar -o- x %o" );     // extract command
-        set->context = g_strdup( "+unrar lt %o" );  // list command
+        set->y = g_strdup( "+rar a -r %o %N" );     // compress command
+        set->z = g_strdup( "+unrar -o- x %x" );     // extract command
+        set->context = g_strdup( "+unrar lt %x" );  // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3452,9 +3452,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-tar" );
         set->x = g_strdup( ".tar" );
-        set->y = g_strdup( "tar -cvf %o %F" );       // compress command
-        set->z = g_strdup( "tar -xvf %o" );          // extract command
-        set->context = g_strdup( "+tar -tvf %o" );   // list command
+        set->y = g_strdup( "tar -cvf %o %N" );       // compress command
+        set->z = g_strdup( "tar -xvf %x" );          // extract command
+        set->context = g_strdup( "+tar -tvf %x" );   // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3484,9 +3484,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-bzip-compressed-tar" );
         set->x = g_strdup( ".tar.bz2" );
-        set->y = g_strdup( "tar -cvjf %o %F" );       // compress command
-        set->z = g_strdup( "tar -xvjf %o" );          // extract command
-        set->context = g_strdup( "+tar -tvf %o" );    // list command
+        set->y = g_strdup( "tar -cvjf %o %N" );       // compress command
+        set->z = g_strdup( "tar -xvjf %x" );          // extract command
+        set->context = g_strdup( "+tar -tvf %x" );    // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3516,9 +3516,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-compressed-tar" );
         set->x = g_strdup( ".tar.gz" );
-        set->y = g_strdup( "tar -cvzf %o %F" );       // compress command
-        set->z = g_strdup( "tar -xvzf %o" );          // extract command
-        set->context = g_strdup( "+tar -tvf %o" );    // list command
+        set->y = g_strdup( "tar -cvzf %o %N" );       // compress command
+        set->z = g_strdup( "tar -xvzf %x" );          // extract command
+        set->context = g_strdup( "+tar -tvf %x" );    // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3548,9 +3548,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-xz-compressed-tar" );
         set->x = g_strdup( ".tar.xz" );
-        set->y = g_strdup( "tar -cvJf %o %F" );       // compress command
-        set->z = g_strdup( "tar -xvJf %o" );          // extract command
-        set->context = g_strdup( "+tar -tvf %o" );    // list command
+        set->y = g_strdup( "tar -cvJf %o %N" );       // compress command
+        set->z = g_strdup( "tar -xvJf %x" );          // extract command
+        set->context = g_strdup( "+tar -tvf %x" );    // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3580,9 +3580,9 @@ static void restore_defaults( GtkWidget* dlg )
         set->b = XSET_B_TRUE;
         set->s = g_strdup( "application/x-zip:application/zip" );
         set->x = g_strdup( ".zip" );
-        set->y = g_strdup( "+zip -r %o %F" );       // compress command
-        set->z = g_strdup( "+unzip %o" );           // extract command
-        set->context = g_strdup( "+unzip -l %o" );  // list command
+        set->y = g_strdup( "+zip -r %o %N" );       // compress command
+        set->z = g_strdup( "+unzip %x" );           // extract command
+        set->context = g_strdup( "+unzip -l %x" );  // list command
     }
 
     /* Archive handler list check is separate as the XSet may exist but
@@ -3794,8 +3794,8 @@ static gboolean validate_handler( GtkWidget* dlg )
             )
             ||
             (
-                !g_strstr_len( handler_compress, -1, "%f" ) &&
-                !g_strstr_len( handler_compress, -1, "%F" )
+                !g_strstr_len( handler_compress, -1, "%n" ) &&
+                !g_strstr_len( handler_compress, -1, "%N" )
             )
         )
         {
@@ -3806,14 +3806,14 @@ static gboolean validate_handler( GtkWidget* dlg )
                             "substitution variables should be in the"
                             " '%s' compression command:\n\n"
                             "One of the following:\n\n"
-                            "%%%%f: First selected file/directory to"
+                            "%%%%n: First selected file/directory to"
                             " archive\n"
-                            "%%%%F: All selected files/directories to"
+                            "%%%%N: All selected files/directories to"
                             " archive\n\n"
                             "and one of the following:\n\n"
                             "%%%%o: Resulting single archive\n"
                             "%%%%O: Resulting archive per source "
-                            "file/directory (see %%%%f/%%%%F)"),
+                            "file/directory (see %%%%n/%%%%N)"),
                             handler_name), NULL, NULL );
             gtk_widget_grab_focus( entry_handler_compress );
             return FALSE;
@@ -3823,7 +3823,7 @@ static gboolean validate_handler( GtkWidget* dlg )
     if (g_strcmp0( handler_extract, "" ) != 0 &&
         g_strcmp0( handler_extract, "+" ) != 0 &&
         (
-            !g_strstr_len( handler_extract, -1, "%o" )
+            !g_strstr_len( handler_extract, -1, "%x" )
         ))
     {
         /* Not all substitution characters are in place - warning
@@ -3835,7 +3835,7 @@ static gboolean validate_handler( GtkWidget* dlg )
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("The following "
                             "placeholders should be in the '%s' extraction"
-                            " command:\n\n%%%%o: "
+                            " command:\n\n%%%%x: "
                             "Archive to extract"),
                             handler_name), NULL, NULL );
         gtk_widget_grab_focus( entry_handler_extract );
@@ -3845,7 +3845,7 @@ static gboolean validate_handler( GtkWidget* dlg )
     if (g_strcmp0( handler_list, "" ) != 0 &&
         g_strcmp0( handler_list, "+" ) != 0 &&
         (
-            !g_strstr_len( handler_list, -1, "%o" )
+            !g_strstr_len( handler_list, -1, "%x" )
         ))
     {
         /* Not all substitution characters are in place  - warning
@@ -3857,7 +3857,7 @@ static gboolean validate_handler( GtkWidget* dlg )
                             dialog_title, NULL, FALSE,
                             g_strdup_printf(_("The following "
                             "placeholders should be in the '%s' list"
-                            " command:\n\n%%%%o: "
+                            " command:\n\n%%%%x: "
                             "Archive to list"),
                             handler_name), NULL, NULL );
         gtk_widget_grab_focus( entry_handler_list );
