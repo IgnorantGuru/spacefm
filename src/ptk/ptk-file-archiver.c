@@ -815,6 +815,29 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
              * handler has been removed */
             gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
             gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
+
+            /* Now that all are removed, the user needs sensitive widgets
+             * to be able to add a further handler */
+            gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_enabled ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_name ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_mime ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extension ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_compress ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extract ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_list ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_compress_term ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_extract_term ),
+                                      TRUE );
+            gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_list_term ),
+                                      TRUE );
         }
         else
         {
