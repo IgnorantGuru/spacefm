@@ -1321,10 +1321,6 @@ void ptk_file_archiver_config( PtkFileBrowser* file_browser )
                                                 GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( GTK_BUTTON( btn_defaults ), GTK_WIDGET ( btn_defaults_image ) );
     g_object_set_data( G_OBJECT( dlg ), "btn_defaults", GTK_BUTTON( btn_defaults ) );
-    g_object_set_data( G_OBJECT( dlg ), "btn_cancel",
-                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
-                                                GTK_STOCK_CANCEL,
-                                                GTK_RESPONSE_CANCEL ) );
     g_object_set_data( G_OBJECT( dlg ), "btn_ok",
                         gtk_dialog_add_button( GTK_DIALOG( dlg ),
                                                 GTK_STOCK_OK,
@@ -2493,8 +2489,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     // Checking if destination directory hasn't been specified
     if( !dest_dir )
     {
-        // It hasn't - generating dialog to ask user. Only dealing with
-        // user-writable contents if the user isn't root
+        /* It hasn't - generating dialog to ask user. Only dealing with
+         * user-writable contents if the user isn't root */
         dlg = gtk_file_chooser_dialog_new( _("Extract To"),
                                 dlgparent? GTK_WINDOW( dlgparent ) : NULL,
                                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
@@ -2549,7 +2545,7 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             g_free( str );
         }
 
-        // saving dialog dimensions
+        // Saving dialog dimensions
         GtkAllocation allocation;
         gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
         width = allocation.width;
