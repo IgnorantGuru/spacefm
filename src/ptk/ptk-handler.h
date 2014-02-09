@@ -2,7 +2,7 @@
  * SpaceFM ptk-handler.h
  * 
  * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
- * Copyright (C) 2014 OmegaPhil <omegaphil@gmail.com>
+ * Copyright (C) 2013-2014 OmegaPhil <OmegaPhil+SpaceFM@gmail.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
  * 
  * License: See COPYING file
