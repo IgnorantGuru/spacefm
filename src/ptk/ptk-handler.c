@@ -31,6 +31,13 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
+const char* handler_prefix[] =
+{
+    "arctype_",
+    "handfs_",
+    "handnet_"
+};
+
 typedef struct _Handler
 {
     const char* xset_name;
@@ -46,117 +53,86 @@ typedef struct _Handler
  * existing users see the new handler. */
 /*igcr extensions are case-sensitive? */
 const Handler handlers_arc[]=
+{
     {
-        {
-            "arctype_7z",
-            "7-Zip",
-            "application/x-7z-compressed",
-            ".7z",
-            "+\"$(which 7za || echo 7zr)\" a %o %N",
-            "+\"$(which 7za || echo 7zr)\" x %x",
-            "+\"$(which 7za || echo 7zr)\" l %x"
-        },
-        {
-            "arctype_gz",
-            "Gzip",
-            "application/x-gzip:application/x-gzpdf",
-            ".gz",
-            "gzip -c %N > %O",
-            "gzip -cd %x > %G",
-            "+gunzip -l %x"
-        },
-        {
-            "arctype_rar",
-            "RAR",
-            "application/x-rar",
-            ".rar",
-            "+rar a -r %o %N",
-            "+unrar -o- x %x",
-            "+unrar lt %x"
-        },
-        {
-            "arctype_tar",
-            "Tar",
-            "application/x-tar",
-            ".tar",
-            "tar -cvf %o %N",
-            "tar -xvf %x",
-            "+tar -tvf %x"
-        },
-        {
-            "arctype_tar_bz2",
-            "Tar bzip2",
-            "application/x-bzip-compressed-tar",
-            ".tar.bz2",
-            "tar -cvjf %o %N",
-            "tar -xvjf %x",
-            "+tar -tvf %x"
-        },
-        {
-            "arctype_tar_gz",
-            "Tar Gzip",
-            "application/x-compressed-tar",
-            ".tar.gz:.tgz",
-            "tar -cvzf %o %N",
-            "tar -xvzf %x",
-            "+tar -tvf %x"
-        },
-        {
-            "arctype_tar_xz",
-            "Tar xz",
-            "application/x-xz-compressed-tar",
-            ".tar.xz:.txz",
-            "tar -cvJf %o %N",
-            "tar -xvJf %x",
-            "+tar -tvf %x"
-        },
-        {
-            "arctype_zip",
-            "Zip",
-            "application/x-zip:application/zip",
-            ".zip",
-            "+zip -r %o %N",
-            "+unzip %x",
-            "+unzip -l %x"
-        }
-    };
+        "arctype_7z",
+        "7-Zip",
+        "application/x-7z-compressed",
+        ".7z",
+        "+\"$(which 7za || echo 7zr)\" a %o %N",
+        "+\"$(which 7za || echo 7zr)\" x %x",
+        "+\"$(which 7za || echo 7zr)\" l %x"
+    },
+    {
+        "arctype_gz",
+        "Gzip",
+        "application/x-gzip:application/x-gzpdf",
+        ".gz",
+        "gzip -c %N > %O",
+        "gzip -cd %x > %G",
+        "+gunzip -l %x"
+    },
+    {
+        "arctype_rar",
+        "RAR",
+        "application/x-rar",
+        ".rar",
+        "+rar a -r %o %N",
+        "+unrar -o- x %x",
+        "+unrar lt %x"
+    },
+    {
+        "arctype_tar",
+        "Tar",
+        "application/x-tar",
+        ".tar",
+        "tar -cvf %o %N",
+        "tar -xvf %x",
+        "+tar -tvf %x"
+    },
+    {
+        "arctype_tar_bz2",
+        "Tar bzip2",
+        "application/x-bzip-compressed-tar",
+        ".tar.bz2",
+        "tar -cvjf %o %N",
+        "tar -xvjf %x",
+        "+tar -tvf %x"
+    },
+    {
+        "arctype_tar_gz",
+        "Tar Gzip",
+        "application/x-compressed-tar",
+        ".tar.gz:.tgz",
+        "tar -cvzf %o %N",
+        "tar -xvzf %x",
+        "+tar -tvf %x"
+    },
+    {
+        "arctype_tar_xz",
+        "Tar xz",
+        "application/x-xz-compressed-tar",
+        ".tar.xz:.txz",
+        "tar -cvJf %o %N",
+        "tar -xvJf %x",
+        "+tar -tvf %x"
+    },
+    {
+        "arctype_zip",
+        "Zip",
+        "application/x-zip:application/zip",
+        ".zip",
+        "+zip -r %o %N",
+        "+unzip %x",
+        "+unzip -l %x"
+    }
+};
 
 // Function prototypes
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data );
-static void restore_defaults( GtkWidget* dlg );
+static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg );
-
-#if 0
-static void reset_default( int mode, XSet* set )
-{   // reset individual handler
-    int i;
-    
-    if ( mode == HANDLER_MODE_ARC )
-        const Handler handlers[] = *handlers_arc;
-    /*else if ( mode == HANDLER_MODE_FS )
-        handlers = handlers_fs;
-    else if  ( mode == HANDLER_MODE_NET )
-        handlers = handlers_net; */
-    else
-        return;
-    
-    for ( i = 0; i < G_N_ELEMENTS( handlers ); i++ )
-    {
-        if ( !g_strcmp0( set->name, handlers[i]->xset_name ) )
-        {
-            string_copy_free( &set->menu_label, handlers[i]->handler_name );
-            string_copy_free( &set->s, handlers[i]->type );
-            string_copy_free( &set->x, handlers[i]->ext );
-            string_copy_free( &set->y, handlers[i]->mount_cmd );      // archive compress
-            string_copy_free( &set->z, handlers[i]->unmount_cmd );    // archive extract
-            string_copy_free( &set->context, handlers[i]->show_cmd ); // archive list
-            set->b = XSET_B_TRUE;
-            break;
-        }
-    }
-}
-#endif
 
 void ptk_handler_reset_defaults_all( int mode, gboolean overwrite,
                                                gboolean add_missing )
@@ -260,6 +236,8 @@ static void config_load_handler_settings( XSet* handler_xset,
                                           gchar* handler_xset_name,
                                           GtkWidget* dlg )
 {
+    int mode = HANDLER_MODE_ARC;  // will be passed or set data
+
     // Fetching actual xset if only the name has been passed
     if ( !handler_xset )
         handler_xset = xset_get( handler_xset_name );
@@ -292,12 +270,16 @@ static void config_load_handler_settings( XSet* handler_xset,
                                         "btn_remove" );
     GtkWidget* btn_apply = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_apply" );
+    GtkWidget* btn_defaults0 = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_defaults0" );
 
     /* At this point a handler exists, so making remove and apply buttons
      * sensitive as well as the enabled checkbutton */
     gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), TRUE );
     gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), TRUE );
     gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_enabled ), TRUE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_defaults0 ),
+                g_str_has_prefix( handler_xset->name, handler_prefix[mode] ) );
 
     // Configuring widgets with handler settings. Only name, MIME and
     // extension warrant a warning
@@ -421,10 +403,13 @@ static void config_unload_handler_settings( GtkWidget* dlg )
                                         "btn_remove" );
     GtkWidget* btn_apply = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_apply" );
+    GtkWidget* btn_defaults0 = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "btn_defaults0" );
 
     // Disabling main change buttons
     gtk_widget_set_sensitive( GTK_WIDGET( btn_remove ), FALSE );
     gtk_widget_set_sensitive( GTK_WIDGET( btn_apply ), FALSE );
+    gtk_widget_set_sensitive( GTK_WIDGET( btn_defaults0 ), FALSE );
 
     // Unchecking handler
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
@@ -1053,21 +1038,102 @@ static void on_configure_row_activated( GtkTreeView* view,
     gtk_widget_grab_focus( entry_handler_name );*/
 }
 
-static void restore_defaults( GtkWidget* dlg )
+static void restore_defaults( GtkWidget* dlg, gboolean all )
 {
-    int response = xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
-                        _("Restore Default Handlers"), NULL,
-                        GTK_BUTTONS_YES_NO, _("Missing default handlers will be restored.\n\nAlso OVERWRITE EXISTING default handlers?"),
-                        NULL, NULL);
+    int mode = HANDLER_MODE_ARC;  // will be passed
 
-    ptk_handler_reset_defaults_all( HANDLER_MODE_ARC,
-                                        response == GTK_RESPONSE_YES, TRUE );
+    if ( all )
+    {
+        int response = xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                            _("Restore Default Handlers"), NULL,
+                            GTK_BUTTONS_YES_NO, _("Missing default handlers will be restored.\n\nAlso OVERWRITE EXISTING default handlers?"),
+                            NULL, NULL);
+        if ( response != GTK_RESPONSE_YES && response != GTK_RESPONSE_NO )
+            // dialog was closed with no button pressed - cancel
+            return;
+        ptk_handler_reset_defaults_all( HANDLER_MODE_ARC,
+                                            response == GTK_RESPONSE_YES, TRUE );
 
-    /* Reset archive handlers list (this also selects
-     * the first handler and therefore populates the handler widgets) */
-    GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
-    gtk_list_store_clear( GTK_LIST_STORE( list ) );
-    populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
+        /* Reset archive handlers list (this also selects
+         * the first handler and therefore populates the handler widgets) */
+        GtkListStore* list = (GtkListStore*)g_object_get_data( G_OBJECT( dlg ), "list" );
+        gtk_list_store_clear( GTK_LIST_STORE( list ) );
+        populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
+    }
+    else
+    {
+        // Fetching the model from the view
+        GtkTreeView* view_handlers = (GtkTreeView*)g_object_get_data( G_OBJECT( dlg ),
+                                                "view_handlers" );
+
+        // Fetching selection from treeview
+        GtkTreeSelection* selection;
+        selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
+        
+        // Exiting if no handler is selected
+        GtkTreeIter it;
+        GtkTreeModel* model;
+        if ( !gtk_tree_selection_get_selected( selection, &model, &it ) )
+            return;
+
+        gchar* xset_name;
+        gtk_tree_model_get( model, &it,
+                            COL_XSET_NAME, &xset_name,
+                            -1 );
+        // a default handler is selected?
+        if ( !( xset_name &&
+                        g_str_has_prefix( xset_name, handler_prefix[mode] ) ) )
+        {
+            g_free( xset_name );
+            return;
+        }
+        
+        // get default handler
+        int i, nelements;
+        const Handler* handler = NULL;
+
+        if ( mode == HANDLER_MODE_ARC )
+            nelements = G_N_ELEMENTS( handlers_arc );
+        /*else if ( mode == HANDLER_MODE_FS )
+        else if  ( mode == HANDLER_MODE_NET ) */
+        else
+            return;
+            
+        gboolean found_handler = FALSE;
+        for ( i = 0; i < nelements; i++ )
+        {
+            if ( mode == HANDLER_MODE_ARC )
+                handler = &handlers_arc[i];
+            /*else if ( mode == HANDLER_MODE_FS )
+                handler = &handlers_fs[i];
+            else if ( mode == HANDLER_MODE_NET )
+                handler = &handlers_net[i]; */
+            if ( !g_strcmp0( handler->xset_name, xset_name ) )
+            {
+                found_handler = TRUE;
+                break;
+            }
+        }
+        g_free( xset_name );
+        if ( !found_handler )
+            return;
+        
+        // create fake xset
+        XSet* set = g_slice_new( XSet );
+        set->name = (char*)handler->xset_name;
+        set->menu_label = (char*)handler->handler_name;
+        set->s = (char*)handler->type;
+        set->x = (char*)handler->ext;
+        set->y = (char*)handler->mount_cmd;
+        set->z = (char*)handler->unmount_cmd;
+        set->context = (char*)handler->show_cmd;
+        set->b = XSET_B_TRUE;
+
+        // show fake xset values
+        config_load_handler_settings( set, NULL, dlg );
+
+        g_slice_free( XSet, set );
+    }
 }
 
 static gboolean validate_handler( GtkWidget* dlg )
@@ -1408,15 +1474,22 @@ void ptk_handler_show_config( PtkFileBrowser* file_browser )
     // Adding standard buttons and saving references in the dialog
     // 'Restore defaults' button has custom text but a stock image
     GtkButton* btn_defaults = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( dlg ),
-                                                _("Re_store Defaults"),
+                                                _("All De_faults"),
                                                 GTK_RESPONSE_NONE ) );
-    GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_CLEAR",
+    GtkWidget* btn_defaults_image = xset_get_image( "GTK_STOCK_REVERT_TO_SAVED",
                                                 GTK_ICON_SIZE_BUTTON );
     gtk_button_set_image( GTK_BUTTON( btn_defaults ), GTK_WIDGET ( btn_defaults_image ) );
-    g_object_set_data( G_OBJECT( dlg ), "btn_defaults", GTK_BUTTON( btn_defaults ) );
+    //g_object_set_data( G_OBJECT( dlg ), "btn_defaults", GTK_BUTTON( btn_defaults ) );
+    GtkButton* btn_defaults0 = GTK_BUTTON( gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                _("Defa_ults"),
+                                                GTK_RESPONSE_NO ) );
+    GtkWidget* btn_defaults_image0 = xset_get_image( "GTK_STOCK_REVERT_TO_SAVED",
+                                                GTK_ICON_SIZE_BUTTON );
+    gtk_button_set_image( GTK_BUTTON( btn_defaults0 ), GTK_WIDGET ( btn_defaults_image0 ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_defaults0", GTK_BUTTON( btn_defaults0 ) );
     g_object_set_data( G_OBJECT( dlg ), "btn_ok",
                         gtk_dialog_add_button( GTK_DIALOG( dlg ),
-                                                GTK_STOCK_OK,
+                                                GTK_STOCK_CLOSE,
                                                 GTK_RESPONSE_OK ) );
 
     // Generating left-hand side of dialog
@@ -1712,7 +1785,12 @@ void ptk_handler_show_config( PtkFileBrowser* file_browser )
         else if ( response == GTK_RESPONSE_NONE )
         {
             // Restore defaults requested
-            restore_defaults( GTK_WIDGET( dlg ) );
+            restore_defaults( GTK_WIDGET( dlg ), TRUE );
+        }
+        else if ( response == GTK_RESPONSE_NO )
+        {
+            // Restore defaults requested
+            restore_defaults( GTK_WIDGET( dlg ), FALSE );
         }
         else
             break;
