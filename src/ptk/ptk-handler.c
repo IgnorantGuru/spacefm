@@ -446,6 +446,8 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     // Fetching available archive handlers (literally gets member s from
     // the xset) - user-defined order has already been set
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
+    if ( !archive_handlers_s )
+        return;
 /*igcr copying all these strings is inefficient, just need to parse */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
@@ -485,6 +487,7 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
+    int i;
     const char* dialog_title = _("Archive Handlers");
 
     // Fetching widgets and handler details
@@ -745,34 +748,38 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
  * may == NULL   should confirm !NULL before access  - potential segfault on for loop */
 /*igcr also inefficient to copy all these strings  - although may be fast
  * enough for this function - could use strstr to find deleted handler */
-        gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+        gchar** archive_handlers = archive_handlers_s ? 
+                                   g_strsplit( archive_handlers_s, " ", -1 ) :
+                                   NULL;
         gchar* new_archive_handlers_s = g_strdup( "" );
         gchar* new_archive_handlers_s_temp;
 
         // Looping for handlers (NULL-terminated list)
-        int i;
-        for (i = 0; archive_handlers[i] != NULL; ++i)
+        if ( archive_handlers )
         {
-            // Appending to new archive handlers list when it isnt the
-            // deleted handler - remember that archive handlers are
-            // referred to by their xset names, not handler names!!
-            if (g_strcmp0( archive_handlers[i], xset_name ) != 0)
+            for (i = 0; archive_handlers[i] != NULL; ++i)
             {
-                // Debug code
-                //g_message("archive_handlers[i]: %s\nxset_name: %s",
-                //                        archive_handlers[i], xset_name);
+                // Appending to new archive handlers list when it isnt the
+                // deleted handler - remember that archive handlers are
+                // referred to by their xset names, not handler names!!
+                if (g_strcmp0( archive_handlers[i], xset_name ) != 0)
+                {
+                    // Debug code
+                    //g_message("archive_handlers[i]: %s\nxset_name: %s",
+                    //                        archive_handlers[i], xset_name);
 
-                new_archive_handlers_s_temp = new_archive_handlers_s;
-                if (g_strcmp0( new_archive_handlers_s, "" ) == 0)
-                {
-                    new_archive_handlers_s = g_strdup( archive_handlers[i] );
+                    new_archive_handlers_s_temp = new_archive_handlers_s;
+                    if (g_strcmp0( new_archive_handlers_s, "" ) == 0)
+                    {
+                        new_archive_handlers_s = g_strdup( archive_handlers[i] );
+                    }
+                    else
+                    {
+                        new_archive_handlers_s = g_strdup_printf( "%s %s",
+                                    new_archive_handlers_s, archive_handlers[i] );
+                    }
+                    g_free(new_archive_handlers_s_temp);
                 }
-                else
-                {
-                    new_archive_handlers_s = g_strdup_printf( "%s %s",
-                                new_archive_handlers_s, archive_handlers[i] );
-                }
-                g_free(new_archive_handlers_s_temp);
             }
         }
 

@@ -41,7 +41,7 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     // Function deals with the possibility that a handler is responsible
     // for multiple MIME types and therefore file extensions. Functions
     // like archive creation need only one extension
-    if (handler_xset)
+    if (handler_xset && handler_xset->x)
     {
         // Obtaining first handled extension
 /*igcr very inefficient to copy all these strings */
@@ -64,6 +64,7 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
 {
     gboolean format_supported = FALSE, mime_or_extension_support = FALSE;
     gchar *ext = NULL;
+    int i;
 
     /* If one was passed, ensuring an extension starts with '.' (
      * get_name_extension does not provide this) */
@@ -82,25 +83,31 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
  * function in particular needs to be fast because it's used by menus, so this
  * should be rewritten to parse the strings without copying.  (memory writes
  * are slower than reads) */
-        gchar** mime_types = g_strsplit( handler_xset->s, ":", -1 );
-        gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
+        gchar** mime_types = handler_xset->s ? 
+                                    g_strsplit( handler_xset->s, ":", -1 ) :
+                                    NULL;
+        gchar** extensions = handler_xset->x ?
+                                    g_strsplit( handler_xset->x, ":", -1 ) :
+                                    NULL;
 
         // Looping for handled MIME types (NULL-terminated list)
-        int i;
-        for (i = 0; mime_types[i] != NULL; ++i)
+        if ( mime_types )
         {
-            // Checking to see if the handler can deal with the
-            // current MIME type
-            if (g_strcmp0( mime_types[i], type ) == 0)
+            for (i = 0; mime_types[i] != NULL; ++i)
             {
-                // It can - flagging and breaking
-                mime_or_extension_support = TRUE;
-                break;
+                // Checking to see if the handler can deal with the
+                // current MIME type
+                if (g_strcmp0( mime_types[i], type ) == 0)
+                {
+                    // It can - flagging and breaking
+                    mime_or_extension_support = TRUE;
+                    break;
+                }
             }
         }
 
         // Looping for handled extensions if mime type wasn't supported
-        if (!mime_or_extension_support)
+        if (extensions && !mime_or_extension_support)
         {
             for (i = 0; extensions[i] != NULL; ++i)
             {
@@ -1071,7 +1078,9 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
 /*igcr these strings don't need to be copied for parse  - maybe ok here */
-    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+    gchar** archive_handlers = archive_handlers_s ?
+                               g_strsplit( archive_handlers_s, " ", -1 ) :
+                               NULL;
     XSet* handler_xset;
 
     /* Setting desired archive operation and keeping in terminal while
@@ -1092,21 +1101,24 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                    FALSE, &extension );
 
         // Looping for handlers (NULL-terminated list)
-        for (i = 0; archive_handlers[i] != NULL; ++i)
+        if ( archive_handlers )
         {
-            // Fetching handler
-/*igcr probably should validate with xset_is */
-            handler_xset = xset_get( archive_handlers[i] );
-
-            // Checking to see if handler is enabled and can cope with
-            // extraction/listing
-            if(archive_handler_is_format_supported( handler_xset, type,
-                                                    extension,
-                                                    archive_operation ))
+            for (i = 0; archive_handlers[i] != NULL; ++i)
             {
-                // It can - setting flag and leaving loop
-                format_supported = TRUE;
-                break;
+                // Fetching handler
+    /*igcr probably should validate with xset_is */
+                handler_xset = xset_get( archive_handlers[i] );
+
+                // Checking to see if handler is enabled and can cope with
+                // extraction/listing
+                if(archive_handler_is_format_supported( handler_xset, type,
+                                                        extension,
+                                                        archive_operation ))
+                {
+                    // It can - setting flag and leaving loop
+                    format_supported = TRUE;
+                    break;
+                }
             }
         }
 
@@ -1157,23 +1169,28 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
 /*igcr shouldn't need to copy strings to parse */
-            gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
-            for (i = 0; extensions[i] != NULL; ++i)
+            gchar** extensions = handler_xset->x ?
+                                 g_strsplit( handler_xset->x, ":", -1 ) :
+                                 NULL;
+            if ( extensions )
             {
-                // Debug code
-                //g_message( "extensions[i]: %s", extensions[i]);
-
-                // Checking if the current extension is being used
-/*igcr dot handled correctly? */
-                if (g_str_has_suffix( filename, extensions[i] ))
+                for (i = 0; extensions[i] != NULL; ++i)
                 {
-                    // It is - determining filename without extension
-                    // and breaking
-                    n = strlen( filename ) - strlen( extensions[i] );
-                    filename[n] = '\0';
-                    filename_no_archive_ext = g_strdup( filename );
-                    filename[n] = '.';
-                    break;
+                    // Debug code
+                    //g_message( "extensions[i]: %s", extensions[i]);
+
+                    // Checking if the current extension is being used
+/*igcr dot handled correctly? */
+                    if (g_str_has_suffix( filename, extensions[i] ))
+                    {
+                        // It is - determining filename without extension
+                        // and breaking
+                        n = strlen( filename ) - strlen( extensions[i] );
+                        filename[n] = '\0';
+                        filename_no_archive_ext = g_strdup( filename );
+                        filename[n] = '.';
+                        break;
+                    }
                 }
             }
 
@@ -1420,7 +1437,11 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
 
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
+    if ( !archive_handlers_s )
+        return FALSE;
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+    if ( !archive_handlers )
+        return FALSE;
 
     // Debug code
     /*g_message("archive_handlers_s: %s\nextension: %s", archive_handlers_s,
