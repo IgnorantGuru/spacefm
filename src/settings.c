@@ -1839,6 +1839,8 @@ void xset_free_all()
             g_free( set->prev );
         if ( set->line )
             g_free( set->line );
+        if ( set->context )
+            g_free( set->context );
         if ( set->plugin )
         {
             if ( set->plug_dir )
@@ -1892,6 +1894,8 @@ void xset_free( XSet* set )
         g_free( set->prev );
     if ( set->line )
         g_free( set->line );
+    if ( set->context )
+        g_free( set->context );
     if ( set->plugin )
     {
         if ( set->plug_dir )
