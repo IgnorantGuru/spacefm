@@ -655,8 +655,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     if ( widget == btn_add )
     {
         // Exiting if there is no handler to add
-/*igcr don't use strcmp <= , just == 0 for match, or test for null character in [0] */
-        if ( !handler_name[0] )
+        if ( !( handler_name && handler_name[0] ) )
             goto _clean_exit;
 
         // Adding new handler as a copy of the current active handler
@@ -1981,7 +1980,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
 
     // Dealing with possibility of no handlers
-    if (g_strcmp0( archive_handlers_s, "" ) == 0)
+    if (g_strcmp0( archive_handlers_s, "" ) <= 0)
     {
         /* Telling user to ensure handlers are available and bringing
          * up configuration */
@@ -2218,7 +2217,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
              * Checking to see if the archive handler compression command
              * has been deleted or has invalid placeholders - not
              * required to only have one of the particular type */
-            if (g_strcmp0( command, "" ) == 0 ||
+            if (g_strcmp0( command, "" ) <= 0 ||
                 (
                     !g_strstr_len( command, -1, "%o" ) &&
                     !g_strstr_len( command, -1, "%O" )
@@ -2426,7 +2425,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                     str = s1;
                     desc = bash_quote( (char *) vfs_file_info_get_name(
                                                     (VFSFileInfo*) l->data ) );
-                    if (g_strcmp0( s1, "" ) == 0)
+                    if (g_strcmp0( s1, "" ) <= 0)
                     {
                         s1 = g_strdup( desc );
                     }
@@ -3605,7 +3604,7 @@ static void restore_defaults( GtkWidget* dlg )
     // Updating list of archive handlers
     if (handlers_to_add)
     {
-        if (g_strcmp0( handlers, "" ) == 0)
+        if (g_strcmp0( handlers, "" ) <= 0)
             handlers = handlers_to_add;
         else
         {
@@ -3701,7 +3700,7 @@ static gboolean validate_handler( GtkWidget* dlg )
      * be modified or stored
      * Note that archive creation also allows for a command to be
      * saved */
-    if (g_strcmp0( handler_name, "" ) == 0)
+    if (g_strcmp0( handler_name, "" ) <= 0)
     {
         /* Handler name not set - warning user and exiting. Note
          * that the created dialog does not have an icon set */
@@ -3714,8 +3713,8 @@ static gboolean validate_handler( GtkWidget* dlg )
     }
 
     // Empty MIME is allowed if extension is filled
-    if (g_strcmp0( handler_mime, "" ) == 0 &&
-        g_strcmp0( handler_extension, "" ) == 0)
+    if (g_strcmp0( handler_mime, "" ) <= 0 &&
+        g_strcmp0( handler_extension, "" ) <= 0)
     {
         /* Handler MIME not set - warning user and exiting. Note
          * that the created dialog does not have an icon set */
@@ -3730,7 +3729,7 @@ static gboolean validate_handler( GtkWidget* dlg )
         return FALSE;
     }
     if (g_strstr_len( handler_mime, -1, " " ) &&
-        g_strcmp0( handler_extension, "" ) == 0)
+        g_strcmp0( handler_extension, "" ) <= 0)
     {
         /* Handler MIME contains a space - warning user and exiting.
          * Note that the created dialog does not have an icon set */
@@ -3749,12 +3748,12 @@ static gboolean validate_handler( GtkWidget* dlg )
      * anything has been entered it must be valid */
     if (
         (
-            g_strcmp0( handler_extension, "" ) == 0 &&
-            g_strcmp0( handler_mime, "" ) == 0
+            g_strcmp0( handler_extension, "" ) <= 0 &&
+            g_strcmp0( handler_mime, "" ) <= 0
         )
         ||
         (
-            g_strcmp0( handler_extension, "" ) != 0 &&
+            g_strcmp0( handler_extension, "" ) > 0 &&
             handler_extension && *handler_extension != '.'
         )
     )
