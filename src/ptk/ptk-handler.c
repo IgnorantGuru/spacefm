@@ -185,8 +185,11 @@ void ptk_handler_reset_defaults_all( int mode, gboolean overwrite,
         list = g_strdup( "" );
         overwrite = add_missing = TRUE;
     }
-    if ( !overwrite && !add_missing )
+    else if ( !overwrite && !add_missing )
+    {
+        g_free( list );
         return;
+    }
     
     for ( i = 0; i < nelements; i++ )
     {
@@ -225,7 +228,8 @@ void ptk_handler_reset_defaults_all( int mode, gboolean overwrite,
             }
         }
     }
-    string_copy_free( &set_conf->s, list );
+    g_free( set_conf->s );
+    set_conf->s = list;
 }
 
 static XSet* add_new_arctype()
