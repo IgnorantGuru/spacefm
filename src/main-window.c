@@ -1163,9 +1163,8 @@ void update_window_icon( GtkWindow* window, GtkIconTheme* theme )
         // An error occured on loading the icon
         fprintf( stderr, "spacefm: Unable to load the window icon "
         "'%s' in - update_window_icon - %s\n", name, error->message);
+        g_error_free( error );
     }
-/*igcr info: was memory leak without g_error_free */
-    g_error_free( error );
 }
 
 static void update_window_icons( GtkIconTheme* theme, GtkWindow* window )

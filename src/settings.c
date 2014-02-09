@@ -8810,9 +8810,8 @@ void xset_set_window_icon( GtkWindow* win )
         // An error occured on loading the icon
         fprintf( stderr, "spacefm: Unable to load the window icon "
         "'%s' in - xset_set_window_icon - %s\n", name, error->message);
+        g_error_free( error );
     }
-/*igcr info: was memory leak without g_error_free */
-    g_error_free( error );
 }
 
 char *replace_string( const char* orig, const char* str, const char* replace,

@@ -31,6 +31,7 @@
 #include "ptk-utils.h"
 #include "ptk-file-misc.h"
 #include "ptk-file-archiver.h"
+#include "ptk-handler.h"
 #include "ptk-clipboard.h"
 #include "ptk-app-chooser.h"
 #include "settings.h"  //MOD
@@ -1016,7 +1017,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 set->disable = TRUE;
             }
             
-            xset_set_cb( "arc_conf2", ptk_file_archiver_config, browser );
+            xset_set_cb( "arc_conf2", ptk_handler_show_config, browser );
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
@@ -3037,7 +3038,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
         else if ( !strcmp( xname, "conf" ) )
-            ptk_file_archiver_config( browser );
+            ptk_handler_show_config( browser );
     }
     else if ( g_str_has_prefix( set->name, "iso_" ) )
     {

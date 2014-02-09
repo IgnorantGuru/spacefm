@@ -1,13 +1,12 @@
 /*
-*  C Interface: ptk-file-archiver
-*
-* Description: 
-*
-*
-* Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM ptk-file-archiver.h
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2014 OmegaPhil <omegaphil@gmail.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
 
 #ifndef _PTK_FILE_ARCHIVER_H_
@@ -21,14 +20,13 @@
 
 G_BEGIN_DECLS
 
+
 // Archive operations enum
 enum {
     ARC_COMPRESS,
     ARC_EXTRACT,
     ARC_LIST
 };
-
-void ptk_file_archiver_config( PtkFileBrowser* file_browser );
 
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 											const char* cwd );
