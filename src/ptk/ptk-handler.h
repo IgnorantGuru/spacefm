@@ -20,12 +20,20 @@
 G_BEGIN_DECLS
 
 enum {
-    HAND_MOUNT,
-    HAND_UNMOUNT,
-    HAND_SHOW
+    HANDLER_MOUNT,
+    HANDLER_UNMOUNT,
+    HANDLER_SHOW
+};
+
+enum {
+    HANDLER_MODE_ARC,
+    HANDLER_MODE_FS,
+    HANDLER_MODE_NET
 };
 
 void ptk_handler_show_config( PtkFileBrowser* file_browser );
+void ptk_handler_reset_defaults_all( int mode, gboolean overwrite,
+                                               gboolean add_missing );
 
 
 G_END_DECLS
