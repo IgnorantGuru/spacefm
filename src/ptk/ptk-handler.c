@@ -12,6 +12,7 @@
 
 #include <glib/gi18n.h>
 #include <string.h>
+#include <fnmatch.h>
 
 #include "ptk-handler.h"
 #include "settings.h"
@@ -197,6 +198,36 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data );
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
+
+gboolean ptk_handler_test_list( const char* list, const char* val1,
+                                const char* val2, const char* val3 )
+{   /* test for the presence of val1, val2, or val3 in list, using
+    *  wildcards.  list is space or comma separated.  valN may == NULL. */
+    if ( !( list && list[0] ) || ( !val1 && !val2 && !val3 ) )
+        return FALSE;
+    
+    // get elements of list
+    gchar** elements = g_strsplit_set( list, " ,", -1 );
+    if ( !elements )
+        return FALSE;
+    
+    // test each element for match
+    int i;
+    for ( i = 0; elements[i]; i++ )
+    {
+        if ( !elements[i][0] )
+            continue;
+        if ( ( val1 && fnmatch( elements[i], val1, 0 ) == 0 ) ||
+             ( val2 && fnmatch( elements[i], val2, 0 ) == 0 ) ||
+             ( val3 && fnmatch( elements[i], val3, 0 ) == 0 ) )
+        {
+            g_strfreev( elements );
+            return TRUE;
+        }
+    }
+    g_strfreev( elements );
+    return FALSE;    
+}
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing )

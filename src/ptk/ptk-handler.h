@@ -34,6 +34,8 @@ enum {
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
+gboolean ptk_handler_test_list( const char* list, const char* val1,
+                                const char* val2, const char* val3 );
 
 
 G_END_DECLS
