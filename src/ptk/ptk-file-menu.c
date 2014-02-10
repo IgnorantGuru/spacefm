@@ -465,6 +465,11 @@ void on_archive_default( GtkMenuItem *menuitem, XSet* set )
     }
 }
 
+void on_archive_show_config( GtkMenuItem *menuitem, PtkFileMenu* data )
+{
+    ptk_handler_show_config( HANDLER_MODE_ARC, data->browser );
+}
+
 void on_hide_file( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     if ( data->browser )
@@ -1017,7 +1022,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 set->disable = TRUE;
             }
             
-            xset_set_cb( "arc_conf2", ptk_handler_show_config, browser );
+            xset_set_cb( "arc_conf2", on_archive_show_config, data );
             
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
@@ -3038,7 +3043,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
         else if ( !strcmp( xname, "conf" ) )
-            ptk_handler_show_config( browser );
+            on_archive_show_config( NULL, data );
     }
     else if ( g_str_has_prefix( set->name, "iso_" ) )
     {

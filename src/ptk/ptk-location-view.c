@@ -21,6 +21,7 @@
 #include "ptk-bookmarks.h"
 #include "ptk-utils.h"
 #include "ptk-file-browser.h"  //MOD
+#include "ptk-handler.h"
 #include "settings.h"  //MOD
 #include "vfs-volume.h"
 #include <gdk/gdkkeysyms.h>
@@ -2648,6 +2649,27 @@ static void on_automountlist( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view
     g_free( msg );
 }
 
+static void on_handler_show_config( GtkMenuItem* item, GtkWidget* view, XSet* set2 )
+{
+    XSet* set;
+    int mode;
+    
+    if ( !item )
+        set = set2;
+    else
+        set = (XSet*)g_object_get_data( G_OBJECT(item), "set" );
+
+    if ( !g_strcmp0( set->name, "dev_fs_cnf" ) )
+        mode = HANDLER_MODE_FS;
+    else if ( !g_strcmp0( set->name, "dev_net_cnf" ) )
+        mode = HANDLER_MODE_NET;
+    else
+        return;
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                                "file_browser" );
+    ptk_handler_show_config( mode, file_browser );
+}
+
 #endif
 
 void open_external_tab( const char* path )
@@ -2855,6 +2877,10 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
         update_names();
     else if ( !strcmp( set->name, "dev_menu_sync" ) )
         on_sync( NULL, vol, view );
+    else if ( !strcmp( set->name, "dev_fs_cnf" ) )
+        on_handler_show_config( NULL, view, set );
+    else if ( !strcmp( set->name, "dev_net_cnf" ) )
+        on_handler_show_config( NULL, view, set );
     else if ( !vol )
         return;
     else
@@ -3157,8 +3183,13 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         set = xset_get( "dev_exec_video" );
         set->disable = !auto_optical;
         
+        set = xset_set_cb( "dev_fs_cnf", on_handler_show_config, view );
+            xset_set_ob1( set, "set", set );
+        set = xset_set_cb( "dev_net_cnf", on_handler_show_config, view );
+            xset_set_ob1( set, "set", set );
+
         set = xset_get( "dev_menu_settings" );
-        menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
+        menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd dev_fs_cnf dev_net_cnf sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
         xset_set_set( set, "desc", menu_elements );
         g_free( menu_elements );
 
@@ -3510,7 +3541,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
     xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
 
     set = xset_get( "dev_menu_settings" );
-    char* desc = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd%s", file_browser ? " dev_newtab" : "" );
+    char* desc = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd dev_fs_cnf dev_net_cnf%s", file_browser ? " dev_newtab" : "" );
     xset_set_set( set, "desc", desc );
     g_free( desc );
 #endif

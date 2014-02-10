@@ -691,7 +691,9 @@ void load_settings( char* config_dir )
     }
     
     // add default handlers
-    ptk_handler_reset_defaults_all( HANDLER_MODE_ARC, FALSE, FALSE );
+    ptk_handler_add_defaults( HANDLER_MODE_ARC, FALSE, FALSE );
+    ptk_handler_add_defaults( HANDLER_MODE_FS, FALSE, FALSE );
+    ptk_handler_add_defaults( HANDLER_MODE_NET, FALSE, FALSE );
     
     // get root-protected settings
     read_root_settings();
@@ -9648,6 +9650,11 @@ void xset_defaults()
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-ucmd" );
+
+    set = xset_set( "dev_fs_cnf", "label", _("Filesystem Handlers") );
+    xset_set_set( set, "icon", "gtk-preferences" );
+    set = xset_set( "dev_net_cnf", "label", _("Network Handlers") );
+    xset_set_set( set, "icon", "gtk-preferences" );
 
     // dev icons
     set = xset_get( "sep_i1" );

@@ -113,6 +113,7 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
             {
                 // Checking to see if the handler can deal with the
                 // current extension
+/*igcr extensions are case-sensitive?  - wait on this until wildcards handled */
                 if (g_strcmp0( extensions[i], ext ) == 0)
                 {
                     // It can - flagging and breaking
@@ -431,7 +432,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                         "configured. You must add a handler before "
                         "creating an archive."),
                         NULL, NULL);
-        ptk_handler_show_config( file_browser );
+        ptk_handler_show_config( HANDLER_MODE_ARC, file_browser );
         return;
     }
 
@@ -717,7 +718,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
              * config dialog then exit, as this dialog would need to be
              * reconstructed if changes occur */
             gtk_widget_destroy( dlg );
-            ptk_handler_show_config( file_browser );
+            ptk_handler_show_config( HANDLER_MODE_ARC, file_browser );
             return;
         }
         else if ( res == GTK_RESPONSE_HELP )

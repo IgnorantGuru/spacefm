@@ -31,9 +31,9 @@ enum {
     HANDLER_MODE_NET
 };
 
-void ptk_handler_show_config( PtkFileBrowser* file_browser );
-void ptk_handler_reset_defaults_all( int mode, gboolean overwrite,
-                                               gboolean add_missing );
+void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
+void ptk_handler_add_defaults( int mode, gboolean overwrite,
+                                         gboolean add_missing );
 
 
 G_END_DECLS
