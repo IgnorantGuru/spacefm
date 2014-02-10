@@ -347,9 +347,9 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_widget_set_sensitive( GTK_WIDGET( btn_defaults0 ),
                 g_str_has_prefix( handler_xset->name, handler_prefix[mode] ) );
 
-    // Configuring widgets with handler settings. Only name, MIME and
-    // extension warrant a warning
-    // Commands are prefixed with '+' when they are ran in a terminal
+    /* Configuring widgets with handler settings. Only name, MIME and
+     * extension warrant a warning
+     * Commands are prefixed with '+' when they are ran in a terminal */
     gboolean check_value = handler_xset->b != XSET_B_TRUE ? FALSE : TRUE;
     int start;
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
@@ -363,15 +363,9 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
                                     handler_xset->x ?
                                     handler_xset->x : "" );
-/*igcr  all places below in this file where you use:
- *          gtk_entry_set_text( ..., g_strdup( ... ) )
- * and similar are memory leaks.  Don't use the g_strdup - set_text merely
- * copies the const string passed - see corrected example above.
- * Also, I didn't want the warnings above so removed them */
     if (!handler_xset->y)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                            g_strdup( "" ) );
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                         FALSE);
     }
@@ -380,22 +374,21 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->y[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                g_strdup( (handler_xset->y) + 1 ) );
+                                           (handler_xset->y) + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                g_strdup( handler_xset->y ) );
+                                           handler_xset->y );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             FALSE);
         }
     }
     if (!handler_xset->z)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                            g_strdup( "" ) );
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                         FALSE);
     }
@@ -404,22 +397,21 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->z[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                g_strdup( (handler_xset->z) + 1 ) );
+                                           (handler_xset->z) + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                g_strdup( handler_xset->z ) );
+                                handler_xset->z );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             FALSE);
         }
     }
     if (!handler_xset->context)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                            g_strdup( "" ) );
+        gtk_entry_set_text( GTK_ENTRY( entry_handler_list ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                         FALSE);
     }
@@ -428,14 +420,14 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->context[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                g_strdup( (handler_xset->context) + 1 ) );
+                                (handler_xset->context) + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                g_strdup( handler_xset->context ) );
+                                           handler_xset->context );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             FALSE);
         }
