@@ -1514,12 +1514,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
      * everything is a 'widget') - no buttons etc added as everything is
      * custom...
      * Extra NULL on the NULL-terminated list to placate an irrelevant
-     * compilation warning
-     * TODO: The below fails - file_browser->main_window is not a valid
-     * widget when this function is called in a normal fashion, it is
-     * when called via a keyboard shortcut. file_browser on its own
-     * reports as a valid widget, but only broken modal behaviour results
-     */
+     * compilation warning */
 /*igcr file_browser may be null if desktop use later accomodated */
     GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
