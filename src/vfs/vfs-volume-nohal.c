@@ -38,6 +38,7 @@
 #include <vfs-file-info.h>
 #include "ptk-file-task.h"
 #include "main-window.h"
+#include "ptk-handler.h"
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
@@ -47,7 +48,7 @@ static void vfs_volume_device_removed ( char* device_file );
 static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 void vfs_volume_special_unmounted( const char* device_file );
-void unmount_if_mounted( const char* device_file );
+void unmount_if_mounted( VFSVolume* vol );
 static void vfs_volume_clean();
 
 
@@ -3133,6 +3134,148 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
 }
 #endif
 
+char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
+                              const char* options, gboolean* run_in_terminal )
+{
+    char* dev_e;
+    char* id_e;
+    char* label_e;
+    char* str;
+    const char* handlers_list;
+    
+    // get handlers
+    if ( !( handlers_list = xset_get_s( mode == HANDLER_MODE_FS ?
+                                        "dev_fs_cnf" : "dev_net_cnf" ) ) )
+        return NULL;
+    gchar** handlers = g_strsplit( handlers_list, " ", 0 );
+    if ( !handlers )
+        return NULL;
+
+    if ( mode == HANDLER_MODE_FS )
+    {
+        // get device properties
+        dev_e = g_strconcat( "dev=", vol->device_file, NULL );
+        id_e = vol->udi && vol->udi[0] ?
+                                g_strconcat( "id=", vol->udi, NULL ) : NULL;
+        // change spaces in label to underscores for testing
+        label_e = vol->label && vol->label[0] ?
+                g_strdelimit( g_strconcat( "label=", vol->label, NULL ), " ", '_' )
+                : NULL;
+    }
+    
+    // test handlers
+    int i;
+    XSet* set;
+    gboolean found = FALSE;
+    for ( i = 0; handlers[i]; i++ )
+    {
+        if ( !handlers[i][0] || !( set = xset_is( handlers[i] ) ) ||
+                                set->b != XSET_B_TRUE /* disabled */ )
+            continue;
+        if ( mode == HANDLER_MODE_FS )
+        {
+            // test whitelist
+            if ( ptk_handler_val_in_list( set->s, vol->fs_type, dev_e, id_e,
+                                          label_e ) )
+            {
+                found = TRUE;
+                break;
+            }
+            // test blacklist
+            if ( ptk_handler_val_in_list( set->x, vol->fs_type, dev_e, id_e,
+                                          label_e ) )
+                break;
+        }
+        else //if ( mode == HANDLER_MODE_NET )
+        {
+            // test whitelist
+            if ( ptk_handler_val_in_list( set->s, NULL, NULL, NULL, NULL ) )
+            {
+                found = TRUE;
+                break;
+            }
+            // test blacklist
+            if ( ptk_handler_val_in_list( set->x, NULL, NULL, NULL, NULL ) )
+                break;            
+        }
+    }
+    if ( mode == HANDLER_MODE_FS )
+    {
+        g_free( dev_e );
+        g_free( id_e );
+        g_free( label_e );
+    }
+    g_strfreev( handlers );
+    if ( !found )
+        return NULL;
+
+    // get command for action
+    char* command;
+    gboolean terminal = FALSE;
+    if ( action == HANDLER_MOUNT )
+        command = g_strdup( set->y );
+    else if ( action == HANDLER_UNMOUNT )
+        command = g_strdup( set->x );
+    else if ( action == HANDLER_INFO )
+        command = g_strdup( set->context );
+    else
+        command = NULL;
+    if ( !command )
+        return NULL;
+    if ( command[0] == '+' )
+    {
+        terminal = TRUE;
+        str = command;
+        command = g_strdup( command + 1 );
+        g_free( str );
+    }
+    
+    // test if command contains only comments and whitespace
+/*igtodo decode multiline here */
+    gchar** lines = g_strsplit( command, "\n", 0 );
+    if ( !lines )
+    {
+        g_free( command );
+        return NULL;
+    }
+    found = FALSE;
+    for ( i = 0; lines[i]; i++ )
+    {
+        g_strstrip( lines[i] );
+        if ( lines[i][0] != '\0' && lines[i][0] != '#' )
+        {
+            found = TRUE;
+            break;
+        }
+    }
+    g_strfreev( lines );
+    if ( !found )
+    {
+        // no non-empty command, so return NULL for automatic command
+        g_free( command );
+        return NULL;
+    }
+
+    // replace sub vars
+    if ( mode == HANDLER_MODE_FS )
+    {
+        str = command;
+        command = replace_string( command, "%v", vol->device_file, FALSE );
+        g_free( str );
+        if ( action == HANDLER_MOUNT && options && options[0] )
+        {
+            str = command;
+            command = replace_string( command, "%o", options, FALSE );
+            g_free( str );
+        }
+        str = command;
+        command = replace_line_subs( command );
+        g_free( str );
+    }
+    *run_in_terminal = terminal;
+    return command;
+}
+
 gboolean vfs_volume_is_automount( VFSVolume* vol )
 {   // determine if volume should be automounted or auto-unmounted
     int i, j;
@@ -3229,12 +3372,15 @@ char* vfs_volume_device_info( const char* device_file )
     return info;
 }
 
-char* vfs_volume_device_mount_cmd( const char* device_file, const char* options )
+char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
+                                   gboolean* run_in_terminal )
 {
     char* command = NULL;
     char* s1;
-    const char* cmd = xset_get_s( "dev_mount_cmd" );
-    if ( !cmd || ( cmd && cmd[0] == '\0' ) )
+    *run_in_terminal = FALSE;
+    command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
+                                      vol, NULL, run_in_terminal );
+    if ( !command )
     {
         // discovery
         if ( s1 = g_find_program_in_path( "udevil" ) )
@@ -3242,82 +3388,72 @@ char* vfs_volume_device_mount_cmd( const char* device_file, const char* options 
             // udevil
             if ( options && options[0] != '\0' )
                 command = g_strdup_printf( "%s mount %s -o '%s'",
-                                            s1, device_file, options );
+                                            s1, vol->device_file, options );
             else
                 command = g_strdup_printf( "%s mount %s",
-                                            s1, device_file );
+                                            s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "pmount" ) )
         {
             // pmount
-            command = g_strdup_printf( "%s %s", s1, device_file );
+            command = g_strdup_printf( "%s %s", s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "udisksctl" ) )
         {
             // udisks2
             if ( options && options[0] != '\0' )
                 command = g_strdup_printf( "%s mount -b %s -o '%s'",
-                                            s1, device_file, options );
+                                            s1, vol->device_file, options );
             else
                 command = g_strdup_printf( "%s mount -b %s",
-                                            s1, device_file );
+                                            s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "udisks" ) )
         {
             // udisks1
             if ( options && options[0] != '\0' )
                 command = g_strdup_printf( "%s --mount %s --mount-options '%s'",
-                                        s1, device_file, options );
+                                        s1, vol->device_file, options );
             else
                 command = g_strdup_printf( "%s --mount %s",
-                                        s1, device_file );
+                                        s1, vol->device_file );
         }
-        g_free( s1 );
-    }
-    else
-    {
-        // user specified
-        s1 = replace_string( cmd, "%v", device_file, FALSE );
-        command = replace_string( s1, "%o", options, TRUE );
         g_free( s1 );
     }
     return command;
 }
 
-char* vfs_volume_device_unmount_cmd( const char* device_file )
+char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
 {
     char* command = NULL;
     char* s1;
-    const char* cmd = xset_get_s( "dev_unmount_cmd" );
-    if ( !cmd || ( cmd && cmd[0] == '\0' ) )
+    *run_in_terminal = FALSE;
+    command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
+                                      vol, NULL, run_in_terminal );
+    if ( !command )
     {
         // discovery
         if ( s1 = g_find_program_in_path( "udevil" ) )
         {
             // udevil
-            command = g_strdup_printf( "%s umount '%s'", s1, device_file );
+            command = g_strdup_printf( "%s umount '%s'", s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "pumount" ) )
         {
             // pmount
-            command = g_strdup_printf( "%s %s", s1, device_file );
+            command = g_strdup_printf( "%s %s", s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "udisksctl" ) )
         {
             // udisks2
-            command = g_strdup_printf( "%s unmount -b %s", s1, device_file );
+            command = g_strdup_printf( "%s unmount -b %s", s1, vol->device_file );
         }
         else if ( s1 = g_find_program_in_path( "udisks" ) )
         {
             // udisks1
-            command = g_strdup_printf( "%s --unmount %s", s1, device_file );
+            command = g_strdup_printf( "%s --unmount %s", s1, vol->device_file );
         }
         g_free( s1 );
-    }
-    else
-    {
-        // user specified
-        command = replace_string( cmd, "%v", device_file, FALSE );
     }
     return command;
 }
@@ -3431,12 +3567,11 @@ char* vfs_volume_get_mount_options( VFSVolume* vol, char* options )
         return g_strdup( newo + 1 );
 }
 
-char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options )
+char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options,
+                                    gboolean* run_in_terminal )
 {
-    char* command;
-    
-    char* options = vfs_volume_get_mount_options( vol, default_options );    
-    command = vfs_volume_device_mount_cmd( vol->device_file, options );
+    char* options = vfs_volume_get_mount_options( vol, default_options );
+    char* command = vfs_volume_device_mount_cmd( vol, options, run_in_terminal );
     g_free( options );
     return command;
 }
@@ -3548,11 +3683,12 @@ void vfs_volume_autounmount( VFSVolume* vol )
 {
     if ( !vol->is_mounted || !vfs_volume_is_automount( vol ) )
         return;
-
-    char* line = vfs_volume_device_unmount_cmd( vol->device_file );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
     if ( line )
     {
         printf( _("\nAuto-Unmount: %s\n"), line );
+/*igtodo run in terminal */
         g_spawn_command_line_async( line, NULL );
         g_free( line );
     }
@@ -3570,11 +3706,13 @@ void vfs_volume_automount( VFSVolume* vol )
         return;
     vol->automount_time = time( NULL );
 
+    gboolean run_in_terminal;
     char* line = vfs_volume_get_mount_command( vol,
-                                            xset_get_s( "dev_mount_options" ) );
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
     if ( line )
     {
         printf( _("\nAutomount: %s\n"), line );
+/*igtodo run in terminal */
         g_spawn_command_line_async( line, NULL );
         g_free( line );
     }
@@ -3665,7 +3803,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 // media ejected ?
                 if ( was_mountable && !volume->is_mountable && volume->is_mounted &&
                             ( volume->is_optical || volume->is_removable ) )
-                    unmount_if_mounted( volume->device_file );
+                    unmount_if_mounted( volume );
             }
             return;
         }
@@ -3760,7 +3898,7 @@ static void vfs_volume_device_removed( char* device_file )
             volume = (VFSVolume*)l->data;
             vfs_volume_exec( volume, xset_get_s( "dev_exec_remove" ) );
             if ( volume->is_mounted && volume->is_removable )
-                unmount_if_mounted( volume->device_file );
+                unmount_if_mounted( volume );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
@@ -3771,18 +3909,20 @@ static void vfs_volume_device_removed( char* device_file )
     vfs_volume_clean();
 }
 
-void unmount_if_mounted( const char* device_file )
+void unmount_if_mounted( VFSVolume* vol )
 {
-    if ( !device_file )
+    if ( !vol->device_file )
         return;
-    char* str = vfs_volume_device_unmount_cmd( device_file );
+    gboolean run_in_terminal;
+    char* str = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
     if ( !str )
         return;
     char* mtab = "/etc/mtab";
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
         mtab = "/proc/mounts";
+/*igtodo run in terminal */
     char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s 2>/dev/null && %s 2>/dev/null\"",
-                                                        device_file, mtab, str );
+                                                vol->device_file, mtab, str );
     g_free( str );
     printf( _("Unmount-If-Mounted: %s\n"), line );
     g_spawn_command_line_async( line, NULL );

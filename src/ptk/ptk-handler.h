@@ -20,9 +20,15 @@
 G_BEGIN_DECLS
 
 enum {
+    HANDLER_COMPRESS,
+    HANDLER_EXTRACT,
+    HANDLER_LIST
+};
+
+enum {
     HANDLER_MOUNT,
     HANDLER_UNMOUNT,
-    HANDLER_SHOW
+    HANDLER_INFO
 };
 
 enum {
@@ -34,8 +40,9 @@ enum {
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
-gboolean ptk_handler_test_list( const char* list, const char* val1,
-                                const char* val2, const char* val3 );
+gboolean ptk_handler_val_in_list( const char* list, const char* val1,
+                                  const char* val2, const char* val3,
+                                  const char* val4 );
 
 
 G_END_DECLS

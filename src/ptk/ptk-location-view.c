@@ -994,7 +994,9 @@ static void on_mount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         file_browser = NULL;
         
     // task
-    char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( view, 0 );
@@ -1007,10 +1009,13 @@ static void on_mount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = !!file_browser;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     vol->inhibit_auto = TRUE;
     ptk_file_task_run( task );
@@ -1332,7 +1337,8 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     */
     
     // task
-    char* line = vfs_volume_device_unmount_cmd( vol->device_file );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( view, 1 );
@@ -1346,10 +1352,13 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = !!file_browser;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     ptk_file_task_run( task );
 }
@@ -1392,7 +1401,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         char* wait;
         char* wait_done;
         char* eject;
-        char* unmount = vfs_volume_device_unmount_cmd( vol->device_file );
+        gboolean run_in_terminal;
+        char* unmount = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
         if ( !unmount )
         {
             popup_missing_mount( view, 1 );
@@ -1404,7 +1414,7 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             eject = g_strdup_printf( "\neject %s", vol->device_file );
         else
             eject = g_strdup( "\nexit 0" );
-
+/*igtodo multi-line commands */
         if ( !file_browser )
         {
             char* prog = g_find_program_in_path( g_get_prgname() );
@@ -1438,8 +1448,11 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     }
     else if ( vol->is_optical || vol->requires_eject )
@@ -1524,7 +1537,9 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
         ao->job = PTK_OPEN_NEW_TAB;
     else
         ao->job = PTK_OPEN_DIR;
-    char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( GTK_WIDGET( view ), 0 );
@@ -1537,10 +1552,13 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;   // set to true for error on click
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     task->complete_notify = (GFunc)on_autoopen_cb;
     task->user_data = ao;
@@ -1571,7 +1589,9 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         ao->device_file = g_strdup( vol->device_file );
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_NEW_TAB;
-        char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+        gboolean run_in_terminal;
+        char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
         if ( !line )
         {
             popup_missing_mount( view, 0 );
@@ -1584,10 +1604,13 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = TRUE;
+        task->task->exec_browser = file_browser;
         task->task->exec_popup = FALSE;
         task->task->exec_show_output = FALSE;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
@@ -1624,7 +1647,9 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         ao->device_file = g_strdup( vol->device_file );
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_DIR;
-        char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+        gboolean run_in_terminal;
+        char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
         if ( !line )
         {
             popup_missing_mount( view, 0 );
@@ -1637,10 +1662,13 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
         task->task->exec_popup = FALSE;
         task->task->exec_show_output = FALSE;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
@@ -1671,7 +1699,10 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                                                         &set->s, set->z, FALSE, set->line ) )
         return;
 
-    char* mount_command = vfs_volume_get_mount_command( vol, set->s );
+    gboolean mount_in_terminal;
+    gboolean unmount_in_terminal;
+    char* mount_command = vfs_volume_get_mount_command( vol, set->s,
+                                                        &mount_in_terminal );
     if ( !mount_command )
     {
         popup_missing_mount( view, 0 );
@@ -1686,13 +1717,15 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( vfs_volume_is_mounted( vol ) )
     {
         // udisks can't remount, so unmount and mount
-        char* unmount_command = vfs_volume_device_unmount_cmd( vol->device_file );
+        char* unmount_command = vfs_volume_device_unmount_cmd( vol,
+                                                    &unmount_in_terminal );
         if ( !unmount_command )
         {
             g_free( mount_command );
             popup_missing_mount( view, 1 );
             return;
         }
+/*igtodo handle multiline commands */
         if ( strstr( unmount_command, "udisks " ) )   // udisks v1
             line = g_strdup_printf( "fm_udisks=`%s 2>&1`\necho \"$fm_udisks\"\nif [ \"$fm_udisks\" != \"${fm_udisks/ount failed:/}\" ]; then\n    exit 1\nelse\n    %s\nfi",
                                     unmount_command, mount_command );
@@ -1707,10 +1740,13 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = !mount_in_terminal && !unmount_in_terminal;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = mount_in_terminal || unmount_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     vol->inhibit_auto = TRUE;
     ptk_file_task_run( task );
@@ -1733,13 +1769,14 @@ static void on_reload( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         // task
         char* eject;
-        char* unmount = vfs_volume_device_unmount_cmd( vol->device_file );
+        gboolean run_in_terminal;
+        char* unmount = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
         if ( !unmount )
         {
             popup_missing_mount( view, 1 );
             return;
         }
-
+/*igtodo multi-line command  - also keep terminal ? */
         if ( vol->is_optical || vol->requires_eject )
             eject = g_strdup_printf( "\nelse\n    eject %s\n    sleep 0.3\n    eject -t %s", vol->device_file, vol->device_file );
         else
@@ -1750,14 +1787,18 @@ static void on_reload( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         else
             line = g_strdup_printf( "sync\n%s\nif [ $? -ne 0 ]; then\n    exit 1%s\nfi", unmount, eject );
         g_free( eject );
+        g_free( unmount );
         char* task_name = g_strdup_printf( "Reload %s", vol->device_file );
         task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = TRUE;
+        task->task->exec_browser = file_browser;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     }
     else if ( vol->is_optical || vol->requires_eject )
@@ -2365,19 +2406,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
 static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 {
     GtkWidget* view;
-    char size_str[ 64 ];
-    char* df;
-    char* udisks;
-    char* lsof;
-    char* infobash;
-    char* path;
-    char* flags;
-    char* old_flags;
-    char* uuid = NULL;
-    char* fstab = NULL;
     char* cmd;
-    char* info;
-    char* esc_path;
     
     if ( !item )
         view = view2;
@@ -2389,7 +2418,54 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
     if ( !vol->device_file )
         return;
-        
+
+    // create task
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                                "file_browser" );
+    // Note: file_browser may be NULL
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
+    char* task_name = g_strdup_printf( _("Properties %s"), vol->device_file );
+    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, 
+                        file_browser ? GTK_WIDGET( file_browser ) : view,
+                        file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+    task->task->exec_browser = file_browser;
+
+    // use handler command if available
+    gboolean run_in_terminal;
+    cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_LIST, vol, NULL,
+                                                    &run_in_terminal );
+    if ( cmd )
+    {
+        task->task->exec_command = cmd;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
+        task->task->exec_popup = TRUE;
+        task->task->exec_show_output = TRUE;
+        task->task->exec_terminal = run_in_terminal;
+        task->task->exec_scroll_lock = TRUE;
+        task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
+        //task->task->exec_keep_tmp = TRUE;
+        ptk_file_task_run( task );        
+        return;
+    }
+
+    // no handler command - show default properties
+    char size_str[ 64 ];
+    char* df;
+    char* udisks;
+    char* lsof;
+    char* infobash;
+    char* path;
+    char* flags;
+    char* old_flags;
+    char* uuid = NULL;
+    char* fstab = NULL;
+    char* info;
+    char* esc_path;
+
     char* base = g_path_get_basename( vol->device_file );
     if ( base )
     {
@@ -2564,20 +2640,6 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
 */        infobash = g_strdup( "" );
     
-    // task
-    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
-                                                                "file_browser" );
-    // Note: file_browser may be NULL
-    if ( !GTK_IS_WIDGET( file_browser ) )
-        file_browser = NULL;
-    
-    char* task_name = g_strdup_printf( _("Properties %s"), vol->device_file );
-    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, 
-                        file_browser ? GTK_WIDGET( file_browser ) : view,
-                        file_browser ? file_browser->task_view : NULL );
-    g_free( task_name );
-    // don't free cwd!
-    task->task->exec_browser = file_browser;
     task->task->exec_command = g_strdup_printf( "%s%s%s%s%s", flags, df, udisks, lsof, infobash );
     task->task->exec_sync = TRUE;
     task->task->exec_popup = TRUE;

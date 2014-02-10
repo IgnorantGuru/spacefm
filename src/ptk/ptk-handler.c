@@ -62,13 +62,14 @@ const char* dialog_titles[] =
 
 typedef struct _Handler
 {
-    const char* xset_name;
-    const char* handler_name;
-    const char* type;           // or whitelist
-    const char* ext;            // or blacklist
-    const char* compress_cmd;   // or mount
-    const char* extract_cmd;    // or unmount
-    const char* list_cmd;       // or info
+    const char* xset_name;      //                   set->name
+    const char* handler_name;   //                   set->menu_label
+    const char* type;           // or whitelist      set->s
+    const char* ext;            // or blacklist      set->x
+    const char* compress_cmd;   // or mount          set->y
+    const char* extract_cmd;    // or unmount        set->x
+    const char* list_cmd;       // or info           set->context
+                                // enabled           set->b
 } Handler;
 
 /* If you add a new handler, add it to existing session file handler list so
@@ -169,7 +170,9 @@ const Handler handlers_fs[]=
 {
     /* In commands:
      *      %v  device
-     *      %o  volume-specific mount options
+     *      %o  volume-specific mount options (use in mount command only)
+     * Plus standard substitution variables are accepted.
+     * 
      * Whitelist (change label spaces to underscore):
      *      ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
      */
@@ -226,15 +229,16 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
 
-gboolean ptk_handler_test_list( const char* list, const char* val1,
-                                const char* val2, const char* val3 )
-{   /* test for the presence of val1, val2, or val3 in list, using
+gboolean ptk_handler_val_in_list( const char* list, const char* val1,
+                                  const char* val2, const char* val3,
+                                  const char* val4 )
+{   /* test for the presence of val1, val2, val3, or val4 in list, using
     *  wildcards.  list is space or comma separated.  valN may == NULL. */
-    if ( !( list && list[0] ) || ( !val1 && !val2 && !val3 ) )
+    if ( !( list && list[0] ) || ( !val1 && !val2 && !val3 && !val4 ) )
         return FALSE;
     
     // get elements of list
-    gchar** elements = g_strsplit_set( list, " ,", -1 );
+    gchar** elements = g_strsplit_set( list, " ,", 0 );
     if ( !elements )
         return FALSE;
     
@@ -246,7 +250,8 @@ gboolean ptk_handler_test_list( const char* list, const char* val1,
             continue;
         if ( ( val1 && fnmatch( elements[i], val1, 0 ) == 0 ) ||
              ( val2 && fnmatch( elements[i], val2, 0 ) == 0 ) ||
-             ( val3 && fnmatch( elements[i], val3, 0 ) == 0 ) )
+             ( val3 && fnmatch( elements[i], val3, 0 ) == 0 ) ||
+             ( val4 && fnmatch( elements[i], val4, 0 ) == 0 ) )
         {
             g_strfreev( elements );
             return TRUE;
@@ -318,9 +323,9 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->menu_label, handler->handler_name );
                 string_copy_free( &set->s, handler->type );
                 string_copy_free( &set->x, handler->ext );
-                string_copy_free( &set->y, handler->compress_cmd );      // archive compress
-                string_copy_free( &set->z, handler->extract_cmd );    // archive extract
-                string_copy_free( &set->context, handler->list_cmd ); // archive list
+                string_copy_free( &set->y, handler->compress_cmd );   // or mount
+                string_copy_free( &set->z, handler->extract_cmd );    // or unmount
+                string_copy_free( &set->context, handler->list_cmd ); // or info
                 set->b = XSET_B_TRUE;
                 // indicate that menu label should be saved
                 set->lock = FALSE;
