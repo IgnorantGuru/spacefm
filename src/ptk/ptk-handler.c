@@ -75,6 +75,22 @@ typedef struct _Handler
  * existing users see the new handler. */
 const Handler handlers_arc[]=
 {
+    /* In compress commands:
+     *     %n: First selected filename to archive, or (with %O) a single filename
+     *     %N: All selected filenames/directories to archive (standard)
+     *     %o: Resulting single archive file
+     *     %O: Resulting archive per source file/directory (use changes %n meaning)
+     *
+     * In extract commands:
+     *     %x: Archive to extract
+     *     %g: Extract To tarGet dir + optional subfolder
+     *     %G: Extract To tarGet dir, never with subfolder
+     *
+     * In list commands:
+     *     %x: Archive to list
+     *
+     * Plus standard substitution variables are accepted.
+     */
     {
         "handarc_7z",
         "7-Zip",
@@ -151,6 +167,12 @@ const Handler handlers_arc[]=
 
 const Handler handlers_fs[]=
 {
+    /* In commands:
+     *      %v  device
+     *      %o  volume-specific mount options
+     * Whitelist (change label spaces to underscore):
+     *      ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
+     */
     {
         "handfs_ext3",
         "ext3",
@@ -173,6 +195,11 @@ const Handler handlers_fs[]=
 
 const Handler handlers_net[]=
 {
+    /* In commands:
+     * ...
+     * Whitelist:
+     *      ssh://*
+     */
     {
         "handnet_sshfs",
         "sshfs",
