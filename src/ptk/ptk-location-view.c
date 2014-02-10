@@ -3540,6 +3540,11 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
     xset_set_cb( "dev_ignore_udisks_nopolicy", update_all, NULL );
     xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
 
+    set = xset_set_cb( "dev_fs_cnf", on_handler_show_config, parent );
+        xset_set_ob1( set, "set", set );
+    set = xset_set_cb( "dev_net_cnf", on_handler_show_config, parent );
+        xset_set_ob1( set, "set", set );
+
     set = xset_get( "dev_menu_settings" );
     char* desc = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd dev_fs_cnf dev_net_cnf%s", file_browser ? " dev_newtab" : "" );
     xset_set_set( set, "desc", desc );
