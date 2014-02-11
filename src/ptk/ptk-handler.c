@@ -214,27 +214,33 @@ const Handler handlers_fs[]=
 const Handler handlers_net[]=
 {
     /* In commands:
-     * ...
+    *       %url%     $fm_url
+    *       %proto%   $fm_url_proto
+    *       %host%    $fm_url_host
+    *       %user%    $fm_url_user
+    *       %pass%    $fm_url_pass
+    *       %path%    $fm_url_path
+    *       %a        (mount point, or in Mount, create auto mount point)
      * Whitelist:
-     *      ssh://*
+     *      ssh://* proto=ssh host=* user=*
      */
     {
         "handnet_sshfs",
         "sshfs",
         "ssh://*",
         "",
-        "udevil mount %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "udevil mount %url%",
+        "udevil umount %a",
+        "udevil info %url%"
     },
     {
         "handnet_nfs",
         "nfs",
         "nfs://* //*",
         "",
-        "udevil mount -o ro %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "udevil mount \"$fm_url\"",
+        "udevil umount %a",
+        "udevil info %url%"
     }
 };
 

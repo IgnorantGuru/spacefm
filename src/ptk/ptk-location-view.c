@@ -813,32 +813,14 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
 {
     char* str;
     char* line;
-    
     netmount_t *netmount = NULL;
-    
-    char* handler = xset_get_s( "path_hand" );
-    if ( !handler )
-    {
-        str = g_find_program_in_path( "udevil" );
-        if ( !str )
-        {
-            g_free( str );
-            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
-                            _("udevil Not Installed"), NULL, 0,
-                            _("Mounting a network share requires udevil to be installed, or you can set a custom protocol handler by right-clicking on the Path Bar."),
-                            NULL, NULL );
-            return;
-        }
-        g_free( str );
-    }
-    
-    // parse
+        
+    // parse url udevil style to detect if mounted
     char* neturl = NULL;
-    char* fstype = NULL;
     int i = parse_network_url( url, NULL, &netmount );
     if ( i != 1 )
     {
-        // unrecognized url - clean it up in case udevil can mount it
+        // unrecognized url - clean it up
         if ( str = strstr( url, "://" ) )
             neturl = g_strdup( str + 3 );
         else
@@ -856,7 +838,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
             neturl = g_strdup( str + 6 );
             g_free( str );
         }
-        fstype = netmount->fstype;
+        g_free( netmount->fstype );
         g_free( netmount->host );
         g_free( netmount->ip );
         g_free( netmount->port );
@@ -894,31 +876,102 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
             break;
         }
     }
+    g_free( neturl );
+    
+    // split url
+    i = split_network_url( url, &netmount );
+    if ( i == 0 )
+    {
+        // not a url
+        return;
+    }
+    
+    /*
+    printf( "\nurl=%s\n", netmount->url );
+    printf( "  fstype=%s\n", netmount->fstype );
+    printf( "  host=%s\n", netmount->host );
+    printf( "  port=%s\n", netmount->port );
+    printf( "  user=%s\n", netmount->user );
+    printf( "  pass=%s\n", netmount->pass );
+    printf( "  path=%s\n\n", netmount->path );
+    */
+    
+    // get mount command
+    gboolean run_in_terminal;
+    gboolean ssh_udevil = FALSE;
+    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, NULL,
+                                        NULL, netmount, &run_in_terminal );
+    if ( !cmd )
+    {
+        // use udevil as default mount command
+        str = g_find_program_in_path( "udevil" );
+        if ( !str )
+        {
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("Handler Not Found"), NULL, 0,
+                            _("No network handler is configured for this URL and udevil is not installed."),
+                            NULL, NULL );
+            goto _net_free;
+        }
+        g_free( str );
+
+        run_in_terminal = ( !g_strcmp0( netmount->fstype, "smb" ) || 
+                            !g_strcmp0( netmount->fstype, "cifs" ) ||
+                            !g_strcmp0( netmount->fstype, "ftp" ) ||
+                            !g_strcmp0( netmount->fstype, "ssh" ) ||
+                            !g_strcmp0( netmount->fstype, "http" ) ||
+                            !g_strcmp0( netmount->fstype, "https" ) );
+        ssh_udevil = !g_strcmp0( netmount->fstype, "ssh" );
+        // add bash variables
+        char* urlq = bash_quote( netmount->url );
+        char* protoq = bash_quote( netmount->fstype );
+        char* hostq = bash_quote( netmount->host );
+        char* userq = bash_quote( netmount->user );
+        char* passq = bash_quote( netmount->pass );
+        char* pathq = bash_quote( netmount->path );
+        char* keepterm;
+        cmd = g_strdup_printf( "fm_url=%s; fm_url_proto=%s; fm_url_host=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s\nudevil mount \"$fm_url\"", urlq, protoq, hostq, userq, passq, pathq );
+        g_free( urlq );
+        g_free( protoq );
+        g_free( hostq );
+        g_free( userq );
+        g_free( passq );
+        g_free( pathq );
+    }
 
     // task    
     char* keepterm;
-    gboolean in_term = FALSE;
-    gboolean is_sync = TRUE;
-    if ( !handler && !g_strcmp0( fstype, "sshfs" ) )
-    {
-        in_term = TRUE;
-        is_sync = FALSE;
-        keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
-    }
-    else if ( !handler && ( !g_strcmp0( fstype, "smbfs" ) || 
-                            !g_strcmp0( fstype, "cifs" ) ||
-                            !g_strcmp0( fstype, "curlftpfs" ) ||
-                            !g_strcmp0( fstype, "davfs" ) ) )
-    {
-        in_term = TRUE;
-        keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
-    }
+    if ( ssh_udevil )
+        keepterm = g_strdup_printf( "if [ $? -ne 0 ]; then\n    echo \"%s\"\n    read\nelse\n    echo \"Press Enter to close (closing this window may unmount sshfs)\"\n    read\nfi\n", press_enter_to_close );    
+    else if ( run_in_terminal )
+        keepterm = g_strdup_printf( "[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
     else
         keepterm = g_strdup( "" );
 
-    AutoOpen* ao = NULL;
-    if ( is_sync )
+    line = g_strdup_printf( "%s%s\n%s", ssh_udevil ? "Connecting...\n\n" : "",
+                                                        cmd, keepterm );
+    g_free( keepterm );
+    g_free( cmd );
+    
+    char* task_name = g_strdup_printf( _("Netmount %s"), netmount->url );
+    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
+                                                        file_browser->task_view );
+    g_free( task_name );
+    task->task->exec_command = line;
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
+    task->task->exec_popup = FALSE;
+    task->task->exec_show_output = FALSE;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
+    task->task->exec_keep_terminal = FALSE;
+    XSet* set = xset_get( "dev_icon_network" );
+    task->task->exec_icon = g_strdup( set->icon );
+    if ( !run_in_terminal )
     {
+        AutoOpen* ao;
         ao = g_slice_new0( AutoOpen );
         ao->device_file = neturl;
         ao->file_browser = file_browser;
@@ -926,33 +979,21 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
             ao->job = PTK_OPEN_NEW_TAB;
         else
             ao->job = PTK_OPEN_DIR;
+        task->complete_notify = (GFunc)on_autoopen_net_cb;
+        task->user_data = ao;
     }
-
-    str = "echo Connecting...;";  // do not translate
-    if ( handler )
-        line = g_strdup_printf( "%s %s '%s'", str, handler, url );
-    else
-        line = g_strdup_printf( "%s udevil mount '%s'%s", str, url, keepterm );
-    g_free( keepterm );
-    g_free( fstype );
-
-    char* task_name = g_strdup_printf( _("Netmount %s"), url );
-    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
-                                                        file_browser->task_view );
-    g_free( task_name );
-    task->task->exec_command = line;
-    task->task->exec_sync = is_sync;
-    task->task->exec_popup = FALSE;
-    task->task->exec_show_output = FALSE;
-    task->task->exec_show_error = TRUE;
-    task->task->exec_terminal = in_term;
-    task->task->exec_keep_terminal = FALSE;
-    XSet* set = xset_get( "dev_icon_network" );
-    task->task->exec_icon = g_strdup( set->icon );
-    task->complete_notify = is_sync ? (GFunc)on_autoopen_net_cb : NULL;
-    task->user_data = ao;
     ptk_file_task_run( task );
-    return;
+
+_net_free:
+    g_free( netmount->url );
+    g_free( netmount->fstype );
+    g_free( netmount->host );
+    g_free( netmount->ip );
+    g_free( netmount->port );
+    g_free( netmount->user );
+    g_free( netmount->pass );
+    g_free( netmount->path );
+    g_slice_free( netmount_t, netmount );        
 }
 
 static void popup_missing_mount( GtkWidget* view, int job )
@@ -2495,8 +2536,38 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
     // use handler command if available
     gboolean run_in_terminal;
-    cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_LIST, vol, NULL,
-                                                    &run_in_terminal );
+    if ( vol->device_type == DEVICE_TYPE_NETWORK )
+    {
+        // is a network - try to get prop command
+        netmount_t *netmount = NULL;
+        if ( parse_network_url( vol->device_file, NULL, &netmount ) == 1 )
+        {
+            cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_INFO,
+                                          NULL, NULL, netmount, &run_in_terminal );
+            g_free( netmount->url );
+            g_free( netmount->fstype );
+            g_free( netmount->host );
+            g_free( netmount->ip );
+            g_free( netmount->port );
+            g_free( netmount->user );
+            g_free( netmount->pass );
+            g_free( netmount->path );
+            g_slice_free( netmount_t, netmount );
+            
+            // replace mount point sub var
+            if ( strstr( cmd, "%a" ) )
+            {
+                char* pointq = bash_quote( vol->mount_point );
+                char* str = cmd;
+                cmd = replace_string( cmd, "%a", pointq, FALSE );
+                g_free( str );
+                g_free( pointq );
+            }
+        }
+    }
+    else
+        cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_INFO, vol, NULL,
+                                  NULL, &run_in_terminal );
     if ( cmd )
     {
         task->task->exec_command = cmd;
