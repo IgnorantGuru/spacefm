@@ -3455,8 +3455,9 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
         }
         else if ( s1 = g_find_program_in_path( "udisks" ) )
         {
-            // udisks1
-            command = g_strdup_printf( "%s --unmount %s", s1, vol->device_file );
+            // udisks1 - generate a valid exit status
+            command = g_strdup_printf( "fm_udisks=`%s --unmount %s 2>&1`\necho \"$fm_udisks\"\n[[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n",
+                                        s1, vol->device_file );
         }
         g_free( s1 );
     }

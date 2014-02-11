@@ -193,6 +193,15 @@ const Handler handlers_fs[]=
         "udevil mount -o ro %v",
         "udevil umount %v",
         "udevil info %v"
+    },
+    {
+        "handfs_def",
+        "Default",
+        "*",
+        "",
+        "# Enter mount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable a mount command)\n#\n# # udevil:\n#     udevil mount -o '%o' %v\n#\n# # pmount: (does not accept mount options)\n#     pmount %v\n#\n# # udisks v2:\n#     udisksctl mount -b %v -o '%o'\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n",
+        "# Enter unmount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable an unmount command)\n#\n# # udevil:\n#     udevil umount %v\n#\n# # pmount:\n#     pumount %v\n#\n# # udisks v2:\n#     udisksctl unmount -b %v\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --unmount %v 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n",
+        "Enter command to show device properties or leave blank for auto:\n\n"
     }
 };
 
@@ -222,6 +231,7 @@ const Handler handlers_net[]=
         "udevil info %v"
     }
 };
+
 
 // Function prototypes
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
