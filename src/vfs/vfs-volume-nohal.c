@@ -3174,6 +3174,10 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             continue;
         if ( mode == HANDLER_MODE_FS )
         {
+            // test blacklist
+            if ( ptk_handler_val_in_list( set->x, vol->fs_type, dev_e, id_e,
+                                          label_e ) )
+                break;
             // test whitelist
             if ( ptk_handler_val_in_list( set->s, vol->fs_type, dev_e, id_e,
                                           label_e ) )
@@ -3181,22 +3185,18 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                 found = TRUE;
                 break;
             }
-            // test blacklist
-            if ( ptk_handler_val_in_list( set->x, vol->fs_type, dev_e, id_e,
-                                          label_e ) )
-                break;
         }
         else //if ( mode == HANDLER_MODE_NET )
         {
+            // test blacklist
+            if ( ptk_handler_val_in_list( set->x, NULL, NULL, NULL, NULL ) )
+                break;            
             // test whitelist
             if ( ptk_handler_val_in_list( set->s, NULL, NULL, NULL, NULL ) )
             {
                 found = TRUE;
                 break;
             }
-            // test blacklist
-            if ( ptk_handler_val_in_list( set->x, NULL, NULL, NULL, NULL ) )
-                break;            
         }
     }
     if ( mode == HANDLER_MODE_FS )
@@ -3229,9 +3229,14 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         command = g_strdup( command + 1 );
         g_free( str );
     }
-    
+
+    // decode newlines and tabs
+    str = replace_string( command, "\\n", "\n", FALSE );
+    g_free( command );
+    command = replace_string( str, "\\t", "\t", FALSE );
+    g_free( str );
+
     // test if command contains only comments and whitespace
-/*igtodo decode multiline here */
     gchar** lines = g_strsplit( command, "\n", 0 );
     if ( !lines )
     {
@@ -3410,12 +3415,12 @@ char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
         }
         else if ( s1 = g_find_program_in_path( "udisks" ) )
         {
-            // udisks1
+            // udisks1 - generate a valid exit status
             if ( options && options[0] != '\0' )
-                command = g_strdup_printf( "%s --mount %s --mount-options '%s'",
+                command = g_strdup_printf( "fm_udisks=`%s --mount %s --mount-options '%s' 2>&1`\necho \"$fm_udisks\"\n[[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n",
                                         s1, vol->device_file, options );
             else
-                command = g_strdup_printf( "%s --mount %s",
+                command = g_strdup_printf( "fm_udisks=`%s --mount %s 2>&1`\necho \"$fm_udisks\"\n[[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n",
                                         s1, vol->device_file );
         }
         g_free( s1 );
