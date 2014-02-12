@@ -2553,7 +2553,8 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     return volume;
 }
 
-static gboolean path_is_mounted_mtab( const char* path, char** device_file )
+static gboolean path_is_mounted_mtab( const char* path, char** device_file,
+                                                        char** fs_type )
 {
     gchar *contents;
     gchar **lines;
@@ -2565,6 +2566,7 @@ static gboolean path_is_mounted_mtab( const char* path, char** device_file )
     char* point;
     gchar encoded_file[PATH_MAX];
     gchar encoded_point[PATH_MAX];
+    gchar encoded_fstype[PATH_MAX];
 
     if ( !path )
         return FALSE;
@@ -2588,9 +2590,10 @@ static gboolean path_is_mounted_mtab( const char* path, char** device_file )
             continue;
 
         if ( sscanf( lines[n],
-                  "%s %s ",
+                  "%s %s %s ",
                   encoded_file,
-                  encoded_point ) != 2 )
+                  encoded_point,
+                  encoded_fstype ) != 3 )
         {
             g_warning ("Error parsing mtab line '%s'", lines[n]);
             continue;
@@ -2601,6 +2604,8 @@ static gboolean path_is_mounted_mtab( const char* path, char** device_file )
         {
             if ( device_file )
                 *device_file = g_strcompress( encoded_file );
+            if ( fs_type )
+                *fs_type = g_strcompress( encoded_fstype );
             ret = TRUE;
             break;
         }
@@ -2736,12 +2741,14 @@ int split_network_url( const char* url, netmount_t** netmount )
     if ( !nm->host )
         ret = 2;
     
+    /*
     // check user pass port
     if ( ( nm->user && strchr( nm->user, ' ' ) )
             || ( nm->pass && strchr( nm->pass, ' ' ) )
             || ( nm->port && strchr( nm->port, ' ' ) ) )
         ret = 2;
-
+    */
+    
     *netmount = nm;
     return ret;
 
@@ -2759,6 +2766,7 @@ _net_free:
     return 0;
 }
 
+#if 0
 int parse_network_url( const char* url, const char* fstype,
                                                         netmount_t** netmount )
 {   // returns 0=not a network url  1=valid network url  2=invalid network url
@@ -3061,6 +3069,7 @@ _net_free:
     g_slice_free( netmount_t, nm );
     return ret;
 }
+#endif
 
 VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
 {   // read a non-block device
@@ -3083,10 +3092,12 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
 
     // get device name
     char* name = NULL;
-    if ( !( path_is_mounted_mtab( point, &name ) && name && name[0] != '\0' ) )
+    char* mtab_fstype = NULL;
+    if ( !( path_is_mounted_mtab( point, &name, &mtab_fstype ) && name &&
+                                                    name[0] != '\0' ) )
         return NULL;
 
-    i = parse_network_url( name, NULL, &netmount );
+    i = split_network_url( name, &netmount );
     if ( i != 1 )
         return NULL;
 
@@ -3095,7 +3106,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     volume->device_type = DEVICE_TYPE_NETWORK;
     volume->udi = netmount->url;
     volume->label = netmount->host;
-    volume->fs_type = netmount->fstype;
+    volume->fs_type = mtab_fstype ? mtab_fstype : g_strdup( "" );
     volume->size = 0;
     volume->device_file = name;
     volume->is_mounted = TRUE;
@@ -3113,6 +3124,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     g_free( netmount->user );
     g_free( netmount->pass );
     g_free( netmount->path );
+    g_free( netmount->fstype );
     g_slice_free( netmount_t, netmount );
 
     vfs_volume_set_info( volume );
@@ -3335,9 +3347,20 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( netmount->user && netmount->user[0] )
             values = g_slist_prepend( values,
                     g_strconcat( "user=", netmount->user, NULL ) );
+        // user-entered url or (if mounted) mtab url
         if ( netmount->url && netmount->url[0] )
             values = g_slist_prepend( values,
                     g_strconcat( "url=", netmount->url, NULL ) );
+        if ( action != HANDLER_MOUNT && vol->is_mounted )
+        {
+            // mtab fs type (fuse.ssh)
+            values = g_slist_prepend( values,
+                    g_strconcat( "mtab_fs=", vol->fs_type, NULL ) );
+            // mtab_url == url if mounted
+            values = g_slist_prepend( values,
+                    g_strconcat( "mtab_url=", netmount->url, NULL ) );
+        }
+        // url-derived protocol
         if ( netmount->fstype && netmount->fstype[0] )
             values = g_slist_prepend( values, g_strdup( netmount->fstype ) );
     }
@@ -3403,7 +3426,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     if ( action == HANDLER_MOUNT )
         command = g_strdup( set->y );
     else if ( action == HANDLER_UNMOUNT )
-        command = g_strdup( set->x );
+        command = g_strdup( set->z );
     else if ( action == HANDLER_INFO )
         command = g_strdup( set->context );
     else
@@ -3431,6 +3454,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         g_free( command );
         return NULL;
     }
+
     found = FALSE;
     for ( i = 0; lines[i]; i++ )
     {
@@ -3470,7 +3494,25 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         {
             if ( action == HANDLER_MOUNT )
             {
-/*igtodo if %a in mount cmd, create auto moint point */
+/*igtodo improve mount point naming */
+                // create mount point
+                char* name;
+                char* point_dir = NULL;
+                char* rand;
+                do
+                {
+                    g_free( point_dir );
+                    rand = randhex8();
+                    name = g_strdup_printf( "point-%s", rand );
+                    g_free( rand );
+                    point_dir = g_build_filename( g_get_user_cache_dir(),
+                                                  "spacefm", name, NULL );
+                    g_free( name );
+                } while ( g_file_test( point_dir, G_FILE_TEST_EXISTS ) );
+                str = command;
+                command = replace_string( command, "%a", point_dir, FALSE );
+                g_free( str );
+                g_free( point_dir );
             }
             else
             {
@@ -3539,7 +3581,27 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         {
             if ( action == HANDLER_MOUNT )
             {
-/*igtodo if %a or $fm_url_point in mount cmd, create auto moint point */
+/*igtodo improve mount point naming */
+                // create mount point
+                char* name;
+                char* point_dir = NULL;
+                char* rand;
+                do
+                {
+                    g_free( point_dir );
+                    rand = randhex8();
+                    name = g_strdup_printf( "point-%s", rand );
+                    g_free( rand );
+                    point_dir = g_build_filename( g_get_user_cache_dir(),
+                                                  "spacefm", name, NULL );
+                    g_free( name );
+                } while ( g_file_test( point_dir, G_FILE_TEST_EXISTS ) );
+                if ( g_mkdir_with_parents( point_dir, 0700 ) == -1 )
+                    g_warning( "Error creating directory %s", point_dir );
+                str = command;
+                command = replace_string( command, "%a", point_dir, FALSE );
+                g_free( str );
+                g_free( point_dir );
             }
             else
             {
@@ -3552,14 +3614,21 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         }
 
         // add bash variables
+        // urlq is user-entered url or (if mounted) mtab url
         char* urlq = bash_quote( netmount->url );
-        char* protoq = bash_quote( netmount->fstype );
+        char* protoq = bash_quote( netmount->fstype );  // url-derived protocol (ssh)
         char* hostq = bash_quote( netmount->host );
         char* userq = bash_quote( netmount->user );
         char* passq = bash_quote( netmount->pass );
         char* pathq = bash_quote( netmount->path );
+        // mtab fs type (fuse.ssh)
+        char* mtabfsq = bash_quote( action != HANDLER_MOUNT &&
+                                        vol->is_mounted ? vol->fs_type : NULL );
+        // urlq and mtaburlq will both be the same mtab url if mounted
+        char* mtaburlq = bash_quote( action != HANDLER_MOUNT && vol->is_mounted ?
+                                        netmount->url : NULL );
         str = command;
-        command = g_strdup_printf( "fm_url=%s; fm_url_proto=%s; fm_url_host=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s\n%s", urlq, protoq, hostq, userq, passq, pathq, command );
+        command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, userq, passq, pathq, mtabfsq, mtaburlq, command );
         g_free( str );
         g_free( urlq );
         g_free( protoq );
@@ -3567,6 +3636,8 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         g_free( userq );
         g_free( passq );
         g_free( pathq );
+        g_free( mtabfsq );
+        g_free( mtaburlq );
     }
     *run_in_terminal = terminal;
     return command;
@@ -3731,7 +3802,7 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
     {
         // is a network - try to get unmount command
         netmount_t *netmount = NULL;
-        if ( parse_network_url( vol->device_file, NULL, &netmount ) == 1 )
+        if ( split_network_url( vol->device_file, &netmount ) == 1 )
         {
             command = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_UNMOUNT,
                                           vol, NULL, netmount, run_in_terminal );
@@ -3746,14 +3817,15 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
             g_slice_free( netmount_t, netmount );
             
             // replace mount point sub var
-            if ( strstr( command, "%a" ) )
+            if ( command && strstr( command, "%a" ) )
             {
-                pointq = bash_quote( vol->mount_point );
+                pointq = bash_quote( vol->is_mounted ? vol->mount_point : NULL );
                 s1 = command;
                 command = replace_string( command, "%a", pointq, FALSE );
                 g_free( s1 );
                 g_free( pointq );
             }
+printf("UNMOUNT %s\n", command );
         }
     }
     else
@@ -3762,12 +3834,15 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
     if ( !command )
     {
         // discovery
-        pointq = bash_quote( vol->device_type == DEVICE_TYPE_NETWORK ?
+        if ( vol->is_mounted )
+            pointq = bash_quote( vol->device_type == DEVICE_TYPE_NETWORK ?
                                    vol->mount_point : vol->device_file );
+        else
+            pointq = g_strdup( "''" );
         if ( s1 = g_find_program_in_path( "udevil" ) )
         {
             // udevil
-            command = g_strdup_printf( "%s umount '%s'", s1, pointq );
+            command = g_strdup_printf( "%s umount %s", s1, pointq );
         }
         else if ( s1 = g_find_program_in_path( "pumount" ) )
         {

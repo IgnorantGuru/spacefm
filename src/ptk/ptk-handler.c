@@ -72,7 +72,7 @@ typedef struct _Handler
     const char* type;           // or whitelist      set->s
     const char* ext;            // or blacklist      set->x
     const char* compress_cmd;   // or mount          set->y
-    const char* extract_cmd;    // or unmount        set->x
+    const char* extract_cmd;    // or unmount        set->z
     const char* list_cmd;       // or info           set->context
                                 // enabled           set->b
 } Handler;
@@ -231,10 +231,14 @@ const Handler handlers_net[]=
     *       %pass%    $fm_url_pass
     *       %path%    $fm_url_path
     *       %a        mount point, or create auto mount point
+    *                 $fm_mtab_fs   (mounted mtab fs type)
+    *                 $fm_mtab_url  (mounted mtab url)
     *
     *  Whitelist/Blacklist: (prefix list element with '+' if required)
     *      protocol (eg ssh)
     *      url=URL (ssh://...)
+    *      mtab_fs=TYPE    (mounted mtab fs type)
+    *      mtab_url=URL    (mounted mtab url)
     *      host=HOSTNAME
     *      user=USERNAME
     *      point=MOUNT_POINT
@@ -244,20 +248,20 @@ const Handler handlers_net[]=
     {
         "handnet_sshfs",
         "sshfs",
-        "ssh://*",
+        "ssh mtab_fs=fuse.sshfs",
         "",
-        "udevil mount %url%",
-        "udevil umount %a",
-        "udevil info %url%"
+        "+if [ \"$(which nohup)\" != \"\" ]; then\n    # Run sshfs through nohup to prevent disconnect on terminal close\n    echo \"Connecting to %url%\"\n    nohup sshfs %user%@%host%:%path% %a &> /tmp/spacefm-ssh-output.tmp\n    err=$?\n    if [ -e /tmp/spacefm-ssh-output.tmp ]; then\n        cat /tmp/spacefm-ssh-output.tmp\n        rm -f /tmp/spacefm-ssh-output.tmp\n    fi\n    [[ $err -eq 0 ]]  # set error status\nelse\n    # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n    # terminal is closed (likely bug in sshfs)\n    spacefm -s run-task cmd --terminal 'echo \"Connecting to %url%\"; echo; sshfs %user%@%host%:%path% %a; if [ $? -ne 0 ]; then echo; echo \"[ Finished ] Press Enter to close\"; else echo; echo \"Press Enter to close (closing this window may unmount sshfs - install nohup to avoid)\"; fi; read' &\n    # don't close terminal before command starts - or uncheck Run In Terminal\n    sleep 1\nfi\n",
+        "fusermount -u %a",
+        "mount | grep \"%a\""
     },
     {
-        "handnet_nfs",
-        "nfs",
-        "nfs://* //*",
+        "handnet_udevil",
+        "udevil",
+        "ftp http https nfs smb ssh mtab_fs=fuse*",
         "",
         "udevil mount \"$fm_url\"",
         "udevil umount %a",
-        "udevil info %url%"
+        "mount | grep \"%a\""
     }
 };
 
@@ -267,6 +271,22 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data );
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
+
+static void temp_encode( char** orig )
+{
+    char* str = replace_string( *orig, "\n", "\\n", FALSE );
+    g_free( *orig );
+    *orig = replace_string( str, "\t", "\\t", FALSE );
+    g_free( str );
+}
+
+static char* temp_decode( const char* orig )
+{
+    char* str = replace_string( orig, "\\n", "\n", FALSE );
+    char* str2 = replace_string( str, "\\t", "\t", FALSE );
+    g_free( str );
+    return str2;
+}
 
 gboolean ptk_handler_values_in_list( const char* list, GSList* values )
 {   /* test for the presence of values in list, using wildcards.
@@ -542,7 +562,7 @@ static void config_load_handler_settings( XSet* handler_xset,
                                     handler_xset->x ?
                                     handler_xset->x : "" );
 /*igcr  all places below in this file where you use:
- *          gtk_entry_set_text( ..., g_strdup( ... ) )
+ *          gtk_entry_set_text( ..., g_strdup( ... ) OR temp_decode )
  * and similar are memory leaks.  Don't use the g_strdup - set_text merely
  * copies the const string passed - see corrected example above.
  * Also, I didn't want the warnings above so removed them */
@@ -558,14 +578,14 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->y[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                g_strdup( (handler_xset->y) + 1 ) );
+                                temp_decode( (handler_xset->y) + 1 ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                g_strdup( handler_xset->y ) );
+                                temp_decode( handler_xset->y ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             FALSE);
         }
@@ -582,14 +602,14 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->z[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                g_strdup( (handler_xset->z) + 1 ) );
+                                temp_decode( (handler_xset->z) + 1 ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                g_strdup( handler_xset->z ) );
+                                temp_decode( handler_xset->z ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             FALSE);
         }
@@ -606,14 +626,14 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->context[0] == '+' )
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                g_strdup( (handler_xset->context) + 1 ) );
+                                temp_decode( (handler_xset->context) + 1 ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             TRUE);
         }
         else
         {
             gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                g_strdup( handler_xset->context ) );
+                                temp_decode( handler_xset->context ) );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             FALSE);
         }
@@ -728,7 +748,6 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     g_strfreev( archive_handlers );
 }
 
-
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
     int i;
@@ -818,6 +837,11 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             GTK_ENTRY ( entry_handler_list ) ) );
     }
 
+    // temporarily encode newlines and tabs until multiline support ready
+    temp_encode( &handler_compress );
+    temp_encode( &handler_extract );
+    temp_encode( &handler_list );
+    
     // Fetching selection from treeview
     GtkTreeSelection* selection;
     selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
@@ -883,13 +907,12 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 GTK_TOGGLE_BUTTON( chkbtn_handler_enabled )
                               ) ? XSET_B_TRUE : XSET_B_FALSE;
 
-/*igcr memory leaks - don't pass g_strdup, just the const str */
-        xset_set_set( new_handler_xset, "label", g_strdup( handler_name ) );
-        xset_set_set( new_handler_xset, "s", g_strdup( handler_mime ) );  // Mime Type(s)
-        xset_set_set( new_handler_xset, "x", g_strdup( handler_extension ) );  // Extension(s)
-        xset_set_set( new_handler_xset, "y", g_strdup( handler_compress ) );  // Compress command
-        xset_set_set( new_handler_xset, "z", g_strdup( handler_extract ) );  // Extract command
-        xset_set_set( new_handler_xset, "cxt", g_strdup( handler_list ) );  // List command
+        xset_set_set( new_handler_xset, "label", handler_name );
+        xset_set_set( new_handler_xset, "s", handler_mime );  // Mime Type(s)
+        xset_set_set( new_handler_xset, "x", handler_extension );  // Extension(s)
+        xset_set_set( new_handler_xset, "y", handler_compress );  // Compress command
+        xset_set_set( new_handler_xset, "z", handler_extract );  // Extract command
+        xset_set_set( new_handler_xset, "cxt", handler_list );  // List command
 
         // Fetching list store
 /*igcr jfyi shouldn't need an object for this - can get list store from list */
@@ -1878,7 +1901,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_list ),
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>L_ist:</b>") :
-                                        _("<b>_Info:</b>") );
+                                        _("<b>_Propert_ies:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
     GtkWidget* entry_handler_name = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",
