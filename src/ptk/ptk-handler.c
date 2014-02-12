@@ -176,6 +176,7 @@ const Handler handlers_fs[]=
     /* In commands:
     *      %v  device
     *      %o  volume-specific mount options (use in mount command only)
+    *      %a  mount point, or create auto mount point
     *  Plus standard substitution variables are accepted.
     * 
     *  Whitelist/Blacklist: (prefix list element with '+' if required)
@@ -229,7 +230,7 @@ const Handler handlers_net[]=
     *       %user%    $fm_url_user
     *       %pass%    $fm_url_pass
     *       %path%    $fm_url_path
-    *       %a        (mount point, or in Mount, create auto mount point)
+    *       %a        mount point, or create auto mount point
     *
     *  Whitelist/Blacklist: (prefix list element with '+' if required)
     *      protocol (eg ssh)

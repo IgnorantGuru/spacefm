@@ -3452,6 +3452,11 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     // replace sub vars
     if ( mode == HANDLER_MODE_FS )
     {
+        /*
+        *      %v  device
+        *      %o  volume-specific mount options (use in mount command only)
+        *      %a  mount point, or create auto mount point
+        */
         str = command;
         command = replace_string( command, "%v", vol->device_file, FALSE );
         g_free( str );
@@ -3461,6 +3466,22 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             command = replace_string( command, "%o", options, FALSE );
             g_free( str );
         }
+        if ( strstr( command, "%a" ) )
+        {
+            if ( action == HANDLER_MOUNT )
+            {
+/*igtodo if %a in mount cmd, create auto moint point */
+            }
+            else
+            {
+                str = command;
+                command = replace_string( command, "%a",
+                        vol->is_mounted && vol->mount_point && vol->mount_point[0] ?
+                        vol->mount_point : "", FALSE );
+                g_free( str );
+            }
+        }
+        // standard sub vars
         str = command;
         command = replace_line_subs( command );
         g_free( str );
@@ -3474,7 +3495,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         *       %user%    $fm_url_user
         *       %pass%    $fm_url_pass
         *       %path%    $fm_url_path
-        *       %a        (mount point, or in Mount, create auto mount point)
+        *       %a        mount point, or create auto mount point
         */
 
         // replace sub vars
@@ -3514,7 +3535,21 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             command = replace_string( command, "%path%", netmount->path, FALSE );
             g_free( str );
         }
-/*igtodo if %a, create moint point */
+        if ( strstr( command, "%a" ) )
+        {
+            if ( action == HANDLER_MOUNT )
+            {
+/*igtodo if %a or $fm_url_point in mount cmd, create auto moint point */
+            }
+            else
+            {
+                str = command;
+                command = replace_string( command, "%a",
+                        vol->is_mounted && vol->mount_point && vol->mount_point[0] ?
+                        vol->mount_point : "", FALSE );
+                g_free( str );
+            }
+        }
 
         // add bash variables
         char* urlq = bash_quote( netmount->url );
