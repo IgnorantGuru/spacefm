@@ -899,7 +899,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     // get mount command
     gboolean run_in_terminal;
     gboolean ssh_udevil = FALSE;
-    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, NULL,
+    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, vol,
                                         NULL, netmount, &run_in_terminal );
     if ( !cmd )
     {
@@ -949,7 +949,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     else
         keepterm = g_strdup( "" );
 
-    line = g_strdup_printf( "%s%s\n%s", ssh_udevil ? "Connecting...\n\n" : "",
+    line = g_strdup_printf( "%s%s\n%s", ssh_udevil ? "echo Connecting...\n\n" : "",
                                                         cmd, keepterm );
     g_free( keepterm );
     g_free( cmd );
@@ -2543,7 +2543,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( parse_network_url( vol->device_file, NULL, &netmount ) == 1 )
         {
             cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_INFO,
-                                          NULL, NULL, netmount, &run_in_terminal );
+                                          vol, NULL, netmount, &run_in_terminal );
             g_free( netmount->url );
             g_free( netmount->fstype );
             g_free( netmount->host );

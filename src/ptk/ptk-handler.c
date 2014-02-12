@@ -82,21 +82,21 @@ typedef struct _Handler
 const Handler handlers_arc[]=
 {
     /* In compress commands:
-     *     %n: First selected filename to archive, or (with %O) a single filename
-     *     %N: All selected filenames/directories to archive (standard)
-     *     %o: Resulting single archive file
-     *     %O: Resulting archive per source file/directory (use changes %n meaning)
-     *
-     * In extract commands:
-     *     %x: Archive to extract
-     *     %g: Extract To tarGet dir + optional subfolder
-     *     %G: Extract To tarGet dir, never with subfolder
-     *
-     * In list commands:
-     *     %x: Archive to list
-     *
-     * Plus standard substitution variables are accepted.
-     */
+    *     %n: First selected filename to archive, or (with %O) a single filename
+    *     %N: All selected filenames/directories to archive (standard)
+    *     %o: Resulting single archive file
+    *     %O: Resulting archive per source file/directory (use changes %n meaning)
+    *
+    * In extract commands:
+    *     %x: Archive to extract
+    *     %g: Extract To tarGet dir + optional subfolder
+    *     %G: Extract To tarGet dir, never with subfolder
+    *
+    * In list commands:
+    *     %x: Archive to list
+    *
+    * Plus standard substitution variables are accepted.
+    */
     {
         "handarc_7z",
         "7-Zip",
@@ -174,13 +174,23 @@ const Handler handlers_arc[]=
 const Handler handlers_fs[]=
 {
     /* In commands:
-     *      %v  device
-     *      %o  volume-specific mount options (use in mount command only)
-     * Plus standard substitution variables are accepted.
-     * 
-     * Whitelist (change label spaces to underscore):
-     *      ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
-     */
+    *      %v  device
+    *      %o  volume-specific mount options (use in mount command only)
+    *  Plus standard substitution variables are accepted.
+    * 
+    *  Whitelist/Blacklist: (prefix list element with '+' if required)
+    *      fstype (eg ext3)
+    *      dev=DEVICE (/dev/sdd1)
+    *      id=UDI
+    *      label=VOLUME_LABEL (includes spaces as underscores)
+    *      point=MOUNT_POINT
+    *      audiocd=0 or 1
+    *      optical=0 or 1
+    *      removable=0 or 1
+    *      mountable=0 or 1
+    *      
+    *      eg: +ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
+    */
     {
         "handfs_ext3",
         "ext3",
@@ -220,9 +230,16 @@ const Handler handlers_net[]=
     *       %pass%    $fm_url_pass
     *       %path%    $fm_url_path
     *       %a        (mount point, or in Mount, create auto mount point)
-     * Whitelist:
-     *      ssh://* proto=ssh host=* user=*
-     */
+    *
+    *  Whitelist/Blacklist: (prefix list element with '+' if required)
+    *      protocol (eg ssh)
+    *      url=URL (ssh://...)
+    *      host=HOSTNAME
+    *      user=USERNAME
+    *      point=MOUNT_POINT
+    *      
+    *      eg: +ssh url=ssh://*
+    */
     {
         "handnet_sshfs",
         "sshfs",
@@ -250,12 +267,10 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
 
-gboolean ptk_handler_val_in_list( const char* list, const char* val1,
-                                  const char* val2, const char* val3,
-                                  const char* val4 )
-{   /* test for the presence of val1, val2, val3, or val4 in list, using
-    *  wildcards.  list is space or comma separated.  valN may == NULL. */
-    if ( !( list && list[0] ) || ( !val1 && !val2 && !val3 && !val4 ) )
+gboolean ptk_handler_values_in_list( const char* list, GSList* values )
+{   /* test for the presence of values in list, using wildcards.
+    *  list is space or comma separated, plus indicates required. */
+    if ( !( list && list[0] ) || !values )
         return FALSE;
     
     // get elements of list
@@ -265,21 +280,42 @@ gboolean ptk_handler_val_in_list( const char* list, const char* val1,
     
     // test each element for match
     int i;
+    GSList* l;
+    char* element;
+    gboolean required;
+    gboolean ret = FALSE;
     for ( i = 0; elements[i]; i++ )
     {
         if ( !elements[i][0] )
             continue;
-        if ( ( val1 && fnmatch( elements[i], val1, 0 ) == 0 ) ||
-             ( val2 && fnmatch( elements[i], val2, 0 ) == 0 ) ||
-             ( val3 && fnmatch( elements[i], val3, 0 ) == 0 ) ||
-             ( val4 && fnmatch( elements[i], val4, 0 ) == 0 ) )
+        if ( elements[i][0] == '+' )
         {
-            g_strfreev( elements );
-            return TRUE;
+            // plus prefix indicates this element is required
+            element = elements[i] + 1;
+            required = TRUE;
+        }
+        else
+        {
+            element =  elements[i];
+            required = FALSE;
+        }
+        for ( l = values; l; l = l->next )
+        {
+            if ( fnmatch( element, (char*)l->data, 0 ) == 0 )
+            {
+                // match
+                ret = TRUE;
+            }
+            else if ( required )
+            {
+                // no match of required
+                g_strfreev( elements );
+                return FALSE;
+            }
         }
     }
     g_strfreev( elements );
-    return FALSE;    
+    return ret;    
 }
 
 gboolean ptk_handler_equals_default( XSet* set )
@@ -403,11 +439,10 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->z, handler->extract_cmd );    // or unmount
                 string_copy_free( &set->context, handler->list_cmd ); // or info
                 set->b = XSET_B_TRUE;
-                // handler equals default, so don't save in session
-printf( "set->disable = TRUE    %s %s\n", handler->xset_name, handler->handler_name );
-                set->disable = TRUE;
                 // note: xset menu_labels are not saved unless !lock
                 set->lock = FALSE;
+                // handler equals default, so don't save in session
+                set->disable = TRUE;
             }
         }
     }

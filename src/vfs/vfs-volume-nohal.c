@@ -3286,46 +3286,70 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
                               gboolean* run_in_terminal )
 {
-    char* dev_e;
-    char* id_e;
-    char* label_e;
-    char* proto_e;
-    char* host_e;
-    char* user_e;
     char* str;
     const char* handlers_list;
     int i;
     XSet* set;
+    GSList* values = NULL;
+
+    if ( !vol )
+        return NULL;
 
     if ( mode == HANDLER_MODE_FS )
     {
-        if ( !vol )
-            return NULL;
-        // get device properties
-        dev_e = g_strconcat( "dev=", vol->device_file, NULL );
-        id_e = vol->udi && vol->udi[0] ?
-                                g_strconcat( "id=", vol->udi, NULL ) : NULL;
+        // fs values
         // change spaces in label to underscores for testing
-        label_e = vol->label && vol->label[0] ?
-                g_strdelimit( g_strconcat( "label=", vol->label, NULL ), " ", '_' )
-                : NULL;
+        if ( vol->label && vol->label[0] )
+            values = g_slist_prepend( values,
+                    g_strdelimit( g_strconcat( "label=", vol->label, NULL ),
+                                  " ", '_' ) );
+        if ( vol->udi && vol->udi[0] )
+            values = g_slist_prepend( values,
+                    g_strconcat( "id=", vol->udi, NULL ) );
+        values = g_slist_prepend( values,
+                    g_strconcat( "audiocd=", vol->is_audiocd ? "1" : "0",
+                                                                    NULL ) );
+        values = g_slist_prepend( values,
+                    g_strconcat( "optical=", vol->is_optical ? "1" : "0",
+                                                                    NULL ) );
+        values = g_slist_prepend( values,
+                    g_strconcat( "removable=", vol->is_removable ? "1" : "0",
+                                                                    NULL ) );
+        values = g_slist_prepend( values,
+                    g_strconcat( "mountable=",
+                            vol->is_mountable && !vol->is_blank ? "1" : "0",
+                                                                    NULL ) );
+        values = g_slist_prepend( values,
+                    g_strconcat( "dev=", vol->device_file, NULL ) );
+        if ( vol->fs_type )
+            values = g_slist_prepend( values, g_strdup( vol->fs_type ) );
     }
     else if ( mode == HANDLER_MODE_NET )
     {
         if ( !netmount )
             return NULL;
-        proto_e = netmount->fstype && netmount->fstype[0] ?
-                        g_strconcat( "proto=", netmount->fstype, NULL ) : NULL;
-        host_e = netmount->host && netmount->host[0] ?
-                        g_strconcat( "host=", netmount->host, NULL ) : NULL;
-        user_e = netmount->user && netmount->user[0] ?
-                        g_strconcat( "user=", netmount->user, NULL ) : NULL;
+        // net values
+        if ( netmount->host && netmount->host[0] )
+            values = g_slist_prepend( values,
+                    g_strconcat( "host=", netmount->host, NULL ) );
+        if ( netmount->user && netmount->user[0] )
+            values = g_slist_prepend( values,
+                    g_strconcat( "user=", netmount->user, NULL ) );
+        if ( netmount->url && netmount->url[0] )
+            values = g_slist_prepend( values,
+                    g_strconcat( "url=", netmount->url, NULL ) );
+        if ( netmount->fstype && netmount->fstype[0] )
+            values = g_slist_prepend( values, g_strdup( netmount->fstype ) );
     }
     else
     {
         g_warning( "vfs_volume_handler_cmd invalid mode %d\n", mode );
         return NULL;
     }
+    // universal values
+    if ( vol->is_mounted && vol->mount_point && vol->mount_point[0] )
+        values = g_slist_prepend( values,
+                g_strconcat( "point=", vol->mount_point, NULL ) );
     
     // get handlers
     if ( !( handlers_list = xset_get_s( mode == HANDLER_MODE_FS ?
@@ -3345,12 +3369,10 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( mode == HANDLER_MODE_FS )
         {
             // test blacklist
-            if ( ptk_handler_val_in_list( set->x, vol->fs_type, dev_e, id_e,
-                                          label_e ) )
+            if ( ptk_handler_values_in_list( set->x, values ) )
                 break;
             // test whitelist
-            if ( ptk_handler_val_in_list( set->s, vol->fs_type, dev_e, id_e,
-                                          label_e ) )
+            if ( ptk_handler_values_in_list( set->s, values ) )
             {
                 found = TRUE;
                 break;
@@ -3359,31 +3381,18 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         else //if ( mode == HANDLER_MODE_NET )
         {
             // test blacklist
-            if ( ptk_handler_val_in_list( set->x, netmount->url, proto_e,
-                                          host_e, user_e ) )
+            if ( ptk_handler_values_in_list( set->x, values ) )
                 break;            
             // test whitelist
-            if ( ptk_handler_val_in_list( set->s, netmount->url, proto_e,
-                                          host_e, user_e ) )
+            if ( ptk_handler_values_in_list( set->s, values ) )
             {
                 found = TRUE;
                 break;
             }
         }
     }
-    if ( mode == HANDLER_MODE_FS )
-    {
-        g_free( dev_e );
-        g_free( id_e );
-        g_free( label_e );
-    }
-    else
-    {
-        g_free( proto_e );
-        g_free( host_e );
-        g_free( user_e );
-    }
-    
+    g_slist_foreach( values, (GFunc)g_free, NULL );
+    g_slist_free( values );
     g_strfreev( handlers );
     if ( !found )
         return NULL;
@@ -3690,7 +3699,7 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
         if ( parse_network_url( vol->device_file, NULL, &netmount ) == 1 )
         {
             command = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_UNMOUNT,
-                                          NULL, NULL, netmount, run_in_terminal );
+                                          vol, NULL, netmount, run_in_terminal );
             g_free( netmount->url );
             g_free( netmount->fstype );
             g_free( netmount->host );
