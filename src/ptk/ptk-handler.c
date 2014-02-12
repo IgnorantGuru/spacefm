@@ -15,7 +15,6 @@
 #include <fnmatch.h>
 
 #include "ptk-handler.h"
-#include "settings.h"
 #include "exo-tree-view.h"
 
 #include "gtk2-compat.h"
@@ -78,8 +77,8 @@ typedef struct _Handler
                                 // enabled           set->b
 } Handler;
 
-/* If you add a new handler, add it to existing session file handler list so
- * existing users see the new handler. */
+/* If you add a new handler, add it to (end of ) existing session file handler
+ * list so existing users see the new handler. */
 const Handler handlers_arc[]=
 {
     /* In compress commands:
@@ -283,6 +282,59 @@ gboolean ptk_handler_val_in_list( const char* list, const char* val1,
     return FALSE;    
 }
 
+gboolean ptk_handler_equals_default( XSet* set )
+{   // determine if set is duplicate of default handler
+    const Handler* handler;
+    int i, nelements, mode;
+    
+    if ( set->b != XSET_B_TRUE )
+        // handler not enabled so not equal default
+        return FALSE;
+    
+    if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_ARC] ) )
+    {
+        mode = HANDLER_MODE_ARC;
+        nelements = G_N_ELEMENTS( handlers_arc );
+    }
+    else if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_FS] ) )
+    {
+        mode = HANDLER_MODE_FS;
+        nelements = G_N_ELEMENTS( handlers_fs );
+    }
+    else if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_NET] ) )
+    {
+        mode = HANDLER_MODE_NET;
+        nelements = G_N_ELEMENTS( handlers_net );
+    }
+    else
+        return FALSE;
+
+    for ( i = 0; i < nelements; i++ )
+    {
+        if ( mode == HANDLER_MODE_ARC )
+            handler = &handlers_arc[i];
+        else if ( mode == HANDLER_MODE_FS )
+            handler = &handlers_fs[i];
+        else if ( mode == HANDLER_MODE_NET )
+            handler = &handlers_net[i];
+
+        if ( !strcmp( handler->xset_name, set->name ) )
+        {
+            // found default handler - test equal
+            if ( !g_strcmp0( handler->handler_name, set->menu_label ) &&
+                 !g_strcmp0( handler->type, set->s ) &&
+                 !g_strcmp0( handler->ext, set->x ) &&
+                 !g_strcmp0( handler->compress_cmd, set->y ) &&
+                 !g_strcmp0( handler->extract_cmd, set->z ) &&
+                 !g_strcmp0( handler->list_cmd, set->context ) )
+                return TRUE;
+            else
+                return FALSE;
+        }
+    }
+    return FALSE;
+}
+
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing )
 {
@@ -310,11 +362,13 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
         list = g_strdup( "" );
         overwrite = add_missing = TRUE;
     }
+    /* disabled to allow loading of non-saved default handlers on start
     else if ( !overwrite && !add_missing )
     {
         g_free( list );
         return;
     }
+    */
     
     for ( i = 0; i < nelements; i++ )
     {
@@ -349,7 +403,10 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->z, handler->extract_cmd );    // or unmount
                 string_copy_free( &set->context, handler->list_cmd ); // or info
                 set->b = XSET_B_TRUE;
-                // indicate that menu label should be saved
+                // handler equals default, so don't save in session
+printf( "set->disable = TRUE    %s %s\n", handler->xset_name, handler->handler_name );
+                set->disable = TRUE;
+                // note: xset menu_labels are not saved unless !lock
                 set->lock = FALSE;
             }
         }
@@ -767,10 +824,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                             -1 );
 
         // Fetching the xset now I have the xset name
-/*igcr xset_get always returns a valid xset as it will create it if it doesn't
- * exist, so it looks like you want to use xset_is here instead to just fetch
- * an xset only if it exists. */
-        handler_xset = xset_get(xset_name);
+        handler_xset = xset_is(xset_name);
 
         // Making sure it has been fetched
         if (!handler_xset)
@@ -888,6 +942,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( handler_xset, "y", handler_compress );
         xset_set_set( handler_xset, "z", handler_extract );
         xset_set_set( handler_xset, "cxt", handler_list );
+        // prevent saving of default handlers later in session
+        handler_xset->disable = ptk_handler_equals_default( handler_xset );
     }
     else if ( widget == btn_remove )
     {

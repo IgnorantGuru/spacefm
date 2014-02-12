@@ -2257,7 +2257,15 @@ void xset_write( FILE* file )
         return;
 
     for ( l = g_list_last( xsets ); l; l = l->prev )
+    {
+        // hack to not save default handlers - this allows default handlers
+        // to be updated more easily
+        if ( (gboolean)((XSet*)l->data)->disable && 
+                (char)((XSet*)l->data)->name[0] == 'h' &&
+                g_str_has_prefix( (char*)((XSet*)l->data)->name, "hand" ) )
+            continue;
         xset_write_set( file, (XSet*)l->data );
+    }
 }
 
 void xset_parse( char* line )

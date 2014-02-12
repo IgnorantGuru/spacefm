@@ -15,6 +15,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 
+#include "settings.h"
 #include "ptk-file-browser.h"
 
 G_BEGIN_DECLS
@@ -40,6 +41,7 @@ enum {
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
+gboolean ptk_handler_equals_default( XSet* set );
 gboolean ptk_handler_val_in_list( const char* list, const char* val1,
                                   const char* val2, const char* val3,
                                   const char* val4 );
