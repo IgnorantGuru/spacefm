@@ -1926,6 +1926,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* view_handler_compress = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_compress",
                         GTK_TEXT_VIEW( view_handler_compress ) );
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view_handler_compress ),
+                                 GTK_WRAP_WORD_CHAR );
     GtkWidget* view_handler_compress_scroll = gtk_scrolled_window_new( NULL,
                                                                 NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_compress_scroll ),
@@ -1936,6 +1938,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* view_handler_extract = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_extract",
                         GTK_TEXT_VIEW( view_handler_extract ) );
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view_handler_extract ),
+                                 GTK_WRAP_WORD_CHAR );
     GtkWidget* view_handler_extract_scroll = gtk_scrolled_window_new( NULL,
                                                                 NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_extract_scroll ),
@@ -1946,6 +1950,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* view_handler_list = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_list",
                         GTK_TEXT_VIEW( view_handler_list ) );
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view_handler_list ),
+                                 GTK_WRAP_WORD_CHAR );
     GtkWidget* view_handler_list_scroll = gtk_scrolled_window_new( NULL,
                                                                 NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_list_scroll ),

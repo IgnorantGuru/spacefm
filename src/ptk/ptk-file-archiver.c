@@ -510,6 +510,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     /* Loading command for handler, based off the i'th handler. Textview
      * needs to be scrollable */
     GtkTextView* view = (GtkTextView*)gtk_text_view_new();
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view ), GTK_WRAP_WORD_CHAR );
     GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
     gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_scroll ),
                                      GTK_POLICY_AUTOMATIC,
