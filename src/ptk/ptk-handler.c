@@ -1898,19 +1898,19 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>Co_mpress:</b>") :
                                         _("<b>_Mount:</b>") );
-    gtk_misc_set_alignment( GTK_MISC( lbl_handler_compress ), 0, 5 );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_compress ), 0, 1.0 );
     GtkWidget* lbl_handler_extract = gtk_label_new( NULL );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_extract ),
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>Extrac_t:</b>") :
                                         _("<b>Unmoun_t:</b>") );
-    gtk_misc_set_alignment( GTK_MISC( lbl_handler_extract ), 0, 5 );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_extract ), 0, 1.0 );
     GtkWidget* lbl_handler_list = gtk_label_new( NULL );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_list ),
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>L_ist:</b>") :
                                         _("<b>Propert_ies:</b>") );
-    gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 5 );
+    gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 1.0 );
     GtkWidget* entry_handler_name = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",
                         GTK_ENTRY( entry_handler_name ) );
