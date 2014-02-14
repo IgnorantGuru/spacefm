@@ -701,7 +701,9 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 /*igcr memory leak here - passing g_strconcat */
                 xset_set_set( handler_xset, "y", run_in_terminal ? 
                                 g_strconcat( "+", command, NULL ) : command );
-
+                // prevent saving of default handlers later in session
+                handler_xset->disable = ptk_handler_equals_default( handler_xset );
+                
                 // Saving settings
                 xset_autosave( FALSE, FALSE );
             }

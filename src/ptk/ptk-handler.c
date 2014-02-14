@@ -9,14 +9,15 @@
  * 
 */
 
-
 #include <glib/gi18n.h>
 #include <string.h>
+#include <fnmatch.h>
 
+#include "ptk-handler.h"
 #include "exo-tree-view.h"
 #include "gtk2-compat.h"
-#include "item-prop.h"  // For get_text_view/load_text_view
-#include "ptk-handler.h"
+#include "item-prop.h" // For get_text_view/load_text_view
+/*igtodo needed? */
 #include "settings.h"
 
 
@@ -56,25 +57,48 @@ const char* handler_conf_xset[] =
 const char* dialog_titles[] =
 {
     N_("Archive Handlers"),
-    N_("Filesystem Handlers"),
-    N_("Network Handlers")
+    N_("Device Handlers"),
+    N_("Protocol Handlers")
 };
+
+#define MOUNT_EXAMPLE "# Enter mount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable a mount command)\n#\n# # udevil:\n#     udevil mount -o '%o' %v\n#\n# # pmount: (does not accept mount options)\n#     pmount %v\n#\n# # udisks v2:\n#     udisksctl mount -b %v -o '%o'\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
+
+#define UNMOUNT_EXAMPLE "# Enter unmount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable an unmount command)\n#\n# # udevil:\n#     udevil umount %v\n#\n# # pmount:\n#     pumount %v\n#\n# # udisks v2:\n#     udisksctl unmount -b %v\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --unmount %v 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
+
+#define INFO_EXAMPLE "# Enter command to show device properties or leave blank for auto:\n\n"
 
 typedef struct _Handler
 {
-    const char* xset_name;
-    const char* handler_name;
-    const char* type;           // or whitelist
-    const char* ext;            // or blacklist
-    const char* compress_cmd;   // or mount
-    const char* extract_cmd;    // or unmount
-    const char* list_cmd;       // or info
+    const char* xset_name;      //                   set->name
+    const char* handler_name;   //                   set->menu_label
+    const char* type;           // or whitelist      set->s
+    const char* ext;            // or blacklist      set->x
+    const char* compress_cmd;   // or mount          set->y
+    const char* extract_cmd;    // or unmount        set->z
+    const char* list_cmd;       // or info           set->context
+                                // enabled           set->b
 } Handler;
 
-/* If you add a new handler, add it to existing session file handler list so
- * existing users see the new handler. */
+/* If you add a new handler, add it to (end of ) existing session file handler
+ * list so existing users see the new handler. */
 const Handler handlers_arc[]=
 {
+    /* In compress commands:
+    *     %n: First selected filename to archive, or (with %O) a single filename
+    *     %N: All selected filenames/directories to archive (standard)
+    *     %o: Resulting single archive file
+    *     %O: Resulting archive per source file/directory (use changes %n meaning)
+    *
+    * In extract commands:
+    *     %x: Archive to extract
+    *     %g: Extract To tarGet dir + optional subfolder
+    *     %G: Extract To tarGet dir, never with subfolder
+    *
+    * In list commands:
+    *     %x: Archive to list
+    *
+    * Plus standard substitution variables are accepted.
+    */
     {
         "handarc_7z",
         "7-Zip",
@@ -151,6 +175,25 @@ const Handler handlers_arc[]=
 
 const Handler handlers_fs[]=
 {
+    /* In commands:
+    *      %v  device
+    *      %o  volume-specific mount options (use in mount command only)
+    *      %a  mount point, or create auto mount point
+    *  Plus standard substitution variables are accepted.
+    * 
+    *  Whitelist/Blacklist: (prefix list element with '+' if required)
+    *      fstype (eg ext3)
+    *      dev=DEVICE (/dev/sdd1)
+    *      id=UDI
+    *      label=VOLUME_LABEL (includes spaces as underscores)
+    *      point=MOUNT_POINT
+    *      audiocd=0 or 1
+    *      optical=0 or 1
+    *      removable=0 or 1
+    *      mountable=0 or 1
+    *      
+    *      eg: +ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
+    */
     {
         "handfs_ext3",
         "ext3",
@@ -168,36 +211,221 @@ const Handler handlers_fs[]=
         "udevil mount -o ro %v",
         "udevil umount %v",
         "udevil info %v"
+    },
+    {
+        "handfs_def",
+        "Default",
+        "*",
+        "",
+        MOUNT_EXAMPLE,
+        UNMOUNT_EXAMPLE,
+        INFO_EXAMPLE
     }
 };
 
 const Handler handlers_net[]=
 {
+    /* In commands:
+    *       %url%     $fm_url
+    *       %proto%   $fm_url_proto
+    *       %host%    $fm_url_host
+    *       %port%    $fm_url_port
+    *       %user%    $fm_url_user
+    *       %pass%    $fm_url_pass
+    *       %path%    $fm_url_path
+    *       %a        mount point, or create auto mount point
+    *                 $fm_mtab_fs   (mounted mtab fs type)
+    *                 $fm_mtab_url  (mounted mtab url)
+    *
+    *  Whitelist/Blacklist: (prefix list element with '+' if required)
+    *      protocol (eg ssh)
+    *      url=URL (ssh://...)
+    *      mtab_fs=TYPE    (mounted mtab fs type)
+    *      mtab_url=URL    (mounted mtab url)
+    *      host=HOSTNAME
+    *      user=USERNAME
+    *      point=MOUNT_POINT
+    *      
+    *      eg: +ssh url=ssh://*
+    */
     {
-        "handnet_sshfs",
-        "sshfs",
-        "ssh://*",
+        "handnet_ftp",
+        "ftp",
+        "ftp",
         "",
-        "udevil mount %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "+options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
+        "fusermount -u \"%a\"",
+        "mount | grep \"%a\""
     },
     {
-        "handnet_nfs",
-        "nfs",
-        "nfs://* //*",
+        "handnet_ssh",
+        "ssh",
+        "ssh mtab_fs=fuse.sshfs",
         "",
-        "udevil mount -o ro %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "+[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
+        "fusermount -u %a",
+        "mount | grep \"%a\""
+    },
+    {
+        "handnet_udevil",
+        "udevil",
+        "ftp http https nfs smb ssh mtab_fs=fuse*",
+        "",
+        "udevil mount \"$fm_url\"",
+        "udevil umount \"%a\"",
+        "mount | grep \"%a\""
     }
 };
+
 
 // Function prototypes
 static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data );
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
+
+static void temp_encode( char** orig )
+{
+    char* str = replace_string( *orig, "\n", "\\n", FALSE );
+    g_free( *orig );
+    *orig = replace_string( str, "\t", "\\t", FALSE );
+    g_free( str );
+}
+
+static char* temp_decode( const char* orig )
+{
+    char* str = replace_string( orig, "\\n", "\n", FALSE );
+    char* str2 = replace_string( str, "\\t", "\t", FALSE );
+    g_free( str );
+    return str2;
+}
+
+gboolean ptk_handler_values_in_list( const char* list, GSList* values,
+                                     char** msg )
+{   /* test for the presence of values in list, using wildcards.
+    *  list is space or comma separated, plus indicates required. */
+    if ( !( list && list[0] ) || !values )
+        return FALSE;
+    
+    if ( msg )
+        *msg = NULL;
+
+    // get elements of list
+    gchar** elements = g_strsplit_set( list, " ,", 0 );
+    if ( !elements )
+        return FALSE;
+    
+    // test each element for match
+    int i;
+    GSList* l;
+    char* element;
+    char* ret_msg = NULL;
+    char* str;
+    gboolean required, match;
+    gboolean ret = FALSE;
+    for ( i = 0; elements[i]; i++ )
+    {
+        if ( !elements[i][0] )
+            continue;
+        if ( elements[i][0] == '+' )
+        {
+            // plus prefix indicates this element is required
+            element = elements[i] + 1;
+            required = TRUE;
+        }
+        else
+        {
+            element =  elements[i];
+            required = FALSE;
+        }
+        if ( msg )
+            match = FALSE;
+        for ( l = values; l; l = l->next )
+        {
+            if ( fnmatch( element, (char*)l->data, 0 ) == 0 )
+            {
+                // match
+                ret = match = TRUE;
+            }
+            else if ( required )
+            {
+                // no match of required
+                g_strfreev( elements );
+                g_free( ret_msg );
+                return FALSE;
+            }
+        }
+        if ( msg )
+        {
+            str = ret_msg;
+            ret_msg = g_strdup_printf( "%s%s%s%s%s", ret_msg ? ret_msg : "",
+                                        ret_msg ? " " : "",
+                                        match ? "[" : "",
+                                        elements[i],
+                                        match ? "]" : "" );
+            g_free( str );
+        }
+    }
+    g_strfreev( elements );
+    if ( ret && msg )
+        *msg = ret_msg;
+    else
+        g_free( ret_msg );
+    return ret;    
+}
+
+gboolean ptk_handler_equals_default( XSet* set )
+{   // determine if set is duplicate of default handler
+    const Handler* handler;
+    int i, nelements, mode;
+    
+    if ( set->b != XSET_B_TRUE )
+        // handler not enabled so not equal default
+        return FALSE;
+    
+    if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_ARC] ) )
+    {
+        mode = HANDLER_MODE_ARC;
+        nelements = G_N_ELEMENTS( handlers_arc );
+    }
+    else if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_FS] ) )
+    {
+        mode = HANDLER_MODE_FS;
+        nelements = G_N_ELEMENTS( handlers_fs );
+    }
+    else if ( g_str_has_prefix( set->name, handler_prefix[HANDLER_MODE_NET] ) )
+    {
+        mode = HANDLER_MODE_NET;
+        nelements = G_N_ELEMENTS( handlers_net );
+    }
+    else
+        return FALSE;
+
+    for ( i = 0; i < nelements; i++ )
+    {
+        if ( mode == HANDLER_MODE_ARC )
+            handler = &handlers_arc[i];
+        else if ( mode == HANDLER_MODE_FS )
+            handler = &handlers_fs[i];
+        else if ( mode == HANDLER_MODE_NET )
+            handler = &handlers_net[i];
+
+        if ( !strcmp( handler->xset_name, set->name ) )
+        {
+            // found default handler - test equal
+            if ( !g_strcmp0( handler->handler_name, set->menu_label ) &&
+                 !g_strcmp0( handler->type, set->s ) &&
+                 !g_strcmp0( handler->ext, set->x ) &&
+                 !g_strcmp0( handler->compress_cmd, set->y ) &&
+                 !g_strcmp0( handler->extract_cmd, set->z ) &&
+                 !g_strcmp0( handler->list_cmd, set->context ) )
+                return TRUE;
+            else
+                return FALSE;
+        }
+    }
+    return FALSE;
+}
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing )
@@ -226,11 +454,13 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
         list = g_strdup( "" );
         overwrite = add_missing = TRUE;
     }
+    /* disabled to allow loading of non-saved default handlers on start
     else if ( !overwrite && !add_missing )
     {
         g_free( list );
         return;
     }
+    */
     
     for ( i = 0; i < nelements; i++ )
     {
@@ -261,12 +491,14 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->menu_label, handler->handler_name );
                 string_copy_free( &set->s, handler->type );
                 string_copy_free( &set->x, handler->ext );
-                string_copy_free( &set->y, handler->compress_cmd );      // archive compress
-                string_copy_free( &set->z, handler->extract_cmd );    // archive extract
-                string_copy_free( &set->context, handler->list_cmd ); // archive list
+                string_copy_free( &set->y, handler->compress_cmd );   // or mount
+                string_copy_free( &set->z, handler->extract_cmd );    // or unmount
+                string_copy_free( &set->context, handler->list_cmd ); // or info
                 set->b = XSET_B_TRUE;
-                // indicate that menu label should be saved
+                // note: xset menu_labels are not saved unless !lock
                 set->lock = FALSE;
+                // handler equals default, so don't save in session
+                set->disable = TRUE;
             }
         }
     }
@@ -364,6 +596,7 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
                                     handler_xset->x ?
                                     handler_xset->x : "" );
+/*igtodo code review g_strdup leaks below this line */
     if (!handler_xset->y)
     {
         load_text_view( GTK_TEXT_VIEW( view_handler_compress ), "" );
@@ -375,7 +608,7 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->y[0] == '+' )
         {
             load_text_view( GTK_TEXT_VIEW( view_handler_compress ),
-                            (handler_xset->y) + 1 );
+                            handler_xset->y + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             TRUE);
         }
@@ -398,7 +631,7 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->z[0] == '+' )
         {
             load_text_view( GTK_TEXT_VIEW( view_handler_extract ),
-                            (handler_xset->z) + 1 );
+                            handler_xset->z + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             TRUE);
         }
@@ -421,7 +654,7 @@ static void config_load_handler_settings( XSet* handler_xset,
         if ( handler_xset->context[0] == '+' )
         {
             load_text_view( GTK_TEXT_VIEW( view_handler_list ),
-                            (handler_xset->context) + 1 );
+                            handler_xset->context + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             TRUE);
         }
@@ -543,7 +776,6 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     g_strfreev( archive_handlers );
 }
 
-
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
     int i;
@@ -620,6 +852,11 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     }
     else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
+    // temporarily encode newlines and tabs until multiline support ready
+    temp_encode( &handler_compress );
+    temp_encode( &handler_extract );
+    temp_encode( &handler_list );
+    
     // Fetching selection from treeview
     GtkTreeSelection* selection;
     selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
@@ -662,10 +899,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                             -1 );
 
         // Fetching the xset now I have the xset name
-/*igcr xset_get always returns a valid xset as it will create it if it doesn't
- * exist, so it looks like you want to use xset_is here instead to just fetch
- * an xset only if it exists. */
-        handler_xset = xset_get(xset_name);
+        handler_xset = xset_is(xset_name);
 
         // Making sure it has been fetched
         if (!handler_xset)
@@ -688,13 +922,12 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                 GTK_TOGGLE_BUTTON( chkbtn_handler_enabled )
                               ) ? XSET_B_TRUE : XSET_B_FALSE;
 
-/*igcr memory leaks - don't pass g_strdup, just the const str */
-        xset_set_set( new_handler_xset, "label", g_strdup( handler_name ) );
-        xset_set_set( new_handler_xset, "s", g_strdup( handler_mime ) );  // Mime Type(s)
-        xset_set_set( new_handler_xset, "x", g_strdup( handler_extension ) );  // Extension(s)
-        xset_set_set( new_handler_xset, "y", g_strdup( handler_compress ) );  // Compress command
-        xset_set_set( new_handler_xset, "z", g_strdup( handler_extract ) );  // Extract command
-        xset_set_set( new_handler_xset, "cxt", g_strdup( handler_list ) );  // List command
+        xset_set_set( new_handler_xset, "label", handler_name );
+        xset_set_set( new_handler_xset, "s", handler_mime );  // Mime Type(s)
+        xset_set_set( new_handler_xset, "x", handler_extension );  // Extension(s)
+        xset_set_set( new_handler_xset, "y", handler_compress );  // Compress command
+        xset_set_set( new_handler_xset, "z", handler_extract );  // Extract command
+        xset_set_set( new_handler_xset, "cxt", handler_list );  // List command
 
         // Fetching list store
 /*igcr jfyi shouldn't need an object for this - can get list store from list */
@@ -783,6 +1016,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         xset_set_set( handler_xset, "y", handler_compress );
         xset_set_set( handler_xset, "z", handler_extract );
         xset_set_set( handler_xset, "cxt", handler_list );
+        // prevent saving of default handlers later in session
+        handler_xset->disable = ptk_handler_equals_default( handler_xset );
     }
     else if ( widget == btn_remove )
     {
@@ -1547,7 +1782,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
 
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lbl_handlers ), _("<b>Handlers</b>") );
+    char* str = g_strdup_printf("<b>%s</b>", _(dialog_titles[mode]) );
+    gtk_label_set_markup( GTK_LABEL( lbl_handlers ), str );
+    g_free( str );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );
 
     // Generating the main manager list
@@ -1672,7 +1909,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_list ),
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>L_ist:</b>") :
-                                        _("<b>_Info:</b>") );
+                                        _("<b>Propert_ies:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
     GtkWidget* entry_handler_name = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",

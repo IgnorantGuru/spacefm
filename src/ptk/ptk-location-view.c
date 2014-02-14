@@ -96,6 +96,7 @@ typedef struct _AutoOpen
 {
     PtkFileBrowser* file_browser;
     char* device_file;
+    char* mount_point;
     int job;
 }AutoOpen;
 
@@ -774,26 +775,61 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
 {
     const GList* l;
     VFSVolume* vol;
+    
+    // try to find device of mounted url.  url in mtab may differ from
+    // user-entered url
+    VFSVolume* device_file_vol = NULL;
+    VFSVolume* mount_point_vol = NULL;
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( l = volumes; l; l = l->next )
     {
         vol = (VFSVolume*)l->data;
-        if ( strstr( vol->device_file, ao->device_file ) )
+        if ( vol->is_mounted )
         {
-            if ( vol->is_mounted )
+            if ( strstr( vol->device_file, ao->device_file ) )
             {
-                vfs_volume_special_mounted( ao->device_file );
-                if ( GTK_IS_WIDGET( ao->file_browser ) )
-                {
-                    GDK_THREADS_ENTER();
-                    ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
-                                                                        ao->job );
-                    GDK_THREADS_LEAVE();
-                }
+                device_file_vol = vol;
+                break;
             }
-            break;
+            else if ( !mount_point_vol && ao->mount_point &&
+                      !g_strcmp0( vol->mount_point, ao->mount_point ) )
+                // found a mount point that matches the ao mount point - 
+                // save for later use if no device file match found
+                mount_point_vol = vol;
         }
     }
+    
+    // open in browser and register special mount
+    if ( !device_file_vol )
+    {
+        if ( mount_point_vol )
+        {
+//printf("on_autoopen_net_cb used mount point:\n    mount_point = %s\n    device_file = %s\n    ao->device_file = %s\n", ao->mount_point, mount_point_vol->device_file, ao->device_file );
+            device_file_vol = mount_point_vol;
+        }
+    }
+    if ( device_file_vol )
+    {
+        // copy the user-entered url to udi
+        g_free( device_file_vol->udi );
+        device_file_vol->udi = g_strdup( ao->device_file );
+
+        // add special mount
+        vfs_volume_special_mounted( ao->device_file );
+        
+        // if fuse fails, device may be in mtab even though mount point doesn't
+        // exist, so test for mount point exists
+        if ( GTK_IS_WIDGET( ao->file_browser ) && 
+              g_file_test( device_file_vol->mount_point, G_FILE_TEST_IS_DIR ) )
+        {
+            GDK_THREADS_ENTER();
+            ptk_file_browser_emit_open( ao->file_browser,
+                                        device_file_vol->mount_point,
+                                        ao->job );
+            GDK_THREADS_LEAVE();
+        }
+    }
+
     if ( ao->job == PTK_OPEN_NEW_TAB && GTK_IS_WIDGET( ao->file_browser ) )
     {
         if ( ao->file_browser->side_dev )
@@ -806,65 +842,38 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
                         ptk_file_browser_get_cwd( ao->file_browser ) );
     }
     g_free( ao->device_file );
+    g_free( ao->mount_point );
     g_slice_free( AutoOpen, ao );
+    vfs_volume_clean_mount_points();
 }
 
 void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
 {
     char* str;
     char* line;
-    
+    char* mount_point = NULL;
     netmount_t *netmount = NULL;
     
-    char* handler = xset_get_s( "path_hand" );
-    if ( !handler )
+    // split url
+    if ( split_network_url( url, &netmount ) != 1 )
     {
-        str = g_find_program_in_path( "udevil" );
-        if ( !str )
-        {
-            g_free( str );
-            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
-                            _("udevil Not Installed"), NULL, 0,
-                            _("Mounting a network share requires udevil to be installed, or you can set a custom protocol handler by right-clicking on the Path Bar."),
-                            NULL, NULL );
-            return;
-        }
-        g_free( str );
+        // not a valid url
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                        _("Invalid URL"), NULL, 0,
+                        _("The entered URL is not valid."),
+                        NULL, NULL );
+        return;
     }
     
-    // parse
-    char* neturl = NULL;
-    char* fstype = NULL;
-    int i = parse_network_url( url, NULL, &netmount );
-    if ( i != 1 )
-    {
-        // unrecognized url - clean it up in case udevil can mount it
-        if ( str = strstr( url, "://" ) )
-            neturl = g_strdup( str + 3 );
-        else
-            neturl = g_strdup( url );
-        if ( str = strchr( neturl, ':' ) )
-            str[0] = '\0';
-    }
-    else
-    {
-        neturl = netmount->url;
-        if ( g_str_has_prefix( neturl, "sshfs#" ) )
-        {
-            // sshfs doesn't include sshfs# prefix in mtab
-            str = neturl;
-            neturl = g_strdup( str + 6 );
-            g_free( str );
-        }
-        fstype = netmount->fstype;
-        g_free( netmount->host );
-        g_free( netmount->ip );
-        g_free( netmount->port );
-        g_free( netmount->user );
-        g_free( netmount->pass );
-        g_free( netmount->path );
-        g_slice_free( netmount_t, netmount );        
-    }
+    /*
+    printf( "\nurl=%s\n", netmount->url );
+    printf( "  fstype=%s\n", netmount->fstype );
+    printf( "  host=%s\n", netmount->host );
+    printf( "  port=%s\n", netmount->port );
+    printf( "  user=%s\n", netmount->user );
+    printf( "  pass=%s\n", netmount->pass );
+    printf( "  path=%s\n\n", netmount->path );
+    */
 
     // already mounted?
     const GList* l;
@@ -873,7 +882,9 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     for ( l = volumes; l; l = l->next )
     {
         vol = (VFSVolume*)l->data;
-        if ( strstr( vol->device_file, neturl ) )
+        // test against mtab url and copy of user-entered url (udi)
+        if ( strstr( vol->device_file, netmount->url ) ||
+                                        strstr( vol->udi, netmount->url ) )
         {
             if ( vol->is_mounted )
             {
@@ -888,89 +899,136 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
                         ptk_file_browser_chdir( file_browser, vol->mount_point,
                                                                 PTK_FB_CHDIR_ADD_HISTORY );
                 }
-                g_free( neturl );
-                return;
+                goto _net_free;
             }
             break;
         }
     }
+    
+    // get mount command
+    gboolean run_in_terminal;
+    gboolean ssh_udevil = FALSE;
+    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, vol,
+                                        NULL, netmount, &run_in_terminal,
+                                        &mount_point );
+    if ( !cmd )
+    {
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                        _("Handler Not Found"), NULL, 0,
+                        _("No network handler is configured for this URL, or no mount command is set.  Add a handler in Settings|Protocol Handlers."),
+                        NULL, NULL );
+        goto _net_free;
+
+        /*
+        // use udevil as default mount command
+        str = g_find_program_in_path( "udevil" );
+        if ( !str )
+        {
+            xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("Handler Not Found"), NULL, 0,
+                            _("No network handler is configured for this URL.  Add a handler in Settings|Protocol Handlers."),
+                            NULL, NULL );
+            goto _net_free;
+        }
+        g_free( str );
+
+        run_in_terminal = ( !g_strcmp0( netmount->fstype, "smb" ) || 
+                            !g_strcmp0( netmount->fstype, "cifs" ) ||
+                            !g_strcmp0( netmount->fstype, "ftp" ) ||
+                            !g_strcmp0( netmount->fstype, "ssh" ) ||
+                            !g_strcmp0( netmount->fstype, "http" ) ||
+                            !g_strcmp0( netmount->fstype, "https" ) );
+        ssh_udevil = !g_strcmp0( netmount->fstype, "ssh" );
+        // add bash variables
+        char* urlq = bash_quote( netmount->url );
+        char* protoq = bash_quote( netmount->fstype );
+        char* hostq = bash_quote( netmount->host );
+        char* userq = bash_quote( netmount->user );
+        char* passq = bash_quote( netmount->pass );
+        char* pathq = bash_quote( netmount->path );
+        char* keepterm;
+        cmd = g_strdup_printf( "fm_url=%s; fm_url_proto=%s; fm_url_host=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s\nudevil mount \"$fm_url\"", urlq, protoq, hostq, userq, passq, pathq );
+        g_free( urlq );
+        g_free( protoq );
+        g_free( hostq );
+        g_free( userq );
+        g_free( passq );
+        g_free( pathq );
+        */
+    }
 
     // task    
     char* keepterm;
-    gboolean in_term = FALSE;
-    gboolean is_sync = TRUE;
-    if ( !handler && !g_strcmp0( fstype, "sshfs" ) )
-    {
-        in_term = TRUE;
-        is_sync = FALSE;
-        keepterm = g_strdup_printf( " ; if [ $? -ne 0 ]; then echo \"%s\"; read; else echo \"Press Enter to close (closing this window may unmount sshfs)\"; read; fi", press_enter_to_close );    
-    }
-    else if ( !handler && ( !g_strcmp0( fstype, "smbfs" ) || 
-                            !g_strcmp0( fstype, "cifs" ) ||
-                            !g_strcmp0( fstype, "curlftpfs" ) ||
-                            !g_strcmp0( fstype, "davfs" ) ) )
-    {
-        in_term = TRUE;
-        keepterm = g_strdup_printf( " || ( echo \"%s\"; read )", press_enter_to_close );
-    }
+    if ( ssh_udevil )
+        keepterm = g_strdup_printf( "if [ $? -ne 0 ]; then\n    echo \"%s\"\n    read\nelse\n    echo; echo \"Press Enter to close (closing this window may unmount sshfs)\"\n    read\nfi\n", press_enter_to_close );    
+    else if ( run_in_terminal )
+        keepterm = g_strdup_printf( "[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
     else
         keepterm = g_strdup( "" );
 
-    AutoOpen* ao = NULL;
-    if ( is_sync )
-    {
-        ao = g_slice_new0( AutoOpen );
-        ao->device_file = neturl;
-        ao->file_browser = file_browser;
-        if ( new_tab )
-            ao->job = PTK_OPEN_NEW_TAB;
-        else
-            ao->job = PTK_OPEN_DIR;
-    }
-
-    str = "echo Connecting...;";  // do not translate
-    if ( handler )
-        line = g_strdup_printf( "%s %s '%s'", str, handler, url );
-    else
-        line = g_strdup_printf( "%s udevil mount '%s'%s", str, url, keepterm );
+    line = g_strdup_printf( "%s%s\n%s", ssh_udevil ? "echo Connecting...\n\n" : "",
+                                                        cmd, keepterm );
     g_free( keepterm );
-    g_free( fstype );
-
-    char* task_name = g_strdup_printf( _("Netmount %s"), url );
+    g_free( cmd );
+    
+    char* task_name = g_strdup_printf( _("Netmount %s"), netmount->url );
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
                                                         file_browser->task_view );
     g_free( task_name );
     task->task->exec_command = line;
-    task->task->exec_sync = is_sync;
+    task->task->exec_sync = !ssh_udevil;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
-    task->task->exec_terminal = in_term;
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_keep_terminal = FALSE;
     XSet* set = xset_get( "dev_icon_network" );
     task->task->exec_icon = g_strdup( set->icon );
-    task->complete_notify = is_sync ? (GFunc)on_autoopen_net_cb : NULL;
-    task->user_data = ao;
+
+    // autoopen
+    if ( !ssh_udevil )  // !sync
+    {
+        AutoOpen* ao;
+        ao = g_slice_new0( AutoOpen );
+        ao->device_file = g_strdup( netmount->url );
+        ao->file_browser = file_browser;
+        ao->mount_point = mount_point;
+        mount_point = NULL;
+        if ( new_tab )
+            ao->job = PTK_OPEN_NEW_TAB;
+        else
+            ao->job = PTK_OPEN_DIR;
+        task->complete_notify = (GFunc)on_autoopen_net_cb;
+        task->user_data = ao;
+    }
     ptk_file_task_run( task );
-    return;
+
+_net_free:
+    g_free( mount_point );
+    g_free( netmount->url );
+    g_free( netmount->fstype );
+    g_free( netmount->host );
+    g_free( netmount->ip );
+    g_free( netmount->port );
+    g_free( netmount->user );
+    g_free( netmount->pass );
+    g_free( netmount->path );
+    g_slice_free( netmount_t, netmount );        
 }
 
 static void popup_missing_mount( GtkWidget* view, int job )
 {
-    const char *cmd, *cmdcap;
+    const char *cmd;
     
     if ( job == 0 )
-    {
-        cmd = "mount";
-        cmdcap = "Mount";
-    }
+        cmd = _("mount");
     else
-    {
-        cmd = "unmount";
-        cmdcap = "Unmount";
-    }
-    char* msg = g_strdup_printf( "No %s program was found.  Please install udisks or set a custom %s command in Settings|%s Command.", cmd, cmd, cmdcap );
-    xset_msg_dialog( view, GTK_MESSAGE_ERROR, "Program Not Installed", NULL, 0,
+        cmd = _("unmount");
+    char* msg = g_strdup_printf( _("No handler is configured for this device type, or no %s command is set.  Add a handler in Settings|Device Handlers or Protocol Handlers."), cmd );
+    xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Handler Not Found"), NULL, 0,
                                                             msg, NULL, NULL );
     g_free( msg );
 }
@@ -994,7 +1052,9 @@ static void on_mount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         file_browser = NULL;
         
     // task
-    char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( view, 0 );
@@ -1004,13 +1064,26 @@ static void on_mount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view, 
                                 file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
+    
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
-    task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    char* keep_term;
+    if ( run_in_terminal )
+        keep_term = g_strdup_printf( "\n[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
+    else
+        keep_term = g_strdup( "" );
+    
+    task->task->exec_command = g_strdup_printf( "%s%s", line, keep_term );
+    g_free( line );
+    g_free( keep_term );
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = !!file_browser;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     vol->inhibit_auto = TRUE;
     ptk_file_task_run( task );
@@ -1332,7 +1405,8 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     */
     
     // task
-    char* line = vfs_volume_device_unmount_cmd( vol->device_file );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( view, 1 );
@@ -1345,11 +1419,22 @@ static void on_umount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     g_free( task_name );
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
-    task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    char* keep_term;
+    if ( run_in_terminal )
+        keep_term = g_strdup_printf( "\n[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
+    else
+        keep_term = g_strdup( "" );
+    task->task->exec_command = g_strdup_printf( "%s%s", line, keep_term );
+    g_free( line );
+    g_free( keep_term );
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = !!file_browser;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     ptk_file_task_run( task );
 }
@@ -1392,7 +1477,9 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         char* wait;
         char* wait_done;
         char* eject;
-        char* unmount = vfs_volume_device_unmount_cmd( vol->device_file );
+        gboolean run_in_terminal;
+        
+        char* unmount = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
         if ( !unmount )
         {
             popup_missing_mount( view, 1 );
@@ -1405,7 +1492,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         else
             eject = g_strdup( "\nexit 0" );
 
-        if ( !file_browser )
+        if ( !file_browser && !run_in_terminal &&
+                                        vol->device_type == DEVICE_TYPE_BLOCK )
         {
             char* prog = g_find_program_in_path( g_get_prgname() );
             if ( !prog )
@@ -1423,11 +1511,19 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             wait = g_strdup( "" );
             wait_done = g_strdup( "" );
         }
-
-        if ( strstr( unmount, "udisks " ) )  // udisks v1
-            line = g_strdup_printf( "%ssync\nfm_udisks=`%s 2>&1`\necho \"$fm_udisks\"%s\nif [ \"$fm_udisks\" != \"${fm_udisks/ount failed:/}\" ]; then\n    exit 1\nfi%s", wait, unmount, wait_done, eject );
+        if ( run_in_terminal )
+            line = g_strdup_printf( "echo 'Unmounting %s...'\n%s%s\nif [ $? -ne 0 ]; then\n    echo -n '%s: '\n    read\n    exit 1\nelse\n    %s\nfi",
+                                        vol->device_file, 
+                                        vol->device_type == DEVICE_TYPE_BLOCK ?
+                                                "sync\n" : "",
+                                        unmount,
+                                        press_enter_to_close, eject );
         else
-            line = g_strdup_printf( "%ssync\n%s\nuerr=$?%s\nif [ $uerr -ne 0 ]; then\n    exit 1\nfi%s", wait, unmount, wait_done, eject );
+            line = g_strdup_printf( "%s%s%s\nuerr=$?%s\nif [ $uerr -ne 0 ]; then\n    exit 1\nfi%s",
+                                        wait,
+                                        vol->device_type == DEVICE_TYPE_BLOCK ?
+                                                "sync\n" : "",
+                                        unmount, wait_done, eject );
         g_free( eject );
         g_free( wait );
         g_free( wait_done );
@@ -1438,11 +1534,15 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     }
-    else if ( vol->is_optical || vol->requires_eject )
+    else if ( vol->device_type == DEVICE_TYPE_BLOCK &&
+                            ( vol->is_optical || vol->requires_eject ) )
     {
         // task
         line = g_strdup_printf( "eject %s", vol->device_file );
@@ -1517,14 +1617,9 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     if ( !file_browser )
         return FALSE;
     // task
-    AutoOpen* ao = g_slice_new0( AutoOpen );
-    ao->device_file = g_strdup( vol->device_file );
-    ao->file_browser = file_browser;
-    if ( xset_get_b( "dev_newtab" ) )
-        ao->job = PTK_OPEN_NEW_TAB;
-    else
-        ao->job = PTK_OPEN_DIR;
-    char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+    gboolean run_in_terminal;
+    char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
     if ( !line )
     {
         popup_missing_mount( GTK_WIDGET( view ), 0 );
@@ -1536,15 +1631,37 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     g_free( task_name );
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
-    task->task->exec_command = line;
+    char* keep_term;
+    if ( run_in_terminal )
+        keep_term = g_strdup_printf( "\n[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
+    else
+        keep_term = g_strdup( "" );
+    task->task->exec_command = g_strdup_printf( "%s%s", line, keep_term );
+    g_free( line );
+    g_free( keep_term );
     task->task->exec_sync = TRUE;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;   // set to true for error on click
+    task->task->exec_terminal = run_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
+
+    // autoopen
+    AutoOpen* ao = g_slice_new0( AutoOpen );
+    ao->device_file = g_strdup( vol->device_file );
+    ao->file_browser = file_browser;
+    if ( xset_get_b( "dev_newtab" ) )
+        ao->job = PTK_OPEN_NEW_TAB;
+    else
+        ao->job = PTK_OPEN_DIR;
+    ao->mount_point = NULL;
     task->complete_notify = (GFunc)on_autoopen_cb;
     task->user_data = ao;
     vol->inhibit_auto = TRUE;
+
     ptk_file_task_run( task );
 
     return vfs_volume_is_mounted( vol );
@@ -1566,32 +1683,51 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         
     if ( !vol->is_mounted )
     {
-        // task
-        AutoOpen* ao = g_slice_new0( AutoOpen );
-        ao->device_file = g_strdup( vol->device_file );
-        ao->file_browser = file_browser;
-        ao->job = PTK_OPEN_NEW_TAB;
-        char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+        // get mount command
+        gboolean run_in_terminal;
+        char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
         if ( !line )
         {
             popup_missing_mount( view, 0 );
             return;
         }
+
+        // task
         char* task_name = g_strdup_printf( _("Mount %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view,
                                                         file_browser->task_view );
         g_free( task_name );
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
-        task->task->exec_command = line;
+        char* keep_term;
+        if ( run_in_terminal )
+            keep_term = g_strdup_printf( "\n[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                         press_enter_to_close );
+        else
+            keep_term = g_strdup( "" );
+        task->task->exec_command = g_strdup_printf( "%s%s", line, keep_term );
+        g_free( line );
+        g_free( keep_term );
         task->task->exec_sync = TRUE;
+        task->task->exec_export = TRUE;
+        task->task->exec_browser = file_browser;
         task->task->exec_popup = FALSE;
         task->task->exec_show_output = FALSE;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
+
+        // autoopen
+        AutoOpen* ao = g_slice_new0( AutoOpen );
+        ao->device_file = g_strdup( vol->device_file );
+        ao->file_browser = file_browser;
+        ao->job = PTK_OPEN_NEW_TAB;
+        ao->mount_point = NULL;
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
         vol->inhibit_auto = TRUE;
+        
         ptk_file_task_run( task );
     }
     else
@@ -1619,32 +1755,51 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         
     if ( !vol->is_mounted )
     {
-        // task
-        AutoOpen* ao = g_slice_new0( AutoOpen );
-        ao->device_file = g_strdup( vol->device_file );
-        ao->file_browser = file_browser;
-        ao->job = PTK_OPEN_DIR;
-        char* line = vfs_volume_get_mount_command( vol, xset_get_s( "dev_mount_options" ) );
+        // get mount command
+        gboolean run_in_terminal;
+        char* line = vfs_volume_get_mount_command( vol,
+                        xset_get_s( "dev_mount_options" ), &run_in_terminal );
         if ( !line )
         {
             popup_missing_mount( view, 0 );
             return;
         }
+
+        // task
         char* task_name = g_strdup_printf( _("Mount %s"), vol->device_file );
         PtkFileTask* task = ptk_file_exec_new( task_name, NULL, view,
                                 file_browser ? file_browser->task_view : NULL );
         g_free( task_name );
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
-        task->task->exec_command = line;
+        char* keep_term;
+        if ( run_in_terminal )
+            keep_term = g_strdup_printf( "\n[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                         press_enter_to_close );
+        else
+            keep_term = g_strdup( "" );
+        task->task->exec_command = g_strdup_printf( "%s%s", line, keep_term );
+        g_free( line );
+        g_free( keep_term );
         task->task->exec_sync = TRUE;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
         task->task->exec_popup = FALSE;
         task->task->exec_show_output = FALSE;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
+
+        // autoopen
+        AutoOpen* ao = g_slice_new0( AutoOpen );
+        ao->device_file = g_strdup( vol->device_file );
+        ao->file_browser = file_browser;
+        ao->job = PTK_OPEN_DIR;
+        ao->mount_point = NULL;
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
         vol->inhibit_auto = TRUE;
+        
         ptk_file_task_run( task );
     }
     else if ( file_browser )
@@ -1671,7 +1826,10 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                                                         &set->s, set->z, FALSE, set->line ) )
         return;
 
-    char* mount_command = vfs_volume_get_mount_command( vol, set->s );
+    gboolean mount_in_terminal;
+    gboolean unmount_in_terminal = FALSE;
+    char* mount_command = vfs_volume_get_mount_command( vol, set->s,
+                                                        &mount_in_terminal );
     if ( !mount_command )
     {
         popup_missing_mount( view, 0 );
@@ -1686,16 +1844,18 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( vfs_volume_is_mounted( vol ) )
     {
         // udisks can't remount, so unmount and mount
-        char* unmount_command = vfs_volume_device_unmount_cmd( vol->device_file );
+        char* unmount_command = vfs_volume_device_unmount_cmd( vol,
+                                                    &unmount_in_terminal );
         if ( !unmount_command )
         {
             g_free( mount_command );
             popup_missing_mount( view, 1 );
             return;
         }
-        if ( strstr( unmount_command, "udisks " ) )   // udisks v1
-            line = g_strdup_printf( "fm_udisks=`%s 2>&1`\necho \"$fm_udisks\"\nif [ \"$fm_udisks\" != \"${fm_udisks/ount failed:/}\" ]; then\n    exit 1\nelse\n    %s\nfi",
-                                    unmount_command, mount_command );
+        if ( mount_in_terminal || unmount_in_terminal )
+            line = g_strdup_printf( "%s\nif [ $? -ne 0 ]; then\n    echo -n '%s: '\n    read\n    exit 1\nelse\n    %s\n    [[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\nfi",
+                                    unmount_command, press_enter_to_close,
+                                    mount_command, press_enter_to_close );
         else
             line = g_strdup_printf( "%s\nif [ $? -ne 0 ]; then\n    exit 1\nelse\n    %s\nfi",
                                     unmount_command, mount_command );
@@ -1707,10 +1867,13 @@ static void on_remount( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     if ( strstr( line, "udisks " ) )  // udisks v1
         task->task->exec_type = VFS_EXEC_UDISKS;
     task->task->exec_command = line;
-    task->task->exec_sync = TRUE;
+    task->task->exec_sync = !mount_in_terminal && !unmount_in_terminal;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
     task->task->exec_popup = FALSE;
     task->task->exec_show_output = FALSE;
     task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = mount_in_terminal || unmount_in_terminal;
     task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     vol->inhibit_auto = TRUE;
     ptk_file_task_run( task );
@@ -1733,7 +1896,8 @@ static void on_reload( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         // task
         char* eject;
-        char* unmount = vfs_volume_device_unmount_cmd( vol->device_file );
+        gboolean run_in_terminal;
+        char* unmount = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
         if ( !unmount )
         {
             popup_missing_mount( view, 1 );
@@ -1745,19 +1909,26 @@ static void on_reload( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         else
             eject = g_strdup( "" );
 
-        if ( strstr( unmount, "udisks " ) )  // udisks v1
-            line = g_strdup_printf( "sync\nfm_udisks=`%s 2>&1`\necho \"$fm_udisks\"\nif [ \"$fm_udisks\" != \"${fm_udisks/ount failed:/}\" ]; then\n    exit 1%s\nfi", unmount, eject );
+        if ( run_in_terminal )
+            line = g_strdup_printf( "echo 'Unmounting %s...'\nsync\n%s\nif [ $? -ne 0 ]; then\n    echo -n '%s: '\n    read\n    exit 1%s\nfi",
+                                            vol->device_file, unmount,
+                                            press_enter_to_close, eject );
         else
-            line = g_strdup_printf( "sync\n%s\nif [ $? -ne 0 ]; then\n    exit 1%s\nfi", unmount, eject );
+            line = g_strdup_printf( "sync\n%s\nif [ $? -ne 0 ]; then\n    exit 1%s\nfi",
+                                            unmount, eject );
         g_free( eject );
+        g_free( unmount );
         char* task_name = g_strdup_printf( "Reload %s", vol->device_file );
         task = ptk_file_exec_new( task_name, NULL, view, file_browser->task_view );
         g_free( task_name );
         if ( strstr( line, "udisks " ) )  // udisks v1
             task->task->exec_type = VFS_EXEC_UDISKS;
         task->task->exec_command = line;
-        task->task->exec_sync = TRUE;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = TRUE;
+        task->task->exec_browser = file_browser;
         task->task->exec_show_error = TRUE;
+        task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     }
     else if ( vol->is_optical || vol->requires_eject )
@@ -2365,19 +2536,7 @@ static void on_backup( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2,
 static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 {
     GtkWidget* view;
-    char size_str[ 64 ];
-    char* df;
-    char* udisks;
-    char* lsof;
-    char* infobash;
-    char* path;
-    char* flags;
-    char* old_flags;
-    char* uuid = NULL;
-    char* fstab = NULL;
     char* cmd;
-    char* info;
-    char* esc_path;
     
     if ( !item )
         view = view2;
@@ -2389,7 +2548,100 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
     if ( !vol->device_file )
         return;
-        
+
+    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                                "file_browser" );
+
+    // use handler command if available
+    gboolean run_in_terminal;
+    if ( vol->device_type == DEVICE_TYPE_NETWORK )
+    {
+        // is a network - try to get prop command
+        netmount_t *netmount = NULL;
+        if ( split_network_url( vol->udi, &netmount ) == 1 )
+        {
+            cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_PROP,
+                                          vol, NULL, netmount, &run_in_terminal,
+                                          NULL );
+            g_free( netmount->url );
+            g_free( netmount->fstype );
+            g_free( netmount->host );
+            g_free( netmount->ip );
+            g_free( netmount->port );
+            g_free( netmount->user );
+            g_free( netmount->pass );
+            g_free( netmount->path );
+            g_slice_free( netmount_t, netmount );
+
+            /*
+            // replace mount point sub var
+            if ( cmd && strstr( cmd, "%a" ) )
+            {
+                char* pointq = bash_quote( vol->mount_point );
+                char* str = cmd;
+                cmd = replace_string( cmd, "%a", pointq, FALSE );
+                g_free( str );
+                g_free( pointq );
+            }
+            */
+            
+            if ( !cmd )
+            {
+                xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                                GTK_MESSAGE_ERROR,
+                                _("Handler Not Found"), NULL, 0,
+                                _("No handler is configured to show properties for this item.  Set a handler in Settings|Protocol Handlers."),
+                                NULL, NULL );
+                return;
+            }
+        }
+    }
+    else
+        cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_PROP, vol, NULL,
+                                  NULL, &run_in_terminal, NULL );
+
+    // create task
+    // Note: file_browser may be NULL
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
+    char* task_name = g_strdup_printf( _("Properties %s"), vol->device_file );
+    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, 
+                        file_browser ? GTK_WIDGET( file_browser ) : view,
+                        file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+    task->task->exec_browser = file_browser;
+
+    if ( cmd )
+    {
+        task->task->exec_command = cmd;
+        task->task->exec_sync = !run_in_terminal;
+        task->task->exec_export = !!file_browser;
+        task->task->exec_browser = file_browser;
+        task->task->exec_popup = TRUE;
+        task->task->exec_show_output = TRUE;
+        task->task->exec_terminal = run_in_terminal;
+        task->task->exec_keep_terminal = run_in_terminal;
+        task->task->exec_scroll_lock = TRUE;
+        task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
+        //task->task->exec_keep_tmp = TRUE;
+        ptk_file_task_run( task );        
+        return;
+    }
+
+    // no handler command - show default properties
+    char size_str[ 64 ];
+    char* df;
+    char* udisks;
+    char* lsof;
+    char* infobash;
+    char* path;
+    char* flags;
+    char* old_flags;
+    char* uuid = NULL;
+    char* fstab = NULL;
+    char* info;
+    char* esc_path;
+
     char* base = g_path_get_basename( vol->device_file );
     if ( base )
     {
@@ -2564,20 +2816,6 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
 */        infobash = g_strdup( "" );
     
-    // task
-    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
-                                                                "file_browser" );
-    // Note: file_browser may be NULL
-    if ( !GTK_IS_WIDGET( file_browser ) )
-        file_browser = NULL;
-    
-    char* task_name = g_strdup_printf( _("Properties %s"), vol->device_file );
-    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, 
-                        file_browser ? GTK_WIDGET( file_browser ) : view,
-                        file_browser ? file_browser->task_view : NULL );
-    g_free( task_name );
-    // don't free cwd!
-    task->task->exec_browser = file_browser;
     task->task->exec_command = g_strdup_printf( "%s%s%s%s%s", flags, df, udisks, lsof, infobash );
     task->task->exec_sync = TRUE;
     task->task->exec_popup = TRUE;
@@ -3145,7 +3383,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
 
         set = xset_set_cb( "dev_prop", on_prop, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
+            set->disable = !vol;
 
         set = xset_get( "dev_menu_root" );
             //set->disable = !vol;
@@ -3376,7 +3614,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     g_object_set_data( G_OBJECT( item ), "view", view );
     g_signal_connect( item, "activate", G_CALLBACK( on_prop ), vol );
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-    if ( !( vol && vol->device_type == DEVICE_TYPE_BLOCK ) )
+    if ( !vol )
         gtk_widget_set_sensitive( item, FALSE );
 #else
     item = gtk_menu_item_new_with_mnemonic( _( "_Mount" ) );

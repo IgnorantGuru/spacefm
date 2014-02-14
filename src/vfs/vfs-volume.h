@@ -117,15 +117,21 @@ typedef struct netmount_t {
 } netmount_t;
 
 gboolean vfs_volume_command( char* command, char** output );
-char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options );
+char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options,
+                                    gboolean* run_in_terminal );
 char* vfs_volume_get_mount_options( VFSVolume* vol, char* options );
 void vfs_volume_automount( VFSVolume* vol );
 void vfs_volume_set_info( VFSVolume* volume );
-char* vfs_volume_device_mount_cmd( const char* device_file, const char* options );
-char* vfs_volume_device_unmount_cmd( const char* device_file );
+char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
+                                   gboolean* run_in_terminal );
+char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal );
 char* vfs_volume_device_info( const char* device_file );
-int parse_network_url( const char* url, const char* fstype,
-                                                        netmount_t** netmount );
+char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
+                              const char* options, netmount_t* netmount,
+                              gboolean* run_in_terminal, char** mount_point );
+void vfs_volume_clean_mount_points();
+
+int split_network_url( const char* url, netmount_t** netmount );
 void vfs_volume_special_mounted( const char* device_file );
 gboolean vfs_volume_dir_avoid_changes( const char* dir );
 dev_t get_device_parent( dev_t dev );
