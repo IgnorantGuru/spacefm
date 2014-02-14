@@ -55,8 +55,8 @@ const char* handler_conf_xset[] =
 const char* dialog_titles[] =
 {
     N_("Archive Handlers"),
-    N_("Filesystem Handlers"),
-    N_("Network Handlers")
+    N_("Device Handlers"),
+    N_("Protocol Handlers")
 };
 
 #define MOUNT_EXAMPLE "# Enter mount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable a mount command)\n#\n# # udevil:\n#     udevil mount -o '%o' %v\n#\n# # pmount: (does not accept mount options)\n#     pmount %v\n#\n# # udisks v2:\n#     udisksctl mount -b %v -o '%o'\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
@@ -227,6 +227,7 @@ const Handler handlers_net[]=
     *       %url%     $fm_url
     *       %proto%   $fm_url_proto
     *       %host%    $fm_url_host
+    *       %port%    $fm_url_port
     *       %user%    $fm_url_user
     *       %pass%    $fm_url_pass
     *       %path%    $fm_url_path
@@ -246,11 +247,20 @@ const Handler handlers_net[]=
     *      eg: +ssh url=ssh://*
     */
     {
-        "handnet_sshfs",
-        "sshfs",
+        "handnet_ftp",
+        "ftp",
+        "ftp",
+        "",
+        "+options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
+        "fusermount -u \"%a\"",
+        "mount | grep \"%a\""
+    },
+    {
+        "handnet_ssh",
+        "ssh",
         "ssh mtab_fs=fuse.sshfs",
         "",
-        "+if [ \"$(which nohup)\" != \"\" ]; then\n    # Run sshfs through nohup to prevent disconnect on terminal close\n    echo \"Connecting to %url%\"\n    nohup sshfs %user%@%host%:%path% %a &> /tmp/spacefm-ssh-output.tmp\n    err=$?\n    if [ -e /tmp/spacefm-ssh-output.tmp ]; then\n        cat /tmp/spacefm-ssh-output.tmp\n        rm -f /tmp/spacefm-ssh-output.tmp\n    fi\n    [[ $err -eq 0 ]]  # set error status\nelse\n    # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n    # terminal is closed (likely bug in sshfs)\n    spacefm -s run-task cmd --terminal 'echo \"Connecting to %url%\"; echo; sshfs %user%@%host%:%path% %a; if [ $? -ne 0 ]; then echo; echo \"[ Finished ] Press Enter to close\"; else echo; echo \"Press Enter to close (closing this window may unmount sshfs - install nohup to avoid)\"; fi; read' &\n    # don't close terminal before command starts - or uncheck Run In Terminal\n    sleep 1\nfi\n",
+        "+[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
         "fusermount -u %a",
         "mount | grep \"%a\""
     },
@@ -260,7 +270,7 @@ const Handler handlers_net[]=
         "ftp http https nfs smb ssh mtab_fs=fuse*",
         "",
         "udevil mount \"$fm_url\"",
-        "udevil umount %a",
+        "udevil umount \"%a\"",
         "mount | grep \"%a\""
     }
 };
@@ -288,12 +298,16 @@ static char* temp_decode( const char* orig )
     return str2;
 }
 
-gboolean ptk_handler_values_in_list( const char* list, GSList* values )
+gboolean ptk_handler_values_in_list( const char* list, GSList* values,
+                                     char** msg )
 {   /* test for the presence of values in list, using wildcards.
     *  list is space or comma separated, plus indicates required. */
     if ( !( list && list[0] ) || !values )
         return FALSE;
     
+    if ( msg )
+        *msg = NULL;
+
     // get elements of list
     gchar** elements = g_strsplit_set( list, " ,", 0 );
     if ( !elements )
@@ -303,7 +317,9 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values )
     int i;
     GSList* l;
     char* element;
-    gboolean required;
+    char* ret_msg = NULL;
+    char* str;
+    gboolean required, match;
     gboolean ret = FALSE;
     for ( i = 0; elements[i]; i++ )
     {
@@ -320,22 +336,39 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values )
             element =  elements[i];
             required = FALSE;
         }
+        if ( msg )
+            match = FALSE;
         for ( l = values; l; l = l->next )
         {
             if ( fnmatch( element, (char*)l->data, 0 ) == 0 )
             {
                 // match
-                ret = TRUE;
+                ret = match = TRUE;
             }
             else if ( required )
             {
                 // no match of required
                 g_strfreev( elements );
+                g_free( ret_msg );
                 return FALSE;
             }
         }
+        if ( msg )
+        {
+            str = ret_msg;
+            ret_msg = g_strdup_printf( "%s%s%s%s%s", ret_msg ? ret_msg : "",
+                                        ret_msg ? " " : "",
+                                        match ? "[" : "",
+                                        elements[i],
+                                        match ? "]" : "" );
+            g_free( str );
+        }
     }
     g_strfreev( elements );
+    if ( ret && msg )
+        *msg = ret_msg;
+    else
+        g_free( ret_msg );
     return ret;    
 }
 
@@ -1776,7 +1809,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
 
     // Generating left-hand side of dialog
     GtkWidget* lbl_handlers = gtk_label_new( NULL );
-    gtk_label_set_markup( GTK_LABEL( lbl_handlers ), _("<b>Handlers</b>") );
+    char* str = g_strdup_printf("<b>%s</b>", _(dialog_titles[mode]) );
+    gtk_label_set_markup( GTK_LABEL( lbl_handlers ), str );
+    g_free( str );
     gtk_misc_set_alignment( GTK_MISC( lbl_handlers ), 0, 0 );
 
     // Generating the main manager list
@@ -1901,7 +1936,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_list ),
                                         mode == HANDLER_MODE_ARC ?
                                         _("<b>L_ist:</b>") :
-                                        _("<b>_Propert_ies:</b>") );
+                                        _("<b>Propert_ies:</b>") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_list ), 0, 0.5 );
     GtkWidget* entry_handler_name = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_name",

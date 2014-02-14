@@ -128,9 +128,9 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
 char* vfs_volume_device_info( const char* device_file );
 char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
-                              gboolean* run_in_terminal );
-//int parse_network_url( const char* url, const char* fstype,
-//                                                    netmount_t** netmount );
+                              gboolean* run_in_terminal, char** mount_point );
+void vfs_volume_clean_mount_points();
+
 int split_network_url( const char* url, netmount_t** netmount );
 void vfs_volume_special_mounted( const char* device_file );
 gboolean vfs_volume_dir_avoid_changes( const char* dir );

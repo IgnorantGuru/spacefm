@@ -9659,9 +9659,9 @@ void xset_defaults()
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-ucmd" );
 
-    set = xset_set( "dev_fs_cnf", "label", _("Filesystem Handlers") );
+    set = xset_set( "dev_fs_cnf", "label", _("_Device Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
-    set = xset_set( "dev_net_cnf", "label", _("Network Handlers") );
+    set = xset_set( "dev_net_cnf", "label", _("_Protocol Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
 
     // dev icons

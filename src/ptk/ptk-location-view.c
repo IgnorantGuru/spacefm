@@ -96,6 +96,7 @@ typedef struct _AutoOpen
 {
     PtkFileBrowser* file_browser;
     char* device_file;
+    char* mount_point;
     int job;
 }AutoOpen;
 
@@ -774,26 +775,61 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
 {
     const GList* l;
     VFSVolume* vol;
+    
+    // try to find device of mounted url.  url in mtab may differ from
+    // user-entered url
+    VFSVolume* device_file_vol = NULL;
+    VFSVolume* mount_point_vol = NULL;
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( l = volumes; l; l = l->next )
     {
         vol = (VFSVolume*)l->data;
-        if ( strstr( vol->device_file, ao->device_file ) )
+        if ( vol->is_mounted )
         {
-            if ( vol->is_mounted )
+            if ( strstr( vol->device_file, ao->device_file ) )
             {
-                vfs_volume_special_mounted( ao->device_file );
-                if ( GTK_IS_WIDGET( ao->file_browser ) )
-                {
-                    GDK_THREADS_ENTER();
-                    ptk_file_browser_emit_open( ao->file_browser, vol->mount_point,
-                                                                        ao->job );
-                    GDK_THREADS_LEAVE();
-                }
+                device_file_vol = vol;
+                break;
             }
-            break;
+            else if ( !mount_point_vol && ao->mount_point &&
+                      !g_strcmp0( vol->mount_point, ao->mount_point ) )
+                // found a mount point that matches the ao mount point - 
+                // save for later use if no device file match found
+                mount_point_vol = vol;
         }
     }
+    
+    // open in browser and register special mount
+    if ( !device_file_vol )
+    {
+        if ( mount_point_vol )
+        {
+//printf("on_autoopen_net_cb used mount point:\n    mount_point = %s\n    device_file = %s\n    ao->device_file = %s\n", ao->mount_point, mount_point_vol->device_file, ao->device_file );
+            device_file_vol = mount_point_vol;
+        }
+    }
+    if ( device_file_vol )
+    {
+        // copy the user-entered url to udi
+        g_free( device_file_vol->udi );
+        device_file_vol->udi = g_strdup( ao->device_file );
+
+        // add special mount
+        vfs_volume_special_mounted( ao->device_file );
+        
+        // if fuse fails, device may be in mtab even though mount point doesn't
+        // exist, so test for mount point exists
+        if ( GTK_IS_WIDGET( ao->file_browser ) && 
+              g_file_test( device_file_vol->mount_point, G_FILE_TEST_IS_DIR ) )
+        {
+            GDK_THREADS_ENTER();
+            ptk_file_browser_emit_open( ao->file_browser,
+                                        device_file_vol->mount_point,
+                                        ao->job );
+            GDK_THREADS_LEAVE();
+        }
+    }
+
     if ( ao->job == PTK_OPEN_NEW_TAB && GTK_IS_WIDGET( ao->file_browser ) )
     {
         if ( ao->file_browser->side_dev )
@@ -806,13 +842,16 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
                         ptk_file_browser_get_cwd( ao->file_browser ) );
     }
     g_free( ao->device_file );
+    g_free( ao->mount_point );
     g_slice_free( AutoOpen, ao );
+    vfs_volume_clean_mount_points();
 }
 
 void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
 {
     char* str;
     char* line;
+    char* mount_point = NULL;
     netmount_t *netmount = NULL;
     
     // split url
@@ -836,14 +875,16 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     printf( "  path=%s\n\n", netmount->path );
     */
 
-    // already mounted? - this will almost never work?
+    // already mounted?
     const GList* l;
     VFSVolume* vol;
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( l = volumes; l; l = l->next )
     {
         vol = (VFSVolume*)l->data;
-        if ( strstr( vol->device_file, netmount->url ) )
+        // test against mtab url and copy of user-entered url (udi)
+        if ( strstr( vol->device_file, netmount->url ) ||
+                                        strstr( vol->udi, netmount->url ) )
         {
             if ( vol->is_mounted )
             {
@@ -868,9 +909,17 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     gboolean run_in_terminal;
     gboolean ssh_udevil = FALSE;
     char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, vol,
-                                        NULL, netmount, &run_in_terminal );
+                                        NULL, netmount, &run_in_terminal,
+                                        &mount_point );
     if ( !cmd )
     {
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                        _("Handler Not Found"), NULL, 0,
+                        _("No network handler is configured for this URL, or no mount command is set.  Add a handler in Settings|Protocol Handlers."),
+                        NULL, NULL );
+        goto _net_free;
+
+        /*
         // use udevil as default mount command
         str = g_find_program_in_path( "udevil" );
         if ( !str )
@@ -905,6 +954,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         g_free( userq );
         g_free( passq );
         g_free( pathq );
+        */
     }
 
     // task    
@@ -945,6 +995,8 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         ao = g_slice_new0( AutoOpen );
         ao->device_file = g_strdup( netmount->url );
         ao->file_browser = file_browser;
+        ao->mount_point = mount_point;
+        mount_point = NULL;
         if ( new_tab )
             ao->job = PTK_OPEN_NEW_TAB;
         else
@@ -955,6 +1007,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     ptk_file_task_run( task );
 
 _net_free:
+    g_free( mount_point );
     g_free( netmount->url );
     g_free( netmount->fstype );
     g_free( netmount->host );
@@ -968,20 +1021,14 @@ _net_free:
 
 static void popup_missing_mount( GtkWidget* view, int job )
 {
-    const char *cmd, *cmdcap;
+    const char *cmd;
     
     if ( job == 0 )
-    {
-        cmd = "mount";
-        cmdcap = "Mount";
-    }
+        cmd = _("mount");
     else
-    {
-        cmd = "unmount";
-        cmdcap = "Unmount";
-    }
-    char* msg = g_strdup_printf( "No %s program was found.  Please install udisks or set a custom %s command in Settings|%s Command.", cmd, cmd, cmdcap );
-    xset_msg_dialog( view, GTK_MESSAGE_ERROR, "Program Not Installed", NULL, 0,
+        cmd = _("unmount");
+    char* msg = g_strdup_printf( _("No handler is configured for this device type, or no %s command is set.  Add a handler in Settings|Device Handlers or Protocol Handlers."), cmd );
+    xset_msg_dialog( view, GTK_MESSAGE_ERROR, _("Handler Not Found"), NULL, 0,
                                                             msg, NULL, NULL );
     g_free( msg );
 }
@@ -1445,7 +1492,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         else
             eject = g_strdup( "\nexit 0" );
 
-        if ( !file_browser && !run_in_terminal )
+        if ( !file_browser && !run_in_terminal &&
+                                        vol->device_type == DEVICE_TYPE_BLOCK )
         {
             char* prog = g_find_program_in_path( g_get_prgname() );
             if ( !prog )
@@ -1464,12 +1512,18 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             wait_done = g_strdup( "" );
         }
         if ( run_in_terminal )
-            line = g_strdup_printf( "echo 'Unmounting %s...'\nsync\n%s\nif [ $? -ne 0 ]; then\n    echo -n '%s: '\n    read\n    exit 1\nelse\n    %s\nfi",
-                                            vol->device_file, unmount,
-                                            press_enter_to_close, eject );
+            line = g_strdup_printf( "echo 'Unmounting %s...'\n%s%s\nif [ $? -ne 0 ]; then\n    echo -n '%s: '\n    read\n    exit 1\nelse\n    %s\nfi",
+                                        vol->device_file, 
+                                        vol->device_type == DEVICE_TYPE_BLOCK ?
+                                                "sync\n" : "",
+                                        unmount,
+                                        press_enter_to_close, eject );
         else
-            line = g_strdup_printf( "%ssync\n%s\nuerr=$?%s\nif [ $uerr -ne 0 ]; then\n    exit 1\nfi%s",
-                                            wait, unmount, wait_done, eject );
+            line = g_strdup_printf( "%s%s%s\nuerr=$?%s\nif [ $uerr -ne 0 ]; then\n    exit 1\nfi%s",
+                                        wait,
+                                        vol->device_type == DEVICE_TYPE_BLOCK ?
+                                                "sync\n" : "",
+                                        unmount, wait_done, eject );
         g_free( eject );
         g_free( wait );
         g_free( wait_done );
@@ -1487,7 +1541,8 @@ static void on_eject( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         task->task->exec_terminal = run_in_terminal;
         task->task->exec_icon = g_strdup( vfs_volume_get_icon( vol ) );
     }
-    else if ( vol->is_optical || vol->requires_eject )
+    else if ( vol->device_type == DEVICE_TYPE_BLOCK &&
+                            ( vol->is_optical || vol->requires_eject ) )
     {
         // task
         line = g_strdup_printf( "eject %s", vol->device_file );
@@ -1602,6 +1657,7 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
         ao->job = PTK_OPEN_NEW_TAB;
     else
         ao->job = PTK_OPEN_DIR;
+    ao->mount_point = NULL;
     task->complete_notify = (GFunc)on_autoopen_cb;
     task->user_data = ao;
     vol->inhibit_auto = TRUE;
@@ -1667,6 +1723,7 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         ao->device_file = g_strdup( vol->device_file );
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_NEW_TAB;
+        ao->mount_point = NULL;
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
         vol->inhibit_auto = TRUE;
@@ -1738,6 +1795,7 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         ao->device_file = g_strdup( vol->device_file );
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_DIR;
+        ao->mount_point = NULL;
         task->complete_notify = (GFunc)on_autoopen_cb;
         task->user_data = ao;
         vol->inhibit_auto = TRUE;
@@ -2500,10 +2558,11 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     {
         // is a network - try to get prop command
         netmount_t *netmount = NULL;
-        if ( split_network_url( vol->device_file, &netmount ) == 1 )
+        if ( split_network_url( vol->udi, &netmount ) == 1 )
         {
-            cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_INFO,
-                                          vol, NULL, netmount, &run_in_terminal );
+            cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_PROP,
+                                          vol, NULL, netmount, &run_in_terminal,
+                                          NULL );
             g_free( netmount->url );
             g_free( netmount->fstype );
             g_free( netmount->host );
@@ -2538,8 +2597,8 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         }
     }
     else
-        cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_INFO, vol, NULL,
-                                  NULL, &run_in_terminal );
+        cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_PROP, vol, NULL,
+                                  NULL, &run_in_terminal, NULL );
 
     // create task
     // Note: file_browser may be NULL

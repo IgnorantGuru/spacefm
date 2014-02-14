@@ -29,7 +29,7 @@ enum {
 enum {
     HANDLER_MOUNT,
     HANDLER_UNMOUNT,
-    HANDLER_INFO
+    HANDLER_PROP
 };
 
 enum {
@@ -42,7 +42,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 gboolean ptk_handler_equals_default( XSet* set );
-gboolean ptk_handler_values_in_list( const char* list, GSList* values );
+gboolean ptk_handler_values_in_list( const char* list, GSList* values,
+                                     char** msg );
 
 
 G_END_DECLS

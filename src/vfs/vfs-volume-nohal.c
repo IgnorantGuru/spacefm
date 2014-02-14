@@ -49,7 +49,6 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 void vfs_volume_special_unmounted( const char* device_file );
 void unmount_if_mounted( VFSVolume* vol );
-static void vfs_volume_clean();
 
 
 typedef struct _VFSVolumeCallbackData
@@ -1892,7 +1891,8 @@ void parse_mounts( gboolean report )
                 // not a block device
                 if ( volume = vfs_volume_read_by_mount( devmount->mount_points ) )
                 {
-                    printf( "network mount changed: %s\n", devmount->mount_points );
+                    printf( "network mount changed: %s on %s\n",
+                                volume->device_file, devmount->mount_points );
                     vfs_volume_device_added( volume, FALSE ); //frees volume if needed
                 }
                 else
@@ -2655,9 +2655,19 @@ int split_network_url( const char* url, netmount_t** netmount )
             goto _net_free;
         str[0] = ':';
         is_colon = TRUE;
+        
+        // remove ...# from start of protocol
+        // eg curlftpfs mtab url looks like: curlftpfs#ftp://hostname/
+        if ( nm->fstype && ( str = strchr( nm->fstype, '#' ) ) )
+        {
+            str2 = nm->fstype;
+            nm->fstype = g_strdup( str + 1 );
+            g_free( str2 );
+        }
     }
     else if ( str = strstr( xurl, ":/" ) )
     {   // host:/path
+        // note: sshfs also uses this URL format in mtab, but mtab_fstype == fuse.sshfs
         if ( xurl[0] == ':' || xurl[0] == '/' )
             goto _net_free;
         nm->fstype = g_strdup( "nfs" );
@@ -2739,7 +2749,7 @@ int split_network_url( const char* url, netmount_t** netmount )
 
     // check host
     if ( !nm->host )
-        ret = 2;
+        nm->host = g_strdup( "" );
     
     /*
     // check user pass port
@@ -2765,311 +2775,6 @@ _net_free:
     g_free( orig_url );
     return 0;
 }
-
-#if 0
-int parse_network_url( const char* url, const char* fstype,
-                                                        netmount_t** netmount )
-{   // returns 0=not a network url  1=valid network url  2=invalid network url
-    if ( !url || !netmount )
-        return 0;
-
-    int ret = 0;
-    char* str;
-    char* str2;
-    netmount_t* nm = g_slice_new0( netmount_t );
-    nm->fstype = NULL;
-    nm->host = NULL;
-    nm->ip = NULL;
-    nm->port = NULL;
-    nm->user = NULL;
-    nm->pass = NULL;
-    nm->path = NULL;
-
-    char* orig_url = strdup( url );
-    char* xurl = orig_url;
-    gboolean is_colon = FALSE;
-    
-    // determine url type
-    if ( g_str_has_prefix( xurl, "smb:" ) || g_str_has_prefix( xurl, "smbfs:" ) 
-                                               || g_str_has_prefix( xurl, "cifs:" ) 
-                                               || g_str_has_prefix( xurl, "//" ) )
-    {
-        ret = 2;
-        // mount [-t smbfs] //host[:<port>]/<path>
-        if ( !g_str_has_prefix( xurl, "//" ) )
-            is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "smbfs" ) && strcmp( fstype, "cifs" ) )
-        {
-            // wlog( _("udevil: error 26: invalid type '%s' for SMB share - must be cifs or smbfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        if ( !g_strcmp0( fstype, "smbfs" ) || g_str_has_prefix( xurl, "smbfs:" ) )
-            nm->fstype = g_strdup( "smbfs" );
-        else
-            nm->fstype = g_strdup( "cifs" );
-    }
-    else if ( g_str_has_prefix( xurl, "nfs:" ) )
-    {
-        ret = 2;
-        is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
-        {
-            // wlog( _("udevil: error 27: invalid type '%s' for NFS share - must be nfs or nfs4\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        nm->fstype = g_strdup( "nfs" );
-    }
-    else if ( g_str_has_prefix( xurl, "curlftpfs#" ) )
-    {
-        ret = 2;
-        if ( g_str_has_prefix( xurl, "curlftpfs#ftp:" ) )
-            is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "curlftpfs" ) )
-        {
-            // wlog( _("udevil: error 28: invalid type '%s' for curlftpfs share - must be curlftpfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        nm->fstype = g_strdup( "curlftpfs" );
-    }
-    else if ( g_str_has_prefix( xurl, "ftp:" ) )
-    {
-        ret = 2;
-        is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "ftpfs" ) && strcmp( fstype, "curlftpfs" ) )
-        {
-            // wlog( _("udevil: error 29: invalid type '%s' for FTP share - must be curlftpfs or ftpfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        if ( fstype )
-            nm->fstype = g_strdup( fstype );
-        else
-        {
-            // detect curlftpfs or ftpfs
-            if ( str = g_find_program_in_path( "curlftpfs" ) )
-                nm->fstype = g_strdup( "curlftpfs" );
-            else
-                nm->fstype = g_strdup( "ftpfs" );
-            g_free( str );
-        }
-    }
-    else if ( g_str_has_prefix( xurl, "sshfs#" ) )
-    {
-        ret = 2;
-        if ( g_str_has_prefix( xurl, "sshfs#ssh:" )
-                            || g_str_has_prefix( xurl, "sshfs#sshfs:" ) 
-                            || g_str_has_prefix( xurl, "sshfs#sftp:" ) )
-            is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "sshfs" ) )
-        {
-            // wlog( _("udevil: error 30: invalid type '%s' for sshfs share - must be sshfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        nm->fstype = g_strdup( "sshfs" );
-    }
-    else if ( g_str_has_prefix( xurl, "ssh:" ) || g_str_has_prefix( xurl, "sshfs:" ) 
-                                            || g_str_has_prefix( xurl, "sftp:" ) )
-    {
-        ret = 2;
-        is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "sshfs" ) )
-        {
-            // wlog( _("udevil: error 31: invalid type '%s' for sshfs share - must be sshfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        nm->fstype = g_strdup( "sshfs" );
-    }
-    else if ( g_str_has_prefix( xurl, "http:" ) || g_str_has_prefix( xurl, "https:" ) )
-    {
-        ret = 2;
-        is_colon = TRUE;
-        if ( fstype && strcmp( fstype, "davfs" ) )
-        {
-            // wlog( _("udevil: error 151: invalid type '%s' for WebDAV share - must be davfs\n"),
-            //                                                    fstype, 2 );
-            goto _net_free;
-        }
-        nm->fstype = g_strdup( "davfs" );
-    }
-    else if ( ( str = strstr( xurl, ":/" ) ) && xurl[0] != ':' && xurl[0] != '/' )
-    {
-        ret = 2;
-        str[0] = '\0';
-        if ( strchr( xurl, '@' ) || !g_strcmp0( fstype, "sshfs" ) )
-        {
-            nm->fstype = g_strdup( "sshfs" );
-            if ( fstype && strcmp( fstype, "sshfs" ) )
-            {
-                // wlog( _("udevil: error 32: invalid type '%s' for sshfs share - must be sshfs\n"),
-                //                                                    fstype, 2 );
-                goto _net_free;
-            }
-        }
-        else
-        {
-            // mount [-t nfs] host:/path
-            nm->fstype = g_strdup( "nfs" );
-            if ( fstype && strcmp( fstype, "nfs" ) && strcmp( fstype, "nfs4" ) )
-            {
-                // wlog( _("udevil: error 33: invalid type '%s' for NFS share - must be nfs or nfs4\n"),
-                //                                                    fstype, 2 );
-                goto _net_free;
-            }
-        }
-        str[0] = ':';
-    }
-    else if ( fstype && ( !strcmp( fstype, "nfs" ) || 
-                          !strcmp( fstype, "nfs4" ) ||
-                          !strcmp( fstype, "smbfs" ) ||
-                          !strcmp( fstype, "cifs" ) ||
-                          !strcmp( fstype, "sshfs" ) ||
-                          !strcmp( fstype, "davfs" ) ||
-                          !strcmp( fstype, "curlftpfs" ) ||
-                          !strcmp( fstype, "ftpfs" ) ) )
-    {
-        // no protocol but user specified a valid network fstype
-        ret = 2;
-        nm->fstype = g_strdup( fstype );
-    }
-
-    if ( ret != 2 )
-        goto _net_free;
-            
-    // parse
-    if ( is_colon && ( str = strchr( xurl, ':' ) ) )
-    {
-        xurl = str + 1;
-    }
-    while ( xurl[0] == '/' )
-        xurl++;
-    char* trim_url = g_strdup( xurl );
-
-    // user:pass
-    if ( str = strchr( xurl, '@' ) )
-    {
-        if ( str2 = strchr( str + 1, '@' ) )
-        {
-            // there is a second @ - assume username contains email address
-            str = str2;
-        }
-        str[0] = '\0';
-        if ( str2 = strchr( xurl, ':' ) )
-        {
-            str2[0] = '\0';
-            if ( str2[1] != '\0' )
-                nm->pass = g_strdup( str2 + 1 );
-        }
-        if ( xurl[0] != '\0' )
-            nm->user = g_strdup( xurl );
-        xurl = str + 1;
-    }
-
-    // path
-    if ( str = strchr( xurl, '/' ) )
-    {
-        nm->path = g_strdup( str );
-        str[0] = '\0';
-    }
-
-    // host:port
-    if ( xurl[0] == '[' )
-    {
-        // ipv6 literal
-        if ( str = strchr( xurl, ']' ) )
-        {
-            str[0] = '\0';
-            if ( xurl[1] != '\0' )
-                nm->host = g_strdup( xurl + 1 );
-            if ( str[1] == ':' && str[2] != '\0' )
-                nm->port = g_strdup( str + 1 );
-        }
-    }
-    else if ( xurl[0] != '\0' )
-    {
-        if ( str = strchr( xurl, ':' ) )
-        {
-            str[0] = '\0';
-            if ( str[1] != '\0' )
-                nm->port = g_strdup( str + 1 );
-        }
-        nm->host = g_strdup( xurl );
-    }
-
-    // url
-    if ( nm->host )
-    {
-        if ( !g_strcmp0( nm->fstype, "cifs" ) || !g_strcmp0( nm->fstype, "smbfs" ) )
-            nm->url = g_strdup_printf( "//%s%s", nm->host, nm->path ? nm->path : "/" );
-        else if ( !g_strcmp0( nm->fstype, "nfs" ) )
-            nm->url = g_strdup_printf( "%s:%s", nm->host, nm->path ? nm->path : "/" );
-        else if ( !g_strcmp0( nm->fstype, "curlftpfs" ) )
-            nm->url = g_strdup_printf( "curlftpfs#ftp://%s%s%s%s",
-                            nm->host,
-                            nm->port ? ":" : "",
-                            nm->port ? nm->port : "",
-                            nm->path ? nm->path : "/" );
-        else if ( !g_strcmp0( nm->fstype, "ftpfs" ) )
-            nm->url = g_strdup( "none" );
-        else if ( !g_strcmp0( nm->fstype, "sshfs" ) )
-            nm->url = g_strdup_printf( "sshfs#%s%s%s%s%s:%s",
-                            nm->user ? nm->user : g_get_user_name(),
-                            nm->pass ? ":" : "",
-                            nm->pass ? nm->pass : "",
-                            "@",   //nm->user || nm->pass ? "@" : "",
-                            nm->host,
-                            nm->path ? nm->path : "/" );
-        else if ( !g_strcmp0( nm->fstype, "davfs" ) )
-            nm->url = g_strdup( url );
-        else
-            nm->url = g_strdup( trim_url );
-    }
-    g_free( trim_url );
-    g_free( orig_url );
-
-    if ( !nm->host )
-    {
-        // wlog( _("udevil: error 34: '%s' is not a recognized network url\n"), url, 2 );
-        goto _net_free;
-    }
-    
-    // check user pass port
-    if ( ( nm->user && strchr( nm->user, ' ' ) )
-            || ( nm->pass && strchr( nm->pass, ' ' ) )
-            || ( nm->port && strchr( nm->port, ' ' ) ) )
-    {
-        // wlog( _("udevil: error 35: invalid network url\n"), fstype, 2 );
-        goto _net_free;
-    }
-/* for udevil only
-    // lookup ip
-    if ( !( nm->ip = get_ip( nm->host ) ) || ( nm->ip && nm->ip[0] == '\0' ) )
-    {
-        // wlog( _("udevil: error 36: lookup host '%s' failed\n"), nm->host, 2 );
-        goto _net_free;
-    }
-*/
-    // valid
-    *netmount = nm;
-    return 1;
-
-_net_free:
-    g_free( nm->url );
-    g_free( nm->fstype );
-    g_free( nm->host );
-    g_free( nm->ip );
-    g_free( nm->port );
-    g_free( nm->user );
-    g_free( nm->pass );
-    g_free( nm->path );
-    g_slice_free( netmount_t, nm );
-    return ret;
-}
-#endif
 
 VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
 {   // read a non-block device
@@ -3135,7 +2840,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
 #if 0
 VFSVolume* vfs_volume_read_by_device( char* device_file )
 {
-    // uses udisks to read device parameters into returned volume
+    // uses udisks v1 output to read device parameters into returned volume
     FILE *fp;
     char line[1024];
     char* value;
@@ -3294,9 +2999,140 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
 }
 #endif
 
+void vfs_volume_clean_mount_points()
+{
+    // clean spacefm cache dir (fuse mounts)
+    GDir *dir;
+    const gchar *name;
+    char* del_path;
+    
+    char* path = g_build_filename( g_get_user_cache_dir(), "spacefm", NULL );
+    if ( ( dir = g_dir_open( path, 0, NULL ) ) != NULL )
+    {
+        while ( ( name = g_dir_read_name( dir ) ) != NULL )
+        {
+            del_path = g_build_filename( g_get_user_cache_dir(), "spacefm",
+                                                                name, NULL );
+            rmdir( del_path );  // removes non-empty, non-mounted directories
+            g_free( del_path );
+        }
+        g_dir_close( dir );
+    }
+    g_free( path );
+
+    // clean udevil mount points
+    char* udevil = g_find_program_in_path( "udevil" );
+    if ( udevil )
+    {
+        char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
+        //printf("Clean: %s\n", line );
+        g_free( udevil );    
+        g_spawn_command_line_async( line, NULL );
+        g_free( line );
+    }
+}
+
+static char* create_mount_point( int mode, VFSVolume* vol,
+                                     netmount_t* netmount )
+{
+    char* mname = NULL;
+    char* str;
+    if ( mode == HANDLER_MODE_FS )
+    {
+        char* bdev = g_path_get_basename( vol->device_file );
+        if ( vol->label && vol->label[0] != '\0'
+                            && vol->label[0] != ' '
+                            && g_utf8_validate( vol->label, -1, NULL )
+                            && !strchr( vol->label, '/' ) )
+            mname = g_strdup_printf( "%.20s", vol->label );
+        else if ( vol->udi && vol->udi[0] != '\0'
+                            && g_utf8_validate( vol->udi, -1, NULL ) )
+        {
+            str = g_path_get_basename( vol->udi );
+            mname = g_strdup_printf( "%s-%.20s", bdev, str );
+            g_free( str );
+        }
+        //else if ( device->id_uuid && device->id_uuid[0] != '\0' )
+        //    mname = g_strdup_printf( "%s-%s", bdev, device->id_uuid );
+        else
+            mname = g_strdup( bdev );
+        g_free( bdev );
+    }
+    else if ( mode == HANDLER_MODE_NET )
+    {
+        if ( netmount->host && g_utf8_validate( netmount->host, -1, NULL ) )
+        {
+            char* parent_dir = NULL;
+            if ( netmount->path )
+            {
+                parent_dir = replace_string( netmount->path, "/", "-", FALSE );
+                g_strstrip( parent_dir );
+                while ( g_str_has_suffix( parent_dir, "-" ) )
+                    parent_dir[ strlen( parent_dir ) - 1] = '\0';
+                while ( g_str_has_prefix( parent_dir, "-" ) )
+                {
+                    str = parent_dir;
+                    parent_dir = g_strdup( str + 1 );
+                    g_free( str );
+                }
+                if ( parent_dir[0] == '\0' 
+                                    || !g_utf8_validate( parent_dir, -1, NULL )
+                                    || strlen( parent_dir ) > 30 )
+                {
+                    g_free( parent_dir );
+                    parent_dir = NULL;
+                }
+            }
+            if ( parent_dir )
+                mname = g_strdup_printf( "%s-%s-%s", netmount->fstype,
+                                                netmount->host, parent_dir );
+            else
+                mname = g_strdup_printf( "%s-%s", netmount->fstype,
+                                                netmount->host );
+            g_free( parent_dir );
+        }
+        else
+            mname = g_strdup( netmount->fstype );
+    }
+
+    // remove leading and trailing spaces
+    if ( mname )
+    {
+        g_strstrip( mname );
+        if ( mname[0] == '\0' )
+        {
+            g_free( mname );
+            mname = NULL;
+        }
+    }
+    
+    if ( !mname )
+        mname = g_strdup( "mount" );
+
+    // complete mount point
+    char* point1 = g_build_filename( g_get_user_cache_dir(), "spacefm", mname,
+                                                                        NULL );
+    g_free( mname );
+    int r = 2;
+    char* point = g_strdup( point1 );
+    // attempt to remove existing dir - succeeds only if empty and unmounted
+    rmdir( point );
+    while ( g_file_test( point, G_FILE_TEST_EXISTS ) )
+    {
+        g_free( point );
+        point = g_strdup_printf( "%s-%d", point1, r++ );
+        rmdir( point );
+    }
+    g_free( point1 );
+    if ( g_mkdir_with_parents( point, 0700 ) == -1 )
+        g_warning( "Error creating mount point directory '%s': %s", point,
+                                                        g_strerror( errno ) );
+    return point;
+}
+
 char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
-                              gboolean* run_in_terminal )
+                              gboolean* run_in_terminal, char** mount_point )
 {
     char* str;
     const char* handlers_list;
@@ -3307,6 +3143,9 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     if ( !vol )
         return NULL;
 
+    if ( mount_point )
+        *mount_point = NULL;
+    
     if ( mode == HANDLER_MODE_FS )
     {
         // fs values
@@ -3347,19 +3186,22 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( netmount->user && netmount->user[0] )
             values = g_slist_prepend( values,
                     g_strconcat( "user=", netmount->user, NULL ) );
-        // user-entered url or (if mounted) mtab url
-        if ( netmount->url && netmount->url[0] )
-            values = g_slist_prepend( values,
-                    g_strconcat( "url=", netmount->url, NULL ) );
         if ( action != HANDLER_MOUNT && vol->is_mounted )
         {
+            // user-entered url (or mtab url if not available)
+            values = g_slist_prepend( values,
+                    g_strconcat( "url=", vol->udi, NULL ) );
             // mtab fs type (fuse.ssh)
             values = g_slist_prepend( values,
                     g_strconcat( "mtab_fs=", vol->fs_type, NULL ) );
             // mtab_url == url if mounted
             values = g_slist_prepend( values,
-                    g_strconcat( "mtab_url=", netmount->url, NULL ) );
+                    g_strconcat( "mtab_url=", vol->device_file, NULL ) );
         }
+        else if ( netmount->url && netmount->url[0] )
+            // user-entered url
+            values = g_slist_prepend( values,
+                    g_strconcat( "url=", netmount->url, NULL ) );
         // url-derived protocol
         if ( netmount->fstype && netmount->fstype[0] )
             values = g_slist_prepend( values, g_strdup( netmount->fstype ) );
@@ -3384,6 +3226,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
 
     // test handlers
     gboolean found = FALSE;
+    char* msg = NULL;
     for ( i = 0; handlers[i]; i++ )
     {
         if ( !handlers[i][0] || !( set = xset_is( handlers[i] ) ) ||
@@ -3392,10 +3235,10 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( mode == HANDLER_MODE_FS )
         {
             // test blacklist
-            if ( ptk_handler_values_in_list( set->x, values ) )
+            if ( ptk_handler_values_in_list( set->x, values, NULL ) )
                 break;
             // test whitelist
-            if ( ptk_handler_values_in_list( set->s, values ) )
+            if ( ptk_handler_values_in_list( set->s, values, &msg ) )
             {
                 found = TRUE;
                 break;
@@ -3404,10 +3247,10 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         else //if ( mode == HANDLER_MODE_NET )
         {
             // test blacklist
-            if ( ptk_handler_values_in_list( set->x, values ) )
+            if ( ptk_handler_values_in_list( set->x, values, NULL ) )
                 break;            
             // test whitelist
-            if ( ptk_handler_values_in_list( set->s, values ) )
+            if ( ptk_handler_values_in_list( set->s, values, &msg ) )
             {
                 found = TRUE;
                 break;
@@ -3419,18 +3262,41 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     g_strfreev( handlers );
     if ( !found )
         return NULL;
-
+                              
     // get command for action
     char* command;
+    const char* action_s;
     gboolean terminal = FALSE;
     if ( action == HANDLER_MOUNT )
+    {   
         command = g_strdup( set->y );
+        action_s = "MOUNT";
+    }
     else if ( action == HANDLER_UNMOUNT )
+    {
         command = g_strdup( set->z );
-    else if ( action == HANDLER_INFO )
+        action_s = "UNMOUNT";
+    }
+    else if ( action == HANDLER_PROP )
+    {
         command = g_strdup( set->context );
+        action_s = "PROPERTIES";
+    }
     else
+    {
         command = NULL;
+        action_s = "invalid";
+    }
+    
+    // show selected handler
+    printf( "\n%s '%s': %s%s %s\n", mode == HANDLER_MODE_FS ?
+                                                _("Selected Device Handler") :
+                                                _("Selected Protocol Handler"),
+                              set->menu_label,
+                              action_s,
+                              command ? "" : " (no command)",
+                              msg );
+
     if ( !command )
         return NULL;
     if ( command[0] == '+' )
@@ -3494,25 +3360,15 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         {
             if ( action == HANDLER_MOUNT )
             {
-/*igtodo improve mount point naming */
                 // create mount point
-                char* name;
-                char* point_dir = NULL;
-                char* rand;
-                do
-                {
-                    g_free( point_dir );
-                    rand = randhex8();
-                    name = g_strdup_printf( "point-%s", rand );
-                    g_free( rand );
-                    point_dir = g_build_filename( g_get_user_cache_dir(),
-                                                  "spacefm", name, NULL );
-                    g_free( name );
-                } while ( g_file_test( point_dir, G_FILE_TEST_EXISTS ) );
+                char* point_dir = create_mount_point( HANDLER_MODE_FS, vol, NULL );
                 str = command;
                 command = replace_string( command, "%a", point_dir, FALSE );
                 g_free( str );
-                g_free( point_dir );
+                if ( mount_point )
+                    *mount_point = point_dir;
+                else
+                    g_free( point_dir );
             }
             else
             {
@@ -3534,6 +3390,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         *       %url%     $fm_url
         *       %proto%   $fm_url_proto
         *       %host%    $fm_url_host
+        *       %port%    $fm_url_port
         *       %user%    $fm_url_user
         *       %pass%    $fm_url_pass
         *       %path%    $fm_url_path
@@ -3544,7 +3401,12 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( strstr( command, "%url%" ) )
         {
             str = command;
-            command = replace_string( command, "%url%", netmount->url, FALSE );
+            if ( action != HANDLER_MOUNT && vol->is_mounted )
+                // user-entered url (or mtab url if not available)
+                command = replace_string( command, "%url%", vol->udi, FALSE );
+            else
+                // user-entered url
+                command = replace_string( command, "%url%", netmount->url, FALSE );
             g_free( str );
         }
         if ( strstr( command, "%proto%" ) )
@@ -3557,6 +3419,12 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         {
             str = command;
             command = replace_string( command, "%host%", netmount->host, FALSE );
+            g_free( str );
+        }
+        if ( strstr( command, "%port%" ) )
+        {
+            str = command;
+            command = replace_string( command, "%port%", netmount->port, FALSE );
             g_free( str );
         }
         if ( strstr( command, "%user%" ) )
@@ -3581,27 +3449,16 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         {
             if ( action == HANDLER_MOUNT )
             {
-/*igtodo improve mount point naming */
                 // create mount point
-                char* name;
-                char* point_dir = NULL;
-                char* rand;
-                do
-                {
-                    g_free( point_dir );
-                    rand = randhex8();
-                    name = g_strdup_printf( "point-%s", rand );
-                    g_free( rand );
-                    point_dir = g_build_filename( g_get_user_cache_dir(),
-                                                  "spacefm", name, NULL );
-                    g_free( name );
-                } while ( g_file_test( point_dir, G_FILE_TEST_EXISTS ) );
-                if ( g_mkdir_with_parents( point_dir, 0700 ) == -1 )
-                    g_warning( "Error creating directory %s", point_dir );
+                char* point_dir = create_mount_point( HANDLER_MODE_NET, vol,
+                                                      netmount );
                 str = command;
                 command = replace_string( command, "%a", point_dir, FALSE );
                 g_free( str );
-                g_free( point_dir );
+                if ( mount_point )
+                    *mount_point = point_dir;
+                else
+                    g_free( point_dir );
             }
             else
             {
@@ -3615,9 +3472,11 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
 
         // add bash variables
         // urlq is user-entered url or (if mounted) mtab url
-        char* urlq = bash_quote( netmount->url );
+        char* urlq = bash_quote( action != HANDLER_MOUNT && vol->is_mounted ?
+                                 vol->udi : netmount->url );
         char* protoq = bash_quote( netmount->fstype );  // url-derived protocol (ssh)
         char* hostq = bash_quote( netmount->host );
+        char* portq = bash_quote( netmount->port );
         char* userq = bash_quote( netmount->user );
         char* passq = bash_quote( netmount->pass );
         char* pathq = bash_quote( netmount->path );
@@ -3626,13 +3485,14 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                                         vol->is_mounted ? vol->fs_type : NULL );
         // urlq and mtaburlq will both be the same mtab url if mounted
         char* mtaburlq = bash_quote( action != HANDLER_MOUNT && vol->is_mounted ?
-                                        netmount->url : NULL );
+                                        vol->device_file : NULL );
         str = command;
-        command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, userq, passq, pathq, mtabfsq, mtaburlq, command );
+        command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_port=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, portq, userq, passq, pathq, mtabfsq, mtaburlq, command );
         g_free( str );
         g_free( urlq );
         g_free( protoq );
         g_free( hostq );
+        g_free( portq );
         g_free( userq );
         g_free( passq );
         g_free( pathq );
@@ -3746,7 +3606,7 @@ char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
     char* s1;
     *run_in_terminal = FALSE;
     command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
-                                      vol, NULL, NULL, run_in_terminal );
+                                      vol, NULL, NULL, run_in_terminal, NULL );
     if ( !command )
     {
         // discovery
@@ -3802,10 +3662,11 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
     {
         // is a network - try to get unmount command
         netmount_t *netmount = NULL;
-        if ( split_network_url( vol->device_file, &netmount ) == 1 )
+        if ( split_network_url( vol->udi, &netmount ) == 1 )
         {
             command = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_UNMOUNT,
-                                          vol, NULL, netmount, run_in_terminal );
+                                          vol, NULL, netmount, run_in_terminal,
+                                          NULL );
             g_free( netmount->url );
             g_free( netmount->fstype );
             g_free( netmount->host );
@@ -3825,12 +3686,11 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
                 g_free( s1 );
                 g_free( pointq );
             }
-printf("UNMOUNT %s\n", command );
         }
     }
     else
         command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
-                                  vol, NULL, NULL, run_in_terminal );
+                                  vol, NULL, NULL, run_in_terminal, NULL );
     if ( !command )
     {
         // discovery
@@ -4199,8 +4059,8 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
                     vfs_volume_special_unmounted( volume->device_file );
-                    //remove udevil mount points in case other unmounted
-                    vfs_volume_clean();
+                    //remove mount points in case other unmounted
+                    vfs_volume_clean_mount_points();
                 }
                 else if ( !was_audiocd && volume->is_audiocd )
                     vfs_volume_autoexec( volume );
@@ -4230,30 +4090,6 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
     }
 }
 
-static void vfs_volume_clean()
-{   // clean udevil mount points
-    char* udevil;
-    const char* mount_cmd = xset_get_s( "dev_mount_cmd" );
-    const char* umount_cmd = xset_get_s( "dev_unmount_cmd" );
-    
-    // is udevil current u/mount solution?
-    if ( !mount_cmd || !umount_cmd )
-        udevil = g_find_program_in_path( "udevil" );
-    else if ( strstr( mount_cmd, "udevil" ) || strstr( umount_cmd, "udevil" ) )
-        udevil = g_find_program_in_path( "udevil" );
-    else
-        udevil = NULL;
-    
-    if ( !udevil )
-        return;
-    
-    char* line = g_strdup_printf( "bash -c \"sleep 1 ; %s clean\"", udevil );
-    //printf("Clean: %s\n", line );
-    g_free( udevil );    
-    g_spawn_command_line_async( line, NULL );
-    g_free( line );
-}
-
 static gboolean vfs_volume_nonblock_removed( const char* mount_points )
 {
     GList* l;
@@ -4275,14 +4111,14 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
                     !g_strcmp0( ((VFSVolume*)l->data)->mount_point, point ) )
         {
             // remove volume
-            printf( "network mount removed: %s\n", point );
             volume = (VFSVolume*)l->data;
+            printf( "network mount removed: %s on %s\n", volume->device_file, point );
             vfs_volume_special_unmounted( volume->device_file );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
             g_slice_free( VFSVolume, volume );
-            vfs_volume_clean();
+            vfs_volume_clean_mount_points();
             return TRUE;
         }
     }
@@ -4315,7 +4151,7 @@ static void vfs_volume_device_removed( char* device_file )
             break;
         }
     }
-    vfs_volume_clean();
+    vfs_volume_clean_mount_points();
 }
 
 void unmount_if_mounted( VFSVolume* vol )
@@ -4338,6 +4174,7 @@ void unmount_if_mounted( VFSVolume* vol )
     g_free( line );
 }
 
+/*igtodo use handler not udevil, run in terminal */
 void vfs_volume_special_unmount_all()
 {
     GList* l;
@@ -4425,6 +4262,9 @@ gboolean vfs_volume_init()
     struct udev_enumerate *enumerate;
     struct udev_list_entry *devices, *dev_list_entry;
     VFSVolume* volume;
+
+    // remove unused mount points
+    vfs_volume_clean_mount_points();
 
     // create udev
     udev = udev_new();
@@ -4581,8 +4421,8 @@ gboolean vfs_volume_finalize()
     // unmount networks and files mounted during this session
     vfs_volume_special_unmount_all();
 
-    // remove unused udevil mount points
-    vfs_volume_clean();
+    // remove unused mount points
+    vfs_volume_clean_mount_points();
     
     return TRUE;
 }
