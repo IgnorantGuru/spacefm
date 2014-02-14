@@ -1195,6 +1195,15 @@ static void restore_defaults( GtkWidget* dlg, gboolean all )
     }
 }
 
+char* unescape_multiline_command( char* command )
+{
+    // Dealing with escaped newlines and tabs in multiline command
+    char *str = NULL, *str1 = replace_string( command, "\\n", "\n", FALSE );
+    str = replace_string( str1, "\\t", "\t", FALSE );
+    g_free( str1 );
+    return str;
+}
+
 static gboolean validate_handler( GtkWidget* dlg, int mode )
 {
     if ( mode != HANDLER_MODE_ARC )

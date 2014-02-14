@@ -34,6 +34,7 @@ enum {
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
+char* unescape_multiline_command( char* command );
 
 
 G_END_DECLS

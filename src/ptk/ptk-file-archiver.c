@@ -706,7 +706,10 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                 xset_autosave( FALSE, FALSE );
             }
 
-            // Cleaning up
+            // Dealing with multiline command
+            g_free( compress_cmd );
+            compress_cmd = command;
+            command = unescape_multiline_command( command );
             g_free( compress_cmd );
 
             // Exiting loop
@@ -1236,10 +1239,21 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             /* Determining extraction command - dealing with 'run in
              * terminal' and placeholders. Doing this here as parent
              * directory creation needs access to the command */
-/*igcr segfault if !handler_xset->z due to unconditional use of *handler_xset->z ? */
-            gchar* extract_cmd = replace_string(
-                (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z,
-                "%x", full_quote, FALSE );
+/*igcr segfault if !handler_xset->z due to unconditional use of *handler_xset->z ?
+ * Its not unconditional - this command has passed archive_handler_is_format_supported */
+            gchar* extract_cmd =
+    (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z;
+
+            /* Dealing with multiline command - don't free the handler
+             * command! */
+            str = extract_cmd;
+            extract_cmd = unescape_multiline_command( extract_cmd );
+
+            // Substituting archive to extract
+            str = extract_cmd;
+            extract_cmd = replace_string( extract_cmd, "%x", full_quote,
+                                          FALSE );
+            g_free( str );
 
             /* Dealing with creation of parent directory if needed -
              * never create a parent directory if '%G' is used - this is
