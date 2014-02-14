@@ -13,10 +13,10 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include "item-prop.h"  // For get_text_view/load_text_view
 #include "ptk-file-archiver.h"
-#include "ptk-handler.h"
 #include "ptk-file-task.h"
-
+#include "ptk-handler.h"
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "settings.h"
@@ -320,7 +320,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free( new_name );
 
     // Fetching reference to entry in dialog
-    GtkEntry* entry = (GtkEntry*)g_object_get_data( G_OBJECT( dlg ), "entry" );
+    GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ), "view" );
 
     // Updating command
     // Dealing with '+' representing running in terminal
@@ -334,7 +334,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 /*igcr compress_cmd will be NULL now if !handler_xset->y  ok? */
         compress_cmd = g_strdup( handler_xset->y );
     }
-    gtk_entry_set_text( GTK_ENTRY( entry ), compress_cmd );
+    load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
     g_free(compress_cmd);
 }
 
@@ -508,7 +508,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_box_pack_start( GTK_BOX( hbox ), lbl_command, FALSE, FALSE, 2 );
 
     // Loading command for handler, based off the i'th handler
-    GtkEntry* entry = (GtkEntry*)gtk_entry_new();
+    GtkTextView* view = (GtkTextView*)gtk_text_view_new();
 
     // Obtaining iterator from string turned into a path into the model
     gchar* compress_cmd;
@@ -533,7 +533,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         {
             compress_cmd = g_strdup( handler_xset->y );
         }
-        gtk_entry_set_text( GTK_ENTRY( entry ), compress_cmd );
+        load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
         g_free(compress_cmd);
         compress_cmd = NULL;
     }
@@ -547,12 +547,12 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_archive_format ),
                                    combo );
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_command ),
-                                   GTK_WIDGET( entry ) );
+                                   GTK_WIDGET( view ) );
 
     // Adding options to hbox
-    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( entry ), TRUE,
+    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( view ), TRUE,
                         TRUE, 4 );
-    g_object_set_data( G_OBJECT( dlg ), "entry", entry );
+    g_object_set_data( G_OBJECT( dlg ), "view", view );
 
     // Adding hbox to dialog at bottom
     gtk_widget_show_all( hbox );
@@ -646,7 +646,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Fetching user-selected handler data
             format = gtk_combo_box_get_active( GTK_COMBO_BOX( combo ) );
-            command = g_strdup( gtk_entry_get_text( entry ) );
+            command = get_text_view( GTK_TEXT_VIEW( view ) );
 
             // Saving selected archive handler ordinal
             str = g_strdup_printf( "%d", format );
@@ -689,7 +689,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                 "file/directory (see %%%%n/%%%%N)\n\n"
                                 "Continuing anyway"),
                                 NULL, NULL );
-                gtk_widget_grab_focus( GTK_WIDGET( entry ) );
+                gtk_widget_grab_focus( GTK_WIDGET( view ) );
             }
 
             // Checking to see if the archive handler compression command

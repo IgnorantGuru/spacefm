@@ -9,15 +9,17 @@
  * 
 */
 
-
 #include <glib/gi18n.h>
 #include <string.h>
 #include <fnmatch.h>
 
 #include "ptk-handler.h"
 #include "exo-tree-view.h"
-
 #include "gtk2-compat.h"
+#include "item-prop.h" // For get_text_view/load_text_view
+/*igtodo needed? */
+#include "settings.h"
+
 
 // Archive handlers treeview model enum
 enum {
@@ -549,12 +551,12 @@ static void config_load_handler_settings( XSet* handler_xset,
                                             "entry_handler_mime" );
     GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "entry_handler_extension" );
-    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_compress" );
-    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_extract" );
-    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_list" );
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_list" );
     GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_compress_term" );
     GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
@@ -578,9 +580,9 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_widget_set_sensitive( GTK_WIDGET( btn_defaults0 ),
                 g_str_has_prefix( handler_xset->name, handler_prefix[mode] ) );
 
-    // Configuring widgets with handler settings. Only name, MIME and
-    // extension warrant a warning
-    // Commands are prefixed with '+' when they are ran in a terminal
+    /* Configuring widgets with handler settings. Only name, MIME and
+     * extension warrant a warning
+     * Commands are prefixed with '+' when they are ran in a terminal */
     gboolean check_value = handler_xset->b != XSET_B_TRUE ? FALSE : TRUE;
     int start;
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
@@ -594,15 +596,10 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ),
                                     handler_xset->x ?
                                     handler_xset->x : "" );
-/*igcr  all places below in this file where you use:
- *          gtk_entry_set_text( ..., g_strdup( ... ) OR temp_decode )
- * and similar are memory leaks.  Don't use the g_strdup - set_text merely
- * copies the const string passed - see corrected example above.
- * Also, I didn't want the warnings above so removed them */
+/*igtodo code review g_strdup leaks below this line */
     if (!handler_xset->y)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                            g_strdup( "" ) );
+        load_text_view( GTK_TEXT_VIEW( view_handler_compress ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                         FALSE);
     }
@@ -610,23 +607,22 @@ static void config_load_handler_settings( XSet* handler_xset,
     {
         if ( handler_xset->y[0] == '+' )
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                temp_decode( (handler_xset->y) + 1 ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_compress ),
+                            handler_xset->y + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             TRUE);
         }
         else
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ),
-                                temp_decode( handler_xset->y ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_compress ),
+                            handler_xset->y );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                             FALSE);
         }
     }
     if (!handler_xset->z)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                            g_strdup( "" ) );
+        load_text_view( GTK_TEXT_VIEW( view_handler_extract ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                         FALSE);
     }
@@ -634,23 +630,22 @@ static void config_load_handler_settings( XSet* handler_xset,
     {
         if ( handler_xset->z[0] == '+' )
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                temp_decode( (handler_xset->z) + 1 ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_extract ),
+                            handler_xset->z + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             TRUE);
         }
         else
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ),
-                                temp_decode( handler_xset->z ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_extract ),
+                            handler_xset->z );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                             FALSE);
         }
     }
     if (!handler_xset->context)
     {
-        gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                            g_strdup( "" ) );
+        load_text_view( GTK_TEXT_VIEW( view_handler_list ), "" );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                         FALSE);
     }
@@ -658,15 +653,15 @@ static void config_load_handler_settings( XSet* handler_xset,
     {
         if ( handler_xset->context[0] == '+' )
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                temp_decode( (handler_xset->context) + 1 ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_list ),
+                            handler_xset->context + 1 );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             TRUE);
         }
         else
         {
-            gtk_entry_set_text( GTK_ENTRY( entry_handler_list ),
-                                temp_decode( handler_xset->context ) );
+            load_text_view( GTK_TEXT_VIEW( view_handler_list ),
+                                           handler_xset->context );
             gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                             FALSE);
         }
@@ -684,12 +679,12 @@ static void config_unload_handler_settings( GtkWidget* dlg )
                                             "entry_handler_mime" );
     GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "entry_handler_extension" );
-    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_compress" );
-    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_extract" );
-    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_list" );
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_list" );
     GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_compress_term" );
     GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
@@ -716,13 +711,13 @@ static void config_unload_handler_settings( GtkWidget* dlg )
     gtk_entry_set_text( GTK_ENTRY( entry_handler_name ), g_strdup( "" ) );
     gtk_entry_set_text( GTK_ENTRY( entry_handler_mime ), g_strdup( "" ) );
     gtk_entry_set_text( GTK_ENTRY( entry_handler_extension ), g_strdup( "" ) );
-    gtk_entry_set_text( GTK_ENTRY( entry_handler_compress ), g_strdup( "" ) );
+    load_text_view( GTK_TEXT_VIEW( view_handler_compress ), "" );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
                                   FALSE);
-    gtk_entry_set_text( GTK_ENTRY( entry_handler_extract ), g_strdup( "" ) );
+    load_text_view( GTK_TEXT_VIEW( view_handler_extract ), "" );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
                                   FALSE);
-    gtk_entry_set_text( GTK_ENTRY( entry_handler_list ), g_strdup( "" ) );
+    load_text_view( GTK_TEXT_VIEW( view_handler_list ), "" );
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
                                   FALSE);
 }
@@ -804,12 +799,12 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                             "entry_handler_mime" );
     GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "entry_handler_extension" );
-    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_compress" );
-    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_extract" );
-    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                            "entry_handler_list" );
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                            "view_handler_list" );
     GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                             "chkbtn_handler_compress_term" );
     GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
@@ -831,44 +826,31 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                         GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
     gchar* handler_compress, *handler_extract, *handler_list;
 
-    // Commands are prefixed with '+' when they are to be ran in a
-    // terminal
-    // g_strdup'd to avoid anal const compiler warning...
+    /* Commands are prefixed with '+' when they are to be ran in a
+     * terminal */
     if (handler_compress_term)
     {
         handler_compress = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) ),
             NULL );
     }
-    else
-    {
-        handler_compress = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_compress ) ) );
-    }
+    else handler_compress = get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) );
 
     if (handler_extract_term)
     {
         handler_extract = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) ),
             NULL );
     }
-    else
-    {
-        handler_extract = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_extract ) ) );
-    }
+    else handler_extract = get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) );
 
     if (handler_list_term)
     {
         handler_list = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_list ) ),
             NULL );
     }
-    else
-    {
-        handler_list = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_list ) ) );
-    }
+    else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
     // temporarily encode newlines and tabs until multiline support ready
     temp_encode( &handler_compress );
@@ -1109,11 +1091,11 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                                       TRUE );
             gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extension ),
                                       TRUE );
-            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_compress ),
+            gtk_widget_set_sensitive( GTK_WIDGET( view_handler_compress ),
                                       TRUE );
-            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extract ),
+            gtk_widget_set_sensitive( GTK_WIDGET( view_handler_extract ),
                                       TRUE );
-            gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_list ),
+            gtk_widget_set_sensitive( GTK_WIDGET( view_handler_list ),
                                       TRUE );
             gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_compress_term ),
                                       TRUE );
@@ -1282,12 +1264,12 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                             "entry_handler_mime" );
     GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
                                             "entry_handler_extension" );
-    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
-                                            "entry_handler_compress" );
-    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
-                                            "entry_handler_extract" );
-    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
-                                            "entry_handler_list" );
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
+                                            "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
+                                            "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
+                                            "view_handler_list" );
     GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
                                             "chkbtn_handler_compress_term" );
     GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( user_data ),
@@ -1299,9 +1281,9 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
     gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_name ), enabled );
     gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_mime ), enabled );
     gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extension ), enabled );
-    gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_compress ), enabled );
-    gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_extract ), enabled );
-    gtk_widget_set_sensitive( GTK_WIDGET( entry_handler_list ), enabled );
+    gtk_widget_set_sensitive( GTK_WIDGET( view_handler_compress ), enabled );
+    gtk_widget_set_sensitive( GTK_WIDGET( view_handler_extract ), enabled );
+    gtk_widget_set_sensitive( GTK_WIDGET( view_handler_list ), enabled );
     gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_compress_term ), enabled );
     gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_extract_term ), enabled );
     gtk_widget_set_sensitive( GTK_WIDGET( chkbtn_handler_list_term ), enabled );
@@ -1462,12 +1444,12 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                                                 "entry_handler_mime" );
     GtkWidget* entry_handler_extension = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                                 "entry_handler_extension" );
-    GtkWidget* entry_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                                "entry_handler_compress" );
-    GtkWidget* entry_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                                "entry_handler_extract" );
-    GtkWidget* entry_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
-                                                "entry_handler_list" );
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
+                                                "view_handler_list" );
     GtkWidget* chkbtn_handler_compress_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
                                                 "chkbtn_handler_compress_term" );
     GtkWidget* chkbtn_handler_extract_term = (GtkWidget*)g_object_get_data( G_OBJECT( dlg ),
@@ -1487,43 +1469,30 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
     gchar* handler_compress, *handler_extract, *handler_list;
 
     /* Commands are prefixed with '+' when they are to be ran in a
-     * terminal
-     * g_strdup'd to avoid anal const compiler warning... */
+     * terminal */
     if (handler_compress_term)
     {
         handler_compress = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_compress ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) ),
             NULL );
     }
-    else
-    {
-        handler_compress = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_compress ) ) );
-    }
+    else handler_compress = get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) );
 
     if (handler_extract_term)
     {
         handler_extract = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_extract ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) ),
             NULL );
     }
-    else
-    {
-        handler_extract = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_extract ) ) );
-    }
+    else handler_extract = get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) );
 
     if (handler_list_term)
     {
         handler_list = g_strconcat( "+",
-            gtk_entry_get_text( GTK_ENTRY ( entry_handler_list ) ),
+            get_text_view( GTK_TEXT_VIEW ( view_handler_list ) ),
             NULL );
     }
-    else
-    {
-        handler_list = g_strdup( gtk_entry_get_text(
-            GTK_ENTRY ( entry_handler_list ) ) );
-    }
+    else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
     /* Validating data. Note that data straight from widgets shouldnt
      * be modified or stored
@@ -1643,7 +1612,7 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             "%%%%O: Resulting archive per source "
                             "file/directory (see %%%%n/%%%%N)"),
                             handler_name), NULL, NULL );
-            gtk_widget_grab_focus( entry_handler_compress );
+            gtk_widget_grab_focus( view_handler_compress );
             return FALSE;
         }
     }
@@ -1666,7 +1635,7 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             " command:\n\n%%%%x: "
                             "Archive to extract"),
                             handler_name), NULL, NULL );
-        gtk_widget_grab_focus( entry_handler_extract );
+        gtk_widget_grab_focus( view_handler_extract );
         return FALSE;
     }
 
@@ -1688,7 +1657,7 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             " command:\n\n%%%%x: "
                             "Archive to list"),
                             handler_name), NULL, NULL );
-        gtk_widget_grab_focus( entry_handler_list );
+        gtk_widget_grab_focus( view_handler_list );
         return FALSE;
     }
 
@@ -1747,12 +1716,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
      * everything is a 'widget') - no buttons etc added as everything is
      * custom...
      * Extra NULL on the NULL-terminated list to placate an irrelevant
-     * compilation warning
-     * TODO: The below fails - file_browser->main_window is not a valid
-     * widget when this function is called in a normal fashion, it is
-     * when called via a keyboard shortcut. file_browser on its own
-     * reports as a valid widget, but only broken modal behaviour results
-     */
+     * compilation warning */
 /*igcr file_browser may be null if desktop use later accomodated */
     GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
@@ -1947,15 +1911,15 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* entry_handler_extension = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_extension",
                         GTK_ENTRY( entry_handler_extension ) );
-    GtkWidget* entry_handler_compress = gtk_entry_new();
-    g_object_set_data( G_OBJECT( dlg ), "entry_handler_compress",
-                        GTK_ENTRY( entry_handler_compress ) );
-    GtkWidget* entry_handler_extract = gtk_entry_new();
-    g_object_set_data( G_OBJECT( dlg ), "entry_handler_extract",
-                        GTK_ENTRY( entry_handler_extract ) );
-    GtkWidget* entry_handler_list = gtk_entry_new();
-    g_object_set_data( G_OBJECT( dlg ), "entry_handler_list",
-                        GTK_ENTRY( entry_handler_list ) );
+    GtkWidget* view_handler_compress = gtk_text_view_new();
+    g_object_set_data( G_OBJECT( dlg ), "view_handler_compress",
+                        GTK_TEXT_VIEW( view_handler_compress ) );
+    GtkWidget* view_handler_extract = gtk_text_view_new();
+    g_object_set_data( G_OBJECT( dlg ), "view_handler_extract",
+                        GTK_TEXT_VIEW( view_handler_extract ) );
+    GtkWidget* view_handler_list = gtk_text_view_new();
+    g_object_set_data( G_OBJECT( dlg ), "view_handler_list",
+                        GTK_TEXT_VIEW( view_handler_list ) );
 
     g_object_set_data( G_OBJECT( dlg ), "dialog_mode",
                        GINT_TO_POINTER( mode ) );
@@ -1968,11 +1932,11 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_extension ),
                                    entry_handler_extension );
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_compress ),
-                                   entry_handler_compress );
+                                   view_handler_compress );
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_extract ),
-                                   entry_handler_extract );
+                                   view_handler_extract );
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_handler_list ),
-                                   entry_handler_list );
+                                   view_handler_list );
 
     GtkWidget* chkbtn_handler_compress_term =
                 gtk_check_button_new_with_label( _("Run In Terminal") );
@@ -2059,7 +2023,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_compress_term ), 1, 4, 6, 7,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_compress ), 0, 4, 7, 8,
+                        GTK_WIDGET( view_handler_compress ), 0, 4, 7, 8,
                         GTK_FILL, GTK_FILL, 0, 0 );
 
     gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 7, 5 );
@@ -2071,7 +2035,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_extract_term ), 1, 4, 8, 9,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_extract ), 0, 4, 9, 10,
+                        GTK_WIDGET( view_handler_extract ), 0, 4, 9, 10,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
     gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 9, 5 );
@@ -2083,7 +2047,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_list_term ), 1, 4, 10, 11,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_list ), 0, 4, 11, 12,
+                        GTK_WIDGET( view_handler_list ), 0, 4, 11, 12,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
     // Packing boxes into dialog with padding to separate from dialog's
