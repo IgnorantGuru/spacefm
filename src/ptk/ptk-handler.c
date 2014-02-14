@@ -2053,43 +2053,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( entry_handler_extension ), 1, 4, 4, 5,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
-    //gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 5, 10 );
-
-    /*
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_compress ), 0, 1, 6, 7,
-                        GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( chkbtn_handler_compress_term ), 1, 4, 6, 7,
-                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_compress_scroll ), 0, 4, 7, 8,
-                        GTK_FILL, GTK_FILL, 0, 0 );
-
-    gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 7, 5 );
-
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_extract ), 0, 1, 8, 9,
-                        GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( chkbtn_handler_extract_term ), 1, 4, 8, 9,
-                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_extract_scroll ), 0, 4, 9, 10,
-                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-
-    gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 9, 5 );
-
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_list ), 0, 1, 10, 11,
-                        GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( chkbtn_handler_list_term ), 1, 4, 10, 11,
-                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_list_scroll ), 0, 4, 11, 12,
-                        GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
-    */
+    // Make sure widgets do not separate too much vertically
+    gtk_box_set_spacing( GTK_BOX( vbox_settings ), 0 );
 
     // pack_end widgets must not expand to be flush up against the side
     gtk_box_pack_start( GTK_BOX( vbox_settings ),
