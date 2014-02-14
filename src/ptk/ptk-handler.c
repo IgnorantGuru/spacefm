@@ -1920,15 +1920,39 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* entry_handler_extension = gtk_entry_new();
     g_object_set_data( G_OBJECT( dlg ), "entry_handler_extension",
                         GTK_ENTRY( entry_handler_extension ) );
+
+    /* Creating new textviews - these all need to be turned into a
+     * scrollable window */
     GtkWidget* view_handler_compress = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_compress",
                         GTK_TEXT_VIEW( view_handler_compress ) );
+    GtkWidget* view_handler_compress_scroll = gtk_scrolled_window_new( NULL,
+                                                                NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_compress_scroll ),
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( view_handler_compress_scroll ),
+                                      view_handler_compress );
     GtkWidget* view_handler_extract = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_extract",
                         GTK_TEXT_VIEW( view_handler_extract ) );
+    GtkWidget* view_handler_extract_scroll = gtk_scrolled_window_new( NULL,
+                                                                NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_extract_scroll ),
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( view_handler_extract_scroll ),
+                                      view_handler_extract );
     GtkWidget* view_handler_list = gtk_text_view_new();
     g_object_set_data( G_OBJECT( dlg ), "view_handler_list",
                         GTK_TEXT_VIEW( view_handler_list ) );
+    GtkWidget* view_handler_list_scroll = gtk_scrolled_window_new( NULL,
+                                                                NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_handler_list_scroll ),
+                                        GTK_POLICY_AUTOMATIC,
+                                        GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( view_handler_list_scroll ),
+                                      view_handler_list );
 
     g_object_set_data( G_OBJECT( dlg ), "dialog_mode",
                        GINT_TO_POINTER( mode ) );
@@ -1960,21 +1984,21 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     g_object_set_data( G_OBJECT( dlg ), "chkbtn_handler_list_term",
                         GTK_CHECK_BUTTON( chkbtn_handler_list_term ) );
 
-    // Creating container boxes - at this point the dialog already comes
-    // with one GtkVBox then inside that a GtkHButtonBox
-    // For the right side of the dialog, standard GtkBox approach fails
-    // to allow precise padding of labels to allow all entries to line up
-    // - so reimplementing with GtkTable. Would many GtkAlignments have
-    // worked?
+    /* Creating container boxes - at this point the dialog already comes
+     * with one GtkVBox then inside that a GtkHButtonBox
+     * For the right side of the dialog, standard GtkBox approach fails
+     * to allow precise padding of labels to allow all entries to line up
+     *  - so reimplementing with GtkTable. Would many GtkAlignments have
+     * worked? */
     GtkWidget* hbox_main = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vbox_handlers = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hbox_view_buttons = gtk_hbox_new( FALSE, 4 );
     GtkWidget* tbl_settings = gtk_table_new( 11, 3 , FALSE );
 
-    // Packing widgets into boxes
-    // Remember, start and end-ness is broken
-    // vbox_handlers packing must not expand so that the right side can
-    // take the space
+    /* Packing widgets into boxes
+     * Remember, start and end-ness is broken
+     * vbox_handlers packing must not expand so that the right side can
+     * take the space */
     gtk_box_pack_start( GTK_BOX( hbox_main ),
                         GTK_WIDGET( vbox_handlers ), FALSE, FALSE, 4 );
     gtk_box_pack_start( GTK_BOX( hbox_main ),
@@ -1982,9 +2006,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
                         GTK_WIDGET( lbl_handlers ), FALSE, FALSE, 4 );
 
-    // view_handlers isn't added but view_scroll is - view_handlers is
-    // inside view_scroll. No padding added to get it to align with the
-    // enabled widget on the right side
+    /* view_handlers isn't added but view_scroll is - view_handlers is
+     * inside view_scroll. No padding added to get it to align with the
+     * enabled widget on the right side */
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
                         GTK_WIDGET( view_scroll ), TRUE, TRUE, 0 );
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
@@ -2032,7 +2056,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_compress_term ), 1, 4, 6, 7,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_compress ), 0, 4, 7, 8,
+                        GTK_WIDGET( view_handler_compress_scroll ), 0, 4, 7, 8,
                         GTK_FILL, GTK_FILL, 0, 0 );
 
     gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 7, 5 );
@@ -2044,7 +2068,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_extract_term ), 1, 4, 8, 9,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_extract ), 0, 4, 9, 10,
+                        GTK_WIDGET( view_handler_extract_scroll ), 0, 4, 9, 10,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
     gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 9, 5 );
@@ -2056,11 +2080,11 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( chkbtn_handler_list_term ), 1, 4, 10, 11,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( view_handler_list ), 0, 4, 11, 12,
+                        GTK_WIDGET( view_handler_list_scroll ), 0, 4, 11, 12,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
-    // Packing boxes into dialog with padding to separate from dialog's
-    // standard buttons at the bottom
+    /* Packing boxes into dialog with padding to separate from dialog's
+     * standard buttons at the bottom */
     gtk_box_pack_start(
                 GTK_BOX(
                     gtk_dialog_get_content_area( GTK_DIALOG( dlg ) )
@@ -2070,8 +2094,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     // Adding archive handlers to list
     populate_archive_handlers( GTK_LIST_STORE( list ), GTK_WIDGET( dlg ) );
 
-    // Rendering dialog - while loop is used to deal with standard
-    // buttons that should not cause the dialog to exit
+    /* Rendering dialog - while loop is used to deal with standard
+     * buttons that should not cause the dialog to exit */
     gtk_widget_show_all( GTK_WIDGET( dlg ) );
     int response;
     while ( response = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
@@ -2120,4 +2144,3 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     // Clearing up dialog
     gtk_widget_destroy( dlg );
 }
-

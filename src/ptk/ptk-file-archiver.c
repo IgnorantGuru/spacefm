@@ -507,8 +507,15 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_box_pack_start( GTK_BOX( hbox ), combo, FALSE, FALSE, 2 );
     gtk_box_pack_start( GTK_BOX( hbox ), lbl_command, FALSE, FALSE, 2 );
 
-    // Loading command for handler, based off the i'th handler
+    /* Loading command for handler, based off the i'th handler. Textview
+     * needs to be scrollable */
     GtkTextView* view = (GtkTextView*)gtk_text_view_new();
+    GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_scroll ),
+                                     GTK_POLICY_AUTOMATIC,
+                                     GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( view_scroll ),
+                                      GTK_WIDGET ( view ) );
 
     // Obtaining iterator from string turned into a path into the model
     gchar* compress_cmd;
@@ -550,7 +557,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                    GTK_WIDGET( view ) );
 
     // Adding options to hbox
-    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( view ), TRUE,
+    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( view_scroll ), TRUE,
                         TRUE, 4 );
     g_object_set_data( G_OBJECT( dlg ), "view", view );
 
