@@ -284,22 +284,6 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
 
-static void temp_encode( char** orig )
-{
-    char* str = replace_string( *orig, "\n", "\\n", FALSE );
-    g_free( *orig );
-    *orig = replace_string( str, "\t", "\\t", FALSE );
-    g_free( str );
-}
-
-static char* temp_decode( const char* orig )
-{
-    char* str = replace_string( orig, "\\n", "\n", FALSE );
-    char* str2 = replace_string( str, "\\t", "\t", FALSE );
-    g_free( str );
-    return str2;
-}
-
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg )
 {   /* test for the presence of values in list, using wildcards.
@@ -852,11 +836,6 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     }
     else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
-    // temporarily encode newlines and tabs until multiline support ready
-    temp_encode( &handler_compress );
-    temp_encode( &handler_extract );
-    temp_encode( &handler_list );
-    
     // Fetching selection from treeview
     GtkTreeSelection* selection;
     selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
