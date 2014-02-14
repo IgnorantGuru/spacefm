@@ -1993,7 +1993,11 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* hbox_main = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vbox_handlers = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hbox_view_buttons = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* tbl_settings = gtk_table_new( 11, 3 , FALSE );
+    GtkWidget* vbox_settings = gtk_vbox_new( FALSE, 4 );
+    GtkWidget* tbl_settings = gtk_table_new( 5, 3 , FALSE );
+    GtkWidget* hbox_compress_header = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hbox_extract_header = gtk_hbox_new( FALSE, 4 );
+    GtkWidget* hbox_list_header = gtk_hbox_new( FALSE, 4 );
 
     /* Packing widgets into boxes
      * Remember, start and end-ness is broken
@@ -2001,10 +2005,12 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
      * take the space */
     gtk_box_pack_start( GTK_BOX( hbox_main ),
                         GTK_WIDGET( vbox_handlers ), FALSE, FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX( hbox_main ),
-                       GTK_WIDGET( tbl_settings ), TRUE, TRUE, 4 );
     gtk_box_pack_start( GTK_BOX( vbox_handlers ),
                         GTK_WIDGET( lbl_handlers ), FALSE, FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hbox_main ),
+                       GTK_WIDGET( vbox_settings ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                       GTK_WIDGET( tbl_settings ), FALSE, FALSE, 4 );
 
     /* view_handlers isn't added but view_scroll is - view_handlers is
      * inside view_scroll. No padding added to get it to align with the
@@ -2047,8 +2053,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( entry_handler_extension ), 1, 4, 4, 5,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
-    gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 5, 10 );
+    //gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 5, 10 );
 
+    /*
     gtk_table_attach( GTK_TABLE( tbl_settings ),
                         GTK_WIDGET( lbl_handler_compress ), 0, 1, 6, 7,
                         GTK_FILL, GTK_FILL, 0, 0 );
@@ -2082,6 +2089,46 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_table_attach( GTK_TABLE( tbl_settings ),
                         GTK_WIDGET( view_handler_list_scroll ), 0, 4, 11, 12,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
+    */
+
+    // pack_end widgets must not expand to be flush up against the side
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( hbox_compress_header ), FALSE, FALSE,
+                        4 );
+    gtk_box_pack_start( GTK_BOX( hbox_compress_header ),
+                        GTK_WIDGET( lbl_handler_compress ), TRUE, TRUE,
+                        4 );
+    gtk_box_pack_end( GTK_BOX( hbox_compress_header ),
+                        GTK_WIDGET( chkbtn_handler_compress_term ), FALSE,
+                        FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( view_handler_compress_scroll ), TRUE,
+                        TRUE, 4 );
+
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( hbox_extract_header ), FALSE, FALSE,
+                        4 );
+    gtk_box_pack_start( GTK_BOX( hbox_extract_header ),
+                        GTK_WIDGET( lbl_handler_extract ), TRUE, TRUE,
+                        4 );
+    gtk_box_pack_end( GTK_BOX( hbox_extract_header ),
+                        GTK_WIDGET( chkbtn_handler_extract_term ), FALSE,
+                        FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( view_handler_extract_scroll ), TRUE,
+                        TRUE, 4 );
+
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( hbox_list_header ), FALSE, FALSE,
+                        4 );
+    gtk_box_pack_start( GTK_BOX( hbox_list_header ),
+                        GTK_WIDGET( lbl_handler_list ), TRUE, TRUE, 4 );
+    gtk_box_pack_end( GTK_BOX( hbox_list_header ),
+                        GTK_WIDGET( chkbtn_handler_list_term ), FALSE,
+                        FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                        GTK_WIDGET( view_handler_list_scroll ), TRUE,
+                        TRUE, 4 );
 
     /* Packing boxes into dialog with padding to separate from dialog's
      * standard buttons at the bottom */
