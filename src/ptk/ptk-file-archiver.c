@@ -978,8 +978,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     GtkWidget* dlg;
     GtkWidget* dlgparent = NULL;
     char* choose_dir = NULL;
-    gboolean create_parent, in_term, keep_term, write_access;
-    gboolean list_contents = FALSE;
+    gboolean create_parent = FALSE, in_term = FALSE, keep_term = FALSE;
+    gboolean  write_access = FALSE, list_contents = FALSE;
     VFSFileInfo* file;
     VFSMimeType* mime;
     const char *dest, *type;
