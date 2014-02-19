@@ -394,12 +394,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                     FALSE );
 
     filter = gtk_file_filter_new();
-    hbox = gtk_hbox_new( FALSE, 4 );
-    GtkWidget* lbl_archive_format = gtk_label_new( NULL );
-    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_archive_format ),
-                                         _("_Archive Format:") );
-    gtk_box_pack_start( GTK_BOX(hbox), lbl_archive_format,
-                        FALSE, TRUE, 2 );
+
+    /* Top hbox has 'Command:' label, 'Archive Format:' label then format
+     * combobox */
+    GtkWidget *hbox_top = gtk_hbox_new( FALSE, 4 );
+    GtkWidget *lbl_command = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_command ),
+                                        _("Co_mmand:") );
+    gtk_box_pack_start( GTK_BOX( hbox_top ), lbl_command, FALSE, TRUE, 2 );
 
     // Generating a ComboBox with model behind, and saving model for use
     // in callback - now that archive handlers are custom, can't rely on
@@ -501,11 +503,14 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     // Adding filter box to hbox and connecting callback
     g_signal_connect( combo, "changed", G_CALLBACK( on_format_changed ),
                       dlg );
-    GtkWidget *lbl_command = gtk_label_new( NULL );
-    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_command ),
-                                        _("Co_mmand:") );
-    gtk_box_pack_start( GTK_BOX( hbox ), combo, FALSE, FALSE, 2 );
-    gtk_box_pack_start( GTK_BOX( hbox ), lbl_command, FALSE, FALSE, 2 );
+    gtk_box_pack_end( GTK_BOX( hbox_top ), combo, FALSE, FALSE, 2 );
+
+    GtkWidget *lbl_archive_format = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_archive_format ),
+                                         _("_Archive Format:") );
+    gtk_box_pack_end( GTK_BOX( hbox_top ), lbl_archive_format, FALSE, FALSE,
+                      2 );
+    gtk_widget_show_all( hbox_top );
 
     /* Loading command for handler, based off the i'th handler. Textview
      * needs to be scrollable */
@@ -517,6 +522,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                      GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_scroll ),
                                       GTK_WIDGET ( view ) );
+    g_object_set_data( G_OBJECT( dlg ), "view", view );
 
     // Obtaining iterator from string turned into a path into the model
     gchar* compress_cmd;
@@ -557,17 +563,23 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_command ),
                                    GTK_WIDGET( view ) );
 
-    // Adding options to hbox
-    gtk_box_pack_start( GTK_BOX( hbox ), GTK_WIDGET( view_scroll ), TRUE,
-                        TRUE, 4 );
-    g_object_set_data( G_OBJECT( dlg ), "view", view );
+    /* Creating hbox for the command textview, on a line under the top
+     * hbox */
+    GtkWidget *hbox_bottom = gtk_hbox_new( FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hbox_bottom ), GTK_WIDGET( view_scroll ),
+                        TRUE, TRUE, 4 );
+    gtk_widget_show_all( hbox_bottom );
 
-    // Adding hbox to dialog at bottom
-    gtk_widget_show_all( hbox );
+    // Packing the two hboxes into a vbox, then adding to dialog at bottom
+    GtkWidget *vbox = gtk_vbox_new( FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox_top ), TRUE,
+                        TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox_bottom ),
+                        TRUE, TRUE, 1 );
     gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area (
                                     GTK_DIALOG( dlg )
                                 ) ),
-                                hbox, FALSE, TRUE, 0 );
+                                vbox, FALSE, TRUE, 0 );
 
     // Configuring dialog
     gtk_file_chooser_set_action( GTK_FILE_CHOOSER( dlg ),
