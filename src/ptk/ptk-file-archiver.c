@@ -45,8 +45,12 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     {
         // Obtaining first handled extension
 /*igcr very inefficient to copy all these strings */
-        gchar** extensions = g_strsplit( handler_xset->x, ":", -1 );
-        gchar* first_extension = g_strdup( extensions[0] );
+        gchar** extensions = g_strsplit( handler_xset->x, ", ", -1 );
+        gchar* first_extension = NULL;
+        if (!extensions || !extensions[0])
+            first_extension = g_strdup( "" );
+        else
+            first_extension = g_strdup( extensions[0] );
 
         // Clearing up
         g_strfreev( extensions );
@@ -84,19 +88,19 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
  * should be rewritten to parse the strings without copying.  (memory writes
  * are slower than reads) */
         gchar** mime_types = handler_xset->s ? 
-                                    g_strsplit( handler_xset->s, ":", -1 ) :
-                                    NULL;
+                           g_strsplit_set( handler_xset->s, ", ", -1 ) :
+                           NULL;
         gchar** extensions = handler_xset->x ?
-                                    g_strsplit( handler_xset->x, ":", -1 ) :
-                                    NULL;
+                           g_strsplit_set( handler_xset->x, ", ", -1 ) :
+                           NULL;
 
         // Looping for handled MIME types (NULL-terminated list)
         if ( mime_types )
         {
-            for (i = 0; mime_types[i] != NULL; ++i)
+            for (i = 0; mime_types[i]; ++i)
             {
-                // Checking to see if the handler can deal with the
-                // current MIME type
+                /* Checking to see if the handler can deal with the
+                 * current MIME type */
                 if (g_strcmp0( mime_types[i], type ) == 0)
                 {
                     // It can - flagging and breaking
@@ -109,7 +113,7 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
         // Looping for handled extensions if mime type wasn't supported
         if (extensions && !mime_or_extension_support)
         {
-            for (i = 0; extensions[i] != NULL; ++i)
+            for (i = 0; extensions[i]; ++i)
             {
                 // Checking to see if the handler can deal with the
                 // current extension
@@ -1196,11 +1200,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
              * archive handler (NULL-terminated list) */
 /*igcr shouldn't need to copy strings to parse */
             gchar** extensions = handler_xset->x ?
-                                 g_strsplit( handler_xset->x, ":", -1 ) :
-                                 NULL;
+                           g_strsplit_set( handler_xset->x, ", ", -1 ) :
+                           NULL;
             if ( extensions )
             {
-                for (i = 0; extensions[i] != NULL; ++i)
+                for (i = 0; extensions[i]; ++i)
                 {
                     // Debug code
                     //g_message( "extensions[i]: %s", extensions[i]);

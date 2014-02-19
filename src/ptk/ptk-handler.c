@@ -111,7 +111,7 @@ const Handler handlers_arc[]=
     {
         "handarc_gz",
         "Gzip",
-        "application/x-gzip:application/x-gzpdf",
+        "application/x-gzip application/x-gzpdf",
         ".gz",
         "gzip -c %N > %O",
         "gzip -cd %x > %G",
@@ -148,7 +148,7 @@ const Handler handlers_arc[]=
         "handarc_tar_gz",
         "Tar Gzip",
         "application/x-compressed-tar",
-        ".tar.gz:.tgz",
+        ".tar.gz .tgz",
         "tar -cvzf %o %N",
         "tar -xvzf %x",
         "+tar -tvf %x"
@@ -157,7 +157,7 @@ const Handler handlers_arc[]=
         "handarc_tar_xz",
         "Tar xz",
         "application/x-xz-compressed-tar",
-        ".tar.xz:.txz",
+        ".tar.xz .txz",
         "tar -cvJf %o %N",
         "tar -xvJf %x",
         "+tar -tvf %x"
@@ -165,7 +165,7 @@ const Handler handlers_arc[]=
     {
         "handarc_zip",
         "Zip",
-        "application/x-zip:application/zip",
+        "application/x-zip application/zip",
         ".zip",
         "+zip -r %o %N",
         "+unzip %x",
