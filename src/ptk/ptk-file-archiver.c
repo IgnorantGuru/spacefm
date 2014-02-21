@@ -842,12 +842,8 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Appending to final command as appropriate
             if (i == 0)
-            {
-                s1 = final_command;
                 final_command = g_strconcat( cmd_to_run,
                                     " || handle_error", NULL );
-                g_free(s1);
-            }
             else
             {
                 s1 = final_command;
