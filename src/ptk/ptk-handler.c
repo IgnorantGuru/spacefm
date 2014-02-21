@@ -708,13 +708,16 @@ static void config_unload_handler_settings( GtkWidget* dlg )
 
 static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
 {
-    // Fetching available archive handlers (literally gets member s from
-    // the xset) - user-defined order has already been set
+    /* Fetching available archive handlers (literally gets member s from
+     * the xset) - user-defined order has already been set */
     int mode = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( dlg ),
                                             "dialog_mode" ) );
     char* archive_handlers_s = xset_get_s( handler_conf_xset[mode] );
+
+    // Making sure archive handlers are available
     if ( !archive_handlers_s )
         return;
+
 /*igcr copying all these strings is inefficient, just need to parse */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
@@ -724,10 +727,9 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     // Looping for handlers (NULL-terminated list)
     GtkTreeIter iter;
     int i;
-    gboolean first = TRUE;
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
-        // ignore invalid handler xset names
+        // Ignore invalid handler xset names
         if ( g_str_has_prefix( archive_handlers[i], handler_prefix[mode] ) ||
              g_str_has_prefix( archive_handlers[i], handler_cust_prefix[mode] ) )
         {
@@ -745,19 +747,30 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
                                 COL_XSET_NAME, xset_name,
                                 COL_HANDLER_NAME, handler_name,
                                 -1 );
-
-            // Populating widgets if this is the first handler
-            if ( first )
-            {
-                config_load_handler_settings( handler_xset, NULL,
-                                              GTK_WIDGET( dlg ) );
-                first = FALSE;
-            }
         }
     }
 
     // Clearing up archive_handlers
     g_strfreev( archive_handlers );
+
+    // Fetching selection from treeview
+    GtkWidget *view_handlers = (GtkWidget*)g_object_get_data(
+                                    G_OBJECT( dlg ), "view_handlers" );
+    GtkTreeSelection* selection;
+    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
+
+    /* Loading first archive handler if there is one and no selection is
+     * present */
+    if ( i > 0 &&
+        !gtk_tree_selection_get_selected( GTK_TREE_SELECTION( selection ),
+         NULL, NULL ) )
+    {
+        GtkTreePath* new_path = gtk_tree_path_new_first();
+        gtk_tree_selection_select_path( GTK_TREE_SELECTION( selection ),
+                                new_path );
+        gtk_tree_path_free( new_path );
+        new_path = NULL;
+    }
 }
 
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
@@ -836,31 +849,16 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     }
     else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
-    // Fetching selection from treeview
-    GtkTreeSelection* selection;
-    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
-
     // Fetching the model and iter from the selection
     GtkTreeIter it;
     GtkTreeModel* model;
-
-    // Checking if no selection is present (happens when the dialog first
-    // loads, and when a handler is deleted)
-    if ( !gtk_tree_selection_get_selected( GTK_TREE_SELECTION( selection ),
-         NULL, NULL ) )
-    {
-        // There isnt selection - selecting the first item in the list
-        GtkTreePath* new_path = gtk_tree_path_new_first();
-        gtk_tree_selection_select_path( GTK_TREE_SELECTION( selection ),
-                                new_path );
-        gtk_tree_path_free( new_path );
-        new_path = NULL;
-    }
-
-    // Obtaining iter for the current selection
     gchar* handler_name_from_model = NULL;  // Used to detect renames
     gchar* xset_name = NULL;
     XSet* handler_xset = NULL;
+
+    // Fetching selection from treeview
+    GtkTreeSelection* selection;
+    selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( view_handlers ) );
 
     // Getting selection fails if there are no handlers
     if ( gtk_tree_selection_get_selected( GTK_TREE_SELECTION( selection ),
