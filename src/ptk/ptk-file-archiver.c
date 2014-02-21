@@ -995,9 +995,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     const char *dest, *type;
     GList* l;
     char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
-        *mkparent = NULL, *perm = NULL, *prompt = NULL, *name = NULL,
-        *extension = NULL, *cmd = NULL, *str = NULL, *final_command = NULL,
-        *s1 = NULL;
+        *mkparent = NULL, *perm = NULL, *name = NULL, *extension = NULL,
+        *cmd = NULL, *str = NULL, *final_command = NULL, *s1 = NULL;
     int i, n, j;
     struct stat64 statbuf;
 
@@ -1379,10 +1378,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             }
 
             /* Finally constructing command to run. The mkparent command
-             * itself has error checking */
+             * itself has error checking - final error check not here as
+             * I want the code shared with the list code flow */
             cmd = g_strdup_printf( ""
                 "cd %s || handle_error\n"
-                "%s%s || handle_error",
+                "%s%s",
                 dest_quote, mkparent, extract_cmd );
 
             // Cleaning up
@@ -1396,12 +1396,12 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
         // Building up final_command
         if (!final_command)
-            final_command = g_strdup( cmd );
+            final_command = g_strconcat( cmd, " || handle_error", NULL );
         else
         {
             str = final_command;
-            final_command = g_strconcat( final_command, " && echo && ",
-                                         cmd, NULL );
+            final_command = g_strconcat( final_command, "; echo; ",
+                                         cmd, " || handle_error", NULL );
             g_free( str );
         }
 
@@ -1418,38 +1418,25 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     final_command = replace_line_subs( final_command );
     g_free(str);
 
-    /* Generating prompt to keep terminal open after error if
-     * appropriate */
-    if (in_term)
-        prompt = g_strdup_printf( "; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security */
-                "[ Finished With Errors ]  Press Enter to close" );
-    else
-        prompt = g_strdup( "" );
-
-    // Inserting handle_error function
-    str = generate_bash_error_function( in_term );
-    s1 = final_command;
-    final_command = g_strconcat( str, "\n\n", final_command, NULL );
-    g_free( str );
-    g_free( s1 );
-
-
     /* Dealing with the need to make extracted files writable if
      * desired (e.g. a tar of files originally archived from a CD
      * will be readonly). Root users don't obey such access
      * permissions and making such owned files writeable may be a
      * security issue */
     if (!list_contents && write_access && geteuid() != 0)
-        perm = g_strdup_printf( " && chmod -R u+rwX %s/*",
+        perm = g_strdup_printf( "; chmod -R u+rwX %s/* || handle_error",
                                 dest_quote );
     else perm = g_strdup( "" );
 
-    // Finally constructing command to run
-    str = final_command;
-    final_command = g_strconcat( final_command, perm, prompt, NULL );
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation - in any case an error check
+     * needs to be made */
+    str = generate_bash_error_function( in_term );
+    s1 = final_command;
+    final_command = g_strconcat( str, "\n\n", final_command, perm, NULL );
     g_free( str );
+    g_free( s1 );
     g_free( perm );
-    g_free( prompt );
     g_free( dest_quote );
 
     // Creating task

@@ -1319,7 +1319,7 @@ char* generate_bash_error_function( gboolean run_in_terminal )
     char *error_pause = NULL, *finished_with_errors = NULL;
     if (run_in_terminal)
     {
-        error_pause = "read s\n";
+        error_pause = "read s";
         finished_with_errors = "[ Finished With Errors ]  Press Enter "
                                "to close";
     }
