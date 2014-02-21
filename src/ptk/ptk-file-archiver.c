@@ -842,12 +842,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 
             // Appending to final command as appropriate
             if (i == 0)
-                final_command = g_strdup( cmd_to_run );
+            {
+                s1 = final_command;
+                final_command = g_strconcat( cmd_to_run,
+                                    " || handle_error", NULL );
+                g_free(s1);
+            }
             else
             {
                 s1 = final_command;
-                final_command = g_strconcat( final_command, " && echo && ",
-                                             cmd_to_run, NULL );
+                final_command = g_strconcat( final_command, "; echo; ",
+                                             cmd_to_run,
+                                             " || handle_error", NULL );
                 g_free(s1);
             }
 
@@ -913,9 +919,15 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                                 FALSE );
 
                 // Cleaning up
-                g_free( s1 );
                 g_free( str );
+                g_free( s1 );
             }
+
+            // Enforcing error check
+            str = final_command;
+            final_command = g_strconcat( final_command, " || handle_error",
+                                         NULL );
+            g_free( str );
         }
 
         // Dealing with remaining standard SpaceFM substitutions
@@ -926,20 +938,18 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
         g_free(s1);
     }
 
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation - in any case an error check
+     * needs to be made */
+    str = generate_bash_error_function( run_in_terminal );
+    s1 = final_command;
+    final_command = g_strconcat( str, "\n\n", final_command, NULL );
+    g_free( str );
+    g_free( s1 );
+
     /* Cleaning up - final_command does not need freeing, as this
      * is freed by the task */
     g_free( command );
-
-    /* When ran in a terminal, adding code to warn user on failure and
-     * to keep the terminal open */
-    if (run_in_terminal)
-    {
-        s1 = final_command;
-        final_command = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi",
-                                         s1,
-                                         "[ Finished With Errors ]  Press Enter to close" );
-        g_free( s1 );
-    }
 
     // Creating task
     char* task_name = g_strdup_printf( _("Archive") );
@@ -986,7 +996,8 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     GList* l;
     char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
         *mkparent = NULL, *perm = NULL, *prompt = NULL, *name = NULL,
-        *extension = NULL, *cmd = NULL, *str = NULL, *final_command = NULL;
+        *extension = NULL, *cmd = NULL, *str = NULL, *final_command = NULL,
+        *s1 = NULL;
     int i, n, j;
     struct stat64 statbuf;
 
@@ -1306,8 +1317,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
                 // Generating shell command to make directory
                 char* parent_quote = bash_quote( parent_path );
-                mkparent = g_strdup_printf( "mkdir -p %s && cd %s && ",
-                                            parent_quote, parent_quote );
+                mkparent = g_strdup_printf( ""
+                    "mkdir -p %s || handle_error\n"
+                    "cd %s || handle_error\n",
+                    parent_quote, parent_quote );
 
                 // Cleaning up (parent_path is used later)
                 g_free( parent_quote );
@@ -1365,9 +1378,12 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 g_free( extract_target );
             }
 
-            // Finally constructing command to run
-            cmd = g_strdup_printf( "cd %s && %s%s", dest_quote,
-                                   mkparent, extract_cmd );
+            /* Finally constructing command to run. The mkparent command
+             * itself has error checking */
+            cmd = g_strdup_printf( ""
+                "cd %s || handle_error\n"
+                "%s%s || handle_error",
+                dest_quote, mkparent, extract_cmd );
 
             // Cleaning up
             g_free( extract_cmd );
@@ -1409,6 +1425,14 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                 "[ Finished With Errors ]  Press Enter to close" );
     else
         prompt = g_strdup( "" );
+
+    // Inserting handle_error function
+    str = generate_bash_error_function( in_term );
+    s1 = final_command;
+    final_command = g_strconcat( str, "\n\n", final_command, NULL );
+    g_free( str );
+    g_free( s1 );
+
 
     /* Dealing with the need to make extracted files writable if
      * desired (e.g. a tar of files originally archived from a CD

@@ -1310,6 +1310,40 @@ static void on_configure_row_activated( GtkTreeView* view,
     gtk_widget_grab_focus( entry_handler_name );*/
 }
 
+char* generate_bash_error_function( gboolean run_in_terminal )
+{
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation. Even outside a terminal, IG
+     * has requested text is output
+     * No translation for security purposes */
+    char *error_pause = NULL, *finished_with_errors = NULL;
+    if (run_in_terminal)
+    {
+        error_pause = "read s\n";
+        finished_with_errors = "[ Finished With Errors ]  Press Enter "
+                               "to close";
+    }
+    else
+    {
+        error_pause = "";
+        finished_with_errors = "[ Finished With Errors ]";
+    }
+
+    return g_strdup_printf( ""
+        "function handle_error()\n"
+        "{\n"
+        "    fm_err=$?\n"
+        "    if [ $fm_err -ne 0 ]\n"
+        "    then\n"
+        "       echo\n"
+        "       echo -n '%s: '\n"
+        "       %s\n"
+        "       exit $fm_err\n"
+        "    fi\n"
+        "}",
+        finished_with_errors, error_pause );
+}
+
 static void restore_defaults( GtkWidget* dlg, gboolean all )
 {
     int mode = GPOINTER_TO_INT( g_object_get_data( G_OBJECT( dlg ),

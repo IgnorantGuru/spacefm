@@ -38,6 +38,7 @@ enum {
     HANDLER_MODE_NET
 };
 
+char* generate_bash_error_function( gboolean run_in_terminal );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 gboolean ptk_handler_equals_default( XSet* set );
