@@ -773,6 +773,9 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
     const GList* l;
     VFSVolume* vol;
     
+    if ( !( ao && ao->device_file ) )
+        return;
+    
     // try to find device of mounted url.  url in mtab may differ from
     // user-entered url
     VFSVolume* device_file_vol = NULL;
@@ -783,7 +786,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
         vol = (VFSVolume*)l->data;
         if ( vol->is_mounted )
         {
-            if ( strstr( vol->device_file, ao->device_file ) )
+            if ( !strcmp( vol->device_file, ao->device_file ) )
             {
                 device_file_vol = vol;
                 break;
@@ -2924,6 +2927,103 @@ void open_external_tab( const char* path )
 
 void mount_iso( PtkFileBrowser* file_browser, const char* path )
 {
+    // already mounted?
+    const GList* l;
+    VFSVolume* vol;
+    const GList* volumes = vfs_volume_get_all_volumes();
+    for ( l = volumes; l; l = l->next )
+    {
+        vol = (VFSVolume*)l->data;
+        if ( !strcmp( vol->device_file, path ) ||
+                                        !strcmp( vol->udi, path ) )
+        {
+            if ( vol->is_mounted )
+            {
+                ptk_file_browser_emit_open( file_browser, vol->mount_point,
+                                                        PTK_OPEN_NEW_TAB );
+                return;
+            }
+            break;
+        }
+    }
+        
+    // create temporary fake volume to get mount command from handler
+    vol = g_slice_new0( VFSVolume );
+    vol->device_type = DEVICE_TYPE_BLOCK;
+    vol->device_file = (char*)path;
+    vol->fs_type = "file";
+    vol->special_mount = FALSE;
+    vol->udi = NULL;
+    vol->label = NULL;
+    vol->size = 0;
+    vol->is_mounted = FALSE;
+    vol->is_audiocd = FALSE;
+    vol->is_optical = FALSE;
+    vol->is_removable = FALSE;
+    vol->is_mountable = TRUE;
+    vol->mount_point = NULL;
+    vol->disp_name = NULL;
+    vol->icon = NULL;
+    vol->automount_time = 0;
+
+    gboolean run_in_terminal;
+    char* mount_point = NULL;
+    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_MOUNT,
+                                        vol, NULL, NULL, &run_in_terminal,
+                                        &mount_point );
+    g_slice_free( VFSVolume, vol );
+
+    if ( !cmd )
+    {
+        popup_missing_mount( GTK_WIDGET( file_browser ), 0 );
+        return;
+    }
+
+    // task    
+    char* keepterm;
+    if ( run_in_terminal )
+        keepterm = g_strdup_printf( "[[ $? -eq 0 ]] || ( echo -n '%s: ' ; read )\n",
+                                     press_enter_to_close );
+    else
+        keepterm = g_strdup( "" );
+
+    char* line = g_strdup_printf( "%s\n%s", cmd, keepterm );
+    g_free( keepterm );
+    g_free( cmd );
+    
+    char* task_name = g_strdup_printf( _("Mount %s"), path );
+    PtkFileTask* task = ptk_file_exec_new( task_name, NULL, GTK_WIDGET( file_browser ),
+                                                        file_browser->task_view );
+    g_free( task_name );
+    task->task->exec_command = line;
+    task->task->exec_sync = !run_in_terminal;
+    task->task->exec_export = TRUE;
+    task->task->exec_browser = file_browser;
+    task->task->exec_popup = FALSE;
+    task->task->exec_show_output = FALSE;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_terminal = run_in_terminal;
+    task->task->exec_keep_terminal = FALSE;
+    XSet* set = xset_get( "dev_icon_file" );
+    task->task->exec_icon = g_strdup( set->icon );
+    if ( strstr( line, "udisks " ) )  // udisks v1
+        task->task->exec_type = VFS_EXEC_UDISKS;
+
+    // autoopen
+    AutoOpen* ao;
+    ao = g_slice_new0( AutoOpen );
+    ao->device_file = g_strdup( path );
+    ao->file_browser = file_browser;
+    ao->mount_point = mount_point;
+    mount_point = NULL;
+    ao->job = PTK_OPEN_NEW_TAB;
+    task->complete_notify = (GFunc)on_autoopen_net_cb;
+    task->user_data = ao;
+
+    ptk_file_task_run( task );
+
+
+/*
     char* udevil = g_find_program_in_path( "udevil" );
     if ( !udevil )
     {
@@ -2984,17 +3084,16 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
             // let mount be detected
             while (gtk_events_pending ())
                 gtk_main_iteration ();   
-/*igtodo will be handled like other filesystems - set special in ao?
 #ifndef HAVE_HAL
             vfs_volume_special_mounted( str + 4 );
 #endif
-*/
         }
     }
 _exit_mount_iso:
     g_free( stderr );
     g_free( stdout );
     return;
+*/
 }
 
 gboolean volume_is_visible( VFSVolume* vol )

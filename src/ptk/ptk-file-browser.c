@@ -5606,17 +5606,12 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
                 g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
                 g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
         {
-            char* str = g_find_program_in_path( "udevil" );
-            if ( str )
-            {
-                g_free( str );
-                str = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
-                                            vfs_file_info_get_name( file ), NULL );
-                mount_iso( file_browser, str );
-                g_free( str );
-                vfs_file_info_unref( file );
-                goto _done;
-            }
+            char* str = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
+                                        vfs_file_info_get_name( file ), NULL );
+            mount_iso( file_browser, str );
+            g_free( str );
+            vfs_file_info_unref( file );
+            goto _done;
         }
         vfs_file_info_unref( file );
     }

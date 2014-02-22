@@ -1892,7 +1892,7 @@ void parse_mounts( gboolean report )
                 // not a block device
                 if ( volume = vfs_volume_read_by_mount( devmount->mount_points ) )
                 {
-                    printf( "network mount changed: %s on %s\n",
+                    printf( "special mount changed: %s on %s\n",
                                 volume->device_file, devmount->mount_points );
                     vfs_volume_device_added( volume, FALSE ); //frees volume if needed
                 }
@@ -2805,35 +2805,64 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
         return NULL;
 
     i = split_network_url( name, &netmount );
-    if ( i != 1 )
+    if ( i == 1 )
+    {
+        // network URL
+        volume = g_slice_new0( VFSVolume );
+        volume->device_type = DEVICE_TYPE_NETWORK;
+        volume->special_mount = FALSE;
+        volume->udi = netmount->url;
+        volume->label = netmount->host;
+        volume->fs_type = mtab_fstype ? mtab_fstype : g_strdup( "" );
+        volume->size = 0;
+        volume->device_file = name;
+        volume->is_mounted = TRUE;
+        volume->ever_mounted = TRUE;
+        volume->open_main_window = NULL;
+        volume->mount_point = point;
+        volume->disp_name = NULL;
+        volume->icon = NULL;
+        volume->automount_time = 0;
+        volume->inhibit_auto = FALSE;
+
+        // free unused netmount
+        g_free( netmount->ip );
+        g_free( netmount->port );
+        g_free( netmount->user );
+        g_free( netmount->pass );
+        g_free( netmount->path );
+        g_free( netmount->fstype );
+        g_slice_free( netmount_t, netmount );
+    }
+    else if ( !g_strcmp0( mtab_fstype, "fuse.fuseiso" ) )
+    {
+/*igtodo get device_file from ~/.mtab.fuseiso */
+        // an ISO file mounted with fuseiso - create a volume for it
+        volume = g_slice_new0( VFSVolume );
+        // not really a block device
+        volume->device_type = DEVICE_TYPE_BLOCK;
+        volume->device_file = name;
+        volume->udi = g_strdup( name );
+        volume->special_mount = FALSE;
+        volume->label = NULL;
+        volume->fs_type = mtab_fstype;
+        volume->size = 0;
+        volume->is_mounted = TRUE;
+        volume->ever_mounted = TRUE;
+        volume->open_main_window = NULL;
+        volume->mount_point = point;
+        volume->disp_name = NULL;
+        volume->icon = NULL;
+        volume->automount_time = 0;
+        volume->inhibit_auto = FALSE;        
+    }
+    else
+    {
+        g_free( name );
+        g_free( mtab_fstype );
+        g_free( point );
         return NULL;
-
-    // network URL
-    volume = g_slice_new0( VFSVolume );
-    volume->device_type = DEVICE_TYPE_NETWORK;
-    volume->special_mount = FALSE;
-    volume->udi = netmount->url;
-    volume->label = netmount->host;
-    volume->fs_type = mtab_fstype ? mtab_fstype : g_strdup( "" );
-    volume->size = 0;
-    volume->device_file = name;
-    volume->is_mounted = TRUE;
-    volume->ever_mounted = TRUE;
-    volume->open_main_window = NULL;
-    volume->mount_point = point;
-    volume->disp_name = NULL;
-    volume->icon = NULL;
-    volume->automount_time = 0;
-    volume->inhibit_auto = FALSE;
-
-    // free unused netmount
-    g_free( netmount->ip );
-    g_free( netmount->port );
-    g_free( netmount->user );
-    g_free( netmount->pass );
-    g_free( netmount->path );
-    g_free( netmount->fstype );
-    g_slice_free( netmount_t, netmount );
+    }
 
     vfs_volume_set_info( volume );
     return volume;
@@ -3174,8 +3203,10 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                     g_strconcat( "mountable=",
                             vol->is_mountable && !vol->is_blank ? "1" : "0",
                                                                     NULL ) );
+        // change spaces in device to underscores for testing - for ISO files
         values = g_slist_prepend( values,
-                    g_strconcat( "dev=", vol->device_file, NULL ) );
+                    g_strdelimit( g_strconcat( "dev=", vol->device_file, NULL ),
+                                  " ", '_' ) );
         if ( vol->fs_type )
             values = g_slist_prepend( values, g_strdup( vol->fs_type ) );
     }
@@ -3351,13 +3382,17 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         *      %o  volume-specific mount options (use in mount command only)
         *      %a  mount point, or create auto mount point
         */
+        char* fileq = bash_quote( vol->device_file );  // for iso files
         str = command;
-        command = replace_string( command, "%v", vol->device_file, FALSE );
+        command = replace_string( command, "%v", fileq, FALSE );
+        g_free( fileq );
         g_free( str );
-        if ( action == HANDLER_MOUNT && options && options[0] )
+        if ( action == HANDLER_MOUNT )
         {
             str = command;
-            command = replace_string( command, "%o", options, FALSE );
+            command = replace_string( command, "%o",
+                                      options ? options : "",
+                                      FALSE );
             g_free( str );
         }
         if ( strstr( command, "%a" ) )
@@ -3614,8 +3649,8 @@ char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
     char* command = NULL;
     char* s1;
     *run_in_terminal = FALSE;
-    command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
-                                      vol, NULL, NULL, run_in_terminal, NULL );
+    command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_MOUNT,
+                                      vol, options, NULL, run_in_terminal, NULL );
     if ( !command )
     {
         // discovery
