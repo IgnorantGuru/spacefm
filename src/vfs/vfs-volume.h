@@ -1,10 +1,13 @@
 /*
-*  C Interface: vfs-volume
-*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM vfs-volume.h
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
+
 
 #ifndef _VFS_VOLUME_H_
 #define _VFS_VOLUME_H_
@@ -83,6 +86,10 @@ struct _VFSVolume
     char* disp_name;
     char* icon;
     char* mount_point;
+    guint64 size;
+    char* label;
+    char* fs_type;
+    gboolean special_mount : 1;  // a network or ISO file was mounted
     gboolean is_mounted : 1;
     /* gboolean is_hotpluggable : 1; */
     gboolean is_removable : 1;
@@ -100,9 +107,6 @@ struct _VFSVolume
     gboolean inhibit_auto : 1;
     time_t automount_time;
     gpointer open_main_window;
-    guint64 size;
-    char* label;
-    char* fs_type;
 };
 
 typedef struct netmount_t {

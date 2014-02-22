@@ -1,43 +1,40 @@
 /*
-*  C Implementation: PtkLocationView
-*
-* Description:
-*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM ptk-location-view.c
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
+ * In SpaceFM, this file was changed extensively, separating bookmarks list
+ * and adding non-HAL device manager features
 */
 
-//MOD this file extensively changed separating bookmarks list and adding
-// udisks support and device manager features
 
 #include <glib.h>
 #include <glib/gi18n.h>
-
-#include "ptk-location-view.h"
+#include <gdk/gdkkeysyms.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "ptk-bookmarks.h"
-#include "ptk-utils.h"
-#include "ptk-file-browser.h"  //MOD
-#include "ptk-handler.h"
-#include "settings.h"  //MOD
-#include "vfs-volume.h"
-#include <gdk/gdkkeysyms.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 
+#include "glib-utils.h" /* for g_mkdir_with_parents */
+
+#include "ptk-location-view.h"
+#include "ptk-bookmarks.h"
+#include "ptk-utils.h"
+#include "ptk-file-browser.h"
+#include "ptk-handler.h"
+#include "ptk-file-task.h"
+#include "settings.h"
+#include "main-window.h"
+#include "vfs-volume.h"
 #include "vfs-dir.h"
 #include "vfs-utils.h" /* for vfs_load_icon */
-
-#include "glib-utils.h" /* for g_mkdir_with_parents */
-#include "ptk-file-task.h"
-#include "main-window.h"
-
 #include "gtk2-compat.h"
+
 
 static GtkTreeModel* model = NULL;
 static GtkTreeModel* bookmodel = NULL;
@@ -791,15 +788,14 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
                 device_file_vol = vol;
                 break;
             }
-            else if ( !mount_point_vol && ao->mount_point &&
+            else if ( !mount_point_vol && ao->mount_point && !vol->special_mount &&
                       !g_strcmp0( vol->mount_point, ao->mount_point ) )
-                // found a mount point that matches the ao mount point - 
+                // found an unspecial mount point that matches the ao mount point - 
                 // save for later use if no device file match found
                 mount_point_vol = vol;
         }
     }
     
-    // open in browser and register special mount
     if ( !device_file_vol )
     {
         if ( mount_point_vol )
@@ -814,9 +810,10 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
         g_free( device_file_vol->udi );
         device_file_vol->udi = g_strdup( ao->device_file );
 
-        // add special mount
-        vfs_volume_special_mounted( ao->device_file );
+        // mark as special mount
+        device_file_vol->special_mount = TRUE;
         
+        // open in browser
         // if fuse fails, device may be in mtab even though mount point doesn't
         // exist, so test for mount point exists
         if ( GTK_IS_WIDGET( ao->file_browser ) && 
@@ -2986,10 +2983,12 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
 
             // let mount be detected
             while (gtk_events_pending ())
-                gtk_main_iteration ();    
+                gtk_main_iteration ();   
+/*igtodo will be handled like other filesystems - set special in ao?
 #ifndef HAVE_HAL
             vfs_volume_special_mounted( str + 4 );
 #endif
+*/
         }
     }
 _exit_mount_iso:
@@ -3980,13 +3979,14 @@ void on_bookmark_device( GtkMenuItem* item, VFSVolume* vol )
         return;
 
 #ifndef HAVE_HAL
-    if ( g_str_has_prefix( vol->device_file, "curlftpfs#" ) )
-        url = vol->device_file + 10;
-    else
-        url = vol->device_file;
+    // udi is the original user-entered URL, if available, else mtab url
+    url = vol->udi;
 #else
     url = vfs_volume_get_device( vol );
 #endif
+
+    if ( g_str_has_prefix( url, "curlftpfs#" ) )
+        url += 10;
 
     if ( ! g_list_find_custom( app_settings.bookmarks->list,
                                url,

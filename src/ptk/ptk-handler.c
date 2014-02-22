@@ -17,8 +17,6 @@
 #include "exo-tree-view.h"
 #include "gtk2-compat.h"
 #include "item-prop.h" // For get_text_view/load_text_view
-/*igtodo needed? */
-#include "settings.h"
 
 
 // Archive handlers treeview model enum

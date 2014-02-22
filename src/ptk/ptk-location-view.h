@@ -1,13 +1,11 @@
 /*
-*  C Interface: PtkLocationView
-*
-* Description:
-*
-*
-* Author: Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>, (C) 2006
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM ptk-location-view.h
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
 
 #ifndef  _PTK_LOCATION_VIEW_H_

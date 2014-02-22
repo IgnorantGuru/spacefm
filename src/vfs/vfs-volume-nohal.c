@@ -1,12 +1,15 @@
 /*
-*  C Implementation: vfs-volume
-*
-*  udev & mount monitor code by IgnorantGuru
-*  device info code uses code excerpts from freedesktop's udisks v1.0.4
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM vfs-volume-nohal.c
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
+ * udev & mount monitor code by IgnorantGuru
+ * device info code uses code excerpts from freedesktop's udisks v1.0.4
 */
+
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -47,7 +50,6 @@ static void vfs_volume_device_added ( VFSVolume* volume, gboolean automount );
 static void vfs_volume_device_removed ( char* device_file );
 static gboolean vfs_volume_nonblock_removed( const char* mount_points );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
-void vfs_volume_special_unmounted( const char* device_file );
 void unmount_if_mounted( VFSVolume* vol );
 
 
@@ -58,7 +60,6 @@ typedef struct _VFSVolumeCallbackData
 }VFSVolumeCallbackData;
 
 static GList* volumes = NULL;
-static GList* special_mounts = NULL;
 static GArray* callbacks = NULL;
 GPid monpid = 0;
 gboolean global_inhibit_auto = FALSE;
@@ -2477,6 +2478,7 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     // translate device info to VFSVolume
     volume = g_slice_new0( VFSVolume );
     volume->device_type = DEVICE_TYPE_BLOCK;
+    volume->special_mount = FALSE;
     volume->device_file = g_strdup( device->devnode );
     volume->udi = g_strdup( device->device_by_id );
     volume->is_optical = device->device_is_optical_disc;
@@ -2809,6 +2811,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     // network URL
     volume = g_slice_new0( VFSVolume );
     volume->device_type = DEVICE_TYPE_NETWORK;
+    volume->special_mount = FALSE;
     volume->udi = netmount->url;
     volume->label = netmount->host;
     volume->fs_type = mtab_fstype ? mtab_fstype : g_strdup( "" );
@@ -2858,6 +2861,7 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
     {
         volume = g_slice_new0( VFSVolume );
         volume->device_file = NULL;
+        volume->special_mount = FALSE;
         volume->udi = NULL;
         volume->is_optical = FALSE;
         volume->is_table = FALSE;
@@ -3509,6 +3513,9 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
     char* test;
     char* value;
     
+    if ( vol->special_mount )
+        // volume is a network or ISO file that was manually mounted
+        return TRUE;
     if ( !vol->is_mountable || vol->is_blank || vol->device_type != DEVICE_TYPE_BLOCK )
         return FALSE;
 
@@ -3845,34 +3852,38 @@ char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options,
     return command;
 }
 
-void vfs_volume_exec( VFSVolume* vol, char* command )
-{
-//printf( "vfs_volume_exec %s %s\n", vol->device_file, command );
-    if ( !command || command[0] == '\0' || vol->device_type != DEVICE_TYPE_BLOCK )
+void exec_task( const char* command, gboolean run_in_terminal )
+{   // run command as async task with optional terminal
+    if ( !( command && command[0] ) )
         return;
 
-    char *s1;
-    char *s2;
-    
-    s1 = replace_string( command, "%m", vol->mount_point, TRUE );
-    s2 = replace_string( s1, "%l", vol->label, TRUE );
+    GList* files = g_list_prepend( NULL, g_strdup( "exec_task" ) );
+
+    PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_EXEC, files, "/", NULL,
+                                                                        NULL );
+    task->task->exec_action = g_strdup( "exec_task" );
+    task->task->exec_command = g_strdup( command );
+    task->task->exec_sync = FALSE;
+    task->task->exec_export = FALSE;
+    task->task->exec_terminal = run_in_terminal;
+    ptk_file_task_run( task );    
+}
+
+void vfs_volume_exec( VFSVolume* vol, const char* command )
+{
+//printf( "vfs_volume_exec %s %s\n", vol->device_file, command );
+    if ( !( command && command[0] ) || vol->device_type != DEVICE_TYPE_BLOCK )
+        return;
+
+    char *s1 = replace_string( command, "%m", vol->mount_point, TRUE );
+    char *s2 = replace_string( s1, "%l", vol->label, TRUE );
     g_free( s1 );
     s1 = replace_string( s2, "%v", vol->device_file, FALSE );
     g_free( s2 );
 
-    GList* files = NULL;
-    files = g_list_prepend( files, g_strdup_printf( "autoexec" ) );
-
     printf( _("\nAutoexec: %s\n"), s1 );
-    PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_EXEC, files, "/", NULL,
-                                                                        NULL );
-    task->task->exec_action = g_strdup_printf( "autoexec" );
-    task->task->exec_command = s1;
-    task->task->exec_sync = FALSE;
-    task->task->exec_export = FALSE;
-task->task->exec_keep_tmp = FALSE;
-    ptk_file_task_run( task );
-    
+    exec_task( s1, FALSE );
+    g_free( s1 );
 }
 
 void vfs_volume_autoexec( VFSVolume* vol )
@@ -3957,12 +3968,11 @@ void vfs_volume_autounmount( VFSVolume* vol )
     if ( line )
     {
         printf( _("\nAuto-Unmount: %s\n"), line );
-/*igtodo run in terminal */
-        g_spawn_command_line_async( line, NULL );
+        exec_task( line, run_in_terminal );
         g_free( line );
     }
     else
-        printf( _("\nAuto-Unmount: error: no unmount program available\n") );
+        printf( _("\nAuto-Unmount: error: no unmount command available\n") );
 }
 
 void vfs_volume_automount( VFSVolume* vol )
@@ -3981,12 +3991,11 @@ void vfs_volume_automount( VFSVolume* vol )
     if ( line )
     {
         printf( _("\nAutomount: %s\n"), line );
-/*igtodo run in terminal */
-        g_spawn_command_line_async( line, NULL );
+        exec_task( line, run_in_terminal );
         g_free( line );
     }
     else
-        printf( _("\nAutomount: error: no mount program available\n") );
+        printf( _("\nAutomount: error: no mount command available\n") );
 }
 
 static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
@@ -4058,7 +4067,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 else if ( was_mounted && !volume->is_mounted )
                 {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
-                    vfs_volume_special_unmounted( volume->device_file );
+                    volume->special_mount = FALSE;
                     //remove mount points in case other unmounted
                     vfs_volume_clean_mount_points();
                 }
@@ -4113,7 +4122,6 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
             // remove volume
             volume = (VFSVolume*)l->data;
             printf( "network mount removed: %s on %s\n", volume->device_file, point );
-            vfs_volume_special_unmounted( volume->device_file );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
@@ -4162,92 +4170,17 @@ void unmount_if_mounted( VFSVolume* vol )
     char* str = vfs_volume_device_unmount_cmd( vol, &run_in_terminal );
     if ( !str )
         return;
+
     char* mtab = "/etc/mtab";
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
         mtab = "/proc/mounts";
-/*igtodo run in terminal */
-    char* line = g_strdup_printf( "bash -c \"grep -qs '^%s ' %s 2>/dev/null && %s 2>/dev/null\"",
+
+    char* line = g_strdup_printf( "grep -qs '^%s ' %s 2>/dev/null || exit\n%s\n",
                                                 vol->device_file, mtab, str );
     g_free( str );
     printf( _("Unmount-If-Mounted: %s\n"), line );
-    g_spawn_command_line_async( line, NULL );
+    exec_task( line, run_in_terminal );
     g_free( line );
-}
-
-/*igtodo use handler not udevil, run in terminal */
-void vfs_volume_special_unmount_all()
-{
-    GList* l;
-    char* line;
-    
-    for ( l = special_mounts; l; l = l->next )
-    {
-        if ( l->data )
-        {
-            line = g_strdup_printf( "udevil umount '%s'", (char*)l->data );
-            printf( _("\nAuto-Unmount: %s\n"), line );
-            g_spawn_command_line_async( line, NULL );
-            g_free( line );
-            g_free( l->data );
-        }
-    }
-    g_list_free( special_mounts );
-    special_mounts = NULL;
-}
-
-void vfs_volume_special_unmounted( const char* device_file )
-{
-    GList* l;
-    
-    if ( !device_file )
-        return;
-
-    for ( l = special_mounts; l; l = l->next )
-    {
-        if ( !g_strcmp0( (char*)l->data, device_file ) )
-        {
-//printf("special_mounts --- %s\n", (char*)l->data );        
-            g_free( l->data );
-            special_mounts = g_list_remove( special_mounts, l->data );
-            return;
-        }
-    }
-}
-
-void vfs_volume_special_mounted( const char* device_file )
-{
-    GList* l;
-    const char* mfile = NULL;
-    
-    if ( !device_file )
-        return;
-//printf("vfs_volume_special_mounted %s\n", device_file );
-    // is device_file an ISO mount point?  get device file
-    if ( !g_str_has_prefix( device_file, "/dev/" ) )
-    {
-        for ( l = volumes; l; l = l->next )
-        {
-            if ( ((VFSVolume*)l->data)->device_type == DEVICE_TYPE_BLOCK &&
-                    ((VFSVolume*)l->data)->is_mounted &&
-                    g_str_has_prefix( ((VFSVolume*)l->data)->device_file, "/dev/loop" ) &&
-                    !g_strcmp0( ((VFSVolume*)l->data)->mount_point, device_file ) )
-            {
-                mfile = ((VFSVolume*)l->data)->device_file;
-                break;
-            }
-        }
-    }
-
-    if ( !mfile )
-        mfile = device_file;
-
-    for ( l = special_mounts; l; l = l->next )
-    {
-        if ( !g_strcmp0( (char*)l->data, mfile ) )
-            return;
-    }
-//printf("special_mounts +++ %s\n", mfile );
-    special_mounts = g_list_prepend( special_mounts, g_strdup( mfile ) );
 }
 
 gboolean on_cancel_inhibit_timer( gpointer user_data )
@@ -4418,81 +4351,11 @@ gboolean vfs_volume_finalize()
     }
     volumes = NULL;
 
-    // unmount networks and files mounted during this session
-    vfs_volume_special_unmount_all();
-
     // remove unused mount points
     vfs_volume_clean_mount_points();
     
     return TRUE;
 }
-
-/*
-gboolean vfs_volume_init ()
-{
-    FILE *fp;
-    char line[1024];
-    VFSVolume* volume;
-    GList* l;
-    
-    if ( !g_file_test( "/usr/bin/udisks", G_FILE_TEST_EXISTS ) )
-        return TRUE;
-
-    // lookup all devices currently known to udisks
-    fp = popen("/usr/bin/udisks --enumerate-device-files", "r");
-    if ( fp )
-    {
-        while (fgets( line, sizeof( line )-1, fp ) != NULL)
-        {
-            if ( strncmp( line, "/dev/disk/", 10 ) && !strncmp( line, "/dev/", 5 ) )
-            {
-                line[ strlen( line ) - 1 ] = '\0';  // removes trailing \n
-                if ( volume = vfs_volume_read_by_device( line ) )
-                    vfs_volume_device_added( volume, FALSE );  // frees volume if needed
-            }
-        }
-        pclose( fp );
-    }
-    global_inhibit_auto = TRUE; // don't autoexec during startup
-    vfs_volume_monitor_start();
-    for ( l = volumes; l; l = l->next )
-        vfs_volume_automount( (VFSVolume*)l->data );
-    g_timeout_add_seconds( 3, ( GSourceFunc ) on_cancel_inhibit_timer, NULL );
-    return TRUE;
-}
-
-gboolean vfs_volume_finalize()
-{
-    GList* l;
-
-    // stop udisks monitor
-    if ( monpid )
-    {
-        if ( !waitpid( monpid, NULL, WNOHANG ) )
-        {
-            kill( monpid, SIGUSR1 );
-            monpid = NULL;
-        }
-    }
-
-    if ( callbacks )
-        g_array_free( callbacks, TRUE );
-
-    gboolean unmount_all = xset_get_b( "dev_unmount_quit" );
-    if ( G_LIKELY( volumes ) )
-    {
-        for ( l = volumes; l; l = l->next )
-        {
-            if ( unmount_all )
-                vfs_volume_autounmount( (VFSVolume*)l->data );
-            vfs_free_volume_members( (VFSVolume*)l->data );
-            g_slice_free( VFSVolume, l->data );
-        }
-    }
-    volumes = NULL;
-    return TRUE;
-}
-*/
 
 const GList* vfs_volume_get_all_volumes()
 {

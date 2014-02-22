@@ -1,38 +1,26 @@
 /*
- *      vfs-volume-hal.c - Support voulme management with HAL
+ * SpaceFM vfs-volume-hal.c  - Support volume management with HAL
  *
- *      Copyright (C) 2004-2005 Red Hat, Inc, David Zeuthen <davidz@redhat.com>
- *      Copyright (c) 2005-2007 Benedikt Meurer <benny@xfce.org>
- *      Copyright 2008 PCMan <pcman.tw@gmail.com>
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2008 PCMan <pcman.tw@gmail.com>
+ * Copyright (c) 2005-2007 Benedikt Meurer <benny@xfce.org>
+ * Copyright (C) 2004-2005 Red Hat, Inc, David Zeuthen <davidz@redhat.com>
  *
- *      This file contains source code from other projects:
+ * This file contains source code from other projects:
  *
- *      The icon-name and volume display name parts are taken from
- *      gnome-vfs-hal-mounts.c of libgnomevfs by David Zeuthen <davidz@redhat.com>.
+ * The icon-name and volume display name parts are taken from
+ * gnome-vfs-hal-mounts.c of libgnomevfs by David Zeuthen <davidz@redhat.com>.
  *
- *      The HAL volume listing and updating-related parts are taken from
- *      thunar-vfs-volume-hal.c of Thunar by Benedikt Meurer <benny@xfce.org>.
+ * The HAL volume listing and updating-related parts are taken from
+ * thunar-vfs-volume-hal.c of Thunar by Benedikt Meurer <benny@xfce.org>.
  *
- *      The mount/umount/eject-related source code is modified from exo-mount.c
- *      taken from libexo. It's originally written by Benedikt Meurer <benny@xfce.org>.
+ * The mount/umount/eject-related source code is modified from exo-mount.c
+ * taken from libexo. It's originally written by Benedikt Meurer <benny@xfce.org>.
  *
- *      The fstab-related mount/umount/eject code is modified from gnome-mount.c
- *      taken from gnome-mount. The original author is David Zeuthen, <david@fubar.dk>.
+ * The fstab-related mount/umount/eject code is modified from gnome-mount.c
+ * taken from gnome-mount. The original author is David Zeuthen, <david@fubar.dk>.
  *
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
+ * License: See COPYING file
  */
 
 /*
