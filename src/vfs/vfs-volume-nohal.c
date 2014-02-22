@@ -3514,9 +3514,11 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
     char* value;
     
     if ( vol->special_mount )
-        // volume is a network or ISO file that was manually mounted
+        // volume is a network or ISO file that was manually mounted -
+        // for autounmounting only
         return TRUE;
-    if ( !vol->is_mountable || vol->is_blank || vol->device_type != DEVICE_TYPE_BLOCK )
+    if ( !vol->is_mountable || vol->is_blank || vol->special_mount ||
+                               vol->device_type != DEVICE_TYPE_BLOCK )
         return FALSE;
 
     char* showhidelist = g_strdup_printf( " %s ", xset_get_s( "dev_automount_volumes" ) );
@@ -3892,7 +3894,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
     char* path;
 
     // Note: audiocd is is_mountable
-    if ( !vol->is_mountable || global_inhibit_auto ||
+    if ( !vol->is_mountable || global_inhibit_auto || vol->special_mount ||
                                         !vfs_volume_is_automount( vol ) ||
                                         vol->device_type != DEVICE_TYPE_BLOCK )
         return;
@@ -3977,7 +3979,7 @@ void vfs_volume_autounmount( VFSVolume* vol )
 
 void vfs_volume_automount( VFSVolume* vol )
 {
-    if ( vol->is_mounted || vol->ever_mounted || vol->is_audiocd
+    if ( vol->is_mounted || vol->ever_mounted || vol->is_audiocd || vol->special_mount
                                         || !vfs_volume_is_automount( vol ) )
         return;
 
