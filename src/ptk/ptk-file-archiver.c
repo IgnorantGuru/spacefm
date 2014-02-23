@@ -356,11 +356,15 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     int i, n, format, res;
 
     /* Generating dialog - extra NULL on the NULL-terminated list to
-     * placate an irrelevant compilation warning */
+     * placate an irrelevant compilation warning. See notes in
+     * ptk-handler.c:ptk_handler_show_config about GTK failure to
+     * identify top-level widget */
 /*igcr file_browser may be NULL - check this entire function for uses */
+    GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
+                                GTK_WIDGET( file_browser->main_window ) ) :
+                                NULL;
     dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
-                                       GTK_WINDOW( gtk_widget_get_toplevel(
-                                             GTK_WIDGET( file_browser ) ) ),
+                            top_level ? GTK_WINDOW( top_level ) : NULL,
                                        GTK_FILE_CHOOSER_ACTION_SAVE, NULL,
                                        NULL );
 
@@ -951,7 +955,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     char* task_name = g_strdup_printf( _("Archive") );
     PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
                                            GTK_WIDGET( file_browser ),
-                                           file_browser->task_view );
+                        file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
     task->task->exec_browser = file_browser;
 
