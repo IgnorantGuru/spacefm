@@ -38,14 +38,12 @@ enum {
     HANDLER_MODE_NET
 };
 
-char* generate_bash_error_function( gboolean run_in_terminal );
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 gboolean ptk_handler_equals_default( XSet* set );
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );
-char* unescape_multiline_command( char* command );
 
 G_END_DECLS
 #endif

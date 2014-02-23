@@ -36,6 +36,16 @@ enum {
 };
 
 
+static char* unescape_multiline_command( const char* command )
+{
+    // Dealing with escaped newlines and tabs in multiline command
+    char *str = NULL;
+    char *str1 = replace_string( command, "\\n", "\n", FALSE );
+    str = replace_string( str1, "\\t", "\t", FALSE );
+    g_free( str1 );
+    return str;
+}
+
 static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 {
     // Function deals with the possibility that a handler is responsible
@@ -44,10 +54,9 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     if (handler_xset && handler_xset->x)
     {
         // Obtaining first handled extension
-/*igcr very inefficient to copy all these strings */
         gchar** extensions = g_strsplit( handler_xset->x, ", ", -1 );
         gchar* first_extension = NULL;
-        if (!extensions || !extensions[0])
+        if ( !( extensions && extensions[0] ) )
             first_extension = g_strdup( "" );
         else
             first_extension = g_strdup( extensions[0] );
@@ -342,6 +351,40 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free(compress_cmd);
 }
 
+static char* generate_bash_error_function( gboolean run_in_terminal )
+{
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation. Even outside a terminal, IG
+     * has requested text is output
+     * No translation for security purposes */
+    char *error_pause = NULL, *finished_with_errors = NULL;
+    if (run_in_terminal)
+    {
+        error_pause = "read s";
+        finished_with_errors = "[ Finished With Errors ]  Press Enter "
+                               "to close";
+    }
+    else
+    {
+        error_pause = "";
+        finished_with_errors = "[ Finished With Errors ]";
+    }
+
+    return g_strdup_printf( ""
+        "function handle_error()\n"
+        "{\n"
+        "    fm_err=$?\n"
+        "    if [ $fm_err -ne 0 ]\n"
+        "    then\n"
+        "       echo\n"
+        "       echo -n '%s: '\n"
+        "       %s\n"
+        "       exit $fm_err\n"
+        "    fi\n"
+        "}",
+        finished_with_errors, error_pause );
+}
+
 void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                const char* cwd )
 {
@@ -516,8 +559,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                       2 );
     gtk_widget_show_all( hbox_top );
 
-    /* Loading command for handler, based off the i'th handler. Textview
-     * needs to be scrollable */
+    /* Loading command for handler, based off the i'th handler */
     GtkTextView* view = (GtkTextView*)gtk_text_view_new();
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view ), GTK_WRAP_WORD_CHAR );
     GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
@@ -978,8 +1020,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
 void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
                                             const char* cwd, const char* dest_dir )
 {
-    /* Note that it seems this function is also used to list the contents
-     * of archives! */
+    /* This function is also used to list the contents of archives */
 
     GtkWidget* dlg;
     GtkWidget* dlgparent = NULL;
@@ -1113,7 +1154,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
-/*igcr these strings don't need to be copied for parse  - maybe ok here */
     gchar** archive_handlers = archive_handlers_s ?
                                g_strsplit( archive_handlers_s, " ", -1 ) :
                                NULL;
@@ -1142,14 +1182,14 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             for (i = 0; archive_handlers[i] != NULL; ++i)
             {
                 // Fetching handler
-    /*igcr probably should validate with xset_is */
-                handler_xset = xset_get( archive_handlers[i] );
+                handler_xset = xset_is( archive_handlers[i] );
 
                 // Checking to see if handler is enabled and can cope with
                 // extraction/listing
-                if(archive_handler_is_format_supported( handler_xset, type,
-                                                        extension,
-                                                        archive_operation ))
+                if ( handler_xset && 
+                     archive_handler_is_format_supported( handler_xset, type,
+                                                          extension,
+                                                          archive_operation ) )
                 {
                     // It can - setting flag and leaving loop
                     format_supported = TRUE;
@@ -1204,7 +1244,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
-/*igcr shouldn't need to copy strings to parse */
             gchar** extensions = handler_xset->x ?
                            g_strsplit_set( handler_xset->x, ", ", -1 ) :
                            NULL;
@@ -1269,21 +1308,14 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             g_free( filename );
 
             /* Determining extraction command - dealing with 'run in
-             * terminal' and placeholders. Doing this here as parent
-             * directory creation needs access to the command */
-/*igcr segfault if !handler_xset->z due to unconditional use of *handler_xset->z ?
- * Its not unconditional - this command has passed archive_handler_is_format_supported */
-            gchar* extract_cmd =
-    (*handler_xset->z == '+') ? handler_xset->z + 1 : handler_xset->z;
+             * terminal' and multiline command. Doing this here as parent
+             * directory creation needs access to the command. */
+            str = unescape_multiline_command( 
+                            ( handler_xset->z && *handler_xset->z == '+' ) ?
+                            handler_xset->z + 1 : handler_xset->z );
 
-            /* Dealing with multiline command - don't free the handler
-             * command! */
-            str = extract_cmd;
-            extract_cmd = unescape_multiline_command( extract_cmd );
-
-            // Substituting archive to extract
-            str = extract_cmd;
-            extract_cmd = replace_string( extract_cmd, "%x", full_quote,
+            // Placeholders - Substituting archive to extract
+            gchar* extract_cmd = replace_string( str, "%x", full_quote,
                                           FALSE );
             g_free( str );
 
@@ -1409,8 +1441,6 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
 
     // Dealing with standard SpaceFM substitutions
     str = final_command;
-/*igcr the way you're doing this in two steps, what happens if a filename
- * contains eg "%d" ?  */
     final_command = replace_line_subs( final_command );
     g_free(str);
 
@@ -1447,7 +1477,10 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
     task->task->exec_browser = file_browser;
     task->task->exec_sync = !in_term;
     task->task->exec_show_error = TRUE;
-/*igcr exec_show_output = in_term correct? or !in_term ? */
+/*igcr exec_show_output = in_term correct? or !in_term ? Note that 
+ * exec_show_output only has an effect if exec_sync == TRUE.  If so, it will
+ * popup the task dialog on any stdout/stderr output.  show_error will only 
+ * popup task dialog if exit status is !0 */
     task->task->exec_show_output = in_term;
     task->task->exec_terminal = in_term;
     task->task->exec_keep_terminal = keep_term;
