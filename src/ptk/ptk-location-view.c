@@ -810,10 +810,42 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
     }
     if ( device_file_vol )
     {
-        // copy the user-entered url to udi
-        g_free( device_file_vol->udi );
-        device_file_vol->udi = g_strdup( ao->device_file );
-
+        if ( device_file_vol->device_type == DEVICE_TYPE_OTHER
+                    && device_file_vol->mount_point
+                    && device_file_vol->mount_point[0]
+                    && !g_strcmp0( device_file_vol->device_file, "fuseiso" )
+                    && !g_strcmp0( device_file_vol->fs_type, "fuse.fuseiso" ) )
+        {
+            /* get device_file from ~/.mtab.fuseiso - this doesn't always work
+             * earlier because sometimes the .mtab.fuseiso file is not updated
+             * until after new device is detected.  Also done in
+             * vfs-volume-nohal:vfs_volume_read_by_mount() */
+            char* mtab_file = g_build_filename( g_get_home_dir(),
+                                                    ".mtab.fuseiso", NULL );
+            char* new_name = NULL;
+            if ( path_is_mounted_mtab( mtab_file, device_file_vol->mount_point,
+                                       &new_name, NULL )
+                                            && new_name && new_name[0] )
+            {
+                g_free( device_file_vol->device_file );
+                g_free( device_file_vol->udi );
+                device_file_vol->udi = g_strdup( new_name );
+                device_file_vol->device_file = new_name;
+                new_name = NULL;
+                vfs_volume_set_info( device_file_vol );
+                if ( volume_is_visible( device_file_vol ) )
+                    update_volume( device_file_vol );
+            }
+            g_free( new_name );
+            g_free( mtab_file );
+        }
+        else
+        {
+            // copy the user-entered url to udi
+            g_free( device_file_vol->udi );
+            device_file_vol->udi = g_strdup( ao->device_file );
+        }
+        
         // mark as special mount
         device_file_vol->should_autounmount = TRUE;
         

@@ -140,6 +140,10 @@ int split_network_url( const char* url, netmount_t** netmount );
 void vfs_volume_special_mounted( const char* device_file );
 gboolean vfs_volume_dir_avoid_changes( const char* dir );
 dev_t get_device_parent( dev_t dev );
+gboolean path_is_mounted_mtab( const char* mtab_file,
+                               const char* path,
+                               char** device_file,
+                               char** fs_type );
 
 #endif
 

@@ -1059,7 +1059,8 @@ gchar* info_mount_points( device_t *device )
           continue;
         }
 
-        /* ignore mounts where only a subtree of a filesystem is mounted */
+        /* ignore mounts where only a subtree of a filesystem is mounted
+         * this function is only used for block devices. */
         if (g_strcmp0 (encoded_root, "/") != 0)
             continue;
 
@@ -1632,6 +1633,7 @@ void parse_mounts( gboolean report )
     GList* l;
     GList* changed = NULL;
     devmount_t *devmount;
+    gboolean subdir_mount;
     
     /* See Documentation/filesystems/proc.txt for the format of /proc/self/mountinfo
     *
@@ -1680,9 +1682,8 @@ void parse_mounts( gboolean report )
             continue;
         }
 
-        /* ignore mounts where only a subtree of a filesystem is mounted */
-        if ( g_strcmp0( encoded_root, "/" ) != 0 )
-            continue;
+        /* mount where only a subtree of a filesystem is mounted? */
+        subdir_mount = ( g_strcmp0( encoded_root, "/" ) != 0 );
 
         /* Temporary work-around for btrfs, see
         *
@@ -1745,6 +1746,19 @@ void parse_mounts( gboolean report )
 //printf("     new devmount %s\n", mount_point);
             if ( report )
             {
+                if ( subdir_mount )
+                {
+                    // is a subdir mount - ignore if block device
+                    devnum = makedev( major, minor );
+                    udevice = udev_device_new_from_devnum( udev, 'b', devnum );
+                    if ( udevice )
+                    {
+                        // is block device with subdir mount - ignore
+                        udev_device_unref( udevice );
+                        g_free( mount_point );   
+                        continue;
+                    }
+                }
                 devmount = g_slice_new0( devmount_t );
                 devmount->major = major;
                 devmount->minor = minor;
@@ -1760,6 +1774,7 @@ void parse_mounts( gboolean report )
                 udevice = udev_device_new_from_devnum( udev, 'b', devnum );
                 if ( udevice )
                 {
+                    // is block device - add
                     udev_device_unref( udevice );
                     devmount = g_slice_new0( devmount_t );
                     devmount->major = major;
@@ -1778,7 +1793,7 @@ void parse_mounts( gboolean report )
             devmount->mounts = g_list_prepend( devmount->mounts, mount_point );
         }
         else
-            g_free (mount_point);      
+            g_free( mount_point );
     }
     g_free( contents );
     g_strfreev( lines );
@@ -2555,10 +2570,10 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     return volume;
 }
 
-static gboolean path_is_mounted_mtab( const char* mtab_file,
-                                      const char* path,
-                                      char** device_file,
-                                      char** fs_type )
+gboolean path_is_mounted_mtab( const char* mtab_file,
+                               const char* path,
+                               char** device_file,
+                               char** fs_type )
 {
     gchar *contents;
     gchar **lines;
@@ -2847,7 +2862,10 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     else if ( !g_strcmp0( mtab_fstype, "fuse.fuseiso" ) )
     {
         // an ISO file mounted with fuseiso
-        // get device_file from ~/.mtab.fuseiso
+        /* get device_file from ~/.mtab.fuseiso - this doesn't always work
+         * because sometimes the .mtab.fuseiso file is not updated until after
+         * new device is detected.  Also done in
+         * ptk-location-view:on_autoopen_net_cb() */
         char* mtab_file = g_build_filename( g_get_home_dir(), ".mtab.fuseiso", NULL );
         char* new_name = NULL;
         if ( path_is_mounted_mtab( mtab_file, point, &new_name, NULL )
