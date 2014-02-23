@@ -985,8 +985,10 @@ void ptk_file_archiver_create( PtkFileBrowser *file_browser, GList *files,
     ptk_file_task_run( task );
 }
 
-void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                            const char* cwd, const char* dest_dir )
+void ptk_file_archiver_extract( PtkFileBrowser *file_browser,
+                                GList *files, const char *cwd,
+                                const char *dest_dir,
+                                DesktopWindow *desktop )
 {
     /* Note that it seems this function is also used to list the contents
      * of archives! */

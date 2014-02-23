@@ -1180,7 +1180,9 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                 if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
                 {
                     ptk_file_archiver_extract( NULL, sel_files,
-                                    vfs_get_desktop_dir(), vfs_get_desktop_dir() );
+                                               vfs_get_desktop_dir(),
+                                               vfs_get_desktop_dir(),
+                                               self );
                     goto _done;
                 }
                 else if ( xset_get_b( "arc_def_exto" ) || 
@@ -1189,7 +1191,8 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                                             !g_str_has_suffix( path, ".tar.gz" ) ) ) )
                 {
                     ptk_file_archiver_extract( NULL, sel_files, 
-                                                    vfs_get_desktop_dir(), NULL );
+                                               vfs_get_desktop_dir(),
+                                               NULL, self );
                     goto _done;
                 }
                 else if ( xset_get_b( "arc_def_list" )
@@ -1205,7 +1208,8 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                 )
                 {
                     ptk_file_archiver_extract( NULL, sel_files,
-                                                vfs_get_desktop_dir(), "////LIST" );
+                                               vfs_get_desktop_dir(),
+                                               "////LIST", self );
                     goto _done;
                 }
             }

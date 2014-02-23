@@ -5565,8 +5565,9 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
             if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
             {
                 ptk_file_archiver_extract( file_browser, sel_files,
-                                        ptk_file_browser_get_cwd( file_browser ),
-                                        ptk_file_browser_get_cwd( file_browser ) );
+                                ptk_file_browser_get_cwd( file_browser ),
+                                ptk_file_browser_get_cwd( file_browser ),
+                                NULL );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_exto" ) || 
@@ -5575,7 +5576,8 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
                                             !g_str_has_suffix( path, ".tar.gz" ) ) ) )
             {
                 ptk_file_archiver_extract( file_browser, sel_files, 
-                                ptk_file_browser_get_cwd( file_browser ), NULL );
+                                ptk_file_browser_get_cwd( file_browser ),
+                                NULL, NULL );
                 goto _done;
             }
             else if ( xset_get_b( "arc_def_list" )
@@ -5590,7 +5592,8 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
             )
             {
                 ptk_file_archiver_extract( file_browser, sel_files,
-                            ptk_file_browser_get_cwd( file_browser ), "////LIST" );
+                                ptk_file_browser_get_cwd( file_browser ),
+                                "////LIST", NULL );
                 goto _done;
             }
         }        
