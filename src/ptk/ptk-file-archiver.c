@@ -1233,20 +1233,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Clearing up
             g_strfreev( extensions );
 
-            // Making sure extension has been found, moving to next file
-            // otherwise
-            if (filename_no_archive_ext == NULL)
-            {
-                g_warning( "Unable to process '%s' - does not use an "
-                           "extension registered with the '%s' archive "
-                           "handler!", filename, handler_xset->menu_label);
-
-                // Cleaning up
-                g_free( filename );
-                g_free( full_quote );
-                g_free( full_path );
-                continue;
-            }
+            /* An archive may not have an extension, or there may be no
+             * extensions specified for the handler (they are optional)
+             * - making sure filename_no_archive_ext is set in this case */
+            if (!filename_no_archive_ext)
+                filename_no_archive_ext = g_strdup( filename );
 
             /* Now the extraction filename is obtained, determine the
              * normal filename without the extension */
