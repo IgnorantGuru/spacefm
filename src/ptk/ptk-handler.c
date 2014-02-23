@@ -109,7 +109,7 @@ const Handler handlers_arc[]=
     {
         "handarc_gz",
         "Gzip",
-        "application/x-gzip application/x-gzpdf",
+        "application/x-gzip application/x-gzpdf application/gzip",
         ".gz",
         "gzip -c %N > %O",
         "gzip -cd %x > %G",

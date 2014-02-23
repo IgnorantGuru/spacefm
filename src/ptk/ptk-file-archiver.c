@@ -399,11 +399,15 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     int i, n, format, res;
 
     /* Generating dialog - extra NULL on the NULL-terminated list to
-     * placate an irrelevant compilation warning */
+     * placate an irrelevant compilation warning. See notes in
+     * ptk-handler.c:ptk_handler_show_config about GTK failure to
+     * identify top-level widget */
 /*igcr file_browser may be NULL - check this entire function for uses */
+    GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
+                                GTK_WIDGET( file_browser->main_window ) ) :
+                                NULL;
     dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
-                                       GTK_WINDOW( gtk_widget_get_toplevel(
-                                             GTK_WIDGET( file_browser ) ) ),
+                            top_level ? GTK_WINDOW( top_level ) : NULL,
                                        GTK_FILE_CHOOSER_ACTION_SAVE, NULL,
                                        NULL );
 
@@ -993,7 +997,7 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
     char* task_name = g_strdup_printf( _("Archive") );
     PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
                                            GTK_WIDGET( file_browser ),
-                                           file_browser->task_view );
+                        file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
     task->task->exec_browser = file_browser;
 
@@ -1272,20 +1276,11 @@ void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
             // Clearing up
             g_strfreev( extensions );
 
-            // Making sure extension has been found, moving to next file
-            // otherwise
-            if (filename_no_archive_ext == NULL)
-            {
-                g_warning( "Unable to process '%s' - does not use an "
-                           "extension registered with the '%s' archive "
-                           "handler!", filename, handler_xset->menu_label);
-
-                // Cleaning up
-                g_free( filename );
-                g_free( full_quote );
-                g_free( full_path );
-                continue;
-            }
+            /* An archive may not have an extension, or there may be no
+             * extensions specified for the handler (they are optional)
+             * - making sure filename_no_archive_ext is set in this case */
+            if (!filename_no_archive_ext)
+                filename_no_archive_ext = g_strdup( filename );
 
             /* Now the extraction filename is obtained, determine the
              * normal filename without the extension */

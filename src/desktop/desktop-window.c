@@ -3166,6 +3166,13 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopItem* item;
     GtkWidget* w = (GtkWidget*)self;
 
+    /* Exit if file or dir is NULL - had this when changing the desktop
+     * directory permissions - making it unwritable - via Info from the
+     * desktop right-click menu. Note that dir can also be NULL, but it
+     * isn't currently used */
+    if (!file || !dir)
+        return;
+
     /* don't touch hidden files */
     if( file->name[0] == '.' )
         return;
