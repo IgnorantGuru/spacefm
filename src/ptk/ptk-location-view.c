@@ -93,6 +93,7 @@ typedef struct _AutoOpen
 {
     PtkFileBrowser* file_browser;
     char* device_file;
+    dev_t devnum;
     char* mount_point;
     int job;
 }AutoOpen;
@@ -791,7 +792,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
                 device_file_vol = vol;
                 break;
             }
-            else if ( !mount_point_vol && ao->mount_point && !vol->special_mount &&
+            else if ( !mount_point_vol && ao->mount_point && !vol->should_autounmount &&
                       !g_strcmp0( vol->mount_point, ao->mount_point ) )
                 // found an unspecial mount point that matches the ao mount point - 
                 // save for later use if no device file match found
@@ -814,7 +815,7 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
         device_file_vol->udi = g_strdup( ao->device_file );
 
         // mark as special mount
-        device_file_vol->special_mount = TRUE;
+        device_file_vol->should_autounmount = TRUE;
         
         // open in browser
         // if fuse fails, device may be in mtab even though mount point doesn't
@@ -994,6 +995,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         AutoOpen* ao;
         ao = g_slice_new0( AutoOpen );
         ao->device_file = g_strdup( netmount->url );
+        ao->devnum = 0;
         ao->file_browser = file_browser;
         ao->mount_point = mount_point;
         mount_point = NULL;
@@ -1579,9 +1581,9 @@ gboolean on_autoopen_cb( VFSFileTask* task, AutoOpen* ao )
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( l = volumes; l; l = l->next )
     {
-        vol = (VFSVolume*)l->data;
-        if ( !strcmp( vol->device_file, ao->device_file ) )
+        if ( ((VFSVolume*)l->data)->devnum == ao->devnum )
         {
+            vol = (VFSVolume*)l->data;
             vol->inhibit_auto = FALSE;
             if ( vol->is_mounted )
             {
@@ -1651,7 +1653,8 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
 
     // autoopen
     AutoOpen* ao = g_slice_new0( AutoOpen );
-    ao->device_file = g_strdup( vol->device_file );
+    ao->devnum = vol->devnum;
+    ao->device_file = NULL;
     ao->file_browser = file_browser;
     if ( xset_get_b( "dev_newtab" ) )
         ao->job = PTK_OPEN_NEW_TAB;
@@ -1720,7 +1723,8 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
         // autoopen
         AutoOpen* ao = g_slice_new0( AutoOpen );
-        ao->device_file = g_strdup( vol->device_file );
+        ao->devnum = vol->devnum;
+        ao->device_file = NULL;
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_NEW_TAB;
         ao->mount_point = NULL;
@@ -1792,7 +1796,8 @@ static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
         // autoopen
         AutoOpen* ao = g_slice_new0( AutoOpen );
-        ao->device_file = g_strdup( vol->device_file );
+        ao->devnum = vol->devnum;
+        ao->device_file = NULL;
         ao->file_browser = file_browser;
         ao->job = PTK_OPEN_DIR;
         ao->mount_point = NULL;
@@ -2783,7 +2788,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             df = g_strdup_printf( "echo %s ; echo \"%s      ( no media )\" ; echo ; ", "USAGE", vol->device_file );
     }
 
-    char* udisks_info = vfs_volume_device_info( vol->device_file );
+    char* udisks_info = vfs_volume_device_info( vol );
     udisks = g_strdup_printf( "%s\ncat << EOF\n%sEOF\necho ; ", info, udisks_info );
     g_free( udisks_info );
 
@@ -2952,7 +2957,7 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
     vol->device_type = DEVICE_TYPE_BLOCK;
     vol->device_file = (char*)path;
     vol->fs_type = "file";
-    vol->special_mount = FALSE;
+    vol->should_autounmount = FALSE;
     vol->udi = NULL;
     vol->label = NULL;
     vol->size = 0;
@@ -3013,6 +3018,7 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
     AutoOpen* ao;
     ao = g_slice_new0( AutoOpen );
     ao->device_file = g_strdup( path );
+    ao->devnum = 0;
     ao->file_browser = file_browser;
     ao->mount_point = mount_point;
     mount_point = NULL;

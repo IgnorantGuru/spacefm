@@ -80,6 +80,7 @@ enum{
 
 struct _VFSVolume
 {
+    dev_t devnum;
     int device_type;
     char* device_file;
     char* udi;
@@ -89,9 +90,8 @@ struct _VFSVolume
     guint64 size;
     char* label;
     char* fs_type;
-    gboolean special_mount : 1;  // a network or ISO file was mounted
+    gboolean should_autounmount : 1;  // a network or ISO file was mounted
     gboolean is_mounted : 1;
-    /* gboolean is_hotpluggable : 1; */
     gboolean is_removable : 1;
     gboolean is_mountable : 1;
     gboolean is_audiocd : 1;
@@ -129,7 +129,7 @@ void vfs_volume_set_info( VFSVolume* volume );
 char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
                                    gboolean* run_in_terminal );
 char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal );
-char* vfs_volume_device_info( const char* device_file );
+char* vfs_volume_device_info( VFSVolume* vol );
 char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
                               gboolean* run_in_terminal, char** mount_point );

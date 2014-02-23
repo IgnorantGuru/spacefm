@@ -33,6 +33,7 @@
 #include <sys/wait.h>
 
 #include <signal.h>  // kill
+#include <linux/kdev_t.h>  // MAJOR MINOR
  
 #ifdef HAVE_STATVFS
 #include <sys/statvfs.h>
@@ -45,10 +46,10 @@
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
-VFSVolume* vfs_volume_read_by_mount( const char* mount_points );
+VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points );
 static void vfs_volume_device_added ( VFSVolume* volume, gboolean automount );
-static void vfs_volume_device_removed ( char* device_file );
-static gboolean vfs_volume_nonblock_removed( const char* mount_points );
+static void vfs_volume_device_removed ( struct udev_device* udevice );
+static gboolean vfs_volume_nonblock_removed( dev_t devnum );
 static void call_callbacks( VFSVolume* vol, VFSVolumeState state );
 void unmount_if_mounted( VFSVolume* vol );
 
@@ -85,10 +86,9 @@ GIOChannel* mchannel = NULL;
 
 typedef struct device_t  {
     struct udev_device *udevice;    
+    dev_t devnum;
     char *devnode;
     char *native_path;
-    char *major;
-    char *minor;
     char *mount_points;
 
     gboolean device_is_system_internal;
@@ -839,13 +839,15 @@ void info_device_properties( device_t *device )
     
     device->native_path = g_strdup( udev_device_get_syspath( device->udevice ) );
     device->devnode = g_strdup( udev_device_get_devnode( device->udevice ) );
-    device->major = g_strdup( udev_device_get_property_value( device->udevice, "MAJOR") );
-    device->minor = g_strdup( udev_device_get_property_value( device->udevice, "MINOR") );
-    if ( !device->native_path || !device->devnode || !device->major || !device->minor )
+    device->devnum = udev_device_get_devnum( device->udevice );
+    //device->major = g_strdup( udev_device_get_property_value( device->udevice, "MAJOR") );
+    //device->minor = g_strdup( udev_device_get_property_value( device->udevice, "MINOR") );
+    if ( !device->native_path || !device->devnode || device->devnum == 0 )
     {
         if ( device->native_path )
             g_free( device->native_path );
         device->native_path = NULL;
+        device->devnum = 0;
         return;
     }
     
@@ -996,10 +998,8 @@ gchar* info_mount_points( device_t *device )
     guint n;
     GList* mounts = NULL;
     
-    if ( !device->major || !device->minor )
-        return NULL;
-    guint dmajor = atoi( device->major );
-    guint dminor = atoi( device->minor );
+    guint dmajor = MAJOR( device->devnum );
+    guint dminor = MINOR( device->devnum );
 
     // if we have the mount point list, use this instead of reading mountinfo
     if ( devmounts )
@@ -1348,8 +1348,6 @@ static void device_free( device_t *device )
         return;
         
     g_free( device->native_path );
-    g_free( device->major );
-    g_free( device->minor );
     g_free( device->mount_points );
     g_free( device->devnode );
 
@@ -1399,8 +1397,6 @@ device_t *device_alloc( struct udev_device *udevice )
     device->udevice = udevice;
 
     device->native_path = NULL;
-    device->major = NULL;
-    device->minor = NULL;
     device->mount_points = NULL;
     device->devnode = NULL;
 
@@ -1465,7 +1461,7 @@ device_t *device_alloc( struct udev_device *udevice )
 gboolean device_get_info( device_t *device )
 {
     info_device_properties( device );
-    if ( !device->native_path )
+    if ( !device->native_path || device->devnum == 0 )
         return FALSE;
     info_drive_properties( device );
     device->device_is_system_internal = info_is_system_internal( device );
@@ -1484,7 +1480,9 @@ char* device_show_info( device_t *device )
     
     line[i++] = g_strdup_printf("Showing information for %s\n", device->devnode );
     line[i++] = g_strdup_printf("  native-path:                 %s\n", device->native_path );
-    line[i++] = g_strdup_printf("  device:                      %s:%s\n", device->major, device->minor );
+    line[i++] = g_strdup_printf("  device:                      %u:%u\n",
+                                                (unsigned int)MAJOR( device->devnum ),
+                                                (unsigned int)MINOR( device->devnum ) );
     line[i++] = g_strdup_printf("  device-file:                 %s\n", device->devnode );
     line[i++] = g_strdup_printf("    presentation:              %s\n", device->devnode );
     if ( device->device_by_id )
@@ -1618,7 +1616,7 @@ void parse_mounts( gboolean report )
     contents = NULL;
     lines = NULL;
     struct udev_device *udevice;
-    dev_t dev;
+    dev_t devnum;
     char* str;
 
     error = NULL;
@@ -1758,8 +1756,8 @@ void parse_mounts( gboolean report )
             else
             {
                 // initial load !report don't add non-block devices
-                dev = makedev( major, minor );
-                udevice = udev_device_new_from_devnum( udev, 'b', dev );
+                devnum = makedev( major, minor );
+                udevice = udev_device_new_from_devnum( udev, 'b', devnum );
                 if ( udevice )
                 {
                     udev_device_unref( udevice );
@@ -1876,12 +1874,13 @@ void parse_mounts( gboolean report )
         {
             devnode = NULL;
             devmount = (devmount_t*)l->data;
-            dev = makedev( devmount->major, devmount->minor );
-            udevice = udev_device_new_from_devnum( udev, 'b', dev );
+            devnum = makedev( devmount->major, devmount->minor );
+            udevice = udev_device_new_from_devnum( udev, 'b', devnum );
             if ( udevice )
                 devnode = g_strdup( udev_device_get_devnode( udevice ) );
             if ( devnode )
             {
+                // block device
                 printf( "mount changed: %s\n", devnode );
                 if ( volume = vfs_volume_read_by_device( udevice ) )
                     vfs_volume_device_added( volume, TRUE );  //frees volume if needed
@@ -1890,14 +1889,15 @@ void parse_mounts( gboolean report )
             else
             {
                 // not a block device
-                if ( volume = vfs_volume_read_by_mount( devmount->mount_points ) )
+                if ( volume = vfs_volume_read_by_mount( devnum,
+                                                devmount->mount_points ) )
                 {
                     printf( "special mount changed: %s on %s\n",
                                 volume->device_file, devmount->mount_points );
                     vfs_volume_device_added( volume, FALSE ); //frees volume if needed
                 }
                 else
-                    vfs_volume_nonblock_removed( devmount->mount_points );
+                    vfs_volume_nonblock_removed( devnum );
             }
             udev_device_unref( udevice );
             g_free( devmount->mount_points );
@@ -2041,14 +2041,7 @@ if ( !( cond & G_IO_NVAL ) )
                     vfs_volume_device_added( volume, TRUE );  //frees volume if needed
             }
             else if ( !strcmp( action, "remove" ) )
-            {
-                char* devnode = g_strdup( udev_device_get_devnode( udevice ) );
-                if ( devnode )
-                {
-                    vfs_volume_device_removed( devnode );
-                    g_free( devnode );
-                }
-            }
+                vfs_volume_device_removed( udevice );
             // what to do for move action?
         }
         g_free( devnode );
@@ -2468,8 +2461,8 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     if ( !udevice )
         return NULL;
     device_t* device = device_alloc( udevice );
-    if ( !device_get_info( device ) || !device->devnode
-                                || !g_str_has_prefix( device->devnode, "/dev/" ) )
+    if ( !device_get_info( device ) || !device->devnode || device->devnum == 0
+                            || !g_str_has_prefix( device->devnode, "/dev/" ) )
     {
         device_free( device );
         return NULL;
@@ -2477,10 +2470,11 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     
     // translate device info to VFSVolume
     volume = g_slice_new0( VFSVolume );
+    volume->devnum = device->devnum;
     volume->device_type = DEVICE_TYPE_BLOCK;
-    volume->special_mount = FALSE;
     volume->device_file = g_strdup( device->devnode );
     volume->udi = g_strdup( device->device_by_id );
+    volume->should_autounmount = FALSE;
     volume->is_optical = device->device_is_optical_disc;
     volume->is_table = device->device_is_partition_table;
     volume->is_floppy = ( device->drive_media_compatibility
@@ -2534,7 +2528,8 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
 
     vfs_volume_set_info( volume );
 /*
-    printf( "====device_file=%s\n", volume->device_file );
+    printf( "====devnum=%u:%u\n", MAJOR( volume->devnum ), MINOR( volume->devnum ) );
+    printf( "    device_file=%s\n", volume->device_file );
     printf( "    udi=%s\n", volume->udi );
     printf( "    label=%s\n", volume->label );
     printf( "    icon=%s\n", volume->icon );
@@ -2778,7 +2773,7 @@ _net_free:
     return 0;
 }
 
-VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
+VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
 {   // read a non-block device
     VFSVolume* volume;
     char* str;
@@ -2786,7 +2781,7 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     struct stat64 statbuf;
     netmount_t *netmount = NULL;
 
-    if ( !mount_points )
+    if ( devnum == 0 || !mount_points )
         return NULL;
 
     // get single mount point
@@ -2809,8 +2804,9 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
     {
         // network URL
         volume = g_slice_new0( VFSVolume );
+        volume->devnum = devnum;
         volume->device_type = DEVICE_TYPE_NETWORK;
-        volume->special_mount = FALSE;
+        volume->should_autounmount = FALSE;
         volume->udi = netmount->url;
         volume->label = netmount->host;
         volume->fs_type = mtab_fstype ? mtab_fstype : g_strdup( "" );
@@ -2839,11 +2835,12 @@ VFSVolume* vfs_volume_read_by_mount( const char* mount_points )
 /*igtodo get device_file from ~/.mtab.fuseiso */
         // an ISO file mounted with fuseiso - create a volume for it
         volume = g_slice_new0( VFSVolume );
+        volume->devnum = devnum;
         // not really a block device
         volume->device_type = DEVICE_TYPE_BLOCK;
         volume->device_file = name;
         volume->udi = g_strdup( name );
-        volume->special_mount = FALSE;
+        volume->should_autounmount = FALSE;
         volume->label = NULL;
         volume->fs_type = mtab_fstype;
         volume->size = 0;
@@ -2890,7 +2887,7 @@ VFSVolume* vfs_volume_read_by_device( char* device_file )
     {
         volume = g_slice_new0( VFSVolume );
         volume->device_file = NULL;
-        volume->special_mount = FALSE;
+        volume->should_autounmount = FALSE;
         volume->udi = NULL;
         volume->is_optical = FALSE;
         volume->is_table = FALSE;
@@ -3548,11 +3545,11 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
     char* test;
     char* value;
     
-    if ( vol->special_mount )
+    if ( vol->should_autounmount )
         // volume is a network or ISO file that was manually mounted -
         // for autounmounting only
         return TRUE;
-    if ( !vol->is_mountable || vol->is_blank || vol->special_mount ||
+    if ( !vol->is_mountable || vol->is_blank || vol->should_autounmount ||
                                vol->device_type != DEVICE_TYPE_BLOCK )
         return FALSE;
 
@@ -3606,30 +3603,16 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
     return FALSE;
 }
 
-char* vfs_volume_device_info( const char* device_file )
+char* vfs_volume_device_info( VFSVolume* vol )
 {
-    struct stat statbuf;    // skip stat64
-    struct udev_device *udevice;
-    
-    if ( !udev )
-        return g_strdup_printf( _("( udev was unavailable at startup )") );
-        
-    if ( stat( device_file, &statbuf ) != 0 )
-    {
-        g_printerr ( "Cannot stat device file %s: %m\n", device_file );
-        return g_strdup_printf( _("( cannot stat device file )") );
-    }
-    if (statbuf.st_rdev == 0)
-    {
-        printf( "Device file %s is not a block device\n", device_file );
-        return g_strdup_printf( _("( not a block device )") );
-    }
-        
-    udevice = udev_device_new_from_devnum( udev, 'b', statbuf.st_rdev );
+    struct udev_device* udevice = udev_device_new_from_devnum( udev, 'b',
+                                                               vol->devnum );
     if ( udevice == NULL )
     {
-        printf( "No udev device for device %s (devnum 0x%08x)\n",
-                                            device_file, (gint)statbuf.st_rdev );
+        g_warning( "No udev device for device %s (%u:%u)",
+                                            vol->device_file,
+                                            (unsigned int)MAJOR( vol->devnum ),
+                                            (unsigned int)MINOR( vol->devnum ) );
         return g_strdup_printf( _("( no udev device )") );
     }
     
@@ -3929,7 +3912,7 @@ void vfs_volume_autoexec( VFSVolume* vol )
     char* path;
 
     // Note: audiocd is is_mountable
-    if ( !vol->is_mountable || global_inhibit_auto || vol->special_mount ||
+    if ( !vol->is_mountable || global_inhibit_auto || vol->should_autounmount ||
                                         !vfs_volume_is_automount( vol ) ||
                                         vol->device_type != DEVICE_TYPE_BLOCK )
         return;
@@ -4014,7 +3997,8 @@ void vfs_volume_autounmount( VFSVolume* vol )
 
 void vfs_volume_automount( VFSVolume* vol )
 {
-    if ( vol->is_mounted || vol->ever_mounted || vol->is_audiocd || vol->special_mount
+    if ( vol->is_mounted || vol->ever_mounted || vol->is_audiocd
+                                        || vol->should_autounmount
                                         || !vfs_volume_is_automount( vol ) )
         return;
 
@@ -4046,7 +4030,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
     // check if we already have this volume device file
     for ( l = volumes; l; l = l->next )
     {
-        if ( !strcmp( ((VFSVolume*)l->data)->device_file, volume->device_file ) )
+        if ( ((VFSVolume*)l->data)->devnum == volume->devnum )
         {
             // update existing volume
             was_mounted = ((VFSVolume*)l->data)->is_mounted;
@@ -4104,7 +4088,7 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
                 else if ( was_mounted && !volume->is_mounted )
                 {
                     vfs_volume_exec( volume, xset_get_s( "dev_exec_unmount" ) );
-                    volume->special_mount = FALSE;
+                    volume->should_autounmount = FALSE;
                     //remove mount points in case other unmounted
                     vfs_volume_clean_mount_points();
                 }
@@ -4136,29 +4120,20 @@ static void vfs_volume_device_added( VFSVolume* volume, gboolean automount )
     }
 }
 
-static gboolean vfs_volume_nonblock_removed( const char* mount_points )
+static gboolean vfs_volume_nonblock_removed( dev_t devnum )
 {
     GList* l;
     VFSVolume* volume;
-    char* str;
     
-    if ( !mount_points )
-        return FALSE;
-    char* point = g_strdup( mount_points );
-    if ( str = strchr( point, ',' ) )
-        str[0] = '\0';
-    g_strstrip( point );
-    if ( !( point && point[0] == '/' ) )
-        return FALSE;
-
     for ( l = volumes; l; l = l->next )
     {
         if ( ((VFSVolume*)l->data)->device_type != DEVICE_TYPE_BLOCK &&
-                    !g_strcmp0( ((VFSVolume*)l->data)->mount_point, point ) )
+                            ((VFSVolume*)l->data)->devnum == devnum )
         {
             // remove volume
             volume = (VFSVolume*)l->data;
-            printf( "network mount removed: %s on %s\n", volume->device_file, point );
+            printf( "special mount removed: %s on %s\n", volume->device_file,
+                                                         volume->mount_point );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
@@ -4170,22 +4145,24 @@ static gboolean vfs_volume_nonblock_removed( const char* mount_points )
     return FALSE;
 }
 
-static void vfs_volume_device_removed( char* device_file )
+static void vfs_volume_device_removed( struct udev_device* udevice )
 {
     GList* l;
     VFSVolume* volume;
-    
-    if ( !device_file )
+
+    if ( !udevice )
         return;
+
+    dev_t devnum = udev_device_get_devnum( udevice );
 
     for ( l = volumes; l; l = l->next )
     {
         if ( ((VFSVolume*)l->data)->device_type == DEVICE_TYPE_BLOCK &&
-                !g_strcmp0( ((VFSVolume*)l->data)->device_file, device_file ) )
+                                ((VFSVolume*)l->data)->devnum == devnum )
         {
             // remove volume
-            //printf("remove volume %s\n", device_file );
             volume = (VFSVolume*)l->data;
+            //printf("remove volume %s\n", volume->device_file );
             vfs_volume_exec( volume, xset_get_s( "dev_exec_remove" ) );
             if ( volume->is_mounted && volume->is_removable )
                 unmount_if_mounted( volume );
