@@ -94,6 +94,8 @@ void vfs_mime_type_remove_reload_cb( GList* cb );
 
 char* vfs_mime_type_locate_desktop_file( const char* dir, const char* desktop_id );
 
+gboolean vfs_mime_type_is_iso( VFSMimeType* vfs_mime_type, const char* path );
+
 G_END_DECLS
 
 #endif

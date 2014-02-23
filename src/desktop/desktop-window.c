@@ -1215,23 +1215,15 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
         {
             VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            if ( mime_type && !vfs_file_info_is_dir( file ) && (
-                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
-                    g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
-                    g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
+            if ( mime_type && !vfs_file_info_is_dir( file ) &&
+                 vfs_mime_type_is_iso( mime_type, vfs_file_info_get_name( file ) ) )
             {
-                char* str = g_find_program_in_path( "udevil" );
-                if ( str )
-                {
-                    g_free( str );
-                    str = g_build_filename( vfs_get_desktop_dir(),
-                                                vfs_file_info_get_name( file ), NULL );
-                    mount_iso( NULL, str );
-                    g_free( str );
-                    vfs_file_info_unref( file );
-                    goto _done;
-                }
+                char* str = g_build_filename( vfs_get_desktop_dir(),
+                                            vfs_file_info_get_name( file ), NULL );
+                mount_iso( NULL, str );
+                g_free( str );
+                vfs_file_info_unref( file );
+                goto _done;
             }
             vfs_file_info_unref( file );
         }

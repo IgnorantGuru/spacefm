@@ -1027,13 +1027,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
-        else if ( file_path && mime_type && !is_dir && ( 
-                  !strcmp( vfs_mime_type_get_type( mime_type ),
-                                            "application/x-cd-image" ) ||
-                  !strcmp( vfs_mime_type_get_type( mime_type ),
-                                            "application/x-iso9660-image" ) ||
-                  g_str_has_suffix( file_path, ".iso" ) ||
-                  g_str_has_suffix( file_path, ".img" ) ) )
+        else if ( file_path && mime_type && !is_dir &&
+                  vfs_mime_type_is_iso( mime_type, file_path ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
@@ -1042,10 +1037,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_get( "iso_auto" );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
-            str = g_find_program_in_path( "udevil" );
-            set->disable = !str;
-            g_free( str );
+            xset_add_menuitem( desktop, browser, submenu, accel_group, set );
         }
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );

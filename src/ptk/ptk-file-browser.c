@@ -5600,11 +5600,8 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
     {
         VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
         mime_type = vfs_file_info_get_mime_type( file );
-        if ( mime_type && !vfs_file_info_is_dir( file ) && ( 
-                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
-                g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
-                g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
+        if ( mime_type && !vfs_file_info_is_dir( file ) &&
+             vfs_mime_type_is_iso( mime_type, vfs_file_info_get_name( file ) ) )
         {
             char* str = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
                                         vfs_file_info_get_name( file ), NULL );
