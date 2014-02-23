@@ -987,10 +987,10 @@ By default, the Devices list will not show devices which contain partition table
 <!-- #Show|Mounted Networks #net -->
 By default, the Devices list will show recognized mounted network filesystems (eg nfs, cifs, etc).  This enables you to click on the network to open it's mount point directory, or right-click on it to use the Unmount and Bookmark menu items.  If you do not want mounted networks listed, uncheck option Show|Mounted Networks.
 
-<!-- #Show|Mounted Files #files -->
-By default, the Devices list will show files mounted to loop devices.  For example, if you right-click on an ISO file and select Open|Mount ISO, SpaceFM will use udevil to attach the ISO file to a loop device and mount it, so you can browse its contents.  You can then click on this device in the Devices list to open it's mount point directory, or right-click on it to use Remove or Unmount.
+<!-- #Show|Mounted Other #files -->
+By default, the Devices list will show files mounted to loop devices, and other non-block devices, such as mounted fuse filesystems.  For example, if you right-click on an ISO file and select Open|Mount ISO, the ISO file will be mounted so you can browse its contents.  You can then click on this device in the Devices list to open it's mount point directory, or right-click on it to use Remove or Unmount.
 
-<p>If you do not want mounted files listed, uncheck option Show|Mounted Files.
+<p>If you do not want mounted files and non-block device filesystems listed, uncheck option Show|Mounted Other.
 
 <!-- #Show|Ignore Hide Policy #hide -->
 Some devices may have their udev property UDISKS_PRESENTATION_HIDE set to 1.  This is a hint to software that the device should be hidden.  By default, SpaceFM will honor these hints and hide such devices.  To ignore such hints, check option Show|Ignore Hide Policy.

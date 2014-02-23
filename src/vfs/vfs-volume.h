@@ -75,7 +75,8 @@ gboolean vfs_volume_eject_by_udi( const char* udi, GError** err );
 
 enum{
     DEVICE_TYPE_BLOCK,
-    DEVICE_TYPE_NETWORK
+    DEVICE_TYPE_NETWORK,
+    DEVICE_TYPE_OTHER     // eg fuseiso mounted file
 };
 
 struct _VFSVolume

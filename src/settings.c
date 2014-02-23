@@ -9527,7 +9527,7 @@ void xset_defaults()
         set->line = g_strdup( "#devices-settings-net" );
         set->b = XSET_B_TRUE;
 
-        set = xset_set( "dev_show_file", "lbl", _("Mounted _Files") );
+        set = xset_set( "dev_show_file", "lbl", _("Mounted _Other") );
         set->menu_style = XSET_MENU_CHECK;
         set->line = g_strdup( "#devices-settings-files" );
         set->b = XSET_B_TRUE;
@@ -9738,7 +9738,7 @@ void xset_defaults()
         xset_set_set( set, "icn", "gtk-network" );
         set->line = g_strdup( "#devices-settings-icon" );
 
-        set = xset_set( "dev_icon_file", "lbl", _("Mounted File") );
+        set = xset_set( "dev_icon_file", "lbl", _("Mounted Other") );
         set->menu_style = XSET_MENU_ICON;
         xset_set_set( set, "icn", "gtk-file" );
         set->line = g_strdup( "#devices-settings-icon" );

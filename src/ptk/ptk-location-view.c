@@ -3150,6 +3150,10 @@ gboolean volume_is_visible( VFSVolume* vol )
     if ( vol->device_type == DEVICE_TYPE_NETWORK )
         return xset_get_b( "dev_show_net" );
     
+    // other - eg fuseiso mounted file
+    if ( vol->device_type == DEVICE_TYPE_OTHER )
+        return xset_get_b( "dev_show_file" );
+    
     // loop
     if ( g_str_has_prefix( vol->device_file, "/dev/loop" ) )
     {
@@ -3159,7 +3163,7 @@ gboolean volume_is_visible( VFSVolume* vol )
             return FALSE;
         // fall through
     }
-        
+    
     // ramfs CONFIG_BLK_DEV_RAM causes multiple entries of /dev/ram*
     if ( !vol->is_mounted && g_str_has_prefix( vol->device_file, "/dev/ram" ) && 
                                         vol->device_file[8] &&

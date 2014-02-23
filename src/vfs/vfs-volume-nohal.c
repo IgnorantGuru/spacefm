@@ -1892,8 +1892,11 @@ void parse_mounts( gboolean report )
                 if ( volume = vfs_volume_read_by_mount( devnum,
                                                 devmount->mount_points ) )
                 {
-                    printf( "special mount changed: %s on %s\n",
-                                volume->device_file, devmount->mount_points );
+                    printf( "special mount changed: %s (%u:%u) on %s\n",
+                                        volume->device_file,
+                                        (unsigned int)MAJOR( volume->devnum ),
+                                        (unsigned int)MINOR( volume->devnum ),
+                                        devmount->mount_points );
                     vfs_volume_device_added( volume, FALSE ); //frees volume if needed
                 }
                 else
@@ -2303,6 +2306,8 @@ void vfs_volume_set_info( VFSVolume* volume )
     }
     else if ( volume->device_type == DEVICE_TYPE_NETWORK )
         volume->icon = g_strdup_printf( "dev_icon_network" );
+    else if ( volume->device_type == DEVICE_TYPE_OTHER )
+        volume->icon = g_strdup_printf( "dev_icon_file" );
     
     // set disp_id using by-id
     if ( volume->device_type == DEVICE_TYPE_BLOCK )
@@ -2550,8 +2555,10 @@ VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice )
     return volume;
 }
 
-static gboolean path_is_mounted_mtab( const char* path, char** device_file,
-                                                        char** fs_type )
+static gboolean path_is_mounted_mtab( const char* mtab_file,
+                                      const char* path,
+                                      char** device_file,
+                                      char** fs_type )
 {
     gchar *contents;
     gchar **lines;
@@ -2571,11 +2578,18 @@ static gboolean path_is_mounted_mtab( const char* path, char** device_file,
     contents = NULL;
     lines = NULL;
     error = NULL;
-    if ( !g_file_get_contents( "/proc/mounts", &contents, NULL, NULL ) )
+    
+    if ( mtab_file )
+    {
+        // read from a custom mtab file, eg ~/.mtab.fuseiso
+        if ( !g_file_get_contents( mtab_file, &contents, NULL, NULL ) )
+            return FALSE;
+    }
+    else if ( !g_file_get_contents( "/proc/mounts", &contents, NULL, NULL ) )
     {
         if ( !g_file_get_contents( "/etc/mtab", &contents, NULL, &error ) )
         {
-            g_warning ("Error reading mtab: %s", error->message);
+            g_warning ("Error reading /etc/mtab: %s", error->message);
             g_error_free (error);
             return FALSE;
         }
@@ -2795,7 +2809,7 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     // get device name
     char* name = NULL;
     char* mtab_fstype = NULL;
-    if ( !( path_is_mounted_mtab( point, &name, &mtab_fstype ) && name &&
+    if ( !( path_is_mounted_mtab( NULL, point, &name, &mtab_fstype ) && name &&
                                                     name[0] != '\0' ) )
         return NULL;
 
@@ -2832,12 +2846,24 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     }
     else if ( !g_strcmp0( mtab_fstype, "fuse.fuseiso" ) )
     {
-/*igtodo get device_file from ~/.mtab.fuseiso */
-        // an ISO file mounted with fuseiso - create a volume for it
+        // an ISO file mounted with fuseiso
+        // get device_file from ~/.mtab.fuseiso
+        char* mtab_file = g_build_filename( g_get_home_dir(), ".mtab.fuseiso", NULL );
+        char* new_name = NULL;
+        if ( path_is_mounted_mtab( mtab_file, point, &new_name, NULL )
+                                        && new_name && new_name[0] )
+        {
+            g_free( name );
+            name = new_name;
+            new_name = NULL;
+        }
+        g_free( new_name );
+        g_free( mtab_file );
+
+        // create a volume
         volume = g_slice_new0( VFSVolume );
         volume->devnum = devnum;
-        // not really a block device
-        volume->device_type = DEVICE_TYPE_BLOCK;
+        volume->device_type = DEVICE_TYPE_OTHER;
         volume->device_file = name;
         volume->udi = g_strdup( name );
         volume->should_autounmount = FALSE;
@@ -3549,7 +3575,7 @@ gboolean vfs_volume_is_automount( VFSVolume* vol )
         // volume is a network or ISO file that was manually mounted -
         // for autounmounting only
         return TRUE;
-    if ( !vol->is_mountable || vol->is_blank || vol->should_autounmount ||
+    if ( !vol->is_mountable || vol->is_blank ||
                                vol->device_type != DEVICE_TYPE_BLOCK )
         return FALSE;
 
@@ -3722,8 +3748,8 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
     {
         // discovery
         if ( vol->is_mounted )
-            pointq = bash_quote( vol->device_type == DEVICE_TYPE_NETWORK ?
-                                   vol->mount_point : vol->device_file );
+            pointq = bash_quote( vol->device_type == DEVICE_TYPE_BLOCK ?
+                                   vol->device_file : vol->mount_point );
         else
             pointq = g_strdup( "''" );
         if ( s1 = g_find_program_in_path( "udevil" ) )
@@ -3912,9 +3938,9 @@ void vfs_volume_autoexec( VFSVolume* vol )
     char* path;
 
     // Note: audiocd is is_mountable
-    if ( !vol->is_mountable || global_inhibit_auto || vol->should_autounmount ||
-                                        !vfs_volume_is_automount( vol ) ||
-                                        vol->device_type != DEVICE_TYPE_BLOCK )
+    if ( !vol->is_mountable || global_inhibit_auto ||
+                                        vol->device_type != DEVICE_TYPE_BLOCK ||
+                                        !vfs_volume_is_automount( vol ) )
         return;
 
     if ( vol->is_audiocd )
@@ -4132,8 +4158,11 @@ static gboolean vfs_volume_nonblock_removed( dev_t devnum )
         {
             // remove volume
             volume = (VFSVolume*)l->data;
-            printf( "special mount removed: %s on %s\n", volume->device_file,
-                                                         volume->mount_point );
+            printf( "special mount removed: %s (%u:%u) on %s\n",
+                                        volume->device_file,
+                                        (unsigned int)MAJOR( volume->devnum ),
+                                        (unsigned int)MINOR( volume->devnum ),
+                                        volume->mount_point );
             volumes = g_list_remove( volumes, volume );
             call_callbacks( volume, VFS_VOLUME_REMOVED );
             vfs_free_volume_members( volume );
