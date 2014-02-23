@@ -3168,8 +3168,7 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
 
     /* Exit if file or dir is NULL - had this when changing the desktop
      * directory permissions - making it unwritable - via Info from the
-     * desktop right-click menu. Note that dir can also be NULL, but it
-     * isn't currently used */
+     * desktop right-click menu */
     if (!file || !dir)
         return;
 
