@@ -1110,21 +1110,24 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     // New >
     if ( desktop || browser )
     {
-        set = xset_set_cb( "new_file", on_popup_new_text_file_activate, data );
-        set = xset_set_cb( "new_folder", on_popup_new_folder_activate, data );
+        set = xset_set_cb( "new_file", on_popup_new_text_file_activate,
+                           data );
+        set = xset_set_cb( "new_folder", on_popup_new_folder_activate,
+                           data );
         set = xset_set_cb( "new_link", on_popup_new_link_activate, data );
+        set = xset_set_cb( "new_archive", on_popup_compress_activate,
+                           data );
+        set->disable = ( !sel_files );
 
         if ( desktop )
         {
             xset_set_cb( "new_app", on_popup_desktop_new_app_activate, desktop );
 
             set = xset_get( "open_new" );
-            xset_set_set( set, "desc", "new_file new_folder new_link sep_o1 new_app" );
+            xset_set_set( set, "desc", "new_file new_folder new_link new_archive sep_o1 new_app" );
         }
         else
         {
-            set = xset_set_cb( "new_archive", on_popup_compress_activate, data );
-            set->disable = ( !sel_files || !browser );
             set = xset_set_cb( "tab_new", on_shortcut_new_tab_activate, browser );
             set->disable = !browser;
             set = xset_set_cb( "tab_new_here", on_popup_open_in_new_tab_here, data );
@@ -2789,7 +2792,11 @@ void on_popup_compress_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
     if ( data->browser )
-        ptk_file_archiver_create( data->browser, data->sel_files, data->cwd );
+        ptk_file_archiver_create( data->browser, data->sel_files,
+                                  data->cwd, NULL );
+    else if ( data->desktop )
+        ptk_file_archiver_create( NULL, data->sel_files,
+                                  data->cwd, data->desktop );
 }
 
 void on_popup_extract_to_activate ( GtkMenuItem *menuitem,

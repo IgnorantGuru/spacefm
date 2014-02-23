@@ -342,8 +342,8 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free(compress_cmd);
 }
 
-void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
-                               const char* cwd )
+void ptk_file_archiver_create( PtkFileBrowser *file_browser, GList *files,
+                               const char *cwd, DesktopWindow *desktop )
 {
     GList *l;
     GtkWidget* combo, *dlg, *hbox;
@@ -957,7 +957,13 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
                                            GTK_WIDGET( file_browser ),
                         file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
-    task->task->exec_browser = file_browser;
+
+    /* Setting correct exec reference - probably causes different bash
+     * to be output */
+    if (file_browser)
+        task->task->exec_browser = file_browser;
+    else
+        task->task->exec_desktop = desktop;
 
     // Using terminals for certain handlers
     if (run_in_terminal)

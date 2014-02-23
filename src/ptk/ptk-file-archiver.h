@@ -28,10 +28,13 @@ enum {
     ARC_LIST
 };
 
-void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
-											const char* cwd );
-void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                            const char* cwd, const char* dest_dir );
+// Pass file_browser or desktop depending on where you're calling from
+void ptk_file_archiver_create( PtkFileBrowser *file_browser,
+                               GList *files, const char* cwd,
+                               DesktopWindow *desktop );
+void ptk_file_archiver_extract( PtkFileBrowser* file_browser,
+                                GList* files, const char* cwd,
+                                const char* dest_dir );
 
 // At least a mime type or extension is required - mime type preferred
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
