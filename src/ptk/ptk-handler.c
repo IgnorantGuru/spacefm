@@ -193,22 +193,22 @@ const Handler handlers_fs[]=
     *      eg: +ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
     */
     {
-        "handfs_ext3",
-        "ext3",
-        "ext3",
+        "handfs_fuseiso",
+        "fuseiso",
+        "file *fuseiso",
         "",
-        "udevil mount %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "fuseiso %v %a",
+        "fusermount -u %a",
+        "grep \"%a\" ~/.mtab.fuseiso"
     },
     {
-        "handfs_ext4",
-        "ext4",
-        "ext4",
-        "ext3",
-        "udevil mount -o ro %v",
-        "udevil umount %v",
-        "udevil info %v"
+        "handfs_udiso",
+        "udevil iso",
+        "file iso9660",
+        "",
+        "uout=\"$(udevil mount %v)\"\nerr=$?; echo \"$uout\"\n[[ $err -ne 0 ]] && exit 1\npoint=\"${uout#Mounted }\"\n[[ \"$point\" = \"$uout\" ]] && exit 0\npoint=\"${point##* at }\"\n[[ -d \"$point\" ]] && spacefm \"$point\" &\n",
+        "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount %a\n",
+        "mount | grep \"%a\""
     },
     {
         "handfs_def",

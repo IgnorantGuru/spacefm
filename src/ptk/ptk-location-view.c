@@ -19,6 +19,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <stdlib.h> /* for realpath */
 
 #include "glib-utils.h" /* for g_mkdir_with_parents */
 
@@ -2967,12 +2968,20 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
     // already mounted?
     const GList* l;
     VFSVolume* vol;
+    char buf[ PATH_MAX + 1 ];
+
+    // fuse and mount canonicalizes iso path in mtab
+    char* canon = realpath( path, buf );
+
+    // already mounted?
     const GList* volumes = vfs_volume_get_all_volumes();
     for ( l = volumes; l; l = l->next )
     {
         vol = (VFSVolume*)l->data;
-        if ( !strcmp( vol->device_file, path ) ||
-                                        !strcmp( vol->udi, path ) )
+        if ( !strcmp( vol->device_file, path )
+                || !strcmp( vol->udi, path )
+                || ( canon && !strcmp( vol->device_file, canon ) )
+                || ( canon && !strcmp( vol->udi, canon ) ) )
         {
             if ( vol->is_mounted )
             {
@@ -2982,8 +2991,9 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
             }
             break;
         }
-    }
         
+    }
+
     // create temporary fake volume to get mount command from handler
     vol = g_slice_new0( VFSVolume );
     vol->device_type = DEVICE_TYPE_BLOCK;
@@ -3009,6 +3019,18 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
                                         vol, NULL, NULL, &run_in_terminal,
                                         &mount_point );
     g_slice_free( VFSVolume, vol );
+
+    if ( !cmd )
+    {
+        char* s1;
+        if ( s1 = g_find_program_in_path( "udevil" ) )
+        {
+            char* fileq = bash_quote( vol->device_file );
+            cmd = g_strdup_printf( "%s mount %s", s1, fileq );
+            g_free( fileq );
+            g_free( s1 );
+        }
+    }
 
     if ( !cmd )
     {
