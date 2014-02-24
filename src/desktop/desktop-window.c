@@ -3035,6 +3035,10 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopWindow* self = (DesktopWindow*)user_data;
     DesktopItem* item;
 
+    if( !dir || !file )
+        // failsafe
+        return;
+
     /* don't show hidden files */
     if( file->name[0] == '.' )
         return;
@@ -3122,7 +3126,8 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopItem* item;
 
     /* FIXME: special handling is needed here */
-    if( ! file )
+    if( !dir || !file )
+        // file == NULL == the desktop dir itself was deleted
         return;
 
     /* don't deal with hidden files */
@@ -3170,10 +3175,8 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopItem* item;
     GtkWidget* w = (GtkWidget*)self;
 
-    /* Exit if file or dir is NULL - had this when changing the desktop
-     * directory permissions - making it unwritable - via Info from the
-     * desktop right-click menu */
-    if (!file || !dir)
+    if ( !dir || !file )
+        // file == NULL == the desktop dir itself changed
         return;
 
     /* don't touch hidden files */
@@ -3966,7 +3969,8 @@ void desktop_window_add_application( DesktopWindow* desktop )
     else
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
-    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
+    app = (char *) ptk_choose_app_for_mime_type( /* GTK_WINDOW( desktop )
+                some wm's don't bring dialog to top ? */ NULL,
                                         mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
