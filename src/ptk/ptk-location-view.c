@@ -2611,9 +2611,13 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
             g_free( netmount->path );
             g_slice_free( netmount_t, netmount );
 
-            /*
-            // replace mount point sub var
-            if ( cmd && strstr( cmd, "%a" ) )
+            if ( !cmd )
+            {
+                cmd = g_strdup_printf( "echo MOUNT\nmount | grep \" on %s \"\necho\necho PROCESSES\n/usr/bin/lsof -w \"%s\" | head -n 500\n",
+                                        vol->mount_point, vol->mount_point );
+                run_in_terminal = FALSE;
+            }
+            else if ( strstr( cmd, "%a" ) )
             {
                 char* pointq = bash_quote( vol->mount_point );
                 char* str = cmd;
@@ -2621,18 +2625,9 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
                 g_free( str );
                 g_free( pointq );
             }
-            */
-            
-            if ( !cmd )
-            {
-                xset_msg_dialog( file_browser ? GTK_WIDGET( file_browser ) : NULL,
-                                GTK_MESSAGE_ERROR,
-                                _("Handler Not Found"), NULL, 0,
-                                _("No handler is configured to show properties for this item.  Set a handler in Settings|Protocol Handlers."),
-                                NULL, NULL );
-                return;
-            }
         }
+        else
+            return;
     }
     else
         cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_PROP, vol, NULL,

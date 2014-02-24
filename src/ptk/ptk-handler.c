@@ -63,7 +63,7 @@ const char* dialog_titles[] =
 
 #define UNMOUNT_EXAMPLE "# Enter unmount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable an unmount command)\n#\n# # udevil:\n#     udevil umount %v\n#\n# # pmount:\n#     pumount %v\n#\n# # udisks v2:\n#     udisksctl unmount -b %v\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --unmount %v 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
 
-#define INFO_EXAMPLE "# Enter command to show device properties or leave blank for auto:\n\n"
+#define INFO_EXAMPLE "# Enter command to show properties or leave blank for auto:\n\n\n# # Example:\n\n# echo MOUNT\n# mount | grep \" on %a \"\n# echo\n# echo PROCESSES\n# /usr/bin/lsof -w \"%a\" | head -n 500\n"
 
 typedef struct _Handler
 {
@@ -212,7 +212,7 @@ const Handler handlers_fs[]=
         "",
         "uout=\"$(udevil mount %v)\"\nerr=$?; echo \"$uout\"\n[[ $err -ne 0 ]] && exit 1\npoint=\"${uout#Mounted }\"\n[[ \"$point\" = \"$uout\" ]] && exit 0\npoint=\"${point##* at }\"\n[[ -d \"$point\" ]] && spacefm \"$point\" &\n",
         "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount %a\n",
-        "mount | grep \"%a\""
+        INFO_EXAMPLE
     },
     {
         "handfs_def",
@@ -257,7 +257,7 @@ const Handler handlers_net[]=
         "",
         "+options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
         "fusermount -u \"%a\"",
-        "mount | grep \"%a\""
+        INFO_EXAMPLE
     },
     {
         "handnet_ssh",
@@ -266,7 +266,7 @@ const Handler handlers_net[]=
         "",
         "+[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
         "fusermount -u %a",
-        "mount | grep \"%a\""
+        INFO_EXAMPLE
     },
     {
         "handnet_udevil",
@@ -275,7 +275,7 @@ const Handler handlers_net[]=
         "",
         "udevil mount \"$fm_url\"",
         "udevil umount \"%a\"",
-        "mount | grep \"%a\""
+        INFO_EXAMPLE
     }
 };
 
