@@ -1179,10 +1179,9 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                 // first file is archive - use default archive action
                 if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
                 {
-                    ptk_file_archiver_extract( NULL, sel_files,
+                    ptk_file_archiver_extract( self, NULL, sel_files,
                                                vfs_get_desktop_dir(),
-                                               vfs_get_desktop_dir(),
-                                               self );
+                                               vfs_get_desktop_dir() );
                     goto _done;
                 }
                 else if ( xset_get_b( "arc_def_exto" ) || 
@@ -1190,9 +1189,9 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                                             !( g_str_has_suffix( path, ".gz" ) && 
                                             !g_str_has_suffix( path, ".tar.gz" ) ) ) )
                 {
-                    ptk_file_archiver_extract( NULL, sel_files, 
+                    ptk_file_archiver_extract( self, NULL, sel_files, 
                                                vfs_get_desktop_dir(),
-                                               NULL, self );
+                                               NULL );
                     goto _done;
                 }
                 else if ( xset_get_b( "arc_def_list" )
@@ -1207,9 +1206,9 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
                           )
                 )
                 {
-                    ptk_file_archiver_extract( NULL, sel_files,
+                    ptk_file_archiver_extract( self, NULL, sel_files,
                                                vfs_get_desktop_dir(),
-                                               "////LIST", self );
+                                               "////LIST" );
                     goto _done;
                 }
             }

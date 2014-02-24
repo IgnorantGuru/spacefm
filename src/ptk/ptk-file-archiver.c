@@ -386,8 +386,9 @@ static char* generate_bash_error_function( gboolean run_in_terminal )
         finished_with_errors, error_pause );
 }
 
-void ptk_file_archiver_create( PtkFileBrowser *file_browser, GList *files,
-                               const char *cwd, DesktopWindow *desktop )
+void ptk_file_archiver_create( DesktopWindow *desktop,
+                               PtkFileBrowser *file_browser, GList *files,
+                               const char *cwd )
 {
     GList *l;
     GtkWidget* combo, *dlg, *hbox;
@@ -1028,10 +1029,10 @@ void ptk_file_archiver_create( PtkFileBrowser *file_browser, GList *files,
     ptk_file_task_run( task );
 }
 
-void ptk_file_archiver_extract( PtkFileBrowser *file_browser,
+void ptk_file_archiver_extract( DesktopWindow *desktop,
+                                PtkFileBrowser *file_browser,
                                 GList *files, const char *cwd,
-                                const char *dest_dir,
-                                DesktopWindow *desktop )
+                                const char *dest_dir )
 {
     /* This function is also used to list the contents of archives */
 
