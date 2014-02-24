@@ -1016,6 +1016,7 @@ void load_settings( char* config_dir )
     }
     if ( ver < 26 ) // < hand
     {
+        XSet* handset;
         /* Archive handlers are now user configurable using a new
          * xset - copying over dialog size from the old xset.
          * Leave "arc_conf" unchanged for backwards compat. */
@@ -1030,8 +1031,39 @@ void load_settings( char* config_dir )
             xset_set( "arc_conf2", "y", str );
             g_free( str );
         }
+        // Import old archive creation options
+        const char* old_arc[] =
+                    { "tar_bz2", "tar_gz", "tar_xz", "zip", "7z", "tar", "rar" };
+        const char* new_cmd[]=
+        {
+            "tar @ -cvjf %o %N",
+            "tar @ -cvzf %o %N",
+            "tar @ -cvJf %o %N",
+            "+zip @ -r %o %N",
+            "+\"$(which 7za || echo 7zr)\" @ a %o %N",
+            "tar @ -cvf %o %N",
+            "+rar a -r @ %o %N"
+        };
+        for ( i = 0; i < G_N_ELEMENTS( old_arc ); i++ )
+        {
+            str = g_strdup_printf( "arc_%s", old_arc[i] );
+            set = xset_is( str );
+            g_free( str );
+            if ( set && set->s && set->s[0] )
+            {
+                // user had old options
+                str = g_strdup_printf( "handarc_%s", old_arc[i] );
+                handset = xset_is( str );
+                g_free( str );
+                if ( handset )
+                {
+                    g_free( handset->y );
+                    handset->y = replace_string( new_cmd[i], "@", set->s, FALSE );
+                    handset->disable = FALSE;  // save in session
+                }
+            }
+        }
         // Import old protocol handler into new handler
-        XSet* handset;
         set = xset_is( "path_hand" );
         if ( set && set->s && set->s[0] )
         {
