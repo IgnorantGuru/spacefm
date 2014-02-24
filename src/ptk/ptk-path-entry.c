@@ -686,13 +686,19 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_get( "path_seek" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
-    set = xset_get( "path_hand" );
-    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb_panel( file_browser->mypanel, "font_path", main_update_fonts, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb( "path_help", ptk_path_entry_man, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+
+    /* This menu item is currently unused/hidden but may have custom items
+     * attached. */
+    set = xset_get( "path_hand" );
+    GtkWidget* hide_item = xset_add_menuitem( NULL, file_browser,
+                                        GTK_WIDGET( menu ), accel_group, set );
+    // show all
     gtk_widget_show_all( GTK_WIDGET( menu ) );
+    gtk_widget_hide( hide_item );
     g_signal_connect( menu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }

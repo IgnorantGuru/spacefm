@@ -512,6 +512,7 @@ Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.
 <p>TIP:  You can right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.
 
 <!-- # Protocol Handler #protohand -->
+TODO
 If you would like to use a custom handler for URLs within SpaceFM, right-click on the Path Bar and select Protocol Handler.  In the dialog, enter the command to be used to open or handle URLs.  <b>No substitution variables are accepted</b> - the URL is passed as the first argument to your command.
 
 <p>Your handler command may be a script which intelligently opens URLs using programs you specify in the script (<a href="#gui-pathbar-protoscript">see example below</a>), or it can be a single command such as 'udevil mount' (the default if the handler command is left blank).
@@ -1187,8 +1188,19 @@ Auto Run|On Remove opens a dialog which allows you to set a command line to be r
 
 <p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
+<!-- #Device Handlers #devh -->
+TODO Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Except for pmount's command line options, mount options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
+
+<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pmount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
+
+<!-- #Protocol Handlers #proh -->
+TODO
+
+
 <!-- #Mount Options #opts -->
-Mount Options opens a dialog which allows you to set default mount options to be used for all mounts, including auto-mounts.  In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
+Mount Options opens a dialog which allows you to set default mount options.  These options may be used in Device Handlers via the substitution variable %o, and are used by the default mount command for all mounts, including auto-mounts.
+
+<p>In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
 
 <p>For example, this set of options:
 <br>&nbsp;&nbsp;&nbsp;&nbsp;nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4
@@ -1197,17 +1209,16 @@ Mount Options opens a dialog which allows you to set default mount options to be
 
 <p>Note that some options, such as nosuid, may be added by your mount program even if you don't include them.  Options specified in fstab may take precedence.
 
-<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate Device Handler.
 
-<!-- #Mount Command #mcmd -->
-Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Except for pmount's command line options, mount options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
+<!-- #Change Detection #chdet -->
+Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
 
-<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pmount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
+<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
 
-<!-- #Unmount Command #ucmd -->
-Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting (including of network filesystems).  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
+<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
 
-<p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
+<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
 
 <!-- #Single Click #single -->
 If option Single Click is checked, the Devices list operates in single-click mode: a single left-click on a device will open it.  If unchecked, a single-click will only select a device, and a double-click is required to open it.

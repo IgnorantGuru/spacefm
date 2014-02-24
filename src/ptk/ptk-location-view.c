@@ -3403,7 +3403,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !vol;
         set = xset_set_cb( "dev_menu_unmount", on_umount, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !( vol && vol->is_mounted );
+            set->disable = !vol;  //!( vol && vol->is_mounted );
         set = xset_set_cb( "dev_menu_reload", on_reload, vol );
             xset_set_ob1( set, "view", view );
             set->disable = !( vol && vol->device_type == DEVICE_TYPE_BLOCK );
@@ -3417,7 +3417,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             set->disable = !vol;
         set = xset_set_cb( "dev_menu_mount", on_mount, vol );
             xset_set_ob1( set, "view", view );
-            set->disable = !vol || ( vol && vol->is_mounted );
+            set->disable = !vol; // || ( vol && vol->is_mounted );
         set = xset_set_cb( "dev_menu_remount", on_remount, vol );
             xset_set_ob1( set, "view", view );
             set->disable = !vol;
@@ -3441,7 +3441,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_cb( "dev_show_partition_tables", update_all, NULL );
         xset_set_cb( "dev_show_net", update_all, NULL );
         set = xset_set_cb( "dev_show_file", update_all, NULL );
-            set->disable = xset_get_b( "dev_show_internal_drives" );
+        //    set->disable = xset_get_b( "dev_show_internal_drives" );
         xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
         xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
         set = xset_set_cb( "dev_automount_optical", update_all, NULL );
@@ -3589,7 +3589,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
             xset_set_ob1( set, "set", set );
 
         set = xset_get( "dev_menu_settings" );
-        menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd dev_fs_cnf dev_net_cnf sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
+        menu_elements = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_fs_cnf dev_net_cnf dev_mount_options dev_change sep_dm5 dev_single dev_newtab dev_icon panel%d_font_dev", file_browser->mypanel );
         xset_set_set( set, "desc", menu_elements );
         g_free( menu_elements );
 
@@ -3597,11 +3597,21 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
 
-
-        //xset_add_menu( NULL, file_browser, popup, accel_group, set->name );
-#endif
+        /* add Mount/Unmount Command to end of menu, then hide.  This menu item is
+         * currently unused but may have custom items attached.
+         * Also see main-window:create_devices_menu() */
+        item = xset_add_menuitem( NULL, file_browser, popup,
+                                accel_group, xset_get( "dev_mount_cmd" ) );
+        GtkWidget* item2 = xset_add_menuitem( NULL, file_browser, popup,
+                                accel_group, xset_get( "dev_unmount_cmd" ) );
 
         gtk_widget_show_all( GTK_WIDGET(popup) );
+        gtk_widget_hide( item );
+        gtk_widget_hide( item2 );
+#else
+        gtk_widget_show_all( GTK_WIDGET(popup) );
+#endif
+
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );
         g_signal_connect( popup, "key-press-event",
@@ -3728,7 +3738,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     g_object_set_data( G_OBJECT( item ), "view", view );
     g_signal_connect( item, "activate", G_CALLBACK( on_umount ), vol );
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-    gtk_widget_set_sensitive( item, vol->is_mounted );
+    gtk_widget_set_sensitive( item, !!vol );
 
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), gtk_separator_menu_item_new() );
 
@@ -3760,7 +3770,7 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     g_object_set_data( G_OBJECT( item ), "view", view );
     g_signal_connect( item, "activate", G_CALLBACK( on_mount ), vol );
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
-    gtk_widget_set_sensitive( item, !vol->is_mounted );
+    gtk_widget_set_sensitive( item, !!vol );
 
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), gtk_separator_menu_item_new() );
 
@@ -3930,7 +3940,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
     xset_set_cb( "dev_show_partition_tables", update_all, NULL );
     xset_set_cb( "dev_show_net", update_all, NULL );
     set = xset_set_cb( "dev_show_file", update_all, NULL );
-        set->disable = xset_get_b( "dev_show_internal_drives" );
+    //    set->disable = xset_get_b( "dev_show_internal_drives" );
     xset_set_cb( "dev_ignore_udisks_hide", update_all, NULL );
     xset_set_cb( "dev_show_hide_volumes", on_showhide, vol );
     set = xset_set_cb( "dev_automount_optical", update_all, NULL );
@@ -3946,7 +3956,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
         xset_set_ob1( set, "set", set );
 
     set = xset_get( "dev_menu_settings" );
-    char* desc = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_mount_options dev_mount_cmd dev_unmount_cmd dev_fs_cnf dev_net_cnf%s", file_browser ? " dev_newtab" : "" );
+    char* desc = g_strdup_printf( "dev_show sep_dm4 dev_menu_auto dev_exec dev_fs_cnf dev_net_cnf dev_mount_options dev_change%s", file_browser ? " dev_newtab" : "" );
     xset_set_set( set, "desc", desc );
     g_free( desc );
 #endif

@@ -4572,17 +4572,38 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         const char* fstype = get_devmount_fstype( major( stat_buf.st_dev ),
                                             minor( stat_buf.st_dev ) );
         //printf("    !udevice || !devnode  fstype=%s\n", fstype );
-        if ( !fstype )
-            ret = FALSE;
-        else
-            // blacklist these types for no change detection (if not block device)
-            ret = (    g_str_has_prefix( fstype, "nfs" )    // nfs nfs4 etc
-                    || ( g_str_has_prefix( fstype, "fuse" ) && 
-                                strcmp( fstype, "fuseblk" ) ) // fuse fuse.sshfs curlftpfs(fuse) etc
-                    || strstr( fstype, "cifs" )
-                    || !strcmp( fstype, "smbfs" )
-                    || !strcmp( fstype, "ftpfs" ) );
-        /*  whitelist
+        ret = FALSE;
+        if ( fstype && fstype[0] )
+        {
+            // fstype listed in change detection blacklist?
+            int len = strlen( fstype );
+            char* ptr = xset_get_s( "dev_change" );
+            while ( ptr && ptr[0] )
+            {
+                while ( ptr[0] == ' ' || ptr[0] == ',' )
+                    ptr++;
+                if ( g_str_has_prefix( ptr, fstype ) &&
+                                        ( ptr[len] == ' ' ||
+                                          ptr[len] == ',' ||
+                                          ptr[len] == '\0' ) )
+                {
+                    printf("Change Detection Blacklist: fstype '%s' on %s\n",
+                                                                fstype, dir );
+                    ret = TRUE;
+                    break;
+                }
+                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                    ptr++;
+            }
+        }
+        /* blacklist these types for no change detection (if not block device)
+        ret = (    g_str_has_prefix( fstype, "nfs" )    // nfs nfs4 etc
+                || ( g_str_has_prefix( fstype, "fuse" ) && 
+                            strcmp( fstype, "fuseblk" ) ) // fuse fuse.sshfs curlftpfs(fuse) etc
+                || strstr( fstype, "cifs" )
+                || !strcmp( fstype, "smbfs" )
+                || !strcmp( fstype, "ftpfs" ) );
+        // whitelist
                 !g_strcmp0( fstype, "tmpfs" ) || !g_strcmp0( fstype, "ramfs" )
                || !g_strcmp0( fstype, "aufs" )  || !g_strcmp0( fstype, "devtmpfs" )
                || !g_strcmp0( fstype, "overlayfs" ) );

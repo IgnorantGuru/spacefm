@@ -44,6 +44,7 @@ gboolean ptk_handler_equals_default( XSet* set );
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );
+XSet* add_new_handler( int mode );  // for settings.c upgrade
 
 G_END_DECLS
 #endif

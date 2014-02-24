@@ -75,6 +75,10 @@ typedef struct _Handler
     const char* extract_cmd;    // or unmount        set->z
     const char* list_cmd;       // or info           set->context
                                 // enabled           set->b
+    // note: xset menu_labels are not saved unless !lock
+    // set->lock = FALSE;
+    // if handler equals default, don't save in session
+    // set->disable = TRUE;
 } Handler;
 
 /* If you add a new handler, add it to (end of ) existing session file handler
@@ -489,7 +493,7 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
     set_conf->s = list;
 }
 
-static XSet* add_new_handler( int mode )
+XSet* add_new_handler( int mode )
 {
     // creates a new xset for a custom handler type
     XSet* set;
@@ -2089,8 +2093,17 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
         }
         else if ( response == GTK_RESPONSE_HELP )
         {
-            // TODO: Sort out proper help
-            xset_show_help( dlg, NULL, "#designmode-style-context" );
+            const char* help;
+            if ( mode == HANDLER_MODE_ARC )
+                // TODO: Sort out proper archive help
+                help = "#designmode";
+            else if ( mode == HANDLER_MODE_FS )
+                help = "#devices-settings-devh";
+            else if ( mode == HANDLER_MODE_NET )
+                help = "#devices-settings-proh";
+            else
+                help = NULL;
+            xset_show_help( dlg, NULL, help );
         }
         else if ( response == GTK_RESPONSE_NONE )
         {

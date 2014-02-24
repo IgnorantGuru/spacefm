@@ -1014,10 +1014,11 @@ void load_settings( char* config_dir )
             g_free( str );
         }
     }
-    if ( ver < 25 ) // < hand
+    if ( ver < 26 ) // < hand
     {
         /* Archive handlers are now user configurable using a new
-         * xset - copying over settings from the old xset */
+         * xset - copying over dialog size from the old xset.
+         * Leave "arc_conf" unchanged for backwards compat. */
         if (xset_get_int( "arc_conf2", "x" ) == 0)
         {
             int width = xset_get_int( "arc_conf", "x" );
@@ -1028,6 +1029,49 @@ void load_settings( char* config_dir )
             str = g_strdup_printf( "%d", height );
             xset_set( "arc_conf2", "y", str );
             g_free( str );
+        }
+        // Import old protocol handler into new handler
+        XSet* handset;
+        set = xset_is( "path_hand" );
+        if ( set && set->s && set->s[0] )
+        {
+            handset = add_new_handler( HANDLER_MODE_NET );
+            handset->menu_label = g_strdup( "Custom" );
+            handset->s = g_strdup( "*" );
+            handset->x = g_strdup( "" );
+            handset->y = g_strdup_printf( "%s %%url%%", set->s );
+            str = xset_get_s( "dev_unmount_cmd" );
+            if ( str && str[0] )
+                handset->z = replace_string( str, "%v", "\"%a\"", FALSE );
+            else
+                handset->z = g_strdup( "udevil umount \"%a\"" );
+            handset->context = g_strdup( "mount | grep \"%a\"" );
+            handset->b = XSET_B_TRUE;
+            handset->lock = FALSE;     // save menu_label
+            handset->disable = FALSE;  // save in session
+            // add handset to handler list
+            set = xset_get( "dev_net_cnf" );
+            str = g_strconcat( handset->name, " ", set->s ? set->s : "", NULL );
+            g_free( set->s );
+            set->s = str;
+        }
+        // Move custom mount/unmount commands to handler
+        handset = xset_get( "handfs_def" );
+        set = xset_is( "dev_unmount_cmd" );
+        if ( set && set->s && set->s[0] )
+        {
+            str = g_strconcat( set->s, "\\n\\n", handset->z, NULL );
+            g_free( handset->z );
+            handset->z = str;
+            handset->disable = FALSE;  // save in session
+        }
+        set = xset_get( "dev_mount_cmd" );
+        if ( set->s && set->s[0] )
+        {
+            str = g_strconcat( set->s, "\\n\\n", handset->y, NULL );
+            g_free( handset->y );
+            handset->y = str;
+            handset->disable = FALSE;  // save in session
         }
     }
 }
@@ -1046,7 +1090,7 @@ char* save_settings( gpointer main_window_ptr )
     FMMainWindow* main_window;
 //printf("save_settings\n");
 
-    xset_set( "config_version", "s", "25" );  // 0.9.4
+    xset_set( "config_version", "s", "26" );  // hand
 
     // save tabs
     gboolean save_tabs = xset_get_b( "main_save_tabs" );
@@ -2187,7 +2231,8 @@ static void xset_write_set( FILE* file, XSet* set )
         if ( set->lock )
         {
             // built-in
-            if ( set->in_terminal == XSET_B_TRUE && set->menu_label[0] )
+            if ( set->in_terminal == XSET_B_TRUE && set->menu_label &&
+                                                    set->menu_label[0] )
                 // only save lbl if menu_label was customized
                 fprintf( file, "%s-lbl=%s\n", set->name, set->menu_label );
         }
@@ -9645,24 +9690,46 @@ void xset_defaults()
     xset_set_set( set, "s", "noexec, nosuid, noatime" );
     set->line = g_strdup( "#devices-menu-remount" );
 
-    set = xset_set( "dev_mount_cmd", "lbl", _("Mount _Command") );
-    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\t%%o\tvolume-specific mount options\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
+    set = xset_set( "dev_change", "lbl", _("_Change Detection") );
+    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.") );
     set->menu_style = XSET_MENU_STRING;
+    xset_set_set( set, "title", _("Change Detection Blacklist") );
+    xset_set_set( set, "icn", "gtk-edit" );
+    set->line = g_strdup( "#devices-settings-chdet" );
+    set->s = g_strdup( "cifs curlftpfs ftpfs fuse.sshfs nfs smbfs" );
+    set->z = g_strdup( set->s );
+    
+    /* This menu item is currently unused/hidden but may have custom items
+     * attached.  See main-window:create_devices_menu() and
+     * ptk-location-view:on_button_press_event() */
+    set = xset_set( "dev_mount_cmd", "lbl", _("Mount _Command") );
+    set->menu_style = XSET_MENU_STRING;
+#if 0
+    xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\t%%o\tvolume-specific mount options\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-mcmd" );
-
+#endif
+    
+    /* This menu item is currently unused/hidden but may have custom items
+     * attached.  See main-window:create_devices_menu() and
+     * ptk-location-view:on_button_press_event() */
     set = xset_set( "dev_unmount_cmd", "lbl", _("_Unmount Command") );
-    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     set->menu_style = XSET_MENU_STRING;
+#if 0
+    xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-ucmd" );
+#endif
 
     set = xset_set( "dev_fs_cnf", "label", _("_Device Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
+    set->line = g_strdup( "#devices-settings-devh" );
+    
     set = xset_set( "dev_net_cnf", "label", _("_Protocol Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
+    set->line = g_strdup( "#devices-settings-proh" );
 
     // dev icons
     set = xset_get( "sep_i1" );
@@ -10808,12 +10875,16 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->line = g_strdup( "#gui-pathbar-seek" );
 
+    /* This menu item is currently unused/hidden but may have custom items
+     * attached.  See ptk-path-entry:on_populate_popup() */
     set = xset_set( "path_hand", "lbl", _("P_rotocol Handler...") );
     set->menu_style = XSET_MENU_STRING;
+#if 0
     xset_set_set( set, "title", _("Set Protocol Handler") );
     xset_set_set( set, "desc", _("Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n\nIf this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n\nTIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n") );
     xset_set_set( set, "icn", "gtk-execute" );
     set->line = g_strdup( "#gui-pathbar-protohand" );
+#endif
 
     set = xset_set( "path_help", "lbl", _("Path Bar _Help") );
     xset_set_set( set, "icn", "gtk-help" );
