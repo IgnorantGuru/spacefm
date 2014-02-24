@@ -39,7 +39,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
 // At least a mime type or extension is required - mime type preferred
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
-                                                char* extension,
+                                                const char* extension,
                                                 int operation );
 
 G_END_DECLS

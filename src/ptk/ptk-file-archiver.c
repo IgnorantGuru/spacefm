@@ -76,63 +76,63 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                                                      int operation )
 {
     gboolean format_supported = FALSE, mime_or_extension_support = FALSE;
-    gchar *ext = NULL;
-    int i;
+    gchar *ext;
+    int len;
+    char* ptr;
 
     /* If one was passed, ensuring an extension starts with '.' (
      * get_name_extension does not provide this) */
     if (extension && extension[0] != '.')
-    {
         ext = g_strconcat( ".", extension, NULL );
-    }
-    else ext = g_strdup( "" );
+    else
+        ext = g_strdup( "" );
 
     // Checking it if its enabled
     if (handler_xset && handler_xset->b == XSET_B_TRUE)
     {
-        /* Obtaining handled MIME types and file extensions
-         * (colon-delimited) */
-/*igcr copying all these strings is an inefficient way to do this.  This 
- * function in particular needs to be fast because it's used by menus, so this
- * should be rewritten to parse the strings without copying.  (memory writes
- * are slower than reads) */
-        gchar** mime_types = handler_xset->s ? 
-                           g_strsplit_set( handler_xset->s, ", ", -1 ) :
-                           NULL;
-        gchar** extensions = handler_xset->x ?
-                           g_strsplit_set( handler_xset->x, ", ", -1 ) :
-                           NULL;
-
-        // Looping for handled MIME types (NULL-terminated list)
-        if ( mime_types )
+        /* Checking to see if the handler can deal with the MIME type */
+        if ( type && handler_xset->s )
         {
-            for (i = 0; mime_types[i]; ++i)
+            len = strlen( type );
+            ptr = handler_xset->s;
+            while ( ptr && ptr[0] )
             {
-                /* Checking to see if the handler can deal with the
-                 * current MIME type */
-                if (g_strcmp0( mime_types[i], type ) == 0)
+                while ( ptr[0] == ' ' || ptr[0] == ',' )
+                    ptr++;
+                if ( g_str_has_prefix( ptr, type ) &&
+                                        ( ptr[len] == ' ' ||
+                                          ptr[len] == ',' ||
+                                          ptr[len] == '\0' ) )
                 {
-                    // It can - flagging and breaking
                     mime_or_extension_support = TRUE;
                     break;
                 }
+                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                    ptr++;
             }
         }
 
-        // Looping for handled extensions if mime type wasn't supported
-        if (extensions && !mime_or_extension_support)
+        /* Otherwise checking to see if the handler can deal with the extension */
+        if ( !mime_or_extension_support && ext && ext[0] && handler_xset->x )
         {
-            for (i = 0; extensions[i]; ++i)
+            len = strlen( ext );
+            ptr = handler_xset->x;
+            while ( ptr && ptr[0] )
             {
-                // Checking to see if the handler can deal with the
-                // current extension
-/*igcr extensions are case-sensitive?  - wait on this until wildcards handled */
-                if (g_strcmp0( extensions[i], ext ) == 0)
+                while ( ptr[0] == ' ' || ptr[0] == ',' )
+                    ptr++;
+/*igcr if extensions are case-sensitive, should make 
+ * default handlers include capitalized extensions? */
+                if ( g_str_has_prefix( ptr, ext ) &&
+                                        ( ptr[len] == ' ' ||
+                                          ptr[len] == ',' ||
+                                          ptr[len] == '\0' ) )
                 {
-                    // It can - flagging and breaking
                     mime_or_extension_support = TRUE;
                     break;
                 }
+                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                    ptr++;
             }
         }
 
@@ -190,10 +190,6 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                     break;
             }
         }
-
-        // Clearing up
-        g_strfreev( mime_types );
-        g_strfreev( extensions );
     }
 
     // Clearing up
@@ -379,7 +375,7 @@ static char* generate_bash_error_function( gboolean run_in_terminal )
     }
 
     return g_strdup_printf( ""
-        "function handle_error()\n"
+        "handle_error()\n"
         "{\n"
         "    fm_err=$?\n"
         "    if [ $fm_err -ne 0 ]\n"
@@ -1514,57 +1510,51 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 }
 
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
-                                                char* extension,
+                                                const char* extension,
                                                 int operation )
 {
-    // Exiting if nothing was passed
-    if (!mime && !extension)
-        return FALSE;
+    const char* type;
+    char* delim;
+    char* ptr;
+    XSet* handler_xset;
 
+    if ( !mime && !extension )
+        return FALSE;
     /* Operation doesnt need validation here - archive_handler_is_format_supported
      * takes care of this */
     
     // Fetching and validating MIME type if provided
-    char *type = NULL;
-    if (mime)
+    if ( mime )
         type = (char*)vfs_mime_type_get_type( mime );
-
-    // Fetching available archive handlers and splitting
-    char* archive_handlers_s = xset_get_s( "arc_conf2" );
-    if ( !archive_handlers_s )
-        return FALSE;
-    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
-    if ( !archive_handlers )
-        return FALSE;
-
-    // Debug code
-    /*g_message("archive_handlers_s: %s\nextension: %s", archive_handlers_s,
-              extension);*/
-
-    // Looping for handlers (NULL-terminated list)
-    int i;
-    gboolean handler_found = FALSE;  // Flag variable used to ensure cleanup
-    for (i = 0; archive_handlers[i] != NULL; ++i)
+    else
+        type = NULL;
+    
+    // parsing handlers list
+    ptr = xset_get_s( "arc_conf2" );
+    while ( ptr && ptr[0] )
     {
+        while ( ptr[0] == ' ' )
+            ptr++;
+        if ( !ptr[0] )
+            break;
+        if ( delim = strchr( ptr, ' ' ) )
+            delim[0] = '\0';    // set temporary end of string
+
         // Fetching handler
-        XSet* handler_xset = xset_is( archive_handlers[i] );
+        handler_xset = xset_is( ptr );
+        if ( delim )
+            delim[0] = ' ';     // remove temporary end of string
 
         // Checking to see if handler can cope with format and operation
-        if( handler_xset && archive_handler_is_format_supported( handler_xset,
+        if ( handler_xset && archive_handler_is_format_supported( handler_xset,
                                                 type,
                                                 extension,
-                                                operation ))
-        {
-            // It can - flagging and breaking
-            handler_found = TRUE;
+                                                operation ) )
+            return TRUE;
+        if ( !delim )
             break;
-        }
+        ptr = delim + 1;
     }
-
-    // Clearing up archive_handlers
-    g_strfreev( archive_handlers );
-
-    // Returning result
-    return handler_found;
+    return FALSE;
 }
 
