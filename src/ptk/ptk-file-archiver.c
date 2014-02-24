@@ -276,23 +276,24 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     gchar* xset_name, *extensions, *extension;
     do
     {
+/*igcr memory leaks - free xset_name extensions */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_EXTENSIONS, &extensions,
                             -1 );
-        handler_xset = xset_get( xset_name );
-
-        // Obtaining archive extension
-        extension = archive_handler_get_first_extension(handler_xset);
-
-        // Checking to see if the current archive filename has this
-/*igcr dot handled properly here with has_suffix? does extension contain dot? */
-        if (g_str_has_suffix( name, extension ))
+        if ( handler_xset = xset_is( xset_name ) )
         {
-            /* It does - recording its length if its the longest match
-             * yet, and continuing */
-            if (strlen( extension ) > len)
-                len = strlen( extension );
+            // Obtaining archive extension
+            extension = archive_handler_get_first_extension(handler_xset);
+
+            // Checking to see if the current archive filename has this
+            if (g_str_has_suffix( name, extension ))
+            {
+                /* It does - recording its length if its the longest match
+                 * yet, and continuing */
+                if (strlen( extension ) > len)
+                    len = strlen( extension );
+            }
         }
     }
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
@@ -308,47 +309,53 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free(extension);
 
     // Getting at currently selected archive handler
-    gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter );
+    if ( gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter ) )
+    {
+        // You have to fetch both items here
+/*igcr memory leaks - free xset_name extensions -  why fetch extensions? */
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        if ( handler_xset = xset_is( xset_name ) )
+        {
+            // Obtaining archive extension
+            extension = archive_handler_get_first_extension(handler_xset);
 
-    // You have to fetch both items here
-/*igcr memory leaks - free xset_name extensions */
-    gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
-                        COL_XSET_NAME, &xset_name,
-                        COL_HANDLER_EXTENSIONS, &extensions,
-                        -1 );
-    handler_xset = xset_get( xset_name );
+            // Appending extension to original filename
+            new_name = g_strconcat( name, extension, NULL );
 
-    // Obtaining archive extension
-    extension = archive_handler_get_first_extension(handler_xset);
-
-    // Appending extension to original filename
-    new_name = g_strconcat( name, extension, NULL );
-
-    // Updating new archive filename
-    gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
+            // Updating new archive filename
+            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
+        }
+    }
 
     // Cleaning up
     g_free( name );
     g_free( extension );
     g_free( new_name );
 
-    // Fetching reference to entry in dialog
-    GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ), "view" );
-
     // Updating command
     // Dealing with '+' representing running in terminal
-    gchar* compress_cmd;
-    if ( handler_xset->y && handler_xset->y[0] == '+' )
+    if ( handler_xset )
     {
-        compress_cmd = g_strdup( handler_xset->y + 1 );
-    }
-    else
-    {
+        gchar* compress_cmd;
+        if ( handler_xset->y && handler_xset->y[0] == '+' )
+        {
+            compress_cmd = g_strdup( handler_xset->y + 1 );
+        }
+        else
+        {
 /*igcr compress_cmd will be NULL now if !handler_xset->y  ok? */
-        compress_cmd = g_strdup( handler_xset->y );
+            compress_cmd = g_strdup( handler_xset->y );
+        }
+        // Fetching reference to entry in dialog
+        GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ),
+                                                                    "view" );
+
+        load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
+        g_free(compress_cmd);
     }
-    load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
-    g_free(compress_cmd);
 }
 
 
@@ -506,12 +513,12 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
         // Fetching handler
-        handler_xset = xset_get( archive_handlers[i] );
+        handler_xset = xset_is( archive_handlers[i] );
 
         /* Checking to see if handler is enabled, can cope with
          * compression and the extension is set - dealing with empty
          * command yet 'run in terminal' still ticked */
-        if (handler_xset->b == XSET_B_TRUE && handler_xset->y
+        if ( handler_xset && handler_xset->b == XSET_B_TRUE && handler_xset->y
                                    && g_strcmp0( handler_xset->y, "" ) != 0
                                    && g_strcmp0( handler_xset->y, "+" ) != 0
                                    && g_strcmp0( handler_xset->x, "" ) != 0)
@@ -588,20 +595,21 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_EXTENSIONS, &extensions,
                             -1 );
-        handler_xset = xset_get( xset_name );
-
-        // Dealing with '+' representing running in terminal
-        if ( handler_xset->y && handler_xset->y[0] == '+' )
+        if ( handler_xset = xset_is( xset_name ) )
         {
-            compress_cmd = g_strdup( handler_xset->y + 1 );
+            // Dealing with '+' representing running in terminal
+            if ( handler_xset->y && handler_xset->y[0] == '+' )
+            {
+                compress_cmd = g_strdup( handler_xset->y + 1 );
+            }
+            else
+            {
+                compress_cmd = g_strdup( handler_xset->y );
+            }
+            load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
+            g_free(compress_cmd);
+            compress_cmd = NULL;
         }
-        else
-        {
-            compress_cmd = g_strdup( handler_xset->y );
-        }
-        load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
-        g_free(compress_cmd);
-        compress_cmd = NULL;
     }
     else
     {
@@ -1539,10 +1547,11 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
         // Fetching handler
-        XSet* handler_xset = xset_get( archive_handlers[i] );
+        XSet* handler_xset = xset_is( archive_handlers[i] );
 
         // Checking to see if handler can cope with format and operation
-        if(archive_handler_is_format_supported( handler_xset, type,
+        if( handler_xset && archive_handler_is_format_supported( handler_xset,
+                                                type,
                                                 extension,
                                                 operation ))
         {

@@ -523,7 +523,8 @@ static void config_load_handler_settings( XSet* handler_xset,
 {
     // Fetching actual xset if only the name has been passed
     if ( !handler_xset )
-        handler_xset = xset_get( handler_xset_name );
+        if ( !( handler_xset = xset_is( handler_xset_name ) ) )
+            return;
 
 /*igcr this code is repeated in several places in this file.  Would be more
  * efficient to create a struct and just pass that (or set it as a single
@@ -731,24 +732,21 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     int i;
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
-        // Ignore invalid handler xset names
         if ( g_str_has_prefix( archive_handlers[i], handler_prefix[mode] ) ||
              g_str_has_prefix( archive_handlers[i], handler_cust_prefix[mode] ) )
         {
-            // Obtaining appending iterator for treeview model
-            gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
-
-            // Fetching handler
-            XSet* handler_xset = xset_get( archive_handlers[i] );
-
-            // Adding handler to model
-/*igcr memory leak - don't copy these strings, just pass them */
-            gchar* handler_name = g_strdup( handler_xset->menu_label );
-            gchar* xset_name = g_strdup( archive_handlers[i] );
-            gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
-                                COL_XSET_NAME, xset_name,
-                                COL_HANDLER_NAME, handler_name,
-                                -1 );
+            // Fetching handler  - ignoring invalid handler xset names
+            XSet* handler_xset = xset_is( archive_handlers[i] );
+            if ( handler_xset )
+            {
+                // Obtaining appending iterator for treeview model
+                gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
+                // Adding handler to model
+                gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
+                                    COL_XSET_NAME, archive_handlers[i],
+                                    COL_HANDLER_NAME, handler_xset->menu_label,
+                                    -1 );
+            }
         }
     }
 
@@ -1006,8 +1004,6 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         // Updating available archive handlers list - fetching current
         // handlers
         const char* archive_handlers_s = xset_get_s( handler_conf_xset[mode] );
-/*igcr also inefficient to copy all these strings  - although may be fast
- * enough for this function - could use strstr to find deleted handler */
         gchar** archive_handlers = archive_handlers_s ? 
                                    g_strsplit( archive_handlers_s, " ", -1 ) :
                                    NULL;
@@ -1128,7 +1124,7 @@ static void on_configure_changed( GtkTreeSelection* selection,
     /* Fetching data from the model based on the iterator. Note that this
      * variable used for the G_STRING is defined on the stack, so should
      * be freed for me */
-/*igcr memory leak - free these */
+/*igcr need to fetch handler_name ? */
     gchar* handler_name;  // Not actually used...
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
@@ -1138,7 +1134,9 @@ static void on_configure_changed( GtkTreeSelection* selection,
 
     // Loading new archive handler values
     config_load_handler_settings( NULL, xset_name, dlg );
-
+    g_free( xset_name );
+    g_free( handler_name );
+    
     /* Focussing archive handler name
      * Selects the text rather than just placing the cursor at the start
      * of the text... */
