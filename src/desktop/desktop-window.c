@@ -3018,6 +3018,10 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopWindow* self = (DesktopWindow*)user_data;
     DesktopItem* item;
 
+    if( !dir || !file )
+        // failsafe
+        return;
+
     /* don't show hidden files */
     if( file->name[0] == '.' )
         return;
@@ -3105,7 +3109,8 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopItem* item;
 
     /* FIXME: special handling is needed here */
-    if( ! file )
+    if( !dir || !file )
+        // file == NULL == the desktop dir itself was deleted
         return;
 
     /* don't deal with hidden files */
@@ -3152,6 +3157,10 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopWindow* self = (DesktopWindow*)user_data;
     DesktopItem* item;
     GtkWidget* w = (GtkWidget*)self;
+
+    if ( !dir || !file )
+        // file == NULL == the desktop dir itself changed
+        return;
 
     /* don't touch hidden files */
     if( file->name[0] == '.' )
