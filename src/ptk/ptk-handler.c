@@ -2015,7 +2015,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     GtkWidget* vbox_handlers = gtk_vbox_new( FALSE, 4 );
     GtkWidget* hbox_view_buttons = gtk_hbox_new( FALSE, 4 );
     GtkWidget* vbox_settings = gtk_vbox_new( FALSE, 4 );
-    GtkWidget* tbl_settings = gtk_table_new( 5, 3 , FALSE );
+    GtkWidget* tbl_settings = gtk_table_new( 3, 3 , FALSE );
     GtkWidget* hbox_compress_header = gtk_hbox_new( FALSE, 4 );
     GtkWidget* hbox_extract_header = gtk_hbox_new( FALSE, 4 );
     GtkWidget* hbox_list_header = gtk_hbox_new( FALSE, 4 );
@@ -2030,6 +2030,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                         GTK_WIDGET( lbl_handlers ), FALSE, FALSE, 4 );
     gtk_box_pack_start( GTK_BOX( hbox_main ),
                        GTK_WIDGET( vbox_settings ), TRUE, TRUE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox_settings ),
+                       GTK_WIDGET( chkbtn_handler_enabled ), FALSE, FALSE, 4 );
     gtk_box_pack_start( GTK_BOX( vbox_settings ),
                        GTK_WIDGET( tbl_settings ), FALSE, FALSE, 4 );
 
@@ -2049,29 +2051,25 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_box_pack_start( GTK_BOX( hbox_view_buttons ),
                         GTK_WIDGET( btn_apply ), TRUE, TRUE, 4 );
 
-    gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( chkbtn_handler_enabled ), 0, 1, 1, 2,
-                        GTK_FILL, GTK_FILL, 0, 0 );
-
     gtk_table_set_row_spacing( GTK_TABLE( tbl_settings ), 1, 5 );
 
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_name ), 0, 1, 2, 3,
+                        GTK_WIDGET( lbl_handler_name ), 0, 1, 0, 1,
                         GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_name ), 1, 4, 2, 3,
+                        GTK_WIDGET( entry_handler_name ), 1, 4, 0, 1,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_mime ), 0, 1, 3, 4,
+                        GTK_WIDGET( lbl_handler_mime ), 0, 1, 1, 2,
                         GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_mime ), 1, 4, 3, 4,
+                        GTK_WIDGET( entry_handler_mime ), 1, 4, 1, 2,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( lbl_handler_extension ), 0, 1, 4, 5,
+                        GTK_WIDGET( lbl_handler_extension ), 0, 1, 2, 3,
                         GTK_FILL, GTK_FILL, 0, 0 );
     gtk_table_attach( GTK_TABLE( tbl_settings ),
-                        GTK_WIDGET( entry_handler_extension ), 1, 4, 4, 5,
+                        GTK_WIDGET( entry_handler_extension ), 1, 4, 2, 3,
                         GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0 );
 
     // Make sure widgets do not separate too much vertically
