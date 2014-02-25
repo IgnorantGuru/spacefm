@@ -2353,7 +2353,6 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
     GtkWidget* folder_view = file_browser->folder_view;
 //printf("ptk_file_browser_chdir\n");
     char* path_end;
-    int test_access;
     char* path;
     char* msg;
 
@@ -2407,16 +2406,7 @@ gboolean ptk_file_browser_chdir( PtkFileBrowser* file_browser,
         return FALSE;
     }
 
-    /* FIXME: check access */
-#if defined(HAVE_EUIDACCESS)
-    test_access = euidaccess( path, R_OK | X_OK );
-#elif defined(HAVE_EACCESS)
-    test_access = eaccess( path, R_OK | X_OK );
-#else   /* No check */
-    test_access = 0;
-#endif
-
-    if ( test_access == -1 )
+    if ( !have_x_access( path ) )
     {
         if ( !inhibit_focus )
         {

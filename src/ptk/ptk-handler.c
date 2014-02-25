@@ -721,7 +721,6 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
     if ( !archive_handlers_s )
         return;
 
-/*igcr copying all these strings is inefficient, just need to parse */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -912,7 +911,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Obtaining appending iterator for treeview model
         GtkTreeIter iter;
-        gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
+        gtk_list_store_prepend( GTK_LIST_STORE( list ), &iter );
 
         // Adding handler to model
 /*igcr you don't need to copy these two strings, just pass them */
@@ -933,8 +932,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         {
             // Adding new handler to handlers
             gchar* new_handlers_list = g_strdup_printf( "%s %s",
-                                        xset_get_s( handler_conf_xset[mode] ),
-                                        new_xset_name );
+                                        new_xset_name,
+                                        xset_get_s( handler_conf_xset[mode] ) );
             xset_set( handler_conf_xset[mode], "s", new_handlers_list );
 
             // Clearing up
@@ -1682,54 +1681,7 @@ void on_textview_popup( GtkTextView *input, GtkMenu *menu, GtkWidget* dlg )
 
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
 {
-    /*
-    Archives Types - 1 per xset as:
-        set->name       xset name
-        set->b          enabled  (XSET_UNSET|XSET_B_FALSE|XSET_B_TRUE)
-        set->menu_label Display Name
-        set->s          Mime Type(s)
-        set->x          Extension(s)
-        set->y          Compress Command
-        set->z          Extract Command
-        set->context    List Command
-
-    Configure menu item is used to store some dialog data:
-        get this set with:
-            set = xset_get( "arc_conf2" );
-        set->x          dialog width  (string)
-        set->y          dialog height (string)
-        set->s          space separated list of xset names (archive types)
-
-    Example to add a new custom archive type:
-        XSet* newset = add_new_arctype();
-        newset->b = XSET_B_TRUE;                              // enable
-        xset_set_set( newset, "label", "Windows CAB" );        // set archive Name - this internally sets menu_label
-        xset_set_set( newset, "s", "application/winjunk" );    // set Mime Type(s)
-        xset_set_set( newset, "x", ".cab" );                   // set Extension(s)
-        xset_set_set( newset, "y", "createcab" );              // set Compress cmd
-        xset_set_set( newset, "z", "excab" );                  // set Extract cmd
-        xset_set_set( newset, "cxt", "listcab" );              // set List cmd - This really is cxt and not ctxt - xset_set_set bug thats already worked around
-
-    Example to retrieve an xset for an archive type:
-        XSet* set = xset_is( "hndarc_rar" );
-        if ( !set )
-            // there is no set named "hndarc_rar" (remove it from the list)
-        else
-        {
-            const char* display_name = set->menu_label;
-            const char* compress_cmd = set->y;
-            gboolean enabled = xset_get_b_set( set );
-            // etc
-        }
-    */
-
-    // TODO: <IgnorantGuru> Also, you might have a look at how your config dialog behaves from the desktop menu.  Specifically, you may want to pass your function (DesktopWindow* desktop) in lieu of file_browser in that case.  So the prototype will be:
-    // nm don't have that branch handy.  But you function can accept both file_browser and desktop and use whichever is non-NULL for the parent
-    // If that doesn't make sense now, ask me later or I can hack it in.  That archive menu appears when right-clicking a desktop item
-
-    /* Archive handlers dialog, attaching to top-level window (in GTK,
-     * everything is a 'widget') - no buttons etc added as everything is
-     * custom...
+    /* Create handlers dialog
      * Extra NULL on the NULL-terminated list to placate an irrelevant
      * compilation warning */
 /*igcr file_browser may be null if desktop use later accomodated */
