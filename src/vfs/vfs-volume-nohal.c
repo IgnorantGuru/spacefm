@@ -4577,23 +4577,26 @@ gboolean vfs_volume_dir_avoid_changes( const char* dir )
         {
             // fstype listed in change detection blacklist?
             int len = strlen( fstype );
-            char* ptr = xset_get_s( "dev_change" );
-            while ( ptr && ptr[0] )
+            char* ptr;
+            if ( ptr = xset_get_s( "dev_change" ) )
             {
-                while ( ptr[0] == ' ' || ptr[0] == ',' )
-                    ptr++;
-                if ( g_str_has_prefix( ptr, fstype ) &&
-                                        ( ptr[len] == ' ' ||
-                                          ptr[len] == ',' ||
-                                          ptr[len] == '\0' ) )
+                while ( ptr[0] )
                 {
-                    printf("Change Detection Blacklist: fstype '%s' on %s\n",
-                                                                fstype, dir );
-                    ret = TRUE;
-                    break;
+                    while ( ptr[0] == ' ' || ptr[0] == ',' )
+                        ptr++;
+                    if ( g_str_has_prefix( ptr, fstype ) &&
+                                            ( ptr[len] == ' ' ||
+                                              ptr[len] == ',' ||
+                                              ptr[len] == '\0' ) )
+                    {
+                        printf("Change Detection Blacklist: fstype '%s' on %s\n",
+                                                                    fstype, dir );
+                        ret = TRUE;
+                        break;
+                    }
+                    while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                        ptr++;
                 }
-                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
-                    ptr++;
             }
         }
         /* blacklist these types for no change detection (if not block device)

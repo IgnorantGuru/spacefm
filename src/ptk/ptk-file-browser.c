@@ -3962,6 +3962,13 @@ on_folder_view_button_press_event ( GtkWidget *widget,
                                 0, 0, "filelist", 0, 0,
                                 event->state, TRUE ) )
             return TRUE;
+        /* set ret TRUE to prevent drag_begin starting in this tab after
+         * fuseiso mount.  Why?
+         * row_activated occurs before GDK_2BUTTON_PRESS so use
+         * file_browser->button_press to determine if row was already
+         * activated or user clicked on non-row */
+        if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
+            ret = TRUE;
     }
 /*  go up if double-click in blank area of file list - this was disabled due
  * to complaints about accidental clicking
@@ -5253,7 +5260,6 @@ gboolean on_folder_view_drag_leave ( GtkWidget *widget,
 {
     /*  Don't call the default handler  */
     g_signal_stop_emission_by_name( widget, "drag-leave" );
-
     file_browser->drag_source_dev = 0;
     file_browser->drag_source_inode = 0;
 
