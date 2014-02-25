@@ -2177,12 +2177,11 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
         {
             const char* help;
             if ( mode == HANDLER_MODE_ARC )
-                // TODO: Sort out proper archive help
-                help = "#designmode";
+                help = "#handlers-arc";
             else if ( mode == HANDLER_MODE_FS )
-                help = "#devices-settings-devh";
+                help = "#handlers-dev";
             else if ( mode == HANDLER_MODE_NET )
-                help = "#devices-settings-proh";
+                help = "#handlers-pro";
             else
                 help = NULL;
             xset_show_help( dlg, NULL, help );

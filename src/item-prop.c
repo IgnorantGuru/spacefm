@@ -1854,7 +1854,7 @@ void xset_item_prop_dlg( XSetContext* context, XSet* set, int page )
     // Opener
     ctxt->hbox_opener = gtk_hbox_new( FALSE, 0 );
     gtk_box_pack_start( GTK_BOX( ctxt->hbox_opener ),
-                        GTK_WIDGET( gtk_label_new( _("If enabled, use as opener for:") ) ),
+                        GTK_WIDGET( gtk_label_new( _("If enabled, use as handler for:") ) ),
                         FALSE, TRUE, 0 );
     ctxt->opener = gtk_combo_box_text_new();
     gtk_combo_box_set_focus_on_click( GTK_COMBO_BOX( ctxt->opener ), FALSE );

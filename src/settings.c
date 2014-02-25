@@ -9765,11 +9765,11 @@ void xset_defaults()
 
     set = xset_set( "dev_fs_cnf", "label", _("_Device Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
-    set->line = g_strdup( "#devices-settings-devh" );
+    set->line = g_strdup( "#handlers-dev" );
     
     set = xset_set( "dev_net_cnf", "label", _("_Protocol Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
-    set->line = g_strdup( "#devices-settings-proh" );
+    set->line = g_strdup( "#handlers-pro" );
 
     // dev icons
     set = xset_get( "sep_i1" );
@@ -10920,16 +10920,10 @@ void xset_defaults()
     set->b = XSET_B_TRUE;
     set->line = g_strdup( "#gui-pathbar-seek" );
 
-    /* This menu item is currently unused/hidden but may have custom items
-     * attached.  See ptk-path-entry:on_populate_popup() */
-    set = xset_set( "path_hand", "lbl", _("P_rotocol Handler...") );
-    set->menu_style = XSET_MENU_STRING;
-#if 0
-    xset_set_set( set, "title", _("Set Protocol Handler") );
-    xset_set_set( set, "desc", _("Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n\nIf this setting is empty, SpaceFM will open protocols using 'udevil mount'.\n\nTIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n") );
-    xset_set_set( set, "icn", "gtk-execute" );
-    set->line = g_strdup( "#gui-pathbar-protohand" );
-#endif
+    set = xset_set( "path_hand", "lbl", _("_Protocol Handlers") );
+    xset_set_set( set, "icn", "gtk-preferences" );
+    set->line = g_strdup( "#handlers-pro" );
+    // set->s was custom protocol handler in sfm<=0.9.3 - retained
 
     set = xset_set( "path_help", "lbl", _("Path Bar _Help") );
     xset_set_set( set, "icn", "gtk-help" );

@@ -17,6 +17,7 @@
 #include <glib/gi18n.h>
 
 #include "gtk2-compat.h"
+#include "ptk-handler.h"
 
 static void on_changed( GtkEntry* entry, gpointer user_data );
 
@@ -606,6 +607,11 @@ void ptk_path_entry_man( GtkWidget* widget, GtkWidget* parent )
     xset_show_help( parent, NULL, "#gui-pathbar" );
 }
 
+void on_protocol_handlers( GtkWidget* widget, PtkFileBrowser* file_browser )
+{
+    ptk_handler_show_config( HANDLER_MODE_NET, file_browser );
+}
+
 void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )
 {
     GtkWidget* parent_win = gtk_widget_get_toplevel( GTK_WIDGET( parent ) );
@@ -686,19 +692,13 @@ void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_bro
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_get( "path_seek" );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
+    set = xset_set_cb( "path_hand", on_protocol_handlers, file_browser );
+    xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb_panel( file_browser->mypanel, "font_path", main_update_fonts, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
     set = xset_set_cb( "path_help", ptk_path_entry_man, file_browser );
     xset_add_menuitem( NULL, file_browser, GTK_WIDGET( menu ), accel_group, set );
-
-    /* This menu item is currently unused/hidden but may have custom items
-     * attached. */
-    set = xset_get( "path_hand" );
-    GtkWidget* hide_item = xset_add_menuitem( NULL, file_browser,
-                                        GTK_WIDGET( menu ), accel_group, set );
-    // show all
     gtk_widget_show_all( GTK_WIDGET( menu ) );
-    gtk_widget_hide( hide_item );
     g_signal_connect( menu, "key-press-event",
                       G_CALLBACK( xset_menu_keypress ), NULL );
 }
