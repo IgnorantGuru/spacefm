@@ -570,10 +570,10 @@ static void config_load_handler_settings( XSet* handler_xset,
     /* Configuring widgets with handler settings. Only name, MIME and
      * extension warrant a warning
      * Commands are prefixed with '+' when they are ran in a terminal */
-    gboolean check_value = handler_xset->b != XSET_B_TRUE ? FALSE : TRUE;
     int start;
     gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ),
-                                    check_value );
+                                  handler_xset->b == XSET_B_TRUE );
+    
     gtk_entry_set_text( GTK_ENTRY( entry_handler_name ),
                                     handler_xset->menu_label ?
                                     handler_xset->menu_label : "" );
@@ -741,10 +741,15 @@ static void populate_archive_handlers( GtkListStore* list, GtkWidget* dlg )
                 // Obtaining appending iterator for treeview model
                 gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
                 // Adding handler to model
+                char* dis_name = g_strdup_printf( "%s %s",
+                                    handler_xset->menu_label,
+                                    handler_xset->b == XSET_B_TRUE ?
+                                        "" : _("(disabled)") );
                 gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
                                     COL_XSET_NAME, archive_handlers[i],
-                                    COL_HANDLER_NAME, handler_xset->menu_label,
+                                    COL_HANDLER_NAME, dis_name,
                                     -1 );
+                g_free( dis_name );
             }
         }
     }
@@ -914,35 +919,33 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         gtk_list_store_prepend( GTK_LIST_STORE( list ), &iter );
 
         // Adding handler to model
-/*igcr you don't need to copy these two strings, just pass them */
-        gchar* new_handler_name = g_strdup( handler_name );
-        gchar* new_xset_name = g_strdup( new_handler_xset->name );
+        char* dis_name = g_strdup_printf( "%s %s",
+                                    handler_name,
+                                    new_handler_xset->b == XSET_B_TRUE ?
+                                        "" : _("(disabled)") );
         gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
-                            COL_XSET_NAME, new_xset_name,
-                            COL_HANDLER_NAME, new_handler_name,
+                            COL_XSET_NAME, new_handler_xset->name,
+                            COL_HANDLER_NAME, dis_name,
                             -1 );
-
+        g_free( dis_name );
+        
         // Updating available archive handlers list
         if (g_strcmp0( xset_get_s( handler_conf_xset[mode] ), "" ) <= 0)
         {
             // No handlers present - adding new handler
-            xset_set( handler_conf_xset[mode], "s", new_xset_name );
+            xset_set( handler_conf_xset[mode], "s", new_handler_xset->name );
         }
         else
         {
             // Adding new handler to handlers
             gchar* new_handlers_list = g_strdup_printf( "%s %s",
-                                        new_xset_name,
+                                        new_handler_xset->name,
                                         xset_get_s( handler_conf_xset[mode] ) );
             xset_set( handler_conf_xset[mode], "s", new_handlers_list );
 
             // Clearing up
             g_free(new_handlers_list);
         }
-
-        // Clearing up
-        g_free(new_handler_name);
-        g_free(new_xset_name);
 
         // Activating the new handler - the normal loading code
         // automatically kicks in
@@ -971,17 +974,20 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Determining current handler enabled state
         gboolean handler_enabled = gtk_toggle_button_get_active(
-            GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ) ) ?
-            XSET_B_TRUE : XSET_B_FALSE;
+            GTK_TOGGLE_BUTTON( chkbtn_handler_enabled ) );
 
         // Checking if the handler has been renamed
         if (g_strcmp0( handler_name_from_model, handler_name ) != 0)
         {
             // It has - updating model
+            char* dis_name = g_strdup_printf( "%s %s",
+                                    handler_name,
+                                    handler_enabled ? "" : _("(disabled)") );
             gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         COL_XSET_NAME, xset_name,
-                        COL_HANDLER_NAME, handler_name,
+                        COL_HANDLER_NAME, dis_name,
                         -1 );
+            g_free( dis_name );
         }
 
         // Saving archive handler
