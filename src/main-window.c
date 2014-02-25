@@ -790,8 +790,16 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
     return dev_menu;
 }
 
-void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
+void on_open_url( GtkWidget* widget, FMMainWindow* main_window )
 {
+    PtkFileBrowser* file_browser = 
+                    PTK_FILE_BROWSER( fm_main_window_get_current_file_browser(
+                                                                main_window ) );
+    char* url = xset_get_s( "main_save_session" );
+    if ( file_browser && url && url[0] )
+        mount_network( file_browser, url, TRUE );
+#if 0
+    /* was on_save_session */
     xset_autosave_cancel();
     char* err_msg = save_settings( main_window );
     if ( err_msg )
@@ -802,7 +810,8 @@ void on_save_session( GtkWidget* widget, FMMainWindow* main_window )
                                                     NULL, 0, msg, NULL, 
                                                     "#programfiles-home-session" );
         g_free( msg );
-    }    
+    }
+#endif
 }
 
 void on_find_file_activate ( GtkMenuItem *menuitem, gpointer user_data )
@@ -1789,9 +1798,9 @@ void rebuild_menus( FMMainWindow* main_window )
     xset_set_cb( "main_search", on_find_file_activate, main_window );
     xset_set_cb( "main_terminal", on_open_terminal_activate, main_window );
     xset_set_cb( "main_root_terminal", on_open_root_terminal_activate, main_window );
-    xset_set_cb( "main_save_session", on_save_session, main_window );
+    xset_set_cb( "main_save_session", on_open_url, main_window );
     xset_set_cb( "main_exit", on_quit_activate, main_window );
-    menu_elements = g_strdup_printf( "main_search main_terminal main_root_terminal sep_f1 main_new_window main_root_window sep_f2 main_save_session main_save_tabs sep_f3 main_exit" );
+    menu_elements = g_strdup_printf( "main_save_session main_search sep_f1 main_terminal main_root_terminal main_new_window main_root_window sep_f2 main_save_tabs sep_f3 main_exit" );
     xset_add_menu( NULL, file_browser, newmenu, accel_group, menu_elements );
     g_free( menu_elements );
     gtk_widget_show_all( GTK_WIDGET(newmenu) );
@@ -3963,7 +3972,7 @@ g_warning( _("Device manager key shortcuts are disabled in HAL mode") );
                 else if ( !strcmp( xname, "root_terminal" ) )
                     on_open_root_terminal_activate( NULL, main_window );
                 else if ( !strcmp( xname, "save_session" ) )
-                    on_save_session( NULL, main_window );
+                    on_open_url( NULL, main_window );
                 else if ( !strcmp( xname, "exit" ) )
                     on_quit_activate( NULL, main_window );
                 else if ( !strcmp( xname, "full" ) )

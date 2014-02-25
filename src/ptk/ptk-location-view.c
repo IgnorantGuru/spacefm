@@ -3448,8 +3448,9 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         set = xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
             xset_set_ob1( set, "view", view );
 
-        if ( vol && ( g_str_has_prefix( vol->device_file, "//" )
-                                            || strstr( vol->device_file, ":/" ) ) )
+        if ( vol && vol->device_type == DEVICE_TYPE_NETWORK &&
+                            ( g_str_has_prefix( vol->device_file, "//" )
+                              || strstr( vol->device_file, ":/" ) ) )
             str = " dev_menu_mark";
         else
             str = "";
@@ -3768,6 +3769,26 @@ static void show_dev_design_menu( GtkWidget* menu, GtkWidget* dev_item,
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
     gtk_widget_set_sensitive( item, !!vol );
 
+    // Bookmark Device
+    if ( vol && vol->device_type == DEVICE_TYPE_NETWORK &&
+                            ( g_str_has_prefix( vol->device_file, "//" )
+                              || strstr( vol->device_file, ":/" ) ) )
+    {
+        set = xset_get( "dev_menu_mark" );
+        item = gtk_image_menu_item_new_with_mnemonic( set->menu_label );
+        if ( set->icon )
+        {
+            image = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
+            if ( image )
+                gtk_image_menu_item_set_image( GTK_IMAGE_MENU_ITEM ( item ),
+                                                                image );
+        }
+        g_object_set_data( G_OBJECT( item ), "view", view );
+        g_signal_connect( item, "activate", G_CALLBACK( on_bookmark_device ), vol );
+        gtk_menu_shell_append( GTK_MENU_SHELL( popup ), item );
+    }
+
+    // Separator
     gtk_menu_shell_append( GTK_MENU_SHELL( popup ), gtk_separator_menu_item_new() );
 
     set = xset_get( "dev_prop" );

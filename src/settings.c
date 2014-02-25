@@ -1105,6 +1105,14 @@ void load_settings( char* config_dir )
             handset->y = str;
             handset->disable = FALSE;  // save in session
         }
+        // Change Save Session to Open URL - remove custom label/icon
+        set = xset_set( "main_save_session", "lbl", _("Open _URL") );
+        xset_set_set( set, "icn", "gtk-network" );
+        // indicate that menu label is default and should not be saved
+        set->in_terminal = XSET_B_UNSET;
+        // indicate that icon is default and should not be saved
+        set->keep_terminal = XSET_B_UNSET;
+        set->key = set->keymod = 0;
     }
 }
 
@@ -9996,8 +10004,13 @@ void xset_defaults()
     set = xset_set( "main_root_terminal", "lbl", _("_Root Terminal") );
     xset_set_set( set, "icn", "gtk-dialog-warning" );
     
-    set = xset_set( "main_save_session", "lbl", _("_Save Session") );
-    xset_set_set( set, "icn", "gtk-save" );
+    // was previously used for Save Session
+    set = xset_set( "main_save_session", "lbl", _("Open _URL") );
+    set->menu_style = XSET_MENU_STRING;
+    xset_set_set( set, "icn", "gtk-network" );
+    xset_set_set( set, "title", _("Open URL") );
+    xset_set_set( set, "desc", _("Enter URL in the format:\n\tPROTO://USERNAME:PASSWORD@HOST:PORT/SHARE\n\nExamples:\n\tftp://mirrors.kernel.org\n\tsmb://user:pass@10.0.0.1:50/docs\n\tssh://user@sys.domain\n\nIncluding a password is unsafe.  To bookmark a URL, right-click on the mounted network in Devices and select Bookmark.\n") );
+    set->line = NULL;
 
     set = xset_set( "main_save_tabs", "lbl", _("Save Ta_bs") );
     set->menu_style = XSET_MENU_CHECK;
