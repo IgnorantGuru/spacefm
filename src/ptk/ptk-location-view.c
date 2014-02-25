@@ -920,22 +920,23 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
         if ( strstr( vol->device_file, netmount->url ) ||
                                         strstr( vol->udi, netmount->url ) )
         {
-            if ( vol->is_mounted )
+            if ( vol->is_mounted && vol->mount_point &&
+                                    have_x_access( vol->mount_point ) )
             {
                 if ( new_tab )
                 {
                     ptk_file_browser_emit_open( file_browser, vol->mount_point,
-                                                            PTK_OPEN_NEW_TAB );
+                                                    PTK_OPEN_NEW_TAB );
                 }
                 else
                 {
-                    if ( strcmp( vol->mount_point, ptk_file_browser_get_cwd( file_browser ) ) )
+                    if ( strcmp( vol->mount_point,
+                                ptk_file_browser_get_cwd( file_browser ) ) )
                         ptk_file_browser_chdir( file_browser, vol->mount_point,
-                                                                PTK_FB_CHDIR_ADD_HISTORY );
+                                                    PTK_FB_CHDIR_ADD_HISTORY );
                 }
                 goto _net_free;
             }
-            break;
         }
     }
     
@@ -2978,13 +2979,13 @@ void mount_iso( PtkFileBrowser* file_browser, const char* path )
                 || ( canon && !strcmp( vol->device_file, canon ) )
                 || ( canon && !strcmp( vol->udi, canon ) ) )
         {
-            if ( vol->is_mounted )
+            if ( vol->is_mounted && vol->mount_point &&
+                                    have_x_access( vol->mount_point ) )
             {
                 ptk_file_browser_emit_open( file_browser, vol->mount_point,
                                                         PTK_OPEN_NEW_TAB );
                 return;
             }
-            break;
         }
         
     }
