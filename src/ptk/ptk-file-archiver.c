@@ -94,21 +94,23 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
         if ( type && handler_xset->s )
         {
             len = strlen( type );
-            ptr = handler_xset->s;
-            while ( ptr && ptr[0] )
+            if ( ptr = handler_xset->s )
             {
-                while ( ptr[0] == ' ' || ptr[0] == ',' )
-                    ptr++;
-                if ( g_str_has_prefix( ptr, type ) &&
-                                        ( ptr[len] == ' ' ||
-                                          ptr[len] == ',' ||
-                                          ptr[len] == '\0' ) )
+                while ( ptr[0] )
                 {
-                    mime_or_extension_support = TRUE;
-                    break;
+                    while ( ptr[0] == ' ' || ptr[0] == ',' )
+                        ptr++;
+                    if ( g_str_has_prefix( ptr, type ) &&
+                                            ( ptr[len] == ' ' ||
+                                              ptr[len] == ',' ||
+                                              ptr[len] == '\0' ) )
+                    {
+                        mime_or_extension_support = TRUE;
+                        break;
+                    }
+                    while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                        ptr++;
                 }
-                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
-                    ptr++;
             }
         }
 
@@ -116,23 +118,25 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
         if ( !mime_or_extension_support && ext && ext[0] && handler_xset->x )
         {
             len = strlen( ext );
-            ptr = handler_xset->x;
-            while ( ptr && ptr[0] )
+            if ( ptr = handler_xset->x )
             {
-                while ( ptr[0] == ' ' || ptr[0] == ',' )
-                    ptr++;
+                while ( ptr[0] )
+                {
+                    while ( ptr[0] == ' ' || ptr[0] == ',' )
+                        ptr++;
 /*igcr if extensions are case-sensitive, should make 
  * default handlers include capitalized extensions? */
-                if ( g_str_has_prefix( ptr, ext ) &&
-                                        ( ptr[len] == ' ' ||
-                                          ptr[len] == ',' ||
-                                          ptr[len] == '\0' ) )
-                {
-                    mime_or_extension_support = TRUE;
-                    break;
+                    if ( g_str_has_prefix( ptr, ext ) &&
+                                            ( ptr[len] == ' ' ||
+                                              ptr[len] == ',' ||
+                                              ptr[len] == '\0' ) )
+                    {
+                        mime_or_extension_support = TRUE;
+                        break;
+                    }
+                    while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
+                        ptr++;
                 }
-                while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
-                    ptr++;
             }
         }
 
@@ -1530,30 +1534,32 @@ gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
         type = NULL;
     
     // parsing handlers list
-    ptr = xset_get_s( "arc_conf2" );
-    while ( ptr && ptr[0] )
+    if ( ptr = xset_get_s( "arc_conf2" ) )
     {
-        while ( ptr[0] == ' ' )
-            ptr++;
-        if ( !ptr[0] )
-            break;
-        if ( delim = strchr( ptr, ' ' ) )
-            delim[0] = '\0';    // set temporary end of string
+        while ( ptr[0] )
+        {
+            while ( ptr[0] == ' ' )
+                ptr++;
+            if ( !ptr[0] )
+                break;
+            if ( delim = strchr( ptr, ' ' ) )
+                delim[0] = '\0';    // set temporary end of string
 
-        // Fetching handler
-        handler_xset = xset_is( ptr );
-        if ( delim )
-            delim[0] = ' ';     // remove temporary end of string
+            // Fetching handler
+            handler_xset = xset_is( ptr );
+            if ( delim )
+                delim[0] = ' ';     // remove temporary end of string
 
-        // Checking to see if handler can cope with format and operation
-        if ( handler_xset && archive_handler_is_format_supported( handler_xset,
-                                                type,
-                                                extension,
-                                                operation ) )
-            return TRUE;
-        if ( !delim )
-            break;
-        ptr = delim + 1;
+            // Checking to see if handler can cope with format and operation
+            if ( handler_xset && archive_handler_is_format_supported( handler_xset,
+                                                    type,
+                                                    extension,
+                                                    operation ) )
+                return TRUE;
+            if ( !delim )
+                break;
+            ptr = delim + 1;
+        }
     }
     return FALSE;
 }
