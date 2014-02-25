@@ -846,6 +846,9 @@ static void on_configure_drag_end( GtkWidget* widget,
     xset_autosave( FALSE, FALSE );
 
     // Ensuring first handler is selected (otherwise none are)
+/*igcr it seems the last selected row is re-selected if this code is not used.
+ * seems preferable. */
+#if 0
     if ( widget )
     {
         GtkTreeSelection *selection = gtk_tree_view_get_selection(
@@ -855,6 +858,7 @@ static void on_configure_drag_end( GtkWidget* widget,
                                 new_path );
         gtk_tree_path_free( new_path );
     }
+#endif
 }
 
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
