@@ -1642,6 +1642,44 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
     return TRUE;
 }
 
+void on_textview_font_change( GtkMenuItem* item, GtkWidget* dlg )
+{
+    GtkWidget* view_handler_compress = (GtkWidget*)g_object_get_data(
+                                            G_OBJECT( dlg ),
+                                            "view_handler_compress" );
+    GtkWidget* view_handler_extract = (GtkWidget*)g_object_get_data(
+                                            G_OBJECT( dlg ),
+                                            "view_handler_extract" );
+    GtkWidget* view_handler_list = (GtkWidget*)g_object_get_data(
+                                            G_OBJECT( dlg ),
+                                            "view_handler_list" );
+    char* fontname = xset_get_s( "context_dlg" );
+    PangoFontDescription* font_desc = fontname ?
+                        pango_font_description_from_string( fontname ) : NULL;
+    gtk_widget_modify_font( GTK_WIDGET( view_handler_compress ), font_desc );
+    gtk_widget_modify_font( GTK_WIDGET( view_handler_extract ), font_desc );
+    gtk_widget_modify_font( GTK_WIDGET( view_handler_list ), font_desc );
+    if ( font_desc )
+        pango_font_description_free( font_desc );
+}
+
+void on_textview_popup( GtkTextView *input, GtkMenu *menu, GtkWidget* dlg )
+{
+    // uses same xsets as item-prop.c:on_script_popup()
+    GtkAccelGroup* accel_group = gtk_accel_group_new();
+    XSet* set = xset_get( "sep_ctxt" );
+    set->menu_style = XSET_MENU_SEP;
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    set = xset_set_cb( "context_dlg", on_textview_font_change, dlg );
+    set->browser = NULL;
+    set->desktop = NULL;
+    xset_add_menuitem( NULL, NULL, GTK_WIDGET( menu ), accel_group, set );
+    
+    gtk_widget_show_all( GTK_WIDGET( menu ) );
+}
+
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
 {
     /*
@@ -1926,6 +1964,16 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                                         GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_handler_list_scroll ),
                                       view_handler_list );
+
+    // set fonts
+    on_textview_font_change( NULL, dlg );
+    // set textview popup menu event handlers
+    g_signal_connect_after( G_OBJECT( view_handler_compress ), "populate-popup",
+                        G_CALLBACK( on_textview_popup ), dlg );
+    g_signal_connect_after( G_OBJECT( view_handler_extract ), "populate-popup",
+                        G_CALLBACK( on_textview_popup ), dlg );
+    g_signal_connect_after( G_OBJECT( view_handler_list ), "populate-popup",
+                        G_CALLBACK( on_textview_popup ), dlg );
 
     g_object_set_data( G_OBJECT( dlg ), "dialog_mode",
                        GINT_TO_POINTER( mode ) );
