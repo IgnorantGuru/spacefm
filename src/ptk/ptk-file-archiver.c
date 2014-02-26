@@ -13,7 +13,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
-#include "item-prop.h"  // For get_text_view/load_text_view
+#include "desktop-window.h"
 #include "ptk-file-archiver.h"
 #include "ptk-file-task.h"
 #include "ptk-handler.h"
@@ -34,18 +34,6 @@ enum {
     // COL_XSET_NAME
     COL_HANDLER_EXTENSIONS = 1
 };
-
-#if 0
-static char* unescape_multiline_command( const char* command )
-{
-    // Dealing with escaped newlines and tabs in multiline command
-    char *str = NULL;
-    char *str1 = replace_string( command, "\\n", "\n", FALSE );
-    str = replace_string( str1, "\\t", "\t", FALSE );
-    g_free( str1 );
-    return str;
-}
-#endif
 
 static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 {
@@ -75,8 +63,8 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                                                      const char* type,
                                                      const char* extension,
                                                      int operation )
-{
-    gboolean format_supported = FALSE, mime_or_extension_support = FALSE;
+{   // this function must be FAST - is run multiple times on menu popup
+    gboolean mime_or_extension_support = FALSE;
     gchar *ext;
     int len;
     char* ptr;
@@ -140,73 +128,13 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                 }
             }
         }
-
-        if (mime_or_extension_support)
-        {
-            // too slow to open files to check for non-empty command here
-            format_supported = TRUE;
-        }
-
-#if 0
-        /* Checking if a found handler can cope with the requested
-         * operation - deal with possibility of empty command set to run
-         * in terminal, therefore '+' stored */
-            switch (operation)
-            {
-                case ARC_COMPRESS:
-                    
-                    if (handler_xset->y
-                        && g_strcmp0( handler_xset->y, "" ) != 0
-                        && g_strcmp0( handler_xset->y, "+" ) != 0)
-                    {
-                        /* Compression possible - setting flag and
-                         * breaking */
-                        format_supported = TRUE;
-                    }
-                    break;
-
-                case ARC_EXTRACT:
-
-                    if (handler_xset->z
-                        && g_strcmp0( handler_xset->z, "" ) != 0
-                        && g_strcmp0( handler_xset->z, "+" ) != 0)
-                    {
-                        /* Extraction possible - setting flag and
-                         * breaking */
-                        format_supported = TRUE;
-                    }
-                    break;
-
-                case ARC_LIST:
-
-                    if (handler_xset->context
-                    && g_strcmp0( handler_xset->context, "" ) != 0
-                    && g_strcmp0( handler_xset->context, "+" ) != 0)
-                    {
-                        /* Listing possible - setting flag and
-                         * breaking */
-                        format_supported = TRUE;
-                    }
-                    break;
-
-                default:
-
-                    /* Invalid archive operation passed - warning
-                     * user and exiting */
-                    g_warning("archive_handler_is_format_supported "
-                            "was passed an invalid archive operation ('%d') "
-                            "on type '%s'!", operation, type);
-                    format_supported = FALSE;
-                    break;
-            }
-#endif
     }
 
     // Clearing up
     g_free( ext );
 
     // Returning result
-    return format_supported;
+    return mime_or_extension_support;
 }
 
 static gboolean archive_handler_run_in_term( XSet* handler_xset,
@@ -333,13 +261,12 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free( new_name );
 
     // Loading command
-    // Dealing with '+' representing running in terminal
     if ( handler_xset )
     {
         GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ),
                                                                     "view" );
         char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
-                        HANDLER_COMPRESS, handler_xset, NULL,
+                        HANDLER_COMPRESS, handler_xset,
                         GTK_TEXT_VIEW( view ), NULL );
         if ( err_msg )
         {
@@ -358,6 +285,8 @@ static char* generate_bash_error_function( gboolean run_in_terminal )
      * the user can review the situation. Even outside a terminal, IG
      * has requested text is output
      * No translation for security purposes */
+/*igcr should the handle_error function also attempt to remove auto-created
+ * subdir?  eg 'rmdir ... 2>/dev/null' */
     char *error_pause = NULL, *finished_with_errors = NULL;
     if (run_in_terminal)
     {
@@ -584,7 +513,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
                                     &iter, g_strdup_printf( "%d", i ) ))
     {
-        // You have to fetch both items here
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
                             //COL_HANDLER_EXTENSIONS, &extensions,
@@ -592,7 +520,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
         if ( handler_xset = xset_is( xset_name ) )
         {
             char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
-                            HANDLER_COMPRESS, handler_xset, NULL,
+                            HANDLER_COMPRESS, handler_xset,
                             GTK_TEXT_VIEW( view ), NULL );
             if ( err_msg )
             {
@@ -679,6 +607,11 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     {
         if ( res == GTK_RESPONSE_OK )
         {
+            // Saving selected archive handler ordinal
+            str = g_strdup_printf( "%d", format );
+            xset_set( "arc_dlg", "z", str );
+            g_free( str );
+
             // Dialog OK'd - fetching archive filename
 /*igcr dest_file freed? */
             dest_file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
@@ -716,11 +649,16 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             gtk_text_buffer_get_end_iter( buf, &iter );
             command = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
 
-            // Saving selected archive handler ordinal
-            str = g_strdup_printf( "%d", format );
-            xset_set( "arc_dlg", "z", str );
-            g_free( str );
-
+            // reject command that contains only whitespace and comments
+            if ( ptk_handler_command_is_empty( command ) )
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                    _("Create Archive"), NULL, 0, 
+                                    _("The archive creation command is empty.  Please enter a command."),
+                                    NULL, NULL );
+                g_free( command );
+                continue;
+            }
 
 #if 0   // I don't like this warning here - users may have custom ways of doing
             /* This is duplicating GUI validation code but it is just
@@ -742,7 +680,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             )
             {
                 // It has/is - warning user
-/*igcr this looks like a very tall dialog - will fit on smaller (600) screens? */
+/* this looks like a very tall dialog - will fit on smaller (600) screens? */
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 _("Create Archive"), NULL, FALSE,
                                 _("The following substitution variables "
@@ -763,48 +701,74 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             }
 #endif
 
-            /* Checking to see if the archive handler compression command
-             * has changed */
-            if ( handler_xset->disable )
+            // Getting prior command for comparison
+            char* compress_cmd = NULL;
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                            HANDLER_COMPRESS, handler_xset,
+                            NULL, &compress_cmd );
+            if ( err_msg )
             {
-                /* Checking to see if the archive handler compression command
-                 * has changed from default command - this loads const command
-                 * Too complicated to test non-default command due to
-                 * script header.  */
-                char* compress_cmd = NULL;
-                char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
-                                HANDLER_COMPRESS, handler_xset,
-                                NULL, NULL, &compress_cmd );
-                if ( err_msg )
-                {
-                    g_free( err_msg );
-                    handler_xset->disable = FALSE;  // treat as command changed
-                }
-                else
-                {
-                    if ( g_strcmp0( command, compress_cmd ) )
-                        handler_xset->disable = FALSE;  // command changed, not default
-                }
-                g_free( compress_cmd );
+                g_warning( "%s", err_msg );
+                g_free( err_msg );
+                compress_cmd = g_strdup( "" );
             }
-            if ( !handler_xset->disable )
+            
+            // Checking to see if the compression command has changed
+            if ( g_strcmp0( compress_cmd, command ) )
             {
-                // handler is not default - saving command
-                char* err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                // command has changed - saving command
+                g_free( compress_cmd );
+                if ( handler_xset->disable )
+                {
+                    // commmand was default - need to save all commands
+                    // get default extract command from const
+                    compress_cmd = ptk_handler_get_command( HANDLER_MODE_ARC,
+                                        HANDLER_EXTRACT, handler_xset );
+                    // write extract command script
+                    err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_EXTRACT,
+                                                    handler_xset,
+                                                    NULL, compress_cmd );
+                    if ( err_msg )
+                    {
+                        g_warning( "%s", err_msg );
+                        g_free( err_msg );
+                    }
+                    g_free( compress_cmd );
+                    // get default list command from const
+                    compress_cmd = ptk_handler_get_command( HANDLER_MODE_ARC,
+                                        HANDLER_LIST, handler_xset );
+                    // write list command script
+                    err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_LIST,
+                                                    handler_xset,
+                                                    NULL, compress_cmd );
+                    if ( err_msg )
+                    {
+                        g_warning( "%s", err_msg );
+                        g_free( err_msg );
+                    }
+                    g_free( compress_cmd );
+                    handler_xset->disable = FALSE;  // not default handler now
+                }
+                // save updated compress command
+                err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
                                                     HANDLER_COMPRESS,
-                                                    handler_xset, NULL,
-                                                    GTK_TEXT_VIEW( view ) );
+                                                    handler_xset,
+                                                    NULL, command );
                 if ( err_msg )
                 {
                     xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
                                         _("Error Saving Handler"), NULL, 0, 
                                         err_msg, NULL, NULL );
                     g_free( err_msg );
-                }
-                
-                // Saving settings
-                xset_autosave( FALSE, FALSE );
+                }                
             }
+            else
+                g_free( compress_cmd );
+            
+            // Saving settings
+            xset_autosave( FALSE, FALSE );
             break;
         }
         else if ( res == GTK_RESPONSE_NONE )
@@ -900,8 +864,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             cmd_to_run = replace_string( cmd, "%N", desc, FALSE );
 
             // Dealing with remaining standard SpaceFM substitutions
-/*igcr the way you're doing this in two steps, what happens if a filename
- * contains eg "%d" ?  */
             s1 = cmd_to_run;
             cmd_to_run = replace_line_subs( cmd_to_run );
             g_free(s1);
@@ -1261,13 +1223,15 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             // It is - get command
             char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
                                             HANDLER_LIST, handler_xset,
-                                            NULL, NULL, &cmd );
+                                            NULL, &cmd );
             if ( err_msg )
             {
                 g_warning( err_msg, NULL );
                 g_free( err_msg );
                 cmd = g_strdup( "" );
             }
+/*igcr note there is no test here for empty command - okay to ignore?
+ * see ptk_handler_command_is_empty() */
 
             str = cmd;            
             cmd = replace_string( cmd, "%x", full_quote, FALSE );
@@ -1344,13 +1308,15 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
                                                     HANDLER_EXTRACT,
                                                     handler_xset,
-                                                    NULL, NULL, &cmd );
+                                                    NULL, &cmd );
             if ( err_msg )
             {
                 g_warning( err_msg, NULL );
                 g_free( err_msg );
                 cmd = g_strdup( "" );
             }
+/*igcr note there is no test here for empty command - okay to ignore?
+ * see ptk_handler_command_is_empty() */
 
             // Placeholders - Substituting archive to extract
             gchar* extract_cmd = replace_string( cmd, "%x", full_quote, FALSE );
@@ -1461,6 +1427,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         }
 
         // Building up final_command
+/*igcr this error trap works properly if cmd is multiline? */
         if (!final_command)
             final_command = g_strconcat( cmd, " || handle_error", NULL );
         else
@@ -1518,7 +1485,9 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 /*igcr exec_show_output = in_term correct? or !in_term ? Note that 
  * exec_show_output only has an effect if exec_sync == TRUE.  If so, it will
  * popup the task dialog on any stdout/stderr output.  show_error will only 
- * popup task dialog if exit status is !0 */
+ * popup task dialog if exit status is !0
+ * Set  exec_show_output = TRUE if you want task dialog to popup on any output
+ * - will not affect behavior in terminal */
     task->task->exec_show_output = in_term;
     task->task->exec_terminal = in_term;
     task->task->exec_keep_terminal = keep_term;
@@ -1541,7 +1510,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
                                                 const char* extension,
                                                 int operation )
-{
+{   // this function must be FAST - is run multiple times on menu popup
     const char* type;
     char* delim;
     char* ptr;

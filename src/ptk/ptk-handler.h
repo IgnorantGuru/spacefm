@@ -46,13 +46,13 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );
 XSet* add_new_handler( int mode );  // for settings.c upgrade
 char* ptk_handler_load_script( int mode, int cmd, XSet* handler_set,
-                               const char* xset_name, GtkTextView* view,
-                               char** text );
+                               GtkTextView* view, char** text );
 char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
-                               const char* xset_name, GtkTextView* view );
-char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set,
-                               const char* xset_name );
-                               
+                               GtkTextView* view, const char* command );
+char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set );
+gboolean ptk_handler_command_is_empty( const char* command );
+void ptk_handler_load_text_view( GtkTextView* view, const char* text );
+
 
 G_END_DECLS
 #endif

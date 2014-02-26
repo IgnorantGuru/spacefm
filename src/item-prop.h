@@ -54,8 +54,6 @@ enum {
     CONTEXT_END
 };
 
-char* get_text_view( GtkTextView* view );  // Exposed for use in ptk-handler.c
-void load_text_view( GtkTextView* view, const char* line );  // Exposed for use in ptk-handler.c
 void xset_item_prop_dlg( XSetContext* context, XSet* set, int page );
 int xset_context_test( XSetContext* context, char* rules, gboolean def_disable );
 

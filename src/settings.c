@@ -10925,6 +10925,7 @@ void xset_defaults()
     set = xset_set( "path_hand", "lbl", _("_Protocol Handlers") );
     xset_set_set( set, "icn", "gtk-preferences" );
     set->line = g_strdup( "#handlers-pro" );
+    xset_set_set( set, "shared_key", "dev_net_cnf" );
     // set->s was custom protocol handler in sfm<=0.9.3 - retained
 
     set = xset_set( "path_help", "lbl", _("Path Bar _Help") );

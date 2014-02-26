@@ -3340,29 +3340,34 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         return NULL;
                               
     // get command for action
-    char* command;
+    char* command = NULL;
     const char* action_s;
-    gboolean terminal = FALSE;
+    gboolean terminal;
+    char* err_msg = ptk_handler_load_script( mode, action, set, NULL,
+                                                                    &command );
+    if ( err_msg )
+    {
+        g_warning( "%s", err_msg );
+        g_free( err_msg );
+        return NULL;
+    }
     if ( action == HANDLER_MOUNT )
-    {   
-        command = g_strdup( set->y );
+    {
+        terminal = set->in_terminal == XSET_B_TRUE;
         action_s = "MOUNT";
     }
     else if ( action == HANDLER_UNMOUNT )
     {
-        command = g_strdup( set->z );
+        terminal = set->keep_terminal == XSET_B_TRUE;
         action_s = "UNMOUNT";
     }
     else if ( action == HANDLER_PROP )
     {
-        command = g_strdup( set->context );
+        terminal = set->scroll_lock == XSET_B_TRUE;
         action_s = "PROPERTIES";
     }
     else
-    {
-        command = NULL;
-        action_s = "invalid";
-    }
+        return NULL;
     
     // show selected handler
     printf( "\n%s '%s': %s%s %s\n", mode == HANDLER_MODE_FS ?
@@ -3373,44 +3378,9 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               command ? "" : " (no command)",
                               msg );
 
-    if ( !command )
-        return NULL;
-    if ( command[0] == '+' )
+    if ( ptk_handler_command_is_empty( command ) )
     {
-        terminal = TRUE;
-        str = command;
-        command = g_strdup( command + 1 );
-        g_free( str );
-    }
-
-    // decode newlines and tabs
-    str = replace_string( command, "\\n", "\n", FALSE );
-    g_free( command );
-    command = replace_string( str, "\\t", "\t", FALSE );
-    g_free( str );
-
-    // test if command contains only comments and whitespace
-    gchar** lines = g_strsplit( command, "\n", 0 );
-    if ( !lines )
-    {
-        g_free( command );
-        return NULL;
-    }
-
-    found = FALSE;
-    for ( i = 0; lines[i]; i++ )
-    {
-        g_strstrip( lines[i] );
-        if ( lines[i][0] != '\0' && lines[i][0] != '#' )
-        {
-            found = TRUE;
-            break;
-        }
-    }
-    g_strfreev( lines );
-    if ( !found )
-    {
-        // no non-empty command, so return NULL for automatic command
+        // empty command
         g_free( command );
         return NULL;
     }
