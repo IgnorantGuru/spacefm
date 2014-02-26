@@ -3520,7 +3520,9 @@ char* xset_custom_get_script( XSet* set, gboolean create )
     char* old_path;
     char* cscript;
 
-    if ( strncmp( set->name, "cstm_", 5 ) || ( create && set->plugin ) )
+    if ( ( strncmp( set->name, "cstm_", 5 ) && strncmp( set->name, "cust", 4 )
+                                            && strncmp( set->name, "hand", 4 ) )
+                                            || ( create && set->plugin ) )
         return NULL;
 
     if ( create )

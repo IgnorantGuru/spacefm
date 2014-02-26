@@ -35,7 +35,7 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
-
+#if 0
 static char* unescape_multiline_command( const char* command )
 {
     // Dealing with escaped newlines and tabs in multiline command
@@ -45,6 +45,7 @@ static char* unescape_multiline_command( const char* command )
     g_free( str1 );
     return str;
 }
+#endif
 
 static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 {
@@ -140,15 +141,20 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
             }
         }
 
+        if (mime_or_extension_support)
+        {
+            // too slow to open files to check for non-empty command here
+            format_supported = TRUE;
+        }
+
+#if 0
         /* Checking if a found handler can cope with the requested
          * operation - deal with possibility of empty command set to run
          * in terminal, therefore '+' stored */
-        if (mime_or_extension_support)
-        {
             switch (operation)
             {
                 case ARC_COMPRESS:
-
+                    
                     if (handler_xset->y
                         && g_strcmp0( handler_xset->y, "" ) != 0
                         && g_strcmp0( handler_xset->y, "+" ) != 0)
@@ -193,7 +199,7 @@ static gboolean archive_handler_is_format_supported( XSet* handler_xset,
                     format_supported = FALSE;
                     break;
             }
-        }
+#endif
     }
 
     // Clearing up
@@ -214,29 +220,20 @@ static gboolean archive_handler_run_in_term( XSet* handler_xset,
         return FALSE;
     }
 
-    // Dealing with different operations
-    switch (operation)
+    int ret;
+    if ( operation == ARC_COMPRESS )
+        ret = handler_xset->in_terminal;
+    else if ( operation == ARC_EXTRACT )
+        ret = handler_xset->keep_terminal;
+    else if ( operation == ARC_LIST )
+        ret = handler_xset->scroll_lock;
+    else
     {
-        case ARC_COMPRESS:
-
-            return handler_xset->y && *handler_xset->y == '+';
-
-        case ARC_EXTRACT:
-
-            return handler_xset->z && *handler_xset->z == '+';
-
-        case ARC_LIST:
-
-            return handler_xset->context && *handler_xset->context == '+';
-
-        default:
-
-            // Invalid archive operation passed - warning user and
-            // exiting
-            g_warning("archive_handler_run_in_term was passed an invalid"
-            " archive operation ('%d')!", operation);
-            return FALSE;
+        g_warning("archive_handler_run_in_term was passed an invalid"
+                    " archive operation ('%d')!", operation);
+        return FALSE;
     }
+    return ret == XSET_B_TRUE;
 }
 
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
@@ -273,13 +270,12 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 
     // Loop through available handlers
     XSet* handler_xset;
-    gchar* xset_name, *extensions, *extension;
+    gchar* xset_name = NULL, *extension;
     do
     {
-/*igcr memory leaks - free xset_name extensions */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
-                            COL_HANDLER_EXTENSIONS, &extensions,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
                             -1 );
         if ( handler_xset = xset_is( xset_name ) )
         {
@@ -295,6 +291,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
                     len = strlen( extension );
             }
         }
+        g_free( xset_name );
     }
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
 
@@ -312,10 +309,9 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     if ( gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter ) )
     {
         // You have to fetch both items here
-/*igcr memory leaks - free xset_name extensions -  why fetch extensions? */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
-                            COL_HANDLER_EXTENSIONS, &extensions,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
                             -1 );
         if ( handler_xset = xset_is( xset_name ) )
         {
@@ -328,6 +324,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
             // Updating new archive filename
             gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
         }
+        g_free( xset_name );
     }
 
     // Cleaning up
@@ -335,26 +332,22 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
     g_free( extension );
     g_free( new_name );
 
-    // Updating command
+    // Loading command
     // Dealing with '+' representing running in terminal
     if ( handler_xset )
     {
-        gchar* compress_cmd;
-        if ( handler_xset->y && handler_xset->y[0] == '+' )
-        {
-            compress_cmd = g_strdup( handler_xset->y + 1 );
-        }
-        else
-        {
-/*igcr compress_cmd will be NULL now if !handler_xset->y  ok? */
-            compress_cmd = g_strdup( handler_xset->y );
-        }
-        // Fetching reference to entry in dialog
         GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ),
                                                                     "view" );
-
-        load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
-        g_free(compress_cmd);
+        char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                        HANDLER_COMPRESS, handler_xset, NULL,
+                        GTK_TEXT_VIEW( view ), NULL );
+        if ( err_msg )
+        {
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                _("Error Loading Handler"), NULL, 0, 
+                                err_msg, NULL, NULL );
+            g_free( err_msg );
+        }
     }
 }
 
@@ -515,15 +508,19 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
         // Fetching handler
         handler_xset = xset_is( archive_handlers[i] );
 
-        /* Checking to see if handler is enabled, can cope with
-         * compression and the extension is set - dealing with empty
-         * command yet 'run in terminal' still ticked */
-        if ( handler_xset && handler_xset->b == XSET_B_TRUE && handler_xset->y
+        if ( handler_xset && handler_xset->b == XSET_B_TRUE )
+/*igcr now too slow to load files here - empty command is okay - give a 
+             * warning if user attempts to create archive with no command 
+             * was:
+             * Checking to see if handler is enabled, can cope with
+             * compression and the extension is set - dealing with empty
+             * command yet 'run in terminal' still ticked
+                                   && handler_xset->y
                                    && g_strcmp0( handler_xset->y, "" ) != 0
                                    && g_strcmp0( handler_xset->y, "+" ) != 0
-                                   && g_strcmp0( handler_xset->x, "" ) != 0)
+                                   && g_strcmp0( handler_xset->x, "" ) != 0) */
         {
-            /* It can - adding to filter so that only relevant archives
+            /* Adding to filter so that only relevant archives
              * are displayed when the user chooses an archive name to
              * create. Note that the handler may be responsible for
              * multiple MIME types and extensions */
@@ -534,14 +531,13 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
 
             // Adding to model
-/*igcr memory leaks - free these */
-            xset_name = g_strdup( archive_handlers[i] );
             extensions = g_strconcat( handler_xset->menu_label, " (",
                                       handler_xset->x, ")", NULL );
             gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
-                                COL_XSET_NAME, xset_name,
+                                COL_XSET_NAME, archive_handlers[i],
                                 COL_HANDLER_EXTENSIONS, extensions,
                                 -1 );
+            g_free( extensions );
         }
     }
 
@@ -584,32 +580,30 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     g_object_set_data( G_OBJECT( dlg ), "view", view );
 
     // Obtaining iterator from string turned into a path into the model
-    gchar* compress_cmd;
 /*igcr memory leak - g_strdup_printf passed */
     if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
                                     &iter, g_strdup_printf( "%d", i ) ))
     {
         // You have to fetch both items here
-/*igcr memory leaks - free these */
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
-                            COL_HANDLER_EXTENSIONS, &extensions,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
                             -1 );
         if ( handler_xset = xset_is( xset_name ) )
         {
-            // Dealing with '+' representing running in terminal
-            if ( handler_xset->y && handler_xset->y[0] == '+' )
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                            HANDLER_COMPRESS, handler_xset, NULL,
+                            GTK_TEXT_VIEW( view ), NULL );
+            if ( err_msg )
             {
-                compress_cmd = g_strdup( handler_xset->y + 1 );
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                    _("Error Loading Handler"), NULL, 0, 
+                                    err_msg, NULL, NULL );
+                g_free( err_msg );
             }
-            else
-            {
-                compress_cmd = g_strdup( handler_xset->y );
-            }
-            load_text_view( GTK_TEXT_VIEW( view ), compress_cmd );
-            g_free(compress_cmd);
-            compress_cmd = NULL;
+
         }
+        g_free( xset_name );
     }
     else
     {
@@ -701,38 +695,34 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             }
 
             // Fetching model data
-/*igcr memory leaks - free these */
             gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                                 COL_XSET_NAME, &xset_name,
-                                COL_HANDLER_EXTENSIONS, &extensions,
+                                //COL_HANDLER_EXTENSIONS, &extensions,
                                 -1 );
-/*igcr use xset_is instead and test for non-NULL handler_xset ? in the event
- * of model corruption this would avoid junk being added to session file */
-            handler_xset = xset_get( xset_name );
 
-            // Fetching normal compression command and whether it should
+            handler_xset = xset_get( xset_name );
+            g_free( xset_name );
+            
             // run in the terminal or not
-            if ( handler_xset->y && handler_xset->y[0] == '+' )
-            {
-                compress_cmd = g_strdup( handler_xset->y + 1 );
-                run_in_terminal = TRUE;
-            }
-            else
-            {
-/*igcr compress_cmd may be set NULL here if !handler_xset->y ok? */
-                compress_cmd = g_strdup( handler_xset->y );
-                run_in_terminal = FALSE;
-            }
+            run_in_terminal = handler_xset->in_terminal == XSET_B_TRUE;
 
             // Fetching user-selected handler data
             format = gtk_combo_box_get_active( GTK_COMBO_BOX( combo ) );
-            command = get_text_view( GTK_TEXT_VIEW( view ) );
+
+            // Get command from text view
+            GtkTextBuffer* buf = gtk_text_view_get_buffer( view );
+            GtkTextIter iter, siter;
+            gtk_text_buffer_get_start_iter( buf, &siter );
+            gtk_text_buffer_get_end_iter( buf, &iter );
+            command = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
 
             // Saving selected archive handler ordinal
             str = g_strdup_printf( "%d", format );
             xset_set( "arc_dlg", "z", str );
             g_free( str );
 
+
+#if 0   // I don't like this warning here - users may have custom ways of doing
             /* This is duplicating GUI validation code but it is just
              * not worth spinning out a series of validation functions
              * for this
@@ -771,30 +761,50 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( view ) );
             }
+#endif
 
-            // Checking to see if the archive handler compression command
-            // has changed
-            if (g_strcmp0( command, compress_cmd ) != 0)
+            /* Checking to see if the archive handler compression command
+             * has changed */
+            if ( handler_xset->disable )
             {
-                // It has - saving, taking into account running in
-                // terminal
-/*igcr memory leak here - passing g_strconcat */
-                xset_set_set( handler_xset, "y", run_in_terminal ? 
-                                g_strconcat( "+", command, NULL ) : command );
-                // prevent saving of default handlers later in session
-                handler_xset->disable = ptk_handler_equals_default( handler_xset );
+                /* Checking to see if the archive handler compression command
+                 * has changed from default command - this loads const command
+                 * Too complicated to test non-default command due to
+                 * script header.  */
+                char* compress_cmd = NULL;
+                char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                                HANDLER_COMPRESS, handler_xset,
+                                NULL, NULL, &compress_cmd );
+                if ( err_msg )
+                {
+                    g_free( err_msg );
+                    handler_xset->disable = FALSE;  // treat as command changed
+                }
+                else
+                {
+                    if ( g_strcmp0( command, compress_cmd ) )
+                        handler_xset->disable = FALSE;  // command changed, not default
+                }
+                g_free( compress_cmd );
+            }
+            if ( !handler_xset->disable )
+            {
+                // handler is not default - saving command
+                char* err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_COMPRESS,
+                                                    handler_xset, NULL,
+                                                    GTK_TEXT_VIEW( view ) );
+                if ( err_msg )
+                {
+                    xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                        _("Error Saving Handler"), NULL, 0, 
+                                        err_msg, NULL, NULL );
+                    g_free( err_msg );
+                }
                 
                 // Saving settings
                 xset_autosave( FALSE, FALSE );
             }
-
-            // Dealing with multiline command
-            g_free( compress_cmd );
-            compress_cmd = command;
-            command = unescape_multiline_command( command );
-            g_free( compress_cmd );
-
-            // Exiting loop
             break;
         }
         else if ( res == GTK_RESPONSE_NONE )
@@ -1248,11 +1258,20 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         // Checking if the operation is to list an archive(s)
         if ( list_contents )
         {
-            // It is - generating appropriate command, dealing with 'run
-            // in terminal'
-            cmd = replace_string( (*handler_xset->context == '+') ?
-                    handler_xset->context + 1 : handler_xset->context,
-                    "%x", full_quote, FALSE );
+            // It is - get command
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                                            HANDLER_LIST, handler_xset,
+                                            NULL, NULL, &cmd );
+            if ( err_msg )
+            {
+                g_warning( err_msg, NULL );
+                g_free( err_msg );
+                cmd = g_strdup( "" );
+            }
+
+            str = cmd;            
+            cmd = replace_string( cmd, "%x", full_quote, FALSE );
+            g_free( str );
         }
         else
         {
@@ -1277,7 +1296,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                     //g_message( "extensions[i]: %s", extensions[i]);
 
                     // Checking if the current extension is being used
-/*igcr dot handled correctly? */
                     if (g_str_has_suffix( filename, extensions[i] ))
                     {
                         // It is - determining filename without extension
@@ -1320,17 +1338,24 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             // Cleaning up
             g_free( filename );
 
-            /* Determining extraction command - dealing with 'run in
+            /* Get extraction command - dealing with 'run in
              * terminal' and multiline command. Doing this here as parent
              * directory creation needs access to the command. */
-            str = unescape_multiline_command( 
-                            ( handler_xset->z && *handler_xset->z == '+' ) ?
-                            handler_xset->z + 1 : handler_xset->z );
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                                                    HANDLER_EXTRACT,
+                                                    handler_xset,
+                                                    NULL, NULL, &cmd );
+            if ( err_msg )
+            {
+                g_warning( err_msg, NULL );
+                g_free( err_msg );
+                cmd = g_strdup( "" );
+            }
 
             // Placeholders - Substituting archive to extract
-            gchar* extract_cmd = replace_string( str, "%x", full_quote,
-                                          FALSE );
-            g_free( str );
+            gchar* extract_cmd = replace_string( cmd, "%x", full_quote, FALSE );
+            g_free( cmd );
+            cmd = NULL;
 
             /* Dealing with creation of parent directory if needed -
              * never create a parent directory if '%G' is used - this is

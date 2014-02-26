@@ -45,6 +45,14 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );
 XSet* add_new_handler( int mode );  // for settings.c upgrade
+char* ptk_handler_load_script( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name, GtkTextView* view,
+                               char** text );
+char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name, GtkTextView* view );
+char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name );
+                               
 
 G_END_DECLS
 #endif

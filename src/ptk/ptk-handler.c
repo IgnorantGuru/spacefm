@@ -12,6 +12,7 @@
 #include <glib/gi18n.h>
 #include <string.h>
 #include <fnmatch.h>
+#include <errno.h>
 
 #include "ptk-handler.h"
 #include "exo-tree-view.h"
@@ -59,6 +60,15 @@ const char* dialog_titles[] =
     N_("Protocol Handlers")
 };
 
+const char* modes[] = { "archive", "device", "protocol" };
+const char* cmds_arc[] = { "compress", "extract", "list" };
+const char* cmds_mnt[] = { "mount", "unmount", "info" };
+
+/* don't change this script header or it will break header detection on 
+ * existing scripts! */
+const char* script_header = "#!/bin/bash\n$fm_import\n";
+
+
 #define MOUNT_EXAMPLE "# Enter mount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable a mount command)\n#\n# # udevil:\n#     udevil mount -o '%o' %v\n#\n# # pmount: (does not accept mount options)\n#     pmount %v\n#\n# # udisks v2:\n#     udisksctl mount -b %v -o '%o'\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
 
 #define UNMOUNT_EXAMPLE "# Enter unmount command or leave blank for auto:\n\n\n# # Examples: (remove # to enable an unmount command)\n#\n# # udevil:\n#     udevil umount %v\n#\n# # pmount:\n#     pumount %v\n#\n# # udisks v2:\n#     udisksctl unmount -b %v\n#\n# # udisks v1: (enable all three lines!)\n#     fm_udisks=`udisks --unmount %v 2>&1`\n#     echo \"$fm_udisks\"\n#     [[ \"$fm_udisks\" = \"${fm_udisks/ount failed:/}\" ]]\n\n"
@@ -67,14 +77,18 @@ const char* dialog_titles[] =
 
 typedef struct _Handler
 {
+                                // enabled           set->b
     const char* xset_name;      //                   set->name
     const char* handler_name;   //                   set->menu_label
     const char* type;           // or whitelist      set->s
     const char* ext;            // or blacklist      set->x
     const char* compress_cmd;   // or mount          set->y
+    gboolean compress_term;     //                   set->in_terminal
     const char* extract_cmd;    // or unmount        set->z
+    gboolean extract_term;      //                   set->keep_terminal
     const char* list_cmd;       // or info           set->context
-                                // enabled           set->b
+    gboolean list_term;         //                   set->scroll_lock
+    
     // note: xset menu_labels are not saved unless !lock
     // set->lock = FALSE;
     // if handler equals default, don't save in session
@@ -106,9 +120,12 @@ const Handler handlers_arc[]=
         "7-Zip",
         "application/x-7z-compressed",
         ".7z",
-        "+\"$(which 7za || echo 7zr)\" a %o %N",
-        "+\"$(which 7za || echo 7zr)\" x %x",
-        "+\"$(which 7za || echo 7zr)\" l %x"
+        "\"$(which 7za || echo 7zr)\" a %o %N",
+        TRUE,
+        "\"$(which 7za || echo 7zr)\" x %x",
+        TRUE,
+        "\"$(which 7za || echo 7zr)\" l %x",
+        TRUE
     },
     {
         "handarc_gz",
@@ -116,17 +133,23 @@ const Handler handlers_arc[]=
         "application/x-gzip application/x-gzpdf application/gzip",
         ".gz",
         "gzip -c %N > %O",
+        FALSE,
         "gzip -cd %x > %G",
-        "+gunzip -l %x"
+        FALSE,
+        "gunzip -l %x",
+        TRUE
     },
     {
         "handarc_rar",
         "RAR",
         "application/x-rar",
         ".rar",
-        "+rar a -r %o %N",
-        "+unrar -o- x %x",
-        "+unrar lt %x"
+        "rar a -r %o %N",
+        TRUE,
+        "unrar -o- x %x",
+        TRUE,
+        "unrar lt %x",
+        TRUE
     },
     {
         "handarc_tar",
@@ -134,8 +157,11 @@ const Handler handlers_arc[]=
         "application/x-tar",
         ".tar",
         "tar -cvf %o %N",
+        FALSE,
         "tar -xvf %x",
-        "+tar -tvf %x"
+        FALSE,
+        "tar -tvf %x",
+        TRUE
     },
     {
         "handarc_tar_bz2",
@@ -143,8 +169,11 @@ const Handler handlers_arc[]=
         "application/x-bzip-compressed-tar",
         ".tar.bz2",
         "tar -cvjf %o %N",
+        FALSE,
         "tar -xvjf %x",
-        "+tar -tvf %x"
+        FALSE,
+        "tar -tvf %x",
+        TRUE
     },
     {
         "handarc_tar_gz",
@@ -152,8 +181,11 @@ const Handler handlers_arc[]=
         "application/x-compressed-tar",
         ".tar.gz .tgz",
         "tar -cvzf %o %N",
+        FALSE,
         "tar -xvzf %x",
-        "+tar -tvf %x"
+        FALSE,
+        "tar -tvf %x",
+        TRUE
     },
     {
         "handarc_tar_xz",
@@ -161,17 +193,23 @@ const Handler handlers_arc[]=
         "application/x-xz-compressed-tar",
         ".tar.xz .txz",
         "tar -cvJf %o %N",
+        FALSE,
         "tar -xvJf %x",
-        "+tar -tvf %x"
+        FALSE,
+        "tar -tvf %x",
+        TRUE
     },
     {
         "handarc_zip",
         "Zip",
         "application/x-zip application/zip",
         ".zip",
-        "+zip -r %o %N",
-        "+unzip %x",
-        "+unzip -l %x"
+        "zip -r %o %N",
+        TRUE,
+        "unzip %x",
+        TRUE,
+        "unzip -l %x",
+        TRUE
     }
 };
 
@@ -202,8 +240,11 @@ const Handler handlers_fs[]=
         "file *fuseiso",
         "",
         "fuseiso %v %a",
+        FALSE,
         "fusermount -u %a",
-        "grep \"%a\" ~/.mtab.fuseiso"
+        FALSE,
+        "grep \"%a\" ~/.mtab.fuseiso",
+        FALSE
     },
     {
         "handfs_udiso",
@@ -211,8 +252,11 @@ const Handler handlers_fs[]=
         "file iso9660",
         "",
         "uout=\"$(udevil mount %v)\"\nerr=$?; echo \"$uout\"\n[[ $err -ne 0 ]] && exit 1\npoint=\"${uout#Mounted }\"\n[[ \"$point\" = \"$uout\" ]] && exit 0\npoint=\"${point##* at }\"\n[[ -d \"$point\" ]] && spacefm \"$point\" &\n",
+        FALSE,
         "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount %a\n",
-        INFO_EXAMPLE
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     },
     {
         "handfs_def",
@@ -220,8 +264,11 @@ const Handler handlers_fs[]=
         "*",
         "",
         MOUNT_EXAMPLE,
+        FALSE,
         UNMOUNT_EXAMPLE,
-        INFO_EXAMPLE
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     }
 };
 
@@ -255,18 +302,24 @@ const Handler handlers_net[]=
         "ftp",
         "ftp",
         "",
-        "+options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
+        "options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
+        TRUE,
         "fusermount -u \"%a\"",
-        INFO_EXAMPLE
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     },
     {
         "handnet_ssh",
         "ssh",
         "ssh mtab_fs=fuse.sshfs",
         "",
-        "+[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
+        "[[ -n \"$fm_url_user\" ]] && fm_url_user=\"${fm_url_user}@\"\n[[ -z \"$fm_url_port\" ]] && fm_url_port=22\necho \">>> sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a\"\necho\n# Run sshfs through nohup to prevent disconnect on terminal close\nsshtmp=\"$(mktemp --tmpdir spacefm-ssh-output-XXXXXXXX.tmp)\" || exit 1\nnohup sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a &> \"$sshtmp\"\nerr=$?\n[[ -e \"$sshtmp\" ]] && cat \"$sshtmp\" ; rm -f \"$sshtmp\"\n[[ $err -eq 0 ]]  # set error status\n\n# Alternate Method - if enabled, disable nohup line above and\n#                    uncheck Run In Terminal\n# # Run sshfs in a terminal without SpaceFM task.  sshfs disconnects when the\n# # terminal is closed\n# spacefm -s run-task cmd --terminal \"echo 'Connecting to $fm_url'; echo; sshfs -p $fm_url_port $fm_url_user$fm_url_host:$fm_url_path %a; if [ $? -ne 0 ]; then echo; echo '[ Finished ] Press Enter to close'; else echo; echo 'Press Enter to close (closing this window may unmount sshfs)'; fi; read\" & sleep 1\n",
+        TRUE,
         "fusermount -u %a",
-        INFO_EXAMPLE
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     },
     {
         "handnet_udevil",
@@ -274,8 +327,11 @@ const Handler handlers_net[]=
         "ftp http https nfs smb ssh mtab_fs=fuse*",
         "",
         "udevil mount \"$fm_url\"",
+        FALSE,
         "udevil umount \"%a\"",
-        INFO_EXAMPLE
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     }
 };
 
@@ -285,6 +341,320 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
                                                 gpointer user_data );
 static void restore_defaults( GtkWidget* dlg, gboolean all );
 static gboolean validate_handler( GtkWidget* dlg, int mode );
+
+#if 0  // gets scripts name or const command - not used
+char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name )
+{
+    // get xset
+    if ( !handler_set )
+    {
+        if ( !( xset_name && ( handler_set = xset_is( xset_name ) ) ) )
+            return NULL;
+    }
+    if ( handler_set->disable )
+    {
+        // is default handler - get command from const char
+        const Handler* handler;
+        int i, nelements;
+        const char* command;
+        char* str;
+        
+        if ( mode == HANDLER_MODE_ARC )
+            nelements = G_N_ELEMENTS( handlers_arc );
+        else if ( mode == HANDLER_MODE_FS )
+            nelements = G_N_ELEMENTS( handlers_fs );
+        else if  ( mode == HANDLER_MODE_NET )
+            nelements = G_N_ELEMENTS( handlers_net );
+        else
+            return NULL;
+
+        for ( i = 0; i < nelements; i++ )
+        {
+            if ( mode == HANDLER_MODE_ARC )
+                handler = &handlers_arc[i];
+            else if ( mode == HANDLER_MODE_FS )
+                handler = &handlers_fs[i];
+            else
+                handler = &handlers_net[i];
+
+            if ( !strcmp( handler->xset_name, handler_set->name ) )
+            {
+                // found default handler
+                if ( cmd == HANDLER_COMPRESS )
+                    command = handler->compress_cmd;
+                else if ( cmd == HANDLER_EXTRACT )
+                    command = handler->extract_cmd;
+                else
+                    command = handler->list_cmd;
+                return g_strdup( command );
+            }
+        }
+        return NULL;
+    }
+    // get default script path
+    char* def_script = xset_custom_get_script( handler_set, FALSE );
+    if ( !def_script )
+    {
+        g_warning( "get_handler_script unable to get script for custom %s",
+                                                        handler_set->name );
+        return NULL;
+    }
+    // name script
+    char* str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
+                                mode == HANDLER_MODE_ARC ?
+                                        cmds_arc[cmd] : cmds_mnt[cmd] );
+    char* script = replace_string( def_script, "/exec.sh", str, FALSE );
+    g_free( str );
+    g_free( def_script );
+    if ( g_file_test( script, G_FILE_TEST_EXISTS ) )
+        return script;
+    g_warning( "ptk_handler_get_command missing script for custom %s",
+                                                        handler_set->name );
+    g_free( script );
+    return NULL;
+}
+#endif
+
+char* ptk_handler_load_script( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name, GtkTextView* view,
+                               char** text )
+{
+    /* places command in textview buffer or char**
+     * handler_set or xset_name required */
+    GtkTextBuffer* buf = NULL;
+    GString* gstr = NULL;
+
+    if ( text )
+        *text = NULL;
+    if ( !view && !text )
+        return g_strdup( _("Error: unable to load command (internal error)") );
+    // get xset
+    if ( !handler_set )
+    {
+        if ( !( xset_name && ( handler_set = xset_is( xset_name ) ) ) )
+            return g_strdup( _("Error: unable to load command (internal error)") );
+    }
+    if ( view )
+    {
+        buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( view ) );
+        gtk_text_buffer_set_text( buf, "", -1 );
+    }
+
+    if ( handler_set->disable )
+    {
+        // is default handler - get contents from const char
+        const Handler* handler;
+        int i, nelements;
+        const char* command;
+
+        if ( mode == HANDLER_MODE_ARC )
+            nelements = G_N_ELEMENTS( handlers_arc );
+        else if ( mode == HANDLER_MODE_FS )
+            nelements = G_N_ELEMENTS( handlers_fs );
+        else if  ( mode == HANDLER_MODE_NET )
+            nelements = G_N_ELEMENTS( handlers_net );
+        else
+            return g_strdup( _("Error: unable to load command (internal error)") );
+
+        for ( i = 0; i < nelements; i++ )
+        {
+            if ( mode == HANDLER_MODE_ARC )
+                handler = &handlers_arc[i];
+            else if ( mode == HANDLER_MODE_FS )
+                handler = &handlers_fs[i];
+            else
+                handler = &handlers_net[i];
+
+            if ( !strcmp( handler->xset_name, handler_set->name ) )
+            {
+                // found default handler
+                if ( cmd == HANDLER_COMPRESS )
+                    command = handler->compress_cmd;
+                else if ( cmd == HANDLER_EXTRACT )
+                    command = handler->extract_cmd;
+                else
+                    command = handler->list_cmd;   
+                if ( view )
+                    gtk_text_buffer_insert_at_cursor( buf, command, -1 );
+                else
+                    *text = g_strdup( command );
+                return NULL; // success
+            }
+        }
+        return g_strdup( _("Error: unable to load command (internal error)") );
+    }
+    
+    // get default script path
+    char* def_script = xset_custom_get_script( handler_set, FALSE );
+    if ( !def_script )
+    {
+        g_warning( "get_handler_script unable to get script for custom %s",
+                                                        handler_set->name );
+        return g_strdup( _("Error: unable to save command (can't get script path?)") );
+    }
+    // name script
+    char* str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
+                                mode == HANDLER_MODE_ARC ?
+                                        cmds_arc[cmd] : cmds_mnt[cmd] );
+    char* script = replace_string( def_script, "/exec.sh", str, FALSE );
+    g_free( str );
+    g_free( def_script );
+
+    // load script
+    //gboolean modified = FALSE;
+    char line[ 4096 ];
+    FILE* file = 0;
+
+    if ( !view )
+        gstr = g_string_new( "" );
+
+    if ( g_file_test( script, G_FILE_TEST_EXISTS ) )
+    {
+        if ( file = fopen( script, "r" ) )
+        {
+            // read file one line at a time to prevent splitting UTF-8 characters
+            while ( fgets( line, sizeof( line ), file ) )
+            {
+                if ( !g_utf8_validate( line, -1, NULL ) )
+                {
+                    fclose( file );
+                    if ( view )
+                        gtk_text_buffer_set_text( buf, "", -1 );
+                    else
+                        g_string_erase( gstr, 0, -1 );
+                    //modified = TRUE;
+                    g_warning( _("file '%s' contents are not valid UTF-8"),
+                                                            script );
+                    break;
+                }
+                if ( view )
+                    gtk_text_buffer_insert_at_cursor( buf, line, -1 );
+                else
+                    g_string_append( gstr, line );
+            }
+            if ( fclose( file ) != 0 )
+                goto _read_error;
+        }
+        else
+            goto _read_error;
+
+        // check for header
+        if ( view )
+        {
+            GtkTextIter start_iter, end_iter;
+            gtk_text_buffer_get_iter_at_offset( buf, &end_iter, strlen( script_header ) );
+            gtk_text_buffer_get_start_iter( buf, &start_iter );
+            char* header = gtk_text_buffer_get_text( buf, &start_iter, &end_iter, FALSE );
+            if ( !g_strcmp0( header, script_header ) )
+            {
+                // standard header - remove from viewed text
+                gtk_text_buffer_delete( buf, &start_iter, &end_iter );
+            }
+            g_free( header );
+        }
+    }
+    g_free( script );
+    
+    if ( !view )
+        *text = g_string_free( gstr, FALSE );
+    
+    //gtk_text_view_set_editable( GTK_TEXT_VIEW( view ), !file ||
+    //                                        have_rw_access( script ) );
+    //gtk_text_buffer_set_modified( buf, modified );
+    //command_script_stat(  );
+    return NULL;  // success
+
+_read_error:
+    if ( file )
+        fclose( file );
+    str = g_strdup_printf( "%s '%s':\n\n%s", _("Error reading file"), script,
+                                                        g_strerror( errno ) );
+    g_free( script ); 
+    if ( !view )
+        g_string_free( gstr, TRUE );
+    return str;
+}
+
+char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
+                               const char* xset_name, GtkTextView* view )
+{
+    /* writes command in textview buffer to script
+     * handler_set or xset_name required */
+    if ( !view )
+        return g_strdup( _("Error: unable to save command (internal error)") );
+    // get xset
+    if ( !handler_set )
+    {
+        if ( !( xset_name && ( handler_set = xset_is( xset_name ) ) ) &&
+                                            handler_set->disable == FALSE )
+            return g_strdup( _("Error: unable to save command (internal error)") );
+    }
+    // get default script path
+    char* def_script = xset_custom_get_script( handler_set, FALSE );
+    if ( !def_script )
+    {
+        g_warning( "save_handler_script unable to get script for custom %s",
+                                                        handler_set->name );
+        return g_strdup( _("Error: unable to save command (can't get script path?)") );
+    }
+    // create parent dir
+    char* parent_dir = g_path_get_dirname( def_script );
+    if ( !g_file_test( parent_dir, G_FILE_TEST_IS_DIR ) )
+    {
+        g_mkdir_with_parents( parent_dir, 0700 );
+        chmod( parent_dir, 0700 );
+    }
+    g_free( parent_dir );
+    // name script
+    char* str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
+                                mode == HANDLER_MODE_ARC ?
+                                        cmds_arc[cmd] : cmds_mnt[cmd] );
+    char* script = replace_string( def_script, "/exec.sh", str, FALSE );
+    g_free( str );
+    g_free( def_script );
+
+    // get text
+    GtkTextBuffer* buf = gtk_text_view_get_buffer( GTK_TEXT_VIEW( view ) );
+    GtkTextIter iter, siter;
+    gtk_text_buffer_get_start_iter( buf, &siter );
+    gtk_text_buffer_get_end_iter( buf, &iter );
+    char* text = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
+//printf("WRITE %s = %s\n", script, text );
+    // write script
+    FILE* file = 0;
+    if ( file = fopen( script, "w" ) )
+    {
+        if ( !g_str_has_prefix( text, "#!" ) )
+        {
+            // user did not include a script header, so use default
+            if ( fputs( script_header, file ) < 0 )
+                goto _write_error;
+        }
+        if ( text && fputs( text, file ) < 0 )
+            goto _write_error;
+        if ( !g_str_has_suffix( text, "\n" ) && fputs( "\n", file ) < 0 )
+            goto _write_error;
+        if ( fclose( file ) != 0 )
+            goto _write_error;
+        if ( chmod( script, S_IRUSR | S_IWUSR | S_IXUSR ) != 0 )
+            goto _write_error;
+    }
+    else
+        goto _write_error;
+    g_free( script );
+    g_free( text );
+    return NULL;  // success
+    
+_write_error:
+    if ( file )
+        fclose( file );
+    str = g_strdup_printf( "%s '%s':\n\n%s", _("Error writing to file"), script,
+                                                        g_strerror( errno ) );
+    g_free( script );    
+    g_free( text );
+    return str;
+}
 
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg )
@@ -362,9 +732,9 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values,
 
 gboolean ptk_handler_equals_default( XSet* set )
 {   // determine if set is duplicate of default handler
+#if 0
     const Handler* handler;
     int i, nelements, mode;
-    
     if ( set->b != XSET_B_TRUE )
         // handler not enabled so not equal default
         return FALSE;
@@ -410,6 +780,7 @@ gboolean ptk_handler_equals_default( XSet* set )
                 return FALSE;
         }
     }
+#endif
     return FALSE;
 }
 
@@ -477,9 +848,12 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                 string_copy_free( &set->menu_label, handler->handler_name );
                 string_copy_free( &set->s, handler->type );
                 string_copy_free( &set->x, handler->ext );
-                string_copy_free( &set->y, handler->compress_cmd );   // or mount
-                string_copy_free( &set->z, handler->extract_cmd );    // or unmount
-                string_copy_free( &set->context, handler->list_cmd ); // or info
+                set->in_terminal = handler->compress_term ?
+                                            XSET_B_TRUE : XSET_B_UNSET;
+                set->keep_terminal = handler->extract_term ?
+                                            XSET_B_TRUE : XSET_B_UNSET;
+                set->scroll_lock = handler->list_term ?
+                                            XSET_B_TRUE : XSET_B_UNSET;
                 set->b = XSET_B_TRUE;
                 // note: xset menu_labels are not saved unless !lock
                 set->lock = FALSE;
@@ -513,12 +887,14 @@ XSet* add_new_handler( int mode )
     // create and return the xset
     set = xset_get( name );
     g_free( name );
+    set->lock = FALSE;  // note: xset menu_labels are not saved unless !lock
     return set;
 }
 
 // handler_xset_name optional if handler_xset passed
 static void config_load_handler_settings( XSet* handler_xset,
                                           gchar* handler_xset_name,
+                                          const Handler* handler,
                                           GtkWidget* dlg )
 {
     // Fetching actual xset if only the name has been passed
@@ -590,6 +966,43 @@ static void config_load_handler_settings( XSet* handler_xset,
                                     handler_xset->x ?
                                     handler_xset->x : "" );
 /*igtodo code review g_strdup leaks below this line */
+    if ( handler )
+    {
+        // load commands from const handler
+        load_text_view( GTK_TEXT_VIEW( view_handler_compress ),
+                                                    handler->compress_cmd );
+        load_text_view( GTK_TEXT_VIEW( view_handler_extract ),
+                                                    handler->extract_cmd );
+        load_text_view( GTK_TEXT_VIEW( view_handler_list ),
+                                                    handler->list_cmd );
+    }
+    else
+    {
+        char* err_msg = ptk_handler_load_script( mode, HANDLER_COMPRESS, handler_xset,
+                           NULL, GTK_TEXT_VIEW( view_handler_compress ), NULL );
+        if ( !err_msg )
+            err_msg = ptk_handler_load_script( mode, HANDLER_EXTRACT, handler_xset,
+                            NULL, GTK_TEXT_VIEW( view_handler_extract ), NULL );
+        if ( !err_msg )
+            err_msg = ptk_handler_load_script( mode, HANDLER_LIST, handler_xset,
+                           NULL, GTK_TEXT_VIEW( view_handler_list ), NULL );
+        if ( err_msg )
+        {
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                _("Error Loading Handler"), NULL, 0, 
+                                err_msg, NULL, NULL );
+            g_free( err_msg );
+        }
+    }
+    // Run In Terminal checkboxes
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_compress_term ),
+                                    handler_xset->in_terminal == XSET_B_TRUE );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_extract_term ),
+                                    handler_xset->keep_terminal == XSET_B_TRUE );
+    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chkbtn_handler_list_term ),
+                                    handler_xset->scroll_lock == XSET_B_TRUE );
+                                        
+#if 0
     if (!handler_xset->y)
     {
         load_text_view( GTK_TEXT_VIEW( view_handler_compress ), "" );
@@ -659,6 +1072,7 @@ static void config_load_handler_settings( XSet* handler_xset,
                                             FALSE);
         }
     }
+#endif
 }
 
 static void config_unload_handler_settings( GtkWidget* dlg )
@@ -864,7 +1278,8 @@ static void on_configure_drag_end( GtkWidget* widget,
 static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 {
     int i;
-
+    char* err_msg = NULL;
+    
     // Fetching widgets and handler details
     GtkButton* btn_add = (GtkButton*)g_object_get_data( G_OBJECT( dlg ),
                                             "btn_add" );
@@ -913,6 +1328,8 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
                         GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
     const gboolean handler_list_term = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
+
+#if 0
     gchar* handler_compress, *handler_extract, *handler_list;
 
     /* Commands are prefixed with '+' when they are to be ran in a
@@ -940,6 +1357,7 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
             NULL );
     }
     else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
+#endif
 
     // Fetching the model and iter from the selection
     GtkTreeIter it, iter;
@@ -990,13 +1408,27 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
         new_handler_xset->b = gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( chkbtn_handler_enabled )
                               ) ? XSET_B_TRUE : XSET_B_FALSE;
-
+        new_handler_xset->disable = FALSE;  // not default - save in session
         xset_set_set( new_handler_xset, "label", handler_name );
         xset_set_set( new_handler_xset, "s", handler_mime );  // Mime Type(s)
         xset_set_set( new_handler_xset, "x", handler_extension );  // Extension(s)
-        xset_set_set( new_handler_xset, "y", handler_compress );  // Compress command
-        xset_set_set( new_handler_xset, "z", handler_extract );  // Extract command
-        xset_set_set( new_handler_xset, "cxt", handler_list );  // List command
+        new_handler_xset->in_terminal = handler_compress_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        new_handler_xset->keep_terminal = handler_extract_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        new_handler_xset->scroll_lock = handler_list_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        err_msg = ptk_handler_save_script( mode, HANDLER_COMPRESS,
+                                new_handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_compress ) );
+        if ( !err_msg )
+            err_msg = ptk_handler_save_script( mode, HANDLER_EXTRACT,
+                                new_handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_extract ) );
+        if ( !err_msg )
+            err_msg = ptk_handler_save_script( mode, HANDLER_LIST,
+                                new_handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_list ) );
 
         // Fetching list store
 /*igcr jfyi shouldn't need an object for this - can get list store from list */
@@ -1079,14 +1511,30 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
 
         // Saving archive handler
         handler_xset->b = handler_enabled;
+        handler_xset->disable = FALSE;  // not default - save in session
         xset_set_set( handler_xset, "label", handler_name );
         xset_set_set( handler_xset, "s", handler_mime );
         xset_set_set( handler_xset, "x", handler_extension );
-        xset_set_set( handler_xset, "y", handler_compress );
-        xset_set_set( handler_xset, "z", handler_extract );
-        xset_set_set( handler_xset, "cxt", handler_list );
-        // prevent saving of default handlers later in session
-        handler_xset->disable = ptk_handler_equals_default( handler_xset );
+        //g_free( set->y ); set->y = NULL;
+        //g_free( set->z ); set->z = NULL;
+        //g_free( set->context ); set->context = NULL;
+        handler_xset->in_terminal = handler_compress_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        handler_xset->keep_terminal = handler_extract_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        handler_xset->scroll_lock = handler_list_term ?
+                                                XSET_B_TRUE : XSET_B_UNSET;
+        err_msg = ptk_handler_save_script( mode, HANDLER_COMPRESS,
+                                handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_compress ) );
+        if ( !err_msg )
+            err_msg = ptk_handler_save_script( mode, HANDLER_EXTRACT,
+                                handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_extract ) );
+        if ( !err_msg )
+            err_msg = ptk_handler_save_script( mode, HANDLER_LIST,
+                                handler_xset, NULL,
+                                GTK_TEXT_VIEW( view_handler_list ) );
     }
     else if ( widget == btn_remove )
     {
@@ -1221,12 +1669,22 @@ static void on_configure_button_press( GtkButton* widget, GtkWidget* dlg )
     // Saving settings
     xset_autosave( FALSE, FALSE );
 
-_clean_exit:
+    if ( err_msg )
+    {
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                            _("Error Saving Handler"), NULL, 0, 
+                            err_msg, NULL, NULL );
+        g_free( err_msg );
+    }
 
+_clean_exit:
+    ;
+#if 0
     // Freeing strings
     g_free( handler_compress );
     g_free( handler_extract );
     g_free( handler_list );
+#endif
 }
 
 static void on_configure_changed( GtkTreeSelection* selection,
@@ -1257,7 +1715,7 @@ static void on_configure_changed( GtkTreeSelection* selection,
                         -1 );
 
     // Loading new archive handler values
-    config_load_handler_settings( NULL, xset_name, dlg );
+    config_load_handler_settings( NULL, xset_name, NULL, dlg );
     g_free( xset_name );
     g_free( handler_name );
     
@@ -1357,7 +1815,7 @@ static void on_configure_row_activated( GtkTreeView* view,
                         -1 );
 
     // Loading new archive handler values
-    config_load_handler_settings( NULL, xset_name, dlg );
+    config_load_handler_settings( NULL, xset_name, NULL, dlg );
 
     // Focussing archive handler name
     // Selects the text rather than just placing the cursor at the start
@@ -1454,13 +1912,13 @@ static void restore_defaults( GtkWidget* dlg, gboolean all )
         set->menu_label = (char*)handler->handler_name;
         set->s = (char*)handler->type;
         set->x = (char*)handler->ext;
-        set->y = (char*)handler->compress_cmd;
-        set->z = (char*)handler->extract_cmd;
-        set->context = (char*)handler->list_cmd;
+        set->in_terminal = handler->compress_term ? XSET_B_TRUE : XSET_B_UNSET;
+        set->keep_terminal = handler->extract_term ? XSET_B_TRUE : XSET_B_UNSET;
+        set->scroll_lock = handler->list_term ? XSET_B_TRUE : XSET_B_UNSET;
         set->b = XSET_B_TRUE;
 
         // show fake xset values
-        config_load_handler_settings( set, NULL, dlg );
+        config_load_handler_settings( set, NULL, handler, dlg );
 
         g_slice_free( XSet, set );
     }
@@ -1502,33 +1960,6 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                         GTK_TOGGLE_BUTTON ( chkbtn_handler_extract_term ) );
     const gboolean handler_list_term = gtk_toggle_button_get_active(
                         GTK_TOGGLE_BUTTON ( chkbtn_handler_list_term ) );
-    gchar* handler_compress, *handler_extract, *handler_list;
-
-    /* Commands are prefixed with '+' when they are to be ran in a
-     * terminal */
-    if (handler_compress_term)
-    {
-        handler_compress = g_strconcat( "+",
-            get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) ),
-            NULL );
-    }
-    else handler_compress = get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) );
-
-    if (handler_extract_term)
-    {
-        handler_extract = g_strconcat( "+",
-            get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) ),
-            NULL );
-    }
-    else handler_extract = get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) );
-
-    if (handler_list_term)
-    {
-        handler_list = g_strconcat( "+",
-            get_text_view( GTK_TEXT_VIEW ( view_handler_list ) ),
-            NULL );
-    }
-    else handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
 
     /* Validating data. Note that data straight from widgets shouldnt
      * be modified or stored
@@ -1606,6 +2037,13 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
         return FALSE;
     }
 
+    gchar* handler_compress, *handler_extract, *handler_list;
+
+    handler_compress = get_text_view( GTK_TEXT_VIEW ( view_handler_compress ) );
+    handler_extract = get_text_view( GTK_TEXT_VIEW ( view_handler_extract ) );
+    handler_list = get_text_view( GTK_TEXT_VIEW ( view_handler_list ) );
+    gboolean ret = TRUE;
+    
     /* Other settings are commands to run in different situations -
      * since different handlers may or may not need different
      * commands, empty commands are allowed but if something is given,
@@ -1614,8 +2052,7 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
     /* Compression handler validation - remember to maintain this code
      * in ptk_file_archiver_create too
      * Checking if a compression command has been entered */
-    if (g_strcmp0( handler_compress, "" ) != 0 &&
-        g_strcmp0( handler_compress, "+" ) != 0)
+    if (g_strcmp0( handler_compress, "" ) != 0 )
     {
         /* It has - making sure all substitution characters are in
          * place - not mandatory to only have one of the particular
@@ -1649,12 +2086,12 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             "file/directory (see %%%%n/%%%%N)"),
                             handler_name), NULL, NULL );
             gtk_widget_grab_focus( view_handler_compress );
-            return FALSE;
+            ret = FALSE;
+            goto _cleanup;
         }
     }
 
     if (g_strcmp0( handler_extract, "" ) != 0 &&
-        g_strcmp0( handler_extract, "+" ) != 0 &&
         (
             !g_strstr_len( handler_extract, -1, "%x" )
         ))
@@ -1672,11 +2109,11 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             "Archive to extract"),
                             handler_name), NULL, NULL );
         gtk_widget_grab_focus( view_handler_extract );
-        return FALSE;
+        ret = FALSE;
+        goto _cleanup;
     }
 
     if (g_strcmp0( handler_list, "" ) != 0 &&
-        g_strcmp0( handler_list, "+" ) != 0 &&
         (
             !g_strstr_len( handler_list, -1, "%x" )
         ))
@@ -1694,11 +2131,17 @@ static gboolean validate_handler( GtkWidget* dlg, int mode )
                             "Archive to list"),
                             handler_name), NULL, NULL );
         gtk_widget_grab_focus( view_handler_list );
-        return FALSE;
+        ret = FALSE;
+        goto _cleanup;
     }
 
+_cleanup:
+    g_free( handler_compress );
+    g_free( handler_extract );
+    g_free( handler_list );
+
     // Validation passed
-    return TRUE;
+    return ret;
 }
 
 void on_textview_font_change( GtkMenuItem* item, GtkWidget* dlg )
