@@ -168,6 +168,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
     int len = 0;
     char *path, *name, *new_name;
+/*igcr when multiple extensions, this function isn't setting the filename correctly */
 
     // Obtaining reference to dialog
     GtkFileChooser* dlg = GTK_FILE_CHOOSER( user_data );
@@ -602,7 +603,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     // Displaying dialog
     gchar* command = NULL;
     gboolean run_in_terminal;
-
+    gtk_widget_show_all( dlg );
+    
     while( res = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
     {
         if ( res == GTK_RESPONSE_OK )
