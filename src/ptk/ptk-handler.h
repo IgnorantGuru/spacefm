@@ -35,7 +35,8 @@ enum {
 enum {
     HANDLER_MODE_ARC,
     HANDLER_MODE_FS,
-    HANDLER_MODE_NET
+    HANDLER_MODE_NET,
+    HANDLER_MODE_FILE
 };
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,

@@ -694,6 +694,7 @@ void load_settings( char* config_dir )
     ptk_handler_add_defaults( HANDLER_MODE_ARC, FALSE, FALSE );
     ptk_handler_add_defaults( HANDLER_MODE_FS, FALSE, FALSE );
     ptk_handler_add_defaults( HANDLER_MODE_NET, FALSE, FALSE );
+    ptk_handler_add_defaults( HANDLER_MODE_FILE, FALSE, FALSE );
     
     // get root-protected settings
     read_root_settings();
@@ -10675,6 +10676,10 @@ void xset_defaults()
 
     set = xset_set( "open_other", "lbl", _("_Choose...") );
     xset_set_set( set, "icn", "gtk-open" );
+
+    set = xset_set( "open_hand", "lbl", _("_Handlers...") );
+    xset_set_set( set, "icn", "gtk-preferences" );
+    set->line = g_strdup( "#handlers-fil" );
 
     set = xset_set( "open_all", "lbl", _("_Default") );//virtual
 

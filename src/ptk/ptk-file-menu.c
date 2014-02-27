@@ -76,6 +76,8 @@ on_popup_open_in_new_win_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data );
 static void on_popup_open_in_terminal_activate( GtkMenuItem *menuitem,
                                                 PtkFileMenu* data );
+static void on_popup_handlers_activate ( GtkMenuItem *menuitem,
+                                       PtkFileMenu* data );
 static void
 on_popup_cut_activate ( GtkMenuItem *menuitem,
                         PtkFileMenu* data );
@@ -853,7 +855,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         set = xset_set_cb( "open_other", on_popup_open_with_another_activate, data );
         xset_add_menuitem( desktop, browser, submenu, accel_group, set );
-                        
+        
+        set = xset_set_cb( "open_hand", on_popup_handlers_activate, data );
+        xset_add_menuitem( desktop, browser, submenu, accel_group, set );
+        
         // Default
         char* plain_type = NULL;
         if ( mime_type )
@@ -1767,6 +1772,12 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         g_free( app );
     }
     vfs_mime_type_unref( mime_type );
+}
+
+void on_popup_handlers_activate ( GtkMenuItem *menuitem,
+                                       PtkFileMenu* data )
+{
+    ptk_handler_show_config( HANDLER_MODE_FILE, data->browser );
 }
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
