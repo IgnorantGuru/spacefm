@@ -795,6 +795,124 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values,
     return ret;    
 }
 
+static gboolean value_in_list( const char* list, const char* value )
+{   // this function must be FAST - is run multiple times on menu popup
+    gboolean supported = FALSE;
+    char* ptr;
+    char* delim;
+    char ch;
+
+    // value in space/comma-separated list with wildcards?
+    if ( value && ( ptr = (char*)list ) && ptr[0] )
+    {
+        while ( 1 )
+        {
+            while ( ptr[0] == ' ' || ptr[0] == ',' )
+                ptr++;
+            if ( !ptr[0] )
+                break;
+            delim = ptr;
+            while ( delim[0] != ' ' && delim[0] != ',' && delim[0] )
+                delim++;
+            ch = delim[0];
+            delim[0] = '\0';    // set temporary end of string                    
+            if ( fnmatch( ptr, value, 0 ) == 0 )
+            {
+                delim[0] = ch;      // restore
+                return TRUE;
+            }
+            delim[0] = ch;      // restore
+            if ( ch == '\0' )
+                break;          // is end of string
+            ptr = delim + 1;
+        }
+    }
+    return FALSE;
+}
+
+gboolean ptk_handler_file_has_handler( int mode, int cmd,
+                                       const char* path,
+                                       VFSMimeType* mime_type,
+                                       char** app_desktop,
+                                       gboolean test_cmd )
+{   /* this function must be FAST - is run multiple times on menu popup
+     * command must be non-empty if test_cmd
+     * places xset name with '#' prefix in app_desktop */
+    const char* type;
+    char* delim;
+    char* ptr;
+    char* msg;
+    XSet* handler_set;
+    
+    if ( app_desktop )
+        *app_desktop = NULL;
+    if ( !path || !mime_type )
+        return FALSE;
+    // Fetching and validating MIME type if provided
+    if ( mime_type )
+        type = (char*)vfs_mime_type_get_type( mime_type );
+    else
+        type = NULL;
+    
+    // parsing handlers space-separated list
+    if ( ptr = xset_get_s( handler_conf_xset[mode] ) )
+    {
+        while ( ptr[0] )
+        {
+            while ( ptr[0] == ' ' )
+                ptr++;
+            if ( !ptr[0] )
+                break;
+            if ( delim = strchr( ptr, ' ' ) )
+                delim[0] = '\0';    // set temporary end of string
+
+            // Fetching handler
+            handler_set = xset_is( ptr );
+            if ( delim )
+                delim[0] = ' ';     // remove temporary end of string
+
+            // handler supports type or path ?
+            if ( handler_set && handler_set->b == XSET_B_TRUE &&
+                    ( value_in_list( handler_set->s, type ) ||
+                      value_in_list( handler_set->x, path ) ) )
+            {
+                // test command
+                if ( test_cmd )
+                {
+                    char* command;
+                    char* err_msg = ptk_handler_load_script( mode, cmd,
+                                            handler_set, NULL, &command );
+                    if ( err_msg )
+                    {
+                        g_warning( "%s", err_msg );
+                        g_free( err_msg );
+                    }
+                    else if ( !ptk_handler_command_is_empty( command ) )
+                    {
+                        g_free( command );
+                        if ( app_desktop )
+                            *app_desktop = g_strconcat( "#", handler_set->name,
+                                                                        NULL );
+                        return TRUE;
+                    }
+                    g_free( command );
+                }
+                else
+                {
+                    if ( app_desktop )
+                        *app_desktop = g_strconcat( "#", handler_set->name,
+                                                                        NULL );
+                    return TRUE;
+                }
+            }
+            if ( !delim )
+                break;
+            ptr = delim + 1;
+        }
+    }
+    return FALSE;
+}
+
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing )
 {

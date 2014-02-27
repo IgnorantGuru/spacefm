@@ -17,6 +17,7 @@
 
 #include "settings.h"
 #include "ptk-file-browser.h"
+#include "vfs-mime-type.h"
 
 G_BEGIN_DECLS
 
@@ -53,6 +54,11 @@ char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
 char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set );
 gboolean ptk_handler_command_is_empty( const char* command );
 void ptk_handler_load_text_view( GtkTextView* view, const char* text );
+gboolean ptk_handler_file_has_handler( int mode, int cmd,
+                                       const char* path,
+                                       VFSMimeType* mime_type,
+                                       char** app_desktop,
+                                       gboolean test_cmd );
 
 
 G_END_DECLS

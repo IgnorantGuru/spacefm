@@ -3344,7 +3344,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     const char* action_s;
     gboolean terminal;
     char* err_msg = ptk_handler_load_script( mode, action, set, NULL,
-                                                                    &command );
+                                                        &command );
     if ( err_msg )
     {
         g_warning( "%s", err_msg );

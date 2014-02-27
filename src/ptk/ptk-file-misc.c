@@ -35,7 +35,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "settings.h"
-
+#include "ptk-handler.h"
 #include "gtk2-compat.h"
 
 typedef struct
@@ -3435,6 +3435,115 @@ void ptk_show_file_properties( GtkWindow* parent_win,
     gtk_widget_show( dlg );
 }
 
+static void open_files_with_handler( const char* cwd,
+                                GList* files,
+                                XSet* handler_set,
+                                PtkFileBrowser* file_browser )
+{
+    GList* l;
+    char* str;
+    char* quoted;
+    char* command_final;
+    char* command;
+    char* name;
+
+    // get command - was already checked as non-empty
+    char* err_msg = ptk_handler_load_script( HANDLER_MODE_FILE,
+                    HANDLER_MOUNT, handler_set,
+                    NULL, &command );
+    if ( err_msg )
+    {
+        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+                            _("Error Loading Handler"), NULL, 0, 
+                            err_msg, NULL, NULL );
+        g_free( err_msg );
+        return;
+    }
+    // prepare bash vars for just the files being opened, not all selected
+    GString* fm_filenames = g_string_new( "fm_filenames=(\n" );
+    GString* fm_files = g_string_new( "fm_files=(\n" );
+    // command looks like it handles multiple files ?
+    gboolean multiple = ( strstr( command, "%N" ) || strstr( command, "%F" )
+                                || strstr( command, "fm_files[" )
+                                || strstr( command, "fm_filenames[" ) );
+    if ( multiple )
+    {
+        for ( l = files; l; l = l->next )
+        {
+            // filename
+            name = g_path_get_basename( (char*)l->data );
+            quoted = bash_quote( name );
+            g_free( name );
+            g_string_append_printf( fm_filenames, "%s\n", quoted );
+            g_free( quoted );
+            // file path
+            quoted = bash_quote( (char*)l->data );
+            g_string_append_printf( fm_files, "%s\n", quoted );
+            g_free( quoted );
+        }
+    }
+    g_string_append( fm_filenames, ")\nfm_filename=\"$fm_filenames[0]\"\n" );
+    g_string_append( fm_files, ")\nfm_file=\"$fm_files[0]\"\n" );
+    // replace standard sub vars
+    str = command;
+    command = replace_line_subs( command );
+    g_free( str );
+
+    // start task(s)
+    for ( l = files; l; l = l->next )
+    {
+        if ( multiple )
+        {
+            command_final = g_strdup_printf( "%s%s%s",
+                                                    fm_filenames->str,
+                                                    fm_files->str,
+                                                    command );
+        }
+        else
+        {
+            // add sub vars for single file
+            // filename
+            name = g_path_get_basename( (char*)l->data );
+            quoted = bash_quote( name );
+            g_free( name );
+            str = g_strdup_printf( "fm_filename=%s\n", quoted );
+            g_free( quoted );
+            // file path
+            quoted = bash_quote( (char*)l->data );
+            command_final = g_strdup_printf( "%s%s%sfm_file=%s\n%s",
+                                                    fm_filenames->str,
+                                                    fm_files->str,
+                                                    str,
+                                                    quoted,
+                                                    command );
+            g_free( str );
+            g_free( quoted );
+        }
+
+        // Run task
+        PtkFileTask* task = ptk_file_exec_new( handler_set->menu_label, cwd,
+                                file_browser ? GTK_WIDGET( file_browser ) : NULL,
+                                file_browser ? file_browser->task_view : NULL );
+        // don't free cwd!
+        task->task->exec_browser = file_browser;
+        //task->task->exec_desktop = desktop;
+        task->task->exec_command = command_final;
+        if ( handler_set->icon )
+            task->task->exec_icon = g_strdup( handler_set->icon );
+        task->task->exec_terminal = ( handler_set->in_terminal == XSET_B_TRUE );
+        task->task->exec_keep_terminal = FALSE;
+        task->task->exec_sync = FALSE;
+        task->task->exec_export = TRUE;
+        ptk_file_task_run( task );
+        
+        if ( multiple )
+            break;
+    }
+    g_string_free( fm_filenames, TRUE );
+    g_string_free( fm_files, TRUE );
+    g_free( command );
+}
+
 static gboolean open_files_with_app( const char* cwd,
                                      GList* files,
                                      const char* app_desktop,
@@ -3444,6 +3553,16 @@ static gboolean open_files_with_app( const char* cwd,
     GError* err = NULL;
     VFSAppDesktop* app;
     GdkScreen* screen;
+    XSet* handler_set;
+    
+    if ( app_desktop && app_desktop[0] == '#' &&
+                            ( handler_set = xset_is( app_desktop + 1 ) )
+                            && files )
+    {
+        // is a handler
+        open_files_with_handler( cwd, files, handler_set, file_browser );
+        return TRUE;
+    }
 
     /* Check whether this is an app desktop file or just a command line */
     /* Not a desktop entry name */
@@ -3480,7 +3599,8 @@ static gboolean open_files_with_app( const char* cwd,
                                                                 app->exec );
     if ( ! vfs_app_desktop_open_files( screen, cwd, app, files, &err ) )
     {
-        GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
+        GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel(
+                                        GTK_WIDGET( file_browser ) ) : NULL;
         //char* msg = g_markup_escape_text(err->message, -1);
         ptk_show_error( GTK_WINDOW( toplevel ),
                         _("Error"),
@@ -3568,14 +3688,18 @@ void ptk_open_files_with_app( const char* cwd,
                                     ( ! app_settings.no_execute || xforce ) )  //MOD
                 {
                     char * argv[ 2 ] = { full_path, NULL };
-                    GdkScreen* screen = file_browser ? gtk_widget_get_screen( GTK_WIDGET(file_browser) ) : gdk_screen_get_default();
+                    GdkScreen* screen = file_browser ? gtk_widget_get_screen(
+                                                GTK_WIDGET(file_browser) ) :
+                                                 gdk_screen_get_default();
                     err = NULL;
                     if ( ! vfs_exec_on_screen ( screen, cwd, argv, NULL,
                                                 vfs_file_info_get_disp_name( file ),
                                                 VFS_EXEC_DEFAULT_FLAGS, &err ) )
                     {
                         //char* msg = g_markup_escape_text(err->message, -1);
-                        toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
+                        toplevel = file_browser ? gtk_widget_get_toplevel(
+                                                GTK_WIDGET( file_browser ) ) :
+                                                NULL;
                         ptk_show_error( ( GtkWindow* ) toplevel,
                                         _("Error"),
                                         err->message );
@@ -3587,7 +3711,8 @@ void ptk_open_files_with_app( const char* cwd,
                         if ( G_LIKELY( file_browser ) )
                         {
                             ptk_file_browser_emit_open( file_browser,
-                                                        full_path, PTK_OPEN_FILE );
+                                                        full_path,
+                                                        PTK_OPEN_FILE );
                         }
                     }
                     g_free( full_path );
@@ -3595,13 +3720,22 @@ void ptk_open_files_with_app( const char* cwd,
                 }
 
                 mime_type = vfs_file_info_get_mime_type( file );
+                
+                // If handler, set app_desktop = #XSETNAME
+                ptk_handler_file_has_handler( HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                              full_path, mime_type,
+                                              &app_desktop, TRUE );
+                
                 /* The file itself is a desktop entry file. */
                 /*                if( g_str_has_suffix( vfs_file_info_get_name( file ), ".desktop" ) ) */
-                if ( file->flags & VFS_FILE_INFO_DESKTOP_ENTRY &&
-                                        ( ! app_settings.no_execute || xforce ) ) //sfm
-                    app_desktop = full_path;
-                else
-                    app_desktop = vfs_mime_type_get_default_action( mime_type );
+                if ( !app_desktop )
+                {
+                    if ( file->flags & VFS_FILE_INFO_DESKTOP_ENTRY &&
+                                            ( ! app_settings.no_execute || xforce ) ) //sfm
+                        app_desktop = full_path;
+                    else
+                        app_desktop = vfs_mime_type_get_default_action( mime_type );
+                }
 
                 if ( !app_desktop && mime_type_is_text_file( full_path, mime_type->type ) )
                 {

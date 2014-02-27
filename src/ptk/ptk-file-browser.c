@@ -5531,6 +5531,7 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
     char *path = NULL, *extension = NULL, *name = NULL;
     VFSMimeType* mime_type = NULL;
 
+/*igtodo move this to ptk_open_files_with_app ? */
     // archive?
     if( sel_files && !xset_get_b( "arc_def_open" ) )
     {

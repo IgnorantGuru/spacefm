@@ -1152,6 +1152,7 @@ static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
         GList* sel_files = NULL;
         sel_files = g_list_prepend( sel_files, clicked_item->fi );
         
+/*igtodo move this to ptk_open_files_with_app ? */
         // archive?
         if( sel_files && !xset_get_b( "arc_def_open" ) )
         {
