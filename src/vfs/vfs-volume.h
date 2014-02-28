@@ -64,6 +64,18 @@ gboolean vfs_volume_is_mounted( VFSVolume *vol );
 
 gboolean vfs_volume_requires_eject( VFSVolume *vol );
 
+// HAL also needs this for ptk_location_view_create_mount_point()
+typedef struct netmount_t {
+    char* url;
+    char* fstype;
+    char* host;
+    char* ip;
+    char* port;
+    char* user;
+    char* pass;
+    char* path;
+} netmount_t;
+
 #ifdef HAVE_HAL
 gboolean vfs_volume_mount_by_udi( const char* udi, GError** err );
 
@@ -109,17 +121,6 @@ struct _VFSVolume
     time_t automount_time;
     gpointer open_main_window;
 };
-
-typedef struct netmount_t {
-    char* url;
-    char* fstype;
-    char* host;
-    char* ip;
-    char* port;
-    char* user;
-    char* pass;
-    char* path;
-} netmount_t;
 
 gboolean vfs_volume_command( char* command, char** output );
 char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options,

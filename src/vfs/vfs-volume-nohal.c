@@ -43,6 +43,7 @@
 #include "ptk-file-task.h"
 #include "main-window.h"
 #include "ptk-handler.h"
+#include "ptk-location-view.h"
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
@@ -3106,104 +3107,6 @@ void vfs_volume_clean_mount_points()
     }
 }
 
-static char* create_mount_point( int mode, VFSVolume* vol,
-                                     netmount_t* netmount )
-{
-    char* mname = NULL;
-    char* str;
-    if ( mode == HANDLER_MODE_FS && vol )
-    {
-        char* bdev = g_path_get_basename( vol->device_file );
-        if ( vol->label && vol->label[0] != '\0'
-                            && vol->label[0] != ' '
-                            && g_utf8_validate( vol->label, -1, NULL )
-                            && !strchr( vol->label, '/' ) )
-            mname = g_strdup_printf( "%.20s", vol->label );
-        else if ( vol->udi && vol->udi[0] != '\0'
-                            && g_utf8_validate( vol->udi, -1, NULL ) )
-        {
-            str = g_path_get_basename( vol->udi );
-            mname = g_strdup_printf( "%s-%.20s", bdev, str );
-            g_free( str );
-        }
-        //else if ( device->id_uuid && device->id_uuid[0] != '\0' )
-        //    mname = g_strdup_printf( "%s-%s", bdev, device->id_uuid );
-        else
-            mname = g_strdup( bdev );
-        g_free( bdev );
-    }
-    else if ( mode == HANDLER_MODE_NET )
-    {
-        if ( netmount->host && g_utf8_validate( netmount->host, -1, NULL ) )
-        {
-            char* parent_dir = NULL;
-            if ( netmount->path )
-            {
-                parent_dir = replace_string( netmount->path, "/", "-", FALSE );
-                g_strstrip( parent_dir );
-                while ( g_str_has_suffix( parent_dir, "-" ) )
-                    parent_dir[ strlen( parent_dir ) - 1] = '\0';
-                while ( g_str_has_prefix( parent_dir, "-" ) )
-                {
-                    str = parent_dir;
-                    parent_dir = g_strdup( str + 1 );
-                    g_free( str );
-                }
-                if ( parent_dir[0] == '\0' 
-                                    || !g_utf8_validate( parent_dir, -1, NULL )
-                                    || strlen( parent_dir ) > 30 )
-                {
-                    g_free( parent_dir );
-                    parent_dir = NULL;
-                }
-            }
-            if ( parent_dir )
-                mname = g_strdup_printf( "%s-%s-%s", netmount->fstype,
-                                                netmount->host, parent_dir );
-            else
-                mname = g_strdup_printf( "%s-%s", netmount->fstype,
-                                                netmount->host );
-            g_free( parent_dir );
-        }
-        else
-            mname = g_strdup( netmount->fstype );
-    }
-
-    // remove leading and trailing spaces
-    if ( mname )
-    {
-        g_strstrip( mname );
-        if ( mname[0] == '\0' )
-        {
-            g_free( mname );
-            mname = NULL;
-        }
-    }
-    
-    if ( !mname )
-        mname = g_strdup( "mount" );
-
-    // complete mount point
-    char* point1 = g_build_filename( g_get_user_cache_dir(), "spacefm", mname,
-                                                                        NULL );
-    g_free( mname );
-    int r = 2;
-    char* point = g_strdup( point1 );
-    // attempt to remove existing dir - succeeds only if empty and unmounted
-    rmdir( point );
-    while ( g_file_test( point, G_FILE_TEST_EXISTS ) )
-    {
-        g_free( point );
-        point = g_strdup_printf( "%s-%d", point1, r++ );
-        rmdir( point );
-    }
-    g_free( point1 );
-    if ( g_mkdir_with_parents( point, 0700 ) == -1 )
-        g_warning( "Error creating mount point directory '%s': %s", point,
-                                                        g_strerror( errno ) );
-    return point;
-}
-
 char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                               const char* options, netmount_t* netmount,
                               gboolean* run_in_terminal, char** mount_point )
@@ -3411,7 +3314,8 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             if ( action == HANDLER_MOUNT )
             {
                 // create mount point
-                char* point_dir = create_mount_point( HANDLER_MODE_FS, vol, NULL );
+                char* point_dir = ptk_location_view_create_mount_point(
+                                            HANDLER_MODE_FS, vol, NULL, NULL );
                 str = command;
                 command = replace_string( command, "%a", point_dir, FALSE );
                 g_free( str );
@@ -3500,8 +3404,8 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             if ( action == HANDLER_MOUNT )
             {
                 // create mount point
-                char* point_dir = create_mount_point( HANDLER_MODE_NET, NULL,
-                                                      netmount );
+                char* point_dir = ptk_location_view_create_mount_point(
+                                    HANDLER_MODE_NET, NULL, netmount, NULL );
                 str = command;
                 command = replace_string( command, "%a", point_dir, FALSE );
                 g_free( str );

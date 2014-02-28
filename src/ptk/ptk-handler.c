@@ -551,17 +551,12 @@ char* ptk_handler_load_script( int mode, int cmd, XSet* handler_set,
     // name script
     char* script;
     char* str;
-    if ( mode == HANDLER_MODE_FILE )
-        script = def_script;
-    else
-    {
-        str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
-                                    mode == HANDLER_MODE_ARC ?
-                                            cmds_arc[cmd] : cmds_mnt[cmd] );
-        script = replace_string( def_script, "/exec.sh", str, FALSE );
-        g_free( str );
-        g_free( def_script );
-    }
+    str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
+                                mode == HANDLER_MODE_ARC ?
+                                        cmds_arc[cmd] : cmds_mnt[cmd] );
+    script = replace_string( def_script, "/exec.sh", str, FALSE );
+    g_free( str );
+    g_free( def_script );
     // load script
     //gboolean modified = FALSE;
     char line[ 4096 ];
@@ -657,17 +652,12 @@ char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
     // name script
     char* script;
     char* str;
-    if ( mode == HANDLER_MODE_FILE )
-        script = def_script;
-    else
-    {
-        str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
-                                    mode == HANDLER_MODE_ARC ?
-                                            cmds_arc[cmd] : cmds_mnt[cmd] );
-        script = replace_string( def_script, "/exec.sh", str, FALSE );
-        g_free( str );
-        g_free( def_script );
-    }
+    str = g_strdup_printf( "/hand-%s-%s.sh", modes[mode],
+                                mode == HANDLER_MODE_ARC ?
+                                        cmds_arc[cmd] : cmds_mnt[cmd] );
+    script = replace_string( def_script, "/exec.sh", str, FALSE );
+    g_free( str );
+    g_free( def_script );
     // get text
     char* text;
     if ( view )

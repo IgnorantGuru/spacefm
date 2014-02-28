@@ -33,6 +33,7 @@
 #include "ptk-app-chooser.h"
 #include "ptk-clipboard.h"
 #include "ptk-file-archiver.h"
+#include "ptk-location-view.h"
 #include <gdk/gdkkeysyms.h>
 
 #include "settings.h"
@@ -3515,6 +3516,17 @@ static void open_files_with_handler( ParentInfo* parent,
         g_free( err_msg );
         return;
     }
+    // auto mount point
+    if ( strstr( command, "%a" ) )
+    {
+        name = ptk_location_view_create_mount_point(
+                                HANDLER_MODE_FILE, NULL, NULL, (char*)l->data );
+        str = command;
+        command = replace_string( command, "%a", name, FALSE );
+        g_free( str );
+        g_free( name );        
+    }
+    
     /* prepare bash vars for just the files being opened by this handler,
      * not necessarily all selected */
     GString* fm_filenames = g_string_new( "fm_filenames=(\n" );
