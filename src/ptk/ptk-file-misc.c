@@ -3794,8 +3794,9 @@ void ptk_open_files_with_app( const char* cwd,
                     // app_desktop is normally const but we're putting a
                     // allocated string in it which will be free later
                     app_desktop = g_strconcat( "###", handler_set->name, NULL );
-                else if ( open_archives_with_handler( parent, sel_files,
-                                                      full_path, mime_type ) )
+                else if ( l == sel_files /* test first file only */ &&
+                            open_archives_with_handler( parent, sel_files,
+                                                        full_path, mime_type ) )
                 {
                     // all files were handled by open_archives_with_handler
                     vfs_mime_type_unref( mime_type );

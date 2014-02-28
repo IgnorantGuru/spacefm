@@ -152,7 +152,7 @@ const Handler handlers_arc[]=
         "handarc_7z",
         "7-Zip",
         "application/x-7z-compressed",
-        ".7z",
+        "*.7z",
         "\"$(which 7za || echo 7zr)\" a %o %N",
         TRUE,
         "\"$(which 7za || echo 7zr)\" x %x",
@@ -164,7 +164,7 @@ const Handler handlers_arc[]=
         "handarc_gz",
         "Gzip",
         "application/x-gzip application/x-gzpdf application/gzip",
-        ".gz",
+        "*.gz",
         "gzip -c %N > %O",
         FALSE,
         "gzip -cd %x > %G",
@@ -176,7 +176,7 @@ const Handler handlers_arc[]=
         "handarc_rar",
         "RAR",
         "application/x-rar",
-        ".rar",
+        "*.rar *.RAR",
         "rar a -r %o %N",
         TRUE,
         "unrar -o- x %x",
@@ -188,7 +188,7 @@ const Handler handlers_arc[]=
         "handarc_tar",
         "Tar",
         "application/x-tar",
-        ".tar",
+        "*.tar",
         "tar -cvf %o %N",
         FALSE,
         "tar -xvf %x",
@@ -200,7 +200,7 @@ const Handler handlers_arc[]=
         "handarc_tar_bz2",
         "Tar bzip2",
         "application/x-bzip-compressed-tar",
-        ".tar.bz2",
+        "*.tar.bz2",
         "tar -cvjf %o %N",
         FALSE,
         "tar -xvjf %x",
@@ -212,7 +212,7 @@ const Handler handlers_arc[]=
         "handarc_tar_gz",
         "Tar Gzip",
         "application/x-compressed-tar",
-        ".tar.gz .tgz",
+        "*.tar.gz *.tgz",
         "tar -cvzf %o %N",
         FALSE,
         "tar -xvzf %x",
@@ -224,7 +224,7 @@ const Handler handlers_arc[]=
         "handarc_tar_xz",
         "Tar xz",
         "application/x-xz-compressed-tar",
-        ".tar.xz .txz",
+        "*.tar.xz *.txz",
         "tar -cvJf %o %N",
         FALSE,
         "tar -xvJf %x",
@@ -236,7 +236,7 @@ const Handler handlers_arc[]=
         "handarc_zip",
         "Zip",
         "application/x-zip application/zip",
-        ".zip",
+        "*.zip *.ZIP",
         "zip -r %o %N",
         TRUE,
         "unzip %x",
@@ -842,6 +842,8 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
     char* ptr;
     char* msg;
     XSet* handler_set;
+    char* under_path;
+    char* new_path = NULL;
     
     if ( !path || !mime_type )
         return NULL;
@@ -850,6 +852,12 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
         type = (char*)vfs_mime_type_get_type( mime_type );
     else
         type = NULL;
+    
+    // replace spaces in path with underscores for matching
+    if ( path && strchr( path, ' ' ) )
+        under_path = new_path = replace_string( path, " ", "_", FALSE );
+    else
+        under_path = (char*)path;
     
     // parsing handlers space-separated list
     if ( ptr = xset_get_s( handler_conf_xset[mode] ) )
@@ -871,7 +879,7 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
             // handler supports type or path ?
             if ( handler_set && handler_set->b == XSET_B_TRUE &&
                     ( value_in_list( handler_set->s, type ) ||
-                      value_in_list( handler_set->x, path ) ) )
+                      value_in_list( handler_set->x, under_path ) ) )
             {
                 // test command
                 if ( test_cmd )
@@ -887,12 +895,14 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
                     else if ( !ptk_handler_command_is_empty( command ) )
                     {
                         g_free( command );
+                        g_free( new_path );
                         return handler_set;
                     }
                     g_free( command );
                 }
                 else
                 {
+                    g_free( new_path );
                     return handler_set;
                 }
             }
@@ -901,6 +911,7 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
             ptr = delim + 1;
         }
     }
+    g_free( new_path );
     return NULL;
 }
 
@@ -2240,7 +2251,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     g_signal_connect( G_OBJECT( hnd->btn_remove ), "clicked",
                         G_CALLBACK( on_configure_button_press ), hnd );
 
-    hnd->btn_add = gtk_button_new_with_mnemonic( _("_Add") );
+    hnd->btn_add = gtk_button_new_with_mnemonic( _("A_dd") );
     gtk_button_set_image( GTK_BUTTON( hnd->btn_add ),
                                         xset_get_image( "GTK_STOCK_ADD",
                                         GTK_ICON_SIZE_BUTTON ) );
@@ -2248,7 +2259,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     g_signal_connect( G_OBJECT( hnd->btn_add ), "clicked",
                         G_CALLBACK( on_configure_button_press ), hnd );
 
-    hnd->btn_apply = gtk_button_new_with_mnemonic( _("App_ly") );
+    hnd->btn_apply = gtk_button_new_with_mnemonic( _("Appl_y") );
     gtk_button_set_image( GTK_BUTTON( hnd->btn_apply ),
                                         xset_get_image( "GTK_STOCK_APPLY",
                                         GTK_ICON_SIZE_BUTTON ) );
@@ -2295,15 +2306,15 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_extension ),
                                         mode == HANDLER_MODE_ARC ||
                                         mode == HANDLER_MODE_FILE ?
-                                        _("F_ilename:") :
-                                        _("Blackl_ist:") );
+                                        _("P_athname:") :
+                                        _("Bl_acklist:") );
     gtk_misc_set_alignment( GTK_MISC( lbl_handler_extension ), 0, 1.0 );
     GtkWidget* lbl_handler_icon;
     if ( mode == HANDLER_MODE_FILE )
     {
         lbl_handler_icon = gtk_label_new( NULL );
         gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_handler_icon ),
-                                            _("Ico_n:") );
+                                            _("_Icon:") );
         gtk_misc_set_alignment( GTK_MISC( lbl_handler_icon ), 0, 1.0 );
     }
     else
@@ -2400,19 +2411,19 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                 gtk_check_button_new_with_label( _("Run In Terminal") );
 
     GtkWidget* lbl_edit0 = gtk_label_new( NULL );
-    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 0, _("Editor") );
+    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 0, _("Edit") );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_edit0 ), str );
     g_free( str );
     g_signal_connect( G_OBJECT( lbl_edit0 ), "activate-link",
                         G_CALLBACK( on_activate_link ), hnd );
     GtkWidget* lbl_edit1 = gtk_label_new( NULL );
-    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 1, _("Editor") );
+    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 1, _("Edit") );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_edit1 ), str );
     g_free( str );
     g_signal_connect( G_OBJECT( lbl_edit1 ), "activate-link",
                         G_CALLBACK( on_activate_link ), hnd );
     GtkWidget* lbl_edit2 = gtk_label_new( NULL );
-    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 2, _("Editor") );
+    str = g_strdup_printf( "<a href=\"%d\">%s</a>", 2, _("Edit") );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_edit2 ), str );
     g_free( str );
     g_signal_connect( G_OBJECT( lbl_edit2 ), "activate-link",

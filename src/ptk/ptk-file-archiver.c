@@ -40,101 +40,36 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     // Function deals with the possibility that a handler is responsible
     // for multiple MIME types and therefore file extensions. Functions
     // like archive creation need only one extension
-    if (handler_xset && handler_xset->x)
+    gchar* first_ext = NULL;
+    gchar* name;
+    int i;
+    if ( handler_xset && handler_xset->x )
     {
-        // Obtaining first handled extension
-        gchar** extensions = g_strsplit( handler_xset->x, ", ", -1 );
-        gchar* first_extension = NULL;
-        if ( !( extensions && extensions[0] ) )
-            first_extension = g_strdup( "" );
-        else
-            first_extension = g_strdup( extensions[0] );
-
-        // Clearing up
-        g_strfreev( extensions );
-
-        // Returning first extension
-        return first_extension;
+        // find first extension
+        gchar** pathnames = g_strsplit( handler_xset->x, ", ", -1 );
+        if ( pathnames )
+        {
+            for ( i = 0; pathnames[i]; ++i )
+            {
+                // getting just the extension of the pathname list element
+                name = get_name_extension( pathnames[i], FALSE, &first_ext );
+                g_free( name );
+                if ( first_ext )
+                {
+                    // add a dot to extension
+                    char* str = first_ext;
+                    first_ext = g_strconcat( ".", first_ext, NULL );
+                    g_free( str );
+                    break;
+                }
+            }
+            g_strfreev( pathnames );
+        }
     }
-    else return g_strdup( "" );
-}
-
-static gboolean archive_handler_is_format_supported( XSet* handler_xset,
-                                                     const char* type,
-                                                     const char* extension,
-                                                     int operation )
-{   // this function must be FAST - is run multiple times on menu popup
-    gboolean mime_or_extension_support = FALSE;
-    gchar *ext;
-    int len;
-    char* ptr;
-
-    /* If one was passed, ensuring an extension starts with '.' (
-     * get_name_extension does not provide this) */
-    if (extension && extension[0] != '.')
-        ext = g_strconcat( ".", extension, NULL );
+    if ( first_ext )
+        return first_ext;
     else
-        ext = g_strdup( "" );
-
-    // Checking it if its enabled
-    if (handler_xset && handler_xset->b == XSET_B_TRUE)
-    {
-        /* Checking to see if the handler can deal with the MIME type */
-        if ( type && handler_xset->s )
-        {
-            len = strlen( type );
-            if ( ptr = handler_xset->s )
-            {
-                while ( ptr[0] )
-                {
-                    while ( ptr[0] == ' ' || ptr[0] == ',' )
-                        ptr++;
-                    if ( g_str_has_prefix( ptr, type ) &&
-                                            ( ptr[len] == ' ' ||
-                                              ptr[len] == ',' ||
-                                              ptr[len] == '\0' ) )
-                    {
-                        mime_or_extension_support = TRUE;
-                        break;
-                    }
-                    while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
-                        ptr++;
-                }
-            }
-        }
-
-        /* Otherwise checking to see if the handler can deal with the extension */
-        if ( !mime_or_extension_support && ext && ext[0] && handler_xset->x )
-        {
-            len = strlen( ext );
-            if ( ptr = handler_xset->x )
-            {
-                while ( ptr[0] )
-                {
-                    while ( ptr[0] == ' ' || ptr[0] == ',' )
-                        ptr++;
-/*igcr if extensions are case-sensitive, should make 
- * default handlers include capitalized extensions? */
-                    if ( g_str_has_prefix( ptr, ext ) &&
-                                            ( ptr[len] == ' ' ||
-                                              ptr[len] == ',' ||
-                                              ptr[len] == '\0' ) )
-                    {
-                        mime_or_extension_support = TRUE;
-                        break;
-                    }
-                    while ( ptr[0] != ' ' && ptr[0] != ',' && ptr[0] )
-                        ptr++;
-                }
-            }
-        }
-    }
-
-    // Clearing up
-    g_free( ext );
-
-    // Returning result
-    return mime_or_extension_support;
+        return g_strdup( "" );
 }
 
 static gboolean archive_handler_run_in_term( XSet* handler_xset,
@@ -219,6 +154,7 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
                 if (strlen( extension ) > len)
                     len = strlen( extension );
             }
+            g_free(extension);
         }
         g_free( xset_name );
     }
@@ -230,9 +166,6 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
         len = strlen( name ) - len;
         name[len] = '\0';
     }
-
-    // Clearing up
-    g_free(extension);
 
     // Getting at currently selected archive handler
     if ( gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter ) )
@@ -252,14 +185,14 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 
             // Updating new archive filename
             gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
+            
+            g_free( new_name );
+            g_free( extension );
         }
         g_free( xset_name );
     }
 
-    // Cleaning up
     g_free( name );
-    g_free( extension );
-    g_free( new_name );
 
     // Loading command
     if ( handler_xset )
