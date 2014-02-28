@@ -830,11 +830,10 @@ static gboolean value_in_list( const char* list, const char* value )
     return FALSE;
 }
 
-gboolean ptk_handler_file_has_handler( int mode, int cmd,
-                                       const char* path,
-                                       VFSMimeType* mime_type,
-                                       char** app_desktop,
-                                       gboolean test_cmd )
+XSet* ptk_handler_file_has_handler( int mode, int cmd,
+                                    const char* path,
+                                    VFSMimeType* mime_type,
+                                    gboolean test_cmd )
 {   /* this function must be FAST - is run multiple times on menu popup
      * command must be non-empty if test_cmd
      * places xset name with '#' prefix in app_desktop */
@@ -844,10 +843,8 @@ gboolean ptk_handler_file_has_handler( int mode, int cmd,
     char* msg;
     XSet* handler_set;
     
-    if ( app_desktop )
-        *app_desktop = NULL;
     if ( !path || !mime_type )
-        return FALSE;
+        return NULL;
     // Fetching and validating MIME type if provided
     if ( mime_type )
         type = (char*)vfs_mime_type_get_type( mime_type );
@@ -890,19 +887,13 @@ gboolean ptk_handler_file_has_handler( int mode, int cmd,
                     else if ( !ptk_handler_command_is_empty( command ) )
                     {
                         g_free( command );
-                        if ( app_desktop )
-                            *app_desktop = g_strconcat( "#", handler_set->name,
-                                                                        NULL );
-                        return TRUE;
+                        return handler_set;
                     }
                     g_free( command );
                 }
                 else
                 {
-                    if ( app_desktop )
-                        *app_desktop = g_strconcat( "#", handler_set->name,
-                                                                        NULL );
-                    return TRUE;
+                    return handler_set;
                 }
             }
             if ( !delim )
@@ -910,7 +901,7 @@ gboolean ptk_handler_file_has_handler( int mode, int cmd,
             ptr = delim + 1;
         }
     }
-    return FALSE;
+    return NULL;
 }
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,

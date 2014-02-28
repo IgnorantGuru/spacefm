@@ -1130,116 +1130,23 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
 
 static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
-    char *path = NULL, *name = NULL, *extension = NULL;
-
     if ( !clicked_item->fi )
         return;
     /* this won't work yet because desktop context_fill doesn't do selected 
      * else if ( xset_opener( self, NULL, 1 ) )
         return;
     */
-    else if ( vfs_file_info_is_dir( clicked_item->fi ) &&
+
+    GList* sel_files = NULL;
+    sel_files = g_list_prepend( sel_files, clicked_item->fi );
+    if ( vfs_file_info_is_dir( clicked_item->fi ) &&
                                                 !app_settings.desk_open_mime )
-    {
         // a folder - open in SpaceFM browser by default
-        GList* sel_files = NULL;
-        sel_files = g_list_prepend( sel_files, clicked_item->fi );
         open_folders( sel_files );
-        g_list_free( sel_files );
-    }
     else /* regular files */
-    {
-        GList* sel_files = NULL;
-        sel_files = g_list_prepend( sel_files, clicked_item->fi );
-        
-/*igtodo move this to ptk_open_files_with_app ? */
-        // archive?
-        if( sel_files && !xset_get_b( "arc_def_open" ) )
-        {
-            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-/*igcr would be more code efficient to get name and extension within 
- * ptk_file_archiver_is_format_supported function, just passing it path, as
- * this is done in a few places (eg ptk-file-browser.c */
-            name = get_name_extension( (char*)vfs_file_info_get_name( file ),
-                                       FALSE, &extension );
-            path = g_build_filename( vfs_get_desktop_dir(),
-                                            vfs_file_info_get_name( file ), NULL );
-            vfs_file_info_unref( file );
-
-/*igcr logic below is troubled - will only do ARC_LIST if ARC_EXTRACT supported
- * better how you did in ptk-file-menu.c.  Also, why is .gz and .tar.gz handled
- * specially? (I can't remember) */
-            if ( ptk_file_archiver_is_format_supported( mime_type,
-                                                        extension,
-                                                        ARC_EXTRACT ) )
-            {
-                int no_write_access = ptk_file_browser_no_access ( 
-                                                    vfs_get_desktop_dir(), NULL );
-
-                // first file is archive - use default archive action
-                if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
-                {
-                    ptk_file_archiver_extract( self, NULL, sel_files,
-                                               vfs_get_desktop_dir(),
-                                               vfs_get_desktop_dir() );
-                    goto _done;
-                }
-                else if ( xset_get_b( "arc_def_exto" ) || 
-                        ( xset_get_b( "arc_def_ex" ) && no_write_access &&
-                                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) ) )
-                {
-                    ptk_file_archiver_extract( self, NULL, sel_files, 
-                                               vfs_get_desktop_dir(),
-                                               NULL );
-                    goto _done;
-                }
-                else if ( xset_get_b( "arc_def_list" )
-                          &&
-                          ptk_file_archiver_is_format_supported( mime_type,
-                                                                 extension,
-                                                                 ARC_LIST )
-                          && !(
-                            g_str_has_suffix( path, ".gz" )
-                            &&
-                            g_str_has_suffix( path, ".tar.gz" )
-                          )
-                )
-                {
-                    ptk_file_archiver_extract( self, NULL, sel_files,
-                                               vfs_get_desktop_dir(),
-                                               "////LIST" );
-                    goto _done;
-                }
-            }
-        }
-
-        if ( sel_files && xset_get_b( "iso_auto" ) )
-        {
-            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            if ( mime_type && !vfs_file_info_is_dir( file ) &&
-                 vfs_mime_type_is_iso( mime_type, vfs_file_info_get_name( file ) ) )
-            {
-                char* str = g_build_filename( vfs_get_desktop_dir(),
-                                            vfs_file_info_get_name( file ), NULL );
-                mount_iso( NULL, str );
-                g_free( str );
-                vfs_file_info_unref( file );
-                goto _done;
-            }
-            vfs_file_info_unref( file );
-        }
-
-        ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL, NULL,
-                                                            TRUE, FALSE ); //MOD
-_done:
-        g_free( path );
-        g_free( name );
-        g_free( extension );
-        g_list_free( sel_files );
-    }
+        ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL,
+                                 self, NULL, TRUE, FALSE );
+    g_list_free( sel_files );
 }
 
 void show_desktop_menu( DesktopWindow* self, guint event_button,
@@ -2583,7 +2490,9 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
         return;
 
     AutoOpenCreate* ao = (AutoOpenCreate*)aop;
-    DesktopWindow* self = (DesktopWindow*)ao->file_browser;
+    if ( !GTK_IS_WIDGET( ao->desktop ) )
+        return;
+    DesktopWindow* self = ao->desktop;
     
     if ( ao->path && g_file_test( ao->path, G_FILE_TEST_EXISTS ) )
     {
@@ -2634,8 +2543,8 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
                 gdk_threads_leave();
             }
             else
-                ptk_open_files_with_app( cwd, sel_files,
-                                                    NULL, NULL, FALSE, TRUE );
+                ptk_open_files_with_app( cwd, sel_files, NULL,
+                                         self, NULL, FALSE, TRUE );
             vfs_file_info_unref( file );
             g_list_free( sel_files );
         }

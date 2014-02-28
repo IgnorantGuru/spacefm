@@ -1014,28 +1014,30 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 void ptk_file_archiver_extract( DesktopWindow *desktop,
                                 PtkFileBrowser *file_browser,
                                 GList *files, const char *cwd,
-                                const char *dest_dir )
-{
-    /* This function is also used to list the contents of archives */
-
+                                const char *dest_dir, int job )
+{   /* This function is also used to list the contents of archives */
     GtkWidget* dlg;
     GtkWidget* dlgparent = NULL;
     char* choose_dir = NULL;
     gboolean create_parent = FALSE, in_term = FALSE, keep_term = FALSE;
     gboolean  write_access = FALSE, list_contents = FALSE;
     VFSFileInfo* file;
-    VFSMimeType* mime;
+    VFSMimeType* mime_type;
     const char *dest, *type;
     GList* l;
     char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
-        *mkparent = NULL, *perm = NULL, *name = NULL, *extension = NULL,
-        *cmd = NULL, *str = NULL, *final_command = NULL, *s1 = NULL;
+        *mkparent = NULL, *perm = NULL,
+        *cmd = NULL, *str = NULL, *final_command = NULL, *s1 = NULL, *extension;
     int i, n, j;
     struct stat64 statbuf;
 
     // Making sure files to act on have been passed
-    if( !files )
+    if( !files || job == HANDLER_COMPRESS )
         return;
+
+    // Detecting whether this function call is actually to list the
+    // contents of the archive or not...
+    list_contents = job == HANDLER_LIST;
 
     // Determining parent of dialog
     if ( file_browser )
@@ -1044,8 +1046,8 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     //else if ( desktop )
     //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
 
-    // Checking if destination directory hasn't been specified
-    if( !dest_dir )
+    // Checking if extract to directory hasn't been specified
+    if ( !dest_dir && !list_contents )
     {
         /* It hasn't - generating dialog to ask user. Only dealing with
          * user-writable contents if the user isn't root */
@@ -1137,10 +1139,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         create_parent = xset_get_b( "arc_def_parent" );
         write_access = xset_get_b( "arc_def_write" );
 
-        // Detecting whether this function call is actually to list the
-        // contents of the archive or not...
-        list_contents = !strcmp( dest_dir, "////LIST" );
-
         dest = dest_dir;
     }
 
@@ -1153,7 +1151,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     gchar** archive_handlers = archive_handlers_s ?
                                g_strsplit( archive_handlers_s, " ", -1 ) :
                                NULL;
-    XSet* handler_xset;
+    XSet* handler_xset = NULL;
 
     /* Setting desired archive operation and keeping in terminal while
      * listing */
@@ -1163,46 +1161,31 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     // Looping for all files to attempt to list/extract
     for ( l = files; l; l = l->next )
     {
-        gboolean format_supported = FALSE;
 
         // Fetching file details
         file = (VFSFileInfo*)l->data;
-        mime = vfs_file_info_get_mime_type( file );
-        type = vfs_mime_type_get_type( mime );
-        name = get_name_extension( (char*)vfs_file_info_get_name( file ),
-                                   FALSE, &extension );
+        mime_type = vfs_file_info_get_mime_type( file );
+        // Determining file paths
+        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
+                                      NULL );
 
-        // Looping for handlers (NULL-terminated list)
-        if ( archive_handlers )
-        {
-            for (i = 0; archive_handlers[i] != NULL; ++i)
-            {
-                // Fetching handler
-                handler_xset = xset_is( archive_handlers[i] );
-
-                // Checking to see if handler is enabled and can cope with
-                // extraction/listing
-                if ( handler_xset && 
-                     archive_handler_is_format_supported( handler_xset, type,
-                                                          extension,
-                                                          archive_operation ) )
-                {
-                    // It can - setting flag and leaving loop
-                    format_supported = TRUE;
-                    break;
-                }
-            }
-        }
-
-        // Cleaning up
-        g_free( name );
-        g_free( extension );
+        // Get handler with non-empty command
+        handler_xset = ptk_handler_file_has_handler(
+                                        HANDLER_MODE_ARC, archive_operation,
+                                        full_path, mime_type, TRUE );
+                                        
+        vfs_mime_type_unref( mime_type );
 
         // Continuing to next file if a handler hasnt been found
-/*igcr a g_warning may be appropriate here for debugging why file ignored */
-        if (!format_supported)
+        if ( !handler_xset )
+        {
+            g_warning( "%s %s", _("No archive handler/command found for file:"),
+                                                            full_path );
+            g_free( full_path );
             continue;
-
+        }
+        printf( "Archive Handler Selected: %s\n", handler_xset->menu_label );
+        
         /* Handler found - fetching the 'run in terminal' preference, if
          * the operation is listing then the terminal should be kept
          * open, otherwise the user should explicitly keep the terminal
@@ -1214,9 +1197,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             in_term = archive_handler_run_in_term( handler_xset,
                                                    archive_operation );
 
-        // Determining file paths
-        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
-                                      NULL );
         full_quote = bash_quote( full_path );
 
         // Checking if the operation is to list an archive(s)
@@ -1232,8 +1212,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 g_free( err_msg );
                 cmd = g_strdup( "" );
             }
-/*igcr note there is no test here for empty command - okay to ignore?
- * see ptk_handler_command_is_empty() */
 
             str = cmd;            
             cmd = replace_string( cmd, "%x", full_quote, FALSE );
@@ -1251,32 +1229,41 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
-            gchar** extensions = handler_xset->x ?
+            gchar** pathnames = handler_xset->x ?
                            g_strsplit_set( handler_xset->x, ", ", -1 ) :
                            NULL;
-            if ( extensions )
+            gchar *filename_no_ext;
+            if ( pathnames )
             {
-                for (i = 0; extensions[i]; ++i)
+                for (i = 0; pathnames[i]; ++i)
                 {
-                    // Debug code
-                    //g_message( "extensions[i]: %s", extensions[i]);
-
-                    // Checking if the current extension is being used
-                    if (g_str_has_suffix( filename, extensions[i] ))
+                    // getting just the extension of the pathname list element
+                    filename_no_ext = get_name_extension( pathnames[i],
+                                                         FALSE,
+                                                         &extension );
+                    if ( extension )
                     {
-                        // It is - determining filename without extension
-                        // and breaking
-                        n = strlen( filename ) - strlen( extensions[i] );
-                        filename[n] = '\0';
-                        filename_no_archive_ext = g_strdup( filename );
-                        filename[n] = '.';
-                        break;
+                        // add a dot to extension
+                        str = extension;
+                        extension = g_strconcat( ".", extension, NULL );
+                        g_free( str );
+                        // Checking if the current extension is being used
+                        if ( g_str_has_suffix( filename, extension ) )
+                        {
+                            // It is - determining filename without extension
+                            n = strlen( filename ) - strlen( extension );
+                            char ch = filename[n];
+                            filename[n] = '\0';
+                            filename_no_archive_ext = g_strdup( filename );
+                            filename[n] = ch;
+                            break;
+                        }
                     }
+                    g_free( filename_no_ext );
+                    g_free( extension );
                 }
             }
-
-            // Clearing up
-            g_strfreev( extensions );
+            g_strfreev( pathnames );
 
             /* An archive may not have an extension, or there may be no
              * extensions specified for the handler (they are optional)
@@ -1286,7 +1273,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
             /* Now the extraction filename is obtained, determine the
              * normal filename without the extension */
-            gchar *filename_no_ext = get_name_extension( filename_no_archive_ext,
+            filename_no_ext = get_name_extension( filename_no_archive_ext,
                                                          FALSE,
                                                          &extension );
 
@@ -1304,8 +1291,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             // Cleaning up
             g_free( filename );
 
-            /* Get extraction command - dealing with 'run in
-             * terminal' and multiline command. Doing this here as parent
+            /* Get extraction command - Doing this here as parent
              * directory creation needs access to the command. */
             char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
                                                     HANDLER_EXTRACT,
@@ -1317,8 +1303,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 g_free( err_msg );
                 cmd = g_strdup( "" );
             }
-/*igcr note there is no test here for empty command - okay to ignore?
- * see ptk_handler_command_is_empty() */
 
             // Placeholders - Substituting archive to extract
             gchar* extract_cmd = replace_string( cmd, "%x", full_quote, FALSE );
@@ -1507,56 +1491,5 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
      * is freed by the task */
     g_strfreev( archive_handlers );
     g_free( choose_dir );
-}
-
-gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
-                                                const char* extension,
-                                                int operation )
-{   // this function must be FAST - is run multiple times on menu popup
-    const char* type;
-    char* delim;
-    char* ptr;
-    XSet* handler_xset;
-
-    if ( !mime && !extension )
-        return FALSE;
-    /* Operation doesnt need validation here - archive_handler_is_format_supported
-     * takes care of this */
-    
-    // Fetching and validating MIME type if provided
-    if ( mime )
-        type = (char*)vfs_mime_type_get_type( mime );
-    else
-        type = NULL;
-    
-    // parsing handlers list
-    if ( ptr = xset_get_s( "arc_conf2" ) )
-    {
-        while ( ptr[0] )
-        {
-            while ( ptr[0] == ' ' )
-                ptr++;
-            if ( !ptr[0] )
-                break;
-            if ( delim = strchr( ptr, ' ' ) )
-                delim[0] = '\0';    // set temporary end of string
-
-            // Fetching handler
-            handler_xset = xset_is( ptr );
-            if ( delim )
-                delim[0] = ' ';     // remove temporary end of string
-
-            // Checking to see if handler can cope with format and operation
-            if ( handler_xset && archive_handler_is_format_supported( handler_xset,
-                                                    type,
-                                                    extension,
-                                                    operation ) )
-                return TRUE;
-            if ( !delim )
-                break;
-            ptr = delim + 1;
-        }
-    }
-    return FALSE;
 }
 

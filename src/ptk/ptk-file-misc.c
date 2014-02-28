@@ -32,11 +32,19 @@
 #include "vfs-execute.h"
 #include "ptk-app-chooser.h"
 #include "ptk-clipboard.h"
+#include "ptk-file-archiver.h"
 #include <gdk/gdkkeysyms.h>
 
 #include "settings.h"
 #include "ptk-handler.h"
 #include "gtk2-compat.h"
+
+typedef struct
+{
+    PtkFileBrowser* file_browser;
+    DesktopWindow* desktop;
+    const char* cwd;
+} ParentInfo;
 
 typedef struct
 {
@@ -3435,10 +3443,56 @@ void ptk_show_file_properties( GtkWindow* parent_win,
     gtk_widget_show( dlg );
 }
 
-static void open_files_with_handler( const char* cwd,
-                                GList* files,
-                                XSet* handler_set,
-                                PtkFileBrowser* file_browser )
+static gboolean open_archives_with_handler( ParentInfo* parent,
+                                            GList* sel_files,
+                                            char* full_path,
+                                            VFSMimeType* mime_type )
+{
+    gboolean extract_here = xset_get_b( "arc_def_ex" );
+    const char* dest_dir = NULL;
+    int cmd;
+    
+    if ( xset_get_b( "arc_def_open" ) )
+        // user has open archives with app option enabled
+        return FALSE;  // don't handle these files
+    
+    // determine default archive action in this dir
+    if ( extract_here && have_rw_access( parent->cwd ) )
+    {
+        // Extract Here
+        cmd = HANDLER_EXTRACT;
+        dest_dir = parent->cwd;
+    }
+    else if ( extract_here || xset_get_b( "arc_def_exto" ) )
+    {
+        // Extract Here but no write access or Extract To option
+        cmd = HANDLER_EXTRACT;
+    }
+    else if ( xset_get_b( "arc_def_list" ) )
+    {
+        // List contents
+        cmd = HANDLER_LIST;
+    }
+    else
+        return FALSE;  // don't handle these files
+    
+    // type or pathname has archive handler? - don't test command non-empty
+    // here because only applies to first file
+    if ( ptk_handler_file_has_handler( HANDLER_MODE_ARC,
+                                       cmd,
+                                       full_path, mime_type,
+                                       FALSE ) )
+    {
+        ptk_file_archiver_extract( parent->desktop, parent->file_browser,
+                                   sel_files, parent->cwd, dest_dir, cmd );
+        return TRUE;  // all files handled
+    }
+    return FALSE;  // don't handle these files
+}
+
+static void open_files_with_handler( ParentInfo* parent,
+                                     GList* files,
+                                     XSet* handler_set )
 {
     GList* l;
     char* str;
@@ -3453,13 +3507,16 @@ static void open_files_with_handler( const char* cwd,
                     NULL, &command );
     if ( err_msg )
     {
-        xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
+        xset_msg_dialog( parent->file_browser ?
+                            GTK_WIDGET( parent->file_browser ) : NULL,
+                            GTK_MESSAGE_ERROR,
                             _("Error Loading Handler"), NULL, 0, 
                             err_msg, NULL, NULL );
         g_free( err_msg );
         return;
     }
-    // prepare bash vars for just the files being opened, not all selected
+    /* prepare bash vars for just the files being opened by this handler,
+     * not necessarily all selected */
     GString* fm_filenames = g_string_new( "fm_filenames=(\n" );
     GString* fm_files = g_string_new( "fm_files=(\n" );
     // command looks like it handles multiple files ?
@@ -3521,12 +3578,15 @@ static void open_files_with_handler( const char* cwd,
         }
 
         // Run task
-        PtkFileTask* task = ptk_file_exec_new( handler_set->menu_label, cwd,
-                                file_browser ? GTK_WIDGET( file_browser ) : NULL,
-                                file_browser ? file_browser->task_view : NULL );
+        PtkFileTask* task = ptk_file_exec_new( handler_set->menu_label,
+                                parent->cwd,
+                                parent->file_browser ?
+                                    GTK_WIDGET( parent->file_browser ) : NULL,
+                                parent->file_browser ?
+                                    parent->file_browser->task_view : NULL );
         // don't free cwd!
-        task->task->exec_browser = file_browser;
-        //task->task->exec_desktop = desktop;
+        task->task->exec_browser = parent->file_browser;
+        task->task->exec_desktop = parent->desktop;
         task->task->exec_command = command_final;
         if ( handler_set->icon )
             task->task->exec_icon = g_strdup( handler_set->icon );
@@ -3544,10 +3604,9 @@ static void open_files_with_handler( const char* cwd,
     g_free( command );
 }
 
-static gboolean open_files_with_app( const char* cwd,
+static gboolean open_files_with_app( ParentInfo* parent,
                                      GList* files,
-                                     const char* app_desktop,
-                                     PtkFileBrowser* file_browser )
+                                     char* app_desktop )
 {
     gchar * name;
     GError* err = NULL;
@@ -3555,12 +3614,15 @@ static gboolean open_files_with_app( const char* cwd,
     GdkScreen* screen;
     XSet* handler_set;
     
-    if ( app_desktop && app_desktop[0] == '#' &&
-                            ( handler_set = xset_is( app_desktop + 1 ) )
+    if ( app_desktop && g_str_has_prefix( app_desktop, "###" ) &&
+                            ( handler_set = xset_is( app_desktop + 3 ) )
                             && files )
     {
         // is a handler
-        open_files_with_handler( cwd, files, handler_set, file_browser );
+        open_files_with_handler( parent, files, handler_set );
+        // hash table contained pointer to allocated app_desktop - other
+        // app_desktop's are const
+        g_free( app_desktop );
         return TRUE;
     }
 
@@ -3590,37 +3652,34 @@ static gboolean open_files_with_app( const char* cwd,
         g_free( name );
     }
 
-    if( file_browser )
-        screen = gtk_widget_get_screen( GTK_WIDGET(file_browser) );
+    if ( parent->file_browser )
+        screen = gtk_widget_get_screen( GTK_WIDGET( parent->file_browser ) );
+    else if ( parent->desktop )
+        screen = gtk_widget_get_screen( GTK_WIDGET( parent->desktop ) );
     else
         screen = gdk_screen_get_default();
 
     printf("EXEC(%s)=%s\n", app->full_path ? app->full_path : app_desktop,
                                                                 app->exec );
-    if ( ! vfs_app_desktop_open_files( screen, cwd, app, files, &err ) )
+    if ( ! vfs_app_desktop_open_files( screen, parent->cwd, app, files, &err ) )
     {
-        GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel(
-                                        GTK_WIDGET( file_browser ) ) : NULL;
-        //char* msg = g_markup_escape_text(err->message, -1);
-        ptk_show_error( GTK_WINDOW( toplevel ),
-                        _("Error"),
-                        err->message );
-        //g_free(msg);
+        GtkWidget * toplevel = parent->file_browser ? gtk_widget_get_toplevel(
+                                GTK_WIDGET( parent->file_browser ) ) : NULL;
+        ptk_show_error( GTK_WINDOW( toplevel ), _("Error"), err->message );
         g_error_free( err );
     }
     vfs_app_desktop_unref( app );
     return TRUE;
 }
 
-static void open_files_with_each_app( gpointer key, gpointer value, gpointer user_data )
+static void open_files_with_each_app( gpointer key, gpointer value,
+                                                    gpointer user_data )
 {
-    const char * app_desktop = ( const char* ) key;
+    char* app_desktop = (char*)key;  // is const unless handler
     const char* cwd;
-    GList* files = ( GList* ) value;
-    PtkFileBrowser* file_browser = ( PtkFileBrowser* ) user_data;
-    /* FIXME: cwd should be passed into this function */
-    cwd = file_browser ? ptk_file_browser_get_cwd(file_browser) : NULL;
-    open_files_with_app( cwd, files, app_desktop, file_browser );
+    GList* files = (GList*)value;
+    ParentInfo* parent = (ParentInfo*)user_data;
+    open_files_with_app( parent, files, app_desktop );
 }
 
 static void free_file_list_hash( gpointer key, gpointer value, gpointer user_data )
@@ -3637,6 +3696,7 @@ static void free_file_list_hash( gpointer key, gpointer value, gpointer user_dat
 void ptk_open_files_with_app( const char* cwd,
                               GList* sel_files,
                               char* app_desktop,
+                              DesktopWindow* desktop,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever )
 {
@@ -3654,6 +3714,11 @@ void ptk_open_files_with_app( const char* cwd,
     GtkWidget* toplevel;
     PtkFileBrowser* fb;
 
+    ParentInfo* parent = g_slice_new0( ParentInfo );
+    parent->desktop = desktop;
+    parent->file_browser = file_browser;
+    parent->cwd = cwd;
+    
     for ( l = sel_files; l; l = l->next )
     {
         file = ( VFSFileInfo* ) l->data;
@@ -3721,29 +3786,45 @@ void ptk_open_files_with_app( const char* cwd,
 
                 mime_type = vfs_file_info_get_mime_type( file );
                 
-                // If handler, set app_desktop = #XSETNAME
-                ptk_handler_file_has_handler( HANDLER_MODE_FILE, HANDLER_MOUNT,
-                                              full_path, mime_type,
-                                              &app_desktop, TRUE );
+                // if has file handler, set app_desktop = #XSETNAME
+                XSet* handler_set;
+                if ( handler_set = ptk_handler_file_has_handler(
+                                            HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                            full_path, mime_type, TRUE ) )
+                    // app_desktop is normally const but we're putting a
+                    // allocated string in it which will be free later
+                    app_desktop = g_strconcat( "###", handler_set->name, NULL );
+                else if ( open_archives_with_handler( parent, sel_files,
+                                                      full_path, mime_type ) )
+                {
+                    // all files were handled by open_archives_with_handler
+                    vfs_mime_type_unref( mime_type );
+                    break;
+                }
                 
                 /* The file itself is a desktop entry file. */
-                /*                if( g_str_has_suffix( vfs_file_info_get_name( file ), ".desktop" ) ) */
+                /* was: if( g_str_has_suffix( vfs_file_info_get_name( file ), ".desktop" ) ) */
                 if ( !app_desktop )
                 {
                     if ( file->flags & VFS_FILE_INFO_DESKTOP_ENTRY &&
-                                            ( ! app_settings.no_execute || xforce ) ) //sfm
+                                    ( ! app_settings.no_execute || xforce ) )
                         app_desktop = full_path;
                     else
-                        app_desktop = vfs_mime_type_get_default_action( mime_type );
+                        app_desktop = vfs_mime_type_get_default_action(
+                                                            mime_type );
                 }
 
-                if ( !app_desktop && mime_type_is_text_file( full_path, mime_type->type ) )
+                if ( !app_desktop && mime_type_is_text_file( full_path,
+                                                            mime_type->type ) )
                 {
                     /* FIXME: special handling for plain text file */
                     vfs_mime_type_unref( mime_type );
                     mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_PLAIN_TEXT );
                     app_desktop = vfs_mime_type_get_default_action( mime_type );
                 }
+                
+                vfs_mime_type_unref( mime_type );
+
                 if ( !app_desktop && vfs_file_info_is_symlink( file ) )
                 {
                     // broken link?
@@ -3752,8 +3833,11 @@ void ptk_open_files_with_app( const char* cwd,
                     {
                         if ( !g_file_test( target_path, G_FILE_TEST_EXISTS ) )
                         {
-                            char* msg = g_strdup_printf( _("This symlink's target is missing or you do not have permission to access it:\n%s\n\nTarget: %s"), full_path, target_path );
-                            toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
+                            char* msg = g_strdup_printf( _("This symlink's target is missing or you do not have permission to access it:\n%s\n\nTarget: %s"),
+                                                    full_path, target_path );
+                            toplevel = file_browser ? gtk_widget_get_toplevel(
+                                                 GTK_WIDGET( file_browser ) ) :
+                                                 NULL;
                             ptk_show_error( ( GtkWindow* ) toplevel,
                                             _("Broken Link"), msg );
                             g_free(msg);
@@ -3766,7 +3850,9 @@ void ptk_open_files_with_app( const char* cwd,
                 }
                 if ( !app_desktop )
                 {
-                    toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;                    /* Let the user choose an application */
+                    /* Let the user choose an application */
+                    toplevel = file_browser ? gtk_widget_get_toplevel( 
+                                        GTK_WIDGET( file_browser ) ) : NULL;
                     choosen_app = (char *) ptk_choose_app_for_mime_type(
                                       ( GtkWindow* ) toplevel,
                                       mime_type, TRUE, TRUE, TRUE, !file_browser );
@@ -3787,7 +3873,6 @@ void ptk_open_files_with_app( const char* cwd,
                     files_to_open = g_list_append( files_to_open, full_path );
                 g_hash_table_replace( file_list_hash, app_desktop, files_to_open );
                 app_desktop = NULL;
-                vfs_mime_type_unref( mime_type );
             }
             else
             {
@@ -3799,32 +3884,28 @@ void ptk_open_files_with_app( const char* cwd,
     if ( file_list_hash )
     {
         g_hash_table_foreach( file_list_hash,
-                              open_files_with_each_app, file_browser );
+                              open_files_with_each_app, parent );
         g_hash_table_foreach( file_list_hash,
                               free_file_list_hash, NULL );
         g_hash_table_destroy( file_list_hash );
     }
     else if ( files_to_open && app_desktop )
     {
-        open_files_with_app( cwd, files_to_open,
-                             app_desktop, file_browser );
+        open_files_with_app( parent, files_to_open, app_desktop );
         g_list_foreach( files_to_open, ( GFunc ) g_free, NULL );
         g_list_free( files_to_open );
     }
 
     if ( new_dir )
     {
-        /*
-        ptk_file_browser_chdir( file_browser, new_dir, PTK_FB_CHDIR_ADD_HISTORY );
-        */
         if ( G_LIKELY( file_browser ) )
         {
             ptk_file_browser_emit_open( file_browser,
                                         full_path, PTK_OPEN_DIR );
         }
-
         g_free( new_dir );
     }
+    g_slice_free( ParentInfo, parent );
 }
 
 void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browser,

@@ -5349,7 +5349,7 @@ void ptk_file_browser_rename_selected_file( PtkFileBrowser* file_browser )
 
     parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
     ptk_rename_file( NULL, file_browser, ptk_file_browser_get_cwd( file_browser ),
-                     file, NULL, FALSE );
+                     file, NULL, FALSE, PTK_RENAME, NULL );
     vfs_file_info_unref( file );
 
 //#if 0
@@ -5528,98 +5528,11 @@ void ptk_file_browser_open_selected_files_with_app( PtkFileBrowser* file_browser
 {
     GList * sel_files;
     sel_files = ptk_file_browser_get_selected_files( file_browser );
-    char *path = NULL, *extension = NULL, *name = NULL;
-    VFSMimeType* mime_type = NULL;
 
-/*igtodo move this to ptk_open_files_with_app ? */
-    // archive?
-    if( sel_files && !xset_get_b( "arc_def_open" ) )
-    {
-        VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-        mime_type = vfs_file_info_get_mime_type( file );
-        name = get_name_extension( (char*)vfs_file_info_get_name( file ), FALSE,
-                                   &extension );
-        path = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
-                                            vfs_file_info_get_name( file ), NULL );
-        vfs_file_info_unref( file );
-
-/*igcr same logic problem as desktop-window.c - will only do ARC_LIST if
- * ARC_EXTRACT supported better how you did in ptk-file-menu.c.  Also, why is
- * .gz and .tar.gz handled specially? (I can't remember) */
-        if ( ptk_file_archiver_is_format_supported( mime_type,
-                                                    extension,
-                                                    ARC_EXTRACT ) )
-        {
-            int no_write_access = 0;
-
-#if defined(HAVE_EUIDACCESS)
-    no_write_access = euidaccess( ptk_file_browser_get_cwd( file_browser ), W_OK );
-#elif defined(HAVE_EACCESS)
-    no_write_access = eaccess( ptk_file_browser_get_cwd( file_browser ), W_OK );
-#endif
-
-            // first file is archive - use default archive action
-            if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
-            {
-                ptk_file_archiver_extract( NULL, file_browser, sel_files,
-                                ptk_file_browser_get_cwd( file_browser ),
-                                ptk_file_browser_get_cwd( file_browser ) );
-                goto _done;
-            }
-            else if ( xset_get_b( "arc_def_exto" ) || 
-                        ( xset_get_b( "arc_def_ex" ) && no_write_access &&
-                                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) ) )
-            {
-                ptk_file_archiver_extract( NULL, file_browser, sel_files, 
-                                ptk_file_browser_get_cwd( file_browser ),
-                                NULL );
-                goto _done;
-            }
-            else if ( xset_get_b( "arc_def_list" )
-                      &&
-                      ptk_file_archiver_is_format_supported( mime_type,
-                                                   extension,
-                                                   ARC_LIST )
-                      && !(
-                        g_str_has_suffix( path, ".gz" )
-                        && !g_str_has_suffix( path, ".tar.gz" )
-                      )
-            )
-            {
-                ptk_file_archiver_extract( NULL, file_browser, sel_files,
-                                ptk_file_browser_get_cwd( file_browser ),
-                                "////LIST" );
-                goto _done;
-            }
-        }        
-    }
-    
-    if ( sel_files && xset_get_b( "iso_auto" ) )
-    {
-        VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-        mime_type = vfs_file_info_get_mime_type( file );
-        if ( mime_type && !vfs_file_info_is_dir( file ) &&
-             vfs_mime_type_is_iso( mime_type, vfs_file_info_get_name( file ) ) )
-        {
-            char* str = g_build_filename( ptk_file_browser_get_cwd( file_browser ),
-                                        vfs_file_info_get_name( file ), NULL );
-            mount_iso( file_browser, str );
-            g_free( str );
-            vfs_file_info_unref( file );
-            goto _done;
-        }
-        vfs_file_info_unref( file );
-    }
-    
     ptk_open_files_with_app( ptk_file_browser_get_cwd( file_browser ),
-                         sel_files, app_desktop, file_browser, FALSE, FALSE );
-_done:
-    g_free( path );
-    g_free( name );
-    g_free( extension );
-    if ( mime_type )
-        vfs_mime_type_unref( mime_type );
+                         sel_files, app_desktop, NULL, file_browser,
+                         FALSE, FALSE );
+
     vfs_file_info_list_free( sel_files );
 }
 

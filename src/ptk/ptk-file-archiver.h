@@ -35,7 +35,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 void ptk_file_archiver_extract( DesktopWindow *desktop,
                                 PtkFileBrowser *file_browser,
                                 GList *files, const char *cwd,
-                                const char *dest_dir );
+                                const char *dest_dir, int job );
 
 // At least a mime type or extension is required - mime type preferred
 gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,

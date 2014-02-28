@@ -24,6 +24,7 @@ typedef struct _AutoOpenCreate
 {
     char* path;
     PtkFileBrowser* file_browser;
+    DesktopWindow* desktop;
     GFunc callback;
     gboolean open_file;
 }AutoOpenCreate;
@@ -64,6 +65,7 @@ void ptk_show_file_properties( GtkWindow* parent_win,
 void ptk_open_files_with_app( const char* cwd,
                               GList* sel_files,
                               char* app_desktop,
+                              DesktopWindow* desktop,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever );
 

@@ -10755,6 +10755,9 @@ void xset_defaults()
         set = xset_set( "arc_conf2", "label", _("Co_nfigure") );
         xset_set_set( set, "icon", "gtk-preferences" );
 
+/*igtodo iso_mount and iso_auto no longer used, they should
+ * be removed?   still possibly attached custom items, yet not included in
+ * menu for performance  see ptk-file-menu */
     set = xset_set( "iso_mount", "label", _("_Mount ISO") );
     xset_set_set( set, "icon", "gtk-cdrom" );
 

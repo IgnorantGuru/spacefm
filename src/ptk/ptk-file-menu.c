@@ -148,90 +148,6 @@ static void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data );
 void
 on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data );
 
-/*
-static void on_popup_run_command( GtkMenuItem *menuitem,
-                               PtkFileMenu* data );  //MOD
-static void on_popup_user_6 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_7 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_8 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_9 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-*/
-/*
-static PtkMenuItemEntry create_new_menu[] =
-    {
-        PTK_IMG_MENU_ITEM( N_( "_Folder" ), "gtk-directory", on_popup_new_folder_activate, GDK_f, GDK_CONTROL_MASK ),  //MOD stole ctrl-f
-        PTK_IMG_MENU_ITEM( N_( "_Text File" ), "gtk-edit", on_popup_new_text_file_activate, GDK_f, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),  //MOD added ctrl-shift-f
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry extract_menu[] =
-    {
-        PTK_MENU_ITEM( N_( "E_xtract Here" ), on_popup_extract_here_activate, 0, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "Extract _To" ), "gtk-directory", on_popup_extract_to_activate, 0, 0 ),
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry basic_popup_menu[] =
-    {
-        PTK_MENU_ITEM( N_( "Open _with..." ), NULL, 0, 0 ),
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_STOCK_MENU_ITEM( "gtk-cut", on_popup_cut_activate ),
-        PTK_STOCK_MENU_ITEM( "gtk-copy", on_popup_copy_activate ),
-        PTK_IMG_MENU_ITEM( N_( "Copy as Te_xt" ), GTK_STOCK_COPY, on_popup_copy_text_activate, GDK_C, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "Copy _Name" ), GTK_STOCK_COPY, on_popup_copy_name_activate, GDK_C, GDK_MOD1_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_STOCK_MENU_ITEM( "gtk-paste", on_popup_paste_activate ),
-        PTK_IMG_MENU_ITEM( N_( "Paste as _Link" ), GTK_STOCK_PASTE, on_popup_paste_link_activate, GDK_V, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "Paste as Tar_get" ), GTK_STOCK_PASTE, on_popup_paste_target_activate, GDK_V, GDK_MOD1_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "_Delete" ), "gtk-delete", on_popup_delete_activate, GDK_Delete, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "_Rename" ), "gtk-edit", on_popup_rename_activate, GDK_F2, 0 ),
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_MENU_ITEM( N_( "Compress" ), on_popup_compress_activate, 0, 0 ),
-        PTK_POPUP_MENU( N_( "E_xtract" ), extract_menu ),
-        PTK_POPUP_IMG_MENU( N_( "_Create New" ), "gtk-new", create_new_menu ),
-        PTK_IMG_MENU_ITEM( N_( "R_un Command..." ), GTK_STOCK_EXECUTE, on_popup_run_command, GDK_r, GDK_CONTROL_MASK ),  //MOD
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_IMG_MENU_ITEM( N_( "_Properties" ), "gtk-info", on_popup_file_properties_activate, GDK_Return, GDK_MOD1_MASK ),
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry dir_popup_menu_items[] =
-    {
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_MENU_ITEM( N_( "Open in New _Tab" ), on_popup_open_in_new_tab_activate, 0, 0 ),
-        PTK_MENU_ITEM( N_( "Open in New _Window" ), on_popup_open_in_new_win_activate, 0, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "Open in Terminal" ), GTK_STOCK_EXECUTE, on_popup_open_in_terminal_activate, 0, 0 ),
-        PTK_MENU_END
-    };
-
-#if 0
-static gboolean same_file_type( GList* files )
-{
-    GList * l;
-    VFSMimeType* mime_type;
-    if ( ! files || ! files->next )
-        return TRUE;
-    mime_type = vfs_file_info_get_mime_type( ( VFSFileInfo* ) l->data );
-    for ( l = files->next; l ; l = l->next )
-    {
-        VFSMimeType * mime_type2;
-        mime_type2 = vfs_file_info_get_mime_type( ( VFSFileInfo* ) l->data );
-        vfs_mime_type_unref( mime_type2 );
-        if ( mime_type != mime_type2 )
-        {
-            vfs_mime_type_unref( mime_type );
-            return FALSE;
-        }
-    }
-    vfs_mime_type_unref( mime_type );
-    return TRUE;
-}
-#endif
-*/
-
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
     int p = browser->mypanel;
@@ -651,7 +567,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     int no_write_access = 0, no_read_access = 0;
     XSet* set, *set2;
     GtkMenuItem* item;
-
+    
     if ( !desktop && !browser )
         return NULL;
         
@@ -968,43 +884,24 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 (char*)vfs_file_info_get_name( info ), FALSE,
                 &extension );
 
-        // Archive commands
-        gboolean can_extract = ptk_file_archiver_is_format_supported(
-                                    mime_type, extension, ARC_EXTRACT );
-        gboolean can_list = ptk_file_archiver_is_format_supported( mime_type,
-                                                  extension, ARC_LIST );
-        if ( can_extract || can_list )
+        if ( ptk_handler_file_has_handler( HANDLER_MODE_ARC,
+                                HANDLER_EXTRACT, file_path, mime_type, FALSE ) )
         {
+            // Archive commands
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "arc_extract", on_popup_extract_here_activate, data );
             xset_set_ob1( set, "set", set );
-
-            /* Disabling extraction if archive handler can't cope or
-             * there is no write access to the current directory - this
-             * is a semi-permanent setting so need to explicitly flip
-             * back to false otherwise */
-            if (can_extract)
                 set->disable = no_write_access;
-            else
-                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_extractto", on_popup_extract_to_activate, data );
             xset_set_ob1( set, "set", set );
-            if (can_extract)
-                set->disable = FALSE;
-            else
-                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_list", on_popup_extract_list_activate, data );
             xset_set_ob1( set, "set", set );
-            if (can_list)
-                set->disable = FALSE;
-            else
-                set->disable = TRUE;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_def_open", on_archive_default, set );
@@ -1032,18 +929,25 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
+#if 0
         else if ( file_path && mime_type && !is_dir &&
                   vfs_mime_type_is_iso( mime_type, file_path ) )
         {
+/*igtodo iso_mount and iso_auto no longer used, they should
+ * be removed?   still possibly attached custom items, yet not included in
+ * menu for performance */
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "iso_mount", on_popup_mount_iso, data );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
+            xset_add_menuitem( desktop, browser, submenu,
+                                                        accel_group, set );    
 
             set = xset_get( "iso_auto" );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );
+            xset_add_menuitem( desktop, browser, submenu,
+                                                        accel_group, set );
         }
+#endif
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
 
@@ -1728,7 +1632,8 @@ on_popup_open_activate ( GtkMenuItem *menuitem,
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
     ptk_open_files_with_app( data->cwd, sel_files,
-                             NULL, data->browser, TRUE, FALSE );  //MOD
+                             NULL, data->desktop, data->browser,
+                             TRUE, FALSE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
 }
@@ -1766,7 +1671,7 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         if( ! sel_files )
             sel_files = g_list_prepend( sel_files, data->info );
         ptk_open_files_with_app( data->cwd, sel_files,
-                                app, data->browser, FALSE, FALSE );
+                                app, data->desktop, data->browser, FALSE, FALSE );
         if( sel_files != data->sel_files )
             g_list_free( sel_files );
         g_free( app );
@@ -1790,8 +1695,8 @@ void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
     sel_files = data->sel_files;
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
-    ptk_open_files_with_app( data->cwd, sel_files,
-                             NULL, FALSE /*allow MIME app - was data->browser*/,
+    ptk_open_files_with_app( data->cwd, sel_files, NULL,
+                             data->desktop, data->browser,
                              FALSE, TRUE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
@@ -1813,7 +1718,8 @@ void on_popup_run_app( GtkMenuItem *menuitem, PtkFileMenu* data )
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
     ptk_open_files_with_app( data->cwd, sel_files,
-                             (char *) app, data->browser, FALSE, FALSE ); //MOD
+                             (char *) app, data->desktop, data->browser,
+                             FALSE, FALSE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
 }
@@ -2810,21 +2716,21 @@ void on_popup_extract_to_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, NULL );
+                               data->cwd, NULL, HANDLER_EXTRACT );
 }
 
 void on_popup_extract_here_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, data->cwd );
+                               data->cwd, data->cwd, HANDLER_EXTRACT );
 }
 
 void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, "////LIST" );
+                               data->cwd, NULL, HANDLER_EXTRACT );
 }
 
 void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
@@ -2866,7 +2772,8 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
                 GList* sel_files = NULL;
                 sel_files = g_list_prepend( sel_files, file );
                 ptk_open_files_with_app( cwd, sel_files,
-                                         NULL, ao->file_browser, FALSE, TRUE );
+                                         NULL, ao->desktop, ao->file_browser,
+                                         FALSE, TRUE );
                 vfs_file_info_unref( file );
                 g_list_free( sel_files );
             }
@@ -2878,43 +2785,38 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
     g_slice_free( AutoOpenCreate, ao );
 }
 
-static void
-create_new_file( PtkFileMenu* data, int create_new )
+static void create_new_file( PtkFileMenu* data, int create_new )
 {
     char* cwd;
-    AutoOpenCreate* ao = NULL;
     
-    if ( data->cwd )
+    if ( !data->cwd )
+        return;
+
+    AutoOpenCreate* ao = g_slice_new0( AutoOpenCreate );
+    ao->path = NULL;
+    ao->file_browser = data->browser;
+    ao->desktop = data->desktop;
+    ao->open_file = FALSE;            
+    if ( data->browser )
+        ao->callback = (GFunc)on_autoopen_create_cb;
+    else if ( data->desktop )
     {
-        if ( data->browser )
-        {
-            ao = g_slice_new0( AutoOpenCreate );
-            ao->path = NULL;
-            ao->file_browser = data->browser;
-            ao->callback = (GFunc)on_autoopen_create_cb;
-            ao->open_file = FALSE;
-        }
-        else if ( data->desktop )
-        {
-            ao = g_slice_new0( AutoOpenCreate );
-            ao->path = NULL;
-            ao->file_browser = (PtkFileBrowser*)data->desktop;  // hack
 #ifdef DESKTOP_INTEGRATION
-            ao->callback = (GFunc)desktop_window_on_autoopen_cb;
+        ao->callback = (GFunc)desktop_window_on_autoopen_cb;
+#else
+        ao->callback = NULL;
 #endif
-            ao->open_file = FALSE;            
-        }
-        int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
-                        data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
-                        NULL, FALSE, create_new, ao );
-        if ( result == 0 )
-        {
-            ao->file_browser = NULL;
-            g_free( ao->path );
-            ao->path = NULL;
-            g_slice_free( AutoOpenCreate, ao );
-            ao = NULL;
-        }
+    }
+    int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
+                    data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
+                    NULL, FALSE, create_new, ao );
+    if ( result == 0 )
+    {
+        ao->file_browser = NULL;
+        ao->desktop = NULL;
+        g_free( ao->path );
+        ao->path = NULL;
+        g_slice_free( AutoOpenCreate, ao );
     }
 }
 
