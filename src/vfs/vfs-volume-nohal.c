@@ -3111,7 +3111,7 @@ static char* create_mount_point( int mode, VFSVolume* vol,
 {
     char* mname = NULL;
     char* str;
-    if ( mode == HANDLER_MODE_FS )
+    if ( mode == HANDLER_MODE_FS && vol )
     {
         char* bdev = g_path_get_basename( vol->device_file );
         if ( vol->label && vol->label[0] != '\0'
@@ -3262,7 +3262,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( netmount->user && netmount->user[0] )
             values = g_slist_prepend( values,
                     g_strconcat( "user=", netmount->user, NULL ) );
-        if ( action != HANDLER_MOUNT && vol->is_mounted )
+        if ( action != HANDLER_MOUNT && vol && vol->is_mounted )
         {
             // user-entered url (or mtab url if not available)
             values = g_slist_prepend( values,
@@ -3288,7 +3288,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         return NULL;
     }
     // universal values
-    if ( vol->is_mounted && vol->mount_point && vol->mount_point[0] )
+    if ( vol && vol->is_mounted && vol->mount_point && vol->mount_point[0] )
         values = g_slist_prepend( values,
                 g_strconcat( "point=", vol->mount_point, NULL ) );
     
@@ -3451,7 +3451,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( strstr( command, "%url%" ) )
         {
             str = command;
-            if ( action != HANDLER_MOUNT && vol->is_mounted )
+            if ( action != HANDLER_MOUNT && vol && vol->is_mounted )
                 // user-entered url (or mtab url if not available)
                 command = replace_string( command, "%url%", vol->udi, FALSE );
             else
@@ -3500,7 +3500,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             if ( action == HANDLER_MOUNT )
             {
                 // create mount point
-                char* point_dir = create_mount_point( HANDLER_MODE_NET, vol,
+                char* point_dir = create_mount_point( HANDLER_MODE_NET, NULL,
                                                       netmount );
                 str = command;
                 command = replace_string( command, "%a", point_dir, FALSE );
@@ -3514,16 +3514,18 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             {
                 str = command;
                 command = replace_string( command, "%a",
-                        vol->is_mounted && vol->mount_point && vol->mount_point[0] ?
-                        vol->mount_point : "", FALSE );
+                        vol && vol->is_mounted && vol->mount_point &&
+                                                    vol->mount_point[0] ?
+                                            vol->mount_point : "", FALSE );
                 g_free( str );
             }
         }
 
         // add bash variables
         // urlq is user-entered url or (if mounted) mtab url
-        char* urlq = bash_quote( action != HANDLER_MOUNT && vol->is_mounted ?
-                                 vol->udi : netmount->url );
+        char* urlq = bash_quote( action != HANDLER_MOUNT &&
+                                                vol && vol->is_mounted ?
+                                                    vol->udi : netmount->url );
         char* protoq = bash_quote( netmount->fstype );  // url-derived protocol (ssh)
         char* hostq = bash_quote( netmount->host );
         char* portq = bash_quote( netmount->port );
@@ -3532,10 +3534,11 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         char* pathq = bash_quote( netmount->path );
         // mtab fs type (fuse.ssh)
         char* mtabfsq = bash_quote( action != HANDLER_MOUNT &&
-                                        vol->is_mounted ? vol->fs_type : NULL );
+                            vol && vol->is_mounted ? vol->fs_type : NULL );
         // urlq and mtaburlq will both be the same mtab url if mounted
-        char* mtaburlq = bash_quote( action != HANDLER_MOUNT && vol->is_mounted ?
-                                        vol->device_file : NULL );
+        char* mtaburlq = bash_quote( action != HANDLER_MOUNT &&
+                                            vol && vol->is_mounted ?
+                                                    vol->device_file : NULL );
         str = command;
         command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_port=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, portq, userq, passq, pathq, mtabfsq, mtaburlq, command );
         g_free( str );

@@ -760,7 +760,10 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
     return ret;
 }
 
-void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
+void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
+                                      const char* url,
+                                      gboolean new_tab,
+                                      gboolean force_new_mount )
 {
     xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
                 _("udev Not Configured"), NULL, 0,
@@ -881,7 +884,10 @@ void on_autoopen_net_cb( VFSFileTask* task, AutoOpen* ao )
     vfs_volume_clean_mount_points();
 }
 
-void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_tab )
+void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
+                                      const char* url,
+                                      gboolean new_tab,
+                                      gboolean force_new_mount )
 {
     char* str;
     char* line;
@@ -910,32 +916,35 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     */
 
     // already mounted?
-    const GList* l;
-    VFSVolume* vol;
-    const GList* volumes = vfs_volume_get_all_volumes();
-    for ( l = volumes; l; l = l->next )
+    if ( !force_new_mount )
     {
-        vol = (VFSVolume*)l->data;
-        // test against mtab url and copy of user-entered url (udi)
-        if ( strstr( vol->device_file, netmount->url ) ||
-                                        strstr( vol->udi, netmount->url ) )
+        const GList* l;
+        VFSVolume* vol;
+        const GList* volumes = vfs_volume_get_all_volumes();
+        for ( l = volumes; l; l = l->next )
         {
-            if ( vol->is_mounted && vol->mount_point &&
-                                    have_x_access( vol->mount_point ) )
+            vol = (VFSVolume*)l->data;
+            // test against mtab url and copy of user-entered url (udi)
+            if ( strstr( vol->device_file, netmount->url ) ||
+                                            strstr( vol->udi, netmount->url ) )
             {
-                if ( new_tab )
+                if ( vol->is_mounted && vol->mount_point &&
+                                        have_x_access( vol->mount_point ) )
                 {
-                    ptk_file_browser_emit_open( file_browser, vol->mount_point,
-                                                    PTK_OPEN_NEW_TAB );
+                    if ( new_tab )
+                    {
+                        ptk_file_browser_emit_open( file_browser, vol->mount_point,
+                                                        PTK_OPEN_NEW_TAB );
+                    }
+                    else
+                    {
+                        if ( strcmp( vol->mount_point,
+                                    ptk_file_browser_get_cwd( file_browser ) ) )
+                            ptk_file_browser_chdir( file_browser, vol->mount_point,
+                                                        PTK_FB_CHDIR_ADD_HISTORY );
+                    }
+                    goto _net_free;
                 }
-                else
-                {
-                    if ( strcmp( vol->mount_point,
-                                ptk_file_browser_get_cwd( file_browser ) ) )
-                        ptk_file_browser_chdir( file_browser, vol->mount_point,
-                                                    PTK_FB_CHDIR_ADD_HISTORY );
-                }
-                goto _net_free;
             }
         }
     }
@@ -943,7 +952,7 @@ void mount_network( PtkFileBrowser* file_browser, const char* url, gboolean new_
     // get mount command
     gboolean run_in_terminal;
     gboolean ssh_udevil = FALSE;
-    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, vol,
+    char* cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_MOUNT, NULL,
                                         NULL, netmount, &run_in_terminal,
                                         &mount_point );
     if ( !cmd )
@@ -4258,7 +4267,8 @@ void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser )
                                         GTK_TREE_VIEW( file_browser->side_book ) );
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
     {
-        mount_network( file_browser, dir_path, xset_get_b( "book_newtab" ) );
+        ptk_location_view_mount_network( file_browser, dir_path,
+                                    xset_get_b( "book_newtab" ), FALSE );
         g_free( dir_path );
     }
     else if ( dir_path )
@@ -4282,7 +4292,7 @@ void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
         return;
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
     {
-        mount_network( file_browser, dir_path, TRUE );
+        ptk_location_view_mount_network( file_browser, dir_path, TRUE, FALSE );
         g_free( dir_path );
     }
     else if ( dir_path )
@@ -4305,7 +4315,8 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
         return;
 
     if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
-        mount_network( file_browser, dir_path, xset_get_b( "book_newtab" ) );
+        ptk_location_view_mount_network( file_browser, dir_path,
+                                    xset_get_b( "book_newtab" ), FALSE );
     else
     {
         if ( !xset_get_b( "book_newtab" ) )

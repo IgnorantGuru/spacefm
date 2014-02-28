@@ -1030,7 +1030,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
     {
         save_command_history( GTK_ENTRY( entry ) );
         str = g_strdup( text );
-        mount_network( file_browser, str, FALSE );
+        ptk_location_view_mount_network( file_browser, str, FALSE, FALSE );
         g_free( str );
         return;
     }    

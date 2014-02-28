@@ -4776,7 +4776,8 @@ static void open_spec( PtkFileBrowser* file_browser, const char* url,
     {
         // network
         if ( file_browser )
-            mount_network( file_browser, use_url, new_tab );
+            ptk_location_view_mount_network( file_browser, use_url, new_tab,
+                                                                    FALSE );
         else
             open_in_prog( use_url );
     }

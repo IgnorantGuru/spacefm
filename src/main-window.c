@@ -282,7 +282,8 @@ void on_bookmark_item_activate ( GtkMenuItem* menu, gpointer user_data )
     if ( g_str_has_prefix( path, "//" ) || strstr( path, ":/" ) )
     {
         if ( file_browser )
-            mount_network( file_browser, path, xset_get_b( "book_newtab" ) );
+            ptk_location_view_mount_network( file_browser, path,
+                                xset_get_b( "book_newtab" ), FALSE );
     }
     else
     {
@@ -797,7 +798,7 @@ void on_open_url( GtkWidget* widget, FMMainWindow* main_window )
                                                                 main_window ) );
     char* url = xset_get_s( "main_save_session" );
     if ( file_browser && url && url[0] )
-        mount_network( file_browser, url, TRUE );
+        ptk_location_view_mount_network( file_browser, url, TRUE, TRUE );
 #if 0
     /* was on_save_session */
     xset_autosave_cancel();
@@ -3516,7 +3517,7 @@ void main_window_open_network( FMMainWindow* main_window, const char* path,
     if ( !file_browser )
         return;
     char* str = g_strdup( path );
-    mount_network( file_browser, str, new_tab );
+    ptk_location_view_mount_network( file_browser, str, new_tab, FALSE );
     g_free( str );
 }
 
