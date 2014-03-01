@@ -1402,6 +1402,13 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                     file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
 
+    /* Setting correct exec reference - probably causes different bash
+     * to be output */
+    if (file_browser)
+        task->task->exec_browser = file_browser;
+    else
+        task->task->exec_desktop = desktop;
+
     // Configuring task
     task->task->exec_command = final_command;
     task->task->exec_browser = file_browser;
