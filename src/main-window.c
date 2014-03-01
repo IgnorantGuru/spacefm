@@ -3037,6 +3037,12 @@ GtkWidget* fm_main_window_new()
 
 GtkWidget* fm_main_window_get_current_file_browser ( FMMainWindow* main_window )
 {
+    if ( !main_window )
+    {
+        main_window = fm_main_window_get_last_active();
+        if ( !main_window )
+            return NULL;
+    }
     if ( main_window->notebook )
     {
         gint idx = gtk_notebook_get_current_page( GTK_NOTEBOOK( main_window->notebook ) );

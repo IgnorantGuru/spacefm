@@ -83,6 +83,11 @@ static void on_drag_data_received( GtkWidget *widget, GdkDragContext *drag_conte
 
 static gboolean try_mount( GtkTreeView* view, VFSVolume* vol );
 
+#ifndef HAVE_HAL
+static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 );
+static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 );
+#endif
+
 enum {
     COL_ICON = 0,
     COL_NAME,
@@ -419,6 +424,33 @@ void on_row_activated( GtkTreeView* view, GtkTreePath* tree_path,
                                                         PTK_OPEN_NEW_TAB );
     }
 #endif
+}
+
+gboolean ptk_location_view_open_block( const char* block, gboolean new_tab )
+{
+    // open block device file if in volumes list
+
+    // may be link so get real path
+    char buf[ PATH_MAX + 1 ];
+    char* canon = realpath( block, buf );
+
+    const GList* l = vfs_volume_get_all_volumes();
+    for ( ; l; l = l->next )
+    {
+        if ( !g_strcmp0( ((VFSVolume*)l->data)->device_file, canon ) )
+        {
+#ifdef HAVE_HAL
+            on_mount( NULL, (VFSVolume*)l->data );
+#else
+            if ( new_tab )
+                on_open_tab( NULL, (VFSVolume*)l->data, NULL );           
+            else
+                on_open( NULL, (VFSVolume*)l->data, NULL );           
+#endif
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 void ptk_location_view_init_model( GtkListStore* list )
@@ -1816,15 +1848,20 @@ static gboolean try_mount( GtkTreeView* view, VFSVolume* vol )
 
 static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 {
+    PtkFileBrowser* file_browser;
     GtkWidget* view;
+
     if ( !item )
         view = view2;
     else
         view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
-    if ( !view )
-        return;
-    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
-                                                                    "file_browser" );
+    if ( view )
+        file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                            "file_browser" );
+    else
+        file_browser = 
+            (PtkFileBrowser*)fm_main_window_get_current_file_browser( NULL );
+
     if ( !file_browser || !vol )
         return;
         
@@ -1885,21 +1922,25 @@ static void on_open_tab( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 
 static void on_open( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
 {
+    PtkFileBrowser* file_browser;
     GtkWidget* view;
     if ( !item )
         view = view2;
     else
         view = (GtkWidget*)g_object_get_data( G_OBJECT(item), "view" );
-    if ( !view )
-        return;
-    PtkFileBrowser* file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
-                                                                    "file_browser" );
-    // Note: file_browser may be NULL
-    if ( !GTK_IS_WIDGET( file_browser ) )
-        file_browser = NULL;
+    if ( view )
+        file_browser = (PtkFileBrowser*)g_object_get_data( G_OBJECT(view),
+                                                            "file_browser" );
+    else
+        file_browser = 
+            (PtkFileBrowser*)fm_main_window_get_current_file_browser( NULL );
 
     if ( !vol )
         return;
+
+    // Note: file_browser may be NULL
+    if ( !GTK_IS_WIDGET( file_browser ) )
+        file_browser = NULL;
         
     if ( !vol->is_mounted )
     {
@@ -4360,46 +4401,56 @@ void on_bookmark_edit( GtkMenuItem* item, PtkFileBrowser* file_browser )
     }    
 }
 
+static void open_bookmark( PtkFileBrowser* file_browser, const char* path,
+                                                         gboolean new_tab )
+{
+    struct stat64 statbuf;
+
+    if ( !path || !GTK_IS_WIDGET( file_browser ) )
+        return;
+    if ( g_str_has_prefix( path, "//" ) || strstr( path, ":/" ) )
+        ptk_location_view_mount_network( file_browser, path, new_tab, FALSE );
+    else if ( stat64( path, &statbuf ) == 0 &&
+                                S_ISBLK( statbuf.st_mode ) &&
+                                ptk_location_view_open_block( path, new_tab ) )
+    {}
+    else
+    {
+        if ( g_strcmp0( path, ptk_file_browser_get_cwd( file_browser ) ) )
+        {
+            if ( new_tab )
+                ptk_file_browser_emit_open( file_browser, path,
+                                                PTK_OPEN_NEW_TAB );
+            else
+                ptk_file_browser_chdir( file_browser, path,
+                                                PTK_FB_CHDIR_ADD_HISTORY );
+        }
+    }
+}
+
 void on_bookmark_open( GtkMenuItem* item, PtkFileBrowser* file_browser )
 {
-    char * dir_path;
-
-    dir_path = ptk_bookmark_view_get_selected_dir( 
-                                        GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
-    {
-        ptk_location_view_mount_network( file_browser, dir_path,
-                                    xset_get_b( "book_newtab" ), FALSE );
-        g_free( dir_path );
-    }
-    else if ( dir_path )
-    {
-        if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
-            ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
-        g_free( dir_path );
-    }    
+    if ( !file_browser )
+        return;
+    char* dir_path = ptk_bookmark_view_get_selected_dir( 
+                                    GTK_TREE_VIEW( file_browser->side_book ) );
+    if ( !dir_path )
+        return;
+    open_bookmark( file_browser, dir_path,
+                              ( g_str_has_prefix( dir_path, "//" ) ||
+                                strstr( dir_path, ":/" ) ) );
+    g_free( dir_path );
 }
 
 void on_bookmark_open_tab( GtkMenuItem* item, PtkFileBrowser* file_browser )
 {
-    char * dir_path;
-
     if ( !file_browser )
         return;
         
-    dir_path = ptk_bookmark_view_get_selected_dir( 
-                                        GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( !dir_path )
-        return;
-    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
-    {
-        ptk_location_view_mount_network( file_browser, dir_path, TRUE, FALSE );
-        g_free( dir_path );
-    }
-    else if ( dir_path )
-    {
-        ptk_file_browser_emit_open( file_browser, dir_path, PTK_OPEN_NEW_TAB );
-    }
+    char* dir_path = ptk_bookmark_view_get_selected_dir( 
+                                    GTK_TREE_VIEW( file_browser->side_book ) );
+    open_bookmark( file_browser, dir_path, TRUE );
+    g_free( dir_path );
 }
 
 void on_bookmark_row_activated ( GtkTreeView *tree_view,
@@ -4407,32 +4458,13 @@ void on_bookmark_row_activated ( GtkTreeView *tree_view,
                                  GtkTreeViewColumn *column,
                                  PtkFileBrowser* file_browser )
 {
-    char * dir_path = NULL;
-
-    //ptk_file_browser_focus_me( file_browser );
-    dir_path = ptk_bookmark_view_get_selected_dir( 
-                                        GTK_TREE_VIEW( file_browser->side_book ) );
-    if ( !dir_path )
+    if ( !file_browser )
         return;
-
-    if ( g_str_has_prefix( dir_path, "//" ) || strstr( dir_path, ":/" ) )
-        ptk_location_view_mount_network( file_browser, dir_path,
-                                    xset_get_b( "book_newtab" ), FALSE );
-    else
-    {
-        if ( !xset_get_b( "book_newtab" ) )
-        {
-            if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
-                ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
-        }
-        else
-        {
-            ptk_file_browser_emit_open( file_browser, dir_path, PTK_OPEN_NEW_TAB );
-            //dir_path = NULL;
-            ptk_bookmark_view_chdir( tree_view,
-                                    ptk_file_browser_get_cwd( file_browser ) );
-        }
-    }
+    
+    //ptk_file_browser_focus_me( file_browser );
+    char* dir_path = ptk_bookmark_view_get_selected_dir( 
+                                    GTK_TREE_VIEW( file_browser->side_book ) );
+    open_bookmark( file_browser, dir_path, xset_get_b( "book_newtab" ) );
     g_free( dir_path );
 }
 
@@ -4445,8 +4477,9 @@ static gboolean on_bookmark_button_press_event( GtkTreeView* view,
     ptk_file_browser_focus_me( file_browser );
 
     if ( ( evt_win_click->s || evt_win_click->ob2_data ) &&
-            main_window_event( file_browser->main_window, evt_win_click, "evt_win_click", 0, 0,
-                                "bookmarks", 0, evt->button, evt->state, TRUE ) )
+            main_window_event( file_browser->main_window, evt_win_click,
+                            "evt_win_click", 0, 0,
+                            "bookmarks", 0, evt->button, evt->state, TRUE ) )
         return FALSE;
 
     if ( evt->button == 1 )  // left

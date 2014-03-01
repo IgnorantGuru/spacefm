@@ -2121,6 +2121,32 @@ gboolean on_activate_link( GtkLabel* label, gchar* uri, HandlerData* hnd )
     return TRUE;
 }
 
+static gboolean on_textview_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                HandlerData* hnd )
+{
+    if ( ( event->keyval == GDK_KEY_Return || 
+                                event->keyval == GDK_KEY_KP_Enter ) )
+    {
+        int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+        if ( keymod == GDK_MOD1_MASK )
+        {
+            // Alt+Enter == Open Handler Command In Editor
+            if ( widget == hnd->view_handler_compress )
+                keymod = 0;
+            else if ( widget == hnd->view_handler_extract )
+                keymod = 1;
+            else
+                keymod = 2;
+            char* uri = g_strdup_printf( "%d", keymod );            
+            on_activate_link( NULL, uri, hnd );
+            g_free( uri );
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                               XSet* def_handler_set )
 {
@@ -2362,6 +2388,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                                         GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_handler_compress_scroll ),
                                       hnd->view_handler_compress );
+    g_signal_connect( G_OBJECT( hnd->view_handler_compress ), "key-press-event",
+                          G_CALLBACK( on_textview_keypress ), hnd );
+
     hnd->view_handler_extract = gtk_text_view_new();
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( hnd->view_handler_extract ),
                                  GTK_WRAP_WORD_CHAR );
@@ -2372,6 +2401,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                                         GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_handler_extract_scroll ),
                                       hnd->view_handler_extract );
+    g_signal_connect( G_OBJECT( hnd->view_handler_extract ), "key-press-event",
+                          G_CALLBACK( on_textview_keypress ), hnd );
+
     hnd->view_handler_list = gtk_text_view_new();
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( hnd->view_handler_list ),
                                  GTK_WRAP_WORD_CHAR );
@@ -2382,6 +2414,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                                         GTK_POLICY_AUTOMATIC );
     gtk_container_add( GTK_CONTAINER( view_handler_list_scroll ),
                                       hnd->view_handler_list );
+    g_signal_connect( G_OBJECT( hnd->view_handler_list ), "key-press-event",
+                          G_CALLBACK( on_textview_keypress ), hnd );
 
     // set fonts
     on_textview_font_change( NULL, hnd );

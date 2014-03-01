@@ -2272,6 +2272,7 @@ void vfs_volume_set_info( VFSVolume* volume )
     char* disp_size;
     char* disp_mount;
     char* disp_fstype;
+    char* disp_devnum;
     char* disp_id = NULL;
     char size_str[ 64 ];
     
@@ -2427,6 +2428,8 @@ void vfs_volume_set_info( VFSVolume* volume )
         disp_fstype = g_strdup( volume->fs_type );// g_strdup_printf( "-%s", volume->fs_type );
     else
         disp_fstype = g_strdup( "" );
+    disp_devnum = g_strdup_printf( "%u:%u", (unsigned int)MAJOR( volume->devnum ),
+                                            (unsigned int)MINOR( volume->devnum ) );
  
     char* fmt = xset_get_s( "dev_dispname" );
     if ( !fmt )
@@ -2444,8 +2447,10 @@ void vfs_volume_set_info( VFSVolume* volume )
         g_free( value );
         value = replace_string( valuec, "%m", disp_mount, FALSE );
         g_free( valuec );
-        parameter = replace_string( value, "%i", disp_id, FALSE );
+        valuec = replace_string( value, "%n", disp_devnum, FALSE );
         g_free( value );
+        parameter = replace_string( valuec, "%i", disp_id, FALSE );
+        g_free( valuec );
     }
     
     //volume->disp_name = g_filename_to_utf8( parameter, -1, NULL, NULL, NULL );
@@ -2470,6 +2475,7 @@ void vfs_volume_set_info( VFSVolume* volume )
     g_free( disp_device );
     g_free( disp_fstype );
     g_free( disp_id );
+    g_free( disp_devnum );
 
     if ( !volume->udi )
         volume->udi = g_strdup( volume->device_file );

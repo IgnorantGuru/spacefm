@@ -9633,7 +9633,7 @@ void xset_defaults()
         set = xset_set( "dev_dispname", "lbl", _("_Display Name") );
         set->menu_style = XSET_MENU_STRING;
         xset_set_set( set, "title", _("Set Display Name Format") );
-        xset_set_set( set, "desc", _("Enter device display name format:\n\nUse:\n\t%%v\tdevice filename (eg sdd1)\n\t%%s\ttotal size (eg 800G)\n\t%%t\tfstype (eg ext4)\n\t%%l\tvolume label (eg Label or [no media])\n\t%%m\tmount point if mounted, or ---\n\t%%i\tdevice ID\n") );
+        xset_set_set( set, "desc", _("Enter device display name format:\n\nUse:\n\t%%v\tdevice filename (eg sdd1)\n\t%%s\ttotal size (eg 800G)\n\t%%t\tfstype (eg ext4)\n\t%%l\tvolume label (eg Label or [no media])\n\t%%m\tmount point if mounted, or ---\n\t%%i\tdevice ID\n\t%%n\tmajor:minor device numbers (eg 15:3)\n") );
         xset_set_set( set, "s", "%v %s %l %m" );
         xset_set_set( set, "z", "%v %s %l %m" );
         xset_set_set( set, "icn", "gtk-edit" );

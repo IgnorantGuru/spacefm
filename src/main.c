@@ -44,6 +44,7 @@
 #include "ptk-app-chooser.h"
 #include "ptk-file-properties.h"
 #include "ptk-file-menu.h"
+#include "ptk-location-view.h"
 
 #include "find-files.h"
 #include "pref-dialog.h"
@@ -1126,6 +1127,7 @@ gboolean handle_parsed_commandline_args()
     gboolean ret = TRUE;
     XSet* set;
     int p;
+    struct stat64 statbuf;
 
     app_settings.load_saved_tabs = !no_tabs;
     
@@ -1228,7 +1230,24 @@ gboolean handle_parsed_commandline_args()
                     ret = TRUE;
                 }
                 else if ( g_file_test( real_path, G_FILE_TEST_EXISTS ) )
-                    open_file( real_path );
+                {
+                    if ( stat64( real_path, &statbuf ) == 0 &&
+                                            S_ISBLK( statbuf.st_mode ) )
+                    {
+                        // open block device eg /dev/sda1
+                        if ( !main_window )
+                        {
+                            open_in_tab( &main_window, "/" );
+                            ptk_location_view_open_block( real_path, FALSE );
+                        }
+                        else
+                            ptk_location_view_open_block( real_path, TRUE );
+                        ret = TRUE;
+                        gtk_window_present( GTK_WINDOW( main_window ) );
+                    }
+                    else
+                        open_file( real_path );
+                }
                 else if ( ( *file[0] != '/' && strstr( *file, ":/" ) )
                                         || g_str_has_prefix( *file, "//" ) )
                 {
@@ -1591,7 +1610,8 @@ void open_file( const char* path )
         else
             error_msg = _( "Don't know how to open the file" );
         disp_path = g_filename_display_name( path );
-        msg = g_strdup_printf( _( "Unable to open file:\n\"%s\"\n%s" ), disp_path, error_msg );
+        msg = g_strdup_printf( _( "Unable to open file:\n\"%s\"\n%s" ),
+                                                disp_path, error_msg );
         g_free( disp_path );
         ptk_show_error( NULL, _("Error"), msg );
         g_free( msg );

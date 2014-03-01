@@ -926,7 +926,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
     gchar *dir_path, *final_path;
     GList* l;
     char* str;
-    
+    struct stat64 statbuf;
+
     text = gtk_entry_get_text( GTK_ENTRY( entry ) );
         
     gtk_editable_select_region( (GtkEditable*)entry, 0, 0 );    // clear selection 
@@ -943,7 +944,9 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         return;
     }
     
-    if ( !g_file_test( final_path, G_FILE_TEST_EXISTS ) &&
+    gboolean final_path_exists = g_file_test( final_path, G_FILE_TEST_EXISTS );
+    
+    if ( !final_path_exists &&
                 ( text[0] == '$' || text[0] == '+' || text[0] == '&'
                   || text[0] == '!' || text[0] == '\0' ) )
     {
@@ -1015,7 +1018,7 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         g_free( prefix );
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
     }
-    else if ( !g_file_test( final_path, G_FILE_TEST_EXISTS ) && text[0] == '%' )
+    else if ( !final_path_exists && text[0] == '%' )
     {
         str = g_strdup( ++text );
         g_strstrip( str );
@@ -1026,7 +1029,8 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
         }
         g_free( str );
     }
-    else if ( ( text[0] != '/' && strstr( text, ":/" ) ) || g_str_has_prefix( text, "//" ) )
+    else if ( ( text[0] != '/' && strstr( text, ":/" ) ) ||
+                                            g_str_has_prefix( text, "//" ) )
     {
         save_command_history( GTK_ENTRY( entry ) );
         str = g_strdup( text );
@@ -1051,18 +1055,27 @@ void on_address_bar_activate( GtkWidget* entry, PtkFileBrowser* file_browser )
                 ptk_file_browser_chdir( file_browser, final_path, PTK_FB_CHDIR_ADD_HISTORY );
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
-        else if ( g_file_test( final_path, G_FILE_TEST_EXISTS ) )
+        else if ( final_path_exists )
         {
-            // open dir and select file
-            dir_path = g_path_get_dirname( final_path );
-            if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
+            if ( stat64( final_path, &statbuf ) == 0 &&
+                            S_ISBLK( statbuf.st_mode ) &&
+                            ptk_location_view_open_block( final_path, FALSE ) )
             {
-                file_browser->select_path = strdup( final_path );
-                ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
+                // ptk_location_view_open_block opened device
             }
             else
-                ptk_file_browser_select_file( file_browser, final_path );
-            g_free( dir_path );
+            {
+                // open dir and select file
+                dir_path = g_path_get_dirname( final_path );
+                if ( strcmp( dir_path, ptk_file_browser_get_cwd( file_browser ) ) )
+                {
+                    file_browser->select_path = strdup( final_path );
+                    ptk_file_browser_chdir( file_browser, dir_path, PTK_FB_CHDIR_ADD_HISTORY );
+                }
+                else
+                    ptk_file_browser_select_file( file_browser, final_path );
+                g_free( dir_path );
+            }
             gtk_widget_grab_focus( GTK_WIDGET( file_browser->folder_view ) );
         }
         gtk_editable_set_position( GTK_EDITABLE( entry ), -1 );
