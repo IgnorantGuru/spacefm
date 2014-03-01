@@ -26,6 +26,7 @@
 #include "vfs-async-task.h"
 
 #include "settings.h"
+#include "ptk-handler.h"
 
 enum{
     COL_APP_ICON = 0,
@@ -484,6 +485,42 @@ static void on_dlg_response( GtkDialog* dlg, int id, gpointer user_data )
     }
 }
 
+void ptk_app_chooser_has_handler_warn( GtkWidget* parent, VFSMimeType* mime_type )
+{
+    // is file handler set for this type?
+    char* msg;
+    GSList* handlers_slist = ptk_handler_file_has_handlers(
+                        HANDLER_MODE_FILE, HANDLER_MOUNT,
+                        NULL, mime_type, FALSE, FALSE );
+    if ( handlers_slist )
+    {
+        msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' file handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|Handlers... for this type to be opened with your associated application by default."),
+                        vfs_mime_type_get_type( mime_type ),
+                        ((XSet*)handlers_slist->data)->menu_label );
+        xset_msg_dialog( parent, 0, _("MIME Type Has Handler"),
+                                        NULL, 0, msg, NULL, NULL );
+        g_free( msg );
+        g_slist_free( handlers_slist );
+    }
+    else if ( !xset_get_b( "arc_def_open" ) )
+    {
+        // is archive handler set for this type?
+        handlers_slist = ptk_handler_file_has_handlers(
+                            HANDLER_MODE_ARC, HANDLER_EXTRACT,
+                            NULL, mime_type, FALSE, FALSE );
+        if ( handlers_slist )
+        {
+            msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' archive handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|Archive Defaults|Archive Handlers, OR select global option Open|Archive Defaults|Open With App, for this type to be opened with your associated application by default."),
+                            vfs_mime_type_get_type( mime_type ),
+                            ((XSet*)handlers_slist->data)->menu_label );
+            xset_msg_dialog( parent, 0, _("MIME Type Has Handler"),
+                                            NULL, 0, msg, NULL, NULL );
+            g_free( msg );
+            g_slist_free( handlers_slist );
+        }
+    }
+}
+
 gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
                                      VFSMimeType* mime_type,
                                      gboolean focus_all_apps,
@@ -518,6 +555,7 @@ gchar* ptk_choose_app_for_mime_type( GtkWindow* parent,
             if ( app_chooser_dialog_get_set_default( dlg ) )
             {
                 vfs_mime_type_set_default_action( mime_type, app );
+                ptk_app_chooser_has_handler_warn( dlg, mime_type );
             }
             else if (/* strcmp( vfs_mime_type_get_type( mime_type ),
                                                     XDG_MIME_TYPE_UNKNOWN ) && */

@@ -385,7 +385,7 @@ void on_archive_default( GtkMenuItem *menuitem, XSet* set )
 
 void on_archive_show_config( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    ptk_handler_show_config( HANDLER_MODE_ARC, data->browser );
+    ptk_handler_show_config( HANDLER_MODE_ARC, data->browser, NULL );
 }
 
 void on_hide_file( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -567,6 +567,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     int no_write_access = 0, no_read_access = 0;
     XSet* set, *set2;
     GtkMenuItem* item;
+    GSList* handlers_slist;
     
     if ( !desktop && !browser )
         return NULL;
@@ -700,6 +701,45 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );
         }
 
+        // file handlers
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                    file_path, mime_type, FALSE, TRUE );
+        if ( handlers_slist )
+        {
+            GSList* sl;
+            for ( sl = handlers_slist; sl; sl = sl->next )
+            {
+                set = (XSet*)sl->data;
+                app_menu_item = gtk_image_menu_item_new_with_label(
+                                                        set->menu_label );
+                gtk_container_add ( GTK_CONTAINER ( submenu ), app_menu_item );
+                g_signal_connect( G_OBJECT( app_menu_item ), "activate",
+                                  G_CALLBACK( on_popup_run_app ), ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "menu", submenu );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-press-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-release-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "handler_set", set );
+                app_img = NULL;
+                if ( set->icon && set->icon[0] )
+                    app_img = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
+                if ( !app_img )
+                    app_img = xset_get_image( "gtk-execute", GTK_ICON_SIZE_MENU );
+                gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
+                                                app_menu_item ), app_img );
+            }
+            g_slist_free( handlers_slist );
+            // add a separator
+            item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
+            gtk_widget_show ( GTK_WIDGET( item ) );
+            gtk_container_add ( GTK_CONTAINER ( submenu ), 
+                                                GTK_WIDGET( item ) );
+        }
+        
         // add apps
         if ( is_text )
         {
@@ -723,8 +763,9 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         {
             for ( app = apps; *app; ++app )
             {
-                if ( ( app - apps ) == 1 )  // Add a separator after default app
+                if ( ( app - apps ) == 1 && !handlers_slist )
                 {
+                    // Add a separator after default app if no handlers listed
                     item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
                     gtk_widget_show ( GTK_WIDGET( item ) );
                     gtk_container_add ( GTK_CONTAINER ( submenu ), 
@@ -884,9 +925,12 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                 (char*)vfs_file_info_get_name( info ), FALSE,
                 &extension );
 
-        if ( ptk_handler_file_has_handler( HANDLER_MODE_ARC,
-                                HANDLER_EXTRACT, file_path, mime_type, FALSE ) )
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_ARC, HANDLER_EXTRACT,
+                                    file_path, mime_type, FALSE, FALSE );
+        if ( handlers_slist )
         {
+            g_slist_free( handlers_slist );
             // Archive commands
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
@@ -904,17 +948,22 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_ob1( set, "set", set );
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
-            set = xset_set_cb( "arc_def_open", on_archive_default, set );
+            set = xset_get( "arc_def_open" );
+            // do NOT use set = xset_set_cb here or wrong set is passed
+            xset_set_cb( "arc_def_open", on_archive_default, set );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
 
-            set = xset_set_cb( "arc_def_ex", on_archive_default, set );
+            set = xset_get( "arc_def_ex" );
+            xset_set_cb( "arc_def_ex", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
             
-            set = xset_set_cb( "arc_def_exto", on_archive_default, set );
+            set = xset_get( "arc_def_exto" );
+            xset_set_cb( "arc_def_exto", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_set_cb( "arc_def_list", on_archive_default, set );
+            set = xset_get( "arc_def_list" );
+            xset_set_cb( "arc_def_list", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
             if ( geteuid() == 0 )
@@ -1682,7 +1731,7 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
 void on_popup_handlers_activate ( GtkMenuItem *menuitem,
                                        PtkFileMenu* data )
 {
-    ptk_handler_show_config( HANDLER_MODE_FILE, data->browser );
+    ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, NULL );
 }
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -1706,14 +1755,25 @@ void on_popup_run_app( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     VFSAppDesktop * desktop_file;
     const char* app = NULL;
+    char* set_app = NULL;
     GList* sel_files;
 
-    desktop_file = ( VFSAppDesktop* ) g_object_get_data( G_OBJECT( menuitem ),
-                                                         "desktop_file" );
-    if ( !desktop_file )
-        return ;
+    XSet* handler_set = (XSet*)g_object_get_data( 
+                                    G_OBJECT( menuitem ), "handler_set" );
+    if ( handler_set )
+    {
+        // is a file handler
+        app = set_app = g_strconcat( "###", handler_set->name, NULL );
+    }
+    else
+    {
+        desktop_file = ( VFSAppDesktop* ) g_object_get_data( G_OBJECT( menuitem ),
+                                                             "desktop_file" );
+        if ( !desktop_file )
+            return ;
+        app = vfs_app_desktop_get_name( desktop_file );
+    }
 
-    app = vfs_app_desktop_get_name( desktop_file );
     sel_files = data->sel_files;
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
@@ -1722,6 +1782,7 @@ void on_popup_run_app( GtkMenuItem *menuitem, PtkFileMenu* data )
                              FALSE, FALSE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
+    g_free( set_app );
 }
 
 enum {
@@ -1780,6 +1841,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
     switch ( job ) {
     case APP_JOB_DEFAULT:
         vfs_mime_type_set_default_action( mime_type, desktop_file->file_name );
+        ptk_app_chooser_has_handler_warn( data->browser ?
+                                            GTK_WIDGET( data->browser ) : NULL,
+                                          mime_type );
         break;
     case APP_JOB_REMOVE:
         // for text files, spacefm displays both the actions for the type
@@ -2120,6 +2184,16 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
 
     if ( !( data && data->info ) )
         return;
+    
+    XSet* handler_set = (XSet*)g_object_get_data( 
+                                    G_OBJECT( app_item ), "handler_set" );
+    if ( handler_set )
+    {
+        // is a file handler - open file handler config
+        gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+        ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, handler_set );
+        return;
+    }
     
     VFSMimeType* mime_type = vfs_file_info_get_mime_type( data->info );
     if ( mime_type )

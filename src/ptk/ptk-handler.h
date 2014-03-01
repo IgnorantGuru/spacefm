@@ -42,7 +42,8 @@ enum {
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                          gboolean add_missing );
 gboolean ptk_handler_equals_default( XSet* set );
-void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser );
+void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
+                              XSet* def_handler_set );
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg );
 XSet* add_new_handler( int mode );  // for settings.c upgrade
@@ -53,10 +54,11 @@ char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
 char* ptk_handler_get_command( int mode, int cmd, XSet* handler_set );
 gboolean ptk_handler_command_is_empty( const char* command );
 void ptk_handler_load_text_view( GtkTextView* view, const char* text );
-XSet* ptk_handler_file_has_handler( int mode, int cmd,
-                                    const char* path,
-                                    VFSMimeType* mime_type,
-                                    gboolean test_cmd );
+GSList* ptk_handler_file_has_handlers( int mode, int cmd,
+                                       const char* path,
+                                       VFSMimeType* mime_type,
+                                       gboolean test_cmd,
+                                       gboolean multiple );
 
 
 G_END_DECLS

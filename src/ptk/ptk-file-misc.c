@@ -3479,11 +3479,12 @@ static gboolean open_archives_with_handler( ParentInfo* parent,
     
     // type or pathname has archive handler? - don't test command non-empty
     // here because only applies to first file
-    if ( ptk_handler_file_has_handler( HANDLER_MODE_ARC,
-                                       cmd,
-                                       full_path, mime_type,
-                                       FALSE ) )
+    GSList* handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_ARC, cmd,
+                                    full_path, mime_type, FALSE, FALSE );
+    if ( handlers_slist )
     {
+        g_slist_free( handlers_slist );
         ptk_file_archiver_extract( parent->desktop, parent->file_browser,
                                    sel_files, parent->cwd, dest_dir, cmd );
         return TRUE;  // all files handled
@@ -3618,7 +3619,7 @@ static void open_files_with_handler( ParentInfo* parent,
 
 static gboolean open_files_with_app( ParentInfo* parent,
                                      GList* files,
-                                     char* app_desktop )
+                                     const char* app_desktop )
 {
     gchar * name;
     GError* err = NULL;
@@ -3632,55 +3633,52 @@ static gboolean open_files_with_app( ParentInfo* parent,
     {
         // is a handler
         open_files_with_handler( parent, files, handler_set );
-        // hash table contained pointer to allocated app_desktop - other
-        // app_desktop's are const
-        g_free( app_desktop );
         return TRUE;
     }
-
-    /* Check whether this is an app desktop file or just a command line */
-    /* Not a desktop entry name */
-    if ( g_str_has_suffix ( app_desktop, ".desktop" ) )
+    else if ( app_desktop )
     {
-        app = vfs_app_desktop_new( app_desktop );
-    }
-    else
-    {
-        /*
-        * If we are lucky enough, there might be a desktop entry
-        * for this program
-        */
-        name = g_strconcat ( app_desktop, ".desktop", NULL );
-        if ( g_file_test( name, G_FILE_TEST_EXISTS ) )
-        {
-            app = vfs_app_desktop_new( name );
-        }
+        /* Check whether this is an app desktop file or just a command line */
+        if ( g_str_has_suffix ( app_desktop, ".desktop" ) )
+            app = vfs_app_desktop_new( app_desktop );
         else
         {
-            /* dirty hack! */
-            app = vfs_app_desktop_new( NULL );
-            app->exec = g_strdup( app_desktop );
+            /* Not a desktop entry name */
+            /*
+            * If we are lucky enough, there might be a desktop entry
+            * for this program
+            */
+            name = g_strconcat ( app_desktop, ".desktop", NULL );
+            if ( g_file_test( name, G_FILE_TEST_EXISTS ) )
+            {
+                app = vfs_app_desktop_new( name );
+            }
+            else
+            {
+                /* dirty hack! */
+                app = vfs_app_desktop_new( NULL );
+                app->exec = g_strdup( app_desktop ); // freed by vfs_app_desktop_unref
+            }
+            g_free( name );
         }
-        g_free( name );
-    }
 
-    if ( parent->file_browser )
-        screen = gtk_widget_get_screen( GTK_WIDGET( parent->file_browser ) );
-    else if ( parent->desktop )
-        screen = gtk_widget_get_screen( GTK_WIDGET( parent->desktop ) );
-    else
-        screen = gdk_screen_get_default();
+        if ( parent->file_browser )
+            screen = gtk_widget_get_screen( GTK_WIDGET( parent->file_browser ) );
+        else if ( parent->desktop )
+            screen = gtk_widget_get_screen( GTK_WIDGET( parent->desktop ) );
+        else
+            screen = gdk_screen_get_default();
 
-    printf("EXEC(%s)=%s\n", app->full_path ? app->full_path : app_desktop,
-                                                                app->exec );
-    if ( ! vfs_app_desktop_open_files( screen, parent->cwd, app, files, &err ) )
-    {
-        GtkWidget * toplevel = parent->file_browser ? gtk_widget_get_toplevel(
-                                GTK_WIDGET( parent->file_browser ) ) : NULL;
-        ptk_show_error( GTK_WINDOW( toplevel ), _("Error"), err->message );
-        g_error_free( err );
+        printf("EXEC(%s)=%s\n", app->full_path ? app->full_path : app_desktop,
+                                                                    app->exec );
+        if ( ! vfs_app_desktop_open_files( screen, parent->cwd, app, files, &err ) )
+        {
+            GtkWidget * toplevel = parent->file_browser ? gtk_widget_get_toplevel(
+                                    GTK_WIDGET( parent->file_browser ) ) : NULL;
+            ptk_show_error( GTK_WINDOW( toplevel ), _("Error"), err->message );
+            g_error_free( err );
+        }
+        vfs_app_desktop_unref( app );
     }
-    vfs_app_desktop_unref( app );
     return TRUE;
 }
 
@@ -3707,7 +3705,7 @@ static void free_file_list_hash( gpointer key, gpointer value, gpointer user_dat
 
 void ptk_open_files_with_app( const char* cwd,
                               GList* sel_files,
-                              char* app_desktop,
+                              const char* app_desktop,
                               DesktopWindow* desktop,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever )
@@ -3722,7 +3720,7 @@ void ptk_open_files_with_app( const char* cwd,
     GHashTable* file_list_hash = NULL;
     GError* err;
     char* new_dir = NULL;
-    char* choosen_app = NULL;
+    char* alloc_desktop;
     GtkWidget* toplevel;
     PtkFileBrowser* fb;
 
@@ -3742,8 +3740,14 @@ void ptk_open_files_with_app( const char* cwd,
                                       NULL );
         if ( G_LIKELY( full_path ) )
         {
-            if ( ! app_desktop )    /* Use default apps for each file */
+            if ( app_desktop )
+                // specified app to open all files
+                files_to_open = g_list_append( files_to_open, full_path );
+            else
             {
+                // No app specified - Use default app for each file
+                
+                // Is a dir?  Open in browser
                 if ( G_LIKELY( file_browser ) && 
                                 g_file_test( full_path, G_FILE_TEST_IS_DIR ) )
                 {
@@ -3762,7 +3766,7 @@ void ptk_open_files_with_app( const char* cwd,
                 
                 /* If this file is an executable file, run it. */
                 if ( !xnever && vfs_file_info_is_executable( file, full_path ) &&
-                                    ( ! app_settings.no_execute || xforce ) )  //MOD
+                                    ( ! app_settings.no_execute || xforce ) )
                 {
                     char * argv[ 2 ] = { full_path, NULL };
                     GdkScreen* screen = file_browser ? gtk_widget_get_screen(
@@ -3773,14 +3777,12 @@ void ptk_open_files_with_app( const char* cwd,
                                                 vfs_file_info_get_disp_name( file ),
                                                 VFS_EXEC_DEFAULT_FLAGS, &err ) )
                     {
-                        //char* msg = g_markup_escape_text(err->message, -1);
                         toplevel = file_browser ? gtk_widget_get_toplevel(
                                                 GTK_WIDGET( file_browser ) ) :
                                                 NULL;
                         ptk_show_error( ( GtkWindow* ) toplevel,
                                         _("Error"),
                                         err->message );
-                        //g_free(msg);
                         g_error_free( err );
                     }
                     else
@@ -3796,16 +3798,22 @@ void ptk_open_files_with_app( const char* cwd,
                     continue;
                 }
 
+                /* Find app to open this file and place copy in alloc_desktop.
+                 * This string is freed when hash table is destroyed. */
+                alloc_desktop = NULL;
+
                 mime_type = vfs_file_info_get_mime_type( file );
                 
-                // if has file handler, set app_desktop = #XSETNAME
-                XSet* handler_set;
-                if ( handler_set = ptk_handler_file_has_handler(
-                                            HANDLER_MODE_FILE, HANDLER_MOUNT,
-                                            full_path, mime_type, TRUE ) )
-                    // app_desktop is normally const but we're putting a
-                    // allocated string in it which will be free later
-                    app_desktop = g_strconcat( "###", handler_set->name, NULL );
+                // if has file handler, set alloc_desktop = ###XSETNAME
+                GSList* handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                    full_path, mime_type, TRUE, FALSE );
+                if ( handlers_slist )
+                {
+                    XSet* handler_set = (XSet*)handlers_slist->data;
+                    g_slist_free( handlers_slist );
+                    alloc_desktop = g_strconcat( "###", handler_set->name, NULL );
+                }
                 else if ( l == sel_files /* test first file only */ &&
                             open_archives_with_handler( parent, sel_files,
                                                         full_path, mime_type ) )
@@ -3817,28 +3825,28 @@ void ptk_open_files_with_app( const char* cwd,
                 
                 /* The file itself is a desktop entry file. */
                 /* was: if( g_str_has_suffix( vfs_file_info_get_name( file ), ".desktop" ) ) */
-                if ( !app_desktop )
+                if ( !alloc_desktop )
                 {
                     if ( file->flags & VFS_FILE_INFO_DESKTOP_ENTRY &&
                                     ( ! app_settings.no_execute || xforce ) )
-                        app_desktop = full_path;
+                        alloc_desktop = full_path;
                     else
-                        app_desktop = vfs_mime_type_get_default_action(
+                        alloc_desktop = vfs_mime_type_get_default_action(
                                                             mime_type );
                 }
 
-                if ( !app_desktop && mime_type_is_text_file( full_path,
+                if ( !alloc_desktop && mime_type_is_text_file( full_path,
                                                             mime_type->type ) )
                 {
                     /* FIXME: special handling for plain text file */
                     vfs_mime_type_unref( mime_type );
                     mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_PLAIN_TEXT );
-                    app_desktop = vfs_mime_type_get_default_action( mime_type );
+                    alloc_desktop = vfs_mime_type_get_default_action( mime_type );
                 }
                 
                 vfs_mime_type_unref( mime_type );
 
-                if ( !app_desktop && vfs_file_info_is_symlink( file ) )
+                if ( !alloc_desktop && vfs_file_info_is_symlink( file ) )
                 {
                     // broken link?
                     char* target_path = g_file_read_link( full_path, NULL );
@@ -3861,61 +3869,68 @@ void ptk_open_files_with_app( const char* cwd,
                         g_free( target_path );
                     }
                 }
-                if ( !app_desktop )
+                if ( !alloc_desktop )
                 {
                     /* Let the user choose an application */
                     toplevel = file_browser ? gtk_widget_get_toplevel( 
                                         GTK_WIDGET( file_browser ) ) : NULL;
-                    choosen_app = (char *) ptk_choose_app_for_mime_type(
+                    alloc_desktop = ptk_choose_app_for_mime_type(
                                       ( GtkWindow* ) toplevel,
                                       mime_type, TRUE, TRUE, TRUE, !file_browser );
-                    app_desktop = choosen_app;
                 }
-                if ( ! app_desktop )
+                if ( !alloc_desktop )
                 {
                     g_free( full_path );
                     continue;
                 }
 
+                // add full_path to list, update hash table
                 files_to_open = NULL;
-                if ( ! file_list_hash )
-                    file_list_hash = g_hash_table_new_full( g_str_hash, g_str_equal, g_free, NULL );
+                if ( !file_list_hash )
+                    /* this will free the keys (alloc_desktop) when hash table
+                     * destroyed or new key inserted/replaced */
+                    file_list_hash = g_hash_table_new_full( g_str_hash,
+                                                g_str_equal, g_free, NULL );
                 else
-                    files_to_open = g_hash_table_lookup( file_list_hash, app_desktop );
-                if ( app_desktop != full_path )
+                    // get existing file list for this app
+                    files_to_open = g_hash_table_lookup( file_list_hash,
+                                                        alloc_desktop );
+
+                if ( alloc_desktop != full_path )
+                    /* it's not a desktop file itself - add file to list.
+                     * Otherwise use full_path as hash table key, which will
+                     * be freed when hash table is destroyed. */
                     files_to_open = g_list_append( files_to_open, full_path );
-                g_hash_table_replace( file_list_hash, app_desktop, files_to_open );
-                app_desktop = NULL;
-            }
-            else
-            {
-                files_to_open = g_list_append( files_to_open, full_path );
+                // update file list in hash table
+                g_hash_table_replace( file_list_hash, alloc_desktop,
+                                                            files_to_open );
             }
         }
     }
 
-    if ( file_list_hash )
+    if ( app_desktop && files_to_open )
     {
+        // specified app to open all files
+        open_files_with_app( parent, files_to_open, app_desktop );
+        g_list_foreach( files_to_open, ( GFunc ) g_free, NULL );
+        g_list_free( files_to_open );
+    }
+    else if ( file_list_hash )
+    {
+        // No app specified - Use default app to open each associated list of files
+        // free_file_list_hash frees each file list and its strings
         g_hash_table_foreach( file_list_hash,
                               open_files_with_each_app, parent );
         g_hash_table_foreach( file_list_hash,
                               free_file_list_hash, NULL );
         g_hash_table_destroy( file_list_hash );
     }
-    else if ( files_to_open && app_desktop )
-    {
-        open_files_with_app( parent, files_to_open, app_desktop );
-        g_list_foreach( files_to_open, ( GFunc ) g_free, NULL );
-        g_list_free( files_to_open );
-    }
 
     if ( new_dir )
     {
         if ( G_LIKELY( file_browser ) )
-        {
             ptk_file_browser_emit_open( file_browser,
                                         full_path, PTK_OPEN_DIR );
-        }
         g_free( new_dir );
     }
     g_slice_free( ParentInfo, parent );

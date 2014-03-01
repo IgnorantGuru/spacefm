@@ -64,7 +64,8 @@ gboolean vfs_volume_is_mounted( VFSVolume *vol );
 
 gboolean vfs_volume_requires_eject( VFSVolume *vol );
 
-// HAL also needs this for ptk_location_view_create_mount_point()
+/* HAL build also needs this for file handler
+ * ptk_location_view_create_mount_point() */
 typedef struct netmount_t {
     char* url;
     char* fstype;

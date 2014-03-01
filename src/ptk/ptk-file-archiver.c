@@ -350,7 +350,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                         "configured. You must add a handler before "
                         "creating an archive."),
                         NULL, NULL);
-        ptk_handler_show_config( HANDLER_MODE_ARC, file_browser );
+        ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
         return;
     }
 
@@ -712,7 +712,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
              * config dialog then exit, as this dialog would need to be
              * reconstructed if changes occur */
             gtk_widget_destroy( dlg );
-            ptk_handler_show_config( HANDLER_MODE_ARC, file_browser );
+            ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
             return;
         }
         else if ( res == GTK_RESPONSE_HELP )
@@ -1103,10 +1103,16 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                                       NULL );
 
         // Get handler with non-empty command
-        handler_xset = ptk_handler_file_has_handler(
+        GSList* handlers_slist = ptk_handler_file_has_handlers(
                                         HANDLER_MODE_ARC, archive_operation,
-                                        full_path, mime_type, TRUE );
-                                        
+                                        full_path, mime_type, TRUE, FALSE );
+        if ( handlers_slist )
+        {
+            handler_xset = (XSet*)handlers_slist->data;
+            g_slist_free( handlers_slist );
+        }
+        else
+            handler_xset = NULL;
         vfs_mime_type_unref( mime_type );
 
         // Continuing to next file if a handler hasnt been found

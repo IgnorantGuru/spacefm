@@ -609,7 +609,7 @@ void ptk_path_entry_man( GtkWidget* widget, GtkWidget* parent )
 
 void on_protocol_handlers( GtkWidget* widget, PtkFileBrowser* file_browser )
 {
-    ptk_handler_show_config( HANDLER_MODE_NET, file_browser );
+    ptk_handler_show_config( HANDLER_MODE_NET, file_browser, NULL );
 }
 
 void ptk_path_entry_help( GtkWidget* widget, GtkWidget* parent )

@@ -820,13 +820,13 @@ static gboolean value_in_list( const char* list, const char* value )
     return FALSE;
 }
 
-XSet* ptk_handler_file_has_handler( int mode, int cmd,
-                                    const char* path,
-                                    VFSMimeType* mime_type,
-                                    gboolean test_cmd )
+GSList* ptk_handler_file_has_handlers( int mode, int cmd,
+                                       const char* path,
+                                       VFSMimeType* mime_type,
+                                       gboolean test_cmd,
+                                       gboolean multiple )
 {   /* this function must be FAST - is run multiple times on menu popup
-     * command must be non-empty if test_cmd
-     * places xset name with '#' prefix in app_desktop */
+     * command must be non-empty if test_cmd */
     const char* type;
     char* delim;
     char* ptr;
@@ -834,8 +834,9 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
     XSet* handler_set;
     char* under_path;
     char* new_path = NULL;
+    GSList* handlers = NULL;
     
-    if ( !path || !mime_type )
+    if ( !path && !mime_type )
         return NULL;
     // Fetching and validating MIME type if provided
     if ( mime_type )
@@ -884,16 +885,20 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
                     }
                     else if ( !ptk_handler_command_is_empty( command ) )
                     {
-                        g_free( command );
-                        g_free( new_path );
-                        return handler_set;
+                        handlers = g_slist_prepend( handlers, handler_set );
+                        if ( !multiple )
+                        {
+                            g_free( command );
+                            break;
+                        }
                     }
                     g_free( command );
                 }
                 else
                 {
-                    g_free( new_path );
-                    return handler_set;
+                    handlers = g_slist_prepend( handlers, handler_set );
+                    if ( !multiple )
+                        break;
                 }
             }
             if ( !delim )
@@ -902,7 +907,7 @@ XSet* ptk_handler_file_has_handler( int mode, int cmd,
         }
     }
     g_free( new_path );
-    return NULL;
+    return g_slist_reverse( handlers );
 }
 
 void ptk_handler_add_defaults( int mode, gboolean overwrite,
@@ -1134,7 +1139,7 @@ static void config_unload_handler_settings( HandlerData* hnd )
                                   FALSE);
 }
 
-static void populate_archive_handlers( HandlerData* hnd )
+static void populate_archive_handlers( HandlerData* hnd, XSet* def_handler_set )
 {
     /* Fetching available archive handlers (literally gets member s from
      * the xset) - user-defined order has already been set */
@@ -1151,6 +1156,8 @@ static void populate_archive_handlers( HandlerData* hnd )
 
     // Looping for handlers (NULL-terminated list)
     GtkTreeIter iter;
+    GtkTreeIter def_handler_iter;
+    def_handler_iter.stamp = 0;
     int i;
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
@@ -1173,6 +1180,8 @@ static void populate_archive_handlers( HandlerData* hnd )
                                     COL_HANDLER_NAME, dis_name,
                                     -1 );
                 g_free( dis_name );
+                if ( def_handler_set == handler_xset )
+                    def_handler_iter = iter;
             }
         }
     }
@@ -1184,17 +1193,21 @@ static void populate_archive_handlers( HandlerData* hnd )
     GtkTreeSelection* selection;
     selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( hnd->view_handlers ) );
 
-    /* Loading first archive handler if there is one and no selection is
+    /* Loading first or default archive handler if there is one and no selection is
      * present */
     if ( i > 0 &&
         !gtk_tree_selection_get_selected( GTK_TREE_SELECTION( selection ),
          NULL, NULL ) )
     {
-        GtkTreePath* new_path = gtk_tree_path_new_first();
+        GtkTreePath* tree_path;
+        if ( def_handler_set && def_handler_iter.stamp )
+            tree_path = gtk_tree_model_get_path( GTK_TREE_MODEL( hnd->list ),
+                                                 &def_handler_iter );
+        else
+            tree_path = gtk_tree_path_new_first();
         gtk_tree_selection_select_path( GTK_TREE_SELECTION( selection ),
-                                new_path );
-        gtk_tree_path_free( new_path );
-        new_path = NULL;
+                                tree_path );
+        gtk_tree_path_free( tree_path );
     }
 }
 
@@ -1754,7 +1767,7 @@ static void restore_defaults( HandlerData* hnd, gboolean all )
         /* Reset archive handlers list (this also selects
          * the first handler and therefore populates the handler widgets) */
         gtk_list_store_clear( GTK_LIST_STORE( hnd->list ) );
-        populate_archive_handlers( hnd );
+        populate_archive_handlers( hnd, NULL );
     }
     else
     {
@@ -2108,7 +2121,8 @@ gboolean on_activate_link( GtkLabel* label, gchar* uri, HandlerData* hnd )
     return TRUE;
 }
 
-void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
+void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
+                              XSet* def_handler_set )
 {
     HandlerData* hnd = g_slice_new0( HandlerData );
     hnd->mode = mode;
@@ -2560,7 +2574,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser )
                 GTK_WIDGET( hbox_main ), TRUE, TRUE, 4 );
 
     // Adding archive handlers to list
-    populate_archive_handlers( hnd );
+    populate_archive_handlers( hnd, def_handler_set );
 
     // Show All
     gtk_widget_show_all( GTK_WIDGET( hnd->dlg ) );

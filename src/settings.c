@@ -10682,7 +10682,7 @@ void xset_defaults()
     xset_set_set( set, "icn", "gtk-preferences" );
     set->line = g_strdup( "#handlers-fil" );
 
-    set = xset_set( "open_all", "lbl", _("_Default") );//virtual
+    set = xset_set( "open_all", "lbl", _("Open With _Default") );//virtual
 
     set = xset_set( "open_in_tab", "lbl", _("In _Tab") );
     set->menu_style = XSET_MENU_SUBMENU;
@@ -10728,10 +10728,10 @@ void xset_defaults()
     set = xset_get( "sep_arc2" );
     set->menu_style = XSET_MENU_SEP;
 
-    set = xset_set( "arc_default", "lbl", _("_Archive Default") );
+    set = xset_set( "arc_default", "lbl", _("_Archive Defaults") );
 
     set->menu_style = XSET_MENU_SUBMENU;
-    xset_set_set( set, "desc", "arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write sep_arc2 arc_conf2" );
+    xset_set_set( set, "desc", "arc_conf2 sep_arc2 arc_def_open arc_def_ex arc_def_exto arc_def_list sep_arc1 arc_def_parent arc_def_write" );
 
         set = xset_set( "arc_def_open", "lbl", _("_Open With App") );
         set->menu_style = XSET_MENU_RADIO;
@@ -10753,7 +10753,7 @@ void xset_defaults()
         set = xset_set( "arc_def_write", "lbl", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
 
-        set = xset_set( "arc_conf2", "label", _("Co_nfigure") );
+        set = xset_set( "arc_conf2", "label", _("Archive _Handlers") );
         xset_set_set( set, "icon", "gtk-preferences" );
 
 /*igtodo iso_mount and iso_auto no longer used, they should
