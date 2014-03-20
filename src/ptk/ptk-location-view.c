@@ -439,13 +439,15 @@ gboolean ptk_location_view_open_block( const char* block, gboolean new_tab )
     {
         if ( !g_strcmp0( ((VFSVolume*)l->data)->device_file, canon ) )
         {
+            VFSVolume* vol = (VFSVolume*)l->data;
 #ifdef HAVE_HAL
-            on_mount( NULL, (VFSVolume*)l->data );
+            if ( !vfs_volume_is_mounted( vol ) )
+                on_mount( NULL, vol );
 #else
             if ( new_tab )
-                on_open_tab( NULL, (VFSVolume*)l->data, NULL );           
+                on_open_tab( NULL, vol, NULL );
             else
-                on_open( NULL, (VFSVolume*)l->data, NULL );           
+                on_open( NULL, vol, NULL );
 #endif
             return TRUE;
         }

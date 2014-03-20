@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <fnmatch.h>
 #include <errno.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "ptk-handler.h"
 #include "exo-tree-view.h"
@@ -2123,7 +2124,7 @@ gboolean on_activate_link( GtkLabel* label, gchar* uri, HandlerData* hnd )
 
 static gboolean on_textview_keypress ( GtkWidget *widget, GdkEventKey *event,
                                                 HandlerData* hnd )
-{
+{   // also used on dlg keypress
     if ( ( event->keyval == GDK_KEY_Return || 
                                 event->keyval == GDK_KEY_KP_Enter ) )
     {
@@ -2136,13 +2137,37 @@ static gboolean on_textview_keypress ( GtkWidget *widget, GdkEventKey *event,
                 keymod = 0;
             else if ( widget == hnd->view_handler_extract )
                 keymod = 1;
-            else
+            else if ( widget == hnd->view_handler_list )
                 keymod = 2;
+            else
+                return FALSE;
             char* uri = g_strdup_printf( "%d", keymod );            
             on_activate_link( NULL, uri, hnd );
             g_free( uri );
             return TRUE;
         }
+    }
+    else if ( event->keyval == GDK_KEY_F1 )
+    {
+        // F1 show help
+        int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+        if ( keymod == 0 )
+        {
+            const char* help;
+            if ( hnd->mode == HANDLER_MODE_ARC )
+                help = "#handlers-arc";
+            else if ( hnd->mode == HANDLER_MODE_FS )
+                help = "#handlers-dev";
+            else if ( hnd->mode == HANDLER_MODE_NET )
+                help = "#handlers-pro";
+            else if ( hnd->mode == HANDLER_MODE_FILE )
+                help = "#handlers-fil";
+            else
+                help = NULL;
+            xset_show_help( hnd->dlg, NULL, help );
+            return TRUE;
+        }        
     }
     return FALSE;
 }
@@ -2165,6 +2190,8 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
                     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                     NULL, NULL );
     gtk_container_set_border_width( GTK_CONTAINER ( hnd->dlg ), 5 );
+    g_signal_connect( G_OBJECT( hnd->dlg ), "key-press-event",
+                                    G_CALLBACK( on_textview_keypress ), hnd );
 
     // Debug code
     //g_message( "Parent window title: %s", gtk_window_get_title( GTK_WINDOW( hnd->parent ) ) );
