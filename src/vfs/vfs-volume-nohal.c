@@ -2899,10 +2899,10 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     else if ( !g_strcmp0( mtab_fstype, "fuse.fuseiso" ) )
     {
         // an ISO file mounted with fuseiso
-        /* get device_file from ~/.mtab.fuseiso - this doesn't always work
-         * because sometimes the .mtab.fuseiso file is not updated until after
-         * new device is detected.  Also done in
-         * ptk-location-view:on_autoopen_net_cb() */
+        /* get device_file from ~/.mtab.fuseiso
+         * hack - sleep for 0.2 seconds here because sometimes the
+         * .mtab.fuseiso file is not updated until after new device is detected. */
+        g_usleep( 200000 );
         char* mtab_file = g_build_filename( g_get_home_dir(), ".mtab.fuseiso", NULL );
         char* new_name = NULL;
         if ( path_is_mounted_mtab( mtab_file, point, &new_name, NULL )

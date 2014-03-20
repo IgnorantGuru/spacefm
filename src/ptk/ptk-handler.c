@@ -375,10 +375,10 @@ const Handler handlers_file[]=
      * Plus standard substitution variables are accepted. */
     {
         "handf_iso",
-        "mount iso",
-        "application/iso",
-        "*.iso",
-        "fuseiso %f %a",
+        "Mount ISO",
+        "application/x-iso9660-image application/x-iso-image application/x-cd-image",
+        "*.img *.iso *.mdf *.nrg",
+        "# is image file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n\n# mount & open\nfuseiso %f %a && spacefm %a &\n",
         FALSE,
         "",
         FALSE,

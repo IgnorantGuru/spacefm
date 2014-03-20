@@ -3503,6 +3503,8 @@ static void open_files_with_handler( ParentInfo* parent,
     char* command;
     char* name;
 
+    printf( "\nSelected File Handler '%s'\n", handler_set->menu_label );
+
     // get command - was already checked as non-empty
     char* err_msg = ptk_handler_load_script( HANDLER_MODE_FILE,
                     HANDLER_MOUNT, handler_set,
@@ -3521,7 +3523,9 @@ static void open_files_with_handler( ParentInfo* parent,
     if ( strstr( command, "%a" ) )
     {
         name = ptk_location_view_create_mount_point(
-                                HANDLER_MODE_FILE, NULL, NULL, (char*)l->data );
+                                HANDLER_MODE_FILE, NULL, NULL,
+                                files && files->data ?
+                                    (char*)files->data : NULL );
         str = command;
         command = replace_string( command, "%a", name, FALSE );
         g_free( str );

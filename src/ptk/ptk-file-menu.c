@@ -435,11 +435,6 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
                          _("Bookmark already exists"), NULL, NULL );
 }
 
-void on_popup_mount_iso( GtkMenuItem *menuitem, PtkFileMenu* data )
-{
-    mount_iso( data->browser, data->file_path );
-}
-
 void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
                                             DesktopWindow* desktop, XSet* set2 )
 {
@@ -978,13 +973,13 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
+/*igtodo iso_mount and iso_auto no longer used, they should
+ * be removed?   still possibly attached custom items, yet not included in
+ * menu for performance */
 #if 0
         else if ( file_path && mime_type && !is_dir &&
                   vfs_mime_type_is_iso( mime_type, file_path ) )
         {
-/*igtodo iso_mount and iso_auto no longer used, they should
- * be removed?   still possibly attached custom items, yet not included in
- * menu for performance */
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
@@ -3027,12 +3022,6 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
             on_popup_extract_list_activate( NULL, data );
         else if ( !strcmp( xname, "conf" ) )
             on_archive_show_config( NULL, data );
-    }
-    else if ( g_str_has_prefix( set->name, "iso_" ) )
-    {
-        xname = set->name + 4;
-        if ( !strcmp( xname, "mount" ) )
-            on_popup_mount_iso( NULL, data );
     }
     else if ( g_str_has_prefix( set->name, "new_" ) )
     {

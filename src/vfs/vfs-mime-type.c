@@ -546,25 +546,3 @@ void vfs_mime_type_append_action( const char* type, const char* desktop_id )
     mime_type_append_action( type, desktop_id );
 }
 
-gboolean vfs_mime_type_is_iso( VFSMimeType* vfs_mime_type, const char* path )
-{
-    // by mime type
-    if ( g_str_has_prefix( vfs_mime_type_get_type( vfs_mime_type ), "application/" )
-          && (
-            !strcmp( vfs_mime_type_get_type( vfs_mime_type ) + 12,
-                                    "x-cd-image" ) ||
-            !strcmp( vfs_mime_type_get_type( vfs_mime_type ) + 12,
-                                    "x-iso9660-image" ) ||
-            !strcmp( vfs_mime_type_get_type( vfs_mime_type ) + 12,
-                                    "x-iso-image" ) ) )
-        return TRUE;
-    char* lastdot = strrchr( path, '.' );
-    if ( !lastdot )
-        return FALSE;
-    // by extensions supported by fuseiso - omiting .bin due to ambiguous use
-    return ( !strcmp( lastdot, ".iso" ) ||
-             !strcmp( lastdot, ".img" ) ||
-             !strcmp( lastdot, ".nrg" ) ||
-             !strcmp( lastdot, ".mdf" ) );
-}
-
