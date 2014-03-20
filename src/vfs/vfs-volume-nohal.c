@@ -1692,7 +1692,7 @@ void parse_mounts( gboolean report )
         *  http://article.gmane.org/gmane.comp.file-systems.btrfs/2851
         *  https://bugzilla.redhat.com/show_bug.cgi?id=495152#c31
         */
-        if ( major == 0 )
+        if ( major == 0 && !subdir_mount )
         {
             const gchar *sep;
             sep = strstr( lines[n], " - " );
@@ -1712,6 +1712,29 @@ void parse_mounts( gboolean report )
                     minor = minor( statbuf.st_rdev );
                 }
             }
+        }
+
+        if ( subdir_mount )
+        {
+            // get mount source
+            //printf("subdir_mount %u:%u %s root=%s\n", major, minor, encoded_mount_point, encoded_root );
+            gchar typebuf[PATH_MAX];
+            gchar mount_source[PATH_MAX];
+            const gchar *sep;
+            sep = strstr( lines[n], " - " );
+            if ( sep && sscanf( sep + 3, "%s %s", typebuf, mount_source ) == 2 )
+            {
+                //printf( "    source=%s\n", mount_source );
+                if ( g_str_has_prefix( mount_source, "/dev/" ) )
+                {
+                    /* is a subdir mount on a local device, eg a bind mount
+                     * so don't include this mount point */
+                    //printf( "        local\n" );
+                    continue;
+                }
+            }
+            else
+                continue;
         }
 
         mount_point = g_strcompress( encoded_mount_point );
@@ -1756,7 +1779,7 @@ void parse_mounts( gboolean report )
                     {
                         // is block device with subdir mount - ignore
                         udev_device_unref( udevice );
-                        g_free( mount_point );   
+                        g_free( mount_point );
                         continue;
                     }
                 }
@@ -1775,8 +1798,15 @@ void parse_mounts( gboolean report )
                 udevice = udev_device_new_from_devnum( udev, 'b', devnum );
                 if ( udevice )
                 {
-                    // is block device - add
+                    // is block device
                     udev_device_unref( udevice );
+                    if ( subdir_mount )
+                    {
+                        // is block device with subdir mount - ignore
+                        g_free( mount_point );   
+                        continue;
+                    }
+                    // add
                     devmount = g_slice_new0( devmount_t );
                     devmount->major = major;
                     devmount->minor = minor;
