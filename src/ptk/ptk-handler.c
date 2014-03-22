@@ -1713,8 +1713,8 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
         return;
 
     // Fetching current status
-    gboolean enabled = hnd->mode == gtk_toggle_button_get_active(
-                                            GTK_TOGGLE_BUTTON ( togglebutton ) );
+    gboolean enabled = gtk_toggle_button_get_active(
+                                        GTK_TOGGLE_BUTTON ( togglebutton ) );
 
     // Setting sensitive/insensitive various widgets as appropriate
     gtk_widget_set_sensitive( hnd->entry_handler_name, enabled );
