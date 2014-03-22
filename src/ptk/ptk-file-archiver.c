@@ -1103,7 +1103,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         // Get handler with non-empty command
         GSList* handlers_slist = ptk_handler_file_has_handlers(
                                         HANDLER_MODE_ARC, archive_operation,
-                                        full_path, mime_type, TRUE, FALSE );
+                                        full_path, mime_type, TRUE, FALSE, TRUE );
         if ( handlers_slist )
         {
             handler_xset = (XSet*)handlers_slist->data;

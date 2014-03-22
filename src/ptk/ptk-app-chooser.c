@@ -491,7 +491,7 @@ void ptk_app_chooser_has_handler_warn( GtkWidget* parent, VFSMimeType* mime_type
     char* msg;
     GSList* handlers_slist = ptk_handler_file_has_handlers(
                         HANDLER_MODE_FILE, HANDLER_MOUNT,
-                        NULL, mime_type, FALSE, FALSE );
+                        NULL, mime_type, FALSE, FALSE, TRUE );
     if ( handlers_slist )
     {
         msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' file handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|Handlers... for this type to be opened with your associated application by default."),
@@ -507,7 +507,7 @@ void ptk_app_chooser_has_handler_warn( GtkWidget* parent, VFSMimeType* mime_type
         // is archive handler set for this type?
         handlers_slist = ptk_handler_file_has_handlers(
                             HANDLER_MODE_ARC, HANDLER_EXTRACT,
-                            NULL, mime_type, FALSE, FALSE );
+                            NULL, mime_type, FALSE, FALSE, TRUE );
         if ( handlers_slist )
         {
             msg = g_strdup_printf( _("Note:  MIME type '%s' is currently set to open with the '%s' archive handler, rather than with your associated MIME application.\n\nYou may also need to disable this handler in Open|Archive Defaults|Archive Handlers, OR select global option Open|Archive Defaults|Open With App, for this type to be opened with your associated application by default."),

@@ -3481,7 +3481,7 @@ static gboolean open_archives_with_handler( ParentInfo* parent,
     // here because only applies to first file
     GSList* handlers_slist = ptk_handler_file_has_handlers(
                                     HANDLER_MODE_ARC, cmd,
-                                    full_path, mime_type, FALSE, FALSE );
+                                    full_path, mime_type, FALSE, FALSE, TRUE );
     if ( handlers_slist )
     {
         g_slist_free( handlers_slist );
@@ -3811,7 +3811,7 @@ void ptk_open_files_with_app( const char* cwd,
                 // if has file handler, set alloc_desktop = ###XSETNAME
                 GSList* handlers_slist = ptk_handler_file_has_handlers(
                                     HANDLER_MODE_FILE, HANDLER_MOUNT,
-                                    full_path, mime_type, TRUE, FALSE );
+                                    full_path, mime_type, TRUE, FALSE, TRUE );
                 if ( handlers_slist )
                 {
                     XSet* handler_set = (XSet*)handlers_slist->data;

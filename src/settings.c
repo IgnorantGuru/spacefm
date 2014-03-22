@@ -123,6 +123,7 @@ gboolean xset_design_cb( GtkWidget* item, GdkEventButton * event, XSet* set );
 gboolean on_autosave_timer( gpointer main_window );
 const char* icon_stock_to_id( const char* name );
 void xset_custom_activate( GtkWidget* item, XSet* set );
+void xset_custom_remove( XSet* set );
 
 const char* user_manual_url = "http://ignorantguru.github.io/spacefm/spacefm-manual-en.html";
 const char* homepage = "http://ignorantguru.github.io/spacefm/"; //also in aboutdlg.ui
@@ -405,6 +406,78 @@ void swap_menu_label( const char* set_name, const char* old_name,
             g_free( set->menu_label );
             set->menu_label = g_strdup( new_name );
             set->in_terminal = XSET_B_UNSET;
+        }
+    }
+}
+
+void move_attached_to_builtin( const char* removed_name, const char* move_to_name )
+{
+    /* For upgrades only: A built-in menu item (removed_name) has been removed,
+     * so move custom menu items attached to the removed item to another item.
+     * Leave removed item data intact in case of downgrade. */
+    
+    XSet* set_to = xset_is( move_to_name );
+    if ( !set_to )
+    {
+        g_warning( "remove_builtin_item passed invalid move_to_name '%s'",
+                                                            move_to_name );
+        return;
+    }
+    
+    GList* l;
+    XSet* set_move;
+    XSet* set_to_next;
+    XSet* set_move_next;
+    for ( l = xsets; l; l = l->next )
+    {
+        if ( !g_strcmp0( removed_name, ((XSet*)l->data)->prev ) )
+        {
+            // found a set attached to removed_name
+            set_move = l->data;
+            if ( set_move->lock )  // failsafe
+                return;
+            
+            while ( set_move )
+            {
+                xset_custom_remove( set_move );
+                
+                g_free( set_move->prev );
+                set_move->prev = g_strdup( set_to->name );
+                
+                if ( set_move->next )
+                {
+                    set_move_next = xset_get( set_move->next );
+                    if ( set_move_next->lock )  // failsafe
+                        set_move_next = NULL;
+                }
+                else
+                    set_move_next = NULL;
+                g_free( set_move->next );
+                set_move->next = g_strdup( set_to->next );
+                
+                if ( set_to->next )
+                {
+                    set_to_next = xset_get( set_to->next );
+                    if ( set_to_next->prev )
+                        g_free( set_to_next->prev );
+                    set_to_next->prev = g_strdup( set_move->name );
+                }
+                g_free( set_to->next );
+                set_to->next = g_strdup( set_move->name );
+                
+                if ( set_to->tool )
+                {
+                    set_move->tool = XSET_B_TRUE;
+                    if ( !set_move->icon )
+                        set_move->icon = g_strdup( "gtk-execute" );
+                }
+                else
+                    set_move->tool = XSET_B_UNSET;
+                
+                set_to = set_move;
+                set_move = set_move_next;
+            }
+            return;
         }
     }
 }
@@ -1074,11 +1147,13 @@ void load_settings( char* config_dir )
             handset->s = g_strdup( "*" );
             handset->x = g_strdup( "" );
             handset->y = g_strdup_printf( "%s %%url%%", set->s );
-            str = xset_get_s( "dev_unmount_cmd" );
-            if ( str && str[0] )
-                handset->z = replace_string( str, "%v", "\"%a\"", FALSE );
+            
+            set = xset_is( "dev_unmount_cmd" );
+            if ( set && set->s && set->s[0] )
+                handset->z = replace_string( set->s, "%v", "\"%a\"", FALSE );
             else
                 handset->z = g_strdup( "udevil umount \"%a\"" );
+            
             handset->context = g_strdup( "mount | grep \"%a\"" );
             handset->b = XSET_B_TRUE;
             handset->lock = FALSE;     // save menu_label
@@ -1099,8 +1174,8 @@ void load_settings( char* config_dir )
             handset->z = str;
             handset->disable = FALSE;  // save in session
         }
-        set = xset_get( "dev_mount_cmd" );
-        if ( set->s && set->s[0] )
+        set = xset_is( "dev_mount_cmd" );
+        if ( set && set->s && set->s[0] )
         {
             str = g_strconcat( set->s, "\\n\\n", handset->y, NULL );
             g_free( handset->y );
@@ -1114,10 +1189,29 @@ void load_settings( char* config_dir )
         set->in_terminal = XSET_B_UNSET;
         // indicate that icon is default and should not be saved
         set->keep_terminal = XSET_B_UNSET;
+        // reset user key shortcut
         set->key = set->keymod = 0;
+        
+        // Apply old Auto-Mount ISO setting to new handler
+        set = xset_is( "iso_auto" );
+        if ( set && set->b != XSET_B_TRUE )
+        {
+            // disable ISO Mount file handler as default opener
+            set = xset_get( "hand_f_+iso" );
+            set->b = XSET_B_UNSET; // disable as default opener
+            set->disable = FALSE;  // save in session
+        }
+        
+        // Move any custom items attached to removed menu items
+        move_attached_to_builtin( "iso_auto", "open_other" );
+        move_attached_to_builtin( "iso_mount", "open_other" );
+        move_attached_to_builtin( "dev_unmount_cmd", "dev_mount_options" );
+        move_attached_to_builtin( "dev_mount_cmd", "dev_mount_options" );
+ 
+        // Save settings
+        xset_autosave( FALSE, FALSE );
     }
 }
-
 
 char* save_settings( gpointer main_window_ptr )
 {
@@ -9744,29 +9838,21 @@ void xset_defaults()
     set->s = g_strdup( "cifs curlftpfs ftpfs fuse.sshfs nfs smbfs" );
     set->z = g_strdup( set->s );
     
-    /* This menu item is currently unused/hidden but may have custom items
-     * attached.  See main-window:create_devices_menu() and
-     * ptk-location-view:on_button_press_event() */
+    /* Removed 0.9.4
     set = xset_set( "dev_mount_cmd", "lbl", _("Mount _Command") );
     set->menu_style = XSET_MENU_STRING;
-#if 0
     xset_set_set( set, "desc", _("Enter the command to mount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\t%%o\tvolume-specific mount options\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nLeave blank for auto-detection.") );
     xset_set_set( set, "title", _("Mount Command") );
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-mcmd" );
-#endif
     
-    /* This menu item is currently unused/hidden but may have custom items
-     * attached.  See main-window:create_devices_menu() and
-     * ptk-location-view:on_button_press_event() */
     set = xset_set( "dev_unmount_cmd", "lbl", _("_Unmount Command") );
     set->menu_style = XSET_MENU_STRING;
-#if 0
     xset_set_set( set, "desc", _("Enter the command to unmount a device:\n\nUse:\n\t%%v\tdevice file ( eg /dev/sda5 )\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nLeave blank for auto-detection.") );
     xset_set_set( set, "title", _("Unmount Command") );
     xset_set_set( set, "icn", "gtk-edit" );
     set->line = g_strdup( "#devices-settings-ucmd" );
-#endif
+    */
 
     set = xset_set( "dev_fs_cnf", "label", _("_Device Handlers") );
     xset_set_set( set, "icon", "gtk-preferences" );
@@ -10009,7 +10095,7 @@ void xset_defaults()
     set = xset_set( "main_root_terminal", "lbl", _("_Root Terminal") );
     xset_set_set( set, "icn", "gtk-dialog-warning" );
     
-    // was previously used for Save Session
+    // was previously used for 'Save Session' < 0.9.4 as XSET_MENU_NORMAL
     set = xset_set( "main_save_session", "lbl", _("Open _URL") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "icn", "gtk-network" );
@@ -10757,14 +10843,13 @@ void xset_defaults()
         set = xset_set( "arc_conf2", "label", _("Archive _Handlers") );
         xset_set_set( set, "icon", "gtk-preferences" );
 
-/*igtodo iso_mount and iso_auto no longer used, they should
- * be removed?   still possibly attached custom items, yet not included in
- * menu for performance  see ptk-file-menu */
+    /* used in < 0.9.4
     set = xset_set( "iso_mount", "label", _("_Mount ISO") );
     xset_set_set( set, "icon", "gtk-cdrom" );
 
     set = xset_set( "iso_auto", "lbl", _("_Auto-Mount ISO") );
     set->menu_style = XSET_MENU_CHECK;
+    */
 
     set = xset_get( "sep_o1" );
     set->menu_style = XSET_MENU_SEP;

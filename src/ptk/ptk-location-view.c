@@ -3524,21 +3524,8 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         menu_elements = g_strdup_printf( "sep_dm2 dev_menu_root sep_dm3 dev_menu_settings dev_prop" );
         xset_add_menu( NULL, file_browser, popup, accel_group, menu_elements );
         g_free( menu_elements );
-
-        /* add Mount/Unmount Command to end of menu, then hide.  This menu item is
-         * currently unused but may have custom items attached.
-         * Also see main-window:create_devices_menu() */
-        item = xset_add_menuitem( NULL, file_browser, popup,
-                                accel_group, xset_get( "dev_mount_cmd" ) );
-        GtkWidget* item2 = xset_add_menuitem( NULL, file_browser, popup,
-                                accel_group, xset_get( "dev_unmount_cmd" ) );
-
-        gtk_widget_show_all( GTK_WIDGET(popup) );
-        gtk_widget_hide( item );
-        gtk_widget_hide( item2 );
-#else
-        gtk_widget_show_all( GTK_WIDGET(popup) );
 #endif
+        gtk_widget_show_all( GTK_WIDGET(popup) );
 
         g_signal_connect( popup, "selection-done",
                           G_CALLBACK( gtk_widget_destroy ), NULL );

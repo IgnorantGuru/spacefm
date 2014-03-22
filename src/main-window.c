@@ -772,21 +772,9 @@ GtkWidget* create_devices_menu( FMMainWindow* main_window )
     set = xset_get( "dev_menu_settings" );
     xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
 
-    /* add Mount/Unmount Command to end of menu, then hide.  This menu item is
-     * currently unused but may have custom items attached.
-     * Also see ptk-location-view:on_button_press_event() */
-    set = xset_get( "dev_mount_cmd" );
-    item = xset_add_menuitem( NULL, file_browser, dev_menu, accel_group, set );
-    set = xset_get( "dev_unmount_cmd" );
-    GtkWidget* item2 = xset_add_menuitem( NULL, file_browser, dev_menu,
-                                                        accel_group, set );
+#endif
     // show all
     gtk_widget_show_all( dev_menu );
-    gtk_widget_hide( item );
-    gtk_widget_hide( item2 );
-#else
-    gtk_widget_show_all( dev_menu );
-#endif
 
     return dev_menu;
 }

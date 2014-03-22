@@ -58,7 +58,8 @@ GSList* ptk_handler_file_has_handlers( int mode, int cmd,
                                        const char* path,
                                        VFSMimeType* mime_type,
                                        gboolean test_cmd,
-                                       gboolean multiple );
+                                       gboolean multiple,
+                                       gboolean enabled_only );
 
 
 G_END_DECLS

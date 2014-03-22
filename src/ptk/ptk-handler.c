@@ -827,7 +827,8 @@ GSList* ptk_handler_file_has_handlers( int mode, int cmd,
                                        const char* path,
                                        VFSMimeType* mime_type,
                                        gboolean test_cmd,
-                                       gboolean multiple )
+                                       gboolean multiple,
+                                       gboolean enabled_only )
 {   /* this function must be FAST - is run multiple times on menu popup
      * command must be non-empty if test_cmd */
     const char* type;
@@ -871,7 +872,8 @@ GSList* ptk_handler_file_has_handlers( int mode, int cmd,
                 delim[0] = ' ';     // remove temporary end of string
 
             // handler supports type or path ?
-            if ( handler_set && handler_set->b == XSET_B_TRUE &&
+            if ( handler_set && 
+                    ( !enabled_only || handler_set->b == XSET_B_TRUE ) &&
                     ( value_in_list( handler_set->s, type ) ||
                       value_in_list( handler_set->x, under_path ) ) )
             {
@@ -1124,7 +1126,8 @@ static void config_unload_handler_settings( HandlerData* hnd )
     gtk_widget_set_sensitive( GTK_WIDGET( hnd->btn_defaults0 ), FALSE );
 
     // Unchecking handler
-    gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( hnd->chkbtn_handler_enabled ),
+    if ( hnd->mode != HANDLER_MODE_FILE )
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( hnd->chkbtn_handler_enabled ),
                                   FALSE);
 
     // Resetting all widgets
@@ -1174,10 +1177,13 @@ static void populate_archive_handlers( HandlerData* hnd, XSet* def_handler_set )
                 // Obtaining appending iterator for treeview model
                 gtk_list_store_append( GTK_LIST_STORE( hnd->list ), &iter );
                 // Adding handler to model
+                const char* disabled = hnd->mode == HANDLER_MODE_FILE ?
+                                                    _("(optional)") :
+                                                    _("(disabled)");
                 char* dis_name = g_strdup_printf( "%s %s",
                                     handler_xset->menu_label,
-                                    handler_xset->b == XSET_B_TRUE ?
-                                        "" : _("(disabled)") );
+                                    handler_xset->b == XSET_B_TRUE ? "" :
+                                        disabled );
                 gtk_list_store_set( GTK_LIST_STORE( hnd->list ), &iter,
                                     COL_XSET_NAME, archive_handlers[i],
                                     COL_HANDLER_NAME, dis_name,
@@ -1389,10 +1395,13 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         gtk_list_store_prepend( GTK_LIST_STORE( hnd->list ), &iter );
 
         // Adding handler to model
+        const char* disabled = hnd->mode == HANDLER_MODE_FILE ?
+                                            _("(optional)") :
+                                            _("(disabled)");
         char* dis_name = g_strdup_printf( "%s %s",
                                     handler_name,
-                                    new_handler_xset->b == XSET_B_TRUE ?
-                                        "" : _("(disabled)") );
+                                    new_handler_xset->b == XSET_B_TRUE ? "" :
+                                        disabled );
         gtk_list_store_set( GTK_LIST_STORE( hnd->list ), &iter,
                             COL_XSET_NAME, new_handler_xset->name,
                             COL_HANDLER_NAME, dis_name,
@@ -1450,9 +1459,12 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         if (g_strcmp0( handler_name_from_model, handler_name ) != 0)
         {
             // It has - updating model
+            const char* disabled = hnd->mode == HANDLER_MODE_FILE ?
+                                                _("(optional)") :
+                                                _("(disabled)");
             char* dis_name = g_strdup_printf( "%s %s",
                                     handler_name,
-                                    handler_enabled ? "" : _("(disabled)") );
+                                    handler_enabled ? "" : disabled );
             gtk_list_store_set( GTK_LIST_STORE( model ), &it,
                         COL_XSET_NAME, xset_name,
                         COL_HANDLER_NAME, dis_name,
@@ -1461,7 +1473,7 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
         }
 
         // Saving archive handler
-        handler_xset->b = handler_enabled;
+        handler_xset->b = handler_enabled ? XSET_B_TRUE : XSET_B_UNSET;
         handler_xset->disable = FALSE;  // not default - save in session
         xset_set_set( handler_xset, "label", handler_name );
         xset_set_set( handler_xset, "s", handler_mime );
@@ -1686,6 +1698,10 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
      * populated handlers list), the enabled checkbox might be checked
      * off - however the widgets must not be set insensitive when this
      * happens */
+
+    if ( hnd->mode == HANDLER_MODE_FILE )
+        return;
+
     // Fetching selection from treeview
     GtkTreeSelection* selection;
     selection = gtk_tree_view_get_selection( GTK_TREE_VIEW( hnd->view_handlers ) );
@@ -1697,7 +1713,7 @@ static void on_configure_handler_enabled_check( GtkToggleButton *togglebutton,
         return;
 
     // Fetching current status
-    gboolean enabled = gtk_toggle_button_get_active(
+    gboolean enabled = hnd->mode == gtk_toggle_button_get_active(
                                             GTK_TOGGLE_BUTTON ( togglebutton ) );
 
     // Setting sensitive/insensitive various widgets as appropriate
@@ -2347,7 +2363,9 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
 
     // Generating right-hand side of dialog
     hnd->chkbtn_handler_enabled = gtk_check_button_new_with_mnemonic(
-                                        _("Handler Ena_bled") );
+                                        mode == HANDLER_MODE_FILE ?
+                                            _("Ena_ble as a default opener") :
+                                            _("Ena_ble Handler") );
     g_signal_connect( G_OBJECT( hnd->chkbtn_handler_enabled ), "toggled",
                 G_CALLBACK ( on_configure_handler_enabled_check ), hnd );
     GtkWidget* lbl_handler_name = gtk_label_new( NULL );

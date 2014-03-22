@@ -699,7 +699,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         // file handlers
         handlers_slist = ptk_handler_file_has_handlers(
                                     HANDLER_MODE_FILE, HANDLER_MOUNT,
-                                    file_path, mime_type, FALSE, TRUE );
+                                    file_path, mime_type, FALSE, TRUE, FALSE );
         if ( handlers_slist )
         {
             GSList* sl;
@@ -922,7 +922,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         handlers_slist = ptk_handler_file_has_handlers(
                                     HANDLER_MODE_ARC, HANDLER_EXTRACT,
-                                    file_path, mime_type, FALSE, FALSE );
+                                    file_path, mime_type, FALSE, FALSE, FALSE );
         if ( handlers_slist )
         {
             g_slist_free( handlers_slist );
