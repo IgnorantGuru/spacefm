@@ -33,20 +33,22 @@ enum {
     COL_HANDLER_EXTENSIONS = 1
 };
 
-const char* handler_prefix[] =
+// xset name prefixes of default handlers
+const char* handler_def_prefix[] =
 {
-    "handarc_",
-    "handfs_",
-    "handnet_",
-    "handf_"
+    "hand_arc_+",
+    "hand_fs_+",
+    "hand_net_+",
+    "hand_f_+"
 };
 
+// xset name prefixes of custom handlers
 const char* handler_cust_prefix[] =
 {
-    "custarc_",
-    "custfs_",
-    "custnet_",
-    "custf_"
+    "hand_arc_",
+    "hand_fs_",
+    "hand_net_",
+    "hand_f_"
 };
 
 const char* handler_conf_xset[] =
@@ -123,10 +125,10 @@ typedef struct _Handler
     const char* list_cmd;       // or info           (script)
     gboolean list_term;         //                   set->scroll_lock
     
-    // note: xset menu_labels are not saved unless !lock
-    // set->lock = FALSE;
-    // if handler equals default, don't save in session
-    // set->disable = TRUE;
+    /* save as custom item
+    set->lock = FALSE;
+    if handler equals default, don't save in session
+    set->disable = TRUE; */
 } Handler;
 
 /* If you add a new handler, add it to (end of ) existing session file handler
@@ -150,7 +152,7 @@ const Handler handlers_arc[]=
     * Plus standard substitution variables are accepted.
     */
     {
-        "handarc_7z",
+        "hand_arc_+7z",
         "7-Zip",
         "application/x-7z-compressed",
         "*.7z",
@@ -162,7 +164,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_gz",
+        "hand_arc_+gz",
         "Gzip",
         "application/x-gzip application/x-gzpdf application/gzip",
         "*.gz",
@@ -174,7 +176,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_rar",
+        "hand_arc_+rar",
         "RAR",
         "application/x-rar",
         "*.rar *.RAR",
@@ -186,7 +188,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_tar",
+        "hand_arc_+tar",
         "Tar",
         "application/x-tar",
         "*.tar",
@@ -198,7 +200,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_tar_bz2",
+        "hand_arc_+tar_bz2",
         "Tar bzip2",
         "application/x-bzip-compressed-tar",
         "*.tar.bz2",
@@ -210,7 +212,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_tar_gz",
+        "hand_arc_+tar_gz",
         "Tar Gzip",
         "application/x-compressed-tar",
         "*.tar.gz *.tgz",
@@ -222,7 +224,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_tar_xz",
+        "hand_arc_+tar_xz",
         "Tar xz",
         "application/x-xz-compressed-tar",
         "*.tar.xz *.txz",
@@ -234,7 +236,7 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "handarc_zip",
+        "hand_arc_+zip",
         "Zip",
         "application/x-zip application/zip",
         "*.zip *.ZIP",
@@ -269,7 +271,7 @@ const Handler handlers_fs[]=
     *      eg: +ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
     */
     {
-        "handfs_fuseiso",
+        "hand_fs_+fuseiso",
         "fuseiso",
         "file *fuseiso",
         "",
@@ -281,7 +283,7 @@ const Handler handlers_fs[]=
         FALSE
     },
     {
-        "handfs_udiso",
+        "hand_fs_+udiso",
         "udevil iso",
         "file iso9660",
         "",
@@ -293,7 +295,7 @@ const Handler handlers_fs[]=
         FALSE
     },
     {
-        "handfs_def",
+        "hand_fs_+def",
         "Default",
         "*",
         "",
@@ -332,7 +334,7 @@ const Handler handlers_net[]=
     *      eg: +ssh url=ssh://*
     */
     {
-        "handnet_ftp",
+        "hand_net_+ftp",
         "ftp",
         "ftp",
         "",
@@ -344,7 +346,7 @@ const Handler handlers_net[]=
         FALSE
     },
     {
-        "handnet_ssh",
+        "hand_net_+ssh",
         "ssh",
         "ssh mtab_fs=fuse.sshfs",
         "",
@@ -356,7 +358,7 @@ const Handler handlers_net[]=
         FALSE
     },
     {
-        "handnet_udevil",
+        "hand_net_+udevil",
         "udevil",
         "ftp http https nfs smb ssh mtab_fs=fuse*",
         "",
@@ -374,7 +376,7 @@ const Handler handlers_file[]=
     /* %a custom mount point
      * Plus standard substitution variables are accepted. */
     {
-        "handf_iso",
+        "hand_f_+iso",
         "Mount ISO",
         "application/x-iso9660-image application/x-iso-image application/x-cd-image",
         "*.img *.iso *.mdf *.nrg",
@@ -674,7 +676,7 @@ char* ptk_handler_save_script( int mode, int cmd, XSet* handler_set,
     else
         text = "";
     
-printf("WRITE %s\n", script );
+//printf("WRITE %s\n", script );
     // write script
     FILE* file = 0;
     if ( file = fopen( script, "w" ) )
@@ -989,7 +991,6 @@ void ptk_handler_add_defaults( int mode, gboolean overwrite,
                                                 XSET_B_TRUE : XSET_B_UNSET;
                 }
                 set->b = XSET_B_TRUE;
-                // note: xset menu_labels are not saved unless !lock
                 set->lock = FALSE;
                 // handler equals default, so don't save in session
                 set->disable = TRUE;
@@ -1021,7 +1022,7 @@ XSet* add_new_handler( int mode )
     // create and return the xset
     set = xset_get( name );
     g_free( name );
-    set->lock = FALSE;  // note: xset menu_labels are not saved unless !lock
+    set->lock = FALSE;
     return set;
 }
 
@@ -1043,7 +1044,8 @@ static void config_load_handler_settings( XSet* handler_xset,
     gtk_widget_set_sensitive( GTK_WIDGET( hnd->btn_down ), TRUE );
     gtk_widget_set_sensitive( GTK_WIDGET( hnd->chkbtn_handler_enabled ), TRUE );
     gtk_widget_set_sensitive( GTK_WIDGET( hnd->btn_defaults0 ),
-                g_str_has_prefix( handler_xset->name, handler_prefix[hnd->mode] ) );
+                    g_str_has_prefix( handler_xset->name,
+                                      handler_def_prefix[hnd->mode] ) );
 
     /* Configuring widgets with handler settings. Only name, MIME and
      * extension warrant a warning
@@ -1162,8 +1164,8 @@ static void populate_archive_handlers( HandlerData* hnd, XSet* def_handler_set )
     int i;
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
-        if ( g_str_has_prefix( archive_handlers[i], handler_prefix[hnd->mode] ) ||
-             g_str_has_prefix( archive_handlers[i], handler_cust_prefix[hnd->mode] ) )
+        if ( g_str_has_prefix( archive_handlers[i],
+                                            handler_cust_prefix[hnd->mode] ) )
         {
             // Fetching handler  - ignoring invalid handler xset names
             XSet* handler_xset = xset_is( archive_handlers[i] );
@@ -1788,8 +1790,8 @@ static void restore_defaults( HandlerData* hnd, gboolean all )
                             COL_XSET_NAME, &xset_name,
                             -1 );
         // a default handler is selected?
-        if ( !( xset_name &&    g_str_has_prefix( xset_name,
-                                                handler_prefix[hnd->mode] ) ) )
+        if ( !( xset_name && g_str_has_prefix( xset_name,
+                                            handler_def_prefix[hnd->mode] ) ) )
         {
             g_free( xset_name );
             return;

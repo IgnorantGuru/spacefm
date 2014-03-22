@@ -1040,20 +1040,21 @@ void load_settings( char* config_dir )
             "tar @ -cvjf %o %N",
             "tar @ -cvzf %o %N",
             "tar @ -cvJf %o %N",
-            "+zip @ -r %o %N",
-            "+\"$(which 7za || echo 7zr)\" @ a %o %N",
+            "zip @ -r %o %N",
+            "\"$(which 7za || echo 7zr)\" @ a %o %N",
             "tar @ -cvf %o %N",
-            "+rar a -r @ %o %N"
+            "rar a -r @ %o %N"
         };
         for ( i = 0; i < G_N_ELEMENTS( old_arc ); i++ )
         {
+            // find old option
             str = g_strdup_printf( "arc_%s", old_arc[i] );
             set = xset_is( str );
             g_free( str );
             if ( set && set->s && set->s[0] )
             {
                 // user had old options
-                str = g_strdup_printf( "handarc_%s", old_arc[i] );
+                str = g_strdup_printf( "hand_arc_+%s", old_arc[i] );
                 handset = xset_is( str );
                 g_free( str );
                 if ( handset )
@@ -1089,7 +1090,7 @@ void load_settings( char* config_dir )
             set->s = str;
         }
         // Move custom mount/unmount commands to handler
-        handset = xset_get( "handfs_def" );
+        handset = xset_get( "hand_fs_+def" );
         set = xset_is( "dev_unmount_cmd" );
         if ( set && set->s && set->s[0] )
         {
@@ -2346,7 +2347,7 @@ void xset_write( FILE* file )
     {
         // hack to not save default handlers - this allows default handlers
         // to be updated more easily
-        if ( (gboolean)((XSet*)l->data)->disable && 
+        if ( (gboolean)((XSet*)l->data)->disable &&
                 (char)((XSet*)l->data)->name[0] == 'h' &&
                 g_str_has_prefix( (char*)((XSet*)l->data)->name, "hand" ) )
             continue;
@@ -2370,7 +2371,7 @@ void xset_parse( char* line )
     char* var = sep + 1;
     *sep = '\0';
 
-    if ( !strncmp( name, "cstm_", 5 ) )
+    if ( !strncmp( name, "cstm_", 5 ) || !strncmp( name, "hand_", 5 ) )
     {
         // custom
         if ( !strcmp( set_last->name, name ) )
