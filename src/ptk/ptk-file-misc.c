@@ -188,7 +188,7 @@ void ptk_delete_files( GtkWindow* parent_win,
     task = ptk_file_task_new( app_settings.use_trash_can ? VFS_FILE_TASK_TRASH : VFS_FILE_TASK_DELETE,
                               file_list,
                               NULL,
-                              GTK_WINDOW( parent_win ),
+                              parent_win ? GTK_WINDOW( parent_win ) : NULL,
                               GTK_WIDGET( task_view ) );
     ptk_file_task_run( task );
 }
@@ -912,10 +912,10 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
     }
         
     GtkWidget* dlg = gtk_file_chooser_dialog_new( title,
-                                   GTK_WINDOW( mset->parent ), 
-                                   action,
-                                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                   GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+                           mset->parent ? GTK_WINDOW( mset->parent ) : NULL, 
+                           action,
+                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                           GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
                     
     xset_set_window_icon( GTK_WINDOW( dlg ) );
 
@@ -1036,7 +1036,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     //  it creates a folder by default with no way to stop it
     //  it gives 'folder already exists' error popup
     GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Browse"),
-                                   GTK_WINDOW( mset->parent ), 
+                                   mset->parent ? GTK_WINDOW( mset->parent ) : NULL, 
                                    mode_default == MODE_PARENT ?
                                         GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER :
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -2110,10 +2110,11 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         task_view = file_browser->task_view;
     }
     else
-        mset->parent = GTK_WIDGET( desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        mset->parent = NULL;  //GTK_WIDGET( desktop );
 
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
-                                GTK_WINDOW( mset->parent ),
+                                mset->parent ? GTK_WINDOW( mset->parent ) : NULL,
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL, NULL );
     //g_free( title );
@@ -3979,12 +3980,14 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
 
     if ( missing_targets > 0 )
     {
-        GtkWidget* parent = NULL;
+        GtkWindow* parent;
         if ( file_browser )
-            parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+            parent = GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
+                                                        file_browser ) ) );
         else if ( desktop )
-            parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
-        ptk_show_error( GTK_WINDOW( parent ),
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            parent = NULL;
+        ptk_show_error( parent,
                         g_strdup_printf ( _("Error") ),
                         g_strdup_printf ( "%i target%s missing",
                         missing_targets, 
@@ -4009,7 +4012,8 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
     char* cmd;
     char* task_name;
     
-    GtkWidget* parent = desktop ? GTK_WIDGET( desktop ) : GTK_WIDGET( file_browser );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    GtkWidget* parent = file_browser ? GTK_WIDGET( file_browser ) : NULL;
     char* file_paths = g_strdup( "" );
     GList* sel;
     char* file_path;
@@ -4036,7 +4040,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
             str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
                                              "Delete %d selected items as root ?",
                                              item_count ), item_count );
-            if ( xset_msg_dialog( GTK_WIDGET( parent ), GTK_MESSAGE_WARNING,
+            if ( xset_msg_dialog( parent, GTK_MESSAGE_WARNING,
                                 _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
                                 _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
             {
@@ -4056,7 +4060,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
             folder = set->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( parent ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        path = xset_file_dialog( parent, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                                 _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
@@ -4085,7 +4089,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
     g_free( file_paths );
 
     // root task
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( parent ),
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, parent,
                                 file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
     task->task->exec_command = cmd;

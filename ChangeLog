@@ -6,6 +6,9 @@
     fix panel_sliders-key used as task height 0.9.2-0.9.3 #419
     reset Use-as-opener on import/install plugin; update man
     task error continue no present open task dialog
+    gnome-terminal 3.10 no longer accepts --disable-factory #428
+    desktop dialogs pop to top #424
+    [GTK2] Preferences|Desktop table row collision #427
 0.9.3   2014-01-17:
     fix memory leak on draw selection rectangle on desktop #397
     [Dialog] fix returned windowsize=1x1 [GTK 3.8+]

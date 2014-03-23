@@ -1448,7 +1448,8 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     if ( task->exec_browser )
         parent = gtk_widget_get_toplevel( task->exec_browser );
     else if ( task->exec_desktop )
-        parent = gtk_widget_get_toplevel( task->exec_desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent = NULL;   //gtk_widget_get_toplevel( task->exec_desktop );
 
     task->state = VFS_FILE_TASK_RUNNING;
     string_copy_free( &task->current_file, src_file );
@@ -1636,20 +1637,25 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         if ( result < 0 ) goto _exit_with_error;
 
         // build - trap rm
+        /* These terminals provide no option to start a new instance, child
+         * exit occurs immediately so can't delete tmp files.  So keep files
+         * and let trap delete on exit.
+
+         * These terminals will not work properly with Run As Task.
+        
+         * Note for konsole:  if you create a link to it and execute the
+         * link, it will start a new instance (might also work for lxterminal?)
+         * http://www.linuxjournal.com/content/start-and-control-konsole-dbus
+         * 
+         * gnome-terminal removed --disable-factory option as of 3.10
+         * https://github.com/IgnorantGuru/spacefm/issues/428
+        */
         if ( !task->exec_keep_tmp && terminal && 
                                 ( strstr( terminal, "lxterminal" ) ||
                                   strstr( terminal, "urxvtc" ) ||  // sure no option avail?
-                                  strstr( terminal, "konsole" ) ) )
+                                  strstr( terminal, "konsole" ) ||
+                                  strstr( terminal, "gnome-terminal" ) ) )
         {
-            // these terminals provide no option to start a new instance, child
-            // exit occurs immediately so can't delete tmp files
-            // so keep files and let trap delete on exit
-
-            // *these terminals will not work properly with Run As Task
-            
-            // note for konsole:  if you create a link to it and execute the
-            // link, it will start a new instance (might also work for lxterminal?)
-            // http://www.linuxjournal.com/content/start-and-control-konsole-dbus
             result = fprintf( file, "trap \"rm -f %s; exit\" EXIT SIGINT SIGTERM SIGQUIT SIGHUP\n\n",
                                                     task->exec_script );
             if ( result < 0 ) goto _exit_with_error;
@@ -1739,8 +1745,6 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         else if ( strstr( terminal, "xfce4-terminal" )
                                 || g_str_has_suffix( terminal, "/terminal" ) )
             argv[a++] = g_strdup_printf( "--disable-server" );
-        else if ( strstr( terminal, "gnome-terminal" ) )
-            argv[a++] = g_strdup_printf( "--disable-factory" );
 
         if ( strstr( terminal, "xfce4-terminal" ) 
                                 || strstr( terminal, "gnome-terminal" )

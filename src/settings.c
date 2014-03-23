@@ -4954,7 +4954,8 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     }
     else
     {
-        parent = GTK_WIDGET( set->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent = NULL;  //GTK_WIDGET( set->desktop );
         cwd = vfs_get_desktop_dir();
     }
     
@@ -5405,7 +5406,8 @@ void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboole
         editor = xset_get_s( "editor" );
         if ( !editor || editor[0] == '\0' )
         {
-            ptk_show_error( GTK_WINDOW( dlgparent ), _("Editor Not Set"),
+            ptk_show_error( dlgparent ? GTK_WINDOW( dlgparent ) : NULL,
+                            _("Editor Not Set"),
                             _("Please set your editor in View|Preferences|Advanced") );
             return;
         }
@@ -5416,7 +5418,8 @@ void xset_edit( GtkWidget* parent, const char* path, gboolean force_root, gboole
         editor = xset_get_s( "root_editor" );
         if ( !editor || editor[0] == '\0' )
         {
-            ptk_show_error( GTK_WINDOW( dlgparent ), _("Root Editor Not Set"),
+            ptk_show_error( dlgparent ? GTK_WINDOW( dlgparent ) : NULL,
+                            _("Root Editor Not Set"),
                             _("Please set root's editor in View|Preferences|Advanced") );
             return;
         }
@@ -5610,7 +5613,8 @@ void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor )
     if ( parent )
         dlgparent = parent;
     else if ( set )
-        dlgparent = set->browser ? GTK_WIDGET( set->browser ) : GTK_WIDGET( set->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        dlgparent = set->browser ? GTK_WIDGET( set->browser ) : NULL;
 
     if ( !set || ( set && set->lock ) )
     {
@@ -5860,7 +5864,8 @@ void xset_set_key( GtkWidget* parent, XSet* set )
     g_free( name );
     if ( parent )
         dlgparent = gtk_widget_get_toplevel( parent );
-    GtkWidget* dlg = gtk_message_dialog_new_with_markup( GTK_WINDOW( dlgparent ),
+    GtkWidget* dlg = gtk_message_dialog_new_with_markup( dlgparent ?
+                                                GTK_WINDOW( dlgparent ) : NULL,
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_QUESTION,
                                   GTK_BUTTONS_NONE,
@@ -5969,7 +5974,8 @@ void xset_design_job( GtkWidget* item, XSet* set )
     if ( set->browser )
         parent = gtk_widget_get_toplevel( GTK_WIDGET( set->browser ) );
     else if ( set->desktop )
-        parent = gtk_widget_get_toplevel( GTK_WIDGET( set->desktop ) );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent = NULL;  //gtk_widget_get_toplevel( GTK_WIDGET( set->desktop ) );
     
     int job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
 
@@ -7846,7 +7852,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         set->desktop = NULL;
     }
     
-    parent = set->browser ? GTK_WIDGET( set->browser ) : GTK_WIDGET( set->desktop );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    parent = set->browser ? GTK_WIDGET( set->browser ) : NULL;
 
     if ( set->plugin )
     {
@@ -8271,7 +8278,8 @@ gboolean xset_text_dialog( GtkWidget* parent, const char* title, GtkWidget* imag
 
     if ( parent )
          dlgparent = gtk_widget_get_toplevel( parent );
-    GtkWidget* dlg = gtk_message_dialog_new( GTK_WINDOW( dlgparent ),
+    GtkWidget* dlg = gtk_message_dialog_new( dlgparent ?
+                                                GTK_WINDOW( dlgparent ) : NULL,
                                   GTK_DIALOG_MODAL,
                                   GTK_MESSAGE_QUESTION,
                                   GTK_BUTTONS_NONE,
@@ -8611,9 +8619,10 @@ char* xset_file_dialog( GtkWidget* parent, GtkFileChooserAction action,
  *      GTK_FILE_CHOOSER_ACTION_SAVE
  *      GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER
  *      GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER  */
-    GtkWidget* dlgparent = gtk_widget_get_toplevel( parent );
+    GtkWidget* dlgparent = parent ? gtk_widget_get_toplevel( parent ) : NULL;
     GtkWidget* dlg = gtk_file_chooser_dialog_new( title,
-                                   GTK_WINDOW( dlgparent ), action,
+                                   dlgparent ? GTK_WINDOW( dlgparent ) : NULL,
+                                   action,
                                    GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                    GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
     //gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
@@ -8690,7 +8699,7 @@ char* xset_color_dialog( GtkWidget* parent, char* title, char* defcolor )
 {
     GdkColor color;
     char* scolor = NULL;
-    GtkWidget* dlgparent = gtk_widget_get_toplevel( parent );
+    GtkWidget* dlgparent = parent ? gtk_widget_get_toplevel( parent ) : NULL;
     GtkWidget* dlg = gtk_color_selection_dialog_new( title );
     GtkWidget* color_sel;
     GtkWidget* help_button;
