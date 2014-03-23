@@ -1,22 +1,13 @@
 /*
- *      desktop-window.c
- *
- *
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- */
+* SpaceFM desktop-window.c
+*
+* Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+* Copyright (C) 2012 BwackNinja <bwackninja@gmail.com>
+* Copyright (C) 2008 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+*
+* License: See COPYING file
+*
+*/
 
 #include <stdlib.h>
 #include <glib/gi18n.h>
@@ -1969,10 +1960,11 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             g_free( files );
             file_list = g_list_reverse( file_list );
             
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
             task = ptk_file_task_new( file_action,
                                       file_list,
                                       dest_dir ? dest_dir : vfs_get_desktop_dir(),
-                                      GTK_WINDOW( self ), NULL );
+                                      NULL, NULL );
             // get insertion box
             if ( self->sort_by == DW_SORT_CUSTOM )
             {
@@ -2348,7 +2340,8 @@ _key_found:
                     desktop_window_sort_items( desktop, by, desktop->sort_type );
                 }
                 else if ( !strcmp( set->name, "desk_pref" ) )
-                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    fm_edit_preference( NULL, PREF_DESKTOP );
                 else if ( !strcmp( set->name, "desk_open" ) )
                     desktop_window_open_desktop_dir( NULL, desktop );
             }
@@ -2358,23 +2351,29 @@ _key_found:
                 if ( !strcmp( xname, "link" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    ptk_clipboard_paste_links(
-                        GTK_WINDOW( gtk_widget_get_toplevel(
-                                    GTK_WIDGET( desktop ) ) ),
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    // must pass desktop here for callback window
+                    ptk_clipboard_paste_links( NULL,
                                     vfs_get_desktop_dir(), NULL,
-                                    (GFunc)desktop_window_insert_task_complete );
+                                    (GFunc)desktop_window_insert_task_complete,
+                                    GTK_WINDOW( gtk_widget_get_toplevel(
+                                                GTK_WIDGET( desktop ) ) ) );
                 }
                 else if ( !strcmp( xname, "target" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    ptk_clipboard_paste_targets( GTK_WINDOW( 
-                            gtk_widget_get_toplevel( GTK_WIDGET( desktop ) ) ),
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    // must pass desktop here for callback window
+                    ptk_clipboard_paste_targets( NULL,
                             vfs_get_desktop_dir(),
-                            NULL, (GFunc)desktop_window_insert_task_complete );
+                            NULL, (GFunc)desktop_window_insert_task_complete,
+                            GTK_WINDOW( gtk_widget_get_toplevel(
+                                        GTK_WIDGET( desktop ) ) ) );
                 }
                 else if ( !strcmp( xname, "as" ) )
                 {
                     desktop_window_set_insert_item( desktop );
+                    // must pass desktop here for callback window
                     ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir(),
                                     (GFunc)desktop_window_insert_task_complete );
                 }
@@ -2630,7 +2629,8 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
 {
-    fm_edit_preference( GTK_WINDOW( self ), PREF_DESKTOP );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    fm_edit_preference( NULL, PREF_DESKTOP );
 }
 
 
@@ -3220,8 +3220,8 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
             folder = set2->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( desktop ),
-                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        path = xset_file_dialog( NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                             _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
@@ -3254,7 +3254,8 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
                                         _("Invalid Destination"), NULL, 0,
                                         _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
@@ -3278,15 +3279,15 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         PtkFileTask* task = ptk_file_task_new( file_action,
                                 file_list,
                                 dest_dir,
-                                GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
-                                                                desktop ) ) ),
+                                NULL,
                                 NULL );
         ptk_file_task_run( task );
         g_free( dest_dir );
     }
     else
     {
-        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
@@ -3952,8 +3953,8 @@ void desktop_window_add_application( DesktopWindow* desktop )
     else
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
-    app = (char *) ptk_choose_app_for_mime_type( /* GTK_WINDOW( desktop )
-                some wm's don't bring dialog to top ? */ NULL,
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    app = (char *) ptk_choose_app_for_mime_type( NULL,
                                         mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
@@ -3964,7 +3965,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
             PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
                                                    sel_files,
                                                    vfs_get_desktop_dir(),
-                                                   GTK_WINDOW( desktop ),
+                                                   NULL,
                                                    NULL );
             ptk_file_task_run( task );
         }

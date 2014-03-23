@@ -30,17 +30,17 @@ void ptk_clipboard_copy_name( const char* working_dir,
 
 void ptk_clipboard_paste_files( GtkWindow* parent_win,
                                 const char* dest_dir, GtkTreeView* task_view,
-                                GFunc callback );
+                                GFunc callback, GtkWindow* callback_win );
 
 void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                 const char* dest_dir,
                                 GtkTreeView* task_view,
-                                GFunc callback );   //MOD added
+                                GFunc callback, GtkWindow* callback_win );
 
 void ptk_clipboard_paste_targets( GtkWindow* parent_win,
-                                const char* dest_dir,
-                                GtkTreeView* task_view,
-                                GFunc callback );   //MOD added
+                                  const char* dest_dir,
+                                  GtkTreeView* task_view,
+                                  GFunc callback, GtkWindow* callback_win );
 
 void ptk_clipboard_copy_text( const char* text );  //MOD added
 

@@ -304,8 +304,8 @@ void on_copycmd( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
                                                                     set->name );
 #ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
-        desktop_window_copycmd( data->desktop, data->sel_files, data->cwd,
-                                                                    set->name );
+        // must pass desktop
+        desktop_window_copycmd( data->desktop, data->sel_files, data->cwd, set->name );
 #endif
 }
 
@@ -317,6 +317,7 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
     else
         set = set2;
     if ( set )
+        // can pass desktop here (ignored)
         ptk_file_misc_rootcmd( data->desktop, data->browser, data->sel_files,
                                                         data->cwd, set->name );
 }
@@ -345,15 +346,15 @@ void on_open_in_panel( GtkMenuItem *menuitem, PtkFileMenu* data )
 
 void on_file_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
-                               GTK_WIDGET( data->desktop ),
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                data->file_path, FALSE, TRUE );
 }
 
 void on_file_root_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
-                               GTK_WIDGET( data->desktop ),
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                data->file_path, TRUE, FALSE );
 }
 
@@ -504,8 +505,8 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
         g_free( name );
     }
     else
-        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : 
-                                         GTK_WIDGET( data->desktop ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                          GTK_MESSAGE_INFO,
                          _("Bookmark Exists"), NULL, 0,
                          _("Bookmark already exists"), NULL, NULL );
@@ -557,8 +558,8 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
 
 void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
-    if ( desktop )
-        fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    fm_edit_preference( NULL, PREF_DESKTOP );
 }
 
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
@@ -1717,12 +1718,14 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
     }
 
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;    //GTK_WIDGET( data->desktop );
+    app = (char *) ptk_choose_app_for_mime_type( parent_win,
                                         mime_type, FALSE, TRUE, TRUE, FALSE );
     if ( app )
     {
@@ -1840,7 +1843,8 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         vfs_mime_type_remove_action( mime_type, desktop_file->file_name );
         if ( strcmp( mime_type->type, "text/plain" ) && 
                                 g_str_has_prefix( mime_type->type, "text/" ) )
-            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : GTK_WIDGET( data->desktop ), 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL, 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
         break;
     case APP_JOB_EDIT:
         path = g_build_filename( g_get_user_data_dir(), "applications",
@@ -1864,28 +1868,30 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                 return;
             }
         }
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, FALSE );        
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
+                                                        FALSE, FALSE );
         g_free( path );
         break;
     case APP_JOB_VIEW:
         path = get_shared_desktop_file_location( desktop_file->file_name );
         if ( path )
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
+                                                        FALSE, TRUE );
         break;
     case APP_JOB_EDIT_LIST:
         path = g_build_filename( g_get_user_data_dir(), "applications",
                                                     "mimeapps.list", NULL );
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ): NULL, path,
+                                                        FALSE, TRUE );
         g_free( path );
         break;
     case APP_JOB_ADD:
-        path = ptk_choose_app_for_mime_type( 
-                                GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
-                                                GTK_WIDGET( data->browser ) :
-                                                GTK_WIDGET( data->desktop ) ) ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        path = ptk_choose_app_for_mime_type( data->browser ?
+                                GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) ) :
+                                    NULL,
                                 mime_type, FALSE, TRUE, TRUE, TRUE );
         // ptk_choose_app_for_mime_type returns either a bare command that 
         // was already set as default, or a (custom or shared) desktop file
@@ -1971,8 +1977,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         }
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, FALSE );        
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, FALSE, FALSE );        
         }
         g_free( path );
         vfs_dir_monitor_mime();
@@ -1983,15 +1990,15 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( str );
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, FALSE, TRUE );        
         }
         g_free( path );
         break;
     case APP_JOB_VIEW_OVER:
         path = "/usr/share/mime/packages/Overrides.xml";
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                        : GTK_WIDGET( data->desktop ), path, TRUE, FALSE );
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, TRUE, FALSE );
         break;
     case APP_JOB_BROWSE_MIME_USR:
         if ( data->browser )
@@ -2016,8 +2023,8 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( path );
         break;
     case APP_JOB_HELP:
-            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :
-                                        GTK_WIDGET( data->desktop ),
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                                         NULL, "#designmode-mime" );
         break;
     }
@@ -2634,14 +2641,18 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
         GtkWidget* parent_win = gtk_widget_get_toplevel( 
                                             GTK_WIDGET( data->browser ) );
         ptk_clipboard_paste_files( GTK_WINDOW( parent_win ), data->cwd,
-                            GTK_TREE_VIEW( data->browser->task_view ), NULL );
+                            GTK_TREE_VIEW( data->browser->task_view ),
+                            NULL, NULL );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
-        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL,
-                            (GFunc)desktop_window_insert_task_complete );        
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
+        ptk_clipboard_paste_files( NULL, data->cwd, NULL,
+                            (GFunc)desktop_window_insert_task_complete,
+                            GTK_WINDOW( data->desktop ) );        
     }
 #endif
 }
@@ -2656,9 +2667,12 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
         ptk_clipboard_paste_links(
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
-            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete );
+            NULL,
+            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete,
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
     }
 #endif
 }
@@ -2673,10 +2687,13 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
         ptk_clipboard_paste_targets(
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
+            NULL,
             data->cwd,
-            NULL, (GFunc)desktop_window_insert_task_complete );
+            NULL, (GFunc)desktop_window_insert_task_complete,
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
     }
 #endif
 }
@@ -2710,6 +2727,7 @@ on_popup_paste_as_activate ( GtkMenuItem *menuitem,
 #ifdef DESKTOP_INTEGRATION
     if ( data->desktop )
         desktop_window_set_insert_item( data->desktop );
+    // must pass data->desktop here
     ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd,
             data->desktop ? (GFunc)desktop_window_insert_task_complete : NULL );
 #else
@@ -2900,12 +2918,14 @@ void
 on_popup_file_properties_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    ptk_show_file_properties( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;
+    ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 0 );
 }
@@ -2914,12 +2934,14 @@ void
 on_popup_file_permissions_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    ptk_show_file_properties( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;
+    ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 1 );
 }
