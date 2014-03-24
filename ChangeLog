@@ -10,6 +10,9 @@
     desktop dialogs pop to top #424
     [GTK2] Preferences|Desktop table row collision #427
     [desktop] preserve location of renamed file(s)
+    [dialog] remove blank lines reading file into drop, combo, m/list
+    [dialog] remove linefeeds inserting value into input/-large
+    [dialog] @FILE values not saved on cancel #321
 0.9.3   2014-01-17:
     fix memory leak on draw selection rectangle on desktop #397
     [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
