@@ -150,6 +150,8 @@ struct _DesktopWindow
     guint row_count;        // number of rows visible on the desktop
     guint order_rows;       // number of rows from saved desktop layout
     gpointer insert_item;   // item at which to insert dragged files
+    gpointer renaming_item; // item is being renamed
+    gpointer renamed_item;  // item was renamed
     gboolean file_listed;   // TRUE once files are read
 };
 

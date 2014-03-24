@@ -337,6 +337,7 @@ static void desktop_window_init(DesktopWindow *self)
     self->margin_right = app_settings.margin_right;
     self->margin_bottom = app_settings.margin_bottom;
     self->insert_item = NULL;
+    self->renamed_item = self->renaming_item = NULL;
     self->file_listed = FALSE;
 
     self->icon_render = gtk_cell_renderer_pixbuf_new();
@@ -2022,11 +2023,20 @@ void on_drag_end( GtkWidget* w, GdkDragContext* ctx )
     DesktopWindow* self = (DesktopWindow*)w;
 }
 
-void desktop_window_rename_selected_files( DesktopWindow* win,
-                                                        GList* files, const char* cwd )
+gboolean on_rename_item_invalidate( DesktopWindow* self )
+{
+    self->renaming_item = self->renamed_item = NULL;
+    return FALSE;
+}
+
+void desktop_window_rename_selected_files( DesktopWindow* self,
+                                           GList* files, const char* cwd )
 {
     GList* l;
+    GList* ll;
     VFSFileInfo* file;
+    DesktopItem* item;
+    
     for ( l = files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
@@ -2043,7 +2053,7 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                     target = g_strdup( path );
                 char* msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
                 g_free( target );
-                if ( !xset_text_dialog( GTK_WIDGET( win ), _("Change Desktop Item Name"), NULL, FALSE, msg,
+                if ( !xset_text_dialog( GTK_WIDGET( self ), _("Change Desktop Item Name"), NULL, FALSE, msg,
                                     NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
                 {
                     g_free( msg );
@@ -2060,28 +2070,55 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 }
                 if ( !vfs_app_desktop_rename( path, new_name ) )
                 {
-                    if ( win->dir )
+                    if ( self->dir )
                         // in case file is a link
-                        vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
+                        vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                     g_free( path );
                     g_free( filename );
-                    xset_msg_dialog( GTK_WIDGET( win ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
+                    xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
                     break;
                 }
-                if ( win->dir )
+                if ( self->dir )
                     // in case file is a link
-                    vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
+                    vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                 g_free( path );
                 g_free( filename );
             }
         }
         else
         {
-            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE, 0, NULL ) )
+            if ( !ptk_rename_file( self, NULL, cwd, file, NULL, FALSE, 0, NULL ) )
                 break;
+            if ( self->sort_by == DW_SORT_CUSTOM )
+            {
+                /* Track the item being renamed so its position can be retained.
+                 * This is a bit hackish, but the file monitor currently emits
+                 * two events when a file is renamed (delete and create).
+                 * This method will not preserve location if file is renamed
+                 * from outside SpaceFM.
+                 * Would be better to employ inotify MOVED_FROM and MOVED_TO
+                 * with cookie, but file monitor doesn't currently provide this
+                 * data to callbacks. */
+                self->renaming_item = NULL;
+                self->renamed_item = NULL;
+                for ( ll = self->items; ll; ll = ll->next )
+                {
+                    item = (DesktopItem*) ll->data;
+                    if ( item->fi == file )
+                    {
+                        self->renaming_item = item;
+                        break;
+                    }
+                }
+            }
         }
     }
- 
+    if ( self->sort_by == DW_SORT_CUSTOM )
+    {
+        // invalidate renaming_item 2 seconds after last rename
+        g_timeout_add_seconds( 2, ( GSourceFunc ) on_rename_item_invalidate,
+                                                                        self );
+    }
 }
 
 DesktopItem* get_next_item( DesktopWindow* self, int direction )
@@ -3074,6 +3111,15 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
                 self->insert_item = l->next->data;
             }
         }
+        else if ( self->renamed_item && !((DesktopItem*)self->renamed_item)->fi &&
+                        ( l = g_list_find( self->items, self->renamed_item ) ) )
+        {
+            // insert where item was renamed
+            desktop_item_free( (DesktopItem*)self->renamed_item );
+            self->renamed_item = NULL;
+            l->data = item;
+            item->is_selected = TRUE;
+        }
         else
         {
             // find empty at end of all icons
@@ -3136,6 +3182,13 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
             item_new->box = item->box;
             desktop_item_free( item );
             l->data = item_new;
+            if ( self->renaming_item == item && self->renamed_item == NULL )
+            {
+                // item is being renamed - retain position
+                self->renamed_item = item_new;
+                self->renaming_item = NULL;
+            }
+
             // layout all since deleting may allow more icons to fit if full
             //redraw_item( self, item_new );
             layout_items( self );
