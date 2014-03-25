@@ -2901,9 +2901,9 @@ The first, "$dialog_pressed", contains the name of the button which was pressed 
     fi
 </pre>
 
-<p>Note: The stock 'cancel' button has a special function.  If it is used to close the dialog (no COMMAND has been associated with the button), element @FILE values will NOT be saved.  In this case, the element values written to stdout may not match the values stored in @FILEs.  You can perform a <a href="#dialog-int-source">source</a> command first if you do want values to be written for @FILEs when Cancel is clicked.  [Note:  In SpaceFM 0.9.3 and prior, element @FILE values WERE saved when the user pressed Cancel.]
+<p><b>Note: The stock 'cancel' button has a special function.</b>  If it is used to close the dialog (no COMMAND has been associated with the button), element @FILE values will NOT be saved.  In this case, the element values written to stdout may not match the values stored in @FILEs.  You can perform a <a href="#dialog-int-source">source</a> command first if you do want values to be written for @FILEs when Cancel is clicked.  [Note:  In SpaceFM 0.9.3 and prior, element @FILE values WERE saved when the user pressed Cancel.]
 
-<b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.  Also, element @FILE values will NOT be saved, as if the user clicked a Cancel button.
+<p><b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.  Also, element @FILE values will NOT be saved, as if the user clicked a Cancel button.
 
 <p><b>If a <a href="#dialog-cmd">command</a> is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
 
