@@ -499,6 +499,9 @@ As you're entering a directory path in the Path Bar, completion will be active. 
 <!-- # Breadcrumbs #bread -->
 The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
+<!-- # Middle-Click Auto Seek #middle -->
+A middle-click in the Path Bar will replace the contents of the Path Bar with the contents of the primary clipboard, and will seek to the location.  The primary clipboard is set simply by selecting text in any application.  For example, if you select the text "/etc/fstab" in your editor, then middle click in SpaceFM's path bar, the directory will change to /etc and the 'fstab' file will be selected.  If you don't want to replace the contents of the Path Bar, and merely want to insert the primary clipboard text (the usual behavior of middle-click), hold down a modifier key while you click, such as Ctrl or Shift.
+
 <!-- # File Path -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
 
@@ -2946,7 +2949,9 @@ The first, "$dialog_pressed", contains the name of the button which was pressed 
     fi
 </pre>
 
-<b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.
+<p><b>Note: The stock 'cancel' button has a special function.</b>  If it is used to close the dialog (no COMMAND has been associated with the button), element @FILE values will NOT be saved.  In this case, the element values written to stdout may not match the values stored in @FILEs.  You can perform a <a href="#dialog-int-source">source</a> command first if you do want values to be written for @FILEs when Cancel is clicked.  [Note:  In SpaceFM 0.9.3 and prior, element @FILE values WERE saved when the user pressed Cancel.]
+
+<p><b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.  Also, element @FILE values will NOT be saved, as if the user clicked a Cancel button.
 
 <p><b>If a <a href="#dialog-cmd">command</a> is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
 
@@ -3877,6 +3882,7 @@ Usage: <b>close [REVERSE]</b>
                --input \
 	       <a href="#dialog-nonvis-winclose">--window-close</a> <b>close %input1</b></pre>
 
+Note: Element @FILE values are NOT saved when the dialog is closed via the close command (or via a SIGQUIT signal, etc).  You can perform a <a href="#dialog-int-source">source</a> command first if you want values to be written for @FILEs.  [Note:  In SpaceFM 0.9.3 and prior, the close command DID save element @FILE values.]
 
 <!-- #press -->
 Usage: <b>press BUTTON-NAME</b>
@@ -3984,7 +3990,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes byt the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 

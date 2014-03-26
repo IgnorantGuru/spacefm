@@ -11302,6 +11302,7 @@ void xset_defaults()
         
         set = xset_set_panel( p, "show_devmon", "lbl", _("_Devices") );
         set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_UNSET;
         if ( p != 1 )
             xset_set_set( set, "shared_key", "panel1_show_devmon" );
 
@@ -11313,11 +11314,13 @@ void xset_defaults()
 
         set = xset_set_panel( p, "show_book", "lbl", _("_Bookmarks") );
         set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_UNSET;
         if ( p != 1 )
             xset_set_set( set, "shared_key", "panel1_show_book" );
 
         set = xset_set_panel( p, "show_sidebar", "lbl", _("_Side Toolbar") );
         set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_UNSET;
         if ( p != 1 )
             xset_set_set( set, "shared_key", "panel1_show_sidebar" );
 

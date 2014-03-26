@@ -1538,9 +1538,9 @@ void show_panels( GtkMenuItem* item, FMMainWindow* main_window )
                                         xset_get_b_panel( p, "detcol_date" ) );
                 set_old = xset_get_panel( p, "slider_positions" );
                 set = xset_get_panel_mode( p, "slider_positions", mode );
-                set->x = g_strdup( set_old->x );
-                set->y = g_strdup( set_old->y );
-                set->s = g_strdup( set_old->s );
+                set->x = g_strdup( set_old->x ? set_old->x : "0" );
+                set->y = g_strdup( set_old->y ? set_old->y : "0" );
+                set->s = g_strdup( set_old->s ? set_old->s : "0" );
             }
             g_free( str );
             // load dynamic slider positions for this panel context

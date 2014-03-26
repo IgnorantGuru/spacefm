@@ -339,6 +339,10 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
             ++pexec;
             switch( *pexec )
             {
+            /* 0.9.4: Treat %u/%U as %f/%F acceptable for local files per spec at
+             * http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#exec-variables
+             * This seems to be more common behavior among file managers and
+             * some common .desktop files erroneously make this assumption.
             case 'U':
                 for( l = file_list; l; l = l->next )
                 {
@@ -363,8 +367,10 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
                     add_files = TRUE;
                 }
                 break;
+            */
             case 'F':
             case 'N':
+            case 'U':
                 for( l = file_list; l; l = l->next )
                 {
                     file = (char*)l->data;
@@ -377,6 +383,7 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
                 break;
             case 'f':
             case 'n':
+            case 'u':
                 if( file_list && file_list->data )
                 {
                     file = (char*)file_list->data;
