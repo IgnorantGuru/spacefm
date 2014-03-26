@@ -16,6 +16,7 @@
     Preferences|Desktop|Font dlg honor cancel
     fix new config devices shown not saved
     path bar middle-click replace contents and activate
+    open .desktop treat %u/%U as %f/%F per freedesktop spec
 0.9.3   2014-01-17:
     fix memory leak on draw selection rectangle on desktop #397
     [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
