@@ -191,9 +191,12 @@ void on_font_button_clicked( GtkButton* button, FMPrefDlg* data )
                                     _("Choose Desktop Font"),
                                    _("Example Item 0123456789"),
                                    font_button_get_font( data->desk_font ) );
-    font_button_set_font( data->desk_font, NULL, fontname && fontname[0] ?
+    if ( fontname )
+    {
+        font_button_set_font( data->desk_font, NULL, fontname[0] ?
                                                  fontname : NULL );
-    g_free( fontname );
+        g_free( fontname );
+    }
 }
 
 static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
