@@ -945,29 +945,29 @@ void on_edit_button_press( GtkWidget* btn, ContextData* ctxt )
         gtk_text_buffer_get_end_iter( buf, &iter );
         char* text = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
         if ( !( text && text[0] ) )
-        {
-            g_free( text );
-            return;
-        }
-        char* str;
-        if ( str = strchr( text, ' ' ) )
-            str[0] = '\0';
-        if ( str = strchr( text, '\n' ) )
-            str[0] = '\0';
-        path = g_strdup( g_strstrip( text ) );
-        g_free( text );
-        if ( path[0] == '\0' || ( path[0] != '/' &&
-                                            !g_ascii_isalnum( path[0] ) ) )
-        {
-            g_free( path );
             path = NULL;
-        }
-        else if ( path[0] != '/' )
+        else
         {
-            str = path;
-            path = g_find_program_in_path( str );
-            g_free( str );
+            char* str;
+            if ( str = strchr( text, ' ' ) )
+                str[0] = '\0';
+            if ( str = strchr( text, '\n' ) )
+                str[0] = '\0';
+            path = g_strdup( g_strstrip( text ) );
+            if ( path[0] == '\0' || ( path[0] != '/' &&
+                                                !g_ascii_isalnum( path[0] ) ) )
+            {
+                g_free( path );
+                path = NULL;
+            }
+            else if ( path[0] != '/' )
+            {
+                str = path;
+                path = g_find_program_in_path( str );
+                g_free( str );
+            }
         }
+        g_free( text );
         if ( !( path && mime_type_is_text_file( path, NULL ) ) )
         {
             xset_msg_dialog( GTK_WIDGET( ctxt->dlg ), GTK_MESSAGE_ERROR,
