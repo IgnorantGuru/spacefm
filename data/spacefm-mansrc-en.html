@@ -499,6 +499,9 @@ As you're entering a directory path in the Path Bar, completion will be active. 
 <!-- # Breadcrumbs #bread -->
 The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
 
+<!-- # Middle-Click Auto Seek #middle -->
+A middle-click in the Path Bar will replace the contents of the Path Bar with the contents of the primary clipboard, and will seek to the location.  The primary clipboard is set simply by selecting text in any application.  For example, if you select the text "/etc/fstab" in your editor, then middle click in SpaceFM's path bar, the directory will change to /etc and the 'fstab' file will be selected.  If you don't want to replace the contents of the Path Bar, and merely want to insert the primary clipboard text (the usual behavior of middle-click), hold down a modifier key while you click, such as Ctrl or Shift.
+
 <!-- # File Path -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
 
