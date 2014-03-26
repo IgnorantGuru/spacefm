@@ -2036,6 +2036,7 @@ void desktop_window_rename_selected_files( DesktopWindow* self,
     GList* ll;
     VFSFileInfo* file;
     DesktopItem* item;
+    char* msg;
     
     for ( l = files; l; l = l->next )
     {
@@ -2051,36 +2052,49 @@ void desktop_window_rename_selected_files( DesktopWindow* self,
                 char* target = g_file_read_link( path, NULL );
                 if ( !target )
                     target = g_strdup( path );
-                char* msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
-                g_free( target );
-                if ( !xset_text_dialog( GTK_WIDGET( self ), _("Change Desktop Item Name"), NULL, FALSE, msg,
-                                    NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
+                if ( !have_rw_access( target ) )
                 {
+                    msg = g_strdup_printf( _("You do not have permission to edit the contents of file %s\n\nConsider copying the file to the desktop, or link to a copy in ~/.local/share/applications/"), target );
+                    xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_INFO, _("Unable To Rename"), NULL, 0, msg, NULL, NULL );                    
                     g_free( msg );
                     g_free( path );
                     g_free( filename );
+                    g_free( target );
                     break;
                 }
-                g_free( msg );
-                if ( new_name[0] == '\0' )
+                else
                 {
-                    g_free( path );
-                    g_free( filename );
-                    break;
-                }
-                if ( !vfs_app_desktop_rename( path, new_name ) )
-                {
+                    msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
+                    g_free( target );
+                    if ( !xset_text_dialog( GTK_WIDGET( self ), _("Change Desktop Item Name"), NULL, FALSE, msg,
+                                        NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
+                    {
+                        g_free( msg );
+                        g_free( path );
+                        g_free( filename );
+                        break;
+                    }
+                    g_free( msg );
+                    if ( new_name[0] == '\0' )
+                    {
+                        g_free( path );
+                        g_free( filename );
+                        break;
+                    }
+                    if ( !vfs_app_desktop_rename( path, new_name ) )
+                    {
+                        if ( self->dir )
+                            // in case file is a link
+                            vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
+                        g_free( path );
+                        g_free( filename );
+                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
+                        break;
+                    }
                     if ( self->dir )
                         // in case file is a link
                         vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
-                    g_free( path );
-                    g_free( filename );
-                    xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
-                    break;
                 }
-                if ( self->dir )
-                    // in case file is a link
-                    vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                 g_free( path );
                 g_free( filename );
             }
