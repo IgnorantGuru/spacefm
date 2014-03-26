@@ -9433,12 +9433,12 @@ void xset_defaults()
 
         set = xset_set( "dev_back_fsarc", "lbl", "_FSArchiver" );
         xset_set_set( set, "desc", "FSArchiver" );
-        xset_set_set( set, "title", "/usr/sbin/fsarchiver -vo -z 7 savefs %s %v" );
+        xset_set_set( set, "title", "fsarchiver -vo -z 7 savefs %s %v" );
         set->line = g_strdup( "#devices-root-fsarc" );
 
         set = xset_set( "dev_back_part", "lbl", "_Partimage" );
         xset_set_set( set, "desc", "Partimage" );
-        xset_set_set( set, "title", "/usr/sbin/partimage -dbo -V 4050 save %v %s" );
+        xset_set_set( set, "title", "partimage -dbo -V 4050 save %v %s" );
         set->line = g_strdup( "#devices-root-parti" );
 
         set = xset_set( "dev_back_mbr", "lbl", "_MBR" );
@@ -9454,8 +9454,8 @@ void xset_defaults()
     set->line = g_strdup( "#devices-root-resfile" );
 
         set = xset_set( "dev_rest_file", "lbl", _("_From File") );
-        xset_set_set( set, "desc", "/usr/sbin/fsarchiver -v restfs %s id=0,dest=%v" );
-        xset_set_set( set, "title", "/usr/sbin/partimage -b restore %v %s" );
+        xset_set_set( set, "desc", "fsarchiver -v restfs %s id=0,dest=%v" );
+        xset_set_set( set, "title", "partimage -b restore %v %s" );
         set->line = g_strdup( "#devices-root-resfile" );
 
         set = xset_set( "dev_rest_info", "lbl", _("File _Info") );
