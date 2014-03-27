@@ -248,6 +248,8 @@ void on_shortcut_new_tab_here( GtkMenuItem* item,
                                           PtkFileBrowser* file_browser );
 static void on_show_history_menu( GtkMenuToolButton* btn, PtkFileBrowser* file_browser );
 void enable_toolbar( PtkFileBrowser* file_browser );
+void show_thumbnails( PtkFileBrowser* file_browser, PtkFileList* list,
+                                    gboolean is_big, int max_file_size );
 
 static int
 file_list_order_from_sort_order( PtkFBSortOrder order );
@@ -2823,9 +2825,9 @@ void ptk_file_browser_update_model( PtkFileBrowser* file_browser )
         file_list_order_from_sort_order( file_browser->sort_order ),
         file_browser->sort_type );
 
-    ptk_file_list_show_thumbnails( list,
-                                   ( file_browser->view_mode == PTK_FB_ICON_VIEW ),
-                                   file_browser->max_thumbnail );
+    show_thumbnails( file_browser, list,
+                     file_browser->view_mode == PTK_FB_ICON_VIEW,
+                     file_browser->max_thumbnail );
     g_signal_connect( list, "sort-column-changed",
                       G_CALLBACK( on_sort_col_changed ), file_browser );
 
@@ -2891,9 +2893,10 @@ void on_dir_file_listed( VFSDir* dir,
     {   //sfm why is this needed for compact view???
         if ( G_LIKELY(! is_cancelled) && file_browser->file_list )
         {
-            ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ),
-                                           file_browser->view_mode == PTK_FB_ICON_VIEW,
-                                           file_browser->max_thumbnail );
+            show_thumbnails( file_browser,
+                             PTK_FILE_LIST( file_browser->file_list ),
+                             file_browser->view_mode == PTK_FB_ICON_VIEW,
+                             file_browser->max_thumbnail );
         }
     }
 }
@@ -4788,9 +4791,8 @@ void ptk_file_browser_refresh( GtkWidget* item, PtkFileBrowser* file_browser )
     else if ( file_browser->max_thumbnail )
     {
         // clear thumbnails
-        ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ),
-                                        file_browser->view_mode == PTK_FB_ICON_VIEW,
-                                        0 );
+        show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                         file_browser->view_mode == PTK_FB_ICON_VIEW, 0 );
         while( gtk_events_pending() )
             gtk_main_iteration();
     }
@@ -6291,8 +6293,8 @@ void ptk_file_browser_view_as_icons( PtkFileBrowser* file_browser )
     if ( file_browser->view_mode == PTK_FB_ICON_VIEW )
         return ;
 
-    ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ), TRUE,
-                                   file_browser->max_thumbnail );
+    show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                     TRUE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_ICON_VIEW;
     gtk_widget_destroy( file_browser->folder_view );
@@ -6312,8 +6314,9 @@ void ptk_file_browser_view_as_compact_list( PtkFileBrowser* file_browser )
     if ( file_browser->view_mode == PTK_FB_COMPACT_VIEW )
         return ;
 
-    ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ), FALSE,
-                                   file_browser->max_thumbnail );
+    show_thumbnails( file_browser,
+                     PTK_FILE_LIST( file_browser->file_list ),
+                     FALSE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_COMPACT_VIEW;
     gtk_widget_destroy( file_browser->folder_view );
@@ -6332,8 +6335,8 @@ void ptk_file_browser_view_as_list ( PtkFileBrowser* file_browser )
     if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
         return ;
 
-    ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ), FALSE,
-                                   file_browser->max_thumbnail );
+    show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                     FALSE, file_browser->max_thumbnail );
 
     file_browser->view_mode = PTK_FB_LIST_VIEW;
     gtk_widget_destroy( file_browser->folder_view );
@@ -6643,15 +6646,27 @@ void ptk_file_browser_hide_shadow( PtkFileBrowser* file_browser )
                                           GTK_SHADOW_NONE );
 }
 
+void show_thumbnails( PtkFileBrowser* file_browser, PtkFileList* list,
+                                    gboolean is_big, int max_file_size )
+{
+    /* This function collects all calls to ptk_file_list_show_thumbnails()
+     * and disables them if change detection is blacklisted on current device */
+    if ( !( file_browser && file_browser->dir ) )
+        max_file_size = 0;
+    else if ( file_browser->dir->avoid_changes )
+        max_file_size = 0;
+    ptk_file_list_show_thumbnails( list, is_big, max_file_size );
+}
+
 void ptk_file_browser_show_thumbnails( PtkFileBrowser* file_browser,
                                        int max_file_size )
 {
     file_browser->max_thumbnail = max_file_size;
     if ( file_browser->file_list )
     {
-        ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ),
-                                       file_browser->view_mode == PTK_FB_ICON_VIEW,
-                                       max_file_size );
+        show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                         file_browser->view_mode == PTK_FB_ICON_VIEW,
+                         max_file_size );
     }
 }
 
@@ -6667,9 +6682,9 @@ void ptk_file_browser_update_display( PtkFileBrowser* file_browser )
     g_object_ref( G_OBJECT( file_browser->file_list ) );
 
     if ( file_browser->max_thumbnail )
-        ptk_file_list_show_thumbnails( PTK_FILE_LIST( file_browser->file_list ),
-                                       file_browser->view_mode == PTK_FB_ICON_VIEW,
-                                       file_browser->max_thumbnail );
+        show_thumbnails( file_browser, PTK_FILE_LIST( file_browser->file_list ),
+                         file_browser->view_mode == PTK_FB_ICON_VIEW,
+                         file_browser->max_thumbnail );
 
     vfs_mime_type_get_icon_size( &big_icon_size, &small_icon_size );
 

@@ -9851,7 +9851,7 @@ void xset_defaults()
     set->line = g_strdup( "#devices-menu-remount" );
 
     set = xset_set( "dev_change", "lbl", _("_Change Detection") );
-    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.") );
+    xset_set_set( set, "desc", _("Enter your comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.  Loading of thumbnails will also be disabled.") );
     set->menu_style = XSET_MENU_STRING;
     xset_set_set( set, "title", _("Change Detection Blacklist") );
     xset_set_set( set, "icn", "gtk-edit" );

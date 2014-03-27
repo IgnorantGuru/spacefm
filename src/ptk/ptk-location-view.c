@@ -200,6 +200,43 @@ void update_volume_icons()
 }
 
 #ifndef HAVE_HAL
+void update_change_detection()
+{
+    const GList* l;
+    int p, n, i;
+    PtkFileBrowser* file_browser;
+    GtkNotebook* notebook;
+    FMMainWindow* a_window;
+    const char* pwd;
+    
+    // update all windows/all panels/all browsers
+    for ( l = fm_main_window_get_all(); l; l = l->next )
+    {
+        a_window = FM_MAIN_WINDOW( l->data );
+        for ( p = 1; p < 5; p++ )
+        {
+            notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
+            n = gtk_notebook_get_n_pages( notebook );
+            for ( i = 0; i < n; ++i )
+            {
+                file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                 notebook, i ) );
+                if ( file_browser &&
+                        ( pwd = ptk_file_browser_get_cwd( file_browser ) ) )
+                {
+                    // update current dir change detection
+                    file_browser->dir->avoid_changes =
+                                        vfs_volume_dir_avoid_changes( pwd );
+                    // update thumbnail visibility
+                    ptk_file_browser_show_thumbnails( file_browser,
+                                  app_settings.show_thumbnail ? 
+                                  app_settings.max_thumb_size : 0 );
+                }
+            }
+        }
+    }
+}
+
 void update_all()
 {
     const GList* l;
@@ -3208,6 +3245,8 @@ void ptk_location_view_on_action( GtkWidget* view, XSet* set )
         on_handler_show_config( NULL, view, set );
     else if ( !strcmp( set->name, "dev_net_cnf" ) )
         on_handler_show_config( NULL, view, set );
+    else if ( !strcmp( set->name, "dev_change" ) )
+        update_change_detection();
     else if ( !vol )
         return;
     else
@@ -3503,6 +3542,7 @@ gboolean on_button_press_event( GtkTreeView* view, GdkEventButton* evt,
         xset_set_cb( "dev_icon_internal_mounted", update_volume_icons, NULL );
         xset_set_cb( "dev_icon_internal_unmounted", update_volume_icons, NULL );
         xset_set_cb( "dev_dispname", update_names, NULL );
+        xset_set_cb( "dev_change", update_change_detection, NULL );
         
         set = xset_get( "dev_exec_fs" );
         set->disable = !auto_optical && !auto_removable;
@@ -3884,6 +3924,7 @@ void ptk_location_view_dev_menu( GtkWidget* parent, PtkFileBrowser* file_browser
     gboolean auto_removable = set->b == XSET_B_TRUE;
     xset_set_cb( "dev_ignore_udisks_nopolicy", update_all, NULL );
     xset_set_cb( "dev_automount_volumes", on_automountlist, vol );
+    xset_set_cb( "dev_change", update_change_detection, NULL );
 
     set = xset_set_cb( "dev_fs_cnf", on_handler_show_config, parent );
         xset_set_ob1( set, "set", set );
