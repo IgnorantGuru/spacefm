@@ -13,6 +13,7 @@
     [dialog] remove blank lines reading file into drop, combo, m/list
     [dialog] remove linefeeds inserting value into input/-large
     [dialog] @FILE values not saved on cancel #321
+    update translations de ru
     Preferences|Desktop|Font dlg honor cancel
     fix new config devices shown not saved
     path bar middle-click replace contents and activate
