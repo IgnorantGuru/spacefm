@@ -1401,7 +1401,8 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
             {
                 gdk_window_set_cursor( gtk_widget_get_window(w), self->hand_cursor );
                 /* FIXME: timeout should be customizable */
-                if( 0 == self->single_click_timeout_handler )
+                if( !app_settings.desk_no_single_hover &&
+                                    0 == self->single_click_timeout_handler )
                     self->single_click_timeout_handler = 
                                     g_timeout_add( SINGLE_CLICK_TIMEOUT,
                                     (GSourceFunc)on_single_click_timeout, self );

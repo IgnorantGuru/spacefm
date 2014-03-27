@@ -2960,9 +2960,10 @@ void fm_main_window_add_new_tab( FMMainWindow* main_window,
 //printf( "++++++++++++++fm_main_window_add_new_tab fb=%#x\n", file_browser );
     ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
     // FIXME: this shouldn't be hard-code
-    ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT );
+    ptk_file_browser_set_single_click_timeout( file_browser,
+                    app_settings.no_single_hover ? 0 : SINGLE_CLICK_TIMEOUT );
     ptk_file_browser_show_thumbnails( file_browser,
-                                      app_settings.show_thumbnail ? app_settings.max_thumb_size : 0 );
+                    app_settings.show_thumbnail ? app_settings.max_thumb_size : 0 );
 
     ptk_file_browser_set_sort_order( file_browser, 
             xset_get_int_panel( file_browser->mypanel, "list_detailed", "x" ) );

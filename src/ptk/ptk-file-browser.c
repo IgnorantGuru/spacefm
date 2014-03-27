@@ -4456,7 +4456,7 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
 
         exo_icon_view_set_single_click( (ExoIconView*)folder_view, file_browser->single_click );
         exo_icon_view_set_single_click_timeout( (ExoIconView*)folder_view,
-                                                        SINGLE_CLICK_TIMEOUT );
+                    app_settings.no_single_hover ? 0 : SINGLE_CLICK_TIMEOUT );
 
         gtk_cell_layout_clear ( GTK_CELL_LAYOUT ( folder_view ) );
 
@@ -4536,7 +4536,7 @@ static GtkWidget* create_folder_view( PtkFileBrowser* file_browser,
 
         exo_tree_view_set_single_click( (ExoTreeView*)folder_view, file_browser->single_click );
         exo_tree_view_set_single_click_timeout( (ExoTreeView*)folder_view, 
-                                                        SINGLE_CLICK_TIMEOUT );
+                    app_settings.no_single_hover ? 0 : SINGLE_CLICK_TIMEOUT );
 
         icon_size = small_icon_size;
 

@@ -53,6 +53,7 @@ const int big_icon_size_default = 48;
 const int small_icon_size_default = 22;
 const int tool_icon_size_default = 0;
 const gboolean single_click_default = FALSE;
+const gboolean no_single_hover_default = FALSE;
 const gboolean show_location_bar_default = TRUE;
 
 /* FIXME: temporarily disable trash since it's not finished */
@@ -73,6 +74,7 @@ const int desktop_sort_by_default = DW_SORT_CUSTOM;
 const int desktop_sort_type_default = GTK_SORT_ASCENDING;
 const gboolean show_wm_menu_default = FALSE;
 const gboolean desk_single_click_default = FALSE;
+const gboolean desk_no_single_hover_default = FALSE;
 const gboolean desk_open_mime_default = FALSE;
 const int margin_top_default = 12;
 const int margin_left_default = 6;
@@ -184,6 +186,8 @@ static void parse_general_settings( char* line )
 #endif
     else if ( 0 == strcmp( name, "single_click" ) )
         app_settings.single_click = atoi(value);
+    else if ( 0 == strcmp( name, "no_single_hover" ) )
+        app_settings.no_single_hover = atoi(value);
     //else if ( 0 == strcmp( name, "view_mode" ) )
     //    app_settings.view_mode = atoi( value );
     else if ( 0 == strcmp( name, "sort_order" ) )
@@ -307,6 +311,8 @@ static void parse_desktop_settings( char* line )
         app_settings.show_wm_menu = atoi( value );
     else if ( 0 == strcmp( name, "desk_single_click" ) )
         app_settings.desk_single_click = atoi( value );
+    else if ( 0 == strcmp( name, "desk_no_single_hover" ) )
+        app_settings.desk_no_single_hover = atoi( value );
     else if ( 0 == strcmp( name, "desk_open_mime" ) )
         app_settings.desk_open_mime = atoi( value );
     else if ( 0 == strcmp( name, "margin_top" ) )
@@ -512,6 +518,7 @@ void load_settings( char* config_dir )
     app_settings.desktop_sort_type = desktop_sort_type_default;
     app_settings.show_wm_menu = show_wm_menu_default;
     app_settings.desk_single_click = desk_single_click_default;
+    app_settings.desk_no_single_hover = desk_no_single_hover_default;
     app_settings.desk_open_mime = desk_open_mime_default;
     app_settings.margin_top = margin_top_default;
     app_settings.margin_left = margin_left_default;
@@ -1341,6 +1348,8 @@ char* save_settings( gpointer main_window_ptr )
 #endif
         if ( app_settings.single_click != single_click_default )
             fprintf( file, "single_click=%d\n", app_settings.single_click );
+        if ( app_settings.no_single_hover != no_single_hover_default )
+            fprintf( file, "no_single_hover=%d\n", app_settings.no_single_hover );
         //if ( app_settings.view_mode != view_mode_default )
         //    fprintf( file, "view_mode=%d\n", app_settings.view_mode );
         if ( app_settings.sort_order != sort_order_default )
@@ -1390,6 +1399,9 @@ char* save_settings( gpointer main_window_ptr )
             fprintf( file, "show_wm_menu=%d\n", app_settings.show_wm_menu );
         if ( app_settings.desk_single_click != desk_single_click_default )
             fprintf( file, "desk_single_click=%d\n", app_settings.desk_single_click );
+        if ( app_settings.desk_no_single_hover != desk_no_single_hover_default )
+            fprintf( file, "desk_no_single_hover=%d\n",
+                                            app_settings.desk_no_single_hover );
         if ( app_settings.desk_open_mime != desk_open_mime_default )
             fprintf( file, "desk_open_mime=%d\n", app_settings.desk_open_mime );
         
@@ -9659,12 +9671,12 @@ void xset_defaults()
 
         set = xset_set( "dev_back_fsarc", "lbl", "_FSArchiver" );
         xset_set_set( set, "desc", "FSArchiver" );
-        xset_set_set( set, "title", "/usr/sbin/fsarchiver -vo -z 7 savefs %s %v" );
+        xset_set_set( set, "title", "fsarchiver -vo -z 7 savefs %s %v" );
         set->line = g_strdup( "#devices-root-fsarc" );
 
         set = xset_set( "dev_back_part", "lbl", "_Partimage" );
         xset_set_set( set, "desc", "Partimage" );
-        xset_set_set( set, "title", "/usr/sbin/partimage -dbo -V 4050 save %v %s" );
+        xset_set_set( set, "title", "partimage -dbo -V 4050 save %v %s" );
         set->line = g_strdup( "#devices-root-parti" );
 
         set = xset_set( "dev_back_mbr", "lbl", "_MBR" );
@@ -9680,8 +9692,8 @@ void xset_defaults()
     set->line = g_strdup( "#devices-root-resfile" );
 
         set = xset_set( "dev_rest_file", "lbl", _("_From File") );
-        xset_set_set( set, "desc", "/usr/sbin/fsarchiver -v restfs %s id=0,dest=%v" );
-        xset_set_set( set, "title", "/usr/sbin/partimage -b restore %v %s" );
+        xset_set_set( set, "desc", "fsarchiver -v restfs %s id=0,dest=%v" );
+        xset_set_set( set, "title", "partimage -b restore %v %s" );
         set->line = g_strdup( "#devices-root-resfile" );
 
         set = xset_set( "dev_rest_info", "lbl", _("File _Info") );
