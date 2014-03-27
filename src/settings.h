@@ -35,6 +35,7 @@ typedef struct
 
     gboolean use_trash_can;
     gboolean single_click;
+    gboolean no_single_hover;
 
     /* char* iconTheme; */
     //char* terminal;
@@ -67,6 +68,7 @@ typedef struct
     int desktop_sort_type;
     gboolean show_wm_menu;
     gboolean desk_single_click;
+    gboolean desk_no_single_hover;
     gboolean desk_open_mime;
     PangoFontDescription* desk_font;
     GdkColor desktop_bg1;

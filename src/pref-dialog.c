@@ -50,6 +50,7 @@ struct _FMPrefDlg
     GtkWidget* small_icon_size;
     GtkWidget* tool_icon_size;
     GtkWidget* single_click;
+    GtkWidget* single_hover;
     GtkWidget* use_si_prefix;
     //GtkWidget* rubberband;
     GtkWidget* root_bar;
@@ -67,6 +68,7 @@ struct _FMPrefDlg
     GtkWidget* img_preview;
     GtkWidget* show_wm_menu;
     GtkWidget* desk_single_click;
+    GtkWidget* desk_single_hover;
     GtkWidget* desk_open_mime;
     GtkWidget* desk_font;
     GtkWidget* margin_top;
@@ -214,6 +216,7 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
     //gboolean show_desktop;
     gboolean show_wallpaper;
     gboolean single_click;
+    gboolean single_hover;
     //gboolean rubberband;
     gboolean root_bar;
     gboolean root_set_change = FALSE;
@@ -373,6 +376,10 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             app_settings.desk_single_click = desk_single_click;
             fm_desktop_set_single_click( app_settings.desk_single_click );
         }
+        int desk_no_single_hover = !gtk_toggle_button_get_active(
+                                GTK_TOGGLE_BUTTON( data->desk_single_hover ) );
+        if ( app_settings.desk_no_single_hover != desk_no_single_hover )
+            app_settings.desk_no_single_hover = desk_no_single_hover;
         app_settings.show_wm_menu = gtk_toggle_button_get_active(
                                 GTK_TOGGLE_BUTTON( data->show_wm_menu ) );
         app_settings.desk_open_mime = gtk_toggle_button_get_active(
@@ -615,12 +622,37 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                         file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
                                                          notebook, i ) );
                         ptk_file_browser_set_single_click( file_browser, app_settings.single_click );
-                        /* ptk_file_browser_set_single_click_timeout( file_browser, SINGLE_CLICK_TIMEOUT ); */
                     }
                 }
             }
         }
 
+        /* single click - hover selects changed? */
+        gboolean no_single_hover = !gtk_toggle_button_get_active(
+                                        (GtkToggleButton*)data->single_hover );
+        if( no_single_hover != app_settings.no_single_hover )
+        {
+            app_settings.no_single_hover = no_single_hover;
+            // update all windows/all panels/all browsers
+            for ( l = fm_main_window_get_all(); l; l = l->next )
+            {
+                a_window = FM_MAIN_WINDOW( l->data );
+                for ( p = 1; p < 5; p++ )
+                {
+                    notebook = GTK_NOTEBOOK( a_window->panel[p-1] );
+                    n = gtk_notebook_get_n_pages( notebook );
+                    for ( i = 0; i < n; ++i )
+                    {
+                        file_browser = PTK_FILE_BROWSER( gtk_notebook_get_nth_page(
+                                                         notebook, i ) );
+                        ptk_file_browser_set_single_click_timeout( file_browser,
+                                        app_settings.no_single_hover ? 0 :
+                                                        SINGLE_CLICK_TIMEOUT );
+                    }
+                }
+            }
+        }
+        
         //MOD
         app_settings.no_execute = !gtk_toggle_button_get_active(
                                             (GtkToggleButton*)data->click_exec );
@@ -801,6 +833,20 @@ void on_date_format_changed( GtkComboBox *widget, FMPrefDlg* data )
     gtk_label_set_text( GTK_LABEL( data->date_display ), buf );
 }
 
+void on_single_click_toggled( GtkWidget* widget, FMPrefDlg* data )
+{
+    gtk_widget_set_sensitive( data->single_hover,
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->single_click ) ) );
+}
+
+void on_desk_single_click_toggled( GtkWidget* widget, FMPrefDlg* data )
+{
+    gtk_widget_set_sensitive( data->desk_single_hover,
+                    gtk_toggle_button_get_active( 
+                    GTK_TOGGLE_BUTTON( data->desk_single_click ) ) );
+}
+
 void on_show_thumbnail_toggled( GtkWidget* widget, FMPrefDlg* data )
 {
     gtk_widget_set_sensitive( data->max_thumb_size,
@@ -867,6 +913,7 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         data->small_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "small_icon_size" );
         data->tool_icon_size = (GtkWidget*)gtk_builder_get_object( builder, "tool_icon_size" );
         data->single_click = (GtkWidget*)gtk_builder_get_object( builder, "single_click" );
+        data->single_hover = (GtkWidget*)gtk_builder_get_object( builder, "single_hover" );
         data->use_si_prefix = (GtkWidget*)gtk_builder_get_object( builder, "use_si_prefix" );
         //data->rubberband = (GtkWidget*)gtk_builder_get_object( builder, "rubberband" );
         data->root_bar = (GtkWidget*)gtk_builder_get_object( builder, "root_bar" );
@@ -960,8 +1007,14 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         }
         gtk_combo_box_set_active( GTK_COMBO_BOX( data->tool_icon_size ), itool_icon );
 
-        gtk_toggle_button_set_active( (GtkToggleButton*)data->single_click, app_settings.single_click );
-
+        gtk_toggle_button_set_active( (GtkToggleButton*)data->single_click,
+                                                app_settings.single_click );
+        gtk_toggle_button_set_active( (GtkToggleButton*)data->single_hover,
+                                                !app_settings.no_single_hover );
+        gtk_widget_set_sensitive( data->single_hover, app_settings.single_click );
+        g_signal_connect( data->single_click, "toggled",
+                                G_CALLBACK( on_single_click_toggled ), data );
+        
         /* Setup 'Interface' tab */
 
         data->always_show_tabs = (GtkWidget*)gtk_builder_get_object( builder, "always_show_tabs" );
@@ -1031,6 +1084,8 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                                         "show_wm_menu" );
         data->desk_single_click = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "desk_single_click" );
+        data->desk_single_hover = (GtkWidget*)gtk_builder_get_object( builder,
+                                                        "desk_single_hover" );
         data->desk_open_mime = (GtkWidget*)gtk_builder_get_object( builder,
                                                         "desk_open_mime" );
         data->bg_color1 = (GtkWidget*)gtk_builder_get_object( builder,
@@ -1071,6 +1126,12 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
                                       app_settings.show_wm_menu );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_single_click ),
                                       app_settings.desk_single_click );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_single_hover ),
+                                      !app_settings.desk_no_single_hover );
+        gtk_widget_set_sensitive( data->desk_single_hover,
+                                        app_settings.desk_single_click );
+        g_signal_connect( data->desk_single_click, "toggled",
+                                G_CALLBACK( on_desk_single_click_toggled ), data );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( data->desk_open_mime ),
                                       app_settings.desk_open_mime );
         
