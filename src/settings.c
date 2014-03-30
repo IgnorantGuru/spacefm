@@ -1086,8 +1086,8 @@ void load_settings( char* config_dir )
     if ( ver < 24 ) // < 0.9.4
     {
         // don't use panel_sliders-key - introduced in 0.9.2 as task man height
-        set = xset_get( "panel_sliders" );
-        if ( set->key != 0 )
+        set = xset_is( "panel_sliders" );
+        if ( set && set->key != 0 )
         {
             str = g_strdup_printf( "%d", set->key );
             set->key = 0;

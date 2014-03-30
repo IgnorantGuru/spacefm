@@ -1979,7 +1979,7 @@ void desktop_window_rename_selected_files( DesktopWindow* self,
                     target = g_strdup( path );
                 if ( !have_rw_access( target ) )
                 {
-                    msg = g_strdup_printf( _("You do not have permission to edit the contents of file %s\n\nConsider copying the file to the desktop, or link to a copy in ~/.local/share/applications/"), target );
+                    msg = g_strdup_printf( _("You do not have permission to edit the contents of file %s\n\nConsider copying the file to the desktop, or link to a copy placed in ~/.local/share/applications/"), target );
                     xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_INFO, _("Unable To Rename"), NULL, 0, msg, NULL, NULL );                    
                     g_free( msg );
                     g_free( path );

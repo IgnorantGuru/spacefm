@@ -5257,9 +5257,21 @@ static gboolean idle_set_task_height( FMMainWindow* main_window )
 {
     GtkAllocation allocation;
     int pos, taskh;
-    
-    // restore height (in case window height changed)
+
     gtk_widget_get_allocation( GTK_WIDGET( main_window ), &allocation );
+
+    // set new config panel sizes to half of window
+    if ( !xset_is( "panel_sliders" ) )
+    {
+        // this isn't perfect because panel half-width is set before user
+        // adjusts window size
+        XSet* set = xset_get( "panel_sliders" );
+        set->x = g_strdup_printf( "%d", allocation.width / 2 );
+        set->y = g_strdup_printf( "%d", allocation.width / 2 );
+        set->s = g_strdup_printf( "%d", allocation.height / 2 );
+    }
+
+    // restore height (in case window height changed)
     taskh = xset_get_int( "task_show_manager", "x" ); // task height >=0.9.2
     if ( taskh == 0 )
     {
