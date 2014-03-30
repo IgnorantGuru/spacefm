@@ -337,7 +337,6 @@ msgstr ""
 dnl
 glib_DEFUN([GLIB_GNU_GETTEXT],
   [AC_REQUIRE([AC_PROG_CC])dnl
-   AC_REQUIRE([AC_HEADER_STDC])dnl
    
    GLIB_LC_MESSAGES
    GLIB_WITH_NLS
@@ -10020,7 +10019,8 @@ to "yes", and re-run configure.
 END
     AC_MSG_ERROR([Your 'rm' program is bad, sorry.])
   fi
-fi])
+fi
+])
 
 dnl Hook into '_AC_COMPILER_EXEEXT' early to learn its expansion.  Do not
 dnl add the conditional right here, as _AC_COMPILER_EXEEXT may be further
