@@ -15,9 +15,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-01-17 15:28+0000\n"
-"PO-Revision-Date: 2014-03-04 17:22+0000\n"
-"Last-Translator: Vladimir.csp <vladimir-csp@yandex.ru>\n"
+"POT-Creation-Date: 2014-03-27 18:29+0000\n"
+"PO-Revision-Date: 2014-03-28 07:30+0000\n"
+"Last-Translator: vp1981 <irk.translator@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/spacefm/language/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,12 +58,12 @@ msgid "by IgnorantGuru"
 msgstr "by IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
-msgid "Copyright (C) 2013    GPL3+"
+msgid "Copyright (C) 2014    GPL3+"
 msgstr "Copyright (C) 2013    GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
-"SpaceFM - Copyright (C) 2013   GPL3+\n"
+"SpaceFM - Copyright (C) 2014   GPL3+\n"
 "\n"
 "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n"
 "\n"
@@ -72,7 +72,7 @@ msgid ""
 "The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
-msgstr "SpaceFM - Copyright (C) 2013   GPL3+\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\n(Это свободная программа: вы можете перераспространять ее и/или изменять ее на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.)\n\nUSE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\n(ИСПОЛЬЗУЙТЕ НА СВОЙ СТРАХ И РИСК. Эта программа распространяется в надежде, что она будет полезной, но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной общественной лицензии GNU.)\n\nThe 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n\n(Библиотеки 'exo' и их исходный код, использующиеся в данной программе распространяются под Стандартной общественной лицензией GNU и под Меньшей Стандартной общественной лицензией GNU версии 3 (LGPL3).)\n\nYou should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n\n(Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <http://www.gnu.org/licenses/>.)"
+msgstr "SpaceFM - Copyright (C) 2014   GPL3+\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\n(Это свободная программа: вы можете перераспространять ее и/или изменять ее на условиях Стандартной общественной лицензии GNU в том виде, в каком она была опубликована Фондом свободного программного обеспечения; либо версии 3 лицензии, либо (по вашему выбору) любой более поздней версии.)\n\nUSE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\n(ИСПОЛЬЗУЙТЕ НА СВОЙ СТРАХ И РИСК. Эта программа распространяется в надежде, что она будет полезной, но БЕЗО ВСЯКИХ ГАРАНТИЙ; даже без неявной гарантии ТОВАРНОГО ВИДА или ПРИГОДНОСТИ ДЛЯ ОПРЕДЕЛЕННЫХ ЦЕЛЕЙ. Подробнее см. в Стандартной общественной лицензии GNU.)\n\nThe 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n\n(Библиотеки 'exo' и их исходный код, использующиеся в данной программе распространяются под Стандартной общественной лицензией GNU и под Меньшей Стандартной общественной лицензией GNU версии 3 (LGPL3).)\n\nYou should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.\n\n(Вы должны были получить копию Стандартной общественной лицензии GNU вместе с этой программой. Если это не так, см. <http://www.gnu.org/licenses/>.)"
 
 #: ../data/ui/about-dlg.ui.h:12
 msgid ""
@@ -90,8 +90,9 @@ msgid ""
 "\n"
 "Special thanks to:\n"
 "    Jean-Philippe Fleury\n"
-"    Hasufell\n"
 "    Vladimir Kudrya\n"
+"    VastOne\n"
+"    Hasufell\n"
 "\n"
 "SpaceFM is developed on geany, gcc, and git, with a little help from gdb.\n"
 "\n"
@@ -104,16 +105,16 @@ msgid ""
 " * Text and icon renderer uses code from Jonathan Blandford\n"
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
-msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nУчастники проекта:\n    BwackNinja <BwackNinja@gmail.com>\n    OmegaPhil <OmegaPhil+SpaceFM@gmail.com>\n\nДизайн:\n    Значки и логотип SpaceFM созданы Goran Simovic\n\nСпасибо пользователям SpaceFM за ценные сведения, а также переводчикам\nи создателям пакетов!\n\nОтдельное спасибо:\n    Jean-Philippe Fleury\n    Hasufell\n    Vladimir Kudrya\n\nSpaceFM разрабатывается с помощью geany, gcc, and git, и с небольшой помощью gdb.\n\nКод, взятый из других проектов:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Обнаружение рабочей зоны: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * В рендерере текста и значков используется код Jonathan Blandford\n * Для значков рабочего стола используется код Brian Tarricone\n * поддержка HAL (устаревшее): gnome-vfs, thunar-vfs, libexo, gnome-mount"
+msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nУчастники проекта:\n    BwackNinja <BwackNinja@gmail.com>\n    OmegaPhil <OmegaPhil+SpaceFM@gmail.com>\n\nДизайн:\n    Значки и логотип SpaceFM созданы Goran Simovic\n\nСпасибо пользователям SpaceFM за ценные сведения, а также переводчикам\nи создателям пакетов!\n\nОтдельное спасибо:\n    Jean-Philippe Fleury\n    Vladimir Kudrya\n    VastOne\n    Hasufell\n\nSpaceFM разрабатывается с помощью geany, gcc, and git, и с небольшой помощью gdb.\n\nКод, взятый из других проектов:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Обнаружение рабочей зоны: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * В рендерере текста и значков используется код Jonathan Blandford\n * Для значков рабочего стола используется код Brian Tarricone\n * поддержка HAL (устаревшее): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
-#: ../data/ui/about-dlg.ui.h:40
+#: ../data/ui/about-dlg.ui.h:41
 msgid ""
 "SpaceFM icons and logo by Goran Simovic\n"
 "\n"
 "Additional icons were taken from the Tango Desktop Project icon set"
 msgstr "Значки и логотип SpaceFM были созданы Goran Simovic\n\n\nДругие значки были взяты из набора Tango Desktop Project"
 
-#: ../data/ui/about-dlg.ui.h:43
+#: ../data/ui/about-dlg.ui.h:44
 msgid "translator-credits"
 msgstr "Vladimir Kudrya <vladimir-csp@yandex.ru>\nRoxana Kolosova <mavka@justos.org>\nLebed Dmitrij <dimaz.sertolovo@gmail.com>\nAnton Dobkin <anton@viansib.ru>\nTim Marinin <velkhar@gmail.com>\nAlexander Kazancev <kazancas@gmail.com>\nVladimir Lomov <irk.translator@yandex.ru>"
 
@@ -141,8 +142,8 @@ msgstr "_Все приложения"
 msgid "_Command:"
 msgstr "_Команда:"
 
-#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:10098
-#: ../src/ptk/ptk-file-misc.c:2122 ../src/item-prop.c:1646
+#: ../data/ui/appchooserdlg.ui.h:7 ../src/settings.c:10133
+#: ../src/ptk/ptk-file-misc.c:2123 ../src/item-prop.c:1647
 msgid "_Browse"
 msgstr "_Обзор"
 
@@ -170,7 +171,7 @@ msgstr "<b>_Расположение:</b>"
 msgid "<b>Link _Target:</b>"
 msgstr "<b>_Ссылка на:</b>"
 
-#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2174
+#: ../data/ui/file_properties.ui.h:5 ../src/ptk/ptk-file-misc.c:2175
 msgid "<b>Type:</b>"
 msgstr "<b>Тип объекта:</b>"
 
@@ -198,7 +199,7 @@ msgstr "<b>Время и_зменения:</b>"
 msgid "<b>_Accessed:</b>"
 msgstr "<b>Время _доступа:</b>"
 
-#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10905
+#: ../data/ui/file_properties.ui.h:12 ../src/settings.c:10941
 msgid "_Info"
 msgstr "_Информация"
 
@@ -250,7 +251,7 @@ msgstr "Липкий (Sticky bit)"
 msgid "Recursive (apply changes to folders and their contents)"
 msgstr "Рекурсивно (применить к подкаталогами и их содержимому)"
 
-#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10908
+#: ../data/ui/file_properties.ui.h:25 ../src/settings.c:10944
 msgid "_Permissions"
 msgstr "_Права доступа"
 
@@ -259,7 +260,7 @@ msgid "Bytes"
 msgstr "Байт"
 
 #: ../data/ui/find-files.ui.h:2 ../data/ui/find-files2.ui.h:2
-#: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
+#: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
 msgid "KB"
 msgstr "КБ"
 
@@ -300,7 +301,7 @@ msgid "Find Files"
 msgstr "Поиск файлов"
 
 #: ../data/ui/find-files.ui.h:12 ../data/ui/find-files2.ui.h:12
-#: ../src/ptk/ptk-file-task.c:2401
+#: ../src/ptk/ptk-file-task.c:2406
 msgid "<b>Filename:</b>"
 msgstr "<b>Имя файла:</b>"
 
@@ -457,120 +458,120 @@ msgid "Toolbar Icons:"
 msgstr "Значки панели:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
-msgid "<b>Display</b>"
-msgstr "<b>Экран</b>"
+msgid "<b>Icons</b>"
+msgstr "<b>Значки</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
 msgstr "Открывать одним щелчком"
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
+msgid "Hover selects"
+msgstr "Выделение наведением"
+
+#: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Bookmarks:"
 msgstr "Закладки:"
 
-#: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
+#: ../data/ui/prefdlg.ui.h:20 ../data/ui/prefdlg2.ui.h:20
 msgid "Show Thumbnails"
 msgstr "Показывать миниатюры"
 
-#: ../data/ui/prefdlg.ui.h:20 ../data/ui/prefdlg2.ui.h:20
+#: ../data/ui/prefdlg.ui.h:21 ../data/ui/prefdlg2.ui.h:21
 msgid "Max Pic Size To Thumbnail:"
 msgstr "Не создавать миниатюры для файлов больше:"
 
-#: ../data/ui/prefdlg.ui.h:22 ../data/ui/prefdlg2.ui.h:22
-msgid "<b>Behavior</b>"
-msgstr "<b>Поведение</b>"
-
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
+msgid "<b>File List</b>"
+msgstr "<b>Список файлов</b>"
+
+#: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "_General"
 msgstr "_Основные"
 
-#: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
+#: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
 msgid "Always show the tab bar"
 msgstr "Всегда показывать панель вкладок"
 
-#: ../data/ui/prefdlg.ui.h:25 ../data/ui/prefdlg2.ui.h:25
+#: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
 msgid "Hide 'Close Tab' buttons"
 msgstr "Скрывать кнопку закрытия вкладки"
 
-#: ../data/ui/prefdlg.ui.h:26 ../data/ui/prefdlg2.ui.h:26
+#: ../data/ui/prefdlg.ui.h:27 ../data/ui/prefdlg2.ui.h:27
 msgid "Confirm delete/remove"
 msgstr "Подтверждать удаление"
 
-#: ../data/ui/prefdlg.ui.h:27 ../data/ui/prefdlg2.ui.h:27
+#: ../data/ui/prefdlg.ui.h:28 ../data/ui/prefdlg2.ui.h:28
 msgid "Click runs executables"
 msgstr "Запускать исполняемые файлы по щелчку"
 
-#: ../data/ui/prefdlg.ui.h:28 ../data/ui/prefdlg2.ui.h:28
+#: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
 msgid "SI File Sizes (1K = 1000) (requires restart)"
 msgstr "Размеры в СИ (1K = 1000) (требует перезапуска)"
 
-#: ../data/ui/prefdlg.ui.h:29 ../data/ui/prefdlg2.ui.h:29
+#: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
 msgid "Show root user indicator color"
 msgstr "Выделять цветом окно пользователя root"
 
-#: ../data/ui/prefdlg.ui.h:30 ../data/ui/prefdlg2.ui.h:30
+#: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
 msgid "Default Drag Action:"
 msgstr "Действие по умолчанию для перетаскивания:"
 
-#: ../data/ui/prefdlg.ui.h:31 ../data/ui/prefdlg2.ui.h:31
+#: ../data/ui/prefdlg.ui.h:32 ../data/ui/prefdlg2.ui.h:32
 msgid "I_nterface"
 msgstr "И_нтерфейс"
 
-#: ../data/ui/prefdlg.ui.h:32 ../data/ui/prefdlg2.ui.h:32
+#: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
 msgid "Wallpaper:"
 msgstr "Фон рабочего стола:"
 
-#: ../data/ui/prefdlg.ui.h:33 ../data/ui/prefdlg2.ui.h:33
+#: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
 msgid "Please select an image file"
 msgstr "Выберите файл изображения"
 
-#: ../data/ui/prefdlg.ui.h:34 ../data/ui/prefdlg2.ui.h:34
+#: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
 msgid "Mode:"
 msgstr "Режим:"
 
-#: ../data/ui/prefdlg.ui.h:35 ../data/ui/prefdlg2.ui.h:35
+#: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
 msgid "Background:"
 msgstr "Фон:"
 
-#: ../data/ui/prefdlg.ui.h:36 ../data/ui/prefdlg2.ui.h:36
+#: ../data/ui/prefdlg.ui.h:37 ../data/ui/prefdlg2.ui.h:37
 msgid "Text:"
 msgstr "Текст:"
 
-#: ../data/ui/prefdlg.ui.h:37 ../data/ui/prefdlg2.ui.h:37
+#: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
 msgid "Shadow:"
 msgstr "Тень:"
 
-#: ../data/ui/prefdlg.ui.h:38 ../data/ui/prefdlg2.ui.h:38
+#: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
 msgid "Font:"
 msgstr "Шрифт:"
 
-#: ../data/ui/prefdlg.ui.h:39 ../data/ui/prefdlg2.ui.h:39
+#: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
 msgid "Top:"
 msgstr "Сверху:"
 
-#: ../data/ui/prefdlg.ui.h:40 ../data/ui/prefdlg2.ui.h:40
+#: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
 msgid "Left:"
 msgstr "Слева:"
 
-#: ../data/ui/prefdlg.ui.h:41 ../data/ui/prefdlg2.ui.h:41
+#: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
 msgid "Right:"
 msgstr "Справа:"
 
-#: ../data/ui/prefdlg.ui.h:42 ../data/ui/prefdlg2.ui.h:42
+#: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
 msgid "Bottom:"
 msgstr "Снизу:"
 
-#: ../data/ui/prefdlg.ui.h:43 ../data/ui/prefdlg2.ui.h:43
+#: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
 msgid "Pad:"
 msgstr "Между:"
 
-#: ../data/ui/prefdlg.ui.h:44 ../data/ui/prefdlg2.ui.h:44
+#: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
 msgid "<b>Margins</b>"
 msgstr "<b>Отступы</b>"
-
-#: ../data/ui/prefdlg.ui.h:45 ../data/ui/prefdlg2.ui.h:45
-msgid "Single click opens"
-msgstr "Запуск по одиночному щелчку"
 
 #: ../data/ui/prefdlg.ui.h:46 ../data/ui/prefdlg2.ui.h:46
 msgid "Right click shows WM menu"
@@ -641,99 +642,99 @@ msgstr "_Продвинутые"
 msgid "Too many columns (>%d) in %s"
 msgstr "Слишком много колонок (>%d) в %s"
 
-#: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1647
-#: ../src/cust-dialog.c:1661 ../src/cust-dialog.c:1880 ../src/item-prop.c:794
+#: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651
+#: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:794
 #, c-format
 msgid "error reading file %s: %s"
 msgstr "ошибка чтения файла %s: %s"
 
-#: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1681
-#: ../src/cust-dialog.c:1894 ../src/item-prop.c:806
+#: ../src/cust-dialog.c:638 ../src/cust-dialog.c:1685
+#: ../src/cust-dialog.c:1898 ../src/item-prop.c:806
 #, c-format
 msgid "file '%s' contents are not valid UTF-8"
 msgstr "содержимое файла «%s» не является корректным UTF-8"
 
-#: ../src/cust-dialog.c:692
+#: ../src/cust-dialog.c:693
 #, c-format
 msgid "Cannot set missing element '%s'"
 msgstr "Элемент «%s» отсутствует, невозможно выполнить set"
 
-#: ../src/cust-dialog.c:818 ../src/cust-dialog.c:907
+#: ../src/cust-dialog.c:821 ../src/cust-dialog.c:910
 #, c-format
 msgid "file '%s' is not a regular file"
 msgstr "файл «%s» не является обычным файлом"
 
-#: ../src/cust-dialog.c:990 ../src/cust-dialog.c:1326
-#: ../src/cust-dialog.c:3418
+#: ../src/cust-dialog.c:993 ../src/cust-dialog.c:1329
+#: ../src/cust-dialog.c:3422
 msgid "Dynamic resize requires width and height > 0"
 msgstr "Для динамического изменения размера ширина и высота должны быть > 0"
 
-#: ../src/cust-dialog.c:1299
+#: ../src/cust-dialog.c:1302
 #, c-format
 msgid "internal command %s requires an argument"
 msgstr "внутренней команде %s требуется аргумент"
 
-#: ../src/cust-dialog.c:1347
+#: ../src/cust-dialog.c:1350
 #, c-format
 msgid "element '%s' does not exist"
 msgstr "Элемент «%s» не существует"
 
-#: ../src/cust-dialog.c:1391
+#: ../src/cust-dialog.c:1395
 #, c-format
 msgid "internal command press is invalid for non-button %s"
 msgstr "внутренняя команда «нажать» не доступна для %s (не кнопка)"
 
-#: ../src/cust-dialog.c:1425
+#: ../src/cust-dialog.c:1429
 #, c-format
 msgid "internal command un/select is invalid for %s"
 msgstr "внутренняя команда «выделить/снять выделение» недоступна для %s"
 
-#: ../src/cust-dialog.c:1459 ../src/cust-dialog.c:1608
-#: ../src/cust-dialog.c:1615
+#: ../src/cust-dialog.c:1463 ../src/cust-dialog.c:1612
+#: ../src/cust-dialog.c:1619
 #, c-format
 msgid "error writing file %s: %s"
 msgstr "ошибка при записи файла %s: %s"
 
-#: ../src/cust-dialog.c:1588
+#: ../src/cust-dialog.c:1592
 #, c-format
 msgid "'%s' is not an internal command"
 msgstr "«%s» не является внутренней командой"
 
-#: ../src/cust-dialog.c:1634
+#: ../src/cust-dialog.c:1638
 #, c-format
 msgid "error creating file %s: %s"
 msgstr "ошибка создания файла %s: %s"
 
-#: ../src/cust-dialog.c:1750
+#: ../src/cust-dialog.c:1754
 #, c-format
 msgid "pipe '%s' data is not valid UTF-8"
 msgstr "данные из потока «%s» не являются корректным UTF-8"
 
-#: ../src/cust-dialog.c:1786 ../src/ptk/ptk-file-task.c:1406
+#: ../src/cust-dialog.c:1790 ../src/ptk/ptk-file-task.c:1408
 msgid "[ SNIP - additional output above has been trimmed from this log ]\n"
 msgstr "[ ---8<---   прочие строки выше были убраны из этого журнала ]\n"
 
-#: ../src/cust-dialog.c:1891
+#: ../src/cust-dialog.c:1895
 msgid "( file contents are not valid UTF-8 )"
 msgstr "( содержимое файла не является корректным UTF-8 )"
 
-#: ../src/cust-dialog.c:2016
+#: ../src/cust-dialog.c:2019
 #, c-format
 msgid "prefix '%s' is not a valid variable name"
 msgstr "префикс «%s» не является корректным именем переменной"
 
 #. pack timeout button first
-#: ../src/cust-dialog.c:2287 ../src/cust-dialog.c:3576
-#: ../src/cust-dialog.c:3636
+#: ../src/cust-dialog.c:2290 ../src/cust-dialog.c:3580
+#: ../src/cust-dialog.c:3640
 msgid "Pause"
 msgstr "Приостановить"
 
-#: ../src/cust-dialog.c:2970
+#: ../src/cust-dialog.c:2974
 #, c-format
 msgid "file '%s' is not a regular file or a pipe"
 msgstr "файл «%s» не является обычным файлом или потоком (pipe)"
 
-#: ../src/cust-dialog.c:3694
+#: ../src/cust-dialog.c:3698
 #, c-format
 msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
@@ -741,56 +742,56 @@ msgid ""
 "can modify elements, and outputs evaluatable/parsable results.\n"
 msgstr "Диалог SpaceFM создаёт пользовательский GTK-диалог, содержащий элементы\nзадаваемые в командной строке. Он может включать встроенные и сторонние\nкоманды, влияющие на элементы интерфейса или выводящие различные данные.\n"
 
-#: ../src/cust-dialog.c:3695
+#: ../src/cust-dialog.c:3699
 #, c-format
 msgid "Usage:\n"
 msgstr "Использование:\n"
 
-#: ../src/cust-dialog.c:3696
+#: ../src/cust-dialog.c:3700
 #, c-format
 msgid "    spacefm --dialog|-g {ELEMENT [OPTIONS] [ARGUMENTS...]} ...\n"
 msgstr "    spacefm --dialog|-g {ЭЛЕМЕНТ [ОПЦИИ] [АРГУМЕНТЫ...]} ...\n"
 
-#: ../src/cust-dialog.c:3697
+#: ../src/cust-dialog.c:3701
 #, c-format
 msgid "Example:\n"
 msgstr "Пример:\n"
 
-#: ../src/cust-dialog.c:3698
+#: ../src/cust-dialog.c:3702
 #, c-format
 msgid "    spacefm -g --label \"A message\" --button ok\n"
 msgstr "    spacefm -g --label \"Сообщение\" --button ok\n"
 
-#: ../src/cust-dialog.c:3699
+#: ../src/cust-dialog.c:3703
 #, c-format
 msgid ""
 "\n"
 "ELEMENT:       OPTIONS & ARGUMENTS:\n"
 msgstr "\nЭЛЕМЕНТ:       ОПЦИИ и АРГУМЕНТЫ:\n"
 
-#: ../src/cust-dialog.c:3700
+#: ../src/cust-dialog.c:3704
 #, c-format
 msgid "--------       --------------------\n"
 msgstr "--------       --------------------\n"
 
-#: ../src/cust-dialog.c:3711
+#: ../src/cust-dialog.c:3715
 #, c-format
 msgid ""
 "\n"
 "The following arguments may be used as shown above:\n"
 msgstr "\nСледующие аргументы могут быть использованы как показано выше:\n"
 
-#: ../src/cust-dialog.c:3712
+#: ../src/cust-dialog.c:3716
 #, c-format
 msgid "    STOCK    %s\n"
 msgstr "    ШАБЛОН   %s\n"
 
-#: ../src/cust-dialog.c:3713
+#: ../src/cust-dialog.c:3717
 #, c-format
 msgid "    ICON     An icon name, eg:  gtk-open\n"
 msgstr "    ЗНАЧОК     Имя значка, например:  gtk-open\n"
 
-#: ../src/cust-dialog.c:3714
+#: ../src/cust-dialog.c:3718
 #, c-format
 msgid ""
 "    @FILE    A text file from which to read a value.  In some cases this file\n"
@@ -798,12 +799,12 @@ msgid ""
 "             element.  In other cases, the file specifies an initial value.\n"
 msgstr "    @ФАЙЛ    текстовый файл, из которого считывается значение.\n             В некоторых случаях изменения в файле отслеживаются.\n             В других случаях берётся только исходное значение.\n"
 
-#: ../src/cust-dialog.c:3715
+#: ../src/cust-dialog.c:3719
 #, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
 msgstr "    СОХРАНИТЬ_В_ФАЙЛ Сохранить содержимое редактора или просмотрщика в этот файл.\n"
 
-#: ../src/cust-dialog.c:3716
+#: ../src/cust-dialog.c:3720
 #, c-format
 msgid ""
 "    COMMAND  An internal command or executable followed by arguments. Separate\n"
@@ -816,7 +817,7 @@ msgid ""
 "                 %%%%           %%\n"
 msgstr "    КОМАНДА  внутренняя или сторонняя команда с последующими аргументами.\n             Отдельные команды разделяются при помощи «--».\n             При вводе КОМАНД можно использовать следующие подстановки:\n                 %%n           Имя текущего элемента\n                 %%v           Значение текущего элемента\n                 %%ИМЯ         Значение элемента с именем ИМЯ (пример: %%input1)\n                 %%(command)   вывод командной строки на bash\n                 %%%%           %%\n"
 
-#: ../src/cust-dialog.c:3717
+#: ../src/cust-dialog.c:3721
 #, c-format
 msgid ""
 "    LABEL    The following escape sequences in LABEL are unescaped:\n"
@@ -829,7 +830,7 @@ msgid ""
 "                 --label '~This is plain. <b>This is bold.</b>'\n"
 msgstr "    МЕТКА    следующие escape-последовательности в МЕТКЕ интерпретируются:\n                 \\n   новая строка\n                 \\t   табуляция\n                 \\\"   \"\n                 \\\\   \\\n             Только в элементах --label: если первый символ МЕТКИ — тильда\n             (~), можно использовать разметку pango.  Например:\n                 --label '~Обычный текст. <b>Полужирный текст.</b>'\n"
 
-#: ../src/cust-dialog.c:3719
+#: ../src/cust-dialog.c:3723
 #, c-format
 msgid ""
 "\n"
@@ -839,21 +840,21 @@ msgid ""
 "    --input --font \"Times New Roman 16\" \"Default Text\"\n"
 msgstr "\nВ дополнение к вышеперечисленным ОПЦИЯМ, к любому элементу можно добавить\n--compact или --expand. Также для большинства элементов можно изменить\nшрифт/размер с помощью --font. Например:\n    --input --font \"Times New Roman 16\" \"Обычный текст\"\n"
 
-#: ../src/cust-dialog.c:3721
+#: ../src/cust-dialog.c:3725
 #, c-format
 msgid ""
 "\n"
 "INTERNAL COMMANDS:\n"
 msgstr "\nВНУТРЕННИЕ КОМАНДЫ:\n"
 
-#: ../src/cust-dialog.c:3732
+#: ../src/cust-dialog.c:3736
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE WITH COMMANDS:\n"
 msgstr "\nПРИМЕР С КОМАНДАМИ:\n"
 
-#: ../src/cust-dialog.c:3733
+#: ../src/cust-dialog.c:3737
 #, c-format
 msgid ""
 "    spacefm -g --label \"Enter some text and press Enter:\" \\\n"
@@ -862,14 +863,14 @@ msgid ""
 "               --button ok\n"
 msgstr "    spacefm -g --label \"Введите текст и нажмите Enter:\" \\\n               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n               --label \\\n               --button ok\n"
 
-#: ../src/cust-dialog.c:3735
+#: ../src/cust-dialog.c:3739
 #, c-format
 msgid ""
 "\n"
 "EXAMPLE SCRIPT:\n"
 msgstr "\nПРИМЕР СЦЕНАРИЯ:\n"
 
-#: ../src/cust-dialog.c:3736
+#: ../src/cust-dialog.c:3740
 #, c-format
 msgid ""
 "    #!/bin/bash\n"
@@ -883,19 +884,19 @@ msgid ""
 "    fi\n"
 msgstr "    #!/bin/bash\n    # Сценарий показывает диалог Да/Нет. Чтобы диалог SpaceFM\n    # видел переменные, нужно использовать eval с кавычками:\n    eval \"`spacefm -g --label \"Вы уверены?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"Пользователь нажал Да — выполнить действие\"\n    else\n        echo \"Пользователь НЕ нажал Да — отмена\"\n    fi\n"
 
-#: ../src/cust-dialog.c:3737
+#: ../src/cust-dialog.c:3741
 #, c-format
 msgid ""
 "\n"
 "For full documentation and examples see the SpaceFM User's Manual:\n"
 msgstr "\nСмотрите полное описание и примеры в Руководстве пользователя SpaceFM:\n"
 
-#: ../src/cust-dialog.c:3764
+#: ../src/cust-dialog.c:3768
 #, c-format
 msgid "spacefm: argument is not valid UTF-8\n"
 msgstr "spacefm: аргумент не является корректным UTF-8\n"
 
-#: ../src/cust-dialog.c:3811
+#: ../src/cust-dialog.c:3815
 msgid "invalid dialog option"
 msgstr "некорректная опция диалога"
 
@@ -1144,466 +1145,466 @@ msgstr "Вывести информацию о версии"
 msgid "[DIR | FILE | URL]..."
 msgstr "[КАТАЛОГ | ФАЙЛ | URL]..."
 
-#: ../src/main.c:465
+#: ../src/main.c:464
 msgid "Option --config-dir ignored - an instance is already running"
 msgstr "Опция --config-dir проигнорирована — программа уже запущена"
 
-#: ../src/main.c:477
+#: ../src/main.c:476
 msgid "Option --config-dir contains invalid chars - cannot start"
 msgstr "Опция --config-dir содержит некорректные символы — запуск невозможен"
 
-#: ../src/main.c:601
+#: ../src/main.c:600
 #, c-format
 msgid "spacefm: --socket-cmd requires an argument\n"
 msgstr "spacefm: опции --socket-cmd нужен аргумент\n"
 
-#: ../src/main.c:608
+#: ../src/main.c:607
 #, c-format
 msgid "spacefm: could not create socket\n"
 msgstr "spacefm: невозможно создать сокет\n"
 
-#: ../src/main.c:623
+#: ../src/main.c:622
 #, c-format
 msgid ""
 "spacefm: could not connect to socket (not running? or DISPLAY not set?)\n"
 msgstr "spacefm: невозможно подключиться к сокету (не запущен? не выставлен DISPLAY?)\n"
 
-#: ../src/main.c:666
+#: ../src/main.c:665
 #, c-format
 msgid "spacefm: invalid response from socket\n"
 msgstr "spacefm: некорректный ответ из сокета\n"
 
 #. TRANSLATOR:  These three lines should be limited to 80 chars each
-#: ../src/main.c:676
+#: ../src/main.c:675
 msgid ""
 "SpaceFM socket commands permit external processes (such as command scripts)\n"
 "to read and set GUI property values and execute methods inside running SpaceFM\n"
 "windows.  To handle events see View|Events in the main menu bar."
 msgstr "Команды для сокета SpaceFM позволяют внешним процессам (командам и скриптам)\nчитать и выставлять значения свойств, выполнять методы внутри запущенных окон SpaceFM.\nОбработка событий осуществляется через меню Вид|События в главной строке меню."
 
-#: ../src/main.c:678
+#: ../src/main.c:677
 msgid "Usage:"
 msgstr "Использование:"
 
-#: ../src/main.c:680
+#: ../src/main.c:679
 msgid "Example:"
 msgstr "Пример:"
 
-#: ../src/main.c:683
+#: ../src/main.c:682
 msgid ""
 "METHODS\n"
 "-------"
 msgstr "МЕТОДЫ\n------"
 
-#: ../src/main.c:685
+#: ../src/main.c:684
 msgid "Sets a property"
 msgstr "Устанавливает свойство"
 
-#: ../src/main.c:688
+#: ../src/main.c:687
 msgid "Gets a property"
 msgstr "Выводит значение свойства"
 
-#: ../src/main.c:691
+#: ../src/main.c:690
 msgid "Sets a task property"
 msgstr "Устанавливает свойство задачи"
 
-#: ../src/main.c:694
+#: ../src/main.c:693
 msgid "Gets a task property"
 msgstr "Выводит значение свойства задачи"
 
-#: ../src/main.c:697
+#: ../src/main.c:696
 msgid "Starts a new task"
 msgstr "Начинает новую задачу"
 
-#: ../src/main.c:700
+#: ../src/main.c:699
 msgid "Activates a menu item by emitting its shortcut key"
 msgstr "Активирует пункт меню имитируя нажатие клавиатурного сочетания"
 
-#: ../src/main.c:703
+#: ../src/main.c:702
 msgid "Shows custom submenu named MENUNAME as a popup menu"
 msgstr "Показывает указанное подменю ИМЯ_МЕНЮ как всплывающее меню"
 
-#: ../src/main.c:706
+#: ../src/main.c:705
 msgid "Add asynchronous handler COMMAND to EVENT"
 msgstr "Добавить асинхронный обработчик КОМАНДА для СОБЫТИЯ"
 
-#: ../src/main.c:709
+#: ../src/main.c:708
 msgid "Add synchronous handler COMMAND to EVENT, replacing default handler"
 msgstr "Добавить асинхронный обработчик КОМАНДА для СОБЫТИЯ, заменив стандартный"
 
-#: ../src/main.c:712
+#: ../src/main.c:711
 msgid "Remove handler COMMAND from EVENT"
 msgstr "Убрать обработчик КОМАНДА для СОБЫТИЯ"
 
-#: ../src/main.c:715
+#: ../src/main.c:714
 msgid "Shows this help reference.  (Also see manual link below.)"
 msgstr "Показывает эту справку. (Также см. ссылку ниже)"
 
-#: ../src/main.c:717
+#: ../src/main.c:716
 msgid ""
 "OPTIONS\n"
 "-------"
 msgstr "ОПЦИИ\n-----"
 
-#: ../src/main.c:718
+#: ../src/main.c:717
 msgid ""
 "Add options after METHOD to specify a specific window, panel, and/or tab."
 msgstr "Добавьте опции после МЕТОДА чтобы указать на определенное окно, панель и/или вкладку."
 
-#: ../src/main.c:719
+#: ../src/main.c:718
 msgid ""
 "Otherwise the current tab of the current panel in the last window is used."
 msgstr "Иначе будет выбрана текущая вкладка в текущей панели последнего использованного окна."
 
-#: ../src/main.c:722
+#: ../src/main.c:721
 msgid "Specify window.  eg:"
 msgstr "Укажите окно. Например:"
 
-#: ../src/main.c:724
+#: ../src/main.c:723
 msgid "Specify panel 1-4.  eg:"
 msgstr "Укажите панель 1-4. Например:"
 
-#: ../src/main.c:726
+#: ../src/main.c:725
 msgid "Specify tab 1-...  eg:"
 msgstr "Укажите вкладку 1-... Например:"
 
-#: ../src/main.c:728
+#: ../src/main.c:727
 msgid ""
 "PROPERTIES\n"
 "----------"
 msgstr "СВОЙСТВА\n--------"
 
-#: ../src/main.c:729
+#: ../src/main.c:728
 msgid "Set properties with METHOD 'set', or get the value with 'get'."
 msgstr "Свойства устанавливаются МЕТОДОМ «set», считываются при помощи «get»."
 
-#: ../src/main.c:731
+#: ../src/main.c:730
 msgid "eg '800x600'"
 msgstr "например, «800x600»"
 
-#: ../src/main.c:732
+#: ../src/main.c:731
 msgid "eg '100x50'"
 msgstr "например, «100x50»"
 
-#: ../src/main.c:735
+#: ../src/main.c:734
 msgid "eg '1024x768'  (read-only)"
 msgstr "например, «1024x768»  (только чтение)"
 
-#: ../src/main.c:736 ../src/main.c:737 ../src/main.c:738 ../src/main.c:739
-#: ../src/main.c:755 ../src/main.c:756 ../src/main.c:757
+#: ../src/main.c:735 ../src/main.c:736 ../src/main.c:737 ../src/main.c:738
+#: ../src/main.c:754 ../src/main.c:755 ../src/main.c:756
 msgid "eg '100'"
 msgstr "например, «100»"
 
-#: ../src/main.c:744
+#: ../src/main.c:743
 msgid "Open DIR or default in a new tab"
 msgstr "Открыть КАТАЛОГ или путь по умолчанию в новой вкладке"
 
-#: ../src/main.c:765
+#: ../src/main.c:764
 msgid "eg 'Current Status: Example'"
 msgstr "например: «Текущий статус: Пример»"
 
-#: ../src/main.c:767
+#: ../src/main.c:766
 msgid "DIR            eg '/etc'"
 msgstr "КАТАЛОГ        например «/etc»"
 
-#: ../src/main.c:768
+#: ../src/main.c:767
 msgid "[FILENAME...]"
 msgstr "[ИМЯ_ФАЙЛА...]"
 
-#: ../src/main.c:769
+#: ../src/main.c:768
 msgid "[PATTERN]      eg '*.jpg'"
 msgstr "[ШАБЛОН]       например «*.jpg»"
 
-#: ../src/main.c:770 ../src/main.c:771
+#: ../src/main.c:769 ../src/main.c:770
 msgid "eg 'Some\\nlines\\nof text'"
 msgstr "например «Пара\\nстрок\\nтекста»"
 
-#: ../src/main.c:772 ../src/main.c:773
+#: ../src/main.c:771 ../src/main.c:772
 msgid "eg '~/copy-file-contents-to-clipboard.txt'"
 msgstr "например «~/copy-file-contents-to-clipboard.txt»"
 
-#: ../src/main.c:774
+#: ../src/main.c:773
 msgid "FILE...  Files copied to clipboard"
 msgstr "ФАЙЛ...  Файлы скопированы в буфер обмена"
 
-#: ../src/main.c:775
+#: ../src/main.c:774
 msgid "FILE...  Files cut to clipboard"
 msgstr "ФАЙЛ...  Файлы вырезаны в буфер обмена"
 
-#: ../src/main.c:777
+#: ../src/main.c:776
 msgid ""
 "TASK PROPERTIES\n"
 "---------------"
 msgstr "СВОЙСТВА ЗАДАЧ\n--------------"
 
-#: ../src/main.c:778
+#: ../src/main.c:777
 msgid "contents of Status task column  (read-only)"
 msgstr "содержимое столбца «Состояние» (только чтение)"
 
-#: ../src/main.c:779
+#: ../src/main.c:778
 msgid "eg 'gtk-open'"
 msgstr "например «gtk-open»"
 
-#: ../src/main.c:780
+#: ../src/main.c:779
 msgid "text to show in Count task column"
 msgstr "текст, который нужно показать в столбце «Номер»"
 
-#: ../src/main.c:781
+#: ../src/main.c:780
 msgid "text to show in Folder task column"
 msgstr "текст, который нужно показать в столбце «Каталог»"
 
-#: ../src/main.c:782
+#: ../src/main.c:781
 msgid "text to show in Item task column"
 msgstr "текст, который нужно показать в столбце «Элемент»"
 
-#: ../src/main.c:783
+#: ../src/main.c:782
 msgid "text to show in To task column"
 msgstr "текст, который нужно показать в столбце «Назначение»"
 
-#: ../src/main.c:784
+#: ../src/main.c:783
 msgid "progress percent (1..100) or '' to pulse"
 msgstr "процент выполнения (1..100) или '' для пульсирования"
 
-#: ../src/main.c:785
+#: ../src/main.c:784
 msgid "text to show in Total task column"
 msgstr "текст, который нужно показать в столбце «Всего»"
 
-#: ../src/main.c:786
+#: ../src/main.c:785
 msgid "text to show in Current task column"
 msgstr "текст, который нужно показать в столбце «Скорость (тек.)»"
 
-#: ../src/main.c:787
+#: ../src/main.c:786
 msgid "text to show in CRemain task column"
 msgstr "текст, который нужно показать в столбце «Осталось (тек.)»"
 
-#: ../src/main.c:788
+#: ../src/main.c:787
 msgid "text to show in Average task column"
 msgstr "текст, который нужно показать в столбце «Скорость (ср.)»"
 
-#: ../src/main.c:789
+#: ../src/main.c:788
 msgid "text to show in Remain task column"
 msgstr "текст, который нужно показать в столбце «Осталось»"
 
-#: ../src/main.c:790
+#: ../src/main.c:789
 msgid "contents of Elapsed task column (read-only)"
 msgstr "содержимое столбца «Прошло» (только чтение)"
 
-#: ../src/main.c:791
+#: ../src/main.c:790
 msgid "contents of Started task column (read-only)"
 msgstr "содержимое столбца «Начато» (только чтение)"
 
-#: ../src/main.c:793
+#: ../src/main.c:792
 msgid "COMMAND  command to show a custom task dialog\n"
 msgstr "КОМАНДА  команда для вывода пользовательского диалога задачи\n"
 
-#: ../src/main.c:795
+#: ../src/main.c:794
 msgid ""
 "TASK TYPES\n"
 "----------"
 msgstr "ТИПЫ ЗАДАЧ\n----------"
 
-#: ../src/main.c:797
+#: ../src/main.c:796
 msgid "Run COMMAND in DIR"
 msgstr "Выполнить КОМАНДУ в КАТАЛОГЕ"
 
-#: ../src/main.c:799
+#: ../src/main.c:798
 msgid "Copy|Move|Link FILE(s) or DIR(s) to TARGET dir"
 msgstr "Копировать|Переместить|Слинковать ФАЙЛ(ы) или КАТАЛОГ(и) в КАТАЛОГ_НАЗНАЧЕНИЯ"
 
-#: ../src/main.c:800
+#: ../src/main.c:799
 msgid "Recursively delete FILE(s) or DIR(s)"
 msgstr "Рекурсивно удалить ФАЙЛ(ы) или КАТАЛОГ(и)"
 
-#: ../src/main.c:801
+#: ../src/main.c:800
 msgid "Open FILE in user's or root's text editor"
 msgstr "Открыть ФАЙЛ в редакторе от имени пользователя или root"
 
-#: ../src/main.c:802
+#: ../src/main.c:801
 msgid "Open URL in user's web browser"
 msgstr "Открыть URL в веб-браузере"
 
-#: ../src/main.c:804
+#: ../src/main.c:803
 msgid ""
 "EVENTS\n"
 "------"
 msgstr "СОБЫТИЯ\n-------"
 
-#: ../src/main.c:805
+#: ../src/main.c:804
 #, c-format
 msgid "Instance start        %e"
 msgstr "Запуск процесса       %e"
 
-#: ../src/main.c:806
+#: ../src/main.c:805
 #, c-format
 msgid "Instance exit         %e"
 msgstr "Завершение процесса   %e"
 
-#: ../src/main.c:807
+#: ../src/main.c:806
 msgid "Window new            %e %w %p %t"
 msgstr "Новое окно            %e %w %p %t"
 
-#: ../src/main.c:808
+#: ../src/main.c:807
 msgid "Window focus          %e %w %p %t"
 msgstr "Фокус на окне         %e %w %p %t"
 
-#: ../src/main.c:809
+#: ../src/main.c:808
 msgid "Window move/resize    %e %w %p %t"
 msgstr "Размер/положение окна  %e %w %p %t"
 
-#: ../src/main.c:810
+#: ../src/main.c:809
 msgid "Mouse click           %e %w %p %t %b %m %f"
 msgstr "Щелчок мыши           %e %w %p %t %b %m %f"
 
-#: ../src/main.c:811
+#: ../src/main.c:810
 msgid "Window keypress       %e %w %p %t %k %m"
 msgstr "Нажатие клавиши       %e %w %p %t %k %m"
 
-#: ../src/main.c:812
+#: ../src/main.c:811
 msgid "Window close          %e %w %p %t"
 msgstr "Закрытие окна         %e %w %p %t"
 
-#: ../src/main.c:813
+#: ../src/main.c:812
 msgid "Panel focus           %e %w %p %t"
 msgstr "Фокус на панели       %e %w %p %t"
 
-#: ../src/main.c:814
+#: ../src/main.c:813
 msgid "Panel show/hide       %e %w %p %t %f %v"
 msgstr "Показ/скрытие панели  %e %w %p %t %f %v"
 
-#: ../src/main.c:815
+#: ../src/main.c:814
 msgid "Selection changed     %e %w %p %t"
 msgstr "Изменение выделения   %e %w %p %t"
 
-#: ../src/main.c:816
+#: ../src/main.c:815
 msgid "Tab new               %e %w %p %t"
 msgstr "Новая вкладка         %e %w %p %t"
 
-#: ../src/main.c:817
+#: ../src/main.c:816
 msgid "Tab focus             %e %w %p %t"
 msgstr "Фокус на вкладке      %e %w %p %t"
 
-#: ../src/main.c:818
+#: ../src/main.c:817
 msgid "Tab close             %e %w %p %t"
 msgstr "Закрытие вкладки      %e %w %p %t"
 
-#: ../src/main.c:819
+#: ../src/main.c:818
 msgid "Device change         %e %f %v"
 msgstr "Изменение устройства  %e %f %v"
 
-#: ../src/main.c:821
+#: ../src/main.c:820
 msgid "Event COMMAND Substitution Variables:"
 msgstr "Подстановочные переменные для КОМАНДЫ события:"
 
-#: ../src/main.c:822
+#: ../src/main.c:821
 msgid "event type (evt_start|evt_exit|...)"
 msgstr "тип события (evt_start|evt_exit|...)"
 
-#: ../src/main.c:823
+#: ../src/main.c:822
 msgid "window ID"
 msgstr "ID окна"
 
-#: ../src/main.c:824
+#: ../src/main.c:823
 msgid "panel number (1-4)"
 msgstr "номер панели (1-4)"
 
-#: ../src/main.c:825
+#: ../src/main.c:824
 msgid "tab number (1-...)"
 msgstr "номер вкладки (1-...)"
 
-#: ../src/main.c:826
+#: ../src/main.c:825
 msgid "mouse button (0=double 1=left 2=middle 3=right ...)"
 msgstr "клавиша мыши (0=двойной 1=левая 2=средняя 3=правая ...)"
 
-#: ../src/main.c:827
+#: ../src/main.c:826
 msgid "key code  (eg 0x63)"
 msgstr "код клавиши (например, 0x63)"
 
-#: ../src/main.c:828
+#: ../src/main.c:827
 msgid "modifier key (eg 0x4  used with clicks and keypresses)"
 msgstr "клавиша-модификатор (например, 0x4, используется со щелчками и нажатиями клавиш)"
 
-#: ../src/main.c:829
+#: ../src/main.c:828
 msgid "focus element (panelN|filelist|devices|bookmarks|dirtree|pathbar)"
 msgstr "фокус на элементе (panelN|filelist|devices|bookmarks|dirtree|pathbar)"
 
-#: ../src/main.c:830
+#: ../src/main.c:829
 msgid "focus element is visible (0 or 1, or device state change)"
 msgstr "элемент в фокусе видим (0 или 1, или изменение состояния устройства)"
 
-#: ../src/main.c:832
+#: ../src/main.c:831
 msgid "Examples"
 msgstr "Примеры"
 
-#: ../src/main.c:848
+#: ../src/main.c:847
 msgid "These files have been copied to the clipboard"
 msgstr "Эти файлы были скопированы в буфер обмена"
 
-#: ../src/main.c:859
+#: ../src/main.c:858
 msgid "For full documentation and examples see the SpaceFM User's Manual:"
 msgstr "Смотрите полное описание и примеры в Руководстве пользователя SpaceFM:"
 
-#: ../src/main.c:1206
+#: ../src/main.c:1193
 #, c-format
 msgid ""
 "spacefm: Error: Unable to save session\n"
 "       %s\n"
 msgstr "spacefm: Ошибка: невозможно сохранить сессию\n       %s\n"
 
-#: ../src/main.c:1260
+#: ../src/main.c:1247
 msgid "File doesn't exist"
 msgstr "Файл не существует"
 
-#: ../src/main.c:1262 ../src/main.c:1338 ../src/main.c:1340 ../src/main.c:1445
-#: ../src/main.c:1472 ../src/main.c:1474 ../src/main.c:1607
-#: ../src/settings.c:4840 ../src/settings.c:8155
+#: ../src/main.c:1249 ../src/main.c:1327 ../src/main.c:1329 ../src/main.c:1434
+#: ../src/main.c:1461 ../src/main.c:1463 ../src/main.c:1596
+#: ../src/settings.c:4867 ../src/settings.c:8189
 #: ../src/ptk/ptk-file-browser.c:2401 ../src/ptk/ptk-file-browser.c:2427
 #: ../src/ptk/ptk-file-browser.c:5982 ../src/ptk/ptk-file-browser.c:5989
-#: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2752
-#: ../src/ptk/ptk-file-misc.c:3404 ../src/ptk/ptk-file-misc.c:3486
-#: ../src/ptk/ptk-file-misc.c:3580 ../src/ptk/ptk-file-misc.c:3741
-#: ../src/ptk/ptk-file-properties.c:891 ../src/ptk/ptk-file-properties.c:902
-#: ../src/vfs/vfs-file-task.c:1512 ../src/item-prop.c:974
+#: ../src/ptk/ptk-console-output.c:232 ../src/ptk/ptk-file-misc.c:2753
+#: ../src/ptk/ptk-file-misc.c:3405 ../src/ptk/ptk-file-misc.c:3487
+#: ../src/ptk/ptk-file-misc.c:3581 ../src/ptk/ptk-file-misc.c:3744
+#: ../src/ptk/ptk-file-properties.c:892 ../src/ptk/ptk-file-properties.c:903
+#: ../src/vfs/vfs-file-task.c:1513 ../src/item-prop.c:974
 #, c-format
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../src/main.c:1338 ../src/main.c:1472
+#: ../src/main.c:1327 ../src/main.c:1461
 msgid ""
 "Error: Unable to initialize inotify file change monitor.\n"
 "\n"
 "Do you have an inotify-capable kernel?"
 msgstr "Ошибка: невозможно инициализировать монитор изменений файлов inotify.\n\nВключена ли в ядре поддержка inotify?"
 
-#: ../src/main.c:1340 ../src/main.c:1474
+#: ../src/main.c:1329 ../src/main.c:1463
 msgid ""
 "Error: Unable to establish connection with FAM.\n"
 "\n"
 "Do you have \"FAM\" or \"Gamin\" installed and running?"
 msgstr "Ошибка: невозможно установить соединение с FAM.\n\nУ Вас установлен и запущен «FAM» или «Gamin»?"
 
-#: ../src/main.c:1392
+#: ../src/main.c:1381
 msgid "--dialog must be first option"
 msgstr "--dialog должен быть первой опцией"
 
-#: ../src/main.c:1399
+#: ../src/main.c:1388
 msgid "--socket-cmd must be first option"
 msgstr "--socket-cmd должен быть первой опцией"
 
-#: ../src/main.c:1407
+#: ../src/main.c:1396
 msgid "This build of SpaceFM has desktop integration disabled"
 msgstr "В этой сборке SpaceFM отключена интеграция в рабочее окружение"
 
-#: ../src/main.c:1444 ../src/main.c:1445
+#: ../src/main.c:1433 ../src/main.c:1434
 msgid ""
 "SpaceFM requires genuine /bin/bash (v4+) to be installed.  Other shells are "
 "NOT equivalent."
 msgstr "Для работы SpaceFM необходима настоящая оболочка /bin/bash (вер. 4+). Другие оболочки НЕ подходят."
 
-#: ../src/main.c:1603
+#: ../src/main.c:1592
 msgid "Don't know how to open the file"
 msgstr "Неизвестный тип файла"
 
-#: ../src/main.c:1605
+#: ../src/main.c:1594
 #, c-format
 msgid ""
 "Unable to open file:\n"
@@ -1611,24 +1612,24 @@ msgid ""
 "%s"
 msgstr "Невозможно открыть файл:\n«%s»\n%s"
 
-#: ../src/main-window.c:404 ../src/settings.c:10149
+#: ../src/main-window.c:404 ../src/settings.c:10184
 msgid "_Show"
 msgstr "_Показать"
 
-#: ../src/main-window.c:405 ../src/item-prop.c:1710
+#: ../src/main-window.c:405 ../src/item-prop.c:1711
 msgid "_Add"
 msgstr "Доба_вить"
 
-#: ../src/main-window.c:459 ../src/settings.c:6063
+#: ../src/main-window.c:459 ../src/settings.c:6095
 msgid "Choose Plugin File"
 msgstr "Выбрать файл плагина"
 
 #. get url
-#: ../src/main-window.c:470 ../src/settings.c:6075
+#: ../src/main-window.c:470 ../src/settings.c:6107
 msgid "Enter Plugin URL"
 msgstr "Ввести URL плагина"
 
-#: ../src/main-window.c:470 ../src/settings.c:6075
+#: ../src/main-window.c:470 ../src/settings.c:6107
 msgid ""
 "Enter SpaceFM Plugin URL:\n"
 "\n"
@@ -1658,11 +1659,11 @@ msgstr "Плагин под именем «%s» уже установлен. П�
 msgid "Overwrite Plugin ?"
 msgstr "Перезаписать плагин?"
 
-#: ../src/main-window.c:538 ../src/settings.c:6083
+#: ../src/main-window.c:538 ../src/settings.c:6115
 msgid "Error Creating Temp Directory"
 msgstr "Ошибка создания временного каталога"
 
-#: ../src/main-window.c:539 ../src/settings.c:6084
+#: ../src/main-window.c:539 ../src/settings.c:6116
 msgid "Unable to create temporary directory"
 msgstr "Невозможно создать временный каталог"
 
@@ -1683,7 +1684,7 @@ msgstr "Ошибка сохранения сессии"
 msgid "Open Root Window"
 msgstr "Открыть окно от имени root"
 
-#: ../src/main-window.c:848 ../src/vfs/vfs-file-task.c:1544
+#: ../src/main-window.c:848 ../src/vfs/vfs-file-task.c:1545
 msgid "Terminal Not Available"
 msgstr "Терминал недоступен"
 
@@ -1710,50 +1711,50 @@ msgid ""
 "To modify a toolbar, click the leftmost tool icon to open the toolbar config menu and select Help."
 msgstr "Режим дизайна позволяет менять имя, клавиатурное сочетание и значок для пунктов меню, показывать справку по нему и добавлять собственные пункты в большинство меню.\n\nЧтобы войти в режим дизайна, просто щёлкните правой кнопкой на пункт меню.\n\nЧтобы открыть подменю в режиме дизайна, сначала закройте подменю (нажав на него). Меню закладок не поддерживает режим дизайна.\n\nЧтобы изменить элементы панели: щёлкните самый левый значок инструментов чтобы открыть меню настройки панели, затем выберите Справку."
 
-#: ../src/main-window.c:1870 ../src/settings.c:4734 ../src/settings.c:5036
-#: ../src/settings.c:5908 ../src/settings.c:6025
+#: ../src/main-window.c:1870 ../src/settings.c:4761 ../src/settings.c:5063
+#: ../src/settings.c:5940 ../src/settings.c:6057
 #, c-format
 msgid "New _Command"
 msgstr "Новая _команда"
 
-#: ../src/main-window.c:1978
+#: ../src/main-window.c:1979
 #, c-format
 msgid "Show Panel %d"
 msgstr "Показать панель %d"
 
-#: ../src/main-window.c:2006 ../src/settings.c:7281 ../src/settings.c:10071
-#: ../src/settings.c:10087 ../src/settings.c:10584
+#: ../src/main-window.c:2007 ../src/settings.c:7313 ../src/settings.c:10106
+#: ../src/settings.c:10122 ../src/settings.c:10620
 msgid "_File"
 msgstr "_Файл"
 
-#: ../src/main-window.c:2009 ../src/settings.c:10673
+#: ../src/main-window.c:2010 ../src/settings.c:10709
 msgid "_View"
 msgstr "_Вид"
 
-#: ../src/main-window.c:2012 ../src/settings.c:11017
+#: ../src/main-window.c:2013 ../src/settings.c:11053
 msgid "_Devices"
 msgstr "_Устройства"
 
-#: ../src/main-window.c:2016 ../src/settings.c:10441 ../src/settings.c:10649
-#: ../src/settings.c:11028
+#: ../src/main-window.c:2017 ../src/settings.c:10477 ../src/settings.c:10685
+#: ../src/settings.c:11065
 msgid "_Bookmarks"
 msgstr "_Закладки"
 
-#: ../src/main-window.c:2022
+#: ../src/main-window.c:2023
 msgid "_Plugins"
 msgstr "_Плагины"
 
-#: ../src/main-window.c:2026
+#: ../src/main-window.c:2027
 msgid "_Tools"
 msgstr "_Инструменты"
 
 #. Help
-#: ../src/main-window.c:2029 ../src/settings.c:995 ../src/settings.c:7292
-#: ../src/settings.c:7816 ../src/settings.c:8097 ../src/settings.c:9773
+#: ../src/main-window.c:2030 ../src/settings.c:1004 ../src/settings.c:7324
+#: ../src/settings.c:7849 ../src/settings.c:8131 ../src/settings.c:9808
 msgid "_Help"
 msgstr "_Справка"
 
-#: ../src/main-window.c:2316
+#: ../src/main-window.c:2335
 #, c-format
 msgid ""
 "Error: Unable to save session file.  Do you want to exit without saving?\n"
@@ -1761,61 +1762,61 @@ msgid ""
 "( %s )"
 msgstr "Ошибка: невозможно сохранить файл сессии.  Выйти без сохранения?\n\n( %s )"
 
-#: ../src/main-window.c:2325
+#: ../src/main-window.c:2344
 msgid "SpaceFM Error"
 msgstr "Ошибка SpaceFM"
 
-#: ../src/main-window.c:2341
+#: ../src/main-window.c:2360
 msgid "Stop all tasks running in this window?"
 msgstr "Остановить все задачи в этом окне?"
 
-#: ../src/main-window.c:2350
+#: ../src/main-window.c:2369
 msgid "Aborting tasks..."
 msgstr "Прерывание задач..."
 
-#: ../src/main-window.c:3567
+#: ../src/main-window.c:3562
 #, c-format
 msgid " %s free / %s   "
 msgstr " %s свободно / %s   "
 
-#: ../src/main-window.c:3620
+#: ../src/main-window.c:3615
 #, c-format
 msgid "   Link → %s"
 msgstr "   Ссылка → %s"
 
-#: ../src/main-window.c:3622
+#: ../src/main-window.c:3617
 #, c-format
 msgid "   Link → %s/"
 msgstr "   Ссылка → %s/"
 
-#: ../src/main-window.c:3625
+#: ../src/main-window.c:3620
 #, c-format
 msgid "   !Link → %s/ (missing)"
 msgstr "   !Ссылка → %s/ (отсутствует)"
 
-#: ../src/main-window.c:3633
+#: ../src/main-window.c:3628
 #, c-format
 msgid "   Link → %s (%s)"
 msgstr "   Ссылка → %s (%s)"
 
-#: ../src/main-window.c:3636
+#: ../src/main-window.c:3631
 #, c-format
 msgid "   !Link → %s (missing)"
 msgstr "   !Ссылка → %s (отсутствует)"
 
-#: ../src/main-window.c:3643
+#: ../src/main-window.c:3638
 #, c-format
 msgid "   !Link → ( error reading target )"
 msgstr "   !Ссылка → ( ошибка чтения цели )"
 
-#: ../src/main-window.c:3690
+#: ../src/main-window.c:3685
 msgid "hidden"
 msgid_plural "hidden"
 msgstr[0] "скрытый"
 msgstr[1] "скрытых"
 msgstr[2] "скрытых"
 
-#: ../src/main-window.c:3693
+#: ../src/main-window.c:3688
 #, c-format
 msgid "%s%d visible (%s)   %s"
 msgid_plural "%s%d visible (%s)   %s"
@@ -1823,7 +1824,7 @@ msgstr[0] "%s%d видимых (%s)   %s"
 msgstr[1] "%s%d видимых (%s)   %s"
 msgstr[2] "%s%d видимых (%s)   %s"
 
-#: ../src/main-window.c:3698
+#: ../src/main-window.c:3693
 #, c-format
 msgid "%s%d item   %s"
 msgid_plural "%s%d items   %s"
@@ -1831,372 +1832,372 @@ msgstr[0] "%s%d объектов   %s"
 msgstr[1] "%s%d объекта   %s"
 msgstr[2] "%s%d объектов   %s"
 
-#: ../src/main-window.c:3934
+#: ../src/main-window.c:3929
 msgid "Device manager key shortcuts are disabled in HAL mode"
 msgstr "Клавиатурные сочетания диспетчера устройств отключены в режиме HAL"
 
 #. If you change "Status", also change it in on_task_button_press_event
-#: ../src/main-window.c:4150 ../src/main-window.c:5612
+#: ../src/main-window.c:4145 ../src/main-window.c:5610
 msgid "Status"
 msgstr "Состояние"
 
-#: ../src/main-window.c:4150
+#: ../src/main-window.c:4145
 msgid "#"
 msgstr "№"
 
-#: ../src/main-window.c:4150 ../src/ptk/ptk-file-misc.c:2077
-#: ../src/find-files.c:918
+#: ../src/main-window.c:4145 ../src/ptk/ptk-file-misc.c:2077
+#: ../src/find-files.c:920
 msgid "Folder"
 msgstr "Каталог"
 
-#: ../src/main-window.c:4150
+#: ../src/main-window.c:4145
 msgid "Item"
 msgstr "Элемент"
 
-#: ../src/main-window.c:4151
+#: ../src/main-window.c:4146
 msgid "To"
 msgstr "Назначение"
 
-#: ../src/main-window.c:4151
+#: ../src/main-window.c:4146
 msgid "Progress"
 msgstr "Прогресс"
 
-#: ../src/main-window.c:4151
+#: ../src/main-window.c:4146
 msgid "Total"
 msgstr "Всего"
 
-#: ../src/main-window.c:4152
+#: ../src/main-window.c:4147
 msgid "Started"
 msgstr "Начато"
 
-#: ../src/main-window.c:4152
+#: ../src/main-window.c:4147
 msgid "Elapsed"
 msgstr "Прошло"
 
-#: ../src/main-window.c:4152
+#: ../src/main-window.c:4147
 msgid "Current"
 msgstr "Скорость (тек.)"
 
-#: ../src/main-window.c:4152
+#: ../src/main-window.c:4147
 msgid "CRemain"
 msgstr "Осталось (тек.)"
 
-#: ../src/main-window.c:4153
+#: ../src/main-window.c:4148
 msgid "Average"
 msgstr "Скорость (ср.)"
 
-#: ../src/main-window.c:4153
+#: ../src/main-window.c:4148
 msgid "Remain"
 msgstr "Осталось"
 
-#: ../src/main-window.c:4166
+#: ../src/main-window.c:4161
 msgid "Reorder Columns Help"
 msgstr "Справка по перестановке колонок"
 
-#: ../src/main-window.c:4166
+#: ../src/main-window.c:4161
 msgid ""
 "To change the order of the columns, drag the column header to the desired "
 "location."
 msgstr "Чтобы изменить порядок столбцов, перетащите заголовок столбца в требуемое место."
 
-#: ../src/main-window.c:5724
+#: ../src/main-window.c:5722
 msgid "moving"
 msgstr "перемещение..."
 
-#: ../src/main-window.c:5725
+#: ../src/main-window.c:5723
 msgid "copying"
 msgstr "копирование..."
 
-#: ../src/main-window.c:5726
+#: ../src/main-window.c:5724
 msgid "trashing"
 msgstr "удаление..."
 
-#: ../src/main-window.c:5727
+#: ../src/main-window.c:5725
 msgid "deleting"
 msgstr "удаление..."
 
-#: ../src/main-window.c:5728
+#: ../src/main-window.c:5726
 msgid "linking"
 msgstr "создание ссылок..."
 
-#: ../src/main-window.c:5729
+#: ../src/main-window.c:5727
 msgid "changing"
 msgstr "изменение..."
 
-#: ../src/main-window.c:5730
+#: ../src/main-window.c:5728
 msgid "running"
 msgstr "выполнение..."
 
-#: ../src/main-window.c:5836
+#: ../src/main-window.c:5834
 #, c-format
 msgid "%d error %s"
 msgstr "%d ошибка %s"
 
-#: ../src/main-window.c:5837
+#: ../src/main-window.c:5835
 #, c-format
 msgid "%d errors %s"
 msgstr "%d ошибок %s"
 
-#: ../src/main-window.c:5853 ../src/ptk/ptk-file-task.c:1690
+#: ../src/main-window.c:5851 ../src/ptk/ptk-file-task.c:1692
 #, c-format
 msgid "paused"
 msgstr "приостановлено"
 
-#: ../src/main-window.c:5855 ../src/ptk/ptk-file-task.c:1692
+#: ../src/main-window.c:5853 ../src/ptk/ptk-file-task.c:1694
 #, c-format
 msgid "queued"
 msgstr "в очереди"
 
-#: ../src/main-window.c:6124 ../src/ptk/ptk-file-browser.c:295
-#: ../src/edit-bookmarks.c:196 ../src/find-files.c:903
+#: ../src/main-window.c:6122 ../src/ptk/ptk-file-browser.c:295
+#: ../src/edit-bookmarks.c:196 ../src/find-files.c:905
 msgid "Name"
 msgstr "Имя"
 
-#: ../src/main-window.c:6124 ../src/ptk/ptk-file-browser.c:295
-#: ../src/find-files.c:924
+#: ../src/main-window.c:6122 ../src/ptk/ptk-file-browser.c:295
+#: ../src/find-files.c:926
 msgid "Size"
 msgstr "Размер"
 
-#: ../src/main-window.c:6124 ../src/ptk/ptk-file-browser.c:295
-#: ../src/find-files.c:928
+#: ../src/main-window.c:6122 ../src/ptk/ptk-file-browser.c:295
+#: ../src/find-files.c:930
 msgid "Type"
 msgstr "Тип"
 
-#: ../src/main-window.c:6125 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6123 ../src/ptk/ptk-file-browser.c:296
 msgid "Permission"
 msgstr "Права доступа"
 
-#: ../src/main-window.c:6125 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6123 ../src/ptk/ptk-file-browser.c:296
 msgid "Owner"
 msgstr "Владелец"
 
-#: ../src/main-window.c:6125 ../src/ptk/ptk-file-browser.c:296
+#: ../src/main-window.c:6123 ../src/ptk/ptk-file-browser.c:296
 msgid "Modified"
 msgstr "Время изменения"
 
-#: ../src/main-window.c:6137
+#: ../src/main-window.c:6135
 msgid "spacefm: invalid socket command\n"
 msgstr "spacefm: некорректная команда сокета\n"
 
-#: ../src/main-window.c:6166
+#: ../src/main-window.c:6164
 #, c-format
 msgid "spacefm: invalid option '%s'\n"
 msgstr "spacefm: некорректная опция «%s»\n"
 
-#: ../src/main-window.c:6169
+#: ../src/main-window.c:6167
 #, c-format
 msgid "spacefm: option %s requires an argument\n"
 msgstr "spacefm: опции %s нужен аргумент\n"
 
-#: ../src/main-window.c:6179
+#: ../src/main-window.c:6177
 msgid "spacefm: invalid window\n"
 msgstr "spacefm: некорректное окно\n"
 
-#: ../src/main-window.c:6199
+#: ../src/main-window.c:6197
 #, c-format
 msgid "spacefm: invalid window %s\n"
 msgstr "spacefm: некорректное окно %s\n"
 
-#: ../src/main-window.c:6209
+#: ../src/main-window.c:6207
 #, c-format
 msgid "spacefm: invalid panel %d\n"
 msgstr "spacefm: некорректная панель %d\n"
 
-#: ../src/main-window.c:6216
+#: ../src/main-window.c:6214
 #, c-format
 msgid "spacefm: panel %d is not visible\n"
 msgstr "spacefm: панель %d скрыта\n"
 
-#: ../src/main-window.c:6229
+#: ../src/main-window.c:6227
 #, c-format
 msgid "spacefm: invalid tab %d\n"
 msgstr "spacefm: некорректная вкладка %d\n"
 
-#: ../src/main-window.c:6241
+#: ../src/main-window.c:6239
 msgid "spacefm: command set requires an argument\n"
 msgstr "spacefm: команде «set» нужен аргумент\n"
 
-#: ../src/main-window.c:6267 ../src/main-window.c:6574
+#: ../src/main-window.c:6265 ../src/main-window.c:6572
 #, c-format
 msgid "spacefm: invalid %s value\n"
 msgstr "spacefm: некорректное значение %s\n"
 
-#: ../src/main-window.c:6300 ../src/main-window.c:6452
+#: ../src/main-window.c:6298 ../src/main-window.c:6450
 msgid "spacefm: invalid slider value\n"
 msgstr "spacefm: некорректное значение ползунка\n"
 
-#: ../src/main-window.c:6329
+#: ../src/main-window.c:6327
 msgid "spacefm: invalid panel number\n"
 msgstr "spacefm: некорректный номер панели\n"
 
-#: ../src/main-window.c:6370
+#: ../src/main-window.c:6368
 msgid "spacefm: invalid tab number\n"
 msgstr "spacefm: некорректный номер вкладки\n"
 
-#: ../src/main-window.c:6423 ../src/main-window.c:6743
-#: ../src/main-window.c:6870 ../src/main-window.c:7138
+#: ../src/main-window.c:6421 ../src/main-window.c:6741
+#: ../src/main-window.c:6868 ../src/main-window.c:7136
 #, c-format
 msgid "spacefm: invalid property %s\n"
 msgstr "spacefm: некорректное свойство %s\n"
 
-#: ../src/main-window.c:6472
+#: ../src/main-window.c:6470
 msgid "spacefm: invalid column width\n"
 msgstr "spacefm: некорректная ширина столбца\n"
 
-#: ../src/main-window.c:6508 ../src/main-window.c:6535
-#: ../src/main-window.c:6936
+#: ../src/main-window.c:6506 ../src/main-window.c:6533
+#: ../src/main-window.c:6934
 #, c-format
 msgid "spacefm: invalid column name '%s'\n"
 msgstr "spacefm: некорректное имя столбца «%s»\n"
 
-#: ../src/main-window.c:6630
+#: ../src/main-window.c:6628
 msgid "spacefm: text is not valid UTF-8\n"
 msgstr "spacefm: текст не является корректным UTF-8\n"
 
-#: ../src/main-window.c:6647
+#: ../src/main-window.c:6645
 #, c-format
 msgid "spacefm: %s requires a file path\n"
 msgstr "spacefm: %s требует путь файла\n"
 
-#: ../src/main-window.c:6653
+#: ../src/main-window.c:6651
 #, c-format
 msgid "spacefm: error reading file '%s'\n"
 msgstr "spacefm: ошибка чтения файла «%s»\n"
 
-#: ../src/main-window.c:6659
+#: ../src/main-window.c:6657
 #, c-format
 msgid "spacefm: file '%s' does not contain valid UTF-8 text\n"
 msgstr "spacefm: файл «%s» не содержит корректный текст UTF-8\n"
 
-#: ../src/main-window.c:6700
+#: ../src/main-window.c:6698
 #, c-format
 msgid "spacefm: %s requires a directory path\n"
 msgstr "spacefm: %s требует путь каталога\n"
 
-#: ../src/main-window.c:6706
+#: ../src/main-window.c:6704
 #, c-format
 msgid "spacefm: directory '%s' does not exist\n"
 msgstr "spacefm: каталог «%s» не существует\n"
 
-#: ../src/main-window.c:6752 ../src/main-window.c:7623
-#: ../src/main-window.c:7649
+#: ../src/main-window.c:6750 ../src/main-window.c:7621
+#: ../src/main-window.c:7647
 #, c-format
 msgid "spacefm: command %s requires an argument\n"
 msgstr "spacefm: команде %s нужен аргумент\n"
 
-#: ../src/main-window.c:7146 ../src/main-window.c:7276
-#: ../src/main-window.c:7380 ../src/main-window.c:7437
-#: ../src/main-window.c:7488 ../src/main-window.c:7689
+#: ../src/main-window.c:7144 ../src/main-window.c:7274
+#: ../src/main-window.c:7378 ../src/main-window.c:7435
+#: ../src/main-window.c:7486 ../src/main-window.c:7687
 #, c-format
 msgid "spacefm: %s requires two arguments\n"
 msgstr "spacefm: команде %s нужно два аргумента\n"
 
-#: ../src/main-window.c:7174 ../src/main-window.c:7304
+#: ../src/main-window.c:7172 ../src/main-window.c:7302
 #, c-format
 msgid "spacefm: invalid task '%s'\n"
 msgstr "spacefm: некорректная задача «%s»\n"
 
-#: ../src/main-window.c:7179
+#: ../src/main-window.c:7177
 #, c-format
 msgid "spacefm: internal task %s is read-only\n"
 msgstr "spacefm: внутренняя задача %s только для чтения\n"
 
-#: ../src/main-window.c:7231
+#: ../src/main-window.c:7229
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
 msgstr "spacefm: свойство задачи «%s» только для чтения\n"
 
-#: ../src/main-window.c:7248
+#: ../src/main-window.c:7246
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
 msgstr "spacefm: некорректное состояние очереди «%s»\n"
 
-#: ../src/main-window.c:7266 ../src/main-window.c:7367
+#: ../src/main-window.c:7264 ../src/main-window.c:7365
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
 msgstr "spacefm: некорректное свойство задачи «%s»\n"
 
-#: ../src/main-window.c:7423 ../src/main-window.c:7525
-#: ../src/main-window.c:7546
+#: ../src/main-window.c:7421 ../src/main-window.c:7523
+#: ../src/main-window.c:7544
 #, c-format
 msgid "spacefm: no such directory '%s'\n"
 msgstr "spacefm: нет такого каталога «%s»\n"
 
-#: ../src/main-window.c:7430 ../src/main-window.c:7481
-#: ../src/main-window.c:7532
+#: ../src/main-window.c:7428 ../src/main-window.c:7479
+#: ../src/main-window.c:7530
 #, c-format
 msgid "spacefm: invalid %s task option '%s'\n"
 msgstr "spacefm: некорректная опция задачи %s «%s»\n"
 
-#: ../src/main-window.c:7497
+#: ../src/main-window.c:7495
 #, c-format
 msgid "spacefm: no such file '%s'\n"
 msgstr "spacefm: нет такого файла «%s»\n"
 
-#: ../src/main-window.c:7565
+#: ../src/main-window.c:7563
 #, c-format
 msgid "spacefm: relative path '%s' requires %s option --dir DIR\n"
 msgstr "spacefm: для относительного пути «%s» требуется опция %s --dir КАТАЛОГ\n"
 
-#: ../src/main-window.c:7589
+#: ../src/main-window.c:7587
 #, c-format
 msgid "spacefm: task type %s requires FILE argument(s)\n"
 msgstr "spacefm: для типа задачи %s требуется аргумент(ы) ФАЙЛ\n"
 
-#: ../src/main-window.c:7614
+#: ../src/main-window.c:7612
 #, c-format
 msgid "spacefm: invalid task type '%s'\n"
 msgstr "spacefm: некорректный тип задачи «%s»\n"
 
-#: ../src/main-window.c:7638
+#: ../src/main-window.c:7636
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
 msgstr "spacefm: некорректный код клавиши «%s»\n"
 
-#: ../src/main-window.c:7656
+#: ../src/main-window.c:7654
 #, c-format
 msgid "spacefm: custom submenu '%s' not found\n"
 msgstr "spacefm: подменю «%s» не найдено\n"
 
-#: ../src/main-window.c:7668
+#: ../src/main-window.c:7666
 #, c-format
 msgid "spacefm: menu '%s' context hidden or disabled\n"
 msgstr "spacefm: меню «%s» скрыто или выключено\n"
 
-#: ../src/main-window.c:7695
+#: ../src/main-window.c:7693
 #, c-format
 msgid "spacefm: invalid event type '%s'\n"
 msgstr "spacefm: некорректный тип события «%s»\n"
 
-#: ../src/main-window.c:7721
+#: ../src/main-window.c:7719
 #, c-format
 msgid "spacefm: event handler not found\n"
 msgstr "spacefm: обработчик события не найден\n"
 
-#: ../src/main-window.c:7732
+#: ../src/main-window.c:7730
 #, c-format
 msgid "spacefm: invalid socket method '%s'\n"
 msgstr "spacefm: некорректный метод сокета «%s»\n"
 
-#: ../src/pref-dialog.c:159 ../src/pref-dialog.c:171 ../src/settings.c:9052
-#: ../src/settings.c:9122 ../src/settings.c:9190
+#: ../src/pref-dialog.c:161 ../src/pref-dialog.c:173 ../src/settings.c:9087
+#: ../src/settings.c:9157 ../src/settings.c:9225
 msgid "Default"
 msgstr "По умолчанию"
 
-#: ../src/pref-dialog.c:191
+#: ../src/pref-dialog.c:193
 msgid "Choose Desktop Font"
 msgstr "Выбрать шрифт Рабочего стола"
 
-#: ../src/pref-dialog.c:192
+#: ../src/pref-dialog.c:194
 msgid "Example Item 0123456789"
 msgstr "Пример элемента 0123456789"
 
 #. task
-#: ../src/pref-dialog.c:772 ../src/pref-dialog.c:773
+#: ../src/pref-dialog.c:807 ../src/pref-dialog.c:808
 msgid "Save Root Settings"
 msgstr "Сохранить настройки пользователя root"
 
-#: ../src/pref-dialog.c:772
+#: ../src/pref-dialog.c:807
 msgid ""
 "You will now be asked for your root password to save the root settings for "
 "this user to a file in /etc/spacefm/  Supplying the password in the next "
@@ -2205,7 +2206,7 @@ msgid ""
 msgstr "Сейчас будет запрошен пароль пользователя root для сохранения системных настроек для текущего пользователя в /etc/spacefm/. Ввести пароль крайне рекомендуется, так как SpaceFM выполняет некоторые команды от имени root через su и эти настройки должны быть защищены правами пользователя root."
 
 #. also in aboutdlg.ui
-#: ../src/settings.c:129
+#: ../src/settings.c:131
 #, c-format
 msgid ""
 "Enter program or bash command line:\n"
@@ -2222,21 +2223,21 @@ msgid ""
 "\t$fm_panel, $fm_tab, $fm_command, etc"
 msgstr "Введите программу или строку команд на bash:\n\nПодстановки:\n\t%%F\tвыбранные файлы или  %%f первый из выбранных файлов\n\t%%N\tвыбранные имена файлов или  %%n имя первого выбранного файла\n\t%%d\tтекущий каталог\n\t%%v\tвыбранное устройство (например, /dev/sda1)\n\t%%m\tточка монтированя (например, /media/dvd);  %%l метка раздела\n\t%%b\tвыбранная закладка\n\t%%t\tкаталог выбранной задачи;  %%p pid задачи\n\t%%a\tзначение пункта меню\n\t$fm_panel, $fm_tab, $fm_command, и т.д."
 
-#: ../src/settings.c:131
+#: ../src/settings.c:133
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
 "Not all icons may work due to various issues."
 msgstr "Введите имя значка, путь к файлу значка или глобальное имя значка:\n\nНекоторые значки могут не работать по различным причинам."
 
-#: ../src/settings.c:133
+#: ../src/settings.c:135
 msgid ""
 "Enter menu item name:\n"
 "\n"
 "Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr "Введите имя пункта меню:\n\nПоставьте нижнюю черту (_) перед буквой, чтобы сделать ее клавиатурным сочетанием."
 
-#: ../src/settings.c:134
+#: ../src/settings.c:136
 msgid ""
 "Enter new menu item name:\n"
 "\n"
@@ -2245,60 +2246,61 @@ msgid ""
 "TIP: To change this menu item later, right-click on the menu item to open the design menu."
 msgstr "Введите новое имя пункта меню:\n\nПоставьте нижнюю черту (_) перед буквой, чтобы сделать ее клавиатурным сочетанием.\n\nПодсказка: чтобы позднее сменить имя пункта меню, щёлкните на нем правой кнопкой чтобы открыть режим дизайна."
 
-#: ../src/settings.c:366
+#: ../src/settings.c:372
 msgid "custom tmp_dir contains invalid chars - reverting to /tmp"
 msgstr "выбранный tmp_dir содержит некорректные символы — используется /tmp"
 
-#: ../src/settings.c:372
+#: ../src/settings.c:378
 msgid "custom tmp_dir does not exist - reverting to /tmp"
 msgstr "выбранный tmp_dir не существует — используется /tmp"
 
-#: ../src/settings.c:861 ../src/settings.c:9484
+#: ../src/settings.c:870 ../src/settings.c:9519
 msgid "Ignore _Hide Policy"
 msgstr "Игнорировать флаг «_Скрытый»"
 
-#: ../src/settings.c:868 ../src/settings.c:9567
+#: ../src/settings.c:877 ../src/settings.c:9602
 msgid "Ignore _No Policy"
 msgstr "Игнорировать флаг «_Не а/м»"
 
-#: ../src/settings.c:878 ../src/settings.c:10117
+#: ../src/settings.c:887 ../src/settings.c:10152
 msgid "_FAQ"
 msgstr "_FAQ"
 
-#: ../src/settings.c:888 ../src/settings.c:893 ../src/settings.c:10260
-#: ../src/settings.c:10280
+#: ../src/settings.c:897 ../src/settings.c:902 ../src/settings.c:10295
+#: ../src/settings.c:10315
 msgid "_Stop"
 msgstr "О_становить"
 
-#: ../src/settings.c:900 ../src/settings.c:10293
+#: ../src/settings.c:909 ../src/settings.c:10328
 msgid "Show _Manager"
 msgstr "Показать _диспетчер"
 
-#: ../src/settings.c:907 ../src/settings.c:10298
+#. set->x  used for task man height >=0.9.4
+#: ../src/settings.c:916 ../src/settings.c:10334
 msgid "Auto-_Hide Manager"
 msgstr "_Автоскрытие диспетчера"
 
-#: ../src/settings.c:914 ../src/settings.c:10363
+#: ../src/settings.c:923 ../src/settings.c:10399
 msgid "Err_ors"
 msgstr "О_шибки"
 
-#: ../src/settings.c:921 ../src/settings.c:10239
+#: ../src/settings.c:930 ../src/settings.c:10274
 msgid "Current Re_main"
 msgstr "Осталос_ь"
 
-#: ../src/settings.c:928 ../src/settings.c:10251
+#: ../src/settings.c:937 ../src/settings.c:10286
 msgid "A_verage Remain"
 msgstr "О_сталось (ср.)"
 
-#: ../src/settings.c:935 ../src/settings.c:10189
+#: ../src/settings.c:944 ../src/settings.c:10224
 msgid "_Folder"
 msgstr "_Каталог"
 
-#: ../src/settings.c:965 ../src/settings.c:10340
+#: ../src/settings.c:974 ../src/settings.c:10376
 msgid "_Detailed Stats"
 msgstr "Подро_бное состояние"
 
-#: ../src/settings.c:976 ../src/settings.c:9223
+#: ../src/settings.c:985 ../src/settings.c:9258
 msgid "Remo_ve / Eject"
 msgstr "_Извлечь"
 
@@ -2306,33 +2308,33 @@ msgstr "_Извлечь"
 #. changes of this nature due to defaults no longer being saved
 #. in session file
 #. New > Import >
-#: ../src/settings.c:987 ../src/settings.c:7269 ../src/settings.c:10081
+#: ../src/settings.c:996 ../src/settings.c:7301 ../src/settings.c:10116
 msgid "_Import"
 msgstr "_Импорт"
 
-#: ../src/settings.c:988 ../src/settings.c:10173
+#: ../src/settings.c:997 ../src/settings.c:10208
 msgid "_Task Manager"
 msgstr "Диспетчер _задач"
 
 #. for rename dialog
-#: ../src/settings.c:991 ../src/settings.c:9722
+#: ../src/settings.c:1000 ../src/settings.c:9757
 msgid "F_ilename"
 msgstr "Имя _файла"
 
-#: ../src/settings.c:992 ../src/settings.c:9733
+#: ../src/settings.c:1001 ../src/settings.c:9768
 msgid "Typ_e"
 msgstr "_Тип"
 
-#: ../src/settings.c:993 ../src/settings.c:9737
+#: ../src/settings.c:1002 ../src/settings.c:9772
 msgid "Ta_rget"
 msgstr "_Цель"
 
-#: ../src/settings.c:994 ../src/settings.c:9741
+#: ../src/settings.c:1003 ../src/settings.c:9776
 msgid "Te_mplate"
 msgstr "_Шаблон"
 
 #. General
-#: ../src/settings.c:1095
+#: ../src/settings.c:1116
 msgid ""
 "# SpaceFM Session File\n"
 "\n"
@@ -2342,30 +2344,30 @@ msgid ""
 "\n"
 msgstr "# Файл сессии SpaceFM\n\n# ЭТОТ ФАЙЛ НЕ ПРЕДНАЗНАЧЕН ДЛЯ РЕДАКТИРОВАНИЯ, он будет прочитан и ПЕРЕЗАПИСАН.\n\n# Если вы удалите все файлы session*, настройки SpaceFM будут сброшены по умолчанию.\n\n"
 
-#: ../src/settings.c:1267
+#: ../src/settings.c:1293
 #, c-format
 msgid "Error saving file"
 msgstr "Ошибка сохранения файла"
 
-#: ../src/settings.c:1351
+#: ../src/settings.c:1377
 #, c-format
 msgid "SpaceFM Error: Unable to autosave session file ( %s )\n"
 msgstr "Ошибка SpaceFM: невозможно сохранить файл сессии ( %s )\n"
 
-#: ../src/settings.c:2784
+#: ../src/settings.c:2810
 msgid ""
 "Error reading root settings from /etc/spacefm/  Commands run as root may "
 "present a security risk"
 msgstr "Ошибка чтения настроек пользователя root из /etc/spacefm/. Команды, выполняемые от имени root могут представлять угрозу безопасности"
 
-#: ../src/settings.c:2786
+#: ../src/settings.c:2812
 msgid ""
 "No root settings found in /etc/spacefm/  Setting a root editor in "
 "Preferences should remove this warning on startup.   Otherwise commands run "
 "as root may present a security risk."
 msgstr "Не найдены настройки пользователя root в /etc/spacefm/.  Это сообщение можно убрать, задав редактор пользователя root в Настройках.  Иначе команды, выполняемые от имени root могут представлять угрозу безопасности."
 
-#: ../src/settings.c:3693
+#: ../src/settings.c:3719
 #, c-format
 msgid ""
 "An error occured copying command files\n"
@@ -2373,11 +2375,11 @@ msgid ""
 "%s"
 msgstr "Произошла ошибка при копировании файлов команды\n\n%s"
 
-#: ../src/settings.c:3695 ../src/settings.c:3730
+#: ../src/settings.c:3721 ../src/settings.c:3756
 msgid "Copy Command Error"
 msgstr "Ошибка команды копирования"
 
-#: ../src/settings.c:3728
+#: ../src/settings.c:3754
 #, c-format
 msgid ""
 "An error occured copying command data files\n"
@@ -2385,12 +2387,12 @@ msgid ""
 "%s"
 msgstr "Произошла ошибка при копировании файлов данных для команды\n\n%s"
 
-#: ../src/settings.c:4101
+#: ../src/settings.c:4127
 #, c-format
 msgid "Error reading plugin file %s"
 msgstr "Ошибка чтения файла плагина %s"
 
-#: ../src/settings.c:4179
+#: ../src/settings.c:4205
 #, c-format
 msgid ""
 "The imported plugin folder does not contain a valid plugin.\n"
@@ -2398,7 +2400,7 @@ msgid ""
 "(%s/)"
 msgstr "Импортированный каталог плагина не содержит корректного плагина.\n\n(%s/)"
 
-#: ../src/settings.c:4219
+#: ../src/settings.c:4245
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2406,7 +2408,7 @@ msgid ""
 "Because it has not been installed, this plugin will not appear in the Plugins menu."
 msgstr "Плагин «%s» был скопирован в буфер обмена для режима дизайна.  Используйте Вид|Режим Дизайна чтобы вставить его в меню.\n\nТак как этот плагин не был установлен, он не появится в меню Плагины."
 
-#: ../src/settings.c:4221
+#: ../src/settings.c:4247
 #, c-format
 msgid ""
 "The '%s' plugin has been copied to the design clipboard.  Use View|Design Mode to paste it into a menu.\n"
@@ -2416,7 +2418,7 @@ msgid ""
 "If this plugin contains su commands or will be run as root, installing it to and running it only from the Plugins menu is recommended to improve your system security."
 msgstr "Плагин «%s» был скопирован в буфер обмена для режима дизайна.  Используйте Вид|Режим Дизайна чтобы вставить его в меню.\n\nТак как этот плагин не был установлен, он не появится в меню Плагины. Его содержимое не защищено правами пользователя root (будучи вставленным, он будет принадлежать пользователю).\n\nЕсли этот плагин содержит команды su или будет выполняться от имени root, рекомендуется устанавливать и запускать его только через меню Плагины, для повышения безопасности системы."
 
-#: ../src/settings.c:4252
+#: ../src/settings.c:4278
 #, c-format
 msgid ""
 "Uninstall the '%s' plugin?\n"
@@ -2424,102 +2426,102 @@ msgid ""
 "( %s )"
 msgstr "Удалить плагин «%s»?\n\n( %s )"
 
-#: ../src/settings.c:4255 ../src/settings.c:4263
+#: ../src/settings.c:4281 ../src/settings.c:4289
 msgid "Uninstall Plugin"
 msgstr "Удалить плагин"
 
 #. task
-#: ../src/settings.c:4300
+#: ../src/settings.c:4326
 msgid "Install Plugin"
 msgstr "Установить плагин"
 
-#: ../src/settings.c:4500
+#: ../src/settings.c:4526
 msgid "Save As Plugin File"
 msgstr "Сохранить как файл плагина"
 
 #. tar and delete tmp files
 #. task
-#: ../src/settings.c:4568
+#: ../src/settings.c:4594
 msgid "Export Plugin"
 msgstr "Экспортировать плагин"
 
-#: ../src/settings.c:4602
+#: ../src/settings.c:4628
 msgid "Export Error"
 msgstr "Ошибка экспорта"
 
-#: ../src/settings.c:4603
+#: ../src/settings.c:4629
 msgid "Unable to create temporary files"
 msgstr "Невозможно создать временные файлы"
 
-#: ../src/settings.c:4736
+#: ../src/settings.c:4763
 msgid "Change Menu Name"
 msgstr "Сменить название меню"
 
-#: ../src/settings.c:5176
+#: ../src/settings.c:5204
 msgid "Editor Not Set"
 msgstr "Редактор не задан"
 
-#: ../src/settings.c:5177
+#: ../src/settings.c:5205
 msgid "Please set your editor in View|Preferences|Advanced"
 msgstr "Выберите редактор в Вид|Настройки|Продвинутые"
 
-#: ../src/settings.c:5187
+#: ../src/settings.c:5216
 msgid "Root Editor Not Set"
 msgstr "Редактор пользователя root не задан"
 
-#: ../src/settings.c:5188
+#: ../src/settings.c:5217
 msgid "Please set root's editor in View|Preferences|Advanced"
 msgstr "Выберите редактор пользователя root в Вид|Настройки|Продвинутые"
 
 #. task
-#: ../src/settings.c:5209
+#: ../src/settings.c:5238
 #, c-format
 msgid "Edit %s"
 msgstr "Правка %s"
 
-#: ../src/settings.c:5389
+#: ../src/settings.c:5419
 msgid "User's Manual Not Found"
 msgstr "Руководство пользователя не найдено"
 
-#: ../src/settings.c:5391
+#: ../src/settings.c:5421
 msgid ""
 "Read the user's manual online?\n"
 "\n"
 "The local copy of the SpaceFM user's manual was not found.  Click Yes to read it online, or click No and then set the correct location in Help|Options|Manual Location."
 msgstr "Прочитать Руководство пользователя в сети?\n\nЛокальная копия Руководства пользователя не найдена.  Нажмите «Да» чтобы прочитать его в сети или укажите корректное локальное расположение руководства в Справка|Опции|Местоположение Руководства."
 
-#: ../src/settings.c:5422
+#: ../src/settings.c:5452
 msgid "Help Not Available"
 msgstr "Руководство недоступно"
 
-#: ../src/settings.c:5422
+#: ../src/settings.c:5452
 msgid "This plugin does not include a README file."
 msgstr "Этот плагин не содержит файла README."
 
-#: ../src/settings.c:5424
+#: ../src/settings.c:5454
 msgid "Creation Failed"
 msgstr "Создание не удалось"
 
-#: ../src/settings.c:5424
+#: ../src/settings.c:5454
 msgid "An error occured creating a README file for this command."
 msgstr "Произошла ошибка при создании файла README для этой команды"
 
-#: ../src/settings.c:5446
+#: ../src/settings.c:5476
 msgid "Manual Opened ?"
 msgstr "Руководство открыто ?"
 
-#: ../src/settings.c:5446
+#: ../src/settings.c:5476
 msgid ""
 "The SpaceFM user's manual should have opened in your browser.  If it didn't open, or if you would like to use a different browser, set your browser in Help|Options|Browser.\n"
 "\n"
 "This message will not repeat."
 msgstr "Руководство пользователя SpaceFM должно было открыться в браузере. Если оно не открылось или если вы хотите открывать его в другом браузере, настройки можно изменить в Справка|Опции|Браузер.\n\nЭто сообщение больше не повторится."
 
-#: ../src/settings.c:5465
+#: ../src/settings.c:5495
 msgid "( none )"
 msgstr "( нет )"
 
-#: ../src/settings.c:5588
+#: ../src/settings.c:5618
 #, c-format
 msgid ""
 "\t%s\n"
@@ -2530,60 +2532,60 @@ msgid ""
 "Press a different key or click Set to replace the current key assignment."
 msgstr "\t%s\n\tКод клавиши: %#4x  Модификатор: %#x\n\n%s уже назначен для «%s».\n\nВыберите другую клавишу или нажмите «Задать», чтобы заменить текущее назначение."
 
-#: ../src/settings.c:5599
+#: ../src/settings.c:5629
 #, c-format
 msgid ""
 "\t%s\n"
 "\tKeycode: %#4x  Modifier: %#x"
 msgstr "\t%s\n\tКод клавиши: %#4x  Модификатор: %#x"
 
-#: ../src/settings.c:5627
+#: ../src/settings.c:5657
 #, c-format
 msgid ""
 "Press your key combination for menu item '%s' then click Set.  To remove the"
 " current key assignment, click Unset."
 msgstr "Задайте клавиатурное сочетание для пункта меню «%s», затем нажмите «Задать».  Чтобы удалить текущее назначение, нажмите «Убрать»."
 
-#: ../src/settings.c:5639
+#: ../src/settings.c:5670
 msgid "Cancel"
 msgstr "Отмена"
 
-#: ../src/settings.c:5645
+#: ../src/settings.c:5676
 msgid "Unset"
 msgstr "Убрать"
 
-#: ../src/settings.c:5658
+#: ../src/settings.c:5689
 msgid "Set"
 msgstr "Задать"
 
-#: ../src/settings.c:5672
+#: ../src/settings.c:5703
 msgid "Set Key"
 msgstr "Задать клавишу"
 
-#: ../src/settings.c:5752
+#: ../src/settings.c:5784
 msgid "Change Icon"
 msgstr "Сменить значок"
 
-#: ../src/settings.c:5852
+#: ../src/settings.c:5884
 msgid "Edit Command Line"
 msgstr "Редактировать команду"
 
-#: ../src/settings.c:5878
+#: ../src/settings.c:5910
 msgid "Choose Custom Executable"
 msgstr "Ручной выбор исполняемого файла"
 
-#: ../src/settings.c:5889
+#: ../src/settings.c:5921
 msgid "Run As User"
 msgstr "Запустить от пользователя"
 
-#: ../src/settings.c:5889
+#: ../src/settings.c:5921
 msgid ""
 "Run this command as username:\n"
 "\n"
 "( Leave blank for current user )"
 msgstr "Запустить эту команду от пользователя:\n\n( Оставьте пустым для текущего пользователя )"
 
-#: ../src/settings.c:5897
+#: ../src/settings.c:5929
 #, c-format
 msgid ""
 "You are adding a custom command to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2591,19 +2593,19 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Вы добавляете пользовательскую команду в пункт меню «По умолчанию».  Этому пункту будет автоматически присвоен контекст — он появится только если тип MIME первого выбранного файла совпадёт с текущим типом «%s».\n\nКоманды или меню добавленные здесь будут появляться только для этого типа MIME."
 
-#: ../src/settings.c:5898
+#: ../src/settings.c:5930
 msgid "New Context Command"
 msgstr "Новая контекстная команда"
 
-#: ../src/settings.c:5909
+#: ../src/settings.c:5941
 msgid "Set Menu Name"
 msgstr "Задать название меню"
 
-#: ../src/settings.c:5945 ../src/item-prop.c:1209
+#: ../src/settings.c:5977 ../src/item-prop.c:1209
 msgid "Choose Folder"
 msgstr "Выбрать каталог"
 
-#: ../src/settings.c:5991
+#: ../src/settings.c:6023
 #, c-format
 msgid ""
 "You are adding a custom submenu to the Default menu item.  This item will automatically have a pre-context - it will only appear when the MIME type of the first selected file matches the current type '%s'.\n"
@@ -2611,30 +2613,30 @@ msgid ""
 "Add commands or menus here which you only want to appear for this one MIME type."
 msgstr "Вы добавляете пользовательскую команду в пункт меню «По умолчанию».  Этому пункту будет автоматически присвоен контекст — он появится только если тип MIME первого выбранного файла совпадёт с текущим типом «%s».\n\nКоманды или меню добавленные здесь будут появляться только для этого типа MIME."
 
-#: ../src/settings.c:5991
+#: ../src/settings.c:6023
 msgid "(none)"
 msgstr "(нет)"
 
-#: ../src/settings.c:6000
+#: ../src/settings.c:6032
 msgid "Set Submenu Name"
 msgstr "Задать название подменю"
 
-#: ../src/settings.c:6000
+#: ../src/settings.c:6032
 msgid ""
 "Enter submenu name:\n"
 "\n"
 "Precede a character with an underscore (_) to underline that character as a shortcut key if desired."
 msgstr "Введите название подменю:\n\nМожно поставить нижнюю черту (_) перед буквой, чтобы сделать из нее клавиатурное сочетание."
 
-#: ../src/settings.c:6000
+#: ../src/settings.c:6032
 msgid "New _Submenu"
 msgstr "Новое подменю"
 
-#: ../src/settings.c:6174
+#: ../src/settings.c:6206
 msgid "( no name )"
 msgstr "( без имени )"
 
-#: ../src/settings.c:6177
+#: ../src/settings.c:6209
 #, c-format
 msgid ""
 "Permanently remove the '%s' SUBMENU AND ALL ITEMS WITHIN IT?\n"
@@ -2642,7 +2644,7 @@ msgid ""
 "This action will delete all settings and files associated with these items."
 msgstr "Удалить безвозвратно подменю «%s» и все элементы в нем?\nБудут также удалены все настройки и файлы связанные с этими элементами."
 
-#: ../src/settings.c:6182
+#: ../src/settings.c:6214
 #, c-format
 msgid ""
 "Permanently remove the '%s' item?\n"
@@ -2650,19 +2652,19 @@ msgid ""
 "This action will delete all settings and files associated with this item."
 msgstr "Удалить безвозвратно элемент «%s»?\nБудут также удалены все настройки и файлы связанные с этим элементом."
 
-#: ../src/settings.c:6196
+#: ../src/settings.c:6228
 msgid "Confirm Remove"
 msgstr "Подтверждение удаления"
 
-#: ../src/settings.c:6220 ../src/item-prop.c:700 ../src/item-prop.c:712
+#: ../src/settings.c:6252 ../src/item-prop.c:700 ../src/item-prop.c:712
 msgid "Are you sure?"
 msgstr "Вы уверены?"
 
-#: ../src/settings.c:6221 ../src/settings.c:6225 ../src/settings.c:6229
+#: ../src/settings.c:6253 ../src/settings.c:6257 ../src/settings.c:6261
 msgid "Dialog Message"
 msgstr "Сообщение в диалоге"
 
-#: ../src/settings.c:6221 ../src/settings.c:6225 ../src/settings.c:6229
+#: ../src/settings.c:6253 ../src/settings.c:6257 ../src/settings.c:6261
 msgid ""
 "Enter the message to be displayed in this dialog:\n"
 "\n"
@@ -2673,23 +2675,23 @@ msgstr "Введите сообщение для отображения в ди�
 
 #. Show Tool
 #. dev settings
-#: ../src/settings.c:6865 ../src/settings.c:9450
+#: ../src/settings.c:6897 ../src/settings.c:9485
 msgid "S_how"
 msgstr "П_оказать"
 
 #. Cut
 #. EDIT
-#: ../src/settings.c:7197 ../src/settings.c:10753
+#: ../src/settings.c:7229 ../src/settings.c:10789
 msgid "Cu_t"
 msgstr "Выр_езать"
 
 #. Copy
-#: ../src/settings.c:7204 ../src/settings.c:9749 ../src/settings.c:10756
+#: ../src/settings.c:7236 ../src/settings.c:9784 ../src/settings.c:10792
 msgid "_Copy"
 msgstr "_Копировать"
 
 #. Paste
-#: ../src/settings.c:7211 ../src/settings.c:10759
+#: ../src/settings.c:7243 ../src/settings.c:10795
 msgid "_Paste"
 msgstr "Вс_тавить"
 
@@ -2698,110 +2700,110 @@ msgstr "Вс_тавить"
 #. GDK_k, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 #. Remove
 #. list buttons
-#: ../src/settings.c:7221 ../src/ptk/ptk-file-menu.c:2200
-#: ../src/item-prop.c:1703
+#: ../src/settings.c:7253 ../src/ptk/ptk-file-menu.c:2207
+#: ../src/item-prop.c:1704
 msgid "_Remove"
 msgstr "_Удалить"
 
 #. Export
-#: ../src/settings.c:7228
+#: ../src/settings.c:7260
 msgid "E_xport"
 msgstr "_Экспортировать"
 
 #. // New submenu
-#: ../src/settings.c:7234 ../src/settings.c:9692 ../src/settings.c:10013
-#: ../src/settings.c:10579
+#: ../src/settings.c:7266 ../src/settings.c:9727 ../src/settings.c:10048
+#: ../src/settings.c:10615
 msgid "_New"
 msgstr "_Создать"
 
 #. New > Bookmark
-#: ../src/settings.c:7247 ../src/settings.c:9255
+#: ../src/settings.c:7279 ../src/settings.c:9290
 msgid "_Bookmark"
 msgstr "_Закладку"
 
 #. New > Application
-#: ../src/settings.c:7251
+#: ../src/settings.c:7283
 msgid "_Application"
 msgstr "_Приложение"
 
 #. New > Command
-#: ../src/settings.c:7255
+#: ../src/settings.c:7287
 msgid "_Command"
 msgstr "_Команду"
 
 #. New > Submenu
-#: ../src/settings.c:7261
+#: ../src/settings.c:7293
 msgid "Sub_menu"
 msgstr "Подменю"
 
 #. New > Separator
-#: ../src/settings.c:7265
+#: ../src/settings.c:7297
 msgid "S_eparator"
 msgstr "Разделитель"
 
-#: ../src/settings.c:7284 ../src/settings.c:10074 ../src/settings.c:10090
+#: ../src/settings.c:7316 ../src/settings.c:10109 ../src/settings.c:10125
 msgid "_URL"
 msgstr "_URL"
 
 #. Key
-#: ../src/settings.c:7299
+#: ../src/settings.c:7331
 msgid "_Key Shortcut"
 msgstr "_Клавиатурное сочетание"
 
 #. edit as user
-#: ../src/settings.c:7315
+#: ../src/settings.c:7347
 msgid "_Edit Script"
 msgstr "_Редактировать сценарий"
 
 #. edit as root
-#: ../src/settings.c:7323
+#: ../src/settings.c:7355
 msgid "E_dit As Root"
 msgstr "Редактировать от _имени root"
 
 #. edit command line
-#: ../src/settings.c:7335
+#: ../src/settings.c:7367
 msgid "_Edit Command"
 msgstr "_Редактировать команду"
 
 #. Properties
-#: ../src/settings.c:7342 ../src/settings.c:9441
+#: ../src/settings.c:7374 ../src/settings.c:9476
 msgid "_Properties"
 msgstr "Сво_йства"
 
-#: ../src/settings.c:7748
+#: ../src/settings.c:7781
 msgid "Set Icon"
 msgstr "Задать значок"
 
-#: ../src/settings.c:8106 ../src/settings.c:9698 ../src/settings.c:10778
+#: ../src/settings.c:8140 ../src/settings.c:9733 ../src/settings.c:10814
 msgid "_Edit"
 msgstr "_Правка"
 
-#: ../src/settings.c:8116 ../src/settings.c:8329 ../src/settings.c:10503
-#: ../src/settings.c:10631
+#: ../src/settings.c:8150 ../src/settings.c:8363 ../src/settings.c:10539
+#: ../src/settings.c:10667
 msgid "_Default"
 msgstr "По умолчанию"
 
-#: ../src/settings.c:8156
+#: ../src/settings.c:8190
 msgid "Your input is invalid because it contains linefeeds"
 msgstr "Ввод некорректен, так как содержит разрывы строк"
 
-#: ../src/settings.c:8332
+#: ../src/settings.c:8366
 msgid "_OK"
 msgstr "_OK"
 
-#: ../src/settings.c:8468
+#: ../src/settings.c:8503
 msgid "_Unset"
 msgstr "_Убрать"
 
-#: ../src/settings.c:8963
+#: ../src/settings.c:8998
 msgid "_Left Toolbar"
 msgstr "_Левая панель инструментов"
 
-#: ../src/settings.c:8967
+#: ../src/settings.c:9002
 msgid "_Right Toolbar"
 msgstr "_Правая панель инструментов"
 
-#: ../src/settings.c:8971 ../src/settings.c:11033
+#: ../src/settings.c:9006 ../src/settings.c:11071
 msgid "_Side Toolbar"
 msgstr "Бо_ковая панель инструментов"
 
@@ -2809,187 +2811,187 @@ msgstr "Бо_ковая панель инструментов"
 #. xset_set( "panel_right", "lbl", _("_Right") );
 #. xset_set( "panel_top", "lbl", _("_Top") );
 #. xset_set( "panel_bottom", "lbl", _("_Bottom") );
-#: ../src/settings.c:8975 ../src/settings.c:8978 ../src/settings.c:9914
-#: ../src/settings.c:10878
+#: ../src/settings.c:9010 ../src/settings.c:9013 ../src/settings.c:9949
+#: ../src/settings.c:10914
 msgid "_Hide"
 msgstr "Ск_рыть"
 
-#: ../src/settings.c:8981
+#: ../src/settings.c:9016
 msgid "Configure Toolbar"
 msgstr "Настроить панель инструментов"
 
-#: ../src/settings.c:8985
+#: ../src/settings.c:9020
 msgid "H_elp"
 msgstr "С_правка"
 
 #. toolitems left
 #. toolitems right
 #. toolitems side
-#: ../src/settings.c:8989 ../src/settings.c:9059 ../src/settings.c:9128
+#: ../src/settings.c:9024 ../src/settings.c:9094 ../src/settings.c:9163
 msgid "Tree"
 msgstr "Дерево"
 
-#: ../src/settings.c:8995 ../src/settings.c:9065 ../src/settings.c:9134
+#: ../src/settings.c:9030 ../src/settings.c:9100 ../src/settings.c:9169
 msgid "Bookmarks"
 msgstr "Закладки"
 
-#: ../src/settings.c:9001 ../src/settings.c:9071 ../src/settings.c:9140
+#: ../src/settings.c:9036 ../src/settings.c:9106 ../src/settings.c:9175
 msgid "Devices"
 msgstr "Устройства"
 
-#: ../src/settings.c:9007 ../src/settings.c:9077 ../src/settings.c:9146
+#: ../src/settings.c:9042 ../src/settings.c:9112 ../src/settings.c:9181
 msgid "New Tab"
 msgstr "Новая вкладка"
 
-#: ../src/settings.c:9012 ../src/settings.c:9082 ../src/settings.c:9151
+#: ../src/settings.c:9047 ../src/settings.c:9117 ../src/settings.c:9186
 msgid "New Tab Here"
 msgstr "Новая вкладка здесь"
 
-#: ../src/settings.c:9017 ../src/settings.c:9087 ../src/settings.c:9156
+#: ../src/settings.c:9052 ../src/settings.c:9122 ../src/settings.c:9191
 msgid "Back"
 msgstr "Назад"
 
-#: ../src/settings.c:9022 ../src/settings.c:9092 ../src/settings.c:9161
+#: ../src/settings.c:9057 ../src/settings.c:9127 ../src/settings.c:9196
 msgid "Back Menu"
 msgstr "Назад (меню)"
 
-#: ../src/settings.c:9027 ../src/settings.c:9097 ../src/settings.c:9166
+#: ../src/settings.c:9062 ../src/settings.c:9132 ../src/settings.c:9201
 msgid "Forward"
 msgstr "Вперед"
 
-#: ../src/settings.c:9032 ../src/settings.c:9102 ../src/settings.c:9171
+#: ../src/settings.c:9067 ../src/settings.c:9137 ../src/settings.c:9206
 msgid "Forward Menu"
 msgstr "Вперед (меню)"
 
-#: ../src/settings.c:9037 ../src/settings.c:9107 ../src/settings.c:9176
+#: ../src/settings.c:9072 ../src/settings.c:9142 ../src/settings.c:9211
 msgid "Up"
 msgstr "Вверх"
 
-#: ../src/settings.c:9042 ../src/settings.c:9112 ../src/settings.c:9181
+#: ../src/settings.c:9077 ../src/settings.c:9147 ../src/settings.c:9216
 msgid "Refresh"
 msgstr "Обновить"
 
-#: ../src/settings.c:9047 ../src/settings.c:9117 ../src/settings.c:9186
+#: ../src/settings.c:9082 ../src/settings.c:9152 ../src/settings.c:9221
 msgid "Home"
 msgstr "Домашний каталог"
 
-#: ../src/settings.c:9195
+#: ../src/settings.c:9230
 msgid "Mount"
 msgstr "Монтировать"
 
-#: ../src/settings.c:9199
+#: ../src/settings.c:9234
 msgid "Mount & Open"
 msgstr "Монтировать и открыть"
 
-#: ../src/settings.c:9203
+#: ../src/settings.c:9238
 msgid "Remove"
 msgstr "Извлечь"
 
-#: ../src/settings.c:9227 ../src/settings.c:9279
+#: ../src/settings.c:9262 ../src/settings.c:9314
 #: ../src/ptk/ptk-location-view.c:3046 ../src/ptk/ptk-location-view.c:3357
 msgid "_Unmount"
 msgstr "_Размонтировать"
 
-#: ../src/settings.c:9231
+#: ../src/settings.c:9266
 msgid "Re_load"
 msgstr "Пере_загрузить"
 
-#: ../src/settings.c:9235
+#: ../src/settings.c:9270
 msgid "_Sync"
 msgstr "_Синхронизировать"
 
-#: ../src/settings.c:9239 ../src/settings.c:9704 ../src/settings.c:10487
-#: ../src/find-files.c:275
+#: ../src/settings.c:9274 ../src/settings.c:9739 ../src/settings.c:10523
+#: ../src/find-files.c:277
 msgid "_Open"
 msgstr "_Открыть"
 
-#: ../src/settings.c:9243
+#: ../src/settings.c:9278
 msgctxt "Devices|Open|"
 msgid "_Tab"
 msgstr "В новой _вкладке"
 
-#: ../src/settings.c:9247 ../src/settings.c:9274
+#: ../src/settings.c:9282 ../src/settings.c:9309
 #: ../src/ptk/ptk-location-view.c:3039 ../src/ptk/ptk-location-view.c:3351
 msgid "_Mount"
 msgstr "_Монтировать"
 
-#: ../src/settings.c:9251
+#: ../src/settings.c:9286
 msgid "Re_/mount"
 msgstr "Перемонти_ровать"
 
-#: ../src/settings.c:9268 ../src/settings.c:10943
+#: ../src/settings.c:9303 ../src/settings.c:10979
 msgid "_Root"
 msgstr "От _имени root"
 
-#: ../src/settings.c:9284
+#: ../src/settings.c:9319
 msgid "_Label"
 msgstr "Ме_тка"
 
-#: ../src/settings.c:9334
+#: ../src/settings.c:9369
 msgid "_Check"
 msgstr "Про_верить"
 
-#: ../src/settings.c:9338
+#: ../src/settings.c:9373
 msgid "_Edit fstab"
 msgstr "_Редактировать fstab"
 
-#: ../src/settings.c:9342
+#: ../src/settings.c:9377
 msgid "Edit u_devil.conf"
 msgstr "Редактировать _udevil.conf"
 
-#: ../src/settings.c:9346
+#: ../src/settings.c:9381
 msgid "_Format"
 msgstr "_Форматировать"
 
-#: ../src/settings.c:9406
+#: ../src/settings.c:9441
 msgid "_Backup"
 msgstr "_Резервное копирование"
 
-#: ../src/settings.c:9428
+#: ../src/settings.c:9463
 msgid "_Restore"
 msgstr "_Восстановить"
 
-#: ../src/settings.c:9433
+#: ../src/settings.c:9468
 msgid "_From File"
 msgstr "_Из файла"
 
-#: ../src/settings.c:9438 ../src/settings.c:9804
+#: ../src/settings.c:9473 ../src/settings.c:9839
 msgid "File _Info"
 msgstr "Информация о фай_ле"
 
-#: ../src/settings.c:9444
+#: ../src/settings.c:9479
 msgid "Setti_ngs"
 msgstr "_Настройки"
 
-#: ../src/settings.c:9455
+#: ../src/settings.c:9490
 msgid "_Internal Drives"
 msgstr "В_нутренние устройства"
 
-#: ../src/settings.c:9460
+#: ../src/settings.c:9495
 msgid "_Empty Drives"
 msgstr "_Пустые устройства"
 
-#: ../src/settings.c:9465
+#: ../src/settings.c:9500
 msgid "_Partition Tables"
 msgstr "_Таблицы разделов"
 
-#: ../src/settings.c:9469
+#: ../src/settings.c:9504
 msgid "Mounted _Networks"
 msgstr "Примонтированные се_тевые ресурсы"
 
-#: ../src/settings.c:9474
+#: ../src/settings.c:9509
 msgid "Mounted _Files"
 msgstr "Примонтированные _файлы"
 
-#: ../src/settings.c:9479
+#: ../src/settings.c:9514
 msgid "_Volumes..."
 msgstr "_Разделы..."
 
-#: ../src/settings.c:9480
+#: ../src/settings.c:9515
 msgid "Show/Hide Volumes"
 msgstr "Показать/скрыть разделы"
 
-#: ../src/settings.c:9481
+#: ../src/settings.c:9516
 msgid ""
 "To force showing or hiding of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3000,15 +3002,15 @@ msgid ""
 "\n"
 msgstr "Чтобы принудительно скрыть или показать определённые разделы, вы можете указать устройства, метки разделов или ID устройств через пробел в списке ниже.\n\nНапример: +/dev/sdd1 -Label With Space +ata-OCZ-part4\nЭта строка включит отображение /dev/sdd1 и устройств с ID OCZ, но скроет устройство с меткой  «Label With Space».\n\nМежду пунктами должны быть пробелы, перед пунктами символы «+» и «-». Список чувствителен к регистру.\n\n"
 
-#: ../src/settings.c:9488
+#: ../src/settings.c:9523
 msgid "_Display Name"
 msgstr "_Отображаемое имя"
 
-#: ../src/settings.c:9490
+#: ../src/settings.c:9525
 msgid "Set Display Name Format"
 msgstr "Задать формат отображаемого имени"
 
-#: ../src/settings.c:9491
+#: ../src/settings.c:9526
 #, c-format
 msgid ""
 "Enter device display name format:\n"
@@ -3022,39 +3024,39 @@ msgid ""
 "\t%%i\tdevice ID\n"
 msgstr "Введите формат отображения устройства:\n\nПодстановки:\n\t%%v\tимя файла устройства (например, sdd1)\n\t%%s\tобщий размер (например, 800Г)\n\t%%t\tтип файловой системы (например, ext4)\n\t%%l\tметка раздела (например, Метка или [нет носителя])\n\t%%m\tточка монтирования или --- если не примонтировано\n\t%%i\tID устройства\n"
 
-#: ../src/settings.c:9497
+#: ../src/settings.c:9532
 msgid "_Auto Mount"
 msgstr "_Автомонтирование"
 
-#: ../src/settings.c:9502
+#: ../src/settings.c:9537
 msgid "Mount _Optical"
 msgstr "Монтировать _оптические"
 
-#: ../src/settings.c:9507
+#: ../src/settings.c:9542
 msgid "_Mount Removable"
 msgstr "Монтировать с_ъёмные"
 
-#: ../src/settings.c:9512
+#: ../src/settings.c:9547
 msgid "Open _Tab"
 msgstr "Открыть в_кладку"
 
-#: ../src/settings.c:9517
+#: ../src/settings.c:9552
 msgid "_Unmount On Exit"
 msgstr "_Размонтировать при выходе"
 
-#: ../src/settings.c:9525
+#: ../src/settings.c:9560
 msgid "Auto _Run"
 msgstr "Автозап_уск"
 
-#: ../src/settings.c:9531
+#: ../src/settings.c:9566
 msgid "On _Mount"
 msgstr "При _монтировании"
 
-#: ../src/settings.c:9533
+#: ../src/settings.c:9568
 msgid "Auto Run On Mount"
 msgstr "Автозапуск при монтировании"
 
-#: ../src/settings.c:9534
+#: ../src/settings.c:9569
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically after a removable drive or data disc is auto-mounted:\n"
@@ -3065,15 +3067,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при автомонтировании съёмного устройства:\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9537
+#: ../src/settings.c:9572
 msgid "On _Audio CD"
 msgstr "Для аудио-СD"
 
-#: ../src/settings.c:9539
+#: ../src/settings.c:9574
 msgid "Auto Run On Audio CD"
 msgstr "Автозапуск для аудио-CD"
 
-#: ../src/settings.c:9540
+#: ../src/settings.c:9575
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when an audio CD is inserted in a qualified device:\n"
@@ -3084,15 +3086,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при автомонтировании аудио-CD:\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9543
+#: ../src/settings.c:9578
 msgid "On _Video DVD"
 msgstr "Для видео-DVD"
 
-#: ../src/settings.c:9545
+#: ../src/settings.c:9580
 msgid "Auto Run On Video DVD"
 msgstr "Автозапуск для видео-DVD"
 
-#: ../src/settings.c:9546
+#: ../src/settings.c:9581
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a video DVD is auto-mounted:\n"
@@ -3103,15 +3105,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при автомонтировании видео-DVD:\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9549
+#: ../src/settings.c:9584
 msgid "On _Insert"
 msgstr "При _подключении"
 
-#: ../src/settings.c:9551
+#: ../src/settings.c:9586
 msgid "Auto Run On Insert"
 msgstr "Автозапуск при подключении"
 
-#: ../src/settings.c:9552
+#: ../src/settings.c:9587
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is inserted:\n"
@@ -3122,15 +3124,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при подключении любого устройства:\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9555
+#: ../src/settings.c:9590
 msgid "On _Unmount"
 msgstr "При _размонтировании"
 
-#: ../src/settings.c:9557
+#: ../src/settings.c:9592
 msgid "Auto Run On Unmount"
 msgstr "Автозапуск при размонтировании"
 
-#: ../src/settings.c:9558
+#: ../src/settings.c:9593
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is unmounted by any means:\n"
@@ -3141,15 +3143,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при размонтировании устройства любым способом:\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9561
+#: ../src/settings.c:9596
 msgid "On _Remove"
 msgstr "При отклю_чении"
 
-#: ../src/settings.c:9563
+#: ../src/settings.c:9598
 msgid "Auto Run On Remove"
 msgstr "Автозапуск при отключении"
 
-#: ../src/settings.c:9564
+#: ../src/settings.c:9599
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when any device is removed (ejection of media does not qualify):\n"
@@ -3160,15 +3162,15 @@ msgid ""
 "\t%%m\tdevice mount point (eg /media/disk)"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при отключении устройства (выброс извлекаемого устройства игнорируется):\n\nПодстановки:\n\t%%v\tустройство (например, /dev/sda1)\n\t%%l\tметка раздела\n\t%%m\tточка монтирования устройства (например, /media/disk)"
 
-#: ../src/settings.c:9571
+#: ../src/settings.c:9606
 msgid "Mount _Volumes..."
 msgstr "Монтирование разделов..."
 
-#: ../src/settings.c:9572
+#: ../src/settings.c:9607
 msgid "Auto-Mount Volumes"
 msgstr "Автомонтирование разделов..."
 
-#: ../src/settings.c:9573
+#: ../src/settings.c:9608
 msgid ""
 "To force or prevent automounting of some volumes, overriding other settings, you can specify the devices, volume labels, or device IDs in the space-separated list below.\n"
 "\n"
@@ -3179,11 +3181,11 @@ msgid ""
 "\n"
 msgstr "Чтобы принудительно включить или выключить автомонтирование для определённых устройств, можно указать устройства, метки или ID в разделённом пробелами списке.\n\nНапример: +/dev/sdd1 -Label With Space +ata-OCZ-part4\nЭта строка включит автомонтирование /dev/sdd1 и устройств с ID OCZ, но предотвратит автомонтирование устройства с меткой  «Label With Space».\n\nМежду пунктами должны быть пробелы, перед пунктами символы «+» и «-». Список чувствителен к регистру.\n\n"
 
-#: ../src/settings.c:9576
+#: ../src/settings.c:9611
 msgid "_Mount Options"
 msgstr "Опции _монтирования"
 
-#: ../src/settings.c:9577
+#: ../src/settings.c:9612
 msgid ""
 "Enter your comma- or space-separated list of default mount options below (to be used for all mounts).\n"
 "\n"
@@ -3195,15 +3197,15 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Введите список опций монтирования, разделённый запятыми или пробелами (применяется ко всем устройствам).\n\nДополнительно можно указать какие опции включать или отключать для определённых файловых систем по принципу: OPTION+FSTYPE или OPTION-FSTYPE.\n\nНапример:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nЭта строка добавит опции nosuid и noatime для всех файловых систем, sync только для vfat и ntfs, и выключит noatime для ext4.\n\nЗаметка: некоторые опции могут быть установлены программой монтирования даже если они здесь не заданы. Опции в fstab имеют приоритет. pmount игнорирует прописанные здесь опции."
 
-#: ../src/settings.c:9579
+#: ../src/settings.c:9614
 msgid "Default Mount Options"
 msgstr "Опции монтирования по умолчанию"
 
-#: ../src/settings.c:9587
+#: ../src/settings.c:9622
 msgid "Re/mount With Options"
 msgstr "Перемонтировать с опциями..."
 
-#: ../src/settings.c:9588
+#: ../src/settings.c:9623
 msgid ""
 "Device will be (re)mounted using the options below.\n"
 "\n"
@@ -3215,11 +3217,11 @@ msgid ""
 "Note: Some options, such as nosuid, may be added by the mount program even if you don't include them.  Options in fstab take precedence.  pmount ignores options set here."
 msgstr "Устройство будет (пере)монтировано с указанными ниже опциями.\n\nДополнительно можно указать какие опции включать или отключать для определённых файловых систем по принципу: OPTION+FSTYPE or OPTION-FSTYPE.\n\nНапример:  nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4\nЭта строка добавит опции nosuid и noatime для всех файловых систем, sync только для vfat и ntfs, и выключит noatime для ext4.\n\nЗаметка: Некоторые опции могут быть установлены программой монтирования даже если они здесь не заданы. Опции в fstab имеют приоритет. pmount игнорирует прописанные здесь опции."
 
-#: ../src/settings.c:9592
+#: ../src/settings.c:9627
 msgid "Mount _Command"
 msgstr "_Команда монтирования"
 
-#: ../src/settings.c:9593
+#: ../src/settings.c:9628
 #, c-format
 msgid ""
 "Enter the command to mount a device:\n"
@@ -3236,15 +3238,15 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Введите команду для монтирования устройства:\n\nПодстановки:\n\t%%v\tфайл устройства (например, /dev/sda5)\n\t%%o\tспециальные опции монтирования раздела\n\nudevil:\t/usr/bin/udevil mount -o %%o %%v\npmount:\t/usr/bin/pmount %%v\nUdisks2:\t/usr/bin/udisksctl mount -b %%v -o %%o\nUdisks1:\t/usr/bin/udisks --mount %%v --mount-options %%o\n\nОставьте пустым для автоопределения."
 
-#: ../src/settings.c:9595
+#: ../src/settings.c:9630
 msgid "Mount Command"
 msgstr "Команда монтирования"
 
-#: ../src/settings.c:9599
+#: ../src/settings.c:9634
 msgid "_Unmount Command"
 msgstr "Команда _размонтирования"
 
-#: ../src/settings.c:9600
+#: ../src/settings.c:9635
 #, c-format
 msgid ""
 "Enter the command to unmount a device:\n"
@@ -3260,258 +3262,258 @@ msgid ""
 "Leave blank for auto-detection."
 msgstr "Введите команду для размонтирования устройства:\n\nПодстановка:\n\t%%v\tфайл устройства (например, /dev/sda5)\n\nudevil:\t/usr/bin/udevil umount %%v\npmount:\t/usr/bin/pumount %%v\nUdisks1:\t/usr/bin/udisks --unmount %%v\nUdisks2:\t/usr/bin/udisksctl unmount -b %%v\n\nОставьте пустым для автоопределения."
 
-#: ../src/settings.c:9602
+#: ../src/settings.c:9637
 msgid "Unmount Command"
 msgstr "Команда размонтирования"
 
-#: ../src/settings.c:9619 ../src/settings.c:9714 ../src/settings.c:11091
-#: ../src/settings.c:11103
+#: ../src/settings.c:9654 ../src/settings.c:9749 ../src/settings.c:11130
+#: ../src/settings.c:11142
 msgid "_Icon"
 msgstr "_Значки"
 
-#: ../src/settings.c:9624
+#: ../src/settings.c:9659
 msgid "Audio CD"
 msgstr "Аудио-CD"
 
-#: ../src/settings.c:9630
+#: ../src/settings.c:9665
 msgid "Optical Mounted"
 msgstr "Примонтирован оптический носитель"
 
-#: ../src/settings.c:9635
+#: ../src/settings.c:9670
 msgid "Optical Has Media"
 msgstr "В оптическом приводе есть носитель"
 
-#: ../src/settings.c:9640
+#: ../src/settings.c:9675
 msgid "Optical No Media"
 msgstr "В оптическом приводе нет носителя"
 
-#: ../src/settings.c:9645
+#: ../src/settings.c:9680
 msgid "Floppy Mounted"
 msgstr "Дискета примонтирована"
 
-#: ../src/settings.c:9650
+#: ../src/settings.c:9685
 msgid "Floppy Unmounted"
 msgstr "Дискета размонтирована"
 
-#: ../src/settings.c:9655
+#: ../src/settings.c:9690
 msgid "Removable Mounted"
 msgstr "Съёмное устройство примонтировано"
 
-#: ../src/settings.c:9660
+#: ../src/settings.c:9695
 msgid "Removable Unmounted"
 msgstr "Съёмное устройство размонтировано"
 
-#: ../src/settings.c:9665
+#: ../src/settings.c:9700
 msgid "Internal Mounted"
 msgstr "Внутреннее устройство примонтировано"
 
-#: ../src/settings.c:9670
+#: ../src/settings.c:9705
 msgid "Internal Unmounted"
 msgstr "Внутреннее устройство размонтировано"
 
-#: ../src/settings.c:9675
+#: ../src/settings.c:9710
 msgid "Mounted Network"
 msgstr "Сетевой ресурс примонтирован"
 
-#: ../src/settings.c:9680
+#: ../src/settings.c:9715
 msgid "Mounted File"
 msgstr "Файл примонтирован"
 
-#: ../src/settings.c:9695 ../src/settings.c:10762
+#: ../src/settings.c:9730 ../src/settings.c:10798
 #: ../src/ptk/ptk-file-misc.c:701 ../src/ptk/ptk-file-misc.c:1237
-#: ../src/ptk/ptk-file-misc.c:2146
+#: ../src/ptk/ptk-file-misc.c:2147
 msgid "_Rename"
 msgstr "_Переименовать"
 
-#: ../src/settings.c:9701
+#: ../src/settings.c:9736
 msgid "Re_move"
 msgstr "_Убрать"
 
-#: ../src/settings.c:9707
+#: ../src/settings.c:9742
 msgctxt "Bookmarks|Open|"
 msgid "_Tab"
 msgstr "В новой _вкладке"
 
-#: ../src/settings.c:9710
+#: ../src/settings.c:9745
 msgid "_Settings"
 msgstr "_Настройки"
 
 #. do not set a default icon for book_icon
 #. Rename/Move Dialog
-#: ../src/settings.c:9719 ../src/settings.c:10702 ../src/settings.c:11109
+#: ../src/settings.c:9754 ../src/settings.c:10738 ../src/settings.c:11148
 msgid "_Name"
 msgstr "_Имя"
 
-#: ../src/settings.c:9726
+#: ../src/settings.c:9761
 msgid "_Parent"
 msgstr "_Родительский каталог"
 
-#: ../src/settings.c:9729 ../src/ptk/ptk-file-misc.c:1066
+#: ../src/settings.c:9764 ../src/ptk/ptk-file-misc.c:1066
 msgid "P_ath"
 msgstr "_Путь"
 
-#: ../src/settings.c:9745
+#: ../src/settings.c:9780
 msgid "_Option"
 msgstr "Оп_ция"
 
-#: ../src/settings.c:9753 ../src/settings.c:10592
+#: ../src/settings.c:9788 ../src/settings.c:10628
 #: ../src/ptk/ptk-file-misc.c:1247 ../src/ptk/ptk-file-misc.c:1258
 msgid "_Link"
 msgstr "_Ссылку"
 
-#: ../src/settings.c:9757 ../src/ptk/ptk-file-misc.c:2497
+#: ../src/settings.c:9792 ../src/ptk/ptk-file-misc.c:2498
 msgid "Copy _Target"
 msgstr "Скопировать с_юда"
 
-#: ../src/settings.c:9760
+#: ../src/settings.c:9795
 msgid "Lin_k Target"
 msgstr "Создать здесь _ссылку"
 
-#: ../src/settings.c:9763
+#: ../src/settings.c:9798
 msgid "_As Root"
 msgstr "От _имени root"
 
-#: ../src/settings.c:9767 ../src/settings.c:10303 ../src/settings.c:10355
-#: ../src/settings.c:10452 ../src/settings.c:10481 ../src/settings.c:11059
-#: ../src/settings.c:11065 ../src/settings.c:11072 ../src/settings.c:11078
-#: ../src/settings.c:11085 ../src/settings.c:11095
+#: ../src/settings.c:9802 ../src/settings.c:10339 ../src/settings.c:10391
+#: ../src/settings.c:10488 ../src/settings.c:10517 ../src/settings.c:11098
+#: ../src/settings.c:11104 ../src/settings.c:11111 ../src/settings.c:11117
+#: ../src/settings.c:11124 ../src/settings.c:11134
 msgid "_Font"
 msgstr "_Шрифт"
 
-#: ../src/settings.c:9770
+#: ../src/settings.c:9805
 msgid "Move Dialog Font"
 msgstr "Шрифт диалога перемещения"
 
-#: ../src/settings.c:9771
+#: ../src/settings.c:9806
 msgid "/home/user/Example Filename.ext"
 msgstr "/home/пользователь/Пример Файла.ext"
 
-#: ../src/settings.c:9776
+#: ../src/settings.c:9811
 msgid "_Confirm Create"
 msgstr "Подтверждение со_здания"
 
-#: ../src/settings.c:9784
+#: ../src/settings.c:9819
 msgid "Highlight _Bar"
 msgstr "Цвет _фона"
 
-#: ../src/settings.c:9785
+#: ../src/settings.c:9820
 msgid "Status Bar Highlight Color"
 msgstr "Цвет фона строки состояния"
 
-#: ../src/settings.c:9789
+#: ../src/settings.c:9824
 msgid "Highlight _Text"
 msgstr "Цвет _текста"
 
-#: ../src/settings.c:9790
+#: ../src/settings.c:9825
 msgid "Status Bar Text Highlight Color"
 msgstr "Цвет текста в строке состояния"
 
-#: ../src/settings.c:9794
+#: ../src/settings.c:9829
 msgid "_Middle Click"
 msgstr "_Средний щелчок"
 
-#: ../src/settings.c:9798 ../src/settings.c:10783
+#: ../src/settings.c:9833 ../src/settings.c:10819
 msgid "Copy _Name"
 msgstr "Копировать _имя"
 
-#: ../src/settings.c:9801 ../src/settings.c:10786
+#: ../src/settings.c:9836 ../src/settings.c:10822
 msgid "Copy _Path"
 msgstr "Копировать _путь"
 
-#: ../src/settings.c:9808
+#: ../src/settings.c:9843
 msgid "_Hide Panel"
 msgstr "_Скрыть панель"
 
-#: ../src/settings.c:9824
+#: ../src/settings.c:9859
 msgid "New _Window"
 msgstr "_Новое окно"
 
-#: ../src/settings.c:9827
+#: ../src/settings.c:9862
 msgid "R_oot Window"
 msgstr "Окно от _имени root"
 
-#: ../src/settings.c:9830
+#: ../src/settings.c:9865
 msgid "_File Search"
 msgstr "_Поиск файлов"
 
-#: ../src/settings.c:9833
+#: ../src/settings.c:9868
 msgid "_Terminal"
 msgstr "_Терминал"
 
 #. discovery notification
-#: ../src/settings.c:9836
+#: ../src/settings.c:9871
 msgid "_Root Terminal"
 msgstr "Терминал от _имени root"
 
-#: ../src/settings.c:9839
+#: ../src/settings.c:9874
 msgid "_Save Session"
 msgstr "Сохранить сесси_ю"
 
-#: ../src/settings.c:9842
+#: ../src/settings.c:9877
 msgid "Save Ta_bs"
 msgstr "Сохранить _вкладки"
 
-#: ../src/settings.c:9846
+#: ../src/settings.c:9881
 msgid "E_xit"
 msgstr "В_ыход"
 
-#: ../src/settings.c:9877 ../src/settings.c:9915 ../src/settings.c:10529
-#: ../src/settings.c:10835 ../src/settings.c:10873
+#: ../src/settings.c:9912 ../src/settings.c:9950 ../src/settings.c:10565
+#: ../src/settings.c:10871 ../src/settings.c:10909
 msgid "Panel _1"
 msgstr "Панель _1"
 
-#: ../src/settings.c:9882 ../src/settings.c:9917 ../src/settings.c:10530
-#: ../src/settings.c:10836 ../src/settings.c:10874
+#: ../src/settings.c:9917 ../src/settings.c:9952 ../src/settings.c:10566
+#: ../src/settings.c:10872 ../src/settings.c:10910
 msgid "Panel _2"
 msgstr "Панель _2"
 
-#: ../src/settings.c:9886 ../src/settings.c:9918 ../src/settings.c:10531
-#: ../src/settings.c:10837 ../src/settings.c:10875
+#: ../src/settings.c:9921 ../src/settings.c:9953 ../src/settings.c:10567
+#: ../src/settings.c:10873 ../src/settings.c:10911
 msgid "Panel _3"
 msgstr "Панель _3"
 
-#: ../src/settings.c:9890 ../src/settings.c:9919 ../src/settings.c:10532
-#: ../src/settings.c:10838 ../src/settings.c:10876
+#: ../src/settings.c:9925 ../src/settings.c:9954 ../src/settings.c:10568
+#: ../src/settings.c:10874 ../src/settings.c:10912
 msgid "Panel _4"
 msgstr "Панель _4"
 
-#: ../src/settings.c:9894
+#: ../src/settings.c:9929
 msgid "Panel _Bar"
 msgstr "Полоса управления панелями"
 
-#: ../src/settings.c:9899 ../src/settings.c:10618
+#: ../src/settings.c:9934 ../src/settings.c:10654
 msgid "_Go"
 msgstr "_Перейти"
 
-#: ../src/settings.c:9905 ../src/settings.c:10510 ../src/settings.c:10527
-#: ../src/settings.c:10658 ../src/settings.c:10816 ../src/settings.c:10833
-#: ../src/settings.c:10854 ../src/settings.c:10871
+#: ../src/settings.c:9940 ../src/settings.c:10546 ../src/settings.c:10563
+#: ../src/settings.c:10694 ../src/settings.c:10852 ../src/settings.c:10869
+#: ../src/settings.c:10890 ../src/settings.c:10907
 msgid "_Prev"
 msgstr "_Предыдущий"
 
-#: ../src/settings.c:9907 ../src/settings.c:10511 ../src/settings.c:10528
-#: ../src/settings.c:10659 ../src/settings.c:10817 ../src/settings.c:10834
-#: ../src/settings.c:10855 ../src/settings.c:10872
+#: ../src/settings.c:9942 ../src/settings.c:10547 ../src/settings.c:10564
+#: ../src/settings.c:10695 ../src/settings.c:10853 ../src/settings.c:10870
+#: ../src/settings.c:10891 ../src/settings.c:10908
 msgid "_Next"
 msgstr "_Следующий"
 
-#: ../src/settings.c:9921
+#: ../src/settings.c:9956
 msgid "_Events"
 msgstr "Со_бытия"
 
-#: ../src/settings.c:9927
+#: ../src/settings.c:9962
 msgid "_Instance"
 msgstr "Про_цесс SpaceFM"
 
-#: ../src/settings.c:9932
+#: ../src/settings.c:9967
 msgid "_Startup"
 msgstr "_Запуск"
 
-#: ../src/settings.c:9934
+#: ../src/settings.c:9969
 msgid "Set Instance Startup Command"
 msgstr "Задать команду при запуске процесса SpaceFM"
 
-#: ../src/settings.c:9935
+#: ../src/settings.c:9970
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance starts:\n"
@@ -3520,15 +3522,15 @@ msgid ""
 "\t%%e\tevent type  (evt_start)\n"
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при запуске процесса SpaceFM:\n\nПодстановка:\n\t%%e\tтип события (evt_start)\n"
 
-#: ../src/settings.c:9938
+#: ../src/settings.c:9973
 msgid "_Exit"
 msgstr "З_авершение"
 
-#: ../src/settings.c:9940
+#: ../src/settings.c:9975
 msgid "Set Instance Exit Command"
 msgstr "Задать команду при завершении SpaceFM"
 
-#: ../src/settings.c:9941
+#: ../src/settings.c:9976
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically when a SpaceFM instance exits:\n"
@@ -3537,20 +3539,20 @@ msgid ""
 "\t%%e\tevent type  (evt_exit)\n"
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при завершении процесса SpaceFM:\n\nПодстановка:\n\t%%e\tтип события (evt_exit)\n"
 
-#: ../src/settings.c:9944
+#: ../src/settings.c:9979
 msgid "_Window"
 msgstr "_Окно"
 
-#: ../src/settings.c:9949
+#: ../src/settings.c:9984
 msgctxt "View|Events|Window|"
 msgid "_New"
 msgstr "_Создать"
 
-#: ../src/settings.c:9951
+#: ../src/settings.c:9986
 msgid "Set New Window Command"
 msgstr "Задать команду при открытии нового окна"
 
-#: ../src/settings.c:9952
+#: ../src/settings.c:9987
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new SpaceFM window is opened:\n"
@@ -3564,15 +3566,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при открытии нового окна SpaceFM:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_new)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:9955 ../src/settings.c:9990 ../src/settings.c:10019
+#: ../src/settings.c:9990 ../src/settings.c:10025 ../src/settings.c:10054
 msgid "_Focus"
 msgstr "_Фокус"
 
-#: ../src/settings.c:9957
+#: ../src/settings.c:9992
 msgid "Set Window Focus Command"
 msgstr "Задать команду при фокусе окна"
 
-#: ../src/settings.c:9958
+#: ../src/settings.c:9993
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window gets focus:\n"
@@ -3586,15 +3588,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться когда окно SpaceFM попадает в фокус:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_focus)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:9961
+#: ../src/settings.c:9996
 msgid "_Move/Resize"
 msgstr "_Перемещение/Изменение размера"
 
-#: ../src/settings.c:9963
+#: ../src/settings.c:9998
 msgid "Set Window Move/Resize Command"
 msgstr "Задать команду при перемещении/изменении размера окна"
 
-#: ../src/settings.c:9964
+#: ../src/settings.c:9999
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is moved or resized:\n"
@@ -3610,15 +3612,15 @@ msgid ""
 "Note: This command may be run multiple times during resize."
 msgstr "Введите команду или строку на bash, которая будет выполняться при перемещении или изменении размера окна SpaceFM:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_move)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.).\n\nЗаметка: эта команда может быть выполнена несколько раз при изменении размера."
 
-#: ../src/settings.c:9967
+#: ../src/settings.c:10002
 msgid "_Click"
 msgstr "_Щелчок мыши"
 
-#: ../src/settings.c:9969
+#: ../src/settings.c:10004
 msgid "Set Click Command"
 msgstr "Задать команду при щелчке мышью"
 
-#: ../src/settings.c:9970
+#: ../src/settings.c:10005
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the mouse is clicked:\n"
@@ -3638,15 +3640,15 @@ msgid ""
 "*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nMiddle button was clicked in %%f\" --button ok &"
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при щелчке мышью:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_click)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\t%%b\tкнопка  (нажатая кнопка мыши)\n\t%%m\tмодификатор  (зажатые клавиши-модификаторы)\n\t%%f\tфокус  (элемент, на котором был сделан щелчок)\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.) в случае если перед командой нет префикса «*».\n\nПоставьте символ звёздочка (*) перед командой и возвратите код выхода 0 при помощи условия, чтобы переопределить обработчик по умолчанию. Например:\n*if [ \"%%b\" != \"2\" ]; then exit 1; fi; spacefm -g --label \"\\nВы щёлкнули средней кнопкой мыши на элементе %%f\" --button ok &"
 
-#: ../src/settings.c:9973
+#: ../src/settings.c:10008
 msgid "_Keypress"
 msgstr "Нажатие _клавиши"
 
-#: ../src/settings.c:9975
+#: ../src/settings.c:10010
 msgid "Set Window Keypress Command"
 msgstr "Задать команду при нажатии клавиши"
 
-#: ../src/settings.c:9976
+#: ../src/settings.c:10011
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a key is pressed:\n"
@@ -3665,15 +3667,15 @@ msgid ""
 "*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nKey F8 was pressed.\" --button ok &"
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при нажатии клавиши:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_key)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\t%%k\tкод клавиши  (нажатой клавиши)\n\t%%m\tмодификатор  (зажатые клавиши-модификаторы)\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.).\n\nПоставьте символ звёздочка (*) перед командой и возвратите код выхода 0 при помощи условия, чтобы переопределить обработчик по умолчанию. Например:\n*if [ \"%%k\" != \"0xffc5\" ]; then exit 1; fi; spacefm -g --label \"\\nБыла нажата клавиша F8.\" --button ok &"
 
-#: ../src/settings.c:9979
+#: ../src/settings.c:10014
 msgid "Cl_ose"
 msgstr "За_крытие"
 
-#: ../src/settings.c:9981
+#: ../src/settings.c:10016
 msgid "Set Window Close Command"
 msgstr "Задать команду при закрытии окна"
 
-#: ../src/settings.c:9982
+#: ../src/settings.c:10017
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a SpaceFM window is closed:\n"
@@ -3687,15 +3689,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при закрытии окна SpaceFM:\n\nПодстановки:\n\t%%e\tтип события  (evt_win_close)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:9985
+#: ../src/settings.c:10020
 msgid "_Panel"
 msgstr "_Панель"
 
-#: ../src/settings.c:9992
+#: ../src/settings.c:10027
 msgid "Set Panel Focus Command"
 msgstr "Задать команду при фокусе на панели"
 
-#: ../src/settings.c:9993
+#: ../src/settings.c:10028
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel gets focus:\n"
@@ -3709,16 +3711,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться когда панель получает фокус:\n\nПодстановки:\n\t%%e\tтип события  (evt_pnl_focus)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:9996
+#: ../src/settings.c:10031
 msgctxt "View|Events|Panel|"
 msgid "_Show"
 msgstr "_Показать"
 
-#: ../src/settings.c:9998
+#: ../src/settings.c:10033
 msgid "Set Panel Show Command"
 msgstr "Задать команду при показе панели"
 
-#: ../src/settings.c:9999
+#: ../src/settings.c:10034
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a panel or panel element is shown or hidden:\n"
@@ -3734,15 +3736,15 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при показе или скрытии панели или ее элемента:\n\nПодстановки:\n\t%%e\tтип события  (evt_pnl_show)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\t%%f\tфокус  (элемент видим или скрыт)\n\t%%v\tвидимость  (1 или 0)\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:10002
+#: ../src/settings.c:10037
 msgid "S_elect"
 msgstr "_Выделение"
 
-#: ../src/settings.c:10004
+#: ../src/settings.c:10039
 msgid "Set Panel Select Command"
 msgstr "Задать команду при выборе панели"
 
-#: ../src/settings.c:10005
+#: ../src/settings.c:10040
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever the file selection changes:\n"
@@ -3758,16 +3760,16 @@ msgid ""
 "Prefix your command with an asterisk (*) and conditionally return exit status 0 to inhibit the default handler."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при изменении выделения файлов:\n\nПодстановки:\n\t%%e\tтип события  (evt_pnl_sel)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.).\n\nПоставьте символ звёздочка (*) перед командой и возвратите код выхода 0 при помощи условия, чтобы переопределить обработчик по умолчанию."
 
-#: ../src/settings.c:10008
+#: ../src/settings.c:10043
 msgctxt "View|Events|"
 msgid "_Tab"
 msgstr "_Вкладка"
 
-#: ../src/settings.c:10015
+#: ../src/settings.c:10050
 msgid "Set New Tab Command"
 msgstr "Задать команду при открытии новой вкладки"
 
-#: ../src/settings.c:10016
+#: ../src/settings.c:10051
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a new tab is opened:\n"
@@ -3781,11 +3783,11 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при открытии новой вкладки:\n\nПодстановки:\n\t%%e\tтип события  (evt_tab_new)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:10021
+#: ../src/settings.c:10056
 msgid "Set Tab Focus Command"
 msgstr "Задать команду при фокусе на вкладке"
 
-#: ../src/settings.c:10022
+#: ../src/settings.c:10057
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab gets focus:\n"
@@ -3799,16 +3801,16 @@ msgid ""
 "Exported bash variables (eg $fm_pwd, etc) can be used in this command."
 msgstr "Введите программу или строку команд на bash, которая будет выполняться когда вкладка получает фокус:\n\nПодстановки:\n\t%%e\tтип события  (evt_tab_focus)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tвкладка\n\nВ этой команде могут быть использованы экспортируемые переменные bash ($fm_pwd, и т.п.)."
 
-#: ../src/settings.c:10025
+#: ../src/settings.c:10060
 msgctxt "View|Events|Tab|"
 msgid "_Close"
 msgstr "_Закрыть"
 
-#: ../src/settings.c:10027
+#: ../src/settings.c:10062
 msgid "Set Tab Close Command"
 msgstr "Задать команду при закрытии вкладки"
 
-#: ../src/settings.c:10028
+#: ../src/settings.c:10063
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a tab is closed:\n"
@@ -3820,15 +3822,15 @@ msgid ""
 "\t%%t\tclosed tab"
 msgstr "Введите программу или строку команд на bash, которая будет выполняться при закрытии вкладки:\n\nПодстановки:\n\t%%e\tтип события  (evt_tab_close)\n\t%%w\tid окна  (см. spacefm -s help)\n\t%%p\tпанель\n\t%%t\tзакрытая вкладка"
 
-#: ../src/settings.c:10031
+#: ../src/settings.c:10066
 msgid "_Device"
 msgstr "_Устройство"
 
-#: ../src/settings.c:10033
+#: ../src/settings.c:10068
 msgid "Set Device Command"
 msgstr "Установить команду для событий с устройствами"
 
-#: ../src/settings.c:10034
+#: ../src/settings.c:10069
 #, c-format
 msgid ""
 "Enter program or bash command line to be run automatically whenever a device state changes:\n"
@@ -3839,15 +3841,15 @@ msgid ""
 "\t%%v\tchange  (added|removed|changed)\n"
 msgstr "Введите программу или строку команд на bash, которая будет выполнена при изменении состояния устройства:\n\nПодстановки:\n\t%%e\tтип события  (evt_device)\n\t%%f\tфайл устройства\n\t%%v\tизменение  (added|removed|changed)\n"
 
-#: ../src/settings.c:10037
+#: ../src/settings.c:10072
 msgid "Wi_ndow Title"
 msgstr "Заголовок _окна"
 
-#: ../src/settings.c:10039
+#: ../src/settings.c:10074
 msgid "Set Window Title Format"
 msgstr "Задать формат заголовка окна"
 
-#: ../src/settings.c:10040
+#: ../src/settings.c:10075
 #, c-format
 msgid ""
 "Set window title format:\n"
@@ -3862,15 +3864,15 @@ msgid ""
 "\t*\tasterisk shown if tasks running in window"
 msgstr "Задать формат заголовка окна:\n\nПодстановки:\n\t%%n\tимя текущего каталога (например, bin)\n\t%%d\tпуть текущего каталога (например, /usr/bin)\n\t%%p\tномер текущей панели (1-4)\n\t%%t\tномер текущей вкладки\n\t%%P\tколичество видимых панелей\n\t%%T\tколичество вкладок на текущей панели\n\t*\tотображение звездочки если в окне выполняются задачи"
 
-#: ../src/settings.c:10044
+#: ../src/settings.c:10079
 msgid "_Window Icon"
 msgstr "_Значок окна"
 
-#: ../src/settings.c:10046
+#: ../src/settings.c:10081
 msgid "Set Window Icon"
 msgstr "Задать значок окна"
 
-#: ../src/settings.c:10047
+#: ../src/settings.c:10082
 msgid ""
 "Enter an icon name, icon file path, or stock item name:\n"
 "\n"
@@ -3883,64 +3885,64 @@ msgid ""
 "For example: spacefm-48-pyramid-green"
 msgstr "Введите имя значка, путь к файлу значка или глобальное имя значка:\n\nНекоторые значки могут не работать по разным причинам.\n\nНекоторые альтернативные значки для SpaceFM:\n\tspacefm-[48|128]-[cube|pyramid]-[blue|green|red]\n\tspacefm-48-folder-[blue|red]\n\nНапример: spacefm-48-pyramid-green"
 
-#: ../src/settings.c:10049
+#: ../src/settings.c:10084
 msgid "_Fullscreen"
 msgstr "На полный _экран"
 
-#: ../src/settings.c:10052
+#: ../src/settings.c:10087
 msgid "_Design Mode"
 msgstr "Режим _дизайна"
 
-#: ../src/settings.c:10055
+#: ../src/settings.c:10090
 msgid "_Preferences"
 msgstr "_Настройки"
 
-#: ../src/settings.c:10058
+#: ../src/settings.c:10093
 msgid "_Tool"
 msgstr "_Инструменты"
 
 #. Plugins
-#: ../src/settings.c:10065
+#: ../src/settings.c:10100
 msgid "_Install"
 msgstr "_Установить"
 
-#: ../src/settings.c:10093
+#: ../src/settings.c:10128
 msgid "_Verbose"
 msgstr "По_дробно"
 
-#: ../src/settings.c:10100
+#: ../src/settings.c:10135
 msgid "In_cluded"
 msgstr "Вкл_ючено"
 
-#: ../src/settings.c:10114
+#: ../src/settings.c:10149
 msgid "_User's Manual"
 msgstr "_Руководство пользователя"
 
-#: ../src/settings.c:10120
+#: ../src/settings.c:10155
 msgid "_Homepage"
 msgstr "_Домашняя страница"
 
-#: ../src/settings.c:10123
+#: ../src/settings.c:10158
 msgid "SpaceFM _News"
 msgstr "_Новости SpaceFM"
 
-#: ../src/settings.c:10126
+#: ../src/settings.c:10161
 msgid "_Get Plugins"
 msgstr "_Получить плагины"
 
-#: ../src/settings.c:10129
+#: ../src/settings.c:10164
 msgid "_Options"
 msgstr "_Опции"
 
-#: ../src/settings.c:10134
+#: ../src/settings.c:10169
 msgid "_Browser"
 msgstr "_Браузер"
 
-#: ../src/settings.c:10136
+#: ../src/settings.c:10171
 msgid "Choose HTML Browser"
 msgstr "Выбрать HTML-браузер"
 
-#: ../src/settings.c:10137
+#: ../src/settings.c:10172
 #, c-format
 msgid ""
 "Enter browser name or bash command line to be used to display HTML files and URLs:\n"
@@ -3951,505 +3953,505 @@ msgid ""
 "(Leave blank for automatic browser detection)"
 msgstr "Введите команду запуска браузера или строку команд на bash для открытия файлов HTML и адресов URL:\n\nПодстановка:\n\t%%u\tадрес\n\n(Оставьте пустым для автоматического определения браузера)"
 
-#: ../src/settings.c:10140
+#: ../src/settings.c:10175
 msgid "_Manual Location"
 msgstr "_Размещение руководства"
 
-#: ../src/settings.c:10142
+#: ../src/settings.c:10177
 msgid "Choose User's Manual Location"
 msgstr "Выбрать расположение Руководства пользователя"
 
-#: ../src/settings.c:10143
+#: ../src/settings.c:10178
 msgid ""
 "Enter local file path or remote URL for the SpaceFM User's Manual:\n"
 "\n"
 "(Leave blank for default)\n"
 msgstr "Введите локальный или удалённый путь размещения Руководства пользователя SpaceFM:\n\n(Оставьте пустым для пути по умолчанию)\n"
 
-#: ../src/settings.c:10146
+#: ../src/settings.c:10181
 msgid "_About"
 msgstr "_О программе"
 
-#: ../src/settings.c:10178
+#: ../src/settings.c:10213
 msgid "_Status"
 msgstr "_Состояние"
 
 #. column position
 #. column width
-#: ../src/settings.c:10184
+#: ../src/settings.c:10219
 msgid "_Count"
 msgstr "_Номер"
 
-#: ../src/settings.c:10195
+#: ../src/settings.c:10230
 msgid "_Item"
 msgstr "_Элемент"
 
-#: ../src/settings.c:10201
+#: ../src/settings.c:10236
 msgid "_To"
 msgstr "На_значение"
 
-#: ../src/settings.c:10207
+#: ../src/settings.c:10242
 msgid "_Progress"
 msgstr "_Прогресс"
 
-#: ../src/settings.c:10214
+#: ../src/settings.c:10249
 msgid "T_otal"
 msgstr "Все_го"
 
-#: ../src/settings.c:10221
+#: ../src/settings.c:10256
 msgid "Sta_rted"
 msgstr "Запу_щено"
 
-#: ../src/settings.c:10226
+#: ../src/settings.c:10261
 msgid "_Elapsed"
 msgstr "П_рошло"
 
-#: ../src/settings.c:10233
+#: ../src/settings.c:10268
 msgid "C_urrent Speed"
 msgstr "_Скорость (тек.)"
 
-#: ../src/settings.c:10245
+#: ../src/settings.c:10280
 msgid "_Average Speed"
 msgstr "С_корость (ср.)"
 
-#: ../src/settings.c:10257
+#: ../src/settings.c:10292
 msgid "Reor_der"
 msgstr "Переупоря_дочить"
 
-#: ../src/settings.c:10263 ../src/settings.c:10283
-#: ../src/ptk/ptk-file-task.c:550 ../src/ptk/ptk-file-task.c:835
+#: ../src/settings.c:10298 ../src/settings.c:10318
+#: ../src/ptk/ptk-file-task.c:552 ../src/ptk/ptk-file-task.c:837
 msgid "Pa_use"
 msgstr "Прио_становить"
 
-#: ../src/settings.c:10266 ../src/settings.c:10286
+#: ../src/settings.c:10301 ../src/settings.c:10321
 msgid "_Queue"
 msgstr "В о_чередь"
 
-#: ../src/settings.c:10269 ../src/settings.c:10289
+#: ../src/settings.c:10304 ../src/settings.c:10324
 msgid "_Resume"
 msgstr "_Возобновить"
 
-#: ../src/settings.c:10272
+#: ../src/settings.c:10307
 msgid "Sho_w Output"
 msgstr "Показывать _вывод"
 
-#: ../src/settings.c:10275
+#: ../src/settings.c:10310
 msgid "_All Tasks"
 msgstr "Все _задачи"
 
-#: ../src/settings.c:10306
+#: ../src/settings.c:10342
 msgid "Task Manager Font"
 msgstr "Шрифт для диспетчера задач"
 
-#: ../src/settings.c:10307
+#: ../src/settings.c:10343
 msgid "copying  File  1:15  65.2 M  30.2 M/s"
 msgstr "копирование Файл 1:15  65,2 М  30,2 М/с"
 
-#: ../src/settings.c:10310
+#: ../src/settings.c:10346
 msgid "_Columns"
 msgstr "_Столбцы"
 
-#: ../src/settings.c:10315
+#: ../src/settings.c:10351
 msgid "_Popups"
 msgstr "_Уведомления"
 
-#: ../src/settings.c:10320
+#: ../src/settings.c:10356
 msgid "Popup _All Tasks"
 msgstr "_Всегда отображать вывод"
 
-#: ../src/settings.c:10325
+#: ../src/settings.c:10361
 msgid "Stay On _Top"
 msgstr "Всегда повер_х"
 
-#: ../src/settings.c:10330
+#: ../src/settings.c:10366
 msgid "A_bove Others"
 msgstr "На _переднем плане"
 
-#: ../src/settings.c:10335
+#: ../src/settings.c:10371
 msgid "All _Workspaces"
 msgstr "На всех _рабочих местах"
 
-#: ../src/settings.c:10345
+#: ../src/settings.c:10381
 msgid "_Overwrite Option"
 msgstr "Опции пере_записи"
 
-#: ../src/settings.c:10350
+#: ../src/settings.c:10386
 msgid "_Error Option"
 msgstr "Опции для о_шибок"
 
-#: ../src/settings.c:10358
+#: ../src/settings.c:10394
 msgid "Task Popup Font (affects new tasks)"
 msgstr "Шрифт уведомлений (только для новых задач)"
 
-#: ../src/settings.c:10359
+#: ../src/settings.c:10395
 msgid "Example Output 0123456789"
 msgstr "Пример вывода 0123456789"
 
-#: ../src/settings.c:10368
+#: ../src/settings.c:10404
 msgid "Stop If _First"
 msgstr "Прервать при ошибке в _начале"
 
-#: ../src/settings.c:10373
+#: ../src/settings.c:10409
 msgid "Stop On _Any"
 msgstr "Прервать при _любой ошибке"
 
-#: ../src/settings.c:10378
+#: ../src/settings.c:10414
 msgid "_Continue"
 msgstr "_Продолжить"
 
-#: ../src/settings.c:10383
+#: ../src/settings.c:10419
 msgid "Qu_eue"
 msgstr "О_чередь"
 
-#: ../src/settings.c:10388
+#: ../src/settings.c:10424
 msgid "_Queue New Tasks"
 msgstr "_Новые задачи в очередь"
 
-#: ../src/settings.c:10393
+#: ../src/settings.c:10429
 msgid "_Smart Queue"
 msgstr "_Умная очередь"
 
-#: ../src/settings.c:10398
+#: ../src/settings.c:10434
 msgid "_Pause On Error"
 msgstr "_Приостановить при ошибке"
 
-#: ../src/settings.c:10408
+#: ../src/settings.c:10444
 msgid "Arrange _Icons"
 msgstr "Выстроить _значки"
 
-#: ../src/settings.c:10413
+#: ../src/settings.c:10449
 msgid "By _Name"
 msgstr "По _имени"
 
-#: ../src/settings.c:10416
+#: ../src/settings.c:10452
 msgid "By _Type"
 msgstr "По _типу"
 
-#: ../src/settings.c:10419
+#: ../src/settings.c:10455
 msgid "By _Date"
 msgstr "По _дате"
 
-#: ../src/settings.c:10422
+#: ../src/settings.c:10458
 msgid "By _Size"
 msgstr "По _размеру"
 
-#: ../src/settings.c:10425
+#: ../src/settings.c:10461
 msgid "_Custom"
 msgstr "_Вручную"
 
-#: ../src/settings.c:10428 ../src/settings.c:10714
+#: ../src/settings.c:10464 ../src/settings.c:10750
 msgid "_Ascending"
 msgstr "По в_озрастанию"
 
-#: ../src/settings.c:10431
+#: ../src/settings.c:10467
 msgid "D_escending"
 msgstr "По _убыванию"
 
-#: ../src/settings.c:10434
+#: ../src/settings.c:10470
 msgid "Desktop _Settings"
 msgstr "Настройки ра_бочего стола"
 
-#: ../src/settings.c:10437 ../src/settings.c:10651
+#: ../src/settings.c:10473 ../src/settings.c:10687
 msgid "De_vices"
 msgstr "_Устройства"
 
-#: ../src/settings.c:10445
+#: ../src/settings.c:10481
 msgid "_Desktop Folder"
 msgstr "Каталог _Рабочего стола"
 
-#: ../src/settings.c:10455
+#: ../src/settings.c:10491
 msgid "Editor Font"
 msgstr "Шрифт редактора"
 
-#: ../src/settings.c:10456 ../src/settings.c:10485
+#: ../src/settings.c:10492 ../src/settings.c:10521
 msgid "Example Input 0123456789"
 msgstr "Пример ввода 012345678"
 
-#: ../src/settings.c:10484
+#: ../src/settings.c:10520
 msgid "Input Font"
 msgstr "Шрифт ввода"
 
-#: ../src/settings.c:10491
+#: ../src/settings.c:10527
 msgid "E_xecute"
 msgstr "_Выполнить"
 
-#: ../src/settings.c:10494
+#: ../src/settings.c:10530
 msgid "Edi_t"
 msgstr "П_равка"
 
-#: ../src/settings.c:10497
+#: ../src/settings.c:10533
 msgid "Edit As _Root"
 msgstr "Правка от _имени root"
 
-#: ../src/settings.c:10500
+#: ../src/settings.c:10536
 msgid "_Choose..."
 msgstr "Выбрать..."
 
 #. virtual
-#: ../src/settings.c:10505
+#: ../src/settings.c:10541
 msgid "In _Tab"
 msgstr "Во вкладке"
 
-#: ../src/settings.c:10509
+#: ../src/settings.c:10545
 msgid "N_ew"
 msgstr "_Создать"
 
-#: ../src/settings.c:10512 ../src/settings.c:10662 ../src/settings.c:10818
-#: ../src/settings.c:10856
+#: ../src/settings.c:10548 ../src/settings.c:10698 ../src/settings.c:10854
+#: ../src/settings.c:10892
 msgid "Tab _1"
 msgstr "Вкладка _1"
 
-#: ../src/settings.c:10513 ../src/settings.c:10663 ../src/settings.c:10819
-#: ../src/settings.c:10857
+#: ../src/settings.c:10549 ../src/settings.c:10699 ../src/settings.c:10855
+#: ../src/settings.c:10893
 msgid "Tab _2"
 msgstr "Вкладка _2"
 
-#: ../src/settings.c:10514 ../src/settings.c:10664 ../src/settings.c:10820
-#: ../src/settings.c:10858
+#: ../src/settings.c:10550 ../src/settings.c:10700 ../src/settings.c:10856
+#: ../src/settings.c:10894
 msgid "Tab _3"
 msgstr "Вкладка _3"
 
-#: ../src/settings.c:10515 ../src/settings.c:10665 ../src/settings.c:10821
-#: ../src/settings.c:10859
+#: ../src/settings.c:10551 ../src/settings.c:10701 ../src/settings.c:10857
+#: ../src/settings.c:10895
 msgid "Tab _4"
 msgstr "Вкладка _4"
 
-#: ../src/settings.c:10516 ../src/settings.c:10666 ../src/settings.c:10822
-#: ../src/settings.c:10860
+#: ../src/settings.c:10552 ../src/settings.c:10702 ../src/settings.c:10858
+#: ../src/settings.c:10896
 msgid "Tab _5"
 msgstr "Вкладка _5"
 
-#: ../src/settings.c:10517 ../src/settings.c:10667 ../src/settings.c:10823
-#: ../src/settings.c:10861
+#: ../src/settings.c:10553 ../src/settings.c:10703 ../src/settings.c:10859
+#: ../src/settings.c:10897
 msgid "Tab _6"
 msgstr "Вкладка _6"
 
-#: ../src/settings.c:10518 ../src/settings.c:10668 ../src/settings.c:10824
-#: ../src/settings.c:10862
+#: ../src/settings.c:10554 ../src/settings.c:10704 ../src/settings.c:10860
+#: ../src/settings.c:10898
 msgid "Tab _7"
 msgstr "Вкладка _7"
 
-#: ../src/settings.c:10519 ../src/settings.c:10669 ../src/settings.c:10825
-#: ../src/settings.c:10863
+#: ../src/settings.c:10555 ../src/settings.c:10705 ../src/settings.c:10861
+#: ../src/settings.c:10899
 msgid "Tab _8"
 msgstr "Вкладка _8"
 
-#: ../src/settings.c:10520 ../src/settings.c:10670 ../src/settings.c:10826
-#: ../src/settings.c:10864
+#: ../src/settings.c:10556 ../src/settings.c:10706 ../src/settings.c:10862
+#: ../src/settings.c:10900
 msgid "Tab _9"
 msgstr "Вкладка _9"
 
-#: ../src/settings.c:10521 ../src/settings.c:10671 ../src/settings.c:10827
-#: ../src/settings.c:10865
+#: ../src/settings.c:10557 ../src/settings.c:10707 ../src/settings.c:10863
+#: ../src/settings.c:10901
 msgid "Tab 1_0"
 msgstr "Вкладка 1_0"
 
-#: ../src/settings.c:10523
+#: ../src/settings.c:10559
 msgid "In _Panel"
 msgstr "В _панели"
 
-#: ../src/settings.c:10534 ../src/settings.c:10553
+#: ../src/settings.c:10570 ../src/settings.c:10589
 msgid "_Extract"
 msgstr "_Распаковать"
 
-#: ../src/settings.c:10537 ../src/settings.c:10557
+#: ../src/settings.c:10573 ../src/settings.c:10593
 msgid "Extract _To"
 msgstr "Распаковать _в"
 
-#: ../src/settings.c:10540 ../src/settings.c:10560
+#: ../src/settings.c:10576 ../src/settings.c:10596
 msgid "_List Contents"
 msgstr "Показать содержимое"
 
-#: ../src/settings.c:10546
+#: ../src/settings.c:10582
 msgid "_Archive Default"
 msgstr "По умолчанию для архива:"
 
-#: ../src/settings.c:10550
+#: ../src/settings.c:10586
 msgid "_Open With App"
 msgstr "Открыть с помощью"
 
-#: ../src/settings.c:10563
+#: ../src/settings.c:10599
 msgid "_Create Subfolder"
 msgstr "_Создать подкаталог"
 
-#: ../src/settings.c:10567
+#: ../src/settings.c:10603
 msgid "_Write Access"
 msgstr "Доступ на _запись"
 
-#: ../src/settings.c:10570
+#: ../src/settings.c:10606
 msgid "_Mount ISO"
 msgstr "_Монтировать ISO"
 
-#: ../src/settings.c:10573
+#: ../src/settings.c:10609
 msgid "_Auto-Mount ISO"
 msgstr "_Автомонтировать ISO"
 
-#: ../src/settings.c:10588
+#: ../src/settings.c:10624
 msgid "Fol_der"
 msgstr "_Каталог"
 
-#: ../src/settings.c:10596
+#: ../src/settings.c:10632
 msgctxt "New|"
 msgid "_Bookmark"
 msgstr "_Закладку"
 
-#: ../src/settings.c:10600
+#: ../src/settings.c:10636
 msgid "_Archive"
 msgstr "_Архив"
 
-#: ../src/settings.c:10607
+#: ../src/settings.c:10643
 msgctxt "New|"
 msgid "_Tab"
 msgstr "Новую _вкладку"
 
-#: ../src/settings.c:10609
+#: ../src/settings.c:10645
 msgid "Tab _Here"
 msgstr "Новую вкладку _здесь"
 
-#: ../src/settings.c:10612
+#: ../src/settings.c:10648
 msgid "_Desktop Application"
 msgstr "Запуск прило_жения"
 
-#: ../src/settings.c:10623
+#: ../src/settings.c:10659
 msgid "_Back"
 msgstr "_Назад"
 
-#: ../src/settings.c:10625
+#: ../src/settings.c:10661
 msgid "_Forward"
 msgstr "_Вперед"
 
-#: ../src/settings.c:10627
+#: ../src/settings.c:10663
 msgid "_Up"
 msgstr "Ввер_х"
 
-#: ../src/settings.c:10629
+#: ../src/settings.c:10665
 msgid "_Home"
 msgstr "_Домашний каталог"
 
-#: ../src/settings.c:10634
+#: ../src/settings.c:10670
 msgid "_Set Default"
 msgstr "Задать по _умолчанию"
 
-#: ../src/settings.c:10637
+#: ../src/settings.c:10673
 msgid "Re_al Path"
 msgstr "_Реальный путь"
 
-#: ../src/settings.c:10639
+#: ../src/settings.c:10675
 msgid "Fo_cus"
 msgstr "_Фокус"
 
-#: ../src/settings.c:10643
+#: ../src/settings.c:10679
 msgid "_Path Bar"
 msgstr "Строка _пути"
 
-#: ../src/settings.c:10645
+#: ../src/settings.c:10681
 msgid "_File List"
 msgstr "_Список файлов"
 
-#: ../src/settings.c:10647
+#: ../src/settings.c:10683
 msgid "_Tree"
 msgstr "_Дерево"
 
-#: ../src/settings.c:10654
+#: ../src/settings.c:10690
 msgctxt "Go|"
 msgid "_Tab"
 msgstr "На _вкладку"
 
-#: ../src/settings.c:10660
+#: ../src/settings.c:10696
 msgid "_Close"
 msgstr "_Закрыть"
 
-#: ../src/settings.c:10677
+#: ../src/settings.c:10713
 msgid "Styl_e"
 msgstr "Сти_ль"
 
-#: ../src/settings.c:10680
+#: ../src/settings.c:10716
 msgid "C_olumns"
 msgstr "_Столбцы"
 
-#: ../src/settings.c:10683
+#: ../src/settings.c:10719
 msgid "_Reorder"
 msgstr "Пере_упорядочить"
 
-#: ../src/settings.c:10685
+#: ../src/settings.c:10721
 msgid "_Rubberband Select"
 msgstr "Выделение растя_жением"
 
-#: ../src/settings.c:10698
+#: ../src/settings.c:10734
 msgid "_Sort"
 msgstr "_Сортировка"
 
 #. visible
 #. position
-#: ../src/settings.c:10704 ../src/settings.c:11114
+#: ../src/settings.c:10740 ../src/settings.c:11153
 msgid "_Size"
 msgstr "_Размер"
 
-#: ../src/settings.c:10706 ../src/settings.c:11121
+#: ../src/settings.c:10742 ../src/settings.c:11160
 msgid "_Type"
 msgstr "_Тип"
 
-#: ../src/settings.c:10708 ../src/settings.c:11127
+#: ../src/settings.c:10744 ../src/settings.c:11166
 msgid "_Permission"
 msgstr "_Права доступа"
 
-#: ../src/settings.c:10710 ../src/settings.c:10973 ../src/settings.c:11133
+#: ../src/settings.c:10746 ../src/settings.c:11009 ../src/settings.c:11172
 msgid "_Owner"
 msgstr "_Владелец"
 
-#: ../src/settings.c:10712 ../src/settings.c:11139
+#: ../src/settings.c:10748 ../src/settings.c:11178
 msgid "_Modified"
 msgstr "Время и_зменения"
 
-#: ../src/settings.c:10716
+#: ../src/settings.c:10752
 msgid "_Descending"
 msgstr "По _убыванию"
 
-#: ../src/settings.c:10719
+#: ../src/settings.c:10755
 msgid "Nat_ural"
 msgstr "_Натуральная"
 
-#: ../src/settings.c:10721
+#: ../src/settings.c:10757
 msgid "_Case Sensitive"
 msgstr "Учитывать ре_гистр"
 
-#: ../src/settings.c:10723
+#: ../src/settings.c:10759
 msgid "Folders Fi_rst"
 msgstr "Катало_ги в начале"
 
-#: ../src/settings.c:10725
+#: ../src/settings.c:10761
 msgid "F_iles First"
 msgstr "_Файлы в начале"
 
-#: ../src/settings.c:10727
+#: ../src/settings.c:10763
 msgid "Mi_xed"
 msgstr "Сме_шанная"
 
-#: ../src/settings.c:10729
+#: ../src/settings.c:10765
 msgid "_Hidden First"
 msgstr "_Скрытые файлы в начале"
 
-#: ../src/settings.c:10731
+#: ../src/settings.c:10767
 msgid "Hidden _Last"
 msgstr "Скрытые файлы в _конце"
 
-#: ../src/settings.c:10734
+#: ../src/settings.c:10770
 msgid "Re_fresh"
 msgstr "О_бновить"
 
-#: ../src/settings.c:10737
+#: ../src/settings.c:10773
 msgid "Auto See_k"
 msgstr "Автопоис_к"
 
-#: ../src/settings.c:10742
+#: ../src/settings.c:10778
 msgid "P_rotocol Handler..."
 msgstr "Обработчик _протокола"
 
-#: ../src/settings.c:10744
+#: ../src/settings.c:10780
 msgid "Set Protocol Handler"
 msgstr "Задать обработчик протокола"
 
-#: ../src/settings.c:10745
+#: ../src/settings.c:10781
 msgid ""
 "Enter command to be used to mount or open protocols (such as nfs://, smb://, etc):\n"
 "\n"
@@ -4458,187 +4460,187 @@ msgid ""
 "TIP:  To unmount networks, install udevil or set Unmount Command to a command which handles network protocols.\n"
 msgstr "Введите команду для монтирования или обработки протоколов (таких как nfs://, smb://, и т.п.):\n\nПри пустом поле SpaceFM будет использовать «udevil mount».\n\nПодсказка:  чтобы размонтировать сетевые ресурсы, установите udevil или задайте команду размонтирования, способную работать с сетевыми протоколами.\n"
 
-#: ../src/settings.c:10749
+#: ../src/settings.c:10785
 msgid "Path Bar _Help"
 msgstr "Справка по строке пути"
 
-#: ../src/settings.c:10766 ../src/settings.c:10896
+#: ../src/settings.c:10802 ../src/settings.c:10932
 msgid "_Delete"
 msgstr "_Удалить"
 
-#: ../src/settings.c:10789
+#: ../src/settings.c:10825
 msgid "Copy Pa_rent"
 msgstr "Копировать родительский"
 
-#: ../src/settings.c:10792
+#: ../src/settings.c:10828
 msgid "Paste _Link"
 msgstr "Вставить _ссылку"
 
-#: ../src/settings.c:10795
+#: ../src/settings.c:10831
 msgid "Paste _Target"
 msgstr "Вставить ц_ель"
 
-#: ../src/settings.c:10798
+#: ../src/settings.c:10834
 msgid "Paste _As"
 msgstr "Вставить _как..."
 
-#: ../src/settings.c:10804 ../src/settings.c:10894
+#: ../src/settings.c:10840 ../src/settings.c:10930
 msgid "_Copy To"
 msgstr "_Копировать в"
 
-#: ../src/settings.c:10808
+#: ../src/settings.c:10844
 msgid "L_ocation"
 msgstr "Ра_змещение"
 
-#: ../src/settings.c:10809 ../src/settings.c:10848
+#: ../src/settings.c:10845 ../src/settings.c:10884
 msgid "L_ast Location"
 msgstr "По_следние размещение"
 
-#: ../src/settings.c:10812
+#: ../src/settings.c:10848
 msgctxt "Edit|CopyTo|"
 msgid "_Tab"
 msgstr "_Вкладку"
 
-#: ../src/settings.c:10829
+#: ../src/settings.c:10865
 msgctxt "Edit|CopyTo|"
 msgid "_Panel"
 msgstr "_Панель"
 
-#: ../src/settings.c:10843
+#: ../src/settings.c:10879
 msgid "_Move To"
 msgstr "Пе_реместить в"
 
-#: ../src/settings.c:10847
+#: ../src/settings.c:10883
 msgid "_Location"
 msgstr "_Размещение"
 
-#: ../src/settings.c:10850
+#: ../src/settings.c:10886
 msgctxt "Edit|MoveTo|"
 msgid "_Tab"
 msgstr "_Вкладку"
 
-#: ../src/settings.c:10867
+#: ../src/settings.c:10903
 msgctxt "Edit|MoveTo|"
 msgid "_Panel"
 msgstr "_Панель"
 
-#: ../src/settings.c:10880
+#: ../src/settings.c:10916
 msgid "_Select All"
 msgstr "Выделить _все"
 
-#: ../src/settings.c:10883
+#: ../src/settings.c:10919
 msgid "_Unselect All"
 msgstr "_Снять выделение"
 
-#: ../src/settings.c:10885
+#: ../src/settings.c:10921
 msgid "_Invert Selection"
 msgstr "_Инвертировать выделение"
 
-#: ../src/settings.c:10887
+#: ../src/settings.c:10923
 msgid "S_elect By Pattern"
 msgstr "Выбрать по шаблон_у"
 
-#: ../src/settings.c:10889
+#: ../src/settings.c:10925
 msgid "R_oot"
 msgstr "От _имени root"
 
-#: ../src/settings.c:10895
+#: ../src/settings.c:10931
 msgid "Move _To"
 msgstr "Переместить _в"
 
 #. Properties
-#: ../src/settings.c:10900
+#: ../src/settings.c:10936
 msgid "Propert_ies"
 msgstr "_Свойства"
 
-#: ../src/settings.c:10911
+#: ../src/settings.c:10947
 msgid "_Quick"
 msgstr "_Права..."
 
-#: ../src/settings.c:10933 ../src/settings.c:10963 ../src/settings.c:10989
+#: ../src/settings.c:10969 ../src/settings.c:10999 ../src/settings.c:11025
 msgid "_Recursive"
 msgstr "_Рекурсивно"
 
-#: ../src/settings.c:11011
+#: ../src/settings.c:11047
 msgid "_Toolbar"
 msgstr "_Инструменты"
 
-#: ../src/settings.c:11022
+#: ../src/settings.c:11059
 msgid "T_ree"
 msgstr "_Дерево"
 
-#: ../src/settings.c:11038
+#: ../src/settings.c:11077
 msgid "_Detailed"
 msgstr "Подро_бно"
 
-#: ../src/settings.c:11044
+#: ../src/settings.c:11083
 msgid "_Icons"
 msgstr "_Значки"
 
-#: ../src/settings.c:11049
+#: ../src/settings.c:11088
 msgid "_Compact"
 msgstr "_Компактно"
 
-#: ../src/settings.c:11054
+#: ../src/settings.c:11093
 msgid "_Hidden Files"
 msgstr "_Скрытые файлы"
 
-#: ../src/settings.c:11062
+#: ../src/settings.c:11101
 #, c-format
 msgid "File List Font (Panel %d)"
 msgstr "Шрифт списка файлов (Панель %d)"
 
-#: ../src/settings.c:11063
+#: ../src/settings.c:11102
 msgid "Example  1.1 M  file  -rwxr--r--  user:group  2011-01-01 01:11"
 msgstr "Пример  1,1 МБ  файл  -rwxr--r--  user:group  2011-01-01 01:11"
 
-#: ../src/settings.c:11068
+#: ../src/settings.c:11107
 #, c-format
 msgid "Devices Font (Panel %d)"
 msgstr "Шрифт для устройств (Панель %d)"
 
-#: ../src/settings.c:11069
+#: ../src/settings.c:11108
 msgid "sr0 [no media] :EXAMPLE"
 msgstr "sr0 [нет носителя] :ПРИМЕР"
 
-#: ../src/settings.c:11075
+#: ../src/settings.c:11114
 #, c-format
 msgid "Bookmarks Font (Panel %d)"
 msgstr "Шрифт для закладок (Панель %d)"
 
-#: ../src/settings.c:11076
+#: ../src/settings.c:11115
 msgid "Example Bookmark Name"
 msgstr "Пример названия закладки"
 
-#: ../src/settings.c:11081
+#: ../src/settings.c:11120
 #, c-format
 msgid "Path Bar Font (Panel %d)"
 msgstr "Шрифт для строки пути (Панель %d)"
 
-#: ../src/settings.c:11082
+#: ../src/settings.c:11121
 msgid "$ cat /home/user/example"
 msgstr "$ cat /home/user/пример"
 
-#: ../src/settings.c:11088
+#: ../src/settings.c:11127
 #, c-format
 msgid "Tab Font (Panel %d)"
 msgstr "Шрифт для вкладок (Панель %d)"
 
-#: ../src/settings.c:11098
+#: ../src/settings.c:11137
 #, c-format
 msgid "Status Bar Font (Panel %d)"
 msgstr "Шрифт для строки состояния (Панель %d)"
 
-#: ../src/settings.c:11099
+#: ../src/settings.c:11138
 msgid "12 G free / 200 G   52 items"
 msgstr "12 ГБ свободно / 200 ГБ   52 объект(а)"
 
 #. speed
-#: ../src/settings.c:11153 ../src/settings.c:11160
+#: ../src/settings.c:11192 ../src/settings.c:11199
 msgid "_New Tab"
 msgstr "Но_вая вкладка"
 
-#: ../src/settings.c:11156 ../src/settings.c:11165
+#: ../src/settings.c:11195 ../src/settings.c:11204
 msgid "_Single Click"
 msgstr "_Одиночный щелчок"
 
@@ -4671,11 +4673,11 @@ msgid ""
 "%s"
 msgstr "Невозможно открыть %s\n\n%s"
 
-#: ../src/ptk/ptk-file-browser.c:3075 ../src/desktop/desktop-window.c:2215
+#: ../src/ptk/ptk-file-browser.c:3075 ../src/desktop/desktop-window.c:2259
 msgid "Select By Pattern"
 msgstr "Выбрать по шаблону"
 
-#: ../src/ptk/ptk-file-browser.c:3075 ../src/desktop/desktop-window.c:2215
+#: ../src/ptk/ptk-file-browser.c:3075 ../src/desktop/desktop-window.c:2259
 #, c-format
 msgid ""
 "Enter pattern to select files and folders:\n"
@@ -4687,21 +4689,21 @@ msgid ""
 "TIP: You can also enter '%% PATTERN' in the path bar."
 msgstr "Введите шаблон для выбора файлов и каталогов:\n\nЕсли шаблон содержит прописные буквы, сопоставление будет чувствительно к регистру.\n\nПример:  *sp*e?m*\n\nПодсказка: можно также ввести «%% ШАБЛОН» в строке пути."
 
-#: ../src/ptk/ptk-file-browser.c:5856 ../src/ptk/ptk-file-misc.c:3813
-#: ../src/desktop/desktop-window.c:3216
+#: ../src/ptk/ptk-file-browser.c:5856 ../src/ptk/ptk-file-misc.c:3817
+#: ../src/desktop/desktop-window.c:3293
 msgid "Choose Location"
 msgstr "Выбрать размещение"
 
 #: ../src/ptk/ptk-file-browser.c:5889 ../src/ptk/ptk-file-browser.c:5921
-#: ../src/desktop/desktop-window.c:3249 ../src/desktop/desktop-window.c:3281
+#: ../src/desktop/desktop-window.c:3327 ../src/desktop/desktop-window.c:3359
 msgid "Invalid Destination"
 msgstr "Некорректное назначение"
 
-#: ../src/ptk/ptk-file-browser.c:5890 ../src/desktop/desktop-window.c:3250
+#: ../src/ptk/ptk-file-browser.c:5890 ../src/desktop/desktop-window.c:3328
 msgid "Destination same as source"
 msgstr "Назначение и источник совпадают"
 
-#: ../src/ptk/ptk-file-browser.c:5922 ../src/desktop/desktop-window.c:3282
+#: ../src/ptk/ptk-file-browser.c:5922 ../src/desktop/desktop-window.c:3360
 msgid "Invalid destination"
 msgstr "Некорректное назначение"
 
@@ -4725,12 +4727,12 @@ msgid "No files are selected"
 msgstr "Файлы не выделены"
 
 #: ../src/ptk/ptk-file-browser.c:6791 ../src/ptk/ptk-location-view.c:3726
-#: ../src/ptk/ptk-file-menu.c:510
+#: ../src/ptk/ptk-file-menu.c:511
 msgid "Bookmark Exists"
 msgstr "Закладка существует"
 
 #: ../src/ptk/ptk-file-browser.c:6792 ../src/ptk/ptk-location-view.c:3727
-#: ../src/ptk/ptk-file-menu.c:511
+#: ../src/ptk/ptk-file-menu.c:512
 msgid "Bookmark already exists"
 msgstr "Закладка уже существует"
 
@@ -5167,173 +5169,173 @@ msgstr "Введите новый каталог для закладки «%s»:
 msgid "Edit Bookmark Location"
 msgstr "Задать размещение закладки"
 
-#: ../src/ptk/ptk-file-task.c:480
+#: ../src/ptk/ptk-file-task.c:482
 msgid "Kill As Other"
 msgstr "Убить от пользователя..."
 
-#: ../src/ptk/ptk-file-task.c:538
+#: ../src/ptk/ptk-file-task.c:540
 msgid "Q_ueue"
 msgstr "О_чередь"
 
-#: ../src/ptk/ptk-file-task.c:544
+#: ../src/ptk/ptk-file-task.c:546
 msgid "Res_ume"
 msgstr "Возо_бновить"
 
-#: ../src/ptk/ptk-file-task.c:625
+#: ../src/ptk/ptk-file-task.c:627
 msgid "Stop As Other"
 msgstr "Остановить от пользователя..."
 
-#: ../src/ptk/ptk-file-task.c:625
+#: ../src/ptk/ptk-file-task.c:627
 msgid "Cont As Other"
 msgstr "Продолжить от пользователя..."
 
-#: ../src/ptk/ptk-file-task.c:795
+#: ../src/ptk/ptk-file-task.c:797
 msgid "Move: "
 msgstr "Переместить: "
 
-#: ../src/ptk/ptk-file-task.c:796
+#: ../src/ptk/ptk-file-task.c:798
 msgid "Copy: "
 msgstr "Копировать: "
 
-#: ../src/ptk/ptk-file-task.c:797
+#: ../src/ptk/ptk-file-task.c:799
 msgid "Trash: "
 msgstr "В корзину:"
 
-#: ../src/ptk/ptk-file-task.c:798
+#: ../src/ptk/ptk-file-task.c:800
 msgid "Delete: "
 msgstr "Удалить: "
 
-#: ../src/ptk/ptk-file-task.c:799
+#: ../src/ptk/ptk-file-task.c:801
 msgid "Link: "
 msgstr "Ссылка: "
 
-#: ../src/ptk/ptk-file-task.c:800
+#: ../src/ptk/ptk-file-task.c:802
 msgid "Change: "
 msgstr "Изменить:"
 
-#: ../src/ptk/ptk-file-task.c:801
+#: ../src/ptk/ptk-file-task.c:803
 msgid "Run: "
 msgstr "Запустить:"
 
-#: ../src/ptk/ptk-file-task.c:805
+#: ../src/ptk/ptk-file-task.c:807
 msgid "Moving..."
 msgstr "Перемещение..."
 
-#: ../src/ptk/ptk-file-task.c:806
+#: ../src/ptk/ptk-file-task.c:808
 msgid "Copying..."
 msgstr "Копирование..."
 
-#: ../src/ptk/ptk-file-task.c:807
+#: ../src/ptk/ptk-file-task.c:809
 msgid "Trashing..."
 msgstr "Удаление..."
 
-#: ../src/ptk/ptk-file-task.c:808
+#: ../src/ptk/ptk-file-task.c:810
 msgid "Deleting..."
 msgstr "Удаление..."
 
-#: ../src/ptk/ptk-file-task.c:809
+#: ../src/ptk/ptk-file-task.c:811
 msgid "Linking..."
 msgstr "Создание ссылок..."
 
-#: ../src/ptk/ptk-file-task.c:810
+#: ../src/ptk/ptk-file-task.c:812
 msgid "Changing..."
 msgstr "Изменение..."
 
-#: ../src/ptk/ptk-file-task.c:811 ../src/ptk/ptk-file-task.c:981
-#: ../src/ptk/ptk-file-task.c:1521
+#: ../src/ptk/ptk-file-task.c:813 ../src/ptk/ptk-file-task.c:983
+#: ../src/ptk/ptk-file-task.c:1523
 #, c-format
 msgid "Running..."
 msgstr "Выполнение..."
 
-#: ../src/ptk/ptk-file-task.c:897
+#: ../src/ptk/ptk-file-task.c:899
 msgid "From:"
 msgstr "Из:"
 
-#: ../src/ptk/ptk-file-task.c:914
+#: ../src/ptk/ptk-file-task.c:916
 msgid "To:"
 msgstr "В: "
 
-#: ../src/ptk/ptk-file-task.c:932
+#: ../src/ptk/ptk-file-task.c:934
 msgid "Progress:  "
 msgstr "Прогресс:"
 
-#: ../src/ptk/ptk-file-task.c:970
+#: ../src/ptk/ptk-file-task.c:972
 msgid "Status:  "
 msgstr "Состояние:"
 
-#: ../src/ptk/ptk-file-task.c:977 ../src/ptk/ptk-file-task.c:1482
+#: ../src/ptk/ptk-file-task.c:979 ../src/ptk/ptk-file-task.c:1484
 #, c-format
 msgid "Paused"
 msgstr "Приостановлено"
 
-#: ../src/ptk/ptk-file-task.c:979 ../src/ptk/ptk-file-task.c:1498
+#: ../src/ptk/ptk-file-task.c:981 ../src/ptk/ptk-file-task.c:1500
 #, c-format
 msgid "Queued"
 msgstr "В очереди"
 
-#: ../src/ptk/ptk-file-task.c:1035
+#: ../src/ptk/ptk-file-task.c:1037
 msgid "Ask"
 msgstr "Спросить"
 
-#: ../src/ptk/ptk-file-task.c:1036
+#: ../src/ptk/ptk-file-task.c:1038
 msgid "Overwrite All"
 msgstr "Перезаписать _всё"
 
-#: ../src/ptk/ptk-file-task.c:1037
+#: ../src/ptk/ptk-file-task.c:1039
 msgid "Skip All"
 msgstr "П_ропустить всё"
 
-#: ../src/ptk/ptk-file-task.c:1038
+#: ../src/ptk/ptk-file-task.c:1040
 msgid "Auto Rename"
 msgstr "Автопереименование"
 
-#: ../src/ptk/ptk-file-task.c:1042
+#: ../src/ptk/ptk-file-task.c:1044
 msgid "Stop If Error First"
 msgstr "Прервать при ошибке в начале"
 
-#: ../src/ptk/ptk-file-task.c:1043
+#: ../src/ptk/ptk-file-task.c:1045
 msgid "Stop On Any Error"
 msgstr "Прервать при любой ошибке"
 
-#: ../src/ptk/ptk-file-task.c:1044
+#: ../src/ptk/ptk-file-task.c:1046
 msgid "Continue"
 msgstr "Продолжить"
 
-#: ../src/ptk/ptk-file-task.c:1215 ../src/ptk/ptk-file-task.c:1453
+#: ../src/ptk/ptk-file-task.c:1217 ../src/ptk/ptk-file-task.c:1455
 #, c-format
 msgid "Stopped"
 msgstr "Остановлено"
 
-#: ../src/ptk/ptk-file-task.c:1219
+#: ../src/ptk/ptk-file-task.c:1221
 msgid "Errors"
 msgstr "Ошибки"
 
-#: ../src/ptk/ptk-file-task.c:1221 ../src/ptk/ptk-file-task.c:1465
-#: ../src/ptk/ptk-file-task.c:1475
+#: ../src/ptk/ptk-file-task.c:1223 ../src/ptk/ptk-file-task.c:1467
+#: ../src/ptk/ptk-file-task.c:1477
 #, c-format
 msgid "Done"
 msgstr "Выполнено"
 
-#: ../src/ptk/ptk-file-task.c:1376
+#: ../src/ptk/ptk-file-task.c:1378
 #, c-format
 msgid "%s  (%s)  %s remaining"
 msgstr "%s  (%s)  %s остаётся"
 
-#: ../src/ptk/ptk-file-task.c:1408
+#: ../src/ptk/ptk-file-task.c:1410
 msgid "[ SNIP - additional errors above have been trimmed from this log ]\n"
 msgstr "[ ---8<---   прочие ошибки выше были убраны из этого журнала ]\n"
 
-#: ../src/ptk/ptk-file-task.c:1443
+#: ../src/ptk/ptk-file-task.c:1445
 #, c-format
 msgid "Error  ( Stop If First )"
 msgstr "Ошибка ( на первом действии )"
 
-#: ../src/ptk/ptk-file-task.c:1445
+#: ../src/ptk/ptk-file-task.c:1447
 #, c-format
 msgid "Error  ( Stop On Any )"
 msgstr "Ошибка ( на любом действии )"
 
-#: ../src/ptk/ptk-file-task.c:1447
+#: ../src/ptk/ptk-file-task.c:1449
 #, c-format
 msgid "Stopped with %d error"
 msgid_plural "Stopped with %d errors"
@@ -5341,7 +5343,7 @@ msgstr[0] "Остановлено с %d ошибкой"
 msgstr[1] "Остановлено с %d ошибками"
 msgstr[2] "Остановлено с %d ошибками"
 
-#: ../src/ptk/ptk-file-task.c:1460
+#: ../src/ptk/ptk-file-task.c:1462
 #, c-format
 msgid "Finished with %d error"
 msgid_plural "Finished with %d errors"
@@ -5349,37 +5351,37 @@ msgstr[0] "Завершено с %d ошибкой"
 msgstr[1] "Завершено с %d ошибками"
 msgstr[2] "Завершено с %d ошибками"
 
-#: ../src/ptk/ptk-file-task.c:1470
+#: ../src/ptk/ptk-file-task.c:1472
 #, c-format
 msgid "Finished with error  ( exit status %d )"
 msgstr "Завершено с ошибкой ( код возврата %d )"
 
-#: ../src/ptk/ptk-file-task.c:1473
+#: ../src/ptk/ptk-file-task.c:1475
 #, c-format
 msgid "Finished with error"
 msgstr "Завершено с ошибкой"
 
-#: ../src/ptk/ptk-file-task.c:1486
+#: ../src/ptk/ptk-file-task.c:1488
 #, c-format
 msgid "Paused  ( pid %d )"
 msgstr "Приостановлено ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1489
+#: ../src/ptk/ptk-file-task.c:1491
 #, c-format
 msgid "Paused  ( exit status %d )"
 msgstr "Приостановлено ( код возврата %d )"
 
-#: ../src/ptk/ptk-file-task.c:1502
+#: ../src/ptk/ptk-file-task.c:1504
 #, c-format
 msgid "Queued  ( pid %d )"
 msgstr "В очереди ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1505
+#: ../src/ptk/ptk-file-task.c:1507
 #, c-format
 msgid "Queued  ( exit status %d )"
 msgstr "В очереди ( код возврата %d )"
 
-#: ../src/ptk/ptk-file-task.c:1516
+#: ../src/ptk/ptk-file-task.c:1518
 #, c-format
 msgid "Running with %d error"
 msgid_plural "Running with %d errors"
@@ -5387,133 +5389,133 @@ msgstr[0] "Выполняется с %d ошибкой"
 msgstr[1] "Выполняется с %d ошибками"
 msgstr[2] "Выполняется с %d ошибками"
 
-#: ../src/ptk/ptk-file-task.c:1526
+#: ../src/ptk/ptk-file-task.c:1528
 #, c-format
 msgid "Running...  ( pid %d )"
 msgstr "Выполняется... ( pid %d )"
 
-#: ../src/ptk/ptk-file-task.c:1529
+#: ../src/ptk/ptk-file-task.c:1531
 #, c-format
 msgid "Running...  ( exit status %d )"
 msgstr "Выполняется... ( код возврата %d )"
 
-#: ../src/ptk/ptk-file-task.c:1694 ../src/ptk/ptk-file-task.c:2460
+#: ../src/ptk/ptk-file-task.c:1696 ../src/ptk/ptk-file-task.c:2465
 #, c-format
 msgid "stalled"
 msgstr "застопорилось"
 
-#: ../src/ptk/ptk-file-task.c:2119
+#: ../src/ptk/ptk-file-task.c:2124
 msgid "Moving from folder:"
 msgstr "Перемещение из каталога:"
 
-#: ../src/ptk/ptk-file-task.c:2121
+#: ../src/ptk/ptk-file-task.c:2126
 msgid "Linking from folder:"
 msgstr "Создание ссылки из каталога:"
 
-#: ../src/ptk/ptk-file-task.c:2123
+#: ../src/ptk/ptk-file-task.c:2128
 msgid "Copying from folder:"
 msgstr "Копирование из каталога:"
 
 #. Ask the user whether to overwrite dir content or not
-#: ../src/ptk/ptk-file-task.c:2139
+#: ../src/ptk/ptk-file-task.c:2144
 msgid "Folder Exists"
 msgstr "Каталог существует"
 
-#: ../src/ptk/ptk-file-task.c:2140
+#: ../src/ptk/ptk-file-task.c:2145
 msgid "<b>Folder already exists.</b>  Please rename or select an action."
 msgstr "<b>Каталог уже существует.</b>  Задайте другое имя или выберите действие."
 
-#: ../src/ptk/ptk-file-task.c:2157 ../src/ptk/ptk-file-task.c:2161
+#: ../src/ptk/ptk-file-task.c:2162 ../src/ptk/ptk-file-task.c:2166
 msgid "\t<b>( link )</b>"
 msgstr "\t<b>( ссылка )</b>"
 
-#: ../src/ptk/ptk-file-task.c:2165
+#: ../src/ptk/ptk-file-task.c:2170
 msgid "\t<b>! overwrite file with link !</b>"
 msgstr "\t<b>! перезаписать файл ссылкой !</b>"
 
-#: ../src/ptk/ptk-file-task.c:2170
+#: ../src/ptk/ptk-file-task.c:2175
 msgid "<b>( same size )</b>"
 msgstr "<b>( тот же размер )</b>"
 
-#: ../src/ptk/ptk-file-task.c:2176 ../src/ptk/ptk-file-task.c:2199
+#: ../src/ptk/ptk-file-task.c:2181 ../src/ptk/ptk-file-task.c:2204
 #, c-format
 msgid "%s\t( %lu bytes )"
 msgstr "%s\t( %lu байт )"
 
-#: ../src/ptk/ptk-file-task.c:2178
+#: ../src/ptk/ptk-file-task.c:2183
 msgid "larger"
 msgstr "больше"
 
-#: ../src/ptk/ptk-file-task.c:2180
+#: ../src/ptk/ptk-file-task.c:2185
 msgid "smaller"
 msgstr "меньше"
 
-#: ../src/ptk/ptk-file-task.c:2184
+#: ../src/ptk/ptk-file-task.c:2189
 msgid "<b>( same time )</b>\t"
 msgstr "<b>( то же время )</b>\t"
 
-#: ../src/ptk/ptk-file-task.c:2194
+#: ../src/ptk/ptk-file-task.c:2199
 msgid "newer"
 msgstr "новее"
 
-#: ../src/ptk/ptk-file-task.c:2196
+#: ../src/ptk/ptk-file-task.c:2201
 msgid "older"
 msgstr "старше"
 
-#: ../src/ptk/ptk-file-task.c:2217
+#: ../src/ptk/ptk-file-task.c:2222
 msgid "Filename Exists"
 msgstr "Файл уже существует"
 
-#: ../src/ptk/ptk-file-task.c:2218 ../src/ptk/ptk-file-task.c:2233
+#: ../src/ptk/ptk-file-task.c:2223 ../src/ptk/ptk-file-task.c:2238
 msgid "<b>Filename already exists.</b>  Please rename or select an action."
 msgstr "<b>Файл уже существует.</b>  Задайте другое имя или выберите действие."
 
-#: ../src/ptk/ptk-file-task.c:2230
+#: ../src/ptk/ptk-file-task.c:2235
 msgid "Rename Required"
 msgstr "Требуется переименование"
 
-#: ../src/ptk/ptk-file-task.c:2232
+#: ../src/ptk/ptk-file-task.c:2237
 msgid "In folder:"
 msgstr "В каталоге:"
 
-#: ../src/ptk/ptk-file-task.c:2312
+#: ../src/ptk/ptk-file-task.c:2317
 msgid "_Overwrite"
 msgstr "Пере_записать"
 
-#: ../src/ptk/ptk-file-task.c:2313
+#: ../src/ptk/ptk-file-task.c:2318
 msgid "Overwrite _All"
 msgstr "Перезаписать _все"
 
-#: ../src/ptk/ptk-file-task.c:2318
+#: ../src/ptk/ptk-file-task.c:2323
 msgid "_Pause"
 msgstr "_Приостановить"
 
-#: ../src/ptk/ptk-file-task.c:2320
+#: ../src/ptk/ptk-file-task.c:2325
 msgid "_Skip"
 msgstr "_Пропустить"
 
-#: ../src/ptk/ptk-file-task.c:2321
+#: ../src/ptk/ptk-file-task.c:2326
 msgid "S_kip All"
 msgstr "П_ропустить всё"
 
-#: ../src/ptk/ptk-file-task.c:2374
+#: ../src/ptk/ptk-file-task.c:2379
 msgid "To folder:"
 msgstr "В каталог:"
 
-#: ../src/ptk/ptk-file-task.c:2401
+#: ../src/ptk/ptk-file-task.c:2406
 msgid "<b>Folder Name:</b>"
 msgstr "<b>Имя каталога:</b>"
 
 #. extra buttons
-#: ../src/ptk/ptk-file-task.c:2429
+#: ../src/ptk/ptk-file-task.c:2434
 msgid " _Rename "
 msgstr "_Переименовать"
 
-#: ../src/ptk/ptk-file-task.c:2433
+#: ../src/ptk/ptk-file-task.c:2438
 msgid " A_uto Rename "
 msgstr "_Автопереименование"
 
-#: ../src/ptk/ptk-file-task.c:2437
+#: ../src/ptk/ptk-file-task.c:2442
 msgid " Auto Re_name All "
 msgstr "Автопереименование (всё)"
 
@@ -5548,7 +5550,7 @@ msgid "Make contents user-_writable"
 msgstr "Разрешить пользователю запись в содержимое"
 
 #: ../src/ptk/ptk-file-archiver.c:589 ../src/ptk/ptk-file-archiver.c:628
-#: ../src/ptk/ptk-file-menu.c:2225 ../src/vfs/vfs-file-task.c:137
+#: ../src/ptk/ptk-file-menu.c:2232 ../src/vfs/vfs-file-task.c:137
 msgid "copy"
 msgstr "копия"
 
@@ -5576,11 +5578,12 @@ msgstr "Файловая система"
 msgid "( no subfolder )"
 msgstr "( нет подкаталога )"
 
-#: ../src/ptk/ptk-file-menu.c:1843
+#. do not pass desktop parent - some WMs won't bring desktop dlg to top
+#: ../src/ptk/ptk-file-menu.c:1847
 msgid "Remove Text Type Association"
 msgstr "Убрать ассоциацию для текстовых файлов"
 
-#: ../src/ptk/ptk-file-menu.c:1843
+#: ../src/ptk/ptk-file-menu.c:1847
 msgid ""
 "NOTE:  When compiling the list of applications to appear in the Open submenu"
 " for a text file, SpaceFM will include applications associated with the MIME"
@@ -5593,16 +5596,16 @@ msgid ""
 msgstr "Заметка:  при составлении списка приложений в меню «Открыть» для текстовых файлов, SpaceFM будет использовать приложения, ассоциированные с конкретным типом MIME (например, text/html), А ТАКЖЕ приложения, ассоциированные с типом text/plain.  Если вы используете функцию «Убрать» в этом списке, то приложение будет убрано из ассоциаций для конкретного типа MIME (например, text/html), но будет ОСТАВЛЕНО как ассоциация для text/plain (кроме случаев, когда тип MIME файла и есть text/plain).  Таким образом, использование пункта «Убрать» может не привести к изъятию приложения из подменю «Открыть», если оно также не будет убрано из ассоциаций к типу MIME text/plain."
 
 #. Set Default
-#: ../src/ptk/ptk-file-menu.c:2194
+#: ../src/ptk/ptk-file-menu.c:2201
 msgid "_Set As Default"
 msgstr "Принять за _умолчание"
 
 #. Add
-#: ../src/ptk/ptk-file-menu.c:2204
+#: ../src/ptk/ptk-file-menu.c:2211
 msgid "_Add..."
 msgstr "_Добавить..."
 
-#: ../src/ptk/ptk-file-menu.c:2267 ../src/ptk/ptk-file-misc.c:1785
+#: ../src/ptk/ptk-file-menu.c:2274 ../src/ptk/ptk-file-misc.c:1785
 msgid "new"
 msgstr "новый"
 
@@ -5649,7 +5652,7 @@ msgstr "<b>Имя _файла:</b>   <i>существует как катало
 
 #: ../src/ptk/ptk-file-misc.c:631 ../src/ptk/ptk-file-misc.c:644
 #: ../src/ptk/ptk-file-misc.c:655 ../src/ptk/ptk-file-misc.c:692
-#: ../src/ptk/ptk-file-misc.c:2442
+#: ../src/ptk/ptk-file-misc.c:2443
 msgid "<b>_Parent:</b>"
 msgstr "<b>_Родительский каталог:</b>"
 
@@ -5682,12 +5685,12 @@ msgid "<b>P_ath:</b>   <i>parent exists as file</i>"
 msgstr "<b>_Путь:</b>   <i>родитель существует как файл</i>"
 
 #: ../src/ptk/ptk-file-misc.c:664 ../src/ptk/ptk-file-misc.c:676
-#: ../src/ptk/ptk-file-misc.c:688 ../src/ptk/ptk-file-misc.c:2371
+#: ../src/ptk/ptk-file-misc.c:688 ../src/ptk/ptk-file-misc.c:2372
 msgid "<b>_Name:</b>"
 msgstr "<b>_Имя:</b>"
 
 #: ../src/ptk/ptk-file-misc.c:666 ../src/ptk/ptk-file-misc.c:678
-#: ../src/ptk/ptk-file-misc.c:690 ../src/ptk/ptk-file-misc.c:2418
+#: ../src/ptk/ptk-file-misc.c:690 ../src/ptk/ptk-file-misc.c:2419
 msgid "<b>_Filename:</b>"
 msgstr "<b>_Имя файла:</b>"
 
@@ -5703,7 +5706,7 @@ msgstr "<b>_Путь:</b>   <i>* создать родительский кат�
 msgid "<b>_Parent:</b>   <i>* create parent</i>"
 msgstr "<b>_Родительский каталог:</b>   <i>* создать родительский каталог</i>"
 
-#: ../src/ptk/ptk-file-misc.c:686 ../src/ptk/ptk-file-misc.c:2466
+#: ../src/ptk/ptk-file-misc.c:686 ../src/ptk/ptk-file-misc.c:2467
 msgid "<b>P_ath:</b>"
 msgstr "<b>Путь:</b>"
 
@@ -5766,7 +5769,9 @@ msgctxt "Title|CreateNew|"
 msgid "Link"
 msgstr "ссылку"
 
-#: ../src/ptk/ptk-file-misc.c:1238 ../src/ptk/ptk-file-misc.c:2106
+#. do not pass desktop parent - some WMs won't bring desktop dlg to top
+#. GTK_WIDGET( desktop );
+#: ../src/ptk/ptk-file-misc.c:1238 ../src/ptk/ptk-file-misc.c:2107
 msgid "Move"
 msgstr "Переместить"
 
@@ -5790,7 +5795,7 @@ msgstr "Вставить ссылку"
 msgid "Target"
 msgstr "Цель"
 
-#: ../src/ptk/ptk-file-misc.c:1265 ../src/ptk/ptk-file-misc.c:2797
+#: ../src/ptk/ptk-file-misc.c:1265 ../src/ptk/ptk-file-misc.c:2798
 msgid " As Root"
 msgstr " От имени root"
 
@@ -5803,101 +5808,101 @@ msgid "File"
 msgstr "Файл"
 
 #. Buttons
-#: ../src/ptk/ptk-file-misc.c:2114
+#: ../src/ptk/ptk-file-misc.c:2115
 msgid "Opt_ions"
 msgstr "_Настройки"
 
-#: ../src/ptk/ptk-file-misc.c:2130
+#: ../src/ptk/ptk-file-misc.c:2131
 msgid "Re_vert"
 msgstr "_Вернуть"
 
-#: ../src/ptk/ptk-file-misc.c:2150
+#: ../src/ptk/ptk-file-misc.c:2151
 msgid "& _Open"
 msgstr "и _открыть"
 
-#: ../src/ptk/ptk-file-misc.c:2184
+#: ../src/ptk/ptk-file-misc.c:2185
 #, c-format
 msgid "Link-> %s"
 msgstr "Ссылка-> %s"
 
-#: ../src/ptk/ptk-file-misc.c:2187
+#: ../src/ptk/ptk-file-misc.c:2188
 #, c-format
 msgid "!Link-> %s (missing)"
 msgstr "!Ссылка-> %s (отсутствует)"
 
-#: ../src/ptk/ptk-file-misc.c:2236
+#: ../src/ptk/ptk-file-misc.c:2237
 msgid "<b>_Target:</b>"
 msgstr "<b>_Цель:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2282
+#: ../src/ptk/ptk-file-misc.c:2283
 msgid "<b>_Template:</b>"
 msgstr "<b>_Шаблон:</b>"
 
-#: ../src/ptk/ptk-file-misc.c:2298 ../src/ptk/ptk-file-misc.c:2901
+#: ../src/ptk/ptk-file-misc.c:2299 ../src/ptk/ptk-file-misc.c:2902
 msgid "Empty File"
 msgstr "Пустой файл"
 
-#: ../src/ptk/ptk-file-misc.c:2328 ../src/ptk/ptk-file-misc.c:2979
+#: ../src/ptk/ptk-file-misc.c:2329 ../src/ptk/ptk-file-misc.c:2980
 msgid "Empty Folder"
 msgstr "Пустой каталог"
 
-#: ../src/ptk/ptk-file-misc.c:2396
+#: ../src/ptk/ptk-file-misc.c:2397
 msgid "<b>E_xtension:</b>"
 msgstr "<b>Расширение:</b>"
 
 #. Options
-#: ../src/ptk/ptk-file-misc.c:2491
+#: ../src/ptk/ptk-file-misc.c:2492
 msgid "Mov_e"
 msgstr "Пере_местить"
 
-#: ../src/ptk/ptk-file-misc.c:2493
+#: ../src/ptk/ptk-file-misc.c:2494
 msgid "Cop_y"
 msgstr "_Копировать"
 
-#: ../src/ptk/ptk-file-misc.c:2495
+#: ../src/ptk/ptk-file-misc.c:2496
 msgid "Lin_k"
 msgstr "Создать _ссылку"
 
-#: ../src/ptk/ptk-file-misc.c:2499
+#: ../src/ptk/ptk-file-misc.c:2500
 msgid "Link Tar_get"
 msgstr "Вставить _ссылку"
 
-#: ../src/ptk/ptk-file-misc.c:2500
+#: ../src/ptk/ptk-file-misc.c:2501
 msgid "A_s Root"
 msgstr "От _имени root"
 
-#: ../src/ptk/ptk-file-misc.c:2502
+#: ../src/ptk/ptk-file-misc.c:2503
 msgctxt "New|Radio"
 msgid "Fil_e"
 msgstr "_файл"
 
-#: ../src/ptk/ptk-file-misc.c:2504
+#: ../src/ptk/ptk-file-misc.c:2505
 msgctxt "New|Radio"
 msgid "Fol_der"
 msgstr "_каталог"
 
-#: ../src/ptk/ptk-file-misc.c:2506
+#: ../src/ptk/ptk-file-misc.c:2507
 msgctxt "New|Radio"
 msgid "_Link"
 msgstr "_ссылку"
 
-#: ../src/ptk/ptk-file-misc.c:2609
+#: ../src/ptk/ptk-file-misc.c:2610
 msgid "New"
 msgstr "Создать"
 
-#: ../src/ptk/ptk-file-misc.c:2752
+#: ../src/ptk/ptk-file-misc.c:2753
 msgid "Path contains linefeeds"
 msgstr "Путь содержит разрывы строк"
 
-#: ../src/ptk/ptk-file-misc.c:2807
+#: ../src/ptk/ptk-file-misc.c:2808
 msgid "Create Parent Folder"
 msgstr "Создать родительский каталог"
 
-#: ../src/ptk/ptk-file-misc.c:2809
+#: ../src/ptk/ptk-file-misc.c:2810
 msgid "The parent folder does not exist.  Create it?"
 msgstr "Родительский каталог не существует. Создать?"
 
-#: ../src/ptk/ptk-file-misc.c:2822
+#: ../src/ptk/ptk-file-misc.c:2823
 #, c-format
 msgid ""
 "Error creating parent folder\n"
@@ -5905,72 +5910,72 @@ msgid ""
 "%s"
 msgstr "Ошибка создания родительского каталога\n\n%s"
 
-#: ../src/ptk/ptk-file-misc.c:2825
+#: ../src/ptk/ptk-file-misc.c:2826
 msgid "Mkdir Error"
 msgstr "Ошибка создания каталога"
 
-#: ../src/ptk/ptk-file-misc.c:2838
+#: ../src/ptk/ptk-file-misc.c:2839
 msgid "Overwrite Existing File"
 msgstr "Перезаписать существующий файл"
 
-#: ../src/ptk/ptk-file-misc.c:2840
+#: ../src/ptk/ptk-file-misc.c:2841
 msgid "OVERWRITE WARNING"
 msgstr "ПРЕДУПРЕЖДЕНИЕ О ПЕРЕЗАПИСИ"
 
-#: ../src/ptk/ptk-file-misc.c:2840
+#: ../src/ptk/ptk-file-misc.c:2841
 msgid "The file path exists.  Overwrite existing file?"
 msgstr "Файл по указанному пути существует. Перезаписать?"
 
 #. new link task
 #. link task
-#: ../src/ptk/ptk-file-misc.c:2849 ../src/ptk/ptk-file-misc.c:3091
+#: ../src/ptk/ptk-file-misc.c:2850 ../src/ptk/ptk-file-misc.c:3092
 #, c-format
 msgid "Create Link%s"
 msgstr "Создать ссылку%s"
 
-#: ../src/ptk/ptk-file-misc.c:2911 ../src/ptk/ptk-file-misc.c:2989
+#: ../src/ptk/ptk-file-misc.c:2912 ../src/ptk/ptk-file-misc.c:2990
 msgid "Template Missing"
 msgstr "Шаблон отсутствует"
 
-#: ../src/ptk/ptk-file-misc.c:2912 ../src/ptk/ptk-file-misc.c:2990
+#: ../src/ptk/ptk-file-misc.c:2913 ../src/ptk/ptk-file-misc.c:2991
 msgid "The specified template does not exist"
 msgstr "Указанный шаблон не существует"
 
-#: ../src/ptk/ptk-file-misc.c:2937
+#: ../src/ptk/ptk-file-misc.c:2938
 #, c-format
 msgid "Create New File%s"
 msgstr "Создать новый файл%s"
 
-#: ../src/ptk/ptk-file-misc.c:3010
+#: ../src/ptk/ptk-file-misc.c:3011
 #, c-format
 msgid "Create New Folder%s"
 msgstr "Создать новый каталог%s"
 
 #. copy task
-#: ../src/ptk/ptk-file-misc.c:3041
+#: ../src/ptk/ptk-file-misc.c:3042
 #, c-format
 msgid "Copy%s"
 msgstr "Копировать%s"
 
-#: ../src/ptk/ptk-file-misc.c:3054
+#: ../src/ptk/ptk-file-misc.c:3055
 msgid "Copy Target Error"
 msgstr "Ошибка копирования цели"
 
-#: ../src/ptk/ptk-file-misc.c:3055 ../src/ptk/ptk-file-misc.c:3103
+#: ../src/ptk/ptk-file-misc.c:3056 ../src/ptk/ptk-file-misc.c:3104
 msgid "Error determining link's target"
 msgstr "Ошибка определения цели ссылки"
 
-#: ../src/ptk/ptk-file-misc.c:3102
+#: ../src/ptk/ptk-file-misc.c:3103
 msgid "Link Target Error"
 msgstr "Ошибка цели ссылки"
 
 #. move task
-#: ../src/ptk/ptk-file-misc.c:3135
+#: ../src/ptk/ptk-file-misc.c:3136
 #, c-format
 msgid "Move%s"
 msgstr "Переместить%s"
 
-#: ../src/ptk/ptk-file-misc.c:3167
+#: ../src/ptk/ptk-file-misc.c:3168
 #, c-format
 msgid ""
 "Error renaming file\n"
@@ -5978,38 +5983,38 @@ msgid ""
 "%s"
 msgstr "Ошибка переименования файла\n\n%s"
 
-#: ../src/ptk/ptk-file-misc.c:3170 ../src/desktop/desktop-window.c:2076
+#: ../src/ptk/ptk-file-misc.c:3171 ../src/desktop/desktop-window.c:2092
 msgid "Rename Error"
 msgstr "Ошибка переименования"
 
-#: ../src/ptk/ptk-file-misc.c:3341 ../src/ptk/ptk-file-misc.c:3343
+#: ../src/ptk/ptk-file-misc.c:3342 ../src/ptk/ptk-file-misc.c:3344
 msgid "New Folder"
 msgstr "Новый каталог"
 
-#: ../src/ptk/ptk-file-misc.c:3342
+#: ../src/ptk/ptk-file-misc.c:3343
 msgid "New folder name:"
 msgstr "Имя каталога:"
 
-#: ../src/ptk/ptk-file-misc.c:3348 ../src/ptk/ptk-file-misc.c:3350
+#: ../src/ptk/ptk-file-misc.c:3349 ../src/ptk/ptk-file-misc.c:3351
 msgid "New File"
 msgstr "Новый файл"
 
-#: ../src/ptk/ptk-file-misc.c:3349
+#: ../src/ptk/ptk-file-misc.c:3350
 msgid "New filename:"
 msgstr "Имя файла:"
 
-#: ../src/ptk/ptk-file-misc.c:3372
+#: ../src/ptk/ptk-file-misc.c:3373
 msgid ""
 "Name already exists.\n"
 "\n"
 "Please input a new one:"
 msgstr "Такое имя уже существует.\n\nВведите другое:"
 
-#: ../src/ptk/ptk-file-misc.c:3405
+#: ../src/ptk/ptk-file-misc.c:3406
 msgid "The new file cannot be created"
 msgstr "Невозможно создать новый файл"
 
-#: ../src/ptk/ptk-file-misc.c:3621
+#: ../src/ptk/ptk-file-misc.c:3622
 #, c-format
 msgid ""
 "This symlink's target is missing or you do not have permission to access it:\n"
@@ -6018,11 +6023,11 @@ msgid ""
 "Target: %s"
 msgstr "Цель символьной ссылки отсутствует или у вас нет к ней доступа:\n%s\n\nЦель: %s"
 
-#: ../src/ptk/ptk-file-misc.c:3624
+#: ../src/ptk/ptk-file-misc.c:3625
 msgid "Broken Link"
 msgstr "Битая ссылка"
 
-#: ../src/ptk/ptk-file-misc.c:3789
+#: ../src/ptk/ptk-file-misc.c:3793
 #, c-format
 msgid "Delete %d selected item as root ?"
 msgid_plural "Delete %d selected items as root ?"
@@ -6030,23 +6035,23 @@ msgstr[0] "Удалить %d выбранных объектов от имени
 msgstr[1] "Удалить %d выбранных объекта от имени root?"
 msgstr[2] "Удалить %d выбранных объектов от имени root?"
 
-#: ../src/ptk/ptk-file-misc.c:3793
+#: ../src/ptk/ptk-file-misc.c:3797
 msgid "Confirm Delete As Root"
 msgstr "Подтвердите удаление от имени root"
 
-#: ../src/ptk/ptk-file-misc.c:3794
+#: ../src/ptk/ptk-file-misc.c:3798
 msgid "DELETE AS ROOT"
 msgstr "УДАЛИТЬ ОТ ИМЕНИ ROOT"
 
-#: ../src/ptk/ptk-file-misc.c:3802
+#: ../src/ptk/ptk-file-misc.c:3806
 msgid "Delete As Root"
 msgstr "Удалить от имени root"
 
-#: ../src/ptk/ptk-file-misc.c:3821
+#: ../src/ptk/ptk-file-misc.c:3825
 msgid "Move As Root"
 msgstr "Переместить от имени root"
 
-#: ../src/ptk/ptk-file-misc.c:3827
+#: ../src/ptk/ptk-file-misc.c:3831
 msgid "Copy As Root"
 msgstr "Копировать от имени root"
 
@@ -6122,15 +6127,15 @@ msgstr "( ошибка чтения ссылки )"
 msgid "Calculating..."
 msgstr "Подсчет..."
 
-#: ../src/ptk/ptk-file-properties.c:850
+#: ../src/ptk/ptk-file-properties.c:851
 msgid "Change File Date"
 msgstr "Сменить дату файла"
 
-#: ../src/ptk/ptk-file-properties.c:891
+#: ../src/ptk/ptk-file-properties.c:892
 msgid "Invalid User"
 msgstr "Указан несуществующий пользователь"
 
-#: ../src/ptk/ptk-file-properties.c:902
+#: ../src/ptk/ptk-file-properties.c:903
 msgid "Invalid Group"
 msgstr "Указана несуществующая группа"
 
@@ -6177,7 +6182,7 @@ msgstr "Для сортировки используйте drag & drop"
 msgid "Please choose an application:"
 msgstr "Выберите приложение:"
 
-#: ../src/vfs/vfs-app-desktop.c:586
+#: ../src/vfs/vfs-app-desktop.c:594
 msgid "Command not found"
 msgstr "Команда не найдена"
 
@@ -6215,7 +6220,7 @@ msgstr "Каталог назначения «%1$s» содержится в и�
 #: ../src/vfs/vfs-file-task.c:634 ../src/vfs/vfs-file-task.c:687
 #: ../src/vfs/vfs-file-task.c:835 ../src/vfs/vfs-file-task.c:866
 #: ../src/vfs/vfs-file-task.c:951 ../src/vfs/vfs-file-task.c:1093
-#: ../src/vfs/vfs-file-task.c:2094
+#: ../src/vfs/vfs-file-task.c:2098
 msgid "Accessing"
 msgstr "Получение доступа..."
 
@@ -6253,52 +6258,52 @@ msgid ""
 "running root commands\n"
 msgstr "Установите /usr/bin/sha256sum чтобы увеличить безопасность выполнения команд от имени root\n"
 
-#: ../src/vfs/vfs-file-task.c:1477
+#: ../src/vfs/vfs-file-task.c:1478
 msgid ""
 "Please configure a valid Terminal SU command in View|Preferences|Advanced"
 msgstr "Настройте корректную команду для терминального SU в меню Вид|Настройки|Продвинутые"
 
-#: ../src/vfs/vfs-file-task.c:1482
+#: ../src/vfs/vfs-file-task.c:1483
 msgid "Terminal SU Not Available"
 msgstr "Терминальный SU недоступен"
 
-#: ../src/vfs/vfs-file-task.c:1488
+#: ../src/vfs/vfs-file-task.c:1489
 msgid ""
 "Please configure a valid Graphical SU command in View|Preferences|Advanced"
 msgstr "Настройте корректную команду для графического SU в меню Вид|Настройки|Продвинутые"
 
-#: ../src/vfs/vfs-file-task.c:1493
+#: ../src/vfs/vfs-file-task.c:1494
 msgid "Graphical SU Not Available"
 msgstr "Графический SU недоступен"
 
-#: ../src/vfs/vfs-file-task.c:1507
+#: ../src/vfs/vfs-file-task.c:1508
 msgid "Cannot create temporary directory"
 msgstr "Невозможно создать временный каталог"
 
-#: ../src/vfs/vfs-file-task.c:1539
+#: ../src/vfs/vfs-file-task.c:1540
 msgid "Please set a valid terminal program in View|Preferences|Advanced"
 msgstr "Настройте корректную команду для терминала в меню Вид|Настройки|Продвинутые"
 
-#: ../src/vfs/vfs-file-task.c:1824
+#: ../src/vfs/vfs-file-task.c:1828
 msgid "spacefm-auth not found in path - this reduces your security"
 msgstr "spacefm-auth не найден по стандартному пути — это уменьшает безопасность"
 
-#: ../src/vfs/vfs-file-task.c:1925
+#: ../src/vfs/vfs-file-task.c:1929
 #, c-format
 msgid ""
 "Error executing '%s'\n"
 "See stdout (run spacefm in a terminal) for debug info"
 msgstr "Ошибка при запуске «%s»\nСмотрите сведения для отладки в stdout (запустите spacefm в терминале) "
 
-#: ../src/vfs/vfs-file-task.c:1994
+#: ../src/vfs/vfs-file-task.c:1998
 msgid "Error writing temporary file"
 msgstr "Ошибка записи во временный файл"
 
-#: ../src/vfs/vfs-file-task.c:2178
+#: ../src/vfs/vfs-file-task.c:2182
 msgid "Timed out calculating total size\n"
 msgstr "Пропуск расчёта общего размера по таймауту\n"
 
-#: ../src/vfs/vfs-file-task.c:2510
+#: ../src/vfs/vfs-file-task.c:2514
 #, c-format
 msgid ""
 "\n"
@@ -6657,7 +6662,19 @@ msgstr "\nАвтомонтирование: ошибка: нет доступн�
 msgid "Unmount-If-Mounted: %s\n"
 msgstr "Размонтировать-если-примонтировано: %s\n"
 
-#: ../src/desktop/desktop-window.c:2052
+#: ../src/desktop/desktop-window.c:2058
+#, c-format
+msgid ""
+"You do not have permission to edit the contents of file %s\n"
+"\n"
+"Consider copying the file to the desktop, or link to a copy placed in ~/.local/share/applications/"
+msgstr "У вас нет прав на редактирование содержимого файла %s\n\nМожно скопировать его на рабочий стол или сделать ссылку на копию в ~/.local/share/applications/"
+
+#: ../src/desktop/desktop-window.c:2059
+msgid "Unable To Rename"
+msgstr "Невозможно переименовать"
+
+#: ../src/desktop/desktop-window.c:2068
 #, c-format
 msgid ""
 "Enter new desktop item name:\n"
@@ -6665,31 +6682,31 @@ msgid ""
 "Changing the name of this desktop item requires modifying the contents of desktop file %s"
 msgstr "Введите имя для нового элемента рабочего стола:\n\nДля изменения отображаемого имени этого элемента будет необходимо изменить содержимое desktop-файла %s"
 
-#: ../src/desktop/desktop-window.c:2054
+#: ../src/desktop/desktop-window.c:2070
 msgid "Change Desktop Item Name"
 msgstr "Сменить имя элемента рабочего стола"
 
-#: ../src/desktop/desktop-window.c:2076
+#: ../src/desktop/desktop-window.c:2092
 msgid "An error occured renaming this desktop item."
 msgstr "Произошла ошибка при переименовании элемента рабочего стола."
 
-#: ../src/find-files.c:276
+#: ../src/find-files.c:278
 msgid "Open Containing _Folder"
 msgstr "Открыть содержащий _каталог"
 
-#: ../src/find-files.c:773
+#: ../src/find-files.c:775
 msgid "Select a folder"
 msgstr "Выбор каталога"
 
-#: ../src/find-files.c:822
+#: ../src/find-files.c:824
 msgid "Browse..."
 msgstr "Обзор..."
 
-#: ../src/find-files.c:846
+#: ../src/find-files.c:848
 msgid "Local Volumes"
 msgstr "Локальные разделы"
 
-#: ../src/find-files.c:934
+#: ../src/find-files.c:936
 msgid "Last Modified"
 msgstr "Последние изменение"
 
@@ -6948,11 +6965,11 @@ msgid ""
 "Do you want to overwrite it?"
 msgstr "Сценарий команды был изменен на диске.\n\nПерезаписать его?"
 
-#: ../src/item-prop.c:897 ../src/item-prop.c:2149
+#: ../src/item-prop.c:897 ../src/item-prop.c:2150
 msgid "Command Dir"
 msgstr "Каталог команды"
 
-#: ../src/item-prop.c:898 ../src/item-prop.c:2150 ../src/item-prop.c:2159
+#: ../src/item-prop.c:898 ../src/item-prop.c:2151 ../src/item-prop.c:2160
 msgid "(no files)"
 msgstr "( без файлов )"
 
@@ -6974,227 +6991,227 @@ msgstr "Цель:  (файл .desktop или исполняемый файл)"
 msgid "Choose Executable"
 msgstr "Выбрать исполняемый файл"
 
-#: ../src/item-prop.c:1529
+#: ../src/item-prop.c:1530
 msgid "Toolbar Item Properties"
 msgstr "Свойства элемента панели инструментов"
 
-#: ../src/item-prop.c:1530
+#: ../src/item-prop.c:1531
 msgid "Menu Item Properties"
 msgstr "Свойства элемента меню"
 
-#: ../src/item-prop.c:1568
+#: ../src/item-prop.c:1569
 msgid "_Toolbar Item"
 msgstr "_Элемент панели инструментов"
 
-#: ../src/item-prop.c:1569
+#: ../src/item-prop.c:1570
 msgid "_Menu Item"
 msgstr "_Элемент меню"
 
-#: ../src/item-prop.c:1577
+#: ../src/item-prop.c:1578
 msgid "Type:"
 msgstr "Тип:"
 
-#: ../src/item-prop.c:1588
+#: ../src/item-prop.c:1589
 msgid "Name:"
 msgstr "Имя:"
 
-#: ../src/item-prop.c:1597
+#: ../src/item-prop.c:1598
 msgid "Key:"
 msgstr "Клавиша:"
 
-#: ../src/item-prop.c:1606
+#: ../src/item-prop.c:1607
 msgid "Icon:"
 msgstr "Значок:"
 
-#: ../src/item-prop.c:1637
+#: ../src/item-prop.c:1638
 msgid "C_hoose"
 msgstr "_Выбрать"
 
-#: ../src/item-prop.c:1659
+#: ../src/item-prop.c:1660
 msgid "S_how In Toolbar"
 msgstr "_Показывать на панели инструментов"
 
-#: ../src/item-prop.c:1670
+#: ../src/item-prop.c:1671
 msgid "Con_text"
 msgstr "_Контекст"
 
-#: ../src/item-prop.c:1717
+#: ../src/item-prop.c:1718
 msgid "A_pply"
 msgstr "П_рименить"
 
-#: ../src/item-prop.c:1749
+#: ../src/item-prop.c:1750
 msgid "matches any rule:"
 msgstr "совпадает по любому правилу:"
 
-#: ../src/item-prop.c:1751
+#: ../src/item-prop.c:1752
 msgid "matches all rules:"
 msgstr "совпадает по всем правилам:"
 
-#: ../src/item-prop.c:1753
+#: ../src/item-prop.c:1754
 msgid "doesn't match any rule:"
 msgstr "не совпадает ни по какому правилу:"
 
-#: ../src/item-prop.c:1755
+#: ../src/item-prop.c:1756
 msgid "doesn't match all rules:"
 msgstr "не совпадает по всем правилам:"
 
-#: ../src/item-prop.c:1762
+#: ../src/item-prop.c:1763
 msgid "Show"
 msgstr "Показать"
 
-#: ../src/item-prop.c:1764
+#: ../src/item-prop.c:1765
 msgid "Enable"
 msgstr "Включить"
 
-#: ../src/item-prop.c:1766
+#: ../src/item-prop.c:1767
 msgid "Hide"
 msgstr "Скрыть"
 
-#: ../src/item-prop.c:1768
+#: ../src/item-prop.c:1769
 msgid "Disable"
 msgstr "Выключить"
 
-#: ../src/item-prop.c:1798
+#: ../src/item-prop.c:1799
 msgid "item if context"
 msgstr "пункт контекста"
 
-#: ../src/item-prop.c:1826
+#: ../src/item-prop.c:1827
 msgid "Edit Rule"
 msgstr "Редактировать правило"
 
-#: ../src/item-prop.c:1843
+#: ../src/item-prop.c:1844
 msgid "Value:"
 msgstr "Значение:"
 
-#: ../src/item-prop.c:1856
+#: ../src/item-prop.c:1857
 msgid "If enabled, use as opener for:"
 msgstr "Если элемент включен, открывать с его помощью:"
 
-#: ../src/item-prop.c:1861
+#: ../src/item-prop.c:1862
 msgid "none"
 msgstr "ничего"
 
-#: ../src/item-prop.c:1863
+#: ../src/item-prop.c:1864
 msgid "files"
 msgstr "файлы"
 
-#: ../src/item-prop.c:1865
+#: ../src/item-prop.c:1866
 msgid "devices"
 msgstr "устройства"
 
-#: ../src/item-prop.c:1873
+#: ../src/item-prop.c:1874
 msgid "_Ignore Context / Show All  (global setting)"
 msgstr "_Игнорировать контекст / Показывать всё  (глобальная настройка)"
 
-#: ../src/item-prop.c:1968
+#: ../src/item-prop.c:1969
 msgid "Comm_and"
 msgstr "_Команда"
 
-#: ../src/item-prop.c:1972
+#: ../src/item-prop.c:1973
 msgid "Command _Line"
 msgstr "Командная _строка"
 
-#: ../src/item-prop.c:1974
+#: ../src/item-prop.c:1975
 msgid "_Script"
 msgstr "_Сценарий"
 
-#: ../src/item-prop.c:1979
+#: ../src/item-prop.c:1980
 msgid "Open In _Editor"
 msgstr "Открыть в _редакторе"
 
-#: ../src/item-prop.c:1985
+#: ../src/item-prop.c:1986
 msgid "_Root Editor"
 msgstr "Редактор _пользователя root"
 
-#: ../src/item-prop.c:2025
+#: ../src/item-prop.c:2026
 msgid "Optio_ns"
 msgstr "_Опции"
 
-#: ../src/item-prop.c:2027
+#: ../src/item-prop.c:2028
 msgid "Run Options"
 msgstr "Опции выполнения"
 
-#: ../src/item-prop.c:2036
+#: ../src/item-prop.c:2037
 msgid "Run As Task"
 msgstr "Выполнять как задачу"
 
-#: ../src/item-prop.c:2040
+#: ../src/item-prop.c:2041
 msgid "Popup Task"
 msgstr "Показывать сообщения"
 
-#: ../src/item-prop.c:2041
+#: ../src/item-prop.c:2042
 msgid "Popup Error"
 msgstr "Показывать ошибки"
 
-#: ../src/item-prop.c:2042
+#: ../src/item-prop.c:2043
 msgid "Popup Output"
 msgstr "Показывать вывод"
 
-#: ../src/item-prop.c:2043
+#: ../src/item-prop.c:2044
 msgid "Scroll Output"
 msgstr "Прокручивать вывод"
 
-#: ../src/item-prop.c:2056
+#: ../src/item-prop.c:2057
 msgid "Run In Terminal"
 msgstr "Выполнять в терминале"
 
-#: ../src/item-prop.c:2057
+#: ../src/item-prop.c:2058
 msgid "Keep Terminal Open"
 msgstr "Оставить терминал открытым"
 
-#: ../src/item-prop.c:2066
+#: ../src/item-prop.c:2067
 msgid "Run As User:"
 msgstr "Выполнить от пользователя:"
 
-#: ../src/item-prop.c:2073
+#: ../src/item-prop.c:2074
 msgid "( leave blank for current user )"
 msgstr "( пусто = текущий пользователь )"
 
-#: ../src/item-prop.c:2080
+#: ../src/item-prop.c:2081
 msgid "Style"
 msgstr "Стиль"
 
-#: ../src/item-prop.c:2091
+#: ../src/item-prop.c:2092
 msgid "Normal"
 msgstr "Нормальный"
 
-#: ../src/item-prop.c:2094
+#: ../src/item-prop.c:2095
 msgid "Checkbox"
 msgstr "Флажок"
 
-#: ../src/item-prop.c:2097
+#: ../src/item-prop.c:2098
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: ../src/item-prop.c:2100
+#: ../src/item-prop.c:2101
 msgid "Input"
 msgstr "Ввод"
 
-#: ../src/item-prop.c:2114
+#: ../src/item-prop.c:2115
 msgid "Confirmation/Input Message:"
 msgstr "Сообщение для подтверждения/ввода"
 
-#: ../src/item-prop.c:2136
+#: ../src/item-prop.c:2137
 msgid "Open In Browser:"
 msgstr "Открыть в браузере"
 
-#: ../src/item-prop.c:2158
+#: ../src/item-prop.c:2159
 msgid "Data Dir"
 msgstr "( каталог данных )"
 
-#: ../src/item-prop.c:2167
+#: ../src/item-prop.c:2168
 msgid "Plugin Dir"
 msgstr "Каталог плагинов"
 
-#: ../src/item-prop.c:2186
+#: ../src/item-prop.c:2187
 msgid "Submenu"
 msgstr "Подменю"
 
-#: ../src/item-prop.c:2188
+#: ../src/item-prop.c:2189
 msgid "Separator"
 msgstr "Разделитель"
 
 #. built-in
-#: ../src/item-prop.c:2192
+#: ../src/item-prop.c:2193
 msgid "Built-In Command"
 msgstr "Встроенная команда"

@@ -1,4 +1,4 @@
-0.9.3+
+0.9.4   2014-03-30:
     improve inotify error messages
     configure.ac default make options; fix -Wformat-security warning #416
     adjust new window maximized panel sizes #420
@@ -13,12 +13,12 @@
     [dialog] remove blank lines reading file into drop, combo, m/list
     [dialog] remove linefeeds inserting value into input/-large
     [dialog] @FILE values not saved on cancel #321
-    update translations de ru
     Preferences|Desktop|Font dlg honor cancel
     fix new config devices shown not saved
     path bar middle-click replace contents and activate
     open .desktop treat %u/%U as %f/%F per freedesktop spec
     single-click method no hover selection option #154
+    update translations de ru sv
 0.9.3   2014-01-17:
     fix memory leak on draw selection rectangle on desktop #397
     [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
