@@ -41,6 +41,59 @@ TIP: To see the work being done on the upcoming release of SpaceFM, see <a href=
 
 
 <!-- --------------------------------------------------------------------- -->
+<br><a name="0.9.4"></a>
+<big><b><a href="#0.9.4">0.9.4 released</a></b></big><br>
+2014-Mar-30
+
+<p><b><a href="http://ignorantguru.github.io/udevil/">udevil</a> is now available in Debian's official testing and unstable repos</b>.  Thanks to Mateusz Łukasik for his work maintaining udevil and SpaceFM packaging on Debian, as well as his Ubuntu PPAs.  For older Debian versions, you can still use the build-from-source packages in IgnorantGuru's PPA.  Please see the updated <a href="https://github.com/IgnorantGuru/spacefm/wiki/Debian">Debian wiki page</a> for details.
+
+<p><b>GTK3 USERS:</b>  GTK 3.10 removes all menu and button icons, and hides key mnemonics in menus and dialogs by default.  To restore icons, you can currently add the lines <code>gtk-menu-images = true</code> and <code>gtk-button-images = true</code> to <i>~/.config/gtk-3.0/settings.ini</i>  This setting is now deprecated and likely to be removed permanently in future GTK3 releases, so you may want to give GTK developers feedback on this change.  Key mnemonics can now be seen only by pressing Alt and hovering the mouse over an item with a mnemonic.  (GNOME's configuration editor may also have some settings for these options.)
+
+<p>Keith Hedger's <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins#keiths-mount-smbftpsshfswebdav-share-gui-">Mount SMB/FTP/SSHFS/WebDAV Share GUI</a> plugin has been updated.
+
+<p>Viking777 has added <a href="https://github.com/IgnorantGuru/spacefm/wiki/plugins#viking-777s-chroot-plugins">Chroot plugins</a>.
+
+<p>IgnorantGuru has created a <a href="https://github.com/IgnorantGuru/spacefm-plugins/wiki#ig-spacetv">SpaceTV</a> plugin for adding resumable video playback to SpaceFM via the new <a href="http://mpv.io/">mpv video player</a>.
+
+<p>Special thanks to <a href="https://github.com/OmegaPhil">OmegaPhil</a> and <a href="http://vsido.org/index.php">VSIDO</a> developer VastOne for their continuing support work, answering questions on the <b>SpaceFM IRC channel</b>, #spacefm on <a href="http://freenode.net/irc_servers.shtml">irc.freenode.net</a>.
+
+<p>runwiththedolphin has produced a <b><a href="http://www.youtube.com/watch?v=aOFC5YRIPMA">new screencast</a> showcasing SpaceFM 0.9</b> on <a href="http://antix.mepis.org/index.php?title=Main_Page">antiX 13.1 Stable</a>. A very positive review of SpaceFM, it’s a nice walkthrough that shows some of the oft-overlooked features, new destkop and file browser features, and shows some tips on using plugins and networks.  See more screencasts on the <a href="https://github.com/IgnorantGuru/spacefm/wiki/Screenshots">SpaceFM Wiki</a>.
+
+<br><br><br><b>SpaceFM 0.9.4 includes the following minor changes:</b>
+
+<ul>
+    <li><b>'Hover selects' options</b> have been added to the General and Desktop tabs of the View|Preferences dialog to allow users to enable single-click opening while disabling automatic select on hover.<br><br>
+    <li>You can now simply <a href="">middle-click</a> in the Path Bar to <i>replace</i> the Path Bar's contents and seek to a new location.  Or hold Shift or Ctrl for normal middle-click insertion.  (As always, you can also middle-click on a panel's status bar to copy the selected file names or paths - choose which by right-clicking on the status bar and setting the Middle Click option there.)<br><br>
+    <li>Dialogs opened from the SpaceFM desktop should now pop to the top of other windows in all window managers.  Such dialogs are no longer parented by the root window, as some managers handled this poorly.<br><br>
+    <li>SpaceFM now passes file paths (%f/%F) rather than URIs when replacing %u/%U substitution variables in .desktop files' Exec keys.  This change is also <a href="http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#exec-variables">freedesktop spec</a> compliant, and was made because some common .desktop files erroneously use %U instead of %F, and because most other file managers use this alternate form of substitution.<br><br>
+    <li>When task error handling is set to 'continue', the task dialog is no longer brought to the top of others windows on every error, merely the first error, and at the end of the task.<br><br>
+    <li>When renaming files/folders on the desktop with Arrange By set to Custom, the location of the item is now preserved.<br><br>
+    <li>SpaceFM now works with <b>gnome-terminal 3.10</b>, which no longer accepts its old option --disable-factory.  Note that this means gnome-terminal can no longer be used with the combination options Run As Task plus Run In Terminal (rare usage).  If you use an older version of gnome-terminal, you can add the --disable-factory back by adding it in View|Preferences|Advanced|Terminal.<br><br>
+    <li>SpaceFM Dialog now removes blank lines when reading a file into drop, combo, list, and mlist elements.<br><br>
+    <li>SpaceFM Dialog now removes linefeeds when using command 'set' to change the value of an input or input-large element.<br><br>
+    <li>SpaceFM Dialog now does not save element values to a specified @FILE when the Cancel button is pressed or the dialog is merely closed, and the user's manual has been updated with this information.<br><br>
+    <li>inotify error messages presented on stderr now show more useful information.<br><br>
+    <li>A problem which caused panel sizes to not be saved when the window was immediately maximized after installing SpaceFM (starting with a fresh config) has been corrected.<br><br>
+    <li>A problem where the icon entry in the item properties dialog of checkbox-style toolbar items was disabled has been corrected.<br><br>
+    <li>A problem when pressing Cancel in the font dialog opened from Preferences|Desktop which caused the font to be set to Default has been corrected.<br><br>
+    <li>A configuration problem which caused some keypresses to not work correctly (due to panel_sliders-key) in 0.9.2-0.9.3 has been corrected.<br><br>
+    <li>When installing a plugin, the item's Use-as-opener for setting is now automatically turned off, and the manual has been updated to note this.<br><br>
+    <li>An overlapping display problem in Preferences|Desktop in some GTK2 themes has been corrected.<br><br>
+    <li>configure now includes default make options -Wno-deprecated-declarations -Wformat -Wformat-security -Wreturn-type -Wunused-value.  Please open an issue if this change breaks building on any compilers.  (They can be removed if needed by editing configure.ac and running autogen.sh or autoreconf.)<br><br>
+    <li>Translations have been updated: de ru sv  <a href="https://github.com/IgnorantGuru/spacefm/wiki/Translate">Help translate.</a><br><br>
+</ul>
+
+
+<br><br><br><hr>
+
+
+
+
+
+
+
+
+<!-- --------------------------------------------------------------------- -->
 <br><a name="0.9.3"></a>
 <big><b><a href="#0.9.3">0.9.3 released</a></b></big><br>
 2014-Jan-17

@@ -204,7 +204,7 @@
 	<li>Builds with any version of GTK+ ranging from 2.18 to 3.x; relies only on stock GTK+ icons
 	<li>Built-in virtual filesystem (VFS) code uses core C kernel functions for speed and reliability, with no dependence on gvfs, etc.
 	<li>Interfaces directly with udev for device support, with <b>no dependency on udisks</b>; can also be built with deprecated HAL support instead of libudev
-	<li>Built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, can easily be built with deprecated fam/gamin support.)
+	<li>Built-in support for inotify-capable kernels (>=2.6.13), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, can easily be built with deprecated fam/gamin support.)
     </ul><br>
 
     <li><b>Task Manager &amp; Queue</b> - <i>Centralized multi-task queue and popup control</i><br>
@@ -867,6 +867,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#designmode">How do I set or change key shortcuts and icons?</a><br>
     How to I set or change the key to go Up a directory?<br>
 	<blockquote>Right-click on the file list, right-click on menu item Go|Up, and select Key Shortcut.</blockquote>
+    <a href="#adjview">How do I change the file list view, add/remove columns, etc.?</a><br>
     <a href="#impcon">How do I hide a menu item?</a><br>
     <a href="#designmode-toolbars">How do I customize the toolbars?</a><br>
     <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
@@ -924,6 +925,8 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
 <p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
 
 <p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
+
+<p><a name="adjview"><b>NOTE:</b></a> SpaceFM's main menu bar (File, View, etc.) is mostly used for <i>program-wide</i> settings and functions.  Most adjustments for an individual panel's appearance are found by right-clicking on the file list and selecting the View context menu.  This View menu will allow you to set which side panes and toolbars are visible in a panel, add and remove file list columns, set the list style and font, set the sort method, etc.
 
 <!-- #Panel Memory #mem -->
 <p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
@@ -1041,6 +1044,10 @@ As you're entering a directory path in the Path Bar, completion will be active. 
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
 The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
+
+<!-- # Middle-Click Auto Seek #middle -->
+<p><a name="gui-pathbar-middle"/><a href="#gui-pathbar-middle"><b>Middle-Click Auto Seek</b></a><br>
+A middle-click in the Path Bar will replace the contents of the Path Bar with the contents of the primary clipboard, and will seek to the location.  The primary clipboard is set simply by selecting text in any application.  For example, if you select the text "/etc/fstab" in your editor, then middle click in SpaceFM's path bar, the directory will change to /etc and the 'fstab' file will be selected.  If you don't want to replace the contents of the Path Bar, and merely want to insert the primary clipboard text (the usual behavior of middle-click), hold down a modifier key while you click, such as Ctrl or Shift.
 
 <!-- # File Path -->
 <p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
@@ -2888,7 +2895,7 @@ The Menu Item page of the <a href="#designmode-props">Menu Item Properties</a> d
 
 <!-- # Name -->
 <p><a name="designmode-props-name"/><a href="#designmode-props-name"><b>Name</b></a><br>
-The Name entry allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key if desired.  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
+The Name entry allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired.  [Note: In GTK >= 3.10, you must press the Alt key to see the mnemonics underlined.]  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
 
 <p>For menu items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as its menu item name.
 
@@ -3024,7 +3031,7 @@ Visible only for non-toolbar Command or Application items, the '<i>If enabled, u
 
 <p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as opener for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
 
-<p>'<i>Use as opener for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.
+<p>'<i>Use as opener for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as opener for' setting (you can add it back after import).
 
 <p>Ignore Context (see below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
 
@@ -3830,7 +3837,9 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>To install a plugin using a <a href="#plugins-creationandfiles-file">plugin file</a>, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
 
-<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
+
+<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
 
 <p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the Design Menu, or highlight the menu item and press F1.
 
@@ -3880,6 +3889,8 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 <p>To do so, use Plugins|Import|File to import a plugin file, or Plugins|Import|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the item into any location in any supported menu.  As with any custom menu items, you cannot paste the item into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
 
 <p>If option Plugins|Import|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
+
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
 
 <p>Alternatively, you can use <a href="#designmode-designmenu-import">New|Import</a> on the Design Menu to import and paste a plugin in one step.
 
@@ -3975,7 +3986,7 @@ Additional files required by your plugin can be added to the command directory, 
 
 <p>In addition, adding a README file to the command directory is recommended.  This file will be created automatically if you select <a href="#designmode-designmenu-help">Help</a> from the Design Menu.  This file explains what your plugin does, how to use it, and may include an email address, website, license terms, etc.
 
-<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.
+<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.  Or, if multiple commands needs to access the same files, consider creating a config directory in the user's home directory (eg ~/.config/spacefm-plugin-myexample) for your plugin.
 
 <!-- # Data Files #data -->
 <p><a name="plugins-creationandfiles-data"/><a href="#plugins-creationandfiles-data"><b>Data Files</b></a><br>
@@ -4447,7 +4458,9 @@ The first, "$dialog_pressed", contains the name of the button which was pressed 
     fi
 </pre>
 
-<b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.
+<p><b>Note: The stock 'cancel' button has a special function.</b>  If it is used to close the dialog (no COMMAND has been associated with the button), element @FILE values will NOT be saved.  In this case, the element values written to stdout may not match the values stored in @FILEs.  You can perform a <a href="#dialog-int-source">source</a> command first if you do want values to be written for @FILEs when Cancel is clicked.  [Note:  In SpaceFM 0.9.3 and prior, element @FILE values WERE saved when the user pressed Cancel.]
+
+<p><b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.  Also, element @FILE values will NOT be saved, as if the user clicked a Cancel button.
 
 <p><b>If a <a href="#dialog-cmd">command</a> is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
 
@@ -5540,6 +5553,7 @@ Usage: <b>close [REVERSE]</b>
                --input \
 	       <a href="#dialog-nonvis-winclose">--window-close</a> <b>close %input1</b></pre>
 
+Note: Element @FILE values are NOT saved when the dialog is closed via the close command (or via a SIGQUIT signal, etc).  You can perform a <a href="#dialog-int-source">source</a> command first if you want values to be written for @FILEs.  [Note:  In SpaceFM 0.9.3 and prior, the close command DID save element @FILE values.]
 
 <!-- #press -->
 <p><a name="dialog-int-press"/><a href="#dialog-int-press"><b>press</b></a><br>
@@ -5657,7 +5671,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes byt the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 
@@ -6944,7 +6958,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2014-01-17&nbsp;&nbsp;(SpaceFM version 0.9.3)
+<p>Updated 2014-03-30&nbsp;&nbsp;(SpaceFM version 0.9.4)
 <br><br>
 </center>
 </td></tr></table>
