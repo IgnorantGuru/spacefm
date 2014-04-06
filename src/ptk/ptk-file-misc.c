@@ -2101,8 +2101,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         task_view = file_browser->task_view;
     }
     else
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        mset->parent = NULL;  //GTK_WIDGET( desktop );
+        mset->parent = GTK_WIDGET( desktop );
 
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
                                 mset->parent ? GTK_WINDOW( mset->parent ) : NULL,
@@ -3738,8 +3737,7 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
             parent = GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
                                                         file_browser ) ) );
         else if ( desktop )
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            parent = NULL;
+            parent = GTK_WINDOW( desktop );
         ptk_show_error( parent,
                         g_strdup_printf ( _("Error") ),
                         g_strdup_printf ( "%i target%s missing",
@@ -3765,8 +3763,8 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
     char* cmd;
     char* task_name;
     
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    GtkWidget* parent = file_browser ? GTK_WIDGET( file_browser ) : NULL;
+    GtkWidget* parent = file_browser ? GTK_WIDGET( file_browser ) :
+                                       GTK_WIDGET( desktop );
     char* file_paths = g_strdup( "" );
     GList* sel;
     char* file_path;
