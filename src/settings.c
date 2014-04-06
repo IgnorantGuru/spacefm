@@ -4966,8 +4966,7 @@ void xset_custom_activate( GtkWidget* item, XSet* set )
     }
     else
     {
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent = NULL;  //GTK_WIDGET( set->desktop );
+        parent = GTK_WIDGET( set->desktop );
         cwd = vfs_get_desktop_dir();
     }
     
@@ -5625,8 +5624,8 @@ void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor )
     if ( parent )
         dlgparent = parent;
     else if ( set )
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        dlgparent = set->browser ? GTK_WIDGET( set->browser ) : NULL;
+        dlgparent = set->browser ? GTK_WIDGET( set->browser ) :
+                                   GTK_WIDGET( set->desktop );
 
     if ( !set || ( set && set->lock ) )
     {
@@ -5983,12 +5982,9 @@ void xset_design_job( GtkWidget* item, XSet* set )
     GtkClipboard* clip;
     GtkWidget* parent = NULL;
     
-    if ( set->browser )
-        parent = gtk_widget_get_toplevel( GTK_WIDGET( set->browser ) );
-    else if ( set->desktop )
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent = NULL;  //gtk_widget_get_toplevel( GTK_WIDGET( set->desktop ) );
-    
+    parent = gtk_widget_get_toplevel( set->browser ?
+                                                GTK_WIDGET( set->browser ) :
+                                                GTK_WIDGET( set->desktop ) );
     int job = GPOINTER_TO_INT( g_object_get_data( G_OBJECT(item), "job" ) );
 
 //printf("activate job %d %s\n", job, set->name);    
@@ -7864,8 +7860,8 @@ void xset_menu_cb( GtkWidget* item, XSet* set )
         set->desktop = NULL;
     }
     
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    parent = set->browser ? GTK_WIDGET( set->browser ) : NULL;
+    parent = set->browser ? GTK_WIDGET( set->browser ) :
+                            GTK_WIDGET( set->desktop );
 
     if ( set->plugin )
     {

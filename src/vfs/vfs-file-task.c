@@ -1448,8 +1448,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     if ( task->exec_browser )
         parent = gtk_widget_get_toplevel( task->exec_browser );
     else if ( task->exec_desktop )
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent = NULL;   //gtk_widget_get_toplevel( task->exec_desktop );
+        parent = gtk_widget_get_toplevel( task->exec_desktop );
 
     task->state = VFS_FILE_TASK_RUNNING;
     string_copy_free( &task->current_file, src_file );

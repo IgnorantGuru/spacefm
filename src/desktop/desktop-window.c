@@ -1886,11 +1886,10 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             g_free( files );
             file_list = g_list_reverse( file_list );
             
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
             task = ptk_file_task_new( file_action,
                                       file_list,
                                       dest_dir ? dest_dir : vfs_get_desktop_dir(),
-                                      NULL, NULL );
+                                      GTK_WINDOW( self ), NULL );
             // get insertion box
             if ( self->sort_by == DW_SORT_CUSTOM )
             {
@@ -2316,8 +2315,7 @@ _key_found:
                     desktop_window_sort_items( desktop, by, desktop->sort_type );
                 }
                 else if ( !strcmp( set->name, "desk_pref" ) )
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    fm_edit_preference( NULL, PREF_DESKTOP );
+                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
                 else if ( !strcmp( set->name, "desk_open" ) )
                     desktop_window_open_desktop_dir( NULL, desktop );
             }
@@ -2327,29 +2325,22 @@ _key_found:
                 if ( !strcmp( xname, "link" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    // must pass desktop here for callback window
-                    ptk_clipboard_paste_links( NULL,
+                    ptk_clipboard_paste_links( GTK_WINDOW( desktop ),
                                     vfs_get_desktop_dir(), NULL,
                                     (GFunc)desktop_window_insert_task_complete,
-                                    GTK_WINDOW( gtk_widget_get_toplevel(
-                                                GTK_WIDGET( desktop ) ) ) );
+                                    GTK_WINDOW( desktop ) );
                 }
                 else if ( !strcmp( xname, "target" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    // must pass desktop here for callback window
-                    ptk_clipboard_paste_targets( NULL,
+                    ptk_clipboard_paste_targets( GTK_WINDOW( desktop ),
                             vfs_get_desktop_dir(),
                             NULL, (GFunc)desktop_window_insert_task_complete,
-                            GTK_WINDOW( gtk_widget_get_toplevel(
-                                        GTK_WIDGET( desktop ) ) ) );
+                            GTK_WINDOW( desktop ) );
                 }
                 else if ( !strcmp( xname, "as" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // must pass desktop here for callback window
                     ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir(),
                                     (GFunc)desktop_window_insert_task_complete );
                 }
@@ -2607,8 +2598,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
 {
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    fm_edit_preference( NULL, PREF_DESKTOP );
+    fm_edit_preference( GTK_WINDOW( self ), PREF_DESKTOP );
 }
 
 
@@ -3214,9 +3204,9 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
             folder = set2->desc;
         else
             folder = cwd;
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        path = xset_file_dialog( NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                            _("Choose Location"), folder, NULL );
+        path = xset_file_dialog( GTK_WIDGET( desktop ),
+                                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                 _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
             if ( g_str_has_prefix( setname, "copy_loc" ) )
@@ -3248,10 +3238,9 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
-                                        _("Invalid Destination"), NULL, 0,
-                                        _("Destination same as source"), NULL, NULL );
+            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                _("Invalid Destination"), NULL, 0,
+                                _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
             return;
         }
@@ -3273,15 +3262,14 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         PtkFileTask* task = ptk_file_task_new( file_action,
                                 file_list,
                                 dest_dir,
-                                NULL,
+                                GTK_WINDOW( desktop ),
                                 NULL );
         ptk_file_task_run( task );
         g_free( dest_dir );
     }
     else
     {
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
+        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
@@ -3947,8 +3935,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
     else
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    app = (char *) ptk_choose_app_for_mime_type( NULL,
+    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
                                         mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
@@ -3959,7 +3946,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
             PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
                                                    sel_files,
                                                    vfs_get_desktop_dir(),
-                                                   NULL,
+                                                   GTK_WINDOW( desktop ),
                                                    NULL );
             ptk_file_task_run( task );
         }
