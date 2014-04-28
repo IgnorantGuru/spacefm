@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-27 18:29+0000\n"
-"PO-Revision-Date: 2014-03-27 20:40+0000\n"
+"PO-Revision-Date: 2014-04-21 13:52+0000\n"
 "Last-Translator: Ingemar Karlsson <ingemar@ingk.se>\n"
 "Language-Team: Swedish (http://www.transifex.com/projects/p/spacefm/language/sv/)\n"
 "MIME-Version: 1.0\n"
@@ -456,7 +456,7 @@ msgstr "Ikoner verktygsrad:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Icons</b>"
-msgstr "<b>Ikoner</>"
+msgstr "<b>Ikoner</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
