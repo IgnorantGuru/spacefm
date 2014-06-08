@@ -571,7 +571,8 @@ spacefm_LDADD = \
     @FAM_LIBS@ \
     @HAL_LIBS@ \
     @SN_LIBS@ \
-    @LIBUDEV_LIBS@
+    @LIBUDEV_LIBS@ \
+    -lffmpegthumbnailer
 
 xml_purge_SOURCES = xml-purge.c
 xml_purge_CFLAGS = @GTK_CFLAGS@

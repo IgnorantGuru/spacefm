@@ -127,7 +127,8 @@ spacefm_LDADD = \
     @FAM_LIBS@ \
     @HAL_LIBS@ \
     @SN_LIBS@ \
-    @LIBUDEV_LIBS@
+    @LIBUDEV_LIBS@ \
+    -lffmpegthumbnailer
 
 noinst_PROGRAMS=xml-purge
 xml_purge_SOURCES=xml-purge.c
