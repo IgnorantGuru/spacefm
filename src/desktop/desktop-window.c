@@ -424,6 +424,10 @@ GtkWidget* desktop_window_new( gboolean transparent )
     {
         GdkScreen* screen = gdk_screen_get_default();
         gtk_widget_set_visual((GtkWidget*) w, gdk_screen_get_rgba_visual(screen));
+#if !GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_colormap((GtkWidget*) w, gdk_screen_get_rgba_colormap(screen));
+#endif
+        gtk_window_stick(w);
     }
     return (GtkWidget*)w;
 }
@@ -510,6 +514,10 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
 
     if ( self->transparent == TRUE )
     {
+#if !GTK_CHECK_VERSION (3, 0, 0)
+        cairo_t *cr;
+        cr = gdk_cairo_create( gtk_widget_get_window( w ) );
+#endif
         cairo_save(cr);
         cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
         cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
