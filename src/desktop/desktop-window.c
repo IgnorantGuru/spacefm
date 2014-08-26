@@ -2552,7 +2552,9 @@ void on_realize( GtkWidget* w )
     DesktopWindow* self = (DesktopWindow*)w;
 
     GTK_WIDGET_CLASS(parent_class)->realize( w );
-    if ( self->transparent == TRUE )
+
+    char *wmname = gdk_x11_screen_get_window_manager_name( gtk_widget_get_screen( w ) );
+    if ( ( self->transparent == TRUE ) &&  !strcmp(wmname, "Compiz") )
     {
         gtk_window_set_decorated( GTK_WINDOW(w), FALSE );
         gtk_window_set_keep_below( GTK_WINDOW(w), TRUE );
