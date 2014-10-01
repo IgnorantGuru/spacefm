@@ -1349,7 +1349,9 @@ int main ( int argc, char *argv[] )
                 vfs_file_monitor_clean();
                 return ret == -1 ? 0 : ret;
             }
+            GDK_THREADS_ENTER();
             gtk_main();
+            GDK_THREADS_LEAVE();
             vfs_file_monitor_clean();
             return 0;
         }
@@ -1509,8 +1511,10 @@ int main ( int argc, char *argv[] )
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
 
+    GDK_THREADS_ENTER();
     if( run )   /* run the main loop */
         gtk_main();
+    GDK_THREADS_LEAVE();
 
     main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
