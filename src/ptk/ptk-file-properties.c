@@ -683,7 +683,8 @@ GtkWidget* file_properties_dlg_new( GtkWindow* parent,
 
     gtk_notebook_set_current_page( notebook, page );
 
-    gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
+    if ( parent )
+        gtk_window_set_transient_for( GTK_WINDOW( dlg ), parent );
     return dlg;
 }
 

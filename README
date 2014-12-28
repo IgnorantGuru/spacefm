@@ -1,4 +1,4 @@
-README for SpaceFM v0.8.7+
+README for SpaceFM v0.9.4
 
 Homepage:
     http://ignorantguru.github.io/spacefm/
@@ -8,7 +8,10 @@ Downloads:
     https://github.com/IgnorantGuru/spacefm/tree/pkg
 
 Official Forum:
-    http://forums.partedmagic.com/viewforum.php?f=15
+    https://sourceforge.net/p/spacefm/discussion/general/
+
+Guidelines For Distributing Modifications:
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications
 
 
 CONTENTS
@@ -50,7 +53,7 @@ PACKAGES
 INSTALLER
 
     A self-extracting installer is available (spacefm-x.x.x-installer.sh):
-        https://github.com/IgnorantGuru/spacefm/tree/master/packages
+        https://github.com/IgnorantGuru/spacefm/tree/pkg
             (To save a file, click on its filename and click 'View Raw')
 
     The installer requires the build dependencies listed below in BUILD.  If
@@ -123,13 +126,13 @@ BUILD GTK2
 
 BUILD GTK3
 
-The GTK3 build of SpaceFM uses the newer GTK libraries.  BE SURE to use a 
-GTK3 theme which supports your CURRENT version of GTK3 (no theme warnings 
+The GTK3 build of SpaceFM uses the newer GTK libraries.  BE SURE to use a
+GTK3 theme which supports your CURRENT version of GTK3 (no theme warnings
 should appear when spacefm is run in a terminal), or use adwaita.  Use of GTK3
 without any theme is NOT recommended.
 
-PACKAGERS:  Due to the unfinished and changing nature of GTK3, some users 
-may prefer the GTK2 build.  Please consider providing both spacefm-gtk2 and 
+PACKAGERS:  Due to the unfinished and changing nature of GTK3, some users
+may prefer the GTK2 build.  Please consider providing both spacefm-gtk2 and
 spacefm-gtk3 packages for your users.
 
 1)  Install required build dependencies (below are Debian package names -
@@ -332,6 +335,9 @@ To build a deb file of SpaceFM on your Debian-based distro:
 
         mv distros/debian .
 
+    NOTE: For newer Debian versions, some adjustments to the control file
+    (dependencies) may be necessary, or use official Debian packages.
+
 4)  IF GTK3 support IS desired:
 
         cp debian/control-gtk3 debian/control
@@ -377,67 +383,70 @@ Otherwise, run these commands AS ROOT:
 
 ENABLE KERNEL POLLING
 
-    You may need to enable kernel polling for device media to be detected by 
-    SpaceFM, especially when used without udisks.  For example, if you 
-    insert a CD and the Devices list doesn't report a change to the device 
-    or doesn't see a filesystem on the device, this is a symptom that 
-    kernel polling is not enabled.
+    You may need to enable kernel polling for device media changes to be
+    detected by SpaceFM.  For example, if you insert a CD and SpaceFM still
+    says 'no media', this is a symptom that kernel polling is not enabled.
 
-    Kernel polling is a new feature of the Linux kernel and udev, so most
-    distros don't yet have it enabled. Even if you are using udisks, enabling
-    kernel polling is recommended to eliminate the need for udisks to do
-    userspace polling. Kernel polling also corrects a common issue where the
-    eject button on a drive won't respond with the newer udev.
+    Kernel polling is a newer feature of the Linux kernel and udev, so some
+    distros don't yet have it enabled by default.  To use kernel polling,
+    your Linux kernel may need to be 2.6.38 or newer, and udev may need to
+    be version 173 or newer.
 
-    To use kernel polling, your Linux kernel may need to be 2.6.38 or newer,
-    and udev may need to be version 173 or newer.
-
-    TO DETERMINE IF KERNEL POLLING IS ENABLED, run these commands:
+    TO DETERMINE IF KERNEL POLLING IS ENABLED:
 
         cat /sys/module/block/parameters/events_dfl_poll_msecs
         cat /sys/block/sr0/events_poll_msecs
 
-    If you get 0 or -1 from those commands, then it's probably disabled.
+    If you get 0 or -1 from both of those commands, kernel polling may be
+    disabled.
 
-    TO ENABLE KERNEL POLLING PERMANENTLY (survives a reboot), add this command
-    to your /etc/rc.local file (anywhere before the 'exit' line in that file):
+    TO ENABLE KERNEL POLLING PERMANENTLY (survives a reboot), add the
+    following command to your /etc/rc.local file (anywhere before the
+    'exit' line in that file):
 
         echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
 
-    Any number between 2000 and 5000 (milliseconds) should be reasonable - the
-    higher 5000 means poll every 5 seconds, which is less overhead but a little
-    slower.
+    Any number between 2000 and 5000 (milliseconds) should be reasonable -
+    the higher 5000 means poll every 5 seconds, which is less overhead but
+    a little slower.
 
-    OR you can pass this option to the kernel boot command line in grub:
+    OR pass this option to the kernel boot command line in grub:
 
         block.events_dfl_poll_msecs=2000
 
+    OR add a udev rule to enable kernel polling on removable devices:
 
-    TO ENABLE KERNEL POLLING TEMPORARILY, enable common polling for the block
-    module:
+        echo 'ACTION=="add", ATTR{removable}=="1", \
+              ATTR{events_poll_msecs}=="-1", ATTR{events_poll_msecs}="2000"' \
+              > /etc/udev/rules.d/61-removable-storage-polling.rules
+
+    A reboot will be required for the above changes to take effect, or...
+
+    TO ENABLE KERNEL POLLING TEMPORARILY AND IMMEDIATELY, enable common
+    polling for the block module:
 
         sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
 
-    OR you can enable polling just for a single device like this (/dev/sr0 in
-    this example):
+    OR you can enable polling just for a single device like this (/dev/sr0
+    in this example):
 
         sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
 
-    The change should be immediate - media will be detected and the eject
-    button on the drive should work normally again. However, the above changes
-    will be lost when you reboot.
+    This change should be immediate - media will be detected.  However, the
+    above change will be lost when you reboot.
 
     References:
     http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html
     http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/
     https://bugs.archlinux.org/task/25609
+    http://unix.stackexchange.com/questions/38582/
 
 
 TRANSLATE
 
     To help translate SpaceFM please visit:
         https://github.com/IgnorantGuru/spacefm/wiki/Translate
-    
+
     At Transifex:
         https://www.transifex.com/projects/p/spacefm/resource/spacefmpot_1/
 
@@ -447,7 +456,7 @@ TRANSLATE
 
 LICENSE
 
-    SpaceFM - Copyright (C) 2013   GPL3+
+    SpaceFM - Copyright (C) 2014  GPL3+
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the
@@ -470,3 +479,10 @@ LICENSE
 
     See COPYING and COPYING-LGPL files.
 
+
+DERIVATIVE WORKS
+
+    If you plan to publish a significant amount of or the full source to
+    SpaceFM with your modifications, please see the following wiki article:
+
+    https://github.com/IgnorantGuru/spacefm/wiki/Guidelines-For-Distributing-Modifications

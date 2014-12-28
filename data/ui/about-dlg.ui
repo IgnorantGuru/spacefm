@@ -6,9 +6,9 @@
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="program_name">SpaceFM</property>
     <property name="comments" translatable="yes">by IgnorantGuru</property>
-    <property name="copyright" translatable="yes">Copyright (C) 2013    GPL3+</property>
+    <property name="copyright" translatable="yes">Copyright (C) 2014    GPL3+</property>
     <property name="website">http://ignorantguru.github.io/spacefm/</property>
-    <property name="license" translatable="yes">SpaceFM - Copyright (C) 2013   GPL3+
+    <property name="license" translatable="yes">SpaceFM - Copyright (C) 2014   GPL3+
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.
 
@@ -20,7 +20,8 @@ You should have received a copy of the GNU General Public License and the GNU Le
 <property name="authors" translatable="yes">IgnorantGuru &lt;ignorantguru@gmx.com&gt;
 
 Contributors:
-    BwackNinja &lt;BwackNinja@gmail.com&gt;  (gtk misc, gtk3 port)
+    BwackNinja &lt;BwackNinja@gmail.com&gt;
+    OmegaPhil &lt;OmegaPhil+SpaceFM@gmail.com&gt;
 
 Artwork:
     SpaceFM icons and logo by Goran Simovic
@@ -29,11 +30,10 @@ Thanks to SpaceFM users for valuable feedback and to SpaceFM translators and
 packagers!
 
 Special thanks to:
-    OmegaPhil
-    Patrick Verner
-    Hasufell
-    Vladimir Kudrya
     Jean-Philippe Fleury
+    Vladimir Kudrya
+    VastOne
+    Hasufell
 
 SpaceFM is developed on geany, gcc, and git, with a little help from gdb.
 

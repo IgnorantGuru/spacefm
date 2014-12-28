@@ -33,7 +33,7 @@ VFSAppDesktop* vfs_app_desktop_new( const char* file_name )
     GKeyFile* file;
     gboolean load;
     char* relative_path;
-
+    
     VFSAppDesktop* app = g_slice_new0( VFSAppDesktop );
     app->n_ref = 1;
 
@@ -48,6 +48,7 @@ VFSAppDesktop* vfs_app_desktop_new( const char* file_name )
     if( g_path_is_absolute( file_name ) )
     {
         app->file_name = g_path_get_basename( file_name );
+        app->full_path = g_strdup( file_name );
         load = g_key_file_load_from_file( file, file_name,
                                           G_KEY_FILE_NONE, NULL );
     }
@@ -56,9 +57,19 @@ VFSAppDesktop* vfs_app_desktop_new( const char* file_name )
         app->file_name = g_strdup( file_name );
         relative_path = g_build_filename( "applications",
                                           app->file_name, NULL );
-        load = g_key_file_load_from_data_dirs( file, relative_path, NULL,
+        load = g_key_file_load_from_data_dirs( file, relative_path,
+                                               &app->full_path,
                                                G_KEY_FILE_NONE, NULL );
         g_free( relative_path );
+
+        if ( !load )
+        {
+            // some desktop files are in subdirs of data dirs (out of spec)
+            if ( app->full_path = mime_type_locate_desktop_file(
+                                                            NULL, file_name ) )
+                load = g_key_file_load_from_file( file, app->full_path,
+                                          G_KEY_FILE_NONE, NULL );
+        }
     }
 
     if( load )
@@ -92,6 +103,7 @@ static void vfs_app_desktop_free( VFSAppDesktop* app )
     g_free( app->exec );
     g_free( app->icon_name );
     g_free( app->path );
+    g_free( app->full_path );
 
     g_slice_free( VFSAppDesktop, app );
 }
@@ -327,6 +339,10 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
             ++pexec;
             switch( *pexec )
             {
+            /* 0.9.4: Treat %u/%U as %f/%F acceptable for local files per spec at
+             * http://standards.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html#exec-variables
+             * This seems to be more common behavior among file managers and
+             * some common .desktop files erroneously make this assumption.
             case 'U':
                 for( l = file_list; l; l = l->next )
                 {
@@ -351,8 +367,10 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
                     add_files = TRUE;
                 }
                 break;
+            */
             case 'F':
             case 'N':
+            case 'U':
                 for( l = file_list; l; l = l->next )
                 {
                     file = (char*)l->data;
@@ -365,6 +383,7 @@ static char* translate_app_exec_to_command_line( VFSAppDesktop* app,
                 break;
             case 'f':
             case 'n':
+            case 'u':
                 if( file_list && file_list->data )
                 {
                     file = (char*)file_list->data;
@@ -571,6 +590,7 @@ gboolean vfs_app_desktop_open_files( GdkScreen* screen,
         return TRUE;
     }
 
-    g_set_error( err, G_SPAWN_ERROR, G_SPAWN_ERROR_FAILED, _("Command not found") );
+    g_set_error( err, G_SPAWN_ERROR, G_SPAWN_ERROR_FAILED, "%s\n\n%s",
+                                    _("Command not found"), app->file_name );
     return FALSE;
 }

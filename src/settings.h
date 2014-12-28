@@ -35,6 +35,7 @@ typedef struct
 
     gboolean use_trash_can;
     gboolean single_click;
+    gboolean no_single_hover;
 
     /* char* iconTheme; */
     //char* terminal;
@@ -67,6 +68,7 @@ typedef struct
     int desktop_sort_type;
     gboolean show_wm_menu;
     gboolean desk_single_click;
+    gboolean desk_no_single_hover;
     gboolean desk_open_mime;
     PangoFontDescription* desk_font;
     GdkColor desktop_bg1;
@@ -113,6 +115,13 @@ enum {
     XSET_B_UNSET,
     XSET_B_TRUE,
     XSET_B_FALSE
+};
+
+enum {
+    XSET_CMD_LINE,
+    XSET_CMD_SCRIPT,
+    XSET_CMD_APP,
+    XSET_CMD_BOOKMARK
 };
 
 enum {   // do not renumber - these values are saved in session files
@@ -195,9 +204,9 @@ typedef struct
     char* z;                // for menu_string locked, stores default
     gboolean disable;       // not saved, default false
     char* menu_label;
-    int menu_style;         // not saved/read if locked
+    int menu_style;         // not saved or read if locked
     char* icon;
-    void (*cb_func) ();      // not saved
+    void (*cb_func) ();     // not saved
     gpointer cb_data;       // not saved
     char* ob1;              // not saved
     gpointer ob1_data;      // not saved
@@ -208,12 +217,12 @@ typedef struct
     int key;
     int keymod;
     char* shared_key;       // not saved
-    char* desc;             // not saved/read if locked
-    char* title;            // not saved/read if locked
+    char* desc;             // not saved or read if locked
+    char* title;            // not saved or read if locked
     char* next;
     char* context;
     char tool;              // 0=not 1=true 2=false
-    gboolean lock;      // not saved, default true
+    gboolean lock;          // not saved, default true
     
     // Custom Command ( !lock )
     char* prev;
@@ -230,7 +239,8 @@ typedef struct
     char in_terminal;       // or save menu_label if lock
     char keep_terminal;     // or save icon if lock
     char scroll_lock;
-    
+    char opener;
+
     // Plugin (not saved at all)
     gboolean plugin;
     gboolean plugin_top;
@@ -278,24 +288,28 @@ static const char* terminal_programs[] =  //for pref-dialog.c
     "sakura",
     "terminator",
     "urxvt",
-    "xterm"
+    "xterm",
+    "x-terminal-emulator",
+    "lilyterm"
 };
 
 static const char* su_commands[] = // order and contents must match prefdlg.ui
 {
     "/bin/su",
-    "/usr/bin/sudo"
+    "/usr/bin/sudo",
+    "/usr/bin/su-to-root"
 };
 
 static const char* gsu_commands[] = // order and contents must match prefdlg.ui
 {
-    "/usr/bin/ktsuss",
     "/usr/bin/gksu",
     "/usr/bin/gksudo",
     "/usr/bin/gnomesu",
     "/usr/bin/xdg-su",
     "/usr/bin/kdesu",   // may be translated to "$(kde4-config --path libexec)/kdesu"
     "/usr/bin/kdesudo",
+    "/usr/bin/ktsuss",
+    "/usr/bin/su-to-root",
     "/bin/su",
     "/usr/bin/sudo"
 };
@@ -316,7 +330,7 @@ void string_copy_free( char** s, const char* src );
 gboolean is_alphanum( char* str );
 char* get_name_extension( char* full_name, gboolean is_dir, char** ext );
 char* unescape( const char* t );
-void xset_autosave( PtkFileBrowser* file_browser, gboolean force );
+void xset_autosave( gboolean force, gboolean delay );
 void xset_autosave_cancel();
 
 void open_in_prog( const char* path );
@@ -340,6 +354,13 @@ int xset_get_int_panel( int panel, const char* name, const char* var );
 XSet* xset_set_panel( int panel, const char* name, const char* var, const char* value );
 XSet* xset_set_cb_panel( int panel, const char* name, void (*cb_func) (), gpointer cb_data );
 gboolean xset_get_b_set( XSet* set );
+XSet* xset_get_panel_mode( int panel, const char* name, char mode );
+gboolean xset_get_b_panel_mode( int panel, const char* name, char mode );
+XSet* xset_set_panel_mode( int panel, const char* name, char mode,
+                                      const char* var, const char* value );
+XSet* xset_set_b_panel_mode( int panel, const char* name, char mode,
+                                                            gboolean bval );
+
 XSetContext* xset_context_new();
 XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
@@ -395,6 +416,8 @@ XSet* xset_import_plugin( const char* plug_dir );
 void clean_plugin_mirrors();
 char* plain_ascii_name( const char* orig_name );
 void xset_show_help( GtkWidget* parent, XSet* set, const char* anchor );
+gboolean xset_opener( DesktopWindow* desktop, PtkFileBrowser* file_browser,
+                                                            char job );
 
 
 

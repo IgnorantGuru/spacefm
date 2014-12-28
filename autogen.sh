@@ -151,6 +151,9 @@ done
 
 conf_flags="--enable-maintainer-mode"
 
+# ensure pot file is not deleted by make clean
+sed -i 's/\(.*rm -f.*\)\$(GETTEXT_PACKAGE)\.pot \(.*\)/\1 \2/' po/Makefile.in.in 
+
 if test x$NOCONFIGURE = x; then
   echo Running $srcdir/configure $conf_flags "$@" ...
   $srcdir/configure $conf_flags "$@" \

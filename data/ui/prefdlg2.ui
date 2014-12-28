@@ -142,6 +142,9 @@
       <row>
         <col id="0">/usr/bin/sudo</col>
       </row>
+      <row>
+        <col id="0">/usr/bin/su-to-root</col>
+      </row>
     </data>
   </object>
   <object class="GtkListStore" id="modelgsu">
@@ -149,9 +152,6 @@
       <column type="gchararray"/>
     </columns>
     <data>
-      <row>
-        <col id="0">/usr/bin/ktsuss</col>
-      </row>
       <row>
         <col id="0">/usr/bin/gksu</col>
       </row>
@@ -169,6 +169,12 @@
       </row>
       <row>
         <col id="0">/usr/bin/kdesudo</col>
+      </row>
+      <row>
+        <col id="0">/usr/bin/ktsuss</col>
+      </row>
+      <row>
+        <col id="0">/usr/bin/su-to-root</col>
       </row>
       <row>
         <col id="0">/bin/su</col>
@@ -334,7 +340,7 @@
                       <object class="GtkLabel" id="label18">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Display&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Icons&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -358,14 +364,38 @@
                             <property name="visible">True</property>
                             <property name="spacing">6</property>
                             <child>
-                              <object class="GtkCheckButton" id="single_click">
+                              <object class="GtkHBox" id="hboxsingleclk">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="label" translatable="yes">Single click opens files</property>
-                                <property name="draw_indicator">True</property>
+                                <property name="spacing">6</property>
+
+                                <child>
+                                  <object class="GtkCheckButton" id="single_click">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="label" translatable="yes">Single click opens files</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="single_hover">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="label" translatable="yes">Hover selects</property>
+                                    <property name="draw_indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">False</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -469,7 +499,7 @@
                     <child type="label">
                       <object class="GtkLabel" id="label12">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;Behavior&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;File List&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
                     </child>
@@ -646,7 +676,7 @@
                   <object class="GtkVBox" id="desktop_page">
                     <property name="visible">True</property>
                     <property name="border_width">2</property>
-                    <property name="spacing">18</property>
+                    <property name="spacing">9</property>
 
                     <!-- Desktop 2-column table -->
                     <child>
@@ -1000,7 +1030,7 @@
                           <object class="GtkCheckButton" id="desk_single_click">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Single click opens</property>
+                            <property name="label" translatable="yes">Single click opens files</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -1009,10 +1039,10 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="show_wm_menu">
+                          <object class="GtkCheckButton" id="desk_single_hover">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Right click shows WM menu</property>
+                            <property name="label" translatable="yes">Hover selects</property>
                             <property name="use_underline">True</property>
                             <property name="draw_indicator">True</property>
                           </object>
@@ -1021,6 +1051,19 @@
                           </packing>
                         </child>
 
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                      </packing>
+                    </child>
+
+                    <child>
+                      <object class="GtkCheckButton" id="show_wm_menu">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Right click shows WM menu</property>
+                        <property name="use_underline">True</property>
+                        <property name="draw_indicator">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>

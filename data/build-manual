@@ -1,0 +1,272 @@
+#!/bin/bash
+# spacefm build manual
+# run from data/ subdir
+# run as: ./build-manual > spacefm-manual-en.html
+
+f="$1"
+if [ "$f" = "" ]; then
+	f=spacefm-mansrc-en.html
+fi
+if [ ! -e "$f" ]; then
+	echo "missing file $f" 1>&2
+	exit 1
+fi
+
+trim()
+{
+	s="$1"
+	s="${s## }"
+	s="${s%% }"
+	echo "$s"
+}
+
+parse()
+{
+	x="$1"
+	head="${section[x]%%>*}>"	#<!-- @Plugins @Creation And Files -->
+	h1="${head#*@}"				#Plugins @Creation And Files -->
+	h2="$h1"					#Plugins @Creation And Files -->
+	h1="${h1%%@*}"				#Plugins 
+	h1="${h1%%-->*}"			 
+	h1="$(trim "$h1")"			#Plugins
+	hx="${h2#*@}"				#Creation And Files -->
+	if [ "$hx" = "$h2" ]; then
+		h2=""
+	else
+		h2="$hx"
+		h2="${h2%%-->*}"			#Creation And Files 
+		h2="$(trim "$h2")"			#Creation And Files
+		subname="${h2##*#}"			#Creation And Files #creation
+		if [ "$subname" = "$h2" ]; then
+			subname=""
+		else
+			h2="${h2%%#*}"
+		fi
+	fi
+	if [ "$subname" != "" ]; then
+		anc="$h1-$subname"
+	else
+		anc="$h1-$h2"
+	fi
+	anc=`echo "$anc" | tr '[A-Z]' '[a-z]'`
+	anc=`echo "$anc" | tr -d '/& '`
+	anc1="$h1"
+	anc1=`echo "$anc1" | tr '[A-Z]' '[a-z]'`
+	anc1=`echo "$anc1" | tr -d '/& '`
+}
+
+IFS=$'\n'
+n=$'\n'
+mode=0
+sx=-1
+
+# this method needs \\ for \ so use cat instead
+	#IFS=$'\n'  # makes read preserve spaces
+	#while read l; do
+	#done < "$f"
+
+# read sections
+for l in `cat -E "$f"`; do
+	l="${l%\$}"
+	if [[ "$l" =~ \<!--.*@.*--\> ]]; then
+		# new section header
+		(( sx++ ))
+		section[sx]="$l$n"
+		mode=1
+	else
+		if (( mode == 0 )); then
+			# print the top part of the file as-is
+			echo "$l"
+		elif (( mode == 1 )); then
+			# add line to section
+			if [ "${l:0:6}" = "<!-- #" ]; then
+				# substitute name
+				subname="${l#*#}"
+				subanc="${subname#*#}"
+				if [ "$subanc" = "$subname" ]; then
+					subanc=""
+				else
+					subanc="${subanc%-->}"
+					subanc="$(trim "$subanc")"
+				fi
+				subname="${subname%%#*}"
+				subname="${subname%-->}"
+				subname="$(trim "$subname")"
+				if [ "$subanc" = "" ]; then
+					subanc=`echo "$subname" | tr '[A-Z]' '[a-z]'`
+					subanc=`echo "$subanc" | tr -d '/& '`
+				fi
+				ll="<p><a name=\"@$subanc\"/><a href=\"@$subanc\"><b>$subname</b></a><br>"
+				section[sx]="${section[$sx]}$l$n"
+				section[sx]="${section[$sx]}$ll$n"
+			else
+				section[sx]="${section[$sx]}$l$n"
+			fi
+		fi
+	fi
+done
+(( scount = sx + 1 ))
+
+parse 0
+
+if [ "$h1" = "toc" ]; then
+	# converting html to nanual
+	a=0
+else
+	# converting nanual to html
+
+	# make toc
+	echo '<!-- @toc -->'
+	echo '<font size=+2><a name="toc">Table Of Contents</a></font><br><br><blockquote>'
+	
+	#<a href="#introduction">Introduction</a>
+	#<ul>
+	#	<a href="#about">About</a><br>
+	#	<a href="#history">History</a><br>
+	#	<a href="#highlights">Highlights</a><br>
+	#</ul>
+	sx=0
+	main=""
+	while (( sx < scount )); do
+		parse $sx
+		if [ "$h1" = "tail" ]; then
+			break
+		fi
+		if [ "$main" != "$h1" ]; then
+			# new main section
+			if [ "$main" != "" ]; then
+				echo "</ul>"
+			fi
+			main="$h1"
+			main_anc="$anc1"
+			echo "<a href=\"#$main_anc\">$main</a>"
+			echo "<ul>"
+		fi
+		# subsection
+		echo "    <a href=\"#$anc\">$h2</a><br>"
+		(( sx++ ))
+	done
+	echo "</ul>"
+	echo "</blockquote></td></tr>"
+	echo
+	
+	# sections
+	sx=0
+	main=""
+	while (( sx < scount )); do
+		parse $sx
+		if [ "$h1" = "tail" ]; then
+			break
+		fi
+		if [ "$main" != "$h1" ]; then
+			# new main section
+			main="$h1"
+			main_anc="$anc1"
+			echo
+			echo "<tr><td colspan=2>"
+			echo "<center><a name=\"$main_anc\"/><a href=\"#$main_anc\"><font size=+2>$main</font></a></center>"
+			echo "</td></tr>"
+			echo
+		fi
+		# subsection
+		echo
+		echo '<tr>'
+		echo '<td width="20%" valign="top">'
+		echo '<a href="#toc">Contents</a>'
+		echo '<ul>'
+		
+		hh1="$h1"
+		hh2="$h2"
+		aanc="$anc"
+		
+		# sections
+		#<ul>
+		#	<li>Introduction
+		#	<ul>
+		#		<li>About
+		#		<li><a href="#history">History</a>
+		#		<li><a href="#highlights">Highlights</a>
+		#	</ul>
+		#	<li><a href="#installation">Installation</a>
+		#	<li><a href="#invocation">Invocation</a>
+		#	<li><a href="#files">Program Files</a>
+		#</ul>
+
+
+		sy=0
+		mainy=""
+		live=0
+		while (( sy < scount )); do
+			parse $sy
+			if [ "$h1" = "tail" ]; then
+				if (( live == 1 )); then
+					echo "    </ul>"
+				fi
+				break
+			fi
+			if [ "$mainy" != "$h1" ]; then
+				# new main section
+				if (( live == 1 )); then
+					echo "    </ul>"
+					live=0
+				fi
+				mainy="$h1"
+				mainy_anc="$anc1"
+				if [ "$mainy" = "$hh1" ]; then
+					# live main section
+					echo "    <li>$mainy"
+					echo "    <ul>"
+					live=1
+				else
+					echo "    <li><a href=\"#$mainy_anc\">$mainy</a>"
+				fi
+			fi
+			# subsection
+			if (( live == 1 )); then
+				if [ "$h2" = "$hh2" ]; then
+					# current subsection
+					echo "        <li>$h2"
+				else
+					echo "        <li><a href=\"#$anc\">$h2</a>"
+				fi
+			fi
+			(( sy++ ))
+		done
+		echo '</ul>'
+		echo '</td>'
+		echo '<td valign="top">'
+		echo "<a name=\"$aanc\"/><a href=\"#$aanc\"><font size=+2>$hh2</font></a>"
+		
+		section[sx]="${section[sx]//\<a name=\"@/<a name=\"$aanc-}"
+		section[sx]="${section[sx]//\<a href=\"@/<a href=\"#$aanc-}"
+		
+		echo -n "${section[$sx]}"
+		echo "<!-- @end $aanc-->"
+		echo '<br><br></td></tr>'
+		echo
+		(( sx++ ))
+	done
+	
+	# tail
+
+	# get version info
+	if [ -e ../configure.ac ]; then
+		ver=`grep -m 1 "^AC_INIT(\[spacefm\], \[" "../configure.ac" \
+			| sed 's/AC_INIT(\[spacefm\], \[\(.*\)\])/\1/'`
+		if [ "$ver" = "" ]; then
+			echo
+			echo "nanual: WARNING: cannot get version"
+			echo
+			version="Updated $(date +%Y-%m-%d)"
+		else
+			version="Updated $(date +%Y-%m-%d)&nbsp;&nbsp;(SpaceFM version $ver)"
+		fi
+	else
+		version="Updated $(date +%Y-%m-%d)"
+	fi
+	
+	section[scount - 1]="${section[scount - 1]//@@@version@@@/$version}"
+	section[scount - 1]="${section[scount - 1]//@@@year@@@/$(date +%Y)}"
+	echo
+	echo "${section[scount - 1]}"
+fi

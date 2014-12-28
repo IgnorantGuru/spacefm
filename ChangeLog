@@ -1,4 +1,67 @@
-0.8.7+
+0.9.4   2014-03-30:
+    improve inotify error messages
+    configure.ac default make options; fix -Wformat-security warning #416
+    adjust new window maximized panel sizes #420
+    fix toolbar checkbox item properties icon insensitive #418
+    fix panel_sliders-key used as task height 0.9.2-0.9.3 #419
+    reset Use-as-opener on import/install plugin; update man
+    task error continue no present open task dialog
+    gnome-terminal 3.10 no longer accepts --disable-factory #428
+    desktop dialogs pop to top #424
+    [GTK2] Preferences|Desktop table row collision #427
+    [desktop] preserve location of renamed file(s)
+    [dialog] remove blank lines reading file into drop, combo, m/list
+    [dialog] remove linefeeds inserting value into input/-large
+    [dialog] @FILE values not saved on cancel #321
+    Preferences|Desktop|Font dlg honor cancel
+    fix new config devices shown not saved
+    path bar middle-click replace contents and activate
+    open .desktop treat %u/%U as %f/%F per freedesktop spec
+    single-click method no hover selection option #154
+    update translations de ru sv
+0.9.3   2014-01-17:
+    fix memory leak on draw selection rectangle on desktop #397
+    [Dialog] fix returned windowsize=1x1 [GTK 3.8+]
+    fix maximized panel sliders not restored #402
+    README, man: update kernel polling instructions #403
+    look in applications subdirs for .desktop file; debug info #405
+    clear g_ascii_strcasecmp warning on owner sort
+    case insensitive app sort, tooltips, uniq in app chooser dialog #405
+    startup test for /bin/bash installed #413
+    task columns default expansion to avoid flicker #235
+0.9.2   2013-12-06:
+    README correct packages link
+    manual note full/max col widths not saved #382
+    adjust maximized and fullscreen behavior #382
+    add su-to-root support
+    detect rename of current folder and close tab #243
+    fix list view auto drag action on drop to last row #387
+    add design menu Edit Script; F4 opens script in editor
+    task manager absolute height #380
+    fix icon/compact dbl-click selects file in selected dir #218 #389
+    fix open foldername.iso as automount iso
+    allow ~/ prefix in bookmarks and hacked session files
+    fix task auto scroll first show
+    add design menu Edit Command
+    update changed translations
+0.9.1   2013-11-06:
+    [gtk 3.8] fix run dialog reverts to minimum size
+    fix icon change not saved (bookmark, tab, devices, etc) #367
+    sakura terminal use -x with single argument
+    fix crash in save_settings #369
+    new panel config memory #372
+    fix build problem on gtk < 2.24 #368
+    new root window use HOME=/root incase no env reset
+    fix Export from desktop menu
+    man panel memory
+    task man change default cols to current speed and remain
+    fix identification of empty optical drive
+    change default device icons
+    add lilyterm to emulators list
+    remove erroneous files from pkg branch
+    README added wiki link Guidelines For Distributing Modifications
+    limit evt_win_move events to 5 per second #380
+0.9.0   2013-10-22:
     add browse-for options in Rename/New dialog Browse dialog
     run fm Devices menu functions in task man
     let vfs task show run-task missing file errors
@@ -35,6 +98,21 @@
     new design menu; Menu Item Properties dialog
     update manual/homepage locations (github.io)
     session dont save default menu labels and icons
+    add item prop Context Use as opener for option
+    add Context verb pattern matches for wildcards #214
+    default Root|U/Mount commands use udevil
+    remove translatable strings in exo view code
+    clear hal build warnings for debian build issue #363
+    x-terminal-emulator link resolved, added to terminals list #358
+    drag to same dir sets auto drag action copy #304 #336
+    Dialog fix segfault with --chooser filespec #320
+    Translation strings adjusted #322 #318 #325 #326
+    save session delayed on tab change if save tabs
+    path bar steal enter key
+    improved overwrite dir #330 #312
+    support mips and other architectures - change to sys/inotify.h #311
+    manual Rename and New File dialogs; adjust Options menu keys #268
+    rename/new dlgs always focus first entry
 0.8.7   2013-03-17:
     added translation files to transifex.com [Delix]
     Delix and Aqualung71 contributed to German translation

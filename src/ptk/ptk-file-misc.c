@@ -179,7 +179,7 @@ void ptk_delete_files( GtkWindow* parent_win,
     task = ptk_file_task_new( app_settings.use_trash_can ? VFS_FILE_TASK_TRASH : VFS_FILE_TASK_DELETE,
                               file_list,
                               NULL,
-                              GTK_WINDOW( parent_win ),
+                              parent_win ? GTK_WINDOW( parent_win ) : NULL,
                               GTK_WIDGET( task_view ) );
     ptk_file_task_run( task );
 }
@@ -202,26 +202,55 @@ static void select_file_name_part( GtkEntry* entry )
     }
 }
 
-static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+void on_help_activate( GtkMenuItem* item, MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    xset_show_help( GTK_WIDGET( mset->dlg ), NULL,
+                        mset->create_new ? "#gui-newf" : "#gui-rename" );
+}
+
+static gboolean on_move_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
+{
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
     return FALSE;
 }
 
-static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event, MoveSet* mset )
+static gboolean on_move_entry_keypress ( GtkWidget *widget, GdkEventKey *event,
+                                                                MoveSet* mset )
 {
-    if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+    int keymod = ( event->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+             GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( keymod == 0 )
     {
-        if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
-            gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
-        return TRUE;
+        if ( event->keyval == GDK_KEY_Return || event->keyval == GDK_KEY_KP_Enter )
+        {
+            if ( gtk_widget_get_sensitive( GTK_WIDGET( mset->next ) ) )
+                gtk_dialog_response( GTK_DIALOG( mset->dlg ), GTK_RESPONSE_OK );
+            return TRUE;
+        }
+        else if ( event->keyval == GDK_KEY_F1 )
+        {
+            on_help_activate( NULL, mset );
+            return TRUE;
+        }
     }
-    
     return FALSE;
 }
 
@@ -874,10 +903,10 @@ void on_create_browse_button_press( GtkWidget* widget, MoveSet* mset )
     }
         
     GtkWidget* dlg = gtk_file_chooser_dialog_new( title,
-                                   GTK_WINDOW( mset->parent ), 
-                                   action,
-                                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                   GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+                           mset->parent ? GTK_WINDOW( mset->parent ) : NULL, 
+                           action,
+                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                           GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
                     
     xset_set_window_icon( GTK_WINDOW( dlg ) );
 
@@ -998,7 +1027,7 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     //  it creates a folder by default with no way to stop it
     //  it gives 'folder already exists' error popup
     GtkWidget* dlg = gtk_file_chooser_dialog_new( _("Browse"),
-                                   GTK_WINDOW( mset->parent ), 
+                                   mset->parent ? GTK_WINDOW( mset->parent ) : NULL, 
                                    mode_default == MODE_PARENT ?
                                         GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER :
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -1124,11 +1153,6 @@ void on_browse_button_press( GtkWidget* widget, MoveSet* mset )
     }
     
     gtk_widget_destroy( dlg );    
-}
-
-void on_help_activate( GtkMenuItem* item, MoveSet* mset )
-{
-    xset_msg_dialog( mset->dlg, 0, _("Rename / Move Tips"), NULL, 0, _("* To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.\n\n* To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').\n\n* Multiple files can be selected in the file browser to rename a batch of files."), NULL, NULL );
 }
 
 void on_font_change( GtkMenuItem* item, MoveSet* mset )
@@ -1950,6 +1974,19 @@ void update_new_display( const char* path )
     g_timeout_add( 1500, (GSourceFunc)update_new_display_delayed, g_strdup( path ) );
 }
 
+/*
+static gboolean on_dlg_keypress( GtkWidget *widget, GdkEventKey *event,
+                                                            MoveSet* mset )
+{
+    if ( event->keyval == GDK_KEY_F1 && event->state == 0 )
+    {
+        on_help_activate( NULL, mset );
+        return TRUE;
+    }
+    return FALSE;
+}
+*/
+
 int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                                         const char* file_dir, VFSFileInfo* file,
                                         const char* dest_dir, gboolean clip_copy,
@@ -2064,10 +2101,11 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         task_view = file_browser->task_view;
     }
     else
-        mset->parent = GTK_WIDGET( desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        mset->parent = NULL;  //GTK_WIDGET( desktop );
 
     mset->dlg = gtk_dialog_new_with_buttons( _("Move"),
-                                GTK_WINDOW( mset->parent ),
+                                mset->parent ? GTK_WINDOW( mset->parent ) : NULL,
                                 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
                                 NULL, NULL );
     //g_free( title );
@@ -2641,6 +2679,7 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
     on_move_change( GTK_WIDGET( mset->buf_full_path ), mset );
     on_opt_toggled( NULL, mset );
 
+    /* instead of using last used widget, just use first visible
     // last widget
     int last = xset_get_int( "move_dlg_font", "z" );
     if ( last == 1 )
@@ -2665,6 +2704,15 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
         else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
             mset->last_widget = mset->input_full_path;
     }
+    */
+    if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_name ) ) )
+        mset->last_widget = mset->input_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_name ) ) )
+        mset->last_widget = mset->input_full_name;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_path ) ) )
+        mset->last_widget = mset->input_path;
+    else if ( gtk_widget_get_visible( gtk_widget_get_parent( mset->input_full_path ) ) )
+        mset->last_widget = mset->input_full_path;
     
     // select last widget
     select_input( mset->last_widget, mset );
@@ -2676,6 +2724,10 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                             G_CALLBACK( on_button_focus ), mset );
     g_signal_connect( G_OBJECT( mset->cancel ), "focus",
                             G_CALLBACK( on_button_focus ), mset );
+
+    // not used to speed keypress processing 
+    //g_signal_connect( G_OBJECT( mset->dlg ), "key-press-event",
+    //                        G_CALLBACK( on_dlg_keypress ), mset );
 
     // run
     int response;
@@ -3159,7 +3211,8 @@ _continue_free:
         g_free( str );
     }
 
-    // save last_widget
+    // save last_widget - this is no longer used but save anyway
+    int last;
     if ( mset->last_widget == mset->input_name )
         last = 1;
     else if ( mset->last_widget == GTK_WIDGET( mset->entry_ext ) )
@@ -3424,6 +3477,8 @@ static gboolean open_files_with_app( const char* cwd,
     else
         screen = gdk_screen_get_default();
 
+    printf("EXEC(%s)=%s\n", app->full_path ? app->full_path : app_desktop,
+                                                                app->exec );
     if ( ! vfs_app_desktop_open_files( screen, cwd, app, files, &err ) )
     {
         GtkWidget * toplevel = file_browser ? gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) ) : NULL;
@@ -3678,12 +3733,14 @@ void ptk_file_misc_paste_as( DesktopWindow* desktop, PtkFileBrowser* file_browse
 
     if ( missing_targets > 0 )
     {
-        GtkWidget* parent = NULL;
+        GtkWindow* parent;
         if ( file_browser )
-            parent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
+            parent = GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
+                                                        file_browser ) ) );
         else if ( desktop )
-            parent = gtk_widget_get_toplevel( GTK_WIDGET( desktop ) );
-        ptk_show_error( GTK_WINDOW( parent ),
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            parent = NULL;
+        ptk_show_error( parent,
                         g_strdup_printf ( _("Error") ),
                         g_strdup_printf ( "%i target%s missing",
                         missing_targets, 
@@ -3708,7 +3765,8 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
     char* cmd;
     char* task_name;
     
-    GtkWidget* parent = desktop ? GTK_WIDGET( desktop ) : GTK_WIDGET( file_browser );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    GtkWidget* parent = file_browser ? GTK_WIDGET( file_browser ) : NULL;
     char* file_paths = g_strdup( "" );
     GList* sel;
     char* file_path;
@@ -3735,7 +3793,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
             str = g_strdup_printf( ngettext( "Delete %d selected item as root ?",
                                              "Delete %d selected items as root ?",
                                              item_count ), item_count );
-            if ( xset_msg_dialog( GTK_WIDGET( parent ), GTK_MESSAGE_WARNING,
+            if ( xset_msg_dialog( parent, GTK_MESSAGE_WARNING,
                                 _("Confirm Delete As Root"), NULL, GTK_BUTTONS_YES_NO,
                                 _("DELETE AS ROOT"), str, NULL ) != GTK_RESPONSE_YES )
             {
@@ -3755,7 +3813,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
             folder = set->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( parent ), GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        path = xset_file_dialog( parent, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                                 _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
@@ -3784,7 +3842,7 @@ void ptk_file_misc_rootcmd( DesktopWindow* desktop, PtkFileBrowser* file_browser
     g_free( file_paths );
 
     // root task
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( parent ),
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, parent,
                                 file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
     task->task->exec_command = cmd;

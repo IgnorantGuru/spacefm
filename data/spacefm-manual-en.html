@@ -9,7 +9,7 @@
 <td width="20%" valign="top">
 <font size=+2>SpaceFM</font><br><br>
 <a href="http://ignorantguru.github.io/spacefm/">Homepage</a><br>
-<a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a><br>
+<a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a><br>
 <a href="http://ignorantguru.github.io/spacefm/news.html">News</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/wiki">Wiki</a><br>
 <a href="https://github.com/IgnorantGuru/spacefm/issues">Report Issues</a><br>
@@ -58,8 +58,11 @@
 </ul>
 <a href="#gui">GUI</a>
 <ul>
+    <a href="#gui-pan">Panels </a><br>
     <a href="#gui-pathbar">Path Bar</a><br>
     <a href="#gui-find">Find-As-You-Type Search </a><br>
+    <a href="#gui-rename">Rename Dialog </a><br>
+    <a href="#gui-newf">New File/Folder Dialog </a><br>
 </ul>
 <a href="#devices">Devices</a>
 <ul>
@@ -154,15 +157,13 @@
 <!-- @Introduction @Highlights -->
 <a name="introduction-about"></a> <!-- backwards compat -->
 
-<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.
-
-<p>Now used as the default file manager in the <a href="http://partedmagic.com/">Parted Magic</a> live rescue OS and <a href="https://github.com/IgnorantGuru/spacefm/wiki/Distros">other distros</a>, SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
+<p>SpaceFM is a multi-panel tabbed file and desktop manager for Linux with built-in VFS, udev- or HAL-based device manager, customizable menu system, and bash integration.  SpaceFM is popular among novice and power users alike for its stability, speed, convenience and flexibility.
 
 <ul>
     <li><b>Flexible</b> - <i>Can appear very simple or very complex depending on configuration</i><br>
     Inspired by the simplicity and clarity of PCManFM's interface, SpaceFM's GUI aims to be simple and uncluttered, while still providing extensive capabilities for power users and flexibility in window components, behavior, and appearance.
     <ul>
-	<li>Each window may contain up to four independently configured, interactive browser panels
+	<li>Each window may contain up to four independently configured, interactive browser panels <a href="#gui-pan">*</a>
 	<li>Each panel supports multiple folder tabs
 	<li>Optional side panes in each panel can show Devices, Bookmarks, and a Directory Tree
 	<li>How many panels you want displayed, how they are arranged and sized, what each panel contains, and what fonts and icons are used is largely up to you.  SpaceFM can be a window containing icons of a single folder's contents, or a multi-panel, tabbed arrangement of detailed file lists, devices, bookmarks, and folder trees.  <a href="http://ignorantguru.github.io/spacefm/screenshots.html">screenshots</a>
@@ -203,7 +204,7 @@
 	<li>Builds with any version of GTK+ ranging from 2.18 to 3.x; relies only on stock GTK+ icons
 	<li>Built-in virtual filesystem (VFS) code uses core C kernel functions for speed and reliability, with no dependence on gvfs, etc.
 	<li>Interfaces directly with udev for device support, with <b>no dependency on udisks</b>; can also be built with deprecated HAL support instead of libudev
-	<li>Built-in support for inotify-capable kernels (most are), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, can easily be built with deprecated fam/gamin support.)
+	<li>Built-in support for inotify-capable kernels (>=2.6.13), meaning there are no dependencies on file alteration monitors (fam, gamin, gvfs, etc).  (For rare kernels without inotify support, can easily be built with deprecated fam/gamin support.)
     </ul><br>
 
     <li><b>Task Manager &amp; Queue</b> - <i>Centralized multi-task queue and popup control</i><br>
@@ -234,7 +235,7 @@
     Run SpaceFM in the background as a daemon to auto-mount and auto-open devices, and quickly open browser windows on demand. <a href="#invocation-daemonmode">*</a><br><br>
 
     <li><b>Network Support</b> - <i>Mounts network filesystems and ISO files</i><br>
-    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a> <br><br>    
+    Conveniently mount network URLs (nfs:// ftp:// smb:// ssh://) and ISO files using the highly configurable <a href="http://ignorantguru.github.io/udevil/">udevil</a>.  Or, configure a custom protocol handler to mount networks using any external tools you choose, plus create custom protocols of your own. <a href="#gui-pathbar-proto">*</a>  NOTE:  Network share support in SpaceFM is ad hoc by design.  This means there aren't many built-in functions pertaining to networks, and SpaceFM does not make network connections itself.  Network discovery and other functions are handled via plugins and your custom commands.<br><br>    
 </ul>
 
 
@@ -268,7 +269,7 @@
 <a name="introduction-history"/><a href="#introduction-history"><font size=+2>History</font></a>
 <!-- @Introduction @History -->
 
-<p>SpaceFM was developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed bugs, and kept the legacy version alive for those who prefered it for its light dependencies and added features.
+<p>SpaceFM was originally developed from a fork of the legacy PCManFM file manager.  When PCManFM reached version 0.5.2 (aka 'the legacy version'), the original author (Hon Jen Yee) abandoned it for a major rewrite which made later versions (the 0.9.x series) dependent on gvfs and other components.  At about this same time, PCManFM-Mod was created as a minor fork of the legacy version which added features, addressed bugs, and kept the legacy version alive for those who prefered it for its light dependencies and added features.
 
 <p>PCManFM-Mod was later used as a base for developing SpaceFM, which included an extensible user interface, multiple panel support, a new udev device manager, inotify support, and removed dependencies on fam/gamin and HAL.  Much of the internal virtual filesystem (VFS), which had been developed and debugged in legacy PCManFM and PCManFM-Mod, was retained and extended, providing SpaceFM with a reliable VFS to build upon.
 
@@ -276,7 +277,9 @@
 
 <p>With version 0.7.5 in April 2012, SpaceFM replaced udisks with direct udev support for device detection and information, and support for multiple mount solutions including <a href="http://ignorantguru.github.io/udevil/">udevil</a> (a mount program developed specifically for SpaceFM), pmount, udisks v1 or v2, or any program you specify.  When used with udevil or a custom protocol handler, this update also added support for network filesystems.
 
-<p>In October 2012, testing began for SpaceFM GTK3.  Rather than abandoning GTK2, users can choose what version of the GTK+ library (2.18 thru 3.x) they want to use with SpaceFM.
+<p>In October 2012, the GTK3 version of SpaceFM was introduced.  Rather than abandoning GTK2, users can choose what version of the GTK+ library (2.18 thru 3.x) they want to use with SpaceFM.
+
+<p>Recent improvements include extending the features of SpaceFM's Desktop Manager, a new Menu Item Properties dialog for adding and customizing menu items, socket commands for interacting with a running instance, and an improved panel configuration memory.
 
 
 
@@ -322,7 +325,7 @@
 
 <p>NOTE: Enabling <a href="#devices-kernpoll">kernel polling</a> is recommended after installing SpaceFM.
 
-<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Github</a>.
+<p>SpaceFM's source code archives are distributed from <a href="http://sourceforge.net/projects/spacefm/files/">SourceForge</a> and <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Github</a>.
 
 <p><b>All distributed files are signed for your protection.</b>  Before using downloaded files, it is recommended that you authenticate your download using the spacefm-x.x.x.SHA256.asc file for the current version and <a href="http://ignorantguru.github.io/spacefm/spacefm.SHA256.txt">these instructions</a>.
 
@@ -365,7 +368,7 @@
 <a name="installation-installer"/><a href="#installation-installer"><font size=+2>Installer</font></a>
 <!-- @Installation @Installer -->
 
-<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/master/packages">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
+<a name="installer"><p></a>If a package is not yet available for your distribution, SpaceFM is easily installed using its self-extracting installer available in <a href="https://github.com/IgnorantGuru/spacefm/tree/pkg">Downloads</a> (to save a file, click on its filename and click 'View Raw').  The installer extracts, builds, and installs automatically.
 
 <P>To use the installer, first install <b>required <i>build</i> dependencies</b> (below are Debian package names - packages names in your distribution's repository may vary but should be similar):
 
@@ -864,6 +867,8 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#designmode">How do I set or change key shortcuts and icons?</a><br>
     How to I set or change the key to go Up a directory?<br>
 	<blockquote>Right-click on the file list, right-click on menu item Go|Up, and select Key Shortcut.</blockquote>
+    <a href="#adjview">How do I change the file list view, add/remove columns, etc.?</a><br>
+    <a href="#impcon">How do I hide a menu item?</a><br>
     <a href="#designmode-toolbars">How do I customize the toolbars?</a><br>
     <a href="#designmode-toolbars">I hid the toolbar - how do I restore it?</a><br>
     How do I create a custom menu item?<br>
@@ -898,8 +903,89 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li>Panels 
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-pan"/><a href="#gui-pan"><font size=+2>Panels </font></a>
+<!-- @GUI @Panels #pan -->
+
+<p>SpaceFM includes up to four file manager panels in each window.  Each panel represents a complete file manager, including tabbed directory contents and optionally shown side panes, toolbar, path bar, and status bar.  Each panel can be hidden or shown via the View menu, or via the Panel Bar located to the right of the main menu bar.
+
+<p>If shown, panels 1 and 2 are next to each other in the top half of the window, and panels 3 and 4 are in the bottom half.  This allows horizontally arranged panels, vertically arranged panels, and combinations of both.
+
+<p><a name="adjview"><b>NOTE:</b></a> SpaceFM's main menu bar (File, View, etc.) is mostly used for <i>program-wide</i> settings and functions.  Most adjustments for an individual panel's appearance are found by right-clicking on the file list and selecting the View context menu.  This View menu will allow you to set which side panes and toolbars are visible in a panel, add and remove file list columns, set the list style and font, set the sort method, etc.
+
+<!-- #Panel Memory #mem -->
+<p><a name="gui-pan-mem"/><a href="#gui-pan-mem"><b>Panel Memory</b></a><br>
+<p>The best way to use SpaceFM's memory for panel configurations is to select the panels you want visible, then arrange each panel as you want it to appear.  Hide or show side panes and adjust their sizes, choose file list columns and adjust their widths, choose which toolbars are visible, etc.  Each time you select a different combination of panels, you may need to do some further configuration until SpaceFM gets to know all the combinations you use and how you like them arranged.
+
+<!-- #How It Works #how -->
+<p><a name="gui-pan-how"/><a href="#gui-pan-how"><b>How It Works</b></a><br>
+<p>Many settings in each panel are specific to that panel.  For example, a different font can be set for the file list or other panes in each panel.  Also, each panel may have a different view style (Detailed, Compact, or Icons), different file list columns visible, different side panes visible, etc.
+
+<p>Some panel settings use a four-state memory, and these settings may be different depending on the panel's relationship to other panels in the window.  The four states are:
+<ul>
+    <li>panel is shown by itself in the window<br>
+    <LI>panel has a horizonal neighboring panel<br>
+    <li>panel has a vertical neighboring panel<br>
+    <li>panel has both horizontal and vertical neighboring panels<br>
+</ul>
+
+<p>The four-state memory of each panel allows SpaceFM to remember how you configured each panel in combination with other panels.  This makes it easier to show and hide panels on the fly without having to readjust columns, side panes, etc.  SpaceFM will remember the selected columns (visibility), column widths, side pane visibility and sizes, and toolbar visibility for each state of each panel.
+
+<p>For more advanced users, note that <a href="#sockets">socket commands</a> can be used to adjust panel configurations from a command or script.  When set as <a href="#sockets-events">event handlers</a>, adjustments can be made automatically when GUI or other events occur, such as showing/hiding a panel or changing window size.
+
+<!-- #Maximized &amp; Fullscreen #max -->
+<p><a name="gui-pan-max"/><a href="#gui-pan-max"><b>Maximized &amp; Fullscreen</b></a><br>
+<P>If you maximize the SpaceFM window, any changes to column widths are not remembered (in any panel or in the task manager).  This means that you can change column widths while maximized, and when you return to an unmaximized window state, your columns widths will revert to their original sizes.
+
+<p>However, if you exit SpaceFM while the window is maximized, your column widths <i>will</i> be saved.  When you restart SpaceFM it will open maximized, and any changes to column widths thereafter will be remembered while maximized (unless you unmaximize and maximize again).
+
+<p>In fullscreen mode, neither changes to column widths nor to side pane heights are remembered.  When you return to non-fullscreen mode, these will revert to their original sizes.
+
+<!-- #Focus Highlighting #foc -->
+<p><a name="gui-pan-foc"/><a href="#gui-pan-foc"><b>Focus Highlighting</b></a><br>
+SpaceFM is designed so that for most purposes, it is not necessary to know which panel has the focus.  By right-clicking in a panel, the context menu shown will be specific to that panel.  (Window level commands and settings are available via the main menu bar.)
+
+<p>However, sometimes it is necessary to know which panel has focus, such as when using keyboard shortcuts on selected files, or using a custom command or plugin in the main menus.  For this purpose, SpaceFM provides an icon at the right of each panel's status bar.  This icon will be enabled for the panel which has focus.
+
+<p>If you would like a more prominent reminder, it is possible to set custom highlight colors for the focused panel's status bar text and background.  To set highlight colors, right-click on the status bar of the panel and select Highlight Text or Highlight Bar.  Each panel may use different highlight colors, or the same.
+
+
+
+
+<!-- @end gui-pan-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li>Path Bar
         <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -943,7 +1029,7 @@ When the cursor is in the Path Bar, the following editing key combinations can b
 	</tr>
 </table>
 
-<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
+<p>When the Path Bar has focus, it will steal the following keypresses (even if they are set as key shortcuts): visible characters without a modifier key, Enter, Home, Shift+Home, End, Shift+End, Delete, Tab, Backspace, Left, Shift+Left, Right, Shift+Right.
 
 <!-- # Auto Seek #seek -->
 <p><a name="gui-pathbar-seek"/><a href="#gui-pathbar-seek"><b>Auto Seek</b></a><br>
@@ -958,6 +1044,10 @@ As you're entering a directory path in the Path Bar, completion will be active. 
 <!-- # Breadcrumbs #bread -->
 <p><a name="gui-pathbar-bread"/><a href="#gui-pathbar-bread"><b>Breadcrumbs</b></a><br>
 The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the Path Bar to trim the path back.  This will also immediately change to the new path.  For example, if the path is currently <i>/usr/<b>share</b>/spacefm/plugins</i> and you Ctrl+Click on the name 'share', the path will change to <i>/usr/share</i>.  This provides a convenient way to go up to a specific directory.
+
+<!-- # Middle-Click Auto Seek #middle -->
+<p><a name="gui-pathbar-middle"/><a href="#gui-pathbar-middle"><b>Middle-Click Auto Seek</b></a><br>
+A middle-click in the Path Bar will replace the contents of the Path Bar with the contents of the primary clipboard, and will seek to the location.  The primary clipboard is set simply by selecting text in any application.  For example, if you select the text "/etc/fstab" in your editor, then middle click in SpaceFM's path bar, the directory will change to /etc and the 'fstab' file will be selected.  If you don't want to replace the contents of the Path Bar, and merely want to insert the primary clipboard text (the usual behavior of middle-click), hold down a modifier key while you click, such as Ctrl or Shift.
 
 <!-- # File Path -->
 <p><a name="gui-pathbar-filepath"/><a href="#gui-pathbar-filepath"><b>File Path</b></a><br>
@@ -1078,7 +1168,7 @@ In addition, a bash command line can be entered in the Path Bar.  This is a conv
 
 When you press Enter, ls will be run for the current directory, and a dialog will open showing the output.  When using prefix '$', the command is run as a task (it will be listed in the <a href="#tasks-man">Task Manager</a> if it takes longer than a half second to run), and a <a href="#tasks-dlg">popup dialog</a> will open only if the command produces output or an error.
 
-<p>In addition, the substitution variables defined in <a href="#designmode-command-line">Command|Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command|Script</a> may also be used in Path Bar command lines.
+<p>In addition, the substitution variables defined in <a href="#designmode-props-command">Command Line</a>, and the bash script variables described in <a href="#designmode-command-script">Command Script</a> may also be used in Path Bar command lines.
 
 <p>For example, to open a dialog showing the path of the current directory:
 <pre>    $ echo Current Directory: %d</pre>
@@ -1134,8 +1224,11 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <li><a href="#quickstart">Quick Start</a>
     <li>GUI
     <ul>
+        <li><a href="#gui-pan">Panels </a>
         <li><a href="#gui-pathbar">Path Bar</a>
         <li>Find-As-You-Type Search 
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
     </ul>
     <li><a href="#devices">Devices</a>
     <li><a href="#tasks">Tasks</a>
@@ -1150,7 +1243,7 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 <a name="gui-find"/><a href="#gui-find"><font size=+2>Find-As-You-Type Search </font></a>
 <!-- @GUI @Find-As-You-Type Search #find -->
 
-<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  By default, SpaceFM conducts a case insensitive substring search.  This means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
+<p>When the file list has focus (click on the file list), pressing an alphanumeric key will open the Find-As-You-Type search box in the lower right corner of the file list, allowing you to quickly jump to a file.  Press down or up arrow, or scroll wheel up/down, to go to the next or previous matched filename.
 
 <p>In addition, Find-As-You-Type Search supports the following modes:
 
@@ -1159,9 +1252,10 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
 
     <li><b>Non-Pattern Mode:</b>  If your key does not contain an asterisk (*) or question mark (?), a normal substring search is performed, with the following new special characters recognized:<br><br>
     <ul>
-        <li>If the search key begins with a caret (^), the search will match names <i>beginning</i> with your key.  
+        <li>If the search key begins with a caret (^), <b>or</b> the search key is less than three characters, the search will match names <i>beginning</i> with your key.
+	<li>If the search key is longer than two characters and doesn't begin with a caret (^), a case insensitive substring search is conducted (this means if you type any part of a filename, the cursor will select the first filename which <i>contains</i> that string of characters.) 
         <li>If your key ends with a dollar sign ($), the search will match names <i>ending</i> with your key.
-        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are not supported in this mode.)
+        <li>You can use both a caret and dollar sign to constrain both.  (Other regex characters and wildcards are <b>not</b> supported in this mode.)
     </ul><br>
     <li>Anytime you use an uppercase letter anywhere in your search key, the search mode becomes <b>case sensitive</b>.<br><br>
 
@@ -1172,9 +1266,93 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
 
 
 
-
-
 <!-- @end gui-find-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pan">Panels </a>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li>Rename Dialog 
+        <li><a href="#gui-newf">New File/Folder Dialog </a>
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-rename"/><a href="#gui-rename"><font size=+2>Rename Dialog </font></a>
+<!-- @GUI @Rename Dialog #rename -->
+
+<P>SpaceFM's Rename Dialog, accessed by right-clicking on a file and selecting Rename, does much more than rename files.  It can move, copy, or create a link to the selected file or directory.  It can also copy the target of a selected link, or create a new link to the target.  By checking As Root, the function will be performed as the root user.
+
+<P>The Option button allows you to add and remove fields from the dialog.  The selected fields, which are extra-large for easy editing of long filenames, show different parts of the selected path, such as the name and extension, full filename, parent, or path.  As you edit the file's path, you will be advised if the entered path already exists.  If you use a path which doesn't exist, SpaceFM will create the necessary parents automatically.  The Confirm Create option determines if you will be prompted before parents are created.
+
+<P>The Browse button allows you to browse for a filename, parent, or path, and insert it into the dialog.
+
+<P>TIPS:  To select all the text in an entry, click the entry's label (eg 'Filename:'), press the Alt key shortcut, or use Tab.  To quickly copy an entry's text to the clipboard, double- or middle-click on the entry's label (eg 'Filename:').  Multiple files can be selected in the file browser to rename a batch of files.
+
+
+
+<!-- @end gui-rename-->
+<br><br></td></tr>
+
+
+<tr>
+<td width="20%" valign="top">
+<a href="#toc">Contents</a>
+<ul>
+    <li><a href="#introduction">Introduction</a>
+    <li><a href="#installation">Installation</a>
+    <li><a href="#invocation">Invocation</a>
+    <li><a href="#quickstart">Quick Start</a>
+    <li>GUI
+    <ul>
+        <li><a href="#gui-pan">Panels </a>
+        <li><a href="#gui-pathbar">Path Bar</a>
+        <li><a href="#gui-find">Find-As-You-Type Search </a>
+        <li><a href="#gui-rename">Rename Dialog </a>
+        <li>New File/Folder Dialog 
+    </ul>
+    <li><a href="#devices">Devices</a>
+    <li><a href="#tasks">Tasks</a>
+    <li><a href="#designmode">Design Mode</a>
+    <li><a href="#plugins">Plugins</a>
+    <li><a href="#dialog">Dialog</a>
+    <li><a href="#sockets">Sockets</a>
+    <li><a href="#programfiles">Program Files</a>
+</ul>
+</td>
+<td valign="top">
+<a name="gui-newf"/><a href="#gui-newf"><font size=+2>New File/Folder Dialog </font></a>
+<!-- @GUI @New File/Folder Dialog #newf -->
+
+<P>The New File/Folder Dialog is opened by right-clicking on the file list and selecting New|File, Folder, or Link.  This dialog works similarly to the <a href="#gui-rename">Rename Dialog</a>, allowing you to create files and folders in other paths, create as root, create relative links (eg a link to ../filename.txt), and create new files and folders using templates.
+
+<P>SpaceFM looks in $XDG_TEMPLATES_DIR/, ~/Templates/, or ~/.templates/ to find template files.  Templates are simply empty or partially filled files (of any type) used to create new files, so instead of an empty file you get a copy of the template file.  You can place any files or links to files in your Templates folder. Subfolders in the templates folder can also be used to create new folders pre-filled with a set of files, or to organize templates.
+
+<p>After you have finished entering the path for your new file or folder, you can press Create to create it, or the '&amp; Open' button to create and open the file or folder in one step.
+
+
+
+
+
+<!-- @end gui-newf-->
 <br><br></td></tr>
 
 
@@ -1312,7 +1490,7 @@ In addition, SpaceFM's main menu bar and the desktop menu include Devices menus 
 
 <!-- #Remove / Eject #remove -->
 <p><a name="devices-menu-remove"/><a href="#devices-menu-remove"><b>Remove / Eject</b></a><br>
-The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause extensive data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)
+The 'Remove / Eject' item is used to remove a device and eject media.  When you click 'Remove / Eject', first a full sync is performed to ensure all data has been commited.  If the sync takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and will list the Remove command as running.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Remove / Eject' from the Devices menu on the desktop, a popup dialog will show removal progress.)  Note that if all other filesystems don't sync immediately, this may prolong the Remove command.  In that case, you can use <a href="#devices-menu-unmount">Unmount</a> instead, which only does a filesystem-specific sync.
 
 <p>Next, if the volume is mounted, it will be unmounted, and if the device is ejectable, it will be ejected.  If the device is removable, it is safe to remove it once the 'Remove / Eject' command has completed without errors, and any lights on the device indicate activity has stopped.  (Even after the sync and unmount has finished, it may take a second or two for the device to stop flashing.  If the device has no activity indicator, it is best to wait 5 seconds before removing it.)
 
@@ -1322,6 +1500,9 @@ The 'Remove / Eject' item is used to remove a device and eject media.  When you 
 
 <p>Middle-clicking on a device in the Devices list is equivalent to right-clicking the device and selecting 'Remove / Eject'.  Thus to quickly remove a device, just middle-click on it.
 
+<p>NOTE:  SpaceFM does NOT disable or power-down usb ports or spin down disks when removing a device, it merely performs a sync to ensure data is written.  Usually this is sufficient to prevent data loss.  If powering down is required for your device, you must add a custom command to the Devices menu, or add the applicable command or option to the general <A href="#devices-settings-ucmd">Unmount Command</a>.
+
+
 <!-- #Reload -->
 <p><a name="devices-menu-reload"/><a href="#devices-menu-reload"><b>Reload</b></a><br>
 Reload is used to unmount, eject if necessary, and reload a device's media tray in one step, and can also be used to close an already open media tray.  The Reload item is similar to <a href="#devices-menu-remove">Remove / Eject</a> - the device will be synced, unmounted, and if possible, ejected.  After this, if ejected the tray will be closed.  The device will not be mounted unless <a href="#devices-settings-optical">auto-mount</a> is set.
@@ -1329,7 +1510,7 @@ Reload is used to unmount, eject if necessary, and reload a device's media tray 
 
 <!-- #Unmount -->
 <p><a name="devices-menu-unmount"/><a href="#devices-menu-unmount"><b>Unmount</b></a><br>
-Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No sync is performed.  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.
+Unmount will simply run an unmount command on the selected device.  By default, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks command line tool will be used, unless another program is specified in <a href="#devices-settings-ucmd">Settings|Unmount Command</a>.  No general sync is performed (but a filesystem-specific sync is performed by umount).  If the command takes longer than about one half second, the <a href="#tasks-man">Task Manager</a> will auto-show and the Unmount command will be listed until finished.  <b>Do not remove</b> a device until the Task Manager shows this command has finished, or data may not be properly written, which can cause data loss.  (If using 'Unmount' from the Devices menu on the desktop, a popup dialog will show removal progress.)
 
 <!-- #Sync -->
 <p><a name="devices-menu-sync"/><a href="#devices-menu-sync"><b>Sync</b></a><br>
@@ -1487,7 +1668,7 @@ For example, to add a custom command which shows the size of the currently selec
 
 <!-- #Unmount -->
 <p><a name="devices-root-unmount"/><a href="#devices-root-unmount"><b>Unmount</b></a><br>
-By default, SpaceFM will use udisks to unmount as root, but you can change this to any command in the dialog, such as umount, <a href="http://ignorantguru.github.io/udevil/">udevil</a>, or pumount.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the command dialog.
+By default, SpaceFM will use <a href="http://ignorantguru.github.io/udevil/">udevil</a> to unmount as root, but you can change this to any unmount command, such as a udisks or pumount command.  Only the substitution variable %v may be used in this command to insert the currently selected device file (eg /dev/sda2).  If you want any mount options added, you must specify them in the dialog.
 
 <!-- #Mount -->
 <p><a name="devices-root-mount"/><a href="#devices-root-mount"><b>Mount</b></a><br>
@@ -1888,7 +2069,7 @@ Mount Command opens a dialog which allows you to enter a custom mount command.  
 
 <!-- #Unmount Command #ucmd -->
 <p><a name="devices-settings-ucmd"/><a href="#devices-settings-ucmd"><b>Unmount Command</b></a><br>
-Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting.  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
+Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting (including of network filesystems).  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
 
 <p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
 
@@ -1944,48 +2125,54 @@ Font opens a font selection dialog which allows you to select the font to be use
 <td valign="top">
 <a name="devices-kernpoll"/><a href="#devices-kernpoll"><font size=+2>How To Enable Kernel Polling </font></a>
 <!-- @Devices @How To Enable Kernel Polling #kernpoll -->
-<p>When using SpaceFM without udisks, and without the udisks-daemon running, you may need to enable kernel polling for device media changes to be detected.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
+<p>You may need to enable kernel polling for device media changes to be detected by SpaceFM.  For example, if you insert a CD and SpaceFM still says 'no media', this is a symptom that kernel polling is not enabled.
 
-<p>Kernel polling is a new feature of the Linux kernel and udev, so most distros don't yet have it enabled.  Even if you are using udisks, enabling kernel polling is recommended to eliminate the need for udisks to do userspace polling.  Kernel polling also corrects a common issue where the eject button on a drive won't respond with the newer udev when udisks is not used.
+<p>Kernel polling is a newer feature of the Linux kernel and udev, so some distros don't yet have it enabled by default.  To use kernel polling, your Linux kernel may need to be <b>2.6.38 or newer</b>, and udev may need to be <b>version 173</b> or newer.
 
-<p>To use kernel polling, your Linux kernel needs to be <b>2.6.38 or newer</b>, and udev must be <b>version 173</b> or newer.
-
-<p>You can deterime if kernel polling is enabled by running these commands:
+<p>To determine if kernel polling is enabled:
 <pre>
     cat /sys/module/block/parameters/events_dfl_poll_msecs
     cat /sys/block/sr0/events_poll_msecs
 </pre>
 
-If you get 0 or -1 from those commands, then it's probably disabled.
+If you get 0 or -1 from both of those commands, kernel polling may be disabled.
 
-<p><b>To enable kernel polling temporarily</b>, enable common polling for the block module:
+<p><b>To enable kernel polling permanently</b> (survives a reboot), add the following command to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file):
 <pre>
-    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
 </pre>
 
 Any number between 2000 and 5000 (milliseconds) should be reasonable - the higher 5000 means poll every 5 seconds, which is less overhead but a little slower.
+
+<p><b>OR</b> pass this option to the kernel boot command line in grub:
+<blockquote>
+    <i>block.events_dfl_poll_msecs=2000</i>
+</blockquote>
+
+<p><b>OR</b> add a udev rule to enable kernel polling on removable devices:<br>
+<blockquote><code>
+    echo 'ACTION=="add", ATTR{removable}=="1", ATTR{events_poll_msecs}=="-1", ATTR{events_poll_msecs}="2000"' > /etc/udev/rules.d/61-removable-storage-polling.rules
+</code></blockquote>
+
+<p>A reboot will be required for the above changes to take effect, or...
+
+<p><b>To enable kernel polling temporarily and immediately</b>, enable common polling for the block module:
+<pre>
+    sudo bash -c 'echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs'
+</pre>
 
 <p><b>OR</b> you can enable polling just for a single device like this (/dev/sr0 in this example):
 <pre>
     sudo bash -c 'echo 2000 > /sys/block/sr0/events_poll_msecs'
 </pre>
 
-The change should be immediate - media will be detected and the eject button on the drive should work normally again.  However, the above changes will be lost when you reboot.
+This change should be immediate - media will be detected.  However, the above change will be lost when you reboot.
 
-<p><b>To make polling permanent</b> (survives a reboot), add one of the above commands to your <b>/etc/rc.local</b> file (anywhere before the 'exit' line in that file), like this (without the sudo):
-<pre>
-    echo 2000 > /sys/module/block/parameters/events_dfl_poll_msecs
-</pre>
-
-<b>OR</b> you can pass this option to the kernel boot command line in grub:
-<blockquote>
-    <i>block.events_dfl_poll_msecs=2000</i>
-</blockquote>
-
-References:<br>
-<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org/msg15714.html</a><br>
+<p>References:<br>
+<a href="http://www.mail-archive.com/lfs-dev@linuxfromscratch.org/msg15714.html">linuxfromscratch.org</a><br>
 <a href="http://blogs.gentoo.org/mgorny/2011/06/20/uam-can-now-mount-cds-and-dvds/">uam-can-now-mount-cds-and-dvds</a><br>
 <a href="https://bugs.archlinux.org/task/25609">bugs.archlinux.org</a><br>
+<a href="http://unix.stackexchange.com/questions/38582/udev-triggers-are-not-firing-on-insert-of-cf-card-into-usb-card-reader-anymore">unix.stackexchange.com</a><br>
 
 
 
@@ -2638,7 +2825,21 @@ Key Shortcut opens a dialog which allows you to bind any shortcut key to the cur
 
 <p><b>TIP: To use only the keyboard in the Set Key dialog</b>, press a key combination and then press Enter to click the Set button.  Or, to click Unset, press the Escape key twice.  To cancel, simply close the dialog (usually Alt-F4).
 
+<p>NOTE: Due to SpaceFM's literal use of keycodes, <b>turning Caps Lock on or changing your keyboard layout</b> may cause some key shortcuts to not respond.  For example, pressing Ctrl+C with Caps Lock on will <i>not</i> activate 'Copy' because the 'C' key returns a different code than with Caps Lock off.
+
 <p>You can also change the key for a menu item using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press Ctrl+K, <b>or</b> use the mouse shortcut Ctrl + Middle-Click.
+
+<!-- # Edit Command #cedit -->
+<p><a name="designmode-designmenu-cedit"/><a href="#designmode-designmenu-cedit"><b>Edit Command</b></a><br>
+Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a command line, Edit Command opens the Menu Item Properties dialog to the Command page.
+
+<p>You can also edit an item's command line using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
+
+<!-- # Edit Script #edit -->
+<p><a name="designmode-designmenu-edit"/><a href="#designmode-designmenu-edit"><b>Edit Script</b></a><br>
+Appearing only for custom menu items of type <a href="#designmode-designmenu-new">Command</a> where the command is set to a script, Edit Script opens the command script in your configured editor.
+
+<p>You can also edit an item's script using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
 
 <!-- # Properties #prop -->
 <p><a name="designmode-designmenu-prop"/><a href="#designmode-designmenu-prop"><b>Properties</b></a><br>
@@ -2694,7 +2895,7 @@ The Menu Item page of the <a href="#designmode-props">Menu Item Properties</a> d
 
 <!-- # Name -->
 <p><a name="designmode-props-name"/><a href="#designmode-props-name"><b>Name</b></a><br>
-The Name entry allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key if desired.  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
+The Name entry allows you to change a menu item's name as it appears in the menu.  Precede a character with an underscore (_) to underline that character as a shortcut key (mnemonic) if desired.  [Note: In GTK >= 3.10, you must press the Alt key to see the mnemonics underlined.]  You can change the name of both built-in and custom menu items.  You cannot change the name of plugins in the Plugins menu.
 
 <p>For menu items of type Bookmark, the Name entry may be left empty, in which case the target of the Bookmark will be displayed as its menu item name.
 
@@ -2755,69 +2956,94 @@ Clicking the Browse button will allow you to select a folder which will be added
 <p><a name="designmode-props-context"/><a href="#designmode-props-context"><b>Context</b></a><br>
 The Context page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set rules which determine when and how a menu item appears in the menu.  Context rules can be set for both built-in and custom items, including plugins and separators.  Context cannot be set for toolbar items.
 
-<p>Context refers to the state of the entire file browser window when the menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
+<p>Context refers to the state of the entire file browser window or desktop when a menu is shown.  For example, the MIME type of the currently selected file is one subject of the context.  Another context subject is the filename of the selected file.  Another is any device that is currently selected in the <a href="#devices-list">Devices list</a>.  There are many subjects which can be used in context rules.
 
 <p>By default, the top line of the context dialog reads "Show item if context matches any rule:", and is followed by an empty rule box.  When the rule box is empty, the item will always be shown regardless of context.
 
-<p>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are the most useful for most purposes.
-
-<p>As an initial example, we will add a rule which shows the current menu item when the selected file is an audio file.  Note that when determining the context, only the type and name of the <i>first</i> selected file is considered.  If multiple files are selected, this can be determined, but the type of each selected file cannot be individually tested.
-
-<p>Set the rule subject to 'MIME Type'.  The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  For this example, set the verb to 'begins with'.
-
-<p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value from the drop-down list.  Each subject chosen will have a different list of common values.  In this example, choose 'audio/' from the drop-down list.
-
-<p>Below the value box containing 'audio/' is a 'Value:' label, which may or may not show a value.  This label shows the subject's value in the <i>current context</i>.  When you opened the Design Menu, the file browser had a context - perhaps some files or a device were selected, the browser was in a particular directory, etc.  For example, if a file is selected and the subject is 'MIME Type', then the file's MIME type will currently appear next to 'Value:'.  If no file is selected, then 'Value:' will show nothing.  (Tip:  You can quickly copy a value into the value box by double-clicking it.)
-
-<p>Now the words in the Edit Rule box should read 'MIME Type... begins with... audio/'.  To add this rule to the rule box above, click the Add button.  'MIME Type begins with audio/' will be added to the list of rules.  For this rule to be satisfied, the MIME type of the first selected file must begin with the text "audio/".  Thus a file of type "audio/mpeg" (an MP3 file), or of type "audio/x-wav" (a WAV file) would match this rule, but a file of type "video/x-msvideo" (an AVI video file) would not.  (You can see the MIME type of any file by right-clicking on it in the file list and selecting Properties|Info.)  In this way, our rule will only match the context if the first selected file is an audio file.
-
-<p>The context dialog will let you know the result of the current set of rules.  Below the rules box to the right, you will see "Current: Show" or "Current: Hide", depending on the current context.  If the first selected file is an audio file, it will read "Current: Show", meaning that with the current context, this menu item will be shown in the menu.  If instead it reads "Current: Hide", then the menu item will be hidden from view for the current context - it will not appear in the menu.
-
-<p>The top line of the context dialog is also now enabled.  For example, we can change 'Show item if context matches any rule:' to 'Enable item if context matches any rule:'.  If the action is to 'Show', its opposite is to hide.  If the action is to 'Enable', then its opposite to disable.  Thus if we change the top line to read 'Enable item if context matches any rule:', then the menu item will be enabled or disabled depending on context, but will never be completely hidden from view in the menu.  Or, to reverse the logic, action can be set to 'Hide' or 'Disable' when any rule is matched.
+<p>You can change 'Show item if context matches any rule:' to 'Enable item if context matches any rule:'.  If the action is to 'Show', its opposite is to hide.  If the action is to 'Enable', then its opposite to disable.  Thus if we change the top line to read 'Enable item if context matches any rule:', then the menu item will be enabled or disabled depending on context, but will never be completely hidden from view in the menu.  Or, to reverse the logic, action can be set to 'Hide' or 'Disable' when any rule is matched.
 
 <p>The 'matches any rules:' box can also be changed so that it requires all rules to be matched instead of just one.  This is like putting an AND between the rules, instead of OR.  Or you can reverse the matching logic by choosing one of the 'doesn't match' options.
 
+<p><b>Composing Rules</b>
+<br>Rather than using an arcane syntax, context rules are composed using words and phrases, which make the rules readable sentences.  To compose a new rule, use the Edit Rule box.  There are many context subjects available in the drop-down list, but "MIME Type" and "Filename" are generally the most useful.
 
-<p>For this example, set the top line to read 'Enable item if context matches any rule:'.  We now have a context rule set which reads 'Enable item if context matches any rule: MIME Type begins with audio/'.
+<p>The box to the right of the subject allows you to choose a verb, or a relationship between the subject and its value.  In the case of "matches" or "doesn't match", wildcards may be used (eg "Filename matches *.jpg").  If the test pattern contains any uppercase characters, the test is case-sensitive.  For additional wildcard characters and pattern specifics, see <a href="http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html#tag_02_13_01">IEEE Pattern Matching Notation</a>.
+
+<p>The box below the subject and verb will contain the value to be used as a test.  You can enter custom text in this box or click the arrow at the right to select a common value.  Each subject chosen will have a different list of common values.
+
+<p>Below the value box is a 'Value:' label, which may or may not show a value.  This label shows the subject's value in the <i>current context</i>.  When you opened the Design Menu, the file browser had a context - perhaps some files or a device were selected, the browser was in a particular directory, etc.  For example, if a file is selected when you open the properties dialog, and the subject is set to 'MIME Type', then the selected file's MIME type will appear next to 'Value:'.  If no file is selected, then 'Value:' will show nothing.  (Tip:  You can quickly copy a value into the value box by double-clicking it.)
+
+<p>The context dialog will let you know the result of the current set of rules given the current context.  Below the rules box to the right, you will see a 'Current:' label.  For example if it reads "Current: Show", then for the current context and set of rules, this menu item will be shown in the menu.  If instead it reads "Current: Hide", then the menu item will be hidden from view for the current context - it will not appear in the menu.
+
+<p><b>An Example Set Of Rules</b>
+<br>As an example, we will add a rule which shows the current menu item when the selected file is an audio file.  Note that when determining the context, only the type and name of the <i>first</i> selected file is considered.  If multiple files are selected, this can be determined, but the type of each selected file cannot be individually tested.
+
+<p>For this example, set the rule subject to 'MIME Type' and set the verb (the box to the right of subject) to 'begins with'.  Below these, choose 'audio/' from the drop-down list of common values.
+
+<p>Now the words in the Edit Rule box should read 'MIME Type... begins with... audio/'.  To add this rule to the rule box above, click the Add button.  'MIME Type begins with audio/' will be added to the list of rules.  For this rule to be satisfied, the MIME type of the first selected file must begin with the text "audio/".  Thus a file of type "audio/mpeg" (an MP3 file), or of type "audio/x-wav" (a WAV file) would match this rule, but a file of type "video/x-msvideo" (an AVI video file) would not.  (You can see the MIME type of any file by right-clicking on it in the file list and selecting Properties|Info.)  In this example, our rule will only match the context if the first selected file is an audio file.
+
+<p>Now set the top line to read 'Enable item if context matches any rule:'.  We now have a context rule set which reads 'Enable item if context matches any rule: MIME Type begins with audio/'.
 
 <p>Click OK to accept this rule set.  Then select an audio file in the file browser's file list.  Open the menu where your item appears, and it will be enabled for use.  Next select another kind of file, such as a text or video file.  Open the menu again, and the menu item will be disabled.
 
-<p>In order to open the Design Menu again for this menu item, you must first select an audio file (you cannot open the Design Menu on a disabled menu item).  Or you can set Ignore Context (see below).
+<p>In order to open the Design Menu again for this menu item, you must first select an audio file (you cannot open the Design Menu on a disabled menu item).  Or you can temporarily check option <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) to access all menu items.
 
-<br>
-<p>The context dialog includes a few more features for editing rules.  To remove a rule, click the rule, then click the Remove button.  If all rules are removed and you click OK, the item will be shown regardless of context.
+<p><b>Additional Features</b><br>
+The context dialog includes a few more features for editing rules.  To remove a rule, click the rule, then click the Remove button.  If all rules are removed and you click OK, the item will be shown regardless of context.
 
 <p>To change a rule in the list, click the rule, then edit the rule using the Edit Rule box.  When the rule is how you want it to appear, click the Apply button to update the rule in the list.
 
 <p>The best way to learn to use the context rules is to practice with a file selected.  In this way you can use the 'Value:' and 'Current:' labels to see context values and observe the result of changing the rules.
 
-<p>Some context subjects are boolean - they will equal 'true' or 'false' (these words must be in english even if the rest of the rule is translated).  For example, the rule subject 'Multiple Selected' will always equal 'true' or 'false', depending on whether more than one file is selected in the file list of the current panel.  Thus if your custom menu item is designed to work with only one selected file, you might set a context rule to disable it if the user has selected multiple files.
+<p>Some context subjects are boolean - they will equal 'true' or 'false' (these words must be in English even if the rest of the rule is translated).  For example, the rule subject 'Multiple Selected' will always equal 'true' or 'false', depending on whether more than one file is selected in the file list of the current panel.  Thus if your custom menu item is designed to work with only one selected file, you might set a context rule to disable it if the user has selected multiple files.
 
 <p>Other context subjects, such as 'Panel Count', contain a number, and you can test whether they are equal to, less than, or greater than a value.  For example, the rule 'Panel Count is greater than 1' will only match if the user has multiple panels shown.
 
-<p>As a more advanced use, it's also possible to use || (or) or && (and) in the test value to provide a list of possibilities (use || or &&, but not both in the same rule).  For example, this rule:
+<p>As a more advanced use, it's also possible to use || (or) or &amp;&amp; (and) in the test value to provide a list of possibilities (use || or &amp;&amp;, but not both in the same rule).  For example, this rule:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;MIME Type begins with audio/ || video/
 
-<p>causes two tests to be performed.  If the MIME Type begins with 'audio/' OR the MIME Type begins with 'video/', then the rule matches.  Likewise, the rule:
-&nbsp;&nbsp;&nbsp;&nbsp;Device Properties contains dvd && blank
+<p>causes two tests to be performed.  If the MIME Type begins with 'audio/' OR the MIME Type begins with 'video/', then the rule matches.  Likewise, the rule:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Device Properties contains dvd &amp;&amp; blank
 
-<p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would tell you if the currently selected device contains a blank DVD.
+<p>also causes two tests to be performed.  If the Device Properties value (which provides information about the currently selected device) contains the word 'dvd', AND it contains the word 'blank', then the rule matches.  This context rule would match if the currently selected device contained a blank DVD.
 
-<p>It is important to note that built-in menu items sometimes have a built-in context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
+<p><b>Automatic Context</b>
+<br>It is important to note that built-in menu items sometimes have an automatic context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
 
+<p>Custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file type handler</a> (see below).
+
+<p>Custom menu items added directly after <a href="#tasks-menu-showout">Show Output</a> in the Task Manager's context menu will also only appear for tasks with a custom popup handler.
+    
 <p>Also, custom submenus which are empty due to all of their children being hidden based on context are hidden automatically.
 
-<p><b>Impossible Context</b>
-<br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide an item you don't use.  This can also happen accidently, which is one reason why Ignore Context is provided.  For example, the rule <b>Directory equals ""</b> will never match (Directory is always set).
+<p><a name="impcon"><b>Impossible Context</b></a>
+<br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
+
+<!-- # Use As Opener For #opener -->
+<p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Opener For</b></a><br>
+Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as opener for</i>' drop-down list on the Context page is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define an open handler for specific file types (or based on any context rules).
+
+<p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
+
+<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the default mount command.  Variables %v, "$fm_device", or other variables may be used in your command.
+
+<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files or devices are opened.
+
+<p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as opener for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
+
+<p>'<i>Use as opener for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as opener for' setting (you can add it back after import).
+
+<p>Ignore Context (see below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
 
 
 <!-- # Ignore Context -->
 <p><a name="designmode-props-ignorecontext"/><a href="#designmode-props-ignorecontext"><b>Ignore Context</b></a><br>
-The 'Ignore Context / Show All (global setting)' option, if checked, causes all <a href="#designmode-style-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
+The '<i>Ignore Context / Show All (global setting)</i>' option, if checked, causes all <a href="#designmode-props-context">context rules</a> to be ignored, and all menu items shown regardless of context.  This is a global setting - it disables context rules in all windows of the current instance.
 
-<p>If you need to change the context of an item you have disabled or hidden, you can either create the appropriate context so that the item is shown and enabled, or you can open the Design Menu for any other item and check 'Ignore Context'.  This will allow you to then access the Design Menu of the item and change its context.  When you are finished, you can uncheck 'Ignore Context'.
+<p>If you need to change the context of an item you have disabled or hidden, you can either select the appropriate file to create a context where the item is shown and enabled, or you can open the Menu Item Properties dialog for any other item and check option '<i>Ignore Context</i>'.  This will allow you to then access the Design Menu of all items and change their context rules.  When you are finished, you can uncheck option '<i>Ignore Context</i>'.
 
-<p>Note that Ignore Context does not affect the built-in context of built-in items - for example, even with Ignore Context checked, the file list's Paste menu item will still be disabled if the clipboard is empty.
+<p>Note that <i>Ignore Context</i> does not affect the automatic context of built-in items - for example, even with <i>Ignore Context</i> checked, the file list's Paste menu item will always be disabled if the clipboard is empty.
+<br>
 
 <!-- # Command -->
 <p><a name="designmode-props-command"/><a href="#designmode-props-command"><b>Command</b></a><br>
@@ -2872,14 +3098,12 @@ Shown only for menu items of type Command, the Command page of the <a href="#des
 <pre>    DISPLAY=:1 claws-mail</pre>
 
 <p><b>Open In Editor</b>
-<br>The Open In Editor button will examine the first part of the command line.  If the first part is a script, it will be opened in your editor.
+<br>The Open In Editor button will examine the first part of the command line.  If the first part is a text file (a script), it will be opened in your editor.
 
 <p>NOTE:  When exporting a Command menu item, the value of the command line will be exported with the plugin even if Command Line is no longer the selected command type, or if the menu item type is changed.  Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.
 
 <p><a name="designmode-command-script"><b>Command Script</b></a>
-<br>When Script is selected on the Command page, a default bash script will be created for the command.  Similar to command lines, bash commands may be entered in the script.
-
-<p>Sometimes a single line isn't enough to do what you want, so SpaceFM provides a convenient way to use a full script with a command.  You can simply add your commands to this script, or open it in your editor and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-props">Properties</a> from the Design Menu to access the script of any Command menu item.
+<br>When Script is selected on the Command page, a default bash script will be created for the command.  Similar to command lines, bash commands may be entered in the script, or open it in your editor and save it.  There is no need to organize your scripts, because you can always use <a href="#designmode-props">Properties</a> from the Design Menu to access the script of any Command menu item.
 
 <p>At its simplest, a command script is simply a list of commands that could be entered in a terminal.  The script executes each command in sequence, allowing you to automate common command-line tasks.  You can also use tests and loops in scripts to make them more capable.  For more information on writing scripts, see the <a href="http://www.tldp.org/LDP/abs/html/index.html">Bash Scripting Guide</a>.
 
@@ -2899,7 +3123,7 @@ $fm_import    # import file manager variables (scroll down for info)
 exit $?
 # Example variables available for use: (imported by $fm_import)
 # These variables represent the state of the file manager when command is run.
-# These variables can also be used in command lines and in the Path Bar.
+# These variables can also be used in command lines and in the <a href="#gui-pathbar-cmd">Path Bar</a>.
 
 # "${fm_files[@]}"          selected files              ( same as %F )
 # "$fm_file"                first selected file         ( same as %f )
@@ -2958,7 +3182,7 @@ exit $?
 # "$fm_command"             current command
 # "$fm_value"               menu item value             ( same as %a )
 # "$fm_user"                original user who ran this command
-# "$fm_my_task"             current task's id  (see '<a href="#sockets-methods-set-task">spacefm -s help</a>')
+# "$fm_my_task"             current task's id  (see '<a href="#sockets-invoc-help">spacefm -s help</a>')
 # "$fm_my_window"           current task's window id
 # "$fm_cmd_name"            menu name of current command
 # "$fm_cmd_dir"             command files directory (for read only)
@@ -3030,7 +3254,7 @@ exit $?
 #   done
 </pre>
 
-<b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.  Note that your script will be run with bash, not sh.  (To use another kind of script, you can run your script as a command line, or use an <a href="#designmode-designmenu-app">Application</a> menu item type and set your script as the <a href="#designmode-props-target">target</a>.)
+<b>Or, if you would like to use another script as your default</b>, save it as <a href="#programfiles-home-defscript">~/.config/spacefm/scripts/default-script</a>.  It is recommended that you include the example variables shown above at the end of your default script.
 
 <p>For example, to calculate the MD5 sum of all selected filenames using a command script, you would use this line in the script:
 <pre>    md5sum "${fm_filenames[@]}"</pre>
@@ -3052,6 +3276,8 @@ exit $?
 <p><b>Open In Editor &amp; Root Editor</b>
 <br>The Open In Editor button will save and open the command script in your editor.  Simply edit the script and save it in your editor.  The Root Editor button, if shown, can be used to open a root-owned script in root's editor.
 
+<p>You can also open the command script in your editor directly from the Design Menu with <a href="#designmode-designmenu-edit">Edit Script</a> or using a <a href="#designmode-shortcuts">design mode shortcut</a> instead of the Design Menu.  Highlight the menu item and press F4 or Ctrl+E, <b>or</b> use the mouse shortcut Middle-Click.
+
 <!-- # Run Options #opts -->
 <p><a name="designmode-props-opts"/><a href="#designmode-props-opts"><b>Run Options</b></a><br>
 Shown only for menu items of type Command, the Options page of the <a href="#designmode-props">Menu Item Properties</a> dialog allows you to set additional options which determine how your command behaves.  The Run Options section determines how SpaceFM will run your command when the menu item is activated.
@@ -3059,7 +3285,7 @@ Shown only for menu items of type Command, the Options page of the <a href="#des
 <p><a name="designmode-command-task"><b>Run As Task</b></a><br>
 Run As Task</a>, which is enabled by default for new commands, changes several aspects of how your command is run.  If Run As Task is UNchecked, the command is run <i>asynchronously</i> - it is run and forgotten by SpaceFM.  This is useful for running a program such as Firefox, for example.  SpaceFM doesn't need to wait for Firefox to finish or monitor its output - it can be run and forgotten.  For commands which simply start applications or produce no output, you may want to uncheck Run As Task.
 
-<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's <a href="#tasks-man">Task Manager</a> will monitor the task, and if the task runs for longer than about one half second, the Task Manager will auto-show and the task will be listed.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.
+<p>If Run As Task is checked, then the command is run <i>synchronously</i> - as a child process of SpaceFM.  SpaceFM's <a href="#tasks-man">Task Manager</a> will monitor the task, and if the task runs for longer than about one half second, the Task Manager will auto-show and the task will be listed.  When the task finishes, it will be removed from the list.  This can be used to monitor a task and to know when it has completed.  (When a command is run from the desktop menu, no Task Manager is shown for the task, but a popup may be shown automatically.)
 
 <p>In addition, any output from the task (stdout and stderr), will be collected in an <a href="#tasks-dlg">output monitor</a>.  To raise this monitor, click on the task in the Task Manager.  (The output monitor can also be set to raise automatically on certain events - see <a href="#designmode-command-popup">Popup</a> options below for details.)
 
@@ -3139,11 +3365,11 @@ Enabled by default when using <a href="#designmode-command-terminal">Run In Term
 <p><a name="designmode-command-user"><b>Run As User</b></a><br>
 If a username is entered in the Run As User field, when the command is run, your configured terminal or graphical su program will be used to run the command as this username, instead of as the current SpaceFM user.  Depending on the su program used, you will be prompted to enter either the user's password or root's password.
 
-<p>To run a command as root, "root" may be entered as the Run As User username.  However, <b>running commands as root in this way is generally NOT recommended</b>.  Because the command line or script is generally saved with normal user permissions, you are running a command which is not protected by root, as root.  This means that any intrusion into your normal user account could lead to this command's contents being modified.  You may then run this command as root not realizing it has been modified, which may compromise your system security at the root level.
+<p>To run a command as root, "root" may be entered as the Run As User username.  However, <b>running commands as root in this way is generally NOT recommended</b>.  Because the command line or script is generally saved with normal user permissions, you are running a command which is not protected by root, as root.  This may compromise your system security at the root level.
 
-<p>To run commands more safely as root, consider exporting the command and installing it as a plugin.  Plugins enjoy root protection from modification, so when they are run as root, you have more assurance that they have not been tampered with.
+<p>To run commands more safely as root, consider <a href="#designmode-designmenu-export">exporting the command</a> and <a href="#plugins-install">installing it as a plugin</a>.  Plugins enjoy root protection from modification, so when they are run as root, you have more assurance that they have not been tampered with.
 
-<p>Another option is to run SpaceFM itself as root when needed (select File|Root Window).  In this way, all commands and settings are stored in root's home (/root/.config/spacefm), and are protected by root.  Yet running SpaceFM as root puts much power at your fingertips - accidentally deleting a file or folder may render your system unusable!  When run as root, everything you do in the file browser is done as root, including opening applications.  At the very least, be sure to have an up-to-date system backup if running SpaceFM as root.  It is up to you to evaluate this option for your purposes.
+<p>Another option is to run SpaceFM itself as root when needed (select File|Root Window).  In this way, all commands and settings are stored in root's home (/root/.config/spacefm), and are protected by root.  Yet running SpaceFM as root puts much power at your fingertips - accidentally deleting a file or folder may render your system unusable!  When run as root, everything you do in the file browser is done as root, including opening applications.  At the very least, be sure to have an up-to-date system backup if running SpaceFM as root.  It is your responsibility to evaluate this option for your purposes.
 
 <p>When running a custom command as another non-root user, depending on the permissions of your SpaceFM config and scripts directories, this user may not have permission to access the command directory, including the command script.  To avoid this limitation, you can use a command line, or use a script which is in a mutually accessible directory.
 
@@ -3274,7 +3500,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <p>You can add custom menu items to these menus (and thus to the toolbars), but you cannot add submenus.  (There are two special built-in submenus in each toolbar config menu:  Back Menu and Forward Menu.  If shown, these will display not only a back/forward icon, but also a drop-down list showing path history for the current browser tab.)
 
-<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> to and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
+<p>Menu items can also be <a href="#designmode-designmenu-paste">pasted</a> and <a href="#designmode-designmenu-import">imported</a> to the toolbar config menus.
 
 
 <!-- @end designmode-toolbars-->
@@ -3433,7 +3659,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- # How MIME Works #mimeworks -->
 <p><a name="designmode-mime-mimeworks"/><a href="#designmode-mime-mimeworks"><b>How MIME Works</b></a><br>
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database exclusively to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file opener commands</a> based on MIME type or browser context to bypass MIME associations.)
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
@@ -3611,7 +3837,9 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>To install a plugin using a <a href="#plugins-creationandfiles-file">plugin file</a>, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
 
-<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type (line, script, custom) of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
+
+<p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
 
 <p>To see the help file for a plugin command, use <a href="#designmode-designmenu-help">Help</a> on the Design Menu, or highlight the menu item and press F1.
 
@@ -3661,6 +3889,8 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 <p>To do so, use Plugins|Import|File to import a plugin file, or Plugins|Import|URL to import directly from URL.  No root password is required.  The plugin will be copied to the <a href="#designmode-designmenu-cut">design clipboard</a>.  You may then use <a href="#designmode-designmenu-paste">Paste</a> on the Design Menu to paste the item into any location in any supported menu.  As with any custom menu items, you cannot paste the item into the Bookmarks menu, as well as some parts of the Plugins menu and Open context menu.
 
 <p>If option Plugins|Import|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
+
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
 
 <p>Alternatively, you can use <a href="#designmode-designmenu-import">New|Import</a> on the Design Menu to import and paste a plugin in one step.
 
@@ -3756,7 +3986,7 @@ Additional files required by your plugin can be added to the command directory, 
 
 <p>In addition, adding a README file to the command directory is recommended.  This file will be created automatically if you select <a href="#designmode-designmenu-help">Help</a> from the Design Menu.  This file explains what your plugin does, how to use it, and may include an email address, website, license terms, etc.
 
-<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.
+<p>If multiple commands in your plugin need to access shared files, it is possible to place them in the top level of the plugin file, the plugin directory.  SpaceFM won't do this for you automatically when exporting a command, but you can add them using an archive application after the plugin file has been created.  Or, if your plugin is already installed and you added files to its plugin directory, these files WILL be included in the plugin file when the plugin is exported again.  Your scripts can access this directory using "$fm_plugin_dir".  To browse it, use <a href="#designmode-props-open">Open In Browser</a> on the Options page of the Menu Item Properties dialog.  <b>One limitation of using this directory</b> is that if a user copies commands from within your plugin submenu to another menu, the files in the plugin directory will NOT be included.  Thus, it may be better to include all of a command's required files in its command directory instead.  In this way, each command is complete when copied elsewhere.  Or, if multiple commands needs to access the same files, consider creating a config directory in the user's home directory (eg ~/.config/spacefm-plugin-myexample) for your plugin.
 
 <!-- # Data Files #data -->
 <p><a name="plugins-creationandfiles-data"/><a href="#plugins-creationandfiles-data"><b>Data Files</b></a><br>
@@ -4228,7 +4458,9 @@ The first, "$dialog_pressed", contains the name of the button which was pressed 
     fi
 </pre>
 
-<b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.
+<p><b>Note: The stock 'cancel' button has a special function.</b>  If it is used to close the dialog (no COMMAND has been associated with the button), element @FILE values will NOT be saved.  In this case, the element values written to stdout may not match the values stored in @FILEs.  You can perform a <a href="#dialog-int-source">source</a> command first if you do want values to be written for @FILEs when Cancel is clicked.  [Note:  In SpaceFM 0.9.3 and prior, element @FILE values WERE saved when the user pressed Cancel.]
+
+<p><b>Note:  If the window is closed by the user pressing the X in the top-right corner</b>, or by pressing Alt-F4, "$dialog_pressed" will be empty (no button was pressed) and "$dialog_pressed_index" will be -2.  Also, element @FILE values will NOT be saved, as if the user clicked a Cancel button.
 
 <p><b>If a <a href="#dialog-cmd">command</a> is added to a button</b>, then the dialog will not necessarily close when the button is pressed.  Instead, the COMMAND(s) will be run.  The value of a button (eg %v, %button1, etc) is the "LABEL[:ICON]" used to create the button.
 
@@ -5321,6 +5553,7 @@ Usage: <b>close [REVERSE]</b>
                --input \
 	       <a href="#dialog-nonvis-winclose">--window-close</a> <b>close %input1</b></pre>
 
+Note: Element @FILE values are NOT saved when the dialog is closed via the close command (or via a SIGQUIT signal, etc).  You can perform a <a href="#dialog-int-source">source</a> command first if you want values to be written for @FILEs.  [Note:  In SpaceFM 0.9.3 and prior, the close command DID save element @FILE values.]
 
 <!-- #press -->
 <p><a name="dialog-int-press"/><a href="#dialog-int-press"><b>press</b></a><br>
@@ -5438,7 +5671,7 @@ Usage: <b>source FILE</b>
 
 <p>When a dialog closes, it saves some @FILE values, and it writes <a href="#dialog-invocation-eval">output</a> to stdout containing variables for use in a script.   The source command is used to trigger this output to be written to a file while the dialog is still running.  The file can then be used as a source file in bash or a similar script, providing the script with the current state of the dialog elements.
 
-<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
+<p>The source command also saves @FILEs for some elements, such as <a href="#dialog-simple-input">--input</a>, which are normally only saved when the dialog closes byt the user pressing a button other than Cancel.  It also saves the contents of an <a href="#dialog-simple-editor">--editor</a> or <a href="#dialog-simple-viewer">--viewer</a> element to SAVEFILE.
 
 <p>If FILE is omitted or equals "", the output is written to stderr by the dialog process (useful for debuging).  To run source with no output use 'source /dev/null'.
 
@@ -5575,7 +5808,7 @@ spacefm -s <a href="#sockets-methods-remove-event">remove-event</a> EVENT COMMAN
 spacefm -s help|--help
     Shows this help reference.
 
-<a href="#socket-options">OPTIONS</a>
+<a name="socket-options"><a href="#socket-options">OPTIONS</a></a>
 -------
 Add options after METHOD to specify a specific window, panel, and/or tab.
 Otherwise the current tab of the current panel in the last window is used.
@@ -5763,7 +5996,7 @@ Usage: <b>spacefm -s set [OPTIONS] PROPERTY [VALUE...]</b>
 
 <p>The set method sets a property to one or more values.  Different properties accept different kinds of values.  To see what values a property accepts, look the property up in the <a href="#socket-props">Help Reference</a>.
 
-<p><a name="socket-options">As</a> with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab OPTIONS.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
+<p>As with all methods, by default the set method will apply to the current tab in the current panel of the last used SpaceFM window.  You can also specify a particular window, panel, and/or tab using the --window, --panel, and/or --tab <a href="#socket-options">OPTIONS</a>.  (The WINDOWID used by the --window option is obtained from the $fm_my_window <a href="#exvar">bash variable</a>.)  For example:
 <pre>
     spacefm -s set --window $fm_my_window --panel 3 --tab 2 pathbar_text "/"
 </pre>
@@ -6019,7 +6252,7 @@ Usage: <b>spacefm -s set-task [OPTIONS] TASKID TASKPROPERTY [VALUE...]</b>
                --window-close rm "$cmdpipe" -- close > /dev/null
     
     # cleanup
-    <b>spacefm -s -set-task $fm_my_task popup_handler</b>
+    <b>spacefm -s set-task $fm_my_task popup_handler</b>
     rm -f "$cmdpipe"
     exit
 </pre>
@@ -6149,7 +6382,7 @@ The above command will create links to the folder /etc and the file /etc/fstab, 
 
 <p><a name="run-task-edit"><a href="#run-task-edit">edit [--as-root] FILE</a></a>
 
-<p>The edit TASKTYPE opens FILE in the user's configured text editor (set in View|Preferences|Advanced).  Or, if the --as-root option is included, FILE is opened in the user's configered root editor.  This task type is always asynchronous (run and forgotten).  For example:
+<p>The edit TASKTYPE opens FILE in the user's configured text editor (set in View|Preferences|Advanced).  Or, if the --as-root option is included, FILE is opened in the user's configured root editor.  This task type is always asynchronous (run and forgotten).  For example:
 <pre>    spacefm -s run-task edit /etc/fstab</pre>
 
 <b>IMPORTANT:</b>  If sharing a plugin which does anything as root, please be sure to include this information clearly in the plugin's description.
@@ -6204,7 +6437,7 @@ Usage: <b>spacefm -s add-event EVENT COMMAND ...</b>
 
 <p>Note that COMMAND will continue to run anytime EVENT occurs during the lifetime of the current SpaceFM instance, so be sure to <a href="#sockets-methods-remove-event">remove the handler</a> when your script is finished using it.
 
-<p>In addition to adding dynamic event hanlders, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
+<p>In addition to adding dynamic event handlers, you can also set static event handlers using the <a href="#sockets-menu">Events Menu</a>.
 
 <p>Note that a single SpaceFM instance may open multiple windows, so your handler will run when events occur in any window.  The handler can test for a specific window using the %w (window ID) substitution variable in the command (which will correspond to a task's $fm_my_window <a href="#exvar">bash variable</a>).
 
@@ -6308,7 +6541,7 @@ Occurs whenever a SpaceFM window receives focus.  For example, if you switch to 
 
 <!-- # evt_win_move (Window|Move) %e %w %p %t # winmov -->
 <p><a name="sockets-events-winmov"/><a href="#sockets-events-winmov"><b>evt_win_move (Window|Move) %e %w %p %t</b></a><br>
-Occurs whenever a SpaceFM window is moved or resized.  Note that during resizing, any handler for this event may be run multiple times, so the handler command should handle this gracefully.
+Occurs whenever a SpaceFM window is moved or resized.  Note that during resizing, any handler for this event may be run multiple times (up to five times per second).
 
 <!-- # evt_win_click (Window|Click) %e %w %p %t %b %m %f # winclk -->
 <p><a name="sockets-events-winclk"/><a href="#sockets-events-winclk"><b>evt_win_click (Window|Click) %e %w %p %t %b %m %f</b></a><br>
@@ -6486,9 +6719,16 @@ Contains the <a href="#designmode-command-browse-files">command directories</a> 
 <p><a name="programfiles-home-defscript"/><a href="#programfiles-home-defscript"><b>scripts/default-script</b></a><br>
 This file, <i>if you create it</i>, is used as your default <a href="#designmode-command-script">command script</a> rather than the <a href="#exvar">automatically generated one</a>.  When you create a new custom command as a Script, ~/.config/spacefm/scripts/default-script will be copied to the <a href="#designmode-command-browse-files">command directory</a> as exec.sh.
 
+<p><b>Other locations in your home folder used by SpaceFM include:</b>
+
 <!-- # ~/.local/share/applications/ #localapps -->
 <p><a name="programfiles-home-localapps"/><a href="#programfiles-home-localapps"><b>~/.local/share/applications/</b></a><br>
 This folder contains desktop files which define applications available on your system, and the defaults.list file specifies default applications for given MIME types.  SpaceFM checks this directory to determine what application to use to open files, will modify the <a href="#mimeappslist">mimeapps.list</a> file when you change the default application for a MIME type, and may create custom desktop files when needed.  The system-wide <a href="#programfiles-usr-usrapps">/usr/share/applications/</a> folder is used similarly, though settings in the local folder take precedence.  You can copy desktop files from /usr/share/applications/ to ~/.local/share/applications/ in order to modify them on a per-user basis, and also add your own custom desktop files.
+
+<!-- # ~/.templates/ #tmpl -->
+<p><a name="programfiles-home-tmpl"/><a href="#programfiles-home-tmpl"><b>~/.templates/</b></a><br>
+The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and folder templates for use in the <a href="#gui-newf">New File/Folder Dialog</a>.
+
 
 <!-- @end programfiles-home-->
 <br><br></td></tr>
@@ -6539,8 +6779,19 @@ Be sure to use a temporary directory which is root-owned/protected and user-writ
 
 <!-- # /etc/xdg/spacefm/ #xdg -->
 <p><a name="programfiles-etc-xdg"/><a href="#programfiles-etc-xdg"><b>/etc/xdg/spacefm/</b></a><br>
-This folder, if it exists, is used to create a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> exists for the current user when spacefm is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
-<pre>    chmod -R ugo+rX /etc/xdg/spacefm</pre>
+This folder, if it exists, is used to copy a default configuration for new SpaceFM users.  If no <a href="#programfiles-home">config directory</a> (eg ~/.config/spacefm) exists for the current user when SpaceFM is first started, the contents of /etc/xdg/spacefm/ will be copied to the new config directory (be sure to kill all running instances of spacefm before testing this).  This allows a distro or system admin to set a default SpaceFM configuration for new users.  To do so, simply configure SpaceFM as you want it to appear and work by default, then copy the contents of the config directory to /etc/xdg/spacefm/ as root.  Be sure to set all files in /etc/xdg/spacefm/ to be readable by all users:
+<pre>
+    sudo cp -r /home/USER/.config/spacefm /etc/xdg/spacefm
+    sudo chmod -R ugo+rX /etc/xdg/spacefm</pre>
+
+To test, start SpaceFM with a test config directory which doesn't exist:
+<pre>    
+    killall spacefm
+    rm -rf /tmp/spacefm-test-config
+    spacefm --config-dir /tmp/spacefm-test-config</pre>
+
+<p>If you want to install plugins by default, install them uncompressed to /usr/share/spacefm/plugins/, just as SpaceFM does when you select Plugins|Install. In the user's configuration, plugins can be copied to other menus as well.  Or you can simply import plugins into the user's menus before copying the config dir to /etc/xdg/spacefm.
+
 
 <!-- @end programfiles-etc-->
 <br><br></td></tr>
@@ -6703,11 +6954,11 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <center>
 <p><b>This document is under construction and incomplete.</b>
 
-<p>Copyright (C) 2013
+<p>Copyright (C) 2014
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2013-04-20&nbsp;&nbsp;(SpaceFM version 0.8.7+)
+<p>Updated 2014-03-30&nbsp;&nbsp;(SpaceFM version 0.9.4)
 <br><br>
 </center>
 </td></tr></table>

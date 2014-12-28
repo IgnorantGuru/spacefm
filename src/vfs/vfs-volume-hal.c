@@ -2199,7 +2199,7 @@ vfs_volume_hal_eject (VFSVolume* volume,
   if (G_UNLIKELY (message == NULL))
     {
       /* out of memory */
-oom:  g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM, g_strerror (ENOMEM));
+oom:  g_set_error_literal (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM, g_strerror (ENOMEM));
       vfs_volume_hal_free( device );
       return FALSE;
     }
@@ -2526,7 +2526,8 @@ vfs_volume_hal_mount (ExoMountHalDevice *device,
       message = dbus_message_new_method_call ("org.freedesktop.Hal", device->udi, "org.freedesktop.Hal.Device.Volume", "Mount");
       if (G_UNLIKELY (message == NULL))
         {
-oom:      g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM, g_strerror (ENOMEM));
+oom:      g_set_error_literal (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM,
+                                                    g_strerror (ENOMEM));
           g_strfreev (options);
           g_free (mount_point);
           g_free (fstype);
@@ -2761,7 +2762,8 @@ vfs_volume_hal_unmount (VFSVolume* volume,
   if (G_UNLIKELY (message == NULL))
     {
       /* out of memory */
-oom:  g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM, g_strerror (ENOMEM));
+oom:  g_set_error_literal (error, G_FILE_ERROR, G_FILE_ERROR_NOMEM,
+                                                g_strerror (ENOMEM));
     vfs_volume_hal_free( device );
       return FALSE;
     }
@@ -2879,18 +2881,20 @@ gboolean vfs_volume_eject_by_udi( const char* udi, GError** err )
 gboolean vfs_volume_mount_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* argv[5];  //MOD
+    char* argv[4];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
         return FALSE;
 
     //MOD separate arguments for ktsuss compatibility
     //cmd = g_strdup_printf( "%s --mount '%s'", g_get_prgname(), udi );
-    argv[1] = g_get_prgname();
-    argv[2] = g_strdup_printf ( "--mount" );
-    argv[3] = g_strdup( udi );
-    argv[4] = NULL;
+    argv[0] = g_strdup( g_get_prgname() );
+    argv[1] = g_strdup_printf ( "--mount" );
+    argv[2] = g_strdup( udi );
+    argv[3] = NULL;
 
+    if ( !argv[0] )
+        return FALSE;
 
     vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );  //MOD
     return (ret == 0);
@@ -2899,17 +2903,21 @@ gboolean vfs_volume_mount_by_udi_as_root( const char* udi )
 gboolean vfs_volume_umount_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* argv[5];  //MOD
+    char* argv[4];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
         return FALSE;
 
     //MOD separate arguments for ktsuss compatibility
     //cmd = g_strdup_printf( "%s --umount '%s'", g_get_prgname(), udi );
-    argv[1] = g_get_prgname();
-    argv[2] = g_strdup_printf ( "--umount" );
-    argv[3] = g_strdup( udi );
-    argv[4] = NULL;
+    argv[0] = g_strdup( g_get_prgname() );
+    argv[1] = g_strdup_printf ( "--umount" );
+    argv[2] = g_strdup( udi );
+    argv[3] = NULL;
+
+    if ( !argv[0] )
+        return FALSE;
+
     vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );
     return (ret == 0);
 }
@@ -2917,17 +2925,21 @@ gboolean vfs_volume_umount_by_udi_as_root( const char* udi )
 gboolean vfs_volume_eject_by_udi_as_root( const char* udi )
 {
     int ret;
-    char* argv[5];  //MOD
+    char* argv[4];  //MOD
 
     if ( G_UNLIKELY( geteuid() == 0 ) )  /* we are already root */
         return FALSE;
 
     //MOD separate arguments for ktsuss compatibility
     //cmd = g_strdup_printf( "%s --eject '%s'", g_get_prgname(), udi );
-    argv[1] = g_get_prgname();
-    argv[2] = g_strdup_printf ( "--eject" );
-    argv[3] = g_strdup( udi );
-    argv[4] = NULL;
+    argv[0] = g_strdup( g_get_prgname() );
+    argv[1] = g_strdup_printf ( "--eject" );
+    argv[2] = g_strdup( udi );
+    argv[3] = NULL;
+
+    if ( !argv[0] )
+        return FALSE;
+
     vfs_sudo_cmd_sync( NULL, argv, &ret, NULL,NULL, NULL );
     return (ret == 0);
 }

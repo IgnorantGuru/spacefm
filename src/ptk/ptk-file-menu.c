@@ -304,8 +304,8 @@ void on_copycmd( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* set2 )
                                                                     set->name );
 #ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
-        desktop_window_copycmd( data->desktop, data->sel_files, data->cwd,
-                                                                    set->name );
+        // must pass desktop
+        desktop_window_copycmd( data->desktop, data->sel_files, data->cwd, set->name );
 #endif
 }
 
@@ -317,6 +317,7 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
     else
         set = set2;
     if ( set )
+        // can pass desktop here (ignored)
         ptk_file_misc_rootcmd( data->desktop, data->browser, data->sel_files,
                                                         data->cwd, set->name );
 }
@@ -345,15 +346,15 @@ void on_open_in_panel( GtkMenuItem *menuitem, PtkFileMenu* data )
 
 void on_file_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
-                               GTK_WIDGET( data->desktop ),
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                data->file_path, FALSE, TRUE );
 }
 
 void on_file_root_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
-                               GTK_WIDGET( data->desktop ),
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                data->file_path, TRUE, FALSE );
 }
 
@@ -403,8 +404,46 @@ void on_popup_sortby( GtkMenuItem *menuitem, PtkFileBrowser* file_browser, int o
 void on_popup_detailed_column( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
 {
     if ( file_browser->view_mode == PTK_FB_LIST_VIEW )
-        on_folder_view_columns_changed( GTK_TREE_VIEW( file_browser->folder_view ),
-                                                    file_browser );
+    {
+        // get visiblity for correct mode
+        FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+        int p = file_browser->mypanel;
+        char mode = main_window->panel_context[p-1];
+        
+        XSet* set = xset_get_panel_mode( p, "detcol_size", mode );
+        set->b = xset_get_panel( p, "detcol_size" )->b;
+        set = xset_get_panel_mode( p, "detcol_type", mode );
+        set->b = xset_get_panel( p, "detcol_type" )->b;
+        set = xset_get_panel_mode( p, "detcol_perm", mode );
+        set->b = xset_get_panel( p, "detcol_perm" )->b;
+        set = xset_get_panel_mode( p, "detcol_owner", mode );
+        set->b = xset_get_panel( p, "detcol_owner" )->b;
+        set = xset_get_panel_mode( p, "detcol_date", mode );
+        set->b = xset_get_panel( p, "detcol_date" )->b;
+        
+        update_views_all_windows( NULL, file_browser );
+    }
+}
+
+void on_popup_toggle_view( GtkMenuItem *menuitem, PtkFileBrowser* file_browser )
+{
+    // get visiblity for correct mode
+    FMMainWindow* main_window = (FMMainWindow*)file_browser->main_window;
+    int p = file_browser->mypanel;
+    char mode = main_window->panel_context[p-1];
+    
+    XSet* set = xset_get_panel_mode( p, "show_toolbox", mode );
+    set->b = xset_get_panel( p, "show_toolbox" )->b;
+    set = xset_get_panel_mode( p, "show_devmon", mode );
+    set->b = xset_get_panel( p, "show_devmon" )->b;
+    set = xset_get_panel_mode( p, "show_dirtree", mode );
+    set->b = xset_get_panel( p, "show_dirtree" )->b;
+    set = xset_get_panel_mode( p, "show_book", mode );
+    set->b = xset_get_panel( p, "show_book" )->b;
+    set = xset_get_panel_mode( p, "show_sidebar", mode );
+    set->b = xset_get_panel( p, "show_sidebar" )->b;
+    
+    update_views_all_windows( NULL, file_browser );
 }
 
 void on_archive_default( GtkMenuItem *menuitem, XSet* set )
@@ -466,8 +505,8 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
         g_free( name );
     }
     else
-        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : 
-                                         GTK_WIDGET( data->desktop ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                          GTK_MESSAGE_INFO,
                          _("Bookmark Exists"), NULL, 0,
                          _("Bookmark already exists"), NULL, NULL );
@@ -519,8 +558,8 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
 
 void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
-    if ( desktop )
-        fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    fm_edit_preference( NULL, PREF_DESKTOP );
 }
 
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
@@ -957,7 +996,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
-        else if ( file_path && mime_type && ( 
+        else if ( file_path && mime_type && !is_dir && ( 
                   !strcmp( vfs_mime_type_get_type( mime_type ),
                                             "application/x-cd-image" ) ||
                   !strcmp( vfs_mime_type_get_type( mime_type ),
@@ -1271,29 +1310,54 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     // View >
     if ( browser )
     {
+        FMMainWindow* main_window = (FMMainWindow*)browser->main_window;
+        char mode = main_window->panel_context[p-1];
+
         gboolean show_side = FALSE;
         xset_set_cb( "view_refresh", ptk_file_browser_refresh, browser );
-        xset_set_cb_panel( p, "show_toolbox", update_views_all_windows, browser );
-        set = xset_set_cb_panel( p, "show_devmon", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_toolbox", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_toolbox", mode )->b;
+        set = xset_set_cb_panel( p, "show_devmon", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_devmon", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_dirtree", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_dirtree", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_dirtree", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_book", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_book", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_book", mode )->b;
             if ( set->b == XSET_B_TRUE ) show_side = TRUE;
-        set = xset_set_cb_panel( p, "show_sidebar", update_views_all_windows, browser );
+        set = xset_set_cb_panel( p, "show_sidebar", on_popup_toggle_view,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "show_sidebar", mode )->b;
             set->disable = !show_side;
         xset_set_cb_panel( p, "show_hidden", on_popup_show_hidden, data );
         
         if ( browser->view_mode == PTK_FB_LIST_VIEW )
         {
-            xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column, browser );
-            xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column, browser );
+            set = xset_set_cb_panel( p, "detcol_size", on_popup_detailed_column,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "detcol_size", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_type", on_popup_detailed_column,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "detcol_type", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_perm", on_popup_detailed_column,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "detcol_perm", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_owner", on_popup_detailed_column,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "detcol_owner", mode )->b;
+            set = xset_set_cb_panel( p, "detcol_date", on_popup_detailed_column,
+                                                                browser );
+            set->b = xset_get_panel_mode( p, "detcol_date", mode )->b;
+ 
             xset_set_cb( "view_reorder_col", on_reorder, browser );
             set = xset_set( "view_columns", "disable", "0" );
-            desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col", p, p, p, p, p );
+            desc = g_strdup_printf( "panel%d_detcol_size panel%d_detcol_type panel%d_detcol_perm panel%d_detcol_owner panel%d_detcol_date sep_v4 view_reorder_col",
+                                                            p, p, p, p, p );
             xset_set_set( set, "desc", desc );
             g_free( desc );
             set = xset_set_cb( "rubberband", main_window_rubberband_all, NULL );
@@ -1305,49 +1369,59 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set( "rubberband", "disable", "1" );
         }
         
-        set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed, browser );
+        set = xset_set_cb_panel( p, "list_detailed", on_popup_list_detailed,
+                                                                browser );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
         set = xset_set_cb_panel( p, "list_icons", on_popup_list_icons, browser );
             xset_set_ob2( set, NULL, set_radio );
-        set = xset_set_cb_panel( p, "list_compact", on_popup_list_compact, browser );
+        set = xset_set_cb_panel( p, "list_compact", on_popup_list_compact,
+                                                                browser );
             xset_set_ob2( set, NULL, set_radio );
 
         set = xset_set_cb( "sortby_name", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_NAME );
             xset_set_ob2( set, NULL, NULL );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_NAME ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
             set_radio = set;
         set = xset_set_cb( "sortby_size", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_SIZE );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_SIZE ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_type", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_TYPE );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_TYPE ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_perm", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_PERM );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_PERM ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_owner", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_OWNER );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_OWNER ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
         set = xset_set_cb( "sortby_date", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", PTK_FB_SORT_BY_MTIME );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_order == PTK_FB_SORT_BY_MTIME ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
 
         set = xset_set_cb( "sortby_ascend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -1 );
             xset_set_ob2( set, NULL, NULL );
-            set->b = browser->sort_type == GTK_SORT_ASCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_type == GTK_SORT_ASCENDING ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
             set_radio = set;
         set = xset_set_cb( "sortby_descend", on_popup_sortby, browser );
             xset_set_ob1_int( set, "sortorder", -2 );
             xset_set_ob2( set, NULL, set_radio );
-            set->b = browser->sort_type == GTK_SORT_DESCENDING ? XSET_B_TRUE : XSET_B_FALSE;
+            set->b = browser->sort_type == GTK_SORT_DESCENDING ?
+                                                    XSET_B_TRUE : XSET_B_FALSE;
 
         set = xset_set_cb( "sortx_natural", on_popup_sort_extra, browser );
             set->b = PTK_FILE_LIST( browser->file_list )->sort_natural ? 
@@ -1383,7 +1457,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         xset_set_cb_panel( p, "font_file", main_update_fonts, browser );
         set = xset_get( "view_list_style" );
-        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 view_columns rubberband sep_v6 panel%d_font_file",
+        desc = g_strdup_printf( "panel%d_list_detailed panel%d_list_compact panel%d_list_icons sep_v5 rubberband sep_v6 panel%d_font_file",
                                         p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
@@ -1393,7 +1467,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         xset_set_set( set, "desc", desc );
         g_free( desc );
         set = xset_get( "con_view" );
-        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style view_sortby sep_v8 view_refresh",
+        desc = g_strdup_printf( "panel%d_show_toolbox panel%d_show_sidebar panel%d_show_devmon panel%d_show_book panel%d_show_dirtree sep_v7 panel%d_show_hidden view_list_style view_sortby view_columns sep_v8 view_refresh",
                                         p, p, p, p, p, p );
         xset_set_set( set, "desc", desc );
         g_free( desc );
@@ -1644,12 +1718,14 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
     }
 
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;    //GTK_WIDGET( data->desktop );
+    app = (char *) ptk_choose_app_for_mime_type( parent_win,
                                         mime_type, FALSE, TRUE, TRUE, FALSE );
     if ( app )
     {
@@ -1667,6 +1743,9 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
+    if ( xset_opener( NULL, data->browser, 1 ) )
+        return;
+
     GList* sel_files;
 
     sel_files = data->sel_files;
@@ -1764,7 +1843,8 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         vfs_mime_type_remove_action( mime_type, desktop_file->file_name );
         if ( strcmp( mime_type->type, "text/plain" ) && 
                                 g_str_has_prefix( mime_type->type, "text/" ) )
-            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : GTK_WIDGET( data->desktop ), 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL, 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
         break;
     case APP_JOB_EDIT:
         path = g_build_filename( g_get_user_data_dir(), "applications",
@@ -1788,28 +1868,30 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                 return;
             }
         }
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, FALSE );        
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
+                                                        FALSE, FALSE );
         g_free( path );
         break;
     case APP_JOB_VIEW:
         path = get_shared_desktop_file_location( desktop_file->file_name );
         if ( path )
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
+                                                        FALSE, TRUE );
         break;
     case APP_JOB_EDIT_LIST:
         path = g_build_filename( g_get_user_data_dir(), "applications",
                                                     "mimeapps.list", NULL );
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ): NULL, path,
+                                                        FALSE, TRUE );
         g_free( path );
         break;
     case APP_JOB_ADD:
-        path = ptk_choose_app_for_mime_type( 
-                                GTK_WINDOW( gtk_widget_get_toplevel( data->browser ?
-                                                GTK_WIDGET( data->browser ) :
-                                                GTK_WIDGET( data->desktop ) ) ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        path = ptk_choose_app_for_mime_type( data->browser ?
+                                GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) ) :
+                                    NULL,
                                 mime_type, FALSE, TRUE, TRUE, TRUE );
         // ptk_choose_app_for_mime_type returns either a bare command that 
         // was already set as default, or a (custom or shared) desktop file
@@ -1895,8 +1977,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         }
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, FALSE );        
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, FALSE, FALSE );        
         }
         g_free( path );
         vfs_dir_monitor_mime();
@@ -1907,15 +1990,15 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( str );
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                            : GTK_WIDGET( data->desktop ), path, FALSE, TRUE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, FALSE, TRUE );        
         }
         g_free( path );
         break;
     case APP_JOB_VIEW_OVER:
         path = "/usr/share/mime/packages/Overrides.xml";
-        xset_edit( data->browser ? GTK_WIDGET( data->browser )
-                        : GTK_WIDGET( data->desktop ), path, TRUE, FALSE );
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+                                                path, TRUE, FALSE );
         break;
     case APP_JOB_BROWSE_MIME_USR:
         if ( data->browser )
@@ -1940,8 +2023,8 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( path );
         break;
     case APP_JOB_HELP:
-            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :
-                                        GTK_WIDGET( data->desktop ),
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) : NULL,
                                         NULL, "#designmode-mime" );
         break;
     }
@@ -2558,14 +2641,18 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
         GtkWidget* parent_win = gtk_widget_get_toplevel( 
                                             GTK_WIDGET( data->browser ) );
         ptk_clipboard_paste_files( GTK_WINDOW( parent_win ), data->cwd,
-                            GTK_TREE_VIEW( data->browser->task_view ), NULL );
+                            GTK_TREE_VIEW( data->browser->task_view ),
+                            NULL, NULL );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
-        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL,
-                            (GFunc)desktop_window_insert_task_complete );        
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
+        ptk_clipboard_paste_files( NULL, data->cwd, NULL,
+                            (GFunc)desktop_window_insert_task_complete,
+                            GTK_WINDOW( data->desktop ) );        
     }
 #endif
 }
@@ -2580,9 +2667,12 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
         ptk_clipboard_paste_links(
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
-            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete );
+            NULL,
+            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete,
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
     }
 #endif
 }
@@ -2597,10 +2687,13 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        // must pass data->desktop here for callback window
         ptk_clipboard_paste_targets(
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ),
+            NULL,
             data->cwd,
-            NULL, (GFunc)desktop_window_insert_task_complete );
+            NULL, (GFunc)desktop_window_insert_task_complete,
+            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
     }
 #endif
 }
@@ -2634,6 +2727,7 @@ on_popup_paste_as_activate ( GtkMenuItem *menuitem,
 #ifdef DESKTOP_INTEGRATION
     if ( data->desktop )
         desktop_window_set_insert_item( data->desktop );
+    // must pass data->desktop here
     ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd,
             data->desktop ? (GFunc)desktop_window_insert_task_complete : NULL );
 #else
@@ -2824,12 +2918,14 @@ void
 on_popup_file_properties_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    ptk_show_file_properties( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;
+    ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 0 );
 }
@@ -2838,12 +2934,14 @@ void
 on_popup_file_permissions_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    GtkWidget* parent_win;
+    GtkWindow* parent_win;
     if ( data->browser )
-        parent_win = gtk_widget_get_toplevel( GTK_WIDGET( data->browser ) );
+        parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
+                                            GTK_WIDGET( data->browser ) ) );
     else
-        parent_win = GTK_WIDGET( data->desktop );
-    ptk_show_file_properties( GTK_WINDOW( parent_win ),
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        parent_win = NULL;
+    ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 1 );
 }

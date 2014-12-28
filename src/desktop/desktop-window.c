@@ -1,22 +1,13 @@
 /*
- *      desktop-window.c
- *
- *
- *      This program is free software; you can redistribute it and/or modify
- *      it under the terms of the GNU General Public License as published by
- *      the Free Software Foundation; either version 2 of the License, or
- *      (at your option) any later version.
- *
- *      This program is distributed in the hope that it will be useful,
- *      but WITHOUT ANY WARRANTY; without even the implied warranty of
- *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *      GNU General Public License for more details.
- *
- *      You should have received a copy of the GNU General Public License
- *      along with this program; if not, write to the Free Software
- *      Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- *      MA 02110-1301, USA.
- */
+* SpaceFM desktop-window.c
+*
+* Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+* Copyright (C) 2012 BwackNinja <bwackninja@gmail.com>
+* Copyright (C) 2008 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+*
+* License: See COPYING file
+*
+*/
 
 #include <stdlib.h>
 #include <glib/gi18n.h>
@@ -346,6 +337,7 @@ static void desktop_window_init(DesktopWindow *self)
     self->margin_right = app_settings.margin_right;
     self->margin_bottom = app_settings.margin_bottom;
     self->insert_item = NULL;
+    self->renamed_item = self->renaming_item = NULL;
     self->file_listed = FALSE;
 
     self->icon_render = gtk_cell_renderer_pixbuf_new();
@@ -1074,23 +1066,28 @@ void paint_rubber_banding_rect( DesktopWindow* self )
     cairo_stroke( cr );
 
     gdk_color_free (clr);
+    cairo_destroy( cr );
 }
 
 static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gboolean add )
 {
     GList* l;
     GdkRectangle old_rect, new_rect;
+/*
 #if GTK_CHECK_VERSION (3, 0, 0)
     cairo_region_t *region;
 #else
     GdkRegion *region;
 #endif
-
+*/
+    // Calc new region
     calc_rubber_banding_rect(self, self->rubber_bending_x, self->rubber_bending_y, &old_rect );
     calc_rubber_banding_rect(self, newx, newy, &new_rect );
 
+    // Trigger redraw of region
     gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &old_rect, FALSE );
     gdk_window_invalidate_rect(gtk_widget_get_window( ((GtkWidget*)self) ), &new_rect, FALSE );
+
 //    gdk_window_clear_area(((GtkWidget*)self)->window, new_rect.x, new_rect.y, new_rect.width, new_rect.height );
 /*
     region = gdk_region_rectangle( &old_rect );
@@ -1123,12 +1120,16 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
     }
 }
 
-static void open_clicked_item( DesktopItem* clicked_item )
+static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
     char* path = NULL;
 
     if ( !clicked_item->fi )
         return;
+    /* this won't work yet because desktop context_fill doesn't do selected 
+     * else if ( xset_opener( self, NULL, 1 ) )
+        return;
+    */
     else if ( vfs_file_info_is_dir( clicked_item->fi ) &&
                                                 !app_settings.desk_open_mime )
     {
@@ -1187,7 +1188,7 @@ static void open_clicked_item( DesktopItem* clicked_item )
         {
             VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
             VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            if ( mime_type && ( 
+            if ( mime_type && !vfs_file_info_is_dir( file ) && (
                     !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
                     !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
                     g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
@@ -1371,7 +1372,7 @@ gboolean on_button_press( GtkWidget* w, GdkEventButton* evt )
     {
         if( clicked_item && evt->button == 1)   /* left double click */
         {
-            open_clicked_item( clicked_item );
+            open_clicked_item( self, clicked_item );
             goto out;
         }
     }
@@ -1413,7 +1414,7 @@ gboolean on_button_release( GtkWidget* w, GdkEventButton* evt )
         {
             if ( clicked_item )
             {
-                open_clicked_item( clicked_item );
+                open_clicked_item( self, clicked_item );
                 return TRUE;
             }
         }
@@ -1476,7 +1477,8 @@ gboolean on_mouse_move( GtkWidget* w, GdkEventMotion* evt )
             {
                 gdk_window_set_cursor( gtk_widget_get_window(w), self->hand_cursor );
                 /* FIXME: timeout should be customizable */
-                if( 0 == self->single_click_timeout_handler )
+                if( !app_settings.desk_no_single_hover &&
+                                    0 == self->single_click_timeout_handler )
                     self->single_click_timeout_handler = 
                                     g_timeout_add( SINGLE_CLICK_TIMEOUT,
                                     (GSourceFunc)on_single_click_timeout, self );
@@ -1960,10 +1962,11 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             g_free( files );
             file_list = g_list_reverse( file_list );
             
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
             task = ptk_file_task_new( file_action,
                                       file_list,
                                       dest_dir ? dest_dir : vfs_get_desktop_dir(),
-                                      GTK_WINDOW( self ), NULL );
+                                      NULL, NULL );
             // get insertion box
             if ( self->sort_by == DW_SORT_CUSTOM )
             {
@@ -2021,11 +2024,21 @@ void on_drag_end( GtkWidget* w, GdkDragContext* ctx )
     DesktopWindow* self = (DesktopWindow*)w;
 }
 
-void desktop_window_rename_selected_files( DesktopWindow* win,
-                                                        GList* files, const char* cwd )
+gboolean on_rename_item_invalidate( DesktopWindow* self )
+{
+    self->renaming_item = self->renamed_item = NULL;
+    return FALSE;
+}
+
+void desktop_window_rename_selected_files( DesktopWindow* self,
+                                           GList* files, const char* cwd )
 {
     GList* l;
+    GList* ll;
     VFSFileInfo* file;
+    DesktopItem* item;
+    char* msg;
+    
     for ( l = files; l; l = l->next )
     {
         file = (VFSFileInfo*)l->data;
@@ -2040,47 +2053,87 @@ void desktop_window_rename_selected_files( DesktopWindow* win,
                 char* target = g_file_read_link( path, NULL );
                 if ( !target )
                     target = g_strdup( path );
-                char* msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
-                g_free( target );
-                if ( !xset_text_dialog( GTK_WIDGET( win ), _("Change Desktop Item Name"), NULL, FALSE, msg,
-                                    NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
+                if ( !have_rw_access( target ) )
                 {
+                    msg = g_strdup_printf( _("You do not have permission to edit the contents of file %s\n\nConsider copying the file to the desktop, or link to a copy placed in ~/.local/share/applications/"), target );
+                    xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_INFO, _("Unable To Rename"), NULL, 0, msg, NULL, NULL );                    
                     g_free( msg );
                     g_free( path );
                     g_free( filename );
+                    g_free( target );
                     break;
                 }
-                g_free( msg );
-                if ( new_name[0] == '\0' )
+                else
                 {
-                    g_free( path );
-                    g_free( filename );
-                    break;
-                }
-                if ( !vfs_app_desktop_rename( path, new_name ) )
-                {
-                    if ( win->dir )
+                    msg = g_strdup_printf( _("Enter new desktop item name:\n\nChanging the name of this desktop item requires modifying the contents of desktop file %s"), target );
+                    g_free( target );
+                    if ( !xset_text_dialog( GTK_WIDGET( self ), _("Change Desktop Item Name"), NULL, FALSE, msg,
+                                        NULL, name, &new_name, NULL, FALSE, NULL ) || !new_name )
+                    {
+                        g_free( msg );
+                        g_free( path );
+                        g_free( filename );
+                        break;
+                    }
+                    g_free( msg );
+                    if ( new_name[0] == '\0' )
+                    {
+                        g_free( path );
+                        g_free( filename );
+                        break;
+                    }
+                    if ( !vfs_app_desktop_rename( path, new_name ) )
+                    {
+                        if ( self->dir )
+                            // in case file is a link
+                            vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
+                        g_free( path );
+                        g_free( filename );
+                        xset_msg_dialog( GTK_WIDGET( self ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
+                        break;
+                    }
+                    if ( self->dir )
                         // in case file is a link
-                        vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
-                    g_free( path );
-                    g_free( filename );
-                    xset_msg_dialog( GTK_WIDGET( win ), GTK_MESSAGE_ERROR, _("Rename Error"), NULL, 0, _("An error occured renaming this desktop item."), NULL, NULL );
-                    break;
+                        vfs_dir_emit_file_changed( self->dir, filename, file, FALSE );
                 }
-                if ( win->dir )
-                    // in case file is a link
-                    vfs_dir_emit_file_changed( win->dir, filename, file, FALSE );
                 g_free( path );
                 g_free( filename );
             }
         }
         else
         {
-            if ( !ptk_rename_file( win, NULL, cwd, file, NULL, FALSE, 0, NULL ) )
+            if ( !ptk_rename_file( self, NULL, cwd, file, NULL, FALSE, 0, NULL ) )
                 break;
+            if ( self->sort_by == DW_SORT_CUSTOM )
+            {
+                /* Track the item being renamed so its position can be retained.
+                 * This is a bit hackish, but the file monitor currently emits
+                 * two events when a file is renamed (delete and create).
+                 * This method will not preserve location if file is renamed
+                 * from outside SpaceFM.
+                 * Would be better to employ inotify MOVED_FROM and MOVED_TO
+                 * with cookie, but file monitor doesn't currently provide this
+                 * data to callbacks. */
+                self->renaming_item = NULL;
+                self->renamed_item = NULL;
+                for ( ll = self->items; ll; ll = ll->next )
+                {
+                    item = (DesktopItem*) ll->data;
+                    if ( item->fi == file )
+                    {
+                        self->renaming_item = item;
+                        break;
+                    }
+                }
+            }
         }
     }
- 
+    if ( self->sort_by == DW_SORT_CUSTOM )
+    {
+        // invalidate renaming_item 2 seconds after last rename
+        g_timeout_add_seconds( 2, ( GSourceFunc ) on_rename_item_invalidate,
+                                                                        self );
+    }
 }
 
 DesktopItem* get_next_item( DesktopWindow* self, int direction )
@@ -2339,7 +2392,8 @@ _key_found:
                     desktop_window_sort_items( desktop, by, desktop->sort_type );
                 }
                 else if ( !strcmp( set->name, "desk_pref" ) )
-                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    fm_edit_preference( NULL, PREF_DESKTOP );
                 else if ( !strcmp( set->name, "desk_open" ) )
                     desktop_window_open_desktop_dir( NULL, desktop );
             }
@@ -2349,23 +2403,29 @@ _key_found:
                 if ( !strcmp( xname, "link" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    ptk_clipboard_paste_links(
-                        GTK_WINDOW( gtk_widget_get_toplevel(
-                                    GTK_WIDGET( desktop ) ) ),
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    // must pass desktop here for callback window
+                    ptk_clipboard_paste_links( NULL,
                                     vfs_get_desktop_dir(), NULL,
-                                    (GFunc)desktop_window_insert_task_complete );
+                                    (GFunc)desktop_window_insert_task_complete,
+                                    GTK_WINDOW( gtk_widget_get_toplevel(
+                                                GTK_WIDGET( desktop ) ) ) );
                 }
                 else if ( !strcmp( xname, "target" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    ptk_clipboard_paste_targets( GTK_WINDOW( 
-                            gtk_widget_get_toplevel( GTK_WIDGET( desktop ) ) ),
+                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+                    // must pass desktop here for callback window
+                    ptk_clipboard_paste_targets( NULL,
                             vfs_get_desktop_dir(),
-                            NULL, (GFunc)desktop_window_insert_task_complete );
+                            NULL, (GFunc)desktop_window_insert_task_complete,
+                            GTK_WINDOW( gtk_widget_get_toplevel(
+                                        GTK_WIDGET( desktop ) ) ) );
                 }
                 else if ( !strcmp( xname, "as" ) )
                 {
                     desktop_window_set_insert_item( desktop );
+                    // must pass desktop here for callback window
                     ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir(),
                                     (GFunc)desktop_window_insert_task_complete );
                 }
@@ -2416,7 +2476,7 @@ _key_found:
         case GDK_KEY_Return:
         case GDK_KEY_space:
             if ( desktop->focus )
-                open_clicked_item( desktop->focus );
+                open_clicked_item( desktop, desktop->focus );
             return TRUE;
         case GDK_KEY_Down:
         case GDK_KEY_Up:
@@ -2621,7 +2681,8 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
 {
-    fm_edit_preference( GTK_WINDOW( self ), PREF_DESKTOP );
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    fm_edit_preference( NULL, PREF_DESKTOP );
 }
 
 
@@ -3009,6 +3070,10 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopWindow* self = (DesktopWindow*)user_data;
     DesktopItem* item;
 
+    if( !dir || !file )
+        // failsafe
+        return;
+
     /* don't show hidden files */
     if( file->name[0] == '.' )
         return;
@@ -3061,6 +3126,15 @@ void on_file_created( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
                 self->insert_item = l->next->data;
             }
         }
+        else if ( self->renamed_item && !((DesktopItem*)self->renamed_item)->fi &&
+                        ( l = g_list_find( self->items, self->renamed_item ) ) )
+        {
+            // insert where item was renamed
+            desktop_item_free( (DesktopItem*)self->renamed_item );
+            self->renamed_item = NULL;
+            l->data = item;
+            item->is_selected = TRUE;
+        }
         else
         {
             // find empty at end of all icons
@@ -3096,7 +3170,8 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopItem* item;
 
     /* FIXME: special handling is needed here */
-    if( ! file )
+    if( !dir || !file )
+        // file == NULL == the desktop dir itself was deleted
         return;
 
     /* don't deal with hidden files */
@@ -3122,6 +3197,13 @@ void on_file_deleted( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
             item_new->box = item->box;
             desktop_item_free( item );
             l->data = item_new;
+            if ( self->renaming_item == item && self->renamed_item == NULL )
+            {
+                // item is being renamed - retain position
+                self->renamed_item = item_new;
+                self->renaming_item = NULL;
+            }
+
             // layout all since deleting may allow more icons to fit if full
             //redraw_item( self, item_new );
             layout_items( self );
@@ -3143,6 +3225,10 @@ void on_file_changed( VFSDir* dir, VFSFileInfo* file, gpointer user_data )
     DesktopWindow* self = (DesktopWindow*)user_data;
     DesktopItem* item;
     GtkWidget* w = (GtkWidget*)self;
+
+    if ( !dir || !file )
+        // file == NULL == the desktop dir itself changed
+        return;
 
     /* don't touch hidden files */
     if( file->name[0] == '.' )
@@ -3202,8 +3288,8 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
             folder = set2->desc;
         else
             folder = cwd;
-        path = xset_file_dialog( GTK_WIDGET( desktop ),
-                                            GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        path = xset_file_dialog( NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                             _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
@@ -3236,7 +3322,8 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+            // do not pass desktop parent - some WMs won't bring desktop dlg to top
+            xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
                                         _("Invalid Destination"), NULL, 0,
                                         _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
@@ -3260,15 +3347,15 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         PtkFileTask* task = ptk_file_task_new( file_action,
                                 file_list,
                                 dest_dir,
-                                GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET(
-                                                                desktop ) ) ),
+                                NULL,
                                 NULL );
         ptk_file_task_run( task );
         g_free( dest_dir );
     }
     else
     {
-        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+        // do not pass desktop parent - some WMs won't bring desktop dlg to top
+        xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
@@ -3550,10 +3637,12 @@ void open_folders( GList* folders )
     {
         main_window = FM_MAIN_WINDOW(fm_main_window_new());
         //FM_MAIN_WINDOW( main_window ) ->splitter_pos = app_settings.splitter_pos;
+        /*  now done in fm_main_window_new
         gtk_window_set_default_size( GTK_WINDOW( main_window ),
                                      app_settings.width,
                                      app_settings.height );
         gtk_widget_show( GTK_WIDGET(main_window) );
+        */
         new_window = !xset_get_b( "main_save_tabs" );
     }
     
@@ -3607,10 +3696,12 @@ void desktop_window_open_desktop_dir( GtkMenuItem *menuitem,
     if ( !main_window )
     {
         main_window = FM_MAIN_WINDOW( fm_main_window_new() );
+        /*  now done in fm_main_window_new
         gtk_window_set_default_size( GTK_WINDOW( main_window ),
                                      app_settings.width,
                                      app_settings.height );
         gtk_widget_show( GTK_WIDGET(main_window) );
+        */
         new_window = !xset_get_b( "main_save_tabs" );
     }
     
@@ -3930,7 +4021,8 @@ void desktop_window_add_application( DesktopWindow* desktop )
     else
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
-    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
+    // do not pass desktop parent - some WMs won't bring desktop dlg to top
+    app = (char *) ptk_choose_app_for_mime_type( NULL,
                                         mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
@@ -3941,7 +4033,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
             PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
                                                    sel_files,
                                                    vfs_get_desktop_dir(),
-                                                   GTK_WINDOW( desktop ),
+                                                   NULL,
                                                    NULL );
             ptk_file_task_run( task );
         }

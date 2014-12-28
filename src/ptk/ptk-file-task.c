@@ -153,6 +153,31 @@ void ptk_file_task_destroy_delayed( PtkFileTask* task )
 }
 */
 
+void save_progress_dialog_size( PtkFileTask* ptask )
+{
+    // save dialog size  - do this here now because as of GTK 3.8,
+    // allocation == 1,1 in destroy event
+    char* s;
+    GtkAllocation allocation;
+    
+    gtk_widget_get_allocation ( GTK_WIDGET( ptask->progress_dlg ),
+                                                            &allocation );    
+
+    s = g_strdup_printf( "%d", allocation.width );
+    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
+        xset_set( "task_pop_top", "s", s );
+    else
+        xset_set( "task_pop_top", "x", s );
+    g_free( s );
+
+    s = g_strdup_printf( "%d", allocation.height );
+    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
+        xset_set( "task_pop_top", "z", s );
+    else
+        xset_set( "task_pop_top", "y", s );
+    g_free( s );
+}
+
 void ptk_file_task_destroy( PtkFileTask* ptask )
 {
 //printf("ptk_file_task_destroy ptask=%#x\n", ptask);
@@ -171,6 +196,7 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
     
     if ( ptask->progress_dlg )
     {
+        save_progress_dialog_size( ptask );
         if ( ptask->overwrite_combo )
             gtk_combo_box_popdown( GTK_COMBO_BOX( ptask->overwrite_combo ) );
         if ( ptask->error_combo )
@@ -189,6 +215,11 @@ void ptk_file_task_destroy( PtkFileTask* ptask )
         if ( ptask->task->exec_channel_err )
             g_io_channel_shutdown( ptask->task->exec_channel_err, TRUE, NULL );
         ptask->task->exec_channel_out = ptask->task->exec_channel_err = 0;
+        if ( ptask->task->child_watch )
+        {
+            g_source_remove( ptask->task->child_watch );
+            ptask->task->child_watch = 0;
+        }
 //printf("    g_io_channel_shutdown DONE\n");
     }
 
@@ -306,6 +337,8 @@ gboolean on_progress_timer( PtkFileTask* ptask )
 //printf("on_progress_timer DONE FALSE-COMPLETE ptask=%#x\n", ptask);
             return FALSE;
         }
+        else if ( ptask->progress_dlg && ptask->err_count )
+            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
     }
 //printf("on_progress_timer DONE TRUE ptask=%#x\n", ptask);
     return !ptask->complete;
@@ -454,6 +487,20 @@ gboolean ptk_file_task_cancel( PtkFileTask* ptask )
                 ptask2->task->exec_browser = ptask->task->exec_browser;
                 ptk_file_task_run( ptask2 );                
             }
+
+            /*
+            // remove zombie - now done automatically in update
+            if ( ptask->task->exec_pid // may be reset in other thread on watch close
+                            && waitpid( ptask->task->exec_pid, NULL, WNOHANG ) )
+            {
+                // process is no longer running (defunct zombie)
+                // glib should detect this but sometimes process goes defunct
+                // with no watch callback, so remove it from task list
+                g_warning( "Removing zombie pid=%d on cancel", ptask->task->exec_pid );
+                ptask->task->exec_pid = 0;
+                ptask->complete = TRUE;
+            }
+            */
         }
         else
         {
@@ -618,11 +665,13 @@ void ptk_file_task_pause( PtkFileTask* ptask, int state )
 gboolean on_progress_dlg_delete_event( GtkWidget *widget, GdkEvent *event,
                                                         PtkFileTask* ptask )
 {
+    save_progress_dialog_size( ptask );
     return !( ptask->complete || ptask->task_view );
 }
 
 void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask )
 {
+    save_progress_dialog_size( ptask );
     if ( response != GTK_RESPONSE_HELP && ptask->complete && !ptask->complete_notify )
     {
         ptk_file_task_destroy( ptask );
@@ -673,24 +722,6 @@ void on_progress_dlg_response( GtkDialog* dlg, int response, PtkFileTask* ptask 
 
 void on_progress_dlg_destroy( GtkDialog* dlg, PtkFileTask* ptask )
 {
-    char* s;
-    GtkAllocation allocation;
-    
-    gtk_widget_get_allocation ( GTK_WIDGET(dlg), &allocation );    
-    s = g_strdup_printf( "%d", allocation.width );
-    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
-        xset_set( "task_pop_top", "s", s );
-    else
-        xset_set( "task_pop_top", "x", s );
-    g_free( s );
-
-    s = g_strdup_printf( "%d", allocation.height );
-    if ( ptask->task->type == VFS_FILE_TASK_EXEC )
-        xset_set( "task_pop_top", "z", s );
-    else
-        xset_set( "task_pop_top", "y", s );
-    g_free( s );
-
     ptask->progress_dlg = NULL;
 }
 
@@ -985,11 +1016,6 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                                      GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC );
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( ptask->error_view ), GTK_WRAP_WORD_CHAR );
     gtk_text_view_set_editable( GTK_TEXT_VIEW( ptask->error_view ), FALSE );
-    if ( !task->exec_scroll_lock )
-    {
-        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ), ptask->log_end,
-                                                            0.0, FALSE, 0, 0 );
-    }
     char* fontname = xset_get_s( "task_pop_font" );
     if ( fontname )
     {
@@ -1116,6 +1142,8 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
                       G_CALLBACK( on_progress_dlg_destroy ), ptask );
     g_signal_connect( ptask->progress_dlg, "delete-event",
                       G_CALLBACK( on_progress_dlg_delete_event ), ptask );
+    //g_signal_connect( ptask->progress_dlg, "configure-event",
+    //                  G_CALLBACK( on_progress_configure_event ), ptask );
 
     gtk_widget_show_all( ptask->progress_dlg );
     if ( ptask->overwrite_combo && !xset_get_b( "task_pop_over" ) )
@@ -1129,7 +1157,15 @@ void ptk_file_task_progress_open( PtkFileTask* ptask )
 
     // icon
     set_progress_icon( ptask );
-    
+
+    // auto scroll - must be after show_all
+    if ( !task->exec_scroll_lock )
+    {
+        gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
+                                                            ptask->log_end,
+                                                            0.0, FALSE, 0, 0 );
+    }
+
     ptask->progress_count = 50;  // trigger fast display
 //printf("ptk_file_task_progress_open DONE\n");
 }
@@ -1377,12 +1413,17 @@ void ptk_file_task_progress_update( PtkFileTask* ptask )
         if ( !task->exec_scroll_lock )
         {
             //scroll to end if scrollbar is mostly down
-            GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment( ptask->scroll );
-            if (  gtk_adjustment_get_upper ( adj ) - gtk_adjustment_get_value ( adj ) < gtk_adjustment_get_page_size ( adj ) + 40 )
-                gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW( ptask->error_view ),
-                                                            ptask->log_end,
-                                                            0.0, FALSE, 0, 0 );
+            GtkAdjustment* adj =  gtk_scrolled_window_get_vadjustment(
+                                                            ptask->scroll );
+            if (  gtk_adjustment_get_upper( adj ) - 
+                                    gtk_adjustment_get_value( adj ) <
+                                    gtk_adjustment_get_page_size( adj ) + 40 )
+                gtk_text_view_scroll_to_mark( GTK_TEXT_VIEW(
+                                                        ptask->error_view ),
+                                              ptask->log_end,
+                                              0.0, FALSE, 0, 0 );
         }
+        ptask->log_appended = FALSE;
     }
 
     // icon
@@ -1530,7 +1571,43 @@ void ptk_file_task_update( PtkFileTask* ptask )
     off64_t cur_speed;
     gdouble timer_elapsed = g_timer_elapsed( task->timer, NULL );
     
-    if ( task->type != VFS_FILE_TASK_EXEC )
+    if ( task->type == VFS_FILE_TASK_EXEC )
+    {
+        // test for zombie process
+        gint status = 0;
+        if ( !ptask->complete && task->exec_pid &&
+                        waitpid( task->exec_pid, &status, WNOHANG ) )
+        {
+            // process is no longer running (defunct zombie)
+            // glib should detect this but sometimes process goes defunct
+            // with no watch callback, so remove it from task list
+            if ( task->child_watch )
+            {
+                g_source_remove( task->child_watch );
+                task->child_watch = 0;
+            }
+            g_spawn_close_pid( task->exec_pid );
+            if ( task->exec_channel_out )
+                g_io_channel_shutdown( task->exec_channel_out, TRUE, NULL );
+            if ( task->exec_channel_err )
+                g_io_channel_shutdown( task->exec_channel_err, TRUE, NULL );
+            task->exec_channel_out = task->exec_channel_err = 0;
+            if ( status )
+            {
+                if ( WIFEXITED( status ) )
+                    task->exec_exit_status = WEXITSTATUS( status );
+                else
+                    task->exec_exit_status = -1;
+            }
+            else
+                task->exec_exit_status = 0;
+            printf( "child ZOMBIED  pid=%d exit_status=%d\n", task->exec_pid,
+						 task->exec_exit_status );
+            task->exec_pid = 0;
+            ptask->complete = TRUE;
+        }
+    }
+    else
     {
         //cur speed
         if ( task->state_pause == VFS_FILE_TASK_RUNNING )
@@ -1738,7 +1815,10 @@ void ptk_file_task_update( PtkFileTask* ptask )
                                     && ptask->err_count != task->err_count )
         {
             ptask->keep_dlg = TRUE;
-            gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
+            if ( ptask->complete || ptask->err_mode == PTASK_ERROR_ANY ||
+                                    ( task->error_first &&
+                                      ptask->err_mode == PTASK_ERROR_FIRST ) )
+                gtk_window_present( GTK_WINDOW( ptask->progress_dlg ) );
         }
         else if ( task->type == VFS_FILE_TASK_EXEC
                                     && ptask->err_count != task->err_count )

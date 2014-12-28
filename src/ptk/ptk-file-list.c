@@ -259,6 +259,8 @@ PtkFileList *ptk_file_list_new ( VFSDir* dir, gboolean show_hidden )
 static void _ptk_file_list_file_changed( VFSDir* dir, VFSFileInfo* file,
                                         PtkFileList* list )
 {
+    if ( !file )
+        return;
     ptk_file_list_file_changed( dir, file, list );
 
     /* check if reloading of thumbnail is needed. */
@@ -690,7 +692,12 @@ static gint ptk_file_list_compare( gconstpointer a,
         result = strcmp( file_a->disp_perm, file_b->disp_perm );
         break;
     case COL_FILE_OWNER:
-        result = g_ascii_strcasecmp( file_a->disp_owner, file_b->disp_owner );
+        if ( file_a->disp_owner && file_b->disp_owner )
+            result = g_ascii_strcasecmp( file_a->disp_owner,
+                                         file_b->disp_owner );
+        else
+            result = g_ascii_strcasecmp( vfs_file_info_get_disp_owner( file_a ),
+                                     vfs_file_info_get_disp_owner( file_b ) );
         break;
     default:
         result = 0;

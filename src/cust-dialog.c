@@ -40,13 +40,12 @@ static char* replace_vars( CustomElement* el, char* value, char* xvalue );
 static void fill_buffer_from_file( CustomElement* el, GtkTextBuffer* buf,
                                    char* path, gboolean watch );
 static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
-                                                            FILE* out );
+                                            FILE* out, gboolean is_cancel );
 static gboolean destroy_dlg( GtkWidget* dlg );
 static void on_button_clicked( GtkButton *button, CustomElement* el );
 void on_combo_changed( GtkComboBox* box, CustomElement* el );
 static gboolean on_timeout_timer( CustomElement* el );
 static gboolean press_last_button( GtkWidget* dlg );
-static void on_dlg_close( GtkDialog* dlg );
 static gboolean on_progress_timer( CustomElement* el );
 
 GtkWidget* signal_dialog = NULL;  // make this a list if supporting multiple dialogs
@@ -644,7 +643,8 @@ GList* args_from_file( const char* path )
         strtok( line, "\r\n" );
         if ( !strcmp( line, "--" ) )
             break;
-        args = g_list_prepend( args, g_strdup( line ) );
+        if ( line[0] != '\n' )  // skip blank lines
+            args = g_list_prepend( args, g_strdup( line ) );
     }
     fclose( file );
     return ( args = g_list_reverse( args ) );
@@ -795,22 +795,24 @@ static void set_element_value( CustomElement* el, const char* name,
     case CDLG_INPUT:
     case CDLG_INPUT_LARGE:
     case CDLG_PASSWORD:
+        // remove linefeeds
+        str = replace_string( value, "\n", "", FALSE );
         if ( el_name->type == CDLG_INPUT_LARGE )
         {
             gtk_text_buffer_set_text( gtk_text_view_get_buffer( 
                                 GTK_TEXT_VIEW( el_name->widgets->next->data ) ),
-                                value, -1 );
+                                str, -1 );
             multi_input_select_region( el_name->widgets->next->data, 0, -1 );
         }
         else
         {
-            gtk_entry_set_text( GTK_ENTRY( el_name->widgets->next->data ), value );
+            gtk_entry_set_text( GTK_ENTRY( el_name->widgets->next->data ), str );
             gtk_editable_select_region( 
                                 GTK_EDITABLE( el_name->widgets->next->data ),
                                 0, -1 );                    
         }
         g_free( el_name->val );
-        el_name->val = g_strdup( value );
+        el_name->val = str;
         break;
     case CDLG_VIEWER:
     case CDLG_EDITOR:
@@ -1379,10 +1381,11 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
     switch ( icmd )
     {
     case CMD_CLOSE:
-        write_source( el->widgets->data, NULL, stdout );
+        write_source( el->widgets->data, NULL, stdout, TRUE );
         g_idle_add( (GSourceFunc)destroy_dlg, el->widgets->data );
         break;
     case CMD_SET:
+    
         set_element_value( el, cname, cvalue );
         break;
     case CMD_PRESS:
@@ -1461,7 +1464,7 @@ static void internal_command( CustomElement* el, int icmd, GList* args, char* xv
                                                         g_strerror( errno ) );
             break;
         }
-        write_source( el->widgets->data, NULL, out );
+        write_source( el->widgets->data, NULL, out, FALSE );
         if ( out != stderr )
             fclose( out );
         break;
@@ -1598,6 +1601,8 @@ static void write_file_value( const char* path, const char* val )
     int f;
     int add = 0;
     
+    if ( !path )
+        return;
     if ( path[0] == '@' )
         add = 1;
 
@@ -1608,11 +1613,14 @@ static void write_file_value( const char* path, const char* val )
                                                     g_strerror( errno ) );
         return;
     }
-    if ( val && write( f, val, strlen( val ) ) < strlen( val ) )
-        dlg_warn( _("error writing file %s: %s"), path + add,
-                                                    g_strerror( errno ) );
-    if ( !strchr( val, '\n' ) )
-        write( f, "\n", 1 );
+    if ( val )
+    {
+        if ( write( f, val, strlen( val ) ) < strlen( val ) )
+            dlg_warn( _("error writing file %s: %s"), path + add,
+                                                        g_strerror( errno ) );
+        else if ( !strchr( val, '\n' ) )
+            write( f, "\n", 1 );
+    }
     close( f );
 }
 
@@ -1955,10 +1963,6 @@ static void free_elements( GList* elements )
 static gboolean destroy_dlg( GtkWidget* dlg )
 {
     GList* elements = (GList*)g_object_get_data( G_OBJECT( dlg ), "elements" );
-
-    // remove destroy signal connect
-    g_signal_handlers_disconnect_by_func( G_OBJECT( dlg ),
-                                            G_CALLBACK( on_dlg_close ), NULL );
     gtk_widget_destroy( GTK_WIDGET( dlg ) );
     free_elements( elements );
     gtk_main_quit();
@@ -1988,7 +1992,7 @@ static void write_value( FILE* file, const char* prefix, const char* name,
 }
 
 static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
-                                                            FILE* out )
+                                            FILE* out, gboolean is_cancel )
 {
     GList* l;
     CustomElement* el;
@@ -1997,7 +2001,6 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
     int width, height, pad = -1;
     
     GList* elements = (GList*)g_object_get_data( G_OBJECT( dlg ), "elements" );
-
 
     // get custom prefix
     for ( l = elements; l; l = l->next )
@@ -2092,7 +2095,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
             else
                 // do not free
                 str = (char*)gtk_entry_get_text( GTK_ENTRY( el->widgets->next->data ) );
-            if ( el->args && ((char*)el->args->data)[0] == '@' )
+            if ( !is_cancel && el->args && ((char*)el->args->data)[0] == '@' )
             {
                 // save file
                 // skip detection of updates while saving file
@@ -2113,7 +2116,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
         case CDLG_VIEWER:
         case CDLG_EDITOR:
             write_value( out, prefix, el->name, NULL, el->val );
-            if ( el->args && el->args->next )
+            if ( !is_cancel && el->args && el->args->next )
             {
                 // save file
                 write_value( out, prefix, el->name, "saved",
@@ -2139,7 +2142,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
                                                 el->widgets->next->data ) ) ?
                                                 "1" : "0" );
             // save file
-            if ( el->args && el->args->next 
+            if ( !is_cancel && el->args && el->args->next 
                                     && ((char*)el->args->next->data)[0] == '@' )
             {
                 write_file_value( (char*)el->args->next->data + 1, 
@@ -2156,7 +2159,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
             str = gtk_combo_box_text_get_active_text( 
                                 GTK_COMBO_BOX_TEXT( el->widgets->next->data ) );
             write_value( out, prefix, el->name, NULL, str );
-            if ( el->def_val && el->def_val[0] == '@' )
+            if ( !is_cancel && el->def_val && el->def_val[0] == '@' )
             {
                 // save file
                 write_file_value( el->def_val + 1, str );
@@ -2240,7 +2243,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
             str = gtk_file_chooser_get_current_folder( GTK_FILE_CHOOSER ( 
                                                     el->widgets->next->data ) );
             write_value( out, prefix, el->name, "dir", str );
-            if ( el->args && ((char*)el->args->data)[0] == '@' )
+            if ( !is_cancel && el->args && ((char*)el->args->data)[0] == '@' )
             {
                 // save file
                 write_value( out, prefix, el->name, "saved",
@@ -2268,12 +2271,6 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
     g_free( str );
 }
 
-static void on_dlg_close( GtkDialog* dlg )
-{
-    write_source( GTK_WIDGET( dlg ), NULL, stdout );
-    destroy_dlg( GTK_WIDGET( dlg ) );
-}
-
 static gboolean on_progress_timer( CustomElement* el )
 {
     gtk_progress_bar_pulse( GTK_PROGRESS_BAR( el->widgets->next->data ) );
@@ -2285,7 +2282,7 @@ static gboolean on_timeout_timer( CustomElement* el )
     el->option--;
     if ( el->option <= 0 )
     {
-        write_source( el->widgets->data, el, stdout );
+        write_source( el->widgets->data, el, stdout, FALSE );
         g_idle_add( (GSourceFunc)destroy_dlg, el->widgets->data );
         return FALSE;
     }
@@ -2433,7 +2430,8 @@ static void on_button_clicked( GtkButton *button, CustomElement* el )
     else
     {
         // no command
-        write_source( el->widgets->data, el, stdout );
+        write_source( el->widgets->data, el, stdout,
+                                        !g_strcmp0( el->val, "cancel" ) );
         g_idle_add( (GSourceFunc)destroy_dlg, el->widgets->data );
     }
 }
@@ -2482,7 +2480,10 @@ gboolean on_window_delete( GtkWidget *widget, GdkEvent  *event, CustomElement* e
         run_command( el, el->cmd_args, NULL );
         return TRUE;
     }
-    return FALSE;  // allow window close
+    // close window
+    write_source( widget, NULL, stdout, TRUE );
+    destroy_dlg( widget );
+    return FALSE;
 }
 
 static gboolean on_dlg_key_press( GtkWidget *entry, GdkEventKey* evt,
@@ -3555,6 +3556,7 @@ static void build_dialog( GList* elements )
     gboolean timeout_added = FALSE;
     gboolean is_sized = FALSE;
     gboolean is_large = FALSE;
+    gboolean has_delete_handler = FALSE;
     
     // create dialog
     dlg = gtk_dialog_new();
@@ -3566,7 +3568,6 @@ static void build_dialog( GList* elements )
     if ( pixbuf )
         gtk_window_set_icon( GTK_WINDOW( dlg ), pixbuf ); 
     g_object_set_data( G_OBJECT( dlg ), "elements", elements );
-    g_signal_connect( G_OBJECT( dlg ), "destroy", G_CALLBACK( on_dlg_close ), NULL );
 
     // pack some boxes to create horizonal padding at edges of window
     GtkWidget* hbox = gtk_hbox_new( FALSE, 0 );
@@ -3620,8 +3621,13 @@ static void build_dialog( GList* elements )
         else if ( el->type == CDLG_WINDOW_CLOSE && el->args )
         {
             el->cmd_args = el->args;
-            g_signal_connect( G_OBJECT( dlg ), "delete-event",
-                                            G_CALLBACK( on_window_delete ), el );
+            if ( !has_delete_handler )
+            {
+                g_signal_connect( G_OBJECT( dlg ), "delete-event",
+                                                G_CALLBACK( on_window_delete ),
+                                                el );
+                has_delete_handler = TRUE;
+            }
         }
         else if ( el->type == CDLG_TIMEOUT && el->option && !el->widgets->next
                                                       && !timeout_added )
@@ -3644,6 +3650,11 @@ static void build_dialog( GList* elements )
             is_large = TRUE;
     }
     g_list_free( boxes );
+
+    // delete-event handler
+    if ( !has_delete_handler )
+        g_signal_connect( G_OBJECT( dlg ), "delete-event",
+                                        G_CALLBACK( on_window_delete ), NULL );
 
     // resize window
     if ( is_large && !is_sized )
@@ -3735,7 +3746,7 @@ void signal_handler()
 {
     if ( signal_dialog )
     {
-        write_source( signal_dialog, NULL, stdout );
+        write_source( signal_dialog, NULL, stdout, TRUE );
         destroy_dlg( signal_dialog );
     }
 }

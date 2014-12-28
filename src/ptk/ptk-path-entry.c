@@ -636,7 +636,10 @@ static gboolean on_button_release( GtkEntry       *entry,
     if ( GDK_BUTTON_RELEASE != evt->type )
         return FALSE;
 
-    if ( 1 == evt->button && ( evt->state & GDK_CONTROL_MASK ) )
+    int keymod = ( evt->state & ( GDK_SHIFT_MASK | GDK_CONTROL_MASK |
+                 GDK_MOD1_MASK | GDK_SUPER_MASK | GDK_HYPER_MASK | GDK_META_MASK ) );
+
+    if ( 1 == evt->button && keymod == GDK_CONTROL_MASK )
     {
         int pos;
         const char *text, *sep;
@@ -670,9 +673,24 @@ static gboolean on_button_release( GtkEntry       *entry,
             }
         }
     }
+    else if ( 2 == evt->button && keymod == 0 )
+    {
+        /* Middle-click - replace path bar contents with primary clipboard
+         * contents and activate */
+        GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_PRIMARY );
+        char* clip_text = gtk_clipboard_wait_for_text( clip );
+        if ( clip_text && clip_text[0] )
+        {
+            char* str = replace_string( clip_text, "\n", "", FALSE );
+            gtk_entry_set_text( entry, str );
+            g_free( str );
+            gtk_widget_activate( (GtkWidget*)entry );
+        }
+        g_free( clip_text );
+        return TRUE;
+    }
     return FALSE;
 }
-
 
 void on_populate_popup( GtkEntry *entry, GtkMenu *menu, PtkFileBrowser* file_browser )
 {

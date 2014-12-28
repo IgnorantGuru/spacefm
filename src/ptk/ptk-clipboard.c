@@ -267,7 +267,7 @@ void ptk_clipboard_copy_file_list( char** path, gboolean copy )
 
 void ptk_clipboard_paste_files( GtkWindow* parent_win,
                                 const char* dest_dir, GtkTreeView* task_view,
-                                GFunc callback )
+                                GFunc callback, GtkWindow* callback_win )
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -351,11 +351,11 @@ void ptk_clipboard_paste_files( GtkWindow* parent_win,
         task = ptk_file_task_new( action,
                                   files,
                                   dest_dir,
-                                  GTK_WINDOW( parent_win ),
+                                  parent_win ? GTK_WINDOW( parent_win ) : NULL,
                                   GTK_WIDGET( task_view ) );
-        if ( callback && parent_win )
+        if ( callback && callback_win )
             ptk_file_task_set_complete_notify( task, callback,
-                                               (gpointer)parent_win );
+                                               (gpointer)callback_win );
         ptk_file_task_run( task );
     }
     gtk_selection_data_free( sel_data );
@@ -365,7 +365,7 @@ void ptk_clipboard_paste_files( GtkWindow* parent_win,
 void ptk_clipboard_paste_links( GtkWindow* parent_win,
                                 const char* dest_dir,
                                 GtkTreeView* task_view,
-                                GFunc callback )   //MOD added
+                                GFunc callback, GtkWindow* callback_win )
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -432,20 +432,20 @@ void ptk_clipboard_paste_links( GtkWindow* parent_win,
         task = ptk_file_task_new( action,
                                   files,
                                   dest_dir,
-                                  GTK_WINDOW( parent_win ),
+                                  parent_win ? GTK_WINDOW( parent_win ) : NULL,
                                   task_view ? GTK_WIDGET( task_view ) : NULL );
-        if ( callback && parent_win )
+        if ( callback && callback_win )
             ptk_file_task_set_complete_notify( task, callback,
-                                               (gpointer)parent_win );
+                                               (gpointer)callback_win );
         ptk_file_task_run( task );
     }
     gtk_selection_data_free( sel_data );
 }
 
 void ptk_clipboard_paste_targets( GtkWindow* parent_win,
-                                const char* dest_dir,
-                                GtkTreeView* task_view,
-                                GFunc callback )   //MOD added
+                                  const char* dest_dir,
+                                  GtkTreeView* task_view,
+                                  GFunc callback, GtkWindow* callback_win )
 {
     GtkClipboard * clip = gtk_clipboard_get( GDK_SELECTION_CLIPBOARD );
     GdkAtom gnome_target;
@@ -530,15 +530,15 @@ void ptk_clipboard_paste_targets( GtkWindow* parent_win,
         task = ptk_file_task_new( action,
                                   files,
                                   dest_dir,
-                                  GTK_WINDOW( parent_win ),
+                                  parent_win ? GTK_WINDOW( parent_win ) : NULL,
                                   GTK_WIDGET( task_view ) );
-        if ( callback && parent_win )
+        if ( callback && callback_win )
             ptk_file_task_set_complete_notify( task, callback,
-                                               (gpointer)parent_win );
+                                               (gpointer)callback_win );
         ptk_file_task_run( task );
         
         if ( missing_targets > 0 )
-            ptk_show_error( GTK_WINDOW( parent_win ),
+            ptk_show_error( parent_win ? GTK_WINDOW( parent_win ) : NULL,
                             g_strdup_printf ( "Error" ),
                             g_strdup_printf ( "%i target%s missing",
                             missing_targets, 
@@ -618,7 +618,8 @@ GList* ptk_clipboard_get_file_paths( const char* cwd, gboolean* is_cut,
                 files = g_list_prepend( files, file_path );
             }
             else
-                *missing_targets++;
+                // no *missing_targets++ here to avoid -Wunused-value compiler warning
+                *missing_targets = *missing_targets + 1;
         }
         ++puri;
     }

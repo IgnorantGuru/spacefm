@@ -200,8 +200,8 @@ exo_tree_view_class_init (ExoTreeViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SINGLE_CLICK,
                                    g_param_spec_boolean ("single-click",
-                                                         _("Single Click"),
-                                                         _("Whether the items in the view can be activated with single clicks"),
+                                                         "Single Click",
+                                                         "Whether the items in the view can be activated with single clicks",
                                                          FALSE,
                                                          EXO_PARAM_READWRITE));
 
@@ -217,8 +217,8 @@ exo_tree_view_class_init (ExoTreeViewClass *klass)
   g_object_class_install_property (gobject_class,
                                    PROP_SINGLE_CLICK_TIMEOUT,
                                    g_param_spec_uint ("single-click-timeout",
-                                                      _("Single Click Timeout"),
-                                                      _("The amount of time after which the item under the mouse cursor will be selected automatically in single click mode"),
+                                                      "Single Click Timeout",
+                                                      "The amount of time after which the item under the mouse cursor will be selected automatically in single click mode",
                                                       0, G_MAXUINT, 0,
                                                       EXO_PARAM_READWRITE));
 }

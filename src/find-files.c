@@ -246,7 +246,8 @@ static void on_open_files( GtkAction* action, FindFile* data )
             if( ! w )
             {
                 w = fm_main_window_new();
-                gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
+                // now done in fm_main_window_new
+                //gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
             }
             gtk_window_present( (GtkWindow*)w );
             file_browser = (PtkFileBrowser*)fm_main_window_get_current_file_browser(
@@ -260,7 +261,8 @@ static void on_open_files( GtkAction* action, FindFile* data )
         if( ! w )
         {
             w = fm_main_window_new();
-            gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
+            // now done in fm_main_window_new
+            //gtk_window_set_default_size( GTK_WINDOW( w ), app_settings.width, app_settings.height );
         }
 
         g_hash_table_foreach( hash, (GHFunc)open_dir, w );
