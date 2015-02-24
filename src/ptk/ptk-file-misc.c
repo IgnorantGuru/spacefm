@@ -3170,7 +3170,7 @@ _move_task:
                     // Respond to an EXDEV error by switching to a move (e.g. aufs
                     // directory rename fails due to the directory existing in
                     // multiple underlying branches)
-                    if ( errno == 18 )
+                    if ( errno == EXDEV )
                         goto _move_task;
 
                     // Unknown error has occurred - alert user as usual

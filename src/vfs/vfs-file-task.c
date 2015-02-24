@@ -746,7 +746,7 @@ vfs_file_task_do_move ( VFSFileTask* task,
 
     if ( result != 0 )
     {
-        if ( result == -1 && errno == 18 )  //MOD Invalid cross-link device
+        if ( result == -1 && errno == EXDEV )  //MOD Invalid cross-link device
             return 18;
         vfs_file_task_error( task, errno, _("Renaming"), src_file );
         if ( should_abort( task ) )
@@ -823,7 +823,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
         else
         {
             /* g_print("on the same dev: %s\n", src_file); */
-            if ( vfs_file_task_do_move( task, src_file, dest_file ) == 18 )  //MOD
+            if ( vfs_file_task_do_move( task, src_file, dest_file ) == EXDEV )  //MOD
             {
                 //MOD Invalid cross-device link (st_dev not always accurate test)
                 // so now redo move as copy
