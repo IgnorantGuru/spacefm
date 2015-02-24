@@ -3132,7 +3132,9 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
             // need move?  (do move as task in case it takes a long time)
             else if ( as_root || strcmp( old_path, path ) )
             {
-                // move task
+_move_task:
+                // move task - this is jumped to from the below rename block on
+                // EXDEV error
                 task_name = g_strdup_printf( _("Move%s"), root_msg );
                 PtkFileTask* task = ptk_file_exec_new( task_name, NULL, mset->parent,
                                                                     task_view );
@@ -3165,6 +3167,13 @@ int ptk_rename_file( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                 // rename (does overwrite)
                 if ( rename( mset->full_path, full_path ) != 0 )
                 {
+                    // Respond to an EXDEV error by switching to a move (e.g. aufs
+                    // directory rename fails due to the directory existing in
+                    // multiple underlying branches)
+                    if ( errno == 18 )
+                        goto _move_task;
+
+                    // Unknown error has occurred - alert user as usual
                     msg = g_strdup_printf( _("Error renaming file\n\n%s"),
                                                             strerror( errno ) );
                     ptk_show_error( GTK_WINDOW( mset->dlg ),
