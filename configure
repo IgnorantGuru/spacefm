@@ -1510,7 +1510,7 @@ Optional Features:
                           disable checks running as super user (no current
                           function) (default: enable)
   --disable-desktop-integration
-                          disable desktop integrations such as icons (default:
+                          disable desktop manager integration (default:
                           enable)
   --enable-pixmaps        use share/pixmaps dir instead of share/icons dir to
                           store icons (default: disable)
@@ -18486,7 +18486,7 @@ echo 'GTK+ Version................................. : GTK 3'
 else
 echo 'GTK+ Version................................. : GTK 2'
 fi
-echo Desktop icon integration..................... : $desktop_integration
+echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'

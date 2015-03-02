@@ -1296,6 +1296,19 @@ gboolean fm_edit_preference( GtkWindow* parent, int page )
         g_object_unref( builder );
     }
 
+    // Set current Preferences page
+    const int desktop_page_num = 2;
+#ifndef DESKTOP_INTEGRATION
+    // hide the Desktop tab if no desktop integration at build time
+    gtk_widget_hide( gtk_notebook_get_nth_page(
+                                           (GtkNotebook*)data->notebook,
+                                            desktop_page_num ) );
+    if ( page >= desktop_page_num )
+        page++;
+#endif
+    // notebook page number 3 is permanently hidden Volume Management
+    if ( page > desktop_page_num )
+        page++;
     gtk_notebook_set_current_page( (GtkNotebook*)data->notebook, page );
 
     gtk_window_present( (GtkWindow*)data->dlg );

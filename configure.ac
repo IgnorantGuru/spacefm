@@ -222,7 +222,7 @@ fi
 AC_ARG_ENABLE(
     [desktop-integration],
     AS_HELP_STRING([--disable-desktop-integration],
-                   [disable desktop integrations such as icons (default: enable)]),
+                   [disable desktop manager integration (default: enable)]),
     desktop_integration=$enableval, desktop_integration="yes")
 if test x"$desktop_integration" = "xyes"; then
   AC_DEFINE(DESKTOP_INTEGRATION, 1, [Whether to integrate desktop or not.])
@@ -310,7 +310,7 @@ echo 'GTK+ Version................................. : GTK 3'
 else
 echo 'GTK+ Version................................. : GTK 2'
 fi
-echo Desktop icon integration..................... : $desktop_integration
+echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'

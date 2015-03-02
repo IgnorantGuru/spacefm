@@ -1157,15 +1157,17 @@ gboolean handle_parsed_commandline_args()
     }
 
     if ( desktop_pref )  //MOD
+    {
+#ifdef DESKTOP_INTEGRATION
         show_pref = 3;
-
+#else
+        show_pref = 1;
+        fprintf( stderr, "spacefm: %s\n", _("This build of SpaceFM has desktop integration disabled") );
+#endif
+    }
+    
     if( show_pref > 0 ) /* show preferences dialog */
     {
-        /* We should initialize desktop support here.
-         * Otherwise, if the user turn on the desktop support
-         * in the pref dialog, the newly loaded desktop will be uninitialized.
-         */
-        //init_desktop_or_daemon();
         fm_edit_preference( GTK_WINDOW( main_window ), show_pref - 1 );
         show_pref = 0;
     }
