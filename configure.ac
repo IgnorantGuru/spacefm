@@ -236,6 +236,25 @@ AC_ARG_ENABLE(
     use_pixmaps=$enableval, use_pixmaps="no")
 AM_CONDITIONAL(NO_PIXMAPS, test ! x"$use_pixmaps" = x"yes")
 
+AC_ARG_WITH([bash-path], 
+	AS_HELP_STRING([--with-bash-path=PATH], [Absolute path to GENUINE bash v4 - other shells lack features REQUIRED by SpaceFM (default: /bin/bash)]),
+	AC_DEFINE_UNQUOTED(BASHPATH, "$withval", [path to bash]),
+	AC_DEFINE_UNQUOTED(BASHPATH, "/bin/bash", [path to bash]))
+bash_path="$withval"
+# IMPORTANT: For security reasons, an absolute path must be used for genuine
+# bash v4.  SpaceFM runs bash as root and you WILL open root exploits if you
+# disable this check, or run bash based on $PATH.
+if test ! -z "$bash_path"; then
+    if test ! "${bash_path:0:1}" = "/"; then
+        AC_MSG_ERROR([Fatal Error: Option --with-bash-path requires absolute path.])
+    fi
+    echo "Modifying spacefm-auth to use bash path..."
+    bash_esc="${bash_path//\//\\/}"
+    sed "s/\(\/bin\/bash\)/$bash_esc/" src/spacefm-auth.bash > src/spacefm-auth
+else
+    cp -p src/spacefm-auth.bash src/spacefm-auth
+fi
+
 dnl advanced compiler tweaking
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
@@ -290,6 +309,9 @@ else
 echo Icon Dir..................................... : "$resolve_datadir/icons/hicolor/"
 fi
 echo Documentation Dir............................ : "$resolve_htmldir/"
+if test ! -z "$bash_path"; then
+echo Custom path to bash v4....................... : "$bash_path"
+fi
 if test x"$use_hal" = x"yes"; then
 echo Linux device support......................... : hal
 else

@@ -849,7 +849,7 @@ void show_socket_help()
     printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
     printf( "    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
     
-    printf( "    #!/bin/bash\n" );
+    printf( "    #!%s\n", BASHPATH );
     printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );
     printf( "    echo \"%s:\"\n", _("These files have been copied to the clipboard") );
     printf( "    i=0\n" );
@@ -1443,10 +1443,12 @@ int main ( int argc, char *argv[] )
     }
     
     // bash installed?
-    if ( !g_file_test( "/bin/\x62\x61\x73\x68", G_FILE_TEST_IS_EXECUTABLE ) )
+    if ( !( BASHPATH && g_file_test( BASHPATH, G_FILE_TEST_IS_EXECUTABLE ) ) )
     {
-        fprintf( stderr, "spacefm: %s\n", _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
-        ptk_show_error( NULL, _("Error"), _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
+        char* bash_error = g_strdup_printf( _( "SpaceFM requires bash to be installed.  Other shells are NOT equivalent as SpaceFM uses features only found in genuine bash (v4+).\n\nThe program %s was not found.  Install bash or use configure option --with-bash-path to specify a custom location at build time." ), BASHPATH );
+        fprintf( stderr, "spacefm: %s\n", bash_error );
+        ptk_show_error( NULL, _("Error"), bash_error );
+        g_free( bash_error );
         return 1;
     }
 

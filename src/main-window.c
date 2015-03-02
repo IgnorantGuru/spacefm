@@ -6392,8 +6392,8 @@ _missing_arg:
             else
                 fm_main_window_add_new_tab( main_window, argv[i+1] );
             main_window_get_counts( file_browser, &i, &tab, &j );
-            *reply = g_strdup_printf( "#!/bin/bash\nnew_tab_window=%p\nnew_tab_panel=%d\nnew_tab_number=%d\n",
-                                                    main_window, panel, tab );
+            *reply = g_strdup_printf( "#!%s\nnew_tab_window=%p\nnew_tab_panel=%d\nnew_tab_number=%d\n",
+                                        BASHPATH, main_window, panel, tab );
         }
         else if ( g_str_has_suffix( argv[i], "_visible" ) )
         {
@@ -7473,8 +7473,8 @@ _invalid_get:
                 gtk_window_present( GTK_WINDOW( main_window ) );
             ptk_file_task_run( ptask );
             if ( opt_task )
-                *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
-                                                        main_window, ptask );
+                *reply = g_strdup_printf( "#!%s\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
+                                            BASHPATH, main_window, ptask );
         }
         else if ( !strcmp( argv[i], "edit" ) || !strcmp( argv[i], "web" ) )
         {
@@ -7616,8 +7616,8 @@ _invalid_get:
                                             GTK_WIDGET( file_browser ) ) ),
                                         file_browser->task_view );
             ptk_file_task_run( ptask );
-            *reply = g_strdup_printf( "#!/bin/bash\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
-                                                        main_window, ptask );
+            *reply = g_strdup_printf( "#!%s\n# Note: $new_task_id not valid until approx one half second after task start\nnew_task_window=%p\nnew_task_id=%p\n",
+                                        BASHPATH, main_window, ptask );
         }
         else
         {
