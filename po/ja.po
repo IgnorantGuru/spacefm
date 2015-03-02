@@ -633,7 +633,7 @@ msgstr "高度な設定(_A)"
 #: ../src/cust-dialog.c:393
 #, c-format
 msgid "Too many columns (>%d) in %s"
-msgstr "%s の列数が多すぎます (> %d)"
+msgstr "の列数が多すぎます (> %d %s)"
 
 #: ../src/cust-dialog.c:630 ../src/cust-dialog.c:1651
 #: ../src/cust-dialog.c:1665 ../src/cust-dialog.c:1884 ../src/item-prop.c:794
