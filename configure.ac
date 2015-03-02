@@ -252,7 +252,7 @@ if test ! -z "$bash_path"; then
     bash_esc="${bash_path//\//\\/}"
     sed "s/\(\/bin\/bash\)/$bash_esc/" src/spacefm-auth.bash > src/spacefm-auth
 else
-    cp -p src/spacefm-auth.bash src/spacefm-auth
+    cp -pf src/spacefm-auth.bash src/spacefm-auth
 fi
 
 dnl advanced compiler tweaking
