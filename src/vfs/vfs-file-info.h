@@ -134,6 +134,8 @@ gboolean vfs_file_info_is_symlink( VFSFileInfo* fi );
 
 gboolean vfs_file_info_is_image( VFSFileInfo* fi );
 
+gboolean vfs_file_info_is_video( VFSFileInfo* fi );
+
 gboolean vfs_file_info_is_desktop_entry( VFSFileInfo* fi );
 
 gboolean vfs_file_info_is_unknown_type( VFSFileInfo* fi );
