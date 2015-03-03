@@ -153,6 +153,7 @@ struct _DesktopWindow
     gpointer renaming_item; // item is being renamed
     gpointer renamed_item;  // item was renamed
     gboolean file_listed;   // TRUE once files are read
+    gboolean transparent;
 };
 
 struct _DesktopWindowClass
@@ -161,7 +162,7 @@ struct _DesktopWindowClass
 };
 
 GType       desktop_window_get_type (void);
-GtkWidget* desktop_window_new          (void);
+GtkWidget* desktop_window_new          ( gboolean transparent );
 
 /*
  *  Set background of the desktop window.

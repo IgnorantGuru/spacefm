@@ -75,6 +75,7 @@ typedef enum{
     CMD_PANEL3,
     CMD_PANEL4,
     CMD_DESKTOP,
+    CMD_TRANSPARENT_DESKTOP,
     CMD_NO_TABS,
     CMD_SOCKET_CMD,
     SOCKET_RESPONSE_OK,
@@ -101,6 +102,7 @@ static gboolean no_tabs = FALSE;     //sfm
 static gboolean new_window = FALSE;
 static gboolean desktop_pref = FALSE;  //MOD
 static gboolean desktop = FALSE;  //MOD
+static gboolean transparent_desktop = FALSE;
 static gboolean profile = FALSE;  //MOD
 static gboolean custom_dialog = FALSE;  //sfm
 static gboolean socket_cmd = FALSE;     //sfm
@@ -131,6 +133,7 @@ static GOptionEntry opt_entries[] =
     { "new-window", 'w', 0, G_OPTION_ARG_NONE, &new_window, N_("Open folders in new window"), NULL },
     { "panel", 'p', 0, G_OPTION_ARG_INT, &panel, N_("Open folders in panel 'P' (1-4)"), "P" },
     { "desktop", '\0', 0, G_OPTION_ARG_NONE, &desktop, N_("Launch desktop manager daemon"), NULL },
+    { "transparent-desktop", '\0', 0, G_OPTION_ARG_NONE, &transparent_desktop, N_("Launch desktop manager daemon (transparent)"), NULL },
     { "desktop-pref", '\0', 0, G_OPTION_ARG_NONE, &desktop_pref, N_("Show desktop settings"), NULL },
     { "show-pref", '\0', 0, G_OPTION_ARG_INT, &show_pref, N_("Show Preferences ('N' is the Pref tab number)"), "N" },
     { "daemon-mode", 'd', 0, G_OPTION_ARG_NONE, &daemon_mode, N_("Run as a daemon"), NULL },
@@ -280,6 +283,8 @@ gboolean on_socket_event( GIOChannel* ioc, GIOCondition cond, gpointer data )
                 socket_daemon_or_desktop = daemon_mode = TRUE;
                 g_string_free( args, TRUE );
                 return TRUE;
+            case CMD_TRANSPARENT_DESKTOP:
+                transparent_desktop = TRUE;
             case CMD_DESKTOP:
                 socket_daemon_or_desktop = desktop = TRUE;
                 break;
@@ -405,6 +410,8 @@ gboolean single_instance_check()
         
         if( daemon_mode )
             cmd = CMD_DAEMON_MODE;
+        else if ( transparent_desktop )
+            cmd = CMD_TRANSPARENT_DESKTOP;
         else if( desktop )
             cmd = CMD_DESKTOP;
         else if( new_window )
@@ -843,7 +850,7 @@ void show_socket_help()
     printf( "    spacefm -s show-menu --window $fm_my_window \"Custom Menu\"\n" );
     printf( "    spacefm -s add-event evt_pnl_sel 'spacefm -s set statusbar_text \"$fm_file\"'\n\n" );
     
-    printf( "    #!/bin/bash\n" );
+    printf( "    #!%s\n", BASHPATH );
     printf( "    eval copied_files=\"$(spacefm -s get clipboard_copy_files)\"\n" );
     printf( "    echo \"%s:\"\n", _("These files have been copied to the clipboard") );
     printf( "    i=0\n" );
@@ -948,8 +955,10 @@ void init_folder()
 
 static void init_daemon_or_desktop()
 {
-    if( desktop )
-        fm_turn_on_desktop_icons();
+    if( transparent_desktop )
+        fm_turn_on_desktop_icons(TRUE);
+    else if( desktop )
+        fm_turn_on_desktop_icons(FALSE);
 }
 
 #ifdef HAVE_HAL
@@ -1010,8 +1019,10 @@ static void init_desktop_or_daemon()
     signal( SIGINT, (void*)gtk_main_quit );
     signal( SIGTERM, (void*)gtk_main_quit );
 
-    if( desktop )
-        fm_turn_on_desktop_icons();
+    if( transparent_desktop )
+        fm_turn_on_desktop_icons(TRUE);
+    else if( desktop )
+        fm_turn_on_desktop_icons(FALSE);
     desktop_or_deamon_initialized = TRUE;
 }
 
@@ -1148,15 +1159,17 @@ gboolean handle_parsed_commandline_args()
     }
 
     if ( desktop_pref )  //MOD
+    {
+#ifdef DESKTOP_INTEGRATION
         show_pref = 3;
-
+#else
+        show_pref = 1;
+        fprintf( stderr, "spacefm: %s\n", _("This build of SpaceFM has desktop integration disabled") );
+#endif
+    }
+    
     if( show_pref > 0 ) /* show preferences dialog */
     {
-        /* We should initialize desktop support here.
-         * Otherwise, if the user turn on the desktop support
-         * in the pref dialog, the newly loaded desktop will be uninitialized.
-         */
-        //init_desktop_or_daemon();
         fm_edit_preference( GTK_WINDOW( main_window ), show_pref - 1 );
         show_pref = 0;
     }
@@ -1194,7 +1207,7 @@ gboolean handle_parsed_commandline_args()
             if ( err_msg )
                 printf( _("spacefm: Error: Unable to save session\n       %s\n"),
                                                                     err_msg );
-            if( desktop && app_settings.show_wallpaper )
+            if( (transparent_desktop || desktop) && app_settings.show_wallpaper )
             {
                 if( desktop_or_deamon_initialized )
                     fm_desktop_update_wallpaper();
@@ -1203,13 +1216,13 @@ gboolean handle_parsed_commandline_args()
         else
             g_free( file );
 
-        ret = ( daemon_mode || ( desktop && desktop_or_deamon_initialized)  );
+        ret = ( daemon_mode || ( (transparent_desktop || desktop) && desktop_or_deamon_initialized)  );
         goto out;
     }
 #endif
     else /* open files/folders */
     {
-        if ( ( daemon_mode || desktop ) && !desktop_or_deamon_initialized )
+        if ( ( daemon_mode || (transparent_desktop || desktop) ) && !desktop_or_deamon_initialized )
             init_desktop_or_daemon();
         else if ( files != default_files )
         {
@@ -1357,7 +1370,9 @@ int main ( int argc, char *argv[] )
                 vfs_file_monitor_clean();
                 return ret == -1 ? 0 : ret;
             }
+            GDK_THREADS_ENTER();
             gtk_main();
+            GDK_THREADS_LEAVE();
             vfs_file_monitor_clean();
             return 0;
         }
@@ -1410,7 +1425,7 @@ int main ( int argc, char *argv[] )
     
     // --desktop with no desktop build?
 #ifndef DESKTOP_INTEGRATION
-    if ( desktop )
+    if ( transparent_desktop || desktop )
     {
         fprintf( stderr, "spacefm: %s\n", _("This build of SpaceFM has desktop integration disabled") );
         return 1;
@@ -1447,10 +1462,12 @@ int main ( int argc, char *argv[] )
     }
     
     // bash installed?
-    if ( !g_file_test( "/bin/\x62\x61\x73\x68", G_FILE_TEST_IS_EXECUTABLE ) )
+    if ( !( BASHPATH && g_file_test( BASHPATH, G_FILE_TEST_IS_EXECUTABLE ) ) )
     {
-        fprintf( stderr, "spacefm: %s\n", _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
-        ptk_show_error( NULL, _("Error"), _("SpaceFM requires genuine /bin/\x62\x61\x73\x68 (v4+) to be installed.  Other shells are NOT equivalent.") );
+        char* bash_error = g_strdup_printf( _( "SpaceFM requires bash to be installed.  Other shells are NOT equivalent as SpaceFM uses features only found in genuine bash (v4+).\n\nThe program %s was not found.  Install bash or use configure option --with-bash-path to specify a custom location at build time." ), BASHPATH );
+        fprintf( stderr, "spacefm: %s\n", bash_error );
+        ptk_show_error( NULL, _("Error"), bash_error );
+        g_free( bash_error );
         return 1;
     }
 
@@ -1517,14 +1534,16 @@ int main ( int argc, char *argv[] )
     run = handle_parsed_commandline_args();
     app_settings.load_saved_tabs = TRUE;
 
+    GDK_THREADS_ENTER();
     if( run )   /* run the main loop */
         gtk_main();
+    GDK_THREADS_LEAVE();
 
     main_window_event( NULL, NULL, "evt_exit", 0, 0, NULL, 0, 0, 0, FALSE );
 
     single_instance_finalize();
 
-    if( desktop && desktop_or_deamon_initialized )  // desktop was app_settings.show_desktop
+    if( (transparent_desktop || desktop) && desktop_or_deamon_initialized )  // desktop was app_settings.show_desktop
         fm_turn_off_desktop_icons();
 
 /*
@@ -1634,7 +1653,7 @@ void pcmanfm_ref()
 gboolean pcmanfm_unref()
 {
     --n_pcmanfm_ref;
-    if( 0 == n_pcmanfm_ref && ! daemon_mode && !desktop )
+    if( 0 == n_pcmanfm_ref && ! daemon_mode && !desktop && !transparent_desktop )
         gtk_main_quit();
     return FALSE;
 }

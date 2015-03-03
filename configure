@@ -843,6 +843,7 @@ enable_superuser_checks
 with_preferable_sudo
 enable_desktop_integration
 enable_pixmaps
+with_bash_path
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1510,7 +1511,7 @@ Optional Features:
                           disable checks running as super user (no current
                           function) (default: enable)
   --disable-desktop-integration
-                          disable desktop integrations such as icons (default:
+                          disable desktop manager integration (default:
                           enable)
   --enable-pixmaps        use share/pixmaps dir instead of share/icons dir to
                           store icons (default: disable)
@@ -1529,6 +1530,8 @@ Optional Packages:
                           unless GTK2 not installed)
   --with-preferable-sudo=PROG
                           Specify custom program to switch to super user
+  --with-bash-path=PATH   Absolute path to GENUINE bash v4 - other shells lack
+                          features REQUIRED by SpaceFM (default: /bin/bash)
 
 Some influential environment variables:
   CC          C compiler command
@@ -15423,6 +15426,37 @@ else
 fi
 
 
+
+# Check whether --with-bash-path was given.
+if test "${with_bash_path+set}" = set; then :
+  withval=$with_bash_path;
+cat >>confdefs.h <<_ACEOF
+#define BASHPATH "$withval"
+_ACEOF
+
+else
+
+cat >>confdefs.h <<_ACEOF
+#define BASHPATH "/bin/bash"
+_ACEOF
+
+fi
+
+bash_path="$withval"
+# IMPORTANT: For security reasons, an absolute path must be used for genuine
+# bash v4.  SpaceFM runs bash as root and you WILL open root exploits if you
+# disable this check, or run bash based on $PATH.
+if test ! -z "$bash_path"; then
+    if test ! "${bash_path:0:1}" = "/"; then
+        as_fn_error $? "Fatal Error: Option --with-bash-path requires absolute path." "$LINENO" 5
+    fi
+    echo "Modifying spacefm-auth to use bash path..."
+    bash_esc="${bash_path//\//\\/}"
+    sed "s/\(\/bin\/bash\)/$bash_esc/" src/spacefm-auth.bash > src/spacefm-auth
+else
+    cp -pf src/spacefm-auth.bash src/spacefm-auth
+fi
+
 CPPFLAGS="$CPPFLAGS -fstrict-aliasing -fmessage-length=0"
 
 CPPFLAGS="$CPPFLAGS -DDATADIR=\\\"$datadir\\\" -DHTMLDIR=\\\"$htmldir\\\""
@@ -18466,6 +18500,9 @@ else
 echo Icon Dir..................................... : "$resolve_datadir/icons/hicolor/"
 fi
 echo Documentation Dir............................ : "$resolve_htmldir/"
+if test ! -z "$bash_path"; then
+echo Custom path to bash v4....................... : "$bash_path"
+fi
 if test x"$use_hal" = x"yes"; then
 echo Linux device support......................... : hal
 else
@@ -18486,7 +18523,7 @@ echo 'GTK+ Version................................. : GTK 3'
 else
 echo 'GTK+ Version................................. : GTK 2'
 fi
-echo Desktop icon integration..................... : $desktop_integration
+echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'

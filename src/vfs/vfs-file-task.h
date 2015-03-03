@@ -159,7 +159,7 @@ struct _VFSFileTask
     gboolean exec_export;
     gboolean exec_direct;
     char* exec_argv[7];      // for exec_direct, command ignored
-                             // for su commands, must use /bin/bash -c
+                             // for su commands, must use bash -c
                              // as su does not execute binaries
     char* exec_script;
     gboolean exec_keep_tmp;  // diagnostic to keep temp files

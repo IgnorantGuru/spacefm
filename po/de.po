@@ -19,8 +19,8 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-27 18:29+0000\n"
-"PO-Revision-Date: 2014-03-27 18:30+0000\n"
-"Last-Translator: ignorantguru <ignorantguru@gmx.com>\n"
+"PO-Revision-Date: 2014-03-31 08:13+0000\n"
+"Last-Translator: delix\n"
 "Language-Team: German (http://www.transifex.com/projects/p/spacefm/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr "by IgnorantGuru"
 
 #: ../data/ui/about-dlg.ui.h:2
 msgid "Copyright (C) 2014    GPL3+"
-msgstr ""
+msgstr "Copyright (C) 2014    GPL3+"
 
 #: ../data/ui/about-dlg.ui.h:3
 msgid ""
@@ -75,7 +75,7 @@ msgid ""
 "The 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n"
 "\n"
 "You should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
-msgstr ""
+msgstr "SpaceFM - Copyright (C) 2014   GPL3+\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nUSE AT YOUR OWN RISK.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.\n\nThe 'exo' libraries and source code used by this software are licensed under the GNU General Public License and the GNU Lesser General Public License version 3 (LGPL3).\n\nYou should have received a copy of the GNU General Public License and the GNU Lesser General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 
 #: ../data/ui/about-dlg.ui.h:12
 msgid ""
@@ -108,7 +108,7 @@ msgid ""
 " * Text and icon renderer uses code from Jonathan Blandford\n"
 " * Desktop icons use code from Brian Tarricone\n"
 " * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
-msgstr ""
+msgstr "IgnorantGuru <ignorantguru@gmx.com>\n\nContributors:\n    BwackNinja <BwackNinja@gmail.com>\n    OmegaPhil <OmegaPhil+SpaceFM@gmail.com>\n\nArtwork:\n    SpaceFM icons and logo by Goran Simovic\n\nThanks to SpaceFM users for valuable feedback and to SpaceFM translators and\npackagers!\n\nSpecial thanks to:\n    Jean-Philippe Fleury\n    Vladimir Kudrya\n    VastOne\n    Hasufell\n\nSpaceFM is developed on geany, gcc, and git, with a little help from gdb.\n\nSource code taken from other projects:\n * pcmanfm-mod: IgnorantGuru\n * pcmanfm v0.5.2: Hon Jen Yee (PCMan)\n * libmd5-rfc: Aladdin Enterprises\n * Working area detection: Gary Kramlich\n * ExoIconView: os-cillation e.K, Anders Carlsson, Benedikt Meurer\n * Text and icon renderer uses code from Jonathan Blandford\n * Desktop icons use code from Brian Tarricone\n * HAL support (deprecated): gnome-vfs, thunar-vfs, libexo, gnome-mount"
 
 #: ../data/ui/about-dlg.ui.h:41
 msgid ""
@@ -462,7 +462,7 @@ msgstr "Symbole der Werkzeugleiste:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Icons</b>"
-msgstr ""
+msgstr "<b>Symbole</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
@@ -470,7 +470,7 @@ msgstr "Einfacher Klick öffnet Dateien"
 
 #: ../data/ui/prefdlg.ui.h:18 ../data/ui/prefdlg2.ui.h:18
 msgid "Hover selects"
-msgstr ""
+msgstr "Auswahl durch Mauszeigerkontakt"
 
 #: ../data/ui/prefdlg.ui.h:19 ../data/ui/prefdlg2.ui.h:19
 msgid "Bookmarks:"
@@ -486,7 +486,7 @@ msgstr "Maximale Größe der Vorschaubilder:"
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "<b>File List</b>"
-msgstr ""
+msgstr "<b>Dateiliste</b>"
 
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "_General"
@@ -6660,11 +6660,11 @@ msgid ""
 "You do not have permission to edit the contents of file %s\n"
 "\n"
 "Consider copying the file to the desktop, or link to a copy placed in ~/.local/share/applications/"
-msgstr ""
+msgstr "Ist das Schreibrecht für die Datei %s vorhanden ?\n\nEine Lösungsmöglichkeit ist das Kopieren der Datei auf den Schreibtisch oder die Verknüpfung mit einer in ~/.local/share/applications/ erzeugten Kopie"
 
 #: ../src/desktop/desktop-window.c:2059
 msgid "Unable To Rename"
-msgstr ""
+msgstr "Umbenennen nicht möglich"
 
 #: ../src/desktop/desktop-window.c:2068
 #, c-format

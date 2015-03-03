@@ -2029,7 +2029,7 @@ static void write_source( GtkWidget* dlg, CustomElement* el_pressed,
 
     // write values
     int button_count = 0;
-    fprintf( out, "#!/bin/bash\n# SpaceFM Dialog source output - execute this output to set variables\n# Example:  eval \"`spacefm --dialog --label \"Message\" --button ok`\"\n\n" );
+    fprintf( out, "#!%s\n# SpaceFM Dialog source output - execute this output to set variables\n# Example:  eval \"`spacefm --dialog --label \"Message\" --button ok`\"\n\n", BASHPATH );
     if ( !el_pressed )
     {
         // no button press caused dialog closure
@@ -3737,7 +3737,7 @@ static void show_help()
     fprintf( f, _("    spacefm -g --label \"Enter some text and press Enter:\" \\\n               --input \"\" set label2 %%v -- echo '# %%n = %%v' \\\n               --label \\\n               --button ok\n") );
     
     fprintf( f, _("\nEXAMPLE SCRIPT:\n") );
-    fprintf( f, _("    #!/bin/bash\n    # This script shows a Yes/No dialog\n    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"User pressed Yes - take some action\"\n    else\n        echo \"User did NOT press Yes - abort\"\n    fi\n") );
+    fprintf( f, _("    #!%s\n    # This script shows a Yes/No dialog\n    # Use QUOTED eval to read variables output by SpaceFM Dialog:\n    eval \"`spacefm -g --label \"Are you sure?\" --button yes --button no`\"\n    if [[ \"$dialog_pressed\" == \"button1\" ]]; then\n        echo \"User pressed Yes - take some action\"\n    else\n        echo \"User did NOT press Yes - abort\"\n    fi\n"), BASHPATH );
     fprintf( f, _("\nFor full documentation and examples see the SpaceFM User's Manual:\n") );
     fprintf( f, "    %s\n\n", DEFAULT_MANUAL );
 }

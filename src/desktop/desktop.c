@@ -68,7 +68,7 @@ void on_size_changed( GdkScreen *screen, GtkWidget* w )
 }
 */
 
-void fm_turn_on_desktop_icons()
+void fm_turn_on_desktop_icons(gboolean transparent)
 {
     GdkDisplay * gdpy;
     gint i;
@@ -88,7 +88,7 @@ void fm_turn_on_desktop_icons()
     desktops = g_new( GtkWidget *, n_screens );
     for ( i = 0; i < n_screens; i++ )
     {
-        desktops[ i ] = desktop_window_new();
+        desktops[ i ] = desktop_window_new(transparent);
         //printf("added desktop window %p to screen %d on display %p (%s)\n",
         //                  desktops[ i ], i, gdpy, g_getenv( "DISPLAY" ) );
         ((DesktopWindow*)desktops[ i ])->screen_index = i;
@@ -221,7 +221,7 @@ void fm_desktop_set_single_click( gboolean single_click )
 #else /* ! DESKTOP_INTEGRATION */
 
 /* dummy implementations */
-void fm_turn_on_desktop_icons() { }
+void fm_turn_on_desktop_icons( gboolean transparent ) { }
 void fm_turn_off_desktop_icons() { }
 void fm_desktop_update_thumbnails() { }
 void fm_desktop_update_wallpaper() { }

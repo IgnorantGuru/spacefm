@@ -746,7 +746,7 @@ vfs_file_task_do_move ( VFSFileTask* task,
 
     if ( result != 0 )
     {
-        if ( result == -1 && errno == 18 )  //MOD Invalid cross-link device
+        if ( result == -1 && errno == EXDEV )  //MOD Invalid cross-link device
             return 18;
         vfs_file_task_error( task, errno, _("Renaming"), src_file );
         if ( should_abort( task ) )
@@ -823,7 +823,7 @@ vfs_file_task_move( char* src_file, VFSFileTask* task )
         else
         {
             /* g_print("on the same dev: %s\n", src_file); */
-            if ( vfs_file_task_do_move( task, src_file, dest_file ) == 18 )  //MOD
+            if ( vfs_file_task_do_move( task, src_file, dest_file ) == EXDEV )  //MOD
             {
                 //MOD Invalid cross-device link (st_dev not always accurate test)
                 // so now redo move as copy
@@ -1576,7 +1576,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         if ( !file ) goto _exit_with_error;
 
         // build - header
-        result = fputs( "#!/bin/bash\n#\n# Temporary SpaceFM exec script - it is safe to delete this file\n\n", file );
+        result = fprintf( file, "#!%s\n#\n# Temporary SpaceFM exec script - it is safe to delete this file\n\n", BASHPATH );
         if ( result < 0 ) goto _exit_with_error;
         
         // build - exports
@@ -1683,7 +1683,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
                                         "[ Finished ]  Press Enter to close" );
             else 
             {         
-                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    /bin/bash\nfi\n\n", "[ Finished ]  Press Enter to close or s + Enter for a shell", "You are ROOT" );
+                result = fprintf( file, "\necho\necho -n '%s: '\nread s\nif [ \"$s\" = 's' ]; then\n    if [ \"$(whoami)\" = \"root\" ]; then\n        echo\n        echo '[ %s ]'\n    fi\n    echo\n    %s\nfi\n\n", "[ Finished ]  Press Enter to close or s + Enter for a shell", "You are ROOT", BASHPATH );
             }
             if ( result < 0 ) goto _exit_with_error;
         }
@@ -1795,7 +1795,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         {
             // /bin/su
             argv[a++] = g_strdup( "-s" );
-            argv[a++] = g_strdup( "/bin/bash" );  //shell spec
+            argv[a++] = g_strdup( BASHPATH );  //shell spec
             argv[a++] = g_strdup( "-c" );
             single_arg = TRUE;
         }
@@ -1833,7 +1833,8 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         // spacefm-auth
         if ( single_arg )
         {
-            argv[a++] = g_strdup_printf( "/bin/bash %s%s %s %s",
+            argv[a++] = g_strdup_printf( "%s %s%s %s %s",
+                                BASHPATH,
                                 auth,
                                 !strcmp( task->exec_as_user, "root" ) ? " root" : "",
                                 task->exec_script,
@@ -1842,7 +1843,7 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
         }
         else
         {
-            argv[a++] = g_strdup( "/bin/bash" );
+            argv[a++] = g_strdup( BASHPATH );
             argv[a++] = auth;
             if ( !strcmp( task->exec_as_user, "root" ) )
                 argv[a++] = g_strdup( "root" );
@@ -1878,11 +1879,11 @@ static void vfs_file_task_exec( char* src_file, VFSFileTask* task )
     {
         if ( single_arg )
         {
-            argv[a++] = g_strdup_printf( "/bin/bash %s run", task->exec_script );
+            argv[a++] = g_strdup_printf( "%s %s run", BASHPATH, task->exec_script );
         }
         else
         {
-            argv[a++] = g_strdup( "/bin/bash" );
+            argv[a++] = g_strdup( BASHPATH );
             argv[a++] = g_strdup( task->exec_script );
             argv[a++] = g_strdup( "run" );
         }
