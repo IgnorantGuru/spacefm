@@ -100,10 +100,10 @@
 <a href="#handlers">Handlers</a>
 <ul>
     <a href="#handlers-introduction">Introduction</a><br>
-    <a href="#handlers-dev">Devices </a><br>
-    <a href="#handlers-pro">Protocols </a><br>
-    <a href="#handlers-arc">Archives </a><br>
-    <a href="#handlers-fil">Files </a><br>
+    <a href="#handlers-dev">Device Handlers </a><br>
+    <a href="#handlers-pro">Protocol Handlers </a><br>
+    <a href="#handlers-arc">Archive Handlers </a><br>
+    <a href="#handlers-fil">File Handlers </a><br>
 </ul>
 <a href="#dialog">Dialog</a>
 <ul>
@@ -1080,7 +1080,7 @@ The path to a file may be entered or pasted in the Path Bar.  When you press Ent
 Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.kernel.org/</i>, will be opened with the associated <a href="#handlers-pro">protocol handler</a>.  If a fileystem is mounted, SpaceFM will usually open the mount point directory automatically.  If the <a href="#devices-list">Devices List</a> has option <a href="#devices-settings-net">Settings|Show|Mounted Networks</a> checked, the filesystem may be listed.
 
 <p>Regardless of the protocol, SpaceFM's default protocol handlers all accept URLs in the format:
-<pre>    PROTO://USERNAME:PASSWORD@HOST:PORT/SHARE</pre>
+<pre>    PROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE</pre>
 
 <p><b>WARNING:  Including a password in the URL is a very unsafe mode of use</b>, as your password is included in the command line and may be written to temporary and/or system files by SpaceFM or mount helpers.  See documentation specific to the filesystem for other authentication methods offered, or enter your password when prompted.
 
@@ -4018,10 +4018,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <li>Handlers
     <ul>
         <li>Introduction
-        <li><a href="#handlers-dev">Devices </a>
-        <li><a href="#handlers-pro">Protocols </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-dev">Device Handlers </a>
+        <li><a href="#handlers-pro">Protocol Handlers </a>
+        <li><a href="#handlers-arc">Archive Handlers </a>
+        <li><a href="#handlers-fil">File Handlers </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4031,7 +4031,7 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <td valign="top">
 <a name="handlers-introduction"/><a href="#handlers-introduction"><font size=+2>Introduction</font></a>
 <!-- @Handlers @Introduction -->
-<p>Handlers are commands or sets of commands which tell SpaceFM how to perform a function, such as opening a file or mounting a device.  In some cases handlers replace SpaceFM's default behavior.  Handlers come in several varieties: <a href="#handlers-dev">Devices</a>, <a href="#handlers-pro">Protocols</a>, <a href="#handlers-arc">Archives</a>, and <a href="#handlers-fil">Files</a>.
+<p>Handlers are sets of commands which tell SpaceFM how to perform a function, such as opening a file, mounting a device, or creating/extracting an archive.  In some cases your handlers replace SpaceFM's default behavior.  Handlers come in several varieties: <a href="#handlers-dev">Devices</a>, <a href="#handlers-pro">Protocols</a>, <a href="#handlers-arc">Archives</a>, and <a href="#handlers-fil">Files</a>.
 
 
 
@@ -4055,10 +4055,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <li>Handlers
     <ul>
         <li><a href="#handlers-introduction">Introduction</a>
-        <li>Devices 
-        <li><a href="#handlers-pro">Protocols </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">Files </a>
+        <li>Device Handlers 
+        <li><a href="#handlers-pro">Protocol Handlers </a>
+        <li><a href="#handlers-arc">Archive Handlers </a>
+        <li><a href="#handlers-fil">File Handlers </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4066,35 +4066,140 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 </ul>
 </td>
 <td valign="top">
-<a name="handlers-dev"/><a href="#handlers-dev"><font size=+2>Devices </font></a>
-<!-- @Handlers @Devices #dev -->
-<a name="devices-settings-mcmd"><p>Device</a> <a name="devices-settings-ucmd">handlers</a> <!-- backwards compat links --> tell SpaceFM how to mount, unmount, and list properties for specific filesystems or devices.  To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.
+<a name="handlers-dev"/><a href="#handlers-dev"><font size=+2>Device Handlers </font></a>
+<!-- @Handlers @Device Handlers #dev -->
+<a name="devices-settings-mcmd"><p>Device</a> <a name="devices-settings-ucmd">handlers</a> <!-- backwards compat links --> tell SpaceFM how to mount, unmount, and show properties for specific filesystems or devices.  Anytime SpaceFM or the SpaceFM daemon mounts or unmounts a device (manually or automatically), or shows the properties of a device, it uses a handler to determine what commands to run.  By adding custom device handlers, SpaceFM can be made to mount and unmount virtually any type of device or filesystem.
 
+<p>To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.  The list at the left of the Device Handlers configuration window lists all device handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches the current device will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.  In this way, you determine what handlers have preference.  The "Default" handler is usually listed last, and is used if no other handlers apply.
+
+<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
+
+<p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler, which appears in the list and in debug messages.  Next comes a Whitelist and Blacklist: these determine when this handler will be used.  Finally, the Mount, Unmount, and Properties boxes contain scripted commands which will be run by the handler to mount, unmount, or list properties of a device.
+
+<!-- # Whitelist #white -->
+<p><a name="handlers-dev-white"/><a href="#handlers-dev-white"><b>Whitelist</b></a><br>
+A handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the device properties, then this handler may be used for this device.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
+
+<p>The following device whitelist elements are recognized:
 <pre>
-    /* In commands:
-    *      %v  device
-    *      %o  volume-specific mount options (use in mount command only)
-    *      %a  mount point, or create auto mount point
-    *  Plus standard substitution variables are accepted.
-    * 
-    *  Whitelist/Blacklist: (prefix list element with '+' if required)
-    *      fstype (eg ext3)
-    *      dev=DEVICE (/dev/sdd1)
-    *      id=UDI
-    *      label=VOLUME_LABEL (includes spaces as underscores)
-    *      point=MOUNT_POINT
-    *      audiocd=0 or 1
-    *      optical=0 or 1
-    *      removable=0 or 1
-    *      mountable=0 or 1
-    *      
-    *      eg: +ext3 dev=/dev/sdb* id=ata-* label=Label_With_Spaces
-    */
+    FSTYPE (eg ext3)
+    dev=DEVICE (/dev/sdd1)
+    id=UDI
+    label=VOLUME_LABEL (include spaces as underscores)
+    point=MOUNT_POINT
+    audiocd=0 or 1
+    optical=0 or 1
+    removable=0 or 1
+    mountable=0 or 1
 </pre>
 
+The simplest whitelist simply contains a filesystem type, such as "ext3".  Thus anytime you mount a device with that filesystem, the handler may be used.
 
+<p>If you want a handler to apply to several filesystem types, just list them:
+<pre>    ext3 ext4</pre>
 
-<p>NOTE:  Custom menu items, added with <a href="#designmode-designmenu-new">New|Command</a>, may also be set as primitive device handlers via their <a href="#designmode-props-opener">Use as handler for</a> option.  When a device is clicked, if the menu item is enabled based on the current browser context, this menu item's command will be run rather than any other configured device handler.
+For more complex situations, you can add more elements to narrow or control when a handler will be used.  For example, consider the following whitelist:
+<pre>    +ext3 +dev=/dev/sdd* +label=My_Volume_Label</pre>
+
+First, the elements are prefixed with plug signs, so all are required to match, or the handler will not be used.  First, the filesystem type MUST be ext3 for this handler to be used.  Second, the device file must begin with "/dev/sdd" (eg /dev/sdd1).  Finally, the volume label on the device must be "My Volume Label" (or "My_Volume_Label").  Note that spaces in the label are converted to underscores for testing.
+
+<p>To see what handler SpaceFM has selected to mount a device, and see the commands being issued, start the <code>spacefm</code> program in a terminal window, and observe debugging output in the terminal while SpaceFM is running.  For example, mounting a USB stick you may see:
+<pre>    Selected Device Handler 'Default': MOUNT [*]</pre>
+
+This tells you that the 'Default' device handler was used, and the action being performed is MOUNT.  The portion(s) of the handler's whitelist which matched will be enclosed in square brackets [ ].
+
+<!-- # Blacklist #black -->
+<p><a name="handlers-dev-black"/><a href="#handlers-dev-black"><b>Blacklist</b></a><br>
+A handler's blacklist is a space-separated list of elements.  If any element in the list matches the device properties, this handler will never be used for this device.
+
+<p>For example, consider the following Whitelist/Blacklist combination:
+<pre>
+    Whitelist: vfat
+    Blacklist: dev=/dev/sde1 label=Ignored_Volume_Label
+</pre>
+
+In this example, the handler applies to any vfat filesystem.  However, if the device file is /dev/sde1, OR the volume label on the device is "Ignored Volume Label" (or "Ignored_Volume_Label"), the handler will not be used.
+
+<!-- # Mount -->
+<p><a name="handlers-dev-mount"/><a href="#handlers-dev-mount"><b>Mount</b></a><br>
+The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+
+<p>Several variables will be replaced before your commands are run:
+<pre>
+    %v  device
+    %o  volume-specific mount options (use in mount command only)
+    %a  create auto mount point
+</pre>
+
+%v will be replaced with the device file (eg /dev/sdd1).  %o, if included, will be replaced with volume-specific mount options (these are set in <a href="#devices-settings-opts">Mount Options</a>).  Or, you can omit %o and simply include the options you desire in the command.
+
+<p>Finally, the presence of %a will cause SpaceFM to create a new directory to be used as a mount point for the mount (eg ~/.cache/spacefm/mountpoint, and %a will be replaced with the directory path.  When the device is unmounted, this mount point will be removed.  Or, if you wish to create your own mount point, or if your mount program automatically creates one in /media (such as udevil), then you may omit %a.
+
+<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
+
+<p>Example Mount commands (enable only one section by removing #):
+<pre>
+    # # udevil:
+    #     udevil mount -o '%o' %v
+    #
+    # # pmount: (does not accept mount options)
+    #     pmount %v
+    #
+    # # udisks v2:
+    #     udisksctl mount -b %v -o '%o'
+    #
+    # # udisks v1: (enable all three lines!)
+    #     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`
+    #     echo "$fm_udisks"
+    #     [[ "$fm_udisks" = "${fm_udisks/ount failed:/}" ]]
+</pre>
+
+(Note:  Because udisks v1 does not return a proper error status on error, the above lines examine the output and set the exit status if appropriate, which triggers an error popup in SpaceFM.)
+
+<p>If a handler's Mount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Mount command, SpaceFM will automatically attempt to use udevil, pmount, udisks2, or udisks1 to mount the device (it will use whatever is installed, in this order of preference).
+
+<p>NOTE:  Custom menu items, added with <a href="#designmode-designmenu-new">New|Command</a>, may also be set as primitive device handlers via their <a href="#designmode-props-opener">Use as handler for</a> option.  When a device is clicked, if the menu item is enabled based on the current browser context, this menu item's command will be run rather than any other configured device handler.  In addition, device events may be configured to trigger actions based on socket event <a href="#sockets-events-device">evt_device</a>.
+
+<!-- # Unmount -->
+<p><a name="handlers-dev-unmount"/><a href="#handlers-dev-unmount"><b>Unmount</b></a><br>
+The Unmount text box contains the commands which will be run if this handler is selected to unmount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window.
+
+<p>Several variables will be replaced before your commands are run:
+<pre>
+    %v  device
+    %a  current mount point
+</pre>
+
+%v will be replaced with the device file (eg /dev/sdd1).  %a will be replaced with the directory which is the mount point of the device.
+
+<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
+
+<p>Example Unmount commands (enable only one section by removing #):
+<pre>
+    # # udevil:
+    #     udevil umount %v
+    #
+    # # pmount:
+    #     pumount %v
+    #
+    # # udisks v2:
+    #     udisksctl unmount -b %v
+    #
+    # # udisks v1: (enable all three lines!)
+    #     fm_udisks=`udisks --unmount %v 2>&1`
+    #     echo "$fm_udisks"
+    #     [[ "$fm_udisks" = "${fm_udisks/ount failed:/}" ]]
+</pre>
+
+(Note:  Because udisks v1 does not return a proper error status on error, the above lines examine the output and set the exit status if appropriate, which triggers an error popup in SpaceFM.)
+
+<p>If a handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will automatically attempt to use udevil, pmount, udisks2, or udisks1 to unmount the device (it will use whatever is installed, in this order of preference).
+
+<!-- # Properties -->
+<p><a name="handlers-dev-properties"/><a href="#handlers-dev-properties"><b>Properties</b></a><br>
+The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
+
+<p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
 <!-- @end handlers-dev-->
 <br><br></td></tr>
@@ -4116,10 +4221,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <li>Handlers
     <ul>
         <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Devices </a>
-        <li>Protocols 
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-dev">Device Handlers </a>
+        <li>Protocol Handlers 
+        <li><a href="#handlers-arc">Archive Handlers </a>
+        <li><a href="#handlers-fil">File Handlers </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4127,36 +4232,104 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 </ul>
 </td>
 <td valign="top">
-<a name="handlers-pro"/><a href="#handlers-pro"><font size=+2>Protocols </font></a>
-<!-- @Handlers @Protocols #pro -->
-<a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or right-click in the Devices list and select Settings|Protocol Handlers.
+<a name="handlers-pro"/><a href="#handlers-pro"><font size=+2>Protocol Handlers </font></a>
+<!-- @Handlers @Protocol Handlers #pro -->
+<a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
 
+<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or right-click in the Devices list and select Settings|Protocol Handlers.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes. 
+
+<!-- # Whitelist #white -->
+<p><a name="handlers-pro-white"/><a href="#handlers-pro-white"><b>Whitelist</b></a><br>
+As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
+
+<P>SpaceFM recognizes a path bar entry as a protocol if it has the form PROTOCOL:// (such as ftp://).  SpaceFM recommends a <a href="#gui-pathbar-proto">standard URL format</a> regardless of protocol.  If the URL is in such a format, SpaceFM will break the URL into parts and assign them to variables ready for your use.  You can also use other URL formats (eg those specific a mount program), but SpaceFM may not correctly assign the parts to variables.
+
+<p>The following protocol whitelist elements are recognized:
 <pre>
-    /* In commands:
-    *       %url%     $fm_url
-    *       %proto%   $fm_url_proto
-    *       %host%    $fm_url_host
-    *       %port%    $fm_url_port
-    *       %user%    $fm_url_user
-    *       %pass%    $fm_url_pass
-    *       %path%    $fm_url_path
-    *       %a        mount point, or create auto mount point
-    *                 $fm_mtab_fs   (mounted mtab fs type)
-    *                 $fm_mtab_url  (mounted mtab url)
-    *
-    *  Whitelist/Blacklist: (prefix list element with '+' if required)
-    *      protocol (eg ssh)
-    *      url=URL (ssh://...)
-    *      mtab_fs=TYPE    (mounted mtab fs type)
-    *      mtab_url=URL    (mounted mtab url)
-    *      host=HOSTNAME
-    *      user=USERNAME
-    *      point=MOUNT_POINT
-    *      
-    *      eg: +ssh url=ssh://*
-    */
+    PROTOCOL (eg ssh)
+    url=URL (ssh://...)
+    host=HOSTNAME
+    user=USERNAME
+    mtab_fs=TYPE    (mounted fs type as shown mtab)
+    mtab_url=URL    (mounted url as shown in mtab)
+    point=MOUNT_POINT
 </pre>
 
+For most protocols, the whitelist will be as simple as the protocol, such as 'ftp'.  For other protocols, you might use a whitelist like:
+<pre>    ssh mtab_fs=fuse.sshfs</pre>
+
+In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
+
+<p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
+
+<p>To see what handler SpaceFM has selected to mount or unmount a URL, and see the commands being issued, start the <code>spacefm</code> program in a terminal window, and observe debugging output in the terminal while SpaceFM is running.  For example, mounting and unmounting an ssh URL you may see:
+<pre>
+    Selected Protocol Handler 'ssh': MOUNT [ssh] mtab_fs=fuse.sshfs
+    Selected Protocol Handler 'ssh': UNMOUNT ssh [mtab_fs=fuse.sshfs]
+</pre>
+
+This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOUNT actions.  The whitelist of that handler is shown, and the portion(s) of the handler's whitelist which matched are enclosed in square brackets [ ].  For mounting, the URL was recognized with protocol ssh, which matched in the whitelist.  For unmounting, the mtab_fs matched the whitelist.
+
+<!-- # Blacklist #black -->
+<p><a name="handlers-pro-black"/><a href="#handlers-pro-black"><b>Blacklist</b></a><br>
+As with device handlers, a protocol handler's blacklist is a space-separated list of elements.  If any element in the list matches the protocol properties, this handler will never be used for this device.
+
+<!-- # Mount -->
+<p><a name="handlers-pro-mount"/><a href="#handlers-pro-mount"><b>Mount</b></a><br>
+The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
+
+<p>Several variables will be replaced before your commands are run:
+<pre>
+    %url%     $fm_url
+    %proto%   $fm_url_proto
+    %host%    $fm_url_host
+    %port%    $fm_url_port
+    %user%    $fm_url_user
+    %pass%    $fm_url_pass
+    %path%    $fm_url_path
+    %a        auto create mount point
+</pre>
+
+These variables will be replaced with the appropriate values taken from a standard URL, and the bash equivalents may also be used (eg %url% is the same as $fm_url).  In the case of %a, its presence will cause SpaceFM to create a new directory to be used as a mount point for the mount (eg ~/.cache/spacefm/mountpoint, and %a will be replaced with the directory path.  When the device is unmounted, this mount point will be removed.  Or, if you wish to create your own mount point, or if your mount program automatically creates one in /media (such as udevil), then you may omit %a.
+
+<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
+
+<p>Note that the Mount command does not need to be used to mount a protocol, it may simply open the protocol with a program of your choice.  For example, to open http:// URLs with Firefox, put "http" in the handler's whitelist, and use this Mount command:
+<pre>    firefox "%url%" &</pre>
+
+The ampersand (&amp;) tells bash to run the program and move on, without waiting for the program to finish, which is usually appropriate when starting an application.
+
+<p>You can also open a website using a SpaceFM socket command, which will guess the user's web browser:
+<pre>    spacefm -s run-task <a href="#run-task-web">web</a> "$fm_url"</pre>
+
+<p>If a handler's Mount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Mount command, SpaceFM will not handle the protocol, and will display an error to the user.
+
+<!-- # Unmount -->
+<p><a name="handlers-pro-unmount"/><a href="#handlers-pro-unmount"><b>Unmount</b></a><br>
+The Unmount text box contains the commands which will be run if this handler is selected to unmount a mounted URL, generally a network filesystem such as sshfs.
+
+<p>Several variables will be replaced before your commands are run:
+<pre>
+    %url%     $fm_url
+    %proto%   $fm_url_proto
+    %host%    $fm_url_host
+    %port%    $fm_url_port
+    %user%    $fm_url_user
+    %path%    $fm_url_path
+    %a        current mount point
+	      $fm_mtab_fs   (mounted fs type as shown mtab)
+	      $fm_mtab_url  (mounted url as shown mtab)
+</pre>
+
+Not all of the variables may be available, depending on the protocol.
+
+<p>If a protocol handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will not unmount the filesystem, and will display an error to the user.
+
+<!-- # Properties -->
+<p><a name="handlers-pro-properties"/><a href="#handlers-pro-properties"><b>Properties</b></a><br>
+The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of a mounted protocol.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
+
+<p>If no applicable protocol handler has a non-empty Properties command, SpaceFM's default properties will be shown.
 
 <!-- @end handlers-pro-->
 <br><br></td></tr>
@@ -4178,10 +4351,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <li>Handlers
     <ul>
         <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Devices </a>
-        <li><a href="#handlers-pro">Protocols </a>
-        <li>Archives 
-        <li><a href="#handlers-fil">Files </a>
+        <li><a href="#handlers-dev">Device Handlers </a>
+        <li><a href="#handlers-pro">Protocol Handlers </a>
+        <li>Archive Handlers 
+        <li><a href="#handlers-fil">File Handlers </a>
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4189,8 +4362,8 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 </ul>
 </td>
 <td valign="top">
-<a name="handlers-arc"/><a href="#handlers-arc"><font size=+2>Archives </font></a>
-<!-- @Handlers @Archives #arc -->
+<a name="handlers-arc"/><a href="#handlers-arc"><font size=+2>Archive Handlers </font></a>
+<!-- @Handlers @Archive Handlers #arc -->
 <p>Archive handlers tell SpaceFM how to create, extract, and list the contents of archive files (eg tar.gz files).  To configure archive handlers, right-click on a known archive file and select Open|Archive Default|Configure. Or, right-click on any file, select New|Archive, and click the Configure button.
 
 <pre>
@@ -4233,10 +4406,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
     <li>Handlers
     <ul>
         <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Devices </a>
-        <li><a href="#handlers-pro">Protocols </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li>Files 
+        <li><a href="#handlers-dev">Device Handlers </a>
+        <li><a href="#handlers-pro">Protocol Handlers </a>
+        <li><a href="#handlers-arc">Archive Handlers </a>
+        <li>File Handlers 
     </ul>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
@@ -4244,8 +4417,8 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 </ul>
 </td>
 <td valign="top">
-<a name="handlers-fil"/><a href="#handlers-fil"><font size=+2>Files </font></a>
-<!-- @Handlers @Files #fil -->
+<a name="handlers-fil"/><a href="#handlers-fil"><font size=+2>File Handlers </font></a>
+<!-- @Handlers @File Handlers #fil -->
 <p>File handlers in SpaceFM are custom menu items which have their context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files'.  When the menu item is enabled (based on the current browser context), the menu item's command will be run when a file is opened, rather than any MIME-associated application.
 
 <p>To add a file handler, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Menu Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will open for all types of files).  For more information see option <a href="#designmode-props-opener">Use as handler for</a>.
@@ -7225,11 +7398,11 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <center>
 <p><b>This document is under construction and incomplete.</b>
 
-<p>Copyright (C) 2014
+<p>Copyright (C) 2015
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2014-03-30&nbsp;&nbsp;(SpaceFM version 0.9.4+)
+<p>Updated 2015-03-05&nbsp;&nbsp;(SpaceFM version 0.9.4+)
 <br><br>
 </center>
 </td></tr></table>
