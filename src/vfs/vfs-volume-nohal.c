@@ -3153,14 +3153,14 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     XSet* set;
     GSList* values = NULL;
 
-    if ( !vol )
-        return NULL;
-
     if ( mount_point )
         *mount_point = NULL;
     
     if ( mode == HANDLER_MODE_FS )
     {
+        if ( !vol )
+            return NULL;
+
         // fs values
         // change spaces in label to underscores for testing
         if ( vol->label && vol->label[0] )
@@ -3194,6 +3194,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
     {
         if ( !netmount )
             return NULL;
+
         // net values
         if ( netmount->host && netmount->host[0] )
             values = g_slist_prepend( values,
