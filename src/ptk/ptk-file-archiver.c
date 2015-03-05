@@ -213,20 +213,19 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 }
 
 
-static char* generate_bash_error_function( gboolean run_in_terminal )
+static char* generate_bash_error_function( gboolean run_in_terminal,
+                                           char* parent_quote )
 {
     /* When ran in a terminal, errors need to result in a pause so that
      * the user can review the situation. Even outside a terminal, IG
      * has requested text is output
      * No translation for security purposes */
-/*igcr should the handle_error function also attempt to remove auto-created
- * subdir?  eg 'rmdir ... 2>/dev/null' */
     char *error_pause = NULL, *finished_with_errors = NULL;
     if (run_in_terminal)
     {
-        error_pause = "read s";
+        error_pause = "       read\n";
         finished_with_errors = "[ Finished With Errors ]  Press Enter "
-                               "to close";
+                               "to close: ";
     }
     else
     {
@@ -235,15 +234,18 @@ static char* generate_bash_error_function( gboolean run_in_terminal )
     }
 
     return g_strdup_printf( ""
-        "handle_error()\n"
-        "{\n"
+        "fm_handle_err() {\n"
         "    fm_err=$?\n"
+        "%s%s%s"
         "    if [ $fm_err -ne 0 ]; then\n"
-        "       echo; echo -n '%s: '\n"
-        "       %s\n"
+        "       echo; echo -n '%s'\n"
+        "%s"
         "       exit $fm_err\n"
         "    fi\n"
         "}",
+        parent_quote ? "    rmdir --ignore-fail-on-non-empty " : "",
+        parent_quote ? parent_quote : "",
+        parent_quote ? "\n" : "",
         finished_with_errors, error_pause );
 }
 
@@ -616,7 +618,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 /* this looks like a very tall dialog - will fit on smaller (600) screens? */
                 xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
                                 _("Create Archive"), NULL, FALSE,
-                                _("The following substitution variables "
+                                _("The following variables "
                                 "should be in the archive creation"
                                 " command:\n\n"
                                 "One of the following:\n\n"
@@ -627,8 +629,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                                 "and one of the following:\n\n"
                                 "%%%%o: Resulting single archive\n"
                                 "%%%%O: Resulting archive per source "
-                                "file/directory (see %%%%n/%%%%N)\n\n"
-                                "Continuing anyway"),
+                                "file/directory (see %%%%n/%%%%N)\n"),
                                 NULL, NULL );
                 gtk_widget_grab_focus( GTK_WIDGET( view ) );
             }
@@ -804,13 +805,15 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             // Appending to final command as appropriate
             if (i == 0)
                 final_command = g_strconcat( cmd_to_run,
-                                    " || handle_error", NULL );
+                                             "\n[[ $? -eq 0 ]] || fm_handle_err\n",
+                                             NULL );
             else
             {
                 s1 = final_command;
                 final_command = g_strconcat( final_command, "; echo; ",
                                              cmd_to_run,
-                                             " || handle_error", NULL );
+                                             "\n[[ $? -eq 0 ]] || fm_handle_err\n",
+                                             NULL );
                 g_free(s1);
             }
 
@@ -882,7 +885,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 
             // Enforcing error check
             str = final_command;
-            final_command = g_strconcat( final_command, " || handle_error",
+            final_command = g_strconcat( final_command, "\n[[ $? -eq 0 ]] || fm_handle_err\n",
                                          NULL );
             g_free( str );
         }
@@ -898,7 +901,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     /* When ran in a terminal, errors need to result in a pause so that
      * the user can review the situation - in any case an error check
      * needs to be made */
-    str = generate_bash_error_function( run_in_terminal );
+    str = generate_bash_error_function( run_in_terminal, NULL );
     s1 = final_command;
     final_command = g_strconcat( str, "\n\n", final_command, NULL );
     g_free( str );
@@ -952,6 +955,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     char* choose_dir = NULL;
     gboolean create_parent = FALSE, in_term = FALSE, keep_term = FALSE;
     gboolean  write_access = FALSE, list_contents = FALSE;
+    char* parent_quote = NULL;
     VFSFileInfo* file;
     VFSMimeType* mime_type;
     const char *dest, *type;
@@ -1270,14 +1274,11 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 g_free( parent_orig );
 
                 // Generating shell command to make directory
-                char* parent_quote = bash_quote( parent_path );
+                parent_quote = bash_quote( parent_path );
                 mkparent = g_strdup_printf( ""
-                    "mkdir -p %s || handle_error\n"
-                    "cd %s || handle_error\n",
+                    "mkdir -p %s || fm_handle_err\n"
+                    "cd %s || fm_handle_err\n",
                     parent_quote, parent_quote );
-
-                // Cleaning up (parent_path is used later)
-                g_free( parent_quote );
             }
             else
             {
@@ -1336,7 +1337,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
              * itself has error checking - final error check not here as
              * I want the code shared with the list code flow */
             cmd = g_strdup_printf( ""
-                "cd %s || handle_error\n"
+                "cd %s || fm_handle_err\n"
                 "%s%s",
                 dest_quote, mkparent, extract_cmd );
 
@@ -1350,14 +1351,13 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         }
 
         // Building up final_command
-/*igcr this error trap works properly if cmd is multiline? */
         if (!final_command)
-            final_command = g_strconcat( cmd, " || handle_error", NULL );
+            final_command = g_strconcat( cmd, "\n[[ $? -eq 0 ]] || fm_handle_err\n", NULL );
         else
         {
             str = final_command;
             final_command = g_strconcat( final_command, "; echo; ",
-                                         cmd, " || handle_error", NULL );
+                                         cmd, "\n[[ $? -eq 0 ]] || fm_handle_err\n", NULL );
             g_free( str );
         }
 
@@ -1378,20 +1378,22 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
      * permissions and making such owned files writeable may be a
      * security issue */
     if (!list_contents && write_access && geteuid() != 0)
-        perm = g_strdup_printf( "; chmod -R u+rwX %s/* || handle_error",
+        perm = g_strdup_printf( "; chmod -R u+rwX %s/* || fm_handle_err",
                                 dest_quote );
     else perm = g_strdup( "" );
 
     /* When ran in a terminal, errors need to result in a pause so that
      * the user can review the situation - in any case an error check
      * needs to be made */
-    str = generate_bash_error_function( in_term );
+    str = generate_bash_error_function( in_term,
+                                        create_parent ? parent_quote : NULL );
     s1 = final_command;
     final_command = g_strconcat( str, "\n\n", final_command, perm, NULL );
     g_free( str );
     g_free( s1 );
     g_free( perm );
     g_free( dest_quote );
+    g_free( parent_quote );
 
     // Creating task
     char* task_name = g_strdup_printf( _("Extract %s"),
@@ -1412,13 +1414,8 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     task->task->exec_browser = file_browser;
     task->task->exec_sync = !in_term;
     task->task->exec_show_error = TRUE;
-/*igcr exec_show_output = in_term correct? or !in_term ? Note that 
- * exec_show_output only has an effect if exec_sync == TRUE.  If so, it will
- * popup the task dialog on any stdout/stderr output.  show_error will only 
- * popup task dialog if exit status is !0
- * Set  exec_show_output = TRUE if you want task dialog to popup on any output
- * - will not affect behavior in terminal */
-    task->task->exec_show_output = in_term;
+    task->task->exec_scroll_lock = FALSE;
+    task->task->exec_show_output = FALSE;
     task->task->exec_terminal = in_term;
     task->task->exec_keep_terminal = keep_term;
     task->task->exec_export = TRUE;  // Setup SpaceFM bash variables

@@ -164,18 +164,6 @@ const Handler handlers_arc[]=
         TRUE
     },
     {
-        "hand_arc_+gz",
-        "Gzip",
-        "application/x-gzip application/x-gzpdf application/gzip",
-        "*.gz",
-        "gzip -c %N > %O",
-        FALSE,
-        "gzip -cd %x > %G",
-        FALSE,
-        "gunzip -l %x",
-        TRUE
-    },
-    {
         "hand_arc_+rar",
         "RAR",
         "application/x-rar",
@@ -245,6 +233,18 @@ const Handler handlers_arc[]=
         "unzip %x",
         TRUE,
         "unzip -l %x",
+        TRUE
+    },
+    {
+        "hand_arc_+gz",
+        "Gzip",
+        "application/x-gzip application/x-gzpdf application/gzip",
+        "*.gz",
+        "gzip -c %N > %O",
+        FALSE,
+        "gzip -cd %x > %G",
+        FALSE,
+        "gunzip -l %x",
         TRUE
     }
 };
@@ -1905,63 +1905,16 @@ static gboolean validate_archive_handler( HandlerData* hnd )
         return FALSE;
     }
 
-    // Empty MIME is allowed if extension is filled
-    if (g_strcmp0( handler_mime, "" ) <= 0 &&
-        g_strcmp0( handler_extension, "" ) <= 0)
+    // MIME and Pathname can't both be empty
+    if ( g_strcmp0( handler_mime, "" ) <= 0 &&
+         g_strcmp0( handler_extension, "" ) <= 0 )
     {
-        /* Handler MIME not set - warning user and exiting. Note
-         * that the created dialog does not have an icon set */
-/*igcr memory leak - passing g_strdup_printf */
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("Please enter a valid "
-                            "MIME content type OR extension for the "
-                            "'%s' handler before saving."),
-                            handler_name), NULL, NULL );
+                            _("Please enter a valid MIME Type or Pathname "
+                            "pattern before saving."),
+                            NULL, NULL );
         gtk_widget_grab_focus( hnd->entry_handler_mime );
-        return FALSE;
-    }
-    if (g_strstr_len( handler_mime, -1, " " ) &&
-        g_strcmp0( handler_extension, "" ) <= 0)
-    {
-        /* Handler MIME contains a space - warning user and exiting.
-         * Note that the created dialog does not have an icon set */
-/*igcr memory leak - passing g_strdup_printf */
-        xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
-                            _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("Please ensure the MIME"
-                            " content type for the '%s' handler "
-                            "contains no spaces before saving."),
-                            handler_name), NULL, NULL );
-        gtk_widget_grab_focus( hnd->entry_handler_mime );
-        return FALSE;
-    }
-
-    /* Empty extension is allowed if MIME type has been given, but if
-     * anything has been entered it must be valid */
-    if (
-        (
-            g_strcmp0( handler_extension, "" ) <= 0 &&
-            g_strcmp0( handler_mime, "" ) <= 0
-        )
-        ||
-        (
-            g_strcmp0( handler_extension, "" ) > 0 &&
-            handler_extension && *handler_extension != '.'
-        )
-    )
-    {
-        /* Handler extension is either not set or does not start with
-         * a full stop - warning user and exiting. Note that the created
-         * dialog does not have an icon set */
-/*igcr memory leak - passing g_strdup_printf */
-        xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
-                            _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("Please enter a valid "
-                            "file extension OR MIME content type for"
-                            " the '%s' handler before saving."),
-                            handler_name), NULL, NULL );
-        gtk_widget_grab_focus( hnd->entry_handler_extension );
         return FALSE;
     }
 
@@ -2029,16 +1982,13 @@ static gboolean validate_archive_handler( HandlerData* hnd )
     {
         /* Not all substitution characters are in place - warning
          * user and exiting. Note that the created dialog does not
-         * have an icon set
-         * TODO: IG problem */
-/*igcr memory leak - passing g_strdup_printf */
+         * have an icon set */
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("The following "
-                            "placeholders should be in the '%s' extraction"
-                            " command:\n\n%%%%x: "
-                            "Archive to extract"),
-                            handler_name), NULL, NULL );
+                            _("The following "
+                            "variables should be in the extraction "
+                            "command:\n\n%%%%x: "
+                            "Archive to extract"), NULL, NULL );
         gtk_widget_grab_focus( hnd->view_handler_extract );
         ret = FALSE;
         goto _cleanup;
@@ -2051,16 +2001,14 @@ static gboolean validate_archive_handler( HandlerData* hnd )
     {
         /* Not all substitution characters are in place  - warning
          * user and exiting. Note that the created dialog does not
-         * have an icon set
-         * TODO: Confirm if IG still has this problem */
-/*igcr memory leak - passing g_strdup_printf */
+         * have an icon set */
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("The following "
-                            "placeholders should be in the '%s' list"
-                            " command:\n\n%%%%x: "
-                            "Archive to list"),
-                            handler_name), NULL, NULL );
+                            _("The following "
+                            "variables should be in the list "
+                            "command:\n\n%%%%x: "
+                            "Archive to list",
+                            NULL, NULL );
         gtk_widget_grab_focus( hnd->view_handler_list );
         ret = FALSE;
         goto _cleanup;

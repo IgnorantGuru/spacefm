@@ -3331,6 +3331,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         /*
         *      %v  device
         *      %o  volume-specific mount options (use in mount command only)
+        *      %t  filesystem type being mounted (eg vfat)
         *      %a  mount point, or create auto mount point
         */
         char* fileq = bash_quote( vol->device_file );  // for iso files
