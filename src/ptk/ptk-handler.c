@@ -717,7 +717,7 @@ _write_error:
 gboolean ptk_handler_values_in_list( const char* list, GSList* values,
                                      char** msg )
 {   /* test for the presence of values in list, using wildcards.
-    *  list is space or comma separated, plus indicates required. */
+    *  list is space-separated, plus sign (+) indicates required. */
     if ( !( list && list[0] ) || !values )
         return FALSE;
     
@@ -725,7 +725,7 @@ gboolean ptk_handler_values_in_list( const char* list, GSList* values,
         *msg = NULL;
 
     // get elements of list
-    gchar** elements = g_strsplit_set( list, " ,", 0 );
+    gchar** elements = g_strsplit( list, " ", -1 );
     if ( !elements )
         return FALSE;
     
@@ -795,17 +795,17 @@ static gboolean value_in_list( const char* list, const char* value )
     char* delim;
     char ch;
 
-    // value in space/comma-separated list with wildcards?
+    // value in space-separated list with wildcards?
     if ( value && ( ptr = (char*)list ) && ptr[0] )
     {
         while ( 1 )
         {
-            while ( ptr[0] == ' ' || ptr[0] == ',' )
+            while ( ptr[0] == ' ' )
                 ptr++;
             if ( !ptr[0] )
                 break;
             delim = ptr;
-            while ( delim[0] != ' ' && delim[0] != ',' && delim[0] )
+            while ( delim[0] != ' ' && delim[0] )
                 delim++;
             ch = delim[0];
             delim[0] = '\0';    // set temporary end of string                    

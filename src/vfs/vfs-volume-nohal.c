@@ -3345,6 +3345,11 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
                                       options ? options : "",
                                       FALSE );
             g_free( str );
+            str = command;
+            command = replace_string( command, "%t",
+                                      vol->fs_type ? vol->fs_type : "",
+                                      FALSE );
+            g_free( str );
         }
         if ( strstr( command, "%a" ) )
         {

@@ -46,7 +46,7 @@ static gchar* archive_handler_get_first_extension( XSet* handler_xset )
     if ( handler_xset && handler_xset->x )
     {
         // find first extension
-        gchar** pathnames = g_strsplit( handler_xset->x, ", ", -1 );
+        gchar** pathnames = g_strsplit( handler_xset->x, " ", -1 );
         if ( pathnames )
         {
             for ( i = 0; pathnames[i]; ++i )
@@ -1167,7 +1167,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             /* Looping for all extensions registered with the current
              * archive handler (NULL-terminated list) */
             gchar** pathnames = handler_xset->x ?
-                           g_strsplit_set( handler_xset->x, ", ", -1 ) :
+                           g_strsplit( handler_xset->x, " ", -1 ) :
                            NULL;
             gchar *filename_no_ext;
             if ( pathnames )
