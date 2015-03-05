@@ -545,3 +545,4 @@ void vfs_mime_type_append_action( const char* type, const char* desktop_id )
 {
     mime_type_append_action( type, desktop_id );
 }
+

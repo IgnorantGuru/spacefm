@@ -77,6 +77,7 @@ PTK_SOURCES = \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
+    ptk/ptk-handler.c ptk/ptk-handler.h \
     ptk/ptk-clipboard.c ptk/ptk-clipboard.h \
     ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
     ptk/ptk-file-misc.c ptk/ptk-file-misc.h \

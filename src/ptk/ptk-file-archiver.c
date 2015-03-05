@@ -1,255 +1,523 @@
 /*
-*  C Implementation: ptk-file-archiver
-*
-* Description:
-*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM ptk-file-archiver.c
+ * 
+ * Copyright (C) 2013-2014 OmegaPhil <OmegaPhil+SpaceFM@gmail.com>
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
+
 
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include "desktop-window.h"
 #include "ptk-file-archiver.h"
-#include "ptk-console-output.h"
 #include "ptk-file-task.h"
-
+#include "ptk-handler.h"
 #include "vfs-file-info.h"
 #include "vfs-mime-type.h"
 #include "settings.h"
 
-#include "gtk2-compat.h"
+//#include "gtk2-compat.h"
 
-typedef struct _ArchiveHandler
+// Archive handlers treeview model enum
+enum {
+    COL_XSET_NAME,
+    COL_HANDLER_NAME
+};
+
+// Archive creation handlers combobox model enum
+enum {
+    // COL_XSET_NAME
+    COL_HANDLER_EXTENSIONS = 1
+};
+
+static gchar* archive_handler_get_first_extension( XSet* handler_xset )
 {
-    const char* mime_type;
-    const char* compress_cmd;
-    const char* extract_cmd;
-    const char* list_cmd;
-    const char* file_ext;
-    const char* name;
-    gboolean multiple_files;
-}
-ArchiveHandler;
-
-const ArchiveHandler handlers[]=
+    // Function deals with the possibility that a handler is responsible
+    // for multiple MIME types and therefore file extensions. Functions
+    // like archive creation need only one extension
+    gchar* first_ext = NULL;
+    gchar* name;
+    int i;
+    if ( handler_xset && handler_xset->x )
     {
+        // find first extension
+        gchar** pathnames = g_strsplit( handler_xset->x, ", ", -1 );
+        if ( pathnames )
         {
-            "application/x-bzip-compressed-tar",
-            "tar %o -cvjf",
-            "tar -xvjf",
-            "tar -tvf",
-            ".tar.bz2", "arc_tar_bz2", TRUE
-        },
-        {
-            "application/x-compressed-tar",
-            "tar %o -cvzf",
-            "tar -xvzf",
-            "tar -tvf",
-            ".tar.gz", "arc_tar_gz", TRUE
-        },
-        {
-            "application/x-xz-compressed-tar",  //MOD added
-            "tar %o -cvJf",
-            "tar -xvJf",
-            "tar -tvf",
-            ".tar.xz", "arc_tar_xz", TRUE
-        },
-        {
-            "application/zip",
-            "zip %o -r",
-            "unzip",
-            "unzip -l",
-            ".zip", "arc_zip", TRUE
-        },
-        {
-            "application/x-7z-compressed",
-            "7za %o a", // hack - also uses 7zr if available
-            "7za x",
-            "7za l",
-            ".7z", "arc_7z", TRUE
-        },
-        {
-            "application/x-tar",
-            "tar %o -cvf",
-            "tar -xvf",
-            "tar -tvf",
-            ".tar", "arc_tar", TRUE
-        },
-        {
-            "application/x-rar",
-            "rar a -r %o",
-            "unrar -o- x",
-            "unrar lt",
-            ".rar", "arc_rar", TRUE
-        },
-        {
-            "application/x-gzip",
-            NULL,
-            "gunzip",
-            NULL,
-            ".gz", NULL, TRUE
+            for ( i = 0; pathnames[i]; ++i )
+            {
+                // getting just the extension of the pathname list element
+                name = get_name_extension( pathnames[i], FALSE, &first_ext );
+                g_free( name );
+                if ( first_ext )
+                {
+                    // add a dot to extension
+                    char* str = first_ext;
+                    first_ext = g_strconcat( ".", first_ext, NULL );
+                    g_free( str );
+                    break;
+                }
+            }
+            g_strfreev( pathnames );
         }
-    };
+    }
+    if ( first_ext )
+        return first_ext;
+    else
+        return g_strdup( "" );
+}
 
+static gboolean archive_handler_run_in_term( XSet* handler_xset,
+                                             int operation )
+{
+    // Making sure a valid handler_xset has been passed
+    if (!handler_xset)
+    {
+        g_warning("archive_handler_run_in_term has been called with an "
+                  "invalid handler_xset!");
+        return FALSE;
+    }
+
+    int ret;
+    if ( operation == ARC_COMPRESS )
+        ret = handler_xset->in_terminal;
+    else if ( operation == ARC_EXTRACT )
+        ret = handler_xset->keep_terminal;
+    else if ( operation == ARC_LIST )
+        ret = handler_xset->scroll_lock;
+    else
+    {
+        g_warning("archive_handler_run_in_term was passed an invalid"
+                    " archive operation ('%d')!", operation);
+        return FALSE;
+    }
+    return ret == XSET_B_TRUE;
+}
 
 static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
-    GtkFileChooser* dlg = GTK_FILE_CHOOSER(user_data);
-
-    int i, n, len;
-    char* ext = NULL;
+    int len = 0;
     char *path, *name, *new_name;
+/*igcr when multiple extensions, this function isn't setting the filename correctly */
 
-    path = gtk_file_chooser_get_filename( dlg );
+    // Obtaining reference to dialog
+    GtkFileChooser* dlg = GTK_FILE_CHOOSER( user_data );
+
+    // Obtaining new archive filename
+    path = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
     if( !path )
         return;
-    ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT( combo ) );
     name = g_path_get_basename( path );
     g_free( path );
-    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(combo),
-                                        NULL );
-    for( i = 0; i < n; ++i )
+
+    // Fetching the combo model
+    GtkListStore* list = g_object_get_data( G_OBJECT( dlg ),
+                                            "combo-model" );
+
+    // Attempting to detect and remove extension from any current archive
+    // handler - otherwise cycling through the handlers just appends
+    // extensions to the filename
+    // Obtaining iterator pointing at first handler
+    GtkTreeIter iter;
+    if (!gtk_tree_model_get_iter_first( GTK_TREE_MODEL( list ), &iter ))
     {
-        if( g_str_has_suffix( name, handlers[i].file_ext ) )
-            break;
+        // Failed to get iterator - warning user and exiting
+        g_warning("Unable to get an iterator to the start of the model "
+                  "associated with combobox!");
+        return;
     }
-    if( i < n )
+
+    // Loop through available handlers
+    XSet* handler_xset;
+    gchar* xset_name = NULL, *extension;
+    do
     {
-        len = strlen( name ) - strlen( handlers[i].file_ext );
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        if ( handler_xset = xset_is( xset_name ) )
+        {
+            // Obtaining archive extension
+            extension = archive_handler_get_first_extension(handler_xset);
+
+            // Checking to see if the current archive filename has this
+            if (g_str_has_suffix( name, extension ))
+            {
+                /* It does - recording its length if its the longest match
+                 * yet, and continuing */
+                if (strlen( extension ) > len)
+                    len = strlen( extension );
+            }
+            g_free(extension);
+        }
+        g_free( xset_name );
+    }
+    while(gtk_tree_model_iter_next( GTK_TREE_MODEL( list ), &iter ));
+
+    // Cropping current extension if found
+    if (len)
+    {
+        len = strlen( name ) - len;
         name[len] = '\0';
     }
-    new_name = g_strjoin( NULL, name, ext, NULL );
-    g_free( name );
-    g_free( ext );
-    gtk_file_chooser_set_current_name( dlg, new_name );
-    g_free( new_name );
 
-    // set options
-    i = gtk_combo_box_get_active(combo);
-    GtkEntry* entry = (GtkEntry*)g_object_get_data( G_OBJECT(dlg), "entry" );
-    if ( xset_get_s( handlers[i].name ) )
-        gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
-    else
-        gtk_entry_buffer_delete_text( gtk_entry_get_buffer( entry ), 0, -1 );
-}
-                                                        
-void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
-                                                                const char* cwd )
-{
-    GList* l;
-    GtkWidget* dlg;
-    GtkFileFilter* filter;
-    char* dest_file;
-    char* ext;
-    char* str;
-    char* cmd;
-    int res;
-    //char **argv, **cmdv;
-    int argc, cmdc, i, n;
-    int format;
-    GtkWidget* combo;
-    GtkWidget* hbox;
-    char* udest_file;
-    char* desc;
-
-    dlg = gtk_file_chooser_dialog_new( _("Save Archive"),
-                                       GTK_WINDOW( gtk_widget_get_toplevel(
-                                             GTK_WIDGET( file_browser ) ) ),
-                                       GTK_FILE_CHOOSER_ACTION_SAVE,
-                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                       GTK_STOCK_SAVE, GTK_RESPONSE_OK, NULL );
-    filter = gtk_file_filter_new();
-    hbox = gtk_hbox_new( FALSE, 4 );
-    gtk_box_pack_start( GTK_BOX(hbox),
-                        gtk_label_new( _("Archive Format:") ),
-                        FALSE, TRUE, 2 );
-
-    combo = gtk_combo_box_text_new();
-
-    for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
+    // Getting at currently selected archive handler
+    if ( gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ), &iter ) )
     {
-        if( handlers[i].compress_cmd )
+        // You have to fetch both items here
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        if ( handler_xset = xset_is( xset_name ) )
         {
-            gtk_file_filter_add_mime_type( filter, handlers[i].mime_type );
-            gtk_combo_box_text_append_text( GTK_COMBO_BOX_TEXT(combo), handlers[i].file_ext );
+            // Obtaining archive extension
+            extension = archive_handler_get_first_extension(handler_xset);
+
+            // Appending extension to original filename
+            new_name = g_strconcat( name, extension, NULL );
+
+            // Updating new archive filename
+            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ), new_name );
+            
+            g_free( new_name );
+            g_free( extension );
+        }
+        g_free( xset_name );
+    }
+
+    g_free( name );
+
+    // Loading command
+    if ( handler_xset )
+    {
+        GtkTextView* view = (GtkTextView*)g_object_get_data( G_OBJECT( dlg ),
+                                                                    "view" );
+        char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                        HANDLER_COMPRESS, handler_xset,
+                        GTK_TEXT_VIEW( view ), NULL );
+        if ( err_msg )
+        {
+            xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                _("Error Loading Handler"), NULL, 0, 
+                                err_msg, NULL, NULL );
+            g_free( err_msg );
         }
     }
-    gtk_file_chooser_set_filter( GTK_FILE_CHOOSER(dlg), filter );
-    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model( 
-                                                    GTK_COMBO_BOX( combo ) ), NULL );
+}
+
+
+static char* generate_bash_error_function( gboolean run_in_terminal )
+{
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation. Even outside a terminal, IG
+     * has requested text is output
+     * No translation for security purposes */
+/*igcr should the handle_error function also attempt to remove auto-created
+ * subdir?  eg 'rmdir ... 2>/dev/null' */
+    char *error_pause = NULL, *finished_with_errors = NULL;
+    if (run_in_terminal)
+    {
+        error_pause = "read s";
+        finished_with_errors = "[ Finished With Errors ]  Press Enter "
+                               "to close";
+    }
+    else
+    {
+        error_pause = "";
+        finished_with_errors = "[ Finished With Errors ]";
+    }
+
+    return g_strdup_printf( ""
+        "handle_error()\n"
+        "{\n"
+        "    fm_err=$?\n"
+        "    if [ $fm_err -ne 0 ]; then\n"
+        "       echo; echo -n '%s: '\n"
+        "       %s\n"
+        "       exit $fm_err\n"
+        "    fi\n"
+        "}",
+        finished_with_errors, error_pause );
+}
+
+void ptk_file_archiver_create( DesktopWindow *desktop,
+                               PtkFileBrowser *file_browser, GList *files,
+                               const char *cwd )
+{
+    GList *l;
+    GtkWidget* combo, *dlg, *hbox;
+    GtkFileFilter* filter;
+/*igcr lots of strings in this function - should double-check usage of each
+ * and verify no leaks */
+    char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
+        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
+        *archive_name = NULL, *final_command = NULL;
+    int i, n, format, res;
+
+    /* Generating dialog - extra NULL on the NULL-terminated list to
+     * placate an irrelevant compilation warning. See notes in
+     * ptk-handler.c:ptk_handler_show_config about GTK failure to
+     * identify top-level widget */
+/*igcr file_browser may be NULL - check this entire function for uses */
+    GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
+                                GTK_WIDGET( file_browser->main_window ) ) :
+                                NULL;
+    dlg = gtk_file_chooser_dialog_new( _("Create Archive"),
+                            top_level ? GTK_WINDOW( top_level ) : NULL,
+                                       GTK_FILE_CHOOSER_ACTION_SAVE, NULL,
+                                       NULL );
+
+    /* Adding standard buttons and saving references in the dialog
+     * 'Configure' button has custom text but a stock image */
+    GtkButton* btn_configure = GTK_BUTTON( gtk_dialog_add_button(
+                                                GTK_DIALOG( dlg ),
+                                                _("Conf_igure"),
+                                                GTK_RESPONSE_NONE ) );
+    GtkWidget* btn_configure_image = xset_get_image( "GTK_STOCK_PREFERENCES",
+                                                GTK_ICON_SIZE_BUTTON );
+    gtk_button_set_image( GTK_BUTTON( btn_configure ),
+                          GTK_WIDGET ( btn_configure_image ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_configure",
+                       GTK_BUTTON( btn_configure ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_cancel",
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_CANCEL,
+                                                GTK_RESPONSE_CANCEL ) );
+    g_object_set_data( G_OBJECT( dlg ), "btn_ok",
+                        gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                GTK_STOCK_OK,
+                                                GTK_RESPONSE_OK ) );
+
+    /* Adding the help button but preventing it from taking the focus on
+     * click */
+    gtk_button_set_focus_on_click(
+                                    GTK_BUTTON(
+                                        gtk_dialog_add_button(
+                                            GTK_DIALOG( dlg ),
+                                            GTK_STOCK_HELP,
+                                            GTK_RESPONSE_HELP
+                                        )
+                                    ),
+                                    FALSE );
+
+    filter = gtk_file_filter_new();
+
+    /* Top hbox has 'Command:' label, 'Archive Format:' label then format
+     * combobox */
+    GtkWidget *hbox_top = gtk_hbox_new( FALSE, 4 );
+    GtkWidget *lbl_command = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_command ),
+                                        _("Co_mmand:") );
+    gtk_box_pack_start( GTK_BOX( hbox_top ), lbl_command, FALSE, TRUE, 2 );
+
+    // Generating a ComboBox with model behind, and saving model for use
+    // in callback - now that archive handlers are custom, can't rely on
+    // presence or a particular order
+    // Model is xset name then extensions the handler deals with
+    GtkListStore* list = gtk_list_store_new( 2, G_TYPE_STRING, G_TYPE_STRING );
+    combo = gtk_combo_box_new_with_model( GTK_TREE_MODEL( list ) );
+    g_object_set_data( G_OBJECT( dlg ), "combo-model", (gpointer)list );
+
+    // Need to manually create the combobox dropdown cells!! Mapping the
+    // extensions column from the model to the displayed cell
+    GtkCellRenderer* renderer = gtk_cell_renderer_text_new ();
+    gtk_cell_layout_pack_start( GTK_CELL_LAYOUT( combo ), renderer,
+                                TRUE );
+    gtk_cell_layout_set_attributes( GTK_CELL_LAYOUT( combo ), renderer,
+                                    "text", COL_HANDLER_EXTENSIONS,
+                                    NULL );
+
+    // Fetching available archive handlers
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
+
+    // Dealing with possibility of no handlers
+    if (g_strcmp0( archive_handlers_s, "" ) <= 0)
+    {
+        /* Telling user to ensure handlers are available and bringing
+         * up configuration */
+        xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                        _("Archive Handlers - Create Archive"), NULL,
+                        GTK_BUTTONS_OK, _("No archive handlers "
+                        "configured. You must add a handler before "
+                        "creating an archive."),
+                        NULL, NULL);
+        ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+        return;
+    }
+
+    // Splitting archive handlers
+/*igcr inefficient to copy all these strings instead of parsing though perhaps
+ * fast enough here */
+    gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
+
+    // Debug code
+    //g_message("archive_handlers_s: %s", archive_handlers_s);
+
+    // Looping for handlers (NULL-terminated list)
+    GtkTreeIter iter;
+    gchar* xset_name, *extensions;
+    XSet* handler_xset;
+    for (i = 0; archive_handlers[i] != NULL; ++i)
+    {
+        // Fetching handler
+        handler_xset = xset_is( archive_handlers[i] );
+
+        if ( handler_xset && handler_xset->b == XSET_B_TRUE )
+/*igcr now too slow to load files here - empty command is okay - give a 
+             * warning if user attempts to create archive with no command 
+             * was:
+             * Checking to see if handler is enabled, can cope with
+             * compression and the extension is set - dealing with empty
+             * command yet 'run in terminal' still ticked
+                                   && handler_xset->y
+                                   && g_strcmp0( handler_xset->y, "" ) != 0
+                                   && g_strcmp0( handler_xset->y, "+" ) != 0
+                                   && g_strcmp0( handler_xset->x, "" ) != 0) */
+        {
+            /* Adding to filter so that only relevant archives
+             * are displayed when the user chooses an archive name to
+             * create. Note that the handler may be responsible for
+             * multiple MIME types and extensions */
+            gtk_file_filter_add_mime_type( filter, handler_xset->s );
+
+            // Appending to combobox
+            // Obtaining appending iterator for model
+            gtk_list_store_append( GTK_LIST_STORE( list ), &iter );
+
+            // Adding to model
+            extensions = g_strconcat( handler_xset->menu_label, " (",
+                                      handler_xset->x, ")", NULL );
+            gtk_list_store_set( GTK_LIST_STORE( list ), &iter,
+                                COL_XSET_NAME, archive_handlers[i],
+                                COL_HANDLER_EXTENSIONS, extensions,
+                                -1 );
+            g_free( extensions );
+        }
+    }
+
+    // Clearing up archive_handlers
+    g_strfreev( archive_handlers );
+
+    // Applying filter
+    gtk_file_chooser_set_filter( GTK_FILE_CHOOSER( dlg ), filter );
+
+    // Restoring previous selected handler
+    n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(
+                                            GTK_COMBO_BOX( combo )
+                                        ), NULL );
     i = xset_get_int( "arc_dlg", "z" );
     if ( i < 0 || i > n - 1 )
         i = 0;
-    gtk_combo_box_set_active( GTK_COMBO_BOX(combo), i );
-    g_signal_connect( combo, "changed", G_CALLBACK(on_format_changed), dlg );
-    gtk_box_pack_start( GTK_BOX(hbox),
-                        combo,
-                        FALSE, FALSE, 2 );
-    gtk_box_pack_start( GTK_BOX(hbox),
-                        gtk_label_new( _("Options:") ),
-                        FALSE, FALSE, 2 );
+    gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), i );
 
-    GtkEntry* entry = ( GtkEntry* ) gtk_entry_new();
-    if ( xset_get_s( handlers[i].name ) )
-        gtk_entry_set_text( entry, xset_get_s( handlers[i].name ) );
-    //GtkWidget* align = gtk_alignment_new( 0, 0, 1, 1 );
-    //gtk_alignment_set_padding( GTK_ALIGNMENT( align ), 0, 0, 0, 0 );
-    //gtk_container_add ( GTK_CONTAINER ( align ), GTK_WIDGET( entry ) );
-    gtk_box_pack_start( GTK_BOX(hbox), GTK_WIDGET( entry ), TRUE, TRUE, 4 );
-    g_object_set_data( G_OBJECT( dlg ), "entry", entry );
+    // Adding filter box to hbox and connecting callback
+    g_signal_connect( combo, "changed", G_CALLBACK( on_format_changed ),
+                      dlg );
+    gtk_box_pack_end( GTK_BOX( hbox_top ), combo, FALSE, FALSE, 2 );
 
-    gtk_widget_show_all( hbox );
-    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area ( 
-                                        GTK_DIALOG( dlg ) ) ),
-                                        hbox, FALSE, TRUE, 0 );
+    GtkWidget *lbl_archive_format = gtk_label_new( NULL );
+    gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_archive_format ),
+                                         _("_Archive Format:") );
+    gtk_box_pack_end( GTK_BOX( hbox_top ), lbl_archive_format, FALSE, FALSE,
+                      2 );
+    gtk_widget_show_all( hbox_top );
 
-    gtk_file_chooser_set_action( GTK_FILE_CHOOSER(dlg), GTK_FILE_CHOOSER_ACTION_SAVE );
-    gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER(dlg), TRUE );
+    /* Loading command for handler, based off the i'th handler */
+    GtkTextView* view = (GtkTextView*)gtk_text_view_new();
+    gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view ), GTK_WRAP_WORD_CHAR );
+    GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
+    gtk_scrolled_window_set_policy ( GTK_SCROLLED_WINDOW ( view_scroll ),
+                                     GTK_POLICY_AUTOMATIC,
+                                     GTK_POLICY_AUTOMATIC );
+    gtk_container_add( GTK_CONTAINER( view_scroll ),
+                                      GTK_WIDGET ( view ) );
+    g_object_set_data( G_OBJECT( dlg ), "view", view );
 
+    // Obtaining iterator from string turned into a path into the model
+/*igcr memory leak - g_strdup_printf passed */
+    if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
+                                    &iter, g_strdup_printf( "%d", i ) ))
+    {
+        gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                            COL_XSET_NAME, &xset_name,
+                            //COL_HANDLER_EXTENSIONS, &extensions,
+                            -1 );
+        if ( handler_xset = xset_is( xset_name ) )
+        {
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                            HANDLER_COMPRESS, handler_xset,
+                            GTK_TEXT_VIEW( view ), NULL );
+            if ( err_msg )
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                    _("Error Loading Handler"), NULL, 0, 
+                                    err_msg, NULL, NULL );
+                g_free( err_msg );
+            }
+
+        }
+        g_free( xset_name );
+    }
+    else
+    {
+        // Recording the fact getting the iter failed
+        g_warning( "Unable to fetch the iter from handler ordinal %d!", i );
+    };
+
+    // Mnemonically attaching widgets to labels
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_archive_format ),
+                                   combo );
+    gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_command ),
+                                   GTK_WIDGET( view ) );
+
+    /* Creating hbox for the command textview, on a line under the top
+     * hbox */
+    GtkWidget *hbox_bottom = gtk_hbox_new( FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( hbox_bottom ), GTK_WIDGET( view_scroll ),
+                        TRUE, TRUE, 4 );
+    gtk_widget_show_all( hbox_bottom );
+
+    // Packing the two hboxes into a vbox, then adding to dialog at bottom
+    GtkWidget *vbox = gtk_vbox_new( FALSE, 4 );
+    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox_top ), TRUE,
+                        TRUE, 0 );
+    gtk_box_pack_start( GTK_BOX( vbox ), GTK_WIDGET( hbox_bottom ),
+                        TRUE, TRUE, 1 );
+    gtk_box_pack_start( GTK_BOX( gtk_dialog_get_content_area (
+                                    GTK_DIALOG( dlg )
+                                ) ),
+                                vbox, FALSE, TRUE, 0 );
+
+    // Configuring dialog
+    gtk_file_chooser_set_action( GTK_FILE_CHOOSER( dlg ),
+                                 GTK_FILE_CHOOSER_ACTION_SAVE );
+    gtk_file_chooser_set_do_overwrite_confirmation( GTK_FILE_CHOOSER( dlg ),
+                                                    TRUE );
+
+    // Populating name of archive and setting the correct directory
     if( files )
     {
-//        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg),
-//                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ) );
-
-
-        ext = gtk_combo_box_text_get_active_text( GTK_COMBO_BOX_TEXT(combo) );
-        dest_file = g_strjoin( NULL, 
+        // Fetching first extension handler deals with
+        ext = archive_handler_get_first_extension( handler_xset );
+        dest_file = g_strjoin( NULL,
                         vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
                         ext, NULL );
-        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), dest_file );
+        gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ),
+                                           dest_file );
         g_free( dest_file );
-
-/*
-        if ( !files->next )
-        {
-            dest_file = g_build_filename( cwd,
-                    vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ), NULL );
-            if ( g_file_test( dest_file, G_FILE_TEST_IS_DIR ) )
-            {
-                g_free( dest_file );
-                dest_file = g_strjoin( NULL,
-                                vfs_file_info_get_disp_name( (VFSFileInfo*)files->data ),
-                                ext, NULL );
-            }
-            else
-            {
-                g_free( dest_file );
-                dest_file = g_strdup( vfs_file_info_get_disp_name(
-                                                    (VFSFileInfo*)files->data ) );
-            }
-            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), dest_file );
-            g_free( dest_file );
-        }
-        else
-            gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER(dlg), "new archive" );
-*/
         g_free( ext );
 
     }
-    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
-    
+    gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dlg ), cwd );
+
+    // Setting dimension and position
     int width = xset_get_int( "arc_dlg", "x" );
     int height = xset_get_int( "arc_dlg", "y" );
     if ( width && height )
@@ -262,16 +530,513 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             gtk_main_iteration();
         gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
     }
-    
-    res = gtk_dialog_run(GTK_DIALOG(dlg));
 
-    dest_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dlg));
-    format = gtk_combo_box_get_active( GTK_COMBO_BOX(combo) );
-    char* options = g_strdup( gtk_entry_get_text( entry ) );
+    // Displaying dialog
+    gchar* command = NULL;
+    gboolean run_in_terminal;
+    gtk_widget_show_all( dlg );
     
-    if ( res == GTK_RESPONSE_OK )
+    while( res = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
     {
-        char* str;
+        if ( res == GTK_RESPONSE_OK )
+        {
+            // Saving selected archive handler ordinal
+            str = g_strdup_printf( "%d", format );
+            xset_set( "arc_dlg", "z", str );
+            g_free( str );
+
+            // Dialog OK'd - fetching archive filename
+/*igcr dest_file freed? */
+            dest_file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+
+            // Fetching archive handler selected
+            if(!gtk_combo_box_get_active_iter( GTK_COMBO_BOX( combo ),
+                &iter ))
+            {
+                // Unable to fetch iter from combo box - warning user and
+                // exiting
+                g_warning( "Unable to fetch iter from combobox!" );
+/*igcr need to destroy dlg, free dest_file, etc, or goto */
+                return;
+            }
+
+            // Fetching model data
+            gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
+                                COL_XSET_NAME, &xset_name,
+                                //COL_HANDLER_EXTENSIONS, &extensions,
+                                -1 );
+
+            handler_xset = xset_get( xset_name );
+            g_free( xset_name );
+            
+            // run in the terminal or not
+            run_in_terminal = handler_xset->in_terminal == XSET_B_TRUE;
+
+            // Fetching user-selected handler data
+            format = gtk_combo_box_get_active( GTK_COMBO_BOX( combo ) );
+
+            // Get command from text view
+            GtkTextBuffer* buf = gtk_text_view_get_buffer( view );
+            GtkTextIter iter, siter;
+            gtk_text_buffer_get_start_iter( buf, &siter );
+            gtk_text_buffer_get_end_iter( buf, &iter );
+            command = gtk_text_buffer_get_text( buf, &siter, &iter, FALSE );
+
+            // reject command that contains only whitespace and comments
+            if ( ptk_handler_command_is_empty( command ) )
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                    _("Create Archive"), NULL, 0, 
+                                    _("The archive creation command is empty.  Please enter a command."),
+                                    NULL, NULL );
+                g_free( command );
+                continue;
+            }
+
+#if 0   // I don't like this warning here - users may have custom ways of doing
+            /* This is duplicating GUI validation code but it is just
+             * not worth spinning out a series of validation functions
+             * for this
+             * Checking to see if the archive handler compression command
+             * has been deleted or has invalid placeholders - not
+             * required to only have one of the particular type */
+            if (g_strcmp0( command, "" ) <= 0 ||
+                (
+                    !g_strstr_len( command, -1, "%o" ) &&
+                    !g_strstr_len( command, -1, "%O" )
+                )
+                ||
+                (
+                    !g_strstr_len( command, -1, "%n" ) &&
+                    !g_strstr_len( command, -1, "%N" )
+                )
+            )
+            {
+                // It has/is - warning user
+/* this looks like a very tall dialog - will fit on smaller (600) screens? */
+                xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_WARNING,
+                                _("Create Archive"), NULL, FALSE,
+                                _("The following substitution variables "
+                                "should be in the archive creation"
+                                " command:\n\n"
+                                "One of the following:\n\n"
+                                "%%%%n: First selected file/directory to"
+                                " archive\n"
+                                "%%%%N: All selected files/directories to"
+                                " archive\n\n"
+                                "and one of the following:\n\n"
+                                "%%%%o: Resulting single archive\n"
+                                "%%%%O: Resulting archive per source "
+                                "file/directory (see %%%%n/%%%%N)\n\n"
+                                "Continuing anyway"),
+                                NULL, NULL );
+                gtk_widget_grab_focus( GTK_WIDGET( view ) );
+            }
+#endif
+
+            // Getting prior command for comparison
+            char* compress_cmd = NULL;
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                            HANDLER_COMPRESS, handler_xset,
+                            NULL, &compress_cmd );
+            if ( err_msg )
+            {
+                g_warning( "%s", err_msg );
+                g_free( err_msg );
+                compress_cmd = g_strdup( "" );
+            }
+            
+            // Checking to see if the compression command has changed
+            if ( g_strcmp0( compress_cmd, command ) )
+            {
+                // command has changed - saving command
+                g_free( compress_cmd );
+                if ( handler_xset->disable )
+                {
+                    // commmand was default - need to save all commands
+                    // get default extract command from const
+                    compress_cmd = ptk_handler_get_command( HANDLER_MODE_ARC,
+                                        HANDLER_EXTRACT, handler_xset );
+                    // write extract command script
+                    err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_EXTRACT,
+                                                    handler_xset,
+                                                    NULL, compress_cmd );
+                    if ( err_msg )
+                    {
+                        g_warning( "%s", err_msg );
+                        g_free( err_msg );
+                    }
+                    g_free( compress_cmd );
+                    // get default list command from const
+                    compress_cmd = ptk_handler_get_command( HANDLER_MODE_ARC,
+                                        HANDLER_LIST, handler_xset );
+                    // write list command script
+                    err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_LIST,
+                                                    handler_xset,
+                                                    NULL, compress_cmd );
+                    if ( err_msg )
+                    {
+                        g_warning( "%s", err_msg );
+                        g_free( err_msg );
+                    }
+                    g_free( compress_cmd );
+                    handler_xset->disable = FALSE;  // not default handler now
+                }
+                // save updated compress command
+                err_msg = ptk_handler_save_script( HANDLER_MODE_ARC,
+                                                    HANDLER_COMPRESS,
+                                                    handler_xset,
+                                                    NULL, command );
+                if ( err_msg )
+                {
+                    xset_msg_dialog( GTK_WIDGET( dlg ), GTK_MESSAGE_ERROR,
+                                        _("Error Saving Handler"), NULL, 0, 
+                                        err_msg, NULL, NULL );
+                    g_free( err_msg );
+                }                
+            }
+            else
+                g_free( compress_cmd );
+            
+            // Saving settings
+            xset_autosave( FALSE, FALSE );
+            break;
+        }
+        else if ( res == GTK_RESPONSE_NONE )
+        {
+            /* User wants to configure archive handlers - call up the
+             * config dialog then exit, as this dialog would need to be
+             * reconstructed if changes occur */
+            gtk_widget_destroy( dlg );
+            ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+            return;
+        }
+        else if ( res == GTK_RESPONSE_HELP )
+        {
+            // TODO: Sort out proper help
+            xset_show_help( dlg, NULL, "#designmode-style-context" );
+        }
+        else
+        {
+            // Destroying dialog
+            gtk_widget_destroy( dlg );
+            return;
+        }
+    }
+
+    // Saving dialog dimensions
+    GtkAllocation allocation;
+    gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
+    width = allocation.width;
+    height = allocation.height;
+    if ( width && height )
+    {
+        str = g_strdup_printf( "%d", width );
+        xset_set( "arc_dlg", "x", str );
+        g_free( str );
+        str = g_strdup_printf( "%d", height );
+        xset_set( "arc_dlg", "y", str );
+        g_free( str );
+    }
+
+    // Destroying dialog
+    gtk_widget_destroy( dlg );
+
+    // Dealing with separate archives for each source file/directory ('%O')
+    if (g_strstr_len( command, -1, "%O" ))
+    {
+        /* '%O' is present - the archiving command should be generated
+         * and ran for each individual file */
+
+        // Fetching extension
+        ext = archive_handler_get_first_extension( handler_xset );
+
+        /* Looping for all selected files/directories - all are used
+         * when '%N' is present, only the first otherwise */
+        for( i = 0, l = files;
+             l && ( i == 0 || g_strstr_len( command, -1, "%N" ) );
+             l = l->next, ++i)
+        {
+            // FIXME: Maybe we should consider filename encoding here.
+            desc = (char *) vfs_file_info_get_name(
+                                            (VFSFileInfo*) l->data );
+
+            /* In %O mode, every source file is output to its own archive,
+             * so the resulting archive name is based on the filename and
+             * substituted every time */
+
+            // Obtaining archive name, quoting and substituting
+            archive_name = g_strconcat( desc, ext, NULL );
+            s1 = archive_name;
+            archive_name = bash_quote( archive_name );
+            g_free(s1);
+            cmd = replace_string( command, "%O", archive_name, FALSE );
+            g_free(archive_name);
+
+            /* Bash quoting desc - desc original value comes from the
+             * VFSFileInfo struct and therefore should not be freed */
+            desc = bash_quote( desc );
+
+            // Detecting first run
+            if (i == 0)
+            {
+                // Replacing out '%n' with 1st file
+                s1 = cmd;
+                cmd = replace_string( cmd, "%n", desc, FALSE );
+                g_free(s1);
+
+                // Removing '%n' from command - its used up
+                s1 = command;
+                command = replace_string( command, "%n", "", FALSE );
+                g_free(s1);
+            }
+
+            // Replacing out '%N' with nth file (NOT ALL FILES)
+            cmd_to_run = replace_string( cmd, "%N", desc, FALSE );
+
+            // Dealing with remaining standard SpaceFM substitutions
+            s1 = cmd_to_run;
+            cmd_to_run = replace_line_subs( cmd_to_run );
+            g_free(s1);
+
+            // Appending to final command as appropriate
+            if (i == 0)
+                final_command = g_strconcat( cmd_to_run,
+                                    " || handle_error", NULL );
+            else
+            {
+                s1 = final_command;
+                final_command = g_strconcat( final_command, "; echo; ",
+                                             cmd_to_run,
+                                             " || handle_error", NULL );
+                g_free(s1);
+            }
+
+            // Cleaning up
+            g_free( desc );
+            g_free( cmd );
+            g_free( cmd_to_run );
+        }
+    }
+    else
+    {
+        /* '%O' isn't present - the normal single command is needed
+         * Obtaining valid quoted UTF8 file name for archive to create */
+/*igcr dest_file may be NULL */
+        udest_file = g_filename_display_name( dest_file );
+/*igcr dest_file should be freed at function end or it won't be freed unless
+ * this else block is run ? */
+        g_free( dest_file );
+        char* udest_quote = bash_quote( udest_file );
+        g_free( udest_file );
+
+        // Inserting archive name into appropriate place in command
+        final_command = replace_string( command, "%o", udest_quote,
+                                        FALSE );
+        g_free( udest_quote );
+
+        if (files)
+        {
+            desc = bash_quote( (char *) vfs_file_info_get_name(
+                                            (VFSFileInfo*) files->data ) );
+
+            // Dealing with first selected file substitution
+            s1 = final_command;
+            final_command = replace_string( final_command, "%n", desc,
+                                            FALSE );
+            g_free(s1);
+
+            /* Generating string of selected files/directories to archive if
+             * '%N' is present */
+            if (g_strstr_len( final_command, -1, "%N" ))
+            {
+                s1 = g_strdup( "" );
+                for( l = files; l; l = l->next)
+                {
+                    // FIXME: Maybe we should consider filename encoding here.
+                    str = s1;
+                    desc = bash_quote( (char *) vfs_file_info_get_name(
+                                                    (VFSFileInfo*) l->data ) );
+                    if (g_strcmp0( s1, "" ) <= 0)
+                    {
+                        s1 = g_strdup( desc );
+                    }
+                    else
+                    {
+                        s1 = g_strdup_printf( "%s %s", s1, desc );
+                    }
+                    g_free( desc );
+                    g_free( str );
+                }
+
+                str = final_command;
+                final_command = replace_string( final_command, "%N", s1,
+                                                FALSE );
+
+                // Cleaning up
+                g_free( str );
+                g_free( s1 );
+            }
+
+            // Enforcing error check
+            str = final_command;
+            final_command = g_strconcat( final_command, " || handle_error",
+                                         NULL );
+            g_free( str );
+        }
+
+        // Dealing with remaining standard SpaceFM substitutions
+        s1 = final_command;
+/*igcr the way you're doing this in two steps, what happens if a filename
+ * contains eg "%d" ?  */
+        final_command = replace_line_subs( final_command );
+        g_free(s1);
+    }
+
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation - in any case an error check
+     * needs to be made */
+    str = generate_bash_error_function( run_in_terminal );
+    s1 = final_command;
+    final_command = g_strconcat( str, "\n\n", final_command, NULL );
+    g_free( str );
+    g_free( s1 );
+
+    /* Cleaning up - final_command does not need freeing, as this
+     * is freed by the task */
+    g_free( command );
+
+    // Creating task
+    char* task_name = g_strdup_printf( _("Archive") );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
+                                           GTK_WIDGET( file_browser ),
+                        file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+
+    /* Setting correct exec reference - probably causes different bash
+     * to be output */
+    if (file_browser)
+        task->task->exec_browser = file_browser;
+    else
+        task->task->exec_desktop = desktop;
+
+    // Using terminals for certain handlers
+    if (run_in_terminal)
+    {
+        task->task->exec_terminal = TRUE;
+        task->task->exec_sync = FALSE;
+    }
+    else task->task->exec_sync = TRUE;
+
+    // Final configuration, setting custom icon
+    task->task->exec_command = final_command;
+    task->task->exec_show_error = TRUE;
+    task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
+    XSet* set = xset_get( "new_archive" );
+    if ( set->icon )
+        task->task->exec_icon = g_strdup( set->icon );
+
+    // Running task
+    ptk_file_task_run( task );
+}
+
+void ptk_file_archiver_extract( DesktopWindow *desktop,
+                                PtkFileBrowser *file_browser,
+                                GList *files, const char *cwd,
+                                const char *dest_dir, int job )
+{   /* This function is also used to list the contents of archives */
+    GtkWidget* dlg;
+    GtkWidget* dlgparent = NULL;
+    char* choose_dir = NULL;
+    gboolean create_parent = FALSE, in_term = FALSE, keep_term = FALSE;
+    gboolean  write_access = FALSE, list_contents = FALSE;
+    VFSFileInfo* file;
+    VFSMimeType* mime_type;
+    const char *dest, *type;
+    GList* l;
+    char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
+        *mkparent = NULL, *perm = NULL,
+        *cmd = NULL, *str = NULL, *final_command = NULL, *s1 = NULL, *extension;
+    int i, n, j;
+    struct stat64 statbuf;
+
+    // Making sure files to act on have been passed
+    if( !files || job == HANDLER_COMPRESS )
+        return;
+
+    // Detecting whether this function call is actually to list the
+    // contents of the archive or not...
+    list_contents = job == HANDLER_LIST;
+
+    // Determining parent of dialog
+    if ( file_browser )
+        dlgparent = gtk_widget_get_toplevel(
+                                    GTK_WIDGET( file_browser->main_window ) );
+    //else if ( desktop )
+    //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
+
+    // Checking if extract to directory hasn't been specified
+    if ( !dest_dir && !list_contents )
+    {
+        /* It hasn't - generating dialog to ask user. Only dealing with
+         * user-writable contents if the user isn't root */
+        dlg = gtk_file_chooser_dialog_new( _("Extract To"),
+                                dlgparent? GTK_WINDOW( dlgparent ) : NULL,
+                                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+
+        GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
+        GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
+                                            _("Cre_ate subfolder(s)") );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
+                                              xset_get_b( "arc_dlg" ) );
+        GtkWidget* chk_write = gtk_check_button_new_with_mnemonic(
+                                                    _("Make contents "
+                                                    "user-_writable") );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_write ),
+                                xset_get_int( "arc_dlg", "s" ) == 1 &&
+                                geteuid() != 0 );
+        gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
+        gtk_box_pack_start( GTK_BOX(hbox), chk_write, FALSE, FALSE, 6 );
+        gtk_widget_show_all( hbox );
+        gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
+
+        // Setting dialog to current working directory
+        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
+
+        // Fetching saved dialog dimensions and applying
+        int width = xset_get_int( "arc_dlg", "x" );
+        int height = xset_get_int( "arc_dlg", "y" );
+        if ( width && height )
+        {
+            // filechooser won't honor default size or size request ?
+            gtk_widget_show_all( dlg );
+            gtk_window_set_position( GTK_WINDOW( dlg ),
+                                     GTK_WIN_POS_CENTER_ALWAYS );
+            gtk_window_resize( GTK_WINDOW( dlg ), width, height );
+            while( gtk_events_pending() )
+                gtk_main_iteration();
+            gtk_window_set_position( GTK_WINDOW( dlg ),
+                                     GTK_WIN_POS_CENTER );
+        }
+
+        // Displaying dialog
+        if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
+        {
+            // Fetching user-specified settings and saving
+            choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+            create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
+            write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
+            xset_set_b( "arc_dlg", create_parent );
+            str = g_strdup_printf( "%d", write_access ? 1 : 0 );
+            xset_set( "arc_dlg", "s", str );
+            g_free( str );
+        }
+
+        // Saving dialog dimensions
         GtkAllocation allocation;
         gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
         width = allocation.width;
@@ -285,510 +1050,390 @@ void ptk_file_archiver_create( PtkFileBrowser* file_browser, GList* files,
             xset_set( "arc_dlg", "y", str );
             g_free( str );
         }
-        str = g_strdup_printf( "%d", format );
-        xset_set( "arc_dlg", "z", str );
-        g_free( str );
-        xset_set( handlers[format].name, "s", gtk_entry_get_text( entry ) );
-    }
 
-    gtk_widget_destroy( dlg );
-
-    if ( res != GTK_RESPONSE_OK )
-    {
-        g_free( dest_file );
-        return;
-    }
-
-    char* s1;
-    if ( options )
-    {
-        s1 = replace_string( handlers[format].compress_cmd, "%o", options, FALSE );
-        g_free( options );
-    }
-    else
-        s1 = g_strdup( handlers[format].compress_cmd );
-        
-    if ( format == 4 )
-    {
-        // for 7z use 7za OR 7zr
-        str = g_find_program_in_path( "7za" );
-        if ( !str )
-            str = g_find_program_in_path( "7zr" );
-        if ( str )
-        {
-            cmd = s1;
-            s1 = replace_string( cmd, "7za", str, FALSE );
-            g_free( cmd );
-            g_free( str );
-        }
-    }
-
-    udest_file = g_filename_display_name( dest_file );
-/*
-    if ( !g_str_has_suffix( udest_file, handlers[format].file_ext ) )
-    {
-        g_free( dest_file );
-        dest_file = udest_file;
-        udest_file = g_strdup_printf( "%s%s", dest_file, handlers[format].file_ext );
-    }
-*/
-    g_free( dest_file );
-    
-    // overwrite?
-/*
-    if ( g_file_test( udest_file, G_FILE_TEST_EXISTS ) )
-    {
-        char* afile = g_path_get_basename( udest_file );
-        char* msg = g_strdup_printf( _("Archive '%s' exists.\n\nOverwrite?"), afile );
-        g_free( afile );
-        if ( xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_QUESTION,
-                                        _("Overwrite?"), NULL, GTK_BUTTONS_OK_CANCEL,
-                                        msg, NULL, NULL ) != GTK_RESPONSE_OK )
-        {
-            g_free( udest_file );
-            g_free( s1 );
-            g_free( msg );
-            return;
-        }
-        g_free( msg );
-    }
-*/    
-    char* udest_quote = bash_quote( udest_file );
-    //char* cmd = g_strdup_printf( "%s %s \"${fm_filenames[@]}\"", s1, udest_quote );
-    cmd = g_strdup_printf( "%s %s", s1, udest_quote );
-    g_free( udest_file );
-    g_free( udest_quote );
-    g_free( s1 );
-
-    // add selected files
-    for( l = files; l; l = l->next )
-    {
-        // FIXME: Maybe we should consider filename encoding here.
-        s1 = cmd;
-        desc = bash_quote( (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data ) );
-        cmd = g_strdup_printf( "%s %s", s1, desc );
-        g_free( desc );
-        g_free( s1 );
-    }
-    
-    // task
-    char* task_name = g_strdup_printf( _("Archive") );
-    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, GTK_WIDGET( file_browser ),
-                                                        file_browser->task_view );
-    g_free( task_name );
-    task->task->exec_browser = file_browser;
-    if ( format == 3 || format == 4 || format == 6 )
-    {
-        // use terminal for noisy rar, 7z, zip creation
-        task->task->exec_terminal = TRUE;
-        task->task->exec_sync = FALSE;
-        s1 = cmd;
-        cmd = g_strdup_printf( "%s ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", s1, "[ Finished With Errors ]  Press Enter to close" );
-        g_free( s1 );
-    }
-    else
-    {
-        task->task->exec_sync = TRUE;
-    }
-    task->task->exec_command = cmd;
-    task->task->exec_show_error = TRUE;
-    task->task->exec_export = TRUE;
-    //task->task->exec_keep_tmp = TRUE;
-    XSet* set = xset_get( "new_archive" );
-    if ( set->icon )
-        task->task->exec_icon = g_strdup( set->icon );
-    ptk_file_task_run( task );
-
-/*    
-    g_shell_parse_argv( handlers[format].compress_cmd,
-                        &cmdc, &cmdv, NULL );
-
-    n = g_list_length( files );
-    argc = cmdc + n + 1;
-    argv = g_new0( char*, argc + 1 );
-
-    for( i = 0; i < cmdc; ++i )
-        argv[i] = cmdv[i];
-
-    argv[i] = dest_file;
-    ++i;
-
-    for( l = files; l; l = l->next )
-    {
-        // FIXME: Maybe we should consider filename encoding here.
-        argv[i] = (char *) vfs_file_info_get_name( (VFSFileInfo*) l->data );
-        ++i;
-    }
-    argv[i] = NULL;
-
-    udest_file = g_filename_display_name( dest_file );
-    desc = g_strdup_printf( _("Creating Compressed File: %s"), udest_file );
-    g_free( udest_file );
-
-    ptk_console_output_run( parent_win, _("Compress Files"),
-                            desc,
-                            working_dir,
-                            argc, argv );
-    g_free( dest_file );
-    g_strfreev( cmdv );
-    g_free( argv );
-*/
-}
-
-void ptk_file_archiver_extract( PtkFileBrowser* file_browser, GList* files,
-                                            const char* cwd, const char* dest_dir )
-{
-    GtkWidget* dlg;
-    GtkWidget* dlgparent = NULL;
-    char* choose_dir = NULL;
-    gboolean create_parent;
-    gboolean write_access;
-    gboolean list_contents = FALSE;
-    VFSFileInfo* file;
-    VFSMimeType* mime;
-    const char* type;
-    GList* l;
-    char* mkparent;
-    char* perm;
-    char* prompt;
-    char* full_path;
-    char* full_quote;
-    char* dest_quote;
-    const char* dest;
-    char* cmd;
-    char* str;
-    int i, n, j;
-    struct stat64 statbuf;
-    gboolean keep_term;
-    gboolean in_term;    
-    const char* suffix[] = { ".tar", ".tar.gz", ".tgz", ".tar.bz2", ".tar.xz",
-                                            ".txz", ".zip", ".rar", ".7z" };
-
-    if( !files )
-        return;
-        
-    if ( file_browser )
-        dlgparent = gtk_widget_get_toplevel( GTK_WIDGET( file_browser ) );
-    //else if ( desktop )
-    //    dlgparent = gtk_widget_get_toplevel( desktop );  // causes drag action???
-        
-    if( !dest_dir )
-    {
-        dlg = gtk_file_chooser_dialog_new( _("Extract To"),
-                                           GTK_WINDOW( dlgparent ),
-                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                           GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                           GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
-
-        GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
-        GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
-                                                    _("Cre_ate subfolder(s)") );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
-                                                    xset_get_b( "arc_dlg" ) );
-        GtkWidget* chk_write = gtk_check_button_new_with_mnemonic(
-                                                    _("Make contents user-_writable") );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_write ),
-                                xset_get_int( "arc_dlg", "s" ) == 1 && geteuid() != 0 );
-        gtk_widget_set_sensitive( chk_write, geteuid() != 0 );
-        gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
-        gtk_box_pack_start( GTK_BOX(hbox), chk_write, FALSE, FALSE, 6 );
-        gtk_widget_show_all( hbox );
-        gtk_file_chooser_set_extra_widget( GTK_FILE_CHOOSER(dlg), hbox );
-
-        gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER (dlg), cwd );
-
-        int width = xset_get_int( "arc_dlg", "x" );
-        int height = xset_get_int( "arc_dlg", "y" );
-        if ( width && height )
-        {
-            // filechooser won't honor default size or size request ?
-            gtk_widget_show_all( dlg );
-            gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER_ALWAYS );
-            gtk_window_resize( GTK_WINDOW( dlg ), width, height );
-            while( gtk_events_pending() )
-                gtk_main_iteration();
-            gtk_window_set_position( GTK_WINDOW( dlg ), GTK_WIN_POS_CENTER );
-        }
-
-        if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
-        {
-            GtkAllocation allocation;
-            gtk_widget_get_allocation ( GTK_WIDGET ( dlg ), &allocation );
-            width = allocation.width;
-            height = allocation.height;
-            if ( width && height )
-            {
-                str = g_strdup_printf( "%d", width );
-                xset_set( "arc_dlg", "x", str );
-                g_free( str );
-                str = g_strdup_printf( "%d", height );
-                xset_set( "arc_dlg", "y", str );
-                g_free( str );
-            }
-            choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER(dlg) );
-            create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
-            write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
-            xset_set_b( "arc_dlg", create_parent );
-            str = g_strdup_printf( "%d", write_access ? 1 : 0 );
-            xset_set( "arc_dlg", "s", str );
-            g_free( str );
-        }
+        // Destroying dialog
         gtk_widget_destroy( dlg );
+
+        // Exiting if user didnt choose an extraction directory
         if( !choose_dir )
             return;
+
+/*igcr choose_dir does need to be freed, but not dest_dir.  Free choose_dir after
+ * dest is used */
+        // This DOES NOT need to be freed by me despite the documentation
+        // saying so! Otherwise enjoy ur double free
         dest = choose_dir;
     }
     else
     {
+        // Extraction directory specified - loading defaults
         create_parent = xset_get_b( "arc_def_parent" );
         write_access = xset_get_b( "arc_def_write" );
-        list_contents = !strcmp( dest_dir, "////LIST" );
+
         dest = dest_dir;
     }
 
+    /* Quoting destination directory (doing this outside of the later
+     * loop as its needed after the selected files loop completes) */
+    dest_quote = bash_quote( dest );
+
+    // Fetching available archive handlers and splitting
+    char* archive_handlers_s = xset_get_s( "arc_conf2" );
+    gchar** archive_handlers = archive_handlers_s ?
+                               g_strsplit( archive_handlers_s, " ", -1 ) :
+                               NULL;
+    XSet* handler_xset = NULL;
+
+    /* Setting desired archive operation and keeping in terminal while
+     * listing */
+    int archive_operation = list_contents ? ARC_LIST : ARC_EXTRACT;
+    keep_term = list_contents;
+
+    // Looping for all files to attempt to list/extract
     for ( l = files; l; l = l->next )
     {
+
+        // Fetching file details
         file = (VFSFileInfo*)l->data;
-        mime = vfs_file_info_get_mime_type( file );
-        type = vfs_mime_type_get_type( mime );
-        for ( i = 0; i < G_N_ELEMENTS(handlers); ++i )
+        mime_type = vfs_file_info_get_mime_type( file );
+        // Determining file paths
+        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ),
+                                      NULL );
+
+        // Get handler with non-empty command
+        GSList* handlers_slist = ptk_handler_file_has_handlers(
+                                        HANDLER_MODE_ARC, archive_operation,
+                                        full_path, mime_type, TRUE, FALSE, TRUE );
+        if ( handlers_slist )
         {
-            if( 0 == strcmp( type, handlers[i].mime_type ) )
-                break;
+            handler_xset = (XSet*)handlers_slist->data;
+            g_slist_free( handlers_slist );
         }
-        if ( i == G_N_ELEMENTS(handlers) )
+        else
+            handler_xset = NULL;
+        vfs_mime_type_unref( mime_type );
+
+        // Continuing to next file if a handler hasnt been found
+        if ( !handler_xset )
+        {
+            g_warning( "%s %s", _("No archive handler/command found for file:"),
+                                                            full_path );
+            g_free( full_path );
             continue;
-        if ( ( list_contents && !handlers[i].list_cmd )
-                || ( !list_contents && !handlers[i].extract_cmd ) )
-            continue;
-    
-        // handler found
-        keep_term = TRUE;
-        in_term = FALSE;
-        full_path = g_build_filename( cwd, vfs_file_info_get_name( file ), NULL );
+        }
+        printf( "Archive Handler Selected: %s\n", handler_xset->menu_label );
+        
+        /* Handler found - fetching the 'run in terminal' preference, if
+         * the operation is listing then the terminal should be kept
+         * open, otherwise the user should explicitly keep the terminal
+         * running via the handler's command
+         * Since multiple commands are now batched together, only one
+         * of the handlers needing to run in a terminal will cause all of
+         * them to */
+        if (!in_term)
+            in_term = archive_handler_run_in_term( handler_xset,
+                                                   archive_operation );
+
         full_quote = bash_quote( full_path );
-        dest_quote = bash_quote( dest );
+
+        // Checking if the operation is to list an archive(s)
         if ( list_contents )
         {
-            // list contents
-            cmd = g_strdup_printf( "%s %s | more -d", handlers[i].list_cmd, full_quote );
-            in_term = TRUE;
-        }
-        else if ( !strcmp( type, "application/x-gzip" ) )
-        {
-            // extract .gz
-            char* base = g_build_filename( dest, vfs_file_info_get_name( file ),
-                                                                        NULL );
-            if ( g_str_has_suffix( base, ".gz" ) )
-                base[strlen(base)-3] = '\0';
-            char* test_path = g_strdup( base );
-            n = 1;
-            while ( lstat64( test_path, &statbuf ) == 0 )
+            // It is - get command
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                                            HANDLER_LIST, handler_xset,
+                                            NULL, &cmd );
+            if ( err_msg )
             {
-                g_free( test_path );
-                test_path = g_strdup_printf( "%s-%s%d", base, _("copy"), ++n );
+                g_warning( err_msg, NULL );
+                g_free( err_msg );
+                cmd = g_strdup( "" );
             }
-            g_free( dest_quote );
-            dest_quote = bash_quote( test_path );
-            g_free( test_path );
-            g_free( base );
-            cmd = g_strdup_printf( "%s -c %s > %s", handlers[i].extract_cmd,
-                                                    full_quote, dest_quote );
+
+            str = cmd;            
+            cmd = replace_string( cmd, "%x", full_quote, FALSE );
+            g_free( str );
         }
         else
         {
-            // extract
-            if ( create_parent && strcmp( type, "application/x-gzip" ) )
+            /* An archive is to be extracted
+             * Obtaining filename minus the archive extension - this is
+             * needed if a parent directory must be created, and if the
+             * extraction target is a file without the handler extension
+             * filename is g_strdup'd to get rid of the const */
+            gchar* filename = g_strdup( vfs_file_info_get_name( file ) );
+            gchar* filename_no_archive_ext = NULL;
+
+            /* Looping for all extensions registered with the current
+             * archive handler (NULL-terminated list) */
+            gchar** pathnames = handler_xset->x ?
+                           g_strsplit_set( handler_xset->x, ", ", -1 ) :
+                           NULL;
+            gchar *filename_no_ext;
+            if ( pathnames )
             {
-                // create parent
-                char* full_name = g_path_get_basename( full_path );
-                char* parent_name = NULL;
-                for ( j = 0; j < G_N_ELEMENTS(suffix); ++j )
+                for (i = 0; pathnames[i]; ++i)
                 {
-                    if ( g_str_has_suffix( full_name, suffix[j] ) )
+                    // getting just the extension of the pathname list element
+                    filename_no_ext = get_name_extension( pathnames[i],
+                                                         FALSE,
+                                                         &extension );
+                    if ( extension )
                     {
-                        n = strlen( full_name ) - strlen( suffix[j] );
-                        full_name[n] = '\0';
-                        parent_name = g_strdup( full_name );
-                        full_name[n] = '.';
-                        break;
+                        // add a dot to extension
+                        str = extension;
+                        extension = g_strconcat( ".", extension, NULL );
+                        g_free( str );
+                        // Checking if the current extension is being used
+                        if ( g_str_has_suffix( filename, extension ) )
+                        {
+                            // It is - determining filename without extension
+                            n = strlen( filename ) - strlen( extension );
+                            char ch = filename[n];
+                            filename[n] = '\0';
+                            filename_no_archive_ext = g_strdup( filename );
+                            filename[n] = ch;
+                            break;
+                        }
                     }
+                    g_free( filename_no_ext );
+                    g_free( extension );
                 }
-                if ( !parent_name )
-                    parent_name = g_strdup( full_name );
-                g_free( full_name );
-                
-                char* parent_path = g_build_filename( dest, parent_name, NULL );
-                char* parent_orig = g_strdup( parent_path );
+            }
+            g_strfreev( pathnames );
+
+            /* An archive may not have an extension, or there may be no
+             * extensions specified for the handler (they are optional)
+             * - making sure filename_no_archive_ext is set in this case */
+            if (!filename_no_archive_ext)
+                filename_no_archive_ext = g_strdup( filename );
+
+            /* Now the extraction filename is obtained, determine the
+             * normal filename without the extension */
+            filename_no_ext = get_name_extension( filename_no_archive_ext,
+                                                         FALSE,
+                                                         &extension );
+
+            /* 'Completing' the extension and dealing with files with
+             * no extension */
+            if (!extension)
+                extension = g_strdup( "" );
+            else
+            {
+                str = extension;
+                extension = g_strconcat( ".", extension, NULL );
+                g_free( str );
+            }
+
+            // Cleaning up
+            g_free( filename );
+
+            /* Get extraction command - Doing this here as parent
+             * directory creation needs access to the command. */
+            char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
+                                                    HANDLER_EXTRACT,
+                                                    handler_xset,
+                                                    NULL, &cmd );
+            if ( err_msg )
+            {
+                g_warning( err_msg, NULL );
+                g_free( err_msg );
+                cmd = g_strdup( "" );
+            }
+
+            // Placeholders - Substituting archive to extract
+            gchar* extract_cmd = replace_string( cmd, "%x", full_quote, FALSE );
+            g_free( cmd );
+            cmd = NULL;
+
+            /* Dealing with creation of parent directory if needed -
+             * never create a parent directory if '%G' is used - this is
+             * an override substitution for the sake of gzip */
+            gchar* parent_path = NULL;
+            if (create_parent && !g_strstr_len( extract_cmd, -1, "%G" ))
+            {
+                /* Determining full path of parent directory to make
+                 * (also used later in '%g' substitution) */
+                parent_path = g_build_filename( dest, filename_no_archive_ext,
+                                                NULL );
+                gchar* parent_orig = g_strdup( parent_path );
                 n = 1;
+
+                // Looping to find a path that doesnt exist
                 while ( lstat64( parent_path, &statbuf ) == 0 )
                 {
                     g_free( parent_path );
-                    parent_path = g_strdup_printf( "%s-%s%d", parent_orig,
-                                                                _("copy"), ++n );
+                    parent_path = g_strdup_printf( "%s-%s%d",
+                                                   parent_orig,
+                                                   _("copy"), ++n );
                 }
                 g_free( parent_orig );
 
+                // Generating shell command to make directory
                 char* parent_quote = bash_quote( parent_path );
-                mkparent = g_strdup_printf( "mkdir -p %s && cd %s && ", parent_quote,
-                                                                    parent_quote );
-                if ( write_access && geteuid() != 0 )
-                    perm = g_strdup_printf( " && chmod -R u+rwX %s", parent_quote );
-                else
-                    perm = g_strdup( "" );
-                g_free( parent_path );
+                mkparent = g_strdup_printf( ""
+                    "mkdir -p %s || handle_error\n"
+                    "cd %s || handle_error\n",
+                    parent_quote, parent_quote );
+
+                // Cleaning up (parent_path is used later)
                 g_free( parent_quote );
             }
             else
             {
-                // no create parent
+                // Parent directory doesn't need to be created
                 mkparent = g_strdup( "" );
-                if ( write_access && geteuid() != 0 && strcmp( type, "application/x-gzip" ) )
-                    perm = g_strdup_printf( " && chmod -R u+rwX %s/*", dest_quote );
-                else
-                    perm = g_strdup( "" );
+                parent_path = g_strdup( "" );
+                create_parent = FALSE;
+
+                /* Making sure any '%G's turn into normal '%g's now
+                 * they've played their role */
+                gchar* old_extract_cmd = extract_cmd;
+                extract_cmd = replace_string( extract_cmd, "%G", "%g",
+                                               FALSE );
+                g_free( old_extract_cmd );
             }
-            
-            if ( i == 3 || i == 4 || i == 6 )
+
+            // Debug code
+            //g_message( "full_quote: %s\ndest: %s", full_quote, dest );
+
+            /* Singular file extraction target (e.g. stdout-redirected
+             * gzip) */
+            if (g_strstr_len( extract_cmd, -1, "%g" ))
             {
-                // zip 7z rar in terminal for password & output
-                in_term = TRUE;  // run in terminal
-                keep_term = FALSE;
-                prompt = g_strdup_printf( " ; fm_err=$?; if [ $fm_err -ne 0 ]; then echo; echo -n '%s: '; read s; exit $fm_err; fi", /* no translate for security*/
-                            "[ Finished With Errors ]  Press Enter to close" );
-            }
-            else
-                prompt = g_strdup( "" );
-            
-            char* handler = NULL;
-            if ( i == 4 )
-            {
-                // for 7z use 7za OR 7zr
-                str = g_find_program_in_path( "7za" );
-                if ( !str )
-                    str = g_find_program_in_path( "7zr" );
-                if ( str )
+                /* Creating extraction target, taking into account whether
+                 * a parent directory has been created or not - target is
+                 * guaranteed not to exist so as to avoid overwriting */
+                gchar* extract_target = g_build_filename(
+                                    create_parent ? parent_path : dest,
+                                                filename_no_archive_ext,
+                                                NULL );
+                n = 1;
+
+                // Looping to find a path that doesnt exist
+                while ( lstat64( extract_target, &statbuf ) == 0 )
                 {
-                    handler = replace_string( handlers[i].extract_cmd, "7za", str, FALSE );
+                    g_free( extract_target );
+                    str = g_strdup_printf( "%s-%s%d%s", filename_no_ext,
+                                           _("copy"), ++n, extension );
+                    extract_target = g_build_filename(
+                                    create_parent ? parent_path : dest,
+                                    str, NULL );
                     g_free( str );
                 }
+
+                // Quoting and substituting command
+                gchar* extract_target_quote = bash_quote( extract_target );
+                gchar* old_extract_cmd = extract_cmd;
+                extract_cmd = replace_string( extract_cmd, "%g",
+                                              extract_target_quote, FALSE );
+                g_free( extract_target_quote );
+                g_free( old_extract_cmd );
+                g_free( extract_target );
             }
-            cmd = g_strdup_printf( "cd %s && %s%s %s%s%s", dest_quote, mkparent,
-                                handler ? handler : handlers[i].extract_cmd,
-                                full_quote, prompt, perm );
+
+            /* Finally constructing command to run. The mkparent command
+             * itself has error checking - final error check not here as
+             * I want the code shared with the list code flow */
+            cmd = g_strdup_printf( ""
+                "cd %s || handle_error\n"
+                "%s%s",
+                dest_quote, mkparent, extract_cmd );
+
+            // Cleaning up
+            g_free( extract_cmd );
+            g_free( filename_no_archive_ext );
+            g_free( filename_no_ext );
+            g_free( extension );
             g_free( mkparent );
-            g_free( perm );
-            g_free( prompt );
-            g_free( handler );
+            g_free( parent_path );
         }
-        g_free( dest_quote );
+
+        // Building up final_command
+/*igcr this error trap works properly if cmd is multiline? */
+        if (!final_command)
+            final_command = g_strconcat( cmd, " || handle_error", NULL );
+        else
+        {
+            str = final_command;
+            final_command = g_strconcat( final_command, "; echo; ",
+                                         cmd, " || handle_error", NULL );
+            g_free( str );
+        }
+
+        // Cleaning up
         g_free( full_quote );
         g_free( full_path );
+        g_free( cmd );
+    }
 
-        // task
-        char* task_name = g_strdup_printf( _("Extract %s"),
-                                                vfs_file_info_get_name( file ) );
-        PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
-                                file_browser ? file_browser->task_view : NULL );
-        g_free( task_name );
-        task->task->exec_command = cmd;
+    // Dealing with standard SpaceFM substitutions
+    str = final_command;
+    final_command = replace_line_subs( final_command );
+    g_free(str);
+
+    /* Dealing with the need to make extracted files writable if
+     * desired (e.g. a tar of files originally archived from a CD
+     * will be readonly). Root users don't obey such access
+     * permissions and making such owned files writeable may be a
+     * security issue */
+    if (!list_contents && write_access && geteuid() != 0)
+        perm = g_strdup_printf( "; chmod -R u+rwX %s/* || handle_error",
+                                dest_quote );
+    else perm = g_strdup( "" );
+
+    /* When ran in a terminal, errors need to result in a pause so that
+     * the user can review the situation - in any case an error check
+     * needs to be made */
+    str = generate_bash_error_function( in_term );
+    s1 = final_command;
+    final_command = g_strconcat( str, "\n\n", final_command, perm, NULL );
+    g_free( str );
+    g_free( s1 );
+    g_free( perm );
+    g_free( dest_quote );
+
+    // Creating task
+    char* task_name = g_strdup_printf( _("Extract %s"),
+                                vfs_file_info_get_name( file ) );
+    PtkFileTask* task = ptk_file_exec_new( task_name, cwd, dlgparent,
+                    file_browser ? file_browser->task_view : NULL );
+    g_free( task_name );
+
+    /* Setting correct exec reference - probably causes different bash
+     * to be output */
+    if (file_browser)
         task->task->exec_browser = file_browser;
-        task->task->exec_sync = !in_term;
-        task->task->exec_show_error = TRUE;
-        task->task->exec_show_output = in_term;
-        task->task->exec_terminal = in_term;
-        task->task->exec_keep_terminal = keep_term;
-        task->task->exec_export = FALSE;
-    //task->task->exec_keep_tmp = TRUE;
-        XSet* set = xset_get( "arc_extract" );
-        if ( set->icon )
-            task->task->exec_icon = g_strdup( set->icon );
-        ptk_file_task_run( task );
-    }
-    if ( choose_dir )
-        g_free( choose_dir );
-    
+    else
+        task->task->exec_desktop = desktop;
 
-/*
-    file = (VFSFileInfo*)files->data;
-    mime = vfs_file_info_get_mime_type( file );
-    type = vfs_mime_type_get_type( mime );
+    // Configuring task
+    task->task->exec_command = final_command;
+    task->task->exec_browser = file_browser;
+    task->task->exec_sync = !in_term;
+    task->task->exec_show_error = TRUE;
+/*igcr exec_show_output = in_term correct? or !in_term ? Note that 
+ * exec_show_output only has an effect if exec_sync == TRUE.  If so, it will
+ * popup the task dialog on any stdout/stderr output.  show_error will only 
+ * popup task dialog if exit status is !0
+ * Set  exec_show_output = TRUE if you want task dialog to popup on any output
+ * - will not affect behavior in terminal */
+    task->task->exec_show_output = in_term;
+    task->task->exec_terminal = in_term;
+    task->task->exec_keep_terminal = keep_term;
+    task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
 
-    for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
-    {
-        if( 0 == strcmp( type, handlers[i].mime_type ) )
-            break;
-    }
+    // Setting custom icon
+    XSet* set = xset_get( "arc_extract" );
+    if ( set->icon )
+        task->task->exec_icon = g_strdup( set->icon );
 
-    if( i < G_N_ELEMENTS(handlers) )    // handler found
-    {
-        g_shell_parse_argv( handlers[i].extract_cmd,
-                            &cmdc, &cmdv, NULL );
+    // Running task
+    ptk_file_task_run( task );
 
-        n = g_list_length( files );
-        argc = cmdc + n;
-        argv = g_new0( char*, argc + 1 );
-
-        for( i = 0; i < cmdc; ++i )
-            argv[i] = cmdv[i];
-
-        for( l = files; l; l = l->next )
-        {
-            file = (VFSFileInfo*)l->data;
-            full_path = g_build_filename( working_dir,
-                                          vfs_file_info_get_name( file ),
-                                          NULL );
-            // FIXME: Maybe we should consider filename encoding here.
-            argv[i] = full_path;
-            ++i;
-        }
-        argv[i] = NULL;
-        argc = i;
-
-        udest_dir = g_filename_display_name( dest_dir );
-        desc = g_strdup_printf( _("Extracting Files to: %s"), udest_dir );
-        g_free( udest_dir );
-        ptk_console_output_run( parent_win, _("Extract Files"),
-                                desc,
-                                dest_dir,
-                                argc, argv );
-        g_strfreev( cmdv );
-        for( i = cmdc; i < argc; ++i )
-            g_free( argv[i] );
-        g_free( argv );
-    }
-
-    g_free( _dest_dir );
-*/
+    /* Clearing up - final_command does not need freeing, as this
+     * is freed by the task */
+    g_strfreev( archive_handlers );
+    g_free( choose_dir );
 }
 
-gboolean ptk_file_archiver_is_format_supported( VFSMimeType* mime,
-                                                gboolean extract )
-{
-    int i;
-    const char* type;
-
-    if( !mime ) return FALSE;
-    type = vfs_mime_type_get_type( mime );
-    if(! type ) return FALSE;
-
-    /* alias = mime_type_get_alias( type ); */
-
-    for( i = 0; i < G_N_ELEMENTS(handlers); ++i )
-    {
-        if( 0 == strcmp( type, handlers[i].mime_type ) )
-        {
-            if( extract )
-            {
-                if( handlers[i].extract_cmd )
-                    return TRUE;
-            }
-            else if( handlers[i].compress_cmd )
-            {
-                return TRUE;
-            }
-            break;
-        }
-    }
-    return FALSE;
-}

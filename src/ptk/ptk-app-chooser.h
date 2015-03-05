@@ -39,6 +39,7 @@ gchar* app_chooser_dialog_get_selected_app( GtkWidget* dlg );
 * Check if the user set the selected app default handler.
 */
 gboolean app_chooser_dialog_get_set_default( GtkWidget* dlg );
+void ptk_app_chooser_has_handler_warn( GtkWidget* parent, VFSMimeType* mime_type );
 
 
 void

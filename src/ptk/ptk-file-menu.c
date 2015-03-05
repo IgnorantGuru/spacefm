@@ -31,6 +31,7 @@
 #include "ptk-utils.h"
 #include "ptk-file-misc.h"
 #include "ptk-file-archiver.h"
+#include "ptk-handler.h"
 #include "ptk-clipboard.h"
 #include "ptk-app-chooser.h"
 #include "settings.h"  //MOD
@@ -75,6 +76,8 @@ on_popup_open_in_new_win_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data );
 static void on_popup_open_in_terminal_activate( GtkMenuItem *menuitem,
                                                 PtkFileMenu* data );
+static void on_popup_handlers_activate ( GtkMenuItem *menuitem,
+                                       PtkFileMenu* data );
 static void
 on_popup_cut_activate ( GtkMenuItem *menuitem,
                         PtkFileMenu* data );
@@ -144,90 +147,6 @@ static void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data );
 
 void
 on_popup_canon ( GtkMenuItem *menuitem, PtkFileMenu* data );
-
-/*
-static void on_popup_run_command( GtkMenuItem *menuitem,
-                               PtkFileMenu* data );  //MOD
-static void on_popup_user_6 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_7 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_8 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-static void on_popup_user_9 ( GtkMenuItem *menuitem,
-                                        PtkFileMenu* data );  //MOD
-*/
-/*
-static PtkMenuItemEntry create_new_menu[] =
-    {
-        PTK_IMG_MENU_ITEM( N_( "_Folder" ), "gtk-directory", on_popup_new_folder_activate, GDK_f, GDK_CONTROL_MASK ),  //MOD stole ctrl-f
-        PTK_IMG_MENU_ITEM( N_( "_Text File" ), "gtk-edit", on_popup_new_text_file_activate, GDK_f, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),  //MOD added ctrl-shift-f
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry extract_menu[] =
-    {
-        PTK_MENU_ITEM( N_( "E_xtract Here" ), on_popup_extract_here_activate, 0, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "Extract _To" ), "gtk-directory", on_popup_extract_to_activate, 0, 0 ),
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry basic_popup_menu[] =
-    {
-        PTK_MENU_ITEM( N_( "Open _with..." ), NULL, 0, 0 ),
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_STOCK_MENU_ITEM( "gtk-cut", on_popup_cut_activate ),
-        PTK_STOCK_MENU_ITEM( "gtk-copy", on_popup_copy_activate ),
-        PTK_IMG_MENU_ITEM( N_( "Copy as Te_xt" ), GTK_STOCK_COPY, on_popup_copy_text_activate, GDK_C, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "Copy _Name" ), GTK_STOCK_COPY, on_popup_copy_name_activate, GDK_C, GDK_MOD1_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_STOCK_MENU_ITEM( "gtk-paste", on_popup_paste_activate ),
-        PTK_IMG_MENU_ITEM( N_( "Paste as _Link" ), GTK_STOCK_PASTE, on_popup_paste_link_activate, GDK_V, GDK_CONTROL_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "Paste as Tar_get" ), GTK_STOCK_PASTE, on_popup_paste_target_activate, GDK_V, GDK_MOD1_MASK | GDK_SHIFT_MASK ),   //MOD added
-        PTK_IMG_MENU_ITEM( N_( "_Delete" ), "gtk-delete", on_popup_delete_activate, GDK_Delete, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "_Rename" ), "gtk-edit", on_popup_rename_activate, GDK_F2, 0 ),
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_MENU_ITEM( N_( "Compress" ), on_popup_compress_activate, 0, 0 ),
-        PTK_POPUP_MENU( N_( "E_xtract" ), extract_menu ),
-        PTK_POPUP_IMG_MENU( N_( "_Create New" ), "gtk-new", create_new_menu ),
-        PTK_IMG_MENU_ITEM( N_( "R_un Command..." ), GTK_STOCK_EXECUTE, on_popup_run_command, GDK_r, GDK_CONTROL_MASK ),  //MOD
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_IMG_MENU_ITEM( N_( "_Properties" ), "gtk-info", on_popup_file_properties_activate, GDK_Return, GDK_MOD1_MASK ),
-        PTK_MENU_END
-    };
-
-static PtkMenuItemEntry dir_popup_menu_items[] =
-    {
-        PTK_SEPARATOR_MENU_ITEM,
-        PTK_MENU_ITEM( N_( "Open in New _Tab" ), on_popup_open_in_new_tab_activate, 0, 0 ),
-        PTK_MENU_ITEM( N_( "Open in New _Window" ), on_popup_open_in_new_win_activate, 0, 0 ),
-        PTK_IMG_MENU_ITEM( N_( "Open in Terminal" ), GTK_STOCK_EXECUTE, on_popup_open_in_terminal_activate, 0, 0 ),
-        PTK_MENU_END
-    };
-
-#if 0
-static gboolean same_file_type( GList* files )
-{
-    GList * l;
-    VFSMimeType* mime_type;
-    if ( ! files || ! files->next )
-        return TRUE;
-    mime_type = vfs_file_info_get_mime_type( ( VFSFileInfo* ) l->data );
-    for ( l = files->next; l ; l = l->next )
-    {
-        VFSMimeType * mime_type2;
-        mime_type2 = vfs_file_info_get_mime_type( ( VFSFileInfo* ) l->data );
-        vfs_mime_type_unref( mime_type2 );
-        if ( mime_type != mime_type2 )
-        {
-            vfs_mime_type_unref( mime_type );
-            return FALSE;
-        }
-    }
-    vfs_mime_type_unref( mime_type );
-    return TRUE;
-}
-#endif
-*/
 
 void on_popup_list_detailed( GtkMenuItem *menuitem, PtkFileBrowser* browser )
 {
@@ -317,7 +236,6 @@ void on_popup_rootcmd_activate( GtkMenuItem *menuitem, PtkFileMenu* data, XSet* 
     else
         set = set2;
     if ( set )
-        // can pass desktop here (ignored)
         ptk_file_misc_rootcmd( data->desktop, data->browser, data->sel_files,
                                                         data->cwd, set->name );
 }
@@ -346,15 +264,15 @@ void on_open_in_panel( GtkMenuItem *menuitem, PtkFileMenu* data )
 
 void on_file_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                               GTK_WIDGET( data->desktop ),
                data->file_path, FALSE, TRUE );
 }
 
 void on_file_root_edit( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+    xset_edit( data->browser ? GTK_WIDGET( data->browser ) : 
+                               GTK_WIDGET( data->desktop ),
                data->file_path, TRUE, FALSE );
 }
 
@@ -465,6 +383,11 @@ void on_archive_default( GtkMenuItem *menuitem, XSet* set )
     }
 }
 
+void on_archive_show_config( GtkMenuItem *menuitem, PtkFileMenu* data )
+{
+    ptk_handler_show_config( HANDLER_MODE_ARC, data->browser, NULL );
+}
+
 void on_hide_file( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     if ( data->browser )
@@ -505,16 +428,11 @@ void on_add_bookmark( GtkMenuItem *menuitem, PtkFileMenu* data )
         g_free( name );
     }
     else
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL,
+        xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) :
+                                         GTK_WIDGET( data->desktop ),
                          GTK_MESSAGE_INFO,
                          _("Bookmark Exists"), NULL, 0,
                          _("Bookmark already exists"), NULL, NULL );
-}
-
-void on_popup_mount_iso( GtkMenuItem *menuitem, PtkFileMenu* data )
-{
-    mount_iso( data->browser, data->file_path );
 }
 
 void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
@@ -558,8 +476,7 @@ void on_popup_desktop_sort_activate( GtkMenuItem *menuitem,
 
 void on_popup_desktop_pref_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
 {
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    fm_edit_preference( NULL, PREF_DESKTOP );
+    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
 }
 
 void on_popup_desktop_new_app_activate( GtkMenuItem *menuitem, DesktopWindow* desktop )
@@ -617,7 +534,7 @@ static void ptk_file_menu_free( PtkFileMenu *data )
     g_slice_free( PtkFileMenu, data );
 }
 
-/* Retrive popup menu for selected file(s) */
+/* Retrieve popup menu for selected file(s) */
 GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
                                 const char* file_path, VFSFileInfo* info,
                                 const char* cwd, GList* sel_files )
@@ -644,7 +561,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     int no_write_access = 0, no_read_access = 0;
     XSet* set, *set2;
     GtkMenuItem* item;
-
+    GSList* handlers_slist;
+    
     if ( !desktop && !browser )
         return NULL;
         
@@ -777,6 +695,45 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );
         }
 
+        // file handlers
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_FILE, HANDLER_MOUNT,
+                                    file_path, mime_type, FALSE, TRUE, FALSE );
+        if ( handlers_slist )
+        {
+            GSList* sl;
+            for ( sl = handlers_slist; sl; sl = sl->next )
+            {
+                set = (XSet*)sl->data;
+                app_menu_item = gtk_image_menu_item_new_with_label(
+                                                        set->menu_label );
+                gtk_container_add ( GTK_CONTAINER ( submenu ), app_menu_item );
+                g_signal_connect( G_OBJECT( app_menu_item ), "activate",
+                                  G_CALLBACK( on_popup_run_app ), ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "menu", submenu );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-press-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_signal_connect( G_OBJECT( app_menu_item ), "button-release-event",
+                                            G_CALLBACK( on_app_button_press ),
+                                            ( gpointer ) data );
+                g_object_set_data( G_OBJECT( app_menu_item ), "handler_set", set );
+                app_img = NULL;
+                if ( set->icon && set->icon[0] )
+                    app_img = xset_get_image( set->icon, GTK_ICON_SIZE_MENU );
+                if ( !app_img )
+                    app_img = xset_get_image( "gtk-execute", GTK_ICON_SIZE_MENU );
+                gtk_image_menu_item_set_image ( GTK_IMAGE_MENU_ITEM( 
+                                                app_menu_item ), app_img );
+            }
+            g_slist_free( handlers_slist );
+            // add a separator
+            item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
+            gtk_widget_show ( GTK_WIDGET( item ) );
+            gtk_container_add ( GTK_CONTAINER ( submenu ), 
+                                                GTK_WIDGET( item ) );
+        }
+        
         // add apps
         if ( is_text )
         {
@@ -800,8 +757,9 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
         {
             for ( app = apps; *app; ++app )
             {
-                if ( ( app - apps ) == 1 )  // Add a separator after default app
+                if ( ( app - apps ) == 1 && !handlers_slist )
                 {
+                    // Add a separator after default app if no handlers listed
                     item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
                     gtk_widget_show ( GTK_WIDGET( item ) );
                     gtk_container_add ( GTK_CONTAINER ( submenu ), 
@@ -848,7 +806,10 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
 
         set = xset_set_cb( "open_other", on_popup_open_with_another_activate, data );
         xset_add_menuitem( desktop, browser, submenu, accel_group, set );
-                        
+        
+        set = xset_set_cb( "open_hand", on_popup_handlers_activate, data );
+        xset_add_menuitem( desktop, browser, submenu, accel_group, set );
+        
         // Default
         char* plain_type = NULL;
         if ( mime_type )
@@ -951,14 +912,26 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             }
         }
 
-        if ( mime_type && ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
+        // Obtaining file extension
+        char *not_used = NULL, *extension = NULL;
+        if (info)
+            not_used = get_name_extension(
+                (char*)vfs_file_info_get_name( info ), FALSE,
+                &extension );
+
+        handlers_slist = ptk_handler_file_has_handlers(
+                                    HANDLER_MODE_ARC, HANDLER_EXTRACT,
+                                    file_path, mime_type, FALSE, FALSE, FALSE );
+        if ( handlers_slist )
         {
+            g_slist_free( handlers_slist );
+            // Archive commands
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "arc_extract", on_popup_extract_here_activate, data );
             xset_set_ob1( set, "set", set );
-            set->disable = no_write_access;
+                set->disable = no_write_access;
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_set_cb( "arc_extractto", on_popup_extract_to_activate, data );
@@ -970,6 +943,7 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
 
             set = xset_get( "arc_def_open" );
+            // do NOT use set = xset_set_cb here or wrong set is passed
             xset_set_cb( "arc_def_open", on_archive_default, set );
             xset_set_ob2( set, NULL, NULL );
             set_radio = set;
@@ -986,38 +960,43 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_cb( "arc_def_list", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            set = xset_get( "arc_def_write" );
             if ( geteuid() == 0 )
             {
+                set = xset_get( "arc_def_write" );
                 set->b = XSET_B_FALSE;
                 set->disable = TRUE;
             }
             
+            xset_set_cb( "arc_conf2", on_archive_show_config, data );
+            
             xset_add_menuitem( desktop, browser, submenu, accel_group,
                                                         xset_get( "arc_default" ) );    
         }
-        else if ( file_path && mime_type && !is_dir && ( 
-                  !strcmp( vfs_mime_type_get_type( mime_type ),
-                                            "application/x-cd-image" ) ||
-                  !strcmp( vfs_mime_type_get_type( mime_type ),
-                                            "application/x-iso9660-image" ) ||
-                  g_str_has_suffix( file_path, ".iso" ) ||
-                  g_str_has_suffix( file_path, ".img" ) ) )
+/*igtodo iso_mount and iso_auto no longer used, they should
+ * be removed?   still possibly attached custom items, yet not included in
+ * menu for performance */
+#if 0
+        else if ( file_path && mime_type && !is_dir &&
+                  vfs_mime_type_is_iso( mime_type, file_path ) )
         {
             item = GTK_MENU_ITEM( gtk_separator_menu_item_new() );
             gtk_menu_shell_append( GTK_MENU_SHELL( submenu ), GTK_WIDGET( item ) );
 
             set = xset_set_cb( "iso_mount", on_popup_mount_iso, data );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
+            xset_add_menuitem( desktop, browser, submenu,
+                                                        accel_group, set );    
 
             set = xset_get( "iso_auto" );
-            xset_add_menuitem( desktop, browser, submenu, accel_group, set );    
-            str = g_find_program_in_path( "udevil" );
-            set->disable = !str;
-            g_free( str );
+            xset_add_menuitem( desktop, browser, submenu,
+                                                        accel_group, set );
         }
+#endif
         g_signal_connect (submenu, "key-press-event",
                                     G_CALLBACK (app_menu_keypress), data );
+
+        // Cleaning up
+        g_free( not_used );
+        g_free( extension );
     }
 #ifdef DESKTOP_INTEGRATION
     else if ( desktop )
@@ -1083,21 +1062,24 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
     // New >
     if ( desktop || browser )
     {
-        set = xset_set_cb( "new_file", on_popup_new_text_file_activate, data );
-        set = xset_set_cb( "new_folder", on_popup_new_folder_activate, data );
+        set = xset_set_cb( "new_file", on_popup_new_text_file_activate,
+                           data );
+        set = xset_set_cb( "new_folder", on_popup_new_folder_activate,
+                           data );
         set = xset_set_cb( "new_link", on_popup_new_link_activate, data );
+        set = xset_set_cb( "new_archive", on_popup_compress_activate,
+                           data );
+        set->disable = ( !sel_files );
 
         if ( desktop )
         {
             xset_set_cb( "new_app", on_popup_desktop_new_app_activate, desktop );
 
             set = xset_get( "open_new" );
-            xset_set_set( set, "desc", "new_file new_folder new_link sep_o1 new_app" );
+            xset_set_set( set, "desc", "new_file new_folder new_link new_archive sep_o1 new_app" );
         }
         else
         {
-            set = xset_set_cb( "new_archive", on_popup_compress_activate, data );
-            set->disable = ( !sel_files || !browser );
             set = xset_set_cb( "tab_new", on_shortcut_new_tab_activate, browser );
             set->disable = !browser;
             set = xset_set_cb( "tab_new_here", on_popup_open_in_new_tab_here, data );
@@ -1693,7 +1675,8 @@ on_popup_open_activate ( GtkMenuItem *menuitem,
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
     ptk_open_files_with_app( data->cwd, sel_files,
-                             NULL, data->browser, TRUE, FALSE );  //MOD
+                             NULL, data->desktop, data->browser,
+                             TRUE, FALSE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
 }
@@ -1723,8 +1706,7 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
                                             GTK_WIDGET( data->browser ) ) );
     else
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent_win = NULL;    //GTK_WIDGET( data->desktop );
+        parent_win = GTK_WINDOW( data->desktop );
     app = (char *) ptk_choose_app_for_mime_type( parent_win,
                                         mime_type, FALSE, TRUE, TRUE, FALSE );
     if ( app )
@@ -1733,12 +1715,18 @@ on_popup_open_with_another_activate ( GtkMenuItem *menuitem,
         if( ! sel_files )
             sel_files = g_list_prepend( sel_files, data->info );
         ptk_open_files_with_app( data->cwd, sel_files,
-                                app, data->browser, FALSE, FALSE );
+                                app, data->desktop, data->browser, FALSE, FALSE );
         if( sel_files != data->sel_files )
             g_list_free( sel_files );
         g_free( app );
     }
     vfs_mime_type_unref( mime_type );
+}
+
+void on_popup_handlers_activate ( GtkMenuItem *menuitem,
+                                       PtkFileMenu* data )
+{
+    ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, NULL );
 }
 
 void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
@@ -1751,8 +1739,8 @@ void on_popup_open_all( GtkMenuItem *menuitem, PtkFileMenu* data )
     sel_files = data->sel_files;
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
-    ptk_open_files_with_app( data->cwd, sel_files,
-                             NULL, FALSE /*allow MIME app - was data->browser*/,
+    ptk_open_files_with_app( data->cwd, sel_files, NULL,
+                             data->desktop, data->browser,
                              FALSE, TRUE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
@@ -1762,21 +1750,34 @@ void on_popup_run_app( GtkMenuItem *menuitem, PtkFileMenu* data )
 {
     VFSAppDesktop * desktop_file;
     const char* app = NULL;
+    char* set_app = NULL;
     GList* sel_files;
 
-    desktop_file = ( VFSAppDesktop* ) g_object_get_data( G_OBJECT( menuitem ),
-                                                         "desktop_file" );
-    if ( !desktop_file )
-        return ;
+    XSet* handler_set = (XSet*)g_object_get_data( 
+                                    G_OBJECT( menuitem ), "handler_set" );
+    if ( handler_set )
+    {
+        // is a file handler
+        app = set_app = g_strconcat( "###", handler_set->name, NULL );
+    }
+    else
+    {
+        desktop_file = ( VFSAppDesktop* ) g_object_get_data( G_OBJECT( menuitem ),
+                                                             "desktop_file" );
+        if ( !desktop_file )
+            return ;
+        app = vfs_app_desktop_get_name( desktop_file );
+    }
 
-    app = vfs_app_desktop_get_name( desktop_file );
     sel_files = data->sel_files;
     if( ! sel_files )
         sel_files = g_list_prepend( sel_files, data->info );
     ptk_open_files_with_app( data->cwd, sel_files,
-                             (char *) app, data->browser, FALSE, FALSE ); //MOD
+                             (char *) app, data->desktop, data->browser,
+                             FALSE, FALSE );
     if( sel_files != data->sel_files )
         g_list_free( sel_files );
+    g_free( set_app );
 }
 
 enum {
@@ -1835,6 +1836,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
     switch ( job ) {
     case APP_JOB_DEFAULT:
         vfs_mime_type_set_default_action( mime_type, desktop_file->file_name );
+        ptk_app_chooser_has_handler_warn( data->browser ?
+                                            GTK_WIDGET( data->browser ) : NULL,
+                                          mime_type );
         break;
     case APP_JOB_REMOVE:
         // for text files, spacefm displays both the actions for the type
@@ -1843,8 +1847,7 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         vfs_mime_type_remove_action( mime_type, desktop_file->file_name );
         if ( strcmp( mime_type->type, "text/plain" ) && 
                                 g_str_has_prefix( mime_type->type, "text/" ) )
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : NULL, 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
+            xset_msg_dialog( data->browser ? GTK_WIDGET( data->browser ) : GTK_WIDGET( data->desktop ), 0, _("Remove Text Type Association"), NULL, 0, _("NOTE:  When compiling the list of applications to appear in the Open submenu for a text file, SpaceFM will include applications associated with the MIME type (eg text/html) AND applications associated with text/plain.  If you select Remove on an application, it will be removed as an associated application for the MIME type (eg text/html), but will NOT be removed as an associated application for text/plain (unless the MIME type is text/plain).  Thus using Remove may not remove the application from the Open submenu for this type, unless you also remove it from text/plain."), NULL, "#designmode-mime-remove" );
         break;
     case APP_JOB_EDIT:
         path = g_build_filename( g_get_user_data_dir(), "applications",
@@ -1868,30 +1871,31 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
                 return;
             }
         }
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
-                                                        FALSE, FALSE );
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                   GTK_WIDGET( data->desktop ),
+                   path, FALSE, FALSE );
         g_free( path );
         break;
     case APP_JOB_VIEW:
         path = get_shared_desktop_file_location( desktop_file->file_name );
         if ( path )
-            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL, path,
-                                                        FALSE, TRUE );
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                       GTK_WIDGET( data->desktop ),
+                       path, FALSE, TRUE );
         break;
     case APP_JOB_EDIT_LIST:
         path = g_build_filename( g_get_user_data_dir(), "applications",
                                                     "mimeapps.list", NULL );
-        xset_edit( data->browser ? GTK_WIDGET( data->browser ): NULL, path,
-                                                        FALSE, TRUE );
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                   GTK_WIDGET( data->desktop ),
+                   path, FALSE, TRUE );
         g_free( path );
         break;
     case APP_JOB_ADD:
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
         path = ptk_choose_app_for_mime_type( data->browser ?
                                 GTK_WINDOW( gtk_widget_get_toplevel(
                                             GTK_WIDGET( data->browser ) ) ) :
-                                    NULL,
+                                    GTK_WINDOW( data->desktop ),
                                 mime_type, FALSE, TRUE, TRUE, TRUE );
         // ptk_choose_app_for_mime_type returns either a bare command that 
         // was already set as default, or a (custom or shared) desktop file
@@ -1977,9 +1981,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         }
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
-                                                path, FALSE, FALSE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                       GTK_WIDGET( data->desktop ),
+                       path, FALSE, FALSE );        
         }
         g_free( path );
         vfs_dir_monitor_mime();
@@ -1990,15 +1994,17 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( str );
         if ( g_file_test( path, G_FILE_TEST_EXISTS ) )
         {
-            xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
-                                                path, FALSE, TRUE );        
+            xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                       GTK_WIDGET( data->desktop ),
+                       path, FALSE, TRUE );        
         }
         g_free( path );
         break;
     case APP_JOB_VIEW_OVER:
         path = "/usr/share/mime/packages/Overrides.xml";
-        xset_edit( data->browser ? GTK_WIDGET( data->browser ) : NULL,
-                                                path, TRUE, FALSE );
+        xset_edit( data->browser ? GTK_WIDGET( data->browser ) :
+                                   GTK_WIDGET( data->desktop ),
+                   path, TRUE, FALSE );
         break;
     case APP_JOB_BROWSE_MIME_USR:
         if ( data->browser )
@@ -2023,9 +2029,9 @@ void app_job( GtkWidget* item, GtkWidget* app_item )
         g_free( path );
         break;
     case APP_JOB_HELP:
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) : NULL,
-                                        NULL, "#designmode-mime" );
+            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :
+                                            GTK_WIDGET( data->desktop ),
+                            NULL, "#designmode-mime" );
         break;
     }
     if ( mime_type )
@@ -2106,7 +2112,9 @@ gboolean app_menu_keypress( GtkWidget* menu, GdkEventKey* event,
             if ( !help )
                 help = "#designmode-mime";
             gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
-            xset_show_help( NULL, NULL, help );
+            xset_show_help( data->browser ? GTK_WIDGET( data->browser ) :
+                                            GTK_WIDGET( data->desktop ),
+                            NULL, help );
             return TRUE;
         }
         else if ( desktop_file && event->keyval == GDK_KEY_F2 )
@@ -2179,6 +2187,16 @@ static void show_app_menu( GtkWidget* menu, GtkWidget* app_item, PtkFileMenu* da
 
     if ( !( data && data->info ) )
         return;
+    
+    XSet* handler_set = (XSet*)g_object_get_data( 
+                                    G_OBJECT( app_item ), "handler_set" );
+    if ( handler_set )
+    {
+        // is a file handler - open file handler config
+        gtk_menu_shell_deactivate( GTK_MENU_SHELL( menu ) );
+        ptk_handler_show_config( HANDLER_MODE_FILE, data->browser, handler_set );
+        return;
+    }
     
     VFSMimeType* mime_type = vfs_file_info_get_mime_type( data->info );
     if ( mime_type )
@@ -2648,9 +2666,7 @@ on_popup_paste_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        // must pass data->desktop here for callback window
-        ptk_clipboard_paste_files( NULL, data->cwd, NULL,
+        ptk_clipboard_paste_files( GTK_WINDOW( data->desktop ), data->cwd, NULL,
                             (GFunc)desktop_window_insert_task_complete,
                             GTK_WINDOW( data->desktop ) );        
     }
@@ -2667,12 +2683,10 @@ on_popup_paste_link_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        // must pass data->desktop here for callback window
         ptk_clipboard_paste_links(
-            NULL,
-            data->cwd, NULL, (GFunc)desktop_window_insert_task_complete,
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
+                GTK_WINDOW( data->desktop ),
+                data->cwd, NULL, (GFunc)desktop_window_insert_task_complete,
+                GTK_WINDOW( data->desktop ) );
     }
 #endif
 }
@@ -2687,13 +2701,11 @@ on_popup_paste_target_activate ( GtkMenuItem *menuitem,
     else if ( data->desktop )
     {
         desktop_window_set_insert_item( data->desktop );
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        // must pass data->desktop here for callback window
         ptk_clipboard_paste_targets(
-            NULL,
+            GTK_WINDOW( data->desktop ),
             data->cwd,
             NULL, (GFunc)desktop_window_insert_task_complete,
-            GTK_WINDOW( gtk_widget_get_toplevel( GTK_WIDGET( data->desktop ) ) ) );
+            GTK_WINDOW( data->desktop ) );
     }
 #endif
 }
@@ -2727,7 +2739,6 @@ on_popup_paste_as_activate ( GtkMenuItem *menuitem,
 #ifdef DESKTOP_INTEGRATION
     if ( data->desktop )
         desktop_window_set_insert_item( data->desktop );
-    // must pass data->desktop here
     ptk_file_misc_paste_as( data->desktop, data->browser, data->cwd,
             data->desktop ? (GFunc)desktop_window_insert_task_complete : NULL );
 #else
@@ -2778,28 +2789,29 @@ on_popup_rename_activate ( GtkMenuItem *menuitem,
 void on_popup_compress_activate ( GtkMenuItem *menuitem,
                                   PtkFileMenu* data )
 {
-    if ( data->browser )
-        ptk_file_archiver_create( data->browser, data->sel_files, data->cwd );
+    ptk_file_archiver_create( data->desktop, data->browser, data->sel_files,
+                              data->cwd );
 }
 
 void on_popup_extract_to_activate ( GtkMenuItem *menuitem,
                                     PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files, data->cwd, NULL );
+    ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
+                               data->cwd, NULL, HANDLER_EXTRACT );
 }
 
 void on_popup_extract_here_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files,
-                                                        data->cwd, data->cwd );
+    ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
+                               data->cwd, data->cwd, HANDLER_EXTRACT );
 }
 
 void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
-    ptk_file_archiver_extract( data->browser, data->sel_files,
-                                                    data->cwd, "////LIST" );
+    ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
+                               data->cwd, NULL, HANDLER_EXTRACT );
 }
 
 void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
@@ -2841,7 +2853,8 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
                 GList* sel_files = NULL;
                 sel_files = g_list_prepend( sel_files, file );
                 ptk_open_files_with_app( cwd, sel_files,
-                                         NULL, ao->file_browser, FALSE, TRUE );
+                                         NULL, ao->desktop, ao->file_browser,
+                                         FALSE, TRUE );
                 vfs_file_info_unref( file );
                 g_list_free( sel_files );
             }
@@ -2853,43 +2866,38 @@ void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )
     g_slice_free( AutoOpenCreate, ao );
 }
 
-static void
-create_new_file( PtkFileMenu* data, int create_new )
+static void create_new_file( PtkFileMenu* data, int create_new )
 {
     char* cwd;
-    AutoOpenCreate* ao = NULL;
     
-    if ( data->cwd )
+    if ( !data->cwd )
+        return;
+
+    AutoOpenCreate* ao = g_slice_new0( AutoOpenCreate );
+    ao->path = NULL;
+    ao->file_browser = data->browser;
+    ao->desktop = data->desktop;
+    ao->open_file = FALSE;            
+    if ( data->browser )
+        ao->callback = (GFunc)on_autoopen_create_cb;
+    else if ( data->desktop )
     {
-        if ( data->browser )
-        {
-            ao = g_slice_new0( AutoOpenCreate );
-            ao->path = NULL;
-            ao->file_browser = data->browser;
-            ao->callback = (GFunc)on_autoopen_create_cb;
-            ao->open_file = FALSE;
-        }
-        else if ( data->desktop )
-        {
-            ao = g_slice_new0( AutoOpenCreate );
-            ao->path = NULL;
-            ao->file_browser = (PtkFileBrowser*)data->desktop;  // hack
 #ifdef DESKTOP_INTEGRATION
-            ao->callback = (GFunc)desktop_window_on_autoopen_cb;
+        ao->callback = (GFunc)desktop_window_on_autoopen_cb;
+#else
+        ao->callback = NULL;
 #endif
-            ao->open_file = FALSE;            
-        }
-        int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
-                        data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
-                        NULL, FALSE, create_new, ao );
-        if ( result == 0 )
-        {
-            ao->file_browser = NULL;
-            g_free( ao->path );
-            ao->path = NULL;
-            g_slice_free( AutoOpenCreate, ao );
-            ao = NULL;
-        }
+    }
+    int result = ptk_rename_file( data->desktop, data->browser, data->cwd,
+                    data->sel_files ? (VFSFileInfo*)data->sel_files->data : NULL,
+                    NULL, FALSE, create_new, ao );
+    if ( result == 0 )
+    {
+        ao->file_browser = NULL;
+        ao->desktop = NULL;
+        g_free( ao->path );
+        ao->path = NULL;
+        g_slice_free( AutoOpenCreate, ao );
     }
 }
 
@@ -2923,8 +2931,7 @@ on_popup_file_properties_activate ( GtkMenuItem *menuitem,
         parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
                                             GTK_WIDGET( data->browser ) ) );
     else
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent_win = NULL;
+        parent_win = GTK_WINDOW( data->desktop );
     ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 0 );
@@ -2939,8 +2946,7 @@ on_popup_file_permissions_activate ( GtkMenuItem *menuitem,
         parent_win = GTK_WINDOW( gtk_widget_get_toplevel(
                                             GTK_WIDGET( data->browser ) ) );
     else
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        parent_win = NULL;
+        parent_win = GTK_WINDOW( data->desktop );
     ptk_show_file_properties( parent_win,
                               data->cwd,
                               data->sel_files, 1 );
@@ -3028,12 +3034,8 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
             on_popup_extract_to_activate( NULL, data );
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
-    }
-    else if ( g_str_has_prefix( set->name, "iso_" ) )
-    {
-        xname = set->name + 4;
-        if ( !strcmp( xname, "mount" ) )
-            on_popup_mount_iso( NULL, data );
+        else if ( !strcmp( xname, "conf" ) )
+            on_archive_show_config( NULL, data );
     }
     else if ( g_str_has_prefix( set->name, "new_" ) )
     {

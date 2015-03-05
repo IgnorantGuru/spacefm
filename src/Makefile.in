@@ -119,8 +119,9 @@ am__spacefm_SOURCES_DIST = mime-type/mime-type.c mime-type/mime-type.h \
 	ptk/ptk-bookmarks.c ptk/ptk-bookmarks.h ptk/ptk-input-dialog.c \
 	ptk/ptk-input-dialog.h ptk/ptk-file-task.c ptk/ptk-file-task.h \
 	ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
-	ptk/ptk-clipboard.c ptk/ptk-clipboard.h ptk/ptk-file-menu.c \
-	ptk/ptk-file-menu.h ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
+	ptk/ptk-handler.c ptk/ptk-handler.h ptk/ptk-clipboard.c \
+	ptk/ptk-clipboard.h ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
+	ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
 	ptk/ptk-file-properties.c ptk/ptk-file-properties.h \
 	ptk/ptk-app-chooser.c ptk/ptk-app-chooser.h \
 	exo/exo-icon-view.c exo/exo-icon-view.h exo/exo-tree-view.c \
@@ -167,6 +168,7 @@ am__objects_8 = ptk/spacefm-ptk-file-browser.$(OBJEXT) \
 	ptk/spacefm-ptk-input-dialog.$(OBJEXT) \
 	ptk/spacefm-ptk-file-task.$(OBJEXT) \
 	ptk/spacefm-ptk-file-archiver.$(OBJEXT) \
+	ptk/spacefm-ptk-handler.$(OBJEXT) \
 	ptk/spacefm-ptk-clipboard.$(OBJEXT) \
 	ptk/spacefm-ptk-file-menu.$(OBJEXT) \
 	ptk/spacefm-ptk-file-misc.$(OBJEXT) \
@@ -521,6 +523,7 @@ PTK_SOURCES = \
     ptk/ptk-input-dialog.c ptk/ptk-input-dialog.h \
     ptk/ptk-file-task.c ptk/ptk-file-task.h \
     ptk/ptk-file-archiver.c ptk/ptk-file-archiver.h \
+    ptk/ptk-handler.c ptk/ptk-handler.h \
     ptk/ptk-clipboard.c ptk/ptk-clipboard.h \
     ptk/ptk-file-menu.c ptk/ptk-file-menu.h \
     ptk/ptk-file-misc.c ptk/ptk-file-misc.h \
@@ -768,6 +771,8 @@ ptk/spacefm-ptk-file-task.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-file-archiver.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
+ptk/spacefm-ptk-handler.$(OBJEXT): ptk/$(am__dirstamp) \
+	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-clipboard.$(OBJEXT): ptk/$(am__dirstamp) \
 	ptk/$(DEPDIR)/$(am__dirstamp)
 ptk/spacefm-ptk-file-menu.$(OBJEXT): ptk/$(am__dirstamp) \
@@ -890,6 +895,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-properties.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-file-task.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-handler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-input-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-location-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@ptk/$(DEPDIR)/spacefm-ptk-path-entry.Po@am__quote@
@@ -1380,6 +1386,20 @@ ptk/spacefm-ptk-file-archiver.obj: ptk/ptk-file-archiver.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-file-archiver.c' object='ptk/spacefm-ptk-file-archiver.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-file-archiver.obj `if test -f 'ptk/ptk-file-archiver.c'; then $(CYGPATH_W) 'ptk/ptk-file-archiver.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-file-archiver.c'; fi`
+
+ptk/spacefm-ptk-handler.o: ptk/ptk-handler.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-handler.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-handler.Tpo -c -o ptk/spacefm-ptk-handler.o `test -f 'ptk/ptk-handler.c' || echo '$(srcdir)/'`ptk/ptk-handler.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-handler.Tpo ptk/$(DEPDIR)/spacefm-ptk-handler.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-handler.c' object='ptk/spacefm-ptk-handler.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-handler.o `test -f 'ptk/ptk-handler.c' || echo '$(srcdir)/'`ptk/ptk-handler.c
+
+ptk/spacefm-ptk-handler.obj: ptk/ptk-handler.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-handler.obj -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-handler.Tpo -c -o ptk/spacefm-ptk-handler.obj `if test -f 'ptk/ptk-handler.c'; then $(CYGPATH_W) 'ptk/ptk-handler.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-handler.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) ptk/$(DEPDIR)/spacefm-ptk-handler.Tpo ptk/$(DEPDIR)/spacefm-ptk-handler.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='ptk/ptk-handler.c' object='ptk/spacefm-ptk-handler.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -c -o ptk/spacefm-ptk-handler.obj `if test -f 'ptk/ptk-handler.c'; then $(CYGPATH_W) 'ptk/ptk-handler.c'; else $(CYGPATH_W) '$(srcdir)/ptk/ptk-handler.c'; fi`
 
 ptk/spacefm-ptk-clipboard.o: ptk/ptk-clipboard.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(spacefm_CFLAGS) $(CFLAGS) -MT ptk/spacefm-ptk-clipboard.o -MD -MP -MF ptk/$(DEPDIR)/spacefm-ptk-clipboard.Tpo -c -o ptk/spacefm-ptk-clipboard.o `test -f 'ptk/ptk-clipboard.c' || echo '$(srcdir)/'`ptk/ptk-clipboard.c

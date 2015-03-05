@@ -141,7 +141,8 @@ static gboolean open_file( char* dir, GList* files, PtkFileBrowser* file_browser
 {
     if( files )
     {
-        ptk_open_files_with_app( dir, files, NULL, NULL, FALSE, TRUE );
+/*igtodo test passing file_browser here? */
+        ptk_open_files_with_app( dir, files, NULL, NULL, NULL, FALSE, TRUE );
 
         //sfm open selected dirs
         if ( file_browser )

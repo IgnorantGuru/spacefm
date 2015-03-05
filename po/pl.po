@@ -7,14 +7,15 @@
 # dawid.a <armatys.d@gmail.com>, 2013
 # mati75 <mati75@linuxmint.pl>, 2013-2014
 # mati75 <mati75@linuxmint.pl>, 2013
+# megamann, 2014
 # morfik <morfikov@gmail.com>, 2013
 msgid ""
 msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-27 18:29+0000\n"
-"PO-Revision-Date: 2014-03-27 18:30+0000\n"
-"Last-Translator: ignorantguru <ignorantguru@gmx.com>\n"
+"PO-Revision-Date: 2014-04-10 17:50+0000\n"
+"Last-Translator: megamann\n"
 "Language-Team: Polish (http://www.transifex.com/projects/p/spacefm/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -456,7 +457,7 @@ msgstr "Ikony Paska Narzędzi:"
 
 #: ../data/ui/prefdlg.ui.h:16 ../data/ui/prefdlg2.ui.h:16
 msgid "<b>Icons</b>"
-msgstr ""
+msgstr "<b>Ikony</b>"
 
 #: ../data/ui/prefdlg.ui.h:17 ../data/ui/prefdlg2.ui.h:17
 msgid "Single click opens files"
@@ -480,7 +481,7 @@ msgstr "Maksymalny Rozmiar Obrazu Miniaturki"
 
 #: ../data/ui/prefdlg.ui.h:23 ../data/ui/prefdlg2.ui.h:23
 msgid "<b>File List</b>"
-msgstr ""
+msgstr "<b>Lista plików</b>"
 
 #: ../data/ui/prefdlg.ui.h:24 ../data/ui/prefdlg2.ui.h:24
 msgid "_General"
@@ -737,7 +738,7 @@ msgid ""
 "SpaceFM Dialog creates a custom GTK dialog based on the GUI elements you\n"
 "specify on the command line, features run-time internal/external commands which\n"
 "can modify elements, and outputs evaluatable/parsable results.\n"
-msgstr ""
+msgstr "Okno dialogowe SpaceFM tworzy okno GTK oparte na niestandardowych elementach \ngraficznych, ty podajesz w linii poleceń, funkcje czasu wykonywania \npoleceń wewnętrznych/zewnętrznych, którym można modyfikować elementy\ni wyjściowe wyniki evaluatable/parsable.\n"
 
 #: ../src/cust-dialog.c:3699
 #, c-format
@@ -794,12 +795,12 @@ msgid ""
 "    @FILE    A text file from which to read a value.  In some cases this file\n"
 "             is monitored, so writing a new value to the file will update the\n"
 "             element.  In other cases, the file specifies an initial value.\n"
-msgstr ""
+msgstr "@ FILE Plik tekstowy, z którego można odczytać wartość.\nW niektórych przypadkach plik ten jest monitorowany, więc\npisząc nową wartość do pliku aktualizuje element.\nW innych przypadkach, plik określa wartość początkową.\n"
 
 #: ../src/cust-dialog.c:3719
 #, c-format
 msgid "    SAVEFILE A viewer's or editor's contents are saved to this file.\n"
-msgstr ""
+msgstr "SAVEFILE Zawartość podglądu lub edytora są zapisywane do tego pliku.\n"
 
 #: ../src/cust-dialog.c:3720
 #, c-format
@@ -2102,17 +2103,17 @@ msgstr "spacefm: wewnętrzne żądanie %s jest tylko do odczytu\n"
 #: ../src/main-window.c:7229
 #, c-format
 msgid "spacefm: task property '%s' is read-only\n"
-msgstr ""
+msgstr "spacefm: Cecha żądania '%s' jest tylko do odczytu\n"
 
 #: ../src/main-window.c:7246
 #, c-format
 msgid "spacefm: invalid queue_state '%s'\n"
-msgstr ""
+msgstr "spacefm: Nieprawidłowy stan kolejki '%s'\n"
 
 #: ../src/main-window.c:7264 ../src/main-window.c:7365
 #, c-format
 msgid "spacefm: invalid task property '%s'\n"
-msgstr ""
+msgstr "spacefm: Nieprawidłowa cecha żądania '%s'\n"
 
 #: ../src/main-window.c:7421 ../src/main-window.c:7523
 #: ../src/main-window.c:7544
@@ -2149,7 +2150,7 @@ msgstr ""
 #: ../src/main-window.c:7636
 #, c-format
 msgid "spacefm: invalid keycode '%s'\n"
-msgstr ""
+msgstr "spacefm: nieprawidłowy kod dostępu '%s'\n"
 
 #: ../src/main-window.c:7654
 #, c-format
@@ -2760,7 +2761,7 @@ msgstr "E_dytuj Jako Administrator"
 #. edit command line
 #: ../src/settings.c:7367
 msgid "_Edit Command"
-msgstr ""
+msgstr "_Edytuj polecenie"
 
 #. Properties
 #: ../src/settings.c:7374 ../src/settings.c:9476
@@ -4122,7 +4123,7 @@ msgstr "Po _Nazwie"
 
 #: ../src/settings.c:10452
 msgid "By _Type"
-msgstr ""
+msgstr "Według _Typu"
 
 #: ../src/settings.c:10455
 msgid "By _Date"
@@ -4130,7 +4131,7 @@ msgstr "Po _Dacie"
 
 #: ../src/settings.c:10458
 msgid "By _Size"
-msgstr ""
+msgstr "Według _Rozmairu"
 
 #: ../src/settings.c:10461
 msgid "_Custom"
@@ -6669,7 +6670,7 @@ msgstr ""
 
 #: ../src/desktop/desktop-window.c:2059
 msgid "Unable To Rename"
-msgstr ""
+msgstr "Nie można zmienić nazwy"
 
 #: ../src/desktop/desktop-window.c:2068
 #, c-format

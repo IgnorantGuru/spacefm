@@ -1,10 +1,13 @@
 /*
-*  C Interface: vfs-volume
-*
-*
-* Copyright: See COPYING file that comes with this distribution
-*
+ * SpaceFM vfs-volume.h
+ * 
+ * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
+ * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
+ * 
+ * License: See COPYING file
+ * 
 */
+
 
 #ifndef _VFS_VOLUME_H_
 #define _VFS_VOLUME_H_
@@ -61,6 +64,19 @@ gboolean vfs_volume_is_mounted( VFSVolume *vol );
 
 gboolean vfs_volume_requires_eject( VFSVolume *vol );
 
+/* HAL build also needs this for file handler
+ * ptk_location_view_create_mount_point() */
+typedef struct netmount_t {
+    char* url;
+    char* fstype;
+    char* host;
+    char* ip;
+    char* port;
+    char* user;
+    char* pass;
+    char* path;
+} netmount_t;
+
 #ifdef HAVE_HAL
 gboolean vfs_volume_mount_by_udi( const char* udi, GError** err );
 
@@ -72,19 +88,24 @@ gboolean vfs_volume_eject_by_udi( const char* udi, GError** err );
 
 enum{
     DEVICE_TYPE_BLOCK,
-    DEVICE_TYPE_NETWORK
+    DEVICE_TYPE_NETWORK,
+    DEVICE_TYPE_OTHER     // eg fuseiso mounted file
 };
 
 struct _VFSVolume
 {
+    dev_t devnum;
     int device_type;
     char* device_file;
     char* udi;
     char* disp_name;
     char* icon;
     char* mount_point;
+    guint64 size;
+    char* label;
+    char* fs_type;
+    gboolean should_autounmount : 1;  // a network or ISO file was mounted
     gboolean is_mounted : 1;
-    /* gboolean is_hotpluggable : 1; */
     gboolean is_removable : 1;
     gboolean is_mountable : 1;
     gboolean is_audiocd : 1;
@@ -100,35 +121,31 @@ struct _VFSVolume
     gboolean inhibit_auto : 1;
     time_t automount_time;
     gpointer open_main_window;
-    guint64 size;
-    char* label;
-    char* fs_type;
 };
 
-typedef struct netmount_t {
-    char* url;
-    char* fstype;
-    char* host;
-    char* ip;
-    char* port;
-    char* user;
-    char* pass;
-    char* path;
-} netmount_t;
-
 gboolean vfs_volume_command( char* command, char** output );
-char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options );
+char* vfs_volume_get_mount_command( VFSVolume* vol, char* default_options,
+                                    gboolean* run_in_terminal );
 char* vfs_volume_get_mount_options( VFSVolume* vol, char* options );
 void vfs_volume_automount( VFSVolume* vol );
 void vfs_volume_set_info( VFSVolume* volume );
-char* vfs_volume_device_mount_cmd( const char* device_file, const char* options );
-char* vfs_volume_device_unmount_cmd( const char* device_file );
-char* vfs_volume_device_info( const char* device_file );
-int parse_network_url( const char* url, const char* fstype,
-                                                        netmount_t** netmount );
+char* vfs_volume_device_mount_cmd( VFSVolume* vol, const char* options,
+                                   gboolean* run_in_terminal );
+char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal );
+char* vfs_volume_device_info( VFSVolume* vol );
+char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
+                              const char* options, netmount_t* netmount,
+                              gboolean* run_in_terminal, char** mount_point );
+void vfs_volume_clean_mount_points();
+
+int split_network_url( const char* url, netmount_t** netmount );
 void vfs_volume_special_mounted( const char* device_file );
 gboolean vfs_volume_dir_avoid_changes( const char* dir );
 dev_t get_device_parent( dev_t dev );
+gboolean path_is_mounted_mtab( const char* mtab_file,
+                               const char* path,
+                               char** device_file,
+                               char** fs_type );
 
 #endif
 

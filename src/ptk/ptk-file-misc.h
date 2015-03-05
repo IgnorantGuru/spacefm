@@ -24,6 +24,7 @@ typedef struct _AutoOpenCreate
 {
     char* path;
     PtkFileBrowser* file_browser;
+    DesktopWindow* desktop;
     GFunc callback;
     gboolean open_file;
 }AutoOpenCreate;
@@ -55,15 +56,14 @@ void ptk_show_file_properties( GtkWindow* parent_win,
                                const char* cwd,
                                GList* sel_files, int page );
 
-/*
- * sel_files is a list of VFSFileInfo
+/* sel_files is a list of VFSFileInfo
  * app_desktop is the application used to open the files.
  * If app_desktop == NULL, each file will be opened with its
- * default application.
- */
+ * default application. */
 void ptk_open_files_with_app( const char* cwd,
                               GList* sel_files,
-                              char* app_desktop,
+                              const char* app_desktop,
+                              DesktopWindow* desktop,
                               PtkFileBrowser* file_browser,
                               gboolean xforce, gboolean xnever );
 

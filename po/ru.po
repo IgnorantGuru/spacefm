@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: SpaceFM\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-27 18:29+0000\n"
-"PO-Revision-Date: 2014-03-28 07:30+0000\n"
+"PO-Revision-Date: 2014-04-04 02:40+0000\n"
 "Last-Translator: vp1981 <irk.translator@yandex.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/projects/p/spacefm/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -2776,7 +2776,7 @@ msgstr "Задать значок"
 
 #: ../src/settings.c:8140 ../src/settings.c:9733 ../src/settings.c:10814
 msgid "_Edit"
-msgstr "_Правка"
+msgstr "_Изменить"
 
 #: ../src/settings.c:8150 ../src/settings.c:8363 ../src/settings.c:10539
 #: ../src/settings.c:10667
@@ -4177,11 +4177,11 @@ msgstr "_Выполнить"
 
 #: ../src/settings.c:10530
 msgid "Edi_t"
-msgstr "П_равка"
+msgstr "Из_менить"
 
 #: ../src/settings.c:10533
 msgid "Edit As _Root"
-msgstr "Правка от _имени root"
+msgstr "Изменить от _имени root"
 
 #: ../src/settings.c:10536
 msgid "_Choose..."

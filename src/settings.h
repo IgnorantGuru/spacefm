@@ -366,11 +366,13 @@ XSet* xset_get_plugin_mirror( XSet* set );
 void write_src_functions( FILE* file );
 char* xset_custom_get_script( XSet* set, gboolean create );
 gboolean have_rw_access( const char* path );
+gboolean have_x_access( const char* path );
 char* xset_get_keyname( XSet* set, int key_val, int key_mod );
 void xset_set_key( GtkWidget* parent, XSet* set );
 
 XSet* xset_set( const char* name, const char* var, const char* value );
 XSet* xset_set_set( XSet* set, const char* var, const char* value );
+void xset_custom_delete( XSet* set, gboolean delete_next );
 void xset_add_menu( DesktopWindow* desktop, PtkFileBrowser* file_browser,
                     GtkWidget* menu, GtkAccelGroup *accel_group, char* elements );
 GtkWidget* xset_add_menuitem( DesktopWindow* desktop, PtkFileBrowser* file_browser,

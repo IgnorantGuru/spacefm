@@ -94,7 +94,7 @@ static void on_style_set( GtkWidget* w, GtkStyle* prev );
 static void on_realize( GtkWidget* w );
 static gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt );
 static gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt );
-/* static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data ); */
+static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data );
 
 static void on_drag_begin( GtkWidget* w, GdkDragContext* ctx );
 static gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint time );
@@ -283,7 +283,7 @@ static void desktop_window_class_init(DesktopWindowClass *klass)
     wc->realize = on_realize;
     wc->focus_in_event = on_focus_in;
     wc->focus_out_event = on_focus_out;
-    /* wc->scroll_event = on_scroll; */
+    wc->scroll_event = on_scroll;
     wc->delete_event = (gpointer)gtk_true;
 
     wc->drag_begin = on_drag_begin;
@@ -400,6 +400,7 @@ static void desktop_window_init(DesktopWindow *self)
                                             GDK_BUTTON_PRESS_MASK |
                                             GDK_BUTTON_RELEASE_MASK |
                                             GDK_KEY_PRESS_MASK|
+                                            GDK_SCROLL_MASK |
                                             GDK_PROPERTY_CHANGE_MASK );
 
     gtk_drag_dest_set( (GtkWidget*)self, 0, NULL, 0,
@@ -415,9 +416,19 @@ static void desktop_window_init(DesktopWindow *self)
 }
 
 
-GtkWidget* desktop_window_new(void)
+GtkWidget* desktop_window_new( gboolean transparent )
 {
     GtkWindow* w = (GtkWindow*)g_object_new(DESKTOP_WINDOW_TYPE, NULL);
+    ((DesktopWindow *) w)->transparent = transparent;
+    if ( transparent )
+    {
+        GdkScreen* screen = gdk_screen_get_default();
+        gtk_widget_set_visual((GtkWidget*) w, gdk_screen_get_rgba_visual(screen));
+#if !GTK_CHECK_VERSION (3, 0, 0)
+        gtk_widget_set_colormap((GtkWidget*) w, gdk_screen_get_rgba_colormap(screen));
+#endif
+        gtk_window_stick(w);
+    }
     return (GtkWidget*)w;
 }
 
@@ -500,6 +511,19 @@ gboolean on_expose( GtkWidget* w, GdkEventExpose* evt )
                         evt->area.x, evt->area.y,
                         evt->area.width, evt->area.height );
 */
+
+    if ( self->transparent == TRUE )
+    {
+#if !GTK_CHECK_VERSION (3, 0, 0)
+        cairo_t *cr;
+        cr = gdk_cairo_create( gtk_widget_get_window( w ) );
+#endif
+        cairo_save(cr);
+        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
+        cairo_paint(cr);
+        cairo_restore(cr);
+    }
 
     if( self->rubber_bending )
         paint_rubber_banding_rect( self );
@@ -602,7 +626,14 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
     xdisplay = GDK_DISPLAY_XDISPLAY( gtk_widget_get_display( (GtkWidget*)win) );
     XGetGeometry (xdisplay, GDK_WINDOW_XID( gtk_widget_get_window( (GtkWidget*)win ) ),
                   &xroot, &dummy, &dummy, &dummy, &dummy, &udummy, &depth);
-    xvisual = GDK_VISUAL_XVISUAL (gdk_screen_get_system_visual ( gtk_widget_get_screen ( (GtkWidget*)win) ) );
+    if( win->transparent )
+    {
+        xvisual = GDK_VISUAL_XVISUAL (gdk_screen_get_rgba_visual ( gtk_widget_get_screen ( (GtkWidget*)win) ) );
+    }
+    else
+    {
+        xvisual = GDK_VISUAL_XVISUAL (gdk_screen_get_system_visual ( gtk_widget_get_screen ( (GtkWidget*)win) ) );
+    }
 
     win->bg_type = type;
 
@@ -765,32 +796,35 @@ void desktop_window_set_background( DesktopWindow* win, GdkPixbuf* src_pix, DWBg
 #endif
     gtk_widget_queue_draw( (GtkWidget*)win );
 
-    XGrabServer (xdisplay);
-
-    if( pixmap )
+    if ( !win->transparent )
     {
+        XGrabServer (xdisplay);
+
+        if( pixmap )
+        {
 #if GTK_CHECK_VERSION (3, 0, 0)
-        xpixmap = pixmap;
+            xpixmap = pixmap;
 #else
-        xpixmap = GDK_WINDOW_XID(pixmap);
+            xpixmap = GDK_WINDOW_XID(pixmap);
 #endif
 
-        XChangeProperty( xdisplay,
-                    xroot,
-                    gdk_x11_get_xatom_by_name("_XROOTPMAP_ID"), XA_PIXMAP,
-                    32, PropModeReplace,
-                    (guchar *) &xpixmap, 1);
+            XChangeProperty( xdisplay,
+                        xroot,
+                        gdk_x11_get_xatom_by_name("_XROOTPMAP_ID"), XA_PIXMAP,
+                        32, PropModeReplace,
+                        (guchar *) &xpixmap, 1);
 
-        XSetWindowBackgroundPixmap( xdisplay, xroot, xpixmap );
-    }
-    else
-    {
-        /* FIXME: Anyone knows how to handle this correctly??? */
-    }
-    XClearWindow( xdisplay, xroot );
+            XSetWindowBackgroundPixmap( xdisplay, xroot, xpixmap );
+        }
+        else
+        {
+            /* FIXME: Anyone knows how to handle this correctly??? */
+        }
+        XClearWindow( xdisplay, xroot );
 
-    XUngrabServer( xdisplay );
-    XFlush( xdisplay );
+        XUngrabServer( xdisplay );
+        XFlush( xdisplay );
+    }
 }
 
 void desktop_window_set_icon_size( DesktopWindow* win, int size )
@@ -1122,99 +1156,23 @@ static void update_rubberbanding( DesktopWindow* self, int newx, int newy, gbool
 
 static void open_clicked_item( DesktopWindow* self, DesktopItem* clicked_item )
 {
-    char* path = NULL;
-
     if ( !clicked_item->fi )
         return;
     /* this won't work yet because desktop context_fill doesn't do selected 
      * else if ( xset_opener( self, NULL, 1 ) )
         return;
     */
-    else if ( vfs_file_info_is_dir( clicked_item->fi ) &&
+
+    GList* sel_files = NULL;
+    sel_files = g_list_prepend( sel_files, clicked_item->fi );
+    if ( vfs_file_info_is_dir( clicked_item->fi ) &&
                                                 !app_settings.desk_open_mime )
-    {
         // a folder - open in SpaceFM browser by default
-        GList* sel_files = NULL;
-        sel_files = g_list_prepend( sel_files, clicked_item->fi );
         open_folders( sel_files );
-        g_list_free( sel_files );
-    }
     else /* regular files */
-    {
-        GList* sel_files = NULL;
-        sel_files = g_list_prepend( sel_files, clicked_item->fi );
-        
-        // archive?
-        if( sel_files && !xset_get_b( "arc_def_open" ) )
-        {
-            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            path = g_build_filename( vfs_get_desktop_dir(),
-                                            vfs_file_info_get_name( file ), NULL );
-            vfs_file_info_unref( file );    
-            if ( ptk_file_archiver_is_format_supported( mime_type, TRUE ) )
-            {
-                int no_write_access = ptk_file_browser_no_access ( 
-                                                    vfs_get_desktop_dir(), NULL );
-
-                // first file is archive - use default archive action
-                if ( xset_get_b( "arc_def_ex" ) && !no_write_access )
-                {
-                    ptk_file_archiver_extract( NULL, sel_files,
-                                    vfs_get_desktop_dir(), vfs_get_desktop_dir() );
-                    goto _done;
-                }
-                else if ( xset_get_b( "arc_def_exto" ) || 
-                        ( xset_get_b( "arc_def_ex" ) && no_write_access &&
-                                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) ) )
-                {
-                    ptk_file_archiver_extract( NULL, sel_files, 
-                                                    vfs_get_desktop_dir(), NULL );
-                    goto _done;
-                }
-                else if ( xset_get_b( "arc_def_list" ) && 
-                            !( g_str_has_suffix( path, ".gz" ) && 
-                                            !g_str_has_suffix( path, ".tar.gz" ) ) )
-                {
-                    ptk_file_archiver_extract( NULL, sel_files,
-                                                vfs_get_desktop_dir(), "////LIST" );
-                    goto _done;
-                }
-            }
-        }
-
-        if ( sel_files && xset_get_b( "iso_auto" ) )
-        {
-            VFSFileInfo* file = vfs_file_info_ref( (VFSFileInfo*)sel_files->data );
-            VFSMimeType* mime_type = vfs_file_info_get_mime_type( file );
-            if ( mime_type && !vfs_file_info_is_dir( file ) && (
-                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-cd-image" ) ||
-                    !strcmp( vfs_mime_type_get_type( mime_type ), "application/x-iso9660-image" ) ||
-                    g_str_has_suffix( vfs_file_info_get_name( file ), ".iso" ) ||
-                    g_str_has_suffix( vfs_file_info_get_name( file ), ".img" ) ) )
-            {
-                char* str = g_find_program_in_path( "udevil" );
-                if ( str )
-                {
-                    g_free( str );
-                    str = g_build_filename( vfs_get_desktop_dir(),
-                                                vfs_file_info_get_name( file ), NULL );
-                    mount_iso( NULL, str );
-                    g_free( str );
-                    vfs_file_info_unref( file );
-                    goto _done;
-                }
-            }
-            vfs_file_info_unref( file );
-        }
-
-        ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL, NULL,
-                                                            TRUE, FALSE ); //MOD
-_done:
-        g_free( path );
-        g_list_free( sel_files );
-    }
+        ptk_open_files_with_app( vfs_get_desktop_dir(), sel_files, NULL,
+                                 self, NULL, TRUE, FALSE );
+    g_list_free( sel_files );
 }
 
 void show_desktop_menu( DesktopWindow* self, guint event_button,
@@ -1962,11 +1920,10 @@ void on_drag_data_received( GtkWidget* w, GdkDragContext* ctx, gint x, gint y,
             g_free( files );
             file_list = g_list_reverse( file_list );
             
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
             task = ptk_file_task_new( file_action,
                                       file_list,
                                       dest_dir ? dest_dir : vfs_get_desktop_dir(),
-                                      NULL, NULL );
+                                      GTK_WINDOW( self ), NULL );
             // get insertion box
             if ( self->sort_by == DW_SORT_CUSTOM )
             {
@@ -2392,8 +2349,7 @@ _key_found:
                     desktop_window_sort_items( desktop, by, desktop->sort_type );
                 }
                 else if ( !strcmp( set->name, "desk_pref" ) )
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    fm_edit_preference( NULL, PREF_DESKTOP );
+                    fm_edit_preference( GTK_WINDOW( desktop ), PREF_DESKTOP );
                 else if ( !strcmp( set->name, "desk_open" ) )
                     desktop_window_open_desktop_dir( NULL, desktop );
             }
@@ -2403,29 +2359,22 @@ _key_found:
                 if ( !strcmp( xname, "link" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    // must pass desktop here for callback window
-                    ptk_clipboard_paste_links( NULL,
+                    ptk_clipboard_paste_links( GTK_WINDOW( desktop ),
                                     vfs_get_desktop_dir(), NULL,
                                     (GFunc)desktop_window_insert_task_complete,
-                                    GTK_WINDOW( gtk_widget_get_toplevel(
-                                                GTK_WIDGET( desktop ) ) ) );
+                                    GTK_WINDOW( desktop ) );
                 }
                 else if ( !strcmp( xname, "target" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-                    // must pass desktop here for callback window
-                    ptk_clipboard_paste_targets( NULL,
+                    ptk_clipboard_paste_targets( GTK_WINDOW( desktop ),
                             vfs_get_desktop_dir(),
                             NULL, (GFunc)desktop_window_insert_task_complete,
-                            GTK_WINDOW( gtk_widget_get_toplevel(
-                                        GTK_WIDGET( desktop ) ) ) );
+                            GTK_WINDOW( desktop ) );
                 }
                 else if ( !strcmp( xname, "as" ) )
                 {
                     desktop_window_set_insert_item( desktop );
-                    // must pass desktop here for callback window
                     ptk_file_misc_paste_as( desktop, NULL, vfs_get_desktop_dir(),
                                     (GFunc)desktop_window_insert_task_complete );
                 }
@@ -2518,8 +2467,18 @@ void on_realize( GtkWidget* w )
     DesktopWindow* self = (DesktopWindow*)w;
 
     GTK_WIDGET_CLASS(parent_class)->realize( w );
-    gdk_window_set_type_hint( gtk_widget_get_window(w),
-                              GDK_WINDOW_TYPE_HINT_DESKTOP );
+
+    char *wmname = gdk_x11_screen_get_window_manager_name( gtk_widget_get_screen( w ) );
+    if ( ( self->transparent == TRUE ) &&  !strcmp(wmname, "Compiz") )
+    {
+        gtk_window_set_decorated( GTK_WINDOW(w), FALSE );
+        gtk_window_set_keep_below( GTK_WINDOW(w), TRUE );
+    }
+    else
+    {
+        gdk_window_set_type_hint( gtk_widget_get_window(w),
+                                  GDK_WINDOW_TYPE_HINT_DESKTOP );
+    }
 
     gtk_window_set_skip_pager_hint( GTK_WINDOW(w), TRUE );
     gtk_window_set_skip_taskbar_hint( GTK_WINDOW(w), TRUE );
@@ -2567,14 +2526,11 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     return FALSE;
 }
 
-/*
 gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data )
 {
     forward_event_to_rootwin( gtk_widget_get_screen( w ), ( GdkEvent* ) evt );
     return TRUE;
 }
-*/
-
 
 void on_sort_by_name ( GtkMenuItem *menuitem, DesktopWindow* self )
 {
@@ -2617,7 +2573,9 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
         return;
 
     AutoOpenCreate* ao = (AutoOpenCreate*)aop;
-    DesktopWindow* self = (DesktopWindow*)ao->file_browser;
+    if ( !GTK_IS_WIDGET( ao->desktop ) )
+        return;
+    DesktopWindow* self = ao->desktop;
     
     if ( ao->path && g_file_test( ao->path, G_FILE_TEST_EXISTS ) )
     {
@@ -2668,8 +2626,8 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
                 gdk_threads_leave();
             }
             else
-                ptk_open_files_with_app( cwd, sel_files,
-                                                    NULL, NULL, FALSE, TRUE );
+                ptk_open_files_with_app( cwd, sel_files, NULL,
+                                         self, NULL, FALSE, TRUE );
             vfs_file_info_unref( file );
             g_list_free( sel_files );
         }
@@ -2681,8 +2639,7 @@ void desktop_window_on_autoopen_cb( gpointer task, gpointer aop )
 
 void on_settings( GtkMenuItem *menuitem, DesktopWindow* self )
 {
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    fm_edit_preference( NULL, PREF_DESKTOP );
+    fm_edit_preference( GTK_WINDOW( self ), PREF_DESKTOP );
 }
 
 
@@ -3288,9 +3245,9 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
             folder = set2->desc;
         else
             folder = cwd;
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        path = xset_file_dialog( NULL, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                            _("Choose Location"), folder, NULL );
+        path = xset_file_dialog( GTK_WIDGET( desktop ),
+                                 GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+                                 _("Choose Location"), folder, NULL );
         if ( path && g_file_test( path, G_FILE_TEST_IS_DIR ) )
         {
             if ( g_str_has_prefix( setname, "copy_loc" ) )
@@ -3322,10 +3279,9 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         
         if ( !strcmp( dest_dir, cwd ) )
         {
-            // do not pass desktop parent - some WMs won't bring desktop dlg to top
-            xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
-                                        _("Invalid Destination"), NULL, 0,
-                                        _("Destination same as source"), NULL, NULL );
+            xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
+                                _("Invalid Destination"), NULL, 0,
+                                _("Destination same as source"), NULL, NULL );
             g_free( dest_dir );
             return;
         }
@@ -3347,15 +3303,14 @@ void desktop_window_copycmd( DesktopWindow* desktop, GList* sel_files,
         PtkFileTask* task = ptk_file_task_new( file_action,
                                 file_list,
                                 dest_dir,
-                                NULL,
+                                GTK_WINDOW( desktop ),
                                 NULL );
         ptk_file_task_run( task );
         g_free( dest_dir );
     }
     else
     {
-        // do not pass desktop parent - some WMs won't bring desktop dlg to top
-        xset_msg_dialog( NULL, GTK_MESSAGE_ERROR,
+        xset_msg_dialog( GTK_WIDGET( desktop ), GTK_MESSAGE_ERROR,
                                     _("Invalid Destination"), NULL, 0,
                                     _("Invalid destination"), NULL, NULL );
     }
@@ -4021,8 +3976,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
     else
         mime_type = vfs_mime_type_get_from_type( XDG_MIME_TYPE_DIRECTORY );
 
-    // do not pass desktop parent - some WMs won't bring desktop dlg to top
-    app = (char *) ptk_choose_app_for_mime_type( NULL,
+    app = (char *) ptk_choose_app_for_mime_type( GTK_WINDOW( desktop ),
                                         mime_type, TRUE, TRUE, FALSE, FALSE );
     if ( app )
     {
@@ -4033,7 +3987,7 @@ void desktop_window_add_application( DesktopWindow* desktop )
             PtkFileTask* task = ptk_file_task_new( VFS_FILE_TASK_LINK,
                                                    sel_files,
                                                    vfs_get_desktop_dir(),
-                                                   NULL,
+                                                   GTK_WINDOW( desktop ),
                                                    NULL );
             ptk_file_task_run( task );
         }
