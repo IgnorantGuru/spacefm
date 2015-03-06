@@ -1,6 +1,7 @@
 /*
  * SpaceFM ptk-handler.c
  * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2013-2014 OmegaPhil <OmegaPhil+SpaceFM@gmail.com>
  * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
@@ -338,7 +339,7 @@ const Handler handlers_net[]=
         "ftp",
         "ftp",
         "",
-        "options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\nerr=$?\nsleep 1  # required to prevent disconnect on too fast terminal close\n[[ $err -eq 0 ]]  # set error status\n",
+        "options=\"nonempty\"\nif [ -n \"%user%\" ]; then\n    user=\",user=%user%\"\n    [[ -n \"%pass%\" ]] && user=\"$user:%pass%\"\nfi\n[[ -n \"%port%\" ]] && portcolon=:\necho \">>> curlftpfs -o $options$user ftp://%host%$portcolon%port%%path% %a\"\necho\ncurlftpfs -o $options$user ftp://%host%$portcolon%port%%path% \"%a\"\n[[ $? -eq 0 ]] && sleep 1 && ls \"%%a\"  # set error status or wait until ready\n",
         TRUE,
         "fusermount -u \"%a\"",
         FALSE,
@@ -1236,19 +1237,13 @@ static void on_configure_drag_end( GtkWidget* widget,
     }
 
     // Looping for all handlers
-    gchar* handler_name_unused;  // Not actually used...
     gchar* xset_name;
     gchar* archive_handlers = g_strdup( "" );
     gchar* archive_handlers_temp;
     do
     {
-        // Fetching data from the model based on the iterator. Note that
-        // this variable used for the G_STRING is defined on the stack,
-        // so should be freed for me
-/*igcr memory leak - free these */
         gtk_tree_model_get( GTK_TREE_MODEL( hnd->list ), &iter,
                             COL_XSET_NAME, &xset_name,
-                            COL_HANDLER_NAME, &handler_name_unused,
                             -1 );
 
         archive_handlers_temp = archive_handlers;
@@ -1262,6 +1257,7 @@ static void on_configure_drag_end( GtkWidget* widget,
                 archive_handlers, xset_name );
         }
         g_free(archive_handlers_temp);
+        g_free( xset_name );
     }
     while(gtk_tree_model_iter_next( GTK_TREE_MODEL( hnd->list ), &iter ));
 
@@ -1328,11 +1324,7 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
          &model, &it ) )
     {
         // Succeeded - handlers present
-        // Fetching data from the model based on the iterator. Note that
-        // this variable used for the G_STRING is defined on the stack,
-        // so should be freed for me
-/*igcr  memory leak - xset_name and handler_name_from_model must be freed
- * by you.  See https://developer.gnome.org/gtk3/stable/GtkTreeModel.html#gtk-tree-model-get */
+        // Fetching data from the model based on the iterator.
         gtk_tree_model_get( model, &it,
                             COL_XSET_NAME, &xset_name,
                             COL_HANDLER_NAME, &handler_name_from_model,
@@ -1648,7 +1640,8 @@ static void on_configure_button_press( GtkButton* widget, HandlerData* hnd )
     }
 
 _clean_exit:
-    ;
+    g_free( xset_name );
+    g_free( handler_name_from_model );
 }
 
 static void on_configure_changed( GtkTreeSelection* selection,
@@ -1667,21 +1660,15 @@ static void on_configure_changed( GtkTreeSelection* selection,
         return;
     }
 
-    /* Fetching data from the model based on the iterator. Note that this
-     * variable used for the G_STRING is defined on the stack, so should
-     * be freed for me */
-/*igcr need to fetch handler_name ? */
-    gchar* handler_name;  // Not actually used...
+    // Fetching data from the model based on the iterator.
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
                         COL_XSET_NAME, &xset_name,
-                        COL_HANDLER_NAME, &handler_name,
                         -1 );
 
     // Loading new archive handler values
     config_load_handler_settings( NULL, xset_name, NULL, hnd );
     g_free( xset_name );
-    g_free( handler_name );
     
     /* Focussing archive handler name
      * Selects the text rather than just placing the cursor at the start
@@ -1748,20 +1735,16 @@ static void on_configure_row_activated( GtkTreeView* view,
     if ( !gtk_tree_model_get_iter( model, &it, tree_path ) )
         return;
 
-    // Fetching data from the model based on the iterator. Note that this
-    // variable used for the G_STRING is defined on the stack, so should
-    // be freed for me
-/*igcr memory leaks - free these */
-    gchar* handler_name;  // Not actually used...
+    // Fetching data from the model based on the iterator.
     gchar* xset_name;
     gtk_tree_model_get( model, &it,
                         COL_XSET_NAME, &xset_name,
-                        COL_HANDLER_NAME, &handler_name,
                         -1 );
 
     // Loading new archive handler values
     config_load_handler_settings( NULL, xset_name, NULL, hnd );
-
+    g_free( xset_name );
+    
     // Focussing archive handler name
     // Selects the text rather than just placing the cursor at the start
     // of the text...
@@ -1899,8 +1882,8 @@ static gboolean validate_archive_handler( HandlerData* hnd )
          * that the created dialog does not have an icon set */
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            _("Please enter a valid handler name "
-                            "before saving."), NULL, NULL );
+                            _("Please enter a valid handler name."),
+                            NULL, NULL );
         gtk_widget_grab_focus( hnd->entry_handler_name );
         return FALSE;
     }
@@ -1912,7 +1895,7 @@ static gboolean validate_archive_handler( HandlerData* hnd )
         xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
                             _("Please enter a valid MIME Type or Pathname "
-                            "pattern before saving."),
+                            "pattern."),
                             NULL, NULL );
         gtk_widget_grab_focus( hnd->entry_handler_mime );
         return FALSE;
@@ -1953,12 +1936,11 @@ static gboolean validate_archive_handler( HandlerData* hnd )
             )
         )
         {
-/*igcr memory leak - passing g_strdup_printf - also fits on small screen? */
             xset_msg_dialog( GTK_WIDGET( hnd->dlg ), GTK_MESSAGE_WARNING,
                             _(dialog_titles[hnd->mode]), NULL, FALSE,
-                            g_strdup_printf(_("The following "
-                            "substitution variables should be in the"
-                            " '%s' compression command:\n\n"
+                            _("The following "
+                            "substitution variables should probably be in the "
+                            "compression command:\n\n"
                             "One of the following:\n\n"
                             "%%%%n: First selected file/directory to"
                             " archive\n"
@@ -1967,8 +1949,7 @@ static gboolean validate_archive_handler( HandlerData* hnd )
                             "and one of the following:\n\n"
                             "%%%%o: Resulting single archive\n"
                             "%%%%O: Resulting archive per source "
-                            "file/directory (see %%%%n/%%%%N)"),
-                            handler_name), NULL, NULL );
+                            "file/directory (see %%%%n/%%%%N)"), NULL, NULL );
             gtk_widget_grab_focus( hnd->view_handler_compress );
             ret = FALSE;
             goto _cleanup;
@@ -2007,7 +1988,7 @@ static gboolean validate_archive_handler( HandlerData* hnd )
                             _("The following "
                             "variables should be in the list "
                             "command:\n\n%%%%x: "
-                            "Archive to list",
+                            "Archive to list"),
                             NULL, NULL );
         gtk_widget_grab_focus( hnd->view_handler_list );
         ret = FALSE;
@@ -2147,7 +2128,6 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     /* Create handlers dialog
      * Extra NULL on the NULL-terminated list to placate an irrelevant
      * compilation warning */
-/*igcr file_browser may be null if desktop use later accomodated */
     hnd->parent = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
                                 NULL;
@@ -2617,7 +2597,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
     
     /* Rendering dialog - while loop is used to deal with standard
      * buttons that should not cause the dialog to exit */
-/*igcr need to handle dialog delete event */
+/*igcr need to handle dialog delete event? */
     int response;
     while ( response = gtk_dialog_run( GTK_DIALOG( hnd->dlg ) ) )
     {

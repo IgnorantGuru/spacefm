@@ -1,6 +1,7 @@
 /*
  * SpaceFM ptk-file-archiver.c
  * 
+ * Copyright (C) 2015 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2013-2014 OmegaPhil <OmegaPhil+SpaceFM@gmail.com>
  * Copyright (C) 2014 IgnorantGuru <ignorantguru@gmx.com>
  * Copyright (C) 2006 Hong Jen Yee (PCMan) <pcman.tw (AT) gmail.com>
@@ -103,7 +104,6 @@ static void on_format_changed( GtkComboBox* combo, gpointer user_data )
 {
     int len = 0;
     char *path, *name, *new_name;
-/*igcr when multiple extensions, this function isn't setting the filename correctly */
 
     // Obtaining reference to dialog
     GtkFileChooser* dlg = GTK_FILE_CHOOSER( user_data );
@@ -316,7 +316,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     GtkWidget *hbox_top = gtk_hbox_new( FALSE, 4 );
     GtkWidget *lbl_command = gtk_label_new( NULL );
     gtk_label_set_markup_with_mnemonic( GTK_LABEL( lbl_command ),
-                                        _("Co_mmand:") );
+                                        _("Co_mpress Commands:") );
     gtk_box_pack_start( GTK_BOX( hbox_top ), lbl_command, FALSE, TRUE, 2 );
 
     // Generating a ComboBox with model behind, and saving model for use
@@ -355,8 +355,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     }
 
     // Splitting archive handlers
-/*igcr inefficient to copy all these strings instead of parsing though perhaps
- * fast enough here */
     gchar** archive_handlers = g_strsplit( archive_handlers_s, " ", -1 );
 
     // Debug code
@@ -366,16 +364,17 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     GtkTreeIter iter;
     gchar* xset_name, *extensions;
     XSet* handler_xset;
+    // Get xset name of last used handler
+    xset_name = xset_get_s( "arc_dlg" );  // do not free
+    format = 4;  // default tar.gz
+    n = 0;
     for (i = 0; archive_handlers[i] != NULL; ++i)
     {
         // Fetching handler
         handler_xset = xset_is( archive_handlers[i] );
 
         if ( handler_xset && handler_xset->b == XSET_B_TRUE )
-/*igcr now too slow to load files here - empty command is okay - give a 
-             * warning if user attempts to create archive with no command 
-             * was:
-             * Checking to see if handler is enabled, can cope with
+            /* Checking to see if handler is enabled, can cope with
              * compression and the extension is set - dealing with empty
              * command yet 'run in terminal' still ticked
                                    && handler_xset->y
@@ -401,6 +400,11 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                                 COL_HANDLER_EXTENSIONS, extensions,
                                 -1 );
             g_free( extensions );
+            
+            // Is last used handler?
+            if ( !g_strcmp0( xset_name, handler_xset->name ) )
+                format = n;
+            n++;            
         }
     }
 
@@ -411,13 +415,13 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     gtk_file_chooser_set_filter( GTK_FILE_CHOOSER( dlg ), filter );
 
     // Restoring previous selected handler
+    xset_name = NULL;
     n = gtk_tree_model_iter_n_children( gtk_combo_box_get_model(
                                             GTK_COMBO_BOX( combo )
                                         ), NULL );
-    i = xset_get_int( "arc_dlg", "z" );
-    if ( i < 0 || i > n - 1 )
-        i = 0;
-    gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), i );
+    if ( format < 0 || format > n - 1 )
+        format = 0;
+    gtk_combo_box_set_active( GTK_COMBO_BOX( combo ), format );
 
     // Adding filter box to hbox and connecting callback
     g_signal_connect( combo, "changed", G_CALLBACK( on_format_changed ),
@@ -431,7 +435,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                       2 );
     gtk_widget_show_all( hbox_top );
 
-    /* Loading command for handler, based off the i'th handler */
     GtkTextView* view = (GtkTextView*)gtk_text_view_new();
     gtk_text_view_set_wrap_mode( GTK_TEXT_VIEW( view ), GTK_WRAP_WORD_CHAR );
     GtkWidget* view_scroll = gtk_scrolled_window_new( NULL, NULL );
@@ -442,10 +445,11 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                                       GTK_WIDGET ( view ) );
     g_object_set_data( G_OBJECT( dlg ), "view", view );
 
+    /* Loading command for handler, based off the format handler */
     // Obtaining iterator from string turned into a path into the model
-/*igcr memory leak - g_strdup_printf passed */
-    if(gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
-                                    &iter, g_strdup_printf( "%d", i ) ))
+    str = g_strdup_printf( "%d", format );
+    if ( gtk_tree_model_get_iter_from_string( GTK_TREE_MODEL( list ),
+                                            &iter, str ) )
     {
         gtk_tree_model_get( GTK_TREE_MODEL( list ), &iter,
                             COL_XSET_NAME, &xset_name,
@@ -470,9 +474,10 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     else
     {
         // Recording the fact getting the iter failed
-        g_warning( "Unable to fetch the iter from handler ordinal %d!", i );
+        g_warning( "Unable to fetch the iter from handler ordinal %d!", format );
     };
-
+    g_free( str );
+    
     // Mnemonically attaching widgets to labels
     gtk_label_set_mnemonic_widget( GTK_LABEL( lbl_archive_format ),
                                    combo );
@@ -514,7 +519,9 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
         gtk_file_chooser_set_current_name( GTK_FILE_CHOOSER( dlg ),
                                            dest_file );
         g_free( dest_file );
+        dest_file = NULL;
         g_free( ext );
+        ext = NULL;
 
     }
     gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( dlg ), cwd );
@@ -542,13 +549,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     {
         if ( res == GTK_RESPONSE_OK )
         {
-            // Saving selected archive handler ordinal
-            str = g_strdup_printf( "%d", format );
-            xset_set( "arc_dlg", "z", str );
-            g_free( str );
-
             // Dialog OK'd - fetching archive filename
-/*igcr dest_file freed? */
             dest_file = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
 
             // Fetching archive handler selected
@@ -558,7 +559,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                 // Unable to fetch iter from combo box - warning user and
                 // exiting
                 g_warning( "Unable to fetch iter from combobox!" );
-/*igcr need to destroy dlg, free dest_file, etc, or goto */
+                g_free( dest_file );
+                gtk_widget_destroy( dlg );
                 return;
             }
 
@@ -569,13 +571,12 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                                 -1 );
 
             handler_xset = xset_get( xset_name );
+            // Saving selected archive handler name as default
+            xset_set( "arc_dlg", "s", xset_name );
             g_free( xset_name );
             
             // run in the terminal or not
             run_in_terminal = handler_xset->in_terminal == XSET_B_TRUE;
-
-            // Fetching user-selected handler data
-            format = gtk_combo_box_get_active( GTK_COMBO_BOX( combo ) );
 
             // Get command from text view
             GtkTextBuffer* buf = gtk_text_view_get_buffer( view );
@@ -810,7 +811,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             else
             {
                 s1 = final_command;
-                final_command = g_strconcat( final_command, "; echo; ",
+                final_command = g_strconcat( final_command, "echo\n",
                                              cmd_to_run,
                                              "\n[[ $? -eq 0 ]] || fm_handle_err\n",
                                              NULL );
@@ -827,11 +828,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     {
         /* '%O' isn't present - the normal single command is needed
          * Obtaining valid quoted UTF8 file name for archive to create */
-/*igcr dest_file may be NULL */
         udest_file = g_filename_display_name( dest_file );
-/*igcr dest_file should be freed at function end or it won't be freed unless
- * this else block is run ? */
-        g_free( dest_file );
         char* udest_quote = bash_quote( udest_file );
         g_free( udest_file );
 
@@ -892,11 +889,10 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 
         // Dealing with remaining standard SpaceFM substitutions
         s1 = final_command;
-/*igcr the way you're doing this in two steps, what happens if a filename
- * contains eg "%d" ?  */
         final_command = replace_line_subs( final_command );
         g_free(s1);
     }
+    g_free( dest_file );
 
     /* When ran in a terminal, errors need to result in a pause so that
      * the user can review the situation - in any case an error check
@@ -1035,9 +1031,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
             write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
             xset_set_b( "arc_dlg", create_parent );
-            str = g_strdup_printf( "%d", write_access ? 1 : 0 );
-            xset_set( "arc_dlg", "s", str );
-            g_free( str );
+            xset_set( "arc_dlg", "s", write_access ? "1" : "0" );
         }
 
         // Saving dialog dimensions
@@ -1061,11 +1055,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         // Exiting if user didnt choose an extraction directory
         if( !choose_dir )
             return;
-
-/*igcr choose_dir does need to be freed, but not dest_dir.  Free choose_dir after
- * dest is used */
-        // This DOES NOT need to be freed by me despite the documentation
-        // saying so! Otherwise enjoy ur double free
         dest = choose_dir;
     }
     else
@@ -1356,7 +1345,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         else
         {
             str = final_command;
-            final_command = g_strconcat( final_command, "; echo; ",
+            final_command = g_strconcat( final_command, "echo\n",
                                          cmd, "\n[[ $? -eq 0 ]] || fm_handle_err\n", NULL );
             g_free( str );
         }
@@ -1378,7 +1367,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
      * permissions and making such owned files writeable may be a
      * security issue */
     if (!list_contents && write_access && geteuid() != 0)
-        perm = g_strdup_printf( "; chmod -R u+rwX %s/* || fm_handle_err",
+        perm = g_strdup_printf( "chmod -R u+rwX %s || fm_handle_err\n",
                                 dest_quote );
     else perm = g_strdup( "" );
 
@@ -1394,6 +1383,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     g_free( perm );
     g_free( dest_quote );
     g_free( parent_quote );
+    g_free( choose_dir );
 
     // Creating task
     char* task_name = g_strdup_printf( _("Extract %s"),
@@ -1431,6 +1421,5 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     /* Clearing up - final_command does not need freeing, as this
      * is freed by the task */
     g_strfreev( archive_handlers );
-    g_free( choose_dir );
 }
 

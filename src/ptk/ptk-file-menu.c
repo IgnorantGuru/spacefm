@@ -3034,7 +3034,7 @@ void ptk_file_menu_action( DesktopWindow* desktop, PtkFileBrowser* browser,
             on_popup_extract_to_activate( NULL, data );
         else if ( !strcmp( xname, "extract" ) )
             on_popup_extract_list_activate( NULL, data );
-        else if ( !strcmp( xname, "conf" ) )
+        else if ( !strcmp( xname, "conf2" ) )
             on_archive_show_config( NULL, data );
     }
     else if ( g_str_has_prefix( set->name, "new_" ) )

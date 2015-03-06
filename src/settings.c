@@ -10857,6 +10857,7 @@ void xset_defaults()
 
         set = xset_set( "arc_def_write", "lbl", _("_Write Access") );
         set->menu_style = XSET_MENU_CHECK;
+        set->b = XSET_B_TRUE;
 
         set = xset_set( "arc_conf2", "label", _("Archive _Handlers") );
         xset_set_set( set, "icon", "gtk-preferences" );
