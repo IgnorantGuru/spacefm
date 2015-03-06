@@ -259,7 +259,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 /*igcr lots of strings in this function - should double-check usage of each
  * and verify no leaks */
     char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
-        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
+        *ext = NULL, *s1 = NULL, *s2 = NULL, *str = NULL, *udest_file = NULL,
         *archive_name = NULL, *final_command = NULL;
     int i, n, format, res;
 
@@ -779,7 +779,16 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 
             /* Bash quoting desc - desc original value comes from the
              * VFSFileInfo struct and therefore should not be freed */
-            desc = bash_quote( desc );
+            if ( desc[0] == '-' )
+            {
+                // special handling for filename starting with a dash
+                // due to tar interpreting it as option
+                s1 = g_strdup_printf( "./%s", desc );
+                desc = bash_quote( s1 );
+                g_free( s1 );
+            }
+            else
+                desc = bash_quote( desc );
 
             // Detecting first run
             if (i == 0)
@@ -839,15 +848,25 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
 
         if (files)
         {
-            desc = bash_quote( (char *) vfs_file_info_get_name(
-                                            (VFSFileInfo*) files->data ) );
+            desc = vfs_file_info_get_name( (VFSFileInfo*) files->data );
+            if ( desc[0] == '-' )
+            {
+                // special handling for filename starting with a dash
+                // due to tar interpreting it as option
+                s1 = g_strdup_printf( "./%s", desc );
+                desc = bash_quote( s1 );
+                g_free( s1 );
+            }
+            else
+                desc = bash_quote( desc );
 
             // Dealing with first selected file substitution
             s1 = final_command;
             final_command = replace_string( final_command, "%n", desc,
                                             FALSE );
             g_free(s1);
-
+            g_free( desc );
+            
             /* Generating string of selected files/directories to archive if
              * '%N' is present */
             if (g_strstr_len( final_command, -1, "%N" ))
@@ -857,8 +876,19 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
                 {
                     // FIXME: Maybe we should consider filename encoding here.
                     str = s1;
-                    desc = bash_quote( (char *) vfs_file_info_get_name(
-                                                    (VFSFileInfo*) l->data ) );
+
+                    desc = vfs_file_info_get_name( (VFSFileInfo*) l->data );
+                    if ( desc[0] == '-' )
+                    {
+                        // special handling for filename starting with a dash
+                        // due to tar interpreting it as option
+                        s2 = g_strdup_printf( "./%s", desc );
+                        desc = bash_quote( s2 );
+                        g_free( s2 );
+                    }
+                    else
+                        desc = bash_quote( desc );
+
                     if (g_strcmp0( s1, "" ) <= 0)
                     {
                         s1 = g_strdup( desc );
