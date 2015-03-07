@@ -1155,7 +1155,7 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <p>Note that some options, such as nosuid, may be added by your mount program even if you don't include them.  Options specified in fstab may take precedence.
 
-<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate Device Handler.
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate <a href="#handlers-dev">Device Handler</a>.
 
 <!-- #Change Detection #chdet -->
 Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
@@ -2640,7 +2640,7 @@ The Unmount text box contains the commands which will be run if this handler is 
 
 (Note:  Because udisks v1 does not return a proper error status on error, the above lines examine the output and set the exit status if appropriate, which triggers an error popup in SpaceFM.)
 
-<p>If a handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will automatically attempt to use udevil, pmount, udisks2, or udisks1 to unmount the device (it will use whatever is installed, in this order of preference).
+<p>If a handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will automatically attempt to use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pmount, udisks2, or udisks1 to unmount the device (it will use whatever is installed, in this order of preference).
 
 <!-- # Properties -->
 The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
