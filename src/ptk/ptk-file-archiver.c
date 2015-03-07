@@ -249,6 +249,60 @@ static char* generate_bash_error_function( gboolean run_in_terminal,
         finished_with_errors, error_pause );
 }
 
+char* replace_archive_subs( const char* line, const char* n, const char* N,
+                            const char* o )
+{
+    char* s;
+    char* old_s;
+    char* sub;
+    char* percent;
+    char ch;
+
+    if ( !line )
+        return g_strdup( "" );
+    
+    s = g_strdup( "" );
+    char* ptr = (char*) line;
+    while ( ptr[0] )
+    {
+        percent = strchr( ptr, '%' );
+        if ( !percent )
+        {
+            // no more percents - copy end of string
+            old_s = s;
+            s = g_strdup_printf( "%s%s", s, ptr );
+            g_free( old_s );
+            break;
+        }
+        if ( percent[1] == 'n' )
+            sub = (char*) n;
+        else if ( percent[1] == 'N' )
+            sub = (char*) N;
+        else if ( percent[1] == 'o' || percent[1] == 'O' )
+            sub = (char*) o;
+        else
+        {
+            // not % n N o or O - copy ptr to percent
+            ch = percent[1];  // save the character after percent, change to null
+            percent[1] = '\0';
+            old_s = s;
+            s = g_strdup_printf( "%s%s", s, ptr );
+            g_free( old_s );
+            percent[1] = ch;  // restore character after percent
+            ptr = percent + 1;
+            continue;
+        }
+        // copy ptr to percent - 1 and sub
+        percent[0] = '\0';   // change % to end of string
+        old_s = s;
+        s = g_strdup_printf( "%s%s%s", s, ptr, sub );
+        g_free( old_s );
+        percent[0] = '%';    // restore %
+        ptr = percent + 2;
+    }
+    return s;
+}
+
 void ptk_file_archiver_create( DesktopWindow *desktop,
                                PtkFileBrowser *file_browser, GList *files,
                                const char *cwd )
@@ -258,8 +312,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     GtkFileFilter* filter;
 /*igcr lots of strings in this function - should double-check usage of each
  * and verify no leaks */
-    char* cmd = NULL, *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
-        *ext = NULL, *s1 = NULL, *s2 = NULL, *str = NULL, *udest_file = NULL,
+    char *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
+        *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
         *archive_name = NULL, *final_command = NULL;
     int i, n, format, res;
 
@@ -746,6 +800,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     // Destroying dialog
     gtk_widget_destroy( dlg );
 
+    // Make Archive Creation Command
+
     // Dealing with separate archives for each source file/directory ('%O')
     if (g_strstr_len( command, -1, "%O" ))
     {
@@ -761,7 +817,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
              l && ( i == 0 || g_strstr_len( command, -1, "%N" ) );
              l = l->next, ++i)
         {
-            // FIXME: Maybe we should consider filename encoding here.
             desc = (char *) vfs_file_info_get_name(
                                             (VFSFileInfo*) l->data );
 
@@ -769,13 +824,11 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
              * so the resulting archive name is based on the filename and
              * substituted every time */
 
-            // Obtaining archive name, quoting and substituting
+            // Obtaining archive name, quoting and substituting for %O
             archive_name = g_strconcat( desc, ext, NULL );
             s1 = archive_name;
             archive_name = bash_quote( archive_name );
             g_free(s1);
-            cmd = replace_string( command, "%O", archive_name, FALSE );
-            g_free(archive_name);
 
             /* Bash quoting desc - desc original value comes from the
              * VFSFileInfo struct and therefore should not be freed */
@@ -789,138 +842,98 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             }
             else
                 desc = bash_quote( desc );
-
-            // Detecting first run
-            if (i == 0)
-            {
-                // Replacing out '%n' with 1st file
-                s1 = cmd;
-                cmd = replace_string( cmd, "%n", desc, FALSE );
-                g_free(s1);
-
-                // Removing '%n' from command - its used up
-                s1 = command;
-                command = replace_string( command, "%n", "", FALSE );
-                g_free(s1);
-            }
-
-            // Replacing out '%N' with nth file (NOT ALL FILES)
-            cmd_to_run = replace_string( cmd, "%N", desc, FALSE );
-
-            // Dealing with remaining standard SpaceFM substitutions
-            s1 = cmd_to_run;
-            cmd_to_run = replace_line_subs( cmd_to_run );
-            g_free(s1);
-
+            
+            // Replace sub vars  %n %N %O (and erroneous %o treat as %O)
+            cmd_to_run = replace_archive_subs( command,
+                            i == 0 ? desc : "",  // first run only %n = desc
+                            desc,  // Replace %N with nth file (NOT ALL FILES)
+                            archive_name );
+            g_free( archive_name );
+            g_free( desc );
+            
             // Appending to final command as appropriate
             if (i == 0)
                 final_command = g_strconcat( cmd_to_run,
-                                             "\n[[ $? -eq 0 ]] || fm_handle_err\n",
-                                             NULL );
+                                        "\n[[ $? -eq 0 ]] || fm_handle_err\n",
+                                        NULL );
             else
             {
                 s1 = final_command;
                 final_command = g_strconcat( final_command, "echo\n",
-                                             cmd_to_run,
-                                             "\n[[ $? -eq 0 ]] || fm_handle_err\n",
-                                             NULL );
+                                        cmd_to_run,
+                                        "\n[[ $? -eq 0 ]] || fm_handle_err\n",
+                                        NULL );
                 g_free(s1);
             }
-
-            // Cleaning up
-            g_free( desc );
-            g_free( cmd );
             g_free( cmd_to_run );
         }
     }
     else
     {
         /* '%O' isn't present - the normal single command is needed
-         * Obtaining valid quoted UTF8 file name for archive to create */
+         * Obtaining valid quoted UTF8 file name %o for archive to create */
         udest_file = g_filename_display_name( dest_file );
         char* udest_quote = bash_quote( udest_file );
         g_free( udest_file );
-
-        // Inserting archive name into appropriate place in command
-        final_command = replace_string( command, "%o", udest_quote,
-                                        FALSE );
-        g_free( udest_quote );
-
-        if (files)
+        char* all = g_strdup ( "" );
+        char* first;
+        if ( files )
         {
-            desc = vfs_file_info_get_name( (VFSFileInfo*) files->data );
+            desc = (char*) vfs_file_info_get_name( (VFSFileInfo*) files->data );
             if ( desc[0] == '-' )
             {
                 // special handling for filename starting with a dash
                 // due to tar interpreting it as option
                 s1 = g_strdup_printf( "./%s", desc );
-                desc = bash_quote( s1 );
+                first = bash_quote( s1 );
                 g_free( s1 );
             }
             else
-                desc = bash_quote( desc );
-
-            // Dealing with first selected file substitution
-            s1 = final_command;
-            final_command = replace_string( final_command, "%n", desc,
-                                            FALSE );
-            g_free(s1);
-            g_free( desc );
+                first = bash_quote( desc );
             
             /* Generating string of selected files/directories to archive if
              * '%N' is present */
-            if (g_strstr_len( final_command, -1, "%N" ))
+            if ( g_strstr_len( command, -1, "%N" ) )
             {
-                s1 = g_strdup( "" );
                 for( l = files; l; l = l->next)
                 {
-                    // FIXME: Maybe we should consider filename encoding here.
-                    str = s1;
-
-                    desc = vfs_file_info_get_name( (VFSFileInfo*) l->data );
+                    desc = (char*) vfs_file_info_get_name( (VFSFileInfo*) l->data );
                     if ( desc[0] == '-' )
                     {
                         // special handling for filename starting with a dash
                         // due to tar interpreting it as option
-                        s2 = g_strdup_printf( "./%s", desc );
-                        desc = bash_quote( s2 );
-                        g_free( s2 );
+                        s1 = g_strdup_printf( "./%s", desc );
+                        desc = bash_quote( s1 );
+                        g_free( s1 );
                     }
                     else
                         desc = bash_quote( desc );
 
-                    if (g_strcmp0( s1, "" ) <= 0)
-                    {
-                        s1 = g_strdup( desc );
-                    }
-                    else
-                    {
-                        s1 = g_strdup_printf( "%s %s", s1, desc );
-                    }
-                    g_free( desc );
+                    str = all;
+                    all = g_strdup_printf( "%s%s%s", all,
+                                           all[0] ? " " : "", desc );
                     g_free( str );
+                    g_free( desc );
                 }
-
-                str = final_command;
-                final_command = replace_string( final_command, "%N", s1,
-                                                FALSE );
-
-                // Cleaning up
-                g_free( str );
-                g_free( s1 );
             }
-
-            // Enforcing error check
-            str = final_command;
-            final_command = g_strconcat( final_command, "\n[[ $? -eq 0 ]] || fm_handle_err\n",
-                                         NULL );
-            g_free( str );
         }
-
-        // Dealing with remaining standard SpaceFM substitutions
-        s1 = final_command;
-        final_command = replace_line_subs( final_command );
-        g_free(s1);
+        else
+        {
+            // no files selected!
+            first = g_strdup( "" );
+        }
+        
+        // Replace sub vars  %n %N %o
+        cmd_to_run = replace_archive_subs( command, first, all, udest_quote );
+        
+        // Enforce error check
+        final_command = g_strconcat( cmd_to_run,
+                                     "\n[[ $? -eq 0 ]] || fm_handle_err\n",
+                                     NULL );
+        g_free( cmd_to_run );
+        g_free( udest_quote );
+        g_free( first );
+        g_free( all );
     }
     g_free( dest_file );
 
