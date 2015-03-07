@@ -246,7 +246,19 @@ const Handler handlers_arc[]=
         "gzip -cd %x > %G",
         FALSE,
         "gunzip -l %x",
-        TRUE
+        FALSE
+    },
+    {
+        "hand_arc_+xz",
+        "XZ",
+        "application/x-xz",
+        "*.xz",
+        "xz -cz %N > %O",
+        FALSE,
+        "xz -cd %x > %G",
+        FALSE,
+        "xz -tv %x",
+        FALSE
     }
 };
 

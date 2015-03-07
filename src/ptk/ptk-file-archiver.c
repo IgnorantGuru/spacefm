@@ -1507,7 +1507,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     task->task->exec_sync = !in_term;
     task->task->exec_show_error = TRUE;
     task->task->exec_scroll_lock = FALSE;
-    task->task->exec_show_output = FALSE;
+    task->task->exec_show_output = list_contents && !in_term;
     task->task->exec_terminal = in_term;
     task->task->exec_keep_terminal = keep_term;
     task->task->exec_export = TRUE;  // Setup SpaceFM bash variables
