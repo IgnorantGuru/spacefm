@@ -217,7 +217,7 @@ Or, to see the help for alternate build options, run:
 
 <p>To see SpaceFM's command line usage run <code>spacefm --help</code>
 <pre>Usage:
-  spacefm [OPTION...] [DIR | FILE | URL]... 
+  spacefm [OPTION...] [DIR | FILE | URL | DEVICE]... 
 
 Help Options:
   -h, --help                   Show help options
@@ -253,8 +253,7 @@ Application Options:
 
 <p>IMPORTANT:  The config directory path may not contain spaces or other special characters - keep it simple.  Also, if /etc/xdg/spacefm exists, its contents will be copied to the config directory if it doesn't exist at startup.
 
-<!-- @Invocation @Windows -->
-
+<!-- @Invocation @Opening Windows #windows -->
 <p>To open an initial SpaceFM window, run 'spacefm' with or without a folder specification:
 <pre>    spacefm
 
@@ -319,10 +318,16 @@ Application Options:
 </pre>
 The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A shorter sleep time of 0.1 may also work on your system.
 
-<p><b>Opening Files</b><br>
-If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
+<!-- @Invocation @Opening Files, URLs, and Devices #file -->
+<p>If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type (File Handlers are not used), but will not open a SpaceFM window:
 <pre>    # open a file:
     spacefm /etc/fstab</pre>
+
+To open a URL (see <a href="#handlers-pro">Protocol Handlers</a>):
+<pre>    spacefm ftp://ftp.us.debian.org/debian/</pre>
+
+To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or open an already mounted device:
+<pre>    spacefm /dev/sdd1</pre>
 
 
 <!-- @Invocation @GTK Themes -->
