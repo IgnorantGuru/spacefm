@@ -137,20 +137,20 @@ typedef struct _Handler
 const Handler handlers_arc[]=
 {
     /* In compress commands:
-    *     %n: First selected filename to archive, or (with %O) a single filename
-    *     %N: All selected filenames/directories to archive (standard)
-    *     %o: Resulting single archive file
-    *     %O: Resulting archive per source file/directory (use changes %n meaning)
+    *   %n: First selected filename/dir to archive
+    *   %N: All selected filenames/dirs to archive, or (with %O) a single filename
+    *   %o: Resulting single archive file
+    *   %O: Resulting archive per source file/directory (use changes %N meaning)
     *
     * In extract commands:
-    *     %x: Archive to extract
-    *     %g: Extract To tarGet dir + optional subfolder
-    *     %G: Extract To tarGet dir, never with subfolder
+    *   %x: Archive file to extract
+    *   %g: Unique extraction target filename with optional subfolder
+    *   %G: Unique extraction target filename, never with subfolder
     *
     * In list commands:
     *     %x: Archive to list
     *
-    * Plus standard substitution variables are accepted.
+    * Plus standard bash variables are accepted.
     */
     {
         "hand_arc_+7z",
