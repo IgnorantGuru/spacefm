@@ -786,8 +786,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
         }
         else if ( res == GTK_RESPONSE_HELP )
         {
-            // TODO: Sort out proper help
-            xset_show_help( dlg, NULL, "#designmode-style-context" );
+            xset_show_help( dlg, NULL, "#handlers-arc" );
         }
         else
         {
@@ -1026,7 +1025,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     char *dest_quote = NULL, *full_path = NULL, *full_quote = NULL,
         *mkparent = NULL, *perm = NULL,
         *cmd = NULL, *str = NULL, *final_command = NULL, *s1 = NULL, *extension;
-    int i, n, j;
+    int i, n, j, res;
     struct stat64 statbuf;
 
     // Making sure files to act on have been passed
@@ -1050,10 +1049,42 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         /* It hasn't - generating dialog to ask user. Only dealing with
          * user-writable contents if the user isn't root */
         dlg = gtk_file_chooser_dialog_new( _("Extract To"),
-                                dlgparent? GTK_WINDOW( dlgparent ) : NULL,
-                                GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-                                GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                GTK_STOCK_OK, GTK_RESPONSE_OK, NULL );
+                                dlgparent ? GTK_WINDOW( dlgparent ) : NULL,
+                                           GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER, NULL,
+                                           NULL );
+
+        /* Adding standard buttons and saving references in the dialog
+         * 'Configure' button has custom text but a stock image */
+        GtkButton* btn_configure = GTK_BUTTON( gtk_dialog_add_button(
+                                                    GTK_DIALOG( dlg ),
+                                                    _("Conf_igure"),
+                                                    GTK_RESPONSE_NONE ) );
+        GtkWidget* btn_configure_image = xset_get_image( "GTK_STOCK_PREFERENCES",
+                                                    GTK_ICON_SIZE_BUTTON );
+        gtk_button_set_image( GTK_BUTTON( btn_configure ),
+                              GTK_WIDGET ( btn_configure_image ) );
+        g_object_set_data( G_OBJECT( dlg ), "btn_configure",
+                           GTK_BUTTON( btn_configure ) );
+        g_object_set_data( G_OBJECT( dlg ), "btn_cancel",
+                            gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                    GTK_STOCK_CANCEL,
+                                                    GTK_RESPONSE_CANCEL ) );
+        g_object_set_data( G_OBJECT( dlg ), "btn_ok",
+                            gtk_dialog_add_button( GTK_DIALOG( dlg ),
+                                                    GTK_STOCK_OK,
+                                                    GTK_RESPONSE_OK ) );
+
+        /* Adding the help button but preventing it from taking the focus on
+         * click */
+        gtk_button_set_focus_on_click(
+                                        GTK_BUTTON(
+                                            gtk_dialog_add_button(
+                                                GTK_DIALOG( dlg ),
+                                                GTK_STOCK_HELP,
+                                                GTK_RESPONSE_HELP
+                                            )
+                                        ),
+                                        FALSE );
 
         GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
         GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
@@ -1095,16 +1126,39 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         }
 
         // Displaying dialog
-        if( gtk_dialog_run( GTK_DIALOG(dlg) ) == GTK_RESPONSE_OK )
+        while( res = gtk_dialog_run( GTK_DIALOG( dlg ) ) )
         {
-            // Fetching user-specified settings and saving
-            choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
-            create_parent = gtk_toggle_button_get_active(
-                                        GTK_TOGGLE_BUTTON( chk_parent ) );
-            write_access = create_parent && 
-                gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
-            xset_set_b( "arc_dlg", create_parent );
-            xset_set( "arc_dlg", "s", write_access ? "1" : "0" );
+            if ( res == GTK_RESPONSE_OK )
+            {
+                // Fetching user-specified settings and saving
+                choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
+                create_parent = gtk_toggle_button_get_active(
+                                            GTK_TOGGLE_BUTTON( chk_parent ) );
+                write_access = create_parent && 
+                    gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
+                xset_set_b( "arc_dlg", create_parent );
+                xset_set( "arc_dlg", "s", write_access ? "1" : "0" );
+                break;
+            }
+            else if ( res == GTK_RESPONSE_NONE )
+            {
+                /* User wants to configure archive handlers - call up the
+                 * config dialog then exit, as this dialog would need to be
+                 * reconstructed if changes occur */
+                gtk_widget_destroy( dlg );
+                ptk_handler_show_config( HANDLER_MODE_ARC, file_browser, NULL );
+                return;
+            }
+            else if ( res == GTK_RESPONSE_HELP )
+            {
+                xset_show_help( dlg, NULL, "#handlers-arc" );
+            }
+            else
+            {
+                // Destroying dialog
+                gtk_widget_destroy( dlg );
+                return;
+            }
         }
 
         // Saving dialog dimensions
