@@ -960,12 +960,8 @@ GtkWidget* ptk_file_menu_new( DesktopWindow* desktop, PtkFileBrowser* browser,
             xset_set_cb( "arc_def_list", on_archive_default, set );
             xset_set_ob2( set, NULL, set_radio );
 
-            if ( geteuid() == 0 )
-            {
-                set = xset_get( "arc_def_write" );
-                set->b = XSET_B_FALSE;
-                set->disable = TRUE;
-            }
+            set = xset_get( "arc_def_write" );
+            set->disable = geteuid() == 0 || !xset_get_b( "arc_def_parent" );
             
             xset_set_cb( "arc_conf2", on_archive_show_config, data );
             
@@ -2811,7 +2807,7 @@ void on_popup_extract_list_activate ( GtkMenuItem *menuitem,
                                       PtkFileMenu* data )
 {
     ptk_file_archiver_extract( data->desktop, data->browser, data->sel_files,
-                               data->cwd, NULL, HANDLER_EXTRACT );
+                               data->cwd, NULL, HANDLER_LIST );
 }
 
 void on_autoopen_create_cb( gpointer task, AutoOpenCreate* ao )

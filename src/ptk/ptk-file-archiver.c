@@ -250,7 +250,7 @@ static char* generate_bash_error_function( gboolean run_in_terminal,
 }
 
 char* replace_archive_subs( const char* line, const char* n, const char* N,
-                            const char* o )
+                            const char* o, const char* x, const char* g )
 {
     char* s;
     char* old_s;
@@ -274,15 +274,30 @@ char* replace_archive_subs( const char* line, const char* n, const char* N,
             g_free( old_s );
             break;
         }
-        if ( percent[1] == 'n' )
+        if ( percent[1] == 'n' && n )
             sub = (char*) n;
-        else if ( percent[1] == 'N' )
+        else if ( percent[1] == 'N' && N )
             sub = (char*) N;
-        else if ( percent[1] == 'o' || percent[1] == 'O' )
+        else if ( ( percent[1] == 'o' || percent[1] == 'O' ) && o )
             sub = (char*) o;
+        else if ( percent[1] == 'x' && x )
+            sub = (char*) x;
+        else if ( ( percent[1] == 'g' || percent[1] == 'G' ) && g )
+            sub = (char*) g;
+        else if ( percent[1] == '%' )
+        {
+            // double percent %% - reduce to single and skip
+            percent[1] = '\0';
+            old_s = s;
+            s = g_strdup_printf( "%s%s", s, ptr );
+            g_free( old_s );
+            percent[1] = '%';
+            ptr = percent + 2;
+            continue;
+        }
         else
         {
-            // not % n N o or O - copy ptr to percent
+            // not recognized % - copy ptr to percent literally
             ch = percent[1];  // save the character after percent, change to null
             percent[1] = '\0';
             old_s = s;
@@ -847,7 +862,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
             cmd_to_run = replace_archive_subs( command,
                             i == 0 ? desc : "",  // first run only %n = desc
                             desc,  // Replace %N with nth file (NOT ALL FILES)
-                            archive_name );
+                            archive_name, NULL, NULL );
             g_free( archive_name );
             g_free( desc );
             
@@ -924,7 +939,8 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
         }
         
         // Replace sub vars  %n %N %o
-        cmd_to_run = replace_archive_subs( command, first, all, udest_quote );
+        cmd_to_run = replace_archive_subs( command, first, all, udest_quote,
+                                           NULL, NULL );
         
         // Enforce error check
         final_command = g_strconcat( cmd_to_run,
@@ -984,6 +1000,14 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     ptk_file_task_run( task );
 }
 
+static void on_create_subfolder_toggled( GtkToggleButton *togglebutton,
+                                         GtkWidget* chk_write )
+{
+    gboolean enabled = gtk_toggle_button_get_active(
+                                        GTK_TOGGLE_BUTTON ( togglebutton ) );
+    gtk_widget_set_sensitive( chk_write, enabled && geteuid() != 0 );
+}
+
 void ptk_file_archiver_extract( DesktopWindow *desktop,
                                 PtkFileBrowser *file_browser,
                                 GList *files, const char *cwd,
@@ -1034,14 +1058,18 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         GtkWidget* hbox = gtk_hbox_new( FALSE, 10 );
         GtkWidget* chk_parent = gtk_check_button_new_with_mnemonic(
                                             _("Cre_ate subfolder(s)") );
-        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
-                                              xset_get_b( "arc_dlg" ) );
         GtkWidget* chk_write = gtk_check_button_new_with_mnemonic(
                                                     _("Make contents "
                                                     "user-_writable") );
+        gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_parent ),
+                                              xset_get_b( "arc_dlg" ) );
         gtk_toggle_button_set_active( GTK_TOGGLE_BUTTON( chk_write ),
                                 xset_get_int( "arc_dlg", "s" ) == 1 &&
                                 geteuid() != 0 );
+        gtk_widget_set_sensitive( chk_write, xset_get_b( "arc_dlg" ) &&
+                                             geteuid() != 0 );
+        g_signal_connect( G_OBJECT( chk_parent ), "toggled",
+                    G_CALLBACK ( on_create_subfolder_toggled ), chk_write );
         gtk_box_pack_start( GTK_BOX(hbox), chk_parent, FALSE, FALSE, 6 );
         gtk_box_pack_start( GTK_BOX(hbox), chk_write, FALSE, FALSE, 6 );
         gtk_widget_show_all( hbox );
@@ -1071,8 +1099,10 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
         {
             // Fetching user-specified settings and saving
             choose_dir = gtk_file_chooser_get_filename( GTK_FILE_CHOOSER( dlg ) );
-            create_parent = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_parent ) );
-            write_access = gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
+            create_parent = gtk_toggle_button_get_active(
+                                        GTK_TOGGLE_BUTTON( chk_parent ) );
+            write_access = create_parent && 
+                gtk_toggle_button_get_active( GTK_TOGGLE_BUTTON( chk_write ) );
             xset_set_b( "arc_dlg", create_parent );
             xset_set( "arc_dlg", "s", write_access ? "1" : "0" );
         }
@@ -1104,14 +1134,14 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     {
         // Extraction directory specified - loading defaults
         create_parent = xset_get_b( "arc_def_parent" );
-        write_access = xset_get_b( "arc_def_write" );
+        write_access = create_parent && xset_get_b( "arc_def_write" );
 
         dest = dest_dir;
     }
 
     /* Quoting destination directory (doing this outside of the later
      * loop as its needed after the selected files loop completes) */
-    dest_quote = bash_quote( dest );
+    dest_quote = bash_quote( dest ? dest : cwd );
 
     // Fetching available archive handlers and splitting
     char* archive_handlers_s = xset_get_s( "arc_conf2" );
@@ -1170,12 +1200,15 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             in_term = archive_handler_run_in_term( handler_xset,
                                                    archive_operation );
 
-        full_quote = bash_quote( full_path );
+        // Archive to list or extract:
+        full_quote = bash_quote( full_path );   // %x
+        gchar* extract_target = NULL;           // %g or %G
+        gchar* mkparent = g_strdup( "" );
+        perm = g_strdup( "" );
 
-        // Checking if the operation is to list an archive(s)
         if ( list_contents )
         {
-            // It is - get command
+            // List archive contents only
             char* err_msg = ptk_handler_load_script( HANDLER_MODE_ARC,
                                             HANDLER_LIST, handler_xset,
                                             NULL, &cmd );
@@ -1185,10 +1218,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 g_free( err_msg );
                 cmd = g_strdup( "" );
             }
-
-            str = cmd;            
-            cmd = replace_string( cmd, "%x", full_quote, FALSE );
-            g_free( str );
         }
         else
         {
@@ -1241,7 +1270,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
             /* An archive may not have an extension, or there may be no
              * extensions specified for the handler (they are optional)
              * - making sure filename_no_archive_ext is set in this case */
-            if (!filename_no_archive_ext)
+            if ( !filename_no_archive_ext )
                 filename_no_archive_ext = g_strdup( filename );
 
             /* Now the extraction filename is obtained, determine the
@@ -1252,7 +1281,7 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
             /* 'Completing' the extension and dealing with files with
              * no extension */
-            if (!extension)
+            if ( !extension )
                 extension = g_strdup( "" );
             else
             {
@@ -1260,9 +1289,6 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 extension = g_strconcat( ".", extension, NULL );
                 g_free( str );
             }
-
-            // Cleaning up
-            g_free( filename );
 
             /* Get extraction command - Doing this here as parent
              * directory creation needs access to the command. */
@@ -1277,16 +1303,11 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                 cmd = g_strdup( "" );
             }
 
-            // Placeholders - Substituting archive to extract
-            gchar* extract_cmd = replace_string( cmd, "%x", full_quote, FALSE );
-            g_free( cmd );
-            cmd = NULL;
-
             /* Dealing with creation of parent directory if needed -
              * never create a parent directory if '%G' is used - this is
              * an override substitution for the sake of gzip */
             gchar* parent_path = NULL;
-            if (create_parent && !g_strstr_len( extract_cmd, -1, "%G" ))
+            if ( create_parent && !g_strstr_len( cmd, -1, "%G" ) )
             {
                 /* Determining full path of parent directory to make
                  * (also used later in '%g' substitution) */
@@ -1307,24 +1328,32 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
                 // Generating shell command to make directory
                 parent_quote = bash_quote( parent_path );
+                g_free( mkparent );
                 mkparent = g_strdup_printf( ""
                     "mkdir -p %s || fm_handle_err\n"
                     "cd %s || fm_handle_err\n",
                     parent_quote, parent_quote );
+
+                /* Dealing with the need to make extracted files writable if
+                 * desired (e.g. a tar of files originally archived from a CD
+                 * will be readonly). Root users don't obey such access
+                 * permissions and making such owned files writeable may be a
+                 * security issue */
+                if ( write_access && geteuid() != 0 )
+                {
+                    /* deliberately omitting fm_handle_error - only a
+                     * convenience function */
+                    g_free( perm );
+                    perm = g_strdup_printf( "chmod -R u+rwX %s\n",
+                                            parent_quote );
+                }
+                g_free( parent_quote );
+                parent_quote = NULL;
             }
             else
             {
                 // Parent directory doesn't need to be created
-                mkparent = g_strdup( "" );
-                parent_path = g_strdup( "" );
                 create_parent = FALSE;
-
-                /* Making sure any '%G's turn into normal '%g's now
-                 * they've played their role */
-                gchar* old_extract_cmd = extract_cmd;
-                extract_cmd = replace_string( extract_cmd, "%G", "%g",
-                                               FALSE );
-                g_free( old_extract_cmd );
             }
 
             // Debug code
@@ -1332,12 +1361,12 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
             /* Singular file extraction target (e.g. stdout-redirected
              * gzip) */
-            if (g_strstr_len( extract_cmd, -1, "%g" ))
+            if ( g_strstr_len( cmd, -1, "%g" ) || g_strstr_len( cmd, -1, "%G" ) )
             {
                 /* Creating extraction target, taking into account whether
                  * a parent directory has been created or not - target is
                  * guaranteed not to exist so as to avoid overwriting */
-                gchar* extract_target = g_build_filename(
+                extract_target = g_build_filename(
                                     create_parent ? parent_path : dest,
                                                 filename_no_archive_ext,
                                                 NULL );
@@ -1355,64 +1384,40 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
                     g_free( str );
                 }
 
-                // Quoting and substituting command
-                gchar* extract_target_quote = bash_quote( extract_target );
-                gchar* old_extract_cmd = extract_cmd;
-                extract_cmd = replace_string( extract_cmd, "%g",
-                                              extract_target_quote, FALSE );
-                g_free( extract_target_quote );
-                g_free( old_extract_cmd );
-                g_free( extract_target );
+                // Quoting target
+                str = extract_target;
+                extract_target = bash_quote( extract_target );
+                g_free( str );
             }
 
-            /* Finally constructing command to run. The mkparent command
-             * itself has error checking - final error check not here as
-             * I want the code shared with the list code flow */
-            cmd = g_strdup_printf( ""
-                "cd %s || fm_handle_err\n"
-                "%s%s",
-                dest_quote, mkparent, extract_cmd );
-
             // Cleaning up
-            g_free( extract_cmd );
+            g_free( filename );
             g_free( filename_no_archive_ext );
             g_free( filename_no_ext );
             g_free( extension );
-            g_free( mkparent );
             g_free( parent_path );
         }
 
-        // Building up final_command
-        if (!final_command)
-            final_command = g_strconcat( cmd, "\n[[ $? -eq 0 ]] || fm_handle_err\n", NULL );
-        else
-        {
-            str = final_command;
-            final_command = g_strconcat( final_command, "echo\n",
-                                         cmd, "\n[[ $? -eq 0 ]] || fm_handle_err\n", NULL );
-            g_free( str );
-        }
-
+        // Substituting %x %g %G
+        str = cmd;
+        cmd = replace_archive_subs( cmd, NULL, NULL, NULL, full_quote,
+                                    extract_target );
+        g_free( str );
+        
+        /* Finally constructing command to run. The mkparent command
+         * itself has error checking - final error check not here as
+         * I want the code shared with the list code flow */
+        final_command = g_strdup_printf( "cd %s || fm_handle_err\n%s%s"
+                                         "\n[[ $? -eq 0 ]] || fm_handle_err\n%s",
+                                         dest_quote, mkparent, cmd, perm );
+        
         // Cleaning up
         g_free( full_quote );
         g_free( full_path );
         g_free( cmd );
+        g_free( mkparent );
+        g_free( perm );
     }
-
-    // Dealing with standard SpaceFM substitutions
-    str = final_command;
-    final_command = replace_line_subs( final_command );
-    g_free(str);
-
-    /* Dealing with the need to make extracted files writable if
-     * desired (e.g. a tar of files originally archived from a CD
-     * will be readonly). Root users don't obey such access
-     * permissions and making such owned files writeable may be a
-     * security issue */
-    if (!list_contents && write_access && geteuid() != 0)
-        perm = g_strdup_printf( "chmod -R u+rwX %s || fm_handle_err\n",
-                                dest_quote );
-    else perm = g_strdup( "" );
 
     /* When ran in a terminal, errors need to result in a pause so that
      * the user can review the situation - in any case an error check
@@ -1420,13 +1425,13 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
     str = generate_bash_error_function( in_term,
                                         create_parent ? parent_quote : NULL );
     s1 = final_command;
-    final_command = g_strconcat( str, "\n\n", final_command, perm, NULL );
+    final_command = g_strconcat( str, "\n", final_command, NULL );
     g_free( str );
     g_free( s1 );
-    g_free( perm );
     g_free( dest_quote );
     g_free( parent_quote );
     g_free( choose_dir );
+    g_strfreev( archive_handlers );
 
     // Creating task
     char* task_name = g_strdup_printf( _("Extract %s"),
@@ -1460,9 +1465,5 @@ void ptk_file_archiver_extract( DesktopWindow *desktop,
 
     // Running task
     ptk_file_task_run( task );
-
-    /* Clearing up - final_command does not need freeing, as this
-     * is freed by the task */
-    g_strfreev( archive_handlers );
 }
 

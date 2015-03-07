@@ -897,8 +897,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#designmode-designmenu-import">How do I import a plugin to another menu?</a><br>
     How do I create a new tab in the current folder?<br>
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
-    How do I make archives (tar.gz etc) open with an application?<br>
-	<blockquote>Right-click on any archive file and select Open|Archive Default|Open With App.</blockquote>
+    <a href="#handlers-arc-arcdef">How do I make archives (tar.gz etc) open with an application?</a><br>
     Why aren't all my thumbnails displayed?<br>
 	<blockquote>View|Preferences|Max Pic Size To Thumbnail may limit what pics are thumbnailed.</blockquote>
 </ul>
@@ -4376,10 +4375,10 @@ SpaceFM's Open menu for archive files, accessed by right-clicking on any archive
 
 <!-- # Archive Defaults #arcdef -->
 <p><a name="handlers-arc-arcdef"/><a href="#handlers-arc-arcdef"><b>Archive Defaults</b></a><br>
-<p>With a default configuration, opening an archive file by double-clicking it in the file list will automatically extract it to a folder of the same name.  You can change how SpaceFM opens archive files using the Archive Defaults submenu in the Open menu of an archive file:
+<p>With a default configuration, opening an archive file by double-clicking it in the file list will automatically extract it to a folder of the same name.  You can change how SpaceFM opens archives by right-clicking on an archive file and using the Open|Archive Defaults submenu:
 
 <p><b>Open With App</b><br>
-Selecting Open With App will cause SpaceFM to open archive files using whatever MIME application is associated with the file type on your system.  This application will appear at the top of the Open menu, and can be changed using SpaceFM's <a href="">MIME Menu</a>.  Even if you have Open With App selected as the default behavior for opening archive files, you can still manually choose Extract, Extract To, and List Contents from the Open menu to use SpaceFM's built-in archive facility.
+Selecting Open With App will cause SpaceFM to open archive files using whatever MIME application is associated with the file type on your system.  This application will appear at the top of the Open menu, and can be changed using SpaceFM's <a href="#designmode-mime">MIME Menu</a>.  Even if you have Open With App selected as the default behavior for opening archive files, you can still manually choose Extract, Extract To, and List Contents from the Open menu to use SpaceFM's built-in archive facility.
 
 <p><b>Extract</b><br>
 Extract is the default behavior of SpaceFM.  If selected, double-clicking on an archive in the file list will automatically extract its contents to a folder.
@@ -4393,10 +4392,10 @@ If List Contents is selected, double-clicking on an archive file will open a ter
 <p>In addition, the Archive Defaults submenu includes these options:
 
 <p><b>Create Subfolder</b><br>
-If this option is selected, which is the default, then using Extract (manually or automatically on open) will create a subfolder with the same name of the archive, and will extract the contents to it.  If this option is not selected, the archive contents will be extracted to the current folder.  (Note that the Extract To dialog also contains a Create Subfolder option for that operation - that setting is remembered separately).
+If this option is selected, which is the default, then using Extract (manually or automatically on open) will create a subfolder with the same name as the archive, and will extract the contents to it.  If this option is not selected, the archive contents will be extracted to the current folder.  (Note that the Extract To dialog also contains a Create Subfolder option for that operation - that setting is remembered separately).  Note that with Create Subfolder disabled, <b>some archive programs, such as tar , may overwrite files in the current folder</b> if they have the same name as files in the archive.
 
 <p><b>Write Access</b><br>
-If this option is selected, after extraction the contents of the extraction folder will be made write-accessible to the current user.  This option is only available if Create Subfolder is selected, and if the user is not root.  Because some archives (such as tar.gz files made from CDROM) contain read-only files which then require and extra step to delete, this convenience option ensures the user can delete and change the extracted files.
+If this option is selected, after extraction the contents of the extraction folder will be made write-accessible to the current user.  This option is only available if the Create Subfolder option is enabled, and if the user is not root.  Because some archives (such as tar.gz files made from CDROM) contain read-only files which then require an extra step to delete, this convenience option ensures the user can delete and change the extracted files.
 
 <p><b>Archive Handlers</b><br>
 Selecting Archive Handlers opens the Archive Handlers configuration window (see below).
@@ -4409,15 +4408,15 @@ Selecting Archive Handlers opens the Archive Handlers configuration window (see 
 
 <p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
 
-<p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Filename text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
+<p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Pathname text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
 
-<p><b>MIME Type</b><br>
-This text box contains a space-separated list of MIME types (such as application/x-compressed-tar), which is used to associated the handler with those file types.  Wildcards, such as asterisk '*' to represent multiple characters, and question mark '?' to represent a single character, are accepted.  A handler must have a MIME Type or a Filename pattern (see below), or it cannot be used to extract or list the contents of archive files.
+<p><b><u>MIME Type</u></b><br>
+This text box contains a space-separated list of MIME types (such as application/x-compressed-tar), which is used to associated the handler with those file types.  Wildcards, such as asterisk '*' to represent multiple characters, and question mark '?' to represent a single character, are accepted.  A handler must have a MIME Type or a Pathname pattern (see below), or it cannot be used to extract or list the contents of archive files.
 
-<p><b>Filename</b><br>
-This text box contains a space-separated list of filename globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Filename value of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first filename pattern in the list will determine the default file extension used when creating archives with this handler.
+<p><b><u>Pathname</u></b><br>
+This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first pathname pattern in the list will determine the default file extension used when creating archives with this handler.  Note that the full pathname of the file (eg /home/user/archive.tar.gz) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/*.tar.gz) to control how archives in specific locations are handled.
 
-<p><b>Compress</b><br>
+<p><b><u>Compress</u></b><br>
 The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
 
 <p>Several variables will be replaced before your commands are run:
@@ -4438,35 +4437,13 @@ Other kinds of archiving programs, such as compressing files with GZip, <b>can o
 
 When SpaceFM sees the above command containing %O, it will know to run the gzip command once for each file, and will replace %N with a single filename on each run.  It will also replace %O with a different output archive filename on each run, creating multiple files (in this case with the .gz extension).
 
-<p>In addition to the above variables, or instead of them, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p><b>To create an archive using your handler</b>s, select files to be archived in SpaceFM's file list, right-click, and select New|Archive.  Select your handler in the Format list.  You can also edit the Compress command in this dialog, and the updated command will be saved to your handler.
-
-<p><b>Extract</b><br>
-The Extract text box contains the commands which will be run if this handler is selected to extract an archive (or uncompress a single compressed file, etc.)
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %x: Archive file to extract
-    %g: Extraction directory with optional subfolder
-    %G: Extraction directory, never with subfolder
-</pre>
-
-In most cases, you will only need the %x variable to represent the file being extracted, as SpaceFM automatically runs your command in the directory to which files should be extracted (or %g, which includes any automatically created subfolder).  For example, the Extract command for a tar file is simply:
-<pre>  tar -xvf %x</pre>
-
-In some cases, you will want to inform SpaceFM that a subfolder should never be automatically created for the command, even if the user has enabled the Create Subfolder option.  For example, when decompressing a GZipped file, rather than create a subfolder for the single output file, SpaceFM simply uncompresses the file to the selected directory.  It uses this Extract command to do so:
-<pre>    gzip -cd %x > %G</pre>
-
-(Note that the above command by itself will overwrite any existing file.)
+<p>Note: To include a literal '%N' or other string in your command without it being interpreted as a variable, use double percent signs (%%N).
 
 <p>In addition to the above variables, or instead of them, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
 
-<p><b>List</b><br>
-The List text box contains the commands which will be run if this handler is selected to list the contents of an archive file.  It recognizes only the %x variable which is replaced with the archive filename, and SpaceFM's exported <a href="#exvar">bash variables</a> may also be used.
+<p><b>To create an archive using your handler</b>, select files to be archived in SpaceFM's file list, right-click, and select New|Archive.  Select your handler in the Format list.  You can also edit the Compress command in this dialog, and the updated command will be saved to your handler.
 
-<p><b>How To Test</b><br>
-To test your handler commands, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is working on archives.  This will show you the handlers chosen, and the commands exactly as they are issued.
+<p><b>To test your handler commands</b>, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is working on archives.  This will show you the handlers chosen, and the commands exactly as they are issued.
 
 <p>When running any commands in a terminal, SpaceFM will add a query at the end to keep the terminal open if it sees a non-zero error status from the last command run, or when listing archive contents.  If you need to keep the terminal open for other purposes, you can include these lines in your command:
 <pre>
@@ -4474,7 +4451,26 @@ To test your handler commands, run the <code>spacefm</code> program in a termina
     read
 </pre>
 
+<p><b><u>Extract</u></b><br>
+The Extract text box contains the commands which will be run if this handler is selected to extract an archive (or uncompress a single compressed file, etc.)
 
+<p>Several variables will be replaced before your commands are run:
+<pre>
+    %x: Archive file to extract
+    %g: Unique extraction target filename with optional subfolder
+    %G: Unique extraction target filename, never with subfolder
+</pre>
+
+In most cases, you will only need the %x variable to represent the file being extracted, as SpaceFM automatically runs your command in the directory to which files should be extracted.  For example, the Extract command for a tar file is simply:
+<pre>  tar -xvf %x</pre>
+
+In some cases, such as uncompressing a file with GZip, you will want SpaceFM to give you a single non-existing filename to be used as the extraction target.  For this purpose you may use %g or %G.  %g will cause SpaceFM to substitute a single non-existing filename based on the archive name.  If the user has selected the Create Subfolder option, a subfolder will also be created for the file.  However, in cases like GZip, it is often unnecessary to create a subfolder for just one file.  In this case use %G, which will be substituted with a single non-existing filename in the main extraction directory, and no subfolder will be created (even if the user has option Create Subfolder enabled).  For example, when decompressing a GZipped file, rather than create a subfolder for the single output file, SpaceFM simply uncompresses the file to the selected directory.  It uses this Extract command to do so:
+<pre>    gzip -cd %x > %G</pre>
+
+<p>In addition to the above variables, or instead of them, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
+
+<p><b><u>List</u></b><br>
+The List text box contains the commands which will be run if this handler is selected to list the contents of an archive file.  It recognizes only the %x variable which is replaced with the archive filename, and SpaceFM's exported <a href="#exvar">bash variables</a> may also be used.
 
 
 <!-- @end handlers-arc-->
@@ -7495,7 +7491,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-03-06&nbsp;&nbsp;(SpaceFM version 0.9.4+)
+<p>Updated 2015-03-07&nbsp;&nbsp;(SpaceFM version 0.9.4+)
 <br><br>
 </center>
 </td></tr></table>
