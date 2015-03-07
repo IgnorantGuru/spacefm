@@ -280,9 +280,9 @@ const Handler handlers_fs[]=
     {
         "hand_fs_+fuseiso",
         "fuseiso",
-        "file *fuseiso",
+        "*fuseiso",
         "",
-        "fuseiso %v %a",
+        "# Mounting of iso files is performed by fuseiso in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
         FALSE,
         "fusermount -u %a",
         FALSE,
@@ -292,7 +292,7 @@ const Handler handlers_fs[]=
     {
         "hand_fs_+udiso",
         "udevil iso",
-        "file iso9660",
+        "iso9660",
         "",
         "uout=\"$(udevil mount %v)\"\nerr=$?; echo \"$uout\"\n[[ $err -ne 0 ]] && exit 1\npoint=\"${uout#Mounted }\"\n[[ \"$point\" = \"$uout\" ]] && exit 0\npoint=\"${point##* at }\"\n[[ -d \"$point\" ]] && spacefm \"$point\" &\n",
         FALSE,
@@ -381,13 +381,13 @@ const Handler handlers_net[]=
 const Handler handlers_file[]=
 {
     /* %a custom mount point
-     * Plus standard substitution variables are accepted. */
+     * Plus standard bash variables are accepted. */
     {
         "hand_f_+iso",
         "Mount ISO",
         "application/x-iso9660-image application/x-iso-image application/x-cd-image",
         "*.img *.iso *.mdf *.nrg",
-        "# is image file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n\n# mount & open\nfuseiso %f %a && spacefm %a &\n",
+        "# is image file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n\n# mount & open\nfuseiso %f %a && spacefm %a &\n\n# Note: Unmounting of iso files is performed by the fuseiso device handler.\n",
         FALSE,
         "",
         FALSE,
@@ -2615,7 +2615,7 @@ void ptk_handler_show_config( int mode, PtkFileBrowser* file_browser,
         {
             const char* help;
             if ( mode == HANDLER_MODE_ARC )
-                help = "#handlers-arc";
+                help = "#handlers-arc-archand";
             else if ( mode == HANDLER_MODE_FS )
                 help = "#handlers-dev";
             else if ( mode == HANDLER_MODE_NET )
