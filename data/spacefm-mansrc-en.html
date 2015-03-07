@@ -506,8 +506,10 @@ The Breadcrumbs feature allows you to Ctrl+Click on a portion of the path in the
 <!-- # Middle-Click Auto Seek #middle -->
 A middle-click in the Path Bar will replace the contents of the Path Bar with the contents of the primary clipboard, and will seek to the location.  The primary clipboard is set simply by selecting text in any application.  For example, if you select the text "/etc/fstab" in your editor, then middle click in SpaceFM's path bar, the directory will change to /etc and the 'fstab' file will be selected.  If you don't want to replace the contents of the Path Bar, and merely want to insert the primary clipboard text (the usual behavior of middle-click), hold down a modifier key while you click, such as Ctrl or Shift.
 
-<!-- # File Path -->
+<!-- # File Path or Device #file -->
 The path to a file may be entered or pasted in the Path Bar.  When you press Enter, SpaceFM will change to the directory containing the file and will select the file in the file list.
+
+<p>Also, a device file (eg /dev/sdd1) may be entered in the path bar.  The device will be mounted if needed, and the mount point directory of the device will be opened.
 
 <!-- # Protocol URL #proto -->
 Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.kernel.org/</i>, will be opened with the associated <a href="#handlers-pro">protocol handler</a>.  If a fileystem is mounted, SpaceFM will usually open the mount point directory automatically.  If the <a href="#devices-list">Devices List</a> has option <a href="#devices-settings-net">Settings|Show|Mounted Networks</a> checked, the filesystem may be listed.
@@ -2650,7 +2652,7 @@ The Properties text box contains the commands which will be run if the user sele
 <!-- @Handlers @Protocol Handlers #pro -->
 <a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
 
-<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or right-click in the Devices list and select Settings|Protocol Handlers.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes. 
+<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or select Settings|Protocol Handlers from the Devices menu.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes. 
 
 <!-- # Whitelist #white -->
 As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  

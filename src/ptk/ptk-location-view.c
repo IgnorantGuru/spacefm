@@ -1102,7 +1102,7 @@ void ptk_location_view_mount_network( PtkFileBrowser* file_browser,
     {
         xset_msg_dialog( GTK_WIDGET( file_browser ), GTK_MESSAGE_ERROR,
                         _("Handler Not Found"), NULL, 0,
-                        _("No network handler is configured for this URL, or no mount command is set.  Add a handler in Settings|Protocol Handlers."),
+                        _("No network handler is configured for this URL, or no mount command is set.  Add a handler in Devices|Settings|Protocol Handlers."),
                         NULL, NULL );
         goto _net_free;
 

@@ -1098,6 +1098,7 @@ void load_settings( char* config_dir )
     if ( ver < 26 ) // < hand
     {
         XSet* handset;
+        char* cmd;
         /* Archive handlers are now user configurable using a new
          * xset - copying over dialog size from the old xset.
          * Leave "arc_conf" unchanged for backwards compat. */
@@ -1112,56 +1113,47 @@ void load_settings( char* config_dir )
             xset_set( "arc_conf2", "y", str );
             g_free( str );
         }
-        // Import old archive creation options
-        const char* old_arc[] =
-                    { "tar_bz2", "tar_gz", "tar_xz", "zip", "7z", "tar", "rar" };
-        const char* new_cmd[]=
-        {
-            "tar @ -cvjf %o %N",
-            "tar @ -cvzf %o %N",
-            "tar @ -cvJf %o %N",
-            "zip @ -r %o %N",
-            "\"$(which 7za || echo 7zr)\" @ a %o %N",
-            "tar @ -cvf %o %N",
-            "rar a -r @ %o %N"
-        };
-        for ( i = 0; i < G_N_ELEMENTS( old_arc ); i++ )
-        {
-            // find old option
-            str = g_strdup_printf( "arc_%s", old_arc[i] );
-            set = xset_is( str );
-            g_free( str );
-            if ( set && set->s && set->s[0] )
-            {
-                // user had old options
-                str = g_strdup_printf( "hand_arc_+%s", old_arc[i] );
-                handset = xset_is( str );
-                g_free( str );
-                if ( handset )
-                {
-                    g_free( handset->y );
-                    handset->y = replace_string( new_cmd[i], "@", set->s, FALSE );
-                    handset->disable = FALSE;  // save in session
-                }
-            }
-        }
         // Import old protocol handler into new handler
         set = xset_is( "path_hand" );
         if ( set && set->s && set->s[0] )
         {
             handset = add_new_handler( HANDLER_MODE_NET );
-            handset->menu_label = g_strdup( "Custom" );
-            handset->s = g_strdup( "*" );
-            handset->x = g_strdup( "" );
-            handset->y = g_strdup_printf( "%s %%url%%", set->s );
+            handset->menu_label = g_strdup( "Imported Custom 0.9" );
+            handset->s = g_strdup( "*" );  // whitelist
+            handset->x = g_strdup( "" );   // blacklist
             
+            // copy old protocol mount command to handler script
+            cmd = g_strdup_printf( "# Imported protocol handler from "
+                                   "SpaceFM 0.9:\n\n%s %%url%%", set->s );
+            str = ptk_handler_save_script( HANDLER_MODE_NET,
+                                           HANDLER_MOUNT,
+                                           handset,
+                                           NULL, cmd );
+            g_free( str );  // ignore any error msg
+            g_free( cmd );
+            
+            // copy old unmount command to handler script
             set = xset_is( "dev_unmount_cmd" );
             if ( set && set->s && set->s[0] )
-                handset->z = replace_string( set->s, "%v", "\"%a\"", FALSE );
+                cmd = replace_string( set->s, "%v", "\"%a\"", FALSE );
             else
-                handset->z = g_strdup( "udevil umount \"%a\"" );
+                cmd = g_strdup( "udevil umount \"%a\"" );
+            str = ptk_handler_save_script( HANDLER_MODE_NET,
+                                           HANDLER_UNMOUNT,
+                                           handset,
+                                           NULL, cmd );
+            g_free( str );  // ignore any error msg
+            g_free( cmd );
             
-            handset->context = g_strdup( "mount | grep \"%a\"" );
+            // set a properties command to handler script
+            cmd = g_strdup( "mount | grep \"%a\"" );
+            str = ptk_handler_save_script( HANDLER_MODE_NET,
+                                           HANDLER_PROP,
+                                           handset,
+                                           NULL, cmd );
+            g_free( str );  // ignore any error msg
+            g_free( cmd );
+                        
             handset->b = XSET_B_TRUE;
             handset->lock = FALSE;     // save menu_label
             handset->disable = FALSE;  // save in session
@@ -1171,24 +1163,48 @@ void load_settings( char* config_dir )
             g_free( set->s );
             set->s = str;
         }
-        // Move custom mount/unmount commands to handler
+        // Copy custom mount/unmount/prop commands to handler
         handset = xset_get( "hand_fs_+def" );
+        handset->disable = FALSE;  // save in session
         set = xset_is( "dev_unmount_cmd" );
         if ( set && set->s && set->s[0] )
         {
-            str = g_strconcat( set->s, "\\n\\n", handset->z, NULL );
-            g_free( handset->z );
-            handset->z = str;
-            handset->disable = FALSE;  // save in session
+            // copy old custom unmount command to handler script
+            cmd = g_strdup_printf( "# Imported Unmount Command from "
+                                   "SpaceFM 0.9:\n\n%s\n\n%s",
+                                   set->s, UNMOUNT_EXAMPLE );
         }
+        else
+            cmd = g_strdup( UNMOUNT_EXAMPLE );
+        str = ptk_handler_save_script( HANDLER_MODE_FS,
+                                       HANDLER_UNMOUNT,
+                                       handset,
+                                       NULL, cmd );
+        g_free( str );  // ignore any error msg
+        g_free( cmd );
+
         set = xset_is( "dev_mount_cmd" );
         if ( set && set->s && set->s[0] )
         {
-            str = g_strconcat( set->s, "\\n\\n", handset->y, NULL );
-            g_free( handset->y );
-            handset->y = str;
-            handset->disable = FALSE;  // save in session
+            // copy old custom mount command to handler script
+            cmd = g_strdup_printf( "# Imported Mount Command from "
+                                   "SpaceFM 0.9:\n\n%s\n\n%s",
+                                   set->s, MOUNT_EXAMPLE );
         }
+        else
+            cmd = g_strdup( MOUNT_EXAMPLE );
+        str = ptk_handler_save_script( HANDLER_MODE_FS,
+                                       HANDLER_MOUNT,
+                                       handset,
+                                       NULL, cmd );
+        g_free( str );  // ignore any error msg
+        g_free( cmd );
+        // Copy default Properties command
+        str = ptk_handler_save_script( HANDLER_MODE_FS,
+                                       HANDLER_LIST,
+                                       handset,
+                                       NULL, INFO_EXAMPLE );
+
         // Change Save Session to Open URL - remove custom label/icon
         set = xset_set( "main_save_session", "lbl", _("Open _URL") );
         xset_set_set( set, "icn", "gtk-network" );
