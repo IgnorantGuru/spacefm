@@ -47,8 +47,7 @@
 <a href="#invocation">Invocation</a>
 <ul>
     <a href="#invocation-commandline">Command Line</a><br>
-    <a href="#invocation-windows">Opening Windows </a><br>
-    <a href="#invocation-file">Opening Files, URLs, and Devices </a><br>
+    <a href="#invocation-windows">Windows</a><br>
     <a href="#invocation-gtkthemes">GTK Themes</a><br>
     <a href="#invocation-desktopmanager">Desktop Manager</a><br>
     <a href="#invocation-daemonmode">Daemon Mode</a><br>
@@ -97,14 +96,6 @@
     <a href="#plugins-import">Import</a><br>
     <a href="#plugins-uninstall">Uninstall</a><br>
     <a href="#plugins-creationandfiles">Creation And Files</a><br>
-</ul>
-<a href="#handlers">Handlers</a>
-<ul>
-    <a href="#handlers-introduction">Introduction</a><br>
-    <a href="#handlers-dev">Device Handlers </a><br>
-    <a href="#handlers-pro">Protocol Handlers </a><br>
-    <a href="#handlers-arc">Archives </a><br>
-    <a href="#handlers-fil">File Handlers </a><br>
 </ul>
 <a href="#dialog">Dialog</a>
 <ul>
@@ -156,7 +147,6 @@
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -270,7 +260,6 @@
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -323,7 +312,6 @@
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -371,7 +359,6 @@
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -432,7 +419,6 @@ Or, to see the help for alternate build options, run:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -476,7 +462,6 @@ Or, to see the help for alternate build options, run:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -523,8 +508,7 @@ Or, to see the help for alternate build options, run:
     <li>Invocation
     <ul>
         <li>Command Line
-        <li><a href="#invocation-windows">Opening Windows </a>
-        <li><a href="#invocation-file">Opening Files, URLs, and Devices </a>
+        <li><a href="#invocation-windows">Windows</a>
         <li><a href="#invocation-gtkthemes">GTK Themes</a>
         <li><a href="#invocation-desktopmanager">Desktop Manager</a>
         <li><a href="#invocation-daemonmode">Daemon Mode</a>
@@ -535,7 +519,6 @@ Or, to see the help for alternate build options, run:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -547,7 +530,7 @@ Or, to see the help for alternate build options, run:
 
 <p>To see SpaceFM's command line usage run <code>spacefm --help</code>
 <pre>Usage:
-  spacefm [OPTION...] [DIR | FILE | URL | DEVICE]... 
+  spacefm [OPTION...] [DIR | FILE | URL]... 
 
 Help Options:
   -h, --help                   Show help options
@@ -596,8 +579,7 @@ Application Options:
     <li>Invocation
     <ul>
         <li><a href="#invocation-commandline">Command Line</a>
-        <li>Opening Windows 
-        <li><a href="#invocation-file">Opening Files, URLs, and Devices </a>
+        <li>Windows
         <li><a href="#invocation-gtkthemes">GTK Themes</a>
         <li><a href="#invocation-desktopmanager">Desktop Manager</a>
         <li><a href="#invocation-daemonmode">Daemon Mode</a>
@@ -608,15 +590,15 @@ Application Options:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
 </ul>
 </td>
 <td valign="top">
-<a name="invocation-windows"/><a href="#invocation-windows"><font size=+2>Opening Windows </font></a>
-<!-- @Invocation @Opening Windows #windows -->
+<a name="invocation-windows"/><a href="#invocation-windows"><font size=+2>Windows</font></a>
+<!-- @Invocation @Windows -->
+
 <p>To open an initial SpaceFM window, run 'spacefm' with or without a folder specification:
 <pre>    spacefm
 
@@ -681,6 +663,12 @@ Application Options:
 </pre>
 The sleep commands give time for the socket to be created and the newly created window to become the last used window.  A shorter sleep time of 0.1 may also work on your system.
 
+<p><b>Opening Files</b><br>
+If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type, but will not open a SpaceFM window:
+<pre>    # open a file:
+    spacefm /etc/fstab</pre>
+
+
 <!-- @end invocation-windows-->
 <br><br></td></tr>
 
@@ -694,53 +682,7 @@ The sleep commands give time for the socket to be created and the newly created 
     <li>Invocation
     <ul>
         <li><a href="#invocation-commandline">Command Line</a>
-        <li><a href="#invocation-windows">Opening Windows </a>
-        <li>Opening Files, URLs, and Devices 
-        <li><a href="#invocation-gtkthemes">GTK Themes</a>
-        <li><a href="#invocation-desktopmanager">Desktop Manager</a>
-        <li><a href="#invocation-daemonmode">Daemon Mode</a>
-    </ul>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="invocation-file"/><a href="#invocation-file"><font size=+2>Opening Files, URLs, and Devices </font></a>
-<!-- @Invocation @Opening Files, URLs, and Devices #file -->
-<p>If you specify a file rather than a folder on the command line, SpaceFM will open the file using the default MIME application for this file type (File Handlers are not used), but will not open a SpaceFM window:
-<pre>    # open a file:
-    spacefm /etc/fstab</pre>
-
-To open a URL (see <a href="#handlers-pro">Protocol Handlers</a>):
-<pre>    spacefm ftp://ftp.us.debian.org/debian/</pre>
-
-To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or open an already mounted device:
-<pre>    spacefm /dev/sdd1</pre>
-
-
-<!-- @end invocation-file-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li>Invocation
-    <ul>
-        <li><a href="#invocation-commandline">Command Line</a>
-        <li><a href="#invocation-windows">Opening Windows </a>
-        <li><a href="#invocation-file">Opening Files, URLs, and Devices </a>
+        <li><a href="#invocation-windows">Windows</a>
         <li>GTK Themes
         <li><a href="#invocation-desktopmanager">Desktop Manager</a>
         <li><a href="#invocation-daemonmode">Daemon Mode</a>
@@ -751,7 +693,6 @@ To mount and open a device (see <a href="#handlers-dev">Device Handlers</a>), or
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -802,8 +743,7 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
     <li>Invocation
     <ul>
         <li><a href="#invocation-commandline">Command Line</a>
-        <li><a href="#invocation-windows">Opening Windows </a>
-        <li><a href="#invocation-file">Opening Files, URLs, and Devices </a>
+        <li><a href="#invocation-windows">Windows</a>
         <li><a href="#invocation-gtkthemes">GTK Themes</a>
         <li>Desktop Manager
         <li><a href="#invocation-daemonmode">Daemon Mode</a>
@@ -814,7 +754,6 @@ Then open ~/.local/share/applications/spacefm.desktop in your editor and set the
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -857,8 +796,7 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li>Invocation
     <ul>
         <li><a href="#invocation-commandline">Command Line</a>
-        <li><a href="#invocation-windows">Opening Windows </a>
-        <li><a href="#invocation-file">Opening Files, URLs, and Devices </a>
+        <li><a href="#invocation-windows">Windows</a>
         <li><a href="#invocation-gtkthemes">GTK Themes</a>
         <li><a href="#invocation-desktopmanager">Desktop Manager</a>
         <li>Daemon Mode
@@ -869,7 +807,6 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -916,7 +853,6 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -941,7 +877,8 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <a href="#designmode-designmenu-import">How do I import a plugin to another menu?</a><br>
     How do I create a new tab in the current folder?<br>
 	<blockquote>Right-click on any tab and select Tab Here (you can assign any key shortcut to this item using <a href="#designmode-designmenu-key">Design Mode</a>).</blockquote>
-    <a href="#handlers-arc-arcdef">How do I make archives (tar.gz etc) open with an application?</a><br>
+    How do I make archives (tar.gz etc) open with an application?<br>
+	<blockquote>Right-click on any archive file and select Open|Archive Default|Open With App.</blockquote>
     Why aren't all my thumbnails displayed?<br>
 	<blockquote>View|Preferences|Max Pic Size To Thumbnail may limit what pics are thumbnailed.</blockquote>
 </ul>
@@ -976,7 +913,6 @@ Like other menus in SpaceFM, <a href="#designmode">Design Mode</a> may be used i
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1055,7 +991,6 @@ SpaceFM is designed so that for most purposes, it is not necessary to know which
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1120,31 +1055,91 @@ The path to a file may be entered or pasted in the Path Bar.  When you press Ent
 
 <!-- # Protocol URL #proto -->
 <p><a name="gui-pathbar-proto"/><a href="#gui-pathbar-proto"><b>Protocol URL</b></a><br>
-Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.kernel.org/</i>, will be opened with the associated <a href="#handlers-pro">protocol handler</a>.  If a fileystem is mounted, SpaceFM will usually open the mount point directory automatically.  If the <a href="#devices-list">Devices List</a> has option <a href="#devices-settings-net">Settings|Show|Mounted Networks</a> checked, the filesystem may be listed.
+Any entry in the Path Bar which looks like a protocol, such as <i>ftp://mirrors.kernel.org/</i>, will be opened with the Protocol Handler.  By default, SpaceFM uses <a href="http://ignorantguru.github.io/udevil/">udevil</a> as the handler, unless a <a href="#gui-pathbar-protohand">custom Protocol Handler</a> has been configured.  If udevil recognizes the protocol, it will be mounted and SpaceFM will automatically open the mount point directory (in most cases).  If the <a href="#devices-list">Devices List</a> has option <a href="#devices-settings-net">Settings|Show|Mounted Networks</a> checked, the new network filesystem will be listed.
 
-<p>Regardless of the protocol, SpaceFM's default protocol handlers all accept URLs in the format:
-<pre>    PROTOCOL://USERNAME:PASSWORD@HOST:PORT/SHARE</pre>
+<p>Information like username, password, port, etc may also be included in the URL - see <a href="http://ignorantguru.github.io/udevil/udevil--help.html">URL protocols and formats handled by udevil</a>.
 
 <p><b>WARNING:  Including a password in the URL is a very unsafe mode of use</b>, as your password is included in the command line and may be written to temporary and/or system files by SpaceFM or mount helpers.  See documentation specific to the filesystem for other authentication methods offered, or enter your password when prompted.
 
-<p>Some parts of the above URL format may be omitted.  Examples include:
-<pre>    ftp://mirrors.kernel.org
-    smb://user:pass@10.0.0.1:50/docs
-    ssh://user@sys.domain
+<p>TIP:  You can right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.
+
+<!-- # Protocol Handler #protohand -->
+<p><a name="gui-pathbar-protohand"/><a href="#gui-pathbar-protohand"><b>Protocol Handler</b></a><br>
+If you would like to use a custom handler for URLs within SpaceFM, right-click on the Path Bar and select Protocol Handler.  In the dialog, enter the command to be used to open or handle URLs.  <b>No substitution variables are accepted</b> - the URL is passed as the first argument to your command.
+
+<p>Your handler command may be a script which intelligently opens URLs using programs you specify in the script (<a href="#gui-pathbar-protoscript">see example below</a>), or it can be a single command such as 'udevil mount' (the default if the handler command is left blank).
+
+<p>Note that any Path Bar entry which looks like a protocol URL will be passed to your command, so this feature <b>can be used to create custom protocols</b> or to support ones not recognized by udevil.  For example, if your handler knows what to do with the URL <i>myproto://something-here</I>, then you will be able to enter this URL in SpaceFM's Path Bar to take a custom action.  Your handler doesn't necessarily have to mount anything - it can take any action on the URL passed to it.
+
+<p>SpaceFM runs the handler as a synchronous task and will popup an error dialog on non-zero exit status.  When the task finishes, SpaceFM will check to see if the URL is now mounted, and if it is, will open the mount point directory.  (Note that SpaceFM may not detect or recognize all mounted protocols.  You can also have your handler open the mount point directory after a successful mount by having it run <code>spacefm DIR</code>).
+
+<p>Although SpaceFM will not run the custom handler in a terminal, you can run some commands in your script in a terminal (eg for password entry) using 'spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal', as shown in the <a href="#gui-pathbar-protoscript">example script</a>.
+
+<p><a href="#devices-menu-bookmark">Bookmarked</a> protocol URLs are also opened by the Protocol Handler.
+
+<p>When unmounting a network using <a href="#devices-menu-remove">Remove / Eject</a> or <a href="#devices-menu-unmount">Unmount</a> in the <a href="#devices-menu">Devices Menu</a>, the configured <a href="#devices-settings-ucmd">Unmount Command</a> is run.  If you want to be able to unmount custom or unusual protocols via the <a href="#devices-list">Devices List</a>, you can set the Unmount Command to a script which handles your protocols.  (It must also handle normal device unmounts for normal operation.)
+
+<!-- # Example Protocol Handler Script #protoscript -->
+<p><a name="gui-pathbar-protoscript"/><a href="#gui-pathbar-protoscript"><b>Example Protocol Handler Script</b></a><br>
+Below is an example protocol handler script.  For example, you might save this script as a text file named 'myhandler', then install it as 'protocol-handler' (installing your script improves security):
+<pre>    sudo install myhandler /usr/local/bin/protocol-handler</pre>
+
+Finally, set <a href="#gui-pathbar-protohand">Protocol Handler</a> to 'protocol-handler'.
+
+<pre>#!/bin/bash
+# Example Protocol Handler script to open URLs entered in SpaceFM's Path Bar
+
+# Get just the protocol, eg "smb" from "smb://..."
+protocol="${1%%:*}"
+
+# Open the URL using the appropriate program
+case "$protocol" in
+    "" )
+        echo "Invalid URL" 2>&1
+        exit 1
+        ;;
+    myproto )
+        # open custom protocol 'myproto' with myproto-handler
+        myproto-handler "$1"
+        ;;
+    ssh )
+        # instead of udevil, mount ssh by running sshfs as the current user
+
+        # First, create a mountpoint
+        mount_point=`mktemp -d ~/ssh-mount-XXXX`
+        if [ $? -ne 0 ]; then
+            echo "Unable to create mount point" 2>&1
+            exit 1
+        fi
+
+        # Get just the hostname to pass to sshfs
+        # See <a href="http://www.tldp.org/LDP/abs/html/refcards.html#AEN22587">http://www.tldp.org/LDP/abs/html/refcards.html#AEN22587</a>
+        hostname="${1#*:}"
+        while [ "${hostname:0:1}" == "/" ]; do
+            hostname="${hostname#/}"
+        done
+        hostname="${hostname%:*}"
+        hostname="${hostname%/*}"
+
+        # Run sshfs in user's terminal to mount hostname to mount point
+        # Note - If the terminal is closed, sshfs may unmount (sshfs bug)
+        spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal \
+		"sshfs $hostname: $mount_point; echo; echo Press Enter; read"
+
+        # Attempt to remove mount point in case of mount error
+        rmdir "$mount_point" 2>/dev/null
+        ;;
+    * )
+        # For any other protocols, use udevil
+        # Run udevil in user's terminal in case password entry is required
+        # Prompt to close terminal if an error occurs so the error can be seen
+        spacefm -s <a href="#sockets-methods-run-task">run-task</a> cmd --terminal \
+	        "udevil mount '$1' || ( echo; echo Press Enter; read )"
+        ;;
+esac
 </pre>
 
-NFS and Samba (cifs) URLs may also be in the alternate formats:
-<pre>    NFSHOST:/SHARE
-    //SAMBAHOST/SHARE</pre>
-
-For additional URL examples, see <a href="http://ignorantguru.github.io/udevil/udevil--help.html">URL protocols and formats handled by udevil</a>, which natively uses the same URL formats supported by SpaceFM.
-
-<p>In addition, custom <a href="#handlers-pro">protocol handlers</a> may be added which accept URLs in the above formats, or in any format you prefer.
- 
-<p>URLs may also be opened via the main menu bar's File|Open URL item, which is equivalent to entering them in the Path Bar, or on the command line.
-
-<p>TIP:  You can right-click on a mounted network in the <a href="#devices-list">Devices List</a> and select <a href="#devices-menu-bookmark">Bookmark</a> to bookmark the URL for future use.  Or, simply edit an existing bookmark to contain a URL.
-
+Now when you enter a URL in the Path Bar, it will be mounted using the above script.
 
 <!-- # Command Line #cmd -->
 <p><a name="gui-pathbar-cmd"/><a href="#gui-pathbar-cmd"><b>Command Line</b></a><br>
@@ -1239,7 +1234,6 @@ Additional functions are planned for SpaceFM's Path Bar - check this manual for 
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1296,7 +1290,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1340,7 +1333,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1390,7 +1382,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1438,7 +1429,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1483,7 +1473,6 @@ See also: <a href="#gui-pathbar-pattern">Select By Pattern</a>.
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1657,7 +1646,6 @@ For example, to add a custom command which shows the size of the currently selec
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1802,7 +1790,6 @@ Edit fstab is a convenience function which simply opens the /etc/fstab file as r
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -1845,11 +1832,11 @@ By default, the Devices list will not show devices which contain partition table
 <p><a name="devices-settings-net"/><a href="#devices-settings-net"><b>Show|Mounted Networks</b></a><br>
 By default, the Devices list will show recognized mounted network filesystems (eg nfs, cifs, etc).  This enables you to click on the network to open it's mount point directory, or right-click on it to use the Unmount and Bookmark menu items.  If you do not want mounted networks listed, uncheck option Show|Mounted Networks.
 
-<!-- #Show|Mounted Other #files -->
-<p><a name="devices-settings-files"/><a href="#devices-settings-files"><b>Show|Mounted Other</b></a><br>
-By default, the Devices list will show files mounted to loop devices, and other non-block devices, such as mounted fuse filesystems.  For example, if you right-click on an ISO file and select Open|Mount ISO, the ISO file will be mounted so you can browse its contents.  You can then click on this device in the Devices list to open it's mount point directory, or right-click on it to use Remove or Unmount.
+<!-- #Show|Mounted Files #files -->
+<p><a name="devices-settings-files"/><a href="#devices-settings-files"><b>Show|Mounted Files</b></a><br>
+By default, the Devices list will show files mounted to loop devices.  For example, if you right-click on an ISO file and select Open|Mount ISO, SpaceFM will use udevil to attach the ISO file to a loop device and mount it, so you can browse its contents.  You can then click on this device in the Devices list to open it's mount point directory, or right-click on it to use Remove or Unmount.
 
-<p>If you do not want mounted files and non-block device filesystems listed, uncheck option Show|Mounted Other.
+<p>If you do not want mounted files listed, uncheck option Show|Mounted Files.
 
 <!-- #Show|Ignore Hide Policy #hide -->
 <p><a name="devices-settings-hide"/><a href="#devices-settings-hide"><b>Show|Ignore Hide Policy</b></a><br>
@@ -2061,20 +2048,9 @@ Auto Run|On Remove opens a dialog which allows you to set a command line to be r
 
 <p>For greater control, an <a href="#sockets-events">event handler</a> may be set for event <a href="#sockets-events-device">evt_device</a>.
 
-<!-- #Device Handlers #devh -->
-<p><a name="devices-settings-devh"/><a href="#devices-settings-devh"><b>Device Handlers</b></a><br>
-Opens the <a href="#handlers-dev">Device Handlers</a> configuration dialog.
-
-<!-- #Protocol Handlers #proh -->
-<p><a name="devices-settings-proh"/><a href="#devices-settings-proh"><b>Protocol Handlers</b></a><br>
-Opens the <a href="#handlers-pro">Protocol Handlers</a> configuration dialog.
-
-
 <!-- #Mount Options #opts -->
 <p><a name="devices-settings-opts"/><a href="#devices-settings-opts"><b>Mount Options</b></a><br>
-Mount Options opens a dialog which allows you to set default mount options.  These options may be used in Device Handlers via the substitution variable %o, and are used by the default mount command for all mounts, including auto-mounts.
-
-<p>In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
+Mount Options opens a dialog which allows you to set default mount options to be used for all mounts, including auto-mounts.  In addition to regular options, you can also specify options to be added or removed for a specific filesystem type by using the form OPTION+FSTYPE or OPTION-FSTYPE.
 
 <p>For example, this set of options:
 <br>&nbsp;&nbsp;&nbsp;&nbsp;nosuid, sync+vfat, sync+ntfs, noatime, noatime-ext4
@@ -2083,17 +2059,19 @@ Mount Options opens a dialog which allows you to set default mount options.  The
 
 <p>Note that some options, such as nosuid, may be added by your mount program even if you don't include them.  Options specified in fstab may take precedence.
 
-<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the appropriate Device Handler.
+<p>pmount does not support conventional mount options, so when using pmount as the mount command, options set here will be ignored.  Instead, you can include pmount's command line options in the <a href="#devices-settings-mcmd">Mount Command</a>.
 
-<!-- #Change Detection #chdet -->
-<p><a name="devices-settings-chdet"/><a href="#devices-settings-chdet"><b>Change Detection</b></a><br>
-Change Detection opens a dialog which allows you to enter a comma- or space-separated list of filesystems which should NOT be monitored for changes.  This setting only affects non-block devices (such as nfs or fuse), and is usually used to prevent SpaceFM becoming unresponsive with network filesystems.
+<!-- #Mount Command #mcmd -->
+<p><a name="devices-settings-mcmd"/><a href="#devices-settings-mcmd"><b>Mount Command</b></a><br>
+Mount Command opens a dialog which allows you to enter a custom mount command.  This command will be used for all manual and automatic mounts.  The command accepts two substitution variables, %v and %o, which are replaced with the device file (eg /dev/sda5) and the volume specific mount options when the command is run.  Except for pmount's command line options, mount options should NOT be entered here - enter them in <a href="#devices-settings-opts">Mount Options</a> instead.
 
-<p>When SpaceFM opens a directory in a tab, normally it will detect changes, for example if you change, add, or delete files in the directory.  Because SpaceFM works directly with the kernel for file information, and because some network filesystems become temporarily unresponsive when busy, this can cause SpaceFM to become temporarily unresponsive to mouse clicks, etc.
+<p>If the Mount Command dialog is left empty, SpaceFM will automatically determine which mount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pmount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
 
-<p>To prevent this, the device's filesystem can be listed in the Change Detection Blacklist.  In this case, SpaceFM will not detect file changes, and you will need to manually refresh the file list view to see them.  To do so, right-click on the file list and select View|Refresh, or press F5.
+<!-- #Unmount Command #ucmd -->
+<p><a name="devices-settings-ucmd"/><a href="#devices-settings-ucmd"><b>Unmount Command</b></a><br>
+Unmount Command opens a dialog which allows you to enter a custom unmount command.  This command will be used for all manual and automatic unmounting (including of network filesystems).  The command accepts one substitution variable, %v, which is replaced with the device file (eg /dev/sda5) when the command is run.
 
-<p>An alternative approach to blacklisting filesystems is to close the tab containing the filesystem while a copy is in progress to that directory, for example.
+<p>If the Unmount Command dialog is left empty, SpaceFM will automatically determine which unmount program to use.  Currently it will use <a href="http://ignorantguru.github.io/udevil/">udevil</a>, pumount, or the udisks v2 or v1 command line tool (/usr/bin/udisksctl or /usr/bin/udisks).
 
 <!-- #Single Click #single -->
 <p><a name="devices-settings-single"/><a href="#devices-settings-single"><b>Single Click</b></a><br>
@@ -2139,7 +2117,6 @@ Font opens a font selection dialog which allows you to select the font to be use
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2227,7 +2204,6 @@ This change should be immediate - media will be detected.  However, the above ch
     </ul>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2277,7 +2253,6 @@ This change should be immediate - media will be detected.  However, the above ch
     </ul>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2325,7 +2300,6 @@ This change should be immediate - media will be detected.  However, the above ch
     </ul>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2613,7 +2587,6 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
     </ul>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2670,7 +2643,6 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
         <li><a href="#designmode-mime">MIME Menu </a>
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2722,7 +2694,6 @@ Note that the PID of the task refers to the initial process started by SpaceFM. 
         <li><a href="#designmode-mime">MIME Menu </a>
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -2904,7 +2875,6 @@ Properties opens the <a href="#designmode-props">Menu Item Properties</a> dialog
         <li><a href="#designmode-mime">MIME Menu </a>
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3040,7 +3010,7 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <p><b>Automatic Context</b>
 <br>It is important to note that built-in menu items sometimes have an automatic context, which is evaluated before any rules you add.  For example, the file list's Paste menu item is disabled if the clipboard is empty.  No rule you add will cause it to be enabled in this case, although you can still add a rule to hide it.
 
-<p>Custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file handler</a> (see below).
+<p>Custom menu items added directly after the Default menu item in the file list's Open context menu have an automatic pre-context - they only appear if the MIME type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to add an item with an automatic context based on MIME type, and may also be used to setup a <a href="#designmode-props-opener">file type handler</a> (see below).
 
 <p>Custom menu items added directly after <a href="#tasks-menu-showout">Show Output</a> in the Task Manager's context menu will also only appear for tasks with a custom popup handler.
     
@@ -3049,21 +3019,21 @@ The context dialog includes a few more features for editing rules.  To remove a 
 <p><a name="impcon"><b>Impossible Context</b></a>
 <br>Note that it IS possible to set an impossible context for an item - a set of rules which will never match.  In this case the item will never be shown.  This can be used to permanently hide or disable an item you don't use.  This can also happen accidently, which is one reason why <a href="#designmode-props-ignorecontext">Ignore Context</a> (see below) is provided.  For example, the rule <b>Directory equals ""</b> will never match (because Directory is always set).
 
-<!-- # Use As Handler For #opener -->
-<p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Handler For</b></a><br>
-Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as handler for</i>' drop-down list on the Context page is used to set this item as a default handler.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define a file handler for specific file types (or based on any context rules).
+<!-- # Use As Opener For #opener -->
+<p><a name="designmode-props-opener"/><a href="#designmode-props-opener"><b>Use As Opener For</b></a><br>
+Visible only for non-toolbar Command or Application items, the '<i>If enabled, use as opener for</i>' drop-down list on the Context page is used to set this item as a default opener.  For example, if set to "files", and you open one or more files, if this item is shown and enabled based on its <a href="#designmode-props-context">context rules</a>, then this item will be run, rather than the default MIME application.  This option is used to define an open handler for specific file types (or based on any context rules).
 
 <p>If set to 'files', note that <b>no files are passed to a command</b> on the command line.  You must use <a href="#exvar">variables</a> in your command line or script to pass files to it.  If the menu item is of type Application, what is passed will depend on the Exec= line of the application's .desktop file.
 
-<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the applicable device handler.  Variables %v, "$fm_device", or other variables may be used in your command.
+<p>If set to 'devices', clicking on a device in the Devices list will cause the item to be run rather than the default mount command.  Variables %v, "$fm_device", or other variables may be used in your command.
 
-<p>If more than one item is set as a handler and each is enabled, multiple items will be run each time files or devices are opened.
+<p>If more than one item is set as an opener and each is enabled, multiple items will be run each time files or devices are opened.
 
-<p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as handler for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your handler is used.
+<p>As noted above, custom menu items added directly after the Open|Default menu item have an automatic pre-context - they only appear if the MIME file type of the first selected file matches the MIME type when the custom item was added.  This provides an easy way to set a custom open handler for a given MIME type.  Simply select a file of the desired type, right-click on it and add your custom item directly after the Open|Default menu item.  Next, select option '<i>use as opener for files</i>'.  Your custom item will be used to open files when the MIME type matches.  Or, you can set additional context rules to determine when your opener is used.
 
-<p>'<i>Use as handler for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as handler for' setting (by design - you can add it back after import if desired).
+<p>'<i>Use as opener for</i>' currently has no effect on files or devices opened from the SpaceFM desktop.  Also, when imported or installed, plugins lose their 'Use as opener for' setting (you can add it back after import).
 
-<p>Ignore Context (see below) has no effect on the handler being context-enabled - its context will be tested even if global option Ignore Context is checked.
+<p>Ignore Context (see below) has no effect on the opener being context-enabled - its context will be tested even if global option Ignore Context is checked.
 
 
 <!-- # Ignore Context -->
@@ -3509,7 +3479,6 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
         <li><a href="#designmode-mime">MIME Menu </a>
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3559,7 +3528,6 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
         <li><a href="#designmode-mime">MIME Menu </a>
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3672,7 +3640,6 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
         <li>MIME Menu 
     </ul>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3692,7 +3659,7 @@ Plugin Dir will only be listed for <a href="#plugins">plugins</a>.  It opens the
 
 <!-- # How MIME Works #mimeworks -->
 <p><a name="designmode-mime-mimeworks"/><a href="#designmode-mime-mimeworks"><b>How MIME Works</b></a><br>
-SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file handlers</a> based on MIME type or browser context to bypass MIME associations.)
+SpaceFM uses freedesktop.org's <a href="http://freedesktop.org/wiki/Specifications/shared-mime-info-spec">shared-mime-info</a> database to determine file types, display file type names, determine and adjust associated applications, and determine and adjust the default application for a type.  (Also note that you can create <a href="#designmode-props-opener">file opener commands</a> based on MIME type or browser context to bypass MIME associations.)
 
 <p>It helps to know some basics about how MIME works so you can better control how your system handles file types.
 
@@ -3817,7 +3784,6 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
         <li><a href="#plugins-uninstall">Uninstall</a>
         <li><a href="#plugins-creationandfiles">Creation And Files</a>
     </ul>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3858,7 +3824,6 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
         <li><a href="#plugins-uninstall">Uninstall</a>
         <li><a href="#plugins-creationandfiles">Creation And Files</a>
     </ul>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3872,7 +3837,7 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>To install a plugin using a <a href="#plugins-creationandfiles-file">plugin file</a>, use Plugins|Install|File.  You will be prompted to choose a file, and you will need to enter the root password for installation.  You can also install a plugin directly from a URL using Plugins|Install|URL (be sure to examine their contents before running commands within the plugin).  wget is required when installing from URL (this program is already installed on most Linux distributions).  Remember that installing a plugin as root does NOT mean it is run as root.  The files for the plugin are merely copied to /usr/<i>?local?</i>/share/spacefm/plugins as root.
 
-<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as handler for</a> context setting.  These settings must be manually added after installation/import if desired.
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
 
 <p>Installed plugins are available via the Plugins menu.  SpaceFM will allow you to set a key shortcut for a plugin, change its icon, and change Run In Terminal and Run As Task options for the plugin.  You cannot change the type of a plugin, and unless you do so as root, you cannot edit the command script.  You can temporarily edit the command line or custom target of a plugin, but your changes will not be saved - they will be valid only for the current session by the current user.
 
@@ -3910,7 +3875,6 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
         <li><a href="#plugins-uninstall">Uninstall</a>
         <li><a href="#plugins-creationandfiles">Creation And Files</a>
     </ul>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3926,7 +3890,7 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
 
 <p>If option Plugins|Import|Verbose is checked, after the plugin has been copied to the design clipboard, you'll see a message reminding you what to do next.
 
-<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as handler for</a> context setting.  These settings must be manually added after installation/import if desired.
+<p>When installed or imported, plugins lose any key shortcut which was saved with the plugin, and also lose their <a href="#designmode-props-opener">Use as opener for</a> context setting.  These settings must be manually added after installation/import if desired.
 
 <p>Alternatively, you can use <a href="#designmode-designmenu-import">New|Import</a> on the Design Menu to import and paste a plugin in one step.
 
@@ -3954,7 +3918,6 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
         <li>Uninstall
         <li><a href="#plugins-creationandfiles">Creation And Files</a>
     </ul>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -3992,7 +3955,6 @@ The usr/ submenu gives you access to files and folders in /usr/share/application
         <li><a href="#plugins-uninstall">Uninstall</a>
         <li>Creation And Files
     </ul>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li><a href="#programfiles">Program Files</a>
@@ -4036,533 +3998,10 @@ If necessary, your plugin can maintain changing, persistent data files in the us
 <p>Before distributing a plugin, be sure to open or extract the archive and examine all files in your text editor to be clear on what data you are sharing.  For example, some entries may be included in the plugin file even if they are currently disabled in the command.
 
 
+
+
+
 <!-- @end plugins-creationandfiles-->
-<br><br></td></tr>
-
-
-<tr><td colspan=2>
-<center><a name="handlers"/><a href="#handlers"><font size=+2>Handlers</font></a></center>
-</td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li>Handlers
-    <ul>
-        <li>Introduction
-        <li><a href="#handlers-dev">Device Handlers </a>
-        <li><a href="#handlers-pro">Protocol Handlers </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">File Handlers </a>
-    </ul>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="handlers-introduction"/><a href="#handlers-introduction"><font size=+2>Introduction</font></a>
-<!-- @Handlers @Introduction -->
-<p>Handlers are sets of commands which tell SpaceFM how to perform a function, such as opening a file, mounting a device, or creating/extracting an archive.  In some cases your handlers replace SpaceFM's default behavior.  Handlers come in several varieties: <a href="#handlers-dev">Devices</a>, <a href="#handlers-pro">Protocols</a>, <a href="#handlers-arc">Archives</a>, and <a href="#handlers-fil">Files</a>.
-
-
-
-<!-- @end handlers-introduction-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li>Handlers
-    <ul>
-        <li><a href="#handlers-introduction">Introduction</a>
-        <li>Device Handlers 
-        <li><a href="#handlers-pro">Protocol Handlers </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">File Handlers </a>
-    </ul>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="handlers-dev"/><a href="#handlers-dev"><font size=+2>Device Handlers </font></a>
-<!-- @Handlers @Device Handlers #dev -->
-<a name="devices-settings-mcmd"><p>Device</a> <a name="devices-settings-ucmd">handlers</a> <!-- backwards compat links --> tell SpaceFM how to mount, unmount, and show properties for specific filesystems or devices.  Anytime SpaceFM or the SpaceFM daemon mounts or unmounts a device (manually or automatically), or shows the properties of a device, it uses a handler to determine what commands to run.  By adding custom device handlers, SpaceFM can be made to mount and unmount virtually any type of device or filesystem.
-
-<p>To configure device handlers, right-click in the Devices list and select Settings|Device Handlers.  The list at the left of the Device Handlers configuration window lists all device handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches the current device will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.  In this way, you determine what handlers have preference.  The "Default" handler is usually listed last, and is used if no other handlers apply.
-
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
-
-<p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler, which appears in the list and in debug messages.  Next comes a Whitelist and Blacklist: these determine when this handler will be used.  Finally, the Mount, Unmount, and Properties boxes contain scripted commands which will be run by the handler to mount, unmount, or list properties of a device.
-
-<p><b>TIP:</b>  If you just want to change the mount program that SpaceFM uses to mount removable drives (such as udevil, pmount, or udisks), open Device Handlers and click the Default handler.  Example Mount and Unmount commands are shown for each mount program.  Just enable the section you want to use by removing the appropriate comment marks (#), and click Apply.
-
-
-<!-- # Whitelist #white -->
-<p><a name="handlers-dev-white"/><a href="#handlers-dev-white"><b>Whitelist</b></a><br>
-A handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the device properties, then this handler may be used for this device.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
-
-<p>The following device whitelist elements are recognized:
-<pre>
-    FSTYPE (eg ext3)
-    dev=DEVICE (/dev/sdd1)
-    id=UDI
-    label=VOLUME_LABEL (include spaces as underscores)
-    point=MOUNT_POINT
-    audiocd=0 or 1
-    optical=0 or 1
-    removable=0 or 1
-    mountable=0 or 1
-</pre>
-
-The simplest whitelist simply contains a filesystem type, such as "ext3".  Thus anytime you mount a device with that filesystem, the handler may be used.
-
-<p>If you want a handler to apply to several filesystem types, just list them:
-<pre>    ext3 ext4</pre>
-
-For more complex situations, you can add more elements to narrow or control when a handler will be used.  For example, consider the following whitelist:
-<pre>    +ext3 +dev=/dev/sdd* +label=My_Volume_Label</pre>
-
-First, the elements are prefixed with plug signs, so all are required to match, or the handler will not be used.  First, the filesystem type MUST be ext3 for this handler to be used.  Second, the device file must begin with "/dev/sdd" (eg /dev/sdd1).  Finally, the volume label on the device must be "My Volume Label" (or "My_Volume_Label").  Note that spaces in the label are converted to underscores for testing.
-
-<p>To see what handler SpaceFM has selected to mount a device, and see the commands being issued, start the <code>spacefm</code> program in a terminal window, and observe debugging output in the terminal while SpaceFM is running.  For example, mounting a USB stick you may see:
-<pre>    Selected Device Handler 'Default': MOUNT [*]</pre>
-
-This tells you that the 'Default' device handler was used, and the action being performed is MOUNT.  The portion(s) of the handler's whitelist which matched will be enclosed in square brackets [ ].
-
-<!-- # Blacklist #black -->
-<p><a name="handlers-dev-black"/><a href="#handlers-dev-black"><b>Blacklist</b></a><br>
-A handler's blacklist is a space-separated list of elements.  If any element in the list matches the device properties, this handler will never be used for this device.
-
-<p>For example, consider the following Whitelist/Blacklist combination:
-<pre>
-    Whitelist: vfat
-    Blacklist: dev=/dev/sde1 label=Ignored_Volume_Label
-</pre>
-
-In this example, the handler applies to any vfat filesystem.  However, if the device file is /dev/sde1, OR the volume label on the device is "Ignored Volume Label" (or "Ignored_Volume_Label"), the handler will not be used.
-
-<!-- # Mount -->
-<p><a name="handlers-dev-mount"/><a href="#handlers-dev-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to mount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %v  device
-    %o  volume-specific mount options (use in mount command only)
-    %t  filesystem type being mounted (eg vfat)
-    %a  create auto mount point
-</pre>
-
-%v will be replaced with the device file (eg /dev/sdd1).  %o, if included, will be replaced with volume-specific mount options (these are set in <a href="#devices-settings-opts">Mount Options</a>).  Or, you can omit %o and simply include the options you desire in the command.
-
-<p>Finally, the presence of %a will cause SpaceFM to create a new directory to be used as a mount point for the mount (eg ~/.cache/spacefm/mountpoint, and %a will be replaced with the directory path.  When the device is unmounted, this mount point will be removed.  Or, if you wish to create your own mount point, or if your mount program automatically creates one in /media (such as udevil), then you may omit %a.
-
-<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p>Example Mount commands (enable only one section by removing #):
-<pre>
-    # # udevil:
-    #     udevil mount -o '%o' %v
-    #
-    # # pmount: (does not accept mount options)
-    #     pmount %v
-    #
-    # # udisks v2:
-    #     udisksctl mount -b %v -o '%o'
-    #
-    # # udisks v1: (enable all three lines!)
-    #     fm_udisks=`udisks --mount %v --mount-options '%o' 2>&1`
-    #     echo "$fm_udisks"
-    #     [[ "$fm_udisks" = "${fm_udisks/ount failed:/}" ]]
-</pre>
-
-(Note:  Because udisks v1 does not return a proper error status on error, the above lines examine the output and set the exit status if appropriate, which triggers an error popup in SpaceFM.)
-
-<p>If a handler's Mount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Mount command, SpaceFM will automatically attempt to use udevil, pmount, udisks2, or udisks1 to mount the device (it will use whatever is installed, in this order of preference).
-
-<p>NOTE:  Custom menu items, added with <a href="#designmode-designmenu-new">New|Command</a>, may also be set as primitive device handlers via their <a href="#designmode-props-opener">Use as handler for</a> option.  When a device is clicked, if the menu item is enabled based on the current browser context, this menu item's command will be run rather than any other configured device handler.  In addition, device events may be configured to trigger actions based on socket event <a href="#sockets-events-device">evt_device</a>.
-
-<!-- # Unmount -->
-<p><a name="handlers-dev-unmount"/><a href="#handlers-dev-unmount"><b>Unmount</b></a><br>
-The Unmount text box contains the commands which will be run if this handler is selected to unmount a device (manually or automatically).  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window.
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %v  device
-    %a  current mount point
-</pre>
-
-%v will be replaced with the device file (eg /dev/sdd1).  %a will be replaced with the directory which is the mount point of the device.
-
-<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p>Example Unmount commands (enable only one section by removing #):
-<pre>
-    # # udevil:
-    #     udevil umount %v
-    #
-    # # pmount:
-    #     pumount %v
-    #
-    # # udisks v2:
-    #     udisksctl unmount -b %v
-    #
-    # # udisks v1: (enable all three lines!)
-    #     fm_udisks=`udisks --unmount %v 2>&1`
-    #     echo "$fm_udisks"
-    #     [[ "$fm_udisks" = "${fm_udisks/ount failed:/}" ]]
-</pre>
-
-(Note:  Because udisks v1 does not return a proper error status on error, the above lines examine the output and set the exit status if appropriate, which triggers an error popup in SpaceFM.)
-
-<p>If a handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will automatically attempt to use udevil, pmount, udisks2, or udisks1 to unmount the device (it will use whatever is installed, in this order of preference).
-
-<!-- # Properties -->
-<p><a name="handlers-dev-properties"/><a href="#handlers-dev-properties"><b>Properties</b></a><br>
-The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of the device.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
-
-<p>If no applicable device handler has a non-empty Properties command, SpaceFM's default properties will be shown.
-
-<!-- @end handlers-dev-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li>Handlers
-    <ul>
-        <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Device Handlers </a>
-        <li>Protocol Handlers 
-        <li><a href="#handlers-arc">Archives </a>
-        <li><a href="#handlers-fil">File Handlers </a>
-    </ul>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="handlers-pro"/><a href="#handlers-pro"><font size=+2>Protocol Handlers </font></a>
-<!-- @Handlers @Protocol Handlers #pro -->
-<a name="gui-pathbar-protohand"><p>Protocol handlers</a> <!-- backwards compat link --> tell SpaceFM how to respond when a URL is opened or unmounted, such as mounting or unmounting a network filesystem, or showing properties for a mounted URL.  Anytime you enter a URL in SpaceFM's <a href="#gui-pathbar-proto">Path Bar</a> (eg ftp://mirrors.kernel.org), open a bookmark containing a URL, select Open URL from the file menu, or specify a URL on the command-line, a handler is used to open the URL.  This handler can run another program (such as a web browser), can mount the URL as a filesystem, or take any other action you specify.
-
-<p>To configure protocol handlers, right-click in the Path Bar and select Protocol Handlers, or right-click in the Devices list and select Settings|Protocol Handlers.  Like <a href="#handlers-dev">Device Handlers</a>, protocol handlers have an Enable checkbox, a whitelist and blacklist which determine when the handler is used, and command boxes. 
-
-<!-- # Whitelist #white -->
-<p><a name="handlers-pro-white"/><a href="#handlers-pro-white"><b>Whitelist</b></a><br>
-As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
-
-<P>SpaceFM recognizes a path bar entry as a protocol if it has the form PROTOCOL:// (such as ftp://).  SpaceFM recommends a <a href="#gui-pathbar-proto">standard URL format</a> regardless of protocol.  If the URL is in such a format, SpaceFM will break the URL into parts and assign them to variables ready for your use.  You can also use other URL formats (eg those specific a mount program), but SpaceFM may not correctly assign the parts to variables.
-
-<p>The following protocol whitelist elements are recognized:
-<pre>
-    PROTOCOL (eg ssh)
-    url=URL (ssh://...)
-    host=HOSTNAME
-    user=USERNAME
-    mtab_fs=FSTYPE    (mounted fs type as shown mtab)
-    mtab_url=URL    (mounted url as shown in mtab)
-    point=MOUNT_POINT
-</pre>
-
-For most protocols, the whitelist will be as simple as the protocol, such as 'ftp'.  For other protocols, you might use a whitelist like:
-<pre>    ssh mtab_fs=fuse.sshfs</pre>
-
-In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
-
-<p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
-
-<p>To see what handler SpaceFM has selected to mount or unmount a URL, and see the commands being issued, start the <code>spacefm</code> program in a terminal window, and observe debugging output in the terminal while SpaceFM is running.  For example, mounting and unmounting an ssh URL you may see:
-<pre>
-    Selected Protocol Handler 'ssh': MOUNT [ssh] mtab_fs=fuse.sshfs
-    Selected Protocol Handler 'ssh': UNMOUNT ssh [mtab_fs=fuse.sshfs]
-</pre>
-
-This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOUNT actions.  The whitelist of that handler is shown, and the portion(s) of the handler's whitelist which matched are enclosed in square brackets [ ].  For mounting, the URL was recognized with protocol ssh, which matched in the whitelist.  For unmounting, the mtab_fs matched the whitelist.
-
-<!-- # Blacklist #black -->
-<p><a name="handlers-pro-black"/><a href="#handlers-pro-black"><b>Blacklist</b></a><br>
-As with device handlers, a protocol handler's blacklist is a space-separated list of elements.  If any element in the list matches the protocol properties, this handler will never be used for this device.
-
-<!-- # Mount -->
-<p><a name="handlers-pro-mount"/><a href="#handlers-pro-mount"><b>Mount</b></a><br>
-The Mount text box contains the commands which will be run if this handler is selected to handle an entered URL.  The commands are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %url%     $fm_url
-    %proto%   $fm_url_proto
-    %host%    $fm_url_host
-    %port%    $fm_url_port
-    %user%    $fm_url_user
-    %pass%    $fm_url_pass
-    %path%    $fm_url_path
-    %a        auto create mount point
-</pre>
-
-These variables will be replaced with the appropriate values taken from a standard URL, and the bash equivalents may also be used (eg %url% is the same as $fm_url).  In the case of %a, its presence will cause SpaceFM to create a new directory to be used as a mount point for the mount (eg ~/.cache/spacefm/mountpoint, and %a will be replaced with the directory path.  When the device is unmounted, this mount point will be removed.  Or, if you wish to create your own mount point, or if your mount program automatically creates one in /media (such as udevil), then you may omit %a.
-
-<p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p>Note that the Mount command does not need to be used to mount a protocol, it may simply open the protocol with a program of your choice.  For example, to open http:// URLs with Firefox, put "http" in the handler's whitelist, and use this Mount command:
-<pre>    firefox "%url%" &</pre>
-
-The ampersand (&amp;) tells bash to run the program and move on, without waiting for the program to finish, which is usually appropriate when starting an application.
-
-<p>You can also open a website using a SpaceFM socket command, which will guess the user's web browser:
-<pre>    spacefm -s run-task <a href="#run-task-web">web</a> "$fm_url"</pre>
-
-<p>If a handler's Mount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Mount command, SpaceFM will not handle the protocol, and will display an error to the user.
-
-<!-- # Unmount -->
-<p><a name="handlers-pro-unmount"/><a href="#handlers-pro-unmount"><b>Unmount</b></a><br>
-The Unmount text box contains the commands which will be run if this handler is selected to unmount a mounted URL, generally a network filesystem such as sshfs.
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %url%     $fm_url
-    %proto%   $fm_url_proto
-    %host%    $fm_url_host
-    %port%    $fm_url_port
-    %user%    $fm_url_user
-    %path%    $fm_url_path
-    %a        current mount point
-	      $fm_mtab_fs   (mounted fs type as shown mtab)
-	      $fm_mtab_url  (mounted url as shown mtab)
-</pre>
-
-Not all of the variables may be available, depending on the protocol.
-
-<p>If a protocol handler's Unmount command is empty (or contains only blank lines and comments), that handler will not be used.  If no handler is found with a non-empty Unmount command, SpaceFM will not unmount the filesystem, and will display an error to the user.
-
-<!-- # Properties -->
-<p><a name="handlers-pro-properties"/><a href="#handlers-pro-properties"><b>Properties</b></a><br>
-The Properties text box contains the commands which will be run if the user selects Properties from the right-click menu of the devices list.  This is used to show any relevant properties and status of a mounted protocol.  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window, otherwise the output will be displayed in a SpaceFM popup window.
-
-<p>If no applicable protocol handler has a non-empty Properties command, SpaceFM's default properties will be shown.
-
-<!-- @end handlers-pro-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li>Handlers
-    <ul>
-        <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Device Handlers </a>
-        <li><a href="#handlers-pro">Protocol Handlers </a>
-        <li>Archives 
-        <li><a href="#handlers-fil">File Handlers </a>
-    </ul>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="handlers-arc"/><a href="#handlers-arc"><font size=+2>Archives </font></a>
-<!-- @Handlers @Archives #arc -->
-<p>SpaceFM includes a built-in facility for creating, extracting, and listing the contents of archive files (such as tar.gz or zip files).
-
-<!-- # Open Menu #arcopen -->
-<p><a name="handlers-arc-arcopen"/><a href="#handlers-arc-arcopen"><b>Open Menu</b></a><br>
-SpaceFM's Open menu for archive files, accessed by right-clicking on any archive file, allows you to choose Extract, Extract To, or List Contents.  By default, choosing Extract will extract the selected archive files to folders of the same name, choosing Extract To will allow you to choose where to extract the files, or choosing List Contents will display the contents of the archive file(s).
-
-<!-- # Archive Defaults #arcdef -->
-<p><a name="handlers-arc-arcdef"/><a href="#handlers-arc-arcdef"><b>Archive Defaults</b></a><br>
-<p>With a default configuration, opening an archive file by double-clicking it in the file list will automatically extract it to a folder of the same name.  You can change how SpaceFM opens archives by right-clicking on an archive file and using the Open|Archive Defaults submenu:
-
-<p><b>Open With App</b><br>
-Selecting Open With App will cause SpaceFM to open archive files using whatever MIME application is associated with the file type on your system.  This application will appear at the top of the Open menu, and can be changed using SpaceFM's <a href="#designmode-mime">MIME Menu</a>.  Even if you have Open With App selected as the default behavior for opening archive files, you can still manually choose Extract, Extract To, and List Contents from the Open menu to use SpaceFM's built-in archive facility.
-
-<p><b>Extract</b><br>
-Extract is the default behavior of SpaceFM.  If selected, double-clicking on an archive in the file list will automatically extract its contents to a folder.
-
-<p><b>Extract To</b><br>
-The Extract To behavor is similar to Extract - it will extract the archive contents to a folder - except that you will be able to choose the destination folder.  Also, the Extract To dialog includes Create Subfolder and Write Access options (see below).
-
-<p><b>List Contents</b><br>
-If List Contents is selected, double-clicking on an archive file will open a terminal window displaying the contents of the selected archive, but it will not be extracted.
-
-<p>In addition, the Archive Defaults submenu includes these options:
-
-<p><b>Create Subfolder</b><br>
-If this option is selected, which is the default, then using Extract (manually or automatically on open) will create a subfolder with the same name as the archive, and will extract the contents to it.  If this option is not selected, the archive contents will be extracted to the current folder.  (Note that the Extract To dialog also contains a Create Subfolder option for that operation - that setting is remembered separately).  Note that with Create Subfolder disabled, <b>some archive programs, such as tar , may overwrite files in the current folder</b> if they have the same name as files in the archive.
-
-<p><b>Write Access</b><br>
-If this option is selected, after extraction the contents of the extraction folder will be made write-accessible to the current user.  This option is only available if the Create Subfolder option is enabled, and if the user is not root.  Because some archives (such as tar.gz files made from CDROM) contain read-only files which then require an extra step to delete, this convenience option ensures the user can delete and change the extracted files.
-
-<p><b>Archive Handlers</b><br>
-Selecting Archive Handlers opens the Archive Handlers configuration window (see below).
-
-<!-- # Archive Handlers #archand -->
-<p><a name="handlers-arc-archand"/><a href="#handlers-arc-archand"><b>Archive Handlers</b></a><br>
-<p>Archive handlers tell SpaceFM how to create, extract, and list the contents of various kinds of archive files (eg tar.gz files).  To configure archive handlers, right-click on a known archive file and select Open|Archive Defaults|Archive Handlers. Or, right-click on any file, select New|Archive, and click the Configure button.
-
-<p>The list at the left of the Archive Handlers configuration window lists all archive handlers.  (Enlarge this window to see the handler commands more clearly.)  Click on a handler's name to see its contents.  The order of the list is important: Starting from the top, the first handler which matches a file being extracted will be used.  You can reorder the list by dragging entries, or using the Up &amp; Down buttons.
-
-<p><b>IMPORTANT:</b>  After modifying a handler's contents, you must click Apply or the changes you have made will be lost.
-
-<p>The right side of the window shows the selected handler's contents.  If Enable Handler is unchecked, this handler will never be used.  The Name contains the common name for the handler.  Next come MIME Type and Pathname text boxes: these determine when this handler will be used.  Finally, the Compress, Extract, and List boxes contain scripted commands which will be run by the handler to perform archive functions.
-
-<p><b><u>MIME Type</u></b><br>
-This text box contains a space-separated list of MIME types (such as application/x-compressed-tar), which is used to associated the handler with those file types.  Wildcards, such as asterisk '*' to represent multiple characters, and question mark '?' to represent a single character, are accepted.  A handler must have a MIME Type or a Pathname pattern (see below), or it cannot be used to extract or list the contents of archive files.
-
-<p><b><u>Pathname</u></b><br>
-This text box contains a space-separated list of pathname globs to be used in addition to MIME type to identify files compatible with this handler.  For example, a Pathname pattern of "*.tar.gz" will cause all filenames ending in ".tar.gz" to be associated with this handler.  The first pathname pattern in the list will determine the default file extension used when creating archives with this handler.  Note that the full pathname of the file (eg /home/user/archive.tar.gz) is tested against the pattern, so for advanced uses the pattern may contain directory parts (eg /home/user/*.tar.gz) to control how archives in specific locations are handled.
-
-<p><b><u>Compress</u></b><br>
-The Compress text box contains the commands which will be run if this handler is selected to create an archive (or a single compressed file, etc.)  The command(s) are run as a bash script, and may contain any valid bash syntax (version 4, or any greater version of bash you have installed).  If the Run In Terminal box is checked, the script will be run in your configured terminal emulator window (which may allow the user to enter information, such as a password).  You can also edit the commands in your configured editor by clicking on 'Edit' in the upper-right corner, or press Alt-Enter while the cursor is in the box (remember to save the script in your editor when finished).  Or, if you edit the commands in the configuraton window, be sure to click Apply.
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %n: First selected filename/dir to archive
-    %N: All selected filenames/dirs to archive, or (with %O) a single filename
-    %o: Resulting single archive file
-    %O: Resulting archive per source file/directory (use changes %N meaning)
-</pre>
-
-When creating an archive, the user first selects one or more files or directories to be included.  These are passed to your command via the %n or %N variables, which are replaced with quoted filenames.  How these are used will depend on the type of archive you are creating from the selected files: a single archive containing all files, or an archive per source file/directory.
-
-<p><b>If you want to create a single archive containing all selected items</b>, use %o to represent the name of the resulting archive file (which will be chosen by the user at run time).  With %o, you will generally use %N to include the list of all selected files.  (Or if you only use %n, only the first selected file will be included in your archive.)  For example, to create a tar archive, you would use this Compress command:
-<pre>    tar -cvf %o %N</pre>
-
-Other kinds of archiving programs, such as compressing files with GZip, <b>can only operate on one file at a time</b>.  In this case, you will use the %O variable (a capital 'O' instead of lowercase) to indicate to SpaceFM that you want your Compress command run multiple times, once for <i>each</i> selected file or directory.  In this case, %N will be replaced with a single filename each time the command is run.  (If %N is not included, the command will only be run once.  If you use %n with %O, it will only be replaced with the first selected file the first time the command is run, and will then be empty "" on any subsequent runs.)  For example, to compress all selected files with GZip, use this command:
-<pre>    gzip -c %N > %O</pre>
-
-When SpaceFM sees the above command containing %O, it will know to run the gzip command once for each file, and will replace %N with a single filename on each run.  It will also replace %O with a different output archive filename on each run, creating multiple files (in this case with the .gz extension).
-
-<p>Note: To include a literal '%N' or other string in your command without it being interpreted as a variable, use double percent signs (%%N).
-
-<p>In addition to the above variables, or instead of them, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p><b>To create an archive using your handler</b>, select files to be archived in SpaceFM's file list, right-click, and select New|Archive.  Select your handler in the Format list.  You can also edit the Compress command in this dialog, and the updated command will be saved to your handler.
-
-<p><b>To test your handler commands</b>, run the <code>spacefm</code> program in a terminal, and observe the output as SpaceFM is working on archives.  This will show you the handlers chosen, and the commands exactly as they are issued.
-
-<p>When running any commands in a terminal, SpaceFM will add a query at the end to keep the terminal open if it sees a non-zero error status from the last command run, or when listing archive contents.  If you need to keep the terminal open for other purposes, you can include these lines in your command:
-<pre>
-    echo -n '[ Finished ]  Press Enter to close:'
-    read
-</pre>
-
-<p><b><u>Extract</u></b><br>
-The Extract text box contains the commands which will be run if this handler is selected to extract an archive (or uncompress a single compressed file, etc.)
-
-<p>Several variables will be replaced before your commands are run:
-<pre>
-    %x: Archive file to extract
-    %g: Unique extraction target filename with optional subfolder
-    %G: Unique extraction target filename, never with subfolder
-</pre>
-
-In most cases, you will only need the %x variable to represent the file being extracted, as SpaceFM automatically runs your command in the directory to which files should be extracted.  For example, the Extract command for a tar file is simply:
-<pre>  tar -xvf %x</pre>
-
-In some cases, such as uncompressing a file with GZip, you will want SpaceFM to give you a single non-existing filename to be used as the extraction target.  For this purpose you may use %g or %G.  %g will cause SpaceFM to substitute a single non-existing filename based on the archive name.  If the user has selected the Create Subfolder option, a subfolder will also be created for the file.  However, in cases like GZip, it is often unnecessary to create a subfolder for just one file.  In this case use %G, which will be substituted with a single non-existing filename in the main extraction directory, and no subfolder will be created (even if the user has option Create Subfolder enabled).  For example, when decompressing a GZipped file, rather than create a subfolder for the single output file, SpaceFM simply uncompresses the file to the selected directory.  It uses this Extract command to do so:
-<pre>    gzip -cd %x > %G</pre>
-
-<p>In addition to the above variables, or instead of them, SpaceFM's exported <a href="#exvar">bash variables</a> may be used.
-
-<p><b><u>List</u></b><br>
-The List text box contains the commands which will be run if this handler is selected to list the contents of an archive file.  It recognizes only the %x variable which is replaced with the archive filename, and SpaceFM's exported <a href="#exvar">bash variables</a> may also be used.
-
-
-<!-- @end handlers-arc-->
-<br><br></td></tr>
-
-
-<tr>
-<td width="20%" valign="top">
-<a href="#toc">Contents</a>
-<ul>
-    <li><a href="#introduction">Introduction</a>
-    <li><a href="#installation">Installation</a>
-    <li><a href="#invocation">Invocation</a>
-    <li><a href="#quickstart">Quick Start</a>
-    <li><a href="#gui">GUI</a>
-    <li><a href="#devices">Devices</a>
-    <li><a href="#tasks">Tasks</a>
-    <li><a href="#designmode">Design Mode</a>
-    <li><a href="#plugins">Plugins</a>
-    <li>Handlers
-    <ul>
-        <li><a href="#handlers-introduction">Introduction</a>
-        <li><a href="#handlers-dev">Device Handlers </a>
-        <li><a href="#handlers-pro">Protocol Handlers </a>
-        <li><a href="#handlers-arc">Archives </a>
-        <li>File Handlers 
-    </ul>
-    <li><a href="#dialog">Dialog</a>
-    <li><a href="#sockets">Sockets</a>
-    <li><a href="#programfiles">Program Files</a>
-</ul>
-</td>
-<td valign="top">
-<a name="handlers-fil"/><a href="#handlers-fil"><font size=+2>File Handlers </font></a>
-<!-- @Handlers @File Handlers #fil -->
-<p>[ STUB - TODO ]
-
-<p>File handlers in SpaceFM are custom menu items which have their context option <a href="#designmode-props-opener">Use as handler for:</a> set to 'files'.  When the menu item is enabled (based on the current browser context), the menu item's command will be run when a file is opened, rather than any MIME-associated application.
-
-<p>To add a file handler, simply right-click on almost any existing menu item and select <a href="#designmode-designmenu-new">New|Command</a>.  On the <a href="#designmode-props-context">Context</a> page of the <a href="#designmode-props">Menu Item Properties</a> dialog, set 'Use as handler for: files'.  Also be sure to add context rules which determine when this handler will be active (or it will open for all types of files).  For more information see option <a href="#designmode-props-opener">Use as handler for</a>.
-
-<p>If no file handler menu item is enabled, SpaceFM will use <a href="#designmode-mime">MIME associations</a> to determine how to open a file.
-
-
-
-
-
-<!-- @end handlers-fil-->
 <br><br></td></tr>
 
 
@@ -4584,7 +4023,6 @@ The List text box contains the commands which will be run if this handler is sel
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li>Introduction
@@ -4629,7 +4067,6 @@ The List text box contains the commands which will be run if this handler is sel
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -4861,7 +4298,6 @@ The above commands place spacefm's output into the variable 'out', then pass tha
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -5373,7 +4809,6 @@ Usage: <code><b>--timeout [DELAY|@FILE]</b></code>
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -5673,7 +5108,6 @@ Or to allow the user to select only files ending in ".avi":
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -5975,7 +5409,6 @@ Note that you may or may not need to add a small delay (eg sleep 0.1) for the so
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -6073,7 +5506,6 @@ spacefm -g --check Option 0                                                     
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li>Dialog
     <ul>
         <li><a href="#dialog-introduction">Introduction</a>
@@ -6269,7 +5701,6 @@ Usage: <b>source FILE</b>
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li>Sockets
     <ul>
@@ -6312,7 +5743,6 @@ Usage: <b>source FILE</b>
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li>Sockets
     <ul>
@@ -6543,7 +5973,6 @@ Examples:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li>Sockets
     <ul>
@@ -7073,7 +6502,6 @@ Usage: <b>spacefm -s remove-event EVENT COMMAND ...</b>
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li>Sockets
     <ul>
@@ -7188,7 +6616,6 @@ Occurs whenever a device is added, removed, or otherwise changes state (mounted,
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li>Sockets
     <ul>
@@ -7240,7 +6667,6 @@ Occurs whenever a device is added, removed, or otherwise changes state (mounted,
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li>Program Files
@@ -7321,7 +6747,6 @@ The ~/.templates/ folder (or $XDG_TEMPLATES_DIR/ or ~/Templates/) holds file and
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li>Program Files
@@ -7385,7 +6810,6 @@ To test, start SpaceFM with a test config directory which doesn't exist:
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li>Program Files
@@ -7444,7 +6868,6 @@ A folder used to store temporary data, usually plugin data which has been copied
     <li><a href="#tasks">Tasks</a>
     <li><a href="#designmode">Design Mode</a>
     <li><a href="#plugins">Plugins</a>
-    <li><a href="#handlers">Handlers</a>
     <li><a href="#dialog">Dialog</a>
     <li><a href="#sockets">Sockets</a>
     <li>Program Files
@@ -7531,11 +6954,11 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 <center>
 <p><b>This document is under construction and incomplete.</b>
 
-<p>Copyright (C) 2015
+<p>Copyright (C) 2014
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-03-07&nbsp;&nbsp;(SpaceFM version 0.9.4+)
+<p>Updated 2014-03-30&nbsp;&nbsp;(SpaceFM version 0.9.4)
 <br><br>
 </center>
 </td></tr></table>
