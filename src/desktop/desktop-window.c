@@ -94,7 +94,7 @@ static void on_style_set( GtkWidget* w, GtkStyle* prev );
 static void on_realize( GtkWidget* w );
 static gboolean on_focus_in( GtkWidget* w, GdkEventFocus* evt );
 static gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt );
-static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data );
+static gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt );
 
 static void on_drag_begin( GtkWidget* w, GdkDragContext* ctx );
 static gboolean on_drag_motion( GtkWidget* w, GdkDragContext* ctx, gint x, gint y, guint time );
@@ -2602,7 +2602,7 @@ gboolean on_focus_out( GtkWidget* w, GdkEventFocus* evt )
     return FALSE;
 }
 
-gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt, gpointer user_data )
+gboolean on_scroll( GtkWidget *w, GdkEventScroll *evt )
 {
     forward_event_to_rootwin( gtk_widget_get_screen( w ), ( GdkEvent* ) evt );
     return TRUE;
