@@ -10732,7 +10732,8 @@ void xset_defaults()
 
     set = xset_set( "desk_pref", "lbl", _("Desktop _Settings") );
     xset_set_set( set, "icn", "gtk-preferences" );
-
+    // set->b keeps desktop prefs compositing wm info has been shown
+    
     set = xset_set( "desk_dev", "lbl", _("De_vices") );
     set->menu_style = XSET_MENU_SUBMENU;
     xset_set_set( set, "icn", "gtk-harddisk" );

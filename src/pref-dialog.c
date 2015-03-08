@@ -431,9 +431,17 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
             app_settings.show_wallpaper = show_wallpaper;
             g_free( app_settings.wallpaper );
             app_settings.wallpaper = wallpaper;
-            fm_desktop_update_wallpaper();
-            if ( !was_transparent != !is_transparent )
-                xset_msg_dialog( GTK_WIDGET( dlg ), 0, _("Transparency Change Requires Restart"), NULL, 0, _("For changes to desktop transparency to take effect, you must restart the SpaceFM desktop manager.  Usually the easiest way to do so is to logout.\n\nNote: For desktop transparency to work, you need to be running a compositing window manager or separate compositor like xcompmgr."), NULL, NULL );
+            fm_desktop_update_wallpaper( !was_transparent != !is_transparent );
+            if ( is_transparent && !was_transparent &&
+                                                !xset_get_b( "desk_pref" ) )
+            {
+                xset_msg_dialog( GTK_WIDGET( dlg ), 0, _("Transparency Requirements"),
+                        NULL, 0, _("General Note: For desktop transparency to "
+                        "work, you need to be running a compositing window "
+                        "manager or separate compositor like xcompmgr.\n\n"
+                        "This message will not repeat."), NULL, NULL );
+                xset_set_b( "desk_pref", TRUE );
+            }
         }
 
         //font
