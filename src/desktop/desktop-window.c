@@ -2544,7 +2544,7 @@ void on_realize( GtkWidget* w )
 
     GTK_WIDGET_CLASS(parent_class)->realize( w );
 
-    char *wmname = gdk_x11_screen_get_window_manager_name( gtk_widget_get_screen( w ) );
+    const char *wmname = gdk_x11_screen_get_window_manager_name( gtk_widget_get_screen( w ) );
     if ( ( self->transparent == TRUE ) &&  !strcmp(wmname, "Compiz") )
     {
         gtk_window_set_decorated( GTK_WINDOW(w), FALSE );
