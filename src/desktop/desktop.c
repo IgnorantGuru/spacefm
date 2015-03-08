@@ -118,7 +118,7 @@ void fm_turn_on_desktop_icons(gboolean transparent)
         */
     }
     fm_desktop_update_colors();
-    fm_desktop_update_wallpaper();
+    fm_desktop_update_wallpaper( FALSE );
 }
 
 void fm_turn_off_desktop_icons()
@@ -149,11 +149,18 @@ void fm_desktop_update_thumbnails()
     /* FIXME: thumbnail on desktop cannot be turned off. */
 }
 
-void fm_desktop_update_wallpaper()
+void fm_desktop_update_wallpaper( gboolean transparency_changed )
 {
     DWBgType type;
     GdkPixbuf* pix;
     int i;
+
+    if( transparency_changed )
+    {
+        fm_turn_off_desktop_icons();
+        fm_turn_on_desktop_icons( type == DW_BG_TRANSPARENT );
+        return;
+    }
 
     if( app_settings.show_wallpaper && app_settings.wallpaper )
     {
@@ -170,6 +177,9 @@ void fm_desktop_update_wallpaper()
             break;
         case WPM_TILE:
             type = DW_BG_TILE;
+            break;
+        case WPM_TRANSPARENT:
+            type = DW_BG_TRANSPARENT;
             break;
         case WPM_STRETCH:
         default:
@@ -224,7 +234,7 @@ void fm_desktop_set_single_click( gboolean single_click )
 void fm_turn_on_desktop_icons( gboolean transparent ) { }
 void fm_turn_off_desktop_icons() { }
 void fm_desktop_update_thumbnails() { }
-void fm_desktop_update_wallpaper() { }
+void fm_desktop_update_wallpaper( gboolean transparency_changed ) { }
 void fm_desktop_update_colors() { }
 void fm_desktop_update_icons() { }
 void fm_desktop_set_single_click( gboolean single_click ) { }

@@ -1191,7 +1191,7 @@ gboolean handle_parsed_commandline_args()
             if( desktop && app_settings.show_wallpaper )
             {
                 if( desktop_or_deamon_initialized )
-                    fm_desktop_update_wallpaper();
+                    fm_desktop_update_wallpaper( FALSE );
             }
         }
         else
