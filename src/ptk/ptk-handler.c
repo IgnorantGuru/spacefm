@@ -1076,7 +1076,7 @@ static void config_load_handler_settings( XSet* handler_xset,
         gtk_entry_set_text( GTK_ENTRY( hnd->entry_handler_icon ),
                                     handler_xset->icon ?
                                     handler_xset->icon : "" );
-/*igtodo code review g_strdup leaks below this line */
+
     if ( handler )
     {
         // load commands from const handler
@@ -1851,6 +1851,7 @@ static void restore_defaults( HandlerData* hnd, gboolean all )
             set->scroll_lock = handler->list_term ? XSET_B_TRUE : XSET_B_UNSET;
         }
         set->b = XSET_B_TRUE;
+        set->icon = NULL;
 
         // show fake xset values
         config_load_handler_settings( set, NULL, handler, hnd );
