@@ -154,6 +154,10 @@ void fm_desktop_update_wallpaper( gboolean transparency_changed )
     DWBgType type;
     GdkPixbuf* pix;
     int i;
+    
+    // is desktop manager running?
+    if ( !n_screens || !desktops )
+        return;
 
     if( transparency_changed )
     {
