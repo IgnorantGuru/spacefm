@@ -2793,6 +2793,27 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
         else
             return;
     }
+    else if ( vol->device_type == DEVICE_TYPE_OTHER &&
+                        mtab_fstype_is_handled_by_protocol( vol->fs_type ) )
+    {
+        cmd = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_PROP,
+                                      vol, NULL, NULL, &run_in_terminal,
+                                      NULL );
+        if ( !cmd )
+        {
+            cmd = g_strdup_printf( "echo MOUNT\nmount | grep \" on %s \"\necho\necho PROCESSES\n/usr/bin/lsof -w \"%s\" | head -n 500\n",
+                                    vol->mount_point, vol->mount_point );
+            run_in_terminal = FALSE;
+        }
+        else if ( strstr( cmd, "%a" ) )
+        {
+            char* pointq = bash_quote( vol->mount_point );
+            char* str = cmd;
+            cmd = replace_string( cmd, "%a", pointq, FALSE );
+            g_free( str );
+            g_free( pointq );
+        }
+    }
     else
         cmd = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_PROP, vol, NULL,
                                   NULL, &run_in_terminal, NULL );

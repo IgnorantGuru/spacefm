@@ -146,6 +146,7 @@ gboolean path_is_mounted_mtab( const char* mtab_file,
                                const char* path,
                                char** device_file,
                                char** fs_type );
+gboolean mtab_fstype_is_handled_by_protocol( const char* mtab_fstype );
 
 #endif
 

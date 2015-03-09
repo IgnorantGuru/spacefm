@@ -3266,11 +3266,8 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         if ( vol->fs_type )
             values = g_slist_prepend( values, g_strdup( vol->fs_type ) );
     }
-    else if ( mode == HANDLER_MODE_NET )
-    {
-        if ( !netmount )
-            return NULL;
-
+    else if ( mode == HANDLER_MODE_NET && netmount )
+    {   // for DEVICE_TYPE_NETWORK
         // net values
         if ( netmount->host && netmount->host[0] )
             values = g_slist_prepend( values,
@@ -3297,6 +3294,21 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         // url-derived protocol
         if ( netmount->fstype && netmount->fstype[0] )
             values = g_slist_prepend( values, g_strdup( netmount->fstype ) );
+    }
+    else if ( mode == HANDLER_MODE_NET )
+    {   // for DEVICE_TYPE_OTHER unmount or prop that has protocol handler in mtab_fs
+        if ( action != HANDLER_MOUNT && vol && vol->is_mounted )
+        {
+            // user-entered url (or mtab url if not available)
+            values = g_slist_prepend( values,
+                    g_strconcat( "url=", vol->udi, NULL ) );
+            // mtab fs type (fuse.ssh)
+            values = g_slist_prepend( values,
+                    g_strconcat( "mtab_fs=", vol->fs_type, NULL ) );
+            // mtab_url == url if mounted
+            values = g_slist_prepend( values,
+                    g_strconcat( "mtab_url=", vol->device_file, NULL ) );
+        }
     }
     else
     {
@@ -3458,7 +3470,7 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         g_free( str );
     }
     else //if ( mode == HANDLER_MODE_NET )
-    {
+    {   // also used for DEVICE_TYPE_OTHER unmount and prop
         /*
         *       %url%     $fm_url
         *       %proto%   $fm_url_proto
@@ -3470,57 +3482,60 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
         *       %a        mount point, or create auto mount point
         */
 
-        // replace sub vars
-        if ( strstr( command, "%url%" ) )
+        if ( netmount )
         {
-            str = command;
-            if ( action != HANDLER_MOUNT && vol && vol->is_mounted )
-                // user-entered url (or mtab url if not available)
-                command = replace_string( command, "%url%", vol->udi, FALSE );
-            else
-                // user-entered url
-                command = replace_string( command, "%url%", netmount->url, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%proto%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%proto%", netmount->fstype, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%host%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%host%", netmount->host, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%port%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%port%", netmount->port, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%user%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%user%", netmount->user, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%pass%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%pass%", netmount->pass, FALSE );
-            g_free( str );
-        }
-        if ( strstr( command, "%path%" ) )
-        {
-            str = command;
-            command = replace_string( command, "%path%", netmount->path, FALSE );
-            g_free( str );
+            // replace sub vars
+            if ( strstr( command, "%url%" ) )
+            {
+                str = command;
+                if ( action != HANDLER_MOUNT && vol && vol->is_mounted )
+                    // user-entered url (or mtab url if not available)
+                    command = replace_string( command, "%url%", vol->udi, FALSE );
+                else
+                    // user-entered url
+                    command = replace_string( command, "%url%", netmount->url, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%proto%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%proto%", netmount->fstype, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%host%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%host%", netmount->host, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%port%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%port%", netmount->port, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%user%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%user%", netmount->user, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%pass%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%pass%", netmount->pass, FALSE );
+                g_free( str );
+            }
+            if ( strstr( command, "%path%" ) )
+            {
+                str = command;
+                command = replace_string( command, "%path%", netmount->path, FALSE );
+                g_free( str );
+            }
         }
         if ( strstr( command, "%a" ) )
         {
-            if ( action == HANDLER_MOUNT )
+            if ( action == HANDLER_MOUNT && netmount )
             {
                 // create mount point
                 char* point_dir = ptk_location_view_create_mount_point(
@@ -3544,36 +3559,39 @@ char* vfs_volume_handler_cmd( int mode, int action, VFSVolume* vol,
             }
         }
 
-        // add bash variables
-        // urlq is user-entered url or (if mounted) mtab url
-        char* urlq = bash_quote( action != HANDLER_MOUNT &&
+        if ( netmount )
+        {
+            // add bash variables
+            // urlq is user-entered url or (if mounted) mtab url
+            char* urlq = bash_quote( action != HANDLER_MOUNT &&
+                                                    vol && vol->is_mounted ?
+                                                        vol->udi : netmount->url );
+            char* protoq = bash_quote( netmount->fstype );  // url-derived protocol (ssh)
+            char* hostq = bash_quote( netmount->host );
+            char* portq = bash_quote( netmount->port );
+            char* userq = bash_quote( netmount->user );
+            char* passq = bash_quote( netmount->pass );
+            char* pathq = bash_quote( netmount->path );
+            // mtab fs type (fuse.ssh)
+            char* mtabfsq = bash_quote( action != HANDLER_MOUNT &&
+                                vol && vol->is_mounted ? vol->fs_type : NULL );
+            // urlq and mtaburlq will both be the same mtab url if mounted
+            char* mtaburlq = bash_quote( action != HANDLER_MOUNT &&
                                                 vol && vol->is_mounted ?
-                                                    vol->udi : netmount->url );
-        char* protoq = bash_quote( netmount->fstype );  // url-derived protocol (ssh)
-        char* hostq = bash_quote( netmount->host );
-        char* portq = bash_quote( netmount->port );
-        char* userq = bash_quote( netmount->user );
-        char* passq = bash_quote( netmount->pass );
-        char* pathq = bash_quote( netmount->path );
-        // mtab fs type (fuse.ssh)
-        char* mtabfsq = bash_quote( action != HANDLER_MOUNT &&
-                            vol && vol->is_mounted ? vol->fs_type : NULL );
-        // urlq and mtaburlq will both be the same mtab url if mounted
-        char* mtaburlq = bash_quote( action != HANDLER_MOUNT &&
-                                            vol && vol->is_mounted ?
-                                                    vol->device_file : NULL );
-        str = command;
-        command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_port=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, portq, userq, passq, pathq, mtabfsq, mtaburlq, command );
-        g_free( str );
-        g_free( urlq );
-        g_free( protoq );
-        g_free( hostq );
-        g_free( portq );
-        g_free( userq );
-        g_free( passq );
-        g_free( pathq );
-        g_free( mtabfsq );
-        g_free( mtaburlq );
+                                                        vol->device_file : NULL );
+            str = command;
+            command = g_strdup_printf( "fm_url_proto=%s; fm_url=%s; fm_url_host=%s; fm_url_port=%s; fm_url_user=%s; fm_url_pass=%s; fm_url_path=%s; fm_mtab_fs=%s; fm_mtab_url=%s\n%s", protoq, urlq, hostq, portq, userq, passq, pathq, mtabfsq, mtaburlq, command );
+            g_free( str );
+            g_free( urlq );
+            g_free( protoq );
+            g_free( hostq );
+            g_free( portq );
+            g_free( userq );
+            g_free( passq );
+            g_free( pathq );
+            g_free( mtabfsq );
+            g_free( mtaburlq );
+        }
     }
     *run_in_terminal = terminal;
     return command;
@@ -3744,6 +3762,7 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
             g_free( netmount->path );
             g_slice_free( netmount_t, netmount );
             
+            //igtodo is this redundant?
             // replace mount point sub var
             if ( command && strstr( command, "%a" ) )
             {
@@ -3754,6 +3773,23 @@ char* vfs_volume_device_unmount_cmd( VFSVolume* vol, gboolean* run_in_terminal )
                 g_free( pointq );
             }
         }
+    }
+    else if ( vol->device_type == DEVICE_TYPE_OTHER &&
+                        mtab_fstype_is_handled_by_protocol( vol->fs_type ) )
+    {
+        command = vfs_volume_handler_cmd( HANDLER_MODE_NET, HANDLER_UNMOUNT,
+                                          vol, NULL, NULL, run_in_terminal,
+                                          NULL );
+        //igtodo is this redundant?
+        // replace mount point sub var
+        if ( command && strstr( command, "%a" ) )
+        {
+            pointq = bash_quote( vol->is_mounted ? vol->mount_point : NULL );
+            s1 = command;
+            command = replace_string( command, "%a", pointq, FALSE );
+            g_free( s1 );
+            g_free( pointq );
+        }        
     }
     else
         command = vfs_volume_handler_cmd( HANDLER_MODE_FS, HANDLER_UNMOUNT,
