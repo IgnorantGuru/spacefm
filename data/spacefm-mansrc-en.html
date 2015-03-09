@@ -2657,7 +2657,7 @@ The Properties text box contains the commands which will be run if the user sele
 <!-- # Whitelist #white -->
 As with device handlers, a protocol handler's whitelist is a space-separated list of elements.  In general, if any element in the list matches the protocol properties, then this handler may be used.  If a list element is prefixed with a plus sign '+', that element is <i>required</i> to match.  Any element in the list may contain wildcards (an asterisk '*' to represent multiple characters, or a question mark '?' to represent single characters).  
 
-<P>SpaceFM recognizes a path bar entry as a protocol if it has the form PROTOCOL:// (such as ftp://).  SpaceFM recommends a <a href="#gui-pathbar-proto">standard URL format</a> regardless of protocol.  If the URL is in such a format, SpaceFM will break the URL into parts and assign them to variables ready for your use.  You can also use other URL formats (eg those specific a mount program), but SpaceFM may not correctly assign the parts to variables.
+<P>SpaceFM recognizes a path bar entry as a protocol if it has the form PROTOCOL:// (such as ftp://).  SpaceFM recommends a <a href="#gui-pathbar-proto">standard URL format</a> regardless of protocol.  If the URL is in such a format, SpaceFM will break the URL into parts and assign them to variables ready for your use.  You can also use other URL formats (eg those specific to a mount program), but SpaceFM may not correctly assign the parts to variables.
 
 <p>The following protocol whitelist elements are recognized:
 <pre>
@@ -2665,8 +2665,8 @@ As with device handlers, a protocol handler's whitelist is a space-separated lis
     url=URL (ssh://...)
     host=HOSTNAME
     user=USERNAME
-    mtab_fs=FSTYPE    (mounted fs type as shown mtab)
-    mtab_url=URL    (mounted url as shown in mtab)
+    mtab_fs=FSTYPE      (mounted fs type as shown in mtab)
+    mtab_url=URL        (mounted url as shown in mtab)
     point=MOUNT_POINT
 </pre>
 
@@ -2674,6 +2674,8 @@ For most protocols, the whitelist will be as simple as the protocol, such as 'ft
 <pre>    ssh mtab_fs=fuse.sshfs</pre>
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
+
+<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its devices list.  By default, SpaceFM will list all filesystems mounted to a SpaceFM .cache directory (the default location for %a auto-created mount points - see below), and it will list mtab filesystems that begin with "fuse.".  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.
 
 <p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
 
@@ -2824,6 +2826,10 @@ When SpaceFM sees the above command containing %O, it will know to run the gzip 
     read
 </pre>
 
+<p>To trap any errors in commands containing multiple lines, you can use the built-in error trap after each line:
+<pre>    tar -cvf %o %N <b>|| fm_handle_err</b></pre>
+ 
+
 <p><b><u>Extract</u></b><br>
 The Extract text box contains the commands which will be run if this handler is selected to extract an archive (or uncompress a single compressed file, etc.)
 
@@ -2889,8 +2895,13 @@ This text box contains the commands which will be run if this handler is selecte
 		<td>%v</td>	<td>selected device (eg /dev/sda1)</td>
 	</tr><tr>
 		<td>%m</td>	<td>device mount point (eg /media/dvd)</td>
+	</tr><tr>
+		<td>%a</td>	<td>auto create mount point</td>
 	</tr>
 </table></center>
+
+<p>The presence of %a will cause SpaceFM to create a new directory to be used as a mount point (eg ~/.cache/spacefm/mountpoint, and %a will be replaced with the directory path.  This can be used to mount files (eg iso files).  When the device is unmounted, this mount point will be removed.  For example, this command will mount an iso file using fuseoiso and open the mount point directory in SpaceFM:
+<pre>    fuseiso %f %a && spacefm %a &amp;</pre>
 
 <p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used, as well as all the substitution variables defined in <a href="#designmode-props-command">Command Line</a>.
 

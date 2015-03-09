@@ -365,9 +365,21 @@ const Handler handlers_net[]=
         FALSE
     },
     {
+        "hand_net_+mtp",
+        "mtp",
+        "mtp mtab_fs=fuse.jmtpfs",
+        "",
+        "jmtpfs \"%a\"\n",
+        FALSE,
+        "fusermount -u %a",
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
+    },
+    {
         "hand_net_+udevil",
         "udevil",
-        "ftp http https nfs smb ssh mtab_fs=fuse*",
+        "ftp http https nfs smb ssh mtab_fs=fuse.sshfs",
         "",
         "udevil mount \"$fm_url\"",
         FALSE,

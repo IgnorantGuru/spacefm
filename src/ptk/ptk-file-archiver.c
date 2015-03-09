@@ -325,8 +325,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     GList *l;
     GtkWidget* combo, *dlg, *hbox;
     GtkFileFilter* filter;
-/*igcr lots of strings in this function - should double-check usage of each
- * and verify no leaks */
+
     char *cmd_to_run = NULL, *desc = NULL, *dest_file = NULL,
         *ext = NULL, *s1 = NULL, *str = NULL, *udest_file = NULL,
         *archive_name = NULL, *final_command = NULL;
@@ -336,7 +335,6 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
      * placate an irrelevant compilation warning. See notes in
      * ptk-handler.c:ptk_handler_show_config about GTK failure to
      * identify top-level widget */
-/*igcr file_browser may be NULL - check this entire function for uses */
     GtkWidget *top_level = file_browser ? gtk_widget_get_toplevel(
                                 GTK_WIDGET( file_browser->main_window ) ) :
                                 NULL;
@@ -968,7 +966,7 @@ void ptk_file_archiver_create( DesktopWindow *desktop,
     // Creating task
     char* task_name = g_strdup_printf( _("Archive") );
     PtkFileTask* task = ptk_file_exec_new( task_name, cwd,
-                                           GTK_WIDGET( file_browser ),
+                        file_browser ? GTK_WIDGET( file_browser ) : NULL,
                         file_browser ? file_browser->task_view : NULL );
     g_free( task_name );
 

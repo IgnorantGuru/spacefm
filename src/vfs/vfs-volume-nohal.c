@@ -45,6 +45,9 @@
 #include "ptk-handler.h"
 #include "ptk-location-view.h"
 
+#define MOUNTINFO "/proc/self/mountinfo"
+#define MTAB "/proc/mounts"
+
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
 VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points );
@@ -1021,9 +1024,9 @@ gchar* info_mount_points( device_t *device )
     lines = NULL;
 
     error = NULL;
-    if (!g_file_get_contents ("/proc/self/mountinfo", &contents, NULL, &error))
+    if (!g_file_get_contents (MOUNTINFO, &contents, NULL, &error))
     {
-        g_warning ("Error reading /proc/self/mountinfo: %s", error->message);
+        g_warning ("Error reading %s: %s", MOUNTINFO, error->message);
         g_error_free (error);
         return NULL;
     }
@@ -1622,9 +1625,9 @@ void parse_mounts( gboolean report )
     char* str;
 
     error = NULL;
-    if (!g_file_get_contents ("/proc/self/mountinfo", &contents, NULL, &error))
+    if (!g_file_get_contents (MOUNTINFO, &contents, NULL, &error))
     {
-        g_warning ("Error reading /proc/self/mountinfo: %s", error->message);
+        g_warning ("Error reading %s: %s", MOUNTINFO, error->message);
         g_error_free (error);
         return;
     }
@@ -2637,7 +2640,7 @@ gboolean path_is_mounted_mtab( const char* mtab_file,
         if ( !g_file_get_contents( mtab_file, &contents, NULL, NULL ) )
             return FALSE;
     }
-    else if ( !g_file_get_contents( "/proc/mounts", &contents, NULL, NULL ) )
+    else if ( !g_file_get_contents( MTAB, &contents, NULL, NULL ) )
     {
         if ( !g_file_get_contents( "/etc/mtab", &contents, NULL, &error ) )
         {
@@ -2677,6 +2680,44 @@ gboolean path_is_mounted_mtab( const char* mtab_file,
     g_free( contents );
     g_strfreev( lines );
     return ret;
+}
+
+gboolean mtab_fstype_is_handled_by_protocol( const char* mtab_fstype )
+{
+    int i;
+    XSet* set;
+    gboolean found = FALSE;
+    const char* handlers_list;
+    if ( mtab_fstype && mtab_fstype[0] &&
+                        ( handlers_list = xset_get_s( "dev_net_cnf" ) ) )
+    {
+        // is the mtab_fstype handled by a protocol handler?
+        GSList* values = NULL;
+        values = g_slist_prepend( values,
+                g_strconcat( "mtab_fs=", mtab_fstype, NULL ) );
+        gchar** handlers = g_strsplit( handlers_list, " ", 0 );
+        if ( handlers )
+        {
+            // test handlers
+            for ( i = 0; handlers[i]; i++ )
+            {
+                if ( !handlers[i][0] || !( set = xset_is( handlers[i] ) ) ||
+                                        set->b != XSET_B_TRUE /* disabled */ )
+                    continue;
+                // test whitelist
+                if ( g_strcmp0( set->s, "*" ) &&
+                        ptk_handler_values_in_list( set->s, values, NULL ) )
+                {
+                    found = TRUE;
+                    break;
+                }
+            }
+            g_strfreev( handlers );
+        }
+        g_slist_foreach( values, (GFunc)g_free, NULL );
+        g_slist_free( values );
+    }
+    return found;
 }
 
 int split_network_url( const char* url, netmount_t** netmount )
@@ -2932,16 +2973,51 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
         volume->disp_name = NULL;
         volume->icon = NULL;
         volume->automount_time = 0;
-        volume->inhibit_auto = FALSE;        
+        volume->inhibit_auto = FALSE;
     }
     else
     {
-        g_free( name );
-        g_free( mtab_fstype );
-        g_free( point );
-        return NULL;
+        // a non-block path is mounted - do we want to include it?
+        gboolean keep = FALSE;
+        // Is its mount point in a /.cache/spacefm/ dir ?
+        keep = point && strstr( point, "/.cache/spacefm/" );
+        if ( !keep && mtab_fstype )
+            // always include fuse types
+            keep = g_str_has_prefix( mtab_fstype, "fuse." );
+        if ( !keep )
+        {
+            // Is the mtab fstype handled by a protocol handler?
+            keep = mtab_fstype_is_handled_by_protocol( mtab_fstype );
+        }
+        if ( keep )
+        {
+            // create a volume
+            volume = g_slice_new0( VFSVolume );
+            volume->devnum = devnum;
+            volume->device_type = DEVICE_TYPE_OTHER;
+            volume->device_file = name;
+            volume->udi = g_strdup( name );
+            volume->should_autounmount = FALSE;
+            volume->label = NULL;
+            volume->fs_type = mtab_fstype;
+            volume->size = 0;
+            volume->is_mounted = TRUE;
+            volume->ever_mounted = TRUE;
+            volume->open_main_window = NULL;
+            volume->mount_point = point;
+            volume->disp_name = NULL;
+            volume->icon = NULL;
+            volume->automount_time = 0;
+            volume->inhibit_auto = FALSE;
+        }
+        else
+        {
+            g_free( name );
+            g_free( mtab_fstype );
+            g_free( point );
+            return NULL;
+        }
     }
-
     vfs_volume_set_info( volume );
     return volume;
 }
@@ -4152,9 +4228,9 @@ void unmount_if_mounted( VFSVolume* vol )
     if ( !str )
         return;
 
-    char* mtab = "/etc/mtab";
+    char* mtab = MTAB;
     if ( !g_file_test( mtab, G_FILE_TEST_EXISTS ) )
-        mtab = "/proc/mounts";
+        mtab = "/etc/mtab";
 
     char* line = g_strdup_printf( "grep -qs '^%s ' %s 2>/dev/null || exit\n%s\n",
                                                 vol->device_file, mtab, str );
@@ -4250,7 +4326,7 @@ gboolean vfs_volume_init()
 
     // start mount monitor
     GError *error = NULL;
-    mchannel = g_io_channel_new_file ( "/proc/self/mountinfo", "r", &error );
+    mchannel = g_io_channel_new_file ( MOUNTINFO, "r", &error );
     if ( mchannel != NULL )
     {
         g_io_channel_set_close_on_unref( mchannel, TRUE );
@@ -4259,7 +4335,7 @@ gboolean vfs_volume_init()
     else
     {
         free_devmounts();
-        printf( "spacefm: error monitoring /proc/self/mountinfo: %s\n", error->message );
+        printf( "spacefm: error monitoring %s: %s\n", MOUNTINFO, error->message );
         g_error_free (error);
     }
 

@@ -778,9 +778,11 @@ char* ptk_location_view_create_mount_point( int mode, VFSVolume* vol,
             if ( parent_dir )
                 mname = g_strdup_printf( "%s-%s-%s", netmount->fstype,
                                                 netmount->host, parent_dir );
-            else
+            else if ( netmount->host && netmount->host[0] )
                 mname = g_strdup_printf( "%s-%s", netmount->fstype,
                                                 netmount->host );
+            else
+                mname = g_strdup_printf( "%s", netmount->fstype );
             g_free( parent_dir );
         }
         else
@@ -2910,7 +2912,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     else
         info = g_strdup_printf( "echo FSTAB ; echo '( not found )' ; echo ; echo INFO ; " );
 
-    flags = g_strdup_printf( "echo %s ; echo %s       ", "DEVICE", vol->device_file );
+    flags = g_strdup_printf( "echo %s ; echo '%s'       ", "DEVICE", vol->device_file );
     if ( vol->is_removable )
         { old_flags = flags; flags = g_strdup_printf( "%s removable", flags ); g_free( old_flags ); }
     else
@@ -2979,7 +2981,7 @@ static void on_prop( GtkMenuItem* item, VFSVolume* vol, GtkWidget* view2 )
     }
 
     char* udisks_info = vfs_volume_device_info( vol );
-    udisks = g_strdup_printf( "%s\ncat << EOF\n%sEOF\necho ; ", info, udisks_info );
+    udisks = g_strdup_printf( "%s\ncat << EOF\n%s\nEOF\necho ; ", info, udisks_info );
     g_free( udisks_info );
 
     if ( vol->is_mounted )
