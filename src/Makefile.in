@@ -325,6 +325,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FAM_CFLAGS = @FAM_CFLAGS@
 FAM_LIBS = @FAM_LIBS@
+FFMPEG_CFLAGS = @FFMPEG_CFLAGS@
+FFMPEG_LIBS = @FFMPEG_LIBS@
 FGREP = @FGREP@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMOFILES = @GMOFILES@
@@ -565,6 +567,7 @@ spacefm_CFLAGS = \
     @SN_CFLAGS@ \
     @HAL_CFLAGS@ \
     @LIBUDEV_CFLAGS@ \
+    @FFMPEG_CFLAGS@ \
     @G_CAST_CHECKS@ \
     -Werror-implicit-function-declaration
 
@@ -575,7 +578,7 @@ spacefm_LDADD = \
     @HAL_LIBS@ \
     @SN_LIBS@ \
     @LIBUDEV_LIBS@ \
-    -lffmpegthumbnailer
+    @FFMPEG_LIBS@
 
 xml_purge_SOURCES = xml-purge.c
 xml_purge_CFLAGS = @GTK_CFLAGS@

@@ -26,7 +26,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#ifdef HAVE_FFMPEG
 #include <libffmpegthumbnailer/videothumbnailerc.h>
+#endif
 
 #if GLIB_CHECK_VERSION(2, 16, 0)
     #include "md5.h"    /* for thumbnails */
@@ -331,14 +333,17 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
     int i, w, h;
     struct stat statbuf;
     GdkPixbuf* thumbnail, *result = NULL;
-    VFSMimeType* mimetype = vfs_mime_type_get_from_file_name( file_path );
-    gboolean file_is_video = FALSE;
 
+    gboolean file_is_video = FALSE;
+#ifdef HAVE_FFMPEG
+    VFSMimeType* mimetype = vfs_mime_type_get_from_file_name( file_path );
     if ( mimetype )
     {
         if ( strncmp( vfs_mime_type_get_type( mimetype ), "video/", 6 ) == 0 )
             file_is_video = TRUE;
+        vfs_mime_type_unref( mimetype );
     }
+#endif
 
     if ( file_is_video == FALSE )
     {
@@ -400,6 +405,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
                 chmod( thumbnail_file, 0600 );  /* only the owner can read it. */
             }
         }
+#ifdef HAVE_FFMPEG
         else
         {
             video_thumbnailer* video_thumb = video_thumbnailer_create();
@@ -414,6 +420,7 @@ static GdkPixbuf* _vfs_thumbnail_load( const char* file_path, const char* uri,
                 thumbnail = gdk_pixbuf_new_from_file( thumbnail_file, NULL );
             }
         }
+#endif
     }
 
     if ( thumbnail )

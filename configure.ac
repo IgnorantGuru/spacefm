@@ -249,6 +249,18 @@ fi
 AM_CONDITIONAL(DESKTOP_INTEGRATION, test "$desktop_integration" = "yes")
 
 AC_ARG_ENABLE(
+    [video-thumbnails],
+    AS_HELP_STRING([--disable-video-thumbnails],
+                   [disable libffmpegthumbnailer video thumbnails (default: enable)]),
+    video_thumbnails=$enableval, video_thumbnails="yes")
+if test x"$video_thumbnails" = "xyes"; then
+    PKG_CHECK_MODULES( FFMPEG, libffmpegthumbnailer, HAVE_FFMPEG=yes)
+    AC_SUBST(FFMPEG_CFLAGS)
+    AC_SUBST(FFMPEG_LIBS)
+    AC_DEFINE(HAVE_FFMPEG, 1, [Whether to use video thumbnails or not.])
+fi
+
+AC_ARG_ENABLE(
     [pixmaps],
     AS_HELP_STRING([--enable-pixmaps],
         [use share/pixmaps dir instead of share/icons dir to store icons (default: disable)]),
@@ -334,6 +346,7 @@ echo 'GTK+ Version................................. : GTK 2'
 fi
 echo Desktop manager integration.................. : $desktop_integration
 echo Startup notification......................... : $use_sn
+echo Video thumbnail support...................... : $video_thumbnails
 echo
 echo 'Homepage: http://ignorantguru.github.com/spacefm/'
 echo

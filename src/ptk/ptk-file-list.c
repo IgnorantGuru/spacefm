@@ -448,7 +448,8 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
     case COL_FILE_BIG_ICON:
         icon = NULL;
         /* special file can use special icons saved as thumbnails*/
-        if( vfs_file_info_is_video( info ) || list->max_thumbnail > vfs_file_info_get_size( info )
+        if( vfs_file_info_is_video( info ) ||
+                        list->max_thumbnail > vfs_file_info_get_size( info )
             && info->flags == VFS_FILE_INFO_NONE )
             icon = vfs_file_info_get_big_thumbnail( info );
 
@@ -463,7 +464,8 @@ void ptk_file_list_get_value ( GtkTreeModel *tree_model,
     case COL_FILE_SMALL_ICON:
         icon = NULL;
         /* special file can use special icons saved as thumbnails*/
-        if( vfs_file_info_is_video( info ) || list->max_thumbnail > vfs_file_info_get_size( info ) )
+        if( vfs_file_info_is_video( info ) ||
+                        list->max_thumbnail > vfs_file_info_get_size( info ) )
             icon = vfs_file_info_get_small_thumbnail( info );
         if( !icon )
             icon = vfs_file_info_get_small_icon( info );

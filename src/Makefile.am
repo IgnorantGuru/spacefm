@@ -119,6 +119,7 @@ spacefm_CFLAGS = \
     @SN_CFLAGS@ \
     @HAL_CFLAGS@ \
     @LIBUDEV_CFLAGS@ \
+    @FFMPEG_CFLAGS@ \
     @G_CAST_CHECKS@ \
     -Werror-implicit-function-declaration
 
@@ -129,7 +130,7 @@ spacefm_LDADD = \
     @HAL_LIBS@ \
     @SN_LIBS@ \
     @LIBUDEV_LIBS@ \
-    -lffmpegthumbnailer
+    @FFMPEG_LIBS@
 
 noinst_PROGRAMS=xml-purge
 xml_purge_SOURCES=xml-purge.c
