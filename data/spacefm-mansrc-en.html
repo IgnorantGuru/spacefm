@@ -2677,7 +2677,7 @@ For most protocols, the whitelist will be as simple as the protocol, such as 'ft
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
 
-<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its Devices list.  By default, SpaceFM will list all filesystems mounted to a SpaceFM .cache directory (the default location for %a auto-created mount points - see below), and it will list mtab filesystems that begin with "fuse.".  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.  This will also ensure that your protocol handler, rather than a device handler, is used to unmount and show properties for the mounted protocol.
+<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its Devices list.  By default, SpaceFM will list most non-block (eg fuse) filesystems which are mounted to a user-readable directory.  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.  This will also ensure that your protocol handler, rather than a device handler, is used to unmount and show properties for the mounted protocol.
 
 <p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
 
@@ -2688,6 +2688,10 @@ In this case, the handler is selected if the protocol is "ssh", which will work 
 </pre>
 
 This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOUNT actions.  The whitelist of that handler is shown, and the portion(s) of the handler's whitelist which matched are enclosed in square brackets [ ].  For mounting, the URL was recognized with protocol ssh, which matched in the whitelist.  For unmounting, the mtab_fs matched the whitelist.
+
+<p>After your protocol is mounted, the mount directory may or may not automatically open in SpaceFM (depending on whether SpaceFM can associate a new device with the protocol just mounted based on mtab, mount point, etc.)  If it does not open, you can open a mount point after a successful mount command by adding a line such as:
+<pre>    [[ $? -eq 0 ]] && spacefm -t "%a"</pre>
+
 
 <!-- # Blacklist #black -->
 As with device handlers, a protocol handler's blacklist is a space-separated list of elements.  If any element in the list matches the protocol properties, this handler will never be used for this device.

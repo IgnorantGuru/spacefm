@@ -16,6 +16,8 @@
 #endif
 
 #include "vfs-volume.h"
+#include <glib.h>
+#include <glib/gstdio.h>
 #include "glib-mem.h"
 #include <glib/gi18n.h>
 #include <string.h>
@@ -47,6 +49,7 @@
 
 #define MOUNTINFO "/proc/self/mountinfo"
 #define MTAB "/proc/mounts"
+#define HIDDEN_NON_BLOCK_FS "devpts proc fusectl pstore sysfs tmpfs devtmpfs"
 
 void vfs_volume_monitor_start();
 VFSVolume* vfs_volume_read_by_device( struct udev_device *udevice );
@@ -2693,6 +2696,7 @@ gboolean mtab_fstype_is_handled_by_protocol( const char* mtab_fstype )
     {
         // is the mtab_fstype handled by a protocol handler?
         GSList* values = NULL;
+        values = g_slist_prepend( values, g_strdup( mtab_fstype ) );
         values = g_slist_prepend( values,
                 g_strconcat( "mtab_fs=", mtab_fstype, NULL ) );
         gchar** handlers = g_strsplit( handlers_list, " ", 0 );
@@ -2977,18 +2981,11 @@ VFSVolume* vfs_volume_read_by_mount( dev_t devnum, const char* mount_points )
     }
     else
     {
-        // a non-block path is mounted - do we want to include it?
-        gboolean keep = FALSE;
-        // Is its mount point in a /.cache/spacefm/ dir ?
-        keep = point && strstr( point, "/.cache/spacefm/" );
-        if ( !keep && mtab_fstype )
-            // always include fuse types
-            keep = g_str_has_prefix( mtab_fstype, "fuse." );
-        if ( !keep )
-        {
-            // Is the mtab fstype handled by a protocol handler?
-            keep = mtab_fstype_is_handled_by_protocol( mtab_fstype );
-        }
+        // a non-block device is mounted - do we want to include it?
+        gboolean keep;
+        keep = mtab_fstype_is_handled_by_protocol( mtab_fstype );
+        keep = keep || !strstr( HIDDEN_NON_BLOCK_FS, mtab_fstype );
+        keep = keep && ( geteuid() == 0 || g_access( point, R_OK ) == 0 );
         if ( keep )
         {
             // create a volume
