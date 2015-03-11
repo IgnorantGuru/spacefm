@@ -438,7 +438,9 @@ static void on_response( GtkDialog* dlg, int response, FMPrefDlg* user_data )
                 xset_msg_dialog( GTK_WIDGET( dlg ), 0, _("Transparency Requirements"),
                         NULL, 0, _("General Note: For desktop transparency to "
                         "work, you need to be running a compositing window "
-                        "manager or separate compositor like compton or xcompmgr.  You can then use use nitrogen or xwinwrap to set wallpaper on the background.\n\n"
+                        "manager or separate compositor like compton or xcompmgr. "
+                        "You can then use use nitrogen or xwinwrap to set wallpaper "
+                        "on the background.\n\n"
                         "This message will not repeat."), NULL, NULL );
                 xset_set_b( "desk_pref", TRUE );
             }
