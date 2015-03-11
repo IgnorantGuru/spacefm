@@ -3618,7 +3618,8 @@ static void open_files_with_handler( ParentInfo* parent,
             task->task->exec_icon = g_strdup( handler_set->icon );
         task->task->exec_terminal = ( handler_set->in_terminal == XSET_B_TRUE );
         task->task->exec_keep_terminal = FALSE;
-        task->task->exec_sync = FALSE;
+        task->task->exec_sync = handler_set->in_terminal != XSET_B_TRUE;
+        task->task->exec_show_error = task->task->exec_sync;
         task->task->exec_export = TRUE;
         ptk_file_task_run( task );
         

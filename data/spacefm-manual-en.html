@@ -4311,7 +4311,7 @@ For most protocols, the whitelist will be as simple as the protocol, such as 'ft
 
 In this case, the handler is selected if the protocol is "ssh", which will work when mounting an ssh filesystem.  However, when fuse mounts the filesystem, it uses "fuse.sshfs" as the filesystem type, which is listed in mtab (see the output of the <code>mount</code> command).  Thus this whitelist also includes "mtab_fs=fuse.sshfs", so this handler will be used for that filesystem type in mtab.  This will allow the handler to be used for both mounting ssh URLs and unmounting fuse.sshfs filesystems.
 
-<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its Devices list.  By default, SpaceFM will list all filesystems mounted to a SpaceFM .cache directory (the default location for %a auto-created mount points - see below), and it will list mtab filesystems that begin with "fuse.".  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.  This will also ensure that your protocol handler, rather than a device handler, is used to unmount and show properties for the mounted protocol.
+<p>Note: The whitelist mtab_fs= property also may affect what mounted protocols SpaceFM detects and lists in its Devices list.  By default, SpaceFM will list most non-block (eg fuse) filesystems which are mounted to a user-readable directory.  To have it detect and list another filesystem in the devices list, add the type with mtab_fs=FSTYPE to a protocol handler's whitelist.  This will also ensure that your protocol handler, rather than a device handler, is used to unmount and show properties for the mounted protocol.
 
 <p>Note that some of the above fields, such as mtab_fs, mtab_url, and point, are only set when performing an unmount.  Also, any spaces in the values are replaced with underscores before being tested.
 
@@ -4322,6 +4322,10 @@ In this case, the handler is selected if the protocol is "ssh", which will work 
 </pre>
 
 This tells you that the 'ssh' protocol handler was used for both MOUNT and UNMOUNT actions.  The whitelist of that handler is shown, and the portion(s) of the handler's whitelist which matched are enclosed in square brackets [ ].  For mounting, the URL was recognized with protocol ssh, which matched in the whitelist.  For unmounting, the mtab_fs matched the whitelist.
+
+<p>After your protocol is mounted, the mount directory may or may not automatically open in SpaceFM (depending on whether SpaceFM can associate a new device with the protocol just mounted based on mtab, mount point, etc.)  If it does not open, you can open a mount point after a successful mount command by adding a line such as:
+<pre>    [[ $? -eq 0 ]] && spacefm -t "%a"</pre>
+
 
 <!-- # Blacklist #black -->
 <p><a name="handlers-pro-black"/><a href="#handlers-pro-black"><b>Blacklist</b></a><br>
@@ -4613,7 +4617,7 @@ This text box contains the commands which will be run if this handler is selecte
 
 <p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used, as well as all the substitution variables defined in <a href="#designmode-props-command">Command Line</a>.
 
-<p>When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  For example:
+<p>If the command ends with a non-zero error status, a popup will be shown.  When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  This will prevent it being shown in the task manager.  For example:
 <pre>    geany %F &amp;</pre>
 
 <p>When running your commands in a terminal, if you need to keep the terminal open after your command finishes, you can include these lines at the end of your command:
@@ -7598,7 +7602,7 @@ Additional MIME types provided by libmimetype, adding globs for some missing but
 
 <p>DISCLAIMER:  While the authors, copyright holders, and maintainers of this software endeavour to keep all content up to date and valuable, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability or availability with respect to the software or the information, communications, products, services, or related graphics for any purpose. Any reliance you place on such content is therefore strictly AT YOUR OWN RISK.<br>
 <br>
-<p>Updated 2015-03-09&nbsp;&nbsp;(SpaceFM version 0.9.9+)
+<p>Updated 2015-03-11&nbsp;&nbsp;(SpaceFM version 0.9.9+)
 <br><br>
 </center>
 </td></tr></table>

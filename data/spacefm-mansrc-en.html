@@ -2911,7 +2911,7 @@ This text box contains the commands which will be run if this handler is selecte
 
 <p>In addition to the above variables, SpaceFM's exported <a href="#exvar">bash variables</a> may be used, as well as all the substitution variables defined in <a href="#designmode-props-command">Command Line</a>.
 
-<p>When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  For example:
+<p>If the command ends with a non-zero error status, a popup will be shown.  When starting applications, it is best to add an ampersand (&amp;) to the end of the command, which tells bash to run the program and continue.  This will prevent it being shown in the task manager.  For example:
 <pre>    geany %F &amp;</pre>
 
 <p>When running your commands in a terminal, if you need to keep the terminal open after your command finishes, you can include these lines at the end of your command:

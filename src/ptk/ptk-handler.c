@@ -279,7 +279,7 @@ const Handler handlers_fs[]=
     */
     {
         "hand_fs_+fuseiso",
-        "fuseiso",
+        "fuseiso unmount",
         "*fuseiso",
         "",
         "# Mounting of iso files is performed by fuseiso in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
@@ -291,12 +291,12 @@ const Handler handlers_fs[]=
     },
     {
         "hand_fs_+udiso",
-        "udevil iso",
+        "udevil iso unmount",
         "iso9660",
         "",
-        "uout=\"$(udevil mount %v)\"\nerr=$?; echo \"$uout\"\n[[ $err -ne 0 ]] && exit 1\npoint=\"${uout#Mounted }\"\n[[ \"$point\" = \"$uout\" ]] && exit 0\npoint=\"${point##* at }\"\n[[ -d \"$point\" ]] && spacefm \"$point\" &\n",
+        "# Mounting of iso files is performed by udevil in a file handler,\n# not this device handler.  Right-click on any file and select\n# Open|Handlers, and select Mount ISO to see this command.",
         FALSE,
-        "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount %a\n",
+        "# Note: non-iso9660 types will fall through to Default unmount handler\nudevil umount \"%a\"\n",
         FALSE,
         INFO_EXAMPLE,
         FALSE
@@ -387,6 +387,18 @@ const Handler handlers_net[]=
         FALSE,
         INFO_EXAMPLE,
         FALSE
+    },
+    {
+        "hand_net_+fuse",
+        "fuse unmount",
+        "mtab_fs=fuse.*",
+        "",
+        "",
+        FALSE,
+        "fusermount -u \"%a\"",
+        FALSE,
+        INFO_EXAMPLE,
+        FALSE
     }
 };
 
@@ -399,7 +411,7 @@ const Handler handlers_file[]=
         "Mount ISO",
         "application/x-iso9660-image application/x-iso-image application/x-cd-image",
         "*.img *.iso *.mdf *.nrg",
-        "# is image file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n\n# mount & open\nfuseiso %f %a && spacefm %a &\n\n# Note: Unmounting of iso files is performed by the fuseiso device handler.\n",
+        "# Note: Unmounting of iso files is performed by the fuseiso or udevil device\n# handler, not this handler.\n\n# Use fuseiso or udevil ?\nfuse=\"$(which fuseiso)\"  # remove this line to use udevil only\nif [[ -z \"$fuse\" ]]; then\n    udevil=\"$(which udevil)\"\n    if [[ -z \"$udevil\" ]]; then\n        echo \"You must install fuseiso or udevil to mount ISOs with this handler.\"\n        exit 1\n    fi\n    # use udevil - attempt mount\n    uout=\"$($udevil mount \"$fm_file\" 2>&1)\"\n    err=$?; echo \"$uout\"\n    if [ $err -eq 2 ]; then\n        # is file already mounted? (english only)\n        point=\"${uout#* is already mounted at }\"\n        if [ \"$point\" != \"$uout\" ]; then\n            point=\"${point% (*}\"\n            if [ -x \"$point\" ]; then\n                spacefm -t \"$point\"\n                exit 0\n            fi\n        fi\n    fi\n    [[ $err -ne 0 ]] && exit 1\n    point=\"${uout#Mounted }\"\n    [[ \"$point\" = \"$uout\" ]] && exit 0\n    point=\"${point##* at }\"\n    [[ -d \"$point\" ]] && spacefm \"$point\" &\n    exit 0\nfi\n# use fuseiso - is file already mounted?\ncanon=\"$(readlink -f \"$fm_file\" 2>/dev/null)\"\nif [ -n \"$canon\" ]; then\n    canon_enc=\"${canon// /\\\\040}\" # encode spaces for mtab+grep\n    if grep -q \"^$canon_enc \" ~/.mtab.fuseiso 2>/dev/null; then\n        # file is mounted - get mount point\n        point=\"$(grep -m 1 \"^$canon_enc \" ~/.mtab.fuseiso \\\n                 | sed 's/.* \\(.*\\) fuseiso .*/\\1/' )\"\n    if [ -x \"$point\" ]; then\n            spacefm \"$point\" &\n            exit\n        fi\n    fi\nfi\n# mount & open\nfuseiso %f %a && spacefm %a &\n",
         FALSE,
         "",
         FALSE,
